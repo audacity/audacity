@@ -28,21 +28,21 @@
 #include "AudacityMessageBox.h"
 #include "../widgets/valnum.h"
 
-const EffectParameterMethods& EffectEcho::Parameters() const
+const EffectParameterMethods& EchoBase::Parameters() const
 {
-   static CapturedParameters<EffectEcho,
+   static CapturedParameters<EchoBase,
       Delay, Decay
    > parameters;
    return parameters;
 }
 
-const ComponentInterfaceSymbol EffectEcho::Symbol
+const ComponentInterfaceSymbol EchoBase::Symbol
 { XO("Echo") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectEcho > reg; }
 
 
-struct EffectEcho::Instance
+struct EchoBase::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
 {
@@ -83,43 +83,43 @@ std::shared_ptr<EffectInstance> EffectEcho::MakeInstance() const
 
 
 
-EffectEcho::EffectEcho()
+EchoBase::EchoBase()
 {
    SetLinearEffectFlag(true);
 }
 
-EffectEcho::~EffectEcho()
+EchoBase::~EchoBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEcho::GetSymbol() const
+ComponentInterfaceSymbol EchoBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectEcho::GetDescription() const
+TranslatableString EchoBase::GetDescription() const
 {
    return XO("Repeats the selected audio again and again");
 }
 
-ManualPageID EffectEcho::ManualPage() const
+ManualPageID EchoBase::ManualPage() const
 {
    return L"Echo";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEcho::GetType() const
+EffectType EchoBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectEcho::Instance::ProcessInitialize(
+bool EchoBase::Instance::ProcessInitialize(
    EffectSettings& settings, double sampleRate, ChannelNames)
 {
-   auto& echoSettings = GetSettings(settings);  
+   auto& echoSettings = GetSettings(settings);
    if (echoSettings.delay == 0.0)
       return false;
 
@@ -144,16 +144,16 @@ bool EffectEcho::Instance::ProcessInitialize(
    return history != NULL;
 }
 
-bool EffectEcho::Instance::ProcessFinalize() noexcept
+bool EchoBase::Instance::ProcessFinalize() noexcept
 {
    return true;
 }
 
-size_t EffectEcho::Instance::ProcessBlock(EffectSettings& settings,
+size_t EchoBase::Instance::ProcessBlock(EffectSettings& settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    auto& echoSettings = GetSettings(settings);
-   
+
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
@@ -175,7 +175,7 @@ struct EffectEcho::Editor
    : EffectEditor
 {
    Editor(const EffectUIServices& services,
-      EffectSettingsAccess& access, const EffectEchoSettings& settings
+      EffectSettingsAccess& access, const EchoSettings& settings
    )  : EffectEditor{ services, access }
       , mSettings{ settings }
    {}
@@ -186,7 +186,7 @@ struct EffectEcho::Editor
 
    void PopulateOrExchange(ShuttleGui& S);
 
-   EffectEchoSettings mSettings;
+   EchoSettings mSettings;
 };
 
 
@@ -221,7 +221,7 @@ void EffectEcho::Editor::PopulateOrExchange(ShuttleGui & S)
             Decay.min, Decay.max)
          .AddTextBox(XXO("D&ecay factor:"), L"", 10);
    }
-   S.EndMultiColumn();   
+   S.EndMultiColumn();
 }
 
 

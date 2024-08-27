@@ -21,7 +21,7 @@ class ShuttleGui;
 using Floats = ArrayOf<float>;
 
 
-struct EffectEchoSettings
+struct EchoSettings
 {
    static constexpr double delayDefault = 1.0;
    static constexpr double decayDefault = 0.5;
@@ -30,16 +30,14 @@ struct EffectEchoSettings
    double decay{ decayDefault };
 };
 
-class EffectEcho final : public EffectWithSettings<
-   EffectEchoSettings, StatelessPerTrackEffect
->
+class EchoBase : public EffectWithSettings<EchoSettings, PerTrackEffect>
 {
 public:
-   
+
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectEcho();
-   virtual ~EffectEcho();
+   EchoBase();
+   virtual ~EchoBase();
 
    // ComponentInterface implementation
 
@@ -51,40 +49,43 @@ public:
 
    EffectType GetType() const override;
 
+   struct Instance;
+
+protected:
+   // EchoBase implementation
+   const EffectParameterMethods& Parameters() const override;
+
+#if 0
+   // TODO simplify like this in C++20
+   using ParametersType = CapturedParameters<EchoBase,
+        EffectParameter{
+         &EchoBase::delay, L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f }
+      , EffectParameter{
+         &EchoBase::decay, L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f }
+   >;
+#else
+
+static constexpr EffectParameter Delay{ &EchoSettings::delay,
+   L"Delay",   EchoSettings::delayDefault, 0.001f,  FLT_MAX, 1.0f };
+static constexpr EffectParameter Decay{ &EchoSettings::decay,
+   L"Decay",   EchoSettings::decayDefault, 0.0f,    FLT_MAX, 1.0f };
+
+#endif
+};
+
+class EffectEcho final : public EchoBase, public StatelessEffectUIServices
+{
+   public:
+
+   struct Editor;
+
    // Effect implementation
    std::unique_ptr<EffectEditor> MakeEditor(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs)
    const override;
 
-   struct Editor;
-
-   struct Instance;
-
    std::shared_ptr<EffectInstance> MakeInstance() const override;
-
-private:
-   // EffectEcho implementation
-   
-
-   const EffectParameterMethods& Parameters() const override;
-
-#if 0
-   // TODO simplify like this in C++20
-   using ParametersType = CapturedParameters<EffectEcho,
-        EffectParameter{
-         &EffectEcho::delay, L"Delay",   1.0f, 0.001f,  FLT_MAX, 1.0f }
-      , EffectParameter{
-         &EffectEcho::decay, L"Decay",   0.5f, 0.0f,    FLT_MAX, 1.0f }
-   >;
-#else
-
-static constexpr EffectParameter Delay{ &EffectEchoSettings::delay,
-   L"Delay",   EffectEchoSettings::delayDefault, 0.001f,  FLT_MAX, 1.0f };
-static constexpr EffectParameter Decay{ &EffectEchoSettings::decay,
-   L"Decay",   EffectEchoSettings::decayDefault, 0.0f,    FLT_MAX, 1.0f };
-
-#endif
 };
 
 #endif // __AUDACITY_EFFECT_ECHO__
