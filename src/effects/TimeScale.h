@@ -15,15 +15,16 @@
 
 #if USE_SBSMS
 
-#include "SBSMSEffect.h"
+#include "SBSMSBase.h"
 #include "ShuttleAutomation.h"
+#include "StatefulEffectUIServices.h"
 #include <wx/weakref.h>
 
 class wxSlider;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectTimeScale final : public EffectSBSMS
+class EffectTimeScale final : public SBSMSBase, public StatefulEffectUIServices
 {
 public:
    static inline EffectTimeScale *

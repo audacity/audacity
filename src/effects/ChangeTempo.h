@@ -18,11 +18,12 @@
 #define __AUDACITY_EFFECT_CHANGETEMPO__
 
 #if USE_SBSMS
-#include "SBSMSEffect.h"
+#include "SBSMSBase.h"
 #endif
 
 #include "SoundTouchBase.h"
 #include "ShuttleAutomation.h"
+#include "StatefulEffectUIServices.h"
 #include <wx/weakref.h>
 
 class wxSlider;

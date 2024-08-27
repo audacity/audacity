@@ -72,7 +72,7 @@ EffectTimeScale::EffectTimeScale()
    slideTypePitch = SlideLinearOutputRate;
    bPreview = false;
    previewSelectedDuration = 0.0;
-   
+
    SetLinearEffectFlag(true);
 }
 
@@ -116,7 +116,7 @@ double EffectTimeScale::CalcPreviewInputLength(
       double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
       double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
       double tOut = previewLength/inputLength;
-      double t = EffectSBSMS::getInvertedStretchedTime(rateStart1,rateEnd1,slideTypeRate,tOut);
+      double t = SBSMSBase::getInvertedStretchedTime(rateStart1,rateEnd1,slideTypeRate,tOut);
       return t * inputLength;
    }
 }
@@ -134,15 +134,15 @@ bool EffectTimeScale::Process(
    double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
    double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
    double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
-  
+
    if(bPreview) {
       double t = (mT1-mT0) / previewSelectedDuration;
-      rateEnd1 = EffectSBSMS::getRate(rateStart1,rateEnd1,slideTypeRate,t);
-      pitchEnd1 = EffectSBSMS::getRate(pitchStart1,pitchEnd1,slideTypePitch,t);
+      rateEnd1 = SBSMSBase::getRate(rateStart1,rateEnd1,slideTypeRate,t);
+      pitchEnd1 = SBSMSBase::getRate(pitchStart1,pitchEnd1,slideTypePitch,t);
    }
-   
-   EffectSBSMS::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
-   return EffectSBSMS::Process(instance, settings);
+
+   SBSMSBase::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
+   return SBSMSBase::Process(instance, settings);
 }
 
 std::unique_ptr<EffectEditor> EffectTimeScale::PopulateOrExchange(
