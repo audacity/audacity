@@ -13,6 +13,10 @@
 #include "trackedittypes.h"
 #include "dom/track.h"
 
+namespace au::au3 {
+class IAu3Project;
+}
+
 namespace au::trackedit {
 class ITrackeditProject
 {
@@ -46,6 +50,6 @@ class ITrackeditProjectCreator : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ITrackeditProjectCreator() = default;
 
-    virtual ITrackeditProjectPtr create() const = 0;
+    virtual ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const = 0;
 };
 }
