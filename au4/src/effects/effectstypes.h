@@ -1,9 +1,6 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-/*
-* Audacity: A Digital Audio Editor
-*/
 #pragma once
 
 #include <vector>
