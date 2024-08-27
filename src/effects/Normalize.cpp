@@ -9,7 +9,7 @@
 
 *******************************************************************//**
 
-\class EffectNormalize
+\class NormalizeBase
 \brief An Effect to bring the peak level up to a chosen level.
 
 *//*******************************************************************/
@@ -32,66 +32,66 @@
 #include "../widgets/valnum.h"
 #include "ProgressDialog.h"
 
-const EffectParameterMethods& EffectNormalize::Parameters() const
+const EffectParameterMethods& NormalizeBase::Parameters() const
 {
-   static CapturedParameters<EffectNormalize,
+   static CapturedParameters<NormalizeBase,
       PeakLevel, ApplyVolume, RemoveDC, StereoInd
    > parameters;
    return parameters;
 }
 
-const ComponentInterfaceSymbol EffectNormalize::Symbol
+const ComponentInterfaceSymbol NormalizeBase::Symbol
 { XO("Normalize") };
 
-namespace{ BuiltinEffectsModule::Registration< EffectNormalize > reg; }
+namespace{ BuiltinEffectsModule::Registration< NormalizeBase > reg; }
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
    EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
    EVT_TEXT(wxID_ANY, EffectNormalize::OnUpdateUI)
 END_EVENT_TABLE()
 
-EffectNormalize::EffectNormalize()
+NormalizeBase::NormalizeBase()
 {
    Parameters().Reset(*this);
    SetLinearEffectFlag(false);
 }
 
-EffectNormalize::~EffectNormalize()
+NormalizeBase::~NormalizeBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNormalize::GetSymbol() const
+ComponentInterfaceSymbol NormalizeBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNormalize::GetDescription() const
+TranslatableString NormalizeBase::GetDescription() const
 {
    return XO("Sets the peak amplitude of one or more tracks");
 }
 
-ManualPageID EffectNormalize::ManualPage() const
+ManualPageID NormalizeBase::ManualPage() const
 {
    return L"Normalize";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNormalize::GetType() const
+EffectType NormalizeBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool EffectNormalize::CheckWhetherSkipEffect(const EffectSettings &) const
+bool NormalizeBase::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return ((mGain == false) && (mDC == false));
 }
 
-bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
+bool NormalizeBase::Process(EffectInstance &, EffectSettings &)
 {
    if (mGain == false && mDC == false)
       return true;
@@ -295,9 +295,9 @@ bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-// EffectNormalize implementation
+// NormalizeBase implementation
 
-bool EffectNormalize::AnalyseTrack(const WaveChannel &track,
+bool NormalizeBase::AnalyseTrack(const WaveChannel &track,
    const ProgressReport &report,
    const bool gain, const bool dc, const double curT0, const double curT1,
    float &offset, float &extent)
@@ -333,7 +333,7 @@ bool EffectNormalize::AnalyseTrack(const WaveChannel &track,
 
 //AnalyseTrackData() takes a track, transforms it to bunch of buffer-blocks,
 //and executes selected AnalyseOperation on it...
-bool EffectNormalize::AnalyseTrackData(const WaveChannel &track,
+bool NormalizeBase::AnalyseTrackData(const WaveChannel &track,
    const ProgressReport &report, const double curT0, const double curT1,
    float &offset)
 {
@@ -399,7 +399,7 @@ bool EffectNormalize::AnalyseTrackData(const WaveChannel &track,
 //and executes ProcessData, on it...
 // uses mMult and offset to normalize a track.
 // mMult must be set before this is called
-bool EffectNormalize::ProcessOne(WaveChannel &track,
+bool NormalizeBase::ProcessOne(WaveChannel &track,
    const TranslatableString &msg, double &progress, float offset)
 {
    bool rc = true;
@@ -457,14 +457,14 @@ bool EffectNormalize::ProcessOne(WaveChannel &track,
 }
 
 /// @see AnalyseDataLoudnessDC
-double EffectNormalize::AnalyseDataDC(float *buffer, size_t len, double sum)
+double NormalizeBase::AnalyseDataDC(float *buffer, size_t len, double sum)
 {
    for(decltype(len) i = 0; i < len; i++)
       sum += (double)buffer[i];
    return sum;
 }
 
-void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)
+void NormalizeBase::ProcessData(float *buffer, size_t len, float offset)
 {
    for(decltype(len) i = 0; i < len; i++) {
       float adjFrame = (buffer[i] + offset) * mMult;

@@ -25,17 +25,15 @@ class wxTextCtrl;
 class ShuttleGui;
 class WaveChannel;
 
-class EffectNormalize final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class NormalizeBase : public StatefulEffect
 {
 public:
-   static inline EffectNormalize *
-   FetchParameters(EffectNormalize &e, EffectSettings &) { return &e; }
+   static inline NormalizeBase *
+   FetchParameters(NormalizeBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectNormalize();
-   virtual ~EffectNormalize();
+   NormalizeBase();
+   virtual ~NormalizeBase();
 
    // ComponentInterface implementation
 
@@ -51,14 +49,9 @@ public:
 
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
-   // EffectNormalize implementation
+   // NormalizeBase implementation
 
    bool ProcessOne(WaveChannel &track,
       const TranslatableString &msg, double& progress, float offset);
@@ -73,12 +66,7 @@ private:
    static double AnalyseDataDC(float *buffer, size_t len, double sum);
    void ProcessData(float *buffer, size_t len, float offset);
 
-   void OnUpdateUI(wxCommandEvent & evt);
-   void UpdateUI();
-
-private:
-   wxWeakRef<wxWindow> mUIParent{};
-
+protected:
    double mPeakLevel;
    bool   mGain;
    bool   mDC;
@@ -88,6 +76,37 @@ private:
    double mCurT1;
    float  mMult;
 
+   const EffectParameterMethods& Parameters() const override;
+
+static constexpr EffectParameter PeakLevel{ &NormalizeBase::mPeakLevel,
+   L"PeakLevel",           -1.0,    -145.0,  0.0,  1  };
+static constexpr EffectParameter RemoveDC{ &NormalizeBase::mDC,
+   L"RemoveDcOffset",      true,    false,   true, 1  };
+static constexpr EffectParameter ApplyVolume{ &NormalizeBase::mGain,
+   L"ApplyVolume",           true,    false,   true, 1  };
+static constexpr EffectParameter StereoInd{ &NormalizeBase::mStereoInd,
+   L"StereoIndependent",   false,   false,   true, 1  };
+};
+
+class EffectNormalize final :
+    public NormalizeBase,
+    public StatefulEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+   DECLARE_EVENT_TABLE()
+
+private:
+   void OnUpdateUI(wxCommandEvent & evt);
+   void UpdateUI();
+
+   wxWeakRef<wxWindow> mUIParent{};
+
    wxCheckBox *mGainCheckBox;
    wxCheckBox *mDCCheckBox;
    wxTextCtrl *mLevelTextCtrl;
@@ -95,18 +114,6 @@ private:
    wxStaticText *mWarning;
    wxCheckBox *mStereoIndCheckBox;
    bool mCreating;
-
-   const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
-
-static constexpr EffectParameter PeakLevel{ &EffectNormalize::mPeakLevel,
-   L"PeakLevel",           -1.0,    -145.0,  0.0,  1  };
-static constexpr EffectParameter RemoveDC{ &EffectNormalize::mDC,
-   L"RemoveDcOffset",      true,    false,   true, 1  };
-static constexpr EffectParameter ApplyVolume{ &EffectNormalize::mGain,
-   L"ApplyVolume",           true,    false,   true, 1  };
-static constexpr EffectParameter StereoInd{ &EffectNormalize::mStereoInd,
-   L"StereoIndependent",   false,   false,   true, 1  };
 };
 
 #endif
