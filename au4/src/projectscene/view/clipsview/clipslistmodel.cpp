@@ -53,6 +53,13 @@ void ClipsListModel::reload()
         return c1.startTime < c2.startTime;
     });
 
+    //! NOTE Reload everything if the list has changed completely
+    m_allClipList.onChanged(this, [this]() {
+        muse::async::Async::call(this, [this]() {
+            reload();
+        });
+    });
+
     m_allClipList.onItemChanged(this, [this](const Clip& clip) {
         for (size_t i = 0; i < m_allClipList.size(); ++i) {
             if (m_allClipList.at(i).key != clip.key) {

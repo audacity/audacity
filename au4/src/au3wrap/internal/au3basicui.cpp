@@ -5,13 +5,15 @@
 #include "au3basicui.h"
 #include "mocks/progressdialog.h"
 
+#include "global/async/async.h"
+
 Au3BasicUI::~Au3BasicUI()
 {
 }
 
 void Au3BasicUI::DoCallAfter(const BasicUI::Action& action)
 {
-    Q_UNUSED(action);
+    muse::async::Async::call(this, action);
 }
 
 void Au3BasicUI::DoYield()

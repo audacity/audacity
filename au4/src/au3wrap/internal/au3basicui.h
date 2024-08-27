@@ -4,8 +4,11 @@
 
 #pragma once
 
+#include "global/async/asyncable.h"
+
 #include "BasicUI.h"
-class Au3BasicUI final : public BasicUI::Services
+
+class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable
 {
 public:
     ~Au3BasicUI() override;

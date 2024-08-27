@@ -4,19 +4,40 @@
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 #include "libraries/lib-project-history/ProjectHistory.h"
 
+#include "au3wrap/iau3project.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
-#include "au3wrap/internal/domau3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+
+#include "log.h"
 
 using namespace muse;
 using namespace au::trackedit;
 using namespace au::au3;
 
-AudacityProject* Au3TrackeditProject::au3ProjectPtr() const
+struct Au3TrackeditProject::Au3Impl
 {
-    AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
-    return project;
+    AudacityProject* prj = nullptr;
+    ::TrackList* trackList = nullptr;
+
+    // events
+    Observer::Subscription tracksSubc;
+    bool trackReplacing = false;
+};
+
+Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3project)
+{
+    m_impl = std::make_shared<Au3Impl>();
+    m_impl->prj = reinterpret_cast<AudacityProject*>(au3project->au3ProjectPtr());
+    m_impl->trackList = &::TrackList::Get(*m_impl->prj);
+    m_impl->tracksSubc = m_impl->trackList->Subscribe([this](const TrackListEvent& e) {
+        onTrackListEvent(e);
+    });
+}
+
+Au3TrackeditProject::~Au3TrackeditProject()
+{
+    m_impl->tracksSubc.Reset();
 }
 
 static au::trackedit::TrackType trackType(const ::Track* track)
@@ -39,9 +60,7 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
 {
     std::vector<au::trackedit::TrackId> au4trackIds;
 
-    ::TrackList& tracks = ::TrackList::Get(*au3ProjectPtr());
-
-    for (const ::Track* t : tracks) {
+    for (const ::Track* t : *m_impl->trackList) {
         au4trackIds.push_back(DomConverter::trackId(t->GetId()));
     }
 
@@ -53,9 +72,7 @@ muse::async::NotifyList<au::trackedit::Track> Au3TrackeditProject::trackList() c
     muse::async::NotifyList<Track> au4tracks;
     au4tracks.setNotify(m_trackChangedNotifier.notify());
 
-    ::TrackList& tracks = ::TrackList::Get(*au3ProjectPtr());
-
-    for (const ::Track* t : tracks) {
+    for (const ::Track* t : *m_impl->trackList) {
         Track au4t;
         au4t.id = DomConverter::trackId(t->GetId());
         au4t.title = wxToString(t->GetName());
@@ -67,9 +84,55 @@ muse::async::NotifyList<au::trackedit::Track> Au3TrackeditProject::trackList() c
     return au4tracks;
 }
 
+static std::string eventTypeToString(const TrackListEvent& e)
+{
+    switch (e.mType) {
+    case TrackListEvent::SELECTION_CHANGE: return "SELECTION_CHANGE";
+    case TrackListEvent::TRACK_DATA_CHANGE: return "TRACK_DATA_CHANGE";
+    case TrackListEvent::PERMUTED: return "PERMUTED";
+    case TrackListEvent::RESIZING: return "RESIZING";
+    case TrackListEvent::ADDITION: return "ADDITION";
+    case TrackListEvent::DELETION: return e.mExtra ? "REPLACING" : "DELETION";
+    }
+}
+
+void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
+{
+    TrackId trackId = -1;
+    auto track = e.mpTrack.lock();
+    if (track) {
+        trackId = DomConverter::trackId(track->GetId());
+    }
+    LOGD() << "trackId: " << trackId << ", type: " << eventTypeToString(e);
+
+    switch (e.mType) {
+    case TrackListEvent::DELETION: {
+        if (e.mExtra == 1) {
+            m_impl->trackReplacing = true;
+        }
+    } break;
+    case TrackListEvent::ADDITION: {
+        if (m_impl->trackReplacing) {
+            onTrackDataChanged(trackId);
+            m_impl->trackReplacing = false;
+        }
+    } break;
+    default:
+        break;
+    }
+}
+
+void Au3TrackeditProject::onTrackDataChanged(const TrackId& trackId)
+{
+    auto it = m_clipsChanged.find(trackId);
+    if (it != m_clipsChanged.end()) {
+        it->second.changed();
+    }
+}
+
 muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
 {
-    const WaveTrack* waveTrack = DomAccessor::findWaveTrack(*au3ProjectPtr(), ::TrackId(trackId));
+    const WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, ::TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return muse::async::NotifyList<au::trackedit::Clip>();
     }
@@ -88,7 +151,7 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
 
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(*au3ProjectPtr(), ::TrackId(key.trackId));
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, ::TrackId(key.trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return Clip();
     }
@@ -121,13 +184,9 @@ void Au3TrackeditProject::onClipAdded(const Clip& clip)
 
 au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
 {
-    if (!au3ProjectPtr()) {
-        return trackedit::TimeSignature();
-    }
-
     trackedit::TimeSignature result;
 
-    ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(*au3ProjectPtr());
+    ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(*m_impl->prj);
     result.tempo = timeSig.GetTempo();
     result.lower = timeSig.GetLowerTimeSignature();
     result.upper = timeSig.GetUpperTimeSignature();
@@ -137,11 +196,7 @@ au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
 
 void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeSignature)
 {
-    if (!au3ProjectPtr()) {
-        return;
-    }
-
-    ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(*au3ProjectPtr());
+    ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(*m_impl->prj);
     timeSig.SetTempo(timeSignature.tempo);
     timeSig.SetUpperTimeSignature(timeSignature.upper);
     timeSig.SetLowerTimeSignature(timeSignature.lower);
@@ -156,16 +211,15 @@ muse::async::Channel<au::trackedit::TimeSignature> Au3TrackeditProject::timeSign
 
 secs_t Au3TrackeditProject::totalTime() const
 {
-    return ::TrackList::Get(*au3ProjectPtr()).GetEndTime();
+    return m_impl->trackList->GetEndTime();
 }
 
 void Au3TrackeditProject::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
 {
-    auto project = reinterpret_cast<AudacityProject*>(au3ProjectPtr());
-    ProjectHistory::Get(*project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} });
+    ProjectHistory::Get(*m_impl->prj).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} });
 }
 
-ITrackeditProjectPtr Au3TrackeditProjectCreator::create() const
+ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
 {
-    return std::make_shared<Au3TrackeditProject>();
+    return std::make_shared<Au3TrackeditProject>(au3project);
 }
