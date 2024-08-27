@@ -32,7 +32,7 @@ void TempConceptExecutor::execute(const std::string& effectId_)
             return false;
         }
 
-        muse::String type = au3::wxToSting(effect.GetSymbol().Internal());
+        muse::String type = au3::wxToString(effect.GetSymbol().Internal());
         //! NOTE The goal is that we need to pass the instance ID to the view model
         //! and get a pointer to the effect instance there.
         //! For built-in effects, we can register and unregister the instance

@@ -13,7 +13,7 @@ using namespace au::effects;
 
 void GeneralViewModel::init()
 {
-    LOGDA() << au3::wxToSting(effect()->GetSymbol().Internal());
+    LOGDA() << au3::wxToString(effect()->GetSymbol().Internal());
 
     //! NOTE This is where it's needed
     //! * Get a list of parameters

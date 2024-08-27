@@ -46,7 +46,7 @@ static EffectMeta effectMeta(const ComponentInterfaceSymbol& symbol)
 void BuiltinEffects::init()
 {
     auto regView = [](const ::ComponentInterfaceSymbol& symbol, const muse::String& url) {
-        BuiltinEffects::effectsViewRegister()->regUrl(au3::wxToSting(symbol.Internal()), url);
+        BuiltinEffects::effectsViewRegister()->regUrl(au3::wxToString(symbol.Internal()), url);
     };
 
     // General
@@ -75,7 +75,7 @@ EffectMetaList BuiltinEffects::effectMetaList() const
                 << ", Symbol: " << au3::wxToStdSting(desc.GetSymbol().Internal());
 
         EffectMeta meta = effectMeta(desc.GetSymbol());
-        meta.id = au3::wxToSting(desc.GetID());
+        meta.id = au3::wxToString(desc.GetID());
         list.push_back(std::move(meta));
     }
 
