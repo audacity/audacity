@@ -2,7 +2,6 @@
 * Audacity: A Digital Audio Editor
 */
 #include "au3wrapmodule.h"
-#include "effects/effectsettings.h"
 
 #include <wx/log.h>
 
@@ -10,14 +9,13 @@
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 
-#include "mocks/qtBasicUI.h"
-
 #include "modularity/ioc.h"
 
 #include "internal/wxlogwrap.h"
 #include "internal/au3project.h"
 #include "internal/au3audiodevicesprovider.h"
 #include "internal/au3commonsettings.h"
+#include "internal/au3basicui.h"
 
 #include "log.h"
 
@@ -54,7 +52,7 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
     m_audioDevicesProvider->init();
 
-    static QtBasicUI uiServices;
+    static Au3BasicUI uiServices;
     (void)BasicUI::Install(&uiServices);
 }
 

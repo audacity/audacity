@@ -5,10 +5,10 @@
 #pragma once
 
 #include "BasicUI.h"
-class QtBasicUI final : public BasicUI::Services
+class Au3BasicUI final : public BasicUI::Services
 {
 public:
-    ~QtBasicUI() override;
+    ~Au3BasicUI() override;
 
 protected:
     void DoCallAfter(const BasicUI::Action& action) override;
