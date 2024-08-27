@@ -671,7 +671,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
             cancelRecording();
 
             Ret ret = make_ret(Err::RecordingError);
-            ret.setText(String::fromStdString(ret.text()).arg(wxToSting(gAudioIO->LastPaErrorString())).toStdString());
+            ret.setText(String::fromStdString(ret.text()).arg(wxToString(gAudioIO->LastPaErrorString())).toStdString());
 
             return ret;
         }

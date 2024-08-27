@@ -58,7 +58,7 @@ muse::async::NotifyList<au::trackedit::Track> Au3TrackeditProject::trackList() c
     for (const ::Track* t : tracks) {
         Track au4t;
         au4t.id = DomConverter::trackId(t->GetId());
-        au4t.title = wxToSting(t->GetName());
+        au4t.title = wxToString(t->GetName());
         au4t.type = trackType(t);
 
         au4tracks.push_back(std::move(au4t));
