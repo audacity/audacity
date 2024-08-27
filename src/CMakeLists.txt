@@ -325,8 +325,6 @@ set( SOURCES
       effects/BasicEffectUIServices.h
       effects/BassTreble.cpp
       effects/BassTreble.h
-      effects/Biquad.cpp
-      effects/Biquad.h
       effects/ChangePitch.cpp
       effects/ChangePitch.h
       effects/ChangeSpeed.cpp
@@ -356,8 +354,6 @@ set( SOURCES
       effects/DynamicRangeProcessorPanelCommon.h
       effects/DynamicRangeProcessorTransferFunctionPanel.cpp
       effects/DynamicRangeProcessorTransferFunctionPanel.h
-      effects/EBUR128.cpp
-      effects/EBUR128.h
       effects/Echo.cpp
       effects/Echo.h
       effects/EffectEditor.cpp

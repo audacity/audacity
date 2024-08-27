@@ -15,7 +15,7 @@ Max Maisel
 #include "MemoryX.h"
 
 /// \brief Represents a biquad digital filter.
-struct Biquad
+struct MATH_API Biquad
 {
    Biquad();
    void Reset();

@@ -5,8 +5,12 @@ A library of mathematical utilities and manipulation of samples
 addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
 
 set( SOURCES
+   Biquad.cpp
+   Biquad.h
    Dither.cpp
    Dither.h
+   EBUR128.cpp
+   EBUR128.h
    InterpolateAudio.cpp
    InterpolateAudio.h
    LinearFit.h

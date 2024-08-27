@@ -18,7 +18,7 @@ Max Maisel
 #include <cmath>
 
 /// \brief Implements EBU-R128 loudness measurement.
-class EBUR128
+class MATH_API EBUR128
 {
 public:
    EBUR128(double rate, size_t channels);
