@@ -69,16 +69,16 @@ enum {
 
 // Soundtouch is not reasonable below -99% or above 3000%.
 
-const EffectParameterMethods& EffectChangePitch::Parameters() const
+const EffectParameterMethods& ChangePitchBase::Parameters() const
 {
-   static CapturedParameters<EffectChangePitch,
+   static CapturedParameters<ChangePitchBase,
       // Vaughan, 2013-06: Long lost to history, I don't see why m_dPercentChange was chosen to be shuttled.
       // Only m_dSemitonesChange is used in Process().
       // PRL 2022: but that is so only when USE_SBSMS is not defined
       Percentage, UseSBSMS
    > parameters{
-      [](EffectChangePitch &, EffectSettings &,
-         EffectChangePitch &e, bool updating){
+      [](ChangePitchBase &, EffectSettings &,
+         ChangePitchBase &e, bool updating){
          if (updating)
             e.Calc_SemitonesChange_fromPercentChange();
          return true;
@@ -91,9 +91,9 @@ const EffectParameterMethods& EffectChangePitch::Parameters() const
 static const double kSliderMax = 100.0;          // warped above zero to actually go up to 400%
 static const double kSliderWarp = 1.30105;       // warp power takes max from 100 to 400.
 
-// EffectChangePitch
+// ChangePitchBase
 
-const ComponentInterfaceSymbol EffectChangePitch::Symbol
+const ComponentInterfaceSymbol ChangePitchBase::Symbol
 { XO("Change Pitch") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectChangePitch > reg; }
@@ -113,7 +113,7 @@ BEGIN_EVENT_TABLE(EffectChangePitch, wxEvtHandler)
    EVT_SLIDER(ID_PercentChange, EffectChangePitch::OnSlider_PercentChange)
 END_EVENT_TABLE()
 
-EffectChangePitch::EffectChangePitch()
+ChangePitchBase::ChangePitchBase()
 {
    // mUseSBSMS always defaults to false and its value is used only if USE_SBSMS
    // is defined
@@ -123,61 +123,45 @@ EffectChangePitch::EffectChangePitch()
    m_dStartFrequency = 0.0; // 0.0 => uninitialized
    m_bLoopDetect = false;
 
-   // NULL out these control members because there are some cases where the
-   // event table handlers get called during this method, and those handlers that
-   // can cause trouble check for NULL.
-   m_pChoice_FromPitch = NULL;
-   m_pSpin_FromOctave = NULL;
-   m_pChoice_ToPitch = NULL;
-   m_pSpin_ToOctave = NULL;
-
-   m_pTextCtrl_SemitonesChange = NULL;
-
-   m_pTextCtrl_FromFrequency = NULL;
-   m_pTextCtrl_ToFrequency = NULL;
-
-   m_pTextCtrl_PercentChange = NULL;
-   m_pSlider_PercentChange = NULL;
-
    SetLinearEffectFlag(true);
 }
 
-EffectChangePitch::~EffectChangePitch()
+ChangePitchBase::~ChangePitchBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangePitch::GetSymbol() const
+ComponentInterfaceSymbol ChangePitchBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectChangePitch::GetDescription() const
+TranslatableString ChangePitchBase::GetDescription() const
 {
    return XO("Changes the pitch of a track without changing its tempo");
 }
 
-ManualPageID EffectChangePitch::ManualPage() const
+ManualPageID ChangePitchBase::ManualPage() const
 {
    return L"Change_Pitch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangePitch::GetType() const
+EffectType ChangePitchBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-OptionalMessage EffectChangePitch::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage ChangePitchBase::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectChangePitch&>(*this).DoLoadFactoryDefaults(settings);
+   return const_cast<ChangePitchBase&>(*this).DoLoadFactoryDefaults(settings);
 }
 
 OptionalMessage
-EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
+ChangePitchBase::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    DeduceFrequencies();
 
@@ -186,7 +170,7 @@ EffectChangePitch::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
+bool ChangePitchBase::Process(EffectInstance &, EffectSettings &settings)
 {
 #if USE_SBSMS
    if (mUseSBSMS)
@@ -227,7 +211,7 @@ bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
    }
 }
 
-bool EffectChangePitch::CheckWhetherSkipEffect(const EffectSettings &) const
+bool ChangePitchBase::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_dPercentChange == 0.0);
 }
@@ -411,11 +395,11 @@ bool EffectChangePitch::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-// EffectChangePitch implementation
+// ChangePitchBase implementation
 
 // Deduce m_FromFrequency from the samples at the beginning of
 // the selection. Then set some other params accordingly.
-void EffectChangePitch::DeduceFrequencies()
+void ChangePitchBase::DeduceFrequencies()
 {
     auto FirstTrack = [&]()->const WaveTrack *{
       if( IsBatchProcessing() || !inputTracks() )
@@ -486,7 +470,7 @@ void EffectChangePitch::DeduceFrequencies()
 
 // calculations
 
-void EffectChangePitch::Calc_ToPitch()
+void ChangePitchBase::Calc_ToPitch()
 {
    int nSemitonesChange =
       (int)(m_dSemitonesChange + ((m_dSemitonesChange < 0.0) ? -0.5 : 0.5));
@@ -495,30 +479,30 @@ void EffectChangePitch::Calc_ToPitch()
       m_nToPitch += 12;
 }
 
-void EffectChangePitch::Calc_ToOctave()
+void ChangePitchBase::Calc_ToOctave()
 {
    m_nToOctave = PitchOctave(FreqToMIDInote(m_ToFrequency));
 }
 
-void EffectChangePitch::Calc_SemitonesChange_fromPitches()
+void ChangePitchBase::Calc_SemitonesChange_fromPitches()
 {
    m_dSemitonesChange =
       PitchToMIDInote(m_nToPitch, m_nToOctave) - PitchToMIDInote(m_nFromPitch, m_nFromOctave);
 }
 
-void EffectChangePitch::Calc_SemitonesChange_fromPercentChange()
+void ChangePitchBase::Calc_SemitonesChange_fromPercentChange()
 {
    // Use m_dPercentChange rather than m_FromFrequency & m_ToFrequency, because
    // they start out uninitialized, but m_dPercentChange is always valid.
    m_dSemitonesChange = (12.0 * log((100.0 + m_dPercentChange) / 100.0)) / log(2.0);
 }
 
-void EffectChangePitch::Calc_ToFrequency()
+void ChangePitchBase::Calc_ToFrequency()
 {
    m_ToFrequency = (m_FromFrequency * (100.0 + m_dPercentChange)) / 100.0;
 }
 
-void EffectChangePitch::Calc_PercentChange()
+void ChangePitchBase::Calc_PercentChange()
 {
    m_dPercentChange = 100.0 * (pow(2.0, (m_dSemitonesChange / 12.0)) - 1.0);
 }

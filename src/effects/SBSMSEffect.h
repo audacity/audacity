@@ -65,7 +65,7 @@ private:
    float mTotalStretch;
 
    friend class EffectChangeTempo;
-   friend class EffectChangePitch;
+   friend class ChangePitchBase;
 };
 
 #endif
