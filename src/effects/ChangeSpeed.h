@@ -26,17 +26,15 @@ class NumericTextCtrl;
 class ShuttleGui;
 class WaveChannel;
 
-class EffectChangeSpeed final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class ChangeSpeedBase : public StatefulEffect
 {
 public:
-   static inline EffectChangeSpeed *
-   FetchParameters(EffectChangeSpeed &e, EffectSettings &) { return &e; }
+   static inline ChangeSpeedBase *
+   FetchParameters(ChangeSpeedBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectChangeSpeed();
-   virtual ~EffectChangeSpeed();
+   ChangeSpeedBase();
+   virtual ~ChangeSpeedBase();
 
    // ComponentInterface implementation
 
@@ -56,14 +54,9 @@ public:
       const EffectSettings &settings, double previewLength) const override;
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
-   // EffectChangeSpeed implementation
+   // ChangeSpeedBase implementation
 
    using Gap = std::pair<double, double>;
    using Gaps = std::vector<Gap>;
@@ -74,24 +67,7 @@ private:
       sampleCount start, sampleCount end);
    bool ProcessLabelTrack(LabelTrack *t);
 
-   // handlers
-   void OnText_PercentChange(wxCommandEvent & evt);
-   void OnText_Multiplier(wxCommandEvent & evt);
-   void OnSlider_PercentChange(wxCommandEvent & evt);
-   void OnChoice_Vinyl(wxCommandEvent & evt);
-   void OnTimeCtrl_ToLength(wxCommandEvent & evt);
-   void OnTimeCtrlUpdate(wxCommandEvent & evt);
-
-   // helper functions
-   void Update_Text_PercentChange();   // Update control per current m_PercentChange.
-   void Update_Text_Multiplier();      // Update control per current m_PercentChange.
-   void Update_Slider_PercentChange(); // Update control per current m_PercentChange.
-   void Update_Vinyl();                // Update Vinyl controls for NEW percent change.
-   void Update_TimeCtrl_ToLength();    // Update target length controls for NEW percent change.
-   void UpdateUI();                    // Enable / disable OK / preview.
-
-private:
-   wxWeakRef<wxWindow> mUIParent{};
+protected:
 
    // track related
    int    mCurTrackNum;
@@ -110,14 +86,6 @@ private:
 
    bool mbLoopDetect;
 
-   // controls
-   wxTextCtrl *      mpTextCtrl_PercentChange;
-   wxTextCtrl *      mpTextCtrl_Multiplier;
-   wxSlider *        mpSlider_PercentChange;
-   wxChoice *        mpChoice_FromVinyl;
-   wxChoice *        mpChoice_ToVinyl;
-   NumericTextCtrl * mpFromLengthCtrl;
-   NumericTextCtrl * mpToLengthCtrl;
    double mRate;
 
    // private effect parameters
@@ -126,10 +94,53 @@ private:
    NumericFormatID mFormat;          // time control format
 
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Percentage{ &EffectChangeSpeed::m_PercentChange,
+static constexpr EffectParameter Percentage{ &ChangeSpeedBase::m_PercentChange,
    L"Percentage",    0.0,  -99.0,   4900.0,  1  };
+};
+
+class EffectChangeSpeed :
+    public ChangeSpeedBase,
+    public StatefulEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+   DECLARE_EVENT_TABLE()
+private:
+   // handlers
+   void OnText_PercentChange(wxCommandEvent& evt);
+   void OnText_Multiplier(wxCommandEvent& evt);
+   void OnSlider_PercentChange(wxCommandEvent& evt);
+   void OnChoice_Vinyl(wxCommandEvent& evt);
+   void OnTimeCtrl_ToLength(wxCommandEvent& evt);
+   void OnTimeCtrlUpdate(wxCommandEvent& evt);
+
+   // helper functions
+   void
+   Update_Text_PercentChange();   // Update control per current m_PercentChange.
+   void Update_Text_Multiplier(); // Update control per current m_PercentChange.
+   void
+   Update_Slider_PercentChange(); // Update control per current m_PercentChange.
+   void Update_Vinyl(); // Update Vinyl controls for NEW percent change.
+   void Update_TimeCtrl_ToLength(); // Update target length controls for NEW
+                                    // percent change.
+   void UpdateUI();                 // Enable / disable OK / preview.
+
+   wxWeakRef<wxWindow> mUIParent {};
+
+   // controls
+   wxTextCtrl* mpTextCtrl_PercentChange;
+   wxTextCtrl* mpTextCtrl_Multiplier;
+   wxSlider* mpSlider_PercentChange;
+   wxChoice* mpChoice_FromVinyl;
+   wxChoice* mpChoice_ToVinyl;
+   NumericTextCtrl* mpFromLengthCtrl;
+   NumericTextCtrl* mpToLengthCtrl;
 };
 
 #endif // __AUDACITY_EFFECT_CHANGESPEED__

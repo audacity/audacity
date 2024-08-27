@@ -8,7 +8,7 @@
 
 *******************************************************************//**
 
-\class EffectChangeSpeed
+\class ChangeSpeedBase
 \brief An Effect that affects both pitch & speed.
 
 *//*******************************************************************/
@@ -68,9 +68,9 @@ static const TranslatableStrings kVinylStrings{
 
 // Soundtouch is not reasonable below -99% or above 3000%.
 
-const EffectParameterMethods& EffectChangeSpeed::Parameters() const
+const EffectParameterMethods& ChangeSpeedBase::Parameters() const
 {
-   static CapturedParameters<EffectChangeSpeed,
+   static CapturedParameters<ChangeSpeedBase,
       Percentage
    > parameters;
    return parameters;
@@ -81,10 +81,10 @@ static const double kSliderMax = 100.0;         // warped above zero to actually
 static const double kSliderWarp = 1.30105;      // warp power takes max from 100 to 400.
 
 //
-// EffectChangeSpeed
+// ChangeSpeedBase
 //
 
-const ComponentInterfaceSymbol EffectChangeSpeed::Symbol
+const ComponentInterfaceSymbol ChangeSpeedBase::Symbol
 { XO("Change Speed and Pitch") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectChangeSpeed > reg; }
@@ -99,7 +99,7 @@ BEGIN_EVENT_TABLE(EffectChangeSpeed, wxEvtHandler)
     EVT_COMMAND(ID_ToLength, EVT_TIMETEXTCTRL_UPDATED, EffectChangeSpeed::OnTimeCtrlUpdate)
 END_EVENT_TABLE()
 
-EffectChangeSpeed::EffectChangeSpeed()
+ChangeSpeedBase::ChangeSpeedBase()
 {
    Parameters().Reset(*this);
 
@@ -113,23 +113,23 @@ EffectChangeSpeed::EffectChangeSpeed()
    SetLinearEffectFlag(true);
 }
 
-EffectChangeSpeed::~EffectChangeSpeed()
+ChangeSpeedBase::~ChangeSpeedBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangeSpeed::GetSymbol() const
+ComponentInterfaceSymbol ChangeSpeedBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectChangeSpeed::GetDescription() const
+TranslatableString ChangeSpeedBase::GetDescription() const
 {
    return XO("Changes the speed of a track, also changing its pitch");
 }
 
-ManualPageID EffectChangeSpeed::ManualPage() const
+ManualPageID ChangeSpeedBase::ManualPage() const
 {
    return L"Change_Speed";
 }
@@ -137,19 +137,19 @@ ManualPageID EffectChangeSpeed::ManualPage() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangeSpeed::GetType() const
+EffectType ChangeSpeedBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-OptionalMessage EffectChangeSpeed::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage ChangeSpeedBase::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectChangeSpeed&>(*this).DoLoadFactoryDefaults(settings);
+   return const_cast<ChangeSpeedBase&>(*this).DoLoadFactoryDefaults(settings);
 }
 
 OptionalMessage
-EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
+ChangeSpeedBase::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mFromVinyl = kVinyl_33AndAThird;
    mFormat = NumericConverterFormats::DefaultSelectionFormat().Internal();
@@ -159,26 +159,26 @@ EffectChangeSpeed::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectChangeSpeed::CheckWhetherSkipEffect(const EffectSettings &) const
+bool ChangeSpeedBase::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_PercentChange == 0.0);
 }
 
-double EffectChangeSpeed::CalcPreviewInputLength(
+double ChangeSpeedBase::CalcPreviewInputLength(
    const EffectSettings &, double previewLength) const
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
 
-bool EffectChangeSpeed::Init()
+bool ChangeSpeedBase::Init()
 {
-   // The selection might have changed since the last time EffectChangeSpeed
+   // The selection might have changed since the last time ChangeSpeedBase
    // was invoked, so recalculate the Length parameters.
    mFromLength = mT1 - mT0;
    return true;
 }
 
-auto EffectChangeSpeed::FindGaps(
+auto ChangeSpeedBase::FindGaps(
    const WaveTrack &track, const double curT0, const double curT1) -> Gaps
 {
    // Silenced samples will be inserted in gaps between clips, so capture where
@@ -207,7 +207,7 @@ auto EffectChangeSpeed::FindGaps(
    return gaps;
 }
 
-bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
+bool ChangeSpeedBase::Process(EffectInstance &, EffectSettings &)
 {
    // Similar to SoundTouchBase::Process()
 
@@ -475,11 +475,11 @@ bool EffectChangeSpeed::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-// EffectChangeSpeed implementation
+// ChangeSpeedBase implementation
 
 // Labels are time-scaled linearly inside the affected region, and labels after
 // the region are shifted along according to how the region size changed.
-bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
+bool ChangeSpeedBase::ProcessLabelTrack(LabelTrack *lt)
 {
    RegionTimeWarper warper { mT0, mT1,
       std::make_unique<LinearTimeWarper>(mT0, mT0,
@@ -490,7 +490,7 @@ bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 
 // ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 // and calls libsamplerate code on these blocks.
-bool EffectChangeSpeed::ProcessOne(
+bool ChangeSpeedBase::ProcessOne(
    const WaveChannel &track, WaveChannel &outputTrack,
    sampleCount start, sampleCount end)
 {
@@ -551,7 +551,7 @@ bool EffectChangeSpeed::ProcessOne(
    return bResult;
 }
 
-// handler implementations for EffectChangeSpeed
+// handler implementations for ChangeSpeedBase
 
 void EffectChangeSpeed::OnText_PercentChange(wxCommandEvent & WXUNUSED(evt))
 {
