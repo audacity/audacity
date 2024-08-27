@@ -58,9 +58,9 @@ enum
 
 // Soundtouch is not reasonable below -99% or above 3000%.
 
-const EffectParameterMethods& EffectChangeTempo::Parameters() const
+const EffectParameterMethods& ChangeTempoBase::Parameters() const
 {
-   static CapturedParameters<EffectChangeTempo,
+   static CapturedParameters<ChangeTempoBase,
       Percentage, UseSBSMS
    > parameters;
    return parameters;
@@ -71,10 +71,10 @@ static const double kSliderMax = 100.0;         // warped above zero to actually
 static const double kSliderWarp = 1.30105;      // warp power takes max from 100 to 400.
 
 //
-// EffectChangeTempo
+// ChangeTempoBase
 //
 
-const ComponentInterfaceSymbol EffectChangeTempo::Symbol
+const ComponentInterfaceSymbol ChangeTempoBase::Symbol
 { XO("Change Tempo") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectChangeTempo > reg; }
@@ -87,7 +87,7 @@ BEGIN_EVENT_TABLE(EffectChangeTempo, wxEvtHandler)
     EVT_TEXT(ID_ToLength, EffectChangeTempo::OnText_ToLength)
 END_EVENT_TABLE()
 
-EffectChangeTempo::EffectChangeTempo()
+ChangeTempoBase::ChangeTempoBase()
 {
    // mUseSBSMS always defaults to false and its value is used only if USE_SBSMS
    // is defined
@@ -102,55 +102,55 @@ EffectChangeTempo::EffectChangeTempo()
    SetLinearEffectFlag(true);
 }
 
-EffectChangeTempo::~EffectChangeTempo()
+ChangeTempoBase::~ChangeTempoBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectChangeTempo::GetSymbol() const
+ComponentInterfaceSymbol ChangeTempoBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectChangeTempo::GetDescription() const
+TranslatableString ChangeTempoBase::GetDescription() const
 {
    return XO("Changes the tempo of a selection without changing its pitch");
 }
 
-ManualPageID EffectChangeTempo::ManualPage() const
+ManualPageID ChangeTempoBase::ManualPage() const
 {
    return L"Change_Tempo";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectChangeTempo::GetType() const
+EffectType ChangeTempoBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectChangeTempo::SupportsAutomation() const
+bool ChangeTempoBase::SupportsAutomation() const
 {
    return true;
 }
 
 // Effect implementation
 
-double EffectChangeTempo::CalcPreviewInputLength(
+double ChangeTempoBase::CalcPreviewInputLength(
    const EffectSettings &, double previewLength) const
 {
    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
 
-bool EffectChangeTempo::CheckWhetherSkipEffect(const EffectSettings &) const
+bool ChangeTempoBase::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return (m_PercentChange == 0.0);
 }
 
-bool EffectChangeTempo::Init()
+bool ChangeTempoBase::Init()
 {
-   // The selection might have changed since the last time EffectChangeTempo
+   // The selection might have changed since the last time ChangeTempoBase
    // was invoked, so recalculate the Length parameters.
    m_FromLength = mT1 - mT0;
    m_ToLength = (m_FromLength * 100.0) / (100.0 + m_PercentChange);
@@ -158,7 +158,7 @@ bool EffectChangeTempo::Init()
    return true;
 }
 
-bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
+bool ChangeTempoBase::Process(EffectInstance &, EffectSettings &settings)
 {
    bool success = false;
 

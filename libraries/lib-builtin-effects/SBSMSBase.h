@@ -61,7 +61,7 @@ private:
    int mCurTrackNum;
    float mTotalStretch;
 
-   friend class EffectChangeTempo;
+   friend class ChangeTempoBase;
    friend class ChangePitchBase;
 };
 
