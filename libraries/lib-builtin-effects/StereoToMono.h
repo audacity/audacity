@@ -7,19 +7,14 @@
   Lynn Allan
 
 **********************************************************************/
-
-#ifndef __AUDACITY_EFFECT_STEREO_TO_MONO__
-#define __AUDACITY_EFFECT_STEREO_TO_MONO__
+#pragma once
 
 #include "StatefulEffect.h"
 
-class EffectStereoToMono final : public StatefulEffect
+class BUILTIN_EFFECTS_API StereoToMono : public StatefulEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
-
-   EffectStereoToMono();
-   virtual ~EffectStereoToMono();
 
    // ComponentInterface implementation
 
@@ -36,16 +31,13 @@ public:
 
    // Effect implementation
 
-   bool Process(EffectInstance &instance, EffectSettings &settings) override;
+   bool Process(EffectInstance& instance, EffectSettings& settings) override;
    bool IsHiddenFromMenus() const override;
 
 private:
    // EffectStereoToMono implementation
 
-   bool ProcessOne(TrackList &outputs,
-      sampleCount & curTime, sampleCount totalTime, WaveTrack &track);
-
+   bool ProcessOne(
+      TrackList& outputs, sampleCount& curTime, sampleCount totalTime,
+      WaveTrack& track);
 };
-
-#endif
-

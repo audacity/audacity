@@ -33,7 +33,10 @@ enum class LabelFormat
    WEBVTT,
 };
 
-class AUDACITY_DLL_API LabelStruct
+LABEL_TRACK_API
+extern EnumSetting<bool> LabelStyleSetting;
+
+class LABEL_TRACK_API LabelStruct
 {
 public:
    LabelStruct() = default;
@@ -89,7 +92,7 @@ public:
 
 using LabelArray = std::vector<LabelStruct>;
 
-class AUDACITY_DLL_API LabelTrack final
+class LABEL_TRACK_API LabelTrack final
    : public UniqueChannelTrack<>
    , public Observer::Publisher<struct LabelTrackEvent>
 {

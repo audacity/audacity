@@ -107,6 +107,7 @@ set( SOURCES
       DropTarget.cpp
       EffectAndCommandPluginManager.cpp
       EffectAndCommandPluginManager.h
+      ExportLabelTrack.cpp
       DropoutDetector.cpp
       EnvelopeEditor.cpp
       EnvelopeEditor.h
@@ -129,9 +130,6 @@ set( SOURCES
       KeyboardCapture.h
       LabelDialog.cpp
       LabelDialog.h
-      LabelTrack.cpp
-      LabelTrack.h
-      LabelTrackEditing.cpp
       LangChoice.cpp
       LangChoice.h
       Legacy.cpp
@@ -393,14 +391,10 @@ set( SOURCES
       effects/EqualizationParameters.h
       effects/EqualizationUI.cpp
       effects/EqualizationUI.h
-      effects/Fade.cpp
-      effects/Fade.h
       effects/FindClipping.cpp
       effects/FindClipping.h
       effects/Generator.cpp
       effects/Generator.h
-      effects/Invert.cpp
-      effects/Invert.h
       effects/Limiter.cpp
       effects/Limiter.h
       effects/LimiterEditor.cpp
@@ -423,15 +417,13 @@ set( SOURCES
       effects/CompressorEditor.h
       effects/RealtimeEffectStateUI.cpp
       effects/RealtimeEffectStateUI.h
-      effects/Repair.cpp
-      effects/Repair.h
+      effects/RegisterBuiltinEffects.cpp
+      effects/RegisterBuiltinEffects.h
       effects/Repeat.cpp
       effects/Repeat.h
       effects/Reverb.cpp
       effects/Reverb.h
       effects/Reverb_libSoX.h
-      effects/Reverse.cpp
-      effects/Reverse.h
       effects/SBSMSEffect.cpp
       effects/SBSMSEffect.h
       effects/ScienFilter.cpp
@@ -446,8 +438,6 @@ set( SOURCES
       effects/StatefulEffectUIServices.h
       effects/StatelessPerTrackEffect.cpp
       effects/StatelessPerTrackEffect.h
-      effects/StereoToMono.cpp
-      effects/StereoToMono.h
       effects/TimeScale.cpp
       effects/TimeScale.h
       effects/ToneGen.cpp

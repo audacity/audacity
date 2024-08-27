@@ -6,76 +6,55 @@
 
   Lynn Allan
 
-*******************************************************************//**
-
-\class EffectStereoToMono
-\brief An Effect to convert stereo to mono.
-
-*//*******************************************************************/
-
-
+**********************************************************************/
 #include "StereoToMono.h"
+#include "BasicUI.h"
 #include "EffectOutputTracks.h"
-#include "LoadEffects.h"
-
 #include "Mix.h"
 #include "MixAndRender.h"
 #include "Project.h"
 #include "RealtimeEffectList.h"
 #include "WaveTrack.h"
-#include "ProgressDialog.h"
 
-const ComponentInterfaceSymbol EffectStereoToMono::Symbol
-{ XO("Stereo To Mono") };
+const ComponentInterfaceSymbol StereoToMono::Symbol { XO("Stereo To Mono") };
 
-namespace{ BuiltinEffectsModule::Registration< EffectStereoToMono > reg; }
-
-EffectStereoToMono::EffectStereoToMono()
-{
-}
-
-EffectStereoToMono::~EffectStereoToMono()
-{
-}
-
-// ComponentInterface implementation
-
-ComponentInterfaceSymbol EffectStereoToMono::GetSymbol() const
+ComponentInterfaceSymbol StereoToMono::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectStereoToMono::GetDescription() const
+TranslatableString StereoToMono::GetDescription() const
 {
    return XO("Converts stereo tracks to mono");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectStereoToMono::GetType() const
+EffectType StereoToMono::GetType() const
 {
-   // Really EffectTypeProcess, but this prevents it from showing in the Effect Menu
+   // Really EffectTypeProcess, but this prevents it from showing in the Effect
+   // Menu
    return EffectTypeHidden;
 }
 
-bool EffectStereoToMono::IsInteractive() const
+bool StereoToMono::IsInteractive() const
 {
    return false;
 }
 
-unsigned EffectStereoToMono::GetAudioInCount() const
+unsigned StereoToMono::GetAudioInCount() const
 {
    return 2;
 }
 
-unsigned EffectStereoToMono::GetAudioOutCount() const
+unsigned StereoToMono::GetAudioOutCount() const
 {
    return 1;
 }
 
 // Effect implementation
 
-bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
+bool StereoToMono::Process(EffectInstance&, EffectSettings&)
 {
    // Do not use mWaveTracks here.  We will possibly DELETE tracks,
    // so we must use the "real" tracklist.
@@ -92,8 +71,10 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
    sampleCount totalTime = 0;
 
    auto trackRange = outputs.Get().Selected<WaveTrack>();
-   for (const auto left : trackRange) {
-      if (left->Channels().size() > 1) {
+   for (const auto left : trackRange)
+   {
+      if (left->Channels().size() > 1)
+      {
          auto start = left->TimeToLongSamples(left->GetStartTime());
          auto end = left->TimeToLongSamples(left->GetEndTime());
          totalTime += (end - start);
@@ -105,8 +86,10 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
    mProgress->SetMessage(XO("Mixing down to mono"));
 
-   for (const auto track : trackRange) {
-      if (track->Channels().size() > 1) {
+   for (const auto track : trackRange)
+   {
+      if (track->Channels().size() > 1)
+      {
          if (!ProcessOne(outputs.Get(), curTime, totalTime, *track))
             break;
       }
@@ -118,8 +101,9 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-bool EffectStereoToMono::ProcessOne(TrackList &outputs,
-   sampleCount & curTime, sampleCount totalTime, WaveTrack &track)
+bool StereoToMono::ProcessOne(
+   TrackList& outputs, sampleCount& curTime, sampleCount totalTime,
+   WaveTrack& track)
 {
    auto idealBlockLen = track.GetMaxBlockSize() * 2;
    bool bResult = true;
@@ -146,17 +130,17 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    outTrack->ConvertToSampleFormat(floatSample);
 
    double denominator = track.GetChannelVolume(0) + track.GetChannelVolume(1);
-   while (auto blockLen = mixer.Process()) {
+   while (auto blockLen = mixer.Process())
+   {
       auto buffer = mixer.GetBuffer();
       for (auto i = 0; i < blockLen; i++)
-         ((float *)buffer)[i] /= denominator;
+         ((float*)buffer)[i] /= denominator;
 
       // If mixing channels that both had only 16 bit effective format
       // (for example), and no gains or envelopes, still there should be
       // dithering because of the averaging above, which may introduce samples
       // lying between the quantization levels.  So use widestSampleFormat.
-      outTrack->Append(0,
-         buffer, floatSample, blockLen, 1, widestSampleFormat);
+      outTrack->Append(0, buffer, floatSample, blockLen, 1, widestSampleFormat);
 
       curTime += blockLen;
       if (TotalProgress(curTime.as_double() / totalTime.as_double()))
@@ -172,7 +156,7 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    return bResult;
 }
 
-bool EffectStereoToMono::IsHiddenFromMenus() const
+bool StereoToMono::IsHiddenFromMenus() const
 {
    return true;
 }

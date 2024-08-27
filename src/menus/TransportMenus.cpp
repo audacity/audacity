@@ -1,7 +1,7 @@
 #include "AudioIO.h"
 #include "../CommonCommandFlags.h"
 #include "DeviceManager.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -335,7 +335,7 @@ void OnPunchAndRoll(const CommandContext &context)
       // play recording tracks only
       for (auto &pTrack : tracks)
          transportTracks.playbackSequences.push_back(pTrack);
-      
+
    // Unlike with the usual recording, a track may be chosen both for playback
    // and recording.
    std::copy(tracks.begin(), tracks.end(),

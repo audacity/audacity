@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../AdornedRulerPanel.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
@@ -204,7 +204,7 @@ void PlayIndicatorOverlay::OnTimer(Observer::Message)
          if (!pinned &&
              mode != PlayMode::oneSecondPlay &&
              !gAudioIO->IsPaused() &&
-             // Bug 2656 allow scrolling when paused in 
+             // Bug 2656 allow scrolling when paused in
              // scrubbing/play-at-speed.
              // ONLY do this additional test if scrubbing/play-at-speed
              // is active.

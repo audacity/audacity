@@ -5,7 +5,7 @@
 
 #include "LabelTrackView.h"
 #include "../../ui/TimeShiftHandle.h"
-#include "../../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "ViewInfo.h"
 
 class LabelTrackShifter final : public TrackShifter {
@@ -32,7 +32,7 @@ public:
    {
    }
    Track &GetTrack() const override { return *mpTrack; }
-   
+
    static inline size_t& GetIndex(ChannelGroupInterval &interval)
    {
       return static_cast<LabelTrack::Interval&>(interval).index;

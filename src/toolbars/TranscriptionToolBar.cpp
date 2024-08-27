@@ -842,7 +842,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
 
 }
 
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "ProjectHistory.h"
 #include "../TrackPanel.h"
 #include "TrackFocus.h"

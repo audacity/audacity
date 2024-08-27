@@ -35,7 +35,7 @@
 #include "../../widgets/valnum.h"
 #include "AudacityMessageBox.h"
 
-#include "../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "WaveTrack.h"
 
 enum
