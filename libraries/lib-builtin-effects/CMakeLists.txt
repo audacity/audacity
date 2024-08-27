@@ -13,6 +13,8 @@ set( SOURCES
    Fade.h
    Invert.cpp
    Invert.h
+   NormalizeBase.cpp
+   NormalizeBase.h
    Repair.cpp
    Repair.h
    Reverse.cpp
