@@ -25,6 +25,8 @@ set( SOURCES
    ReverbBase.h
    Reverse.cpp
    Reverse.h
+   SoundTouchBase.cpp
+   SoundTouchBase.h
    StereoToMono.cpp
    StereoToMono.h
    ToneGenBase.cpp
@@ -33,6 +35,8 @@ set( SOURCES
 set( LIBRARIES
    lib-dynamic-range-processor-interface
    lib-label-track-interface
+   lib-note-track-interface
+   $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
 )
 audacity_library( lib-builtin-effects "${SOURCES}" "${LIBRARIES}"
    "" ""

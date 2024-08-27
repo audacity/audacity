@@ -21,7 +21,7 @@
 #include "SBSMSEffect.h"
 #endif
 
-#include "SoundTouchEffect.h"
+#include "SoundTouchBase.h"
 #include "ShuttleAutomation.h"
 #include <wx/weakref.h>
 

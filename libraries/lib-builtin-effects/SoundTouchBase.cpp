@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-SoundTouchEffect.cpp
+SoundTouchBase.cpp
 
 Dominic Mazzoni, Vaughan Johnson
 
@@ -15,7 +15,7 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 
 
 #if USE_SOUNDTOUCH
-#include "SoundTouchEffect.h"
+#include "SoundTouchBase.h"
 #include "EffectOutputTracks.h"
 
 #include <math.h>

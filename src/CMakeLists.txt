@@ -427,8 +427,6 @@ set( SOURCES
       effects/ScoreAlignDialog.h
       effects/Silence.cpp
       effects/Silence.h
-      effects/SoundTouchEffect.cpp
-      effects/SoundTouchEffect.h
       effects/StatefulEffectUIServices.cpp
       effects/StatefulEffectUIServices.h
       effects/StatelessPerTrackEffect.cpp
@@ -1020,7 +1018,6 @@ set( LIBRARIES
       ZLIB::ZLIB
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_SBSMS}>:libsbsms>
-      $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>

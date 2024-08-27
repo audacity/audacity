@@ -211,12 +211,12 @@ bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
       };
       IdentityTimeWarper warper;
 #ifdef USE_MIDI
-      // Pitch shifting note tracks is currently only supported by SoundTouchEffect
+      // Pitch shifting note tracks is currently only supported by SoundTouchBase
       // and non-real-time-preview effects require an audio track selection.
       //
       // Note: m_dSemitonesChange is private to ChangePitch because it only
       // needs to pass it along to mSoundTouch (above). I added mSemitones
-      // to SoundTouchEffect (the super class) to convey this value
+      // to SoundTouchBase (the super class) to convey this value
       // to process Note tracks. This approach minimizes changes to existing
       // code, but it would be cleaner to change all m_dSemitonesChange to
       // mSemitones, make mSemitones exist with or without USE_MIDI, and
