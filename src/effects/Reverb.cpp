@@ -29,9 +29,9 @@
 #include "Reverb_libSoX.h"
 
 
-const EffectParameterMethods& EffectReverb::Parameters() const
+const EffectParameterMethods& ReverbBase::Parameters() const
 {
-   static CapturedParameters<EffectReverb,
+   static CapturedParameters<ReverbBase,
       RoomSize, PreDelay, Reverberance, HfDamping, ToneLow, ToneHigh,
       WetGain, DryGain, StereoWidth, WetOnly
    > parameters;
@@ -112,10 +112,10 @@ struct EffectReverbState
 
 
 //
-// EffectReverb
+// ReverbBase
 //
 
-const ComponentInterfaceSymbol EffectReverb::Symbol
+const ComponentInterfaceSymbol ReverbBase::Symbol
 { XO("Reverb") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectReverb > reg; }
@@ -201,7 +201,7 @@ bool EffectReverb::Editor::ValidateUI()
       {
          // pass back the modified settings to the MessageBuffer
 
-         EffectReverb::GetSettings(settings) = mSettings;
+         ReverbBase::GetSettings(settings) = mSettings;
          return nullptr;
       }
    );
@@ -210,7 +210,7 @@ bool EffectReverb::Editor::ValidateUI()
 }
 
 
-struct EffectReverb::Instance
+struct ReverbBase::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
 {
@@ -242,7 +242,7 @@ struct EffectReverb::Instance
    bool RealtimeAddProcessor(EffectSettings& settings, EffectOutputs *,
       unsigned numChannels, float sampleRate) override
    {
-      EffectReverb::Instance slave(mProcessor);
+      ReverbBase::Instance slave(mProcessor);
 
       // The notion of ChannelNames is unavailable here,
       // so we'll have to force the stereo init, if this is the case
@@ -289,7 +289,7 @@ struct EffectReverb::Instance
                               is.mPreDelay, is.mStereoWidth, is.mToneLow, is.mToneHigh   );
                }
             }
-         }         
+         }
 
          mLastAppliedSettings = incomingSettings;
       }
@@ -332,7 +332,7 @@ struct EffectReverb::Instance
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
    EffectReverbState mState;
-   std::vector<EffectReverb::Instance> mSlaves;
+   std::vector<ReverbBase::Instance> mSlaves;
 
    unsigned mChannels{ 2 };
 
@@ -349,47 +349,47 @@ EffectReverb::MakeInstance() const
 }
 
 
-EffectReverb::EffectReverb()
+ReverbBase::ReverbBase()
 {
    SetLinearEffectFlag(true);
 }
 
-EffectReverb::~EffectReverb()
+ReverbBase::~ReverbBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectReverb::GetSymbol() const
+ComponentInterfaceSymbol ReverbBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectReverb::GetDescription() const
+TranslatableString ReverbBase::GetDescription() const
 {
    return XO("Adds ambience or a \"hall effect\"");
 }
 
-ManualPageID EffectReverb::ManualPage() const
+ManualPageID ReverbBase::ManualPage() const
 {
    return L"Reverb";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectReverb::GetType() const
+EffectType ReverbBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-auto EffectReverb::RealtimeSupport() const -> RealtimeSince
+auto ReverbBase::RealtimeSupport() const -> RealtimeSince
 {
    return RealtimeSince::After_3_1;
 }
 
 static size_t BLOCK = 16384;
 
-bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
+bool ReverbBase::Instance::ProcessInitialize(EffectSettings& settings,
    double sampleRate, ChannelNames chanMap)
 {
    // For descructive processing, fix the number of channels, maybe as 1 not 2
@@ -401,7 +401,7 @@ bool EffectReverb::Instance::ProcessInitialize(EffectSettings& settings,
 }
 
 
-bool EffectReverb::Instance::InstanceInit(EffectSettings& settings,
+bool ReverbBase::Instance::InstanceInit(EffectSettings& settings,
    double sampleRate, EffectReverbState& state,
    ChannelNames chanMap, bool forceStereo)
 {
@@ -437,18 +437,18 @@ bool EffectReverb::Instance::InstanceInit(EffectSettings& settings,
    return true;
 }
 
-bool EffectReverb::Instance::ProcessFinalize() noexcept
+bool ReverbBase::Instance::ProcessFinalize() noexcept
 {
    return true;
 }
 
-size_t EffectReverb::Instance::ProcessBlock(EffectSettings& settings,
+size_t ReverbBase::Instance::ProcessBlock(EffectSettings& settings,
    const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
-size_t EffectReverb::Instance::InstanceProcess(EffectSettings& settings, EffectReverbState& state,
+size_t ReverbBase::Instance::InstanceProcess(EffectSettings& settings, EffectReverbState& state,
    const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    auto& rs = GetSettings(settings);
@@ -461,7 +461,7 @@ size_t EffectReverb::Instance::InstanceProcess(EffectSettings& settings, EffectR
       ichans[c] = inBlock[c];
       ochans[c] = outBlock[c];
    }
-   
+
    float const dryMult = rs.mWetOnly ? 0 : dB_to_linear(rs.mDryGain);
 
    auto remaining = blockLen;
@@ -494,7 +494,7 @@ size_t EffectReverb::Instance::InstanceProcess(EffectSettings& settings, EffectR
       {
          for (decltype(len) i = 0; i < len; i++)
          {
-            ochans[0][i] = dryMult * 
+            ochans[0][i] = dryMult *
                            state.mP[0].dry[i] +
                            state.mP[0].wet[0][i];
          }
@@ -512,7 +512,7 @@ size_t EffectReverb::Instance::InstanceProcess(EffectSettings& settings, EffectR
    return blockLen;
 }
 
-RegistryPaths EffectReverb::GetFactoryPresets() const
+RegistryPaths ReverbBase::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -526,14 +526,14 @@ RegistryPaths EffectReverb::GetFactoryPresets() const
 
 
 OptionalMessage
-EffectReverb::LoadFactoryPreset(int id, EffectSettings& settings) const
+ReverbBase::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
       return {};
    }
 
-   EffectReverb::GetSettings(settings) = FactoryPresets[id].preset;
+   ReverbBase::GetSettings(settings) = FactoryPresets[id].preset;
 
    return { nullptr };
 }
@@ -671,7 +671,7 @@ bool operator==(const EffectReverbSettings& a, const EffectReverbSettings& b)
             && (a.mWetGain      == b.mWetGain)
             && (a.mDryGain      == b.mDryGain)
             && (a.mStereoWidth  == b.mStereoWidth)
-            && (a.mWetOnly      == b.mWetOnly);           
+            && (a.mWetOnly      == b.mWetOnly);
 }
 
 bool OnlySimpleParametersChanged(const EffectReverbSettings& a, const EffectReverbSettings& b)
@@ -694,7 +694,7 @@ bool OnlySimpleParametersChanged(const EffectReverbSettings& a, const EffectReve
 
                (a.mRoomSize     == b.mRoomSize)
             && (a.mPreDelay     == b.mPreDelay)
-            && (a.mStereoWidth  == b.mStereoWidth);           
+            && (a.mStereoWidth  == b.mStereoWidth);
 
    return oneSimpleParameterChanged && allNonSimpleParametersStayedTheSame;
 }

@@ -48,17 +48,17 @@ struct EffectReverbSettings
 };
 
 
-class EffectReverb final : public EffectWithSettings<
-   EffectReverbSettings, StatelessPerTrackEffect
+class ReverbBase : public EffectWithSettings<
+   EffectReverbSettings, PerTrackEffect
 >
 {
 public:
 
-   
+
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectReverb();
-   virtual ~EffectReverb();
+   ReverbBase();
+   virtual ~ReverbBase();
 
    // ComponentInterface implementation
 
@@ -75,25 +75,11 @@ public:
 
    RealtimeSince RealtimeSupport() const override;
 
-   // Effect implementation
-
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
-
-   struct Editor;
 
    struct Instance;
 
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
+protected:
 
-private:
-   // EffectReverb implementation
-
-
-private:
-   
    const EffectParameterMethods& Parameters() const override;
 
 static constexpr EffectParameter RoomSize{ &EffectReverbSettings::mRoomSize,  L"RoomSize",
@@ -125,6 +111,18 @@ static constexpr EffectParameter StereoWidth{ &EffectReverbSettings::mStereoWidt
 
 static constexpr EffectParameter WetOnly{ &EffectReverbSettings::mWetOnly,   L"WetOnly",
                                            EffectReverbSettings::wetOnlyDefault,   false,   true, 1  };
+};
+
+class EffectReverb : public ReverbBase, public StatelessEffectUIServices
+{
+public:
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+
+   std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) const override;
+
+   struct Editor;
 };
 
 #endif
