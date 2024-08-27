@@ -19,6 +19,8 @@ public:
     Clip clip(const ClipKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
 
+    void onTrackAdded(const Track& track) override;
+
     void onClipChanged(const Clip& clip) override;
     void onClipAdded(const Clip& clip) override;
     void onClipRemoved(const Clip& clip) override;
@@ -40,7 +42,7 @@ private:
     std::shared_ptr<Au3Impl> m_impl;
 
     mutable std::map<TrackId, muse::async::ChangedNotifier<Clip>> m_clipsChanged;
-    mutable muse::async::ChangedNotifier<trackedit::Track> m_trackChangedNotifier;
+    mutable muse::async::ChangedNotifier<trackedit::Track> m_tracksChanged;
     mutable muse::async::Channel<au::trackedit::TimeSignature> m_timeSignatureChanged;
 };
 

@@ -28,6 +28,8 @@ public:
     virtual Clip clip(const ClipKey& key) const = 0;
     virtual muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const = 0;
 
+    virtual void onTrackAdded(const Track& track) = 0;
+
     virtual void onClipChanged(const Clip& clip) = 0;
     virtual void onClipAdded(const Clip& clip) = 0;
     virtual void onClipRemoved(const Clip& clip) = 0;

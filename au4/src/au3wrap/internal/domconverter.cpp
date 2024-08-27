@@ -7,6 +7,24 @@
 
 using namespace au::au3;
 
+namespace {
+static au::trackedit::TrackType trackType(const ::Track* track)
+{
+    switch (track->NChannels()) {
+    case 0:
+        return au::trackedit::TrackType::Label;
+    case 1:
+        return au::trackedit::TrackType::Mono;
+    case 2:
+        return au::trackedit::TrackType::Stereo;
+    default:
+        break;
+    }
+
+    return au::trackedit::TrackType::Undefined;
+}
+}
+
 au::trackedit::TrackId DomConverter::trackId(const TrackId& au3trackId)
 {
     return *(reinterpret_cast<const long*>(&au3trackId));
@@ -35,4 +53,14 @@ au::trackedit::Clip DomConverter::clip(const WaveTrack* waveTrack, const WaveCli
     clip.color = colors.at(colorIdx);
 
     return clip;
+}
+
+au::trackedit::Track DomConverter::track(const ::Track *waveTrack)
+{
+    trackedit::Track au4t;
+    au4t.id = DomConverter::trackId(waveTrack->GetId());
+    au4t.title = wxToString(waveTrack->GetName());
+    au4t.type = trackType(waveTrack);
+
+    return au4t;
 }

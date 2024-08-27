@@ -161,6 +161,24 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Render pitch and speed")
              ),
     //! ----------
+    UiAction("new-mono-track",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "New mono track"),
+             TranslatableString("action", "New mono track")
+             ),
+    UiAction("new-stereo-track",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "New stereo track"),
+             TranslatableString("action", "New stereo track")
+             ),
+    UiAction("new-label-track",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "New label track"),
+             TranslatableString("action", "New label track")
+             )
 };
 
 TrackeditUiActions::TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller)

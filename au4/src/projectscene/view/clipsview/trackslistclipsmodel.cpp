@@ -28,11 +28,25 @@ void TracksListClipsModel::load()
 
     m_trackList = prj->trackList();
 
-    //! TODO Subscribe on tracks changed
-
     m_dataSelectedTracks = selectionController()->dataSelectedOnTracks();
     selectionController()->dataSelectedOnTracksChanged().onReceive(this, [this](const std::vector<trackedit::TrackId>& tracks) {
         setDataSelectedTracks(tracks);
+    });
+
+    m_trackList.onItemAdded(this, [this](const trackedit::Track& track) {
+        beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
+        m_trackList.push_back(track);
+        endInsertRows();
+    });
+
+    m_trackList.onItemRemoved(this, [](const trackedit::Track& track) {
+        Q_UNUSED(track);
+        NOT_IMPLEMENTED;
+    });
+
+    m_trackList.onItemChanged(this, [](const trackedit::Track& track) {
+        Q_UNUSED(track);
+        NOT_IMPLEMENTED;
     });
 
     endResetModel();

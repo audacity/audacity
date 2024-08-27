@@ -19,6 +19,9 @@ static const ActionCode CLIP_CUT_SELECTED_CODE("clip-cut-selected");
 static const ActionCode CLIP_COPY_SELECTED_CODE("clip-copy-selected");
 static const ActionCode CLIP_DELETE_SELECTED_CODE("clip-delete-selected");
 static const ActionCode PASTE("paste");
+static const ActionCode NEW_MONO_TRACK("new-mono-track");
+static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
+static const ActionCode NEW_LABEL_TRACK("new-label-track");
 
 void TrackeditActionsController::init()
 {
@@ -38,6 +41,9 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, "set-selection-to-loop", this, &TrackeditActionsController::setSelectionToLoop);
     dispatcher()->reg(this, "set-loop-region-in", this, &TrackeditActionsController::setLoopRegionIn);
     dispatcher()->reg(this, "set-loop-region-out", this, &TrackeditActionsController::setLoopRegionOut);
+    dispatcher()->reg(this, NEW_MONO_TRACK, this, &TrackeditActionsController::newMonoTrack);
+    dispatcher()->reg(this, NEW_STEREO_TRACK, this, &TrackeditActionsController::newStereoTrack);
+    dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
 }
 
 void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -201,6 +207,21 @@ void TrackeditActionsController::setLoopRegionIn()
 void TrackeditActionsController::setLoopRegionOut()
 {
     NOT_IMPLEMENTED;
+}
+
+void TrackeditActionsController::newMonoTrack()
+{
+    trackeditInteraction()->newMonoTrack();
+}
+
+void TrackeditActionsController::newStereoTrack()
+{
+    trackeditInteraction()->newStereoTrack();
+}
+
+void TrackeditActionsController::newLabelTrack()
+{
+    trackeditInteraction()->newLabelTrack();
 }
 
 void TrackeditActionsController::pushProjectHistoryPasteState()

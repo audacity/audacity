@@ -44,6 +44,9 @@ public:
     bool copyTrackDataIntoClipboard(const trackedit::TrackId trackId, double begin, double end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClipData(const trackedit::ClipKey& clipKey, double begin, double end) override;
+    void newMonoTrack() override;
+    void newStereoTrack() override;
+    void newLabelTrack() override;;
     audio::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
 
 private:
