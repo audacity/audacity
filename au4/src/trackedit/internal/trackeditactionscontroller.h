@@ -53,6 +53,10 @@ private:
     void setLoopRegionIn();
     void setLoopRegionOut();
 
+    void newMonoTrack();
+    void newStereoTrack();
+    void newLabelTrack();
+
     void pushProjectHistoryPasteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
 

@@ -2,9 +2,12 @@
 
 #include <algorithm>
 
+#include "ProjectRate.h"
+#include "QualitySettings.h"
 #include "global/types/number.h"
 
 #include "libraries/lib-project/Project.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 
@@ -327,6 +330,55 @@ bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, double be
     }
 
     return true;
+}
+
+void Au3Interaction::newMonoTrack()
+{
+    auto &project = projectRef();
+    auto &tracks = ::TrackList::Get(project);
+    auto &trackFactory = ::WaveTrackFactory::Get(project);
+
+    sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();
+    auto rate = ::ProjectRate::Get(project).GetRate();
+
+    auto track = trackFactory.Create(defaultFormat, rate);
+    track->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+    tracks.Add(track);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackAdded(DomConverter::track(track.get()));
+
+    //! TODO AU4: set selected?
+    //! TODO AU4: add action to the history
+    // ProjectHistory::Get( project )
+    //     .PushState(XO("Created new audio track"), XO("New Track"));
+}
+
+void Au3Interaction::newStereoTrack()
+{
+    auto &project = projectRef();
+    auto &tracks = ::TrackList::Get(project);
+    auto &trackFactory = ::WaveTrackFactory::Get(project);
+
+    sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();
+    auto rate = ::ProjectRate::Get(project).GetRate();
+
+    tracks.Add(trackFactory.Create(2, defaultFormat, rate));
+    auto &newTrack = **tracks.rbegin();
+    newTrack.SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackAdded(DomConverter::track(*tracks.rbegin()));
+
+    //! TODO AU4: set selected?
+    //! TODO AU4: add action to the history
+    // ProjectHistory::Get( project )
+        // .PushState(XO("Created new stereo audio track"), XO("New Track"));
+}
+
+void Au3Interaction::newLabelTrack()
+{
+    NOT_IMPLEMENTED;
 }
 
 au::audio::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) const

@@ -40,22 +40,6 @@ Au3TrackeditProject::~Au3TrackeditProject()
     m_impl->tracksSubc.Reset();
 }
 
-static au::trackedit::TrackType trackType(const ::Track* track)
-{
-    switch (track->NChannels()) {
-    case 0:
-        return au::trackedit::TrackType::Label;
-    case 1:
-        return au::trackedit::TrackType::Mono;
-    case 2:
-        return au::trackedit::TrackType::Stereo;
-    default:
-        break;
-    }
-
-    return au::trackedit::TrackType::Undefined;
-}
-
 std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
 {
     std::vector<au::trackedit::TrackId> au4trackIds;
@@ -70,16 +54,13 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
 muse::async::NotifyList<au::trackedit::Track> Au3TrackeditProject::trackList() const
 {
     muse::async::NotifyList<Track> au4tracks;
-    au4tracks.setNotify(m_trackChangedNotifier.notify());
 
     for (const ::Track* t : *m_impl->trackList) {
-        Track au4t;
-        au4t.id = DomConverter::trackId(t->GetId());
-        au4t.title = wxToString(t->GetName());
-        au4t.type = trackType(t);
-
+        Track au4t = DomConverter::track(t);
         au4tracks.push_back(std::move(au4t));
     }
+
+    au4tracks.setNotify(m_tracksChanged.notify());
 
     return au4tracks;
 }
@@ -147,6 +128,12 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     clips.setNotify(notifier.notify());
 
     return clips;
+}
+
+void Au3TrackeditProject::onTrackAdded(const Track &track)
+{
+    async::ChangedNotifier<Track>& notifier = m_tracksChanged;
+    notifier.itemAdded(track);
 }
 
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const

@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 
+#include "actions/iactionsdispatcher.h"
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
@@ -32,6 +33,7 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
     Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged)
 
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     TracksListModel(QObject* parent = nullptr);
@@ -39,7 +41,7 @@ public:
 
     Q_INVOKABLE void load();
 
-    Q_INVOKABLE void addTrack();
+    Q_INVOKABLE void addTrack(TrackTypes::Type type);
     Q_INVOKABLE void addTracks(TrackTypes::Type type, int quantity);
     Q_INVOKABLE void duplicateTrack(int index);
     Q_INVOKABLE void deleteTrack(int index);
@@ -120,7 +122,6 @@ private:
 
     QList<TrackItem*> m_trackList;
     muse::uicomponents::ItemMultiSelectionModel* m_selectionModel = nullptr;
-    std::shared_ptr<muse::async::Asyncable> m_tracksNotifyReceiver = nullptr;
 };
 }
 

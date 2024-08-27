@@ -11,8 +11,6 @@ using namespace au::trackedit;
 TracksListModel::TracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
-    m_tracksNotifyReceiver = std::make_shared<muse::async::Asyncable>();
-
     m_selectionModel = new muse::uicomponents::ItemMultiSelectionModel(this);
     m_selectionModel->setAllowedModifiers(Qt::ShiftModifier);
 
@@ -77,11 +75,14 @@ void TracksListModel::load()
         updateRemovingAvailability();
     };
 
-    tracks.onItemAdded(m_tracksNotifyReceiver.get(), [updateTrackItem](const Track& track) {
+    tracks.onItemAdded(this, [this, updateTrackItem](const Track& track) {
+        beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
+        m_trackList.push_back(buildTrackItem(track));
         updateTrackItem(track);
+        endInsertRows();
     });
 
-    tracks.onItemChanged(m_tracksNotifyReceiver.get(), [updateTrackItem](const Track& track) {
+    tracks.onItemChanged(this, [updateTrackItem](const Track& track) {
         updateTrackItem(track);
     });
 
@@ -93,16 +94,22 @@ void TracksListModel::load()
     emit isAddingAvailableChanged(true);
 }
 
-void TracksListModel::addTrack()
+void TracksListModel::addTrack(TrackTypes::Type type)
 {
-    NOT_IMPLEMENTED;
+    if (type == TrackTypes::Type::MONO) {
+        dispatcher()->dispatch("new-mono-track");
+    } else if (type == TrackTypes::Type::STEREO) {
+        dispatcher()->dispatch("new-stereo-track");
+    } else if (type == TrackTypes::Type::LABEL) {
+        dispatcher()->dispatch("new-label-track");
+    }
 }
 
 void TracksListModel::addTracks(TrackTypes::Type type, int quantity)
 {
-    UNUSED(type);
-    UNUSED(quantity);
-    NOT_IMPLEMENTED;
+    for (int i = 0; i < quantity; ++i) {
+        addTrack(type);
+    }
 }
 
 void TracksListModel::duplicateTrack(int index)
@@ -437,7 +444,7 @@ bool TracksListModel::removeRows(int row, int count, const QModelIndex& parent)
 
 void TracksListModel::onProjectChanged()
 {
-    m_tracksNotifyReceiver->disconnectAll();
+    this->disconnectAll();
 
     if (m_isLoadingBlocked) {
         m_projectChangedWhileLoadingWasBlocked = true;

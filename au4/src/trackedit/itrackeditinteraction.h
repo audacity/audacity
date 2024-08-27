@@ -34,6 +34,9 @@ public:
     virtual bool copyTrackDataIntoClipboard(const TrackId trackId, double begin, double end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClipData(const ClipKey& clipKey, double begin, double end) = 0;
+    virtual void newMonoTrack() = 0;
+    virtual void newStereoTrack() = 0;
+    virtual void newLabelTrack() = 0;
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
 };
 }
