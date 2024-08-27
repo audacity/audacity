@@ -8,7 +8,7 @@
 
 *******************************************************************//**
 
-\class EffectLoudness
+\class LoudnessBase
 \brief An Effect to bring the loudness level up to a chosen level.
 
 *//*******************************************************************/
@@ -33,15 +33,15 @@
 
 #include "LoadEffects.h"
 
-static const EnumValueSymbol kNormalizeTargetStrings[EffectLoudness::nAlgos] =
+static const EnumValueSymbol kNormalizeTargetStrings[LoudnessBase::nAlgos] =
 {
    { XO("perceived loudness") },
    { XO("RMS") }
 };
 
-const EffectParameterMethods& EffectLoudness::Parameters() const
+const EffectParameterMethods& LoudnessBase::Parameters() const
 {
-   static CapturedParameters<EffectLoudness,
+   static CapturedParameters<LoudnessBase,
       StereoInd, LUFSLevel, RMSLevel, DualMono, NormalizeTo
    > parameters;
    return parameters;
@@ -53,48 +53,48 @@ BEGIN_EVENT_TABLE(EffectLoudness, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectLoudness::OnUpdateUI)
 END_EVENT_TABLE()
 
-const ComponentInterfaceSymbol EffectLoudness::Symbol
+const ComponentInterfaceSymbol LoudnessBase::Symbol
 { XO("Loudness Normalization") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectLoudness > reg; }
 
-EffectLoudness::EffectLoudness()
+LoudnessBase::LoudnessBase()
 {
    Parameters().Reset(*this);
    SetLinearEffectFlag(false);
 }
 
-EffectLoudness::~EffectLoudness()
+LoudnessBase::~LoudnessBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectLoudness::GetSymbol() const
+ComponentInterfaceSymbol LoudnessBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectLoudness::GetDescription() const
+TranslatableString LoudnessBase::GetDescription() const
 {
    return XO("Sets the loudness of one or more tracks");
 }
 
-ManualPageID EffectLoudness::ManualPage() const
+ManualPageID LoudnessBase::ManualPage() const
 {
    return L"Loudness_Normalization";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectLoudness::GetType() const
+EffectType LoudnessBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
+bool LoudnessBase::Process(EffectInstance &, EffectSettings &)
 {
    const float ratio = DB_TO_LINEAR(
       (mNormalizeTo == kLoudness)
@@ -348,11 +348,11 @@ bool EffectLoudness::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-// EffectLoudness implementation
+// LoudnessBase implementation
 
 /// Get required buffer size for the largest whole track and allocate buffers.
 /// This reduces the amount of allocations required.
-void EffectLoudness::AllocBuffers(TrackList &outputs)
+void LoudnessBase::AllocBuffers(TrackList &outputs)
 {
    mTrackBufferCapacity = 0;
    bool stereoTrackFound = false;
@@ -376,13 +376,13 @@ void EffectLoudness::AllocBuffers(TrackList &outputs)
       mTrackBuffer[1].reinit(mTrackBufferCapacity);
 }
 
-void EffectLoudness::FreeBuffers()
+void LoudnessBase::FreeBuffers()
 {
    mTrackBuffer[0].reset();
    mTrackBuffer[1].reset();
 }
 
-bool EffectLoudness::GetTrackRMS(WaveChannel &track,
+bool LoudnessBase::GetTrackRMS(WaveChannel &track,
    const double curT0, const double curT1, float &rms)
 {
    // set mRMS.  No progress bar here as it's fast.
@@ -397,7 +397,7 @@ bool EffectLoudness::GetTrackRMS(WaveChannel &track,
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool EffectLoudness::ProcessOne(WaveChannel &track, size_t nChannels,
+bool LoudnessBase::ProcessOne(WaveChannel &track, size_t nChannels,
    const double curT0, const double curT1, const float mult,
    EBUR128 *pLoudnessProcessor)
 {
@@ -448,7 +448,7 @@ bool EffectLoudness::ProcessOne(WaveChannel &track, size_t nChannels,
    return true;
 }
 
-void EffectLoudness::LoadBufferBlock(WaveChannel &track, size_t nChannels,
+void LoudnessBase::LoadBufferBlock(WaveChannel &track, size_t nChannels,
    sampleCount pos, size_t len)
 {
    size_t idx = 0;
@@ -469,7 +469,7 @@ void EffectLoudness::LoadBufferBlock(WaveChannel &track, size_t nChannels,
 
 /// Calculates sample sum (for DC) and EBU R128 weighted square sum
 /// (for loudness).
-bool EffectLoudness::AnalyseBufferBlock(EBUR128 &loudnessProcessor)
+bool LoudnessBase::AnalyseBufferBlock(EBUR128 &loudnessProcessor)
 {
    for(size_t i = 0; i < mTrackBufferLen; i++)
    {
@@ -484,7 +484,7 @@ bool EffectLoudness::AnalyseBufferBlock(EBUR128 &loudnessProcessor)
    return true;
 }
 
-bool EffectLoudness::ProcessBufferBlock(const float mult)
+bool LoudnessBase::ProcessBufferBlock(const float mult)
 {
    for(size_t i = 0; i < mTrackBufferLen; i++)
    {
@@ -498,7 +498,7 @@ bool EffectLoudness::ProcessBufferBlock(const float mult)
    return true;
 }
 
-bool EffectLoudness::StoreBufferBlock(WaveChannel &track, size_t nChannels,
+bool LoudnessBase::StoreBufferBlock(WaveChannel &track, size_t nChannels,
    sampleCount pos, size_t len)
 {
    size_t idx = 0;
@@ -519,7 +519,7 @@ bool EffectLoudness::StoreBufferBlock(WaveChannel &track, size_t nChannels,
    }
 }
 
-bool EffectLoudness::UpdateProgress()
+bool LoudnessBase::UpdateProgress()
 {
    mProgressVal += (double(1 + mProcStereo) * double(mTrackBufferLen)
                  / (double(GetNumWaveTracks()) * double(mSteps) * mTrackLen));

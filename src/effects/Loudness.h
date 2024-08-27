@@ -30,9 +30,7 @@ class ShuttleGui;
 class WaveChannel;
 using Floats = ArrayOf<float>;
 
-class EffectLoudness final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class LoudnessBase : public StatefulEffect
 {
 public:
    enum kNormalizeTargets
@@ -42,12 +40,12 @@ public:
       nAlgos
    };
 
-   static inline EffectLoudness *
-   FetchParameters(EffectLoudness &e, EffectSettings &) { return &e; }
+   static inline LoudnessBase *
+   FetchParameters(LoudnessBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectLoudness();
-   virtual ~EffectLoudness();
+   LoudnessBase();
+   virtual ~LoudnessBase();
 
    // ComponentInterface implementation
 
@@ -62,14 +60,10 @@ public:
    // Effect implementation
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
+   bool UpdateProgress();
 
 private:
-   // EffectLoudness implementation
+   // LoudnessBase implementation
 
    void AllocBuffers(TrackList &outputs);
    void FreeBuffers();
@@ -84,14 +78,7 @@ private:
    [[nodiscard]] bool StoreBufferBlock(WaveChannel &track, size_t nChannels,
       sampleCount pos, size_t len);
 
-   bool UpdateProgress();
-   void OnChoice(wxCommandEvent & evt);
-   void OnUpdateUI(wxCommandEvent & evt);
-   void UpdateUI();
-
-private:
-   wxWeakRef<wxWindow> mUIParent{};
-
+protected:
    bool   mStereoInd;
    double mLUFSLevel;
    double mRMSLevel;
@@ -104,30 +91,49 @@ private:
    double mTrackLen;
    double mCurRate;
 
-   wxSimplebook *mBook;
-   wxChoice *mChoice;
-   wxStaticText *mWarning;
-   wxCheckBox *mStereoIndCheckBox;
-   wxCheckBox *mDualMonoCheckBox;
-
    Floats mTrackBuffer[2];    // MM: must be increased once surround channels are supported
    size_t mTrackBufferLen;
    size_t mTrackBufferCapacity;
    bool   mProcStereo;
 
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter StereoInd{ &EffectLoudness::mStereoInd,
+static constexpr EffectParameter StereoInd{ &LoudnessBase::mStereoInd,
    L"StereoIndependent",   false,      false,   true,     1  };
-static constexpr EffectParameter LUFSLevel{ &EffectLoudness::mLUFSLevel,
+static constexpr EffectParameter LUFSLevel{ &LoudnessBase::mLUFSLevel,
    L"LUFSLevel",           -23.0,      -145.0,  0.0,      1  };
-static constexpr EffectParameter RMSLevel{ &EffectLoudness::mRMSLevel,
+static constexpr EffectParameter RMSLevel{ &LoudnessBase::mRMSLevel,
    L"RMSLevel",            -20.0,      -145.0,  0.0,      1  };
-static constexpr EffectParameter DualMono{ &EffectLoudness::mDualMono,
+static constexpr EffectParameter DualMono{ &LoudnessBase::mDualMono,
    L"DualMono",            true,       false,   true,     1  };
-static constexpr EffectParameter NormalizeTo{ &EffectLoudness::mNormalizeTo,
+static constexpr EffectParameter NormalizeTo{ &LoudnessBase::mNormalizeTo,
    L"NormalizeTo",         (int)kLoudness , 0    ,   nAlgos-1, 1  };
+};
+
+class EffectLoudness final :
+    public LoudnessBase,
+    public StatefulEffectUIServices
+{
+public:
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+
+   DECLARE_EVENT_TABLE()
+private:
+   void OnChoice(wxCommandEvent& evt);
+   void OnUpdateUI(wxCommandEvent& evt);
+   void UpdateUI();
+
+   wxWeakRef<wxWindow> mUIParent {};
+
+   wxSimplebook* mBook;
+   wxChoice* mChoice;
+   wxStaticText* mWarning;
+   wxCheckBox* mStereoIndCheckBox;
+   wxCheckBox* mDualMonoCheckBox;
 };
 
 #endif
