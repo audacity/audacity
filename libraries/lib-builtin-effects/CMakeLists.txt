@@ -21,6 +21,8 @@ set( SOURCES
    NormalizeBase.h
    Repair.cpp
    Repair.h
+   ReverbBase.cpp
+   ReverbBase.h
    Reverse.cpp
    Reverse.h
    StereoToMono.cpp
