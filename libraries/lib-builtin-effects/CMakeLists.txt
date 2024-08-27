@@ -7,6 +7,8 @@ set( SOURCES
    AmplifyBase.h
    BassTrebleBase.cpp
    BassTrebleBase.h
+   ChangePitchBase.cpp
+   ChangePitchBase.h
    CompressorInstance.cpp
    CompressorInstance.h
    EchoBase.cpp
@@ -36,6 +38,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-dynamic-range-processor-interface
+   lib-fft-interface
    lib-label-track-interface
    lib-note-track-interface
    $<$<BOOL:${USE_SBSMS}>:libsbsms>
