@@ -20,6 +20,8 @@
 
 namespace BasicUI { class ProgressDialog; }
 
+namespace au::effects { class EffectExecutionScenarion; }
+
 class AudacityProject;
 class Track;
 
@@ -54,6 +56,9 @@ public:
    static InstanceFinder DefaultInstanceFinder(EffectPlugin &plugin);
 
 protected:
+   //! NOTE Temporary solution
+   friend class au::effects::EffectExecutionScenarion;
+
    //! After Init(), tell whether Process() should be skipped
    /*
      Typically this is only useful in automation, for example

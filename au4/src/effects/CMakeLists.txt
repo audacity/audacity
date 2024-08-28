@@ -19,6 +19,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsviewregister.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectinstancesregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectexecutionscenario.h
 
     # internal
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.cpp
@@ -31,6 +32,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectexecutionscenarion.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectexecutionscenarion.h
 
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.cpp
@@ -103,4 +106,3 @@ endif()
 set(MODULE_LINK au3wrap)
 
 setup_module()
-

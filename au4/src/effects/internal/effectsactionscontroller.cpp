@@ -3,8 +3,6 @@
 */
 #include "effectsactionscontroller.h"
 
-#include "tmpconcept/tempconceptexecutor.h"
-
 #include "log.h"
 
 using namespace au::effects;
@@ -24,9 +22,5 @@ void EffectsActionsController::doEffect(const muse::actions::ActionData& args)
 
     muse::String effectId = args.arg<muse::String>(0);
 
-    TempConceptExecutor e;
-    e.execute(effectId.toStdString());
-
-    // muse::String effectId = args.arg<muse::String>(0);
-    // interactive()->open("audacity://effects/viewer?id=" + effectId.toStdString());
+    effectExecutionScenarion()->performEffect(effectId);
 }
