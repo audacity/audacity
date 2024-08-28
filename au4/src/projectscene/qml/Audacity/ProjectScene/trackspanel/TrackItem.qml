@@ -34,12 +34,6 @@ ListItemBlank {
     height: trackViewState.trackHeight
     clip: true
 
-    onIsSelectedChanged: {
-        if (isSelected && !navigation.active) {
-            navigation.requestActive()
-        }
-    }
-
     signal duplicateRequested()
     signal deleteRequested()
 

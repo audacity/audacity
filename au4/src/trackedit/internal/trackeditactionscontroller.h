@@ -33,10 +33,11 @@ public:
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
+    void doGlobalCopy();
     void doGlobalDelete();
 
     void clipCut();
-    void clipCopy();
+    void clipCopy(const muse::actions::ActionData &args);
     void clipDelete(const muse::actions::ActionData& args);
 
     void clipCutSelected();
@@ -52,6 +53,7 @@ private:
     void setLoopRegionIn();
     void setLoopRegionOut();
 
+    void pushProjectHistoryPasteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
