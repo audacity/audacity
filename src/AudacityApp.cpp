@@ -1292,6 +1292,14 @@ void AudacityApp::ShowSplashScreen() {
       wxDefaultSize,
       wxSTAY_ON_TOP);
 
+   // If the user interacts with another top level window while the splash screen is visible
+   // it gets destroyed automatically, need to hanlde that to prevent the fade out of deleted object
+   mSplashScreen->Bind(wxEVT_DESTROY, [this](wxWindowDestroyEvent& event) {
+         mSplashScreen.release();
+         event.Skip();
+      }
+   );
+
    // Unfortunately with the Windows 10 Creators update, the splash screen 
    // now appears before setting its position.
    // On a dual monitor screen it will appear on one screen and then 
@@ -1319,9 +1327,14 @@ void AudacityApp::HideSplashScreen(bool fadeOut)
 
    int currentAlpha = maxTransparency;
 
+   // Splash was already destroyed
+   if (!mSplashScreen) {
+      return;
+   }
+
    if (!fadeOut) {
       mSplashScreen->Destroy();
-      mSplashScreen.reset();
+      mSplashScreen.release();
       return;
    }
 
@@ -1329,11 +1342,13 @@ void AudacityApp::HideSplashScreen(bool fadeOut)
 
    mSplashTimer.Bind(wxEVT_TIMER, [this, currentAlpha, transparencyDecrement](wxTimerEvent& evt) mutable {
       currentAlpha -= transparencyDecrement;
-
-      if (currentAlpha <= 0) {
+      if (!mSplashScreen) {
+         mSplashTimer.Stop();
+      }
+      else if (currentAlpha <= 0) {
          mSplashTimer.Stop();
          mSplashScreen->Destroy();
-         mSplashScreen.reset();
+         mSplashScreen.release();
       }
       else if (mSplashScreen->CanSetTransparent()) {
          mSplashScreen->SetTransparent(currentAlpha);
@@ -1663,6 +1678,10 @@ bool AudacityApp::InitPart2()
 #endif
    }
 
+   // Update Manager may spawn a modal dialog, we need to hide the splash screen before that
+   bool splashFadeOut = !playingJournal;
+   HideSplashScreen(splashFadeOut);
+
 #if defined(HAVE_UPDATES_CHECK)
    UpdateManager::Start(playingJournal);
 #endif
@@ -1790,9 +1809,6 @@ bool AudacityApp::InitPart2()
 #endif
 
    HandleAppInitialized();
-
-   bool splashFadeOut = !playingJournal;
-   HideSplashScreen(splashFadeOut);
 
    return TRUE;
 }
