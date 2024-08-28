@@ -28,7 +28,7 @@ public:
 
     QQuickItem* contentItem() const;
 
-    Q_INVOKABLE void load(const QString& type, const QString& instanceId, QObject* itemParent);
+    Q_INVOKABLE void load(const QString& type, const QString& effectId, QObject* itemParent);
 
 signals:
     void titleChanged();

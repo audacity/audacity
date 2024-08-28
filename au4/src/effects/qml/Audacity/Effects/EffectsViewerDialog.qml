@@ -11,7 +11,7 @@ StyledDialogView {
     id: root
 
     property alias type: viewer.type
-    property alias instanceId: viewer.instanceId
+    property alias effectId: viewer.effectId
 
     title: viewer.title
 

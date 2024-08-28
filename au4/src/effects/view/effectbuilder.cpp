@@ -33,9 +33,9 @@ EffectBuilder::EffectBuilder(QObject* parent)
     : QObject(parent)
 {}
 
-void EffectBuilder::load(const QString& type, const QString& instanceId, QObject* itemParent)
+void EffectBuilder::load(const QString& type, const QString& effectId, QObject* itemParent)
 {
-    LOGD() << "type: " << type << ", instanceId: " << instanceId;
+    LOGD() << "type: " << type << ", effectId: " << effectId;
 
     QString url = viewRegister()->viewUrl(type);
     if (url.isEmpty()) {
@@ -58,7 +58,7 @@ void EffectBuilder::load(const QString& type, const QString& instanceId, QObject
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
-        { "instanceId", QVariant::fromValue(instanceId) }
+        { "effectId", QVariant::fromValue(effectId) }
     });
 
     m_contentItem = qobject_cast<QQuickItem*>(obj);

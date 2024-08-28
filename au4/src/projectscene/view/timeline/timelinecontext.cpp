@@ -468,7 +468,9 @@ void TimelineContext::updateTimeSignature()
 
 qreal TimelineContext::horizontalScrollableSize() const
 {
-    double maxEndTime = std::max(m_lastZoomEndTime, trackEditProject()->totalTime().to_double());
+    const auto prj = trackEditProject();
+    double totalTime = prj ? prj->totalTime().to_double() : 0.0;
+    double maxEndTime = std::max(m_lastZoomEndTime, totalTime);
     return timeToContentPosition(maxEndTime);
 }
 

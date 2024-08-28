@@ -10,7 +10,7 @@ Rectangle {
     id: root
 
     property string type: ""
-    property string instanceId: ""
+    property string effectId: ""
 
     signal closeRequested()
 
@@ -24,7 +24,7 @@ Rectangle {
     height: implicitHeight
 
     Component.onCompleted: {
-        builder.load(root.type, root.instanceId, root)
+        builder.load(root.type, root.effectId, root)
     }
 
     EffectBuilder {

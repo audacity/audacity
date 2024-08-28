@@ -25,7 +25,7 @@ void EffectsActionsController::doEffect(const muse::actions::ActionData& args)
     muse::String effectId = args.arg<muse::String>(0);
 
     TempConceptExecutor e;
-    e.execute(effectId.toStdString());
+    e.execute(effectId);
 
     // muse::String effectId = args.arg<muse::String>(0);
     // interactive()->open("audacity://effects/viewer?id=" + effectId.toStdString());

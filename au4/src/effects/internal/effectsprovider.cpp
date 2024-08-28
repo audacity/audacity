@@ -7,12 +7,15 @@
 
 #include "../builtin/builtineffects.h"
 
+#include "libraries/lib-effects/Effect.h"
+#include "libraries/lib-audacity-application-logic/EffectManager.h"
+
 #include "log.h"
 
 using namespace muse;
 using namespace au::effects;
 
-static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&instanceId=%2";
+static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&effectId=%2";
 
 static muse::String categoryId(muse::audio::AudioResourceType type)
 {
@@ -92,11 +95,18 @@ EffectMeta EffectsProvider::meta(const muse::String& effectId) const
     return EffectMeta();
 }
 
-muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInstanceId& instanceId)
+Effect* EffectsProvider::effect(const EffectId& effectId) const
 {
-    LOGD() << "try open effect: " << type << ", instanceId: " << instanceId;
+    EffectManager& em = EffectManager::Get();
+    Effect* e = dynamic_cast<::Effect*>(em.GetEffect(effectId.toStdString()));
+    return e;
+}
 
-    RetVal<Val> rv = interactive()->open(String(VIEWER_URI).arg(type).arg(size_t(instanceId)).toStdString());
+muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectId& effectId)
+{
+    LOGD() << "try open effect: " << type << ", effectId: " << effectId;
+
+    RetVal<Val> rv = interactive()->open(String(VIEWER_URI).arg(type).arg(effectId).toStdString());
 
     LOGD() << "open ret: " << rv.ret.toString();
 

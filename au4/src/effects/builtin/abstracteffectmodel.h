@@ -6,31 +6,31 @@
 #include <QObject>
 
 #include "modularity/ioc.h"
-#include "../ieffectinstancesregister.h"
+#include "../ieffectsprovider.h"
 
 class Effect;
 namespace au::effects {
 class AbstractEffectModel : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
+    Q_PROPERTY(QString effectId READ effectId WRITE setEffectId NOTIFY effectIdChanged FINAL)
 
-    muse::Inject<IEffectInstancesRegister> effectInstancesRegister;
+    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
     AbstractEffectModel(QObject* parent = nullptr);
 
-    QString instanceId() const;
-    void setInstanceId(const QString& newInstanceId);
+    QString effectId() const;
+    void setEffectId(const QString& newEffectId);
 
 signals:
-    void instanceIdChanged();
+    void effectIdChanged();
 
 protected:
 
     Effect* effect() const;
 
 private:
-    QString m_instanceId;
+    QString m_effectId;
 };
 }

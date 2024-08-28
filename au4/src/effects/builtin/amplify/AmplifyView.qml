@@ -7,7 +7,7 @@ import Audacity.Effects
 Rectangle {
 
     property string title: "Amplify"
-    property alias instanceId: viewModel.instanceId
+    property alias effectId: viewModel.effectId
 
     color: "#909000"
     width: 300
