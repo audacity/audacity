@@ -9,6 +9,7 @@ using namespace au::trackedit;
 using namespace muse::async;
 using namespace muse::actions;
 
+static const ActionCode COPY_CODE("copy");
 static const ActionCode DELETE_CODE("delete");
 
 static const ActionCode CLIP_CUT_CODE("clip-cut");
@@ -21,6 +22,7 @@ static const ActionCode PASTE("paste");
 
 void TrackeditActionsController::init()
 {
+    dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
     dispatcher()->reg(this, DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
 
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
@@ -43,6 +45,19 @@ void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& ac
     m_actionCheckedChanged.send(actionCode);
 }
 
+void TrackeditActionsController::doGlobalCopy()
+{
+    if (selectionController()->isDataSelected()) {
+        dispatcher()->dispatch(CLIP_COPY_SELECTED_CODE);
+        return;
+    }
+
+    ClipKey selectedClipKey = selectionController()->selectedClip();
+    if (selectedClipKey.isValid()) {
+        dispatcher()->dispatch(CLIP_COPY_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+    }
+}
+
 void TrackeditActionsController::doGlobalDelete()
 {
     if (selectionController()->isDataSelected()) {
@@ -61,9 +76,15 @@ void TrackeditActionsController::clipCut()
     NOT_IMPLEMENTED;
 }
 
-void TrackeditActionsController::clipCopy()
+void TrackeditActionsController::clipCopy(const ActionData& args)
 {
-    NOT_IMPLEMENTED;
+    ClipKey clipKey = args.arg<ClipKey>(0);
+    if (!clipKey.isValid()) {
+        return;
+    }
+
+    trackeditInteraction()->clearClipboard();
+    trackeditInteraction()->copyClipIntoClipboard(clipKey);
 }
 
 void TrackeditActionsController::clipDelete(const ActionData& args)
@@ -92,17 +113,9 @@ void TrackeditActionsController::clipCopySelected()
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
-    auto selectedClipKey = selectionController()->selectedClip();
 
     trackeditInteraction()->clearClipboard();
-    // handles single clip selected
-    // intentional comparison, see clipId default value
-    if (selectedClipKey.clipId != -1) {
-        trackeditInteraction()->copyClipIntoClipboard(selectedClipKey);
-        return;
-    }
 
-    // handles multiple clips selected
     for (const auto& track : tracks) {
         if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
             continue;
@@ -155,6 +168,8 @@ void TrackeditActionsController::paste()
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         trackeditInteraction()->pasteIntoClipboard(selectedStartTime, selectedTrackId);
+
+        pushProjectHistoryPasteState();
     }
 }
 
@@ -186,6 +201,13 @@ void TrackeditActionsController::setLoopRegionIn()
 void TrackeditActionsController::setLoopRegionOut()
 {
     NOT_IMPLEMENTED;
+}
+
+void TrackeditActionsController::pushProjectHistoryPasteState()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto trackeditProject = project->trackeditProject();
+    trackeditProject->pushHistoryState("Pasted from the clipboard", "Paste");
 }
 
 void TrackeditActionsController::pushProjectHistoryDeleteState(secs_t start, secs_t duration)
