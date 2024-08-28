@@ -16,6 +16,7 @@
 #include "internal/effectsactionscontroller.h"
 #include "internal/effectsuiactions.h"
 #include "internal/effectinstancesregister.h"
+#include "internal/effectexecutionscenarion.h"
 
 #include "builtin/builtineffects.h"
 
@@ -53,6 +54,7 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IEffectsViewRegister>(moduleName(), new EffectsViewRegister());
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
     ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
+    ioc()->registerExport<IEffectExecutionScenarion>(moduleName(), new EffectExecutionScenarion());
 }
 
 void EffectsModule::resolveImports()
