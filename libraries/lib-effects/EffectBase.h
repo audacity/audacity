@@ -20,7 +20,7 @@
 
 namespace BasicUI { class ProgressDialog; }
 
-namespace au::effects { class EffectExecutionScenario; }
+namespace au::effects { class EffectsProvider; }
 
 class AudacityProject;
 class Track;
@@ -36,6 +36,8 @@ public:
    bool PreviewsFullSelection() const { return mPreviewFullSelection; }
 
    void SetTracks(TrackList *pTracks);
+
+   double GetDefaultDuration();
 
    //! Called when Preview() starts, to allow temporary effect state changes
    /*!
@@ -57,7 +59,7 @@ public:
 
 protected:
    //! NOTE Temporary solution
-    friend class au::effects::EffectExecutionScenario;
+    friend class au::effects::EffectsProvider;
 
    //! After Init(), tell whether Process() should be skipped
    /*
@@ -104,8 +106,6 @@ protected:
 
 private:
    friend class Effect;
-
-   double GetDefaultDuration();
 
 public:
    // Public until we can move these fields out of here into EffectContext

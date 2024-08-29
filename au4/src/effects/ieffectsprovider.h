@@ -11,6 +11,8 @@
 
 #include "effectstypes.h"
 
+class AudacityProject;
+class EffectSettings;
 namespace au::effects {
 class IEffectsProvider : MODULE_EXPORT_INTERFACE
 {
@@ -28,6 +30,10 @@ public:
 
     virtual EffectMeta meta(const muse::String& effectId) const = 0;
 
-    virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0; // type - is Symbol of effect
+    // type - is Symbol of effect
+    virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;
+
+    virtual muse::Ret performEffect(AudacityProject& project, Effect* effect, EffectSettings& settings,
+                                    const EffectTimeParams& timeParams) = 0;
 };
 }

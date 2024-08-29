@@ -21,7 +21,6 @@
 #include "libraries/lib-transactions/TransactionScope.h"
 #include "libraries/lib-module-manager/ConfigInterface.h"
 #include "libraries/lib-numeric-formats/NumericConverterFormats.h"
-#include "libraries/lib-basic-ui/BasicUI.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
@@ -94,12 +93,10 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
     // common things used below
     std::shared_ptr<SimpleEffectSettingsAccess> pAccess;
     EffectSettings settings;
+    EffectTimeParams tp;
+    tp.projectRate = ProjectRate::Get(project).GetRate();
 
-    double t0 = 0.0;
-    double t1 = 0.0;
     double oldDuration = 0.0;
-    double projectRate = ProjectRate::Get(project).GetRate();
-
     {
         //! NOTE Step 2.1 - get effect settings
         EffectSettings* pSettings = em.GetDefaultSettings(ID);
@@ -115,30 +112,33 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
                       EffectSettingsExtra::DurationKey(), oldDuration, effect->GetDefaultDuration());
         }
 
-        //! NOTE Step 3.3 - check selected time
+        //! NOTE Step 2.3 - check selected time
         double duration = 0.0;
-        t0 = selectedRegion.t0();
-        t1 = selectedRegion.t1();
-        if (t1 > t0) {
+        tp.t0 = selectedRegion.t0();
+        tp.t1 = selectedRegion.t1();
+        if (tp.t1 > tp.t0) {
             // there is a selection: let's fit in there...
             // MJS: note that this is just for the TTC and is independent of the track rate
             // but we do need to make sure we have the right number of samples at the project rate
-            double quantMT0 = QUANTIZED_TIME(t0, projectRate);
-            double quantMT1 = QUANTIZED_TIME(t1, projectRate);
+            double quantMT0 = QUANTIZED_TIME(tp.t0, tp.projectRate);
+            double quantMT1 = QUANTIZED_TIME(tp.t1, tp.projectRate);
             duration = quantMT1 - quantMT0;
-            t1 = t0 + duration;
+            tp.t1 = tp.t0 + duration;
         }
 
-        //! NOTE Step 2.3 - update settings
+        tp.f0 = selectedRegion.f0();
+        tp.f1 = selectedRegion.f1();
+
+        //! NOTE Step 2.4 - update settings
         wxString newFormat = (isSelection
                               ? NumericConverterFormats::TimeAndSampleFormat()
                               : NumericConverterFormats::DefaultSelectionFormat()
                               ).Internal();
 
-        //! NOTE Step 2.4 - get current settings (make local settings)
+        //! NOTE Step 2.5 - get current settings (make local settings)
         settings = pAccess->Get();
 
-        //! NOTE Step 2.5 - update settings
+        //! NOTE Step 2.6 - update settings
         auto updater = [&](EffectSettings& settings) {
             settings.extra.SetDuration(duration);
             settings.extra.SetDurationFormat(newFormat);
@@ -151,7 +151,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
             pAccess->ModifySettings(updater);
         }
 
-        //! NOTE Step 2.6 - modify settings
+        //! NOTE Step 2.7 - modify settings
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             muse::String type = au3::wxToString(effect->GetSymbol().Internal());
             EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effect);
@@ -163,128 +163,31 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
                 LOGE() << "failed show effect: " << type << ", ret: " << ret.toString();
             }
 
-            //! NOTE Step 2.6.2 - update local settings
+            //! NOTE Step 2.7.2 - update local settings after modify by showEffect
             if (ret) {
                 settings = pAccess->Get();
             }
         }
-    }
 
-    //! ============================================================================
-    //! NOTE Step 3 - setup
-    //! ============================================================================
-
-    // common things used below
-    unsigned oldFlags = 0;
-    WaveTrack* newTrack = nullptr;
-
-    {
         //! TODO
         em.SetSkipStateFlag(false);
-
-        //! NOTE Step 3.1 - setup effect
-        oldFlags = effect->mUIFlags;
-        effect->mUIFlags = flags;
-        effect->mFactory = &WaveTrackFactory::Get(project);
-        effect->mProjectRate = projectRate;
-        effect->mT0 = t0;
-        effect->mT1 = t1;
-
-        effect->SetTracks(&TrackList::Get(project));
-        // Update track/group counts
-        effect->CountWaveTracks();
-
-        //! NOTE Step 3.2 - add new a track if need
-        // We don't yet know the effect type for code in the Nyquist Prompt, so
-        // assume it requires a track and handle errors when the effect runs.
-        if ((effect->GetType() == EffectTypeGenerate || effect->GetPath() == NYQUIST_PROMPT_ID) && (effect->mNumTracks == 0)) {
-            auto track = effect->mFactory->Create();
-            track->SetName(effect->mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
-            newTrack = effect->mTracks->Add(track);
-            newTrack->SetSelected(true);
-        }
-
-        //! NOTE Step 3.4 - check frequency params
-        effect->mF0 = selectedRegion.f0();
-        effect->mF1 = selectedRegion.f1();
-        if (effect->mF0 != SelectedRegion::UndefinedFrequency) {
-            effect->mPresetNames.push_back(L"control-f0");
-        }
-        if (effect->mF1 != SelectedRegion::UndefinedFrequency) {
-            effect->mPresetNames.push_back(L"control-f1");
-        }
     }
 
     //! ============================================================================
-    //! NOTE Step 4 - process
+    //! NOTE Step 3 - perform effect
     //! ============================================================================
-
     // common things used below
-    bool success = false;
+    Ret success;
     {
-        //! NOTE Step 4.1 - find instance
-        std::shared_ptr<EffectInstanceEx> pInstanceEx;
-
-        //! TODO It is not obvious why we only look for an instance
-        //! for interactive and unconfigured effects,
-        //! and always create a new one for the others
-        if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
-            const std::optional<EffectPlugin::InstancePointer> result = EffectBase::FindInstance(*effect);
-            if (result.has_value()) {
-                pInstanceEx = *result;
-            }
-        }
-
-        //! NOTE Step 4.2 - make new instance if not found
-        if (!pInstanceEx) {
-            // Path that skipped the dialog factory -- effect may be non-interactive
-            // or this is batch mode processing or repeat of last effect with stored
-            // settings.
-            pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(effect->MakeInstance());
-            // Note: Init may read parameters from preferences
-            if (!pInstanceEx || !pInstanceEx->Init()) {
-                return muse::make_ret(Ret::Code::InternalError);
-            }
-        }
-
-        //! NOTE Step 4.3 - open transaction
-        TransactionScope trans(project, "Effect");
-
-        //! NOTE Step 4.4 - do process
-
-        //! TODO It is not clear what the skip flag is and why it can be set,
-        //! in what cases when calling this function
-        //! it is not necessary to call the main thing - the process
-        bool returnVal = true;
-        bool skipFlag = static_cast<EffectBase*>(effect)->CheckWhetherSkipEffect(settings);
-        if (skipFlag == false) {
-            using namespace BasicUI;
-            auto name = effect->GetName();
-            auto progress = MakeProgress(
-                name,
-                XO("Applying %s...").Format(name),
-                ProgressShowCancel
-                );
-            auto vr = valueRestorer(effect->mProgress, progress.get());
-
-            assert(pInstanceEx); // null check above
-            returnVal = pInstanceEx->Process(settings);
-        }
-
-        success = returnVal;
-
-        //! NOTE Step 4.5 - commit transaction on success
-        if (success) {
-            trans.Commit();
-        }
+        success = effectsProvider()->performEffect(project, effect, settings, tp);
     }
 
     //! ============================================================================
-    //! NOTE Step 5 - cleanup
+    //! NOTE Step 4 - cleanup
     //! ============================================================================
 
     {
-        //! NOTE Step 5.1 - update selected region after process
+        //! NOTE Step 4.1 - update selected region after process
 
         //! TODO It is not clear, can the effect change the selected region?
         //! Or is it done because the selected region changes when
@@ -294,36 +197,28 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
             selectedRegion.setTimes(effect->mT0, effect->mT1);
         }
 
-        //! NOTE Step 5.2 - cleanup
+        //! NOTE Step 4.2 - cleanup
         if (!success) {
-            if (newTrack) {
-                effect->mTracks->Remove(*newTrack);
-            }
             // On failure, restore the old duration setting
             settings.extra.SetDuration(oldDuration);
         }
 
-        // Don't hold a dangling pointer when done
-        effect->SetTracks(nullptr);
-        effect->mPresetNames.clear();
-        effect->mUIFlags = oldFlags;
-
         //! TODO Should we do this only if it is not successful? (restore the oldDuration).
         //! If it is successful, according to logic, there is nothing to update, everything is up to date
         pAccess->Set(std::move(settings), nullptr);
+    }
 
-        //! NOTE Step 5.3 - break if not success
-        if (!success) {
-            return muse::make_ret(Ret::Code::UnknownError);
-        }
+    //! NOTE break if not success
+    if (!success) {
+        return muse::make_ret(Ret::Code::UnknownError);
     }
 
     //! ============================================================================
-    //! NOTE Step 6 - write history
+    //! NOTE Step 5 - write history
     //! ============================================================================
 
     {
-        //! NOTE Step 6.1 - write project history if need
+        //! NOTE Step 5.1 - write project history if need
         if (em.GetSkipStateFlag()) {
             flags = flags | EffectManager::kSkipState;
         }
@@ -334,7 +229,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
             ProjectHistory::Get(project).PushState(longDesc, shortDesc);
         }
 
-        //! NOTE Step 6.2 - remember a successful generator, effect, analyzer, or tool Process
+        //! NOTE Step 5.2 - remember a successful generator, effect, analyzer, or tool Process
 
         if (!(flags & EffectManager::kDontRepeatLast)) {
             auto& commandManager = CommandManager::Get(project);

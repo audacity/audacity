@@ -29,6 +29,9 @@ public:
 
     muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
 
+    muse::Ret performEffect(AudacityProject& project, Effect* effect, EffectSettings& settings,
+                            const EffectTimeParams& timeParams) override;
+
 private:
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
