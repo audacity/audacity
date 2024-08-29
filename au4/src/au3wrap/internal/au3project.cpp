@@ -53,7 +53,15 @@ bool Au3Project::load(const muse::io::path_t& filePath)
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     std::string sstr = filePath.toStdString();
     FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
-    auto conn = projectFileIO.LoadProject(fileName, true);
+
+    std::optional<ProjectFileIO::TentativeConnection> conn;
+
+    try {
+        conn.emplace(projectFileIO.LoadProject(fileName, true).value());
+    } catch (AudacityException&) {
+        LOGE() << "failed load project: " << filePath << ", exception received";
+        return false;
+    }
 
     muse::Defer([&conn]() {
         conn->Commit();
