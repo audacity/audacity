@@ -19619,7 +19619,7 @@ msgstr "Вы можете отключить проверку обновлени
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr "П&роверить обновления"
+msgstr "Проверить обновления"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
