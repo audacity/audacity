@@ -653,8 +653,11 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
             next = *TrackList::Channels(this).first.advance(1);
          SetRate(mLegacyRate);
          mLegacyRate = 0;
-         if (next)
+         if (next && next->mLegacyRate > 0)
+         {
+            next->SetRate(next->mLegacyRate);
             next->mLegacyRate = 0;
+         }
          if (mLegacyFormat != undefinedSample)
             WaveTrackData::Get(*this).SetSampleFormat(mLegacyFormat);
          if (next && next->mLegacyFormat != undefinedSample)
