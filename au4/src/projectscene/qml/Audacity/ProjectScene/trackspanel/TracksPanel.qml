@@ -82,9 +82,11 @@ Item {
             }
         }
 
+        SeparatorLine { }
+
         StyledListView {
             id: view
-
+            Layout.topMargin: -contentColumn.sideMargin
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -101,10 +103,6 @@ Item {
 
             navigation.section: root.navigationSection
             navigation.order: controlPanel.navigation.order + 1
-
-            SeparatorLine {
-                anchors.top: parent.top
-            }
 
             delegate: TrackItem {
                 item: itemData

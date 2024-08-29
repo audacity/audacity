@@ -14,7 +14,7 @@ StyledPopupView {
     margins: 8
     contentWidth: contentRect.width
     contentHeight: contentRect.height
-    placement: PopupView.Above
+    placement: PopupView.PreferAbove
     openPolicies: PopupView.NoActivateFocus
 
     property rect contentRect: fontMetrics.boundingRect(qsTrc("projectscene", "Pan: 100R"))

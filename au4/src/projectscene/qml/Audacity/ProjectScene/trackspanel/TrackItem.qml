@@ -53,10 +53,16 @@ ListItemBlank {
 
         spacing: 0
 
+        TrackSelectionBar {
+            id: selectionBar
+            isSelected: root.isSelected
+        }
+
         ColumnLayout {
+            Layout.topMargin: 7
             Layout.margins: 12
             Layout.alignment: Qt.AlignTop
-            spacing: 12
+            spacing: 2
 
             RowLayout {
                 Layout.fillWidth: true
@@ -78,8 +84,8 @@ ListItemBlank {
                 MenuButton {
                     Component.onCompleted: {
                         var operations = [
-                                    { "id": "duplicate", "title": qsTrc("notation", "Duplicate") },
-                                    { "id": "delete", "title": qsTrc("notation", "Delete") }
+                                    { "id": "duplicate", "title": qsTrc("track", "Duplicate") },
+                                    { "id": "delete", "title": qsTrc("track", "Delete") }
                                 ]
 
                         menuModel = operations
@@ -151,8 +157,8 @@ ListItemBlank {
 
             FlatButton {
                 Layout.fillWidth: true
-
-                // iconCode
+                Layout.preferredHeight: 24
+                Layout.margins: 4
 
                 text: qsTrc("projectscene", "Effects")
 
@@ -240,5 +246,6 @@ ListItemBlank {
 
     SeparatorLine {
         anchors.bottom: parent.bottom
+        separatorWidth: 2
     }
 }
