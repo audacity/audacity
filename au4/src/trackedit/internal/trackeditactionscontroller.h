@@ -57,6 +57,7 @@ private:
     void newStereoTrack();
     void newLabelTrack();
 
+    void pushProjectHistoryTrackAddedState();
     void pushProjectHistoryPasteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
 

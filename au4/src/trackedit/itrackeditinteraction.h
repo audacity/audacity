@@ -28,7 +28,7 @@ public:
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
     virtual void clearClipboard() = 0;
-    virtual bool pasteIntoClipboard(double begin, TrackId trackId) = 0;
+    virtual bool pasteFromClipboard(double begin, TrackId trackId) = 0;
     virtual bool copyClipIntoClipboard(const ClipKey& clipKey) = 0;
     virtual bool copyClipDataIntoClipboard(const ClipKey& clipKey, double begin, double end) = 0;
     virtual bool copyTrackDataIntoClipboard(const TrackId trackId, double begin, double end) = 0;

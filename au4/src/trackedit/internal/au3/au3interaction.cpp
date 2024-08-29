@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "ProjectRate.h"
+#include "TempoChange.h"
 #include "QualitySettings.h"
 #include "global/types/number.h"
 
@@ -15,6 +16,8 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "trackedit/dom/track.h"
+
 #include "log.h"
 
 using namespace au::trackedit;
@@ -26,6 +29,107 @@ AudacityProject& Au3Interaction::projectRef() const
 {
     AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
+}
+
+bool Au3Interaction::pasteIntoNewTrack()
+{
+    auto &project = projectRef();
+    auto &tracks = ::TrackList::Get( project );
+    auto prj = globalContext()->currentTrackeditProject();
+    double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+
+    ::Track* pFirstNewTrack = NULL;
+    for (auto data : s_clipboard.data) {
+        auto pNewTrack = createNewTrackAndPaste(data.track, tracks, selectedStartTime);
+        if (!pFirstNewTrack) {
+            pFirstNewTrack = pNewTrack.get();
+        }
+
+        prj->onTrackAdded(DomConverter::track(pNewTrack.get()));
+        for (const auto& clip : prj->clipList(DomConverter::trackId(pNewTrack->GetId()))) {
+            prj->onClipAdded(clip);
+        }
+    }
+    selectionController()->setSelectedTrack(DomConverter::trackId(pFirstNewTrack->GetId()));
+}
+
+::Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<::Track> track, ::TrackList &list, double begin)
+{
+    auto &trackFactory = WaveTrackFactory::Get(projectRef());
+    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(DomConverter::trackId(track->GetId())));
+    IF_ASSERT_FAILED(waveTrack) {
+        return nullptr;
+    }
+    auto pFirstTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+    list.Add(pFirstTrack->SharedPointer());
+    pFirstTrack->Paste(begin, *track);
+    return pFirstTrack->SharedPointer();
+}
+
+std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksIds(const std::vector<Track> &tracks, TrackId destinationTrackId, size_t tracksNum) const
+{
+    std::vector<TrackId> tracksIds;
+    bool addingEnabled = false;
+
+    for (const auto& track : tracks) {
+        if (track.id == destinationTrackId) {
+            addingEnabled = true;
+        }
+        if (addingEnabled) {
+            tracksIds.push_back(track.id);
+            if (tracksIds.size() == tracksNum) {
+                break;
+            }
+        }
+    }
+
+    return tracksIds;
+}
+
+bool Au3Interaction::canPasteClips(const std::vector<TrackId> &dstTracksIds, double begin) const
+{
+    for (size_t i = 0; i < dstTracksIds.size(); ++i) {
+        WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(dstTracksIds[i]));
+        IF_ASSERT_FAILED(dstWaveTrack) {
+            return false;
+        }
+
+        WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(s_clipboard.data[i].track->GetId()));
+        IF_ASSERT_FAILED(origWaveTrack) {
+            return false;
+        }
+
+        double insertDuration = 0;
+
+        // intentional comparison, see clipId default value
+        if (s_clipboard.data[i].clipKey.clipId == -1) {
+            // handle multiple clips
+            std::shared_ptr<WaveClip> leftClip = origWaveTrack->GetLeftmostClip();
+            std::shared_ptr<WaveClip> rightClip = origWaveTrack->GetRightmostClip();
+            insertDuration = rightClip->End() - leftClip->Start();
+        } else {
+            //handle single clip
+            std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(origWaveTrack, s_clipboard.data[i].clipKey.clipId);
+            IF_ASSERT_FAILED(clip) {
+                return false;
+            }
+
+            insertDuration = clip->End() - clip->Start();
+        }
+
+        // throws incosistency exception if project tempo is not set, see:
+        // au4/src/au3wrap/internal/au3project.cpp: 92
+        // Paste func throws exception if there's not enough space to paste in (exception handler calls BasicUI logic)
+        if (!dstWaveTrack->IsEmpty(begin, begin + insertDuration)) {
+            LOGDA() << "not enough space to paste clip into";
+            //! TODO AU4: show dialog
+            return false;
+        }
+    }
+
+    return true;
 }
 
 au::audio::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
@@ -168,70 +272,64 @@ void Au3Interaction::clearClipboard()
     s_clipboard.data.clear();
 }
 
-bool Au3Interaction::pasteIntoClipboard(double begin, TrackId trackId)
+bool Au3Interaction::pasteFromClipboard(double begin, TrackId destinationTrackId)
 {
-    WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(dstWaveTrack) {
-        return false;
-    }
-
     if (s_clipboard.data.empty()) {
         return false;
     }
 
-    // check if every clip fits into track first
-    for (const auto& data : s_clipboard.data) {
-        WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(data.track->GetId()));
+    if (destinationTrackId == -1) {
+        return pasteIntoNewTrack();
+    }
+
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    //! TODO: we need to make sure that we get a trackList with order
+    //! the same as in the TrackPanel
+    auto tracks = project->trackeditProject()->trackList();
+    size_t tracksNum = s_clipboard.data.size();
+
+    // for multiple tracks copying
+    std::vector<TrackId> dstTracksIds = determineDestinationTracksIds(tracks, destinationTrackId, tracksNum);
+
+    bool newTracksNeeded = false;
+    size_t newTracksCount = 0;
+    if (dstTracksIds.size() != tracksNum) {
+        newTracksNeeded = true;
+        newTracksCount = tracksNum - dstTracksIds.size();
+    }
+
+    // check if copied data fits into selected area
+    if (!canPasteClips(dstTracksIds, begin)) {
+        return false;
+    }
+
+    for (size_t i = 0; i < dstTracksIds.size(); ++i) {
+        WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(dstTracksIds[i]));
         IF_ASSERT_FAILED(dstWaveTrack) {
             return false;
         }
-
-        double insertDuration = 0;
-
-        // intentional comparison, see clipId default value
-        if (data.clipKey.clipId == -1) {
-            // handle multiple clips
-            std::shared_ptr<WaveClip> leftClip = origWaveTrack->GetLeftmostClip();
-            std::shared_ptr<WaveClip> rightClip = origWaveTrack->GetRightmostClip();
-            insertDuration = rightClip->End() - leftClip->Start();
-        } else {
-            //handle single clip
-            std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(origWaveTrack, data.clipKey.clipId);
-            IF_ASSERT_FAILED(clip) {
-                return false;
-            }
-
-            insertDuration = clip->End() - clip->Start();
-        }
-
-        // throws incosistency exception if project tempo is not set, see:
-        // au4/src/au3wrap/internal/au3project.cpp: 92
-        // Paste func throws exception if there's not enough space to paste in (exception handler calls BasicUI logic)
-        if (!dstWaveTrack->IsEmpty(begin, begin + insertDuration)) {
-            LOGDA() << "not enough space to paste clip into";
-            //! TODO AU4: show dialog
-            return false;
-        }
-    }
-
-    // paste and update model
-    for (const auto& data : s_clipboard.data) {
         auto prj = globalContext()->currentTrackeditProject();
 
         // use an unordered_set to store the IDs of the clips before the paste
         std::unordered_set<int> clipIdsBefore;
-        for (const auto& clip : prj->clipList(trackId)) {
+        for (const auto& clip : prj->clipList(dstTracksIds[i])) {
             clipIdsBefore.insert(clip.key.clipId);
         }
 
-        dstWaveTrack->Paste(begin, *data.track);
+        dstWaveTrack->Paste(begin, *s_clipboard.data[i].track);
 
         // Check which clips were added and trigger the onClipAdded event
-        for (const auto& clip : prj->clipList(trackId)) {
+        for (const auto& clip : prj->clipList(dstTracksIds[i])) {
             if (clipIdsBefore.find(clip.key.clipId) == clipIdsBefore.end()) {
                 prj->onClipAdded(clip);
             }
         }
+    }
+
+    if (newTracksNeeded) {
+        // remove already pasted elements from the clipboard and paste the rest into the new tracks
+        s_clipboard.data.erase(s_clipboard.data.begin(), s_clipboard.data.begin() + dstTracksIds.size());
+        return pasteIntoNewTrack();
     }
 
     return true;
@@ -343,15 +441,15 @@ void Au3Interaction::newMonoTrack()
 
     auto track = trackFactory.Create(defaultFormat, rate);
     track->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+    //! TODO AU4: find out why have to set tempo for the track right there
+    //! should be set automatically to project tempo value
+    DoProjectTempoChange(*track, 120);
     tracks.Add(track);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onTrackAdded(DomConverter::track(track.get()));
 
-    //! TODO AU4: set selected?
-    //! TODO AU4: add action to the history
-    // ProjectHistory::Get( project )
-    //     .PushState(XO("Created new audio track"), XO("New Track"));
+    selectionController()->setSelectedTrack(DomConverter::trackId(track->GetId()));
 }
 
 void Au3Interaction::newStereoTrack()
@@ -366,14 +464,15 @@ void Au3Interaction::newStereoTrack()
     tracks.Add(trackFactory.Create(2, defaultFormat, rate));
     auto &newTrack = **tracks.rbegin();
     newTrack.SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+    //! TODO AU4: find out why have to set tempo for the track right there
+    //! should be set automatically to project tempo value
+    DoProjectTempoChange(newTrack, 120);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->onTrackAdded(DomConverter::track(*tracks.rbegin()));
+    auto track = *tracks.rbegin();
+    prj->onTrackAdded(DomConverter::track(track));
 
-    //! TODO AU4: set selected?
-    //! TODO AU4: add action to the history
-    // ProjectHistory::Get( project )
-        // .PushState(XO("Created new stereo audio track"), XO("New Track"));
+    selectionController()->setSelectedTrack(DomConverter::trackId(track->GetId()));
 }
 
 void Au3Interaction::newLabelTrack()

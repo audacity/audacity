@@ -6,6 +6,7 @@
 #include "../../itrackeditinteraction.h"
 
 #include "Track.h"
+#include "iselectioncontroller.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
@@ -27,6 +28,7 @@ namespace au::trackedit {
 class Au3Interaction : public ITrackeditInteraction
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::trackedit::ISelectionController> selectionController;
 
 public:
     Au3Interaction() = default;
@@ -38,7 +40,7 @@ public:
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
     void clearClipboard() override;
-    bool pasteIntoClipboard(double begin, trackedit::TrackId trackId) override;
+    bool pasteFromClipboard(double begin, trackedit::TrackId trackId) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, double begin, double end) override;
     bool copyTrackDataIntoClipboard(const trackedit::TrackId trackId, double begin, double end) override;
@@ -51,6 +53,11 @@ public:
 
 private:
     AudacityProject& projectRef() const;
+    bool pasteIntoNewTrack();
+    ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList &list, double begin);
+    std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks,
+                                    TrackId destinationTrackId, size_t tracksNum) const;
+    bool canPasteClips(const std::vector<TrackId>& tracksIds,  double begin) const;
 
     muse::async::Channel<trackedit::ClipKey, double /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 

@@ -128,8 +128,6 @@ void TrackeditActionsController::clipCopySelected()
         }
 
         trackeditInteraction()->copyTrackDataIntoClipboard(track.id, selectedStartTime, selectedEndTime);
-        //! TODO AU4: handle multiple tracks copying (need to extend playcursor behaviour first)
-        break;
     }
 }
 
@@ -173,7 +171,7 @@ void TrackeditActionsController::paste()
     TrackId selectedTrackId = selectionController()->selectedTrack();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
-        trackeditInteraction()->pasteIntoClipboard(selectedStartTime, selectedTrackId);
+        trackeditInteraction()->pasteFromClipboard(selectedStartTime, selectedTrackId);
 
         pushProjectHistoryPasteState();
     }
@@ -212,16 +210,25 @@ void TrackeditActionsController::setLoopRegionOut()
 void TrackeditActionsController::newMonoTrack()
 {
     trackeditInteraction()->newMonoTrack();
+    pushProjectHistoryTrackAddedState();
 }
 
 void TrackeditActionsController::newStereoTrack()
 {
     trackeditInteraction()->newStereoTrack();
+    pushProjectHistoryTrackAddedState();
 }
 
 void TrackeditActionsController::newLabelTrack()
 {
     trackeditInteraction()->newLabelTrack();
+}
+
+void TrackeditActionsController::pushProjectHistoryTrackAddedState()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto trackeditProject = project->trackeditProject();
+    trackeditProject->pushHistoryState("Created new audio track", "New track");
 }
 
 void TrackeditActionsController::pushProjectHistoryPasteState()
