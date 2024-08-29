@@ -5,8 +5,8 @@
 
 using namespace au::projectscene;
 
-constexpr int DEFAULT_HEIGHT = 114;
-constexpr int MIN_HEIGHT = 52;
+constexpr int DEFAULT_HEIGHT = 116;
+constexpr int MIN_HEIGHT = 44;
 constexpr int COLLAPSE_HEIGHT = 72;
 
 muse::ValCh<int> ProjectViewState::tracksVericalY() const

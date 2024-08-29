@@ -194,5 +194,6 @@ Item {
         color: "#FFFFFF"
         opacity: 0.1
         anchors.bottom: parent.bottom
+        separatorWidth: 2
     }
 }
