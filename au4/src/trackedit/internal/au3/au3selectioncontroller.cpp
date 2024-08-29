@@ -32,7 +32,7 @@ void Au3SelectionController::resetSelectedTrack()
         au3Track->SetSelected(false);
     }
 
-    m_selectedTrack.set(au::trackedit::TrackId(), true);
+    m_selectedTrack.set(au::trackedit::TrackId(-1), true);
 }
 
 au::trackedit::TrackId Au3SelectionController::selectedTrack() const
