@@ -1,21 +1,25 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2024 Audacity Team
+# Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2022-2024
-# Balázs Úr <urbalazs@gmail.com>, 2014-2016.
-# Koncz László <koncz.l@upcmail.hu>, 2014.
-# Pelládi Gábor <pelladigabor@gmail.com>, 2008.
-# Márton Balázs <documan@mailbox.hu>, 2008.
+# Sandor Kelemen <ksanci@ksanci.hu>, 2024
+# Veronika Simonkay, 2024
+# 3f048e6dde83e70af0efde74dc4791f1_abfed1b <c0210df0666399427a8ed09f655e9a6e_942643>, 2024
+# Benedek Fodor (RedyAu) <fodor.benedek2001@gmail.com>, 2024
+# Péter Patkós, 2024
+# Paval Shalamitski <yehekim@gmail.com>, 2024
+# Balázs Úr, 2024
+# Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2024
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2020-11-02 10:15+0000\n"
+"POT-Creation-Date: 2024-08-30 16:51+0300\n"
+"PO-Revision-Date: 2024-04-06 16:47+0000\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/klyok/teams/690/hu/)\n"
 "Language: hu\n"
@@ -27,7 +31,7 @@ msgstr ""
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "A stream aktív … nem sikerül az információgyújtés.\n"
+msgstr "A stream aktív … nem sikerül az információgyűjtés.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -360,23 +364,21 @@ msgstr "Nem lehet folytatni a feltöltést."
 #. i18n-hint: database operation has failed because the requested item was not found
 #: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "File not found"
-msgstr "\"%s\" fájl nem található."
+msgstr "A fájl nem található"
 
 #: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
 msgid "Project was closed before snapshot was created"
 msgstr ""
 
 #: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid Response: %s"
-msgstr "Érvénytelen mintavételezési gyakoriság"
+msgstr "Érvénytelen válasz: %s"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
-#, fuzzy
 msgid "Export failed"
-msgstr "Exportálása fájlba."
+msgstr "Sikertelen eportálás"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
@@ -386,37 +388,32 @@ msgid "Export error"
 msgstr "Importálási hiba"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
-#, fuzzy
 msgid "Failed to attach to the Cloud project database"
-msgstr "Nem sikerült megnyitni a projekt adatbázisát"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
-#, fuzzy
 msgid "Failed to decompress the Cloud project block"
-msgstr "Nem sikerült megnyitni a projekt adatbázisát"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Local project data was removed before the sync has completed"
 msgstr ""
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
-#, fuzzy
 msgid "Failed to deserialize the response"
-msgstr "Nem lehet lekérni az előbeállítás tartalmát"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Modern"
-msgstr "Mód:"
+msgstr "Modern"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Glue Compressor"
-msgstr "Tömörítő"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -425,9 +422,8 @@ msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beat Booster"
-msgstr "Basszus kiemelése"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -436,9 +432,8 @@ msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beefy Master"
-msgstr "Beillesztés"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -452,27 +447,23 @@ msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Lead Vocals"
-msgstr "Vokálok eltávolítása"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Fat Vocals"
-msgstr "Vokálok izolálása"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Power Vocals"
-msgstr "Vokálok eltávolítása"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Vocal Control"
-msgstr "Hangvezérlők"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -492,24 +483,22 @@ msgstr ""
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Piano"
-msgstr ""
+msgstr "Zongora"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Acoustic Guitar"
-msgstr ""
+msgstr "Akusztikus gitár"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Bass Guitar"
-msgstr "Basszus vágása"
+msgstr "Basszusgitár"
 
 #. i18n-hint: This is the name of an effect preset. Strings is violins, etc
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Strings"
-msgstr "&Beállítások"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -553,21 +542,18 @@ msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Master Limiter"
-msgstr "Korlátozó"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "SFX Limiter"
-msgstr "Korlátozó"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "VO Limiter"
-msgstr "Korlátozó"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -581,9 +567,8 @@ msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Play it Loud"
-msgstr "Hang lejátszása"
+msgstr ""
 
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
@@ -873,14 +858,13 @@ msgstr ""
 "Az Audacity nem tudja megnyitni az ilyen típusú fájlt."
 
 #: libraries/lib-import-export/Import.cpp
-#, fuzzy
 msgid "Importing files"
-msgstr "%s importálása"
+msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Importing %s..."
-msgstr "%s importálása"
+msgstr "%s importálása..."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Operation was canceled by user"
@@ -2454,32 +2438,28 @@ msgid "Samples"
 msgstr "Minták"
 
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "SQLite3 error"
-msgstr "belső hiba"
+msgstr "SQLite3 hiba"
 
 #. i18n-hint: database operation was successful
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "No error"
-msgstr "nincs hiba"
+msgstr "Nincs hiba"
 
 #. i18n-hint: database operation has failed, but there is no specific reason
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Generic error"
-msgstr "Általános"
+msgstr "Általános hiba"
 
 #. i18n-hint: database operation has failed due to the internal error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Internal logic error in SQLite"
-msgstr "Belső logikai hiba"
+msgstr ""
 
 #. i18n-hint: database operation has failed due to the permission error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Access permission denied"
-msgstr ""
+msgstr "Hozzáférés megtagadva"
 
 #. i18n-hint: database operation was aborted by the callback
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2489,12 +2469,12 @@ msgstr ""
 #. i18n-hint: database operation has failed because database is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database file is locked"
-msgstr ""
+msgstr "Az adatbázis-fájl zárolták"
 
 #. i18n-hint: database operation has failed because table is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "A table in the database is locked"
-msgstr ""
+msgstr "Az adatbázisban egy táblát zároltak"
 
 #. i18n-hint: database operation has failed due to the lack of memory
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2508,14 +2488,13 @@ msgstr ""
 
 #. i18n-hint: database operation was interrupted
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Operation terminated"
-msgstr "bizonytalan"
+msgstr ""
 
 #. i18n-hint: database operation has failed due to the I/O failure
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "I/O error occurred"
-msgstr ""
+msgstr "I/O hiba"
 
 #. i18n-hint: database operation has failed due to the database corruption
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2529,12 +2508,8 @@ msgstr ""
 
 #. i18n-hint: database operation has failed because the file cannot be opened
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Unable to open the database file"
 msgstr ""
-"Nem sikerült megnyitni az adatbázisfájlt:\n"
-"\n"
-"%s"
 
 #. i18n-hint: database operation has failed because the lock protocol has failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2544,7 +2519,7 @@ msgstr ""
 #. i18n-hint: database operation has failed because the database schema has changed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database schema changed"
-msgstr ""
+msgstr "Az adatbázis-séma módosult"
 
 #. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2559,7 +2534,7 @@ msgstr ""
 #. i18n-hint: database operation has failed due to the data type mismatch
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Data type mismatch"
-msgstr ""
+msgstr "Adattípus eltérés"
 
 #. i18n-hint: database operation has failed due to the library misuse
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2578,9 +2553,8 @@ msgstr ""
 
 #. i18n-hint: database operation has failed due to the format error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Not used"
-msgstr "(Nincs használatban):"
+msgstr "Nincs használatban"
 
 #. i18n-hint: database operation has failed because the parameter is out of range
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2589,12 +2563,8 @@ msgstr ""
 
 #. i18n-hint: database operation has failed because the file opened is not a database file
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "File opened that is not a database file "
 msgstr ""
-"Nem sikerült megnyitni az adatbázisfájlt:\n"
-"\n"
-"%s"
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2942,9 +2912,8 @@ msgid "Pre-processing"
 msgstr "Előfeldolgozás"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
-#, fuzzy
 msgid "Rendering Clip"
-msgstr "Klip átnevezése…"
+msgstr ""
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -5012,7 +4981,7 @@ msgstr "VBR mód"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Optimize for"
-msgstr "Erre optimalizáljon: "
+msgstr "Optimális ehhez:"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Speech"
@@ -5040,11 +5009,11 @@ msgstr "Nem támogatott mintavételezési frekvencia"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting selected audio as Opus"
-msgstr "Kiválasztott hanganyag exportálása Opusként"
+msgstr "Kiválasztott hanganyag exportálása Opusként folyamatban"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting the audio as Opus"
-msgstr "Hanganyag exportálása Opusként"
+msgstr "Hanganyag exportálása Opusként folyamatban"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to create Opus encoder"
@@ -5076,7 +5045,7 @@ msgstr "Nem sikerült a lookaheadet szerezni"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Failed to calculate correct preskip"
-msgstr "Nem sikerült helyes preskipet számítani"
+msgstr "Nem sikerült helyes preskipet számolni"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Failed to encode input buffer"
@@ -5760,9 +5729,8 @@ msgstr "Parancsfájl leállítása"
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-#, fuzzy
 msgid "Waiting for audio.com"
-msgstr "audio.com"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
@@ -5772,91 +5740,76 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
 msgid "Save to audio.com"
-msgstr "audio.com"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#, fuzzy
 msgid "Generating audio preview..."
-msgstr "Hang előkészítése..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
 msgid "Open trace audio.com"
-msgstr "audio.com"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
 msgid "Synchronizing project"
-msgstr "Projekt mentése"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Previews can be updated only for Cloud projects"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Save &To Cloud..."
-msgstr "Napló mentése ide:"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Fro&m Cloud..."
-msgstr "Menü megnyitása…"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "S&hare Audio..."
-msgstr "Megosztás"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Account"
-msgstr "Fiók ö&sszekapcsolása"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Export behavior"
-msgstr "Importálási hiba"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "S&how 'How would you like to export?' dialog"
-msgstr "Hogyan illeszted ne a hangot?"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Save behavior"
-msgstr "Viselkedések"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Always &ask"
-msgstr "Mindig kérdezzen"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Always &save to cloud"
-msgstr "Hullám&szín"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Always save to the co&mputer"
-msgstr "Naplótartalom mentése."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Temporary Cloud files directory"
-msgstr "Ideiglenes fájlok mappája"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -5873,14 +5826,12 @@ msgid "days"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "&Remove temporary files after:"
-msgstr "Ideiglenes fájlok mappája"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Preferences for Cloud"
-msgstr "Modul beállításai"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -5898,9 +5849,8 @@ msgid "Cannot set the preference."
 msgstr "A beállítás nem sikerült."
 
 #: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, fuzzy
 msgid "Failed."
-msgstr "Sikertelen"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
 #, c-format
@@ -5932,9 +5882,8 @@ msgid "&Share Audio Toolbar"
 msgstr "&Megosztás eszköztár"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "Account not linked"
-msgstr "A fiókot sikeresen összekapcsolta!"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
@@ -5945,35 +5894,30 @@ msgid "&Unlink Account"
 msgstr "Fiók &leválasztása"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
 msgid "Open from audio.com"
-msgstr "audio.com"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
 msgid "Don't show this again"
-msgstr "Ne jelenjen meg többet ez a figyelmeztetés"
+msgstr ""
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "How would you like to save?"
-msgstr "Hogyan illeszted ne a hangot?"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Save to the Cloud (free)"
-msgstr "Napló mentése ide:"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Save to Cloud"
-msgstr "Hullám&szín"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
@@ -5986,60 +5930,51 @@ msgid ""
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Save to &computer"
-msgstr "Naplótartalom mentése."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Remember my choice and don't show again"
-msgstr "Emlékezz a választásomra és többé ne kérdezd"
+msgstr ""
 
 #. i18n-hint: A title that is shown on export that allows the user to select
 #. Cloud or local export.
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "How would you like to export?"
-msgstr "Hogyan illeszted ne a hangot?"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Share to audio.com"
-msgstr "Megosztás"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Share to audio.com"
-msgstr "Megosztás"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Export to &computer"
-msgstr "Továbbiak exportálása"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Don't show again"
-msgstr "Többet nem kérdezze"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Project Name"
-msgstr "Projekt"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
 msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr "A hang megosztásának feltétele egy ingyenes %s fiók, ami össze van kötve az Audacity-vel. %%Ehhez kattitnts a fenti \"Fiók összekötése\" lehetőségre."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
@@ -6056,9 +5991,8 @@ msgid "Public"
 msgstr "Nyilvános"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
 msgid "Save to computer..."
-msgstr "Projekt mentése..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 msgid "We encountered an issue syncing your file"
@@ -6069,18 +6003,16 @@ msgid "Don't worry, your changes will be saved to a temporary location and will 
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
 msgid "You are not signed in"
-msgstr "Ehhez a bejegyzéshez nem rendelhet hozzá billentyűt"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
 msgid "Sign in"
-msgstr "Vége igazítása"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -6141,14 +6073,12 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#, fuzzy
 msgid "Save to computer"
-msgstr "Naplótartalom mentése."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#, fuzzy
 msgid "Save to Cloud"
-msgstr "Napló mentése ide:"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "Your project storage limit has been reached."
@@ -6164,9 +6094,8 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Visit audio.com"
-msgstr "audio.com"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Project version conflict detected"
@@ -6177,9 +6106,8 @@ msgid "There's a newer version of this Audacity project on Audio.com. Saving thi
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Save this project"
-msgstr "Ment egy projektet."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Discard and open latest version"
@@ -6190,14 +6118,12 @@ msgid "Project contains unsaved changes. There's a newer version of this Audacit
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Open local project"
-msgstr "Megnyit egy projektet."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Cloud project conflict"
-msgstr "Tömörített projektfájl"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
@@ -6208,18 +6134,16 @@ msgid "Keep currently open version"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Open new version"
-msgstr "Mintavételezési gyakoriság átalakítás"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open from Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "less than 1 minute"
-msgstr "Kevesebb mint 1 perc"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
@@ -6229,56 +6153,48 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one hour ago"
 msgid_plural "%d hours ago"
-msgstr[0] "Hangszín időtartama:"
-msgstr[1] "Hangszín időtartama:"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Modified"
-msgstr "Módosított címke"
+msgstr "Módosítva"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Failed to authorize account"
-msgstr "Nem sikerült visszaállítani a kapcsolatot"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Loading projects list..."
-msgstr "Projekt mentése"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Failed to get projects list"
-msgstr "Nem sikerült megtalálni a projektet"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Cloud saved projects"
-msgstr "Tömörített projektfájl"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Search:"
-msgstr "Ker&esés:"
+msgstr "Keresés:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Prev"
-msgstr "&Előnézet"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "View in audio.com"
-msgstr "audio.com"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Page %d of %d"
-msgstr "%s %d / %d"
+msgstr "%d / %d oldal"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -6360,9 +6276,8 @@ msgid "You don't have access to this project."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "The project could not be found."
-msgstr "A célprojektet nem lehetett leválasztani"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The server responded with something Audacity could not understand."
@@ -6377,26 +6292,23 @@ msgid "Audio.com encountered an internal error."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "Audacity encountered an unknown error."
-msgstr "Audacity konfigurációs hiba"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "Sync failed"
-msgstr " Szinkronizáció zárolva"
+msgstr "A szinkronizáció sikertelen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error details:\n"
 "%s"
-msgstr "Probléma részletei"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#, fuzzy
 msgid "Syncing your project"
-msgstr "Projekt biztonsági mentése"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
@@ -6408,9 +6320,8 @@ msgid "Continue"
 msgstr "Folytatás"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
 msgid "Success!"
-msgstr "Siker"
+msgstr "Siker!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
@@ -6418,35 +6329,31 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
-msgstr ""
+msgstr "Kész"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Cloud project incomplete"
-msgstr "Az összetevő nem található"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Load latest"
-msgstr "Fájlok betöltése"
+msgstr "Legutolsó betöltése"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#, fuzzy
 msgid "You have canceled this upload to audio.com"
-msgstr "Audio.com-ra feltöltés megszakítása"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#, fuzzy
 msgid "Retry"
-msgstr "Újra&próbálkozás"
+msgstr "Újra"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
@@ -6638,9 +6545,9 @@ msgstr "%s, grafikák"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, effects presets"
-msgstr "Előbeállítás kiválasztása"
+msgstr ""
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -6935,9 +6842,8 @@ msgstr "Kattintás és húzás az igazításhoz, dupla kattintás az alapérték
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Record/Playhead"
-msgstr "Fej felvétele/lejátszása"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
@@ -7059,16 +6965,16 @@ msgstr ""
 "Eltávolították a legutóbbi fájlok listájáról."
 
 #: src/AudacityApp.cpp
+msgid "Audacity is starting up..."
+msgstr "Az Audacity indulása folyamatban…"
+
+#: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr "Az SQLite könyvtár inicializálása nem sikerült.  Az Audacity nem tudja folytatni."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "A blokkméret csak 256 és 100000000 között lehet\n"
-
-#: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "Az Audacity indulása folyamatban…"
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -7348,13 +7254,11 @@ msgstr ""
 "Bekapcsolod a a zenei nézetet és beállítod a a projekt tempót  %s értékre?"
 
 #: src/AudacityMirProject.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity detected one or more files to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
-"Audacity az érzékeli, hogy ez a fájl üteme %s bpm.\n"
-"Bekapcsolod a a zenei nézetet és beállítod a a projekt tempót  %s értékre?"
 
 #: src/AudacityMirProject.cpp
 msgid "Music Import"
@@ -8264,16 +8168,13 @@ msgstr "Újra&rajtolás…"
 
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "A spektrumábrázoláshoz minden kiválasztott csatornánál azonosnak kell lennie a mintavételezési frekvenciának."
+msgstr "Spektrumábrázoláshoz minden kiválasztott sáv mintavételezési frekvenciája azonos kell, hogy legyen."
 
 #: src/FreqWindow.cpp
-#, fuzzy
 msgid ""
 "Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
-"Hangelemzés sikertelen. Ezt egy nyújtott klip is okozhatja.\n"
-"Próbáld meg visszaállítani a nyújtást a klipeken, vagy keverd és rendereld a sávokat az elemzés előtt."
 
 #: src/FreqWindow.cpp
 #, c-format
@@ -8505,14 +8406,12 @@ msgid "Label Track"
 msgstr "Címkesáv"
 
 #: src/LabelTrack.cpp
-#, fuzzy
 msgid "SubRip text file"
-msgstr "Szöveges fájl"
+msgstr ""
 
 #: src/LabelTrack.cpp
-#, fuzzy
 msgid "WebVTT file"
-msgstr "HTML-fájl"
+msgstr "WebVTT-fájl"
 
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
@@ -8770,14 +8669,12 @@ msgstr ""
 "%s"
 
 #: src/PluginDataViewCtrl.cpp
-#, fuzzy
 msgid "Disable"
-msgstr "Kikapcsolva"
+msgstr "Kikapcsolás"
 
 #: src/PluginDataViewCtrl.cpp
-#, fuzzy
 msgid "Enable"
-msgstr "Engedélyezve"
+msgstr "Engedélyezés"
 
 #: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
@@ -8796,57 +8693,48 @@ msgid "Generator"
 msgstr "Előállító"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Analyzer"
-msgstr "Elemzés"
+msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Tool"
-msgstr "Eszközök"
+msgstr "Eszköz"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Manage Plugins"
 msgstr "Bővítmények kezelése"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Native Audacity"
-msgstr "Audacity frissítés"
+msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Show:"
-msgstr "Megjelenítés:"
+msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Type:"
-msgstr "Típus:"
+msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "C&ategory:"
-msgstr "Kategória"
+msgstr "&Kategória:"
 
 #: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Searc&h:"
 msgstr "Ker&esés:"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Plugin"
-msgstr "Bővítmény"
+msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Rescan"
-msgstr "Újraolvasás"
+msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Get more effects..."
-msgstr "További hatások beszerzése…"
+msgstr ""
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -8891,10 +8779,10 @@ msgstr "Túl kevés kompatibilis sáv került kiválasztásra"
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr "%s.%i"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -9507,9 +9395,8 @@ msgstr "Ismeretlen"
 
 #. i18n-hint: master channel display name
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Master"
-msgstr "Beillesztés"
+msgstr "Mester"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Add effect"
@@ -9587,14 +9474,12 @@ msgid "Realtime effects are non-destructive and can be changed at any time."
 msgstr "A valósidejű hatások roncsolásmentesek, és bármikor módosíthatók."
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Master Effects"
-msgstr "Valósidejű hatások"
+msgstr "Mester hatások"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Applies to all tracks"
-msgstr "Szétvágás új sávra"
+msgstr ""
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -10334,9 +10219,8 @@ msgid "View tutorials"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our forum"
-msgstr "audio.com"
+msgstr "Látogasd meg a fórumunkat"
 
 #: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
@@ -12061,60 +11945,50 @@ msgstr "%0.f mp"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "I&nput"
-msgstr ""
+msgstr "&Bemenet"
 
 #. i18n-hint: show input on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show input"
-msgstr "Kimenet megjelenítése"
+msgstr "Bemenet megjelenítése"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "O&utput"
-msgstr "Kimenet"
+msgstr "&Kimenet"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "A&ctual compression"
-msgstr "Tömörítés"
+msgstr ""
 
 #. i18n-hint: show actual compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show actual compression"
-msgstr "Hangerő és tömörítés"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Tar&get compression"
-msgstr "Tömörítés"
+msgstr ""
 
 #. i18n-hint: show target compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show target compression"
-msgstr "Hangerő és tömörítés"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Compression curve"
-msgstr "Tömörítés"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Smoothing"
-msgstr "Ne tegyen semmit"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "&Threshold (dB)"
-msgstr "Küszöbérték (dB)"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "&Make-up gain (dB)"
-msgstr "Helyrehozó erősítés"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Make-up target (dB)"
@@ -12125,37 +11999,32 @@ msgid "Knee &width (dB)"
 msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "Rati&o:"
-msgstr "&Arány:"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Lookahead (ms)"
 msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "Attac&k (ms)"
-msgstr "Válasz (mp)"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "&Release (ms)"
-msgstr "Lecsengési idő"
-
-#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-msgid "Input"
 msgstr ""
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-#, fuzzy
-msgid "Actual Compression"
-msgstr "Tömörítés"
+msgid "Input"
+msgstr "Bemenet"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-#, fuzzy
+msgid "Actual Compression"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Target Compression"
-msgstr "Tömörítés"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "awaiting playback"
@@ -12776,9 +12645,8 @@ msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Fejjel lefelé tükrözi a hangmintákat, megfordítva azok polaritását"
 
 #: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Compressor"
-msgstr "Tömörítő"
+msgstr ""
 
 #: src/effects/LegacyCompressor.cpp
 msgid "Compresses the dynamic range of audio"
@@ -13482,13 +13350,12 @@ msgstr "Figyelmeztetés: nincsenek ismétlések."
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Acoustic"
-msgstr ""
+msgstr "Akusztikus"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Ambience"
-msgstr "Csend"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13497,9 +13364,8 @@ msgstr ""
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Clean"
-msgstr "Törlés"
+msgstr "Tisztítás"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13513,15 +13379,13 @@ msgstr "II. énekhang"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Dance Vocal"
-msgstr "Vokálok izolálása"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Modern Vocal"
-msgstr "Vokálok eltávolítása"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -15163,9 +15027,8 @@ msgid "&Export Audio..."
 msgstr "&Hang exportálása…"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Expo&rt Other"
-msgstr "Továbbiak exportálása"
+msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
@@ -15205,9 +15068,8 @@ msgid "Export as FLAC"
 msgstr "Exportálása FLAC-ként"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Expo&rt Selected Audio..."
-msgstr "Hang exportálása…"
+msgstr "Kijelölt hang &exportálása…"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -15574,9 +15436,8 @@ msgid "Add Realtime Effects"
 msgstr "Valósidejű hatások hozzáadása"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Get AI effects..."
-msgstr "További hatások beszerzése…"
+msgstr ""
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -15886,9 +15747,8 @@ msgid "Long Seek Rig&ht During Playback"
 msgstr "Nagy tekerés &jobbra a lejátszás alatt"
 
 #: src/menus/TimelineMenus.cpp
-#, fuzzy
 msgid "Tim&eline"
-msgstr "Idővonal"
+msgstr "Idő&vonal"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -16278,9 +16138,8 @@ msgid "&Solo/Unsolo Focused Track"
 msgstr "A fókuszált sáv &szólóra/nem szólóra állítása"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Delete Fo&cused Track"
-msgstr "Fókuszált sáv &bezárása"
+msgstr ""
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track U&p"
@@ -16559,18 +16418,16 @@ msgid "Skip to Selection End"
 msgstr "Kihagyás a kijelölés &végéig"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Enable E&xtra Menus"
-msgstr "&Extra menük bekapcsolása"
+msgstr ""
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "&Levágás megjelenítése a Hullámformában"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Show &RMS in Waveform"
-msgstr "&Levágás megjelenítése a Hullámformában"
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -16846,9 +16703,8 @@ msgid "'Macro Output' directory cannot be set."
 msgstr "'Makrókimenet' mappája nem állítható be."
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Add new location"
-msgstr "Új szabály &hozzáadása"
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
@@ -16912,18 +16768,17 @@ msgstr "SSE/SSE2/…/AVX &használata"
 #. * First argument is replaced with plugin type (e.g. "LV2 plugin locations")
 #.
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s plugin locations"
-msgstr "Válassz egy helyet"
+msgstr "%s plugin helyei"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Skip effects scanning at startup"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Open Plugin &Manager"
-msgstr "Bővítménykezelő megnyitása"
+msgstr ""
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -18763,53 +18618,44 @@ msgid "Stretch"
 msgstr "Nyújtás"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
-#, fuzzy
 msgid "Click to open clip context menu."
-msgstr "Kattintás a címkeszöveg módosításához"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Reset Clip Pitch"
-msgstr "Klipnyújtás renderelése"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Not enough space"
-msgstr "Nincs elég adat kijelölve."
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "There is not enough space to expand the clip to its original speed."
-msgstr "Nincs elegendő hely a klip nyújtásához a kiválasztott sebességre."
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Reset Clip Speed"
-msgstr "Klip sebessége"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to reset clip pitch."
-msgstr "Kattintás és húzás a klip nyújtásához"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to change clip pitch, Cmd + click to reset."
-msgstr "Kattintás és húzás az igazításhoz, dupla kattintás az alapértékhez"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip pitch, Ctrl + click to reset."
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to reset clip speed."
-msgstr "Kattintás és húzás a klip nyújtásához"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to change clip speed, Cmd + click to reset."
-msgstr "Kattintás és húzás az igazításhoz, dupla kattintás az alapértékhez"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip speed, Ctrl + click to reset."
@@ -18833,52 +18679,44 @@ msgid "Removed Cut Line"
 msgstr "Metszésvonal eltávolítva"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Pitch and Speed"
-msgstr "Hangmagasság és Tempó"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Clip Pitch"
-msgstr "Hangmagasság"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "se&mitones:"
-msgstr "félhangok + centek"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&cents:"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Clip Speed"
-msgstr "Klip sebessége"
-
-#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-msgid "&speed %: "
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
+msgid "&speed %: "
+msgstr "&sebesség %: "
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "General"
-msgstr "&Előállítás"
+msgstr "Általános"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "&Optimize for Voice"
-msgstr "Erre optimalizáljon: "
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Changed Speed"
-msgstr "Sebesség módosítása"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Changed Pitch"
-msgstr "Hangmagasság változtatása"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -19030,9 +18868,8 @@ msgid "Rename Clip..."
 msgstr "Klip átnevezése…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
-#, fuzzy
 msgid "Pitch and Speed..."
-msgstr "Sebesség változtatása"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
@@ -19073,37 +18910,32 @@ msgid "Rendered time-stretched audio"
 msgstr "Időnyújtással renderelt hang"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch Shift"
-msgstr "Végső hangmagasság-eltolás"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Changed Pitch Shift"
-msgstr "Hangmagasság változtatása"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Rename Clip..."
 msgstr "Klip á&tnevezése..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "&Pitch and Speed..."
-msgstr "Sebesség változtatása"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Render Pitch and &Speed"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch &Up"
-msgstr "Hangmagasság"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch &Down"
-msgstr "Hangmagasság"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -19337,33 +19169,28 @@ msgid "WaveColor Change"
 msgstr "Hullámszín módosítása"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change Speed Limits"
-msgstr "Sebesség módosítása"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change speed limit (%) to:"
-msgstr "Alsó sebességhatár változtatása (%) erre:"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Lower Speed Limit"
-msgstr "Alsó sebességhatár"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Upper Speed Limit"
-msgstr "Felső sebességhatár"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
 msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Invalid Limits"
-msgstr "Kemény korlát"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19841,9 +19668,9 @@ msgstr "J"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.3fx"
-msgstr "%.3f"
+msgstr "%.3fx"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -20737,9 +20564,8 @@ msgstr ""
 "                 Csak egy hangot észleltünk."
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Limiter"
-msgstr "Korlátozó"
+msgstr ""
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -21621,466 +21447,5 @@ msgid "Spectral Tools"
 msgstr "Spektrális eszközök"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy"
-msgstr "Jogi nyilatkozat"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s %i"
-#~ msgstr "%s %i"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s #%d"
-#~ msgstr "%s #%d"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Felső sebességhatár változtatása (%) erre:"
-
-#~ msgid "This version of Audacity only allows one time track for each project window."
-#~ msgstr "Az Audacity ezen verziója projektablakonként csak egyetlen idősávot engedélyez."
-
-#, fuzzy
-#~ msgid "Master effects"
-#~ msgstr "Valósidejű hatások"
-
-#, fuzzy
-#~ msgid "Apply to all tracks"
-#~ msgstr "Szétvágás új sávra"
-
-#, fuzzy
-#~ msgid "Input gain (dB)"
-#~ msgstr "Kimeneti növekedés (dB)"
-
-#, fuzzy
-#~ msgid "Ceiling (dB)"
-#~ msgstr "Növelés (dB)"
-
-#, fuzzy
-#~ msgid "Attenuation"
-#~ msgstr "Tájolás"
-
-#, fuzzy
-#~ msgid "Limiter (beta)"
-#~ msgstr "Korlátozó"
-
-#, fuzzy
-#~ msgid "Compressor (beta)"
-#~ msgstr "Tömörítő"
-
-#, fuzzy
-#~ msgid "View online"
-#~ msgstr "Idővonal"
-
-#~ msgid ""
-#~ "Your project is now empty.\n"
-#~ "If saved, the project will have no tracks.\n"
-#~ "\n"
-#~ "To save any previously open tracks:\n"
-#~ "Click 'No', Edit > Undo until all tracks\n"
-#~ "are open, then File > Save Project.\n"
-#~ "\n"
-#~ "Save anyway?"
-#~ msgstr ""
-#~ "A projektje jelenleg üres.\n"
-#~ "Ha elmented, a projektnek nem lesznek sávjai.\n"
-#~ "\n"
-#~ "Bármely korábban megnyitott sáv mentéséhez:\n"
-#~ "Kattints a 'Nem'-re, Szerkesztés > Visszavonás,\n"
-#~ "amíg minden sáv meg nincs nyitva, aztán\n"
-#~ "Fájl > Projekt mentése.\n"
-#~ "\n"
-#~ "Biztos, hogy mented?"
-
-#~ msgid "Warning - Empty Project"
-#~ msgstr "Figyelmeztetés - Üres projekt"
-
-#~ msgid ""
-#~ "'Save Project' is for an Audacity project, not an audio file.\n"
-#~ "For an audio file that will open in other apps, use 'Export'.\n"
-#~ msgstr ""
-#~ "A 'Projekt mentése' Audacity-projekthez van, nem hangfájlhoz.\n"
-#~ "Más alkalmazásban megnyitandó hangfájlhoz használja az 'Exportálás'-t.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "If saved, the project will have no tracks.\n"
-#~ "\n"
-#~ "To save any previously open tracks:\n"
-#~ "Cancel, Edit > Undo until all tracks\n"
-#~ "are open, then File > Save Project."
-#~ msgstr ""
-#~ "\n"
-#~ "Ha elmented, a projektnek nem lesznek sávjai.\n"
-#~ "\n"
-#~ "Bármely korábban megnyitott sáv mentéséhez:\n"
-#~ "Mégse, Szerkesztés > Visszavonás, amíg minden sáv\n"
-#~ "meg nincs nyitva, aztán Fájl > Projekt mentése."
-
-#~ msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-#~ msgstr "<br><br>A jelenleg használt Audacity verziója: <b>Alfa teszt verzió</b>."
-
-#~ msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-#~ msgstr "<br><br>A jelenleg használt Audacity verziója: <b>Béta teszt verzió</b>."
-
-#~ msgid "Get the Official Released Version of Audacity"
-#~ msgstr "Szerezd meg az Audacity hivatalosan kiadott verzióját"
-
-#~ msgid "Check Online"
-#~ msgstr "Online ellenőrzés"
-
-#~ msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
-#~ msgstr "Javasoljuk, hogy használd a legújabb stabil verziónkat, ami teljes dokumentációval és támogatással rendelkezik.<br/><br/>"
-
-#~ msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-#~ msgstr "Segíthetsz nekünk abban, hogy az Audacity kész legyen a kiadásra, azzal, hogy csatlakozol a [[https://www.audacityteam.org/community/|közösségünkhöz]].<hr/><br/><br/>"
-
-#~ msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-#~ msgstr "<p>Ebben a verzióban újdonság az Ütemek és a Mértékek, az Időnyújtás stb. <br/>"
-
-#~ msgid "How to get help"
-#~ msgstr "Hogyan kaphatsz segítséget"
-
-#~ msgid "These are our support methods:"
-#~ msgstr "Ezek a támogatási módszereink:"
-
-#~ msgid "[[help:Quick_Help|Quick Help]]"
-#~ msgstr "[[help:Quick_Help|Gyors segítség]]"
-
-#~ msgid " [[help:Main_Page|Manual]]"
-#~ msgstr " [[help:Main_Page|Kézikönyv]]"
-
-#~ msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-#~ msgstr "[[https://support.audacityteam.org/|Oktatóanyagok & útmutatók]]"
-
-#~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-#~ msgstr " [[http://forum.audacityteam.org/|Fórum]] - tedd fel a kérdésed közvetlenül az interneten."
-
-#~ msgid "Warnings"
-#~ msgstr "Figyelmeztetések"
-
-#~ msgid "Preferences for Warnings"
-#~ msgstr "Figyelmeztetések beállításai"
-
-#~ msgid "Show Warnings/Prompts for"
-#~ msgstr "Figyelmeztetések/Felugrók megjelenítése"
-
-#~ msgid "Saving &projects versus exporting audio"
-#~ msgstr "&Projektek mentés a hang exportálásával szemben"
-
-#~ msgid "Saving &empty project"
-#~ msgstr "Ü&res projekt mentése"
-
-#~ msgid "Stereo, %dHz"
-#~ msgstr "Sztereó, %dHz"
-
-#~ msgid "Mono, %dHz"
-#~ msgstr "Monó, %dHz"
-
-#~ msgid "&Ok"
-#~ msgstr "&OK"
-
-#~ msgid "Stereo, 999999Hz"
-#~ msgstr "Sztereó, 999999Hz"
-
-#~ msgid "Noise Removal"
-#~ msgstr "Zajszűrés"
-
-#~ msgid "Removes constant background noise such as fans, tape noise, or hums"
-#~ msgstr "Eltávolítja az állandó háttérzajokat, mint például ventilátorok, kazettazaj vagy zümmögések"
-
-#~ msgid ""
-#~ "Select all of the audio you want filtered, choose how much noise you want\n"
-#~ "filtered out, and then click 'OK' to remove noise.\n"
-#~ msgstr ""
-#~ "Jelöld ki az összes hangot, amit szűrni szeretnél, válaszd ki, hogy mennyi\n"
-#~ "zajt szeretnél kiszűrni, majd kattints az 'OK' gombra a zaj eltávolításához.\n"
-
-#~ msgid "Noise re&duction (dB):"
-#~ msgstr "Zaj&csökkentés (dB):"
-
-#~ msgid "&Sensitivity (dB):"
-#~ msgstr "Ér&zékenység (dB):"
-
-#~ msgid "Fr&equency smoothing (Hz):"
-#~ msgstr "Fr&ekvenciasimítás (Hz):"
-
-#~ msgid "Attac&k/decay time (secs):"
-#~ msgstr "Válas&z-/lecsengési idő (mp):"
-
-#~ msgid "Attack/decay time"
-#~ msgstr "Válasz-/lecsengési idő"
-
-#~ msgid "Re&move"
-#~ msgstr "Eltá&volítás"
-
-#~ msgid "Show Track &Name as overlay"
-#~ msgstr "Hangsáv&név megjelenítése átfedésként"
-
-#~ msgid "B&lend system and Audacity theme"
-#~ msgstr "Rendszer és Audacity téma &egyvelege"
-
-#~ msgid "Sho&w track name as overlay"
-#~ msgstr "Hangsávnév megjelenítése átfedésként"
-
-#~ msgid "Command+Click to deselect"
-#~ msgstr "Parancs+kattintás a kijelölés visszavonásához"
-
-#~ msgid "Select track"
-#~ msgstr "Válassz sávot"
-
-#~ msgid "Ctrl+Click to deselect"
-#~ msgstr "Ctrl+kattintás a kijelölés visszavonásához"
-
-#~ msgid "%.2fx"
-#~ msgstr "%.2fx"
-
-#~ msgid "Rendering Time-Stretched Audio"
-#~ msgstr "Időbeli nyújtás renderelése folyamatban"
-
-#~ msgid "You've specified a file name without an extension. Are you sure?"
-#~ msgstr "Egy fájlnevet fájlkiterjesztés nélkül adtál meg. Biztos, hogy folytatod?"
-
-#~ msgid "Update display while playing"
-#~ msgstr "Kijelző frissítése lejátszás közben"
-
-#~ msgid "Pinned Play Head"
-#~ msgstr "Rögzített lejátszófej"
-
-#~ msgid "Enable pinned play &head"
-#~ msgstr "Kitűzütt lejátszófej engedélyezése"
-
-#~ msgid "Select effects, click the Enable or Disable button, then click OK."
-#~ msgstr "Válassz hatásokat, kattints az engedélyezés vagy letiltás gombra, végül nyomd meg az OK gombot."
-
-#~ msgid "Show all"
-#~ msgstr "Összes megjelenítése"
-
-#~ msgid "Show disabled"
-#~ msgstr "Letiltottak megjelenítése"
-
-#~ msgid "D&isabled"
-#~ msgstr "&Letiltva"
-
-#~ msgid "Show enabled"
-#~ msgstr "Engedélyezettek megjelenítése"
-
-#~ msgid "E&nabled"
-#~ msgstr "&Engedélyezve"
-
-#~ msgid "Show new"
-#~ msgstr "Új megjelenítése"
-
-#~ msgid "Ne&w"
-#~ msgstr "Ú&j"
-
-#~ msgid "State"
-#~ msgstr "Állapot"
-
-#~ msgid "&Select All"
-#~ msgstr "Ö&sszes kijelölése"
-
-#~ msgid "C&lear All"
-#~ msgstr "&Kijelölés törlése"
-
-#~ msgid "&Disable"
-#~ msgstr "&Letiltás"
-
-#~ msgid ""
-#~ "Enabling effects or commands:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Hatások vagy parancsok engedélyezése:\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "Enabling effect or command:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Hatás vagy parancs engedélyezése:\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "Anonymous"
-#~ msgstr "Névtelen"
-
-#~ msgid "Stop &Preview"
-#~ msgstr "&Előnézet &megállítása"
-
-#~ msgid "&Timeline"
-#~ msgstr "&Idővonal"
-
-#~ msgid "Show Timeline Tooltips"
-#~ msgstr "Idővonal buboréksúgók megjelenítése"
-
-#~ msgid "Show Scrub Ruler"
-#~ msgstr "Változó sebességű lejátszás vonalzó megjelenítése"
-
-#~ msgid "Enable &dragging selection edges"
-#~ msgstr "Kijelölésszélek húzásának engedélyezése"
-
-#~ msgid "Enable scrolling left of &zero"
-#~ msgstr "Görgetés engedélyezése &nullától balra"
-
-#~ msgid "Mixing down to &mono during export"
-#~ msgstr "Összekeverés &monóra exportálás közben"
-
-#~ msgid "Mixing down to &stereo during export"
-#~ msgstr "Összekeverés &sztereóra exportálás közben"
-
-#~ msgid "Mixing down on export (&Custom FFmpeg or external program)"
-#~ msgstr "Összekeverés exportáláskor (&egyéni FFmpeg vagy külső program)"
-
-#~ msgid "Missing file &name extension during export"
-#~ msgstr "Hiányzó fájl &név kiterjesztés exportálás közben"
-
-#~ msgid "Scrub"
-#~ msgstr "Változó sebességű lejátszás"
-
-#~ msgid "Seek"
-#~ msgstr "Tekerés"
-
-#~ msgid "Scrub Ruler"
-#~ msgstr "Változó sebességű lejátszás vonalzó"
-
-#~ msgid "Stop Scrubbing"
-#~ msgstr "Változó sebességű lejátszás leállítása"
-
-#~ msgid "Start Scrubbing"
-#~ msgstr "Változó sebességű lejátszás indítása"
-
-#~ msgid "Stop Seeking"
-#~ msgstr "Tekerés leállítása"
-
-#~ msgid "Start Seeking"
-#~ msgstr "Tekerés indítása"
-
-#~ msgid "Hide Scrub Ruler"
-#~ msgstr "Változó sebességű lejátszás vonalzó elrejtése"
-
-#~ msgid "Scru&b Toolbar"
-#~ msgstr "&Változó sebességű lejátszás eszköztár"
-
-#~ msgid "Invalid clip speed"
-#~ msgstr "Érvénytelen klipsebesség"
-
-#~ msgid "Clip speed must be a positive value"
-#~ msgstr "A klip sebessége pozitív szám kell, hogy legyen"
-
-#~ msgid "Change &Speed..."
-#~ msgstr "&Sebesség változtatása..."
-
-#~ msgid "Render Clip S&tretching"
-#~ msgstr "Klip&nyújtás renderelése"
-
-#~ msgid "Robert Haenggi"
-#~ msgstr "Robert Haenggi"
-
-#~ msgid "Remove Vocals: to mono"
-#~ msgstr "Vokálok eltávolítása: monóvá"
-
-#~ msgid "Isolate Vocals and Invert"
-#~ msgstr "Vokálok izolálása és megfordítása"
-
-#~ msgid "Remove Center: to mono"
-#~ msgstr "Középpont eltávolítása: monóvá"
-
-#~ msgid "Remove Center"
-#~ msgstr "Középpont eltávolítása"
-
-#~ msgid "Isolate Center"
-#~ msgstr "Középpont izolálása"
-
-#~ msgid "Isolate Center and Invert"
-#~ msgstr "Középpont izolálása és megfordítása"
-
-#~ msgid "Strength"
-#~ msgstr "Erősség"
-
-#~ msgid "Low Cut for Vocals (Hz)"
-#~ msgstr "Alacsony vágás vokálokhoz (Hz)"
-
-#~ msgid "High Cut for Vocals (Hz)"
-#~ msgstr "Magas vágás vokálokhoz (Hz)"
-
-#~ msgid ""
-#~ "Average x: ~a, y: ~a\n"
-#~ "                    Covariance x y: ~a\n"
-#~ "                    Average variance x: ~a, y: ~a\n"
-#~ "                    Standard deviation x: ~a, y: ~a\n"
-#~ "                    Coefficient of correlation: ~a\n"
-#~ "                    Coefficient of determination: ~a\n"
-#~ "                    Variation of residuals: ~a\n"
-#~ "                    y equals ~a plus ~a times x~%"
-#~ msgstr ""
-#~ "Átlag x: ~a, y: ~a\n"
-#~ "                    Kovariancia x y: ~a\n"
-#~ "                    Átlagos szórás x: ~a, y: ~a\n"
-#~ "                    Szórás x: ~a, y: ~a\n"
-#~ "                    Korrelációs együttható: ~a\n"
-#~ "                    Determinációs együttható: ~a\n"
-#~ "                    Maradék variációi: ~a\n"
-#~ "                    y egyezik ~a plusz ~a alkalommal x~%"
-
-#~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-#~ msgstr "Balansz pozíció: ~a~% A bal és jobb csatorna körülbelül ~a %-kal korrelál. Ez azt jelenti: ~%~a~%"
-
-#~ msgid ""
-#~ " - The two channels are identical, i.e. dual mono.\n"
-#~ "                The center can't be removed.\n"
-#~ "                Any remaining difference may be caused by lossy encoding."
-#~ msgstr ""
-#~ " - A két csatorna azonos, például iker (duál) monó.\n"
-#~ "                 A közép nem távolítható el.\n"
-#~ "                 A fennmaradó különbséget a veszteséges kódolás okozhatja."
-
-#~ msgid ""
-#~ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
-#~ "                Most likely, the center extraction will be poor."
-#~ msgstr ""
-#~ " - A két csatorna szorosan összefügg, például majdnem monó vagy nagyon balanszolt.\n"
-#~ "                 Valószínűleg a közép kivonása gyenge lesz."
-
-#~ msgid " - A fairly good value, at least stereo in average and not too wide spread."
-#~ msgstr " - Meglehetősen jó ár-érték arány, legalább sztereó átlagos és nem túl széles elterjedésben."
-
-#~ msgid ""
-#~ " - An ideal value for Stereo.\n"
-#~ "                However, the center extraction depends also on the used reverb."
-#~ msgstr ""
-#~ " - Egy ideális érték sztereóhoz.\n"
-#~ "                A középső kivonás azonban a használt visszaverősétől is függ."
-
-#~ msgid ""
-#~ " - The two channels are almost not related.\n"
-#~ "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
-#~ "                The center extraction can still be good though."
-#~ msgstr ""
-#~ " - A két csatorna szinte nem kapcsolódik egymáshoz.\n"
-#~ "                 Vagy csak zaj van, vagy a darab kiegyensúlyozatlan módon van elsajátítva.\n"
-#~ "                 A középső kivezetés még mindig jó lehet."
-
-#~ msgid ""
-#~ " - Although the Track is stereo, the field is obviously extra wide.\n"
-#~ "                This can cause strange effects.\n"
-#~ "                Especially when played by only one speaker."
-#~ msgstr ""
-#~ " - Habár a sáv sztereó, a mező nyilvánvalóan extra széles.\n"
-#~ "                Ez furcsa hatásokat okozhat.\n"
-#~ "                Főleg, amikor csak egy hangszórón játszuk le."
-
-#~ msgid ""
-#~ " - The two channels are nearly identical.\n"
-#~ "                  Obviously, a pseudo stereo effect has been used\n"
-#~ "                  to spread the signal over the physical distance between the speakers.\n"
-#~ "                  Don't expect good results from a center removal."
-#~ msgstr ""
-#~ " - A két csatorna közel azonos.\n"
-#~ "                   Nyilvánvalóan pszeudo sztereó effektust használtak\n"
-#~ "                   hogy elterjessze a jelet a hangszórók közötti fizikai távolságon.\n"
-#~ "                   Ne várjon jó eredményt a közép eltávolításától."
-
-#~ msgid "This plug-in works only with stereo tracks."
-#~ msgstr "Ez a bővítmény csak sztereó sávokkal működik."
+msgstr ""
