@@ -57,7 +57,7 @@ bool Au3Project::load(const muse::io::path_t& filePath)
     std::optional<ProjectFileIO::TentativeConnection> conn;
 
     try {
-        conn.emplace(projectFileIO.LoadProject(fileName, true).value());
+        conn.emplace(projectFileIO.LoadProject(fileName, false /*ignoreAutosave*/).value());
     } catch (AudacityException&) {
         LOGE() << "failed load project: " << filePath << ", exception received";
         return false;
