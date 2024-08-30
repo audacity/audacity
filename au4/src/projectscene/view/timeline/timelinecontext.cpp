@@ -308,26 +308,35 @@ double TimelineContext::zoom() const
 
 void TimelineContext::setZoom(double zoom, double mouseX)
 {
-    zoom = std::max(ZOOM_MIN, std::min(ZOOM_MAX, zoom));
+    double newZoom = std::max(ZOOM_MIN, std::min(ZOOM_MAX, zoom));
 
-    if (m_zoom != zoom) {
-        m_zoom = zoom;
-        emit zoomChanged();
-
-        double timeRange = m_frameEndTime - m_frameStartTime;
-        double mouseTime = m_frameStartTime + (mouseX / m_frameWidth) * timeRange;
-        double newTimeRange = positionToTime(m_frameWidth) - m_frameStartTime;
-
-        double newStartTime = mouseTime - (mouseX / m_frameWidth) * newTimeRange;
-        setFrameStartTime(std::max(newStartTime, 0.0));
-
-        double newEndTime = mouseTime + ((m_frameWidth - mouseX) / m_frameWidth) * newTimeRange;
-        m_lastZoomEndTime = newEndTime;
-        setFrameEndTime(newEndTime);
-
-        emit verticalScrollChanged();
-        emit frameTimeChanged();
+    if (muse::RealIsEqual(m_zoom, newZoom)) {
+        return;
     }
+
+    double timeRange = m_frameEndTime - m_frameStartTime;
+    double mouseTime = m_frameStartTime + (mouseX / m_frameWidth) * timeRange;
+
+    double totalTimeRange = trackEditProject()->totalTime() * 2.0;
+    double newTimeRange = (m_frameStartTime + m_frameWidth / newZoom) - m_frameStartTime;
+
+    if (muse::RealIsEqualOrMore(newTimeRange, totalTimeRange)) {
+        newTimeRange = totalTimeRange;
+        newZoom = m_frameWidth / totalTimeRange;
+    }
+
+    m_zoom = newZoom;
+    emit zoomChanged();
+
+    double newStartTime = mouseTime - (mouseX / m_frameWidth) * newTimeRange;
+    setFrameStartTime(std::max(newStartTime, 0.0));
+
+    double newEndTime = mouseTime + ((m_frameWidth - mouseX) / m_frameWidth) * newTimeRange;
+    m_lastZoomEndTime = newEndTime;
+    setFrameEndTime(newEndTime);
+
+    emit verticalScrollChanged();
+    emit frameTimeChanged();
 }
 
 int TimelineContext::BPM() const
