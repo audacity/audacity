@@ -7,6 +7,7 @@
 
 #include "../trackedittypes.h"
 #include "global/types/string.h"
+#include "draw/types/color.h"
 
 #include "clip.h" // IWYU pragma: export
 
@@ -22,6 +23,7 @@ struct Track {
     TrackId id;
     muse::String title;
     TrackType type = TrackType::Undefined;
+    muse::draw::Color color;
 };
 
 using TrackList = std::vector<Track>;
