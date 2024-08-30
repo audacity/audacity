@@ -64,7 +64,7 @@ void AppShellConfiguration::init()
     settings()->setDefaultValue(STARTUP_MODE_TYPE, Val(StartupModeType::StartEmpty));
     // settings()->setDefaultValue(STARTUP_SCORE_PATH, Val(projectConfiguration()->myFirstProjectPath().toStdString()));
 
-    // fileSystem()->makePath(sessionDataPath());
+    fileSystem()->makePath(sessionDataPath());
 }
 
 bool AppShellConfiguration::hasCompletedFirstLaunchSetup() const
@@ -262,16 +262,14 @@ muse::io::path_t AppShellConfiguration::sessionFilePath() const
 
 muse::RetVal<muse::ByteArray> AppShellConfiguration::readSessionState() const
 {
-    return muse::RetVal<muse::ByteArray>();
     // mi::ReadResourceLockGuard lock_guard(multiInstancesProvider(), SESSION_RESOURCE_NAME);
-    // return fileSystem()->readFile(sessionFilePath());
+    return fileSystem()->readFile(sessionFilePath());
 }
 
 muse::Ret AppShellConfiguration::writeSessionState(const QByteArray& data)
 {
-    return muse::Ret();
     // mi::WriteResourceLockGuard lock_guard(multiInstancesProvider(), SESSION_RESOURCE_NAME);
-    // return fileSystem()->writeFile(sessionFilePath(), ByteArray::fromQByteArrayNoCopy(data));
+    return fileSystem()->writeFile(sessionFilePath(), ByteArray::fromQByteArrayNoCopy(data));
 }
 
 muse::io::paths_t AppShellConfiguration::parseSessionProjectsPaths(const QByteArray& json) const

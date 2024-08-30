@@ -110,9 +110,9 @@ void StartupScenario::runAfterSplashScreen()
     StartupModeType modeType = resolveStartupModeType();
 //! TODO AU4
     // bool isMainInstance = multiInstancesProvider()->isMainInstance();
-    // if (isMainInstance && sessionsManager()->hasProjectsForRestore()) {
-    //     modeType = StartupModeType::Recovery;
-    // }
+    if (/*isMainInstance && */ sessionsManager()->hasProjectsForRestore()) {
+        modeType = StartupModeType::Recovery;
+    }
 
     muse::Uri startupUri = startupPageUri(modeType);
 
