@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-08-16 00:00+0000\n"
+"PO-Revision-Date: 2024-08-31 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -4446,7 +4446,7 @@ msgstr "Indeks[%02x] Kodek[%s], Język[%s], Bitrate[%s], Kanały[%d], Długość
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Bit Depth"
-msgstr "Głębia bitów"
+msgstr "Rozdzielczość bitowa"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
