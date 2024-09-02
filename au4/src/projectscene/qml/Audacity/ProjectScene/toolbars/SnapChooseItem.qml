@@ -49,9 +49,15 @@ Item {
 
     StyledTextLabel {
         id: labelItem
-        anchors.fill: parent
+
+        anchors.left: parent.left
         anchors.leftMargin: 12
+        anchors.right: dropIconItem.left
+        anchors.verticalCenter: parent.verticalCenter
+
         horizontalAlignment: Text.AlignLeft
+        wrapMode: Text.Wrap
+        maximumLineCount: 1
     }
 
     MouseArea {
