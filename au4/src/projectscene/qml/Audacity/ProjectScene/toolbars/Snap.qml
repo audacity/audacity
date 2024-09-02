@@ -2,12 +2,13 @@
 * Audacity: A Digital Audio Editor
 */
 import QtQuick
+import QtQuick.Layouts
 
 import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-Row {
+RowLayout {
     id: root
 
     property bool isSnapEnabled: false
@@ -21,7 +22,7 @@ Row {
     signal handleMenuItem(var itemId)
 
     StyledTextLabel {
-        anchors.verticalCenter: parent.verticalCenter
+        Layout.alignment: Qt.AlignVCenter
 
         text: qsTrc("projectscene", "Snap")
     }
@@ -29,7 +30,7 @@ Row {
     CheckBox {
         id: snapCheckBox
 
-        anchors.verticalCenter: parent.verticalCenter
+        Layout.alignment: Qt.AlignVCenter
 
         checked: root.isSnapEnabled
 
@@ -39,8 +40,8 @@ Row {
     }
 
     SnapChooseItem {
-        width: 144
-        height: root.height
+        Layout.fillWidth: true
+        Layout.fillHeight: true
 
         text: root.currentSnapMode
 

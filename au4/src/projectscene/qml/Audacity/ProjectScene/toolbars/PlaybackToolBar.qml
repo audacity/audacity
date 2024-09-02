@@ -208,7 +208,7 @@ Item {
             Snap {
                 property var itemData: null
 
-                width: 207
+                width: 143
                 height: 28
 
                 isSnapEnabled: Boolean(itemData) ? itemData.isSnapEnabled : false
