@@ -130,6 +130,9 @@ private:
     qreal findZoomFocusPosition() const;
 
     void fitSelectionToWidth();
+    void fitProjectToWidth();
+
+    bool hasSelection() const;
 
     void shiftFrameTimeOnStep(int direction);
     void setFrameStartTime(double newFrameStartTime);

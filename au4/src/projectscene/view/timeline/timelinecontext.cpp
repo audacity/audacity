@@ -67,6 +67,7 @@ void TimelineContext::init(double frameWidth)
     dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
     dispatcher()->reg(this, "zoom-out", this, &TimelineContext::zoomOut);
     dispatcher()->reg(this, "fit-selection", this, &TimelineContext::fitSelectionToWidth);
+    dispatcher()->reg(this, "fit-project", this, &TimelineContext::fitProjectToWidth);
 
     onProjectChanged();
 
@@ -289,7 +290,7 @@ qreal TimelineContext::findZoomFocusPosition() const
 {
     double result = 0.0;
 
-    if (muse::RealIsEqualOrLess(m_selecitonStartTime, 0.0) || muse::RealIsEqualOrLess(m_selectionEndTime, 0.0)) {
+    if (!hasSelection()) {
         // No selection: zoom at the center of the view
         result = frameCenterPosition();
     } else {
@@ -302,7 +303,7 @@ qreal TimelineContext::findZoomFocusPosition() const
 
 void TimelineContext::fitSelectionToWidth()
 {
-    if (muse::RealIsEqualOrLess(m_selecitonStartTime, 0.0) || muse::RealIsEqualOrLess(m_selectionEndTime, 0.0)) {
+    if (!hasSelection()) {
         return;
     }
 
@@ -322,6 +323,20 @@ void TimelineContext::fitSelectionToWidth()
     shiftFrameTime(zoomTime - centerTime);
 }
 
+void TimelineContext::fitProjectToWidth()
+{
+    double totalTimeRange = trackEditProject()->totalTime();
+    if (muse::is_zero(totalTimeRange)) {
+        return;
+    }
+
+    double newZoom = m_frameWidth / totalTimeRange;
+    setZoom(newZoom, 0.0);
+
+    //! position view to begin
+    shiftFrameTime(0.0 - m_frameStartTime);
+}
+
 void TimelineContext::shiftFrameTimeOnStep(int direction)
 {
     double step = 30.0 / m_zoom;
@@ -333,6 +348,11 @@ void TimelineContext::updateFrameTime()
 {
     setFrameEndTime(positionToTime(m_frameWidth));
     emit frameTimeChanged();
+}
+
+bool TimelineContext::hasSelection() const
+{
+    return !muse::RealIsEqualOrLess(m_selecitonStartTime, 0.0) && !muse::RealIsEqualOrLess(m_selectionEndTime, 0.0);
 }
 
 double TimelineContext::timeToPosition(double time) const
@@ -399,7 +419,7 @@ void TimelineContext::setZoom(double zoom, double mouseX)
     double totalTimeRange = trackEditProject()->totalTime() * 2.0;
     double newTimeRange = (m_frameStartTime + m_frameWidth / newZoom) - m_frameStartTime;
 
-    if (muse::RealIsEqualOrMore(newTimeRange, totalTimeRange)) {
+    if (!muse::is_zero(totalTimeRange) && muse::RealIsEqualOrMore(newTimeRange, totalTimeRange)) {
         newTimeRange = totalTimeRange;
         newZoom = m_frameWidth / totalTimeRange;
     }
