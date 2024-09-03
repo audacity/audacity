@@ -3,9 +3,11 @@
 #include <QObject>
 
 #include "global/async/asyncable.h"
+#include "actions/actionable.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "actions/iactionsdispatcher.h"
 #include "trackedit/iselectioncontroller.h"
 #include "iprojectsceneconfiguration.h"
 
@@ -19,7 +21,7 @@
 
 namespace au::projectscene {
 class SnapTimeFormatter;
-class TimelineContext : public QObject, public muse::async::Asyncable
+class TimelineContext : public QObject, public muse::async::Asyncable, public muse::actions::Actionable
 {
     Q_OBJECT
 
@@ -40,6 +42,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable
         qreal startVerticalScrollPosition READ startVerticalScrollPosition WRITE setStartVerticalScrollPosition NOTIFY verticalScrollChanged)
     Q_PROPERTY(qreal verticalScrollbarSize READ verticalScrollbarSize NOTIFY verticalScrollChanged)
 
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<IProjectSceneConfiguration> configuration;
@@ -118,6 +121,10 @@ private:
     trackedit::ITrackeditProjectPtr trackEditProject() const;
     IProjectViewStatePtr viewState() const;
     void onProjectChanged();
+
+    void zoomIn();
+    void zoomOut();
+
 
     void shiftFrameTimeOnStep(int direction);
     void setFrameStartTime(double newFrameStartTime);

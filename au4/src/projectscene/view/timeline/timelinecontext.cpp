@@ -62,6 +62,9 @@ void TimelineContext::init(double frameWidth)
         emit horizontalScrollChanged();
     });
 
+    dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
+    dispatcher()->reg(this, "zoom-out", this, &TimelineContext::zoomOut);
+
     onProjectChanged();
 
     emit horizontalScrollChanged();
@@ -188,7 +191,8 @@ void TimelineContext::shiftFrameTime(double shift)
     double endTimeShift = shift;
 
     double minStartTime = 0.0;
-    double maxEndTime = std::max(m_lastZoomEndTime, trackEditProject()->totalTime().to_double());
+    double totalTime = trackEditProject()->totalTime().to_double();
+    double maxEndTime = std::max(m_lastZoomEndTime, totalTime);
 
     // do not shift to negative time values
     if (m_frameStartTime + timeShift < minStartTime) {
@@ -242,6 +246,31 @@ void TimelineContext::onProjectChanged()
 
     updateTimeSignature();
 }
+
+void TimelineContext::zoomIn()
+{
+    double newZoom = zoom() * 2.0;
+    double zoomPosition = findZoomFocusPosition();
+
+    setZoom(newZoom, zoomPosition);
+
+    double centerPosition = frameCenterPosition();
+    double centerTime = positionToTime(centerPosition);
+
+    //! update values after zooming
+    zoomPosition = findZoomFocusPosition();
+    double zoomTime = positionToTime(zoomPosition);
+
+    //! position center to zoom position
+    shiftFrameTime(zoomTime - centerTime);
+}
+
+void TimelineContext::zoomOut()
+{
+    double newZoom = zoom() / 2.0;
+    setZoom(newZoom, findZoomFocusPosition());
+}
+
 
 void TimelineContext::shiftFrameTimeOnStep(int direction)
 {

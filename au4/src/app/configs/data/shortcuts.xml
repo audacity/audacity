@@ -893,7 +893,7 @@
     </SC>
     <SC>
         <key>zoom-in</key>
-        <seq>Ctrl+1</seq>
+        <seq>Ctrl+=</seq>
     </SC>
     <SC>
         <key>zoom-normal</key>
@@ -901,7 +901,7 @@
     </SC>
     <SC>
         <key>zoom-out</key>
-        <seq>Ctrl+3</seq>
+        <seq>Ctrl+-</seq>
     </SC>
     <SC>
         <key>zoom-sel</key>
