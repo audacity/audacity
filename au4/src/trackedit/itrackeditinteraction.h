@@ -26,6 +26,8 @@ public:
     virtual bool changeClipStartTime(const ClipKey& clipKey, double newStartTime, bool completed) = 0;
     virtual muse::async::Channel<ClipKey, double /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const = 0;
 
+    virtual bool trimTrackData(trackedit::TrackId trackId, double begin, double end) = 0;
+
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
     virtual void clearClipboard() = 0;
     virtual bool pasteFromClipboard(double begin, TrackId trackId) = 0;

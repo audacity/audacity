@@ -38,6 +38,8 @@ public:
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, double newStartTime, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, double /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
 
+    bool trimTrackData(trackedit::TrackId trackId, double begin, double end) override;
+
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
     void clearClipboard() override;
     bool pasteFromClipboard(double begin, trackedit::TrackId trackId) override;

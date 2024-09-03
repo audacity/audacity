@@ -136,6 +136,12 @@ void Au3TrackeditProject::onTrackAdded(const Track &track)
     notifier.itemAdded(track);
 }
 
+void Au3TrackeditProject::onTrackChanged(const Track &track)
+{
+    async::ChangedNotifier<Track>& notifier = m_tracksChanged;
+    notifier.itemChanged(track);
+}
+
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, ::TrackId(key.trackId));

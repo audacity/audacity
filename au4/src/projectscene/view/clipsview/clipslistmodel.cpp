@@ -44,6 +44,12 @@ void ClipsListModel::reload()
         return;
     }
 
+    prj->trackList().onItemChanged(this, [this](const Track& track){
+        if (track.id == m_trackId) {
+            reload();
+        }
+    });
+
     m_allClipList = prj->clipList(m_trackId);
 
     //! NOTE Clips in the track may not be in order (relative to startTime), here we arrange them.
