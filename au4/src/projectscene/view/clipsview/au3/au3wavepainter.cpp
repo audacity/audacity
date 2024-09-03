@@ -521,7 +521,11 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
         ColorFromQColor(style.clippedPen))
     .SetEnvelope(clip.GetEnvelope());
 
-    waveformPainter.Draw(channelIndex, painter, paintParameters, metrics);
+    WaveMetrics _metrics = metrics;
+    _metrics.fromTime += clip.GetTrimLeft();
+    _metrics.toTime += clip.GetTrimLeft();
+
+    waveformPainter.Draw(channelIndex, painter, paintParameters, _metrics);
 }
 
 static bool showIndividualSamples(const WaveClip& clip, bool zoom)
