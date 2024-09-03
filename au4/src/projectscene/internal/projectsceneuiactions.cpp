@@ -79,20 +79,6 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              TranslatableString("action", "Spectral box select"),
              IconCode::Code::BRUSH
              ),
-    UiAction("trim-audio-outside-selection",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Trim"),
-             TranslatableString("action", "Trim"),
-             IconCode::Code::TRIM_AUDIO_OUTSIDE_SELECTION
-             ),
-    UiAction("silence-audio-selection",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Silence"),
-             TranslatableString("action", "Silence"),
-             IconCode::Code::SILENCE_AUDIO_SELECTION
-             ),
     UiAction("snap",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,

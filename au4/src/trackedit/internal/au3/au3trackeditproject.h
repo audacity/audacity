@@ -20,6 +20,7 @@ public:
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
 
     void onTrackAdded(const Track& track) override;
+    void onTrackChanged(const Track& track) override;
 
     void onClipChanged(const Clip& clip) override;
     void onClipAdded(const Clip& clip) override;

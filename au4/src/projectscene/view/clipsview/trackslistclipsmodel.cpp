@@ -44,9 +44,15 @@ void TracksListClipsModel::load()
         NOT_IMPLEMENTED;
     });
 
-    m_trackList.onItemChanged(this, [](const trackedit::Track& track) {
-        Q_UNUSED(track);
-        NOT_IMPLEMENTED;
+    m_trackList.onItemChanged(this, [this](const trackedit::Track& track) {
+        for (size_t i = 0; i < m_trackList.size(); ++i) {
+            if (m_trackList.at(i).id == track.id) {
+                m_trackList[i] = track;
+
+                emit dataChanged(index(i), index(i));
+                break;
+            }
+        }
     });
 
     endResetModel();
