@@ -60,6 +60,8 @@ void TimelineContext::init(double frameWidth)
 
     connect(this, &TimelineContext::frameTimeChanged, [this]() {
         emit horizontalScrollChanged();
+        emit selectionStartTimeChanged();
+        emit selectionEndTimeChanged();
     });
 
     dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
