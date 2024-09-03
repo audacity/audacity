@@ -142,6 +142,129 @@ BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
                      wxEVT_COMMAND_BUTTON_CLICKED, NyquistEffect::OnFileButton)
 END_EVENT_TABLE()
 
+int NyquistEffect::GetWidgetCount() const
+{
+   return static_cast<int>(mControls.size());
+}
+
+namespace
+{
+constexpr auto Int(double val)
+{
+   return static_cast<int>(val);
+}
+
+auto ToStrVec(const std::vector<EnumValueSymbol>& symbols)
+{
+   std::vector<std::string> strings(symbols.size());
+   std::transform(
+      symbols.begin(), symbols.end(), strings.begin(),
+      [](const EnumValueSymbol& symbol) {
+         return symbol.Translation().ToStdString();
+      });
+   return strings;
+}
+} // namespace
+
+std::optional<EffectWidget> NyquistEffect::GetWidget(int index) const
+{
+   if (index < 0 || index >= static_cast<int>(mControls.size()))
+      return {};
+   const NyqControl& ctrl = mControls[index];
+   const auto name = ctrl.name.ToStdString();
+   const auto tip = ctrl.label.ToStdString();
+   switch (ctrl.type)
+   {
+   case NYQ_CTRL_INT:
+      return EffectWidget {
+         name, IntSliderVal { Int(ctrl.low), Int(ctrl.high), Int(ctrl.val) },
+         true, tip
+      };
+   case NYQ_CTRL_FLOAT:
+      return EffectWidget { name,
+                            DblSliderVal { ctrl.low, ctrl.high, ctrl.val },
+                            true, tip };
+   case NYQ_CTRL_STRING:
+      return EffectWidget { name, EditableTextVal { ctrl.valStr.ToStdString() },
+                            true, tip };
+   case NYQ_CTRL_CHOICE:
+      return EffectWidget { name,
+                            ChoiceVal { ToStrVec(ctrl.choices), Int(ctrl.val) },
+                            true, tip };
+   case NYQ_CTRL_INT_TEXT:
+      return EffectWidget { name, IntTextVal { Int(ctrl.val) }, true, tip };
+   case NYQ_CTRL_FLOAT_TEXT:
+      return EffectWidget { name, DblTextVal { ctrl.val }, true, tip };
+   case NYQ_CTRL_TEXT:
+      return EffectWidget { name, InfoTextVal { ctrl.valStr.ToStdString() },
+                            true, tip };
+   case NYQ_CTRL_TIME:
+      return EffectWidget { name, NumericTextVal { ctrl.val }, true, tip };
+   case NYQ_CTRL_FILE:
+      return EffectWidget { name, ChooseFileVal { ctrl.valStr.ToStdString() },
+                            true, tip };
+   default:
+      assert(false);
+      return {};
+   }
+}
+
+void NyquistEffect::SetWidget(int index, const EffectWidget& widget)
+{
+   if (index < 0 || index >= static_cast<int>(mControls.size()))
+      return;
+   NyqControl& ctrl = mControls[index];
+   const auto name = wxString::FromUTF8(widget.name);
+   switch (ctrl.type)
+   {
+   case NYQ_CTRL_INT:
+      if (auto p = std::get_if<IntSliderVal>(&widget.value))
+         ctrl.val = p->value;
+      break;
+   case NYQ_CTRL_FLOAT:
+      if (auto p = std::get_if<DblSliderVal>(&widget.value))
+         ctrl.val = p->value;
+      break;
+   case NYQ_CTRL_STRING:
+      if (auto p = std::get_if<EditableTextVal>(&widget.value))
+         ctrl.valStr = wxString::FromUTF8(p->value);
+      break;
+   case NYQ_CTRL_CHOICE:
+      if (auto p = std::get_if<ChoiceVal>(&widget.value))
+         ctrl.val = p->index;
+      break;
+   case NYQ_CTRL_INT_TEXT:
+      if (auto p = std::get_if<IntTextVal>(&widget.value))
+         ctrl.val = p->value;
+      break;
+   case NYQ_CTRL_FLOAT_TEXT:
+      if (auto p = std::get_if<DblTextVal>(&widget.value))
+         ctrl.val = p->value;
+      break;
+   case NYQ_CTRL_TEXT:
+      // Not editable.
+      break;
+   case NYQ_CTRL_TIME:
+      if (auto p = std::get_if<NumericTextVal>(&widget.value))
+         ctrl.val = p->value;
+      break;
+   case NYQ_CTRL_FILE:
+      if (auto p = std::get_if<ChooseFileVal>(&widget.value))
+         ctrl.valStr = wxString::FromUTF8(p->path);
+      break;
+   default:
+      // Unhandled control type.
+      assert(false);
+   }
+}
+
+std::vector<EffectWidgetGroup> NyquistEffect::GetWidgetGroups() const
+{
+   // Nyquist doesn't support grouping. (Nyquist widget documentation:
+   // https://plugins.audacityteam.org/contributing/developing-your-own-plugins-and-scripts/creating-your-own-nyquist-plugins/widgets-reference)
+   return {};
+}
+
 NyquistEffect::NyquistEffect(const wxString &fName)
    : mIsPrompt{ fName == NYQUIST_PROMPT_ID }
 {

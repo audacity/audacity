@@ -4,6 +4,7 @@
 #include "TimeStretching.h"
 #include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
+#include <cassert>
 
 const EffectParameterMethods& AmplifyBase::Parameters() const
 {
@@ -40,6 +41,11 @@ AmplifyBase::Instance::~Instance()
 {
    // In case the dialog is cancelled before effect processing
    static_cast<AmplifyBase&>(GetEffect()).DestroyOutputTracks();
+}
+
+EffectWidgetList* AmplifyBase::Instance::GetWidgetList()
+{
+   return &mProcessor;
 }
 
 AmplifyBase::AmplifyBase()
@@ -164,4 +170,66 @@ void AmplifyBase::ClampRatio()
 
    mAmp = LINEAR_TO_DB(mRatio);
    mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
+}
+
+namespace
+{
+auto Str(const TranslatableString& ts)
+{
+   return ts.Translation().ToStdString();
+}
+} // namespace
+
+int AmplifyBase::GetWidgetCount() const
+{
+   return 3;
+}
+
+std::optional<EffectWidget> AmplifyBase::GetWidget(int index) const
+{
+   switch (index)
+   {
+   case 0:
+      return EffectWidget { Str(XXO("&Amplification (dB)")),
+                            DblSliderVal { -50.f, 50.f, (float)mAmp }, true };
+   case 1:
+      return EffectWidget { Str(XXO("&New Peak Amplitude (dB)")),
+                            DblSliderVal { -50.f, 50.f, (float)mNewPeak },
+                            true };
+   case 2:
+      return EffectWidget { Str(XXO("Allo&w Clipping")), ToggleVal { mCanClip },
+                            true };
+   default:
+      return {};
+   }
+}
+
+std::vector<EffectWidgetGroup> AmplifyBase::GetWidgetGroups() const
+{
+   return {};
+}
+
+void AmplifyBase::SetWidget(int index, const EffectWidget& widget)
+{
+   try
+   {
+      switch (index)
+      {
+      case 0:
+         mAmp = std::get<DblSliderVal>(widget.value).value;
+         break;
+      case 1:
+         mNewPeak = std::get<DblSliderVal>(widget.value).value;
+         break;
+      case 2:
+         mCanClip = std::get<ToggleVal>(widget.value).value;
+         break;
+      default:
+         assert(false);
+      }
+   }
+   catch (const std::bad_variant_access&)
+   {
+      assert(false);
+   }
 }

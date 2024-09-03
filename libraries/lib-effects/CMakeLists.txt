@@ -11,6 +11,10 @@ set( SOURCES
    EffectOutputTracks.h
    EffectPlugin.cpp
    EffectPlugin.h
+   EffectWidget.cpp
+   EffectWidget.h
+   EffectWidgetList.cpp
+   EffectWidgetList.h
    LoadEffects.cpp
    LoadEffects.h
    MixAndRender.cpp
@@ -23,6 +27,8 @@ set( SOURCES
    StatefulEffect.h
    StatefulPerTrackEffect.cpp
    StatefulPerTrackEffect.h
+   WidgetListStatefulEffect.cpp
+   WidgetListStatefulEffect.h
 )
 set( LIBRARIES
    lib-command-parameters-interface

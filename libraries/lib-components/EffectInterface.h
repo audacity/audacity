@@ -442,6 +442,8 @@ enum ChannelName : int {
 };
 using ChannelNames = const ChannelName *;
 
+class EffectWidgetList;
+
 /***************************************************************************//**
 \class EffectInstance
 @brief Performs effect computation
@@ -451,6 +453,11 @@ class COMPONENTS_API EffectInstance
 {
 public:
    virtual ~EffectInstance();
+
+   virtual EffectWidgetList* GetWidgetList()
+   {
+      return nullptr;
+   }
 
    virtual size_t GetBlockSize() const = 0;
 

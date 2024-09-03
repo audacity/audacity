@@ -15,6 +15,7 @@
 #include "../StatefulEffectUIServices.h"
 #include "FileNames.h"
 #include "SampleCount.h"
+#include "WidgetListStatefulEffect.h"
 #include "wxPanelWrapper.h"
 
 #include "nyx.h"
@@ -75,10 +76,14 @@ struct NyquistSettings {
 };
 
 class AUDACITY_DLL_API NyquistEffect final :
-    public EffectWithSettings<NyquistSettings, StatefulEffect>,
+    public EffectWithSettings<NyquistSettings, WidgetListStatefulEffect>,
     public StatefulEffectUIServices
 {
 public:
+   int GetWidgetCount() const override;
+   std::optional<EffectWidget> GetWidget(int index) const override;
+   void SetWidget(int index, const EffectWidget& widget) override;
+   std::vector<EffectWidgetGroup> GetWidgetGroups() const override;
 
    /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.

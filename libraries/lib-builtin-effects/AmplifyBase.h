@@ -2,8 +2,11 @@
 
 #include "SettingsVisitor.h"
 #include "StatefulPerTrackEffect.h"
+#include "EffectWidgetList.h"
 
-class BUILTIN_EFFECTS_API AmplifyBase : public StatefulPerTrackEffect
+class BUILTIN_EFFECTS_API AmplifyBase :
+    public StatefulPerTrackEffect,
+    public EffectWidgetList
 {
 public:
    static inline AmplifyBase* FetchParameters(AmplifyBase& e, EffectSettings&)
@@ -18,6 +21,12 @@ public:
    // EffectInstanceFactory
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
+   // EffectWidgetList
+public:
+   int GetWidgetCount() const override;
+   std::optional<EffectWidget> GetWidget(int index) const override;
+   std::vector<EffectWidgetGroup> GetWidgetGroups() const override;
+   void SetWidget(int index, const EffectWidget& widget) override;
 
    // EffectDefinitionInterface implementation
 
@@ -38,11 +47,21 @@ public:
    std::any BeginPreview(const EffectSettings& settings) override;
 
 protected:
-   // TODO review this
    struct BUILTIN_EFFECTS_API Instance : StatefulPerTrackEffect::Instance
    {
-      using StatefulPerTrackEffect::Instance::Instance;
+      Instance(AmplifyBase& processor)
+          : StatefulPerTrackEffect::Instance { processor }
+          , mProcessor { processor }
+      {
+      }
       ~Instance() override;
+
+      // EffectInstance
+   public:
+      EffectWidgetList* GetWidgetList() override;
+
+   private:
+      AmplifyBase& mProcessor;
    };
 
 protected:
