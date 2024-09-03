@@ -50,6 +50,7 @@ public:
    // EffectDefinitionInterface implementation
 
    EffectType GetType() const override;
+   RealtimeSince RealtimeSupport() const override;
 
    // Effect implementation
    std::unique_ptr<EffectEditor> MakeEditor(
