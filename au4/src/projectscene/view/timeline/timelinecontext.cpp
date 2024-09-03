@@ -66,6 +66,7 @@ void TimelineContext::init(double frameWidth)
 
     dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
     dispatcher()->reg(this, "zoom-out", this, &TimelineContext::zoomOut);
+    dispatcher()->reg(this, "fit-selection", this, &TimelineContext::fitSelectionToWidth);
 
     onProjectChanged();
 
@@ -273,6 +274,53 @@ void TimelineContext::zoomOut()
     setZoom(newZoom, findZoomFocusPosition());
 }
 
+qreal TimelineContext::frameCenterPosition() const
+{
+    return m_frameWidth / 2.0;
+}
+
+qreal TimelineContext::selectionCenterPosition() const
+{
+    double centerTime = m_selecitonStartTime + (m_selectionEndTime - m_selecitonStartTime) / 2.0;
+    return timeToPosition(centerTime);
+}
+
+qreal TimelineContext::findZoomFocusPosition() const
+{
+    double result = 0.0;
+
+    if (muse::RealIsEqualOrLess(m_selecitonStartTime, 0.0) || muse::RealIsEqualOrLess(m_selectionEndTime, 0.0)) {
+        // No selection: zoom at the center of the view
+        result = frameCenterPosition();
+    } else {
+        // Selection: zoom at the center of the selection
+        result = selectionCenterPosition();
+    }
+
+    return std::clamp(result, 0.0, m_frameWidth);
+}
+
+void TimelineContext::fitSelectionToWidth()
+{
+    if (muse::RealIsEqualOrLess(m_selecitonStartTime, 0.0) || muse::RealIsEqualOrLess(m_selectionEndTime, 0.0)) {
+        return;
+    }
+
+    double zoomPosition = findZoomFocusPosition();
+
+    double newZoom = m_frameWidth / (m_selectionEndTime - m_selecitonStartTime);
+    setZoom(newZoom, zoomPosition);
+
+    double centerPosition = frameCenterPosition();
+    double centerTime = positionToTime(centerPosition);
+
+    //! update values after zooming
+    zoomPosition = selectionCenterPosition();
+    double zoomTime = positionToTime(zoomPosition);
+
+    //! position center to zoom position
+    shiftFrameTime(zoomTime - centerTime);
+}
 
 void TimelineContext::shiftFrameTimeOnStep(int direction)
 {

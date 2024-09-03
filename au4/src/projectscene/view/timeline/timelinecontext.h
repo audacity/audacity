@@ -125,6 +125,11 @@ private:
     void zoomIn();
     void zoomOut();
 
+    qreal frameCenterPosition() const;
+    qreal selectionCenterPosition() const;
+    qreal findZoomFocusPosition() const;
+
+    void fitSelectionToWidth();
 
     void shiftFrameTimeOnStep(int direction);
     void setFrameStartTime(double newFrameStartTime);
