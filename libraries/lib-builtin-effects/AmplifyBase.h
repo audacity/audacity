@@ -15,6 +15,10 @@ public:
    AmplifyBase();
    virtual ~AmplifyBase() override;
 
+   // EffectInstanceFactory
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+
+
    // EffectDefinitionInterface implementation
 
    ComponentInterfaceSymbol GetSymbol() const override;

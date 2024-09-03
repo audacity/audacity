@@ -27,8 +27,6 @@ class ShuttleGui;
 class EffectAmplify : public AmplifyBase, public StatefulEffectUIServices
 {
 public:
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
-
    // ComponentInterface implementation
 
    ComponentInterfaceSymbol GetSymbol() const override;

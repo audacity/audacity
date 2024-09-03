@@ -57,9 +57,16 @@ AmplifyBase::~AmplifyBase()
 {
 }
 
+std::shared_ptr<EffectInstance> AmplifyBase::MakeInstance() const
+{
+   // Cheat with const_cast to return an object that calls through to
+   // non-const methods of a stateful effect.
+   return std::make_shared<Instance>(const_cast<AmplifyBase&>(*this));
+}
+
 ComponentInterfaceSymbol AmplifyBase::GetSymbol() const
 {
-    return Symbol;
+   return Symbol;
 }
 
 EffectType AmplifyBase::GetType() const

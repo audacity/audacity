@@ -198,15 +198,6 @@ bool EffectAmplify::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-std::shared_ptr<EffectInstance> EffectAmplify::MakeInstance() const
-{
-   // Cheat with const_cast to return an object that calls through to
-   // non-const methods of a stateful effect.
-   return std::make_shared<Instance>(const_cast<EffectAmplify&>(*this));
-}
-
-// AmplifyBase implementation
-
 void EffectAmplify::CheckClip()
 {
    EffectEditor::EnableApply(mUIParent,
