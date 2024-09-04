@@ -36,7 +36,7 @@ bool Au3Interaction::pasteIntoNewTrack()
     auto &project = projectRef();
     auto &tracks = ::TrackList::Get( project );
     auto prj = globalContext()->currentTrackeditProject();
-    double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+    secs_t selectedStartTime = globalContext()->playbackState()->playbackPosition();
 
     ::Track* pFirstNewTrack = NULL;
     for (auto data : s_clipboard.data) {
@@ -53,7 +53,7 @@ bool Au3Interaction::pasteIntoNewTrack()
     selectionController()->setSelectedTrack(DomConverter::trackId(pFirstNewTrack->GetId()));
 }
 
-::Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<::Track> track, ::TrackList &list, double begin)
+::Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<::Track> track, ::TrackList &list, secs_t begin)
 {
     auto &trackFactory = WaveTrackFactory::Get(projectRef());
     auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
@@ -88,7 +88,7 @@ std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksId
     return tracksIds;
 }
 
-bool Au3Interaction::canPasteClips(const std::vector<TrackId> &dstTracksIds, double begin) const
+bool Au3Interaction::canPasteClips(const std::vector<TrackId> &dstTracksIds, secs_t begin) const
 {
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(dstTracksIds[i]));
@@ -101,7 +101,7 @@ bool Au3Interaction::canPasteClips(const std::vector<TrackId> &dstTracksIds, dou
             return false;
         }
 
-        double insertDuration = 0;
+        secs_t insertDuration = 0;
 
         // intentional comparison, see clipId default value
         if (s_clipboard.data[i].clipKey.clipId == -1) {
@@ -147,7 +147,7 @@ au::audio::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKe
     return clip->Start();
 }
 
-bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, double newStartTime, bool completed)
+bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -181,14 +181,14 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, doub
             //! NOTE Let's check if the clip is not the last one
             if (nextIt != clips.end()) {
                 std::shared_ptr<WaveClip> nextClip = *nextIt;
-                double nextStartTime = nextClip->GetPlayStartTime();
-                double deltaSec = newStartTime - clip->GetPlayStartTime();
+                secs_t nextStartTime = nextClip->GetPlayStartTime();
+                secs_t deltaSec = newStartTime - clip->GetPlayStartTime();
 
                 // check collision
                 if ((clip->GetPlayEndTime() + deltaSec) > nextStartTime) {
                     //! NOTE If we have reached the limit, we do nothing.
                     //! TODO maybe there is a problem here, the end time of the clip may coincide with the start time of the next clip
-                    if (muse::is_equal(clip->GetPlayEndTime(), nextStartTime)) {
+                    if (muse::is_equal(clip->GetPlayEndTime(), nextStartTime.to_double())) {
                         LOGW() << "You can't change the clip time because it overlaps with the next one.";
                         return false;
                     }
@@ -203,7 +203,7 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, doub
 
         if (newStartTime < clip->GetPlayStartTime()) {
             //! NOTE For the first clip, the end time is 0.0
-            double prevEndTime = 0.0;
+            secs_t prevEndTime = 0.0;
             if (it != clips.begin()) {
                 auto prevIt = --it;
                 std::shared_ptr<WaveClip> pervClip = *prevIt;
@@ -214,7 +214,7 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, doub
             if (newStartTime < prevEndTime) {
                 //! NOTE If we have reached the limit, we do nothing.
                 //! TODO maybe there is a problem here, the start time of the clip may coincide with the end time of the prev clip
-                if (muse::is_equal(clip->GetPlayStartTime(), prevEndTime)) {
+                if (muse::is_equal(clip->GetPlayStartTime(), prevEndTime.to_double())) {
                     LOGW() << "You can't change the clip time because it overlaps with the prev one.";
                     return false;
                 }
@@ -240,13 +240,13 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, doub
     return true;
 }
 
-muse::async::Channel<au::trackedit::ClipKey, double /*newStartTime*/, bool /*completed*/>
+muse::async::Channel<au::trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/>
 Au3Interaction::clipStartTimeChanged() const
 {
     return m_clipStartTimeChanged;
 }
 
-bool Au3Interaction::trimTrackData(TrackId trackId, double begin, double end)
+bool Au3Interaction::trimTrackData(TrackId trackId, secs_t begin, secs_t end)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -287,7 +287,7 @@ void Au3Interaction::clearClipboard()
     s_clipboard.data.clear();
 }
 
-bool Au3Interaction::pasteFromClipboard(double begin, TrackId destinationTrackId)
+bool Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTrackId)
 {
     if (s_clipboard.data.empty()) {
         return false;
@@ -368,7 +368,7 @@ bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
     return true;
 }
 
-bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, double begin, double end)
+bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t begin, secs_t end)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -386,7 +386,7 @@ bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, double be
     return true;
 }
 
-bool Au3Interaction::copyTrackDataIntoClipboard(const TrackId trackId, double begin, double end)
+bool Au3Interaction::copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -418,7 +418,7 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
     return true;
 }
 
-bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, double begin, double end)
+bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
