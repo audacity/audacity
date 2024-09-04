@@ -132,14 +132,12 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
 
 void Au3TrackeditProject::onTrackAdded(const Track &track)
 {
-    async::ChangedNotifier<Track>& notifier = m_tracksChanged;
-    notifier.itemAdded(track);
+    m_tracksChanged.itemAdded(track);
 }
 
 void Au3TrackeditProject::onTrackChanged(const Track &track)
 {
-    async::ChangedNotifier<Track>& notifier = m_tracksChanged;
-    notifier.itemChanged(track);
+    m_tracksChanged.itemChanged(track);
 }
 
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const

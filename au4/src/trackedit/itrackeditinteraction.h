@@ -23,19 +23,19 @@ public:
 
     //! NOTE Can be called by moving a clip
     //! if the changes is completed, then it is necessary to pass: `completed = true`
-    virtual bool changeClipStartTime(const ClipKey& clipKey, double newStartTime, bool completed) = 0;
-    virtual muse::async::Channel<ClipKey, double /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const = 0;
+    virtual bool changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed) = 0;
+    virtual muse::async::Channel<ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const = 0;
 
-    virtual bool trimTrackData(trackedit::TrackId trackId, double begin, double end) = 0;
+    virtual bool trimTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) = 0;
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
     virtual void clearClipboard() = 0;
-    virtual bool pasteFromClipboard(double begin, TrackId trackId) = 0;
+    virtual bool pasteFromClipboard(secs_t begin, TrackId trackId) = 0;
     virtual bool copyClipIntoClipboard(const ClipKey& clipKey) = 0;
-    virtual bool copyClipDataIntoClipboard(const ClipKey& clipKey, double begin, double end) = 0;
-    virtual bool copyTrackDataIntoClipboard(const TrackId trackId, double begin, double end) = 0;
+    virtual bool copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t begin, secs_t end) = 0;
+    virtual bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
-    virtual bool removeClipData(const ClipKey& clipKey, double begin, double end) = 0;
+    virtual bool removeClipData(const ClipKey& clipKey, secs_t begin, secs_t end) = 0;
     virtual void newMonoTrack() = 0;
     virtual void newStereoTrack() = 0;
     virtual void newLabelTrack() = 0;
