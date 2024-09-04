@@ -62,6 +62,8 @@ template <> struct WidgetValue<WidgetType::ChooseFile>
 
 template <> struct WidgetValue<WidgetType::DblText>
 {
+   const std::optional<double> min;
+   const std::optional<double> max;
    const double value;
 };
 
@@ -75,6 +77,8 @@ template <> struct WidgetValue<WidgetType::DblSlider>
 
 template <> struct WidgetValue<WidgetType::IntText>
 {
+   const std::optional<int> min;
+   const std::optional<int> max;
    const int value;
 };
 
