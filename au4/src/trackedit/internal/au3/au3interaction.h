@@ -39,6 +39,7 @@ public:
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
 
     bool trimTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) override;
+    bool silenceTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) override;
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
     void clearClipboard() override;

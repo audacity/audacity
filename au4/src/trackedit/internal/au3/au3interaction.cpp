@@ -261,6 +261,21 @@ bool Au3Interaction::trimTrackData(TrackId trackId, secs_t begin, secs_t end)
     return true;
 }
 
+bool Au3Interaction::silenceTrackData(TrackId trackId, secs_t begin, secs_t end)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    waveTrack->Silence(begin, end, {});
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack));
+
+    return true;
+}
+
 bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));

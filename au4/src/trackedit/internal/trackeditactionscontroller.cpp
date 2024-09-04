@@ -24,6 +24,7 @@ static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
 static const ActionCode NEW_LABEL_TRACK("new-label-track");
 
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
+static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
 
 void TrackeditActionsController::init()
 {
@@ -48,6 +49,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
+    dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
 }
 
 void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -247,6 +249,25 @@ void TrackeditActionsController::trimAudioOutsideSelection()
     pushProjectHistoryTrackTrimState(selectedStartTime, selectedEndTime);
 }
 
+void TrackeditActionsController::silenceAudioSelection()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedStartTime = selectionController()->dataSelectedStartTime();
+    auto selectedEndTime = selectionController()->dataSelectedEndTime();
+    auto tracks = project->trackeditProject()->trackList();
+
+    for (const auto& track : tracks) {
+        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
+            continue;
+        }
+
+        trackeditInteraction()->silenceTrackData(track.id, selectedStartTime, selectedEndTime);
+    }
+
+    pushProjectHistoryTrackSilenceState(selectedStartTime, selectedEndTime);
+}
+
 void TrackeditActionsController::pushProjectHistoryTrackAddedState()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
@@ -263,6 +284,17 @@ void TrackeditActionsController::pushProjectHistoryTrackTrimState(secs_t start, 
     ss << "Trim selected audio tracks from " << start << " seconds to " << end << " seconds";
 
     trackeditProject->pushHistoryState(ss.str(), "Trim Audio");
+}
+
+void TrackeditActionsController::pushProjectHistoryTrackSilenceState(secs_t start, secs_t end)
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto trackeditProject = project->trackeditProject();
+
+    std::stringstream ss;
+    ss << "Silenced selected tracks for " << start << " seconds at " << end << "";
+
+    trackeditProject->pushHistoryState(ss.str(), "Silence");
 }
 
 void TrackeditActionsController::pushProjectHistoryPasteState()
