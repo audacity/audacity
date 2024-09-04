@@ -64,6 +64,12 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Delete"),
              IconCode::Code::DELETE_TANK
              ),
+    UiAction("split",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Split"),
+             TranslatableString("action", "Split")
+             ),
     // clip
     UiAction("clip-cut",
              au::context::UiCtxAny,
@@ -128,11 +134,17 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Duplicate clip"),
              TranslatableString("action", "Duplicate clip")
              ),
-    UiAction("clip-split",
+    UiAction("track-split",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split clip"),
-             TranslatableString("action", "Split clip")
+             TranslatableString("action", "Split"),
+             TranslatableString("action", "Split")
+             ),
+    UiAction("track-split-at",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Split at"),
+             TranslatableString("action", "Split at")
              ),
     UiAction("clip-export",
              au::context::UiCtxAny,
