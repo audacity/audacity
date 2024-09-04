@@ -143,6 +143,8 @@ struct WaveBitmapCache::LookupHelper final
 
       const auto height = cache->mPaintParamters.Height;
 
+      const auto zeroLineY = GetRowFromValue(.0f);
+
       auto inputData = cache->mPaintParamters.DBScale ?
                           DBRemappedColumns.data() :
                           result->Data.data();
@@ -155,7 +157,8 @@ struct WaveBitmapCache::LookupHelper final
       {
          envelope->GetValues(
             EnvelopeValues.data(), static_cast<int>(EnvelopeValues.size()),
-            key.FirstSample / cache->GetScaledSampleRate(),
+            key.FirstSample / cache->GetScaledSampleRate() +
+               envelope->GetOffset(),
             1.0 / key.PixelsPerSecond);
 
          for (size_t column = 0; column < columnsCount; ++column)
@@ -178,6 +181,7 @@ struct WaveBitmapCache::LookupHelper final
       const auto globalMinRow = GetRowFromValue(cache->mPaintParamters.Min) + 1;
 
       const auto blankColor = cache->mPaintParamters.BlankColor;
+      const auto zeroLineColor  = cache->mPaintParamters.ZeroLineColor;
 
       const auto backgroundColors = cache->mPaintParamters.BackgroundColors;
       const auto sampleColors = cache->mPaintParamters.SampleColors;
@@ -214,6 +218,20 @@ struct WaveBitmapCache::LookupHelper final
             function.SetStop(stopIndex++, blankColor, globalMaxRow);
 
          const auto maxRow = GetRowFromValue(columnData.max);
+
+         if(zeroLineY > globalMaxRow && maxRow > zeroLineY)
+         {
+            //Waveform is below 0
+            function.SetStop(
+               stopIndex++,
+               selected ? backgroundColors.Selected : backgroundColors.Normal,
+               zeroLineY);
+            function.SetStop(
+               stopIndex++,
+               zeroLineColor,
+               zeroLineY + 1
+            );
+         }
 
          if (maxRow > 0)
          {
@@ -261,6 +279,19 @@ struct WaveBitmapCache::LookupHelper final
          function.SetStop(
             stopIndex++, selected ? sampleColors.Selected : sampleColors.Normal,
             minRow != maxRow ? minRow : minRow + 1);
+
+         if(zeroLineY < globalMinRow && minRow < zeroLineY)
+         {
+            //Waveform is above 0
+            function.SetStop(
+               stopIndex++,
+               selected ? backgroundColors.Selected : backgroundColors.Normal,
+               zeroLineY);
+            function.SetStop(
+               stopIndex++,
+               zeroLineColor,
+               zeroLineY + 1);
+         }
 
          if (minRow < globalMinRow)
          {

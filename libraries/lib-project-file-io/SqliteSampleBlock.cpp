@@ -169,9 +169,10 @@ public:
    SampleBlockPtr DoCreateFromId(
       sampleFormat srcformat, SampleBlockID id) override;
 
-   SampleBlock::DeletionCallback GetSampleBlockDeletionCallback() const
+   void OnSampleBlockDtor(const SampleBlock&)
    {
-      return mSampleBlockDeletionCallback;
+      if (mSampleBlockDeletionCallback)
+         mSampleBlockDeletionCallback();
    }
 
 private:
@@ -182,7 +183,7 @@ private:
 
    AudacityProject &mProject;
    Observer::Subscription mUndoSubscription;
-   SampleBlock::DeletionCallback mSampleBlockDeletionCallback;
+   std::function<void()> mSampleBlockDeletionCallback;
    const std::shared_ptr<ConnectionPtr> mppConnection;
 
    // Track all blocks that this factory has created, but don't control
@@ -345,12 +346,7 @@ SqliteSampleBlock::SqliteSampleBlock(
 
 SqliteSampleBlock::~SqliteSampleBlock()
 {
-   if (
-      const auto cb = mpFactory ? mpFactory->GetSampleBlockDeletionCallback() :
-                                  SampleBlock::DeletionCallback {})
-   {
-      cb(*this);
-   }
+   mpFactory->OnSampleBlockDtor(*this);
 
    if (IsSilent()) {
       // The block object was constructed but failed to Load() or Commit().
@@ -1114,7 +1110,7 @@ void SqliteSampleBlockFactory::OnBeginPurge(size_t begin, size_t end)
        return;
    auto purgeStartTime = std::chrono::system_clock::now();
    std::shared_ptr<ProgressDialog> progressDialog;
-   mSampleBlockDeletionCallback = [=, nDeleted = 0](auto&) mutable {
+   mSampleBlockDeletionCallback = [=, nDeleted = 0] (void) mutable {
       ++nDeleted;
       if(!progressDialog)
       {

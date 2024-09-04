@@ -31,6 +31,7 @@
 #include "Viewport.h"
 #include "prefs/EffectsPrefs.h"
 #include "DoEffect.h"
+#include "prefs/GUIPrefs.h"
 
 // private helper classes and functions
 namespace {
@@ -94,7 +95,12 @@ void OnResetConfig(const CommandContext &context)
    SyncLockTracks.Reset();
    SoundActivatedRecord.Reset();
    SelectionToolbarMode.Reset();
+
+   ShowRMSPref().Reset();
+   ShowClippingPref().Reset();
+
    gPrefs->Flush();
+
    DoReloadPreferences(project);
 
    Viewport::Get(project).SetToDefaultSize();

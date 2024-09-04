@@ -8,8 +8,8 @@
 # Leo Hoàng Trịnh, 2024
 # Phi Sown Nguyen <mersoit792@gmail.com>, 2024
 # Nguyen Mien <Hamien0604@gmail.com>, 2024
-# Muon Viet, 2024
 # hong cuong <hongcuongvn282@gmail.com>, 2024
+# Muon Viet, 2024
 # brad freedom <brad.freedom@gmail.com>, 2024
 #
 #, fuzzy
@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2024-06-30 22:47+0300\n"
+"POT-Creation-Date: 2024-08-30 16:51+0300\n"
+"PO-Revision-Date: 2024-08-30 16:41+0200\n"
 "Last-Translator: brad freedom <brad.freedom@gmail.com>, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/klyok/teams/690/vi/)\n"
 "Language: vi\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -405,180 +405,168 @@ msgstr "Lỗi chuyển đổi thông tin phản hồi"
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Modern"
-msgstr "Chế độ"
+msgstr "Hiện đại."
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Glue Compressor"
-msgstr "Compressor - Bộ nén"
+msgstr "Keo bộ nén"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Gentle"
-msgstr ""
+msgstr "Nhẹ nhàng"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beat Booster"
-msgstr "Khuếch đại Bass - âm Trầm"
+msgstr "Tăng cường nhạc nền"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Deep Dive Master"
-msgstr ""
+msgstr "Master chuyên sâu"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beefy Master"
-msgstr "Chính"
+msgstr "Hoàn thiện âm thanh beefy"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Make It Right Master"
-msgstr ""
+msgstr "Chuyển thành giải âm bên phải"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Brick Wall Master"
-msgstr ""
+msgstr "Hoàn thiện Brick Wall"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Lead Vocals"
-msgstr "Nội vùng"
+msgstr "Giọng chính"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Fat Vocals"
-msgstr ""
+msgstr "Giọng Fat"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Power Vocals"
-msgstr ""
+msgstr "Giọng mạnh"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Vocal Control"
-msgstr "Điều chỉnh giai điệu."
+msgstr "Điều chỉnh giọng"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Vocal Touch-Up"
-msgstr ""
+msgstr "Cải thiện Giọng hát"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Voice Memos Balancer"
-msgstr ""
+msgstr "Trình cân bằng Voice Memos"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Podcast/Radio"
-msgstr ""
+msgstr "Podcast/Radio"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Piano"
-msgstr ""
+msgstr "Piano"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Acoustic Guitar"
-msgstr ""
+msgstr "Acoustic Ghi ta"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Bass Guitar"
-msgstr "Bass Cut"
+msgstr "Bass Ghi ta"
 
 #. i18n-hint: This is the name of an effect preset. Strings is violins, etc
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Strings"
-msgstr "&Tuỳ chọn"
+msgstr "Nhạc cụ dây"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Kick Drums"
-msgstr ""
+msgstr "Trống Chân"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Drums Control"
-msgstr ""
+msgstr "Điều chỉnh Trống"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Climax Impulser SFX"
-msgstr ""
+msgstr "Impulser SFX đỉnh điểm"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Engine Breathing SFX"
-msgstr ""
+msgstr "Engine Breathing SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Impact SFX"
-msgstr ""
+msgstr "Great Impact SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Body SFX"
-msgstr ""
+msgstr "Great Body SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Tail SFX"
-msgstr ""
+msgstr "Great Tail SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Smack Explosion SFX"
-msgstr ""
+msgstr "Smack Explosion SFX"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Master Limiter"
-msgstr "Limiter - Bộ định giới hạn"
+msgstr "Bộ giới hạn chính"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "SFX Limiter"
-msgstr "Limiter - Bộ định giới hạn"
+msgstr "Bộ hạn chế SFX "
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "VO Limiter"
-msgstr "Limiter - Bộ định giới hạn"
+msgstr "Bộ hạn chế VO"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch"
-msgstr ""
+msgstr "Modern Punch"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch 2"
-msgstr ""
+msgstr "Modern Punch 2"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Play it Loud"
-msgstr "Đang phát âm"
+msgstr "Play it Loud"
 
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
@@ -876,7 +864,7 @@ msgstr "Đang nhập %s..."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Operation was canceled by user"
-msgstr ""
+msgstr "Quá trình đã bị huỷ bỡi người dùng"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -1292,13 +1280,13 @@ msgstr ""
 "Chỉ dùng các mô-đun đến từ nguồn có tín"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Có"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Không"
 
@@ -2926,18 +2914,12 @@ msgid "Wave Track"
 msgstr "Sóng của Track"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -5741,9 +5723,8 @@ msgid "Generating audio preview..."
 msgstr "Đang tạo bản xem trước âm thanh.."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
 msgid "Open trace audio.com"
-msgstr "Mở từ audio.com"
+msgstr "Mở dấu vết audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -5902,14 +5883,12 @@ msgid "How would you like to save?"
 msgstr "Bạn muốn lưu như thế nào?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Save to the Cloud (free)"
-msgstr "Lưu lên đám mây"
+msgstr "Lưu lên đám mây (miễn phí)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
-msgstr "Dự án của bạn đã được sao lưu một cách bảo mật trên audio.com"
+msgstr "Dự án của bạn đã được sao lưu một cách bảo mật trên audio.com. Bạn có thể truy cập và làm việc nhóm với người khác từ bất kỳ thiết bị nào. Việc lưu lên đám mây sẽ là miễn phí đối với một số dự án nhất định."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Save to Cloud"
@@ -5924,6 +5903,8 @@ msgid ""
 "Files are saved on your device.\n"
 "Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
+"Các tệp đã được lưu vào thiết bị của bạn.\n"
+"Lưu ý: Đối với việc xuất các tệp MP3 và WAV. hãy vào Tệp>Xuất Audio."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
@@ -6541,9 +6522,9 @@ msgstr "%s, đồ họa"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, effects presets"
-msgstr "Chọn thiết lập sẵn"
+msgstr "%s, hiệu ứng có sẵn"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -6955,16 +6936,16 @@ msgstr ""
 "Tệp tin đã bị loại bỏ trong danh sách các tệp gần đây."
 
 #: src/AudacityApp.cpp
+msgid "Audacity is starting up..."
+msgstr "Audacity đang khởi động..."
+
+#: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr "Audacity không thể chạy tiếp. thư viện SQLite bị lỗi."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Khối phải có kích thước từ 256 đến 100000000\n"
-
-#: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "Audacity đang khởi động..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -8095,8 +8076,9 @@ msgstr "Tần số logarit"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8658,7 +8640,7 @@ msgstr "Tắt"
 msgid "Enable"
 msgstr "Bật lên"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Loại"
 
@@ -8761,8 +8743,8 @@ msgstr "Quá it track thích hợp được chọn"
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s #%d"
+msgid "%s.%d"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -9449,14 +9431,12 @@ msgid "Realtime effects are non-destructive and can be changed at any time."
 msgstr "Hiệu ứng thời gian thực không ảnh hưởng dữ liệu gốc và có thể thay đổi bất cứ lúc nào."
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Master Effects"
 msgstr "Hiệu ứng chính"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Applies to all tracks"
-msgstr "Áp dụng cho tất cả đoạn âm"
+msgstr "Áp dụng cho tất cả các track"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -10992,7 +10972,8 @@ msgstr "Trường độ bên trong giảm dân"
 msgid "Inner &fade up length:"
 msgstr "Trường độ bên trong &mờ dân"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "&Ngưỡng:"
 
@@ -11324,7 +11305,7 @@ msgstr "Vùng chọn phải lớn hơn %dmẫu."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Ngưỡng (càng bé càng nhạy):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Ngưỡng"
 
@@ -11733,7 +11714,7 @@ msgstr "Bộ hạn chế âm gõ"
 msgid "Upper Threshold"
 msgstr "Ngưỡng trên"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Nhiễu nhỏ nhất - Noise Floor "
 
@@ -11917,42 +11898,35 @@ msgid "%0.f ms"
 msgstr "%0.f ms"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "I&nput"
-msgstr "Đầu vào"
+msgstr "Đầu &vào"
 
 #. i18n-hint: show input on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show input"
-msgstr "Hiển thị đầu ra"
+msgstr "Hiển thị đầu vào"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "O&utput"
-msgstr "Đầu ra"
+msgstr "Đầ&u ra"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "A&ctual compression"
-msgstr "Bộ nén"
+msgstr "Nén thự&c tế"
 
 #. i18n-hint: show actual compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show actual compression"
-msgstr "Âm lượng và nén"
+msgstr "Hiển thị nén thực tế"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Tar&get compression"
-msgstr "Bộ nén"
+msgstr "&Mục tiêu nén"
 
 #. i18n-hint: show target compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show target compression"
-msgstr "Âm lượng và nén"
+msgstr "Hiển thị mục tiêu nén"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Compression curve"
@@ -11999,14 +11973,12 @@ msgid "Input"
 msgstr "Đầu vào"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-#, fuzzy
 msgid "Actual Compression"
-msgstr "Bộ nén"
+msgstr "Nén thực tế"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-#, fuzzy
 msgid "Target Compression"
-msgstr "Bộ nén"
+msgstr "Mục tiêu nén"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "awaiting playback"
@@ -12626,8 +12598,126 @@ msgstr "Invert - Đảo"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Lật ngược các mẫu âm thanh, đảo ngược cực tính của chúng"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+msgid "Legacy Compressor"
+msgstr "Bộ nén phiên bản cũ"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Nén dải động của audio"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f secs - giây"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f secs - giây"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Tỉ lệ%.0f - 1 "
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Tỷ lệ %.1fđến 1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "&Nhiễu nhỏ nhất - Noise Floor "
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "&Tỉ lệ"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Tỉ lệ"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "Thời gian khởi chạy:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "Thời gian khởi chạy"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "Thời gian phát hành:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "Thời gian phát hành"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "Điều chỉnh& 0dB sau khi nén"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "Nén từ đỉnh"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Ngưỡng: %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "Nhiễu nhỏ nhất - Noise Floor %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Thời gian khởi chạy%.2f giây"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "Thời gian phát hành%.1f giây "
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Limiter - Bộ định giới hạn"
 
@@ -13212,24 +13302,22 @@ msgstr "Cảnh báo: không được lập lại."
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Acoustic"
-msgstr ""
+msgstr "Acoustic"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Ambience"
-msgstr "Im lặng"
+msgstr "Ambience"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Artificial"
-msgstr ""
+msgstr "Artificial"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Clean"
-msgstr "Xoá"
+msgstr "Dọn sạch"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13244,17 +13332,17 @@ msgstr "Vocal II"
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Dance Vocal"
-msgstr ""
+msgstr "Giọng nhạc Dance"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Modern Vocal"
-msgstr ""
+msgstr "Giọng hiện đại"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Voice Tail"
-msgstr ""
+msgstr "Âm đuôi"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13294,7 +13382,7 @@ msgstr "Nhà thờ lớn"
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Big Cave"
-msgstr ""
+msgstr "Hang động lớn"
 
 #: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
@@ -13516,11 +13604,6 @@ msgstr "Dùng chế độ mặc định"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Quay về chế độ mặc định"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f secs - giây"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -15302,9 +15385,8 @@ msgid "Add Realtime Effects"
 msgstr "Thêm Hiệu Ứng Thời Gian Thực"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Get AI effects..."
-msgstr "Lấy thêm hiệu ứng..."
+msgstr "Lấy hiệu ứng AI"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -16005,9 +16087,8 @@ msgid "&Solo/Unsolo Focused Track"
 msgstr "&Bật/tắt chế độ Solo của track hiện hành"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Delete Fo&cused Track"
-msgstr "&Đóng track hiện hành"
+msgstr "Xoá track hiện &hành"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track U&p"
@@ -16294,9 +16375,8 @@ msgid "&Show Clipping in Waveform"
 msgstr "&Hiển thị Clipping theo dạng sóng"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Show &RMS in Waveform"
-msgstr "&Hiển thị Clipping theo dạng sóng"
+msgstr "Hiển thị &RMS ở dạng sóng"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -19036,20 +19116,28 @@ msgid "WaveColor Change"
 msgstr "Thay đổi màu sóng"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
-msgstr "Chuyển tốc độ giới hạn dưới (%) thành:"
+msgid "Change Speed Limits"
+msgstr "Thay đổi tốc độ giới hạn"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+msgid "Change speed limit (%) to:"
+msgstr "Thay đổi tốc độ giói hạn (%) thành:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Lower Speed Limit"
 msgstr "Tốc độ giới hạn dưới"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Chuyển tốc độ giới hạn trên (%) thành:"
+msgid "Upper Speed Limit"
+msgstr "Tốc độ giới hạn trên"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Tốc độ giới hạn trên"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr "Giới hạn tốc độ trên phải lớn hơn Giới hạn tốc độ dưới"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Invalid Limits"
+msgstr "Giới hạn sai "
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19100,10 +19188,6 @@ msgstr "&Vùng..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Nội suy &logarit"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Phiên bản Audacity này chỉ cho phép một track trên một cửa sổ dự án"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -19737,7 +19821,7 @@ msgstr "Lọc đa tần"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -19849,8 +19933,8 @@ msgid ""
 "                        For the current track, the high frequency setting cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
-"~aVùng chọn tần số quá lớn để lấy mẫu track.~%~\n"
-"Không thể~%~\n"
+"~aVùng chọn tần số quá lớn để lấy mẫu track. ~%~\n"
+"Không thể ~%~\n"
 "Chỉnh tần số lớn hơn ~a Hz đối với track này"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
@@ -19871,7 +19955,7 @@ msgstr "Spectral Edit Shelves-Chỉnh sửa Shelves âm phổ"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20324,7 +20408,7 @@ msgid ""
 "                 Track sample rate is ~a Hz~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"Lỗi:~%~%F Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~\n"
+"Lỗi:~%~%Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~\n"
 "Tốc độ mẫu của track là ~a Hz.~%~\n"
 "Tần số phải nhỏ hơn ~a Hz."
 
@@ -20424,30 +20508,34 @@ msgstr ""
 "có ít nhất hai âm thanh.~%~\n"
 "Chỉ phát hiện một âm thanh."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+msgid "Legacy Limiter"
+msgstr "Bộ định giới hạn phiên bản cũ"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "Giới hạn mềm"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Giới hạn cứng"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Clip mềm"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Clip cứng"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr "Núm điều chỉnh đầu vào (dB) mono/left"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -20455,15 +20543,15 @@ msgstr ""
 "Núm Gain điều chỉnh đầu vào (dB) \n"
 "Right channel / Kênh bên phải"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Giới hạn dB"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Giữ (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "Áp dụng tăng Gain"
 
@@ -20577,7 +20665,7 @@ msgid ""
 "               Track sample rate is ~a Hz.~%~\n"
 "               Frequency must be less than ~a Hz."
 msgstr ""
-"Lỗi:~%~%F Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~\n"
+"Lỗi:~%~%Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~\n"
 "Tốc độ mẫu của track là ~a Hz.~%~\n"
 "Tần số phải nhỏ hơn ~a Hz."
 
@@ -20631,7 +20719,7 @@ msgstr "Thành công.~%tệp được ghi vào:~%~s~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Cảnh báo.~%Sao chép một số tệp không thành công:~%"
+msgstr "Cảnh báo.~% Sao chép một số tệp không thành công:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -21154,7 +21242,7 @@ msgid ""
 msgstr ""
 "Lỗi:~%~\n"
 "Tệp chỉ được chứa văn bản ASCII thuần túy.~%~\n"
-" (Byte không hợp lệ '~a' ở số byte: ~a)"
+"(Byte không hợp lệ '~a' ở số byte: ~a)"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -21301,195 +21389,6 @@ msgstr "Trình xoá giọng nói"
 msgid "Spectral Tools"
 msgstr "Spectral Tools-Công cụ âm phổ"
 
-#~ msgid "Master effects"
-#~ msgstr "Hiệu ứng chính"
-
-#~ msgid "Apply to all tracks"
-#~ msgstr "Áp dụng cho tất cả đoạn âm"
-
-#~ msgid "Input gain (dB)"
-#~ msgstr "Đầu vào gain (dB)"
-
-#~ msgid "Ceiling (dB)"
-#~ msgstr "Trần (dB)"
-
-#~ msgid "Attenuation"
-#~ msgstr "giảm xuống"
-
-#~ msgid "Limiter (beta)"
-#~ msgstr "Limiter - Bộ định giới hạn (beta)"
-
-#~ msgid "Compressor (beta)"
-#~ msgstr "Compressor - Bộ nén (beta)"
-
-#~ msgid "&Show graph (beta)"
-#~ msgstr "&Hiển thị biểu đồ (beta)"
-
-#~ msgid "Files are saved on your device."
-#~ msgstr "Các tập tin đã được lưu trên thiết bị của bạn."
-
-#~ msgid "View online"
-#~ msgstr "Xem onlime"
-
-#~ msgid ""
-#~ "Your project is now empty.\n"
-#~ "If saved, the project will have no tracks.\n"
-#~ "\n"
-#~ "To save any previously open tracks:\n"
-#~ "Click 'No', Edit > Undo until all tracks\n"
-#~ "are open, then File > Save Project.\n"
-#~ "\n"
-#~ "Save anyway?"
-#~ msgstr ""
-#~ "Dự án của bạn hiện đang trống.\n"
-#~ "Nếu lưu lại, dự án sẽ không có track nào.\n"
-#~ "\n"
-#~ "Để lưu lại các track đã mở:\n"
-#~ "Nhấn vào 'Không', Chỉnh sửa > Hoàn tác cho đến khi các track đều mở, rồi vào Tệp > Lưu lại Dự án.\n"
-#~ "\n"
-#~ "Kệ, vẫn lưu?"
-
-#~ msgid "Warning - Empty Project"
-#~ msgstr "Cảnh báo - Dự án trống"
-
-#~ msgid ""
-#~ "'Save Project' is for an Audacity project, not an audio file.\n"
-#~ "For an audio file that will open in other apps, use 'Export'.\n"
-#~ msgstr ""
-#~ "Lưu lại Dự án' dành cho dự án Audacity, không phải là tập tin audio.\n"
-#~ "Nếu dùng cho tập tin audio với các chương trình ứng dụng khác, hãy dùng 'Xuất tập'.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "If saved, the project will have no tracks.\n"
-#~ "\n"
-#~ "To save any previously open tracks:\n"
-#~ "Cancel, Edit > Undo until all tracks\n"
-#~ "are open, then File > Save Project."
-#~ msgstr ""
-#~ "\n"
-#~ "Nếu lưu, dự án của bạn sẽ la một dự án trống\n"
-#~ "\n"
-#~ "Để lưu lại các track đã mở trước đó\n"
-#~ "nhấn nút Huỷ bỏ, Chỉnh sửa > Huỷ bỏ cho tới khi tất cả các \n"
-#~ "track của bạn được mở, rồi chọn Tệp > Lưu dự án."
-
-#~ msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-#~ msgstr "<br>Phiên bản Audacity bạn đang sử dụng là một phiên bản thử nghiệm Alpha </b>."
-
-#~ msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-#~ msgstr "<br>Phiên bản Audacity bạn đang sử dụng là một phiên bản thử nghiệm BETA </b>."
-
-#~ msgid "Get the Official Released Version of Audacity"
-#~ msgstr "Hãy dùng phiên bản phát hành chính thức của Audacity"
-
-#~ msgid "Check Online"
-#~ msgstr "Kiểm tra Online"
-
-#~ msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
-#~ msgstr "Chúng tôi khuyến cáo bạn dùng phiên bản phát hành ổn định gần đây nhất, phiên bản này có đầy đủ tài liệu và sự hỗ trợ.<br/><br/>"
-
-#~ msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-#~ msgstr "Bạn có thể trợ giúp chúng tôi chuẩn bị cho bản phát hành tiếp theo của Audacity bằng cách tham gia [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-
-#~ msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-#~ msgstr "<p>Trong phiên bản này, chúng tôi đã thêm Beats & Measures, Time Stretching và nhiều tính năng khác.<br/>"
-
-#~ msgid "How to get help"
-#~ msgstr "Làm thế nào để nhận sự giúp đỡ"
-
-#~ msgid "These are our support methods:"
-#~ msgstr "Đây là các phương pháp hỗ trợ của chúng tôi:"
-
-#~ msgid "[[help:Quick_Help|Quick Help]]"
-#~ msgstr "[[Trọ giúp: Nhanh_Trợ giúp Nhanh Trọ giúp]]"
-
-#~ msgid " [[help:Main_Page|Manual]]"
-#~ msgstr "[[Trọ giúp:Trang_Chính|Manual]]"
-
-#~ msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-#~ msgstr "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-
-#~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-#~ msgstr " [[https://forum.audacityteam.org/|Forum]] - Vào forum online nếu bạn có bất cứ câu hỏi nào."
-
-#~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "Nén dải động của audio"
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f secs - giây"
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "Tỉ lệ%.0f - 1 "
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "Tỷ lệ %.1fđến 1"
-
-#~ msgid "&Noise Floor:"
-#~ msgstr "&Nhiễu nhỏ nhất - Noise Floor "
-
-#~ msgid "&Ratio:"
-#~ msgstr "&Tỉ lệ"
-
-#~ msgid "Ratio"
-#~ msgstr "Tỉ lệ"
-
-#~ msgid "&Attack Time:"
-#~ msgstr "Thời gian khởi chạy:"
-
-#~ msgid "Attack Time"
-#~ msgstr "Thời gian khởi chạy"
-
-#~ msgid "R&elease Time:"
-#~ msgstr "Thời gian phát hành:"
-
-#~ msgid "Release Time"
-#~ msgstr "Thời gian phát hành"
-
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "Điều chỉnh& 0dB sau khi nén"
-
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "Nén từ đỉnh"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "Ngưỡng: %d dB"
-
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "Nhiễu nhỏ nhất - Noise Floor %d dB"
-
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "Thời gian khởi chạy%.2fgiây"
-
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "Thời gian phát hành%.1fgiây "
-
-#~ msgid "Warnings"
-#~ msgstr "Cảnh báo"
-
-#~ msgid "Preferences for Warnings"
-#~ msgstr "Tùy chỉnh cho Cảnh báo"
-
-#~ msgid "Show Warnings/Prompts for"
-#~ msgstr "Hiển thị Cảnh báo/ Hộp thoại cho"
-
-#~ msgid "Saving &projects versus exporting audio"
-#~ msgstr "Lưu &dự án và xuất audio"
-
-#~ msgid "Saving &empty project"
-#~ msgstr "Đang lưu dự ấn &trống"
-
-#~ msgid "Stereo, %dHz"
-#~ msgstr "Stereo, %dHz"
-
-#~ msgid "Mono, %dHz"
-#~ msgstr "Mono, %dHz"
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr "Phiên bản cũ"

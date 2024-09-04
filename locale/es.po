@@ -1,13 +1,13 @@
 # Header entry was created by Lokalize.
 #
 # Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
-# Francisco Vila <paconet@gmx.es>, 2022, 2023.
+# Aportaciones de Francisco Vila, Kntro Cantero, David Franco y Jaime Serquera
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2024-07-12 16:26+0200\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
+"PO-Revision-Date: 2024-08-07 09:32+0200\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist at gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -1320,13 +1320,13 @@ msgstr ""
 "Utilice sólo módulos de fuentes confiables"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Sí"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "No"
 
@@ -2682,7 +2682,7 @@ msgstr "Alto contraste"
 #. i18n-hint: Light meaning opposite of dark
 #: libraries/lib-theme-resources/LightThemeAsCeeCode.cpp
 msgid "Light"
-msgstr "Ligero"
+msgstr "Claro"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
 #. graphical user interface, including choices of colors, and similarity of images
@@ -2980,18 +2980,12 @@ msgid "Wave Track"
 msgstr "Pista de onda"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -3637,7 +3631,7 @@ msgstr "%.2f kbps"
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Bit Rate"
-msgstr "Velocidad de transferencia"
+msgstr "Vel. de transf."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Quality (kbps)"
@@ -3714,7 +3708,7 @@ msgstr "VOIP"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Low Delay"
-msgstr "Bajo Retardo"
+msgstr "Baja latencia"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
@@ -3895,7 +3889,7 @@ msgstr "Exportar audio como %s"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Invalid sample rate"
-msgstr "Frecuencia de muestreo no válida"
+msgstr "Frecuencia no válida"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp src/menus/TrackMenus.cpp
@@ -3908,7 +3902,7 @@ msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
 "file format. "
 msgstr ""
-"La frecuencia de muestreo del proyecto (%d) no es compatible con el\n"
+"La frecuencia del proyecto (%d) no es compatible con el\n"
 "formato de archivo de salida actual."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -3917,8 +3911,8 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
-"La combinación de frecuencia de muestreo (%d) y velocidad de transferencia ("
-"%d kbps) del proyecto no es\n"
+"La combinación de frecuencia (%d) y velocidad de transferencia (%d kbps) del"
+" proyecto no es\n"
 "compatible con el formato de archivo de salida actual."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -3929,7 +3923,7 @@ msgstr "Puede volver a muestrear a una de las frecuencias indicadas."
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Sample Rates"
-msgstr "Frecuencias de muestreo"
+msgstr "Frecuencias"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LC"
@@ -4111,7 +4105,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Rate:"
-msgstr "Velocidad de transferencia:"
+msgstr "Vel. de transf.:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -4134,12 +4128,12 @@ msgid ""
 "Sample rate (Hz)\n"
 "0 - don't change sample rate"
 msgstr ""
-"Frecuencia de muestreo (Hz)\n"
+"Frecuencia (Hz)\n"
 "0 - No modificar la frecuencia de muestreo"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Sample Rate:"
-msgstr "Frecuencia de muestreo:"
+msgstr "Frecuencia:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -4815,7 +4809,7 @@ msgstr "Medio"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Bit Rate Mode"
-msgstr "Modo de velocidad de transferencia"
+msgstr "Modo tasa de transf."
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Preset"
@@ -4977,8 +4971,8 @@ msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
 "file format. "
 msgstr ""
-"La frecuencia de muestreo del proyecto (%d) no es\n"
-"compatible con el formato de archivo MP3. "
+"La frecuencia del proyecto (%d) no es compatible con el formato\n"
+"de archivo MP3. "
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
@@ -4986,8 +4980,8 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
-"La combinación de frecuencia de muestreo (%d) y velocidad de transferencia ("
-"%d kbps) del proyecto no es compatible con el\n"
+"La combinación de frecuencia (%d) y velocidad de transferencia (%d kbps) del"
+" proyecto no es compatible con el\n"
 "formato de archivo MP3."
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -5145,7 +5139,7 @@ msgstr "Archivos Opus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unsupported sample rate"
-msgstr "Frecuencia de muestreo no admitida"
+msgstr "Frecuencia no admitida"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting selected audio as Opus"
@@ -6809,7 +6803,9 @@ msgstr "Acerca de %s"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "Traducción al Español por Antonio Paniagua Navarro."
+msgstr ""
+"Traducción al Español por Antonio Paniagua Navarro."
+"Aportaciones de Kntro Cantero."
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8403,8 +8399,9 @@ msgstr "Frecuencia logarítmica"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8459,7 +8456,7 @@ msgid ""
 "To plot the spectrum, all selected tracks must have the same sample rate."
 msgstr ""
 "Para trazar el espectro, todas las pistas seleccionadas deberán tener la"
-" misma frecuencia de muestreo."
+" misma frecuencia."
 
 #: src/FreqWindow.cpp
 msgid ""
@@ -9001,7 +8998,7 @@ msgstr "Deshabilitar"
 msgid "Enable"
 msgstr "Habilitar"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Tipo"
 
@@ -9077,7 +9074,7 @@ msgid ""
 msgstr ""
 "Error al abrir dispositivo de sonido.\n"
 "Pruebe a modificar el servidor de audio, el dispositivo de reproducción y la"
-" frecuencia de muestreo del proyecto."
+" frecuencia del proyecto."
 
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
@@ -9111,8 +9108,8 @@ msgstr "No se han seleccionado suficientes pistas compatibles"
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s #%d"
+msgid "%s.%d"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -10660,7 +10657,7 @@ msgstr "Demostración"
 
 #: src/commands/Demo.cpp
 msgid "Delay time (seconds):"
-msgstr "Tiempo de retraso (segundos):"
+msgstr "Tiempo de latencia (segundos):"
 
 #: src/commands/Demo.cpp
 msgid "Decay factor:"
@@ -11413,7 +11410,8 @@ msgstr "Duración de caída interi&or:"
 msgid "Inner &fade up length:"
 msgstr "Duración de su&bida interior:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "U&mbral:"
 
@@ -11747,7 +11745,7 @@ msgstr "La selección debe ser mayor que %d muestras."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Umbral (valores menores indican más sensibilidad):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Umbral"
 
@@ -12162,7 +12160,7 @@ msgstr "Limitador de percusión"
 msgid "Upper Threshold"
 msgstr "Umbral superior"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Límite inferior de ruido"
 
@@ -12451,7 +12449,7 @@ msgstr "El valor requerido supera la capacidad de la memoria."
 
 #: src/effects/Echo.cpp
 msgid "&Delay time (seconds):"
-msgstr "Retraso (segundos):"
+msgstr "&Latencia (segundos):"
 
 #: src/effects/Echo.cpp
 msgid "D&ecay factor:"
@@ -13057,8 +13055,126 @@ msgstr "Inversión"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Intercambia muestras de audio al revés, invirtiendo su polaridad"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+msgid "Legacy Compressor"
+msgstr "Compresor heredado"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Comprime el rango dinámico del audio"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f seg"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f seg"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Proporción %.0f a 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Proporción %.1f a 1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "Límite i&nferior de ruido:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "&Relación:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Proporción"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "Tiempo de &ataque:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "Tiempo de ataque"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "Ti&empo de decaimiento:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "Tiempo de decaimiento"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "&Composición de ganancia para 0 db tras compresión"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "C&ompresión basada en picos"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Umbral %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "Límite inferior %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Tiempo de ataque %.2f seg"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "Tiempo de decaimiento %.1f seg"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Limitador"
 
@@ -13756,7 +13872,7 @@ msgstr "&Tamaño de sala (%):"
 
 #: src/effects/Reverb.cpp
 msgid "&Pre-delay (ms):"
-msgstr "Tiem&po de retardo (ms):"
+msgstr "Latencia &previa (ms):"
 
 #: src/effects/Reverb.cpp
 msgid "Rever&berance (%):"
@@ -13964,11 +14080,6 @@ msgstr "Usar valores predeterminados"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Restablecer valores predeterminados"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f seg"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -14234,9 +14345,10 @@ msgid ""
 " provide that compensation, but it may not work for all VST effects."
 msgstr ""
 "Algunos efectos VST deben retrasar el audio que se devuelve a Audacity como"
-" parte de su procesamiento. Si no se compensa este retardo se pueden provocar"
-" pequeños silencios insertados en el audio. Habilitando esta opción se"
-" compensará ese problema, aunque puede no funcionar en todos los efectos VST."
+" parte de su procesamiento. Si no se compensa esta latencia se pueden"
+" provocar pequeños silencios insertados en el audio. Habilitando esta opción"
+" se compensará ese problema, aunque puede no funcionar en todos los efectos"
+" VST."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14288,9 +14400,10 @@ msgid ""
 " provide that compensation, but it may not work for all VST3 effects."
 msgstr ""
 "Algunos efectos VST3 deben retrasar el audio que se devuelve a Audacity como"
-" parte de su procesamiento. Si no se compensa este retardo se pueden provocar"
-" pequeños silencios insertados en el audio. Habilitando esta opción se"
-" compensará ese problema, aunque puede no funcionar en todos los efectos VST3."
+" parte de su procesamiento. Si no se compensa esta latencia se pueden"
+" provocar pequeños silencios insertados en el audio. Habilitando esta opción"
+" se compensará ese problema, aunque puede no funcionar en todos los efectos"
+" VST3."
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid ""
@@ -14390,7 +14503,7 @@ msgid ""
 " effects."
 msgstr ""
 "Algunos efectos Audio Unit deben retrasar el audio que se devuelve a Audacity"
-" como parte de su procesamiento. Si no se compensa este retardo se pueden"
+" como parte de su procesamiento. Si no se compensa esta latencia se pueden"
 " provocar pequeños silencios insertados en el audio. Habilitando esta opción"
 " se compensará ese problema, aunque puede no funcionar en todos los efectos"
 " Audio Unit."
@@ -14406,9 +14519,9 @@ msgid ""
 " \"Basic\" for a basic text-only interface. Reopen the effect for this to"
 " take effect."
 msgstr ""
-"Seleccione \"Completo\" para utilizar el interface gráfico suministrado por"
-" Audio Unit. \"Genérico\" para usar el interface del sistema. \"Básico\" para"
-" un interface de texto. Vuelva a abrir el efecto para que el cambio se"
+"Seleccione \"Completo\" para utilizar la interfaz gráfico suministrado por"
+" Audio Unit. \"Genérico\" para usar la interfaz del sistema. \"Básico\" para"
+" una interfaz de texto. Vuelva a abrir el efecto para que el cambio se"
 " aplique."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -14453,7 +14566,7 @@ msgid ""
 " provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 "Algunos efectos LADSPA deben retrasar el audio que se devuelve a Audacity"
-" como parte de su procesamiento. Si no se compensa este retardo se pueden"
+" como parte de su procesamiento. Si no se compensa esta latencia se pueden"
 " provocar pequeños silencios insertados en el audio. Habilitando esta opción"
 " se compensará ese problema, aunque puede no funcionar en todos los efectos"
 " LADSPA."
@@ -14479,9 +14592,10 @@ msgid ""
 " provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
 "Algunos efectos LV2 deben retrasar el audio que se devuelve a Audacity como"
-" parte de su procesamiento. Si no se compensa este retardo se pueden provocar"
-" pequeños silencios insertados en el audio. Habilitando esta opción se"
-" compensará ese problema, aunque puede no funcionar en todos los efectos LV2."
+" parte de su procesamiento. Si no se compensa esta latencia se pueden"
+" provocar pequeños silencios insertados en el audio. Habilitando esta opción"
+" se compensará ese problema, aunque puede no funcionar en todos los efectos"
+" LV2."
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid ""
@@ -17326,7 +17440,7 @@ msgstr "Preferencias de entorno gráfico"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (rango aproximado para edición de alta amplitud)"
+msgstr "-36 dB (rango aprox. de edición de alta amplitud)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-48 dB (PCM range of 8 bit samples)"
@@ -19670,20 +19784,30 @@ msgid "WaveColor Change"
 msgstr "Cambio de color de onda"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
-msgstr "Cambiar el límite inferior de velocidad (%) a:"
+msgid "Change Speed Limits"
+msgstr "Cambio de límites de velocidad"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
-msgstr "Límite inferior de velocidad"
+msgid "Change speed limit (%) to:"
+msgstr "Cambio de límites de velocidad (%) a:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Cambiar el límite superior de velocidad (%) a:"
+msgid "Lower Speed Limit"
+msgstr "Límite de velocidad inferior"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Límite superior de velocidad"
+msgid "Upper Speed Limit"
+msgstr "Límite de velocidad superior"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+"El límite de velocidad superior debe ser mayor que el límite de velocidad"
+" inferior"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Invalid Limits"
+msgstr "Límites incorrectos"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19734,13 +19858,6 @@ msgstr "&Rango..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "&Interpolación logarítmica"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Esta versión de Audacity sólo permite una pista de tiempo en cada ventana de"
-" proyecto."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20413,7 +20530,7 @@ msgstr "Filtro Shelf"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -20549,7 +20666,7 @@ msgstr "Espacios de edición espectral"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20786,11 +20903,11 @@ msgstr "Error.~%Seleccione 2 (o más) pistas para realizar el fundido cruzado."
 
 #: plug-ins/delay.ny resources/EffectsMenuDefaults.xml
 msgid "Delay"
-msgstr "Retardo"
+msgstr "Latencia"
 
 #: plug-ins/delay.ny
 msgid "Delay type"
-msgstr "Tipo de retardo"
+msgstr "Tipo de latencia"
 
 #: plug-ins/delay.ny
 msgid "Regular"
@@ -20806,11 +20923,11 @@ msgstr "Pelota botando inversa"
 
 #: plug-ins/delay.ny
 msgid "Delay level per echo (dB)"
-msgstr "Nivel de retardo por eco (dB)"
+msgstr "Nivel de latencia por eco (dB)"
 
 #: plug-ins/delay.ny
 msgid "Delay time (seconds)"
-msgstr "Tiempo de retardo (segundos)"
+msgstr "Tiempo de latencia (segundos)"
 
 #: plug-ins/delay.ny
 msgid "Pitch change effect"
@@ -21106,24 +21223,28 @@ msgstr ""
 "                 dos sonidos al menos.~%~\n"
 "                 Sólo se ha detectado uno."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+msgid "Legacy Limiter"
+msgstr "Limitador heredado"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "Límite suave"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Límite fuerte"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Bloque suave"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Bloque fuerte"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -21131,7 +21252,7 @@ msgstr ""
 "Ganancia de entrada (dB)\n"
 "mono/Izq"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -21139,15 +21260,15 @@ msgstr ""
 "Ganancia de entrada (dB)\n"
 "Canal derecho"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Limitar a (dB)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Mantener (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "Aplicar ganancia de composición"
 
@@ -21385,7 +21506,7 @@ msgstr "Duración (60s max)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm Track"
-msgstr "Pista de ritmo"
+msgstr "Pista de metrónomo"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Dominic Mazzoni, David R. Sky and Steve Daulton"
@@ -21419,7 +21540,7 @@ msgstr "+/- 1"
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
 msgstr ""
 "Establecer el 'Numero de compases' a cero para habilitar la 'Duración de"
-" pista de ritmo'."
+" pista de metrónomo'."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -21431,7 +21552,7 @@ msgstr "1 - 1000 compases"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm track duration"
-msgstr "Duración de pista de ritmo"
+msgstr "Duración de pista de metrónomo"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Used if 'Number of bars' = 0"
@@ -21500,7 +21621,8 @@ msgid ""
 "                    'Rhythm track duration' to greater than zero."
 msgstr ""
 "Establecer tanto 'Número de compases' o~%~\n"
-"                    'Duración de pista de ritmo' a valores mayores que cero."
+"                    'Duración de pista de metrónomo' a valores mayores que"
+" cero."
 
 #: plug-ins/rissetdrum.ny
 msgid "Risset Drum"
@@ -21627,8 +21749,7 @@ msgstr "~aDatos escritos a:~%~a"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
-msgstr ""
-"Frecuencia de muestreo: ~a Hz.  Valores de muestra en escala ~a.~%~a~%~a"
+msgstr "Frecuencia: ~a Hz.  Valores de muestra en escala ~a.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21978,7 +22099,7 @@ msgstr "Reducción de ruido y reparación"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Delay and Reverb"
-msgstr "Retraso y reveberación"
+msgstr "Latencia y reveberación"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Distortion and Modulation"
@@ -22000,6 +22121,24 @@ msgstr "Eliminación vocal"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Herramientas espectrales"
+
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr "Heredado"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s #%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Cambiar el límite superior de velocidad (%) a:"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "Esta versión de Audacity sólo permite una pista de tiempo en cada ventana de proyecto."
 
 #, fuzzy
 #~ msgid "Master effects"
@@ -22126,60 +22265,6 @@ msgstr "Herramientas espectrales"
 
 #~ msgid "Stereo, 999999Hz"
 #~ msgstr "Estéreo, 999999Hz"
-
-#~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "Comprime el rango dinámico del audio"
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f seg"
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "Proporción %.0f a 1"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "Proporción %.1f a 1"
-
-#~ msgid "&Noise Floor:"
-#~ msgstr "Límite i&nferior de ruido:"
-
-#~ msgid "Ratio"
-#~ msgstr "Proporción"
-
-#~ msgid "&Attack Time:"
-#~ msgstr "Tiempo de &ataque:"
-
-#~ msgid "Attack Time"
-#~ msgstr "Tiempo de ataque"
-
-#~ msgid "R&elease Time:"
-#~ msgstr "Ti&empo de decaimiento:"
-
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "&Composición de ganancia para 0 db tras compresión"
-
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "C&ompresión basada en picos"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "Umbral %d dB"
-
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "Límite inferior %d dB"
-
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "Tiempo de ataque %.2f seg"
-
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "Tiempo de decaimiento %.1f seg"
 
 #~ msgid "Noise Removal"
 #~ msgstr "Reducción de ruido"
@@ -25270,9 +25355,6 @@ msgstr "Herramientas espectrales"
 
 #~ msgid "AttackTime"
 #~ msgstr "Tiempo de ataque"
-
-#~ msgid "ReleaseTime"
-#~ msgstr "Tiempo de decaimiento"
 
 #~ msgid "DC Block"
 #~ msgstr "Bloque DC"

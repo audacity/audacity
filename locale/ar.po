@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2020-06-17 17:06-0400\n"
 "Last-Translator: Hussam al-Homsi <sawuare@gmail.com>\n"
 "Language-Team: ar@li.org\n"
@@ -1303,13 +1303,13 @@ msgstr ""
 "فقط استخدم الوحدات من المصادر الموثوقة"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "نعم"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "لا"
 
@@ -2952,17 +2952,11 @@ msgid "Wave Track"
 msgstr "حرك المقطع"
 
 #. i18n-hint Template for clip name generation on copy-paste
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s %i"
+msgid "%s.%i"
 msgstr ""
 
 #: libraries/lib-wave-track/WaveTrack.cpp
@@ -8262,8 +8256,9 @@ msgstr "تردد لوغاريتمي"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8840,7 +8835,7 @@ msgstr "غير ممَكن"
 msgid "Enable"
 msgstr "مكن"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "النوع"
 
@@ -8950,7 +8945,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
+msgid "%s.%d"
 msgstr ""
 
 #: src/ProjectAudioManager.cpp
@@ -11224,7 +11219,8 @@ msgstr "طول الخبو لأسفل الداخلي:"
 msgid "Inner &fade up length:"
 msgstr "طول الخبو لأعلى الداخلي:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "العتبة:"
 
@@ -11578,7 +11574,7 @@ msgstr "يجب أن يكون الاختيار أكير من %d عينة."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "العتبة (الأقل أكثر حساسية):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "العتبة"
 
@@ -11988,7 +11984,7 @@ msgstr "حادد الآلات النقرية"
 msgid "Upper Threshold"
 msgstr "العتبة العلوية"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "الحد الأدنى للضجيج"
 
@@ -12902,8 +12898,133 @@ msgstr "اعكس"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "يقلب عينات الصوت رأسا على عقب، عاكسا قطبيتهن"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "ضاغط"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "اضغط المدى  للصوت"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f ثواني"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f ثواني"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "نسبة %.0f إلى 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "نسبة %.1f إلى 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Noise Floor:"
+msgstr "الحد الأدنى للضجيج:"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Ratio:"
+msgstr "نسبة:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "النسبة"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Attack Time:"
+msgstr "وقت الهجوم:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "وقت الهجوم"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "R&elease Time:"
+msgstr "وقت الإطلاق:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "وقت الإطلاق"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "زيادة تعويض لـ 0 dB بعد الضغط"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "C&ompress based on Peaks"
+msgstr "اضغط استنادا إلى القمم"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "العتبة %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "الحد الأدنى للضجيج %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "وقت الهجوم:  %.1f ثواني"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "وقت الإطلاق: %.1f ثواني"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "الحاصر"
 
@@ -13805,11 +13926,6 @@ msgstr "استخدم الافتراضيات"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "أرجع الافتراضيات"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f ثواني"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19561,20 +19677,33 @@ msgid "WaveColor Change"
 msgstr "تغيير لون الموجة"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "غير السرعة"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "غير حد السرعة الدنيا (%) إلى:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "حد السرعة الدنيا"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "غير حد السرعة القصوى (%) إلى:"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "حد السرعة القصوى"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "حد السرعة القصوى"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "حد dB"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19625,10 +19754,6 @@ msgstr "المدى..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "استيفاء لوغارثمي"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "يسمح هذا الإصدار من Audacity بمقطع وقت واحد فقط لكل نافذة مشروع."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20297,7 +20422,7 @@ msgstr "طول المرشحة"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -20424,7 +20549,7 @@ msgstr "الاختيار الطيفي"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20998,46 +21123,51 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "الحاصر"
+
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Soft Limit"
 msgstr "حد dB"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Hard Limit"
 msgstr "حد dB"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "قطع خفيف"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "قطع شديد"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "حد إلى (dB)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Apply Make-up Gain"
 msgstr "زيادة التعويض"
@@ -21893,6 +22023,16 @@ msgstr "حذف المقطع"
 msgid "Spectral Tools"
 msgstr "طيفي"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr ""
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "غير حد السرعة القصوى (%) إلى:"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "يسمح هذا الإصدار من Audacity بمقطع وقت واحد فقط لكل نافذة مشروع."
+
 #, fuzzy
 #~ msgid "Master effects"
 #~ msgstr "اعرض التأثير مسبقا"
@@ -21997,72 +22137,6 @@ msgstr "طيفي"
 
 #~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
 #~ msgstr " [[https://forum.audacityteam.org/|المنتدى]] - اسأل سؤالك مباشرة، على الشبكة العنكبوتية."
-
-#~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "اضغط المدى  للصوت"
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f ثواني"
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "نسبة %.0f إلى 1"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "نسبة %.1f إلى 1"
-
-#, fuzzy
-#~ msgid "&Noise Floor:"
-#~ msgstr "الحد الأدنى للضجيج:"
-
-#, fuzzy
-#~ msgid "&Ratio:"
-#~ msgstr "نسبة:"
-
-#~ msgid "Ratio"
-#~ msgstr "النسبة"
-
-#, fuzzy
-#~ msgid "&Attack Time:"
-#~ msgstr "وقت الهجوم:"
-
-#~ msgid "Attack Time"
-#~ msgstr "وقت الهجوم"
-
-#, fuzzy
-#~ msgid "R&elease Time:"
-#~ msgstr "وقت الإطلاق:"
-
-#~ msgid "Release Time"
-#~ msgstr "وقت الإطلاق"
-
-#, fuzzy
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "زيادة تعويض لـ 0 dB بعد الضغط"
-
-#, fuzzy
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "اضغط استنادا إلى القمم"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "العتبة %d dB"
-
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "الحد الأدنى للضجيج %d dB"
-
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "وقت الهجوم:  %.1f ثواني"
-
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "وقت الإطلاق: %.1f ثواني"
 
 #~ msgid "Warnings"
 #~ msgstr "التحذيرات"

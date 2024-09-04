@@ -39,6 +39,12 @@ WavePaintParameters::SetBlankColor(graphics::Color color) noexcept
    return *this;
 }
 
+WavePaintParameters& WavePaintParameters::SetZeroLineColor(graphics::Color color) noexcept
+{
+   ZeroLineColor = color;
+   return *this;
+}
+
 WavePaintParameters& WavePaintParameters::SetBackgroundColors(
    graphics::Color normal, graphics::Color selected) noexcept
 {

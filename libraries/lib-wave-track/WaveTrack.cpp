@@ -570,6 +570,22 @@ void WaveTrack::MoveTo(double origin)
    WaveTrackData::Get(*this).SetOrigin(origin);
 }
 
+/*! @excsafety{No-fail} */
+void WaveTrack::ShiftBy(double t0, double delta)
+{
+   for (const auto &pInterval : Intervals())
+   {   // assume No-fail-guarantee
+      if(pInterval->Start() >= t0)
+         pInterval->ShiftBy(delta);
+   }
+   const auto origin = WaveTrackData::Get(*this).GetOrigin();
+   if(t0 <= origin)
+   {
+      const auto offset = t0 >= 0 ? delta : t0 + delta;
+      WaveTrackData::Get(*this).SetOrigin(origin + offset);
+   }
+}
+
 auto WaveTrack::DuplicateWithOtherTempo(double newTempo) const -> Holder
 {
    const auto srcCopy = Duplicate();
@@ -637,8 +653,11 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
             next = *TrackList::Channels(this).first.advance(1);
          SetRate(mLegacyRate);
          mLegacyRate = 0;
-         if (next)
+         if (next && next->mLegacyRate > 0)
+         {
+            next->SetRate(next->mLegacyRate);
             next->mLegacyRate = 0;
+         }
          if (mLegacyFormat != undefinedSample)
             WaveTrackData::Get(*this).SetSampleFormat(mLegacyFormat);
          if (next && next->mLegacyFormat != undefinedSample)
@@ -785,13 +804,12 @@ wxString WaveTrack::MakeClipCopyName(const wxString& originalName) const
 
 wxString WaveTrack::MakeNewClipName() const
 {
-   auto name = GetName();
    for (auto i = 1;; ++i)
    {
+      //i18n-hint Template for clip name generation on inserting new empty clip
+      auto name = XC("%s.%i", "clip name template").Format(GetName(), i).Translation();
       if (!HasClipNamed(name))
          return name;
-      //i18n-hint Template for clip name generation on inserting new empty clip
-      name = XC("%s %i", "clip name template").Format(GetName(), i).Translation();
    }
 }
 
@@ -1053,6 +1071,7 @@ auto WaveTrack::SplitChannels() -> std::vector<Holder>
       for (auto &pClip : mClips)
          pNewTrack->mClips.emplace_back(pClip->SplitChannels());
       this->mRightChannel.reset();
+      TrackList::AssignUniqueId(pNewTrack);
       auto iter = pOwner->Find(this);
       pOwner->Insert(*++iter, pNewTrack);
       // Fix up the channel attachments to avoid waste of space
@@ -1081,7 +1100,6 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       THROW_INCONSISTENCY_EXCEPTION;
 
    auto newTrack = EmptyCopy(NChannels());
-   const auto endTime = std::max(GetEndTime(), t1);
    for (const auto pClip : Intervals()) {
       // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
       // but that was the old behavior.  But this function is also used by the
@@ -1096,7 +1114,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          newTrack->CopyPartOfClip(*pClip, t0, t1, forClipboard);
       }
    }
-   newTrack->FinishCopy(t0, t1, endTime, forClipboard);
+   newTrack->FinishCopy(t0, t1, forClipboard);
    return newTrack;
 }
 
@@ -1124,13 +1142,13 @@ void WaveTrack::CopyPartOfClip(const Interval &clip,
 }
 
 void WaveTrack::FinishCopy(
-   double t0, double t1, double endTime, bool forClipboard)
+   double t0, double t1, bool forClipboard)
 {
    // AWD, Oct 2009: If the selection ends in whitespace, create a
    // placeholder clip representing that whitespace
    // PRL:  Only if we want the track for pasting into other tracks.  Not if
    // it goes directly into a project as in the Duplicate command.
-   if (forClipboard && endTime + 1.0 / GetRate() < t1 - t0) {
+   if (forClipboard && GetEndTime() + 1.0 / GetRate() < t1 - t0) {
       auto placeholder = CreateClip();
       placeholder->SetIsPlaceholder(true);
       placeholder->InsertSilence(0, (t1 - t0) - GetEndTime());
@@ -1764,7 +1782,6 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
 
     //wxPrintf("Check if we need to make room for the pasted data\n");
 
-    auto pastingFromTempTrack = !other.GetOwner();
     bool editClipCanMove = GetEditClipsCanMove();
 
     const SimpleMessageBoxException notEnoughSpaceException {
@@ -1867,11 +1884,10 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
     for (const auto& clip : other.Intervals()) {
         // AWD Oct. 2009: Don't actually paste in placeholder clips
         if (!clip->GetIsPlaceholder()) {
-            const auto name = (pastingFromTempTrack)
-                //Clips from the tracks which aren't bound to any TrackList are
-                //considered to be new entities, thus named using "new" name template
+            // If clip has no name (i.e. generated), assigning a new name
+            const auto name = clip->GetName().IsEmpty()
                 ? track.MakeNewClipName()
-                : track.MakeClipCopyName(clip->GetName());
+                : clip->GetName();
             const auto oldPlayStart = clip->GetPlayStartTime();
             const auto newSequenceStart =
                (oldPlayStart + t0) - clip->GetTrimLeft();
@@ -3002,7 +3018,7 @@ auto WaveTrack::RightmostOrNewClip() -> IntervalHolder
 {
    if (mClips.empty()) {
       auto pInterval = CreateClip(
-         WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
+         WaveTrackData::Get(*this).GetOrigin());
       InsertInterval(pInterval, true, true);
       return pInterval;
    }

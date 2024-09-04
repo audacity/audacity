@@ -555,8 +555,5 @@ bool SettingBase::Delete()
 bool BoolSetting::Toggle()
 {
    bool value = Read();
-   if ( Write( !value ) )
-      return !value;
-   else
-      return value;
+   return Write( !value );
 }

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.0.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2024-07-03 10:05+0200\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
+"PO-Revision-Date: 2024-08-02 20:15+0200\n"
 "Last-Translator: Marco Oros <marco.oros93@gmail.com>\n"
 "Language-Team: Marco Oros\n"
 "Language: sk\n"
@@ -1317,13 +1317,13 @@ msgstr ""
 "Použiť iba moduly z dôveryhodných zdrojov"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Áno"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Nie"
 
@@ -2971,18 +2971,12 @@ msgid "Wave Track"
 msgstr "Vlnová Stopa"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -8362,8 +8356,9 @@ msgstr "Logaritmická frekvencia"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8958,7 +8953,7 @@ msgstr "Zakázať"
 msgid "Enable"
 msgstr "Povoliť"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Typ"
 
@@ -9065,8 +9060,8 @@ msgstr "Je vybratých príliš málo kompatibilných stôp"
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s #%d"
+msgid "%s.%d"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -11291,7 +11286,7 @@ msgstr "Nová amplitúda špičky (dB):"
 
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
-msgstr "Povoliť &orezávanie"
+msgstr "Povoliť pre&budenie"
 
 #: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
 msgid "Auto Duck"
@@ -11359,7 +11354,8 @@ msgstr "Vnútorná dĺžka zosl&abovania:"
 msgid "Inner &fade up length:"
 msgstr "Vnútorná dĺžka zo&silňovania:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "&Prah:"
 
@@ -11692,7 +11688,7 @@ msgstr "Výber musí byť väčší ako %d vzorky."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Prah (nižší znamená citlivejší):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Prah"
 
@@ -11978,11 +11974,11 @@ msgstr "Kontrast..."
 
 #: src/effects/Distortion.cpp
 msgid "Hard Clipping"
-msgstr "Tvrdé orezávanie"
+msgstr "Tvrdé prebudenie"
 
 #: src/effects/Distortion.cpp
 msgid "Soft Clipping"
-msgstr "Jemné orezávanie"
+msgstr "Jemné prebudenie"
 
 #: src/effects/Distortion.cpp
 msgid "Soft Overdrive"
@@ -12106,7 +12102,7 @@ msgstr "Perkusný limitér"
 msgid "Upper Threshold"
 msgstr "Horný prah"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Dno šumu"
 
@@ -12148,7 +12144,7 @@ msgstr "Riadenie parametra"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping level"
-msgstr "Úroveň orezania"
+msgstr "Úroveň prebudenia"
 
 #: src/effects/Distortion.cpp
 msgid "Drive"
@@ -12160,7 +12156,7 @@ msgstr "Nastavenie hlasitosti"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping threshold"
-msgstr "Prah strihu"
+msgstr "Prah prebudenia"
 
 #: src/effects/Distortion.cpp
 msgid "Hardness"
@@ -13001,8 +12997,126 @@ msgstr "Invertovať"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Prehodí audio vzorky zhora-nadol, prevrátením ich polarity"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+msgid "Legacy Compressor"
+msgstr "Viazaný kompresor"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Komprimuje dynamický rozsah audia"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f sekúnd"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f sekúnd"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Pomer %.0f do 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Pomer %.1f do 1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "&Dno šumu:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "&Pomer:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Pomer"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "Čas ná&behu:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "Čas nábehu"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "Čas &uvoľnenia (sekundy):"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "Čas uvoľnenia"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "Po kompresi nastaviť hl&asitosť na 0 DB"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "&Kompresia založená na špičkách"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Prah %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "Dno šumu %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Čas nábehu %.2f sekúnd"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "Čas uvoľnenia %.1f sekúnd"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Limitér"
 
@@ -13904,11 +14018,6 @@ msgstr "Použiť predvolené"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Obnoviť predvolené"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f sekúnd"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19586,20 +19695,28 @@ msgid "WaveColor Change"
 msgstr "Zmeniť farbu vlny"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
-msgstr "Zmeniť dolný limit rýchlosti (%) na:"
+msgid "Change Speed Limits"
+msgstr "Zmeniť obmedzenia rýchlosti"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
-msgstr "Dolný limit rýchlosti"
+msgid "Change speed limit (%) to:"
+msgstr "Zmeniť obmedzenie rýchlosti (%) na:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Zmeniť horný limit rýchlosti (%) na:"
+msgid "Lower Speed Limit"
+msgstr "Dolné obmedzenie rýchlosti"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Horný limit rýchlosti"
+msgid "Upper Speed Limit"
+msgstr "Horné obmedzenie rýchlosti"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr "Horný rýchlostný limit musí byť vyšší ako dolný rýchlostný limit"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Invalid Limits"
+msgstr "Nesprávne obmedzenia"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19650,12 +19767,6 @@ msgstr "&Rozsah..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Logaritmická &interpolácia"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Táto verzia Audacity povoľuje len jednu časovú stopu pre každé okno projektu."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20318,7 +20429,7 @@ msgstr "Poličkový Filter"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -20454,7 +20565,7 @@ msgstr "Poličky spektrálnej úpravy"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -21008,24 +21119,28 @@ msgstr ""
 "                 aspoň dva zvuky.~%~\n"
 "                 Zistený iba jeden zvuk."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+msgid "Legacy Limiter"
+msgstr "Viazaný limitér"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "Jemný limit"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Tvrdý limit"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Jemné orezanie"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Tvrdé orezanie"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -21033,7 +21148,7 @@ msgstr ""
 "Hlasitosť vstupu (dB)\n"
 "mono/ľavý"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -21041,15 +21156,15 @@ msgstr ""
 "Hlasitosť vstupu (dB)\n"
 "pravý kanál"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Limit na (dB)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Zdržanie (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "Upravovať hlasitosť"
 
@@ -21898,6 +22013,30 @@ msgstr "Odstráňovač Vokálov"
 msgid "Spectral Tools"
 msgstr "Spektrálne nástroje"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr "Pravidlá"
+
+#, c-format
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#, c-format
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s #%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Zmeniť horný limit rýchlosti (%) na:"
+
+#~ msgid ""
+#~ "This version of Audacity only allows one time track for each project "
+#~ "window."
+#~ msgstr ""
+#~ "Táto verzia Audacity povoľuje len jednu časovú stopu pre každé okno "
+#~ "projektu."
+
 #~ msgid "Files are saved on your device."
 #~ msgstr "Súbory sú uložené na vašom zariadení."
 
@@ -22026,76 +22165,6 @@ msgstr "Spektrálne nástroje"
 #~ msgstr ""
 #~ " [[https://forum.audacityteam.org/|Fórum]] - spýtajte sa vaše otázky "
 #~ "priamo, online."
-
-#~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "Komprimuje dynamický rozsah audia"
-
-#, c-format
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#, c-format
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f sekúnd"
-
-#, c-format
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#, c-format
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#, c-format
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "Pomer %.0f do 1"
-
-#, c-format
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "Pomer %.1f do 1"
-
-#~ msgid "&Noise Floor:"
-#~ msgstr "&Dno šumu:"
-
-#~ msgid "&Ratio:"
-#~ msgstr "&Pomer:"
-
-#~ msgid "Ratio"
-#~ msgstr "Pomer"
-
-#~ msgid "&Attack Time:"
-#~ msgstr "Čas ná&behu:"
-
-#~ msgid "Attack Time"
-#~ msgstr "Čas nábehu"
-
-#~ msgid "R&elease Time:"
-#~ msgstr "Čas &uvoľnenia (sekundy):"
-
-#~ msgid "Release Time"
-#~ msgstr "Čas uvoľnenia"
-
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "Po kompresi nastaviť hl&asitosť na 0 DB"
-
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "&Kompresia založená na špičkách"
-
-#, c-format
-#~ msgid "Threshold %d dB"
-#~ msgstr "Prah %d dB"
-
-#, c-format
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "Dno šumu %d dB"
-
-#, c-format
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "Čas nábehu %.2f sekúnd"
-
-#, c-format
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "Čas uvoľnenia %.1f sekúnd"
 
 #~ msgid "Warnings"
 #~ msgstr "Upozornenia"

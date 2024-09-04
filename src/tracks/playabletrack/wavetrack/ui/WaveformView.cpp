@@ -351,9 +351,10 @@ void DrawWaveform(
 
    paintParameters
       .SetDisplayParameters(
-         rect.GetHeight(), zoomMin, zoomMax, artist->mShowClipping)
+         rect.GetHeight(), zoomMin, zoomMax, ShowClippingPref().Read())
       .SetDBParameters(dBRange, dB)
       .SetBlankColor(ColorFromWXBrush(artist->blankBrush))
+      .SetZeroLineColor(graphics::Colors::Black)
       .SetShowRMS(ShowRMSPref().Read())
       .SetSampleColors(
          ColorFromWXPen(muted ? artist->muteSamplePen : artist->samplePen),
@@ -603,7 +604,7 @@ void DrawIndividualSamples(TrackPanelDrawingContext &context,
    ArrayOf<int> clipped;
    int clipcnt = 0;
 
-   const auto bShowClipping = artist->mShowClipping;
+   const auto bShowClipping = ShowClippingPref().Read();
    if (bShowClipping)
       clipped.reinit( size_t(slen) );
 

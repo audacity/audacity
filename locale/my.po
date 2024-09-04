@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2010-01-27 06:35-0000\n"
 "Last-Translator: g <g@g>\n"
 "Language-Team: Burmese <my@li.org>\n"
@@ -1309,13 +1309,13 @@ msgid ""
 msgstr ""
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr ""
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "No"
 msgstr "ဘာမျှမရှိ"
@@ -2961,17 +2961,11 @@ msgid "Wave Track"
 msgstr "အသံလမ်းကြောကို ရွှေ့ပါ"
 
 #. i18n-hint Template for clip name generation on copy-paste
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s %i"
+msgid "%s.%i"
 msgstr ""
 
 #: libraries/lib-wave-track/WaveTrack.cpp
@@ -8354,8 +8348,9 @@ msgstr "လော့ဂ် ကြိမ်နှုန်း"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8947,7 +8942,7 @@ msgstr "ပိတ်ထားတယ်"
 msgid "Enable"
 msgstr "ဖွင့်ထားတယ်"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Type"
 msgstr "စစ်ထုတ်ကိရိယာ"
@@ -9059,7 +9054,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
+msgid "%s.%d"
 msgstr ""
 
 #: src/ProjectAudioManager.cpp
@@ -11389,7 +11384,8 @@ msgstr "အတွင်းပိုင်း မှေးမှိန်မှ�
 msgid "Inner &fade up length:"
 msgstr "အတွင်းပိုင်း မှေးမှိန်မှု မြင့်တက်တဲ့ အလျား -"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 #, fuzzy
 msgid "&Threshold:"
 msgstr "အတိုင်းအတာ -"
@@ -11767,7 +11763,7 @@ msgstr ""
 msgid "&Threshold (lower is more sensitive):"
 msgstr "အတိုင်းအတာကို ရွေးချယ်ပါ (အောက်ပိုင်းဟာ ပိုပြီး အာရုံခံနိုင်တယ်) -"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "အတိုင်းအတာ"
 
@@ -12196,7 +12192,7 @@ msgstr ""
 msgid "Upper Threshold"
 msgstr "အတိုင်းအတာ"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr ""
 
@@ -13129,8 +13125,133 @@ msgstr "ပြောင်းပြန်လှန်ပါ"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "ဖိသိပ်ကိရိယာ"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr ""
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, fuzzy, c-format
+msgid "%.2f secs"
+msgstr "%.1f စက္ကန့်"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f စက္ကန့်"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "အချိုး %.0f မှ 1 သို့"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "အချိုး %.1f မှ 1 သို့"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Noise Floor:"
+msgstr "ဆူညံမှု အမျိုးအစား"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Ratio:"
+msgstr "အချိုး -"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "အချိုး"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Attack Time:"
+msgstr "တိုက်ခိုက် ချိန် -"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "တိုက်ခိုက် ချိန်"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "R&elease Time:"
+msgstr "ကုန်လွန်သွားတဲ့ အချိန် -"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Release Time"
+msgstr "တည်ဆောက်မှုကို ထုတ်ပြန်ပါ"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "ဖိသိပ်မှု ပြီးနောက် 0dB အတွက် တိုးတက်မှုကို အစားပေးပါ"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "အတိုင်းအတာ %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Attack Time %.2f secs"
+msgstr "တိုက်ခိုက်ချိန် %.1f စက္ကန့်"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Release Time %.1f secs"
+msgstr "ယိုယွင်း ချိန် %.1f စက္ကန့်"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Limiter"
 msgstr "ကန့်သတ်ကိရိယာ"
@@ -14080,11 +14201,6 @@ msgstr "စံထားချက်များ"
 #, fuzzy
 msgid "Restore Defaults"
 msgstr "စံထားချက်များ"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, fuzzy, c-format
-msgid "%.2f secs"
-msgstr "%.1f စက္ကန့်"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -20187,20 +20303,33 @@ msgid "WaveColor Change"
 msgstr "နှုန်းထား​ ပြောင်းလဲမှု"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "အမြန်နှုန်းကို ပြောင်းလဲပါ"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "ပြောင်းလဲရမဲ့ အောက်ပိုင်း အရှိန် ကန့်သတ်ချက် (%) -"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "အောက်ပိုင်း အရှိန် ကန့်သတ်ချက်"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "ပြောင်းလဲရမဲ့ အထက်ပိုင်း အရှိန် ကန့်သတ်ချက် (%) -"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "အထက်ပိုင်း အရှိန် ကန့်သတ်ချက်"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "အထက်ပိုင်း အရှိန် ကန့်သတ်ချက်"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "ကန့်သတ်ကိရိယာ"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -20257,10 +20386,6 @@ msgstr "အတိုင်းအတာကို ချမှတ်ပါ..."
 #, fuzzy
 msgid "Logarithmic &Interpolation"
 msgstr "လျင်မြန်တဲ့ ဆင့် ဆက်စပ်ဖန်တီးခြင်း"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20956,7 +21081,7 @@ msgstr "အသံပေါက် ရွှေ့ပြောင်းကိရ�
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -21084,7 +21209,7 @@ msgstr "ရွေးချယ်မှု"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -21696,49 +21821,54 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "ကန့်သတ်ကိရိယာ"
+
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Soft Limit"
 msgstr "ကန့်သတ်ကိရိယာ"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Hard Limit"
 msgstr "ကန့်သတ်ကိရိယာ"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Soft Clip"
 msgstr "နောက် ကိရိယာ"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Hard Clip"
 msgstr "တွဲညှပ်မှုကို ​ရှာ​ပါ"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Limit to (dB)"
 msgstr "အဆင့် -"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Apply Make-up Gain"
 msgstr "ချိန်းကြိုးကို အသုံးချပါ"
@@ -22638,6 +22768,13 @@ msgstr "အသံလမ်းကြော ဖယ်ရှားမှု"
 msgid "Spectral Tools"
 msgstr "ရောင်စဉ်"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr ""
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "ပြောင်းလဲရမဲ့ အထက်ပိုင်း အရှိန် ကန့်သတ်ချက် (%) -"
+
 #, fuzzy
 #~ msgid "Master effects"
 #~ msgstr "အစမ်းမြင်ကွင်း"
@@ -22703,61 +22840,6 @@ msgstr "ရောင်စဉ်"
 #~ "အလျင် ဖွင့်တဲ့ အသံလမ်းကြောများ တခုခုကို သိမ်းဆည်းဖို့ -\n"
 #~ "ရပ်ဆိုင်း၊ တည်းဖြတ် > အသံလမ်းကြောများ အားလုံး \n"
 #~ "မဖွင့်မချင်း ပြန်ဖြည်ပါ၊ နောက်ပြီး ဖိုင် > စီမံချက်ကို သိမ်းဆည်းပါ။"
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f စက္ကန့်"
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "အချိုး %.0f မှ 1 သို့"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "အချိုး %.1f မှ 1 သို့"
-
-#, fuzzy
-#~ msgid "&Ratio:"
-#~ msgstr "အချိုး -"
-
-#~ msgid "Ratio"
-#~ msgstr "အချိုး"
-
-#, fuzzy
-#~ msgid "&Attack Time:"
-#~ msgstr "တိုက်ခိုက် ချိန် -"
-
-#~ msgid "Attack Time"
-#~ msgstr "တိုက်ခိုက် ချိန်"
-
-#, fuzzy
-#~ msgid "R&elease Time:"
-#~ msgstr "ကုန်လွန်သွားတဲ့ အချိန် -"
-
-#, fuzzy
-#~ msgid "Release Time"
-#~ msgstr "တည်ဆောက်မှုကို ထုတ်ပြန်ပါ"
-
-#, fuzzy
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "ဖိသိပ်မှု ပြီးနောက် 0dB အတွက် တိုးတက်မှုကို အစားပေးပါ"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "အတိုင်းအတာ %d dB"
-
-#, fuzzy
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "တိုက်ခိုက်ချိန် %.1f စက္ကန့်"
-
-#, fuzzy
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "ယိုယွင်း ချိန် %.1f စက္ကန့်"
 
 #~ msgid "Warnings"
 #~ msgstr "သတိပေးချက်များ"

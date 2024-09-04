@@ -92,6 +92,10 @@ public:
    std::pair<std::string, bool>
    ComputeHash(SampleData& sampleData, const LockedBlock& block) const
    {
+      assert(block.Id >= 0);
+      if(block.Id < 0)
+         return {{}, false};
+
       std::string hash;
 
       if (mCache.GetHash(block.Id, hash))

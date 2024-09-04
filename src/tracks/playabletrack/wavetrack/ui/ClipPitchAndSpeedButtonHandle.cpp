@@ -189,7 +189,7 @@ int ClipButtonSpecializations<ClipButtonId::Pitch>::GetWidth(
    const ClipInterface& clip)
 {
    // If we are to show some decimals, reserve a bit more space.
-   return clip.GetCentShift() % 100 == 0 ? 30 : 50;
+   return clip.GetCentShift() % 100 == 0 ? 32 : 55;
 }
 
 int ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth(

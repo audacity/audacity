@@ -31,7 +31,7 @@
   <url type="help">https://support.audacityteam.org/</url>
   <url type="translate">https://support.audacityteam.org/community/contributing/translating</url>
   <releases>
-    <release version="3.6.0" date="2024-07-15">
+    <release version="3.6.2" date="2024-08-23">
      <description>
         <p>New in Audacity 3.6: Master effects, and a new Limiter and Compressor!</p>
         <p>Watch the release video or read the changelog to learn more.</p>

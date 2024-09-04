@@ -389,6 +389,8 @@ set( SOURCES
       effects/FindClipping.h
       effects/Generator.cpp
       effects/Generator.h
+      effects/LegacyCompressor.cpp
+      effects/LegacyCompressor.h
       effects/Limiter.cpp
       effects/Limiter.h
       effects/LimiterEditor.cpp

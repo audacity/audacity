@@ -799,17 +799,6 @@ void ProjectFileManager::CompactProjectOnClose()
 
       // Attempt to compact the project
       projectFileIO.Compact( { mLastSavedTracks.get() } );
-
-      if ( !projectFileIO.WasCompacted() &&
-          UndoManager::Get( project ).UnsavedChanges() ) {
-         // If compaction failed, we must do some work in case of close
-         // without save.  Don't leave the document blob from the last
-         // push of undo history, when that undo state may get purged
-         // with deletion of some new sample blocks.
-         // REVIEW: UpdateSaved() might fail too.  Do we need to test
-         // for that and report it?
-         projectFileIO.UpdateSaved( mLastSavedTracks.get() );
-      }
    }
 }
 
@@ -1356,7 +1345,7 @@ bool ProjectFileManager::Import(wxArrayString fileNames, bool addToHistory)
           addToHistory))
       return false;
    // Last track in the project is the one that was just added. Use it for
-   // focus, selection, etc.
+   // focus, etc.
    Track* lastTrack = nullptr;
    const auto range = TrackList::Get(mProject).Any<Track>();
    assert(!range.empty());
@@ -1373,8 +1362,6 @@ bool ProjectFileManager::Import(wxArrayString fileNames, bool addToHistory)
       viewPort.ZoomFitHorizontally();
       viewPort.ShowTrack(*track);
       viewPort.HandleResize(); // Adjust scrollers for NEW track sizes.
-      ViewInfo::Get(*project).selectedRegion.setTimes(
-         track->GetStartTime(), track->GetEndTime());
    });
    return true;
 }

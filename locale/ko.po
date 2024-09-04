@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2024-07-03 19:24+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://app.transifex.com/klyok/teams/690/ko/)\n"
@@ -1284,13 +1284,13 @@ msgstr ""
 "믿을 수 있는 모듈만 사용하기 바랍니다. "
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "예"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "아니요"
 
@@ -2922,18 +2922,12 @@ msgid "Wave Track"
 msgstr "파형 트랙"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -8102,8 +8096,9 @@ msgstr "로그 주파수"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8665,7 +8660,7 @@ msgstr "비활성화"
 msgid "Enable"
 msgstr "활성화"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "형식"
 
@@ -8768,10 +8763,10 @@ msgstr "선택된 트랙의 수가 너무 적음"
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s #%d"
+msgid "%s.%d"
+msgstr "%s.%i"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -11003,7 +10998,8 @@ msgstr "내부 페이드 내림 길이:(&O)"
 msgid "Inner &fade up length:"
 msgstr "내부 페이드 올림 길이:(&F)"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "임계값(&T)"
 
@@ -11335,7 +11331,7 @@ msgstr "선택은 %d 개의 샘플보다 더 커야 합니다."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "임계값 (낮은 값일수록 더욱 예민함)(&T):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "임계값"
 
@@ -11742,7 +11738,7 @@ msgstr "타악기 리미터"
 msgid "Upper Threshold"
 msgstr "상위 임계값"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "노이즈 플로어"
 
@@ -12623,8 +12619,127 @@ msgstr "뒤집기: 상하로"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "오디오 샘플의 극성을 반전하여 위아래로 뒤집습니다"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "레거시 컴프레서"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "오디오의 다이내믹 레인지 컴프레션"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f 초"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f 초"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "비율 %.0f 대 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "비율 %.1f 대 1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "노이즈 플로어 (&N):"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "비율 (&R):"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "비율"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "어택 시간 (&A):"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "어택 시간"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "릴리즈 시간 (&R):"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "릴리즈 시간"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "컴프레싱 후 피크 레벨 0 dB까지 메이크업 게인 적용 (&K)"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "피크 값 기반 컴프레싱(&O)"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "임계값 %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "노이즈 플로어 %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "어택 시간 %.2f 초"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "릴리즈 시간 %.1f 초"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "리미터"
 
@@ -13513,11 +13628,6 @@ msgstr "기본값 사용"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "기본값 복원"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f 초"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19038,20 +19148,33 @@ msgid "WaveColor Change"
 msgstr "파형색상 변경"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "속도 변경"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "최저 속도 한계 변경 (%):"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "최저 속도 한계"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "최대 속도 한계 변경 (%):"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "최대 속도 한계"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "최대 속도 한계"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "잘못된 리미트"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19102,10 +19225,6 @@ msgstr "범위(&R)..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "로그 보간(&I)"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "이 버전의 오데시티에서는 각 프로젝트 창에 한 개의 시간 트랙만 사용할 수 있습니다."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -19740,7 +19859,7 @@ msgstr "쉘빙 필터"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -19874,7 +19993,7 @@ msgstr "스펙트럼 편집 도구모음"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20427,24 +20546,29 @@ msgstr ""
 "                 최소 두개의 소리가 필요 합니다.~%~\n"
 "                 현재 하나의 소리만 검출되었습니다."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "VO Limiter"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "소프트 리미트"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "하드 리미트"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "소프트 클립"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "하드 클립"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -20452,7 +20576,7 @@ msgstr ""
 "입력 게인 (dB)\n"
 "모노/왼쪽"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -20460,15 +20584,15 @@ msgstr ""
 "입력 게인 (dB)\n"
 "오른쪽 채널"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "리미트 값 (dB)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Hold (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "메이크업 게인 적용"
 
@@ -21306,6 +21430,25 @@ msgstr "음성 삭제"
 msgid "Spectral Tools"
 msgstr "특수 도구"
 
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy"
+msgstr "레거시"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s #%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "최대 속도 한계를 변경 (%):"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "이 버전의 오데시티에서는 각 프로젝트 창에 한 개의 시간 트랙만 사용할 수 있습니다."
+
 #~ msgid "Master effects"
 #~ msgstr "마스터 이펙트"
 
@@ -21418,66 +21561,6 @@ msgstr "특수 도구"
 
 #~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
 #~ msgstr " [[https://forum.audacityteam.org/|Forum]] - 질문을 온라인으로 직접 물어보세요."
-
-#~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "오디오의 다이내믹 레인지 컴프레션"
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f 초"
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "비율 %.0f 대 1"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "비율 %.1f 대 1"
-
-#~ msgid "&Noise Floor:"
-#~ msgstr "노이즈 플로어:"
-
-#~ msgid "&Ratio:"
-#~ msgstr "비율:"
-
-#~ msgid "Ratio"
-#~ msgstr "비율"
-
-#~ msgid "&Attack Time:"
-#~ msgstr "어택 시간:"
-
-#~ msgid "Attack Time"
-#~ msgstr "어택 시간"
-
-#~ msgid "R&elease Time:"
-#~ msgstr "릴리즈 시간:"
-
-#~ msgid "Release Time"
-#~ msgstr "릴리즈 시간"
-
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "컴프레싱 후 피크 레벨 0 dB까지 메이크업 게인 적용"
-
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "피크 값 기반 컴프레싱(&O)"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "임계값 %d dB"
-
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "노이즈 플로어 %d dB"
-
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "어택 시간 %.2f 초"
-
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "릴리즈 시간 %.1f 초"
 
 #~ msgid "Warnings"
 #~ msgstr "경고"
@@ -22258,4 +22341,4 @@ msgstr "특수 도구"
 #~ "           센터 제거로 좋은 결과를 기대할 수 없습니다."
 
 #~ msgid "This plug-in works only with stereo tracks."
-#~ msgstr "이 플러그인은 스테레오 트랙에만 작동함."
+#~ msgstr "이 플러그인은 스테레오 트랙에만 작동합니다."

@@ -64,6 +64,7 @@ class TIME_TRACK_API TimeTrack final
    // TimeTrack parameters
 
    void MoveTo(double /* t */) override {}
+   void ShiftBy(double, double) override {}
 
    // XMLTagHandler callback methods for loading and saving
 

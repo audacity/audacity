@@ -1,23 +1,32 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR Audacity Team
+# This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# ThemeBoy <transifex@themeboy.com>, 2024
+# hokorobi <hokorobi.hokorobi@gmail.com>, 2024
+# Nishikori Shinki, 2024
+# ABE Tsunehiko, 2024
+# Thomas De Rocker, 2024
+# Beluga, 2024
+# 森の子リスのミーコの大冒険 <phroneris@gmail.com>, 2024
+# Tadahisa Sugisaki, 2024
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2024-07-14 11:30+0900\n"
-"Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
-"Language-Team: Akira Nishimura, Atsushi YOSHIDA, Phroneris, SakiPapa\n"
+"POT-Creation-Date: 2024-08-30 16:51+0300\n"
+"PO-Revision-Date: 2024-04-06 16:47+0000\n"
+"Last-Translator: Tadahisa Sugisaki, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/klyok/teams/690/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.4\n"
-"X-Poedit-SourceCharset: UTF-8\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -213,12 +222,8 @@ msgid "Out of memory!"
 msgstr "メモリが足りません!"
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too high."
-msgstr ""
-"録音レベル自動調整機能は停止しました。音量が大きすぎるため、これ以上の調整は"
-"できません。"
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr "録音レベル自動調整機能は停止しました。音量が大きすぎるため、これ以上の調整はできません。"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
@@ -226,12 +231,8 @@ msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr "録音レベル自動調整機能により、音量を %f まで下げました。"
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too low."
-msgstr ""
-"録音レベル自動調整機能は停止しました。音量が小さすぎるため、これ以上の調整は"
-"できません。"
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr "録音レベル自動調整機能は停止しました。音量が小さすぎるため、これ以上の調整はできません。"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
@@ -239,28 +240,17 @@ msgid "Automated Recording Level Adjustment increased the volume to %.2f."
 msgstr "録音レベル自動調整機能により、音量を %.2f まで上げました。"
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
-"録音レベル自動調整機能は停止しました。解析を繰り返しましたが、適切な音量を見"
-"つけることができません。音量がまだ大きすぎます。"
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
+msgstr "録音レベル自動調整機能は停止しました。解析を繰り返しましたが、適切な音量を見つけることができません。音量がまだ大きすぎます。"
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
-"録音レベル自動調整機能は停止しました。解析を繰り返しましたが、適切な音量を見"
-"つけることができません。音量がまだ小さすぎます。"
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
+msgstr "録音レベル自動調整機能は停止しました。解析を繰り返しましたが、適切な音量を見つけることができません。音量がまだ小さすぎます。"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
-msgid ""
-"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
-"volume."
-msgstr ""
-"録音レベル自動調整機能は停止しました。%.2f が適切な音量と推定されます。"
+msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr "録音レベル自動調整機能は停止しました。%.2f が適切な音量と推定されます。"
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
@@ -430,7 +420,6 @@ msgstr "グルーコンプレッサー"
 msgid "Gentle"
 msgstr "穏やか"
 
-# ja: ファクトリープリセット
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Beat Booster"
@@ -637,7 +626,6 @@ msgstr "ミックスとレンダリング"
 msgid "Mixing and rendering tracks"
 msgstr "トラックのミックスとレンダリング"
 
-# ja: 運営に報告してねとあるので、報告しやすくするために内部エラー部分は原文ママとする。
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
 msgid ""
@@ -647,7 +635,6 @@ msgstr ""
 "Internal error in %s at %s line %d.\n"
 "Audacity チーム（https://forum.audacityteam.org/）に報告してください。"
 
-# ja: 運営に報告してねとあるので、報告しやすくするために内部エラー部分は原文ママとする。
 #: libraries/lib-exceptions/InconsistencyException.cpp
 #, c-format
 msgid ""
@@ -661,60 +648,50 @@ msgstr ""
 msgid "Internal Error"
 msgstr "内部エラー"
 
-# ja: FFTの窓関数
 #: libraries/lib-fft/FFT.cpp
 msgid "Rectangular"
 msgstr "矩形窓"
 
-# ja: FFTの窓関数
 #. i18n-hint a proper name
 #: libraries/lib-fft/FFT.cpp
 msgid "Bartlett"
 msgstr "バートレット窓"
 
-# ja: FFTの窓関数
 #. i18n-hint a proper name
 #: libraries/lib-fft/FFT.cpp
 msgid "Hamming"
 msgstr "ハミング窓"
 
-# ja: FFTの窓関数。Audacity ではデフォルト
 #. i18n-hint a proper name
 #: libraries/lib-fft/FFT.cpp
 msgid "Hann"
 msgstr "ハン窓"
 
-# ja: FFTの窓関数
 #. i18n-hint a proper name
 #: libraries/lib-fft/FFT.cpp
 msgid "Blackman"
 msgstr "ブラックマン窓"
 
-# ja: FFTの窓関数
 #. i18n-hint two proper names
 #: libraries/lib-fft/FFT.cpp
 msgid "Blackman-Harris"
 msgstr "ブラックマン-ハリス窓"
 
-# ja: FFTの窓関数
 #. i18n-hint a proper name
 #: libraries/lib-fft/FFT.cpp
 msgid "Welch"
 msgstr "ウェルチ窓"
 
-# ja: FFTの窓関数
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: libraries/lib-fft/FFT.cpp
 msgid "Gaussian(a=2.5)"
 msgstr "ガウス窓（a=2.5）"
 
-# ja: FFTの窓関数
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: libraries/lib-fft/FFT.cpp
 msgid "Gaussian(a=3.5)"
 msgstr "ガウス窓（a=3.5）"
 
-# ja: FFTの窓関数
 #. i18n-hint a mathematical function named for C. F. Gauss
 #: libraries/lib-fft/FFT.cpp
 msgid "Gaussian(a=4.5)"
@@ -739,8 +716,7 @@ msgstr "%s にあるファイルを読むことができません。"
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr ""
-"ファイルを %s に書き込むことができましたが、名前を %s に変更できません。"
+msgstr "ファイルを %s に書き込むことができましたが、名前を %s に変更できません。"
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -896,9 +872,7 @@ msgstr "ユーザーにより操作がキャンセルされました"
 #: libraries/lib-import-export/Import.cpp
 #, c-format
 msgid "This version of Audacity was not compiled with %s support."
-msgstr ""
-"このバージョンの Audacity は、%s サポート機能とともにコンパイルされていませ"
-"ん。"
+msgstr "このバージョンの Audacity は、%s サポート機能とともにコンパイルされていません。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -919,16 +893,12 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other "
-"files. \n"
-"You may be able to open it in a text editor and download the actual audio "
-"files."
+"Audacity cannot open this file because it only contains links to other files. \n"
+"You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
 "「%s」はプレイリストファイルです。\n"
-"ほかのファイルへのリンク情報のみのため、このファイルを開くことができませ"
-"ん。\n"
-"テキストエディタで開いて、本来のオーディオファイルをダウンロードすることがで"
-"きます。"
+"ほかのファイルへのリンク情報のみのため、このファイルを開くことができません。\n"
+"テキストエディタで開いて、本来のオーディオファイルをダウンロードすることができます。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -947,16 +917,12 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of "
-"file.\n"
-"Otherwise, you need to convert it to a supported audio format, such as WAV "
-"or AIFF."
+"Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "「%s」は Advanced Audio Coding ファイルです。\n"
-"オプションの FFmpeg ライブラリがなければ、この形式のファイルを開くことはでき"
-"ません。\n"
-"もしくは利用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があ"
-"ります。"
+"オプションの FFmpeg ライブラリがなければ、この形式のファイルを開くことはできません。\n"
+"もしくは利用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1007,8 +973,7 @@ msgid ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported "
-"audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
 "「%s」は Musepack オーディオファイルです。\n"
@@ -1081,8 +1046,7 @@ msgid ""
 msgstr ""
 "このファイル「%s」の形式を認識できません。\n"
 "\n"
-"%s 非圧縮ファイルの場合、［ファイル］>［インポート］>［Raw データをインポー"
-"ト］も試してください。"
+"%s 非圧縮ファイルの場合、［ファイル］>［インポート］>［Raw データをインポート］も試してください。"
 
 #: libraries/lib-import-export/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -1159,18 +1123,15 @@ msgstr "LV2 エフェクトを Audacity で使用可能にする"
 msgid "None"
 msgstr "無し"
 
-# ja: ディザリング手法の1つ。ホワイトノイズに似た周波数分布をとる
 #: libraries/lib-math/Dither.cpp
 msgid "Rectangle"
 msgstr "矩形ディザ"
 
-# ja: ディザリング手法の1つ。ピーク振幅はシェープドより小さいが、ノイズの広域集中が少ない
 #: libraries/lib-math/Dither.cpp
 msgctxt "dither"
 msgid "Triangle"
 msgstr "三角ディザ"
 
-# ja: ディザリング手法の1つ。Audacity のデフォルト。ピーク振幅が高いが、ノイズは高周波数帯に集中するので目立ちにくい
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "シェープドディザ"
@@ -1223,7 +1184,6 @@ msgstr "コマンド"
 msgid "Repeat %s"
 msgstr "%s を再適用"
 
-# ja: src/prefs/KeyConfigPrefs.cpp の方と記法を合わせる
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
 msgid ""
@@ -1327,13 +1287,13 @@ msgstr ""
 "信頼できるソースのモジュールだけをお使いください"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "はい"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "いいえ"
 
@@ -1378,8 +1338,6 @@ msgstr ""
 "登録失敗:\n"
 "%s"
 
-# ja: 本当は「この」「これらの」を使い分けたい。
-# →指示代名詞は日本語では不要と判断
 #. i18n-hint A plug-in is an optional added program for a sound
 #. effect, or generator, or analyzer
 #: libraries/lib-module-manager/PluginManager.cpp
@@ -1784,7 +1742,6 @@ msgstr "CDDA フレーム（75 fps）"
 msgid "01000,01000 frames|75"
 msgstr "0100万010000フレーム|75"
 
-# ja: 元の「010,01000>0100 Hz」では万の位が扱えないので不足すぎると思うが、勝手に桁数を増やすわけにもいかないのでとりあえずこれで。
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
 #. * The decimal separator is specified using '<' if your language uses a ',' or
@@ -1911,8 +1868,7 @@ msgstr "「%s」への主接続に対してセーフモードを設定できま�
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr ""
-"「%s」へのチェックポイント接続に対してセーフモードを設定できませんでした"
+msgstr "「%s」へのチェックポイント接続に対してセーフモードを設定できませんでした"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2209,12 +2165,10 @@ msgstr "（回復済）"
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to "
-"open this file."
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
 "Audacity %s で保存されたファイルです。\n"
-"使用中の Audacity は %s です。このファイルを開くには、新しいバージョンにアッ"
-"プグレードしてください。"
+"使用中の Audacity は %s です。このファイルを開くには、新しいバージョンにアップグレードしてください。"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -2233,12 +2187,8 @@ msgid "Unable to parse project information."
 msgstr "プロジェクト情報を解釈できません。"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-msgid ""
-"The project's database failed to reopen, possibly because of limited space "
-"on the storage device."
-msgstr ""
-"プロジェクトのデータベースを開き直すことができません。ストレージデバイスの空"
-"き容量が不足していると思われます。"
+msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
+msgstr "プロジェクトのデータベースを開き直すことができません。ストレージデバイスの空き容量が不足していると思われます。"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Saving project"
@@ -2292,8 +2242,7 @@ msgid ""
 "You need to run that version of Audacity to recover the project."
 msgstr ""
 "この復元ファイルは Audacity 2.3.0 以前で保存されたものです。\n"
-"プロジェクトを復元するには、そのバージョンの Audacity を用いる必要がありま"
-"す。"
+"プロジェクトを復元するには、そのバージョンの Audacity を用いる必要があります。"
 
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
 msgid "Connection to project file is null"
@@ -2322,10 +2271,8 @@ msgstr "%s プラグイングループを、以前に定義したグループと
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr ""
-"%s プラグイン項目は、以前に定義した項目と競合しているため、破棄しました。"
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr "%s プラグイン項目は、以前に定義した項目と競合しているため、破棄しました。"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
@@ -2379,7 +2326,6 @@ msgstr "ビート"
 msgid "Bar"
 msgstr "小節"
 
-# ja: スナップで設定するいわゆる「クオンタイズ値」。1小節を何等分で分割するか=音符の長さを表す。
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/2"
 msgstr "1/2"
@@ -2413,37 +2359,30 @@ msgstr "1/128"
 msgid "Triplets"
 msgstr "3連符"
 
-# ja: 3連符の「クオンタイズ値」1/2-3連符では1/3となる。
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/2 (triplets)"
 msgstr "1/2（3連符）"
 
-# ja: 1/6
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/4 (triplets)"
 msgstr "1/4（3連符）"
 
-# ja: 1/12
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/8 (triplets)"
 msgstr "1/8（3連符）"
 
-# ja: 1/24
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/16 (triplets)"
 msgstr "1/16（3連符）"
 
-# ja: 1/48
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/32 (triplets)"
 msgstr "1/32（3連符）"
 
-# ja: 1/96
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/64 (triplets)"
 msgstr "1/64（3連符）"
 
-# ja: 1/192
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/128 (triplets)"
 msgstr "1/128（3連符）"
@@ -2976,18 +2915,12 @@ msgid "Wave Track"
 msgstr "波形トラック"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -3142,42 +3075,16 @@ msgid "No Local Help"
 msgstr "ローカルヘルプがありません"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and "
-"WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[https://support."
-"audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
-msgstr ""
-"オプションの[[https://support.audacityteam.org/basics/installing-ffmpeg｜"
-"FFmpeg ライブラリ]]をダウンロードしてインストールすれば、プロテクトされていな"
-"いファイルを、ほかの形式（M4A や WMA、ポータブルレコーダーの圧縮 WAV ファイ"
-"ル、ビデオファイルのオーディオなど）のファイルにインポートできるようになりま"
-"す。"
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
+msgstr "オプションの[[https://support.audacityteam.org/basics/installing-ffmpeg｜FFmpeg ライブラリ]]をダウンロードしてインストールすれば、プロテクトされていないファイルを、ほかの形式（M4A や WMA、ポータブルレコーダーの圧縮 WAV ファイル、ビデオファイルのオーディオなど）のファイルにインポートできるようになります。"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
-"manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
-"CDs]]."
-msgstr ""
-"インポートについて [[https://manual.audacityteam.org/man/"
-"playing_and_recording.html#midi|MIDI files]]（MIDI ファイル）やトラックについ"
-"て [[https://manual.audacityteam.org/man/faq_opening_and_saving_files."
-"html#fromcd| audio CDs]]（オーディオ CD）のヘルプもあわせてお読みください。"
+msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+msgstr "インポートについて [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]]（MIDI ファイル）やトラックについて [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]（オーディオ CD）のヘルプもあわせてお読みください。"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
-"download the Manual]].<br><br>To always view the Manual online, change "
-"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"マニュアルがインストールされていません。<br>[[*URL*|オンライン]] で閲覧する"
-"か、[[https://manual.audacityteam.org/man/unzipping_the_manual.html|マニュア"
-"ルをダウンロード]] してください。<br><br>マニュアルを常にオンラインで閲覧する"
-"には、<br>インターフェイス環境設定の「マニュアルの場所」を<br>「インターネッ"
-"トから」に変更してください。"
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr "マニュアルがインストールされていません。<br>[[*URL*|オンライン]] で閲覧するか、[[https://manual.audacityteam.org/man/unzipping_the_manual.html|マニュアルをダウンロード]] してください。<br><br>マニュアルを常にオンラインで閲覧するには、<br>インターフェイス環境設定の「マニュアルの場所」を<br>「インターネットから」に変更してください。"
 
 #: libraries/lib-wx-init/LogWindow.cpp
 msgid "Audacity Log"
@@ -3272,10 +3179,8 @@ msgid "Confirm Close"
 msgstr "閉じるを確認"
 
 #: libraries/lib-wx-init/SelectFile.cpp
-msgid ""
-"The specified filename could not be converted due to Unicode character use."
-msgstr ""
-"指定されたファイル名は Unicode 文字セットを使っているため変換できません。"
+msgid "The specified filename could not be converted due to Unicode character use."
+msgstr "指定されたファイル名は Unicode 文字セットを使っているため変換できません。"
 
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
@@ -3425,21 +3330,15 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "プロジェクトデータフォルダーが見つかりません:「%s」"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-msgid ""
-"MIDI tracks found in project file, but this build of Audacity does not "
-"include MIDI support, bypassing track."
+msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr ""
 "プロジェクトファイルに MIDI トラックが見つかりましたが、\n"
 "Audacity のこのビルドには MIDI サポートが含まれていません。\n"
 "トラックをバイパスします。"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-msgid ""
-"The active project already has a time track and one was encountered in the "
-"project being imported, bypassing imported time track."
-msgstr ""
-"アクティブなプロジェクトにはすでに時間トラックが存在します。インポートしよう"
-"としているプロジェクトにも時間トラックがあったため、バイパスしました。"
+msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
+msgstr "アクティブなプロジェクトにはすでにタイムトラックが存在します。インポートしようとしているプロジェクトにも時間トラックがあったため、バイパスしました。"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -3489,13 +3388,11 @@ msgstr ""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
-msgstr ""
-"pcmaliasblockfile の「aliasstart」属性が見つからないか、正しくありません。"
+msgstr "pcmaliasblockfile の「aliasstart」属性が見つからないか、正しくありません。"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
-msgstr ""
-"pcmaliasblockfile の「aliaslen」属性が見つからないか、正しくありません。"
+msgstr "pcmaliasblockfile の「aliaslen」属性が見つからないか、正しくありません。"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
@@ -3547,12 +3444,8 @@ msgstr "出力を表示"
 #. in the program as a format string.  Keep %f unchanged.
 #: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
-msgid ""
-"Data will be piped to standard in. \"%f\" uses the file name in the export "
-"window."
-msgstr ""
-"データを標準入力にパイプします。「%f」はエクスポートウインドウのファイル名を"
-"使います。"
+msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
+msgstr "データを標準入力にパイプします。「%f」はエクスポートウインドウのファイル名を使います。"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
@@ -3765,23 +3658,17 @@ msgstr "FFmpeg : エラー - 出力形式コンテキストを割り当てられ
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr ""
-"FFmpeg : エラー - 出力ファイル「%s」にオーディオストリームを追加できません。"
+msgstr "FFmpeg : エラー - 出力ファイル「%s」にオーディオストリームを追加できません。"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr ""
-"FFmpeg : エラー - 書き込む出力ファイル「%s」を開けません。エラーコード %d。"
+msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
+msgstr "FFmpeg : エラー - 書き込む出力ファイル「%s」を開けません。エラーコード %d。"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr ""
-"FFmpeg : エラー - 出力ファイル「%s」にヘッダーを書き込めません。エラーコード "
-"%d。"
+msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+msgstr "FFmpeg : エラー - 出力ファイル「%s」にヘッダーを書き込めません。エラーコード %d。"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -3815,8 +3702,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr ""
-"FFmpeg : エラー - オーディオ FIFO からの読み込みバッファーを確保できません。"
+msgstr "FFmpeg : エラー - オーディオ FIFO からの読み込みバッファーを確保できません。"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
@@ -3856,12 +3742,8 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"Attempted to export %d channels, but maximum number of channels for selected "
-"output format is %d"
-msgstr ""
-"%d チャンネルをエクスポートしようとしましたが、選択された出力形式では最大 %d "
-"チャンネルです"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
+msgstr "%d チャンネルをエクスポートしようとしましたが、選択された出力形式では最大 %d チャンネルです"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -3899,8 +3781,7 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
-"プロジェクトのサンプリング周波数（%d）とビットレート（%d kbps）の組み合わせ"
-"は\n"
+"プロジェクトのサンプリング周波数（%d）とビットレート（%d kbps）の組み合わせは\n"
 "現在のファイル形式ではサポートされていません。 "
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -4014,12 +3895,8 @@ msgid "Codec:"
 msgstr "コーデック:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
-msgid ""
-"Not all formats and codecs are compatible. Nor are all option combinations "
-"compatible with all codecs."
-msgstr ""
-"コーデックはすべての形式と互換であるとは限りません。また、コーデックによって"
-"は使用できないオプションの組み合わせがあります。"
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
+msgstr "コーデックはすべての形式と互換であるとは限りません。また、コーデックによっては使用できないオプションの組み合わせがあります。"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
@@ -4418,9 +4295,7 @@ msgstr "FFmpeg の場所を指定"
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr ""
-"FFmpeg を使ったオーディオのインポート/エクスポートには、ファイル「%s」が必要"
-"です。"
+msgstr "FFmpeg を使ったオーディオのインポート/エクスポートには、ファイル「%s」が必要です。"
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
@@ -4477,8 +4352,7 @@ msgstr ""
 "FFmpeg によってオーディオをインポートしようとしましたが、\n"
 "必要なライブラリが見つかりません。\n"
 "\n"
-"FFmpeg によるインポートを使用するには、［編集］>［環境設定］>［ライブラリ］"
-"で\n"
+"FFmpeg によるインポートを使用するには、［編集］>［環境設定］>［ライブラリ］で\n"
 "FFmpeg ライブラリをダウンロードまたは指定してください。"
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
@@ -4566,11 +4440,8 @@ msgstr ""
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 #, c-format
-msgid ""
-"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr ""
-"インデックス[%02x] コーデック[%s]、言語[%s]、ビットレート[%s]、チャンネル"
-"[%d]、デュレーション[%d]"
+msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "インデックス[%02x] コーデック[%s]、言語[%s]、ビットレート[%s]、チャンネル[%d]、デュレーション[%d]"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
@@ -4673,9 +4544,7 @@ msgstr "LOF ファイル中のデュレーションは無効です。"
 
 #: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr ""
-"MIDI トラックをオフセットすることはできません、オーディオファイルのみ可能で"
-"す。"
+msgstr "MIDI トラックをオフセットすることはできません、オーディオファイルのみ可能です。"
 
 #. i18n-hint: You do not need to translate "LOF"
 #: modules/import-export/mod-lof/ImportLOF.cpp
@@ -4700,8 +4569,7 @@ msgstr "MP2 ファイル"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
-msgstr ""
-"このサンプリング周波数とビットレートでは MP2 ファイルにエクスポートできません"
+msgstr "このサンプリング周波数とビットレートでは MP2 ファイルにエクスポートできません"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4863,12 +4731,10 @@ msgstr "%s はどこにありますか?"
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
-"Audacity %d.%d.%d.\n"
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
-"lame_enc.dll v%d.%d とリンクしようとしています。このバージョンは Audacity %d."
-"%d.%d との互換性がありません。\n"
+"lame_enc.dll v%d.%d とリンクしようとしています。このバージョンは Audacity %d.%d.%d との互換性がありません。\n"
 "「LAME for Audacity」の最新版をダウンロードしてください。"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4969,8 +4835,7 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
-"プロジェクトのサンプリング周波数（%d）とビットレート（%d kbps）の組み合わせ"
-"は、\n"
+"プロジェクトのサンプリング周波数（%d）とビットレート（%d kbps）の組み合わせは、\n"
 "MP3 ファイル形式ではサポートされていません。 "
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -5032,8 +4897,7 @@ msgstr "Ogg Vorbis ファイル"
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 #, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
-msgstr ""
-"インデックス[%02x］バージョン[%d]、チャンネル[%d]、サンプリング周波数[%ld]"
+msgstr "インデックス[%02x］バージョン[%d]、チャンネル[%d]、サンプリング周波数[%ld]"
 
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Media read error"
@@ -5252,12 +5116,10 @@ msgstr "この形式ではオーディオをエクスポートできません。
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV or AIFF file which would be greater than "
-"4GB.\n"
+"You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
-"4 GB を超える WAV ファイルまたは AIFF ファイルをエクスポートしようとしていま"
-"す。\n"
+"4 GB を超える WAV ファイルまたは AIFF ファイルをエクスポートしようとしています。\n"
 "Audacity では処理できません。エクスポートを打ち切りました。"
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
@@ -5634,9 +5496,7 @@ msgstr "Nyquist スクリプトを読み込む"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr ""
-"Nyquist スクリプト（*.ny）|*.ny|Lisp スクリプト（*.lsp）|*.lsp|すべてのファイ"
-"ル|*"
+msgstr "Nyquist スクリプト（*.ny）|*.ny|Lisp スクリプト（*.lsp）|*.lsp|すべてのファイル|*"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
@@ -5667,8 +5527,7 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 by Leland Lucius"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
-msgid ""
-"External Audacity module which provides a simple IDE for writing effects."
+msgid "External Audacity module which provides a simple IDE for writing effects."
 msgstr "エフェクト作成簡易 IDE を使用可能にする外部 Audacity モジュールです。"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
@@ -5862,12 +5721,8 @@ msgid "Waiting for audio.com"
 msgstr "audio.com の応答を待っています"
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
-msgid ""
-"An action on audio.com is required before you can continue. You can cancel "
-"this operation."
-msgstr ""
-"続行するには audio.com に応答する必要があります。この操作はキャンセルできま"
-"す。"
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr "続行するには audio.com に応答する必要があります。この操作はキャンセルできます。"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -5991,8 +5846,7 @@ msgid "Syncing to audio.com... (%d%%)"
 msgstr "audio.com に同期中...（%d%%）"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid ""
-"Project is syncing with audio.com. Do you want to stop the sync process?"
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
 msgstr "プロジェクトを audio.com と同期しています。同期プロセスを停止しますか?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -6001,9 +5855,7 @@ msgstr "スペースが空くのを待っています"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr ""
-"audio.com のストレージスペースが使用可能になったら、［再試行］をクリックして"
-"ください。"
+msgstr "audio.com のストレージスペースが使用可能になったら、［再試行］をクリックしてください。"
 
 #. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
@@ -6048,14 +5900,8 @@ msgid "Save to the Cloud (free)"
 msgstr "クラウドに保存（無料）"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid ""
-"Your project is backed up privately on audio.com. You can access your work "
-"from any device and collaborate on your project with others. Cloud saving is "
-"free for a limited number of projects."
-msgstr ""
-"プロジェクトは audio.com に非公開でバックアップされます。どのデバイスからでも"
-"自分の作品にアクセスしたり、プロジェクトの共同作業を行ったりできます。無料で"
-"クラウドに保存できるプロジェクト数には制限があります。"
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
+msgstr "プロジェクトは audio.com に非公開でバックアップされます。どのデバイスからでも自分の作品にアクセスしたり、プロジェクトの共同作業を行ったりできます。無料でクラウドに保存できるプロジェクト数には制限があります。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Save to Cloud"
@@ -6071,8 +5917,7 @@ msgid ""
 "Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
 "ファイルはこのデバイスに保存されます。\n"
-"注: MP3 と WAV ファイルをエクスポートするには、［ファイル］>［オーディオをエ"
-"クスポート］を使用してください。"
+"注: MP3 と WAV ファイルをエクスポートするには、［ファイル］>［オーディオをエクスポート］を使用してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
@@ -6093,12 +5938,8 @@ msgid "Share to audio.com"
 msgstr "audio.com で共有"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid ""
-"Uploads an uncompressed audio file and generates a shareable link. This link "
-"allows others to download the file in either .wav or .mp3 format."
-msgstr ""
-"非圧縮オーディオファイルをアップロードし、共有リンクを作成します。このリンク"
-"から、ほかの人が WAV または MP3 形式のファイルをダウンロードできます。"
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr "非圧縮オーディオファイルをアップロードし、共有リンクを作成します。このリンクから、ほかの人が WAV または MP3 形式のファイルをダウンロードできます。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Share to audio.com"
@@ -6106,8 +5947,7 @@ msgstr "audio.com で共有(&S)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
-msgstr ""
-"MP3、WAV、FLAC そのほかの形式で自分のコンピューターにエクスポートします。"
+msgstr "MP3、WAV、FLAC そのほかの形式で自分のコンピューターにエクスポートします。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Export to &computer"
@@ -6123,12 +5963,8 @@ msgid "Project Name"
 msgstr "プロジェクト名"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid ""
-"Cloud saving requires a free audio.com account linked to Audacity. Press "
-"\"Link account\" above to proceed."
-msgstr ""
-"クラウドに保存するには Audacity にリンクされた無料の audio.com アカウントが必"
-"要です。上の「アカウントをリンク」を押して続けます。"
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr "クラウドに保存するには Audacity にリンクされた無料の audio.com アカウントが必要です。上の「アカウントをリンク」を押して続けます。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
@@ -6153,12 +5989,8 @@ msgid "We encountered an issue syncing your file"
 msgstr "ファイルの同期で問題が発生しました"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid ""
-"Don't worry, your changes will be saved to a temporary location and will be "
-"synchronized to your cloud copy when your internet connection resumes."
-msgstr ""
-"変更点は一時的な場所に保存され、インターネット接続が再開したときにクラウドの"
-"コピーと同期されますので、安心してください。"
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr "変更点は一時的な場所に保存され、インターネット接続が再開したときにクラウドのコピーと同期されますので、安心してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "You are not signed in"
@@ -6222,20 +6054,12 @@ msgid "This project is no longer saved to the Cloud"
 msgstr "このプロジェクトはクラウドに保存されません"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid ""
-"This project was removed from audio.com and therefore cannot be saved at "
-"this time. "
-msgstr ""
-"このプロジェクトは audio.com から消去されたため、現時点では保存することができ"
-"ません。"
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr "このプロジェクトは audio.com から消去されたため、現時点では保存することができません。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid ""
-"You can either save it to the Cloud as a new project, or save it to your "
-"computer."
-msgstr ""
-"新規プロジェクトとしてクラウドに保存するか、コンピューターに保存することがで"
-"きます。"
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr "新規プロジェクトとしてクラウドに保存するか、コンピューターに保存することができます。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
@@ -6251,17 +6075,12 @@ msgid "Your project storage limit has been reached."
 msgstr "プロジェクトがストレージの上限に達しました。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid ""
-"You may need to remove older projects to make space available. For more "
-"options, visit audio.com"
-msgstr ""
-"空きスペースを確保するために、古いプロジェクトを消去する必要があります。ほか"
-"のオプションについては、audio.com に接続してください。"
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr "空きスペースを確保するために、古いプロジェクトを消去する必要があります。ほかのオプションについては、audio.com に接続してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "You can also save this project locally to avoid losing changes."
-msgstr ""
-"変更を失わないように、このプロジェクトをローカルに保存することもできます。"
+msgstr "変更を失わないように、このプロジェクトをローカルに保存することもできます。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
@@ -6273,12 +6092,8 @@ msgid "Project version conflict detected"
 msgstr "プロジェクトのバージョンの競合を検出"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"There's a newer version of this Audacity project on Audio.com. Saving this "
-"project will replace it as the newest version instead."
-msgstr ""
-"Audacity プロジェクトの新しいバージョンが audio.com にあります。保存を行う"
-"と、このプロジェクトが最新バージョンとして置き換わります。"
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr "Audacity プロジェクトの新しいバージョンが audio.com にあります。保存を行うと、このプロジェクトが最新バージョンとして置き換わります。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Save this project"
@@ -6289,14 +6104,8 @@ msgid "Discard and open latest version"
 msgstr "破棄して最新バージョンを開く"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"Project contains unsaved changes. There's a newer version of this Audacity "
-"project on Audio.com. Discarding changes will open the latest version "
-"instead."
-msgstr ""
-"プロジェクトには保存されていない変更が含まれています。この Audacity プロジェ"
-"クトの新しいバージョンが audio.com  にあります。変更を破棄すると、代わりに最"
-"新版を開きます。"
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr "プロジェクトには保存されていない変更が含まれています。この Audacity プロジェクトの新しいバージョンが audio.com  にあります。変更を破棄すると、代わりに最新版を開きます。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open local project"
@@ -6307,12 +6116,8 @@ msgid "Cloud project conflict"
 msgstr "クラウドプロジェクトと競合"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"You are attempting to open a new active version of this project when there "
-"is already one open. Please select which version you wish to remain open."
-msgstr ""
-"すでに開かれているこのプロジェクトのアクティブバージョンを新規に開こうとして"
-"います。開いて残したいバージョンを選択してください。"
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr "すでに開かれているこのプロジェクトのアクティブバージョンを新規に開こうとしています。開いて残したいバージョンを選択してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
@@ -6384,12 +6189,8 @@ msgid "Anyone will be able to listen to this audio."
 msgstr "このオーディオを誰でも聴くことができるようになります。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid ""
-"Only you and people you share a link with will be able to listen to this "
-"audio."
-msgstr ""
-"あなたとリンクを共有する人だけがこのオーディオを聴くことができるようになりま"
-"す。"
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr "あなたとリンクを共有する人だけがこのオーディオを聴くことができるようになります。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Are you sure you want to cancel?"
@@ -6404,12 +6205,8 @@ msgid "Uploading audio..."
 msgstr "オーディオをアップロード中..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid ""
-"We are unable to upload this file. Please try again and make sure to link to "
-"your audio.com account before uploading."
-msgstr ""
-"ファイルをアップロードできません。audio.com アカウントにリンクしていることを"
-"確認してから、再度アップロードしてください。"
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr "ファイルをアップロードできません。audio.com アカウントにリンクしていることを確認してから、再度アップロードしてください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
@@ -6431,12 +6228,8 @@ msgstr "トラック名"
 #. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
-msgid ""
-"Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
-"account\" above to proceed."
-msgstr ""
-"オーディオ共有には、Audacity とリンクした無料の %s アカウントが必要です。%%上"
-"の 「アカウントをリンク」 を押して進んでください。"
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr "オーディオ共有には、Audacity とリンクした無料の %s アカウントが必要です。%%上の 「アカウントをリンク」 を押して進んでください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "audio.com"
@@ -6463,11 +6256,8 @@ msgid "Audacity had trouble connecting to the server."
 msgstr "サーバーへの接続時に問題が発生しました。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid ""
-"The project is too large to upload. Please save it to your computer instead."
-msgstr ""
-"このプロジェクトは大き過ぎるためアップロードできません。代わりにコンピュー"
-"ターに保存してください。"
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr "このプロジェクトは大き過ぎるためアップロードできません。代わりにコンピューターに保存してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You don't have access to this project."
@@ -6511,12 +6301,8 @@ msgid "Syncing your project"
 msgstr "プロジェクトを同期"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-msgid ""
-"The project will sync in background while you work. You can check the sync "
-"status on the bottom right corner of Audacity at any time"
-msgstr ""
-"プロジェクトは作業中にバックグラウンドで同期されます。同期状態は Audacity の"
-"右下隅で常に確認することができます"
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr "プロジェクトは作業中にバックグラウンドで同期されます。同期状態は Audacity の右下隅で常に確認することができます"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 #: src/AudioPasteDialog.cpp
@@ -6528,12 +6314,8 @@ msgid "Success!"
 msgstr "成功しました!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid ""
-"All saved changes will now update to the cloud. You can manage this file "
-"from your uploaded projects page on audio.com"
-msgstr ""
-"保存したすべての変更はクラウドに更新されます。audio.com のアップロードプロ"
-"ジェクトページで、このファイルを管理することができます。"
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr "保存したすべての変更はクラウドに更新されます。audio.com のアップロードプロジェクトページで、このファイルを管理することができます。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
@@ -6544,24 +6326,16 @@ msgid "Cloud project incomplete"
 msgstr "クラウドプロジェクトは未完成"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid ""
-"The latest version of this project was not fully uploaded to audio.com. You "
-"can load the last complete version instead."
-msgstr ""
-"このプロジェクトの audio.com にある最新版は、完全にアップロードされたものでは"
-"ありません。最新の完全バージョンを代わりに読み取ることができます。"
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr "このプロジェクトの audio.com にある最新版は、完全にアップロードされたものではありません。最新の完全バージョンを代わりに読み取ることができます。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Load latest"
 msgstr "最新版を読み込む"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid ""
-"No version of this project has been fully uploaded to audio.com. It cannot "
-"be loaded."
-msgstr ""
-"このプロジェクトは audio.com に完全にアップロードされていません。ダウンロード"
-"できません。"
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr "このプロジェクトは audio.com に完全にアップロードされていません。ダウンロードできません。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 msgid "You have canceled this upload to audio.com"
@@ -6572,12 +6346,8 @@ msgid "Retry"
 msgstr "再試行"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid ""
-"An action on audio.com is required before you can continue. Once you are "
-"done with it, click Retry"
-msgstr ""
-"続けるには audio.com での操作が必要です。完了したら［再試行］をクリックしてく"
-"ださい"
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr "続けるには audio.com での操作が必要です。完了したら［再試行］をクリックしてください"
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -6788,9 +6558,12 @@ msgstr "%s について"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"日本語訳:<br>Akira Nishimura (akira@rsch.tuis.ac.jp)<br>Atsushi "
-"Yoshida<br>Phroneris<br>SakiPapa (tsugisaki.pub@gmail.com)<br>Shinki "
-"Nishikori"
+"日本語訳:<br>\n"
+"Atsushi Yoshida -2015<br>\n"
+"Phroneris<br> 2018-2022\n"
+"SakiPapa (tsugisaki.pub@gmail.com) 2022-<br>\n"
+"Akira Nishimura (akira@rsch.tuis.ac.jp) 2023-<br>\n"
+"Shinki Nishikori 2024-"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -6799,9 +6572,7 @@ msgstr "<h3>"
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid ""
-"%s the free, open source, cross-platform software for recording and editing "
-"sounds."
+msgid "%s the free, open source, cross-platform software for recording and editing sounds."
 msgstr ""
 "%s は、サウンドを録音・編集するための、無料でオープンソース、\n"
 "クロスプラットフォームのソフトウェアです。"
@@ -6854,7 +6625,6 @@ msgstr "スペシャルサンクス:"
 msgid "%s website: "
 msgstr "%s ウェブサイト: "
 
-# ja: 国際的な表記なので西暦の範囲は "-" のままにすべきかとも思ったが、（そもそも表示自体がもう無意味という話は別にして、）万国著作権条約が求める発行年は「最初の」ものだけなので後ろがどうなっていようと問題無いと判断した。
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
@@ -6872,7 +6642,6 @@ msgstr "%s の名称は登録商標です。"
 msgid "Build Information"
 msgstr "ビルド情報"
 
-# ja: 「無効」と見分けやすくするために、あえて文字数を増やす。
 #: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
 #: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
@@ -7040,12 +6809,8 @@ msgid "PRIVACY POLICY"
 msgstr "プライバシーポリシー"
 
 #: src/AboutDialog.cpp
-msgid ""
-"App update checking and error reporting require network access. These "
-"features are optional."
-msgstr ""
-"更新の確認と問題の報告にはネットワーク接続が必要です。これらの機能は任意で"
-"す。"
+msgid "App update checking and error reporting require network access. These features are optional."
+msgstr "更新の確認と問題の報告にはネットワーク接続が必要です。これらの機能は任意です。"
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
@@ -7150,18 +6915,15 @@ msgstr "分と秒"
 msgid "Beats and Measures"
 msgstr "ビートと小節"
 
-# ルーラーパネルのメニュー
 #: src/AdornedRulerPanel.cpp
 msgid "Setting a loop region also makes an audio selection"
 msgstr "ループ範囲設定時にオーディオも選択"
 
-# スクラブルーラのコンテキストメニュー
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 msgid "Clear Loop"
 msgstr "ループを解除"
 
-# スクラブルーラのコンテキストメニュー
 #: src/AdornedRulerPanel.cpp
 msgid "Set Loop To Selection"
 msgstr "選択範囲にループを設定"
@@ -7183,7 +6945,6 @@ msgstr "%s を消去できません"
 msgid "Failed!"
 msgstr "失敗しました!"
 
-# ja: 原文の文字列だけ見ると「（既に）削除されています」かと思っちゃうが、これは見つからなかったファイルについて「（今）削除しました」という意味。
 #: src/AudacityApp.cpp
 #, c-format
 msgid ""
@@ -7196,16 +6957,16 @@ msgstr ""
 "最近使ったファイルの一覧から消去しました。"
 
 #: src/AudacityApp.cpp
+msgid "Audacity is starting up..."
+msgstr "Audacity は起動中です..."
+
+#: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr "SQLite ライブラリの初期化に失敗しました。  続行できません。"
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "ブロックサイズの範囲は 256～100000000 です\n"
-
-#: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "Audacity は起動中です..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -7236,13 +6997,11 @@ msgstr "ファイル(&F)"
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the "
-"temporary files.\n"
+"Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "一時ファイルを安全に保存できる場所を見つけられませんでした。\n"
-"自動クリーンアッププログラムに削除されない場所を、一時ファイルに割り当てる必"
-"要があります。\n"
+"自動クリーンアッププログラムに削除されない場所を、一時ファイルに割り当てる必要があります。\n"
 "環境設定ダイアログで適切なディレクトリ名を入力してください。"
 
 #: src/AudacityApp.cpp
@@ -7254,12 +7013,8 @@ msgstr ""
 "環境設定ダイアログで適切なディレクトリ名を入力してください。"
 
 #: src/AudacityApp.cpp
-msgid ""
-"Audacity is now going to exit. Please launch Audacity again to use the new "
-"temporary directory."
-msgstr ""
-"Audacity を終了します。新しい一時ディレクトリを利用するには、Audacity を再起"
-"動してください。"
+msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
+msgstr "Audacity を終了します。新しい一時ディレクトリを利用するには、Audacity を再起動してください。"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -7382,15 +7137,12 @@ msgstr ""
 msgid "An unrecoverable error has occurred during startup"
 msgstr "起動時に回復不能なエラーが起きました"
 
-# ja: audacity --help で出る説明
 #. i18n-hint: This controls the number of bytes that Audacity will
 #. *           use when writing files to the disk
 #: src/AudacityApp.cpp
 msgid "set max disk block size in bytes"
 msgstr "ストレージの最大ブロックサイズを設定（バイト）"
 
-# ja: audacity —help で出る説明
-# 実行コマンドの記録（ジャーナル）ファイルを再実行してプロジェクトを回復する処理（と思う）
 #. i18n-hint: brief help message for Audacity's command-line options
 #. A journal contains a sequence of user interface interactions to be repeated
 #. "log," "trail," "trace" have somewhat similar meanings
@@ -7398,25 +7150,21 @@ msgstr "ストレージの最大ブロックサイズを設定（バイト）"
 msgid "replay a journal file"
 msgstr "ジャーナルファイルを再実行"
 
-# ja: audacity --help で出る説明
 #. i18n-hint: This displays a list of available options
 #: src/AudacityApp.cpp
 msgid "this help message"
 msgstr "このヘルプメッセージ"
 
-# ja: audacity --help で出る説明
 #. i18n-hint: This runs a set of automatic tests on Audacity itself
 #: src/AudacityApp.cpp
 msgid "run self diagnostics"
 msgstr "自己診断を実行"
 
-# ja: audacity --help で出る説明
 #. i18n-hint: This displays the Audacity version
 #: src/AudacityApp.cpp
 msgid "display Audacity version"
 msgstr "Audacity のバージョンを表示"
 
-# ja: audacity --help で出る説明
 #. i18n-hint: This is a list of one or more files that Audacity
 #. *           should open upon startup
 #: src/AudacityApp.cpp
@@ -7455,25 +7203,21 @@ msgid ""
 "\n"
 "\t%s\n"
 "\n"
-"This could be caused by many reasons, but the most likely are that the disk "
-"is full or you do not have write permissions to the file. \n"
+"This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. \n"
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
-"state which will be recovered the next time you open it."
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 "次の設定ファイルにアクセスできません:\n"
 "\n"
 "\t%s\n"
 "\n"
-"これには多くの原因が考えられますが、最も可能性が高いのは、ストレージが一杯に"
-"なっているか、ファイルへの書き込み権限がないことです。\n"
+"これには多くの原因が考えられますが、最も可能性が高いのは、ストレージが一杯になっているか、ファイルへの書き込み権限がないことです。\n"
 "\n"
 "問題を解決してから［再試行］をクリックして続行してください。\n"
 "\n"
-"［Audacity を終了］を選択した場合は、プロジェクトは未保存の状態で残り、次回開"
-"くときに回復対象になります。"
+"［Audacity を終了］を選択した場合は、プロジェクトは未保存の状態で残り、次回開くときに回復対象になります。"
 
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 msgid "&Quit Audacity"
@@ -7516,13 +7260,11 @@ msgstr "音楽インポート"
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
-"The entire source clip will be pasted into your project, allowing you to "
-"access\n"
+"The entire source clip will be pasted into your project, allowing you to access\n"
 "trimmed audio data anytime."
 msgstr ""
 "スマートクリップ。\n"
-"ソースクリップ全体がプロジェクトに貼り付けられ、トリミングしたオーディオデー"
-"タに\n"
+"ソースクリップ全体がプロジェクトに貼り付けられ、トリミングしたオーディオデータに\n"
 "いつでもアクセスできるようになります。"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
@@ -7545,9 +7287,7 @@ msgstr "どのようにオーディオを貼り付けますか?"
 #: src/AudioPasteDialog.cpp
 #, c-format
 msgid "The full smart clip is %s. Larger sizes will take longer to paste."
-msgstr ""
-"スマートクリップ全体で %s あります。サイズが大きい場合は、貼り付けに時間がか"
-"かります。"
+msgstr "スマートクリップ全体で %s あります。サイズが大きい場合は、貼り付けに時間がかかります。"
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
@@ -7559,16 +7299,13 @@ msgstr "クラッシュからの自動回復"
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"The following projects were not saved properly the last time Audacity was "
-"run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
-"次のプロジェクトは、Audacity を前回使用した時に適切に保存されなかったため、自"
-"動回復を行いました。\n"
+"次のプロジェクトは、Audacity を前回使用した時に適切に保存されなかったため、自動回復を行いました。\n"
 "\n"
-"変更されたデータをストレージへ確実に書き込むよう、プロジェクトを保存してくだ"
-"さい。"
+"変更されたデータをストレージへ確実に書き込むよう、プロジェクトを保存してください。"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Recoverable &projects"
@@ -7639,12 +7376,10 @@ msgstr "詳細(&D)"
 msgid "Choose command"
 msgstr "コマンドを選択"
 
-# ja: デフォルトマクロ名だがファイル名でもある
 #: src/BatchCommands.cpp
 msgid "MP3 Conversion"
 msgstr "MP3 変換"
 
-# ja: デフォルトマクロ名だがファイル名でもある
 #: src/BatchCommands.cpp
 msgid "Fade Ends"
 msgstr "両端フェード"
@@ -7729,7 +7464,6 @@ msgstr "%s を適用"
 msgid "Macros Palette"
 msgstr "マクロパレット"
 
-# マクロマネジャーから呼ばれるパネルウインドウのタイトルとして使用?
 #: src/BatchProcessDialog.cpp
 msgid "Manage Macros"
 msgstr "マクロの管理"
@@ -7808,13 +7542,11 @@ msgstr "名前を変更(&R)..."
 msgid "Re&store"
 msgstr "復旧(&S)"
 
-# ja: WindowでもmacOSでも伝統的に「読み込む」だが、Microsoftは「インポート」を使用することが普通になった。
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "I&mport..."
 msgstr "インポート(&M)..."
 
-# ja: WindowでもmacOSでも伝統的に「書き出す」だが、Microsoftは「エクスポート」を使用することが普通になった。
 #: src/BatchProcessDialog.cpp src/effects/Contrast.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "E&xport..."
@@ -7996,9 +7728,7 @@ msgstr "テストデータサイズは 1 ～ 2000 MB の範囲です。"
 #: src/Benchmark.cpp
 #, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
-msgstr ""
-"%lld 個のチャンクにそれぞれ %lld 個のサンプル、合計 %.1f MB のデータを使用し"
-"ます。\n"
+msgstr "%lld 個のチャンクにそれぞれ %lld 個のサンプル、合計 %.1f MB のデータを使用します。\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
@@ -8113,22 +7843,14 @@ msgstr "ベンチマークは正常に完了しました。\n"
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
-"again."
-msgstr ""
-"%s に利用するオーディオを選択して（例えば Cmd+A ですべてを選択）やり直してく"
-"ださい。"
+msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
+msgstr "%s に利用するオーディオを選択して（例えば Cmd+A ですべてを選択）やり直してください。"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
-"try again."
-msgstr ""
-"%s に利用するオーディオを選択して（例えば Ctrl+A ですべてを選択）やり直してく"
-"ださい。"
+msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
+msgstr "%s に利用するオーディオを選択して（例えば Ctrl+A ですべてを選択）やり直してください。"
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
@@ -8140,11 +7862,9 @@ msgstr "オーディオが選択されていません"
 msgid ""
 "Select the audio for %s to use.\n"
 "\n"
-"1. Select audio that represents noise and use %s to get your 'noise "
-"profile'.\n"
+"1. Select audio that represents noise and use %s to get your 'noise profile'.\n"
 "\n"
-"2. When you have got your noise profile, select the audio you want to "
-"change\n"
+"2. When you have got your noise profile, select the audio you want to change\n"
 "and use %s to change that audio."
 msgstr ""
 "［%s］に用いるオーディオを選択してください。\n"
@@ -8216,8 +7936,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"「行方不明」と表示されたファイルは移動または削除されており、コピーできませ"
-"ん。\n"
+"「行方不明」と表示されたファイルは移動または削除されており、コピーできません。\n"
 "プロジェクトにコピーできるようにするには、これらを元の場所に戻してください。"
 
 #: src/Dependencies.cpp
@@ -8283,35 +8002,28 @@ msgstr "行方不明 %s"
 msgid "&Copy Names to Clipboard"
 msgstr "名前をクリップボードへコピー(&C)"
 
-# ja: もう使われなくなった要らない子
 #: src/Dependencies.cpp
 #, c-format
 msgid "\"%s\", \"%s\", \"%s\"\n"
 msgstr "「%s」、「%s」、「%s」\n"
 
-# ja: もう使われなくなった要らない子
 #: src/Dependencies.cpp
 msgid "Missing"
 msgstr "行方不明"
 
 #: src/Dependencies.cpp
-msgid ""
-"If you proceed, your project will not be saved to disk. Is this what you "
-"want?"
-msgstr ""
-"続行すると、プロジェクトはストレージに保存されません。それでも続行しますか?"
+msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
+msgstr "続行すると、プロジェクトはストレージに保存されません。それでも続行しますか?"
 
 #: src/Dependencies.cpp
 msgid ""
-"Your project is self-contained; it does not depend on any external audio "
-"files. \n"
+"Your project is self-contained; it does not depend on any external audio files. \n"
 "\n"
 "Some older Audacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
 "New projects will be self-contained and are less risky."
 msgstr ""
-"このプロジェクトは自己完結しています。外部オーディオファイルとの依存関係はあ"
-"りません。\n"
+"このプロジェクトは自己完結しています。外部オーディオファイルとの依存関係はありません。\n"
 "\n"
 "古い Audacity プロジェクトの一部には自己完結していないものがあり、\n"
 "その場合は、依存する外部ファイルを正しく配置する必要があります。\n"
@@ -8364,18 +8076,6 @@ msgstr "標準自己相関"
 msgid "Cuberoot Autocorrelation"
 msgstr "立方根自己相関"
 
-# ja: めちゃめちゃググりまくったが、それっぽい学術的な文脈で日本語の訳語をあてている例を見つけられなかったのでもう適当に名付けた。一応「A computationally efficient multipitch analysis model」という論文が元祖らしいということやEACという頭文字があてられ得るということなどまではわかり、被引用文献に1つ日本語のものがあったのでそれが参考になるかもと思ったが、無料で見れる範囲ではEACについて特に触れられていなかったし、詳細な中身を確認するために大学図書館にまで出向くガッツも無いので諦める。っていうか立方根自己相関とやらすら見つけられなかったんだが…。
-# 追記（2022-11-3 SakiPapa）：
-# 自己相関関数（ACF）は波形の形状の特徴を知るために用い
-# られる。音声や光などの信号処理や画像処理以外にさまざま
-# な分野で利用されているようだ。さまざまな手法があるよう
-# だ。
-# EACFでは
-# 拡張自己相関関数( Extended Autocorrelation
-# Function ）
-# というのも検索で見つかるが、これではない。
-# オーディオ分野でSpeech enhancement Autocorrelation に対
-# し「音声強調自己相関」という訳語をあてている。
 #: src/FreqWindow.cpp
 msgid "Enhanced Autocorrelation"
 msgstr "強調自己相関"
@@ -8387,7 +8087,6 @@ msgstr "強調自己相関"
 msgid "Cepstrum"
 msgstr "ケプストラム"
 
-# ja: これは [解析]→[スペクトル表示] で使われているが、"window" 無しのものも [環境設定]→[トラック]→[スペクトログラム] で使われているため、「窓」という語を元の各メニュー項目の方に付けてこちらには付けない。
 #. i18n-hint: This refers to a "window function",
 #. * such as Hann or Rectangular, used in the
 #. * Frequency analyze dialog box.
@@ -8406,8 +8105,9 @@ msgstr "対数周波数軸"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8458,32 +8158,21 @@ msgid "&Replot..."
 msgstr "再描画(&R)..."
 
 #: src/FreqWindow.cpp
-msgid ""
-"To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr ""
-"スペクトルをプロットするには、選択したすべてのトラックが同じサンプリング周波"
-"数でなければなりません。"
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "スペクトルをプロットするには、選択したすべてのトラックが同じサンプリング周波数でなければなりません。"
 
 #: src/FreqWindow.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted "
-"clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before "
-"analyzing"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
-"オーディオを解析できませんでした。ストレッチまたはピッチシフトしたクリップが"
-"原因と思われます。\n"
-"ストレッチクリップをリセットするか、解析前にトラックのミキシングとレンダリン"
-"グを行ってください"
+"オーディオを解析できませんでした。ストレッチまたはピッチシフトしたクリップが原因と思われます。\n"
+"ストレッチクリップをリセットするか、解析前にトラックのミキシングとレンダリングを行ってください"
 
 #: src/FreqWindow.cpp
 #, c-format
-msgid ""
-"Too much audio was selected. Only the first %.1f seconds of audio will be "
-"analyzed."
-msgstr ""
-"大量のオーディオが選択されました。オーディオの最初の %.1f 秒だけを解析しま"
-"す。"
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "大量のオーディオが選択されました。オーディオの最初の %.1f 秒だけを解析します。"
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -8570,12 +8259,10 @@ msgstr "使用領域"
 msgid "&Total space used"
 msgstr "総使用領域(&T)"
 
-# ja: Audacity 2 の機能?
 #: src/HistoryWindow.cpp
 msgid "&Undo levels available"
 msgstr "元に戻せるレベル(&U)"
 
-# ja: Audacity 2 の機能?
 #: src/HistoryWindow.cpp
 msgid "&Levels to discard"
 msgstr "破棄するレベル(&L)"
@@ -8593,7 +8280,6 @@ msgstr "使用クリップボード領域(&B)"
 msgid "D&iscard"
 msgstr "破棄(&I)"
 
-# ja: EXPERIMENTAL
 #: src/HistoryWindow.cpp
 msgid "&Compact"
 msgstr "圧縮(&C)"
@@ -8617,32 +8303,19 @@ msgstr "新規プラグイン"
 msgid "Incompatible plugin(s) found"
 msgstr "互換性がないプラグインが見つかりました"
 
-# ja: メニュー「プラグインマネージャー」から開くパネルウインドウのタイトル。もともとはメニュー項目として使われていた?
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
 msgstr "プラグインの管理(&M)"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid ""
-"Audacity has found %d incompatible plugins which could not be loaded. We "
-"have disabled these plugins to avoid any stalling or crashes. If you would "
-"still like to attempt to use these plugins, you can enable them using "
-"\"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr ""
-"互換性が無く読み込みできないプラグインが %d 個見つかりました。停止やクラッ"
-"シュを防ぐため、これらのプラグインを使用停止にしました。どうしても使用したい"
-"場合には、［プラグインを管理］でプラグインを有効にすることができます。そうで"
-"なければ［続ける］を選択してください。"
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr "互換性が無く読み込みできないプラグインが %d 個見つかりました。停止やクラッシュを防ぐため、これらのプラグインを使用停止にしました。どうしても使用したい場合には、［プラグインを管理］でプラグインを有効にすることができます。そうでなければ［続ける］を選択してください。"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid ""
-"Audacity has found %d incompatible plugins which could not be loaded. We "
-"have disabled these plugins to avoid any stalling or crashes."
-msgstr ""
-"互換性が無く読み込みできないプラグインが %d 個見つかりました。停止やクラッ"
-"シュを防ぐため、これらのプラグインを使用停止にしました。"
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
+msgstr "互換性が無く読み込みできないプラグインが %d 個見つかりました。停止やクラッシュを防ぐため、これらのプラグインを使用停止にしました。"
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -8742,7 +8415,6 @@ msgstr "ラベル"
 msgid "S&tandard"
 msgstr "標準(&T)"
 
-# ja: わかんね
 #: src/LabelTrack.cpp
 msgid "E&xtended (with frequency ranges)"
 msgstr "拡張（周波数範囲付き）(&X)"
@@ -8773,9 +8445,7 @@ msgstr "Audacity で使用する言語を選択:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid ""
-"The language you have chosen, %s (%s), is not the same as the system "
-"language, %s (%s)."
+msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
 msgstr "選択した言語 %s（%s）は、システム言語 %s（%s）と異なります。"
 
 #: src/Legacy.cpp
@@ -8795,17 +8465,11 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Audacity プロジェクトファイルを開く"
 
-# ja: 例えばv3.0.5で「名前を付けて保存」のショートカットに "L" をあててからv3.1.0を起動すると、v3.1.0の新規メニュー項目「ループ (オン/オフ)」のデフォルトショートカット "L" と競合してこのメッセージが出る。このチェックは、前回起動時のバージョン（audacity.cfgに記述）が今回と異なる場合にメニュー項目初期化処理として行われる。
 #: src/MenuCreator.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
 msgstr ""
 "次のコマンドのショートカットを消去しました。\n"
-"このバージョンでは該当コマンドのデフォルトショートカットが新設または変更され"
-"ており、それが過去にほかのコマンドに割り当てたショートカットと競合してしまう"
-"ためです。"
+"このバージョンでは該当コマンドのデフォルトショートカットが新設または変更されており、それが過去にほかのコマンドに割り当てたショートカットと競合してしまうためです。"
 
 #: src/MenuCreator.cpp
 msgid "Shortcuts have been removed"
@@ -9007,7 +8671,7 @@ msgstr "無効"
 msgid "Enable"
 msgstr "有効"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "種類"
 
@@ -9082,15 +8746,12 @@ msgid ""
 "Try changing the audio host, playback device and the project sample rate."
 msgstr ""
 "サウンドデバイスを開く際にエラーが起きました。\n"
-"オーディオホスト、再生デバイス、プロジェクトのサンプリング周波数を変えてくだ"
-"さい。"
+"オーディオホスト、再生デバイス、プロジェクトのサンプリング周波数を変えてください。"
 
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
-msgstr ""
-"録音するには、すべての選択トラックが同一のサンプリング周波数である必要があり"
-"ます"
+msgstr "録音するには、すべての選択トラックが同一のサンプリング周波数である必要があります"
 
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
@@ -9115,8 +8776,8 @@ msgstr "適合するトラック数が足りません"
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s #%d"
+msgid "%s.%d"
+msgstr "%s.%i"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -9140,14 +8801,8 @@ msgid "Close project immediately with no changes"
 msgstr "何も変更せずにプロジェクトをすぐに閉じる"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project "
-"immediately\" on further error alerts."
-msgstr ""
-"ログに記録された修復を続行し、さらにエラーが無いかチェックを行います。以降の"
-"エラー警告で「プロジェクトをすぐに閉じる」を選択しない限り、プロジェクトは現"
-"在の状態に保たれます。"
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr "ログに記録された修復を続行し、さらにエラーが無いかチェックを行います。以降のエラー警告で「プロジェクトをすぐに閉じる」を選択しない限り、プロジェクトは現在の状態に保たれます。"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -9157,11 +8812,6 @@ msgstr "警告 - タグシーケンスに問題があります"
 msgid "Inspecting project file data"
 msgstr "プロジェクトファイルを精査しています"
 
-# ja: この辺りの文字列、そもそも `#if 0` の中にあるし使われてないのでは？
-# ja: 「方法」は次の3個：
-# ・"Close project immediately with no changes"
-# ・"Treat missing audio as silence (this session only)"
-# ・"Replace missing audio with silence (permanent immediately)."
 #: src/ProjectFSCK.cpp
 #, c-format
 msgid ""
@@ -9380,12 +9030,8 @@ msgstr ""
 "空き容量により余裕がある、ほかのストレージを選択してください。"
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"The project exceeds the maximum size of 4GB when writing to a FAT32 "
-"formatted filesystem."
-msgstr ""
-"プロジェクトのサイズが、FAT32 形式のファイルシステムにおける上限の 4 GB を超"
-"えています。"
+msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
+msgstr "プロジェクトのサイズが、FAT32 形式のファイルシステムにおける上限の 4 GB を超えています。"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -9394,12 +9040,10 @@ msgstr "%s を保存しました"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the file name provided would overwrite "
-"another project.\n"
+"The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
 msgstr ""
-"指定されたファイル名は、ほかのプロジェクトを上書きする恐れがあるため、プロ"
-"ジェクトは保存されませんでした。\n"
+"指定されたファイル名は、ほかのプロジェクトを上書きする恐れがあるため、プロジェクトは保存されませんでした。\n"
 "ファイル名を変更してやり直してください。"
 
 #: src/ProjectFileManager.cpp
@@ -9433,12 +9077,10 @@ msgstr "プロジェクトの上書き警告"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the selected project is open in another "
-"window.\n"
+"The project was not saved because the selected project is open in another window.\n"
 "Please try again and select an original name."
 msgstr ""
-"選択されたプロジェクトがほかのウィンドウで開かれているため、プロジェクトは保"
-"存されませんでした。\n"
+"選択されたプロジェクトがほかのウィンドウで開かれているため、プロジェクトは保存されませんでした。\n"
 "ファイル名を変更してやり直してください。"
 
 #: src/ProjectFileManager.cpp
@@ -9522,26 +9164,18 @@ msgstr "ステレオトラックの片チャンネルが欠落しています。
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-msgid ""
-"This project contained stereo tracks with different sample rates per channel."
-msgstr ""
-"このプロジェクトには、チャンネルごとに異なるサンプリング周波数のステレオト"
-"ラックが含まれていました。"
+msgid "This project contained stereo tracks with different sample rates per channel."
+msgstr "このプロジェクトには、チャンネルごとに異なるサンプリング周波数のステレオトラックが含まれていました。"
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-msgid ""
-"This project contained stereo tracks with different sample formats in "
-"channels."
-msgstr ""
-"このプロジェクトには、チャンネルごとに異なるサンプリング形式のステレオトラッ"
-"クが含まれていました。"
+msgid "This project contained stereo tracks with different sample formats in channels."
+msgstr "このプロジェクトには、チャンネルごとに異なるサンプリング形式のステレオトラックが含まれていました。"
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with non-aligned content."
-msgstr ""
-"このプロジェクトには、揃っていない内容のステレオトラックが含まれていました。"
+msgstr "このプロジェクトには、揃っていない内容のステレオトラックが含まれていました。"
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
@@ -9594,9 +9228,7 @@ msgstr "インポートエラー"
 
 #: src/ProjectFileManager.cpp
 msgid "Cannot import AUP3 format.  Use File > Open instead"
-msgstr ""
-"AUP3 形式をインポートできません。  代わりに［ファイル］>［開く］をご利用くだ"
-"さい。"
+msgstr "AUP3 形式をインポートできません。  代わりに［ファイル］>［開く］をご利用ください。"
 
 #: src/ProjectFileManager.cpp
 msgid "Compact Project"
@@ -9605,23 +9237,19 @@ msgstr "プロジェクト圧縮"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
-"Compacting this project will free up disk space by removing unused bytes "
-"within the file.\n"
+"Compacting this project will free up disk space by removing unused bytes within the file.\n"
 "\n"
 "There is %s of free disk space and this project is currently using %s.\n"
 "\n"
-"If you proceed, the current Undo/Redo History and clipboard contents will be "
-"discarded and you will recover approximately %s of disk space.\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
 msgstr ""
-"このプロジェクトを圧縮することで、ファイル内の未使用バイトを削除し、ストレー"
-"ジの空き容量を増やします。\n"
+"このプロジェクトを圧縮することで、ファイル内の未使用バイトを削除し、ストレージの空き容量を増やします。\n"
 "\n"
 "ディスクの空き容量は %s で、このプロジェクトは現在 %s 使用しています。\n"
 "\n"
-"続行すると、現在の元に戻す/やり直す履歴とクリップボードの内容とを破棄し、約 "
-"%s のストレージ空き容量を増やします。\n"
+"続行すると、現在の元に戻す/やり直す履歴とクリップボードの内容とを破棄し、約 %s のストレージ空き容量を増やします。\n"
 "\n"
 "続けますか?"
 
@@ -9750,7 +9378,6 @@ msgstr "%s を %s で置換"
 msgid "Replace %s"
 msgstr "%s を置換"
 
-# ja: エフェクトのグループ化をオンにしている場合に、グループ名が空であるエフェクトが2個以上あるとグループ名として表示される。例えば「Grouped by Publisher（発行元でグループ化）」の場合は「;author “”」とすればそうなる。一方、空文字列すら指定しなかったり行自体を削除したりすると、グループ名は「n/a（情報なし）」になる。
 #: src/RealtimeEffectPanel.cpp src/menus/MenuHelper.cpp
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Unknown"
@@ -9858,7 +9485,6 @@ msgstr "音による録音起動"
 msgid "Activation level (dB):"
 msgstr "録音起動レベル（dB）:"
 
-# ja: EXPERIMENTAL
 #: src/SpectralDataDialog.cpp
 msgid "Spectral Data Control Panel"
 msgstr "スペクトルデータ コントロールパネル"
@@ -10086,16 +9712,14 @@ msgstr "自動エクスポートエラー"
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid ""
-"You may not have enough free disk space to complete this Timer Recording, "
-"based on your current settings.\n"
+"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n"
 "\n"
 "Do you wish to continue?\n"
 "\n"
 "Planned recording duration:   %s\n"
 "Recording time remaining on disk:   %s"
 msgstr ""
-"このタイマー録音を完了するには、現在の設定ではストレージの空き容量が足りませ"
-"ん。\n"
+"このタイマー録音を完了するには、現在の設定ではストレージの空き容量が足りません。\n"
 "\n"
 "続行しますか?\n"
 "\n"
@@ -10447,12 +10071,8 @@ msgid " Select On"
 msgstr " 選択（オン）"
 
 #: src/TrackPanelResizeHandle.cpp
-msgid ""
-"Click and drag to adjust relative size of stereo tracks, double-click to "
-"make heights equal"
-msgstr ""
-"クリック&ドラッグしてステレオトラックの相対サイズを変更、ダブルクリックして高"
-"さを揃える"
+msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
+msgstr "クリック&ドラッグしてステレオトラックの相対サイズを変更、ダブルクリックして高さを揃える"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -10570,12 +10190,8 @@ msgstr "Audacity %s の更新内容"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"Watch the [[%s|release video]] or read the [[https://support.audacityteam."
-"org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr ""
-"詳細は、[[%s|リリースビデオ]]を視聴するか、[[https://support.audacityteam."
-"org/additional-resources/changelog|変更履歴]] をお読みください!</p>"
+msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgstr "詳細は、[[%s|リリースビデオ]]を視聴するか、[[https://support.audacityteam.org/additional-resources/changelog|変更履歴]] をお読みください!</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -10583,12 +10199,8 @@ msgstr "無料のプラグインとサウンドを入手"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for "
-"Audacity users</p>"
-msgstr ""
-"<p>Audascity ユーザーのためのさまざまなオーディオプラグインを提供する [[%s|"
-"Muse Hub app]] をチェックしてください</p>"
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr "<p>Audascity ユーザーのためのさまざまなオーディオプラグインを提供する [[%s|Muse Hub app]] をチェックしてください</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -10651,7 +10263,6 @@ msgstr "オーディオ比較..."
 msgid "Compares a range on two tracks."
 msgstr "2 トラック間のレンジを比較します。"
 
-# ja: デモはデモなのであえて翻訳しない。
 #: src/commands/Demo.cpp
 msgid "Demo"
 msgstr "Demo"
@@ -10750,7 +10361,6 @@ msgstr "クリップ"
 msgid "Envelopes"
 msgstr "エンベロープ"
 
-# ja: 正直訳しようがないけど訳さないのも浮くし、まあこんなもんか…。
 #: src/commands/GetInfoCommand.cpp
 msgid "Boxes"
 msgstr "ボックス"
@@ -11326,7 +10936,6 @@ msgstr "メッセージ出力"
 msgid "Amplify"
 msgstr "増幅"
 
-# ja: 説明
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "選択したオーディオの音量を増加または減少します"
@@ -11351,35 +10960,23 @@ msgstr "クリッピングを許容(&W)"
 msgid "Auto Duck"
 msgstr "自動ダッキング"
 
-# ja: 説明
 #: src/effects/AutoDuck.cpp
-msgid ""
-"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
-"specified \"control\" track reaches a particular level"
-msgstr ""
-"指定された「コントロール」トラックが特定のレベルに達したら、1 つまたは複数ト"
-"ラックのレベルを低減（ダッキング）します"
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "指定された「コントロール」トラックが特定のレベルに達したら、1 つまたは複数トラックのレベルを低減（ダッキング）します"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
 #. sound on another track.  Not as in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid ""
-"You selected a track which does not contain audio. AutoDuck can only process "
-"audio tracks."
-msgstr ""
-"オーディオを含まないトラックが選択されました。自動ダッキングはオーディオト"
-"ラックのみを処理します。"
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "オーディオを含まないトラックが選択されました。自動ダッキングはオーディオトラックのみを処理します。"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
 #. the volume) of the audio automatically when there is sound on another
 #. track.  Not as in 'Donald-Duck'!
 #: src/effects/AutoDuck.cpp
-msgid ""
-"Auto Duck needs a control track which must be placed below the selected "
-"track(s)."
-msgstr ""
-"自動ダッキングは、選択したトラックの下にコントロールトラックを必要とします。"
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "自動ダッキングは、選択したトラックの下にコントロールトラックを必要とします。"
 
 #: src/effects/AutoDuck.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
@@ -11413,7 +11010,8 @@ msgstr "内側フェードダウン時間(&O):"
 msgid "Inner &fade up length:"
 msgstr "内側フェードアップ時間(&F):"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "しきい値(&T):"
 
@@ -11449,7 +11047,6 @@ msgstr "「%s」はほかのエフェクト、ジェネレーター、解析機�
 msgid "Bass and Treble"
 msgstr "低域・高域"
 
-# ja: 説明
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
 msgstr "簡易な音色調整エフェクトです"
@@ -11490,7 +11087,6 @@ msgstr "音量調整を音色調整とリンク(&L)"
 msgid "Change Pitch"
 msgstr "ピッチを変更"
 
-# ja: 説明
 #: src/effects/ChangePitch.cpp
 msgid "Changes the pitch of a track without changing its tempo"
 msgstr "テンポを変えずにトラックのピッチを変更します"
@@ -11595,12 +11191,10 @@ msgstr "45"
 msgid "78"
 msgstr "78"
 
-# ja: エフェクトメニューと速度とピッチを変更ペインとに併用。
 #: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Speed and Pitch"
 msgstr "速度とピッチを変更"
 
-# ja: 説明
 #: src/effects/ChangeSpeed.cpp
 msgid "Changes the speed of a track, also changing its pitch"
 msgstr "トラックの再生速度を変更（ピッチも変化）します"
@@ -11641,7 +11235,6 @@ msgctxt "change speed"
 msgid "&to"
 msgstr "→ 変更後(&T)"
 
-# ja: 速度とピッチを変更ペインの項目タイトル
 #: src/effects/ChangeSpeed.cpp
 msgid "Selection Length"
 msgstr "選択した長さ"
@@ -11674,7 +11267,6 @@ msgstr "→ 変更後"
 msgid "Change Tempo"
 msgstr "テンポを変更"
 
-# ja: 説明
 #: src/effects/ChangeTempo.cpp
 msgid "Changes the tempo of a selection without changing its pitch"
 msgstr "ピッチを変えずに選択範囲のテンポを変更します"
@@ -11734,7 +11326,6 @@ msgstr "長さ（秒）、%s からの変更後"
 msgid "Click Removal"
 msgstr "クリックノイズを除去"
 
-# ja: 説明
 #: src/effects/ClickRemoval.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
 msgstr "オーディオトラックのクリックノイズを消去します"
@@ -11752,7 +11343,7 @@ msgstr "選択範囲は %d サンプル以上である必要があります。"
 msgid "&Threshold (lower is more sensitive):"
 msgstr "しきい値を選択（小さいほど高感度）(&T):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "しきい値"
 
@@ -11798,12 +11389,8 @@ msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid ""
-"Contrast Analyzer, for measuring RMS volume differences between two "
-"selections of audio."
-msgstr ""
-"コントラスト解析機能では、選択した 2 つのオーディオ間で RMS 音量の差を計測し"
-"ます。"
+msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
+msgstr "コントラスト解析機能では、選択した 2 つのオーディオ間で RMS 音量の差を計測します。"
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -12021,7 +11608,6 @@ msgstr "WCAG 2.0 Success Criteria 1.4.7: 不合格"
 msgid "Data gathered"
 msgstr "データ収集日時"
 
-# ja: 2番目の "%s" は、Audacityの言語設定が日本語だと「4月」、英語だと「April」のようになる。
 #. i18n-hint: day of month, month, year, hour, minute, second
 #: src/effects/Contrast.cpp
 #, c-format
@@ -12080,104 +11666,84 @@ msgstr "レクチファイアー"
 msgid "Hard Limiter 1413"
 msgstr "ハードリミッター1413"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
 msgstr "ハードクリップ -12dB、80% メイクアップゲイン"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
 msgstr "ソフトクリップ -12dB、80% メイクアップゲイン"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Fuzz Box"
 msgstr "ファズボックス"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp src/effects/Equalization.cpp
 msgid "Walkie-talkie"
 msgstr "トランシーバー"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Blues drive sustain"
 msgstr "ブルースドライブサステイン"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Light Crunch Overdrive"
 msgstr "オーバードライブ（ライトクランチ）"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Heavy Overdrive"
 msgstr "オーバードライブ（ヘビー）"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "3rd Harmonic (Perfect Fifth)"
 msgstr "3次高調波（完全5度）"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Valve Overdrive"
 msgstr "バルブオーバードライブ"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "2nd Harmonic (Octave)"
 msgstr "2次高調波（オクターブ）"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Gated Expansion Distortion"
 msgstr "ゲートエクスパンションディストーション"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Leveller, Light, -70dB noise floor"
 msgstr "レベラー（ライト）-70dB ノイズフロア"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Leveller, Moderate, -70dB noise floor"
 msgstr "レベラー（モデレート）-70dB ノイズフロア"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heavy, -70dB noise floor"
 msgstr "レベラー（ヘビー）-70dB ノイズフロア"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heavier, -70dB noise floor"
 msgstr "レベラー（よりヘビー）-70dB ノイズフロア"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Leveller, Heaviest, -70dB noise floor"
 msgstr "レベラー（最高にヘビー）-70dB ノイズフロア"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Half-wave Rectifier"
 msgstr "半波レクチファイアー"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Full-wave Rectifier"
 msgstr "全波レクチファイアー"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Full-wave Rectifier (DC blocked)"
 msgstr "全波レクチファイアー（DC ブロック）"
 
-# ja: ファクトリープリセット
 #: src/effects/Distortion.cpp
 msgid "Percussion Limiter"
 msgstr "パーカッションリミッター"
@@ -12186,7 +11752,7 @@ msgstr "パーカッションリミッター"
 msgid "Upper Threshold"
 msgstr "しきい値の上限"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "ノイズフロア"
 
@@ -12206,7 +11772,6 @@ msgstr "リピート回数"
 msgid "Distortion"
 msgstr "ディストーション"
 
-# ja: 説明
 #: src/effects/Distortion.cpp
 msgid "Waveshaping distortion effect"
 msgstr "ウェーブシェイパー式のディストーションエフェクトです"
@@ -12312,9 +11877,7 @@ msgid "DTMF Tones"
 msgstr "ダイヤル（DTMF）トーン"
 
 #: src/effects/DtmfGen.cpp
-msgid ""
-"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
-"keypad on telephones"
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
 msgstr "電話機のキーパッドで発するようなダイヤル（DTMF）トーンを発生します"
 
 #: src/effects/DtmfGen.cpp
@@ -12463,7 +12026,6 @@ msgstr "再生待ち"
 msgid "Echo"
 msgstr "エコー"
 
-# ja: 説明
 #: src/effects/Echo.cpp
 msgid "Repeats the selected audio again and again"
 msgstr "選択したオーディオを何度も繰り返します"
@@ -12658,68 +12220,53 @@ msgstr "EQ フィルター曲線"
 msgid "Graphic EQ"
 msgstr "グラフィック EQ"
 
-# ja: 説明
 #: src/effects/Equalization.cpp
 msgid "Adjusts the volume levels of particular frequencies"
 msgstr "特定の周波数の音量を調整します"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "100Hz Rumble"
 msgstr "100Hz ゴロゴロ音"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "AM Radio"
 msgstr "AM ラジオ"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "Bass Boost"
 msgstr "低域ブースト"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "Bass Cut"
 msgstr "低域カット"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "Low rolloff for speech"
 msgstr "スピーチ用低ロールオフ"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "RIAA"
 msgstr "RIAA"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "Telephone"
 msgstr "電話"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "Treble Boost"
 msgstr "高域ブースト"
 
-# ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
 msgid "Treble Cut"
 msgstr "高域カット"
 
 #: src/effects/Equalization.cpp
-msgid ""
-"To apply Equalization, all selected tracks must have the same sample rate."
-msgstr ""
-"イコライザーを適用するには、すべての選択トラックが同一のサンプリング周波数で"
-"ある必要があります。"
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "イコライザーを適用するには、すべての選択トラックが同一のサンプリング周波数である必要があります。"
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
-msgstr ""
-"トラックのサンプリング周波数が低すぎるため、このエフェクトを使うことができま"
-"せん。"
+msgstr "トラックのサンプリング周波数が低すぎるため、このエフェクトを使うことができません。"
 
 #: src/effects/Equalization.cpp
 msgid "Effect Unavailable"
@@ -12933,12 +12480,10 @@ msgstr "キュービック"
 #: src/effects/EqualizationUI.cpp
 msgid ""
 "To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, "
-"then use that one."
+"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 "このフィルター曲線をマクロの中で使うには、新しい名前を選択してください。\n"
-"「曲線を保存/管理...」を選択し、「無題」曲線の名前を変更してから使用してくだ"
-"さい。"
+"「曲線を保存/管理...」を選択し、「無題」曲線の名前を変更してから使用してください。"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Filter Curve EQ needs a different name"
@@ -13091,8 +12636,126 @@ msgstr "インバート（位相を反転）"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "オーディオサンプルの上下を逆にして、極性（位相）を反転"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+msgid "Legacy Compressor"
+msgstr "レガシーコンプレッサー"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "オーディオのダイナミックレンジを圧縮します"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f 秒"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f 秒"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "レシオ %.0f 〜 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "レシオ %.1f 〜 1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "ノイズフロア(&N):"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "レシオ(&R):"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "レシオ"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "アタックタイム(&A):"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "アタックタイム"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "リリースタイム(&E):"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "リリースタイム"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "圧縮後のメイクアップゲインを 0 dB(&K)"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "ピークに基づく圧縮(&O)"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "しきい値 %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "ノイズフロア %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "アタックタイム %.2f 秒"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "リリースタイム %.1f 秒"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "リミッター"
 
@@ -13190,17 +12853,14 @@ msgstr "3 種類の異なるノイズを生成"
 msgid "&Noise type:"
 msgstr "ノイズの種類(&N):"
 
-# ja: "Experimental only, don't need translations"
 #: src/effects/NoiseReduction.cpp
 msgid "Median"
 msgstr "Median"
 
-# ja: "Experimental only, don't need translations"
 #: src/effects/NoiseReduction.cpp
 msgid "Second greatest"
 msgstr "Second greatest"
 
-# ja: "Experimental only, don't need translations"
 #: src/effects/NoiseReduction.cpp
 msgid "Old"
 msgstr "Old"
@@ -13236,16 +12896,11 @@ msgstr "警告: プロファイリングにおけるウインドウ形式が同�
 
 #: src/effects/NoiseReduction.cpp
 msgid "All noise profile data must have the same sample rate."
-msgstr ""
-"すべてのノイズプロファイルは同じサンプリング周波数である必要があります。"
+msgstr "すべてのノイズプロファイルは同じサンプリング周波数である必要があります。"
 
 #: src/effects/NoiseReduction.cpp
-msgid ""
-"The sample rate of the noise profile must match that of the sound to be "
-"processed."
-msgstr ""
-"ノイズプロファイルのサンプリング周波数は、処理する音と同じである必要がありま"
-"す。"
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "ノイズプロファイルのサンプリング周波数は、処理する音と同じである必要があります。"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Selected noise profile is too short."
@@ -13324,8 +12979,7 @@ msgid ""
 "Select all of the audio you want filtered, choose how much noise you want\n"
 "filtered out, and then click 'OK' to reduce noise.\n"
 msgstr ""
-"処理したいオーディオをすべて選択し、低減の程度を選択、最後に［OK］をクリック"
-"して\n"
+"処理したいオーディオをすべて選択し、低減の程度を選択、最後に［OK］をクリックして\n"
 "ノイズを低減します。\n"
 
 #: src/effects/NoiseReduction.cpp
@@ -13487,7 +13141,6 @@ msgstr "ステレオチャンネルごとにノーマライズ(&O)"
 msgid "Paulstretch"
 msgstr "Paul ストレッチ"
 
-# ja: 説明
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
 msgstr "Paul ストレッチは、極端なタイムストレッチや「停滞的」エフェクトです"
@@ -13550,7 +13203,6 @@ msgstr ""
 msgid "Phaser"
 msgstr "フェイザー"
 
-# ja: 説明
 #: src/effects/Phaser.cpp
 msgid "Combines phase-shifted signals with the original signal"
 msgstr "元の信号に位相シフトした信号を組み合わせます"
@@ -13631,17 +13283,14 @@ msgstr "リペアエフェクトはストレッチを行ったクリップ内で
 
 #: src/effects/Repair.cpp
 msgid ""
-"The Repair effect is intended to be used on very short sections of damaged "
-"audio (up to 128 samples).\n"
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"修復エフェクトは、損傷したオーディオデータの非常に短い範囲 (128 サンプルま"
-"で) に対して使います。\n"
+"修復エフェクトは、損傷したオーディオデータの非常に短い範囲 (128 サンプルまで) に対して使います。\n"
 "\n"
 "拡大して、修復する短い範囲を選択してください。"
 
-# ja: 例えば、全長100サンプルのトラック全体を選択して実行すると表示される。
 #: src/effects/Repair.cpp
 msgid ""
 "Repair works by using audio data outside the selection region.\n"
@@ -13660,7 +13309,6 @@ msgstr ""
 msgid "Repeat"
 msgstr "繰り返し"
 
-# ja: 説明
 #: src/effects/Repeat.cpp
 msgid "Repeats the selection the specified number of times"
 msgstr "指定された回数だけ選択範囲を繰り返します"
@@ -13780,7 +13428,6 @@ msgstr "巨大洞窟"
 msgid "Reverb"
 msgstr "リバーブ"
 
-# ja: 説明
 #: src/effects/Reverb.cpp
 msgid "Adds ambience or a \"hall effect\""
 msgstr "アンビエンスや「ホール効果」を加えます"
@@ -13833,8 +13480,6 @@ msgstr "リバース（逆方向）"
 msgid "Reverses the selected audio"
 msgstr "選択したオーディオを逆方向に反転"
 
-# ja: “in fact this symbol does not get used”
-# Subband Sinusoidal Modeling Synthesis
 #: src/effects/SBSMSEffect.h
 msgid "SBSMS Time / Pitch Stretch"
 msgstr "SBSMS タイム/ピッチストレッチ"
@@ -13873,9 +13518,7 @@ msgstr "アナログフィルターをエミュレートする IIR フィルタ�
 
 #: src/effects/ScienFilter.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr ""
-"フィルターを適用するには、選択したすべてのトラックが同一サンプリング周波数で"
-"ある必要があります。"
+msgstr "フィルターを適用するには、選択したすべてのトラックが同一サンプリング周波数である必要があります。"
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -13914,7 +13557,6 @@ msgstr "阻止帯域の最小減衰量(&T):"
 msgid "Minimum S&topband Attenuation (dB)"
 msgstr "阻止帯域の最小減衰量（dB）(&T)"
 
-# ja: EXPERIMENTAL
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Align MIDI to Audio"
 msgstr "MIDI をオーディオと同期"
@@ -14002,11 +13644,6 @@ msgstr "デフォルトを使用"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "デフォルトに戻す"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f 秒"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -14145,37 +13782,26 @@ msgstr "終了振幅"
 msgid "I&nterpolation:"
 msgstr "補間(&N):"
 
-# ja: メニュー項目の選択肢: エフェクト>特殊>無音を切り詰め
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Detected Silence"
 msgstr "無音部を切り捨てる"
 
-# ja: メニュー項目の選択肢: エフェクト>特殊>無音を切り詰め
 #: src/effects/TruncSilence.cpp
 msgid "Compress Excess Silence"
 msgstr "余分な無音部を圧縮"
 
-# ja: メニュー項目: エフェクト>特殊
 #: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "無音を切り詰める"
 
-# ja: 説明
 #: src/effects/TruncSilence.cpp
-msgid ""
-"Automatically reduces the length of passages where the volume is below a "
-"specified level"
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
 msgstr "音量が設定レベルより小さな部分の長さを自動的に切り詰めます"
 
 #: src/effects/TruncSilence.cpp
-msgid ""
-"When truncating independently, there may only be one selected audio track in "
-"each Sync-Locked Track Group."
-msgstr ""
-"別々に独立して切り詰めを行う場合、選択できるオーディオトラックは、トラックの"
-"同期ロックグループごとに 1 つです。"
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "別々に独立して切り詰めを行う場合、選択できるオーディオトラックは、トラックの同期ロックグループごとに 1 つです。"
 
-# ja: [解析] > [無音の検出] との区別のために、「の」を削除。
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
 msgstr "無音検出"
@@ -14242,16 +13868,11 @@ msgstr "バッファーサイズ"
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"The buffer size controls the number of samples sent to the effect on each "
-"iteration. Smaller values will cause slower processing and some effects "
-"require 8192 samples or less to work properly. However most effects can "
-"accept large buffers and using them will greatly reduce processing time."
+msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
 msgstr ""
 "バッファーサイズは、エフェクトに繰り返し渡されるサンプル数を制御します。\n"
 "値が小さいと処理が遅くなり、エフェクトによっては、8192 サンプル以下でないと\n"
-"正常に動作しないものもあります。しかし、ほとんどのエフェクトは大きなバッ"
-"ファーを\n"
+"正常に動作しないものもあります。しかし、ほとんどのエフェクトは大きなバッファーを\n"
 "受け入れることができ、そのように設定することで処理時間を大幅に短縮できます。"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
@@ -14268,16 +13889,11 @@ msgid "Latency Compensation"
 msgstr "レイテンシ補償"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some VST effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST effects."
+msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr ""
 "VST エフェクトによっては、処理の過程でオーディオが遅延することがあります。\n"
 "この遅延を補償しないと、オーディオに短い無音が挿入されて聞こえます。\n"
-"このオプションを有効にすれば、遅延に対する補償が行われますが、すべての VST エ"
-"フェクトで有効とは限りません。"
+"このオプションを有効にすれば、遅延に対する補償が行われますが、すべての VST エフェクトで有効とは限りません。"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14294,13 +13910,9 @@ msgid "Graphical Mode"
 msgstr "グラフィカルモード"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
-"ほとんどの VST エフェクトは、パラメーター設定用のグラフィカルインターフェイス"
-"を備えています。\n"
+"ほとんどの VST エフェクトは、パラメーター設定用のグラフィカルインターフェイスを備えています。\n"
 "一方で、テキストだけの基本的なものも利用可能です。\n"
 "エフェクトを閉じて、開き直せば変更が適用されます。"
 
@@ -14323,36 +13935,19 @@ msgid "Load VST3 preset:"
 msgstr "VST3 プリセットを読み込む:"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid ""
-"As part of their processing, some VST3 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST3 effects."
-msgstr ""
-"処理の際に VST3 エフェクトの一部ではオーディオが遅延することがあります。これ"
-"を補正しないと、オーディオに短い無音が挿入されてしまいます。このオプションを"
-"有効にすれば、これを補正することができますが、すべての VST3 エフェクトで有効"
-"とは限りません。"
+msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
+msgstr "処理の際に VST3 エフェクトの一部ではオーディオが遅延することがあります。これを補正しないと、オーディオに短い無音が挿入されてしまいます。このオプションを有効にすれば、これを補正することができますが、すべての VST3 エフェクトで有効とは限りません。"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid ""
-"Most VST3 effects have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
-msgstr ""
-"VST3 エフェクトのほとんどは、パラメータを設定するためのグラフィカルなインター"
-"フェースを備えています。テキストのみで設定する方法も利用可能です。 エフェクト"
-"を閉じて、開き直せば変更が適用されます。"
+msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr "VST3 エフェクトのほとんどは、パラメータを設定するためのグラフィカルなインターフェースを備えています。テキストのみで設定する方法も利用可能です。 エフェクトを閉じて、開き直せば変更が適用されます。"
 
 #: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
 msgstr "ワウ（Wahwah）"
 
-# ja: 説明
 #: src/effects/Wahwah.cpp
-msgid ""
-"Rapid tone quality variations, like that guitar sound so popular in the "
-"1970's"
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr "1970 年代ギターサウンドのような急激な音質変化です"
 
 #: src/effects/Wahwah.cpp
@@ -14424,31 +14019,17 @@ msgid "Audio Unit Effect Options"
 msgstr "Audio Unit エフェクトオプション"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will notice "
-"that small silences have been inserted into the audio. Enabling this option "
-"will provide that compensation, but it may not work for all Audio Unit "
-"effects."
-msgstr ""
-"処理の際に Audio Unit エフェクトの一部ではオーディオが遅延することがありま"
-"す。これを補正しないと、オーディオに短い無音が挿入されます。このオプションを"
-"有効にすれば、これを補正することができますが、すべての Audio Unit エフェクト"
-"で有効とは限りません。"
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
+msgstr "処理の際に Audio Unit エフェクトの一部ではオーディオが遅延することがあります。これを補正しないと、オーディオに短い無音が挿入されます。このオプションを有効にすれば、これを補正することができますが、すべての Audio Unit エフェクトで有効とは限りません。"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
 msgstr "ユーザーインターフェイス"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid ""
-"Select \"Full\" to use the graphical interface if supplied by the Audio "
-"Unit. Select \"Generic\" to use the system supplied generic interface. "
-"Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
-"to take effect."
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
 msgstr ""
-"Audio Unit が提供するグラフィカルインターフェイスを利用するには、「完全」を選"
-"んでください。\n"
+"Audio Unit が提供するグラフィカルインターフェイスを利用するには、「完全」を選んでください。\n"
 "システムのインターフェイスを利用するには、「一般」を選んでください。\n"
 "テキスト型インターフェイスにするには「基本」を選んでください。\n"
 "エフェクトを閉じて、開き直せば変更が適用されます。"
@@ -14488,16 +14069,8 @@ msgid "LADSPA Effect Options"
 msgstr "LADSPA エフェクトオプション"
 
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some LADSPA effects must delay returning audio "
-"to Audacity. When not compensating for this delay, you will notice that "
-"small silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all LADSPA effects."
-msgstr ""
-"処理の際に LADSPA エフェクトの一部ではオーディオが遅延することがあります。こ"
-"れを補正しないと、オーディオに短い無音が挿入されます。このオプションを有効に"
-"すれば、これを補正することができますが、すべての LADSPA エフェクトで有効とは"
-"限りません。"
+msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
+msgstr "処理の際に LADSPA エフェクトの一部ではオーディオが遅延することがあります。これを補正しないと、オーディオに短い無音が挿入されます。このオプションを有効にすれば、これを補正することができますが、すべての LADSPA エフェクトで有効とは限りません。"
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -14513,25 +14086,13 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "バッファーサイズ（8～%d サンプル）(&B):"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"As part of their processing, some LV2 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this setting will "
-"provide that compensation, but it may not work for all LV2 effects."
-msgstr ""
-"処理の際に LV2 エフェクトの一部ではオーディオが遅延することがあります。これを"
-"補正しないと、オーディオに短い無音が挿入されます。このオプションを有効にすれ"
-"ば、これを補正することができますが、すべての LV2 エフェクトで有効とは限りませ"
-"ん。"
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
+msgstr "処理の際に LV2 エフェクトの一部ではオーディオが遅延することがあります。これを補正しないと、オーディオに短い無音が挿入されます。このオプションを有効にすれば、これを補正することができますが、すべての LV2 エフェクトで有効とは限りません。"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"LV2 effects can have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
-"LV2 エフェクトには、パラメーター設定用のグラフィカルインターフェイスを備えて"
-"いる場合があります。\n"
+"LV2 エフェクトには、パラメーター設定用のグラフィカルインターフェイスを備えている場合があります。\n"
 "一方で、テキストだけの基本的なものも利用可能です。\n"
 "エフェクトを閉じて、開き直せば変更が適用されます。"
 
@@ -14577,9 +14138,7 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr ""
-"エラー: ファイル「%s」がヘッダーで指定されていますが、プラグインパスに見つか"
-"りません。\n"
+msgstr "エラー: ファイル「%s」がヘッダーで指定されていますが、プラグインパスに見つかりません。\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Audio selection required."
@@ -14648,18 +14207,13 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist は nil オーディオを返しました。\n"
 
 #: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr ""
-"[警告: Nyquist が正しくない UTF-8 文字列を返したので、ここでは Latin-1 に変換"
-"しました。]"
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[警告: Nyquist が正しくない UTF-8 文字列を返したので、ここでは Latin-1 に変換しました。]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr ""
-"このバージョンの Audacity は、バージョン %ld の Nyquist プラグインを使用する"
-"ことはできません"
+msgstr "このバージョンの Audacity は、バージョン %ld の Nyquist プラグインを使用することはできません"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -15154,7 +14708,6 @@ msgstr "クリップを左に移動"
 msgid "Move audio clips"
 msgstr "オーディオクリップを移動"
 
-# ja: 読み上げ用
 #: src/menus/ClipMenus.cpp
 msgid "clip not moved"
 msgstr "クリップは移動していません"
@@ -15245,20 +14798,12 @@ msgid "Pasting clip contents, please wait"
 msgstr "クリップ内容を貼り付けます。お待ちください"
 
 #: src/menus/EditMenus.cpp
-msgid ""
-"The content you are trying to paste will span across more tracks than you "
-"currently have available. Add more tracks and try again."
-msgstr ""
-"貼り付けようとしているコンテンツは、現在使用可能なトラック数を超えています。"
-"トラックを追加して、もう一度試してください。"
+msgid "The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again."
+msgstr "貼り付けようとしているコンテンツは、現在使用可能なトラック数を超えています。トラックを追加して、もう一度試してください。"
 
 #: src/menus/EditMenus.cpp
-msgid ""
-"There are not enough tracks selected to accommodate your copied content. "
-"Select additional tracks and try again."
-msgstr ""
-"コピーしたコンテンツを収容できるだけのトラック数を選択していません。トラック"
-"を追加選択して、やり直してください。"
+msgid "There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again."
+msgstr "コピーしたコンテンツを収容できるだけのトラック数を選択していません。トラックを追加選択して、やり直してください。"
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicated"
@@ -15457,7 +15002,6 @@ msgstr "「%s」からラベルをインポートしました"
 msgid "Import Labels"
 msgstr "ラベルをインポート"
 
-# ja: 開発者向け。翻訳不要。
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
 msgstr "&Dangerous Reset..."
@@ -15809,7 +15353,6 @@ msgstr "ラベルで結合"
 msgid "&Label Track"
 msgstr "ラベルトラック(&L)"
 
-# ja: エフェクトがインタラクティブである（コントロールウィジェットを持つ）場合に、メニュー項目のエフェクト名の末尾に付加される。
 #: src/menus/MenuHelper.cpp
 msgid "..."
 msgstr "..."
@@ -15882,7 +15425,6 @@ msgstr "Audacity の再起動後に実行記録を作成します。"
 msgid "No journal will be recorded after Audacity restarts."
 msgstr "Audacity の再起動後は実行記録を作成しません。"
 
-# ja: ジェネレーター、エフェクト、ツールのメニュー項目
 #: src/menus/PluginMenus.cpp
 msgid "Plugin Manager"
 msgstr "プラグインマネージャー"
@@ -16062,17 +15604,14 @@ msgstr "ゼロ交差を選択"
 msgid "&Selection"
 msgstr "選択(&S)"
 
-# ja: 拡張メニュー>選択
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Off"
 msgstr "スナップ: しない(&O)"
 
-# ja: 拡張メニュー>選択
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Nearest"
 msgstr "スナップ: 最近傍(&N)"
 
-# ja: 拡張メニュー>選択
 #: src/menus/SelectMenus.cpp
 msgid "Snap-To &Prior"
 msgstr "スナップ: 直前(&P)"
@@ -16245,14 +15784,12 @@ msgstr "レンダリング"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr ""
-"%d トラックを新規の 1 ステレオトラックにミックスしてレンダリングしました"
+msgstr "%d トラックを新規の 1 ステレオトラックにミックスしてレンダリングしました"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr ""
-"%d トラックを新規の 1 モノラルトラックにミックスしてレンダリングしました"
+msgstr "%d トラックを新規の 1 モノラルトラックにミックスしてレンダリングしました"
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
@@ -16418,9 +15955,7 @@ msgstr "オーディオトラックと MIDI トラックを 1 つ以上選択し
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr "整列完了: MIDI %.2f から %.2f 秒、オーディオ %.2f から %.2f 秒。"
 
 #: src/menus/TrackMenus.cpp
@@ -16429,12 +15964,8 @@ msgstr "MIDI をオーディオに同期"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"整列エラー: 入力が短すぎます: MIDI %.2f から %.2f 秒、オーディオ %.2f から "
-"%.2f 秒。"
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr "整列エラー: 入力が短すぎます: MIDI %.2f から %.2f 秒、オーディオ %.2f から %.2f 秒。"
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -16632,12 +16163,10 @@ msgstr "フォーカストラックを最上段へ移動(&O)"
 msgid "Move Focused Track to &Bottom"
 msgstr "フォーカストラックを最下段へ移動(&B)"
 
-# ja: 読み上げ用
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
 msgstr "ラベルトラックがありません"
 
-# ja: 読み上げ用
 #: src/menus/TransportMenus.cpp
 msgid "no label track at or below focused track"
 msgstr "フォーカストラックやその下のトラックに、ラベルトラックがありません"
@@ -16653,7 +16182,6 @@ msgstr "フォーカストラックやその下のトラックに、ラベルト
 msgid "%s %d of %d"
 msgstr "%1$s、%3$d個中%2$d個目"
 
-# ja: 読み上げ用
 #: src/menus/TransportMenus.cpp
 msgid "no labels in label track"
 msgstr "ラベルトラックにラベルがありません"
@@ -16923,9 +16451,7 @@ msgid "&Check for updates"
 msgstr "更新を確認(&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid ""
-"App update checking requires network access. In order to protect your "
-"privacy, Audacity does not store any personal information."
+msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
 msgstr ""
 "アプリケーションの更新を確認するには、ネットワーク接続が必要です。\n"
 "プライバシーを保護するため、Audacity はいかなる個人情報も保存しません。"
@@ -16999,12 +16525,8 @@ msgid "&Project Sample Rate:"
 msgstr "プロジェクトのサンプリング周波数(&P):"
 
 #: src/prefs/DevicePrefs.cpp
-msgid ""
-"Sample Rate used when recording new tracks, mixing down tracks and for "
-"playback in this project."
-msgstr ""
-"新規トラックの録音やトラックのミックスダウン、再生時に使用するサンプリング周"
-"波数です。"
+msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
+msgstr "新規トラックの録音やトラックのミックスダウン、再生時に使用するサンプリング周波数です。"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "D&efault Sample Rate:"
@@ -17145,9 +16667,7 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
 msgid "Directory %s is not suitable (at risk of being cleaned out)"
-msgstr ""
-"ディレクトリ %s は適切ではありません（クリーンアップされてしまう恐れがありま"
-"す）"
+msgstr "ディレクトリ %s は適切ではありません（クリーンアップされてしまう恐れがあります）"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Temporary Directory' cannot be set."
@@ -17163,9 +16683,7 @@ msgid "Directory %s is not writable"
 msgstr "ディレクトリ %s は書き込みできません"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid ""
-"Changes to temporary directory will not take effect until Audacity is "
-"restarted"
+msgid "Changes to temporary directory will not take effect until Audacity is restarted"
 msgstr "一時ディレクトリの変更は Audacity を再起動するまで有効になりません"
 
 #: src/prefs/DirectoriesPrefs.cpp
@@ -17329,16 +16847,8 @@ msgid "Unused filters:"
 msgstr "未使用フィルター:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid ""
-"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
-"the items. They are likely to break the pattern matching. Unless you know "
-"what you are doing, it is recommended to trim spaces. Do you want Audacity "
-"to trim spaces for you?"
-msgstr ""
-"空白、改行、タブまたはラインフィードなどのスペース文字が、項目のいずれかに含"
-"まれています。パターンマッチングに失敗する可能性がありますので、意図的に使用"
-"したのでない限り、スペース文字を取り除くことを推奨します。スペースを自動的に"
-"取り除きますか?"
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
+msgstr "空白、改行、タブまたはラインフィードなどのスペース文字が、項目のいずれかに含まれています。パターンマッチングに失敗する可能性がありますので、意図的に使用したのでない限り、スペース文字を取り除くことを推奨します。スペースを自動的に取り除きますか?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -17498,8 +17008,7 @@ msgstr "キーボードの環境設定は現在できません。"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
-msgstr ""
-"キーボードショートカットを変更するには新規プロジェクトを開いてください。"
+msgstr "キーボードショートカットを変更するには新規プロジェクトを開いてください。"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Hotkey:"
@@ -17562,7 +17071,6 @@ msgstr "インポート(&I)..."
 msgid "&Defaults"
 msgstr "デフォルト(&D)"
 
-# ja: "The following commands ～" で使われる。二重引用符は二重カギ括弧では見づらい場合があるので、スミ付き括弧に。丸括弧も三点リーダーに。
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
@@ -17574,8 +17082,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr ""
-"Audacty のキーボードショートカットが定義されている XML ファイルを選択..."
+msgstr "Audacty のキーボードショートカットが定義されている XML ファイルを選択..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -17584,8 +17091,7 @@ msgstr "キーボードショートカットのインポートエラー"
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
-"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
-"and \"%s\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
 "ファイル内のショートカット「%s」と「%s」が重複していて正しくありません。\n"
@@ -17599,12 +17105,10 @@ msgstr "%d 個のキーボードショートカットを読み込みました\n"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
 "\n"
-"The following commands are not mentioned in the imported file, but have "
-"their shortcuts removed because of the conflict with other new shortcuts:\n"
+"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 "\n"
-"インポートしたファイルには以降のコマンドは記載されていませんが、ほかの新しい"
-"ショートカットと競合するため、これらのショートカットを消去しました。\n"
+"インポートしたファイルには以降のコマンドは記載されていませんが、ほかの新しいショートカットと競合するため、これらのショートカットを消去しました。\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Loading Keyboard Shortcuts"
@@ -17714,12 +17218,10 @@ msgstr "モジュールの環境設定"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"Modules are optional components of Audacity that enable some functionality, "
-"such as importing and exporting. \n"
+"Modules are optional components of Audacity that enable some functionality, such as importing and exporting. \n"
 "It is generally not necessary to change these settings."
 msgstr ""
-"モジュールはオプションのコンポーネントで、インポートやエクスポートのようない"
-"くつかの機能を可能にします。\n"
+"モジュールはオプションのコンポーネントで、インポートやエクスポートのようないくつかの機能を可能にします。\n"
 "通常これらの設定を変更する必要はありません。"
 
 #: src/prefs/ModulePrefs.cpp
@@ -17740,9 +17242,7 @@ msgstr "選択しない"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Error: No modules were found. This may indicate a faulty installation."
-msgstr ""
-"エラー: モジュールが見つかりません。正しくインストールされていないと思われま"
-"す。"
+msgstr "エラー: モジュールが見つかりません。正しくインストールされていないと思われます。"
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
@@ -18203,30 +17703,24 @@ msgstr "情報"
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
-"To try it out, click \"Save Theme Cache\" then find and modify the images "
-"and colors in\n"
+"To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into "
-"Audacity."
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity."
 msgstr ""
 "テーマは実験的な機能です。\n"
 "\n"
-"試すには、［テーマキャッシュを保存］をクリックして、ImageCacheVxx.png ファイ"
-"ルを探し、\n"
+"試すには、［テーマキャッシュを保存］をクリックして、ImageCacheVxx.png ファイルを探し、\n"
 "Gimp などの画像エディタを使って画像やカラーなどを修正してください。\n"
 "\n"
-"[テーマキャッシュを読み込む］をクリックすると、画像やカラーが Audacity に反映"
-"します。"
+"[テーマキャッシュを読み込む］をクリックすると、画像やカラーが Audacity に反映します。"
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
-"Saving and loading individual theme files uses a separate file for each "
-"image, but is\n"
+"Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
 msgstr ""
-"個別テーマファイルの保存と読み込みでは、画像ごとに別々のファイルを使います"
-"が、\n"
+"個別テーマファイルの保存と読み込みでは、画像ごとに別々のファイルを使いますが、\n"
 "それ以外は同じ考え方です。"
 
 #. i18n-hint: && in here is an escape character to get a single & on screen,
@@ -18534,7 +18028,6 @@ msgstr "最後まで選択"
 msgid "Select to Start"
 msgstr "最初まで選択"
 
-# 末尾の ”.” は不要と思われる
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
@@ -18853,12 +18346,10 @@ msgstr "拍子記号"
 msgid "Tempo"
 msgstr "テンポ"
 
-# ja: 拍子記号は分数ではないが、拍子記号の上を日本では分子と表現することが多い。
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature"
 msgstr "拍子記号の上（拍数）"
 
-# ja: 拍子記号は分数ではないが、拍子記号の下（拍の音の長さ）を日本では分母と表現することが多い。
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature"
 msgstr "拍子記号の下（音価）"
@@ -19007,9 +18498,7 @@ msgstr "再生速度を下げる(&D)"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr ""
-"ラベルをドラッグします。Shift+ドラッグして同じトラックのすべてのラベルを移動"
-"できます。"
+msgstr "ラベルをドラッグします。Shift+ドラッグして同じトラックのすべてのラベルを移動できます。"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -19099,12 +18588,8 @@ msgid "&MIDI Device Info..."
 msgstr "MIDI デバイス情報(&M)..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"クリックして垂直方向を拡大、Shift+クリックして縮小、ドラッグして拡大範囲を指"
-"定します。"
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr "クリックして垂直方向を拡大、Shift+クリックして縮小、ドラッグして拡大範囲を指定します。"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Zoom Reset"
@@ -19308,22 +18793,16 @@ msgid "Next &Lower Peak Frequency"
 msgstr "次の低域ピーク周波数(&L)"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-msgid ""
-"Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
-msgstr ""
-"ドラッグして拡大領域を指定。右クリックしてメニュー表示。Ctrl+スクロールして拡"
-"大/縮小。"
+msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr "ドラッグして拡大領域を指定。右クリックしてメニュー表示。Ctrl+スクロールして拡大/縮小。"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid "Right-click for menu. Ctrl+scroll to zoom."
 msgstr "右クリックしてメニュー表示。Ctrl + スクロールで拡大/縮小。"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-msgid ""
-"Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr ""
-"クリック&ドラッグしてサブ表示のサイズを調整、ダブルクリックして同じサイズに揃"
-"える"
+msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgstr "クリック&ドラッグしてサブ表示のサイズを調整、ダブルクリックして同じサイズに揃える"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -19700,20 +19179,28 @@ msgid "WaveColor Change"
 msgstr "波形カラーを変更"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
-msgstr "速度下限（%）を変更:"
+msgid "Change Speed Limits"
+msgstr "速度制限を変更"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+msgid "Change speed limit (%) to:"
+msgstr "速度制限（%）を変更:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Lower Speed Limit"
 msgstr "速度下限"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "速度上限（%）を変更:"
+msgid "Upper Speed Limit"
+msgstr "速度上限"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "速度上限"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr "速度上限は速度下限より大きい必要があります"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Invalid Limits"
+msgstr "無効な制限"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19766,13 +19253,6 @@ msgid "Logarithmic &Interpolation"
 msgstr "対数補間(&I)"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"このバージョンの Audacity では、時間トラックは\n"
-"プロジェクトウィンドウごとに 1 つしか許容されません。"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
 msgstr "新規タイムトラックを作りました"
 
@@ -19786,12 +19266,8 @@ msgstr "右クリックしてメニューを表示します。"
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
-msgid ""
-"Drag clips to reposition them. Hold Shift and drag to move all clips on the "
-"same track."
-msgstr ""
-"ドラッグしてクリップを移動させます。Shift+ドラッグして同じトラックのすべての"
-"クリップを移動できます。"
+msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
+msgstr "ドラッグしてクリップを移動させます。Shift+ドラッグして同じトラックのすべてのクリップを移動できます。"
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -19875,8 +19351,6 @@ msgstr "エンベロープを調整しました。"
 msgid "&Scrub"
 msgstr "スクラブ(&S)"
 
-# ja: 録音と再生メニュー>スクラビング
-# （オン/オフ）のトグル動作。日本語版では（オン/オフ）を追加していたが、削除されたので。
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrubbing"
 msgstr "スクラビング"
@@ -20021,9 +19495,7 @@ msgstr "Ctrl+クリック"
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr ""
-"%s してトラックを選択/選択解除します。上下にドラッグしてトラックの順番を変更"
-"します。"
+msgstr "%s してトラックを選択/選択解除します。上下にドラッグしてトラックの順番を変更します。"
 
 #. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
@@ -20070,12 +19542,8 @@ msgstr "更新を確認"
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
-msgid ""
-"If you want to change your preference for automatic updates checking, you "
-"can find it in %s."
-msgstr ""
-"更新の自動確認についての環境設定を変更したい場合は、%s から行うことができま"
-"す。"
+msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
+msgstr "更新の自動確認についての環境設定を変更したい場合は、%s から行うことができます。"
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
@@ -20124,21 +19592,13 @@ msgstr "アプリケーションの更新確認について"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid ""
-"To stay up to date, you will receive an in-app notification whenever there "
-"is a new version of Audacity available to download."
-msgstr ""
-"アプリケーションを最新に保つため、新しいバージョンの Audacity がダウンロード"
-"可能になるたびに、アプリ内通知を受信することができます。"
+msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
+msgstr "アプリケーションを最新に保つため、新しいバージョンの Audacity がダウンロード可能になるたびに、アプリ内通知を受信することができます。"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/update/UpdateNoticeDialog.cpp
-msgid ""
-"In order to protect your privacy, Audacity does not collect any personal "
-"information. However, app update checking does require network access."
-msgstr ""
-"利用者のプライバシーを守るため、個人情報の収集は行いません。しかし、更新を確"
-"認するためにはネットワーク接続が必要です。"
+msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
+msgstr "利用者のプライバシーを守るため、個人情報の収集は行いません。しかし、更新を確認するためにはネットワーク接続が必要です。"
 
 #. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -20318,12 +19778,8 @@ msgid "Missing Plugins"
 msgstr "見つからないプラグイン"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-msgid ""
-"This project contains some realtime effect plugins that cannot be found on "
-"this system."
-msgstr ""
-"システムに無いリアルタイムエフェクトプラグインが、このプロジェクトで使われて"
-"います。"
+msgid "This project contains some realtime effect plugins that cannot be found on this system."
+msgstr "システムに無いリアルタイムエフェクトプラグインが、このプロジェクトで使われています。"
 
 #. i18n-hint: %s will be replaced with "Learn more"
 #: src/widgets/MissingPluginsErrorDialog.cpp
@@ -20352,12 +19808,8 @@ msgstr "ファイルを次のディレクトリに書き込めません: %s。"
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-msgid ""
-"Please check that the directory exists, has the necessary permissions, and "
-"the drive isn't full."
-msgstr ""
-"ディレクトリが存在すること、必要な権限を有すること、ドライブに空き容量がある"
-"ことを確認してください。"
+msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
+msgstr "ディレクトリが存在すること、必要な権限を有すること、ドライブに空き容量があることを確認してください。"
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -20433,7 +19885,7 @@ msgstr "シェルビングフィルター"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -20541,8 +19993,7 @@ msgstr "~a中央周波数は 0Hz より大きい必要があります。"
 #, lisp-format
 msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
+"                        For the current track, the high frequency setting cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
 "~aトラックのサンプリング周波数より高い周波数が選択されています。~%~\n"
@@ -20565,7 +20016,7 @@ msgstr "スペクトル編集シェルビング"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20742,15 +20193,12 @@ msgstr "クロスフェード: クリップ"
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Invalid selection.~%More than 2 audio clips selected."
-msgstr ""
-"エラー。~%選択が正しくありません。~% 2 つ以上のオーディオクリップが選択されて"
-"います。"
+msgstr "エラー。~%選択が正しくありません。~% 2 つ以上のオーディオクリップが選択されています。"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr ""
-"エラー。~%選択が正しくありません。~%開始点/終了点の選択範囲が空白です。"
+msgstr "エラー。~%選択が正しくありません。~%開始点/終了点の選択範囲が空白です。"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -20953,31 +20401,26 @@ msgstr "警告のみ"
 msgid "Error: There is insufficient space to create labels.~%"
 msgstr "エラー: ラベルを作成するための十分な空きがありません。~%"
 
-# ja: 文字化けする
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "Warning: Overlapping region labels.~%"
 msgstr "警告: 領域ラベルが重なっています。~%"
 
-# ja: 文字化けする
 #. i18n-hint:  Type of label
 #: plug-ins/equalabel.ny
 msgid "region labels"
 msgstr "領域ラベル"
 
-# ja: 文字化けする
 #: plug-ins/equalabel.ny
 msgid "point labels"
 msgstr "ポイントラベル"
 
-# ja: 文字化けする
 #. i18n-hint:  Number of labels produced at specified intervals.
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~a~a ~a at intervals of ~a seconds.~%"
 msgstr "~a~a ~a を ~a 秒間隔で生成。~%"
 
-# ja: 文字化けする
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~aRegion length = ~a seconds."
@@ -21026,8 +20469,7 @@ msgid ""
 "                 Track sample rate is ~a Hz~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"エラー:~%~%周波数（~a Hz）がトラックのサンプリング周波数に対して高すぎます。"
-"~%~%~\n"
+"エラー:~%~%周波数（~a Hz）がトラックのサンプリング周波数に対して高すぎます。~%~%~\n"
 "                 トラックのサンプリング周波数は ~a Hz です。~%~\n"
 "                 周波数を ~a Hz 未満にする必要があります。"
 
@@ -21105,8 +20547,7 @@ msgstr "~a 時間 ~a 分 ~a 秒"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr ""
-"検出された無音部が多すぎます。~%最初の 10000 件だけにラベルを付加します。"
+msgstr "検出された無音部が多すぎます。~%最初の 10000 件だけにラベルを付加します。"
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -21128,24 +20569,28 @@ msgstr ""
 "                 有音部が 2 か所以上必要です。~%~\n"
 "                 1 か所しか検出されません。"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+msgid "Legacy Limiter"
+msgstr "レガシーリミッター"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "ソフトリミッティング"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "ハードリミッティング"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "ソフトクリッピング"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "ハードクリッピング"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -21153,7 +20598,7 @@ msgstr ""
 "入力ゲイン（dB）\n"
 "モノラルまたは左"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -21161,15 +20606,15 @@ msgstr ""
 "入力ゲイン（dB）\n"
 "右チャンネル"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "リミットレベル（dB）"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "ホールド（ミリ秒）"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "メイクアップゲインを適用"
 
@@ -21283,8 +20728,7 @@ msgid ""
 "               Track sample rate is ~a Hz.~%~\n"
 "               Frequency must be less than ~a Hz."
 msgstr ""
-"エラー:~%~%周波数（~a Hz）がトラックのサンプリング周波数に対して高すぎます。"
-"~%~%~\n"
+"エラー:~%~%周波数（~a Hz）がトラックのサンプリング周波数に対して高すぎます。~%~%~\n"
 "               トラックのサンプリング周波数は ~a Hz です。~%~\n"
 "               周波数指定を ~a Hz 未満に設定する必要があります。"
 
@@ -21343,9 +20787,7 @@ msgstr "警告。~%コピーに失敗したファイルがあります:~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr ""
-"プラグインをインストールしました。~%（「プラグインマネージャー」から有効にし"
-"てください）:"
+msgstr "プラグインをインストールしました。~%（「プラグインマネージャー」から有効にしてください）:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -21438,8 +20880,7 @@ msgstr "-1 ～ +1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr ""
-"「小節数」を 0 にすると、「リズムトラックの継続時間」が有効になります。"
+msgstr "「小節数」を 0 にすると、「リズムトラックの継続時間」が有効になります。"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -21624,19 +21065,16 @@ msgstr "メッセージを表示"
 msgid "Errors Only"
 msgstr "エラー時のみ"
 
-# [-∞]とローカライズされていたが、ASCIIテキストの制限を考慮した。
 #. i18n-hint abbreviates negative infinity
 #: plug-ins/sample-data-export.ny
 msgid "[-inf]"
 msgstr "[-inf]"
 
-# ja: ヘッダーなし＆「左チャンネルを最初に」
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left Channel.~%~%"
 msgstr "左チャンネル:~%~%"
 
-# ja: ヘッダーなし＆「左チャンネルを最初に」
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~%~%Right Channel.~%~%"
@@ -21647,21 +21085,16 @@ msgstr "~%~%右チャンネル~%~%"
 msgid "~aData written to:~%~a"
 msgstr "~aデータをエクスポートしました:~%~a"
 
-# ja: 最低限ヘッダー
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a"
 msgstr "サンプリング周波数: ~a Hz。サンプル値スケール: ~a。~%~a~%~a"
 
-# ja: HTMLの完了ダイアログ
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid ""
-"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr ""
-"~a   ~a~%~aサンプリング周波数: ~a Hz。~%処理長さ: ~a サンプル、~a 秒。~a"
+msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr "~a   ~a~%~aサンプリング周波数: ~a Hz。~%処理長さ: ~a サンプル、~a 秒。~a"
 
-# ja: 標準ヘッダー
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
@@ -21671,34 +21104,27 @@ msgstr ""
 "~a   ~a~%~aサンプリング周波数: ~a Hz。サンプル値スケール: ~a。~%~\n"
 "                     処理長さ: ~a サンプル、~a 秒。~a"
 
-# ja: 完全ヘッダー
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
-"~a ~\n"
-"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
-"Unweighted RMS: ~a dB.~%~\n"
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
 "~a~%サンプリング周波数: ~a Hz。サンプル値スケール: ~a。~a。~%~\n"
-"~a処理長さ: ~a サンプル、~a 秒。~%ピーク振幅: ~a（リニア）、~a dB。重みなし"
-"RMS: ~a dB。~%~\n"
+"~a処理長さ: ~a サンプル、~a 秒。~%ピーク振幅: ~a（リニア）、~a dB。重みなしRMS: ~a dB。~%~\n"
 "DC オフセット: ~a~a"
 
-# ja: 完全ヘッダーの最後（モノラル）
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a linear, ~a dB."
 msgstr "~a（リニア）、~a dB。"
 
-# ja: 完全ヘッダーの最後（ステレオ）
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "Left: ~a lin, ~a dB | Right: ~a lin, ~a dB."
 msgstr "左: ~a（リニア）、~a dB | 右: ~a（リニア）、~a dB。"
 
-# ja: 以下HTML
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a samples."
@@ -21788,9 +21214,7 @@ msgid ""
 "Produced with <span>Sample Data Export</span> for\n"
 "<a href=\"~a\">Audacity</a> by Steve\n"
 "Daulton"
-msgstr ""
-"<a href=\"~a\">Audacity</a> 用「<span>サンプルデータをエクスポート</span>」に"
-"よって制作。作者: Steve Daulton"
+msgstr "<a href=\"~a\">Audacity</a> 用「<span>サンプルデータをエクスポート</span>」によって制作。作者: Steve Daulton"
 
 #: plug-ins/sample-data-export.ny
 msgid "linear"
@@ -21869,11 +21293,6 @@ msgstr ""
 "「~a」を開けません。~%~\n"
 "ファイルが存在するかどうか確認してください。"
 
-# ja: オリジナルの訳注コピペ（SakiPapa 2023/1/8）
-# ※訳註:~%~
-# 「サンプルデータの書き出し」機能で書き出したファイルの場合、日本語ヘッダーが原因となります。~%~
-# また、Audacity の言語設定を変更して英数字のみで書かれたヘッダーを書き出したとしても、ヘッダー自体を行頭セミコロンでコメントアウトしないと別のエラーが出てしまいます。~%~
-# 他にも色々と制限があるので、詳細はマニュアルの「Sample Data Import」記事→「Obtaining suitable data」項を参照してください（英語）。
 #: plug-ins/sample-data-import.ny
 #, lisp-format
 msgid ""
@@ -21885,18 +21304,10 @@ msgstr ""
 "ファイルはプレーン ASCII テキストだけで書かれている必要があります。~%~\n"
 "（不正なバイト値「~a」がバイト番号 ~a に見つかりました）~%~\n"
 "※訳註:~%~\n"
-"「サンプルデータをエクスポート」機能でエクスポートしたファイルの場合、日本語"
-"ヘッダーがエラーの原因となります。~%~\n"
-"Audacity の言語設定を変更してエクスポートしても、ヘッダー自体を行頭セミコロン"
-"でコメントアウトしないと別のエラーが出てしまいます。~%~\n"
-"ほかにも色々と制限があるので、詳細はマニュアルの「Tools > Sample Data Import "
-"> Obtaining suitable data」を参照してください（英語）。"
+"「サンプルデータをエクスポート」機能でエクスポートしたファイルの場合、日本語ヘッダーがエラーの原因となります。~%~\n"
+"Audacity の言語設定を変更してエクスポートしても、ヘッダー自体を行頭セミコロンでコメントアウトしないと別のエラーが出てしまいます。~%~\n"
+"ほかにも色々と制限があるので、詳細はマニュアルの「Tools > Sample Data Import > Obtaining suitable data」を参照してください（英語）。"
 
-# ja: オリジナルの訳注コピペ（SakiPapa 2023/1/8）
-# ※訳註:~%~
-# 「サンプルデータの書き出し」機能で書き出したファイルの場合、日本語ヘッダーが原因となります。~%~
-# また、Audacity の言語設定を変更して英数字のみで書かれたヘッダーを書き出したとしても、ヘッダー自体を行頭セミコロンでコメントアウトしないと別のエラーが出てしまいます。~%~
-# 他にも色々と制限があるので、詳細はマニュアルの「Sample Data Import」記事→「Obtaining suitable data」項を参照してください（英語）。
 #: plug-ins/sample-data-import.ny
 #, lisp-format
 msgid ""
@@ -21908,12 +21319,9 @@ msgstr ""
 "データはプレーン ASCII テキストによる数値で表す必要があります。~%~\n"
 "「~a」は数値ではありません。~%~%~\n"
 "※訳註:~%~\n"
-"「サンプルデータをエクスポート」機能でエクスポートしたファイルの場合、日本語"
-"ヘッダーがエラーの原因となります。~%~\n"
-"Audacity の言語設定を変更してエクスポートしても、ヘッダー自体を行頭セミコロン"
-"でコメントアウトしないと別のエラーが出てしまいます。~%~\n"
-"ほかにも色々と制限があるので、詳細はマニュアルの「Tools > Sample Data Import "
-"> Obtaining suitable data」を参照してください（英語）。"
+"「サンプルデータをエクスポート」機能でエクスポートしたファイルの場合、日本語ヘッダーがエラーの原因となります。~%~\n"
+"Audacity の言語設定を変更してエクスポートしても、ヘッダー自体を行頭セミコロンでコメントアウトしないと別のエラーが出てしまいます。~%~\n"
+"ほかにも色々と制限があるので、詳細はマニュアルの「Tools > Sample Data Import > Obtaining suitable data」を参照してください（英語）。"
 
 #: plug-ins/sample-data-import.ny
 #, lisp-format
@@ -21927,9 +21335,7 @@ msgstr "スペクトル削除"
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr ""
-"エラー。~%トラックにおける 100 Hz 未満のサンプリング周波数はサポートされませ"
-"ん。"
+msgstr "エラー。~%トラックにおける 100 Hz 未満のサンプリング周波数はサポートされません。"
 
 #: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
@@ -21939,7 +21345,6 @@ msgstr "トレモロ"
 msgid "Waveform type"
 msgstr "波形の種類"
 
-# ja: ディザリング手法の1つ。ピーク振幅はシェープドより小さいが、ノイズの広域集中が少ない
 #: plug-ins/tremolo.ny
 msgid "Triangle"
 msgstr "三角"
@@ -21996,7 +21401,6 @@ msgstr "ホワイトノイズの振幅（パーセント）"
 msgid "Amplitude of Radar Needles (percent)"
 msgstr "（キャリアとなる）パルス列の振幅（パーセント）"
 
-# ja: “rader needles” の直訳。連続した一連のパルス波のことで “pulse train” とも。スピーチシンセサイザーで用いるらしい。Winkipedia の “Dirac comb” を見よとあるのだが（日本語では「くし型関数」などいろいろな呼称がされるとのこと）。vocoder処理前に加える。「ホワイトノイズ」より周波数帯域がより広いんだとか。
 #: plug-ins/vocoder.ny
 msgid "Frequency of Radar Needles (Hz)"
 msgstr "（キャリアとなる）パルス列の周波数（Hz）"
@@ -22052,3 +21456,7 @@ msgstr "ボーカルを消去"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "スペクトルツール"
+
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr "レガシー"

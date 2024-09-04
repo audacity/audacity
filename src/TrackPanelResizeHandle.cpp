@@ -155,6 +155,9 @@ UIHandle::Result TrackPanelResizeHandle::Drag
 
    auto &view = ChannelView::Get(*theChannel);
 
+   if (view.GetMinimized() && mMode == IsResizingBetweenLinkedTracks)
+      return RefreshCode::Cancelled;
+
    const wxMouseEvent &event = evt.event;
 
    int delta = (event.m_y - mMouseClickY);
@@ -184,7 +187,7 @@ UIHandle::Result TrackPanelResizeHandle::Drag
    // Common pieces of code for MONO_WAVE_PAN and otherwise.
    auto doResizeBelow = [&] (Channel *prev) {
       // TODO: more-than-two-channels
-      
+
       auto &prevView = ChannelView::Get(*prev);
 
       double proportion = static_cast < double >(mInitialTrackHeight)

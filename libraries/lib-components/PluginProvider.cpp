@@ -7,6 +7,8 @@
 **********************************************************************/
 #include "PluginProvider.h"
 
+PluginProvider::Validator::~Validator() = default;
+
 PluginProvider::~PluginProvider() = default;
 
 bool PluginProvider::SupportsCustomModulePaths() const

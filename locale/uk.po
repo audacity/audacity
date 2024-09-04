@@ -6,20 +6,20 @@
 # Yuri Chornoivan <yurchor@ukr.net>, 2024.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2024-07-03 11:41+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
+"PO-Revision-Date: 2024-08-02 16:37+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian\n"
+"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11"
+" ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100"
+" > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n %"
+" 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Lokalize 23.04.3\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -738,7 +738,8 @@ msgstr "Audacity не вдалося прочитати дані з файла �
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgid ""
+"Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr ""
 "Audacity вдалося успішно записати файл до %s, але не вдалося перейменувати "
 "його на %s."
@@ -1330,13 +1331,13 @@ msgstr ""
 "Використовуйте лише модулі з надійних джерел"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Так"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Ні"
 
@@ -1407,7 +1408,8 @@ msgstr "Не вдалося відкрити файл для вивантаже�
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Під час спроби ініціалізації шару вводу-виводу midi сталася помилка.\n"
+msgstr ""
+"Під час спроби ініціалізації шару вводу-виводу midi сталася помилка.\n"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid ""
@@ -2991,18 +2993,12 @@ msgid "Wave Track"
 msgstr "Хвильова доріжка"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -8431,8 +8427,9 @@ msgstr "Частота запису журналу"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8775,7 +8772,8 @@ msgstr "Стиль експортованих міток:"
 
 #: src/LabelTrack.cpp
 msgid "Importing WebVTT files is not currently supported."
-msgstr "У поточній версії не передбачено підтримки імпортування файлів WebVTT."
+msgstr ""
+"У поточній версії не передбачено підтримки імпортування файлів WebVTT."
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -9029,7 +9027,7 @@ msgstr "Вимкнути"
 msgid "Enable"
 msgstr "Увімкнути"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Тип"
 
@@ -9137,8 +9135,8 @@ msgstr "Позначено надто мало сумісних доріжок"
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s №%d"
+msgid "%s.%d"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -11441,7 +11439,8 @@ msgstr "Внутрішня довжина з&гасання:"
 msgid "Inner &fade up length:"
 msgstr "Внутрішня дов&жина наростання:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "По&ріг:"
 
@@ -11775,7 +11774,7 @@ msgstr "Має бути позначено не менше за %d семплі�
 msgid "&Threshold (lower is more sensitive):"
 msgstr "Поро&гове значення (нижче значення — більша чутливість):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Порогове значення"
 
@@ -11792,7 +11791,8 @@ msgid "Compressor"
 msgstr "Компресор"
 
 #: src/effects/Compressor.cpp
-msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
+msgid ""
+"Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr ""
 "Звужує «динамічний діапазон» або різницю між голосними і тихими частинами."
 
@@ -12189,7 +12189,7 @@ msgstr "Обмежувач перкусії"
 msgid "Upper Threshold"
 msgstr "Верхнє порогове значення"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Нижній поріг шуму"
 
@@ -13087,8 +13087,126 @@ msgstr "Інвертування"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Віддзеркалює звукові семпли вертикально, змінюючи їхню полярність"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+msgid "Legacy Compressor"
+msgstr "Застарілий компресор"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Стискає динамічний діапазон звукових даних"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d дБ"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f секунд"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f секунд"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Коефіцієнт: %.0f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Коефіцієнт: %.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "Ни&жній поріг шуму:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "&Коефіцієнт:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Коефіцієнт"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "&Час наростання:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "Час наростання"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "Ч&ас випуску:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "Час випуску"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "&Косметичне підсилення для 0 дБ після стискання"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "Стисн&ути на основі пікових значень"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Поріг: %d дБ"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "Нижній поріг шуму %d дБ"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Час наростання: %.2f секунд"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "Час випуску: %.1f секунд"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Обмежувач"
 
@@ -13998,11 +14116,6 @@ msgstr "Відновити типові"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
-msgid "%.2f secs"
-msgstr "%.2f секунд"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
 msgid "%.3f"
 msgstr "%.3f"
 
@@ -14570,7 +14683,8 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
-msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
+msgid ""
+"error: File \"%s\" specified in header but not found in plug-in path.\n"
 msgstr ""
 "помилка: файл «%s» вказано у заголовку, але не знайдено у каталозі "
 "додатків.\n"
@@ -14882,7 +14996,8 @@ msgstr ""
 
 #: src/export/ExportAudioDialog.cpp
 #, c-format
-msgid "Something went really wrong after exporting the following %lld file(s)."
+msgid ""
+"Something went really wrong after exporting the following %lld file(s)."
 msgstr ""
 "Після експортування %lld файлів з наведеними нижче назвами щось пішло не так."
 
@@ -17467,7 +17582,8 @@ msgstr "Налаштування імпортування/експортуван
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&witch view to Beats and Measures and align with musical grid"
-msgstr "П&еремкнути перегляд на біти і розміри і вирівняти за музичною ґраткою"
+msgstr ""
+"П&еремкнути перегляд на біти і розміри і вирівняти за музичною ґраткою"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ask me each time"
@@ -17504,7 +17620,8 @@ msgstr "Зараз ви не можете налаштувати клавіат�
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
-msgstr "Відкрийте новий проєкт, щоб мати змогу змінити клавіатурні скорочення."
+msgstr ""
+"Відкрийте новий проєкт, щоб мати змогу змінити клавіатурні скорочення."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Hotkey:"
@@ -19713,20 +19830,28 @@ msgid "WaveColor Change"
 msgstr "Зміна кольору хвилі"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
-msgstr "Змінити нижню межу швидкості (%) на:"
+msgid "Change Speed Limits"
+msgstr "Змінити межі швидкості"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
-msgstr "Межа зниження швидкості"
+msgid "Change speed limit (%) to:"
+msgstr "Змінити межу швидкості (%) на:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Змінити верхню межу швидкості (%) на:"
+msgid "Lower Speed Limit"
+msgstr "Нижня межа швидкості"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
+msgid "Upper Speed Limit"
 msgstr "Верхня межа швидкості"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr "Верхня межа швидкості має перевищувати нижню межу швидкості"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Invalid Limits"
+msgstr "Некоректні межі"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19777,13 +19902,6 @@ msgstr "&Діапазон…"
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Логарифмічна &інтерполяція"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"У цій версії Audacity можна використовувати лише по одній доріжці у кожному "
-"з вікон проєкту."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20458,7 +20576,7 @@ msgstr "Поличний фільтр"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -20594,7 +20712,7 @@ msgstr "Полиці редагування спектра"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20776,7 +20894,8 @@ msgstr "Помилка.~%Некоректне позначення.~%Позна�
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgid ""
+"Error.~%Invalid selection.~%Empty space at start/ end of the selection."
 msgstr ""
 "Помилка.~%Некоректне позначення.~%Порожнє місце на початку або наприкінці "
 "позначеного фрагмента."
@@ -21131,7 +21250,8 @@ msgstr "~aг ~aх ~aс"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Виявлено надто багато фрагментів тиші.~%Додано лише перші 10000 міток."
+msgstr ""
+"Виявлено надто багато фрагментів тиші.~%Додано лише перші 10000 міток."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -21153,24 +21273,28 @@ msgstr ""
 "принаймні двох звуків.~%~\n"
 "Виявлено лише один звук."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+msgid "Legacy Limiter"
+msgstr "Застарілий обмежувач"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "М'яке обмеження"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Жорстке обмеження"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "М'яке обрізання"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Жорстке обрізання"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -21178,7 +21302,7 @@ msgstr ""
 "Вхідне підсилення (дБ)\n"
 "моно/лівий"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -21186,15 +21310,15 @@ msgstr ""
 "Вхідне підсилення (дБ)\n"
 "Правий канал"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Обмеження (у дБ)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Призупинення (мс)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "Застосувати підсилення"
 
@@ -22045,3 +22169,27 @@ msgstr "Вилучення вокалу"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Спектральні інструменти"
+
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr "Застарілі"
+
+#, c-format
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#, c-format
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s №%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Змінити верхню межу швидкості (%) на:"
+
+#~ msgid ""
+#~ "This version of Audacity only allows one time track for each project "
+#~ "window."
+#~ msgstr ""
+#~ "У цій версії Audacity можна використовувати лише по одній доріжці у "
+#~ "кожному з вікон проєкту."

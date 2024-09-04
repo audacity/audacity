@@ -268,12 +268,8 @@ void OnShowClipping(const CommandContext &context)
    auto &commandManager = CommandManager::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
 
-   bool checked = !gPrefs->Read(wxT("/GUI/ShowClipping"), 0L);
-   gPrefs->Write(wxT("/GUI/ShowClipping"), checked);
+   ShowClippingPref().Toggle();
    gPrefs->Flush();
-   commandManager.Check(wxT("ShowClipping"), checked);
-
-   PrefsListener::Broadcast(ShowClippingPrefsID());
 
    trackPanel.Refresh(false);
 }
@@ -345,7 +341,7 @@ auto ViewMenu()
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
          Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
             OnShowClipping, AlwaysEnabledFlag,
-            Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) ),
+            Options{}.CheckTest( ShowClippingPref() ) ),
          Command( wxT("ShowRMS"), XXO("Sho&w RMS in Waveform"),
             OnShowRMS, AlwaysEnabledFlag,
             Options{}.CheckTest( ShowRMSPref() ) )

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2014-11-21 21:02-0000\n"
 "Last-Translator: Aram Vardanyan\n"
 "Language-Team: Armenian <aramvardanyan@gmx.com>\n"
@@ -1312,13 +1312,13 @@ msgstr ""
 "Միշտ օգտվել վստահելի աղբյուրների մոդուլներից"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Այո"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Ոչ"
 
@@ -2966,17 +2966,11 @@ msgid "Wave Track"
 msgstr "Տեղափոխել ձայնագրություն"
 
 #. i18n-hint Template for clip name generation on copy-paste
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s %i"
+msgid "%s.%i"
 msgstr ""
 
 #: libraries/lib-wave-track/WaveTrack.cpp
@@ -8379,8 +8373,9 @@ msgstr "Մուտքային հաճախականություն"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8974,7 +8969,7 @@ msgstr "Անջատված է"
 msgid "Enable"
 msgstr "Միացված է"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Type"
 msgstr "&Զտման տեսակը՝"
@@ -9084,7 +9079,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
+msgid "%s.%d"
 msgstr ""
 
 #: src/ProjectAudioManager.cpp
@@ -11459,7 +11454,8 @@ msgstr "Ներքին մթացում ներգևի երկարությամբ՝"
 msgid "Inner &fade up length:"
 msgstr "Ներքին մթացում վերևի երկարությամբ՝"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 #, fuzzy
 msgid "&Threshold:"
 msgstr "Մուտք՝"
@@ -11830,7 +11826,7 @@ msgstr "Նշվածը պետք է մեծ լինի քան %d նշումները:"
 msgid "&Threshold (lower is more sensitive):"
 msgstr "Շեմ (Ցածրում ավելի զգայուն)՝"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Շեմ"
 
@@ -12254,7 +12250,7 @@ msgstr ""
 msgid "Upper Threshold"
 msgstr "Շեմ"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Աղմուկի ծածկ"
 
@@ -13195,8 +13191,133 @@ msgstr "Շրջել"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Խտացնող"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr ""
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d դԲ"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, fuzzy, c-format
+msgid "%.2f secs"
+msgstr "%.1f վարկյ."
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f վարկյ."
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Հարաբերակցում %.0f ից 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Հարաբերակցում %.1f ից 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Noise Floor:"
+msgstr "Աղմուկի ծածկ՝"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Ratio:"
+msgstr "Հարաբերակցում՝"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Հարաբերակցում"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Attack Time:"
+msgstr "Գրոհի ժամ՝"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "Գրոհի ժամ"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "R&elease Time:"
+msgstr "Ազատ ժամանակ՝"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "Ազատ ժամանակ"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "Ձևափոխման ավելացում 0 դԲ -ի խտացումից հետո"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "C&ompress based on Peaks"
+msgstr "Խտացում պիկի բազայի վրա"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Շեմը %d դԲ"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "Աղմուկի ծածկ %d դԲ"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Գրոհի ժամ %.1f վարկյ."
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "Մնաց ժամանակ %.1f վարկյ."
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Limiter"
 msgstr "Սահմանափակիչ"
@@ -14145,11 +14266,6 @@ msgstr "&Նախնական"
 #, fuzzy
 msgid "Restore Defaults"
 msgstr "Դնել լռ&ելյայն"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, fuzzy, c-format
-msgid "%.2f secs"
-msgstr "%.1f վարկյ."
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -20197,20 +20313,33 @@ msgid "WaveColor Change"
 msgstr "Ձայնաչափի բաժնի փոխում"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "Փոխված արագություն"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "Փոխել դանդաղ արագացման սանդղակը (%) -ի՝"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "Դանդաղ արագացման սանդղակ"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Փոխել արագ նվագարկման սանդղակը (%) -ի"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "Արագ նվագարկման սանդղակ"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Արագ նվագարկման սանդղակ"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "Սահմանափակիչ"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, fuzzy, c-format
@@ -20264,10 +20393,6 @@ msgstr "Անվանափոխել..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Լոգարիթմային &միջարկում"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Աուդասիթիի այս տարբերակը միայն աջակցում է մեկ ժամի ձայն. ֆայլ, պրեկտի ոշոր պատուհաններում:"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20964,7 +21089,7 @@ msgstr "Ֆիլտրերի երկարությամբ"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 #, fuzzy
@@ -21094,7 +21219,7 @@ msgstr "Տեղավորել նշվածը"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -21706,49 +21831,54 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "Սահմանափակիչ"
+
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Soft Limit"
 msgstr "Սահմանափակիչ"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Hard Limit"
 msgstr "Սահմանափակիչ"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Soft Clip"
 msgstr "Հաջորդը գործիք"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Hard Clip"
 msgstr "Գտնել անջատում"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Limit to (dB)"
 msgstr "Փուլ (դԲ)՝"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Apply Make-up Gain"
 msgstr "Հաստատել շղթան"
@@ -22652,6 +22782,16 @@ msgstr "Հեռացնել ձայնագրություն"
 msgid "Spectral Tools"
 msgstr "Սպեկտր"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr ""
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Փոխել արագ նվագարկման սանդղակը (%) -ի"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "Աուդասիթիի այս տարբերակը միայն աջակցում է մեկ ժամի ձայն. ֆայլ, պրեկտի ոշոր պատուհաններում:"
+
 #, fuzzy
 #~ msgid "Master effects"
 #~ msgstr "Դիտում"
@@ -22738,70 +22878,6 @@ msgstr "Սպեկտր"
 #, fuzzy
 #~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
 #~ msgstr " <a href=\"http://forum.audacityteam.org/\">Ֆորում</a> (տուր քո հարցը միանգամից ինտերնետում)"
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d դԲ"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f վարկյ."
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "Հարաբերակցում %.0f ից 1"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "Հարաբերակցում %.1f ից 1"
-
-#, fuzzy
-#~ msgid "&Noise Floor:"
-#~ msgstr "Աղմուկի ծածկ՝"
-
-#, fuzzy
-#~ msgid "&Ratio:"
-#~ msgstr "Հարաբերակցում՝"
-
-#~ msgid "Ratio"
-#~ msgstr "Հարաբերակցում"
-
-#, fuzzy
-#~ msgid "&Attack Time:"
-#~ msgstr "Գրոհի ժամ՝"
-
-#~ msgid "Attack Time"
-#~ msgstr "Գրոհի ժամ"
-
-#, fuzzy
-#~ msgid "R&elease Time:"
-#~ msgstr "Ազատ ժամանակ՝"
-
-#~ msgid "Release Time"
-#~ msgstr "Ազատ ժամանակ"
-
-#, fuzzy
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "Ձևափոխման ավելացում 0 դԲ -ի խտացումից հետո"
-
-#, fuzzy
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "Խտացում պիկի բազայի վրա"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "Շեմը %d դԲ"
-
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "Աղմուկի ծածկ %d դԲ"
-
-#, fuzzy
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "Գրոհի ժամ %.1f վարկյ."
-
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "Մնաց ժամանակ %.1f վարկյ."
 
 #~ msgid "Warnings"
 #~ msgstr "Զգուշացումներ"

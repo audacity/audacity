@@ -61,13 +61,11 @@ public:
    void SetColours(int iColorIndex);
 
    void UpdatePrefs() override;
-   void UpdateSelectedPrefs( int id ) override;
 
    TrackPanel *parent;
 
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
-   bool mShowClipping;        // "/GUI/ShowClipping"
    int  mSampleDisplay;
 
    wxBrush blankBrush;

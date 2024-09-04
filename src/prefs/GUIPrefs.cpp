@@ -222,15 +222,15 @@ bool GUIPrefs::Commit()
    return true;
 }
 
-int ShowClippingPrefsID()
-{
-   static int value = wxNewId();
-   return value;
-}
-
 BoolSetting& ShowRMSPref()
 {
    static BoolSetting pref { "/GUI/ShowRMS", false };
+   return pref;
+}
+
+BoolSetting& ShowClippingPref()
+{
+   static BoolSetting pref { "/GUI/ShowClipping", false };
    return pref;
 }
 

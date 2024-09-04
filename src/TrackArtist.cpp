@@ -67,7 +67,6 @@ TrackArtist::TrackArtist( TrackPanel *parent_ )
    : parent( parent_ )
 {
    mdBrange = DecibelScaleCutoff.GetDefault();
-   mShowClipping = false;
    mSampleDisplay = 1;// Stem plots by default.
 
    SetColours(0);
@@ -155,18 +154,10 @@ void TrackArtist::SetColours( int iColorIndex)
    }
 }
 
-void TrackArtist::UpdateSelectedPrefs( int id )
-{
-   if( id == ShowClippingPrefsID())
-      mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
-}
-
 void TrackArtist::UpdatePrefs()
 {
    mdBrange = DecibelScaleCutoff.Read();
    mSampleDisplay = TracksPrefs::SampleViewChoice();
-
-   UpdateSelectedPrefs( ShowClippingPrefsID() );
 
    SetColours(0);
 }

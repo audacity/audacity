@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2024-07-03 15:39+0200\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
+"PO-Revision-Date: 2024-08-03 10:50+0200\n"
 "Last-Translator: Thomas Breinstrup\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -557,17 +557,17 @@ msgstr "Smack Explosion SFX"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Master Limiter"
-msgstr "Master Limiter"
+msgstr "Master-begrænser"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "SFX Limiter"
-msgstr "SFX Limiter (lydeffekter)"
+msgstr "SFX-begrænser (lydeffekter)"
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "VO Limiter"
-msgstr "VO Limiter (voice over)"
+msgstr "VO-begrænser (voice over)"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1311,13 +1311,13 @@ msgstr ""
 "Brug kun moduler fra troværdige kilder"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Ja"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Nej"
 
@@ -2963,18 +2963,12 @@ msgid "Wave Track"
 msgstr "Bølgespor"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -6763,7 +6757,7 @@ msgstr "Om %s"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "Dansk oversættelse af Thomas Breinstrup og scootergrisen"
+msgstr "Dansk oversættelse af Thomas Breinstrup"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8349,8 +8343,9 @@ msgstr "Log hyppighed"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8944,7 +8939,7 @@ msgstr "Deaktivér"
 msgid "Enable"
 msgstr "Aktivér"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Type"
 
@@ -9050,8 +9045,8 @@ msgstr "For få kompatible spor markeret"
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s #%d"
+msgid "%s.%d"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -11342,7 +11337,8 @@ msgstr "Længde på indre u&dtoning:"
 msgid "Inner &fade up length:"
 msgstr "Længde på indre o&ptoning:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "&Tærskel:"
 
@@ -11674,7 +11670,7 @@ msgstr "Markeringen skal være større end %d datapunkter."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Tærskel (lavere er mere følsom):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Tærskel"
 
@@ -12083,13 +12079,13 @@ msgstr "Fuldbølge-ensretter (jævnstrømsblokeret)"
 
 #: src/effects/Distortion.cpp
 msgid "Percussion Limiter"
-msgstr "Percussion begrænser"
+msgstr "Percussion-begrænser"
 
 #: src/effects/Distortion.cpp
 msgid "Upper Threshold"
 msgstr "Øvre tærskel"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Grundstøj"
 
@@ -12982,8 +12978,126 @@ msgstr "Invertér"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Vender lydens datapunkter på hovedet, så polariteten vendes"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+msgid "Legacy Compressor"
+msgstr "Klassisk kompressor"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Komprimér lydens dynamiske område"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f sekunder"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f sekunder"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Forhold %.0f til 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Forhold %.1f til 1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "&Grundstøj:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "&Forhold:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Forhold"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "&Anslagstid:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "Anslagstid"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "&Udklingningstid:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "Udklingningstid"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "&Korrigér forstærkning til 0 dB efter komprimering"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "&Komprimér ud fra spidspunkter"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Grænse %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "Grundstøj %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Anslagstid %.2f sekunder"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "Udklingningstid %.1f sekunder"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Begrænser"
 
@@ -13885,11 +13999,6 @@ msgstr "Brug standarder"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Genskab standarder"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f sekunder"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19579,20 +19688,28 @@ msgid "WaveColor Change"
 msgstr "Ændring af bølgefarve"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
-msgstr "Ret nederste hastighedsgrænse (%) til:"
+msgid "Change Speed Limits"
+msgstr "Ændr hastighed"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+msgid "Change speed limit (%) to:"
+msgstr "Ret hastighedsgrænse (%) til:"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Lower Speed Limit"
 msgstr "Nedre hastighedsgrænse"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Ret øverste hastighedsgrænse (%) til:"
+msgid "Upper Speed Limit"
+msgstr "Øvre hastighedsgrænse"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Øvre hastighedsgrænse"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr "Den øvre hastighedsgrænse skal være større end den nedre"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Invalid Limits"
+msgstr "Ugyldige grænser"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19643,12 +19760,6 @@ msgstr "&Område..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Logaritmisk &interpolation"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid ""
-"This version of Audacity only allows one time track for each project window."
-msgstr ""
-"Denne version af Audacity tillader kun én tidslinje for hvert projektvindue."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20312,7 +20423,7 @@ msgstr "Shelving-filter (reducér/forøg signaler over fastsat frekvens)"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -20448,7 +20559,7 @@ msgstr "Spektrumredigeringshylder"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -21006,24 +21117,28 @@ msgstr ""
 "                 mindst to lydstykker.~%~\n"
 "                 Her er der kun et lydstykke."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+msgid "Legacy Limiter"
+msgstr "Klassisk begrænser"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "Blød grænse"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Hård grænse"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Blød klipning"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Hård klipning"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -21031,7 +21146,7 @@ msgstr ""
 "Input-forstærkning (dB)\n"
 "mono/venstre"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -21039,15 +21154,15 @@ msgstr ""
 "Input-forstærkning (dB)\n"
 "Højre kanal"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Begræns til (dB)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Hold (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "Anvend korrigeret forstærkning"
 
@@ -21895,6 +22010,30 @@ msgstr "Fjern vokal"
 msgid "Spectral Tools"
 msgstr "Spektrogramværktøjer"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr "Klassisk"
+
+#, c-format
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#, c-format
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s #%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Ret øverste hastighedsgrænse (%) til:"
+
+#~ msgid ""
+#~ "This version of Audacity only allows one time track for each project "
+#~ "window."
+#~ msgstr ""
+#~ "Denne version af Audacity tillader kun én tidslinje for hvert "
+#~ "projektvindue."
+
 #~ msgid "Files are saved on your device."
 #~ msgstr "Filer gemmes på din enhed."
 
@@ -22025,76 +22164,6 @@ msgstr "Spektrogramværktøjer"
 #~ "online."
 #~ msgstr ""
 #~ " [[https://forum.audacityteam.org/|Forum]] - stil dit spørgsmål online."
-
-#~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "Komprimér lydens dynamiske område"
-
-#, c-format
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#, c-format
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f sekunder"
-
-#, c-format
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#, c-format
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#, c-format
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "Forhold %.0f til 1"
-
-#, c-format
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "Forhold %.1f til 1"
-
-#~ msgid "&Noise Floor:"
-#~ msgstr "&Grundstøj:"
-
-#~ msgid "&Ratio:"
-#~ msgstr "&Forhold:"
-
-#~ msgid "Ratio"
-#~ msgstr "Forhold"
-
-#~ msgid "&Attack Time:"
-#~ msgstr "&Anslagstid:"
-
-#~ msgid "Attack Time"
-#~ msgstr "Anslagstid"
-
-#~ msgid "R&elease Time:"
-#~ msgstr "&Udklingningstid:"
-
-#~ msgid "Release Time"
-#~ msgstr "Udklingningstid"
-
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "&Korrigér forstærkning til 0 dB efter komprimering"
-
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "&Komprimér ud fra spidspunkter"
-
-#, c-format
-#~ msgid "Threshold %d dB"
-#~ msgstr "Grænse %d dB"
-
-#, c-format
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "Grundstøj %d dB"
-
-#, c-format
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "Anslagstid %.2f sekunder"
-
-#, c-format
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "Udklingningstid %.1f sekunder"
 
 #~ msgid "Warnings"
 #~ msgstr "Advarsler"

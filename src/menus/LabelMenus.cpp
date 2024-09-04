@@ -160,6 +160,30 @@ void GetRegionsByLabel(
    }
 }
 
+
+auto GetTracksToEditByLabel(const AudacityProject& project, const TrackList& tracks)
+{
+   const bool syncLocked = SyncLockState::Get(project).IsSyncLocked();
+   const bool playableTrackSelected = !tracks.Selected<const PlayableTrack>().empty();
+
+   return [syncLocked, playableTrackSelected](const auto pTrack) {
+      // All sync-locked tracks should be edited,
+      // if sync lock is enabled regardless of selection
+      if (syncLocked) {
+         return SyncLock::IsSyncLockSelected(*pTrack);
+      }
+
+      // Non-playable tracks should not be edited if sync-lock disabled
+      if (dynamic_cast<const PlayableTrack*>(pTrack) == nullptr) {
+         return false;
+      }
+
+      // If no playable tracks were selected,
+      // then all tracks should be edited
+      return playableTrackSelected ? pTrack->IsSelected() : true;
+   };
+}
+
 using EditFunction = std::function<void(Track& track, double, double)>;
 using EditFunctionWithProgress =
    std::function<void(Track& track, double, double, ProgressReporter)>;
@@ -182,13 +206,7 @@ void EditByLabel(
    if (regions.empty())
       return;
 
-   const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
-                           (tracks.Selected<PlayableTrack>()).empty());
-
-   const auto tracksToEdit = tracks.Any<Track>() + [&](const auto pTrack) {
-      return SyncLock::IsSyncLockSelected(*pTrack) ||
-             (notLocked && dynamic_cast<const PlayableTrack*>(pTrack) != nullptr);
-   };
+   const auto tracksToEdit = tracks.Any<Track>() + GetTracksToEditByLabel(project, tracks);
 
    BasicUI::SplitProgress(
       tracksToEdit.begin(), tracksToEdit.end(),
@@ -237,8 +255,7 @@ void EditClipboardByLabel(AudacityProject &project,
    if (regions.empty())
       return;
 
-   const bool notLocked = (!SyncLockState::Get(project).IsSyncLocked() &&
-                           (tracks.Selected<PlayableTrack>()).empty());
+   const auto tracksToEdit = tracks.Any<Track>() + GetTracksToEditByLabel(project, tracks);
 
    auto &clipboard = Clipboard::Get();
    clipboard.Clear();
@@ -250,40 +267,44 @@ void EditClipboardByLabel(AudacityProject &project,
    //labeled regions in the end. This is to correctly perform
    //actions like 'Cut' which collapse the track area.
 
-   for (auto t : tracks) {
-      const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
-      if (SyncLock::IsSyncLockSelected(*t) || (notLocked && playable)) {
-         // These tracks accumulate the needed clips, right to left:
-         Track::Holder merged;
-         for (size_t i = regions.size(); i--;) {
-            const Region &region = regions.at(i);
-            if (auto dest = action(*t, region.start, region.end)) {
-               if (!merged)
-                  merged = dest;
-               else {
-                  // Paste to the beginning; unless this is the first region,
-                  // offset the track to account for time between the regions
-                  if (i + 1 < regions.size())
-                     merged->ShiftBy(
-                        regions.at(i + 1).start - region.end);
+   for (auto t : tracksToEdit) {
+      // These tracks accumulate the needed clips, right to left:
+      Track::Holder merged;
+      for (size_t i = regions.size(); i--;) {
+         const Region &region = regions.at(i);
+         if (auto dest = action(*t, region.start, region.end)) {
+            if (!merged)
+               merged = dest;
+            else {
+               // Paste to the beginning; unless this is the first region,
+               // offset the track to account for time between the regions
+               if (i + 1 < regions.size())
+                  merged->ShiftBy(
+                     regions.at(i + 1).start - region.end);
 
-                  // dest may have a placeholder clip at the end that is
-                  // removed when pasting, which is okay because we proceed
-                  // right to left.  Any placeholder already in merged is kept.
-                  // Only the rightmost placeholder is important in the final
-                  // result.
-                  merged->Paste(0.0, *dest);
-               }
+               // If GetEditClipsCanMove is not set, we need to manually
+               // shift the merged track by the end time of the dest clip,
+               // to make room for pasting because Paste does not
+               // handle shifting in this case.
+               if (!GetEditClipsCanMove())
+                  merged->ShiftBy(dest->GetEndTime());
+
+               // dest may have a placeholder clip at the end that is
+               // removed when pasting, which is okay because we proceed
+               // right to left.  Any placeholder already in merged is kept.
+               // Only the rightmost placeholder is important in the final
+               // result.
+               merged->Paste(0.0, *dest);
             }
-            else
-               // nothing copied but there is a 'region', so the 'region' must
-               // be a 'point label' so offset
-               if (i + 1 < regions.size() && merged)
-                  merged->ShiftBy(regions.at(i + 1).start - region.end);
          }
-         if (merged)
-            newClipboard.Add(merged);
+         else
+            // nothing copied but there is a 'region', so the 'region' must
+            // be a 'point label' so offset
+            if (i + 1 < regions.size() && merged)
+               merged->ShiftBy(regions.at(i + 1).start - region.end);
       }
+      if (merged)
+         newClipboard.Add(merged);
    }
 
    // Survived possibility of exceptions.  Commit changes to the clipboard now.
@@ -605,7 +626,12 @@ void OnJoinLabels(const CommandContext &context)
 
    auto editfunc = [&](Track& track, double t0, double t1, ProgressReporter reportProgress) {
       track.TypeSwitch(
-         [&](WaveTrack& t) { t.Join(t0, t1, std::move(reportProgress)); });
+         [&](WaveTrack& t) {
+            // Extend Join Region by one sample, to ensure
+            // that Split-Join operation on a given label is reversible and consistent
+            const auto sampleTime = 1.0 / t.GetRate();
+            t.Join(t0 - sampleTime, t1 + sampleTime, std::move(reportProgress));
+         });
    };
    TimeStretching::WithClipRenderingProgress(
       [&](ProgressReporter progress) {

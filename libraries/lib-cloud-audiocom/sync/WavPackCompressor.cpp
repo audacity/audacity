@@ -198,7 +198,10 @@ struct Importer final
    bool IsValid() const
    {
       return Context != nullptr && SamplesCount > 0 &&
-             Format != undefinedSample && BlockId >= 0;
+             Format != undefinedSample &&
+             //The negative BlockId means silenced blocks and it's absolute value encodes it's length
+             //Older projects used to store them on the cloud as regular blocks.
+             ((BlockId >= 0) || (BlockId < 0 && -BlockId == SamplesCount));
    }
 
    Importer(const void* data, const int64_t size)

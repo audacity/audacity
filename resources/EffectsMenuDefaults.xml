@@ -43,7 +43,6 @@
             <Effect>Low-Pass Filter</Effect>
             <Effect>Shelf Filter</Effect>
             <Effect>Notch Filter</Effect>
-            <Effect>Classic Filters</Effect>
         </Effects>
     </Group>
     <Group>
@@ -94,5 +93,13 @@
             <Effect>Spectral Edit Parametric EQ</Effect>
             <Effect>Spectral Edit Shelves</Effect>
         </Effects>
+    </Group>
+    <Group>
+        <Name>Legacy</Name>
+        <Effects>
+            <Effect>Legacy Compressor</Effect>
+            <Effect>Legacy Limiter</Effect>
+            <Effect>Classic Filters</Effect>
+         </Effects>
     </Group>
 </EffectMenuList>
