@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  SoundTouchEffect.h
+  SoundTouchBase.h
 
   Dominic Mazzoni, Vaughan Johnson
 
@@ -12,15 +12,12 @@
 
 **********************************************************************/
 
-
-
 #if USE_SOUNDTOUCH
 
 #ifndef __AUDACITY_EFFECT_SOUNDTOUCH__
 #define __AUDACITY_EFFECT_SOUNDTOUCH__
 
 #include "StatefulEffect.h"
-#include "StatefulEffectUIServices.h"
 
 // forward declaration of a class defined in SoundTouch.h
 // which is not included here
@@ -33,19 +30,17 @@ class NoteTrack;
 class WaveChannel;
 class WaveTrack;
 
-class EffectSoundTouch /* not final */ :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class BUILTIN_EFFECTS_API SoundTouchBase /* not final */ : public StatefulEffect
 {
 public:
 
-   // EffectSoundTouch implementation
+   // SoundTouchBase implementation
 
 #ifdef USE_MIDI
    double mSemitones; // pitch change for NoteTracks
-   EffectSoundTouch();
+   SoundTouchBase();
 #endif
-   ~EffectSoundTouch() override;
+   ~SoundTouchBase() override;
 
 protected:
    // Effect implementation

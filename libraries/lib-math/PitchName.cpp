@@ -16,14 +16,9 @@
 
 *//*******************************************************************/
 
-
-
 #include "PitchName.h"
-
-#include <math.h>
-
 #include "Internat.h"
-
+#include <math.h>
 
 double FreqToMIDInote(const double freq)
 {

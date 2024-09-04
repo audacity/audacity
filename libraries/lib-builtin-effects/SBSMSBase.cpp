@@ -2,7 +2,7 @@
 
 Audacity: A Digital Audio Editor
 
-SBSMSEffect.cpp
+SBSMSBase.cpp
 
 Clayton Otey
 
@@ -11,7 +11,7 @@ effect that uses SBSMS to do its processing (TimeScale)
 
 **********************************************************************/
 #if USE_SBSMS
-#include "SBSMSEffect.h"
+#include "SBSMSBase.h"
 #include "EffectOutputTracks.h"
 
 #include <math.h>
@@ -146,7 +146,7 @@ long postResampleCB(void *cb_data, SBSMSFrame *data)
    return count;
 }
 
-void EffectSBSMS :: setParameters(double rateStartIn, double rateEndIn, double pitchStartIn, double pitchEndIn,
+void SBSMSBase :: setParameters(double rateStartIn, double rateEndIn, double pitchStartIn, double pitchEndIn,
                                   SlideType rateSlideTypeIn, SlideType pitchSlideTypeIn,
                                   bool bLinkRatePitchIn, bool bRateReferenceInputIn, bool bPitchReferenceInputIn)
 {
@@ -161,7 +161,7 @@ void EffectSBSMS :: setParameters(double rateStartIn, double rateEndIn, double p
    this->bPitchReferenceInput = bPitchReferenceInputIn;
 }
 
-void EffectSBSMS::setParameters(double tempoRatio, double pitchRatio)
+void SBSMSBase::setParameters(double tempoRatio, double pitchRatio)
 {
    setParameters(tempoRatio, tempoRatio, pitchRatio, pitchRatio,
                  SlideConstant, SlideConstant, false, false, false);
@@ -195,14 +195,14 @@ std::unique_ptr<TimeWarper> createTimeWarper(double t0, double t1, double durati
       return std::make_unique<IdentityTimeWarper>();
 }
 
-EffectType EffectSBSMS::GetType() const
+EffectType SBSMSBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // Labels inside the affected region are moved to match the audio; labels after
 // it are shifted along appropriately.
-bool EffectSBSMS::ProcessLabelTrack(LabelTrack *lt)
+bool SBSMSBase::ProcessLabelTrack(LabelTrack *lt)
 {
    auto warper1 = createTimeWarper(
       mT0, mT1, (mT1 - mT0) * mTotalStretch, rateStart, rateEnd, rateSlideType);
@@ -211,19 +211,19 @@ bool EffectSBSMS::ProcessLabelTrack(LabelTrack *lt)
    return true;
 }
 
-double EffectSBSMS::getInvertedStretchedTime(double rateStart, double rateEnd, SlideType slideType, double outputTime)
+double SBSMSBase::getInvertedStretchedTime(double rateStart, double rateEnd, SlideType slideType, double outputTime)
 {
    Slide slide(slideType,rateStart,rateEnd,0);
    return slide.getInverseStretchedTime(outputTime);
 }
 
-double EffectSBSMS::getRate(double rateStart, double rateEnd, SlideType slideType, double t)
+double SBSMSBase::getRate(double rateStart, double rateEnd, SlideType slideType, double t)
 {
    Slide slide(slideType,rateStart,rateEnd,0);
    return slide.getRate(t);
 }
 
-bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
+bool SBSMSBase::Process(EffectInstance &, EffectSettings &)
 {
    bool bGoodResult = true;
 
@@ -424,7 +424,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-void EffectSBSMS::Finalize(
+void SBSMSBase::Finalize(
    WaveTrack &orig, const WaveTrack &out, const TimeWarper &warper)
 {
    assert(orig.NChannels() == out.NChannels());

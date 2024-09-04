@@ -148,8 +148,6 @@ set( SOURCES
       MovableControl.cpp
       MovableControl.h
       NoteTrackEditing.cpp
-      PitchName.cpp
-      PitchName.h
       PluginDataModel.cpp
       PluginDataModel.h
       PluginDataViewCtrl.cpp
@@ -325,8 +323,6 @@ set( SOURCES
       effects/BasicEffectUIServices.h
       effects/BassTreble.cpp
       effects/BassTreble.h
-      effects/Biquad.cpp
-      effects/Biquad.h
       effects/ChangePitch.cpp
       effects/ChangePitch.h
       effects/ChangeSpeed.cpp
@@ -356,8 +352,6 @@ set( SOURCES
       effects/DynamicRangeProcessorPanelCommon.h
       effects/DynamicRangeProcessorTransferFunctionPanel.cpp
       effects/DynamicRangeProcessorTransferFunctionPanel.h
-      effects/EBUR128.cpp
-      effects/EBUR128.h
       effects/Echo.cpp
       effects/Echo.h
       effects/EffectEditor.cpp
@@ -423,17 +417,12 @@ set( SOURCES
       effects/Repeat.h
       effects/Reverb.cpp
       effects/Reverb.h
-      effects/Reverb_libSoX.h
-      effects/SBSMSEffect.cpp
-      effects/SBSMSEffect.h
       effects/ScienFilter.cpp
       effects/ScienFilter.h
       effects/ScoreAlignDialog.cpp
       effects/ScoreAlignDialog.h
       effects/Silence.cpp
       effects/Silence.h
-      effects/SoundTouchEffect.cpp
-      effects/SoundTouchEffect.h
       effects/StatefulEffectUIServices.cpp
       effects/StatefulEffectUIServices.h
       effects/StatelessPerTrackEffect.cpp
@@ -1024,8 +1013,6 @@ set( LIBRARIES
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
       $<$<BOOL:${USE_NYQUIST}>:libnyquist>
-      $<$<BOOL:${USE_SBSMS}>:libsbsms>
-      $<$<BOOL:${USE_SOUNDTOUCH}>:soundtouch>
       $<$<BOOL:${USE_VAMP}>:libvamp>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>

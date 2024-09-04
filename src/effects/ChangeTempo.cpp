@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \class EffectChangeTempo
-\brief An EffectSoundTouch provides speeding up or
+\brief A SoundTouchBase provides speeding up or
   slowing down tempo without changing pitch.
 
 *//*******************************************************************/
@@ -22,30 +22,13 @@
 #include <wx/valgen.h>
 #endif
 
-#include <math.h>
-
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 
 #include "ShuttleGui.h"
 #include "../widgets/valnum.h"
-#include "TimeWarper.h"
 
 #include "LoadEffects.h"
-
-// Soundtouch defines these as well, which are also in generated configmac.h
-// and configunix.h, so get rid of them before including,
-// to avoid compiler warnings, and be sure to do this
-// after all other #includes, to avoid any mischief that might result
-// from doing the un-definitions before seeing any wx headers.
-#undef PACKAGE_NAME
-#undef PACKAGE_STRING
-#undef PACKAGE_TARNAME
-#undef PACKAGE_VERSION
-#undef PACKAGE_BUGREPORT
-#undef PACKAGE
-#undef VERSION
-#include "SoundTouch.h"
 
 enum
 {
@@ -56,26 +39,9 @@ enum
    ID_ToLength
 };
 
-// Soundtouch is not reasonable below -99% or above 3000%.
-
-const EffectParameterMethods& EffectChangeTempo::Parameters() const
-{
-   static CapturedParameters<EffectChangeTempo,
-      Percentage, UseSBSMS
-   > parameters;
-   return parameters;
-}
-
 // We warp the slider to go up to 400%, but user can enter higher values.
 static const double kSliderMax = 100.0;         // warped above zero to actually go up to 400%
 static const double kSliderWarp = 1.30105;      // warp power takes max from 100 to 400.
-
-//
-// EffectChangeTempo
-//
-
-const ComponentInterfaceSymbol EffectChangeTempo::Symbol
-{ XO("Change Tempo") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectChangeTempo > reg; }
 
@@ -86,110 +52,6 @@ BEGIN_EVENT_TABLE(EffectChangeTempo, wxEvtHandler)
     EVT_TEXT(ID_ToBPM, EffectChangeTempo::OnText_ToBPM)
     EVT_TEXT(ID_ToLength, EffectChangeTempo::OnText_ToLength)
 END_EVENT_TABLE()
-
-EffectChangeTempo::EffectChangeTempo()
-{
-   // mUseSBSMS always defaults to false and its value is used only if USE_SBSMS
-   // is defined
-   Parameters().Reset(*this);
-   m_FromBPM = 0.0; // indicates not yet set
-   m_ToBPM = 0.0; // indicates not yet set
-   m_FromLength = 0.0;
-   m_ToLength = 0.0;
-
-   m_bLoopDetect = false;
-
-   SetLinearEffectFlag(true);
-}
-
-EffectChangeTempo::~EffectChangeTempo()
-{
-}
-
-// ComponentInterface implementation
-
-ComponentInterfaceSymbol EffectChangeTempo::GetSymbol() const
-{
-   return Symbol;
-}
-
-TranslatableString EffectChangeTempo::GetDescription() const
-{
-   return XO("Changes the tempo of a selection without changing its pitch");
-}
-
-ManualPageID EffectChangeTempo::ManualPage() const
-{
-   return L"Change_Tempo";
-}
-
-// EffectDefinitionInterface implementation
-
-EffectType EffectChangeTempo::GetType() const
-{
-   return EffectTypeProcess;
-}
-
-bool EffectChangeTempo::SupportsAutomation() const
-{
-   return true;
-}
-
-// Effect implementation
-
-double EffectChangeTempo::CalcPreviewInputLength(
-   const EffectSettings &, double previewLength) const
-{
-   return previewLength * (100.0 + m_PercentChange) / 100.0;
-}
-
-bool EffectChangeTempo::CheckWhetherSkipEffect(const EffectSettings &) const
-{
-   return (m_PercentChange == 0.0);
-}
-
-bool EffectChangeTempo::Init()
-{
-   // The selection might have changed since the last time EffectChangeTempo
-   // was invoked, so recalculate the Length parameters.
-   m_FromLength = mT1 - mT0;
-   m_ToLength = (m_FromLength * 100.0) / (100.0 + m_PercentChange);
-
-   return true;
-}
-
-bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
-{
-   bool success = false;
-
-#if USE_SBSMS
-   if (mUseSBSMS)
-   {
-      double tempoRatio = 1.0 + m_PercentChange / 100.0;
-      EffectSBSMS proxy;
-      proxy.mProxyEffectName = XO("High Quality Tempo Change");
-      proxy.setParameters(tempoRatio, 1.0);
-      //! Already processing; don't make a dialog
-      success = Delegate(proxy, settings);
-   }
-   else
-#endif
-   {
-      auto initer = [&](soundtouch::SoundTouch *soundtouch)
-      {
-         soundtouch->setTempoChange(m_PercentChange);
-      };
-      double mT1Dashed = mT0 + (mT1 - mT0)/(m_PercentChange/100.0 + 1.0);
-      RegionTimeWarper warper{ mT0, mT1,
-         std::make_unique<LinearTimeWarper>(mT0, mT0, mT1, mT1Dashed )  };
-      success = EffectSoundTouch::ProcessWithTimeWarper(initer, warper, false);
-   }
-
-   if(success)
-      mT1 = mT0 + (mT1 - mT0)/(m_PercentChange/100 + 1.);
-
-   return success;
-}
 
 std::unique_ptr<EffectEditor> EffectChangeTempo::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
