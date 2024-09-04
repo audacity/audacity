@@ -74,7 +74,7 @@ struct NyquistSettings {
    // Other fields, to do
 };
 
-class AUDACITY_DLL_API NyquistEffect final :
+class AUDACITY_DLL_API NyquistBase :
     public EffectWithSettings<NyquistSettings, StatefulEffect>,
     public StatefulEffectUIServices
 {
@@ -83,8 +83,8 @@ public:
    /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */
-   NyquistEffect(const wxString &fName);
-   virtual ~NyquistEffect();
+   NyquistBase(const wxString &fName);
+   virtual ~NyquistBase();
 
    // ComponentInterface implementation
 
@@ -124,17 +124,8 @@ public:
 
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   int ShowHostInterface(EffectBase &plugin, wxWindow &parent,
-      const EffectDialogFactory &factory,
-      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
-      bool forceModal = false) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
-   // NyquistEffect implementation
+   // NyquistBase implementation
    // For Nyquist Workbench support
    void RedirectOutput();
    void SetCommand(const wxString &cmd);
@@ -143,22 +134,11 @@ public:
    void Stop();
 
 private:
-   wxWeakRef<wxWindow> mUIParent{};
-
    static int mReentryCount;
-   // NyquistEffect implementation
+   // NyquistBase implementation
 
    struct NyxContext;
    bool ProcessOne(NyxContext &nyxContext, EffectOutputTracks *pOutputs);
-
-   void BuildPromptWindow(ShuttleGui & S);
-   void BuildEffectWindow(ShuttleGui & S);
-
-   bool TransferDataToPromptWindow();
-   bool TransferDataToEffectWindow();
-
-   bool TransferDataFromPromptWindow();
-   bool TransferDataFromEffectWindow();
 
    bool IsOk();
    const TranslatableString &InitializationError() const { return mInitError; }
@@ -180,7 +160,9 @@ private:
    void OSCallback();
 
    void ParseFile();
+protected:
    bool ParseCommand(const wxString & cmd);
+private:
    bool ParseProgram(wxInputStream & stream);
    struct Tokenizer {
       bool sl { false };
@@ -199,25 +181,16 @@ private:
                            wxString *pExtraString = nullptr);
    static wxString UnQuote(const wxString &s, bool allowParens = true,
                            wxString *pExtraString = nullptr);
+protected:
    static double GetCtrlValue(const wxString &s);
-
-   void OnLoad(wxCommandEvent & evt);
-   void OnSave(wxCommandEvent & evt);
-   void OnDebug(wxCommandEvent & evt);
-
-   void OnText(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-   void OnChoice(wxCommandEvent & evt);
-   void OnTime(wxCommandEvent & evt);
-   void OnFileButton(wxCommandEvent & evt);
-
    static void resolveFilePath(wxString & path, FileExtension extension = {});
    bool validatePath(wxString path);
    wxString ToTimeFormat(double t);
 
+private:
    std::pair<bool, FilePath> CheckHelpPage() const;
 
-private:
+protected:
 
    wxString          mXlispPath;
 
@@ -272,8 +245,10 @@ private:
    TranslatableString mDebugOutput;
 
    int               mVersion;   // Syntactic version of Nyquist plug-in (not to be confused with mReleaseVersion)
+public:
    std::vector<NyqControl>   mControls;
 
+protected:
    sampleCount       mMaxLen;
    int               mTrackIndex;
    bool              mFirstInGroup;
@@ -289,11 +264,47 @@ private:
    bool              mRestoreSplits;
    int               mMergeClips;
 
-   wxTextCtrl *mCommandText;
+   friend class NyquistEffectsModule;
+};
+
+class NyquistEffect final : public NyquistBase
+{
+private:
+   void BuildPromptWindow(ShuttleGui& S);
+   void BuildEffectWindow(ShuttleGui& S);
+
+   bool TransferDataToPromptWindow();
+   bool TransferDataToEffectWindow();
+
+   bool TransferDataFromPromptWindow();
+   bool TransferDataFromEffectWindow();
+
+   int ShowHostInterface(
+      EffectBase& plugin, wxWindow& parent, const EffectDialogFactory& factory,
+      std::shared_ptr<EffectInstance>& pInstance, EffectSettingsAccess& access,
+      bool forceModal = false) override;
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+protected:
+   wxTextCtrl* mCommandText;
 
    DECLARE_EVENT_TABLE()
+   void OnLoad(wxCommandEvent& evt);
+   void OnSave(wxCommandEvent& evt);
+   void OnDebug(wxCommandEvent& evt);
 
-   friend class NyquistEffectsModule;
+   void OnText(wxCommandEvent& evt);
+   void OnSlider(wxCommandEvent& evt);
+   void OnChoice(wxCommandEvent& evt);
+   void OnTime(wxCommandEvent& evt);
+   void OnFileButton(wxCommandEvent& evt);
+
+private:
+   wxWeakRef<wxWindow> mUIParent {};
 };
 
 class NyquistOutputDialog final : public wxDialogWrapper

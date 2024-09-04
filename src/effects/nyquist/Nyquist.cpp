@@ -8,14 +8,14 @@
 
 ******************************************************************//**
 
-\class NyquistEffect
+\class NyquistBase
 \brief An Effect that calls up a Nyquist (XLISP) plug-in, i.e. many possible
 effects from this one class.
 
 *//****************************************************************//**
 
 \class NyquistOutputDialog
-\brief Dialog used with NyquistEffect
+\brief Dialog used with NyquistBase
 
 *//****************************************************************//**
 
@@ -97,7 +97,7 @@ effects from this one class.
 
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 
-int NyquistEffect::mReentryCount = 0;
+int NyquistBase::mReentryCount = 0;
 
 enum
 {
@@ -122,7 +122,7 @@ static const wxChar *KEY_Parameters = wxT("Parameters");
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// NyquistEffect
+// NyquistBase
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -142,7 +142,7 @@ BEGIN_EVENT_TABLE(NyquistEffect, wxEvtHandler)
                      wxEVT_COMMAND_BUTTON_CLICKED, NyquistEffect::OnFileButton)
 END_EVENT_TABLE()
 
-NyquistEffect::NyquistEffect(const wxString &fName)
+NyquistBase::NyquistBase(const wxString &fName)
    : mIsPrompt{ fName == NYQUIST_PROMPT_ID }
 {
    mAction = XO("Applying Nyquist Effect...");
@@ -199,13 +199,13 @@ NyquistEffect::NyquistEffect(const wxString &fName)
       mInitError = XO("Ill-formed Nyquist plug-in header");
 }
 
-NyquistEffect::~NyquistEffect()
+NyquistBase::~NyquistBase()
 {
 }
 
 // ComponentInterface implementation
 
-PluginPath NyquistEffect::GetPath() const
+PluginPath NyquistBase::GetPath() const
 {
    if (mIsPrompt)
       return NYQUIST_PROMPT_ID;
@@ -213,7 +213,7 @@ PluginPath NyquistEffect::GetPath() const
    return mFileName.GetFullPath();
 }
 
-ComponentInterfaceSymbol NyquistEffect::GetSymbol() const
+ComponentInterfaceSymbol NyquistBase::GetSymbol() const
 {
    if (mIsPrompt)
       return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
@@ -221,7 +221,7 @@ ComponentInterfaceSymbol NyquistEffect::GetSymbol() const
    return mName;
 }
 
-VendorSymbol NyquistEffect::GetVendor() const
+VendorSymbol NyquistBase::GetVendor() const
 {
    if (mIsPrompt)
    {
@@ -231,19 +231,19 @@ VendorSymbol NyquistEffect::GetVendor() const
    return mAuthor;
 }
 
-wxString NyquistEffect::GetVersion() const
+wxString NyquistBase::GetVersion() const
 {
    // Are Nyquist version strings really supposed to be translatable?
    // See commit a06e561 which used XO for at least one of them
    return mReleaseVersion.Translation();
 }
 
-TranslatableString NyquistEffect::GetDescription() const
+TranslatableString NyquistBase::GetDescription() const
 {
    return mCopyright;
 }
 
-ManualPageID NyquistEffect::ManualPage() const
+ManualPageID NyquistBase::ManualPage() const
 {
       return mIsPrompt
          ? wxString("Nyquist_Prompt")
@@ -251,9 +251,9 @@ ManualPageID NyquistEffect::ManualPage() const
 }
 
 
-std::pair<bool, FilePath> NyquistEffect::CheckHelpPage() const
+std::pair<bool, FilePath> NyquistBase::CheckHelpPage() const
 {
-   auto paths = NyquistEffect::GetNyquistSearchPath();
+   auto paths = NyquistBase::GetNyquistSearchPath();
    wxString fileName;
 
    for (size_t i = 0, cnt = paths.size(); i < cnt; i++) {
@@ -267,31 +267,31 @@ std::pair<bool, FilePath> NyquistEffect::CheckHelpPage() const
 }
 
 
-FilePath NyquistEffect::HelpPage() const
+FilePath NyquistBase::HelpPage() const
 {
    return mHelpPage;
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType NyquistEffect::GetType() const
+EffectType NyquistBase::GetType() const
 {
    return mType;
 }
 
-EffectType NyquistEffect::GetClassification() const
+EffectType NyquistBase::GetClassification() const
 {
    if (mIsTool)
       return EffectTypeTool;
    return mType;
 }
 
-EffectFamilySymbol NyquistEffect::GetFamily() const
+EffectFamilySymbol NyquistBase::GetFamily() const
 {
    return NYQUISTEFFECTS_FAMILY;
 }
 
-bool NyquistEffect::IsInteractive() const
+bool NyquistBase::IsInteractive() const
 {
    if (mIsPrompt)
    {
@@ -301,12 +301,12 @@ bool NyquistEffect::IsInteractive() const
    return mControls.size() != 0;
 }
 
-bool NyquistEffect::IsDefault() const
+bool NyquistBase::IsDefault() const
 {
    return mIsPrompt;
 }
 
-bool NyquistEffect::VisitSettings(
+bool NyquistBase::VisitSettings(
    SettingsVisitor &visitor, EffectSettings &settings)
 {
    if (auto pSa = dynamic_cast<ShuttleSetAutomation*>(&visitor))
@@ -314,7 +314,7 @@ bool NyquistEffect::VisitSettings(
    return true;
 }
 
-bool NyquistEffect::VisitSettings(
+bool NyquistBase::VisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
    // For now we assume Nyquist can do get and set better than VisitSettings can,
@@ -370,7 +370,7 @@ bool NyquistEffect::VisitSettings(
    return true;
 }
 
-bool NyquistEffect::SaveSettings(
+bool NyquistBase::SaveSettings(
    const EffectSettings &, CommandParameters & parms) const
 {
    if (mIsPrompt)
@@ -421,14 +421,14 @@ bool NyquistEffect::SaveSettings(
    return true;
 }
 
-bool NyquistEffect::LoadSettings(
+bool NyquistBase::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<NyquistEffect*>(this)->DoLoadSettings(parms, settings);
+   return const_cast<NyquistBase*>(this)->DoLoadSettings(parms, settings);
 }
 
-bool NyquistEffect::DoLoadSettings(
+bool NyquistBase::DoLoadSettings(
    const CommandParameters & parms, EffectSettings &settings)
 {
    // Due to a constness problem that happens when using the prompt, we need
@@ -494,7 +494,7 @@ bool NyquistEffect::DoLoadSettings(
 // returns the number of bad settings.
 // We can run this just testing for bad values, or actually setting when
 // the values are good.
-int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly)
+int NyquistBase::SetLispVarsFromParameters(const CommandParameters & parms, bool bTestOnly)
 {
    int badCount = 0;
    // First pass verifies values
@@ -563,7 +563,7 @@ int NyquistEffect::SetLispVarsFromParameters(const CommandParameters & parms, bo
 }
 
 // Effect Implementation
-bool NyquistEffect::Init()
+bool NyquistBase::Init()
 {
    // When Nyquist Prompt spawns an effect GUI, Init() is called for Nyquist Prompt,
    // and then again for the spawned (mExternal) effect.
@@ -665,7 +665,7 @@ static void RegisterFunctions();
 
 //! Reads and writes Audacity's track objects, interchanging with Nyquist
 //! sound objects (implemented in the library layer written in C)
-struct NyquistEffect::NyxContext {
+struct NyquistBase::NyxContext {
    using ProgressReport = std::function<bool(double)>;
 
    NyxContext(ProgressReport progressReport, double scale, double progressTot)
@@ -707,7 +707,7 @@ struct NyquistEffect::NyxContext {
    std::exception_ptr mpException{};
 };
 
-bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
+bool NyquistBase::Process(EffectInstance &, EffectSettings &settings)
 {
    if (mIsPrompt && mControls.size() > 0 && !IsBatchProcessing()) {
       auto &nyquistSettings = GetSettings(settings);
@@ -715,7 +715,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
          // Free up memory
          nyquistSettings.proxySettings = {};
       });
-      NyquistEffect proxy{ NYQUIST_WORKER_ID };
+      NyquistBase proxy{ NYQUIST_WORKER_ID };
       proxy.SetCommand(mInputCmd);
       proxy.mDebug = nyquistSettings.proxyDebug;
       proxy.mControls = move(nyquistSettings.controls);
@@ -810,7 +810,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DOCUMENTS)\n"), EscapeString(wxStandardPaths::Get().GetDocumentsDir()));
       mProps += wxString::Format(wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"), EscapeString(wxGetHomeDir()));
 
-      auto paths = NyquistEffect::GetNyquistSearchPath();
+      auto paths = NyquistBase::GetNyquistSearchPath();
       wxString list;
       for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
       {
@@ -1123,7 +1123,7 @@ int NyquistEffect::ShowHostInterface(EffectBase &plugin,
    // Nyquist prompt was OK, but gave us some magic ;control comments to
    // reinterpret into a second dialog
 
-   NyquistEffect effect(NYQUIST_WORKER_ID);
+   NyquistBase effect(NYQUIST_WORKER_ID);
    effect.SetCommand(mInputCmd);
    Finally Do{[&]{
       // A second dialog will use effect as a pushed event handler.
@@ -1191,7 +1191,7 @@ std::unique_ptr<EffectEditor> NyquistEffect::PopulateOrExchange(
    return nullptr;
 }
 
-bool NyquistEffect::EnablesDebug() const
+bool NyquistBase::EnablesDebug() const
 {
    return mDebugButton;
 }
@@ -1268,9 +1268,9 @@ wxString GetClipBoundaries(const Track* t)
 };
 } // namespace
 
-// NyquistEffect implementation
+// NyquistBase implementation
 
-bool NyquistEffect::ProcessOne(
+bool NyquistBase::ProcessOne(
    NyxContext &nyxContext, EffectOutputTracks *pOutputs)
 {
    const auto mCurNumChannels = nyxContext.mCurNumChannels;
@@ -1777,10 +1777,10 @@ bool NyquistEffect::ProcessOne(
 }
 
 // ============================================================================
-// NyquistEffect Implementation
+// NyquistBase Implementation
 // ============================================================================
 
-wxString NyquistEffect::NyquistToWxString(const char *nyqString)
+wxString NyquistBase::NyquistToWxString(const char *nyqString)
 {
     wxString str(nyqString, wxConvUTF8);
     if (nyqString != NULL && nyqString[0] && str.empty()) {
@@ -1793,7 +1793,7 @@ wxString NyquistEffect::NyquistToWxString(const char *nyqString)
     return str;
 }
 
-wxString NyquistEffect::EscapeString(const wxString & inStr)
+wxString NyquistBase::EscapeString(const wxString & inStr)
 {
    wxString str = inStr;
 
@@ -1803,7 +1803,7 @@ wxString NyquistEffect::EscapeString(const wxString & inStr)
    return str;
 }
 
-std::vector<EnumValueSymbol> NyquistEffect::ParseChoice(const wxString & text)
+std::vector<EnumValueSymbol> NyquistBase::ParseChoice(const wxString & text)
 {
    std::vector<EnumValueSymbol> results;
    if (text[0] == wxT('(')) {
@@ -1835,7 +1835,7 @@ std::vector<EnumValueSymbol> NyquistEffect::ParseChoice(const wxString & text)
    return results;
 }
 
-FileExtensions NyquistEffect::ParseFileExtensions(const wxString & text)
+FileExtensions NyquistBase::ParseFileExtensions(const wxString & text)
 {
    // todo: error handling
    FileExtensions results;
@@ -1848,7 +1848,7 @@ FileExtensions NyquistEffect::ParseFileExtensions(const wxString & text)
    return results;
 }
 
-FileNames::FileType NyquistEffect::ParseFileType(const wxString & text)
+FileNames::FileType NyquistBase::ParseFileType(const wxString & text)
 {
    // todo: error handling
    FileNames::FileType result;
@@ -1863,7 +1863,7 @@ FileNames::FileType NyquistEffect::ParseFileType(const wxString & text)
    return result;
 }
 
-FileNames::FileTypes NyquistEffect::ParseFileTypes(const wxString & text)
+FileNames::FileTypes NyquistBase::ParseFileTypes(const wxString & text)
 {
    // todo: error handling
    FileNames::FileTypes results;
@@ -1901,12 +1901,12 @@ FileNames::FileTypes NyquistEffect::ParseFileTypes(const wxString & text)
    return results;
 }
 
-void NyquistEffect::RedirectOutput()
+void NyquistBase::RedirectOutput()
 {
    mRedirectOutput = true;
 }
 
-void NyquistEffect::SetCommand(const wxString &cmd)
+void NyquistBase::SetCommand(const wxString &cmd)
 {
    mExternal = true;
 
@@ -1915,22 +1915,22 @@ void NyquistEffect::SetCommand(const wxString &cmd)
    }
 }
 
-void NyquistEffect::Break()
+void NyquistBase::Break()
 {
    mBreak = true;
 }
 
-void NyquistEffect::Continue()
+void NyquistBase::Continue()
 {
    mCont = true;
 }
 
-void NyquistEffect::Stop()
+void NyquistBase::Stop()
 {
    mStop = true;
 }
 
-TranslatableString NyquistEffect::UnQuoteMsgid(const wxString &s, bool allowParens,
+TranslatableString NyquistBase::UnQuoteMsgid(const wxString &s, bool allowParens,
                                 wxString *pExtraString)
 {
    if (pExtraString)
@@ -1971,13 +1971,13 @@ TranslatableString NyquistEffect::UnQuoteMsgid(const wxString &s, bool allowPare
       return Verbatim( s );
 }
 
-wxString NyquistEffect::UnQuote(const wxString &s, bool allowParens,
+wxString NyquistBase::UnQuote(const wxString &s, bool allowParens,
                                 wxString *pExtraString)
 {
    return UnQuoteMsgid( s, allowParens, pExtraString ).Translation();
 }
 
-double NyquistEffect::GetCtrlValue(const wxString &s)
+double NyquistBase::GetCtrlValue(const wxString &s)
 {
    /* For this to work correctly requires that the plug-in header is
     * parsed on each run so that the correct value for "half-srate" may
@@ -1995,7 +1995,7 @@ double NyquistEffect::GetCtrlValue(const wxString &s)
    return Internat::CompatibleToDouble(s);
 }
 
-bool NyquistEffect::Tokenizer::Tokenize(
+bool NyquistBase::Tokenizer::Tokenize(
    const wxString &line, bool eof,
    size_t trimStart, size_t trimEnd)
 {
@@ -2094,7 +2094,7 @@ bool NyquistEffect::Tokenizer::Tokenize(
    }
 }
 
-bool NyquistEffect::Parse(
+bool NyquistBase::Parse(
    Tokenizer &tzer, const wxString &line, bool eof, bool first)
 {
    if ( !tzer.Tokenize(line, eof, first ? 1 : 0, 0) )
@@ -2447,7 +2447,7 @@ bool NyquistEffect::Parse(
    return true;
 }
 
-bool NyquistEffect::ParseProgram(wxInputStream & stream)
+bool NyquistBase::ParseProgram(wxInputStream & stream)
 {
    if (!stream.IsOk())
    {
@@ -2545,7 +2545,7 @@ or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .")
    return true;
 }
 
-void NyquistEffect::ParseFile()
+void NyquistBase::ParseFile()
 {
    wxFileInputStream rawStream(mFileName.GetFullPath());
    wxBufferedInputStream stream(rawStream, 10000);
@@ -2553,21 +2553,21 @@ void NyquistEffect::ParseFile()
    ParseProgram(stream);
 }
 
-bool NyquistEffect::ParseCommand(const wxString & cmd)
+bool NyquistBase::ParseCommand(const wxString & cmd)
 {
    wxStringInputStream stream(cmd + wxT(" "));
 
    return ParseProgram(stream);
 }
 
-int NyquistEffect::NyxContext::StaticGetCallback(float *buffer, int channel,
+int NyquistBase::NyxContext::StaticGetCallback(float *buffer, int channel,
    int64_t start, int64_t len, int64_t totlen, void *userdata)
 {
    auto This = static_cast<NyxContext*>(userdata);
    return This->GetCallback(buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::NyxContext::GetCallback(float *buffer, int ch,
+int NyquistBase::NyxContext::GetCallback(float *buffer, int ch,
    int64_t start, int64_t len, int64_t)
 {
    if (mCurBuffer[ch]) {
@@ -2619,14 +2619,14 @@ int NyquistEffect::NyxContext::GetCallback(float *buffer, int ch,
    return 0;
 }
 
-int NyquistEffect::NyxContext::StaticPutCallback(float *buffer, int channel,
+int NyquistBase::NyxContext::StaticPutCallback(float *buffer, int channel,
    int64_t start, int64_t len, int64_t totlen, void *userdata)
 {
    auto This = static_cast<NyxContext*>(userdata);
    return This->PutCallback(buffer, channel, start, len, totlen);
 }
 
-int NyquistEffect::NyxContext::PutCallback(float *buffer, int channel,
+int NyquistBase::NyxContext::PutCallback(float *buffer, int channel,
    int64_t start, int64_t len, int64_t totlen)
 {
    // Don't let C++ exceptions propagate through the Nyquist library
@@ -2648,12 +2648,12 @@ int NyquistEffect::NyxContext::PutCallback(float *buffer, int channel,
    }, MakeSimpleGuard(-1)); // translate all exceptions into failure
 }
 
-void NyquistEffect::StaticOutputCallback(int c, void *This)
+void NyquistBase::StaticOutputCallback(int c, void *This)
 {
-   ((NyquistEffect *)This)->OutputCallback(c);
+   ((NyquistBase *)This)->OutputCallback(c);
 }
 
-void NyquistEffect::OutputCallback(int c)
+void NyquistBase::OutputCallback(int c)
 {
    // Always collect Nyquist error messages for normal plug-ins
    if (!mRedirectOutput) {
@@ -2664,12 +2664,12 @@ void NyquistEffect::OutputCallback(int c)
    std::cout << (char)c;
 }
 
-void NyquistEffect::StaticOSCallback(void *This)
+void NyquistBase::StaticOSCallback(void *This)
 {
-   ((NyquistEffect *)This)->OSCallback();
+   ((NyquistBase *)This)->OSCallback();
 }
 
-void NyquistEffect::OSCallback()
+void NyquistBase::OSCallback()
 {
    if (mStop) {
       mStop = false;
@@ -2699,7 +2699,7 @@ void NyquistEffect::OSCallback()
 #endif
 }
 
-FilePaths NyquistEffect::GetNyquistSearchPath()
+FilePaths NyquistBase::GetNyquistSearchPath()
 {
    const auto &audacityPathList = FileNames::AudacityPathList();
    FilePaths pathList;
@@ -3108,9 +3108,9 @@ void NyquistEffect::BuildEffectWindow(ShuttleGui & S)
    scroller->SetLabel(wxT("\a"));
 }
 
-// NyquistEffect implementation
+// NyquistBase implementation
 
-bool NyquistEffect::IsOk()
+bool NyquistBase::IsOk()
 {
    return mOK;
 }
@@ -3350,7 +3350,7 @@ void NyquistEffect::OnFileButton(wxCommandEvent& evt)
 
  If the path names only a directory, also append "/untitled" plus extension
  */
-void NyquistEffect::resolveFilePath(
+void NyquistBase::resolveFilePath(
    wxString& path, FileExtension extension /* empty string */)
 {
 #if defined(__WXMSW__)
@@ -3409,7 +3409,7 @@ void NyquistEffect::resolveFilePath(
 }
 
 
-bool NyquistEffect::validatePath(wxString path)
+bool NyquistBase::validatePath(wxString path)
 {
    wxFileName fname = path;
    wxString dir = fname.GetPath();
@@ -3420,7 +3420,7 @@ bool NyquistEffect::validatePath(wxString path)
 }
 
 
-wxString NyquistEffect::ToTimeFormat(double t)
+wxString NyquistBase::ToTimeFormat(double t)
 {
    int seconds = static_cast<int>(t);
    int hh = seconds / 3600;
