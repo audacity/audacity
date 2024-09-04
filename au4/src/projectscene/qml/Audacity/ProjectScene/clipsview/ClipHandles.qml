@@ -16,6 +16,10 @@ Item {
     // so we are handling it manually
     signal clipHandlesMousePositionChanged(real x, real y)
 
+    property var trimStartPos
+    signal trimLeftBy(real x)
+    signal trimRightBy(real x)
+
     Item {
         id: leftTrimHandle
 
@@ -65,15 +69,12 @@ Item {
 
         MouseArea {
             id: leftTrimMa
+
             anchors.fill: parent
             hoverEnabled: true
 
-            onPressed: {
-                //! TODO AU4: implement trimming
-            }
-
-            onReleased: {
-                //! TODO AU4: implement trimming
+            onPressed: function(e) {
+                trimStartPos = mapToGlobal(Qt.point(e.x, e.y)).x
             }
 
             onEntered: {
@@ -86,8 +87,15 @@ Item {
                 }
             }
 
-            onPositionChanged: {
+            onPositionChanged: function(e) {
                 clipHandlesMousePositionChanged(mouseX + leftTrimHandle.x, mouseY)
+
+                if (pressed) {
+                    let globalMouseX = mapToGlobal(Qt.point(e.x, e.y)).x
+
+                    trimLeftBy(globalMouseX - trimStartPos)
+                    trimStartPos = globalMouseX
+                }
             }
         }
     }
@@ -144,12 +152,8 @@ Item {
             anchors.fill: parent
             hoverEnabled: true
 
-            onPressed: {
-                //! TODO AU4: implement trimming
-            }
-
-            onReleased: {
-                //! TODO AU4: implement trimming
+            onPressed: function(e) {
+                trimStartPos = mapToGlobal(Qt.point(e.x, e.y)).x
             }
 
             onEntered: {
@@ -162,8 +166,15 @@ Item {
                 }
             }
 
-            onPositionChanged: {
+            onPositionChanged: function(e) {
                 clipHandlesMousePositionChanged(mouseX + rightTrimHandle.x, mouseY)
+
+                if (pressed) {
+                    let globalMouseX = mapToGlobal(Qt.point(e.x, e.y)).x
+
+                    trimRightBy(trimStartPos - globalMouseX)
+                    trimStartPos = globalMouseX
+                }
             }
         }
     }

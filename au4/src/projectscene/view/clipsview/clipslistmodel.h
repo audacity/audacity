@@ -47,6 +47,8 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
     Q_INVOKABLE bool moveClip(const ClipKey& key, double deltaX, bool completed);
+    Q_INVOKABLE bool trimLeftClip(const ClipKey& key, double deltaX);
+    Q_INVOKABLE bool trimRightClip(const ClipKey& key, double deltaX);
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void unselectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClip();

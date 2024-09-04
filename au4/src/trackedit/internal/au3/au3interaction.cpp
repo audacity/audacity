@@ -445,6 +445,46 @@ bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, secs_t be
     return true;
 }
 
+bool Au3Interaction::trimClipLeft(const ClipKey &clipKey, secs_t deltaSec)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    clip->TrimLeft(deltaSec);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
+bool Au3Interaction::trimClipRight(const ClipKey &clipKey, secs_t deltaSec)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    clip->TrimRight(deltaSec);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
 void Au3Interaction::newMonoTrack()
 {
     auto &project = projectRef();

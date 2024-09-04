@@ -23,6 +23,8 @@ Rectangle {
     property bool collapsed: false
 
     signal clipMoved(real deltaX, bool completed)
+    signal clipLeftTrimmed(real deltaX)
+    signal clipRightTrimmed(real deltaX)
     signal requestSelected()
 
     signal titleEditStarted()
@@ -266,6 +268,14 @@ Rectangle {
             var xWithinClipItem = xWithinClipHandles
             var yWithinClipItem = header.height + 1 + yWithinClipHandles
             clipItemMousePositionChanged(xWithinClipItem, yWithinClipItem)
+        }
+
+        onTrimLeftBy: function(trimByX) {
+            clipLeftTrimmed(trimByX)
+        }
+
+        onTrimRightBy: function(trimByX) {
+            clipRightTrimmed(trimByX)
         }
     }
 

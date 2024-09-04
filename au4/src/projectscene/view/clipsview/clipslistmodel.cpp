@@ -275,6 +275,32 @@ bool ClipsListModel::moveClip(const ClipKey& key, double deltaX, bool completed)
     return ok;
 }
 
+bool ClipsListModel::trimLeftClip(const ClipKey& key, double deltaX)
+{
+    ClipListItem* item = itemByKey(key.key);
+    IF_ASSERT_FAILED(item) {
+        return false;
+    }
+
+    const secs_t deltaSec = deltaX / m_context->zoom();
+
+    bool ok = trackeditInteraction()->trimClipLeft(key.key, deltaSec);
+    return ok;
+}
+
+bool ClipsListModel::trimRightClip(const ClipKey& key, double deltaX)
+{
+    ClipListItem* item = itemByKey(key.key);
+    IF_ASSERT_FAILED(item) {
+        return false;
+    }
+
+    const secs_t deltaSec = deltaX / m_context->zoom();
+
+    bool ok = trackeditInteraction()->trimClipRight(key.key, deltaSec);
+    return ok;
+}
+
 void ClipsListModel::selectClip(const ClipKey& key)
 {
     selectionController()->setSelectedClip(key.key);
