@@ -344,6 +344,12 @@ set(AU3_SRC
 
     ${AU3_LIBRARIES}/lib-mixer/Mix.cpp
     ${AU3_LIBRARIES}/lib-mixer/Mix.h
+    ${AU3_LIBRARIES}/lib-mixer/DownmixSource.cpp
+    ${AU3_LIBRARIES}/lib-mixer/DownmixSource.h
+    ${AU3_LIBRARIES}/lib-mixer/DownmixStage.cpp
+    ${AU3_LIBRARIES}/lib-mixer/DownmixStage.h
+    ${AU3_LIBRARIES}/lib-mixer/MixerSource.cpp
+    ${AU3_LIBRARIES}/lib-mixer/MixerSource.h
     ${AU3_LIBRARIES}/lib-mixer/MixerSource.cpp
     ${AU3_LIBRARIES}/lib-mixer/MixerSource.h
     ${AU3_LIBRARIES}/lib-mixer/EffectStage.cpp
