@@ -106,7 +106,8 @@ public:
 
     WaveformPainter& EnsureClip(const WaveClip& clip)
     {
-        if (&clip != mWaveClip) {
+        const auto changed = mChanged.exchange(false);
+        if (&clip != mWaveClip || changed) {
             mChannelCaches.clear();
         }
 
@@ -177,7 +178,10 @@ public:
         }
     }
 
-    void MarkChanged() noexcept override { }
+    void MarkChanged() noexcept override
+    {
+        mChanged.store(true);
+    }
 
     void Invalidate() override
     {
@@ -202,6 +206,7 @@ private:
     };
 
     std::vector<ChannelCaches> mChannelCaches;
+    std::atomic<bool> mChanged = false;
 };
 }
 
