@@ -150,7 +150,7 @@ public:
 
         auto range = bitmapCache->PerformLookup(zoomInfo, metrics.fromTime, metrics.toTime);
 
-        int left = metrics.left;
+        double left = metrics.left;
         int height = metrics.height;
 
         for (auto it = range.begin(); it != range.end(); ++it) {

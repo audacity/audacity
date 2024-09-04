@@ -48,6 +48,8 @@ public:
     bool copyTrackDataIntoClipboard(const trackedit::TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClipData(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
+    bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec) override;
+    bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec) override;
     void newMonoTrack() override;
     void newStereoTrack() override;
     void newLabelTrack() override;
