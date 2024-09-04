@@ -11,6 +11,7 @@ using namespace muse::actions;
 
 static const ActionCode COPY_CODE("copy");
 static const ActionCode DELETE_CODE("delete");
+static const ActionCode SPLIT_CODE("split");
 
 static const ActionCode CLIP_CUT_CODE("clip-cut");
 static const ActionCode CLIP_COPY_CODE("clip-copy");
@@ -19,6 +20,8 @@ static const ActionCode CLIP_CUT_SELECTED_CODE("clip-cut-selected");
 static const ActionCode CLIP_COPY_SELECTED_CODE("clip-copy-selected");
 static const ActionCode CLIP_DELETE_SELECTED_CODE("clip-delete-selected");
 static const ActionCode PASTE("paste");
+static const ActionCode TRACK_SPLIT("track-split");
+static const ActionCode TRACK_SPLIT_AT("track-split-at");
 static const ActionCode NEW_MONO_TRACK("new-mono-track");
 static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
 static const ActionCode NEW_LABEL_TRACK("new-label-track");
@@ -29,6 +32,7 @@ void TrackeditActionsController::init()
 {
     dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
     dispatcher()->reg(this, DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
+    dispatcher()->reg(this, SPLIT_CODE, this, &TrackeditActionsController::doGlobalSplit);
 
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
     dispatcher()->reg(this, CLIP_COPY_CODE, this, &TrackeditActionsController::clipCopy);
@@ -37,6 +41,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CLIP_COPY_SELECTED_CODE, this, &TrackeditActionsController::clipCopySelected);
     dispatcher()->reg(this, CLIP_DELETE_SELECTED_CODE, this, &TrackeditActionsController::clipDeleteSelected);
     dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
+    dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
+    dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::trackSplitAt);
     dispatcher()->reg(this, "toggle-loop-region", this, &TrackeditActionsController::toggleLoopRegion);
     dispatcher()->reg(this, "clear-loop-region", this, &TrackeditActionsController::clearLoopRegion);
     dispatcher()->reg(this, "set-loop-region-to-selection", this, &TrackeditActionsController::setLoopRegionToSelection);
@@ -79,6 +85,22 @@ void TrackeditActionsController::doGlobalDelete()
     if (selectedClipKey.isValid()) {
         dispatcher()->dispatch(CLIP_DELETE_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
     }
+}
+
+void TrackeditActionsController::doGlobalSplit()
+{
+    TrackId trackIdToSplit = selectionController()->selectedTrack();
+    if (trackIdToSplit == -1) {
+        trackIdToSplit = selectionController()->selectedClip().trackId;
+    }
+
+    if (trackIdToSplit == -1) {
+        return;
+    }
+
+    secs_t playbackPosition = globalContext()->playbackState()->playbackPosition();
+
+    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<trackedit::TrackId, secs_t>(trackIdToSplit, playbackPosition));
 }
 
 void TrackeditActionsController::clipCut()
@@ -179,6 +201,38 @@ void TrackeditActionsController::paste()
 
         pushProjectHistoryPasteState();
     }
+}
+
+void TrackeditActionsController::trackSplit(const ActionData &args)
+{
+    IF_ASSERT_FAILED(args.count() == 1) {
+        return;
+    }
+
+    TrackId trackIdToSplit = args.arg<TrackId>(0);
+    if (trackIdToSplit == -1) {
+        return;
+    }
+
+    secs_t playbackPosition = globalContext()->playbackState()->playbackPosition();
+
+    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<trackedit::TrackId, secs_t>(trackIdToSplit, playbackPosition));
+}
+
+void TrackeditActionsController::trackSplitAt(const ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() == 2) {
+        return;
+    }
+
+    TrackId trackId = args.arg<TrackId>(0);
+    if (trackId == -1) {
+        return;
+    }
+
+    secs_t playbackPosition = args.arg<secs_t>(1);
+
+    trackeditInteraction()->splitAt(trackId, playbackPosition);
 }
 
 void TrackeditActionsController::toggleLoopRegion()

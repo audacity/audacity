@@ -445,6 +445,23 @@ bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, secs_t be
     return true;
 }
 
+bool Au3Interaction::splitAt(TrackId trackId, secs_t pivot)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    waveTrack->SplitAt(pivot);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack));
+
+    prj->pushHistoryState("Split", "Split");
+
+    return true;
+}
+
 bool Au3Interaction::trimClipLeft(const ClipKey &clipKey, secs_t deltaSec)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));

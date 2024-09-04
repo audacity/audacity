@@ -131,12 +131,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Trim clip"),
              TranslatableString("action", "Trim clip")
              ),
-    UiAction("split-clip",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Split clip"),
-             TranslatableString("action", "Split clip")
-             ),
     UiAction("split-into-new-track",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

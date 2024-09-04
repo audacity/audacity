@@ -35,6 +35,7 @@ private:
 
     void doGlobalCopy();
     void doGlobalDelete();
+    void doGlobalSplit();
 
     void clipCut();
     void clipCopy(const muse::actions::ActionData &args);
@@ -45,6 +46,9 @@ private:
     void clipDeleteSelected();
 
     void paste();
+
+    void trackSplit(const muse::actions::ActionData &args);
+    void trackSplitAt(const muse::actions::ActionData &args);
 
     void toggleLoopRegion();
     void clearLoopRegion();

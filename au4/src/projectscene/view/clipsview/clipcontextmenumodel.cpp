@@ -29,7 +29,7 @@ void ClipContextMenuModel::load()
         makeItemWithArg("clip-delete-close-gap"),
         makeItemWithArg("clip-duplicate"),
         makeSeparator(),
-        makeItemWithArg("clip-split"),
+        makeItemWithArg("track-split"),
         makeSeparator(),
         makeItemWithArg("clip-export"),
         makeSeparator(),
