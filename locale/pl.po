@@ -370,7 +370,7 @@ msgstr "Nieprawidłowa odpowiedź: %s"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 msgid "Export failed"
-msgstr "Eksportowanie zakończone niepowodzeniem"
+msgstr "Eksport zakończony niepowodzeniem"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
@@ -832,7 +832,7 @@ msgstr "Eksportuj"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
 msgid "Export completed with error."
-msgstr "Eksportowanie zakończone z błędem."
+msgstr "Eksport zakończony z błędem."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
@@ -4351,10 +4351,10 @@ msgid ""
 "To use FFmpeg import, go to Edit > Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
 msgstr ""
-"Audacity usiłował użyć pakietu FFmpeg do importowania\n"
+"Audacity usiłował użyć pakietu FFmpeg do importu\n"
 "pliku dźwiękowego, ale nie znaleziono bibliotek.\n"
 "\n"
-"Aby użyć importowania FFmpeg, idź do „Edycja > Ustawienia... > Biblioteki”,\n"
+"Aby użyć importu FFmpeg, idź do „Edycja > Ustawienia... > Biblioteki”,\n"
 "aby pobrać lub ustalić lokalizację bibliotek FFmpeg."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
@@ -4505,7 +4505,7 @@ msgstr "Pliki FLAC"
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid "FLAC export couldn't open %s"
-msgstr "Eksportowanie do FLAC nie mogło otworzyć %s"
+msgstr "Eksport FLAC nie mógł otworzyć %s"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
@@ -6730,13 +6730,13 @@ msgstr "Obsługa formatów plików"
 
 #: src/AboutDialog.cpp
 msgid "MP3 Import"
-msgstr "Importowanie MP3"
+msgstr "Import MP3"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
 #.
 #: src/AboutDialog.cpp
 msgid "MP3 Export"
-msgstr "Eksportowanie MP3"
+msgstr "Eksport MP3"
 
 #. i18n-hint: Opus is the codec name. This name should not be translated
 #.
@@ -6745,13 +6745,13 @@ msgstr "Eksportowanie MP3"
 #.
 #: src/AboutDialog.cpp
 msgid "Opus Import and Export"
-msgstr "Importowanie i eksportowanie Opus"
+msgstr "Import i eksport Opus"
 
 #. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
 #. * Both are proper nouns and shouldn't be translated
 #: src/AboutDialog.cpp
 msgid "Ogg Vorbis Import and Export"
-msgstr "Importowanie i eksportowanie Ogg Vorbis"
+msgstr "Import i eksport Ogg Vorbis"
 
 #: src/AboutDialog.cpp
 msgid "ID3 tag support"
@@ -6761,15 +6761,15 @@ msgstr "Obsługa znaczników ID3"
 #. * a proper noun and so shouldn't be translated
 #: src/AboutDialog.cpp
 msgid "FLAC import and export"
-msgstr "Importowanie i eksportowanie FLAC"
+msgstr "Import i eksport FLAC"
 
 #: src/AboutDialog.cpp
 msgid "MP2 export"
-msgstr "Eksportowanie MP2"
+msgstr "Eksport MP2"
 
 #: src/AboutDialog.cpp
 msgid "FFmpeg Import/Export"
-msgstr "Importowanie/eksportowanie FFmpeg"
+msgstr "Import/eksport FFmpeg"
 
 #: src/AboutDialog.cpp
 msgid "Features"
@@ -7253,7 +7253,7 @@ msgstr ""
 
 #: src/AudacityMirProject.cpp
 msgid "Music Import"
-msgstr "Importowanie muzyki"
+msgstr "Import muzyki"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
@@ -17985,7 +17985,7 @@ msgstr "Transport"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
-msgstr "Pauza"
+msgstr "Wstrzymaj"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Play"
@@ -18024,7 +18024,7 @@ msgstr "Zaznacz do początku"
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
 msgid "%s Paused."
-msgstr "%s zapauzowane."
+msgstr "%s wstrzymane."
 
 #: src/toolbars/ControlToolBar.cpp
 #, c-format
