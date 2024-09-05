@@ -14,6 +14,7 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
+    property var canvas: null
     property color clipColor: "#677CE4"
     property bool clipSelected: false
 
@@ -23,8 +24,8 @@ Rectangle {
     property bool collapsed: false
 
     signal clipMoved(real deltaX, bool completed)
-    signal clipLeftTrimmed(real deltaX)
-    signal clipRightTrimmed(real deltaX)
+    signal clipLeftTrimmed(real deltaX, real posOnCanvas)
+    signal clipRightTrimmed(real deltaX, real posOnCanvas)
     signal requestSelected()
 
     signal titleEditStarted()
@@ -254,6 +255,8 @@ Rectangle {
         y: header.height + 1
         width: root.width
         handlesVisible: root.clipSelected
+        canvas: root.canvas
+
 
         // make sure clip handles are visible on top of nearby clips
         onHandlesVisibleChanged: {
@@ -270,12 +273,12 @@ Rectangle {
             clipItemMousePositionChanged(xWithinClipItem, yWithinClipItem)
         }
 
-        onTrimLeftBy: function(trimByX) {
-            clipLeftTrimmed(trimByX)
+        onTrimLeftBy: function(trimByX, posOnCanvas) {
+            clipLeftTrimmed(trimByX, posOnCanvas)
         }
 
-        onTrimRightBy: function(trimByX) {
-            clipRightTrimmed(trimByX)
+        onTrimRightBy: function(trimByX, posOnCanvas) {
+            clipRightTrimmed(trimByX, posOnCanvas)
         }
     }
 

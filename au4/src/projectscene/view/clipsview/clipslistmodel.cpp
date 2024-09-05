@@ -136,6 +136,19 @@ int ClipsListModel::indexByKey(const trackedit::ClipKey& k) const
     return -1;
 }
 
+double ClipsListModel::calculateExtraAutoScrollShift(double posOnCanvas)
+{
+    secs_t posSec = m_context->positionToTime(posOnCanvas);
+    if (!muse::RealIsEqualOrMore(posSec, 0.0)) {
+        posSec = 0.0;
+    }
+    secs_t frameStartBeforeShift = m_context->frameStartTime();
+    m_context->insureVisible(posSec);
+    secs_t frameStartAfterShift = m_context->frameStartTime();
+
+    return (frameStartAfterShift - frameStartBeforeShift) * m_context->zoom();
+}
+
 void ClipsListModel::update()
 {
     //! NOTE First we form a new list, and then we delete old objects,
@@ -275,12 +288,14 @@ bool ClipsListModel::moveClip(const ClipKey& key, double deltaX, bool completed)
     return ok;
 }
 
-bool ClipsListModel::trimLeftClip(const ClipKey& key, double deltaX)
+bool ClipsListModel::trimLeftClip(const ClipKey& key, double deltaX, double posOnCanvas)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
+
+    deltaX += calculateExtraAutoScrollShift(posOnCanvas);
 
     const secs_t deltaSec = deltaX / m_context->zoom();
 
@@ -288,12 +303,14 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, double deltaX)
     return ok;
 }
 
-bool ClipsListModel::trimRightClip(const ClipKey& key, double deltaX)
+bool ClipsListModel::trimRightClip(const ClipKey& key, double deltaX, double posOnCanvas)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
+
+    deltaX -= calculateExtraAutoScrollShift(posOnCanvas);
 
     const secs_t deltaSec = deltaX / m_context->zoom();
 

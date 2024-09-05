@@ -4,7 +4,9 @@ import Muse.Ui
 import Muse.UiComponents
 
 Item {
+    id: root
 
+    property var canvas: null
     property bool handlesHovered: false
     property bool handlesVisible: false
 
@@ -17,8 +19,8 @@ Item {
     signal clipHandlesMousePositionChanged(real x, real y)
 
     property var trimStartPos
-    signal trimLeftBy(real x)
-    signal trimRightBy(real x)
+    signal trimLeftBy(real x, real posOnCanvas)
+    signal trimRightBy(real x, real posOnCanvas)
 
     Item {
         id: leftTrimHandle
@@ -92,6 +94,7 @@ Item {
 
                 if (pressed) {
                     let globalMouseX = mapToGlobal(Qt.point(e.x, e.y)).x
+                    let positionOnCanvas = mapToItem(canvas, e.x, e.y).x
 
                     // make sure we trim to the right only when mouse hovers trim handle
                     if (globalMouseX - trimStartPos > 0 && e.x < 0) {
@@ -99,7 +102,7 @@ Item {
                         return
                     }
 
-                    trimLeftBy(globalMouseX - trimStartPos)
+                    trimLeftBy(globalMouseX - trimStartPos, positionOnCanvas)
                     trimStartPos = globalMouseX
                 }
             }
@@ -177,6 +180,7 @@ Item {
 
                 if (pressed) {
                     let globalMouseX = mapToGlobal(Qt.point(e.x, e.y)).x
+                    let positionOnCanvas = mapToItem(canvas, e.x, e.y).x
 
                     // make sure we trim to the left only when mouse hovers trim handle
                     if (trimStartPos - globalMouseX > 0 && e.x > rightTrimHandle.width) {
@@ -184,7 +188,7 @@ Item {
                         return
                     }
 
-                    trimRightBy(trimStartPos - globalMouseX)
+                    trimRightBy(trimStartPos - globalMouseX, positionOnCanvas)
                     trimStartPos = globalMouseX
                 }
             }

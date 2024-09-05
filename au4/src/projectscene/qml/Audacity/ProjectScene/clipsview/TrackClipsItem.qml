@@ -10,6 +10,7 @@ Item {
 
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
+    property var canvas: null
 
     property bool isDataSelected: false
 
@@ -103,6 +104,7 @@ Item {
             ClipItem {
 
                 context: root.context
+                canvas: root.canvas
                 title: clipItem.title
                 clipColor: clipItem.color
                 clipKey: clipItem.key
@@ -116,12 +118,12 @@ Item {
                     clipsModel.moveClip(clipItem.key, deltaX, completed)
                 }
 
-                onClipLeftTrimmed: function(deltaX) {
-                    clipsModel.trimLeftClip(clipItem.key, deltaX)
+                onClipLeftTrimmed: function(deltaX, posOnCanvas) {
+                    clipsModel.trimLeftClip(clipItem.key, deltaX, posOnCanvas)
                 }
 
-                onClipRightTrimmed: function(deltaX) {
-                    clipsModel.trimRightClip(clipItem.key, deltaX)
+                onClipRightTrimmed: function(deltaX, posOnCanvas) {
+                    clipsModel.trimRightClip(clipItem.key, deltaX, posOnCanvas)
                 }
 
                 onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
