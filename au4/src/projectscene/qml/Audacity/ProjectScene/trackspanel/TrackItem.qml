@@ -246,6 +246,6 @@ ListItemBlank {
 
     SeparatorLine {
         anchors.bottom: parent.bottom
-        separatorWidth: 2
+        thickness: 2
     }
 }
