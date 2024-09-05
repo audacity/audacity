@@ -277,6 +277,7 @@ Rectangle {
                 delegate: TrackClipsItem {
                     width: tracksClipsView.width
                     context: timeline.context
+                    canvas: content
                     trackId: model.trackId
                     isDataSelected: model.isDataSelected
 
