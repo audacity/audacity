@@ -93,6 +93,12 @@ Item {
                 if (pressed) {
                     let globalMouseX = mapToGlobal(Qt.point(e.x, e.y)).x
 
+                    // make sure we trim to the right only when mouse hovers trim handle
+                    if (globalMouseX - trimStartPos > 0 && e.x < 0) {
+                        trimStartPos = globalMouseX
+                        return
+                    }
+
                     trimLeftBy(globalMouseX - trimStartPos)
                     trimStartPos = globalMouseX
                 }
@@ -171,6 +177,12 @@ Item {
 
                 if (pressed) {
                     let globalMouseX = mapToGlobal(Qt.point(e.x, e.y)).x
+
+                    // make sure we trim to the left only when mouse hovers trim handle
+                    if (trimStartPos - globalMouseX > 0 && e.x > rightTrimHandle.width) {
+                        trimStartPos = globalMouseX
+                        return
+                    }
 
                     trimRightBy(trimStartPos - globalMouseX)
                     trimStartPos = globalMouseX
