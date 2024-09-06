@@ -8,7 +8,6 @@
 
 **********************************************************************/
 #include "NyquistBase.h"
-
 #include "BasicUI.h"
 #include "EffectManager.h"
 #include "EffectOutputTracks.h"
@@ -536,23 +535,18 @@ bool NyquistBase::Init()
 
          if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0)))
          {
+            using namespace BasicUI;
             if (!hasSpectral)
-            {
-               EffectUIServices::DoMessageBox(
-                  *this,
+               ShowMessageBox(
                   XO("Enable track spectrogram view before\n"
                      "applying 'Spectral' effects."),
-                  wxOK | wxICON_EXCLAMATION | wxCENTRE, XO("Error"));
-            }
+                  MessageBoxOptions {}.IconStyle(Icon::Error));
             else
-            {
-               EffectUIServices::DoMessageBox(
-                  *this,
+               ShowMessageBox(
                   XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
                      "in the track Spectrogram settings and select the\n"
-                     "frequency range for the effect to act on."),
-                  wxOK | wxICON_EXCLAMATION | wxCENTRE, XO("Error"));
-            }
+                     "frequency range for the effect to act von."),
+                  MessageBoxOptions {}.IconStyle(Icon::Error));
             return false;
          }
       }
@@ -890,9 +884,9 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
    if (!bOnePassTool && (mNumSelectedChannels == 0))
    {
       auto message = XO("Audio selection required.");
-      EffectUIServices::DoMessageBox(
-         *this, message, wxOK | wxCENTRE | wxICON_EXCLAMATION,
-         XO("Nyquist Error"));
+      using namespace BasicUI;
+      BasicUI::ShowMessageBox(
+         message, MessageBoxOptions {}.IconStyle(Icon::Error));
    }
 
    std::optional<TrackIterRange<WaveTrack>> pRange;
@@ -1556,7 +1550,7 @@ bool NyquistBase::ProcessOne(
       }
       else
       {
-         EffectUIServices::DoMessageBox(*this, XO("Nyquist returned a list."));
+         BasicUI::ShowMessageBox(XO("Nyquist returned a list."));
       }
       return true;
    }
@@ -1569,7 +1563,7 @@ bool NyquistBase::ProcessOne(
       auto msg = Verbatim(NyquistToWxString(nyx_get_string()));
       if (!msg.empty())
       { // Empty string may be used as a No-Op return value.
-         EffectUIServices::DoMessageBox(*this, msg);
+         BasicUI::ShowMessageBox(msg);
       }
       else if (GetType() == EffectTypeTool)
       {
@@ -1594,14 +1588,14 @@ bool NyquistBase::ProcessOne(
    if (rval == nyx_double)
    {
       auto str = XO("Nyquist returned the value: %f").Format(nyx_get_double());
-      EffectUIServices::DoMessageBox(*this, str);
+      BasicUI::ShowMessageBox(str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
    if (rval == nyx_int)
    {
       auto str = XO("Nyquist returned the value: %d").Format(nyx_get_int());
-      EffectUIServices::DoMessageBox(*this, str);
+      BasicUI::ShowMessageBox(str);
       return (GetType() != EffectTypeProcess || mIsPrompt);
    }
 
@@ -1646,22 +1640,21 @@ bool NyquistBase::ProcessOne(
    int outChannels = nyx_get_audio_num_channels();
    if (outChannels > (int)mCurNumChannels)
    {
-      EffectUIServices::DoMessageBox(
-         *this, XO("Nyquist returned too many audio channels.\n"));
+      BasicUI::ShowMessageBox(
+         XO("Nyquist returned too many audio channels.\n"));
       return false;
    }
 
    if (outChannels == -1)
    {
-      EffectUIServices::DoMessageBox(
-         *this, XO("Nyquist returned one audio channel as an array.\n"));
+      BasicUI::ShowMessageBox(
+         XO("Nyquist returned one audio channel as an array.\n"));
       return false;
    }
 
    if (outChannels == 0)
    {
-      EffectUIServices::DoMessageBox(
-         *this, XO("Nyquist returned an empty array.\n"));
+      BasicUI::ShowMessageBox(XO("Nyquist returned an empty array.\n"));
       return false;
    }
 
@@ -1681,8 +1674,7 @@ bool NyquistBase::ProcessOne(
    mOutputTime = out->GetEndTime();
    if (mOutputTime <= 0)
    {
-      EffectUIServices::DoMessageBox(
-         *this, XO("Nyquist returned nil audio.\n"));
+      BasicUI::ShowMessageBox(XO("Nyquist returned nil audio.\n"));
       return false;
    }
 
@@ -2575,14 +2567,14 @@ bool NyquistBase::ParseProgram(wxInputStream& stream)
    }
    if (!mFoundType && mIsPrompt)
    {
+      using namespace BasicUI;
       /* i1n-hint: SAL and LISP are names for variant syntaxes for the
        Nyquist programming language.  Leave them, and 'return', untranslated. */
-      EffectUIServices::DoMessageBox(
-         *this,
+      BasicUI::ShowMessageBox(
          XO("Your code looks like SAL syntax, but there is no \'return\' statement.\n\
 For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
 or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n ."),
-         EffectUIServices::DefaultMessageBoxStyle, XO("Error in Nyquist code"));
+         MessageBoxOptions {}.IconStyle(Icon::Error));
       /* i18n-hint: refers to programming "languages" */
       mInitError = XO("Could not determine language");
       return false;
