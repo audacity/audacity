@@ -53,7 +53,6 @@ effects from this one class.
 
 #include "LabelTrack.h"
 #include "NoteTrack.h"
-#include "ShuttleGetDefinition.h"
 #include "../../prefs/GUIPrefs.h"
 #include "../../prefs/SpectrogramSettings.h"
 #include "../../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
@@ -323,10 +322,6 @@ bool NyquistBase::VisitSettings(
       SaveSettings(settings, *pGa->mpEap);
       return true;
    }
-   else if (auto pSd = dynamic_cast<ShuttleGetDefinition*>(&visitor);
-       !pSd)
-      // must be the NullShuttle
-      return true;
 
    // Get the "definition," only for the help or info commands
    if (mExternal)
