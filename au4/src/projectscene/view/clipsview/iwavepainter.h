@@ -33,6 +33,7 @@ public:
         double zoom = 0.0;
         double fromTime = 0.0;
         double toTime = 0.0;
+        double channelHeightRatio = 0.5;
         Style style;
     };
 

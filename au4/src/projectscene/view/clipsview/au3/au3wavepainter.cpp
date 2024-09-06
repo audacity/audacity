@@ -649,14 +649,17 @@ void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const W
 
     const Geometry& g = params.geometry;
 
-    const double channelHeight = (g.height) / static_cast<int>(clip->NChannels());
+    const std::vector<double> channelHeight {
+        g.height * params.channelHeightRatio,
+        g.height * (1 - params.channelHeightRatio),
+    };
 
-    wm.height = channelHeight;
     wm.width = g.width;
     wm.left = g.left;
     wm.top = 0.0;
     for (unsigned i = 0; i < clip->NChannels(); ++i) {
+        wm.height = channelHeight[i];
         DrawWaveform(i, painter, *track, *clip, wm, params.zoom, params.style, dB);
-        wm.top += channelHeight;
+        wm.top += wm.height;
     }
 }

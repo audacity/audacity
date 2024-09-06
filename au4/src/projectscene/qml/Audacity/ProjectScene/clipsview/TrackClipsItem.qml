@@ -13,6 +13,8 @@ Item {
     property var canvas: null
 
     property bool isDataSelected: false
+    property bool isStereo: clipsModel.isStereo
+    property double channelHeightRatio: isStereo ? 0.5 : 1
 
     signal interactionStarted()
     signal interactionEnded()
@@ -116,6 +118,8 @@ Item {
                 leftVisibleMargin: clipItem.leftVisibleMargin
                 rightVisibleMargin: clipItem.rightVisibleMargin
                 collapsed: trackViewState.isTrackCollapsed
+                channelHeightRatio: root.channelHeightRatio
+                showChannelSplitter: isStereo
 
                 onClipMoved: function(deltaX, completed) {
                     clipsModel.moveClip(clipItem.key, deltaX, completed)
@@ -150,6 +154,10 @@ Item {
 
                 onTitleEditCanceled: {
                     clipsModel.resetSelectedClip()
+                }
+
+                onRatioChanged: function (ratio) {
+                    root.channelHeightRatio = ratio
                 }
             }
         }
@@ -199,6 +207,23 @@ Item {
 
         onReleased: {
             root.interactionEnded()
+        }
+    }
+
+    ChannelSplitter {
+        id: channelSplitter
+
+        anchors.fill: parent
+        anchors.topMargin: trackViewState.isTrackCollapsed ? 1 : 21
+        anchors.bottomMargin: 3
+
+        channelHeightRatio: root.channelHeightRatio
+        color: "#FFFFFF"
+        opacity: 0.05
+        visible: isStereo
+
+        onRatioChanged: function(ratio) {
+            root.channelHeightRatio = ratio
         }
     }
 

@@ -14,6 +14,8 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
+    property alias showChannelSplitter: channelSplitter.visible
+    property alias channelHeightRatio: channelSplitter.channelHeightRatio
     property var canvas: null
     property color clipColor: "#677CE4"
     property bool clipSelected: false
@@ -27,6 +29,7 @@ Rectangle {
     signal clipLeftTrimmed(real deltaX, real posOnCanvas)
     signal clipRightTrimmed(real deltaX, real posOnCanvas)
     signal requestSelected()
+    signal ratioChanged(double val)
 
     signal titleEditStarted()
     signal titleEditAccepted(var newTitle)
@@ -233,8 +236,23 @@ Rectangle {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
+            channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+
             clipColor: root.clipColor
             clipSelected: root.clipSelected
+
+            ChannelSplitter {
+                id: channelSplitter
+
+                anchors.fill: parent
+
+                color: "#000000"
+                opacity: 0.10
+
+                onRatioChanged: function (ratio) {
+                    root.ratioChanged(ratio)
+                }
+            }
         }
 
         Rectangle {

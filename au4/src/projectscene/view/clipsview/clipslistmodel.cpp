@@ -154,7 +154,7 @@ void ClipsListModel::update()
     //! NOTE First we form a new list, and then we delete old objects,
     //! otherwise there will be errors in Qml
     QList<ClipListItem*> oldList = m_clipList;
-
+    bool isStereo = false;
     beginResetModel();
 
     m_clipList.clear();
@@ -163,6 +163,7 @@ void ClipsListModel::update()
         ClipListItem* item = new ClipListItem(this);
         item->setClip(c);
         m_clipList.append(item);
+        isStereo |= c.stereo;
     }
 
     updateItemsMetrics();
@@ -173,6 +174,11 @@ void ClipsListModel::update()
     onSelectedClip(selectionController()->selectedClip());
 
     endResetModel();
+
+    if (m_isStereo != isStereo) {
+        m_isStereo = isStereo;
+        emit isStereoChanged();
+    }
 
     muse::async::Async::call(this, [oldList]() {
         qDeleteAll(oldList);
@@ -372,6 +378,11 @@ void ClipsListModel::setTrackId(const QVariant& _newTrackId)
     }
     m_trackId = newTrackId;
     emit trackIdChanged();
+}
+
+bool ClipsListModel::isStereo() const
+{
+    return m_isStereo;
 }
 
 TimelineContext* ClipsListModel::timelineContext() const

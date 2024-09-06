@@ -55,6 +55,7 @@ au::trackedit::Clip DomConverter::clip(const WaveTrack* waveTrack, const WaveCli
     clip.startTime = au3clip->GetPlayStartTime();
     clip.endTime = au3clip->GetPlayEndTime();
     clip.color = trackColor(clip.key.trackId);
+    clip.stereo = au3clip->NChannels() > 1;
 
     return clip;
 }
