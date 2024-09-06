@@ -49,3 +49,8 @@ std::string PlatformCompatibility::GetExecutablePath()
 {
    return wxStandardPaths::Get().GetExecutablePath().ToStdString();
 }
+
+std::string PlatformCompatibility::GetTempDir()
+{
+   return wxStandardPaths::Get().GetTempDir().ToStdString();
+}

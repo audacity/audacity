@@ -15,6 +15,7 @@
 #include "LabelTrack.h"
 #include "Languages.h"
 #include "NoteTrack.h"
+#include "PlatformCompatibility.h"
 #include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -753,10 +754,10 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
          EscapeString(TempDirectory::TempDir()));
       mProps += wxString::Format(
          wxT("(putprop '*SYSTEM-DIR* \"%s\" 'SYS-TEMP)\n"),
-         EscapeString(wxStandardPaths::Get().GetTempDir()));
+         EscapeString(PlatformCompatibility::GetTempDir()));
       mProps += wxString::Format(
          wxT("(putprop '*SYSTEM-DIR* \"%s\" 'DOCUMENTS)\n"),
-         EscapeString(wxStandardPaths::Get().GetDocumentsDir()));
+         EscapeString(PlatformCompatibility::GetDocumentsDir()));
       mProps += wxString::Format(
          wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"),
          EscapeString(wxGetHomeDir()));
