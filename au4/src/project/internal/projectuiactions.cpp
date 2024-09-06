@@ -143,12 +143,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Split clips at silences"),
              TranslatableString("action", "Split clips at silences")
              ),
-    UiAction("merge-selected-clips",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Merge selected clips"),
-             TranslatableString("action", "Merge selected clips")
-             ),
     UiAction("group-clips",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
