@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-08-31 00:00+0000\n"
+"PO-Revision-Date: 2024-09-06 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -179,7 +179,7 @@ msgstr "Błąd: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Error Initializing Audio"
-msgstr "Błąd przy uruchamianiu dźwięku"
+msgstr "Błąd inicjowania dźwięku"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Audacity Audio"
@@ -191,7 +191,7 @@ msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
 msgstr ""
-"Błąd przy otwieraniu urządzenia nagrywającego.\n"
+"Błąd otwierania urządzenia nagrywającego.\n"
 "Kod błędu: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
@@ -279,12 +279,12 @@ msgstr "Nie można wczytać pliku preseta z „%s”"
 #. i18n-hint: the name of an Apple audio software protocol
 #: libraries/lib-audio-unit/AudioUnitEffectBase.h
 msgid "Audio Unit"
-msgstr "Jednostka dźwiękowa"
+msgstr "Audio Unit"
 
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Audio Unit Effects"
-msgstr "Efekty jednostki dźwiękowej"
+msgstr "Efekty Audio Unit"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
@@ -297,7 +297,7 @@ msgstr "Zespół Audacity"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr "Zapewnia efekty jednostki dźwiękowej w Audacity"
+msgstr "Zapewnia efekty Audio Unit w Audacity"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Could not find component"
@@ -370,7 +370,7 @@ msgstr "Nieprawidłowa odpowiedź: %s"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 msgid "Export failed"
-msgstr "Eksportowanie zakończone niepowodzeniem"
+msgstr "Eksport zakończony niepowodzeniem"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
@@ -581,7 +581,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"%s: Nie udało się załadować poniższych ustawień. Zostaną użyte ustawienia domyślne.\n"
+"%s: Nie można załadować poniższych ustawień. Zostaną użyte ustawienia domyślne.\n"
 "\n"
 "%s"
 
@@ -832,7 +832,7 @@ msgstr "Eksportuj"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
 msgid "Export completed with error."
-msgstr "Eksportowanie zakończone z błędem."
+msgstr "Eksport zakończony z błędem."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
@@ -865,7 +865,7 @@ msgstr "Operacja została anulowana przez użytkownika"
 #: libraries/lib-import-export/Import.cpp
 #, c-format
 msgid "This version of Audacity was not compiled with %s support."
-msgstr "Ta wersja Audacity nie była kompilowana ze wsparciem %s."
+msgstr "Ta wersja Audacity nie była kompilowana z obsługą %s."
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -930,7 +930,7 @@ msgstr ""
 "„%s” jest zakodowanym plikiem dźwiękowym.\n"
 "Pliki te pochodzą zazwyczaj z internetowych sklepów muzycznych. \n"
 "Audacity nie może otworzyć tego typu pliku z powodu jego zakodowania. \n"
-"Spróbuj zgrać plik w Audacity lub wypal go na płytę Audio CD, a następnie \n"
+"Spróbuj zgrać plik w Audacity lub wypal go na płycie Audio CD, a następnie \n"
 "wypakuj ścieżkę do obsługiwanego formatu, takiego jak WAV lub AIFF."
 
 #. i18n-hint: %s will be the filename
@@ -1355,7 +1355,7 @@ msgstr "Nie udało się otworzyć pliku do przesłania: %s"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Wystąpił błąd uruchamiania warstwy wej./wyj. MIDI.\n"
+msgstr "Wystąpił błąd inicjowania warstwy wej./wyj. MIDI.\n"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid ""
@@ -1367,7 +1367,7 @@ msgstr ""
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "Error Initializing Midi"
-msgstr "Błąd przy uruchamianiu MIDI"
+msgstr "Błąd inicjowania MIDI"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Note track.
@@ -1425,7 +1425,7 @@ msgstr "Nie znaleziono urządzenia odtwarzającego MIDI „%s”.\n"
 #. * minutes, seconds and samples (at the current project sample rate)
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
 msgid "hh:mm:ss + samples"
-msgstr "gg:mm:ss + sample"
+msgstr "gg:mm:ss + próbki"
 
 #. i18n-hint: Name of time display format that shows time in seconds
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
@@ -1574,7 +1574,7 @@ msgstr "0100 g 060 m 060<01000 s"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+># samples"
-msgstr "0100 g 060 m 060 s+<# sampli"
+msgstr "0100 g 060 m 060 s+<# próbek"
 
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
@@ -1583,7 +1583,7 @@ msgstr "0100 g 060 m 060 s+<# sampli"
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: plug-ins/sample-data-export.ny
 msgid "samples"
-msgstr "sample"
+msgstr "próbki"
 
 #. i18n-hint: Format string for displaying time in samples (lots of samples).
 #. * Change the ',' to the 1000s separator for your locale, and translate
@@ -1591,7 +1591,7 @@ msgstr "sample"
 #. * can change the numbers to an appropriate one, and put a 0 on the front
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000,01000 samples|#"
-msgstr "01000,01000,01000 sample|#"
+msgstr "01000,01000,01000 próbek|#"
 
 #. i18n-hint: Name of time display format that shows time in hours, minutes,
 #. * seconds and frames at 24 frames per second (commonly used for films)
@@ -2402,7 +2402,7 @@ msgstr "Klatki CD"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 msgid "Seconds && samples"
-msgstr "Sekundy &i sample"
+msgstr "Sekundy &i próbki"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 #: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
@@ -2424,7 +2424,7 @@ msgstr "Milisekundy"
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 #: src/prefs/TracksPrefs.cpp
 msgid "Samples"
-msgstr "Sample"
+msgstr "Próbki"
 
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "SQLite3 error"
@@ -2729,7 +2729,7 @@ msgid ""
 "Could not create directory:\n"
 "  %s"
 msgstr ""
-"Nie udało się utworzyć katalogu:\n"
+"Nie można utworzyć katalogu:\n"
 "%s"
 
 #: libraries/lib-theme/Theme.cpp
@@ -2839,7 +2839,7 @@ msgstr "Błąd zapisywania do pliku: „%s”"
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/BasicEffectUIServices.cpp
 msgid "Error Saving Effect Presets"
-msgstr "Błąd zapisywania presetów efektu"
+msgstr "Błąd zapisywania presetów efektów"
 
 #: libraries/lib-vst/VSTWrapper.cpp
 #, c-format
@@ -2890,7 +2890,7 @@ msgid ""
 "Sequence has block file exceeding maximum %s samples per block.\n"
 "Truncating to this maximum length."
 msgstr ""
-"Sekwencja zawiera plik blokowy przekraczający maksymalnie %s sampli na blok.\n"
+"Sekwencja zawiera plik blokowy przekraczający maksymalnie %s próbek na blok.\n"
 "Obcinanie do tej maksymalnej długości."
 
 #: libraries/lib-wave-track/Sequence.cpp
@@ -2933,7 +2933,7 @@ msgstr "Nie ma wystarczająco miejsca, aby wkleić zaznaczenie"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
-msgstr "Ścieżka ma uszkodzoną sekwencję sampli."
+msgstr "Ścieżka ma uszkodzoną sekwencję próbek."
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
@@ -3073,7 +3073,7 @@ msgstr "Obsługa innych formatów"
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Burn to CD"
-msgstr "Wypal na płycie"
+msgstr "Wypal na płycie CD"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "No Local Help"
@@ -3420,7 +3420,7 @@ msgstr "Nie udało się znaleźć pozycji %lld w %s"
 #: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Unable to read %lld samples from %s"
-msgstr "Nie można wczytać %lld sampli z %s"
+msgstr "Nie można wczytać %lld próbek z %s"
 
 #: modules/import-export/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
 msgid "Command:"
@@ -3484,11 +3484,11 @@ msgstr "Nie można eksportować dźwięku do %s"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
-msgstr "Eksportowanie zaznaczonego dźwięku przy użyciu komendy z wiersza poleceń"
+msgstr "Eksportowanie zaznaczonego dźwięku za pomocą kodera wiersza poleceń"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
-msgstr "Eksportowanie dźwięku przy użyciu komendy z wiersza poleceń"
+msgstr "Eksportowanie dźwięku za pomocą kodera wiersza poleceń"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Command Output"
@@ -3708,11 +3708,11 @@ msgstr "FFmpeg : BŁĄD - Nie można przydzielić bufora do odczytu z dźwiękie
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
-msgstr "FFmpeg : BŁĄD - Nie udało się zapisać ramki dźwięku do pliku wyjściowego."
+msgstr "FFmpeg : BŁĄD - Nie można zapisać ramki dźwięku do pliku wyjściowego."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
-msgstr "FFmpeg : BŁĄD - Nie udało się uzyskać próbki rozmiaru bufora."
+msgstr "FFmpeg : BŁĄD - Nie można uzyskać próbki rozmiaru bufora."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
@@ -4351,10 +4351,10 @@ msgid ""
 "To use FFmpeg import, go to Edit > Preferences > Libraries\n"
 "to download or locate the FFmpeg libraries."
 msgstr ""
-"Audacity usiłował użyć pakietu FFmpeg do importowania\n"
+"Audacity usiłował użyć pakietu FFmpeg do importu\n"
 "pliku dźwiękowego, ale nie znaleziono bibliotek.\n"
 "\n"
-"Aby użyć importowania FFmpeg, idź do „Edycja > Ustawienia... > Biblioteki”,\n"
+"Aby użyć importu FFmpeg, idź do „Edycja > Ustawienia... > Biblioteki”,\n"
 "aby pobrać lub ustalić lokalizację bibliotek FFmpeg."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
@@ -4505,7 +4505,7 @@ msgstr "Pliki FLAC"
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid "FLAC export couldn't open %s"
-msgstr "Eksportowanie do FLAC nie mogło otworzyć %s"
+msgstr "Eksport FLAC nie mógł otworzyć %s"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
@@ -6093,7 +6093,7 @@ msgstr "Wykryto konflikt wersji projektu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
-msgstr "Na Audio.com dostępna jest nowsza wersja tego projektu Audacity. Zamiast tego zapisanie tego projektu zastąpi go najnowszą wersją."
+msgstr "Na Audio.com dostępna jest nowsza wersja tego projektu Audacity. Zapisanie tego projektu zastąpi go najnowszą wersją."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Save this project"
@@ -6730,13 +6730,13 @@ msgstr "Obsługa formatów plików"
 
 #: src/AboutDialog.cpp
 msgid "MP3 Import"
-msgstr "Importowanie MP3"
+msgstr "Import MP3"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
 #.
 #: src/AboutDialog.cpp
 msgid "MP3 Export"
-msgstr "Eksportowanie MP3"
+msgstr "Eksport MP3"
 
 #. i18n-hint: Opus is the codec name. This name should not be translated
 #.
@@ -6745,13 +6745,13 @@ msgstr "Eksportowanie MP3"
 #.
 #: src/AboutDialog.cpp
 msgid "Opus Import and Export"
-msgstr "Importowanie i eksportowanie Opus"
+msgstr "Import i eksport Opus"
 
 #. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
 #. * Both are proper nouns and shouldn't be translated
 #: src/AboutDialog.cpp
 msgid "Ogg Vorbis Import and Export"
-msgstr "Importowanie i eksportowanie Ogg Vorbis"
+msgstr "Import i eksport Ogg Vorbis"
 
 #: src/AboutDialog.cpp
 msgid "ID3 tag support"
@@ -6761,15 +6761,15 @@ msgstr "Obsługa znaczników ID3"
 #. * a proper noun and so shouldn't be translated
 #: src/AboutDialog.cpp
 msgid "FLAC import and export"
-msgstr "Importowanie i eksportowanie FLAC"
+msgstr "Import i eksport FLAC"
 
 #: src/AboutDialog.cpp
 msgid "MP2 export"
-msgstr "Eksportowanie MP2"
+msgstr "Eksport MP2"
 
 #: src/AboutDialog.cpp
 msgid "FFmpeg Import/Export"
-msgstr "Importowanie/eksportowanie FFmpeg"
+msgstr "Import/eksport FFmpeg"
 
 #: src/AboutDialog.cpp
 msgid "Features"
@@ -7253,7 +7253,7 @@ msgstr ""
 
 #: src/AudacityMirProject.cpp
 msgid "Music Import"
-msgstr "Importowanie muzyki"
+msgstr "Import muzyki"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
@@ -7725,7 +7725,7 @@ msgstr "Rozmiar danych testowych powinien mieścić się w zakresie 1 - 2000 MB.
 #: src/Benchmark.cpp
 #, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
-msgstr "Używając %lld fragmentów %lld sampli każdy, łącznie %.1f MB.\n"
+msgstr "Używając %lld fragmentów %lld próbek każdy, łącznie %.1f MB.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
@@ -7795,7 +7795,7 @@ msgstr "Sprawdzanie poprawności...\n"
 #: src/Benchmark.cpp
 #, c-format
 msgid "Bad: chunk %lld sample %lld\n"
-msgstr "Nieprawidłowy: fragment %lld sampel %lld\n"
+msgstr "Nieprawidłowy: fragment %lld próbka %lld\n"
 
 #: src/Benchmark.cpp
 msgid "Passed correctness check!\n"
@@ -9165,7 +9165,7 @@ msgstr "Ten projekt zawierał ścieżki stereo z różnymi częstotliwościami p
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with different sample formats in channels."
-msgstr "Ten projekt zawierał ścieżki stereo z różnymi formatami sampli w kanałach."
+msgstr "Ten projekt zawierał ścieżki stereo z różnymi formatami próbek w kanałach."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
@@ -11336,7 +11336,7 @@ msgstr "Algorytm nie działa na tym dźwięku. Nic nie zostało zmienione."
 #: src/effects/ClickRemoval.cpp
 #, c-format
 msgid "Selection must be larger than %d samples."
-msgstr "Zaznaczenie musi być większe niż %d sampli."
+msgstr "Zaznaczenie musi być większe niż %d próbek."
 
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
@@ -11561,7 +11561,7 @@ msgstr "Tło jeszcze niezmierzone"
 
 #: src/effects/Contrast.cpp
 msgid "Export Contrast Result As:"
-msgstr "Wyeksportuj rezultaty kontrastu jako:"
+msgstr "Eksportuj rezultaty kontrastu jako:"
 
 #. i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines
 #: src/effects/Contrast.cpp
@@ -12617,11 +12617,11 @@ msgstr "%lld z %lld"
 
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
-msgstr "Próg początkowy (&sample):"
+msgstr "P&róg początkowy (próbki):"
 
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
-msgstr "Próg k&ońcowy (sample):"
+msgstr "Próg k&ońcowy (próbki):"
 
 #: src/effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -12633,7 +12633,7 @@ msgstr "Odwróć"
 
 #: src/effects/Invert.cpp
 msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr "Odwraca sample do góry nogami, odwracając ich biegunowość"
+msgstr "Odwraca próbki do góry nogami, odwracając ich biegunowość"
 
 #: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
@@ -13286,7 +13286,7 @@ msgid ""
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"Efekt naprawy jest przeznaczony do użytku na bardzo krótkich odcinkach uszkodzonego dźwięku (do 128 sampli).\n"
+"Efekt naprawy jest przeznaczony do użytku na bardzo krótkich odcinkach uszkodzonego dźwięku (do 128 próbek).\n"
 "\n"
 "Powiększ i zaznacz ułamek sekundy do naprawy."
 
@@ -13376,7 +13376,7 @@ msgstr "Wokal taneczny"
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Modern Vocal"
-msgstr "Wokal współczesny"
+msgstr "Wokal nowoczesny"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13856,7 +13856,7 @@ msgstr "Nie można załadować pliku presetów."
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "VST Effect Options"
-msgstr "Opcje efektu VST"
+msgstr "Opcje efektów VST"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -13868,12 +13868,12 @@ msgstr "Rozmiar bufora"
 #: src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
-msgstr "Rozmiar bufora kontroluje liczbę sampli wysyłanych do efektu przy każdej iteracji. Mniejsze wartości spowodują wolniejsze przetwarzanie, a niektóre efekty wymagają 8192 sampli lub mniej, aby działać poprawnie. Jednak większość efektów akceptuje duże bufory, a ich użycie znacznie skraca czas przetwarzania."
+msgstr "Rozmiar bufora kontroluje liczbę próbek wysyłanych do efektu przy każdej iteracji. Mniejsze wartości spowodują wolniejsze przetwarzanie, a niektóre efekty wymagają 8192 próbek lub mniej, aby działać poprawnie. Jednak większość efektów akceptuje duże bufory, a ich użycie znacznie skraca czas przetwarzania."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "&Buffer Size (8 to 1048576 samples):"
-msgstr "Rozmiar &bufora (od 8 do 1048576 sampli):"
+msgstr "Rozmiar &bufora (od 8 do 1048576 próbek):"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -13962,11 +13962,11 @@ msgstr "Przesunięcie częstotliwości Wah w procentach"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Export Audio Unit Preset As %s:"
-msgstr "Eksportuj preset jednostki dźwiękowej jako %s:"
+msgstr "Eksportuj preset Audio Unit jako %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Standard Audio Unit preset file"
-msgstr "Standardowy plik preseta jednostki dźwiękowej"
+msgstr "Standardowy plik preseta Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -13981,12 +13981,12 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
-msgstr "Eksportuj presety jednostki dźwiękowej"
+msgstr "Eksportuj presety Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Import Audio Unit Preset As %s:"
-msgstr "Importuj preset jednostki dźwiękowej jako %s:"
+msgstr "Importuj preset Audio Unit jako %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -14001,11 +14001,11 @@ msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Import Audio Unit Presets"
-msgstr "Importuj presety jednostki dźwiękowej"
+msgstr "Importuj presety Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Audio Unit Effect Options"
-msgstr "Opcje efektu jednostki dźwiękowej"
+msgstr "Opcje efektów Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
@@ -14068,7 +14068,7 @@ msgstr "Ustawienia efektu LV2"
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 #, c-format
 msgid "&Buffer Size (8 to %d) samples:"
-msgstr "Rozmiar &bufora (8 do %d) sampli:"
+msgstr "Rozmiar &bufora (8 do %d) próbek:"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
@@ -14411,12 +14411,12 @@ msgstr "Coś poszło źle po wyeksportowaniu następującego(ych) pliku(ów) %ll
 #: src/export/ExportAudioDialog.cpp
 #, c-format
 msgid "Export canceled after exporting the following %lld file(s)."
-msgstr "Anulowano eksportowanie po wyeksportowaniu następującego(ych) pliku(ów) %lld."
+msgstr "Eksport anulowany po wyeksportowaniu następującego(ych) pliku(ów) %lld."
 
 #: src/export/ExportAudioDialog.cpp
 #, c-format
 msgid "Export stopped after exporting the following %lld file(s)."
-msgstr "Zatrzymano eksportowanie po wyeksportowaniu następującego(ych) pliku(ów) %lld."
+msgstr "Eksport zatrzymany po wyeksportowaniu następującego(ych) pliku(ów) %lld."
 
 #: src/export/ExportAudioDialog.cpp
 #, c-format
@@ -16524,7 +16524,7 @@ msgstr "D&omyślna częstotliwość próbkowania:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Default Sample &Format:"
-msgstr "Domyślny &format sampla:"
+msgstr "Domyślny &format próbek:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Latency"
@@ -16744,7 +16744,7 @@ msgstr "Grupuj według typu i wydawcy"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
-msgstr "Opcje efektu"
+msgstr "Opcje efektów"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
@@ -16872,23 +16872,23 @@ msgstr "-36 dB („płytki” zakres do edytowania przy dużych amplitudach)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (PCM zakres 8-bitowych sampli)"
+msgstr "-48 dB (PCM zakres 8-bitowych próbek)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (PCM zakres 10-bitowych sampli)"
+msgstr "-60 dB (PCM zakres 10-bitowych próbek)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (PCM zakres 12-bitowych sampli)"
+msgstr "-72 dB (PCM zakres 12-bitowych próbek)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (PCM zakres 14-bitowych sampli)"
+msgstr "-84 dB (PCM zakres 14-bitowych próbek)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (PCM zakres 16-bitowych sampli)"
+msgstr "-96 dB (PCM zakres 16-bitowych próbek)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-120 dB (approximate limit of human hearing)"
@@ -16896,7 +16896,7 @@ msgstr "-120 dB (przybliżony zakres słyszenia człowieka)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (PCM zakres 24-bitowych sampli)"
+msgstr "-145 dB (PCM zakres 24-bitowych próbek)"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -17860,7 +17860,7 @@ msgstr "Milisekundy"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "4 Pixels per Sample"
-msgstr "4 piksele na sampel"
+msgstr "4 piksele na próbkę"
 
 #: src/prefs/TracksPrefs.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
@@ -17901,7 +17901,7 @@ msgstr "Domyślna skala kształtu fali:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
-msgstr "Wyświetl &sample:"
+msgstr "Wyświetl p&róbki:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default audio track &name:"
@@ -17985,7 +17985,7 @@ msgstr "Transport"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Pause"
-msgstr "Pauza"
+msgstr "Wstrzymaj"
 
 #: src/toolbars/ControlToolBar.cpp
 msgid "Play"
@@ -18024,7 +18024,7 @@ msgstr "Zaznacz do początku"
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
 msgid "%s Paused."
-msgstr "%s zapauzowane."
+msgstr "%s wstrzymane."
 
 #: src/toolbars/ControlToolBar.cpp
 #, c-format
@@ -18719,19 +18719,19 @@ msgstr "Zmieniono wysokość"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
-msgstr "Kliknij i przeciągnij, aby edytować sampel"
+msgstr "Kliknij i przeciągnij, aby edytować próbkę"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr "Aby użyć rysowania, powiększaj do momentu zobaczenia pojedynczych sampli."
+msgstr "Aby użyć rysowania, powiększaj do momentu zobaczenia pojedynczych próbek."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
-msgstr "Przesunięto sample"
+msgstr "Przesunięto próbki"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Sample Edit"
-msgstr "Edycja sampla"
+msgstr "Edycja próbki"
 
 #. i18n-hint k abbreviating kilo meaning thousands
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
@@ -18944,7 +18944,7 @@ msgstr "&Format"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Changing sample format"
-msgstr "Zmienianie formatu sampla"
+msgstr "Zmienianie formatu próbki"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
@@ -20028,7 +20028,7 @@ msgstr "Studio ściszania"
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "Zaznaczenie jest za krótkie.~%Musi być większe niż 2 sample."
+msgstr "Zaznaczenie jest za krótkie.~%Musi być większe niż 2 próbki."
 
 #: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 msgid "Adjustable Fade"
@@ -21019,7 +21019,7 @@ msgstr "Indeksuj (tylko pliki tekstowe)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample Count"
-msgstr "Liczba sampli"
+msgstr "Liczba próbek"
 
 #: plug-ins/sample-data-export.ny
 msgid "Time Indexed"
@@ -21091,7 +21091,7 @@ msgstr "Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr "~a   ~a~%~aCzęstotliwość próbkowania: ~a Hz.~%LePrzetworzona długość: ~a sampli ~a sekund.~a"
+msgstr "~a   ~a~%~aCzęstotliwość próbkowania: ~a Hz.~%LePrzetworzona długość: ~a próbek ~a sekund.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21100,7 +21100,7 @@ msgid ""
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 "~a   ~a~%~aCzęstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali.~%~\n"
-"                     Przetworzona długość: ~a sampli ~a sekund.~a"
+"                     Przetworzona długość: ~a próbek ~a sekund.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21110,7 +21110,7 @@ msgid ""
 "                  DC offset: ~a~a"
 msgstr ""
 "~a~%Częstotliwość próbkowania: ~a Hz. Przykładowe wartości na ~a skali. ~a.~%~aPrzetworzona długość: ~a ~\n"
-"                  sampli, ~a sekund.~% Amplituda szczytowa: ~a (liniowa) ~a dB.  Nieważona RMS: ~a dB.~%~\n"
+"                  próbek, ~a sekund.~% Amplituda szczytowa: ~a (liniowa) ~a dB.  Nieważona RMS: ~a dB.~%~\n"
 "                  Offset DC: ~a~a"
 
 #: plug-ins/sample-data-export.ny
@@ -21126,7 +21126,7 @@ msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a lin, ~a dB."
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a samples."
-msgstr "~a sampli."
+msgstr "~a próbek."
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21176,7 +21176,7 @@ msgstr "przykładowe dane"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample #"
-msgstr "Sampel #"
+msgstr "Próbka #"
 
 #: plug-ins/sample-data-export.ny
 msgid "Value (linear)"
