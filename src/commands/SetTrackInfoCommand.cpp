@@ -51,7 +51,7 @@ SetTrackAudioConmmand and SetTrackVisualsCommand.
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
-#include "../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
+#include "WaveChannelViewConstants.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveformView.h"
 #include "CommandContext.h"
 

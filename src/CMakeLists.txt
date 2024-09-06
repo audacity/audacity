@@ -741,8 +741,6 @@ set( SOURCES
       tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
       tracks/playabletrack/wavetrack/ui/WaveChannelView.h
-      tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-      tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
