@@ -16,6 +16,7 @@ struct Clip {
     muse::draw::Color color;
     double startTime = 0.0;
     double endTime = 0.0;
+    bool stereo = false;
 
     inline bool isValid() const { return key.isValid(); }
 };

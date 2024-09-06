@@ -48,6 +48,7 @@ void WaveView::paint(QPainter* painter)
     params.zoom = m_context->zoom();
     params.fromTime = (m_clipTime.itemStartTime - m_clipTime.clipStartTime);
     params.toTime = params.fromTime + (m_clipTime.itemEndTime - m_clipTime.itemStartTime);
+    params.channelHeightRatio = m_channelHeightRatio;
 
     // LOGDA() << " geometry.height: " << params.geometry.height
     //         << " geometry.width: " << params.geometry.width
@@ -150,5 +151,17 @@ void WaveView::setClipTime(const ClipTime& newClipTime)
     m_clipTime = newClipTime;
     emit clipTimeChanged();
 
+    update();
+}
+
+double WaveView::channelHeightRatio() const
+{
+    return m_channelHeightRatio;
+}
+
+void WaveView::setChannelHeightRatio(double channelHeightRatio)
+{
+    m_channelHeightRatio = channelHeightRatio;
+    emit channelHeightRatioChanged();
     update();
 }

@@ -27,5 +27,6 @@
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipItemSmall.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipHandles.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/ChannelSplitter.qml</file>
     </qresource>
 </RCC>
