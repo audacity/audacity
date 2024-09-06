@@ -346,7 +346,9 @@ SqliteSampleBlock::SqliteSampleBlock(
 
 SqliteSampleBlock::~SqliteSampleBlock()
 {
-   mpFactory->OnSampleBlockDtor(*this);
+   if (mpFactory) {
+      mpFactory->OnSampleBlockDtor(*this);
+   }
 
    if (IsSilent()) {
       // The block object was constructed but failed to Load() or Commit().
