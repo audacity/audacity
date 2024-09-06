@@ -14,7 +14,7 @@
 
 #include <wx/log.h>
 
-#include "Nyquist.h"
+#include "NyquistBase.h"
 
 #include "FileNames.h"
 #include "PluginManager.h"
@@ -176,7 +176,7 @@ void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   auto pathList = NyquistEffect::GetNyquistSearchPath();
+   auto pathList = NyquistBase::GetNyquistSearchPath();
    FilePaths files;
    TranslatableString ignoredErrMsg;
 
@@ -219,7 +219,7 @@ void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 
 PluginPaths NyquistEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
-   auto pathList = NyquistEffect::GetNyquistSearchPath();
+   auto pathList = NyquistBase::GetNyquistSearchPath();
    FilePaths files;
 
    // Add the Nyquist prompt
@@ -238,7 +238,7 @@ unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
    const RegistrationCallback &callback)
 {
    errMsg = {};
-   NyquistEffect effect(path);
+   NyquistBase effect(path);
    if (effect.IsOk())
    {
       if (callback)
@@ -254,7 +254,7 @@ std::unique_ptr<ComponentInterface>
 NyquistEffectsModule::LoadPlugin(const PluginPath & path)
 {
    // Acquires a resource for the application.
-   auto effect = std::make_unique<NyquistEffect>(path);
+   auto effect = std::make_unique<NyquistBase>(path);
    if (effect->IsOk())
       return effect;
    return nullptr;

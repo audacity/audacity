@@ -524,8 +524,6 @@ set( SOURCES
       # Nyquist Effects
 
       $<$<BOOL:${USE_NYQUIST}>:
-         effects/nyquist/LoadNyquist.cpp
-         effects/nyquist/LoadNyquist.h
          effects/nyquist/Nyquist.cpp
          effects/nyquist/Nyquist.h
       >
@@ -1006,7 +1004,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_VAMP}>:libvamp>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
@@ -1301,7 +1298,7 @@ set( AUDACITY_LIBRARIES
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
    lib-audacity-application-logic-interface
-   lib-builtin-effects
+   lib-builtin-effects-interface
 )
 
 if (USE_VST)
@@ -1365,6 +1362,12 @@ if( ${_OPT}has_crashreports )
          lib-breakpad-configurer-interface
       )
    endif()
+endif()
+
+if( ${_OPT}use_nyquist )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-nyquist-effects-interface
+   )
 endif()
 
 propagate_interesting_dependencies( ${TARGET} "${AUDACITY_LIBRARIES}" )

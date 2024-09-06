@@ -103,6 +103,10 @@ if( ${_OPT}has_crashreports )
    endif()
 endif()
 
+if ( ${_OPT}use_nyquist )
+   list( APPEND LIBRARIES lib-nyquist-effects )
+endif()
+
 # This library depends on lib-network-manager
 # If Sentry reporting is disabled, an INTERFACE library
 # will be defined
