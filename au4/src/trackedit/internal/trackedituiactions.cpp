@@ -70,6 +70,12 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Split"),
              TranslatableString("action", "Split")
              ),
+    UiAction("join",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Merge selected clips"),
+             TranslatableString("action", "Merge selected clips")
+             ),
     // clip
     UiAction("clip-cut",
              au::context::UiCtxAny,
@@ -145,6 +151,12 @@ const UiActionList TrackeditUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Split at"),
              TranslatableString("action", "Split at")
+             ),
+    UiAction("merge-selected-on-tracks",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Merge selected clips"),
+             TranslatableString("action", "Merge selected clips")
              ),
     UiAction("clip-export",
              au::context::UiCtxAny,

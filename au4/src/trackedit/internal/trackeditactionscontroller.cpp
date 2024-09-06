@@ -12,6 +12,7 @@ using namespace muse::actions;
 static const ActionCode COPY_CODE("copy");
 static const ActionCode DELETE_CODE("delete");
 static const ActionCode SPLIT_CODE("split");
+static const ActionCode JOIN_CODE("join");
 
 static const ActionCode CLIP_CUT_CODE("clip-cut");
 static const ActionCode CLIP_COPY_CODE("clip-copy");
@@ -22,6 +23,7 @@ static const ActionCode CLIP_DELETE_SELECTED_CODE("clip-delete-selected");
 static const ActionCode PASTE("paste");
 static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
+static const ActionCode MERGE_SELECTED_ON_TRACK("merge-selected-on-tracks");
 static const ActionCode NEW_MONO_TRACK("new-mono-track");
 static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
 static const ActionCode NEW_LABEL_TRACK("new-label-track");
@@ -34,6 +36,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
     dispatcher()->reg(this, DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
     dispatcher()->reg(this, SPLIT_CODE, this, &TrackeditActionsController::doGlobalSplit);
+    dispatcher()->reg(this, JOIN_CODE, this, &TrackeditActionsController::doGlobalJoin);
 
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
     dispatcher()->reg(this, CLIP_COPY_CODE, this, &TrackeditActionsController::clipCopy);
@@ -44,6 +47,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
     dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::trackSplitAt);
+    dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
     dispatcher()->reg(this, "toggle-loop-region", this, &TrackeditActionsController::toggleLoopRegion);
     dispatcher()->reg(this, "clear-loop-region", this, &TrackeditActionsController::clearLoopRegion);
     dispatcher()->reg(this, "set-loop-region-to-selection", this, &TrackeditActionsController::setLoopRegionToSelection);
@@ -103,6 +107,16 @@ void TrackeditActionsController::doGlobalSplit()
     secs_t playbackPosition = globalContext()->playbackState()->playbackPosition();
 
     dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<trackedit::TrackId, secs_t>(trackIdToSplit, playbackPosition));
+}
+
+void TrackeditActionsController::doGlobalJoin()
+{
+    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+    secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+    dispatcher()->dispatch(MERGE_SELECTED_ON_TRACK,
+                           ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
 }
 
 void TrackeditActionsController::clipCut()
@@ -235,6 +249,24 @@ void TrackeditActionsController::trackSplitAt(const ActionData& args)
     secs_t playbackPosition = args.arg<secs_t>(1);
 
     trackeditInteraction()->splitAt(trackId, playbackPosition);
+}
+
+void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::ActionData &args)
+{
+    IF_ASSERT_FAILED(args.count() == 3) {
+        return;
+    }
+
+    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    if (tracksIds.empty()) {
+        return;
+    }
+
+    secs_t begin = args.arg<secs_t>(1);
+    secs_t end = args.arg<secs_t>(2);
+    secs_t duration = end - begin;
+
+    trackeditInteraction()->mergeSelectedOnTracks(tracksIds, begin, end);
 }
 
 void TrackeditActionsController::toggleLoopRegion()
