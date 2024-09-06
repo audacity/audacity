@@ -15,7 +15,7 @@
 #include "libraries/lib-project-rate/ProjectRate.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-menus/CommandManager.h"
-#include "libraries/lib-audacity-application-logic/EffectManager.h"
+#include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-project-history/ProjectHistory.h"
 #include "libraries/lib-transactions/TransactionScope.h"
 #include "libraries/lib-module-manager/ConfigInterface.h"

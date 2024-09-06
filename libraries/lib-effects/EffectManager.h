@@ -39,16 +39,16 @@ struct EffectAndDefaultSettings{
 using EffectMap = std::unordered_map<wxString, EffectAndDefaultSettings>;
 using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<EffectPlugin> >;
 
-AUDACITY_APPLICATION_LOGIC_API
+EFFECTS_API
 RegistryPaths GetUserPresets(EffectPlugin& host);
 
-AUDACITY_APPLICATION_LOGIC_API
+EFFECTS_API
 bool HasCurrentSettings(EffectPlugin& host);
 
-AUDACITY_APPLICATION_LOGIC_API
+EFFECTS_API
 bool HasFactoryDefaults(EffectPlugin& host);
 
-class AUDACITY_APPLICATION_LOGIC_API EffectManager
+class EFFECTS_API EffectManager
 {
 public:
 
