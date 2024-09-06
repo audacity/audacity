@@ -616,8 +616,6 @@ set( SOURCES
       prefs/QualityPrefs.h
       prefs/RecordingPrefs.cpp
       prefs/RecordingPrefs.h
-      prefs/SpectrogramSettings.cpp
-      prefs/SpectrogramSettings.h
       prefs/SpectrumPrefs.cpp
       prefs/SpectrumPrefs.h
       prefs/ThemePrefs.cpp
@@ -628,8 +626,8 @@ set( SOURCES
       prefs/TracksPrefs.h
       prefs/WaveformPrefs.cpp
       prefs/WaveformPrefs.h
-      prefs/WaveformSettings.cpp
-      prefs/WaveformSettings.h
+      prefs/WaveformScale.cpp
+      prefs/WaveformScale.h
 
       # Toolbars
 

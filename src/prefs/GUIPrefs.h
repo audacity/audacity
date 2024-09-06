@@ -35,12 +35,6 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
    ManualPageID HelpPageName() override;
    void PopulateOrExchange(ShuttleGui & S) override;
 
-   static void GetRangeChoices(
-      TranslatableStrings *pChoices,
-      wxArrayStringEx *pCodes,
-      int *pDefaultRangeIndex = nullptr
-   );
-
  private:
    void Populate();
 

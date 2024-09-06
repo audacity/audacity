@@ -45,15 +45,16 @@ SetTrackAudioConmmand and SetTrackVisualsCommand.
 #include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "tracks/playabletrack/wavetrack/ui/WaveformAppearance.h"
-#include "../prefs/WaveformSettings.h"
+#include "WaveformSettings.h"
 #include "WaveTrack.h"
-#include "../prefs/SpectrogramSettings.h"
+#include "SpectrogramSettings.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
 #include "WaveChannelViewConstants.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveformView.h"
 #include "CommandContext.h"
+#include "prefs/WaveformScale.h"
 
 bool SetTrackBase::Apply(const CommandContext & context)
 {

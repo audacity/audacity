@@ -13,6 +13,7 @@ set( LIBRARIES
    lib-label-track-interface
    lib-note-track-interface
    lib-time-track-interface
+   lib-wave-track-settings
    libnyquist
 )
 audacity_library( lib-nyquist-effects "${SOURCES}" "${LIBRARIES}"

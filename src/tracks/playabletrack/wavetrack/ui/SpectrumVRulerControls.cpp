@@ -19,7 +19,7 @@ Paul Licameli split from WaveChannelVRulerControls.cpp
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "WaveTrack.h"
-#include "../../../../prefs/SpectrogramSettings.h"
+#include "SpectrogramSettings.h"
 #include "../../../../widgets/Ruler.h"
 #include "../../../../widgets/LinearUpdater.h"
 #include "../../../../widgets/LogarithmicUpdater.h"
@@ -69,16 +69,16 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
 {
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;
-   
+
    if (!(event.ShiftDown() || event.CmdDown()))
       return RefreshNone;
-   
+
    // Always stop propagation even if the ruler didn't change.  The ruler
    // is a narrow enough target.
    evt.event.Skip(false);
-   
+
    auto steps = evt.steps;
-   
+
    using namespace WaveChannelViewConstants;
    if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
@@ -110,15 +110,15 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
          newTop =
          std::min(bound,
                   numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
-         
+
          SpectrogramBounds::Get(wc).SetBounds(newBottom, newTop);
       }
    }
    else
       return RefreshNone;
-   
+
    ProjectHistory::Get( *pProject ).ModifyState(true);
-   
+
    return RefreshCell | UpdateVRuler;
 }
 
@@ -146,14 +146,14 @@ void SpectrumVRulerControls::DoUpdateVRuler(
    float minFreq, maxFreq;
    SpectrogramBounds::Get(wc).GetBounds(wc, minFreq, maxFreq);
    vruler->SetDbMirrorValue(0.0);
-   
+
    switch (settings.scaleType) {
       default:
          wxASSERT(false);
       case SpectrogramSettings::stLinear:
       {
          // Spectrum
-         
+
          /*
           draw the ruler
           we will use Hz if maxFreq is < 2000, otherwise we represent kHz,
@@ -185,7 +185,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       case SpectrogramSettings::stPeriod:
       {
          // SpectrumLog
-         
+
          /*
           draw the ruler
           we will use Hz if maxFreq is < 2000, otherwise we represent kHz,

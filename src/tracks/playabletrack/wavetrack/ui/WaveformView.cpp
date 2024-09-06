@@ -37,12 +37,14 @@ Paul Licameli split from WaveChannelView.cpp
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
 #include "../../../../WaveTrackLocation.h"
-#include "../../../../prefs/WaveformSettings.h"
+#include "prefs/WaveformScale.h"
+#include "WaveformSettings.h"
 
 #include "FrameStatistics.h"
 
 #include <wx/graphics.h>
 #include <wx/dc.h>
+#include <wx/gdicmn.h>
 
 #include <wx/dcmemory.h>
 #include "waveform/WaveBitmapCache.h"
@@ -887,7 +889,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             showPoints, muted, highlight);
          offset += rectPortion.width;
       }
-      
+
    }
 
    const auto drawEnvelope = artist->drawEnvelope;

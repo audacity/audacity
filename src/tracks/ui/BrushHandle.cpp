@@ -33,7 +33,7 @@ Edward Hui
 #include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "../../prefs/SpectrogramSettings.h"
+#include "SpectrogramSettings.h"
 #include "../../../images/Cursors.h"
 #include "../playabletrack/wavetrack/ui/SpectrumView.h"
 

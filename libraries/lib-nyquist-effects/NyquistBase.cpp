@@ -21,6 +21,7 @@
 #include "Project.h"
 #include "ProjectRate.h"
 #include "ShuttleAutomation.h"
+#include "SpectrogramSettings.h"
 #include "SyncLock.h"
 #include "TempDirectory.h"
 #include "TimeTrack.h"

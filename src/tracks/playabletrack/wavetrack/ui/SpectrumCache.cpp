@@ -10,7 +10,7 @@
 
 #include "SpectrumCache.h"
 
-#include "../../../../prefs/SpectrogramSettings.h"
+#include "SpectrogramSettings.h"
 #include "RealFFTf.h"
 #include "Sequence.h"
 #include "Spectrum.h"

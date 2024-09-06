@@ -35,6 +35,7 @@
 #include "ThemePrefs.h"
 #include "AColor.h"
 #include "GUISettings.h"
+#include "WaveformSettings.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: refers to Audacity's user interface settings */
@@ -62,50 +63,14 @@ ManualPageID GUIPrefs::HelpPageName()
    return "Interface_Preferences";
 }
 
-void GUIPrefs::GetRangeChoices(
-   TranslatableStrings *pChoices,
-   wxArrayStringEx *pCodes,
-   int *pDefaultRangeIndex
-)
-{
-   static const wxArrayStringEx sCodes = {
-      wxT("36") ,
-      wxT("48") ,
-      wxT("60") ,
-      wxT("72") ,
-      wxT("84") ,
-      wxT("96") ,
-      wxT("120") ,
-      wxT("145") ,
-   };
-   if (pCodes)
-      *pCodes = sCodes;
-
-   static const std::initializer_list<TranslatableString> sChoices = {
-      XO("-36 dB (shallow range for high-amplitude editing)") ,
-      XO("-48 dB (PCM range of 8 bit samples)") ,
-      XO("-60 dB (PCM range of 10 bit samples)") ,
-      XO("-72 dB (PCM range of 12 bit samples)") ,
-      XO("-84 dB (PCM range of 14 bit samples)") ,
-      XO("-96 dB (PCM range of 16 bit samples)") ,
-      XO("-120 dB (approximate limit of human hearing)") ,
-      XO("-145 dB (PCM range of 24 bit samples)") ,
-   };
-
-   if (pChoices)
-      *pChoices = sChoices;
-
-   if (pDefaultRangeIndex)
-      *pDefaultRangeIndex = 2; // 60 == ENV_DB_RANGE
-}
-
 void GUIPrefs::Populate()
 {
    // First any pre-processing for constructing the GUI.
    Languages::GetLanguages(
       FileNames::AudacityPathList(), mLangCodes, mLangNames);
 
-   GetRangeChoices(&mRangeChoices, &mRangeCodes, &mDefaultRangeIndex);
+   WaveformSettings::GetRangeChoices(
+      &mRangeChoices, &mRangeCodes, &mDefaultRangeIndex);
 
 #if 0
    mLangCodes.insert( mLangCodes.end(), {
@@ -190,7 +155,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 #endif
    }
    S.EndStatic();
-   
+
    S.EndScroller();
 }
 

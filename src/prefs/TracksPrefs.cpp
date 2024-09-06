@@ -29,6 +29,7 @@
 #include "ShuttleGui.h"
 #include "UndoManager.h"
 #include "Viewport.h"
+#include "WaveformSettings.h"
 #include "WaveTrack.h"
 
 int TracksPrefs::iPreferencePinned = -1;
@@ -46,7 +47,7 @@ namespace {
    {
       return false;
    }
-   
+
    const wxChar *PinnedHeadPositionPreferenceKey()
    {
       return wxT("/AudioIO/PinnedHeadPosition");
@@ -57,30 +58,6 @@ namespace {
       return 0.5;
    }
 }
-
-
-namespace {
-   const auto waveformScaleKey = wxT("/GUI/DefaultWaveformScaleChoice");
-   const auto dbLogValueString = wxT("dB");
-   const auto dbLinValueString = wxT("dBLin");
-}
-
-static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
-   waveformScaleKey,
-   {
-      { wxT("Linear"), XO("Linear (amp)") },
-      { dbLogValueString, XO("Logarithmic (dB)") },
-      { dbLinValueString, XO("Linear (dB)") },
-   },
-
-   0, // linear
-   
-   {
-      WaveformSettings::stLinearAmp,
-      WaveformSettings::stLogarithmicDb,
-      WaveformSettings::stLinearDb,
-   }
-};
 
 //////////
 // There is a complicated migration history here!
@@ -143,7 +120,9 @@ public:
       if ( !gPrefs->Read( key3, &value ) ) {
          if (newValue == obsoleteValue) {
             newValue = waveformSymbol.Internal();
-            gPrefs->Write(waveformScaleKey, dbLogValueString);
+            gPrefs->Write(
+               WaveformSettings::waveformScaleKey,
+               WaveformSettings::dbLogValueString);
          }
 
          Write( value = newValue );
@@ -178,11 +157,6 @@ static TracksViewModeEnumSetting ViewModeSetting()
 WaveChannelViewConstants::Display TracksPrefs::ViewModeChoice()
 {
    return ViewModeSetting().ReadEnum();
-}
-
-WaveformSettings::ScaleTypeValues TracksPrefs::WaveformScaleChoice()
-{
-   return waveformScaleSetting.ReadEnum();
 }
 
 //////////
@@ -359,8 +333,9 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
          S.TieChoice(XXO("Default &view mode:"),
                      viewModeSetting );
 
-         S.TieChoice(XXO("Default Waveform scale:"),
-                     waveformScaleSetting );
+         S.TieChoice(
+            XXO("Default Waveform scale:"),
+            WaveformSettings::waveformScaleSetting);
 
          S.TieChoice(XXO("Display &samples:"),
                      sampleDisplaySetting );

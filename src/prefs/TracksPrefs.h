@@ -44,7 +44,6 @@ class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
    static void SetPinnedHeadPositionPreference(double value, bool flush = false);
 
    static WaveChannelViewConstants::Display ViewModeChoice();
-   static WaveformSettings::ScaleTypeValues WaveformScaleChoice();
    static WaveChannelViewConstants::SampleDisplay SampleViewChoice();
    static WaveChannelViewConstants::ZoomPresets Zoom1Choice();
    static WaveChannelViewConstants::ZoomPresets Zoom2Choice();

@@ -18,13 +18,32 @@ Paul Licameli
 #include "WaveTrack.h"
 
 #include "Decibels.h"
-#include "GUIPrefs.h"
-#include "TracksPrefs.h"
-
-#include <algorithm>
 
 #include "Prefs.h"
+#include <algorithm>
 
+const wxString WaveformSettings::waveformScaleKey =
+   wxT("/GUI/DefaultWaveformScaleChoice");
+const wxString WaveformSettings::dbLogValueString = wxT("dB");
+const wxString WaveformSettings::dbLinValueString = wxT("dBLin");
+
+EnumSetting<WaveformSettings::ScaleTypeValues>
+   WaveformSettings::waveformScaleSetting {
+      waveformScaleKey,
+      {
+         { wxT("Linear"), XO("Linear (amp)") },
+         { dbLogValueString, XO("Logarithmic (dB)") },
+         { dbLinValueString, XO("Linear (dB)") },
+      },
+
+      0, // linear
+
+      {
+         WaveformSettings::stLinearAmp,
+         WaveformSettings::stLogarithmicDb,
+         WaveformSettings::stLinearDb,
+      }
+   };
 
 WaveformSettings::Globals::Globals()
 {
@@ -107,7 +126,7 @@ bool WaveformSettings::Validate(bool /* quiet */)
 
 void WaveformSettings::LoadPrefs()
 {
-   scaleType = TracksPrefs::WaveformScaleChoice();
+   scaleType = waveformScaleSetting.ReadEnum();
 
    dBRange = DecibelScaleCutoff.Read();
 
@@ -129,7 +148,7 @@ void WaveformSettings::Update()
 void WaveformSettings::UpdatePrefs()
 {
    if (scaleType == defaults().scaleType) {
-      scaleType = TracksPrefs::WaveformScaleChoice();
+      scaleType = waveformScaleSetting.ReadEnum();
    }
 
    if (dBRange == defaults().dBRange){
@@ -144,7 +163,7 @@ void WaveformSettings::ConvertToEnumeratedDBRange()
 {
    // Assumes the codes are in ascending sequence.
    wxArrayStringEx codes;
-   GUIPrefs::GetRangeChoices(nullptr, &codes);
+   WaveformSettings::GetRangeChoices(nullptr, &codes);
    int ii = 0;
    for (int nn = codes.size(); ii < nn; ++ii) {
       long value = 0;
@@ -158,7 +177,7 @@ void WaveformSettings::ConvertToEnumeratedDBRange()
 void WaveformSettings::ConvertToActualDBRange()
 {
    wxArrayStringEx codes;
-   GUIPrefs::GetRangeChoices(nullptr, &codes);
+   WaveformSettings::GetRangeChoices(nullptr, &codes);
    long value = 0;
    codes[std::max(0, std::min((int)(codes.size()) - 1, dBRange))]
       .ToLong(&value);
@@ -191,6 +210,35 @@ const EnumValueSymbols &WaveformSettings::GetScaleNames()
    return result;
 }
 
+void WaveformSettings::GetRangeChoices(
+   TranslatableStrings* pChoices, wxArrayStringEx* pCodes,
+   int* pDefaultRangeIndex)
+{
+   static const wxArrayStringEx sCodes = {
+      wxT("36"), wxT("48"), wxT("60"),  wxT("72"),
+      wxT("84"), wxT("96"), wxT("120"), wxT("145"),
+   };
+   if (pCodes)
+      *pCodes = sCodes;
+
+   static const std::initializer_list<TranslatableString> sChoices = {
+      XO("-36 dB (shallow range for high-amplitude editing)"),
+      XO("-48 dB (PCM range of 8 bit samples)"),
+      XO("-60 dB (PCM range of 10 bit samples)"),
+      XO("-72 dB (PCM range of 12 bit samples)"),
+      XO("-84 dB (PCM range of 14 bit samples)"),
+      XO("-96 dB (PCM range of 16 bit samples)"),
+      XO("-120 dB (approximate limit of human hearing)"),
+      XO("-145 dB (PCM range of 24 bit samples)"),
+   };
+
+   if (pChoices)
+      *pChoices = sChoices;
+
+   if (pDefaultRangeIndex)
+      *pDefaultRangeIndex = 2; // 60 == ENV_DB_RANGE
+}
+
 WaveformSettings::~WaveformSettings()
 {
 }
@@ -198,31 +246,4 @@ WaveformSettings::~WaveformSettings()
 auto WaveformSettings::Clone() const -> PointerType
 {
    return std::make_unique<WaveformSettings>(*this);
-}
-
-static const ChannelGroup::Attachments::RegisteredFactory
-key2{ [](auto &) { return std::make_unique<WaveformScale>(); } };
-
-WaveformScale &WaveformScale::Get(const WaveTrack &track)
-{
-   auto &mutTrack = const_cast<WaveTrack&>(track);
-   return mutTrack.Attachments::Get<WaveformScale>(key2);
-}
-
-WaveformScale &WaveformScale::Get(const WaveChannel &channel)
-{
-   return Get(channel.GetTrack());
-}
-
-WaveformScale::~WaveformScale() = default;
-
-auto WaveformScale::Clone() const -> PointerType
-{
-   return std::make_unique<WaveformScale>(*this);
-}
-
-int WaveformScale::ZeroLevelYCoordinate(wxRect rect) const
-{
-   return rect.GetTop() +
-      (int)((mDisplayMax / (mDisplayMax - mDisplayMin)) * rect.height);
 }
