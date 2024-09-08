@@ -802,7 +802,7 @@ int AudioIOBase::getRecordDevIndex(const wxString &devNameArg)
       // JKC: This will happen if you run with no config file
       // This happens once.  Config file will exist on the next run.
       // TODO: Look into this a bit more.  Could be relevant to blank Device Toolbar.
-      wxLogWarning("PortAudio returns -1, cannot find a suitable default device, so we just use the first one available");
+      wxLogDebug("PortAudio returns -1, cannot find a suitable default device, so we just use the first one available");
       deviceNum = 0;
    }
 

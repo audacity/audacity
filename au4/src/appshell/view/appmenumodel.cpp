@@ -457,7 +457,7 @@ MenuItemList AppMenuModel::makeClipItems()
         makeMenuItem("split"),
         makeMenuItem("split-into-new-track"),
         makeMenuItem("split-clips-at-silences"),
-        makeMenuItem("merge-selected-clips"),
+        makeMenuItem("join"),
         makeSeparator(),
         makeMenuItem("group-clips"),
         makeMenuItem("ungroup-clips")

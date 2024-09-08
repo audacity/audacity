@@ -477,6 +477,40 @@ bool Au3Interaction::splitAt(TrackId trackId, secs_t pivot)
     return true;
 }
 
+bool Au3Interaction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    //! TODO fix this so it displays progress if there's
+    //! a need to change pitch/speed
+    ProgressReporter dummyProgressReporter;
+    waveTrack->Join(begin, end, dummyProgressReporter);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack));
+
+    return true;
+}
+
+bool Au3Interaction::mergeSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
+{
+    secs_t duration = end - begin;
+
+    for (const auto &trackId : tracksIds ) {
+        bool ok = mergeSelectedOnTrack(trackId, begin, end);
+        if (!ok) {
+            return false;
+        }
+    }
+
+    pushProjectHistoryJoinState(begin, duration);
+
+    return true;
+}
+
 bool Au3Interaction::trimClipLeft(const ClipKey &clipKey, secs_t deltaSec)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
@@ -580,4 +614,15 @@ au::audio::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey
     }
 
     return clip->End() - clip->Start();
+}
+
+void Au3Interaction::pushProjectHistoryJoinState(secs_t start, secs_t duration)
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto trackeditProject = project->trackeditProject();
+
+    std::stringstream ss;
+    ss << "Joined " << duration << " seconds at " << start;
+
+    trackeditProject->pushHistoryState(ss.str(), "Join");
 }
