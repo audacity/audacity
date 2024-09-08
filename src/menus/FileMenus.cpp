@@ -529,10 +529,6 @@ auto FileMenu()
          //   AudioIONotBusyFlag(), wxT("Shift+A") )
       ),
 
-      Section( "Close", Command( wxT("Close"), XXO("&Close Project"), OnClose,
-            AudioIONotBusyFlag(), wxT("Ctrl+W") )
-      ),
-
       Section( "Import-Export",
          Command( wxT("Export"), XXO("&Export Audio..."), OnExportAudio,
             AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+E") ),
@@ -553,12 +549,16 @@ auto FileMenu()
          )
       ),
 
+      Section( "Close", Command( wxT("Close"), XXO("&Close Project"), OnClose,
+            AudioIONotBusyFlag(), wxT("Ctrl+W") )
+      ),
+
       Section( "Exit",
          // On the Mac, the Exit item doesn't actually go here...wxMac will
          // pull it out
          // and put it in the Audacity menu for us based on its ID.
          /* i18n-hint: (verb) It's item on a menu. */
-         Command( wxT("Exit"), XXO("Quit Audacity"), OnExit,
+         Command( wxT("Exit"), XXO("&Quit Audacity"), OnExit,
             AlwaysEnabledFlag, wxT("Ctrl+Q") )
       )
    ) };
