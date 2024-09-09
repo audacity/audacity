@@ -70,7 +70,7 @@ jobs:
       run: |
           cmake --build .build.x64 --target package_source
     - name: Upload sources
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: audacity-sources
         path: |
@@ -157,7 +157,7 @@ jobs:
         OWNER=${{ github.repository_owner }}
         docker run --volume=$(pwd):/work_dir:rw --rm --network=none ghcr.io/${OWNER,,}/audacity-${{ matrix.config.name }}-build:${{ github.ref_name }}
     - name: Upload Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.config.name }}-package-${{ github.sha }}
         path: |
