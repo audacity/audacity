@@ -35,6 +35,8 @@
 #include "nyquist/xlisp/xlisp.h"
 #include "nyx.h"
 
+#include <cfloat>
+#include <cstring>
 #include <iostream>
 #include <wx/log.h>
 #include <wx/numformatter.h>

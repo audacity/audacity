@@ -14,8 +14,6 @@
 #include "StatefulEffect.h"
 #include "WaveChannelViewConstants.h"
 
-#include "nyx.h"
-
 class wxArrayString;
 class wxFileName;
 class wxCheckBox;

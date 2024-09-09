@@ -12,10 +12,7 @@
 #define __AUDACITY_EFFECT_NYQUIST__
 
 #include "../StatefulEffectUIServices.h"
-#include "FileNames.h"
 #include "NyquistBase.h"
-#include "SampleCount.h"
-#include "StatefulEffect.h"
 #include "wxPanelWrapper.h"
 
 class wxArrayString;

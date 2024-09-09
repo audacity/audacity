@@ -26,54 +26,28 @@ effects from this one class.
 
 
 #include "Nyquist.h"
-#include "EffectOutputTracks.h"
 
-#include <algorithm>
-#include <cmath>
-#include <cstring>
-
-#include <locale.h>
-
-#include <wx/checkbox.h>
 #include <wx/choice.h>
-#include <wx/datetime.h>
-#include <wx/log.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
-#include <wx/slider.h>
-#include <wx/sstream.h>
-#include <wx/stattext.h>
-#include <wx/textdlg.h>
 #include <wx/tokenzr.h>
-#include <wx/txtstrm.h>
 #include <wx/valgen.h>
-#include <wx/wfstream.h>
-#include <wx/numformatter.h>
-#include <wx/stdpaths.h>
 
-#include "../../commands/ScriptCommandRelay.h"
-#include "../../prefs/GUIPrefs.h"
+#include "../../commands/ScriptCommandRelay.h" // ExecFromMain
 #include "../../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
 #include "../../widgets/NumericTextCtrl.h"
 #include "../../widgets/valnum.h"
 #include "../EffectEditor.h"
-#include "AudacityMessageBox.h"
 #include "BasicUI.h"
 #include "ShuttleGui.h"
 #include "EffectManager.h"
-#include "wxFileNameWrapper.h"
 
-#include "FileDialog/FileDialog.h"
-
+#include <nyx.h>
 #ifndef nyx_returns_start_and_end_time
 #error You need to update lib-src/libnyquist
 #endif
 
-#include <locale.h>
-#include <iostream>
-#include <ostream>
-#include <sstream>
-#include <float.h>
+#include <cfloat>
 
 enum
 {
