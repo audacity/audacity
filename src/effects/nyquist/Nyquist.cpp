@@ -927,6 +927,14 @@ void NyquistOutputDialog::OnOk(wxCommandEvent & /* event */)
    EndModal(wxID_OK);
 }
 
+static NyquistBase::GetEffectHook::Scope getEffectHookScope {
+   [](const PluginID& path) {
+      // Returned object must implement EffectUIServices for display of wxWidget
+      // UI to be possible.
+      return std::make_unique<NyquistEffect>(path);
+   }
+};
+
 static NyquistBase::GetDisplaysHook::Scope getDisplaysHookScope {
    [](const WaveTrack* track) {
       auto pView = WaveChannelView::FindFirst(track);

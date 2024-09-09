@@ -78,6 +78,12 @@ class NYQUIST_EFFECTS_API NyquistBase :
     public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
 public:
+   struct GetEffectHook :
+       GlobalHook<
+          GetEffectHook, std::unique_ptr<NyquistBase>(const wxString& pluginId)>
+   {
+   };
+
    struct GetDisplaysHook :
        GlobalHook<
           GetDisplaysHook,
@@ -152,6 +158,8 @@ public:
    void Break();
    void Stop();
 
+   bool IsOk();
+
 private:
    static int mReentryCount;
    // NyquistBase implementation
@@ -159,7 +167,6 @@ private:
    struct NyxContext;
    bool ProcessOne(NyxContext& nyxContext, EffectOutputTracks* pOutputs);
 
-   bool IsOk();
    const TranslatableString& InitializationError() const
    {
       return mInitError;
