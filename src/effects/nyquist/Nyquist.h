@@ -73,10 +73,8 @@ private:
 class NyquistOutputDialog final : public wxDialogWrapper
 {
 public:
-   NyquistOutputDialog(wxWindow * parent, wxWindowID id,
-                       const TranslatableString & title,
-                       const TranslatableString & prompt,
-                       const TranslatableString &message);
+   NyquistOutputDialog(
+      const TranslatableString& title, const TranslatableString& message);
 
 private:
    void OnOk(wxCommandEvent & event);

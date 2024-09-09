@@ -85,6 +85,14 @@ public:
    {
    };
 
+   struct ShowDebugOutputHook :
+       GlobalHook<
+          ShowDebugOutputHook, void(
+                                  const TranslatableString& title,
+                                  const TranslatableString& message)>
+   {
+   };
+
    /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */

@@ -881,11 +881,9 @@ BEGIN_EVENT_TABLE(NyquistOutputDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, NyquistOutputDialog::OnOk)
 END_EVENT_TABLE()
 
-NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
-                                       const TranslatableString & title,
-                                       const TranslatableString & prompt,
-                                       const TranslatableString &message)
-: wxDialogWrapper{ parent, id, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER }
+NyquistOutputDialog::NyquistOutputDialog(const TranslatableString & title,
+                                         const TranslatableString &message)
+: wxDialogWrapper{ nullptr, -1, title, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER }
 {
    SetName();
 
@@ -893,7 +891,7 @@ NyquistOutputDialog::NyquistOutputDialog(wxWindow * parent, wxWindowID id,
    {
       S.SetBorder(10);
 
-      S.AddVariableText( prompt, false, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT );
+      S.AddVariableText( XO("Debug Output: "), false, wxALIGN_LEFT | wxLEFT | wxTOP | wxRIGHT );
 
       // TODO: use ShowInfoDialog() instead.
       // Beware this dialog MUST work with screen readers.
@@ -1064,5 +1062,13 @@ static NyquistBase::GetDisplaysHook::Scope getDisplaysHookScope {
       auto pView = WaveChannelView::FindFirst(track);
       return pView ? pView->GetDisplays() :
                      std::vector<WaveChannelSubView::Type> {};
+   }
+};
+
+static NyquistBase::ShowDebugOutputHook::Scope showDebugOutputHookScope {
+   [](const TranslatableString& title, const TranslatableString& message) {
+      NyquistOutputDialog dialog { title, message };
+      dialog.CentreOnParent();
+      dialog.ShowModal();
    }
 };

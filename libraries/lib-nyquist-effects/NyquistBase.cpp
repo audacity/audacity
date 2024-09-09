@@ -1060,12 +1060,7 @@ finish:
    mDebug = (mTrace && !mDebugOutput.Translation().empty()) ? true : mDebug;
 
    if (mDebug && !mRedirectOutput)
-   {
-      NyquistOutputDialog dlog(
-         nullptr, -1, mName, XO("Debug Output: "), mDebugOutput);
-      dlog.CentreOnParent();
-      dlog.ShowModal();
-   }
+      ShowDebugOutputHook::Call(mName, mDebugOutput);
 
    // Has rug been pulled from under us by some effect done within Nyquist??
    if (!bOnePassTool && (nEffectsSoFar == EffectOutputTracks::nEffectsDone))
