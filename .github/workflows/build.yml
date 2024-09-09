@@ -251,7 +251,7 @@ jobs:
     - name: 'Tar files'
       shell: bash
       run: tar cf macos_intel.tar .build.x64
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
         path: macos_intel.tar
@@ -293,7 +293,7 @@ jobs:
     - name: 'Tar files'
       shell: bash
       run: tar cf macos_arm64.tar .build.arm64
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
         path: macos_arm64.tar
@@ -304,10 +304,10 @@ jobs:
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       with:
         name: macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       with:
         name: macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
     - name: Untar files
@@ -315,7 +315,7 @@ jobs:
       run: |
         tar xf macos_intel.tar
         tar xf macos_arm64.tar
-    - uses: geekyeggo/delete-artifact@v1
+    - uses: geekyeggo/delete-artifact@v5
       with:
         name: |
           macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
@@ -376,7 +376,7 @@ jobs:
           artifact_name=$(basename "$(ls .build.x64/package/*.tar.gz | head -n 1)" ".tar.gz")
           gh_export SOURCES_ARTIFACT_NAME="${artifact_name}"
     - name: Upload sources
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.SOURCES_ARTIFACT_NAME }}
         path: |
