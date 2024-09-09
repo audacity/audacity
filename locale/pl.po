@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-09-06 00:00+0000\n"
+"PO-Revision-Date: 2024-09-09 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -2645,7 +2645,7 @@ msgid ""
 "  %s."
 msgstr ""
 "Audacity nie mógł zapisać pliku:\n"
-"%s."
+"  %s."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2655,7 +2655,7 @@ msgid ""
 "for writing."
 msgstr ""
 "Audacity nie mógł otworzyć pliku:\n"
-"%s\n"
+"  %s\n"
 "do zapisu."
 
 #: libraries/lib-theme/Theme.cpp
@@ -2665,7 +2665,7 @@ msgid ""
 "  %s."
 msgstr ""
 "Audacity nie mógł zapisać obrazów do pliku:\n"
-"%s."
+"  %s."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2675,7 +2675,7 @@ msgid ""
 "Theme not loaded."
 msgstr ""
 "Audacity nie mógł znaleźć pliku:\n"
-"%s.\n"
+"  %s.\n"
 "Motyw nie został załadowany."
 
 #. i18n-hint: Do not translate png.  It is the name of a file format.
@@ -2688,7 +2688,7 @@ msgid ""
 msgstr ""
 "Audacity nie mógł załadować pliku:\n"
 "  %s.\n"
-"Być może format png jest nieprawidłowy?"
+"Być może format PNG jest nieprawidłowy?"
 
 #: libraries/lib-theme/Theme.cpp
 msgid ""
@@ -2712,7 +2712,7 @@ msgid ""
 msgstr ""
 "Nie znaleziono żadnego z\n"
 "elementów motywu w:\n"
-"%s."
+"  %s."
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2730,7 +2730,7 @@ msgid ""
 "  %s"
 msgstr ""
 "Nie można utworzyć katalogu:\n"
-"%s"
+"  %s"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2750,7 +2750,7 @@ msgid ""
 "  %s"
 msgstr ""
 "Audacity nie mógł zapisać pliku:\n"
-"%s"
+"  %s"
 
 #: libraries/lib-theme/Theme.cpp src/FreqWindow.cpp src/LabelDialog.cpp
 #: src/effects/Contrast.cpp src/menus/FileMenus.cpp
@@ -2812,7 +2812,7 @@ msgstr "Dodaje możliwość korzystania z efektów VST w Audacity."
 
 #: libraries/lib-vst/VSTWrapper.cpp
 msgid "Unable to allocate memory when loading presets file."
-msgstr "Nie można przydzielić pamięci przy ładowaniu pliku presetów."
+msgstr "Nie można przydzielić pamięci podczas ładowania pliku presetów."
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/VST/VSTEffect.cpp
 msgid "Error Loading VST Presets"
@@ -3085,7 +3085,7 @@ msgstr "Audacity może importować niechronione pliki w wielu formatach (takich 
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
-msgstr "Możesz również przeczytać naszą pomoc na temat importowania [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|plików MIDI]] i ścieżek z [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| płyt Audio CD]]."
+msgstr "Możesz również przeczytać naszą pomoc na temat importowania [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|plików MIDI]] i ścieżek z [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|płyt Audio CD]]."
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
@@ -3211,7 +3211,7 @@ msgstr "Typ pliku:"
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Select a directory"
-msgstr "Zaznacz katalog"
+msgstr "Wybierz katalog"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h src/commands/DragCommand.cpp
 msgid "Panel"
@@ -3332,7 +3332,7 @@ msgstr "Nieprawidłowy atrybut „selHigh” projektu."
 #: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
-msgstr "Nie można odnaleźć folderu projektu: „%s”"
+msgstr "Nie można znaleźć folderu projektu: „%s”"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -4044,8 +4044,8 @@ msgstr ""
 "Poziom kompresji\n"
 "Wymagany dla FLAC\n"
 "-1 - automatyczny\n"
-"min. - 0 (szybkie kodowanie, duży plik)\n"
-"maks. - 10 (wolne kodowanie, mały plik)"
+"min. - 0 (szybkie kodowanie, duży plik wyjściowy)\n"
+"maks. - 10 (wolne kodowanie, mały plik wyjściowy)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Compression:"
@@ -6139,7 +6139,7 @@ msgstr "mniej niż 1 minuta"
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "minuta temu"
+msgstr[0] "minutę temu"
 msgstr[1] "%d minuty temu"
 msgstr[2] "%d minut temu"
 msgstr[3] "%d minuty temu"
@@ -6148,7 +6148,7 @@ msgstr[3] "%d minuty temu"
 #, c-format
 msgid "one hour ago"
 msgid_plural "%d hours ago"
-msgstr[0] "godzina temu"
+msgstr[0] "godzinę temu"
 msgstr[1] "%d godziny temu"
 msgstr[2] "%d godzin temu"
 msgstr[3] "%d godziny temu"
@@ -6777,7 +6777,7 @@ msgstr "Funkcje"
 
 #: src/AboutDialog.cpp
 msgid "Plug-in support"
-msgstr "Obsługa wtyczki"
+msgstr "Obsługa wtyczek"
 
 #: src/AboutDialog.cpp
 msgid "Sound card mixer support"
@@ -7239,7 +7239,7 @@ msgid ""
 "Audacity detected this file to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
-"Audacity wykrył, że ten plik ma %s bpm.\n"
+"Audacity wykrył, że ten plik ma %s BPM.\n"
 "Chcesz włączyć widok muzyki i ustawić tempo projektu na %s?"
 
 #: src/AudacityMirProject.cpp
@@ -7248,7 +7248,7 @@ msgid ""
 "Audacity detected one or more files to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
-"Audacity wykrył jeden lub więcej plików, które mają %s bpm.\n"
+"Audacity wykrył jeden lub więcej plików, które mają %s BPM.\n"
 "Chcesz włączyć widok muzyki i ustawić tempo projektu na %s?"
 
 #: src/AudacityMirProject.cpp
@@ -7347,7 +7347,7 @@ msgstr ""
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
-msgstr "Wybierz polecenie"
+msgstr "Zaznacz polecenie"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Command"
@@ -8442,7 +8442,7 @@ msgstr "Wybierz język używany w Audacity:"
 #: src/LangChoice.cpp
 #, c-format
 msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
-msgstr "Wybrany przez Ciebie język %s (%s), nie jest taki sam jak język systemowy %s (%s)."
+msgstr "Wybrany przez Ciebie język: %s (%s), nie jest taki sam jak język systemu: %s (%s)."
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -8546,7 +8546,7 @@ msgstr "C"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C♯"
-msgstr "C♯"
+msgstr "Cis"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8556,7 +8556,7 @@ msgstr "D"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♯"
-msgstr "D♯"
+msgstr "Dis"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8571,7 +8571,7 @@ msgstr "F"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F♯"
-msgstr "F♯"
+msgstr "Fis"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8581,7 +8581,7 @@ msgstr "G"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♯"
-msgstr "G♯"
+msgstr "Gis"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8591,62 +8591,62 @@ msgstr "A"
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♯"
-msgstr "A♯"
+msgstr "Ais"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "B"
-msgstr "B"
+msgstr "H"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♭"
-msgstr "D♭"
+msgstr "Des"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "E♭"
-msgstr "E♭"
+msgstr "Es"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♭"
-msgstr "G♭"
+msgstr "Ges"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♭"
-msgstr "A♭"
+msgstr "As"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "B♭"
-msgstr "B♭"
+msgstr "B"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C♯/D♭"
-msgstr "C♯/D♭"
+msgstr "Cis/Des"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "D♯/E♭"
-msgstr "D♯/E♭"
+msgstr "Dis/Es"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "F♯/G♭"
-msgstr "F♯/G♭"
+msgstr "Fis/Ges"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "G♯/A♭"
-msgstr "G♯/A♭"
+msgstr "Gis/As"
 
 #. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "A♯/B♭"
-msgstr "A♯/B♭"
+msgstr "Ais/B"
 
 #: src/PluginDataModel.cpp
 #, c-format
@@ -9026,7 +9026,7 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
-msgstr "Projekt przekracza maksymalny rozmiar 4 GB przy zapisywaniu do systemu plików FAT32."
+msgstr "Projekt przekracza maksymalny rozmiar 4 GB podczas zapisywania do systemu plików FAT32."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -10728,7 +10728,7 @@ msgstr "Czas:"
 #: src/commands/SetEnvelopeCommand.cpp src/menus/EditMenus.cpp
 #: src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Delete"
-msgstr "Kasuj"
+msgstr "Usuń"
 
 #: src/commands/SetEnvelopeCommand.cpp
 msgid "Edited Envelope"
@@ -11044,7 +11044,7 @@ msgstr "%s: dotyczy innego efektu, generatora lub analizatora.\n"
 
 #: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
-msgstr "Bas i sopran"
+msgstr "Basy i soprany"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
@@ -11056,23 +11056,23 @@ msgstr "Kontrola dźwięku"
 
 #: src/effects/BassTreble.cpp
 msgid "Bass (dB):"
-msgstr "Bas (dB):"
+msgstr "Basy (dB):"
 
 #: src/effects/BassTreble.cpp
 msgid "Ba&ss (dB):"
-msgstr "Ba&s (dB):"
+msgstr "Ba&sy (dB):"
 
 #: src/effects/BassTreble.cpp
 msgid "Bass"
-msgstr "Bas"
+msgstr "Basy"
 
 #: src/effects/BassTreble.cpp
 msgid "&Treble (dB):"
-msgstr "&Sopran (dB):"
+msgstr "&Soprany (dB):"
 
 #: src/effects/BassTreble.cpp
 msgid "Treble"
-msgstr "Sopran"
+msgstr "Soprany"
 
 #: src/effects/BassTreble.cpp
 msgid "&Volume (dB):"
@@ -12363,7 +12363,7 @@ msgstr "&Uzyskaj więcej..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "De&faults"
-msgstr "Do&myślnie"
+msgstr "Do&myślne"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid ""
@@ -12681,7 +12681,7 @@ msgstr "Współczynnik kompresji %.0f do 1"
 #: src/effects/LegacyCompressor.cpp
 #, c-format
 msgid "Ratio %.1f to 1"
-msgstr "Współczynnik kompresji %.1f to 1"
+msgstr "Współczynnik kompresji %.1f do 1"
 
 #: src/effects/LegacyCompressor.cpp
 msgid "&Noise Floor:"
@@ -12939,7 +12939,7 @@ msgstr "Czas opadania"
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Frequency smoothing (bands):"
-msgstr "Wy&gładzanie częstotliwości (zespoły):"
+msgstr "Wy&gładzanie częstotliwości (pasma):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Frequency smoothing"
@@ -14186,7 +14186,7 @@ msgstr "Nyquist zwrócił pusty szereg.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned nil audio.\n"
-msgstr "Nyquist zwrócił dźwięk nil.\n"
+msgstr "Nyquist nie zwrócił dźwięku.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
@@ -14195,7 +14195,7 @@ msgstr "[Ostrzeżenie - Nyquist zwrócił nieprawidłowy ciąg znaków UTF-8, pr
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Ta wersja Audacity nie obsługuje wersji wtyczki Nyquista %ld"
+msgstr "Ta wersja Audacity nie obsługuje wersji %ld wtyczki Nyquista"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -14884,7 +14884,7 @@ msgstr "Wy&tnij"
 
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "&Delete"
-msgstr "&Kasuj"
+msgstr "&Usuń"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -16460,7 +16460,7 @@ msgstr "Zachowania"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "&Don't apply effects in batch mode"
-msgstr "Nie stosuje efektów w trybie wsa&dowym"
+msgstr "Nie stosuj efektów w trybie wsa&dowym"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Audio Settings"
@@ -16516,7 +16516,7 @@ msgstr "Częstotliwość &próbkowania projektu:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
-msgstr "Częstotliwość próbkowania używana przy nagrywaniu nowych ścieżek, miksowaniu ścieżek i do odtwarzania w tym projekcie."
+msgstr "Częstotliwość próbkowania używana podczas nagrywania nowych ścieżek, miksowania ścieżek i do odtwarzania w tym projekcie."
 
 #: src/prefs/DevicePrefs.cpp
 msgid "D&efault Sample Rate:"
@@ -16661,7 +16661,7 @@ msgstr "Katalog %s jest nieodpowiedni (zagrożone są czyszczone)"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Temporary Directory' cannot be set."
-msgstr "Nie można ustawić „Katalog tymczasowy”."
+msgstr "Nie można ustawić „Katalogu tymczasowego”."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "'Temporary files' directory cannot be set."
@@ -16854,7 +16854,7 @@ msgstr "Zasada potwierdzania przy usuwaniu"
 
 #: src/prefs/ExtImportPrefs.h
 msgid "Ext Import"
-msgstr "Rozsz. import"
+msgstr "Import rozsz."
 
 #. i18n-hint: refers to Audacity's user interface settings
 #: src/prefs/GUIPrefs.cpp
@@ -16974,7 +16974,7 @@ msgstr "&Nic nie rób"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
-msgstr "Importowania muzyki"
+msgstr "Importy muzyki"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When Audacity detects music in file imported on empty project"
@@ -17266,7 +17266,7 @@ msgstr "Po wyciętym obsz&arze:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Seek Time when playing"
-msgstr "Czas przewijania przy odtwarzaniu"
+msgstr "Czas przewijania podczas odtwarzania"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Short period:"
@@ -18291,7 +18291,7 @@ msgstr "Przyczepianie"
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap to combo box"
-msgstr "Przyczep do pola kombi"
+msgstr "Przyczep do pola wyboru"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
@@ -19121,7 +19121,7 @@ msgstr "Utworzono nową ścieżkę dźwiękową"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
 msgid "Created new stereo audio track"
-msgstr "Utworzono nową stereofoniczną ścieżkę dźwiękową"
+msgstr "Utworzono nową ścieżkę dźwiękową stereo"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
 msgid "&Mono Track"
@@ -19319,7 +19319,7 @@ msgstr "Ustaw nazwę ścieżki"
 #: src/tracks/ui/CommonTrackControls.cpp
 #, c-format
 msgid "Renamed '%s' to '%s'"
-msgstr "Zmiana nazwy z „%s” na „%s”"
+msgstr "Zmieniono nazwę z „%s” na „%s”"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Name Change"
@@ -20080,7 +20080,7 @@ msgstr "Koniec (lub początek)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Handy Presets (override controls)"
-msgstr "Poręczne presety (zastąp kontrole)"
+msgstr "Przydatne presety (zastąp kontrole)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "None Selected"
@@ -20614,7 +20614,7 @@ msgstr "Przytrzymanie (ms)"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
-msgstr "Zastosuj Upiększanie wzmocnienia"
+msgstr "Zastosuj upiększanie wzmocnienia"
 
 #: plug-ins/lowpass.ny resources/EffectsMenuDefaults.xml
 msgid "Low-Pass Filter"
@@ -20842,7 +20842,7 @@ msgstr "Stopniowy"
 
 #: plug-ins/pluck.ny
 msgid "Duration (60s max)"
-msgstr "Długość (maksymalnie 60)"
+msgstr "Długość (maks. 60)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm Track"
@@ -20854,7 +20854,7 @@ msgstr "Dominic Mazzoni, David R. Sky i Steve Daulton"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Tempo (bpm)"
-msgstr "Tempo (bpm)"
+msgstr "Tempo (BPM)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "30 - 300 beats/minute"
@@ -21066,7 +21066,7 @@ msgstr "Tylko błędy"
 #. i18n-hint abbreviates negative infinity
 #: plug-ins/sample-data-export.ny
 msgid "[-inf]"
-msgstr "[-inf]"
+msgstr "[-niesk.]"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
