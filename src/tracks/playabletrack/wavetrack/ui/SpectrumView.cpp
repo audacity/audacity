@@ -45,6 +45,10 @@ Paul Licameli split from WaveChannelView.cpp
 class BrushHandle;
 class SpectralData;
 
+static_assert(
+   SpectrogramSettings::csNumColorScheme == AColor::colorSchemes,
+   "Broken correspondence");
+
 static WaveChannelSubView::Type sType{
    WaveChannelViewConstants::Spectrum,
    { wxT("Spectrogram"), XXO("&Spectrogram") }

@@ -766,7 +766,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
          EscapeString(PlatformCompatibility::GetDocumentsDir()));
       mProps += wxString::Format(
          wxT("(putprop '*SYSTEM-DIR* \"%s\" 'HOME)\n"),
-         EscapeString(wxGetHomeDir()));
+         EscapeString(PlatformCompatibility::GetHomeDir()));
 
       auto paths = NyquistBase::GetNyquistSearchPath();
       wxString list;
@@ -1301,8 +1301,8 @@ bool NyquistBase::ProcessOne(
          auto pair = WaveChannelUtilities::GetMinMax(
             *mCurTrack[i], mT0, mT1); // may throw
          min = pair.first, max = pair.second;
-         maxPeak = wxMax(wxMax(fabs(min), fabs(max)), maxPeak);
-         maxPeakLevel = wxMax(maxPeakLevel, maxPeak);
+         maxPeak = std::max(std::max(fabs(min), fabs(max)), maxPeak);
+         maxPeakLevel = std::max(maxPeakLevel, maxPeak);
 
          // On Debian, NaN samples give maxPeak = 3.40282e+38 (FLT_MAX)
          if (
@@ -2799,8 +2799,8 @@ void NyquistBase::resolveFilePath(
 
    typedef std::unordered_map<wxString, FilePath> map;
    map pathKeys = {
-      { "*home*", wxGetHomeDir() },
-      { "~", wxGetHomeDir() },
+      { "*home*", PlatformCompatibility::GetHomeDir() },
+      { "~", PlatformCompatibility::GetHomeDir() },
       { "*default*", FileNames::DefaultToDocumentsFolder("").GetPath() },
       { "*export*", FileNames::FindDefaultPath(FileNames::Operation::Export) },
       { "*save*", FileNames::FindDefaultPath(FileNames::Operation::Save) },

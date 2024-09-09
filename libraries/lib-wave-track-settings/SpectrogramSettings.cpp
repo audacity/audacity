@@ -16,7 +16,6 @@ Paul Licameli
 
 #include "SpectrogramSettings.h"
 
-#include "AColor.h"
 #include "NumberScale.h"
 
 #include <algorithm>
@@ -251,7 +250,6 @@ const EnumValueSymbols &SpectrogramSettings::GetColorSchemeNames()
    };
 
    wxASSERT(csNumColorScheme == result.size());
-   static_assert(csNumColorScheme == AColor::colorSchemes, "Broken correspondence");
 
    return result;
 }
