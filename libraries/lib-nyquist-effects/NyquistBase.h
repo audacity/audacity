@@ -102,6 +102,10 @@ public:
    {
    };
 
+   struct YieldIfNeededHook : GlobalHook<YieldIfNeededHook, void()>
+   {
+   };
+
    /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */

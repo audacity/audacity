@@ -31,6 +31,7 @@ effects from this one class.
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
 #include <wx/tokenzr.h>
+#include <wx/utils.h> // wxYieldIfNeeded
 #include <wx/valgen.h>
 
 #include "../../commands/ScriptCommandRelay.h" // ExecFromMain
@@ -928,3 +929,19 @@ static NyquistBase::ShowDebugOutputHook::Scope showDebugOutputHookScope {
 static NyquistBase::ExecFromMainHook::Scope execFromMainHookScope {
    [](wxString* pIn, wxString* pOut) { ExecFromMain(pIn, pOut); }
 };
+
+static NyquistBase::YieldIfNeededHook::Scope yieldIfNeededHookScope { []() {
+// LLL:  STF figured out that yielding while the effect is being applied
+//       produces an EXTREME slowdown.  It appears that yielding is not
+//       really necessary on Linux and Windows.
+//
+//       However, on the Mac, the spinning cursor appears during longer
+//       Nyquist processing and that may cause the user to think Audacity
+//       has crashed or hung.  In addition, yielding or not on the Mac
+//       doesn't seem to make much of a difference in execution time.
+//
+//       So, yielding on the Mac only...
+#if defined(__WXMAC__)
+   wxYieldIfNeeded();
+#endif
+} };

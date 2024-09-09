@@ -2744,19 +2744,7 @@ void NyquistBase::OSCallback()
       nyx_continue();
    }
 
-   // LLL:  STF figured out that yielding while the effect is being applied
-   //       produces an EXTREME slowdown.  It appears that yielding is not
-   //       really necessary on Linux and Windows.
-   //
-   //       However, on the Mac, the spinning cursor appears during longer
-   //       Nyquist processing and that may cause the user to think Audacity
-   //       has crashed or hung.  In addition, yielding or not on the Mac
-   //       doesn't seem to make much of a difference in execution time.
-   //
-   //       So, yielding on the Mac only...
-#if defined(__WXMAC__)
-   wxYieldIfNeeded();
-#endif
+   YieldIfNeededHook::Call();
 }
 
 FilePaths NyquistBase::GetNyquistSearchPath()
