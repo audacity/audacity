@@ -93,6 +93,11 @@ public:
    {
    };
 
+   struct ExecFromMainHook :
+       GlobalHook<ExecFromMainHook, void(wxString* pIn, wxString* pOut)>
+   {
+   };
+
    /** @param fName File name of the Nyquist script defining this effect. If
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */

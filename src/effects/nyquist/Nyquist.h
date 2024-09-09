@@ -18,8 +18,6 @@
 #include "StatefulEffect.h"
 #include "wxPanelWrapper.h"
 
-#include "nyx.h"
-
 class wxArrayString;
 class wxFileName;
 class wxCheckBox;

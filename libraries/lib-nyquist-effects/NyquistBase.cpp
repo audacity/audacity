@@ -31,6 +31,10 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"
+
+#include "nyquist/xlisp/xlisp.h"
+#include "nyx.h"
+
 #include <iostream>
 #include <wx/log.h>
 #include <wx/numformatter.h>
@@ -2857,4 +2861,140 @@ wxString NyquistBase::ToTimeFormat(double t)
    int mm = seconds % 3600;
    mm = mm / 60;
    return wxString::Format("%d:%d:%.3f", hh, mm, t - (hh * 3600 + mm * 60));
+}
+
+static LVAL gettext()
+{
+   auto string = UTF8CTOWX(getstring(xlgastring()));
+#if !HAS_I18N_CONTEXTS
+   // allow ignored context argument
+   if (moreargs())
+      nextarg();
+#endif
+   xllastarg();
+   return cvstring(GetCustomTranslation(string).mb_str(wxConvUTF8));
+}
+
+static LVAL gettextc()
+{
+#if HAS_I18N_CONTEXTS
+   auto string = UTF8CTOWX(getstring(xlgastring()));
+   auto context = UTF8CTOWX(getstring(xlgastring()));
+   xllastarg();
+   return cvstring(
+      wxGetTranslation(string, "", 0, "", context).mb_str(wxConvUTF8));
+#else
+   return gettext();
+#endif
+}
+
+static LVAL ngettext()
+{
+   auto string1 = UTF8CTOWX(getstring(xlgastring()));
+   auto string2 = UTF8CTOWX(getstring(xlgastring()));
+   auto number = getfixnum(xlgafixnum());
+#if !HAS_I18N_CONTEXTS
+   // allow ignored context argument
+   if (moreargs())
+      nextarg();
+#endif
+   xllastarg();
+   return cvstring(
+      wxGetTranslation(string1, string2, number).mb_str(wxConvUTF8));
+}
+
+static LVAL ngettextc()
+{
+#if HAS_I18N_CONTEXTS
+   auto string1 = UTF8CTOWX(getstring(xlgastring()));
+   auto string2 = UTF8CTOWX(getstring(xlgastring()));
+   auto number = getfixnum(xlgafixnum());
+   auto context = UTF8CTOWX(getstring(xlgastring()));
+   xllastarg();
+   return cvstring(wxGetTranslation(string1, string2, number, "", context)
+                      .mb_str(wxConvUTF8));
+#else
+   return ngettext();
+#endif
+}
+
+void* nyq_make_opaque_string(int size, unsigned char* src)
+{
+   LVAL dst;
+   unsigned char* dstp;
+   dst = new_string((int)(size + 2));
+   dstp = getstring(dst);
+
+   /* copy the source to the destination */
+   while (size-- > 0)
+      *dstp++ = *src++;
+   *dstp = '\0';
+
+   return (void*)dst;
+}
+
+void* nyq_reformat_aud_do_response(const wxString& Str)
+{
+   LVAL dst;
+   LVAL message;
+   LVAL success;
+   wxString Left = Str.BeforeLast('\n').BeforeLast('\n').ToAscii();
+   wxString Right = Str.BeforeLast('\n').AfterLast('\n').ToAscii();
+   message = cvstring(Left);
+   success = Right.EndsWith("OK") ? s_true : nullptr;
+   dst = cons(message, success);
+   return (void*)dst;
+}
+
+void* ExecForLisp(char* pIn)
+{
+   wxString Str1(pIn);
+   wxString Str2;
+
+   NyquistBase::ExecFromMainHook::Call(&Str1, &Str2);
+
+   return nyq_reformat_aud_do_response(Str2);
+}
+
+/* xlc_aud_do -- interface to C routine aud_do */
+/**/
+LVAL xlc_aud_do(void)
+{
+   // Based on string-trim...
+   unsigned char* leftp;
+   LVAL src, dst;
+
+   /* get the string */
+   src = xlgastring();
+   xllastarg();
+
+   /* setup the string pointer */
+   leftp = getstring(src);
+
+   // Go call my real function here...
+   dst = (LVAL)ExecForLisp((char*)leftp);
+
+   // dst = cons(dst, (LVAL)1);
+   /* return the new string */
+   return (dst);
+}
+
+static void RegisterFunctions()
+{
+   // Add functions to XLisp.  Do this only once,
+   // before the first call to nyx_init.
+   static bool firstTime = true;
+   if (firstTime)
+   {
+      firstTime = false;
+
+      // All function names must be UP-CASED
+      static const FUNDEF functions[] = {
+         { "_", SUBR, gettext },         { "_C", SUBR, gettextc },
+         { "NGETTEXT", SUBR, ngettext }, { "NGETTEXTC", SUBR, ngettextc },
+         { "AUD-DO", SUBR, xlc_aud_do },
+      };
+
+      xlbindfunctions(functions, WXSIZEOF(functions));
+   }
 }
