@@ -164,7 +164,7 @@ void TimelineContext::scrollVertical(qreal newPos)
 void TimelineContext::insureVisible(double posSec)
 {
     constexpr double SCROLL_MARGIN_PX(16);
-    constexpr double AUTO_SHIFT_PERCENT(0.75);
+    constexpr double AUTO_SHIFT_PERCENT(0.03);
 
     if (posSec < frameStartTime()) {
         moveToFrameTime(posSec);
