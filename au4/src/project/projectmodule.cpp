@@ -79,6 +79,7 @@ void ProjectModule::registerExports()
     ioc()->registerExport<IProjectConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IRecentFilesController>(moduleName(), m_recentFilesController);
     ioc()->registerExport<IOpenSaveProjectScenario>(moduleName(), new OpenSaveProjectScenario());
+    ioc()->registerExport<IProjectFilesController>(moduleName(), m_actionsController);
 }
 
 void ProjectModule::resolveImports()

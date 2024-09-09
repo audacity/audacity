@@ -179,13 +179,14 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
         m_isProjectClosing = false;
     };
 
-    AudacityProject* internalAu3Project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
     IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
         return true;
     }
 
     bool result = true;
+
+    AudacityProject* internalAu3Project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
 
     if (UndoManager::Get(*internalAu3Project).UnsavedChanges()) {
         IInteractive::Button btn = askAboutSavingProject(project);
