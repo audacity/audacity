@@ -313,23 +313,6 @@ Rectangle {
             onSelectionDraged: function(x1, x2, completed) { selectionController.onSelectionDraged(x1, x2, completed) }
         }
 
-        PlayCursor {
-            id: playCursor
-            anchors.top: tracksClipsViewArea.top
-            anchors.bottom: parent.bottom
-            x: playCursorController.positionX
-            z: 2
-            timelinePressed: timelineMouseArea.pressed
-
-            onSetPlaybackPosition: function(ix) {
-                playCursorController.seekToX(ix)
-            }
-
-            onPlayCursorMousePositionChanged: function(ix) {
-                lineCursor.x = ix
-            }
-        }
-
         VerticalRulersPanel {
             id: verticalRulers
 
@@ -338,6 +321,25 @@ Rectangle {
             anchors.bottom: tracksClipsViewArea.bottom
 
             visible: tracksModel.isVerticalRulersVisible
+        }
+    }
+
+    PlayCursor {
+        id: playCursor
+
+        anchors.top: content.top
+        anchors.bottom: content.bottom
+
+        x: playCursorController.positionX
+
+        timelinePressed: timelineMouseArea.pressed
+
+        onSetPlaybackPosition: function(ix) {
+            playCursorController.seekToX(ix)
+        }
+
+        onPlayCursorMousePositionChanged: function(ix) {
+            lineCursor.x = ix
         }
     }
 }
