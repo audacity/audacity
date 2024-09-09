@@ -132,6 +132,10 @@ void PlaybackToolBarModel::updatePlayState()
 {
     PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAY_PAUSE_ITEM_ID));
 
+    if (item == nullptr) {
+        return;
+    }
+
     bool isPlaying = controller()->isPlaying();
     bool isRecording = recordController()->isRecording();
 
@@ -162,6 +166,10 @@ void PlaybackToolBarModel::updateStopState()
 {
     PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(STOP_ITEM_ID));
 
+    if (item == nullptr) {
+        return;
+    }
+
     bool isRecording = recordController()->isRecording();
 
     ActionCode code = STOP_ACTION_CODE;
@@ -179,6 +187,10 @@ void PlaybackToolBarModel::updateStopState()
 void PlaybackToolBarModel::updateRecordState()
 {
     PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_ACTION_CODE));
+
+    if (item == nullptr) {
+        return;
+    }
 
     bool isRecording = recordController()->isRecording();
 
@@ -198,6 +210,10 @@ void PlaybackToolBarModel::updateRecordState()
 void PlaybackToolBarModel::updateLoopState()
 {
     PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(LOOP_ACTION_CODE));
+
+    if (item == nullptr) {
+        return;
+    }
 
     bool isLooping = false; // todo: from controller
     item->setSelected(isLooping);
