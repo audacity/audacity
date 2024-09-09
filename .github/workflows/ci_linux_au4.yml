@@ -6,8 +6,8 @@ on:
     branches:
     - master
     
-  # schedule:
-  #   - cron: '0 3 */1 */1 *' # At 03:00 on every day-of-month for master
+  schedule:
+    - cron: '0 3 */1 */1 *' # At 03:00 on every day-of-month for master
   #   - cron: '0 5 */1 */1 *' # At 05:00 on every day-of-month for current release branch
   workflow_dispatch:
     inputs:

@@ -195,11 +195,11 @@ void ApplicationActionController::restart()
 {
     if (projectFilesController()->closeOpenedProject()) {
         // if (multiInstancesProvider()->instances().size() == 1) {
-        // application()->restart();
+        application()->restart();
         // } else {
         // multiInstancesProvider()->quitAllAndRestartLast();
 
-        QCoreApplication::exit();
+        // QCoreApplication::exit();
         // }
     }
 }
