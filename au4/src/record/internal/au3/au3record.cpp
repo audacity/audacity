@@ -29,6 +29,7 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "au3wrap/internal/domau3types.h"
 
 #include "recorderrors.h"
 
@@ -51,7 +52,6 @@ public:
     {
         m_timer.onTimeout(this, [this]() {
             m_updateRequested.notify();
-            m_timer.start();
         });
     }
 
@@ -241,21 +241,34 @@ void Au3Record::init()
     });
 
     s_recordingListener->recordingClipChanged().onReceive(this, [this](const trackedit::ClipKey& clipKey) {
-        Track* track = &PendingTracks::Get(projectRef())
-                       .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId)));
+        WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
 
-        WaveTrack* waveTrack = dynamic_cast<WaveTrack*>(track);
-        IF_ASSERT_FAILED(waveTrack) {
+        Track* pendingTrack = &PendingTracks::Get(projectRef())
+                       .SubstitutePendingChangedTrack(*origWaveTrack);
+
+        WaveTrack* pendingWaveTrack = dynamic_cast<WaveTrack*>(pendingTrack);
+        IF_ASSERT_FAILED(pendingWaveTrack) {
             return;
         }
 
-        std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-        IF_ASSERT_FAILED(clip) {
+        auto pendingClipId = DomAccessor::findMatchedClip(pendingWaveTrack, origWaveTrack, clipKey.clipId);
+        if (pendingClipId == -1) {
+            return;
+        }
+
+        std::shared_ptr<WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, pendingClipId);
+        IF_ASSERT_FAILED(pendingClip) {
             return;
         }
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+        // IMPORTANT: getting pending clip and assigning it to the clip from original track
+        // to make that possible we need to assign orignal clip's ID to the pending clip
+        // so onClipChanged accepts it
+        auto pendingClipWithFakeId = DomConverter::clip(pendingWaveTrack, pendingClip.get());
+        pendingClipWithFakeId.key.clipId = clipKey.clipId;
+        prj->onClipChanged(pendingClipWithFakeId);
     });
 
     s_recordingListener->commitRequested().onNotify(this, [this]() {
@@ -510,20 +523,6 @@ Ret Au3Record::doRecord(AudacityProject& project,
                     transportSequences.prerollSequences.push_back(shared);
                 }
 
-                trackedit::ClipKey newClipKey(DomConverter::trackId(wt->GetId()), wt->Intervals().size());
-
-                // A function that copies all the non-sample data between
-                // wave tracks; in case the track recorded to changes scale
-                // type (for instance), during the recording.
-                auto updater = [newClipKey](Track& d, const Track& s){
-                    assert(d.NChannels() == s.NChannels());
-                    auto& dst = static_cast<WaveTrack&>(d);
-                    auto& src = static_cast<const WaveTrack&>(s);
-                    dst.Init(src);
-
-                    s_recordingListener->recordingClipChanged().send(newClipKey);
-                };
-
                 // End of current track is before or at recording start time.
                 // Less than or equal, not just less than, to ensure a clip boundary.
                 // when append recording.
@@ -548,6 +547,21 @@ Ret Au3Record::doRecord(AudacityProject& project,
                     || lastClip->HasPitchOrSpeed()) {
                     newClip = insertEmptyInterval(*wt, t0, true);
                 }
+
+                trackedit::ClipKey newClipKey(DomConverter::trackId(wt->GetId()), au::au3::WaveClipID(newClip.get()).id);
+
+                // A function that copies all the non-sample data between
+                // wave tracks; in case the track recorded to changes scale
+                // type (for instance), during the recording.
+                auto updater = [newClipKey](Track& d, const Track& s){
+                    assert(d.NChannels() == s.NChannels());
+                    auto& dst = static_cast<WaveTrack&>(d);
+                    auto& src = static_cast<const WaveTrack&>(s);
+                    dst.Init(src);
+
+                    s_recordingListener->recordingClipChanged().send(newClipKey);
+                };
+
                 // Get a copy of the track to be appended, to be pushed into
                 // undo history only later.
                 const auto pending = static_cast<WaveTrack*>(
