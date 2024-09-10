@@ -60,6 +60,7 @@
 #ifdef AU_MODULE_EFFECTS_VST
 #include "effects/vst/vsteffectsmodule.h"
 #endif
+#include "effects/nyquist/nyquisteffectsmodule.h"
 
 #include "au3wrap/au3wrapmodule.h"
 
@@ -139,6 +140,7 @@ int main(int argc, char** argv)
 #ifdef AU_MODULE_EFFECTS_VST
     app.addModule(new au::effects::VstEffectsModule());
 #endif
+    app.addModule(new au::effects::NyquistEffectsModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.

@@ -92,6 +92,7 @@ set(LINK_LIB
     record
     effects_base
     effects_builtin
+    effects_nyquist
 )
 
 if (AU_MODULE_EFFECTS_VST)
