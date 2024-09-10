@@ -55,7 +55,7 @@
 #include "playback/playbackmodule.h"
 #include "trackedit/trackeditmodule.h"
 #include "record/recordmodule.h"
-#include "effects/effectsmodule.h"
+#include "effects/effects_base/effectsmodule.h"
 
 #include "au3wrap/au3wrapmodule.h"
 

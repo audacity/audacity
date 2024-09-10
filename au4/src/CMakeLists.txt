@@ -49,7 +49,7 @@ if (AU_BUILD_RECORD_MODULE)
 endif()
 
 if (AU_BUILD_EFFECTS_MODULE)
-    add_subdirectory(effects)
+    add_subdirectory(effects/effects_base)
 endif()
 
 # ...

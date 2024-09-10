@@ -1,9 +1,9 @@
 #
 # Audacity: A Digital Audio Editor
 #
-declare_module(effects)
+declare_module(effects_base)
 
-set(MODULE_QRC effects.qrc)
+set(MODULE_QRC effects_base.qrc)
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 
@@ -73,7 +73,7 @@ if (AU_MODULE_VST)
 endif()
 
 # AU3
-include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3defs.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
 
 set(AU3_SRC
     ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.cpp

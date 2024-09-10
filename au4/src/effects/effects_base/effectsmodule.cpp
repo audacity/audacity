@@ -35,12 +35,12 @@ using namespace au::effects;
 
 static void effects_init_qrc()
 {
-    Q_INIT_RESOURCE(effects);
+    Q_INIT_RESOURCE(effects_base);
 }
 
 std::string EffectsModule::moduleName() const
 {
-    return "effects";
+    return "effects_base";
 }
 
 void EffectsModule::registerExports()

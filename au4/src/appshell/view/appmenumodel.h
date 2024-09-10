@@ -39,7 +39,7 @@ Q_MOC_INCLUDE(< QWindow >)
 #include "iappshellconfiguration.h"
 #include "internal/iappmenumodelhook.h"
 #include "global/iglobalconfiguration.h"
-#include "effects/ieffectsprovider.h"
+#include "effects/effects_base/ieffectsprovider.h"
 
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
