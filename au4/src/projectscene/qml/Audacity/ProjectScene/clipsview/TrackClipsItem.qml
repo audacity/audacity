@@ -78,9 +78,12 @@ Item {
                         return null
                     }
 
-                    if (clipItem.width < 24) {
-                        return clipSmallComp
-                    }
+                    //! NOTE This optimization is disabled, it is probably not needed,
+                    // and if it needs to be enabled, it should be modified, add handlers
+
+                    // if (clipItem.width < 24) {
+                    //     return clipSmallComp
+                    // }
 
                     return clipComp
                 }
