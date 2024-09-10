@@ -208,7 +208,7 @@ option(AU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
 option(AU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
 option(AU_BUILD_EFFECTS_MODULE "Build effects module" ON)
 
-option(AU_MODULE_VST "Build audacity vst module" OFF)
+option(AU_MODULE_EFFECTS_VST "Build audacity vst module" OFF)
 set(AU_MODULE_VST_VST3_SDK_PATH "" CACHE PATH "Path to VST3_SDK. SDK version >= ${VST3_SDK_VERSION} required")
 
 # === Setup ===

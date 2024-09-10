@@ -5,8 +5,6 @@ declare_module(effects_builtin)
 
 set(MODULE_QRC effects_builtin.qrc)
 
-set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
-
 set(MODULE_SRC
     # common
     ${CMAKE_CURRENT_LIST_DIR}/builtineffectsmodule.cpp
@@ -55,10 +53,6 @@ set(MODULE_SRC ${MODULE_SRC}
 
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
-
-if(AU_MODULE_VST)
-    set(MODULE_DEF ${MODULE_DEF} -DAU_MODULE_VST)
-endif()
 
 set(MODULE_LINK au3wrap)
 

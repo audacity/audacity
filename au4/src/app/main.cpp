@@ -57,6 +57,9 @@
 #include "record/recordmodule.h"
 #include "effects/effects_base/effectsmodule.h"
 #include "effects/builtin/builtineffectsmodule.h"
+#ifdef AU_MODULE_EFFECTS_VST
+#include "effects/vst/vsteffectsmodule.h"
+#endif
 
 #include "au3wrap/au3wrapmodule.h"
 
@@ -133,6 +136,9 @@ int main(int argc, char** argv)
     app.addModule(new au::record::RecordModule());
     app.addModule(new au::effects::EffectsModule());
     app.addModule(new au::effects::BuiltinEffectsModule());
+#ifdef AU_MODULE_EFFECTS_VST
+    app.addModule(new au::effects::VstEffectsModule());
+#endif
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.
