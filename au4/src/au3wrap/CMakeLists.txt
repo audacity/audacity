@@ -21,7 +21,7 @@
 # This module stores global state
 declare_module(au3wrap)
 
-if(AU_MODULE_VST)
+if(AU_MODULE_EFFECTS_VST)
     add_subdirectory("vst3")
 endif()
 
@@ -521,7 +521,7 @@ set(AU3_SRC
 
 )
 
-if(AU_MODULE_VST)
+if(AU_MODULE_EFFECTS_VST)
     set(MODULE_SRC ${MODULE_SRC}
         ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.cpp
         ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.h
@@ -545,20 +545,20 @@ endif()
 include(GetPlatformInfo)
 
 if(OS_IS_WIN)
-    if (AU_MODULE_VST)
+    if (AU_MODULE_EFFECTS_VST)
         set(MODULE_SRC ${MODULE_SRC}
             ${AU3_LIBRARIES}/lib-vst3/module_win32.cpp
         )
     endif()
 
 elseif(OS_IS_LIN)
-    if (AU_MODULE_VST)
+    if (AU_MODULE_EFFECTS_VST)
         set(MODULE_SRC ${MODULE_SRC}
             ${AU3_LIBRARIES}/lib-vst3/module_linux.cpp
         )
     endif()
 elseif(OS_IS_MAC)
-    if (AU_MODULE_VST)
+    if (AU_MODULE_EFFECTS_VST)
         set(MODULE_SRC ${MODULE_SRC}
             ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
         )
@@ -583,7 +583,7 @@ set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 set(MODULE_LINK ${AU3_LINK})
 
-if (AU_MODULE_VST)
+if (AU_MODULE_EFFECTS_VST)
     set(MODULE_INCLUDE ${MODULE_INCLUDE} ${AU_MODULE_VST_VST3_SDK_PATH})
     set(MODULE_LINK ${MODULE_LINK} vst_sdk_3)
 endif()

@@ -4,17 +4,21 @@
 #pragma once
 
 #include "modularity/ioc.h"
-#include "audioplugins/iknownaudiopluginsregister.h"
-#include "effects/ieffectsconfiguration.h"
 #include "global/iinteractive.h"
+#include "effects/builtin/ibuiltineffectsrepository.h"
+#include "effects/vst/ivsteffectsrepository.h"
+#include "effects/nyquist/inyquisteffectsrepository.h"
+#include "../ieffectsconfiguration.h"
 
-#include "effects/ieffectsprovider.h"
+#include "../ieffectsprovider.h"
 
 namespace au::effects {
 class EffectsProvider : public IEffectsProvider
 {
     muse::Inject<IEffectsConfiguration> configuration;
-    muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
+    muse::Inject<IBuiltinEffectsRepository> builtinEffectsRepository;
+    muse::Inject<IVstEffectsRepository> vstEffectsRepository;
+    muse::Inject<INyquistEffectsRepository> nyquistEffectsRepository;
     muse::Inject<muse::IInteractive> interactive;
 
 public:
@@ -33,6 +37,10 @@ public:
                             const EffectTimeParams& timeParams) override;
 
 private:
+
+    bool isVstSupported() const;
+    bool isNyquistSupported() const;
+
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
 

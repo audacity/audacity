@@ -47,8 +47,8 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
     Q_INVOKABLE bool moveClip(const ClipKey& key, double deltaX, bool completed);
-    Q_INVOKABLE bool trimLeftClip(const ClipKey& key, double deltaX);
-    Q_INVOKABLE bool trimRightClip(const ClipKey& key, double deltaX);
+    Q_INVOKABLE bool trimLeftClip(const ClipKey& key, double deltaX, double posOnCanvas);
+    Q_INVOKABLE bool trimRightClip(const ClipKey& key, double deltaX, double posOnCanvas);
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void unselectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClip();
@@ -87,6 +87,7 @@ private:
     void onClipRenameAction(const muse::actions::ActionData& args);
     ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
     int indexByKey(const trackedit::ClipKey& k) const;
+    double calculateExtraAutoScrollShift(double posOnCanvas);
 
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;

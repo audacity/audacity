@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "effects/ieffectsconfiguration.h"
+#include "../ieffectsconfiguration.h"
 
 #include "modularity/ioc.h"
 #include "global/iglobalconfiguration.h"

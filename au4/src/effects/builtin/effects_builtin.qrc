@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>amplify/AmplifyView.qml</file>
+        <file>tonegen/ChirpView.qml</file>
+        <file>tonegen/ToneView.qml</file>
+        <file>general/GeneralEffectView.qml</file>
+    </qresource>
+</RCC>

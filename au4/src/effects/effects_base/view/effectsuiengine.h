@@ -5,7 +5,7 @@
 
 #include <QObject>
 
-#include "effects/ieffectsuiengine.h"
+#include "../ieffectsuiengine.h"
 
 #include "modularity/ioc.h"
 #include "ui/iuiengine.h"

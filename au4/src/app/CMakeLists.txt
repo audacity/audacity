@@ -90,8 +90,15 @@ set(LINK_LIB
     projectscene
     playback
     record
-    effects
+    effects_base
+    effects_builtin
+    effects_nyquist
 )
+
+if (AU_MODULE_EFFECTS_VST)
+    list(APPEND LINK_LIB effects_vst)
+    add_definitions(-DAU_MODULE_EFFECTS_VST)
+endif()
 
 ###########################################
 # Resources

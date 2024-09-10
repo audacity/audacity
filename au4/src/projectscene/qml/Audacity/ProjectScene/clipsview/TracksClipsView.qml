@@ -14,6 +14,8 @@ Rectangle {
     property bool clipHovered: false
     color: ui.theme.backgroundPrimaryColor
 
+    clip: true
+
     TracksListClipsModel {
         id: tracksModel
     }
@@ -148,8 +150,6 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        clip: true
-
         // anchors.leftMargin: 130
         // anchors.rightMargin: 130
 
@@ -277,6 +277,7 @@ Rectangle {
                 delegate: TrackClipsItem {
                     width: tracksClipsView.width
                     context: timeline.context
+                    canvas: content
                     trackId: model.trackId
                     isDataSelected: model.isDataSelected
 
@@ -313,6 +314,23 @@ Rectangle {
             onSelectionDraged: function(x1, x2, completed) { selectionController.onSelectionDraged(x1, x2, completed) }
         }
 
+        PlayCursor {
+            id: playCursor
+            anchors.top: tracksClipsViewArea.top
+            anchors.bottom: parent.bottom
+            x: playCursorController.positionX
+            z: 2
+            timelinePressed: timelineMouseArea.pressed
+
+            onSetPlaybackPosition: function(ix) {
+                playCursorController.seekToX(ix)
+            }
+
+            onPlayCursorMousePositionChanged: function(ix) {
+                lineCursor.x = ix
+            }
+        }
+
         VerticalRulersPanel {
             id: verticalRulers
 
@@ -321,25 +339,6 @@ Rectangle {
             anchors.bottom: tracksClipsViewArea.bottom
 
             visible: tracksModel.isVerticalRulersVisible
-        }
-    }
-
-    PlayCursor {
-        id: playCursor
-
-        anchors.top: content.top
-        anchors.bottom: content.bottom
-
-        x: playCursorController.positionX
-
-        timelinePressed: timelineMouseArea.pressed
-
-        onSetPlaybackPosition: function(ix) {
-            playCursorController.seekToX(ix)
-        }
-
-        onPlayCursorMousePositionChanged: function(ix) {
-            lineCursor.x = ix
         }
     }
 }

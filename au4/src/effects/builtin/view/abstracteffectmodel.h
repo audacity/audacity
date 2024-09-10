@@ -6,7 +6,7 @@
 #include <QObject>
 
 #include "modularity/ioc.h"
-#include "../ieffectinstancesregister.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
 
 class Effect;
 namespace au::effects {

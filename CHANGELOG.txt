@@ -1,5 +1,10 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.6.3
+
+This is a patch release. It fixes the following bug: 
+   * #7622 Fixed a crash when exiting Audacity. (Thanks, Joe Souza!)
+
 Changes in version 3.6.2
 
 This is a patch release. It adds a "Legacy" effects section containing the old Limiter, Compressor and Classic Filters.

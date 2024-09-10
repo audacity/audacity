@@ -5,8 +5,6 @@
 
 #include "global/translation.h"
 
-#include "../builtin/builtineffects.h"
-
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
 #include "libraries/lib-audacity-application-logic/EffectManager.h"
@@ -25,14 +23,14 @@ static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&instance
 
 static const int UNDEFINED_FREQUENCY = -1;
 
-static muse::String categoryId(muse::audio::AudioResourceType type)
+bool EffectsProvider::isVstSupported() const
 {
-    switch (type) {
-    case muse::audio::AudioResourceType::VstPlugin: return VST_CATEGORY_ID;
-    default: break;
-    }
+    return vstEffectsRepository() ? true : false;
+}
 
-    return u"";
+bool EffectsProvider::isNyquistSupported() const
+{
+    return nyquistEffectsRepository() ? true : false;
 }
 
 void EffectsProvider::reloadEffects()
@@ -42,24 +40,24 @@ void EffectsProvider::reloadEffects()
 
     // build-in
     {
-        BuiltinEffects loader;
-        EffectMetaList metaList = loader.effectMetaList();
+        EffectMetaList metaList = builtinEffectsRepository()->effectMetaList();
         for (EffectMeta meta : metaList) {
             m_effects.push_back(std::move(meta));
         }
     }
 
-    // plugins
-    {
-        std::vector<muse::audioplugins::AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
+    // VST
+    if (isVstSupported()) {
+        EffectMetaList metaList = vstEffectsRepository()->effectMetaList();
+        for (EffectMeta meta : metaList) {
+            m_effects.push_back(std::move(meta));
+        }
+    }
 
-        for (const muse::audioplugins::AudioPluginInfo& info : allEffects) {
-            EffectMeta meta;
-            meta.id = muse::String(info.meta.id.c_str());
-            meta.title = muse::String(info.meta.id.c_str());
-
-            meta.categoryId = categoryId(info.meta.type);
-
+    // Nyquist
+    if (isNyquistSupported()) {
+        EffectMetaList metaList = nyquistEffectsRepository()->effectMetaList();
+        for (EffectMeta meta : metaList) {
             m_effects.push_back(std::move(meta));
         }
     }
@@ -79,14 +77,11 @@ muse::async::Notification EffectsProvider::effectMetaListChanged() const
 
 EffectCategoryList EffectsProvider::effectsCategoryList() const
 {
-    static const EffectCategoryList list = {
-        { BUILTIN_CATEGORY_ID, muse::mtrc("effects", "Build-in") },
-#ifdef AU_MODULE_VST
-        {
-            VST_CATEGORY_ID, u"VST"
-        }
-#endif
-    };
+    EffectCategoryList list;
+    list.push_back({ BUILTIN_CATEGORY_ID, muse::mtrc("effects", "Build-in") });
+    if (isVstSupported()) {
+        list.push_back({ VST_CATEGORY_ID, muse::mtrc("effects", "VST") });
+    }
 
     return list;
 }
