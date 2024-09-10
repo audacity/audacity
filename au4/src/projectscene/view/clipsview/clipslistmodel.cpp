@@ -154,6 +154,9 @@ void ClipsListModel::update()
 
     updateItemsMetrics();
 
+    //! NOTE We need to update the selected item
+    //! to take a pointer to the item from the new list
+    m_selectedItem = nullptr;
     onSelectedClip(selectionController()->selectedClip());
 
     endResetModel();
