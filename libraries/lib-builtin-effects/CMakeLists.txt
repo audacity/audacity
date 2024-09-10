@@ -21,6 +21,8 @@ set( SOURCES
    ContrastBase.h
    DtmfBase.cpp
    DtmfBase.h
+   DistortionBase.cpp
+   DistortionBase.h
    EchoBase.cpp
    EchoBase.h
    Fade.cpp
