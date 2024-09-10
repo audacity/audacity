@@ -61,10 +61,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/chirpeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/toneeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/toneeffect.h
-
-    # temp_concept
-    ${CMAKE_CURRENT_LIST_DIR}/tmpconcept/tempconceptexecutor.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/tmpconcept/tempconceptexecutor.h
     )
 
 if (AU_MODULE_VST)
