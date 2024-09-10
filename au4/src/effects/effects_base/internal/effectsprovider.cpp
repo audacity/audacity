@@ -28,6 +28,11 @@ bool EffectsProvider::isVstSupported() const
     return vstEffectsRepository() ? true : false;
 }
 
+bool EffectsProvider::isNyquistSupported() const
+{
+    return nyquistEffectsRepository() ? true : false;
+}
+
 void EffectsProvider::reloadEffects()
 {
     m_effects.clear();
@@ -41,9 +46,17 @@ void EffectsProvider::reloadEffects()
         }
     }
 
-    // vst
+    // VST
     if (isVstSupported()) {
         EffectMetaList metaList = vstEffectsRepository()->effectMetaList();
+        for (EffectMeta meta : metaList) {
+            m_effects.push_back(std::move(meta));
+        }
+    }
+
+    // Nyquist
+    if (isNyquistSupported()) {
+        EffectMetaList metaList = nyquistEffectsRepository()->effectMetaList();
         for (EffectMeta meta : metaList) {
             m_effects.push_back(std::move(meta));
         }
