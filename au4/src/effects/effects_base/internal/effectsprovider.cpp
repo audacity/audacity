@@ -5,8 +5,6 @@
 
 #include "global/translation.h"
 
-#include "../builtin/builtineffects.h"
-
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
 #include "libraries/lib-audacity-application-logic/EffectManager.h"
@@ -42,8 +40,7 @@ void EffectsProvider::reloadEffects()
 
     // build-in
     {
-        BuiltinEffects loader;
-        EffectMetaList metaList = loader.effectMetaList();
+        EffectMetaList metaList = builtinEffectsRepository()->effectMetaList();
         for (EffectMeta meta : metaList) {
             m_effects.push_back(std::move(meta));
         }

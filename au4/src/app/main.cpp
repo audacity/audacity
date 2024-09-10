@@ -56,6 +56,7 @@
 #include "trackedit/trackeditmodule.h"
 #include "record/recordmodule.h"
 #include "effects/effects_base/effectsmodule.h"
+#include "effects/builtin/builtineffectsmodule.h"
 
 #include "au3wrap/au3wrapmodule.h"
 
@@ -131,6 +132,7 @@ int main(int argc, char** argv)
     app.addModule(new au::trackedit::TrackeditModule());
     app.addModule(new au::record::RecordModule());
     app.addModule(new au::effects::EffectsModule());
+    app.addModule(new au::effects::BuiltinEffectsModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.

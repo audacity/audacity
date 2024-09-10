@@ -18,8 +18,6 @@
 #include "internal/effectinstancesregister.h"
 #include "internal/effectexecutionscenario.h"
 
-#include "builtin/builtineffects.h"
-
 #ifdef AU_MODULE_VST
 #include "internal/au3/vst3pluginsscanner.h"
 #include "internal/au3/vst3pluginsmetareader.h"
@@ -33,7 +31,7 @@
 
 using namespace au::effects;
 
-static void effects_init_qrc()
+static void effects_base_init_qrc()
 {
     Q_INIT_RESOURCE(effects_base);
 }
@@ -85,7 +83,7 @@ void EffectsModule::resolveImports()
 
 void EffectsModule::registerResources()
 {
-    effects_init_qrc();
+    effects_base_init_qrc();
 }
 
 void EffectsModule::registerUiTypes()
@@ -95,9 +93,6 @@ void EffectsModule::registerUiTypes()
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
-    //! NOTE Should be before PluginManager::Get().Initialize
-    BuiltinEffects::init();
-
     PluginManager::Get().Initialize([](const FilePath& localFileName) {
         return std::make_unique<au3::EffectSettings>(localFileName.ToStdString());
     });
