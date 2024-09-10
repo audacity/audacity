@@ -444,6 +444,8 @@ enum {
 };
 
 namespace {
+   bool IsWindowValid(const ProjectWindow *window) { return window && !window->IsBeingDeleted(); }
+
 //! This allows either the ProjectWindow or the AudacityProject to be
 //! destroyed first.  This object is given to an attached object of the project.
 struct Adapter final : ViewportCallbacks {
@@ -451,69 +453,69 @@ struct Adapter final : ViewportCallbacks {
    ~Adapter() override = default;
 
    std::pair<int, int> ViewportSize() const override
-   { return mwWindow ? mwWindow->ViewportSize() : std::pair{ 1, 1 }; }
+   { return IsWindowValid(mwWindow) ? mwWindow->ViewportSize() : std::pair{ 1, 1 }; }
 
    unsigned MinimumTrackHeight() override
-   { return mwWindow ? mwWindow->MinimumTrackHeight() : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->MinimumTrackHeight() : 0; }
    bool IsTrackMinimized(const Track &track) override
-   { return mwWindow ? mwWindow->IsTrackMinimized(track) : false; }
+   { return IsWindowValid(mwWindow) ? mwWindow->IsTrackMinimized(track) : false; }
    void SetMinimized(Track &track, bool minimized) override
-   { if (mwWindow) mwWindow->SetMinimized(track, minimized); }
+   { if (IsWindowValid(mwWindow)) mwWindow->SetMinimized(track, minimized); }
    int GetTrackHeight(const Track &track) override
-   { return mwWindow ? mwWindow->GetTrackHeight(track) : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->GetTrackHeight(track) : 0; }
    void SetChannelHeights(Track &track, unsigned height) override
-   { if (mwWindow) mwWindow->SetChannelHeights(track, height); }
+   { if (IsWindowValid(mwWindow)) mwWindow->SetChannelHeights(track, height); }
    int GetTotalHeight(const TrackList &trackList) override
-   { return mwWindow ? mwWindow->GetTotalHeight(trackList) : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->GetTotalHeight(trackList) : 0; }
 
    int GetHorizontalThumbPosition() const override
-   { return mwWindow ? mwWindow->GetHorizontalThumbPosition() : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->GetHorizontalThumbPosition() : 0; }
    int GetHorizontalThumbSize() const override
-   { return mwWindow ? mwWindow->GetHorizontalThumbSize() : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->GetHorizontalThumbSize() : 0; }
    int GetHorizontalRange() const override
-   { return mwWindow ? mwWindow->GetHorizontalRange() : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->GetHorizontalRange() : 0; }
    void SetHorizontalThumbPosition(int viewStart) override
    {
-      if (mwWindow) mwWindow->SetHorizontalThumbPosition(viewStart);
+      if (IsWindowValid(mwWindow)) mwWindow->SetHorizontalThumbPosition(viewStart);
    }
    void SetHorizontalScrollbar(int position, int thumbSize,
       int range, int pageSize, bool refresh) override
    {
-      if (mwWindow)
+      if (IsWindowValid(mwWindow))
          mwWindow->SetHorizontalScrollbar(
            position, thumbSize, range, pageSize, refresh);
    }
    void ShowHorizontalScrollbar(bool shown) override
    {
-      if (mwWindow)
+      if (IsWindowValid(mwWindow))
          mwWindow->ShowHorizontalScrollbar(shown);
    }
 
    int GetVerticalThumbPosition() const override
-   { return mwWindow ? mwWindow->GetVerticalThumbPosition() : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->GetVerticalThumbPosition() : 0; }
    int GetVerticalThumbSize() const override
-   { return mwWindow ? mwWindow->GetVerticalThumbSize() : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->GetVerticalThumbSize() : 0; }
    int GetVerticalRange() const override
-   { return mwWindow ? mwWindow->GetVerticalRange() : 0; }
+   { return IsWindowValid(mwWindow) ? mwWindow->GetVerticalRange() : 0; }
    void SetVerticalThumbPosition(int viewStart) override
    {
-      if (mwWindow) mwWindow->SetVerticalThumbPosition(viewStart);
+      if (IsWindowValid(mwWindow)) mwWindow->SetVerticalThumbPosition(viewStart);
    }
    void SetVerticalScrollbar(int position, int thumbSize,
       int range, int pageSize, bool refresh) override
    {
-      if (mwWindow)
+      if (IsWindowValid(mwWindow))
          mwWindow->SetVerticalScrollbar(
            position, thumbSize, range, pageSize, refresh);
    }
    void ShowVerticalScrollbar(bool shown) override
    {
-      if (mwWindow)
+      if (IsWindowValid(mwWindow))
          mwWindow->ShowVerticalScrollbar(shown);
    }
    void SetToDefaultSize() override
    {
-      if (mwWindow)
+      if (IsWindowValid(mwWindow))
          mwWindow->SetToDefaultSize();
    }
 
