@@ -6,6 +6,7 @@
 #include "modularity/ioc.h"
 #include "audioplugins/iknownaudiopluginsregister.h"
 #include "global/iinteractive.h"
+#include "effects/builtin/ibuiltineffectsrepository.h"
 #include "../ieffectsconfiguration.h"
 
 #include "../ieffectsprovider.h"
@@ -14,6 +15,7 @@ namespace au::effects {
 class EffectsProvider : public IEffectsProvider
 {
     muse::Inject<IEffectsConfiguration> configuration;
+    muse::Inject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
     muse::Inject<muse::IInteractive> interactive;
 

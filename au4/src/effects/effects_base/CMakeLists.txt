@@ -42,25 +42,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.h
-
-    # built-in
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/builtineffects.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/builtineffects.h
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/abstracteffectmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/abstracteffectmodel.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/general/generalviewmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/general/generalviewmodel.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyeffect.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyeffect.h
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyviewmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyviewmodel.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/chirpeffect.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/chirpeffect.h
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/toneeffect.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/toneeffect.h
     )
 
 if (AU_MODULE_VST)
@@ -74,23 +55,6 @@ endif()
 
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
-
-set(AU3_SRC
-    ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.cpp
-    ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/AmplifyBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/AmplifyBase.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
-)
-
-set(AU3_DEF ${AU3_DEF}
-    -DBUILTIN_EFFECTS_API=
-)
-
-set(MODULE_SRC ${MODULE_SRC}
-    ${AU3_SRC}
-)
 
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})

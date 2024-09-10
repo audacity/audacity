@@ -91,6 +91,7 @@ set(LINK_LIB
     playback
     record
     effects_base
+    effects_builtin
 )
 
 ###########################################

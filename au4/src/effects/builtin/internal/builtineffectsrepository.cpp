@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "builtineffects.h"
+#include "builtineffectsrepository.h"
 
 #include <QtQml>
 
@@ -43,10 +43,10 @@ static EffectMeta effectMeta(const ComponentInterfaceSymbol& symbol)
     return meta;
 }
 
-void BuiltinEffects::init()
+void BuiltinEffectsRepository::init()
 {
-    auto regView = [](const ::ComponentInterfaceSymbol& symbol, const muse::String& url) {
-        BuiltinEffects::effectsViewRegister()->regUrl(au3::wxToString(symbol.Internal()), url);
+    auto regView = [this](const ::ComponentInterfaceSymbol& symbol, const muse::String& url) {
+        effectsViewRegister()->regUrl(au3::wxToString(symbol.Internal()), url);
     };
 
     // General
@@ -65,7 +65,7 @@ void BuiltinEffects::init()
     //regView(ToneEffect::Symbol, u"qrc:/builtin/tonegen/ToneView.qml");
 }
 
-EffectMetaList BuiltinEffects::effectMetaList() const
+EffectMetaList BuiltinEffectsRepository::effectMetaList() const
 {
     EffectMetaList list;
 
