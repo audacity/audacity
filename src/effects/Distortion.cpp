@@ -11,7 +11,7 @@
 
 ******************************************************************//**
 
-\class EffectDistortion
+\class DistortionBase
 \brief A WaveShaper distortion effect.
 
 *//*******************************************************************/
@@ -30,7 +30,7 @@
 #define M_PI 3.1415926535897932384626433832795
 #endif
 #ifndef M_PI_2
-#define M_PI_2 1.57079632679489661923132169163975 
+#define M_PI_2 1.57079632679489661923132169163975
 #endif
 
 #include <wx/checkbox.h>
@@ -45,7 +45,7 @@
 #include "ShuttleGui.h"
 #include "../widgets/valnum.h"
 
-const EnumValueSymbol EffectDistortion::kTableTypeStrings[nTableTypes] =
+const EnumValueSymbol DistortionBase::kTableTypeStrings[nTableTypes] =
 {
    { XO("Hard Clipping") },
    { XO("Soft Clipping") },
@@ -60,9 +60,9 @@ const EnumValueSymbol EffectDistortion::kTableTypeStrings[nTableTypes] =
    { XO("Hard Limiter 1413") }
 };
 
-const EffectParameterMethods& EffectDistortion::Parameters() const
+const EffectParameterMethods& DistortionBase::Parameters() const
 {
-   static CapturedParameters<EffectDistortion,
+   static CapturedParameters<DistortionBase,
       TableTypeIndx, DCBlock, Threshold_dB, NoiseFloor, Param1, Param2, Repeats
    > parameters;
    return parameters;
@@ -119,20 +119,20 @@ TranslatableString defaultLabel(int index)
 }
 
 //
-// EffectDistortion
+// DistortionBase
 //
 
-const ComponentInterfaceSymbol EffectDistortion::Symbol
+const ComponentInterfaceSymbol DistortionBase::Symbol
 { XO("Distortion") };
 
-namespace{ BuiltinEffectsModule::Registration< EffectDistortion > reg; }
+namespace{ BuiltinEffectsModule::Registration< DistortionBase > reg; }
 
 
 struct EffectDistortion::Editor
    : EffectEditor
 {
    Editor(const EffectUIServices& services,
-      EffectDistortion::Instance& instance,
+      DistortionBase::Instance& instance,
       EffectSettingsAccess& access, const EffectDistortionSettings& settings
    )  : EffectEditor{ services, access }
       , mInstance(instance)
@@ -195,7 +195,7 @@ struct EffectDistortion::Editor
    void UpdateControlText(wxTextCtrl* textCtrl, wxString& string, bool enabled);
 
    wxWeakRef<wxWindow> mUIParent{};
-   EffectDistortion::Instance& mInstance;
+   DistortionBase::Instance& mInstance;
 };
 
 
@@ -203,7 +203,7 @@ bool EffectDistortion::Editor::ValidateUI()
 {
    {
       // This section was copied from the original
-      // EffectDistortion::TransferDataFromWindow
+      // DistortionBase::TransferDataFromWindow
       //
       // However, the call to ->Validate would bring up an error dialog
       // saying "Empty value"
@@ -231,7 +231,7 @@ bool EffectDistortion::Editor::ValidateUI()
 }
 
 
-struct EffectDistortion::Instance
+struct DistortionBase::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
 {
@@ -286,7 +286,7 @@ struct EffectDistortion::Instance
 
    // Used by Soft Clipping but could be used for other tables.
    // Log curve formula: y = T + (((e^(RT - Rx)) - 1) / -R)
-   // where R is the ratio, T is the threshold, and x is from T to 1. 
+   // where R is the ratio, T is the threshold, and x is from T to 1.
    inline float LogCurve(double threshold, float value, double ratio);
 
    // Used by Cubic curve but could be used for other tables
@@ -307,7 +307,7 @@ struct EffectDistortion::Instance
 
 
 std::shared_ptr<EffectInstance>
-EffectDistortion::MakeInstance() const
+DistortionBase::MakeInstance() const
 {
    return std::make_shared<Instance>(*this);
 }
@@ -318,77 +318,77 @@ EffectDistortionState& EffectDistortion::Editor::GetState()
    return mInstance.mMaster;
 }
 
-EffectDistortion::EffectDistortion()
+DistortionBase::DistortionBase()
 {
    wxASSERT(nTableTypes == WXSIZEOF(kTableTypeStrings));
 
    SetLinearEffectFlag(false);
 }
 
-EffectDistortion::~EffectDistortion()
+DistortionBase::~DistortionBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectDistortion::GetSymbol() const
+ComponentInterfaceSymbol DistortionBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectDistortion::GetDescription() const
+TranslatableString DistortionBase::GetDescription() const
 {
    return XO("Waveshaping distortion effect");
 }
 
-ManualPageID EffectDistortion::ManualPage() const
+ManualPageID DistortionBase::ManualPage() const
 {
    return L"Distortion";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectDistortion::GetType() const
+EffectType DistortionBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-auto EffectDistortion::RealtimeSupport() const -> RealtimeSince
+auto DistortionBase::RealtimeSupport() const -> RealtimeSince
 {
    return RealtimeSince::After_3_1;
 }
 
-unsigned EffectDistortion::Instance::GetAudioInCount() const
+unsigned DistortionBase::Instance::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectDistortion::Instance::GetAudioOutCount() const
+unsigned DistortionBase::Instance::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectDistortion::Instance::ProcessInitialize(
+bool DistortionBase::Instance::ProcessInitialize(
    EffectSettings & settings, double sampleRate, ChannelNames chanMap)
 {
    InstanceInit(mMaster, settings, sampleRate);
    return true;
 }
 
-size_t EffectDistortion::Instance::ProcessBlock(EffectSettings& settings,
+size_t DistortionBase::Instance::ProcessBlock(EffectSettings& settings,
    const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mMaster, inBlock, outBlock, blockLen);
 }
 
-bool EffectDistortion::Instance::RealtimeInitialize(EffectSettings &, double)
+bool DistortionBase::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
    mSlaves.clear();
    return true;
 }
 
-bool EffectDistortion::Instance::RealtimeAddProcessor(
+bool DistortionBase::Instance::RealtimeAddProcessor(
    EffectSettings & settings, EffectOutputs *, unsigned, float sampleRate)
 {
    EffectDistortionState slave;
@@ -400,14 +400,14 @@ bool EffectDistortion::Instance::RealtimeAddProcessor(
    return true;
 }
 
-bool EffectDistortion::Instance::RealtimeFinalize(EffectSettings &) noexcept
+bool DistortionBase::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectDistortion::Instance::RealtimeProcess(size_t group, EffectSettings& settings,
+size_t DistortionBase::Instance::RealtimeProcess(size_t group, EffectSettings& settings,
    const float* const* inbuf, float* const* outbuf, size_t numSamples)
 {
    if (group >= mSlaves.size())
@@ -415,7 +415,7 @@ size_t EffectDistortion::Instance::RealtimeProcess(size_t group, EffectSettings&
    return InstanceProcess(settings, mSlaves[group], inbuf, outbuf, numSamples);
 }
 
-RegistryPaths EffectDistortion::GetFactoryPresets() const
+RegistryPaths DistortionBase::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -428,20 +428,20 @@ RegistryPaths EffectDistortion::GetFactoryPresets() const
 }
 
 OptionalMessage
-EffectDistortion::LoadFactoryPreset(int id, EffectSettings& settings) const
+DistortionBase::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectDistortion*>(this)->DoLoadFactoryPreset(id, settings);
+   return const_cast<DistortionBase*>(this)->DoLoadFactoryPreset(id, settings);
 }
 
-OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id, EffectSettings& settings)
+OptionalMessage DistortionBase::DoLoadFactoryPreset(int id, EffectSettings& settings)
 {
    if (id < 0 || id >= (int) WXSIZEOF(FactoryPresets))
    {
       return {};
    }
 
-   GetSettings(settings) = FactoryPresets[id].params;   
+   GetSettings(settings) = FactoryPresets[id].params;
 
    return { nullptr };
 }
@@ -452,11 +452,11 @@ OptionalMessage EffectDistortion::DoLoadFactoryPreset(int id, EffectSettings& se
 std::unique_ptr<EffectEditor>
 EffectDistortion::MakeEditor(ShuttleGui& S, EffectInstance& instance,
    EffectSettingsAccess& access, const EffectOutputs* pOutputs) const
-{   
+{
    auto& settings = access.Get();
    auto& myEffSettings = GetSettings(settings);
-   
-   auto result = std::make_unique<Editor>(*this, dynamic_cast<EffectDistortion::Instance&>(instance), access, myEffSettings);
+
+   auto result = std::make_unique<Editor>(*this, dynamic_cast<DistortionBase::Instance&>(instance), access, myEffSettings);
    result->PopulateOrExchange(S);
    return result;
 }
@@ -495,7 +495,7 @@ void EffectDistortion::Editor::PopulateOrExchange(ShuttleGui& S)
          S.SetStretchyCol(2);
          {
             // Allow space for first Column
-            S.AddSpace(250,0); S.AddSpace(0,0); S.AddSpace(0,0); S.AddSpace(0,0); 
+            S.AddSpace(250,0); S.AddSpace(0,0); S.AddSpace(0,0); S.AddSpace(0,0);
 
             // Upper threshold control
             mThresholdTxt = S.AddVariableText(defaultLabel(0),
@@ -518,7 +518,7 @@ void EffectDistortion::Editor::PopulateOrExchange(ShuttleGui& S)
             S.AddSpace(20, 0);
 
             BindTo(*mThresholdS, wxEVT_SLIDER, &Editor::OnThresholdSlider);
-            
+
             // Noise floor control
             mNoiseFloorTxt = S.AddVariableText(defaultLabel(1),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -550,7 +550,7 @@ void EffectDistortion::Editor::PopulateOrExchange(ShuttleGui& S)
          S.SetStretchyCol(2);
          {
             // Allow space for first Column
-            S.AddSpace(250,0); S.AddSpace(0,0); S.AddSpace(0,0); S.AddSpace(0,0); 
+            S.AddSpace(250,0); S.AddSpace(0,0); S.AddSpace(0,0); S.AddSpace(0,0);
 
             // Parameter1 control
             mParam1Txt = S.AddVariableText(defaultLabel(2),
@@ -572,7 +572,7 @@ void EffectDistortion::Editor::PopulateOrExchange(ShuttleGui& S)
             S.AddSpace(20, 0);
 
             BindTo(*mParam1S, wxEVT_SLIDER, &Editor::OnParam1Slider);
-            
+
             // Parameter2 control
             mParam2Txt = S.AddVariableText(defaultLabel(3),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -594,7 +594,7 @@ void EffectDistortion::Editor::PopulateOrExchange(ShuttleGui& S)
             BindTo(*mParam2S, wxEVT_SLIDER, &Editor::OnParam2Slider);
 
             S.AddSpace(20, 0);
-            
+
             // Repeats control
             mRepeatsTxt = S.AddVariableText(defaultLabel(4),
                false, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -652,10 +652,10 @@ bool EffectDistortion::Editor::UpdateUI()
 }
 
 
-void EffectDistortion::Instance::InstanceInit(EffectDistortionState& data, EffectSettings& settings, float sampleRate)
+void DistortionBase::Instance::InstanceInit(EffectDistortionState& data, EffectSettings& settings, float sampleRate)
 {
    auto& ms = GetSettings(settings);
-  
+
    data.samplerate = sampleRate;
    data.skipcount = 0;
    data.tablechoiceindx = ms.mTableChoiceIndx;
@@ -678,12 +678,12 @@ void EffectDistortion::Instance::InstanceInit(EffectDistortionState& data, Effec
    return;
 }
 
-size_t EffectDistortion::Instance::InstanceProcess(EffectSettings &settings,
+size_t DistortionBase::Instance::InstanceProcess(EffectSettings &settings,
    EffectDistortionState& data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    auto& ms = GetSettings(settings);
-   
+
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
 
@@ -800,7 +800,7 @@ void EffectDistortion::Editor::OnThresholdSlider(wxCommandEvent& evt)
 
    const double thresholdDB = (double)evt.GetInt() / Threshold_dB.scale;
    ms.mThreshold_dB = wxMax(LINEAR_TO_DB(thresholdDB), Threshold_dB.min);
-   
+
    mThresholdT->GetValidator()->TransferToWindow();
 
    ValidateUI();
@@ -1178,7 +1178,7 @@ void EffectDistortion::Editor::UpdateControlText(wxTextCtrl* textCtrl, wxString&
    }
 }
 
-void EffectDistortion::Instance::MakeTable
+void DistortionBase::Instance::MakeTable
 (
    EffectDistortionState& state,
    const EffectDistortionSettings& ms
@@ -1227,7 +1227,7 @@ void EffectDistortion::Instance::MakeTable
 // Preset tables for gain lookup
 //
 
-void EffectDistortion::Instance::HardClip
+void DistortionBase::Instance::HardClip
 (
    EffectDistortionState& state,
    const EffectDistortionSettings& ms
@@ -1250,7 +1250,7 @@ void EffectDistortion::Instance::HardClip
    }
 }
 
-void EffectDistortion::Instance::SoftClip
+void DistortionBase::Instance::SoftClip
 (        EffectDistortionState& state,
    const EffectDistortionSettings& ms
 )
@@ -1273,12 +1273,12 @@ void EffectDistortion::Instance::SoftClip
    CopyHalfTable();
 }
 
-float EffectDistortion::Instance::LogCurve(double threshold, float value, double ratio)
+float DistortionBase::Instance::LogCurve(double threshold, float value, double ratio)
 {
    return threshold + ((std::exp(ratio * (threshold - value)) - 1) / -ratio);
 }
 
-void EffectDistortion::Instance::ExponentialTable(const EffectDistortionSettings& ms)
+void DistortionBase::Instance::ExponentialTable(const EffectDistortionSettings& ms)
 {
    double amount = std::min(0.999, DB_TO_LINEAR(-1 * ms.mParam1));   // avoid divide by zero
 
@@ -1291,7 +1291,7 @@ void EffectDistortion::Instance::ExponentialTable(const EffectDistortionSettings
    CopyHalfTable();
 }
 
-void EffectDistortion::Instance::LogarithmicTable(const EffectDistortionSettings& ms)
+void DistortionBase::Instance::LogarithmicTable(const EffectDistortionSettings& ms)
 {
    double amount = ms.mParam1;
    double stepsize = 1.0 / STEPS;
@@ -1312,7 +1312,7 @@ void EffectDistortion::Instance::LogarithmicTable(const EffectDistortionSettings
    CopyHalfTable();
 }
 
-void EffectDistortion::Instance::HalfSinTable(const EffectDistortionSettings& ms)
+void DistortionBase::Instance::HalfSinTable(const EffectDistortionSettings& ms)
 {
    int iter = std::floor(ms.mParam1 / 20.0);
    double fractionalpart = (ms.mParam1 / 20.0) - iter;
@@ -1330,7 +1330,7 @@ void EffectDistortion::Instance::HalfSinTable(const EffectDistortionSettings& ms
    CopyHalfTable();
 }
 
-void EffectDistortion::Instance::CubicTable(const EffectDistortionSettings& ms)
+void DistortionBase::Instance::CubicTable(const EffectDistortionSettings& ms)
 {
    double amount = ms.mParam1 * std::sqrt(3.0) / 100.0;
    double gain = 1.0;
@@ -1339,7 +1339,7 @@ void EffectDistortion::Instance::CubicTable(const EffectDistortionSettings& ms)
 
    double stepsize = amount / STEPS;
    double x = -amount;
-   
+
    if (amount == 0) {
       for (int i = 0; i < TABLESIZE; i++) {
          mTable[i] = (i / (double)STEPS) - 1.0;
@@ -1356,7 +1356,7 @@ void EffectDistortion::Instance::CubicTable(const EffectDistortionSettings& ms)
    }
 }
 
-double EffectDistortion::Instance::Cubic(const EffectDistortionSettings& ms, double x)
+double DistortionBase::Instance::Cubic(const EffectDistortionSettings& ms, double x)
 {
    if (ms.mParam1 == 0.0)
       return x;
@@ -1365,7 +1365,7 @@ double EffectDistortion::Instance::Cubic(const EffectDistortionSettings& ms, dou
 }
 
 
-void EffectDistortion::Instance::EvenHarmonicTable(const EffectDistortionSettings& ms)
+void DistortionBase::Instance::EvenHarmonicTable(const EffectDistortionSettings& ms)
 {
    double amount = ms.mParam1 / -100.0;
    // double C = std::sin(std::max(0.001, mParams.mParam2) / 100.0) * 10.0;
@@ -1381,7 +1381,7 @@ void EffectDistortion::Instance::EvenHarmonicTable(const EffectDistortionSetting
    }
 }
 
-void EffectDistortion::Instance::SineTable(const EffectDistortionSettings& ms)
+void DistortionBase::Instance::SineTable(const EffectDistortionSettings& ms)
 {
    int iter = std::floor(ms.mParam1 / 20.0);
    double fractionalpart = (ms.mParam1 / 20.0) - iter;
@@ -1399,7 +1399,7 @@ void EffectDistortion::Instance::SineTable(const EffectDistortionSettings& ms)
    CopyHalfTable();
 }
 
-void EffectDistortion::Instance::Leveller(const EffectDistortionSettings& ms)
+void DistortionBase::Instance::Leveller(const EffectDistortionSettings& ms)
 {
    double noiseFloor = DB_TO_LINEAR(ms.mNoiseFloor);
    int numPasses = ms.mRepeats;
@@ -1413,7 +1413,7 @@ void EffectDistortion::Instance::Leveller(const EffectDistortionSettings& ms)
    gainLimits[1] = noiseFloor;
    /* In the original Leveller effect, behaviour was undefined for threshold > 20 dB.
     * If we want to support > 20 dB we need to scale the points to keep them non-decreasing.
-    * 
+    *
     * if (noiseFloor > gainLimits[2]) {
     *    for (int i = 3; i < numPoints; i++) {
     *    gainLimits[i] = noiseFloor + ((1 - noiseFloor)*((gainLimits[i] - 0.1) / 0.9));
@@ -1456,7 +1456,7 @@ void EffectDistortion::Instance::Leveller(const EffectDistortionSettings& ms)
    CopyHalfTable();
 }
 
-void EffectDistortion::Instance::Rectifier(const EffectDistortionSettings& ms)
+void DistortionBase::Instance::Rectifier(const EffectDistortionSettings& ms)
 {
    double amount = (ms.mParam1 / 50.0) - 1;
    double stepsize = 1.0 / STEPS;
@@ -1476,7 +1476,7 @@ void EffectDistortion::Instance::Rectifier(const EffectDistortionSettings& ms)
    }
 }
 
-void EffectDistortion::Instance::HardLimiter(EffectDistortionState& state, const EffectDistortionSettings& settings)
+void DistortionBase::Instance::HardLimiter(EffectDistortionState& state, const EffectDistortionSettings& settings)
 {
    // The LADSPA "hardLimiter 1413" is basically hard clipping,
    // but with a 'kind of' wet/dry mix:
@@ -1487,7 +1487,7 @@ void EffectDistortion::Instance::HardLimiter(EffectDistortionState& state, const
 
 // Helper functions for lookup tables
 
-void EffectDistortion::Instance::CopyHalfTable()
+void DistortionBase::Instance::CopyHalfTable()
 {
    // Copy negative half of table from positive half
    int count = TABLESIZE - 1;
@@ -1498,7 +1498,7 @@ void EffectDistortion::Instance::CopyHalfTable()
 }
 
 
-float EffectDistortion::Instance::WaveShaper(float sample, EffectDistortionSettings& ms)
+float DistortionBase::Instance::WaveShaper(float sample, EffectDistortionSettings& ms)
 {
    float out;
    int index;
@@ -1528,7 +1528,7 @@ float EffectDistortion::Instance::WaveShaper(float sample, EffectDistortionSetti
 }
 
 
-float EffectDistortion::Instance::DCFilter(EffectDistortionState& data, float sample)
+float DistortionBase::Instance::DCFilter(EffectDistortionState& data, float sample)
 {
    // Rolling average gives less offset at the start than an IIR filter.
    const unsigned int queueLength = std::floor(data.samplerate / 20.0);

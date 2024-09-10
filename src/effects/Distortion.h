@@ -68,17 +68,17 @@ struct EffectDistortionSettings
 };
 
 
-class EffectDistortion final : public EffectWithSettings<
-   EffectDistortionSettings, StatelessPerTrackEffect
+class DistortionBase : public EffectWithSettings<
+   EffectDistortionSettings, PerTrackEffect
 >
 {
 public:
    struct Params;
-   
+
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectDistortion();
-   virtual ~EffectDistortion();
+   DistortionBase();
+   virtual ~DistortionBase();
 
 
    // ComponentInterface implementation
@@ -99,31 +99,10 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
-
-   struct Editor;
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
-private:
-
-   enum control
-   {
-      ID_DCBlock = 10001,
-      ID_Threshold,
-      ID_NoiseFloor,
-      ID_Param1,
-      ID_Param2,
-      ID_Repeats,
-   };
-
-
-private:
-
-   int mTypChoiceIndex;
+protected:
 
    const EffectParameterMethods& Parameters() const override;
 
@@ -174,6 +153,27 @@ static constexpr EffectParameter Repeats{
    &EffectDistortionSettings::mRepeats,  L"Repeats",
     EffectDistortionSettings::mDefaultRepeats,       0,       5,                  1    };
 
+};
+
+class EffectDistortion final : public DistortionBase, public StatelessEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) const override;
+
+   struct Editor;
+
+private:
+   enum control
+   {
+      ID_DCBlock = 10001,
+      ID_Threshold,
+      ID_NoiseFloor,
+      ID_Param1,
+      ID_Param2,
+      ID_Repeats,
+   };
 };
 
 #endif
