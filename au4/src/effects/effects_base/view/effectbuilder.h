@@ -10,8 +10,8 @@
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "effects/ieffectsviewregister.h"
-#include "effects/ieffectsuiengine.h"
+#include "../ieffectsviewregister.h"
+#include "../ieffectsuiengine.h"
 
 namespace au::effects {
 class EffectBuilder : public QObject, public muse::async::Asyncable

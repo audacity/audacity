@@ -5,10 +5,10 @@
 
 #include "modularity/ioc.h"
 #include "audioplugins/iknownaudiopluginsregister.h"
-#include "effects/ieffectsconfiguration.h"
 #include "global/iinteractive.h"
+#include "../ieffectsconfiguration.h"
 
-#include "effects/ieffectsprovider.h"
+#include "../ieffectsprovider.h"
 
 namespace au::effects {
 class EffectsProvider : public IEffectsProvider
