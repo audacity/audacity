@@ -94,6 +94,11 @@ set(LINK_LIB
     effects_builtin
 )
 
+if (AU_MODULE_EFFECTS_VST)
+    list(APPEND LINK_LIB effects_vst)
+    add_definitions(-DAU_MODULE_EFFECTS_VST)
+endif()
+
 ###########################################
 # Resources
 ###########################################

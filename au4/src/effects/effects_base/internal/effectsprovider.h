@@ -4,9 +4,9 @@
 #pragma once
 
 #include "modularity/ioc.h"
-#include "audioplugins/iknownaudiopluginsregister.h"
 #include "global/iinteractive.h"
 #include "effects/builtin/ibuiltineffectsrepository.h"
+#include "effects/vst/ivsteffectsrepository.h"
 #include "../ieffectsconfiguration.h"
 
 #include "../ieffectsprovider.h"
@@ -16,7 +16,7 @@ class EffectsProvider : public IEffectsProvider
 {
     muse::Inject<IEffectsConfiguration> configuration;
     muse::Inject<IBuiltinEffectsRepository> builtinEffectsRepository;
-    muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
+    muse::Inject<IVstEffectsRepository> vstEffectsRepository;
     muse::Inject<muse::IInteractive> interactive;
 
 public:
@@ -35,6 +35,9 @@ public:
                             const EffectTimeParams& timeParams) override;
 
 private:
+
+    bool isVstSupported() const;
+
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
 
