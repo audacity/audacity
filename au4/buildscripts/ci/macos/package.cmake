@@ -54,16 +54,17 @@ if (BUILD_MODE STREQUAL "nightly_build")
     #   BUILD_BRANCH=$(cat $ARTIFACTS_DIR/env/build_branch.env)
     #   BUILD_REVISION=$(cat $ARTIFACTS_DIR/env/build_revision.env)
     #   ARTIFACT_NAME=AudacityNightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}-${PACKARCH}
-    set(ARTIFACT_NAME "AudacityNightly-${BUILD_VERSION}")
+    set(LONG_NAME "AudacityNightly")
+    set(ARTIFACT_NAME ${LONG_NAME}-${BUILD_VERSION}.dmg)
 else()
-    set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}")
+    set(LONG_NAME "Audacity")
+    set(ARTIFACT_NAME ${LONG_NAME}-${BUILD_VERSION}.dmg)
 endif()
 
 execute_process(
-    COMMAND bash ${PACKAGING_DIR}/make_dmg.sh --longer_name "${ARTIFACT_NAME}" --version ${BUILD_VERSION}
+    COMMAND bash ${PACKAGING_DIR}/make_dmg.sh --long_name "${LONG_NAME}" --version ${BUILD_VERSION}
 )
 
-
-file(COPY_FILE ${INSTALL_DIR}/${ARTIFACT_NAME}.dmg ${ARTIFACTS_DIR}/${ARTIFACT_NAME}.dmg)
+file(COPY_FILE ${INSTALL_DIR}/${ARTIFACT_NAME} ${ARTIFACTS_DIR}/${ARTIFACT_NAME})
 
 # bash ./buildscripts/ci/tools/make_artifact_name_env.sh $ARTIFACT_NAME
