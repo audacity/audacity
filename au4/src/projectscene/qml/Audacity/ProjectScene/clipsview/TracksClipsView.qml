@@ -14,6 +14,8 @@ Rectangle {
     property bool clipHovered: false
     color: ui.theme.backgroundPrimaryColor
 
+    clip: true
+
     TracksListClipsModel {
         id: tracksModel
     }
@@ -147,8 +149,6 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-
-        clip: true
 
         // anchors.leftMargin: 130
         // anchors.rightMargin: 130
