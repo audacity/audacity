@@ -106,8 +106,9 @@ double ClipListItem::leftVisibleMargin() const
 
 void ClipListItem::setLeftVisibleMargin(double newLeftVisibleMargin)
 {
-    if (qFuzzyCompare(m_leftVisibleMargin, newLeftVisibleMargin))
+    if (qFuzzyCompare(m_leftVisibleMargin, newLeftVisibleMargin)) {
         return;
+    }
     m_leftVisibleMargin = newLeftVisibleMargin;
     emit leftVisibleMarginChanged();
 }
@@ -119,8 +120,9 @@ double ClipListItem::rightVisibleMargin() const
 
 void ClipListItem::setRightVisibleMargin(double newRightVisibleMargin)
 {
-    if (qFuzzyCompare(m_rightVisibleMargin, newRightVisibleMargin))
+    if (qFuzzyCompare(m_rightVisibleMargin, newRightVisibleMargin)) {
         return;
+    }
     m_rightVisibleMargin = newRightVisibleMargin;
     emit rightVisibleMarginChanged();
 }
