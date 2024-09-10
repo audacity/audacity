@@ -51,6 +51,8 @@ bool Au3Interaction::pasteIntoNewTrack()
         }
     }
     selectionController()->setSelectedTrack(DomConverter::trackId(pFirstNewTrack->GetId()));
+
+    return true;
 }
 
 ::Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<::Track> track, ::TrackList &list, secs_t begin)
