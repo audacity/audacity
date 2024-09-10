@@ -24,17 +24,15 @@ class WaveChannel;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 
-class EffectAutoDuck final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class AutoDuckBase : public StatefulEffect
 {
 public:
-   static inline EffectAutoDuck *
-   FetchParameters(EffectAutoDuck &e, EffectSettings &) { return &e; }
+   static inline AutoDuckBase *
+   FetchParameters(AutoDuckBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectAutoDuck();
-   virtual ~EffectAutoDuck();
+   AutoDuckBase();
+   virtual ~AutoDuckBase();
 
    // ComponentInterface implementation
 
@@ -50,23 +48,13 @@ public:
 
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool DoTransferDataToWindow();
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
-   // EffectAutoDuck implementation
+   // AutoDuckBase implementation
 
    bool ApplyDuckFade(int trackNum, WaveChannel &track, double t0, double t1);
 
-   void OnValueChanged(wxCommandEvent & evt);
-
-private:
-   wxWeakRef<wxWindow> mUIParent{};
-
+protected:
    double mDuckAmountDb;
    double mInnerFadeDownLen;
    double mInnerFadeUpLen;
@@ -76,6 +64,43 @@ private:
    double mMaximumPause;
 
    const WaveTrack *mControlTrack{};
+
+   const EffectParameterMethods& Parameters() const override;
+
+static constexpr EffectParameter DuckAmountDb{ &AutoDuckBase::mDuckAmountDb,
+   L"DuckAmountDb",     -12.0,   -24.0,   0.0,     1  };
+static constexpr EffectParameter InnerFadeDownLen{ &AutoDuckBase::mInnerFadeDownLen,
+   L"InnerFadeDownLen", 0.0,     0.0,     3.0,     1  };
+static constexpr EffectParameter InnerFadeUpLen{ &AutoDuckBase::mInnerFadeUpLen,
+   L"InnerFadeUpLen",   0.0,     0.0,     3.0,     1  };
+static constexpr EffectParameter OuterFadeDownLen{ &AutoDuckBase::mOuterFadeDownLen,
+   L"OuterFadeDownLen", 0.5,     0.0,     3.0,     1  };
+static constexpr EffectParameter OuterFadeUpLen{ &AutoDuckBase::mOuterFadeUpLen,
+   L"OuterFadeUpLen",   0.5,     0.0,     3.0,     1  };
+static constexpr EffectParameter ThresholdDb{ &AutoDuckBase::mThresholdDb,
+   L"ThresholdDb",      -30.0,   -100.0,  0.0,     1  };
+static constexpr EffectParameter MaximumPause{ &AutoDuckBase::mMaximumPause,
+   L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
+};
+
+class EffectAutoDuck final :
+    public AutoDuckBase,
+    public StatefulEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool DoTransferDataToWindow();
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+   DECLARE_EVENT_TABLE()
+
+private:
+   void OnValueChanged(wxCommandEvent & evt);
+
+   wxWeakRef<wxWindow> mUIParent{};
 
    wxTextCtrl *mDuckAmountDbBox;
    wxTextCtrl *mInnerFadeDownLenBox;
@@ -87,24 +112,6 @@ private:
 
    class Panel;
    Panel *mPanel{};
-
-   const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
-
-static constexpr EffectParameter DuckAmountDb{ &EffectAutoDuck::mDuckAmountDb,
-   L"DuckAmountDb",     -12.0,   -24.0,   0.0,     1  };
-static constexpr EffectParameter InnerFadeDownLen{ &EffectAutoDuck::mInnerFadeDownLen,
-   L"InnerFadeDownLen", 0.0,     0.0,     3.0,     1  };
-static constexpr EffectParameter InnerFadeUpLen{ &EffectAutoDuck::mInnerFadeUpLen,
-   L"InnerFadeUpLen",   0.0,     0.0,     3.0,     1  };
-static constexpr EffectParameter OuterFadeDownLen{ &EffectAutoDuck::mOuterFadeDownLen,
-   L"OuterFadeDownLen", 0.5,     0.0,     3.0,     1  };
-static constexpr EffectParameter OuterFadeUpLen{ &EffectAutoDuck::mOuterFadeUpLen,
-   L"OuterFadeUpLen",   0.5,     0.0,     3.0,     1  };
-static constexpr EffectParameter ThresholdDb{ &EffectAutoDuck::mThresholdDb,
-   L"ThresholdDb",      -30.0,   -100.0,  0.0,     1  };
-static constexpr EffectParameter MaximumPause{ &EffectAutoDuck::mMaximumPause,
-   L"MaximumPause",     1.0,     0.0,     DBL_MAX, 1  };
 };
 
 class EffectAutoDuck::Panel final : public wxPanelWrapper

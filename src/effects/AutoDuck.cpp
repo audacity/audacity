@@ -39,9 +39,9 @@
 #include "TimeStretching.h"
 #include "AudacityMessageBox.h"
 
-const EffectParameterMethods& EffectAutoDuck::Parameters() const
+const EffectParameterMethods& AutoDuckBase::Parameters() const
 {
-   static CapturedParameters<EffectAutoDuck,
+   static CapturedParameters<AutoDuckBase,
       DuckAmountDb, InnerFadeDownLen, InnerFadeUpLen, OuterFadeDownLen,
       OuterFadeUpLen, ThresholdDb, MaximumPause
    > parameters;
@@ -84,43 +84,43 @@ BEGIN_EVENT_TABLE(EffectAutoDuck, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectAutoDuck::OnValueChanged)
 END_EVENT_TABLE()
 
-EffectAutoDuck::EffectAutoDuck()
+AutoDuckBase::AutoDuckBase()
 {
    Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
-EffectAutoDuck::~EffectAutoDuck()
+AutoDuckBase::~AutoDuckBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectAutoDuck::GetSymbol() const
+ComponentInterfaceSymbol AutoDuckBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectAutoDuck::GetDescription() const
+TranslatableString AutoDuckBase::GetDescription() const
 {
    return XO("Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
 }
 
-ManualPageID EffectAutoDuck::ManualPage() const
+ManualPageID AutoDuckBase::ManualPage() const
 {
    return L"Auto_Duck";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectAutoDuck::GetType() const
+EffectType AutoDuckBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool EffectAutoDuck::Init()
+bool AutoDuckBase::Init()
 {
    mControlTrack = nullptr;
 
@@ -173,7 +173,7 @@ bool EffectAutoDuck::Init()
    return true;
 }
 
-bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
+bool AutoDuckBase::Process(EffectInstance &, EffectSettings &)
 {
    if (GetNumWaveTracks() == 0 || !mControlTrack)
       return false;
@@ -453,10 +453,10 @@ bool EffectAutoDuck::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-// EffectAutoDuck implementation
+// AutoDuckBase implementation
 
 // this currently does an exponential fade
-bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveChannel &track,
+bool AutoDuckBase::ApplyDuckFade(int trackNum, WaveChannel &track,
    double t0, double t1)
 {
    bool cancel = false;
