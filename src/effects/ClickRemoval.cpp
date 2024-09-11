@@ -46,15 +46,15 @@ enum
    ID_Width
 };
 
-const EffectParameterMethods& EffectClickRemoval::Parameters() const
+const EffectParameterMethods& ClickRemovalBase::Parameters() const
 {
-   static CapturedParameters<EffectClickRemoval,
+   static CapturedParameters<ClickRemovalBase,
       Threshold, Width
    > parameters;
    return parameters;
 }
 
-const ComponentInterfaceSymbol EffectClickRemoval::Symbol
+const ComponentInterfaceSymbol ClickRemovalBase::Symbol
 { XO("Click Removal") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectClickRemoval > reg; }
@@ -66,7 +66,7 @@ BEGIN_EVENT_TABLE(EffectClickRemoval, wxEvtHandler)
     EVT_TEXT(ID_Width, EffectClickRemoval::OnWidthText)
 END_EVENT_TABLE()
 
-EffectClickRemoval::EffectClickRemoval()
+ClickRemovalBase::ClickRemovalBase()
 {
    Parameters().Reset(*this);
 
@@ -76,42 +76,42 @@ EffectClickRemoval::EffectClickRemoval()
    sep = 2049;
 }
 
-EffectClickRemoval::~EffectClickRemoval()
+ClickRemovalBase::~ClickRemovalBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectClickRemoval::GetSymbol() const
+ComponentInterfaceSymbol ClickRemovalBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectClickRemoval::GetDescription() const
+TranslatableString ClickRemovalBase::GetDescription() const
 {
    return XO("Click Removal is designed to remove clicks on audio tracks");
 }
 
-ManualPageID EffectClickRemoval::ManualPage() const
+ManualPageID ClickRemovalBase::ManualPage() const
 {
    return L"Click_Removal";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectClickRemoval::GetType() const
+EffectType ClickRemovalBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool EffectClickRemoval::CheckWhetherSkipEffect(const EffectSettings &) const
+bool ClickRemovalBase::CheckWhetherSkipEffect(const EffectSettings &) const
 {
    return ((mClickWidth == 0) || (mThresholdLevel == 0));
 }
 
-bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
+bool ClickRemovalBase::Process(EffectInstance &, EffectSettings &)
 {
    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
    bool bGoodResult = true;
@@ -147,7 +147,7 @@ bool EffectClickRemoval::Process(EffectInstance &, EffectSettings &)
    return bGoodResult && mbDidSomething;
 }
 
-bool EffectClickRemoval::ProcessOne(
+bool ClickRemovalBase::ProcessOne(
    int count, WaveChannel &track, sampleCount start, sampleCount len)
 {
    if (len <= windowSize / 2) {
@@ -198,7 +198,7 @@ bool EffectClickRemoval::ProcessOne(
    return bResult;
 }
 
-bool EffectClickRemoval::RemoveClicks(size_t len, float *buffer)
+bool ClickRemovalBase::RemoveClicks(size_t len, float *buffer)
 {
    bool bResult = false; // This effect usually does nothing.
    size_t i;

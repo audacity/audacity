@@ -27,17 +27,15 @@ class Envelope;
 class ShuttleGui;
 class WaveChannel;
 
-class EffectClickRemoval final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class ClickRemovalBase : public StatefulEffect
 {
 public:
-   static inline EffectClickRemoval *
-   FetchParameters(EffectClickRemoval &e, EffectSettings &) { return &e; }
+   static inline ClickRemovalBase *
+   FetchParameters(ClickRemovalBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectClickRemoval();
-   virtual ~EffectClickRemoval();
+   ClickRemovalBase();
+   virtual ~ClickRemovalBase();
 
    // ComponentInterface implementation
 
@@ -53,11 +51,6 @@ public:
 
    bool CheckWhetherSkipEffect(const EffectSettings &settings) const override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
 private:
    bool ProcessOne(int count, WaveChannel &track,
@@ -65,14 +58,7 @@ private:
 
    bool RemoveClicks(size_t len, float *buffer);
 
-   void OnWidthText(wxCommandEvent & evt);
-   void OnThreshText(wxCommandEvent & evt);
-   void OnWidthSlider(wxCommandEvent & evt);
-   void OnThreshSlider(wxCommandEvent & evt);
-
-private:
-   wxWeakRef<wxWindow> mUIParent{};
-
+protected:
    Envelope *mEnvelope;
 
    bool mbDidSomething; // This effect usually does nothing on real-world data.
@@ -81,18 +67,40 @@ private:
    int mClickWidth;
    int sep;
 
-   wxSlider *mWidthS;
-   wxSlider *mThreshS;
-   wxTextCtrl *mWidthT;
-   wxTextCtrl *mThreshT;
-
    const EffectParameterMethods& Parameters() const override;
+
+static constexpr EffectParameter Threshold{ &ClickRemovalBase::mThresholdLevel,
+   L"Threshold",  200,     0,       900,     1  };
+static constexpr EffectParameter Width{ &ClickRemovalBase::mClickWidth,
+   L"Width",      20,      0,       40,      1  };
+};
+
+class EffectClickRemoval final :
+    public ClickRemovalBase,
+    public StatefulEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Threshold{ &EffectClickRemoval::mThresholdLevel,
-   L"Threshold",  200,     0,       900,     1  };
-static constexpr EffectParameter Width{ &EffectClickRemoval::mClickWidth,
-   L"Width",      20,      0,       40,      1  };
+private:
+   void OnWidthText(wxCommandEvent & evt);
+   void OnThreshText(wxCommandEvent & evt);
+   void OnWidthSlider(wxCommandEvent & evt);
+   void OnThreshSlider(wxCommandEvent & evt);
+
+private:
+   wxWeakRef<wxWindow> mUIParent{};
+
+   wxSlider* mWidthS;
+   wxSlider* mThreshS;
+   wxTextCtrl* mWidthT;
+   wxTextCtrl* mThreshT;
 };
 
 #endif
