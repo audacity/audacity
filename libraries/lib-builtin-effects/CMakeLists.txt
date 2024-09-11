@@ -11,10 +11,12 @@ set( SOURCES
    BassTrebleBase.h
    ChangePitchBase.cpp
    ChangePitchBase.h
-   ChangeTempoBase.cpp
-   ChangeTempoBase.h
    ChangeSpeedBase.cpp
    ChangeSpeedBase.h
+   ChangeTempoBase.cpp
+   ChangeTempoBase.h
+   ClickRemovalBase.cpp
+   ClickRemovalBase.h
    CompressorInstance.cpp
    CompressorInstance.h
    ContrastBase.cpp
