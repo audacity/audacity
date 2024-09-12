@@ -303,6 +303,8 @@ bool ClipsListModel::moveClip(const ClipKey& key, bool completed)
 
     double newStartTime = m_context->mousePositionTime() - m_moveStartTimeOffset;
 
+    newStartTime = m_context->applySnapToTime(newStartTime);
+
     bool ok = trackeditInteraction()->changeClipStartTime(key.key, newStartTime, completed);
     return ok;
 }
