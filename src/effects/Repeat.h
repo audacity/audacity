@@ -21,17 +21,15 @@ class ShuttleGui;
 
 class wxStaticText;
 
-class EffectRepeat final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class RepeatBase : public StatefulEffect
 {
 public:
-   static inline EffectRepeat *
-   FetchParameters(EffectRepeat &e, EffectSettings &) { return &e; }
+   static inline RepeatBase *
+   FetchParameters(RepeatBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectRepeat();
-   virtual ~EffectRepeat();
+   RepeatBase();
+   virtual ~RepeatBase();
 
    // ComponentInterface implementation
 
@@ -46,33 +44,38 @@ public:
    // Effect implementation
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
+
+   bool NeedsDither() const override;
+
+protected:
+   // RepeatBase implementation
+   int repeatCount;
+
+   const EffectParameterMethods& Parameters() const override;
+
+static constexpr EffectParameter Count{ &RepeatBase::repeatCount,
+   L"Count",1,  1,    INT_MAX,  1  };
+};
+
+class EffectRepeat final : public RepeatBase, public StatefulEffectUIServices
+{
+public:
    std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
 
-   bool NeedsDither() const override;
-
 private:
-   // EffectRepeat implementation
-
    void OnRepeatTextChange(wxCommandEvent & evt);
    void DisplayNewTime();
 
    wxWeakRef<wxWindow> mUIParent{};
 
-   int repeatCount;
-
    wxTextCtrl   *mRepeatCount;
    wxStaticText *mCurrentTime;
    wxStaticText *mTotalTime;
-
-   const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
-
-static constexpr EffectParameter Count{ &EffectRepeat::repeatCount,
-   L"Count",1,  1,    INT_MAX,  1  };
 };
 
 #endif

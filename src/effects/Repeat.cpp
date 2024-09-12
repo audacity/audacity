@@ -36,15 +36,15 @@
 
 #include "LoadEffects.h"
 
-const EffectParameterMethods& EffectRepeat::Parameters() const
+const EffectParameterMethods& RepeatBase::Parameters() const
 {
-   static CapturedParameters<EffectRepeat,
+   static CapturedParameters<RepeatBase,
       Count
    > parameters;
    return parameters;
 }
 
-const ComponentInterfaceSymbol EffectRepeat::Symbol
+const ComponentInterfaceSymbol RepeatBase::Symbol
 { XO("Repeat") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectRepeat > reg; }
@@ -53,43 +53,43 @@ BEGIN_EVENT_TABLE(EffectRepeat, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectRepeat::OnRepeatTextChange)
 END_EVENT_TABLE()
 
-EffectRepeat::EffectRepeat()
+RepeatBase::RepeatBase()
 {
    Parameters().Reset(*this);
    SetLinearEffectFlag(true);
 }
 
-EffectRepeat::~EffectRepeat()
+RepeatBase::~RepeatBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectRepeat::GetSymbol() const
+ComponentInterfaceSymbol RepeatBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectRepeat::GetDescription() const
+TranslatableString RepeatBase::GetDescription() const
 {
    return XO("Repeats the selection the specified number of times");
 }
 
-ManualPageID EffectRepeat::ManualPage() const
+ManualPageID RepeatBase::ManualPage() const
 {
    return L"Repeat";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectRepeat::GetType() const
+EffectType RepeatBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // Effect implementation
 
-bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
+bool RepeatBase::Process(EffectInstance &, EffectSettings &)
 {
    // Set up mOutputTracks.
    // This effect needs all for sync-lock grouping.
@@ -274,7 +274,7 @@ void EffectRepeat::OnRepeatTextChange(wxCommandEvent & WXUNUSED(evt))
    DisplayNewTime();
 }
 
-bool EffectRepeat::NeedsDither() const
+bool RepeatBase::NeedsDither() const
 {
    return false;
 }
