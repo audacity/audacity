@@ -76,20 +76,20 @@ class NYQUIST_EFFECTS_API NyquistBase :
     public EffectWithSettings<NyquistSettings, StatefulEffect>
 {
 public:
-   struct GetEffectHook :
+   struct NYQUIST_EFFECTS_API GetEffectHook :
        GlobalHook<
           GetEffectHook, std::unique_ptr<NyquistBase>(const wxString& pluginId)>
    {
    };
 
-   struct GetDisplaysHook :
+   struct NYQUIST_EFFECTS_API GetDisplaysHook :
        GlobalHook<
           GetDisplaysHook,
           std::vector<WaveChannelSubViewType>(const WaveTrack*)>
    {
    };
 
-   struct ShowDebugOutputHook :
+   struct NYQUIST_EFFECTS_API ShowDebugOutputHook :
        GlobalHook<
           ShowDebugOutputHook, void(
                                   const TranslatableString& title,
@@ -97,7 +97,7 @@ public:
    {
    };
 
-   struct ExecFromMainHook :
+   struct NYQUIST_EFFECTS_API ExecFromMainHook :
        GlobalHook<ExecFromMainHook, void(wxString* pIn, wxString* pOut)>
    {
    };
