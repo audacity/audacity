@@ -530,6 +530,9 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
+   // Compact the project.
+   projectFileManager.CompactProjectOnClose();
+
    // This can reduce reference counts of sample blocks in the project's
    // tracks. No need to have `SetBypass()` called yet because the `tracks`
    // object still holds strong references to the tracks.
@@ -537,9 +540,6 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // not track-specific (like project tempo) after the last save don't get
    // written to the project file.
    UndoManager::Get(project).ClearStates();
-
-   // Compact the project.
-   projectFileManager.CompactProjectOnClose();
 
    // Set (or not) the bypass flag to indicate that deletes that would happen
    // during tracks.Clear() below are not necessary. Must be called after
