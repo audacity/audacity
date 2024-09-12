@@ -417,6 +417,16 @@ double TimelineContext::singleStepToTime(double position, Direction direction, c
     return result;
 }
 
+void TimelineContext::updateMousePositionTime(double mouseX)
+{
+    m_mousePositionTime = positionToTime(mouseX);
+}
+
+double TimelineContext::mousePositionTime() const
+{
+    return m_mousePositionTime;
+}
+
 double TimelineContext::zoom() const
 {
     return m_zoom;
