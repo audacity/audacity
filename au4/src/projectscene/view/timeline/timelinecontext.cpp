@@ -384,16 +384,7 @@ double TimelineContext::positionToTime(double position, bool withSnap) const
     double result = m_frameStartTime + position / m_zoom;
 
     if (withSnap) {
-        auto viewState = this->viewState();
-        if (viewState && viewState->isSnapEnabled()) {
-            auto project = globalContext()->currentTrackeditProject();
-            if (!project) {
-                return 0.0;
-            }
-
-            trackedit::TimeSignature timeSig = project->timeSignature();
-            result = m_snapTimeFormatter->snapTime(result, viewState->snap().val, timeSig);
-        }
+        result = applySnapToTime(result);
     }
 
     return result;
@@ -415,6 +406,22 @@ double TimelineContext::singleStepToTime(double position, Direction direction, c
     }
 
     return result;
+}
+
+double TimelineContext::applySnapToTime(double time) const
+{
+    auto viewState = this->viewState();
+    if (!viewState || !viewState->isSnapEnabled()) {
+        return time;
+    }
+
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return time;
+    }
+
+    trackedit::TimeSignature timeSig = project->timeSignature();
+    return m_snapTimeFormatter->snapTime(time, viewState->snap().val, timeSig);
 }
 
 void TimelineContext::updateMousePositionTime(double mouseX)

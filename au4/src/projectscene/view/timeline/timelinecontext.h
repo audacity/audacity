@@ -86,6 +86,7 @@ public:
     Q_INVOKABLE double timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
     double singleStepToTime(double position, Direction direction, const Snap& snap) const;
+    double applySnapToTime(double time) const;
 
     Q_INVOKABLE void updateMousePositionTime(double mouseX);
     double mousePositionTime() const;
