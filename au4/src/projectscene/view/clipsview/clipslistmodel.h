@@ -48,7 +48,11 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
-    Q_INVOKABLE bool moveClip(const ClipKey& key, double deltaX, bool completed);
+
+    Q_INVOKABLE void startMoveClip(const ClipKey& key);
+    Q_INVOKABLE bool moveClip(const ClipKey& key, bool completed);
+    Q_INVOKABLE void endMoveClip(const ClipKey& key);
+
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, double deltaX, double posOnCanvas);
     Q_INVOKABLE bool trimRightClip(const ClipKey& key, double deltaX, double posOnCanvas);
     Q_INVOKABLE void selectClip(const ClipKey& key);
@@ -98,5 +102,8 @@ private:
     QList<ClipListItem*> m_clipList;
     ClipListItem* m_selectedItem = nullptr;
     bool m_isStereo = false;
+
+    //! Offset between mouse click position on clip's header and clip's start time
+    double m_moveStartTimeOffset = -1.0;
 };
 }

@@ -121,8 +121,16 @@ Item {
                 channelHeightRatio: root.channelHeightRatio
                 showChannelSplitter: isStereo
 
-                onClipMoved: function(deltaX, completed) {
-                    clipsModel.moveClip(clipItem.key, deltaX, completed)
+                onClipStartMoveRequested: function() {
+                    clipsModel.startMoveClip(clipItem.key)
+                }
+
+                onClipMoveRequested: function(completed) {
+                    clipsModel.moveClip(clipItem.key, completed)
+                }
+
+                onClipEndMoveRequested: function() {
+                    clipsModel.endMoveClip(clipItem.key)
                 }
 
                 onClipLeftTrimmed: function(deltaX, posOnCanvas) {
