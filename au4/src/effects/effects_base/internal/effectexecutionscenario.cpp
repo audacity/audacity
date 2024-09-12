@@ -9,7 +9,6 @@
 //#include "libraries/lib-audacity-application-logic/AudacityApplicationLogic.h"
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-module-manager/PluginManager.h"
-#include "libraries/lib-command-parameters/ShuttleAutomation.h"
 
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
@@ -26,6 +25,8 @@
 
 using namespace muse;
 using namespace au::effects;
+
+static const int UNDEFINED_FREQUENCY = -1;
 
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
@@ -150,8 +151,52 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
         if (pAccess) {
             pAccess->ModifySettings(updater);
         }
+    }
 
-        //! NOTE Step 2.7 - modify settings
+    //! ============================================================================
+    //! NOTE Step 3 - setup effect
+    //! (must be before creating an instance and initializing it)
+    //! ============================================================================
+    unsigned oldFlags = 0;
+    {
+        //! NOTE Step 1.1 - setup effect
+        oldFlags = effect->mUIFlags;
+        effect->mUIFlags = flags;
+        effect->mFactory = &WaveTrackFactory::Get(project);
+        effect->mProjectRate = tp.projectRate;
+        effect->mT0 = tp.t0;
+        effect->mT1 = tp.t1;
+
+        effect->SetTracks(&TrackList::Get(project));
+        // Update track/group counts
+        effect->CountWaveTracks();
+
+        //! NOTE Step 1.2 - check frequency params
+        effect->mF0 = tp.f0;
+        effect->mF1 = tp.f1;
+        if (effect->mF0 != UNDEFINED_FREQUENCY) {
+            effect->mPresetNames.push_back(L"control-f0");
+        }
+        if (effect->mF1 != UNDEFINED_FREQUENCY) {
+            effect->mPresetNames.push_back(L"control-f1");
+        }
+    }
+
+    //! ============================================================================
+    //! NOTE Step 4 - Make and init instance
+    //! ============================================================================
+    std::shared_ptr<EffectInstanceEx> pInstanceEx;
+    {
+        pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(effect->MakeInstance());
+        if (!pInstanceEx || !pInstanceEx->Init()) {
+            return muse::make_ret(Ret::Code::InternalError);
+        }
+    }
+
+    //! ============================================================================
+    //! NOTE Step 5 - modify settings by user
+    //! ============================================================================
+    {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             muse::String type = au3::wxToString(effect->GetSymbol().Internal());
             EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effect);
@@ -161,6 +206,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
                 effect->SaveUserPreset(CurrentSettingsGroup(), pAccess->Get());
             } else {
                 LOGE() << "failed show effect: " << type << ", ret: " << ret.toString();
+                return ret;
             }
 
             //! NOTE Step 2.7.2 - update local settings after modify by showEffect
@@ -174,20 +220,26 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
     }
 
     //! ============================================================================
-    //! NOTE Step 3 - perform effect
+    //! NOTE Step 6 - perform effect
     //! ============================================================================
     // common things used below
     Ret success;
     {
-        success = effectsProvider()->performEffect(project, effect, settings, tp);
+        success = effectsProvider()->performEffect(project, effect, pInstanceEx, settings);
     }
 
     //! ============================================================================
-    //! NOTE Step 4 - cleanup
+    //! NOTE Step 7 - cleanup
     //! ============================================================================
 
     {
-        //! NOTE Step 4.1 - update selected region after process
+        //! NOTE Step 7.1 - cleanup effect
+        // Don't hold a dangling pointer when done
+        effect->SetTracks(nullptr);
+        effect->mPresetNames.clear();
+        effect->mUIFlags = oldFlags;
+
+        //! NOTE Step 7.2 - update selected region after process
 
         //! TODO It is not clear, can the effect change the selected region?
         //! Or is it done because the selected region changes when
@@ -197,7 +249,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
             selectedRegion.setTimes(effect->mT0, effect->mT1);
         }
 
-        //! NOTE Step 4.2 - cleanup
+        //! NOTE Step 7.3 - cleanup
         if (!success) {
             // On failure, restore the old duration setting
             settings.extra.SetDuration(oldDuration);
@@ -214,11 +266,11 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
     }
 
     //! ============================================================================
-    //! NOTE Step 5 - write history
+    //! NOTE Step 8 - write history
     //! ============================================================================
 
     {
-        //! NOTE Step 5.1 - write project history if need
+        //! NOTE Step 8.1 - write project history if need
         if (em.GetSkipStateFlag()) {
             flags = flags | EffectManager::kSkipState;
         }
@@ -229,7 +281,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
             ProjectHistory::Get(project).PushState(longDesc, shortDesc);
         }
 
-        //! NOTE Step 5.2 - remember a successful generator, effect, analyzer, or tool Process
+        //! NOTE Step 8.2 - remember a successful generator, effect, analyzer, or tool Process
 
         if (!(flags & EffectManager::kDontRepeatLast)) {
             auto& commandManager = CommandManager::Get(project);

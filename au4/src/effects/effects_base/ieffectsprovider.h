@@ -33,7 +33,7 @@ public:
     // type - is Symbol of effect
     virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;
 
-    virtual muse::Ret performEffect(AudacityProject& project, Effect* effect, EffectSettings& settings,
-                                    const EffectTimeParams& timeParams) = 0;
+    virtual muse::Ret performEffect(AudacityProject& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
+                                    EffectSettings& settings) = 0;
 };
 }

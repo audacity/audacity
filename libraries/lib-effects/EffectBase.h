@@ -20,7 +20,10 @@
 
 namespace BasicUI { class ProgressDialog; }
 
-namespace au::effects { class EffectsProvider; }
+namespace au::effects {
+class EffectsProvider;
+class EffectExecutionScenario;
+}
 
 class AudacityProject;
 class Track;
@@ -60,6 +63,7 @@ public:
 protected:
    //! NOTE Temporary solution
     friend class au::effects::EffectsProvider;
+    friend class au::effects::EffectExecutionScenario;
 
    //! After Init(), tell whether Process() should be skipped
    /*

@@ -8,10 +8,12 @@
 #include "global/types/string.h"
 
 class Effect;
+class EffectInstanceEx;
 namespace au::effects {
-using EffectId = muse::String; // PluginID from AU3
-using Effect = ::Effect;       // Effect from AU3
+using EffectId = muse::String;              // PluginID from AU3
+using Effect = ::Effect;                    // Effect from AU3
 using EffectInstanceId = uint64_t;
+using EffectInstance = ::EffectInstanceEx;  // EffectInstanceEx from AU3
 
 struct EffectMeta {
     EffectId id;
