@@ -87,6 +87,9 @@ public:
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
     double singleStepToTime(double position, Direction direction, const Snap& snap) const;
 
+    Q_INVOKABLE void updateMousePositionTime(double mouseX);
+    double mousePositionTime() const;
+
     void moveToFrameTime(double startTime);
     void shiftFrameTime(double secs);
 
@@ -177,5 +180,7 @@ private:
     qreal m_previousHorizontalScrollPosition = 0.0;
 
     qreal m_startVerticalScrollPosition = 0.0;
+
+    double m_mousePositionTime = 0.0;
 };
 }

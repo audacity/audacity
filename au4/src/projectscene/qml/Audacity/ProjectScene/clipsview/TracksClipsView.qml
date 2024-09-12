@@ -113,13 +113,19 @@ Rectangle {
 
         height: 77
 
+        function updateCursorPosition(x) {
+            lineCursor.x = x
+            timeline.context.updateMousePositionTime(x)
+        }
+
         MouseArea {
             id: timelineMouseArea
             anchors.fill: parent
             hoverEnabled: true
 
             onPositionChanged: function(e) {
-                lineCursor.x = e.x
+                timeline.updateCursorPosition(e.x)
+
                 if (pressed) {
                     playCursorController.seekToX(e.x)
                 }
@@ -190,7 +196,9 @@ Rectangle {
             onPositionChanged: function(e) {
                 mouseOnTracks = e.y < tracksClipsView.visibleContentHeight
                 selectionController.onPositionChanged(e.x, e.y)
-                lineCursor.x = e.x
+
+                timeline.updateCursorPosition(e.x)
+
                 if (root.clipHovered) {
                     root.clipHovered = false
                 }
@@ -282,7 +290,8 @@ Rectangle {
                     isDataSelected: model.isDataSelected
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
-                        lineCursor.x = xWithinTrack
+                        timeline.updateCursorPosition(xWithinTrack)
+
                         if (!root.clipHovered) {
                             root.clipHovered = true
                         }
@@ -327,7 +336,7 @@ Rectangle {
             }
 
             onPlayCursorMousePositionChanged: function(ix) {
-                lineCursor.x = ix
+                timeline.updateCursorPosition(ix)
             }
         }
 
