@@ -71,6 +71,8 @@ set( SOURCES
    TimeScaleBase.h
    ToneGenBase.cpp
    ToneGenBase.h
+   TruncSilenceBase.cpp
+   TruncSilenceBase.h
    TwoPassSimpleMono.cpp
    TwoPassSimpleMono.h
 )
