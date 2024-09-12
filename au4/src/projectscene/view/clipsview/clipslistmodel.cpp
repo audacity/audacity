@@ -284,17 +284,34 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
     return ok;
 }
 
-bool ClipsListModel::moveClip(const ClipKey& key, double deltaX, bool completed)
+void ClipsListModel::startMoveClip(const ClipKey& key)
+{
+    ClipListItem* item = itemByKey(key.key);
+    IF_ASSERT_FAILED(item) {
+        return;
+    }
+
+    m_moveStartTimeOffset = m_context->mousePositionTime() - item->clip().startTime;
+}
+
+bool ClipsListModel::moveClip(const ClipKey& key, bool completed)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
 
-    double deltaSec = deltaX / m_context->zoom();
+    double newStartTime = m_context->mousePositionTime() - m_moveStartTimeOffset;
 
-    bool ok = trackeditInteraction()->changeClipStartTime(key.key, item->clip().startTime + deltaSec, completed);
+    bool ok = trackeditInteraction()->changeClipStartTime(key.key, newStartTime, completed);
     return ok;
+}
+
+void ClipsListModel::endMoveClip(const ClipKey& key)
+{
+    UNUSED(key);
+
+    m_moveStartTimeOffset = -1.0;
 }
 
 bool ClipsListModel::trimLeftClip(const ClipKey& key, double deltaX, double posOnCanvas)

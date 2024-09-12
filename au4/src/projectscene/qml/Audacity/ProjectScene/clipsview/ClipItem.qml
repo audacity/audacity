@@ -25,7 +25,10 @@ Rectangle {
 
     property bool collapsed: false
 
-    signal clipMoved(real deltaX, bool completed)
+    signal clipStartMoveRequested()
+    signal clipMoveRequested(bool completed)
+    signal clipEndMoveRequested()
+
     signal clipLeftTrimmed(real deltaX, real posOnCanvas)
     signal clipRightTrimmed(real deltaX, real posOnCanvas)
     signal requestSelected()
@@ -120,29 +123,27 @@ Rectangle {
                 cursorShape: Qt.OpenHandCursor
 
                 property bool moveActive: false
-                property real moveLastX: 0.0
 
                 onPositionChanged: function(e) {
                     root.clipItemMousePositionChanged(e.x, e.y)
 
                     if (headerDragArea.moveActive) {
-                        var gx = mapToGlobal(e.x, e.y).x
-                        root.clipMoved(gx - headerDragArea.moveLastX, false)
-                        headerDragArea.moveLastX = gx
+                        root.clipMoveRequested(false)
                     }
                 }
 
                 onPressed: function(e) {
                     root.requestSelected()
 
-                    headerDragArea.moveLastX = mapToGlobal(e.x, e.y).x
+                    root.clipStartMoveRequested()
                     headerDragArea.moveActive = true
                 }
 
                 onReleased: function(e) {
-                    var gx = mapToGlobal(e.x, e.y).x
-                    root.clipMoved(gx - headerDragArea.moveLastX, true)
+                    root.clipMoveRequested(true)
                     headerDragArea.moveActive = false
+
+                    root.clipEndMoveRequested()
                 }
 
                 onDoubleClicked: root.editTitle()
