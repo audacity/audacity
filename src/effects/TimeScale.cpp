@@ -35,9 +35,9 @@ enum
    ID_PitchPercentChangeEnd
 };
 
-const EffectParameterMethods& EffectTimeScale::Parameters() const
+const EffectParameterMethods& TimeScaleBase::Parameters() const
 {
-   static CapturedParameters<EffectTimeScale,
+   static CapturedParameters<TimeScaleBase,
       RatePercentStart, RatePercentEnd, HalfStepsStart, HalfStepsEnd,
       PitchPercentStart, PitchPercentEnd
    > parameters;
@@ -45,10 +45,10 @@ const EffectParameterMethods& EffectTimeScale::Parameters() const
 }
 
 //
-// EffectTimeScale
+// TimeScaleBase
 //
 
-const ComponentInterfaceSymbol EffectTimeScale::Symbol
+const ComponentInterfaceSymbol TimeScaleBase::Symbol
 { wxT("Sliding Stretch"), XO("Sliding Stretch") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectTimeScale > reg; }
@@ -64,7 +64,7 @@ BEGIN_EVENT_TABLE(EffectTimeScale, wxEvtHandler)
    EVT_SLIDER(ID_RatePercentChangeEnd, EffectTimeScale::OnSlider_RatePercentChangeEnd)
 END_EVENT_TABLE()
 
-EffectTimeScale::EffectTimeScale()
+TimeScaleBase::TimeScaleBase()
 {
    Parameters().Reset(*this);
 
@@ -76,37 +76,37 @@ EffectTimeScale::EffectTimeScale()
    SetLinearEffectFlag(true);
 }
 
-EffectTimeScale::~EffectTimeScale()
+TimeScaleBase::~TimeScaleBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectTimeScale::GetSymbol() const
+ComponentInterfaceSymbol TimeScaleBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectTimeScale::GetDescription() const
+TranslatableString TimeScaleBase::GetDescription() const
 {
    return XO("Allows continuous changes to the tempo and/or pitch");
 }
 
-ManualPageID EffectTimeScale::ManualPage() const
+ManualPageID TimeScaleBase::ManualPage() const
 {
    return L"Sliding_Stretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectTimeScale::GetType() const
+EffectType TimeScaleBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // Effect implementation
 
-double EffectTimeScale::CalcPreviewInputLength(
+double TimeScaleBase::CalcPreviewInputLength(
    const EffectSettings &settings, double previewLength) const
 {
    double inputLength = settings.extra.GetDuration();
@@ -121,13 +121,13 @@ double EffectTimeScale::CalcPreviewInputLength(
    }
 }
 
-std::any EffectTimeScale::BeginPreview(const EffectSettings &settings)
+std::any TimeScaleBase::BeginPreview(const EffectSettings &settings)
 {
    previewSelectedDuration = settings.extra.GetDuration();
    return { CopyableValueRestorer{ bPreview, true } };
 }
 
-bool EffectTimeScale::Process(
+bool TimeScaleBase::Process(
    EffectInstance &instance, EffectSettings &settings)
 {
    double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
@@ -275,18 +275,18 @@ bool EffectTimeScale::TransferDataFromWindow(EffectSettings &)
    return true;
 }
 
-inline double EffectTimeScale::PercentChangeToRatio(double percentChange)
+inline double TimeScaleBase::PercentChangeToRatio(double percentChange)
 {
    return 1.0 + percentChange / 100.0;
 }
 
-inline double EffectTimeScale::HalfStepsToPercentChange(double halfSteps)
+inline double TimeScaleBase::HalfStepsToPercentChange(double halfSteps)
 {
    return 100.0 * (pow(2.0,halfSteps/12.0) - 1.0);
 }
 
 inline
-double EffectTimeScale::PercentChangeToHalfSteps(double percentChange)
+double TimeScaleBase::PercentChangeToHalfSteps(double percentChange)
 {
    return 12.0 * log2(PercentChangeToRatio(percentChange));
 }
