@@ -66,17 +66,15 @@ struct EffectWahwahSettings
    double mOutGain{ outGainDefault };
 };
 
-
-class EffectWahwah final : public EffectWithSettings<
-   EffectWahwahSettings, StatelessPerTrackEffect
->
+class WahWahBase :
+    public EffectWithSettings<EffectWahwahSettings, PerTrackEffect>
 {
 public:
-      
+
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectWahwah();
-   virtual ~EffectWahwah();
+   WahWahBase();
+   virtual ~WahWahBase();
 
    // ComponentInterface implementation
 
@@ -91,17 +89,11 @@ public:
 
    // Effect implementation
 
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
-
-   struct Editor;
    struct Instance;
    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
-private:
-   // EffectWahwah implementation
+protected:
+   // WahWahBase implementation
 
    const EffectParameterMethods& Parameters() const override;
 
@@ -111,6 +103,17 @@ static constexpr EffectParameter Depth  { &EffectWahwahSettings::mDepth,   L"Dep
 static constexpr EffectParameter Res    { &EffectWahwahSettings::mRes,     L"Resonance",  EffectWahwahSettings::resDefault,       0.1,      10.0,  10  };
 static constexpr EffectParameter FreqOfs{ &EffectWahwahSettings::mFreqOfs, L"Offset",     EffectWahwahSettings::freqOfsDefault,   0,       100,     1  }; // scaled to 0-1 before processing
 static constexpr EffectParameter OutGain{ &EffectWahwahSettings::mOutGain, L"Gain",       EffectWahwahSettings::outGainDefault, -30.0,      30.0,   1  };
+};
+
+class EffectWahwah : public WahWahBase, public StatelessEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) const override;
+
+private:
+   struct Editor;
 };
 
 #endif

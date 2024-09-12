@@ -31,9 +31,9 @@
 #include "ShuttleGui.h"
 #include "../widgets/valnum.h"
 
-const EffectParameterMethods& EffectWahwah::Parameters() const
+const EffectParameterMethods& WahWahBase::Parameters() const
 {
-   static CapturedParameters<EffectWahwah,
+   static CapturedParameters<WahWahBase,
       Freq, Phase, Depth, Res, FreqOfs, OutGain
    > parameters;
    return parameters;
@@ -43,10 +43,10 @@ const EffectParameterMethods& EffectWahwah::Parameters() const
 #define lfoskipsamples 30
 
 //
-// EffectWahwah
+// WahWahBase
 //
 
-const ComponentInterfaceSymbol EffectWahwah::Symbol
+const ComponentInterfaceSymbol WahWahBase::Symbol
 { XO("Wahwah") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectWahwah > reg; }
@@ -126,7 +126,7 @@ bool EffectWahwah::Editor::ValidateUI()
 }
 
 
-struct EffectWahwah::Instance
+struct WahWahBase::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
 {
@@ -163,54 +163,54 @@ struct EffectWahwah::Instance
    unsigned GetAudioOutCount() const override;
 
    EffectWahwahState mState;
-   std::vector<EffectWahwah::Instance> mSlaves;
+   std::vector<WahWahBase::Instance> mSlaves;
 };
 
 
-std::shared_ptr<EffectInstance> EffectWahwah::MakeInstance() const
+std::shared_ptr<EffectInstance> WahWahBase::MakeInstance() const
 {
    return std::make_shared<Instance>(*this);
 }
 
-EffectWahwah::EffectWahwah()
+WahWahBase::WahWahBase()
 {
    SetLinearEffectFlag(true);
 }
 
-EffectWahwah::~EffectWahwah()
+WahWahBase::~WahWahBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectWahwah::GetSymbol() const
+ComponentInterfaceSymbol WahWahBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectWahwah::GetDescription() const
+TranslatableString WahWahBase::GetDescription() const
 {
    return XO("Rapid tone quality variations, like that guitar sound so popular in the 1970's");
 }
 
-ManualPageID EffectWahwah::ManualPage() const
+ManualPageID WahWahBase::ManualPage() const
 {
    return L"Wahwah";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectWahwah::GetType() const
+EffectType WahWahBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-auto EffectWahwah::RealtimeSupport() const -> RealtimeSince
+auto WahWahBase::RealtimeSupport() const -> RealtimeSince
 {
    return RealtimeSince::After_3_1;
 }
 
-bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
+bool WahWahBase::Instance::ProcessInitialize(EffectSettings & settings,
    double sampleRate, ChannelNames chanMap)
 {
    InstanceInit(settings, mState, sampleRate);
@@ -219,23 +219,23 @@ bool EffectWahwah::Instance::ProcessInitialize(EffectSettings & settings,
    return true;
 }
 
-size_t EffectWahwah::Instance::ProcessBlock(EffectSettings &settings,
+size_t WahWahBase::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
-bool EffectWahwah::Instance::RealtimeInitialize(EffectSettings &, double)
+bool WahWahBase::Instance::RealtimeInitialize(EffectSettings &, double)
 {
    SetBlockSize(512);
    mSlaves.clear();
    return true;
 }
 
-bool EffectWahwah::Instance::RealtimeAddProcessor(
+bool WahWahBase::Instance::RealtimeAddProcessor(
    EffectSettings &settings, EffectOutputs *, unsigned, float sampleRate)
 {
-   EffectWahwah::Instance slave(mProcessor);
+   WahWahBase::Instance slave(mProcessor);
 
    InstanceInit(settings, slave.mState, sampleRate);
 
@@ -244,14 +244,14 @@ bool EffectWahwah::Instance::RealtimeAddProcessor(
    return true;
 }
 
-bool EffectWahwah::Instance::RealtimeFinalize(EffectSettings &) noexcept
+bool WahWahBase::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectWahwah::Instance::RealtimeProcess(size_t group, EffectSettings &settings,
+size_t WahWahBase::Instance::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    if (group >= mSlaves.size())
@@ -283,7 +283,7 @@ void EffectWahwah::Editor::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol(2);
-   
+
       mFreqT = S
          .Validator<FloatingPointValidator<double>>(
             5, &ms.mFreq, NumValidatorStyle::ONE_TRAILING_ZERO, Freq.min, Freq.max)
@@ -381,13 +381,13 @@ bool EffectWahwah::Editor::UpdateUI()
    mResS->SetValue((int)(ms.mRes * Res.scale));
    mFreqOfsS->SetValue((int)(ms.mFreqOfs * FreqOfs.scale));
    mOutGainS->SetValue((int)(ms.mOutGain * OutGain.scale));
-   
+
    return true;
 }
 
-// EffectWahwah implementation
+// WahWahBase implementation
 
-void EffectWahwah::Instance::InstanceInit(EffectSettings& settings, EffectWahwahState & data, float sampleRate)
+void WahWahBase::Instance::InstanceInit(EffectSettings& settings, EffectWahwahState & data, float sampleRate)
 {
    auto& ms = GetSettings(settings);
 
@@ -411,12 +411,12 @@ void EffectWahwah::Instance::InstanceInit(EffectSettings& settings, EffectWahwah
    data.outgain = DB_TO_LINEAR(ms.mOutGain);
 }
 
-size_t EffectWahwah::Instance::InstanceProcess(EffectSettings& settings,
+size_t WahWahBase::Instance::InstanceProcess(EffectSettings& settings,
    EffectWahwahState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    auto& ms = GetSettings(settings);
-   
+
    const float *ibuf = inBlock[0];
    float *obuf = outBlock[0];
    double frequency, omega, sn, cs, alpha;
@@ -462,12 +462,12 @@ size_t EffectWahwah::Instance::InstanceProcess(EffectSettings& settings,
    return blockLen;
 }
 
-unsigned EffectWahwah::Instance::GetAudioOutCount() const
+unsigned WahWahBase::Instance::GetAudioOutCount() const
 {
    return 1;
 }
 
-unsigned EffectWahwah::Instance::GetAudioInCount() const
+unsigned WahWahBase::Instance::GetAudioInCount() const
 {
    return 1;
 }
