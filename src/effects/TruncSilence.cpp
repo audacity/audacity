@@ -72,7 +72,7 @@ using Region = WaveTrack::Region;
 // Declaration of RegionList
 class RegionList : public std::list < Region > {};
 
-const EnumValueSymbol EffectTruncSilence::kActionStrings[nActions] =
+const EnumValueSymbol TruncSilenceBase::kActionStrings[nActions] =
 {
    { XO("Truncate Detected Silence") },
    { XO("Compress Excess Silence") }
@@ -86,9 +86,9 @@ static CommandParameters::ObsoleteMap kObsoleteActions[] = {
 
 static const size_t nObsoleteActions = WXSIZEOF( kObsoleteActions );
 
-const EffectParameterMethods& EffectTruncSilence::Parameters() const
+const EffectParameterMethods& TruncSilenceBase::Parameters() const
 {
-   static CapturedParameters<EffectTruncSilence,
+   static CapturedParameters<TruncSilenceBase,
       Threshold, ActIndex, Minimum, Truncate, Compress, Independent
    > parameters;
    return parameters;
@@ -103,7 +103,7 @@ static const double DEF_MinTruncMs = 0.001;
 // Typical fraction of total time taken by detection (better to guess low)
 const double detectFrac = 0.4;
 
-const ComponentInterfaceSymbol EffectTruncSilence::Symbol
+const ComponentInterfaceSymbol TruncSilenceBase::Symbol
 { XO("Truncate Silence") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectTruncSilence > reg; }
@@ -113,7 +113,7 @@ BEGIN_EVENT_TABLE(EffectTruncSilence, wxEvtHandler)
    EVT_TEXT(wxID_ANY, EffectTruncSilence::OnControlChange)
 END_EVENT_TABLE()
 
-EffectTruncSilence::EffectTruncSilence()
+TruncSilenceBase::TruncSilenceBase()
 {
    Parameters().Reset(*this);
 
@@ -130,35 +130,35 @@ EffectTruncSilence::EffectTruncSilence()
    mBlendFrameCount = DEF_BlendFrameCount;
 }
 
-EffectTruncSilence::~EffectTruncSilence()
+TruncSilenceBase::~TruncSilenceBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectTruncSilence::GetSymbol() const
+ComponentInterfaceSymbol TruncSilenceBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectTruncSilence::GetDescription() const
+TranslatableString TruncSilenceBase::GetDescription() const
 {
    return XO("Automatically reduces the length of passages where the volume is below a specified level");
 }
 
-ManualPageID EffectTruncSilence::ManualPage() const
+ManualPageID TruncSilenceBase::ManualPage() const
 {
    return L"Truncate_Silence";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectTruncSilence::GetType() const
+EffectType TruncSilenceBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectTruncSilence::LoadSettings(
+bool TruncSilenceBase::LoadSettings(
    const CommandParameters & parms, EffectSettings &settings) const
 {
    Effect::LoadSettings(parms, settings);
@@ -201,7 +201,7 @@ bool EffectTruncSilence::LoadSettings(
 
 // Effect implementation
 
-double EffectTruncSilence::CalcPreviewInputLength(
+double TruncSilenceBase::CalcPreviewInputLength(
    const EffectSettings &, double /* previewLength */) const
 {
    double inputLength = mT1 - mT0;
@@ -230,7 +230,7 @@ double EffectTruncSilence::CalcPreviewInputLength(
 }
 
 
-bool EffectTruncSilence::Process(EffectInstance &, EffectSettings &)
+bool TruncSilenceBase::Process(EffectInstance &, EffectSettings &)
 {
    const bool success =
       mbIndependent
@@ -240,7 +240,7 @@ bool EffectTruncSilence::Process(EffectInstance &, EffectSettings &)
    return success;
 }
 
-bool EffectTruncSilence::ProcessIndependently()
+bool TruncSilenceBase::ProcessIndependently()
 {
    unsigned nGroups = 0;
 
@@ -306,7 +306,7 @@ bool EffectTruncSilence::ProcessIndependently()
    return true;
 }
 
-bool EffectTruncSilence::ProcessAll()
+bool TruncSilenceBase::ProcessAll()
 {
    // Copy tracks
    EffectOutputTracks outputs {
@@ -331,7 +331,7 @@ bool EffectTruncSilence::ProcessAll()
    return false;
 }
 
-bool EffectTruncSilence::FindSilences(RegionList &silences,
+bool TruncSilenceBase::FindSilences(RegionList &silences,
    const TrackIterRange<const WaveTrack> &range)
 {
    // Start with the whole selection silent
@@ -378,7 +378,7 @@ bool EffectTruncSilence::FindSilences(RegionList &silences,
    return true;
 }
 
-bool EffectTruncSilence::DoRemoval(const RegionList &silences,
+bool TruncSilenceBase::DoRemoval(const RegionList &silences,
    const TrackIterRange<Track> &range,
    unsigned iGroup, unsigned nGroups,
    double &totalCutLen)
@@ -511,7 +511,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
    return true;
 }
 
-bool EffectTruncSilence::Analyze(RegionList& silenceList,
+bool TruncSilenceBase::Analyze(RegionList& silenceList,
    RegionList& trackSilences, const WaveTrack &wt, sampleCount* silentFrame,
    sampleCount* index, int whichTrack, double* inputLength,
    double* minInputLength) const
@@ -794,7 +794,7 @@ bool EffectTruncSilence::TransferDataFromWindow(EffectSettings &)
 // EffectTruncSilence implementation
 
 // Finds the intersection of the ordered region lists, stores in dest
-void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
+void TruncSilenceBase::Intersect(RegionList &dest, const RegionList &src)
 {
    RegionList::iterator destIter;
    destIter = dest.begin();
@@ -924,7 +924,7 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
 }
 
 /*
-void EffectTruncSilence::BlendFrames(float* buffer, int blendFrameCount, int leftIndex, int rightIndex)
+void TruncSilenceBase::BlendFrames(float* buffer, int blendFrameCount, int leftIndex, int rightIndex)
 {
    float* bufOutput = &buffer[leftIndex];
    float* bufBefore = &buffer[leftIndex];
@@ -968,7 +968,7 @@ void EffectTruncSilence::OnControlChange(wxCommandEvent & WXUNUSED(evt))
    }
 }
 
-bool EffectTruncSilence::NeedsDither() const
+bool TruncSilenceBase::NeedsDither() const
 {
    return false;
 }

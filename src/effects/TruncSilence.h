@@ -30,17 +30,15 @@ class wxCheckBox;
 
 class RegionList;
 
-class EffectTruncSilence final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class TruncSilenceBase : public StatefulEffect
 {
 public:
-   static inline EffectTruncSilence *
-   FetchParameters(EffectTruncSilence &e, EffectSettings &) { return &e; }
+   static inline TruncSilenceBase *
+   FetchParameters(TruncSilenceBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectTruncSilence();
-   virtual ~EffectTruncSilence();
+   TruncSilenceBase();
+   virtual ~TruncSilenceBase();
 
    // ComponentInterface implementation
 
@@ -68,23 +66,15 @@ public:
       double* minInputLength = nullptr) const;
 
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
    bool NeedsDither() const override;
 
-private:
-   // EffectTruncSilence implementation
+protected:
+   // TruncSilenceBase implementation
 
    //ToDo ... put BlendFrames in Effects, Project, or other class
    // void BlendFrames(float* buffer, int leftIndex, int rightIndex, int blendFrameCount);
    void Intersect(RegionList &dest, const RegionList & src);
-
-   void OnControlChange(wxCommandEvent & evt);
-   void UpdateUI();
 
    bool ProcessIndependently();
    bool ProcessAll();
@@ -95,8 +85,6 @@ private:
       unsigned iGroup, unsigned nGroups,
       double &totalCutLen);
 
-   wxWeakRef<wxWindow> mUIParent{};
-
    double mThresholdDB {} ;
    int mActionIndex;
    double mInitialAllowedSilence;
@@ -106,15 +94,7 @@ private:
 
    size_t mBlendFrameCount;
 
-   wxTextCtrl *mThresholdText;
-   wxChoice *mActionChoice;
-   wxTextCtrl *mInitialAllowedSilenceT;
-   wxTextCtrl *mTruncLongestAllowedSilenceT;
-   wxTextCtrl *mSilenceCompressPercentT;
-   wxCheckBox *mIndependent;
-
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
    enum kActions
    {
@@ -125,18 +105,45 @@ private:
 
    static const EnumValueSymbol kActionStrings[nActions];
 
-static constexpr EffectParameter Threshold{ &EffectTruncSilence::mThresholdDB,
+static constexpr EffectParameter Threshold{ &TruncSilenceBase::mThresholdDB,
    L"Threshold",  -20.0,      -80.0,   -20.0,                     1  };
-static constexpr EnumParameter ActIndex{ &EffectTruncSilence::mActionIndex,
+static constexpr EnumParameter ActIndex{ &TruncSilenceBase::mActionIndex,
    L"Action",     (int)kTruncate,  0,       nActions - 1,           1, kActionStrings, nActions };
-static constexpr EffectParameter Minimum{ &EffectTruncSilence::mInitialAllowedSilence,
+static constexpr EffectParameter Minimum{ &TruncSilenceBase::mInitialAllowedSilence,
    L"Minimum",    0.5,        0.001,   10000.0,                   1  };
-static constexpr EffectParameter Truncate{ &EffectTruncSilence::mTruncLongestAllowedSilence,
+static constexpr EffectParameter Truncate{ &TruncSilenceBase::mTruncLongestAllowedSilence,
    L"Truncate",   0.5,        0.0,     10000.0,                   1  };
-static constexpr EffectParameter Compress{ &EffectTruncSilence::mSilenceCompressPercent,
+static constexpr EffectParameter Compress{ &TruncSilenceBase::mSilenceCompressPercent,
    L"Compress",   50.0,       0.0,     99.9,                      1  };
-static constexpr EffectParameter Independent{ &EffectTruncSilence::mbIndependent,
+static constexpr EffectParameter Independent{ &TruncSilenceBase::mbIndependent,
    L"Independent", false,     false,   true,                      1  };
+};
+
+class EffectTruncSilence final :
+    public TruncSilenceBase,
+    public StatefulEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+   DECLARE_EVENT_TABLE()
+
+   void OnControlChange(wxCommandEvent & evt);
+   void UpdateUI();
+
+private:
+   wxWeakRef<wxWindow> mUIParent {};
+
+   wxTextCtrl* mThresholdText;
+   wxChoice* mActionChoice;
+   wxTextCtrl* mInitialAllowedSilenceT;
+   wxTextCtrl* mTruncLongestAllowedSilenceT;
+   wxTextCtrl* mSilenceCompressPercentT;
+   wxCheckBox* mIndependent;
 };
 
 #endif
