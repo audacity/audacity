@@ -330,6 +330,7 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key)
     double newStartTime = m_context->mousePositionTime() - m_clipEditStartTimeOffset;
 
     newStartTime += autoScrollView(newStartTime);
+    newStartTime = m_context->applySnapToTime(newStartTime);
 
     bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime);
     return ok;
@@ -345,6 +346,7 @@ bool ClipsListModel::trimRightClip(const ClipKey& key)
     double newEndTime = m_context->mousePositionTime() + m_clipEditEndTimeOffset;
 
     newEndTime -= autoScrollView(newEndTime);
+    newEndTime = m_context->applySnapToTime(newEndTime);
 
     bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime);
     return ok;
