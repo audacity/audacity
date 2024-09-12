@@ -45,6 +45,8 @@ set( SOURCES
    NormalizeBase.h
    PaulstretchBase.cpp
    PaulstretchBase.h
+   PhaserBase.cpp
+   PhaserBase.h
    PlotSpectrumBase.cpp
    PlotSpectrumBase.h
    Repair.cpp
