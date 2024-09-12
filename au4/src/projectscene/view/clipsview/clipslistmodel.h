@@ -49,12 +49,13 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
 
-    Q_INVOKABLE void startMoveClip(const ClipKey& key);
-    Q_INVOKABLE bool moveClip(const ClipKey& key, bool completed);
-    Q_INVOKABLE void endMoveClip(const ClipKey& key);
+    Q_INVOKABLE void startEditClip(const ClipKey& key);
+    Q_INVOKABLE void endEditClip(const ClipKey& key);
 
-    Q_INVOKABLE bool trimLeftClip(const ClipKey& key, double deltaX, double posOnCanvas);
-    Q_INVOKABLE bool trimRightClip(const ClipKey& key, double deltaX, double posOnCanvas);
+    Q_INVOKABLE bool moveClip(const ClipKey& key, bool completed);
+    Q_INVOKABLE bool trimLeftClip(const ClipKey& key);
+    Q_INVOKABLE bool trimRightClip(const ClipKey& key);
+
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void unselectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClip();
@@ -94,7 +95,8 @@ private:
     void onClipRenameAction(const muse::actions::ActionData& args);
     ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
     int indexByKey(const trackedit::ClipKey& k) const;
-    double calculateExtraAutoScrollShift(double posOnCanvas);
+
+    double autoScrollView(double newTime);
 
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;
@@ -103,7 +105,8 @@ private:
     ClipListItem* m_selectedItem = nullptr;
     bool m_isStereo = false;
 
-    //! Offset between mouse click position on clip's header and clip's start time
-    double m_moveStartTimeOffset = -1.0;
+    //! Offset between mouse click position on clip's header and clip's start and end time
+    double m_clipEditStartTimeOffset = -1.0;
+    double m_clipEditEndTimeOffset = -1.0;
 };
 }

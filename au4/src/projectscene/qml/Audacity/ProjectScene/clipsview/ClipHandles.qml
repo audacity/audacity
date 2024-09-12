@@ -19,8 +19,12 @@ Item {
     signal clipHandlesMousePositionChanged(real x, real y)
 
     property var trimStartPos
-    signal trimLeftBy(real x, real posOnCanvas)
-    signal trimRightBy(real x, real posOnCanvas)
+
+    signal clipStartEditRequested()
+    signal clipEndEditRequested()
+
+    signal trimLeftRequested()
+    signal trimRightRequested()
 
     Item {
         id: leftTrimHandle
@@ -76,7 +80,11 @@ Item {
             hoverEnabled: true
 
             onPressed: function(e) {
-                trimStartPos = mapToGlobal(Qt.point(e.x, e.y)).x
+                root.clipStartEditRequested()
+            }
+
+            onReleased: function(e) {
+                root.clipEndEditRequested()
             }
 
             onEntered: {
@@ -93,17 +101,7 @@ Item {
                 clipHandlesMousePositionChanged(mouseX + leftTrimHandle.x, mouseY)
 
                 if (pressed) {
-                    let globalMouseX = mapToGlobal(Qt.point(e.x, e.y)).x
-                    let positionOnCanvas = mapToItem(canvas, e.x, e.y).x
-
-                    // make sure we trim to the right only when mouse hovers trim handle
-                    if (globalMouseX - trimStartPos > 0 && e.x < 0) {
-                        trimStartPos = globalMouseX
-                        return
-                    }
-
-                    trimLeftBy(globalMouseX - trimStartPos, positionOnCanvas)
-                    trimStartPos = globalMouseX
+                    root.trimLeftRequested()
                 }
             }
         }
@@ -162,7 +160,11 @@ Item {
             hoverEnabled: true
 
             onPressed: function(e) {
-                trimStartPos = mapToGlobal(Qt.point(e.x, e.y)).x
+                root.clipStartEditRequested()
+            }
+
+            onReleased: function(e) {
+                root.clipEndEditRequested()
             }
 
             onEntered: {
@@ -179,17 +181,7 @@ Item {
                 clipHandlesMousePositionChanged(mouseX + rightTrimHandle.x, mouseY)
 
                 if (pressed) {
-                    let globalMouseX = mapToGlobal(Qt.point(e.x, e.y)).x
-                    let positionOnCanvas = mapToItem(canvas, e.x, e.y).x
-
-                    // make sure we trim to the left only when mouse hovers trim handle
-                    if (trimStartPos - globalMouseX > 0 && e.x > rightTrimHandle.width) {
-                        trimStartPos = globalMouseX
-                        return
-                    }
-
-                    trimRightBy(trimStartPos - globalMouseX, positionOnCanvas)
-                    trimStartPos = globalMouseX
+                    root.trimRightRequested()
                 }
             }
         }
