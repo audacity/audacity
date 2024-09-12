@@ -75,6 +75,8 @@ set( SOURCES
    TruncSilenceBase.h
    TwoPassSimpleMono.cpp
    TwoPassSimpleMono.h
+   WahWahBase.cpp
+   WahWahBase.h
 )
 set( LIBRARIES
    lib-dynamic-range-processor-interface
