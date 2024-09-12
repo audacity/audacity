@@ -51,6 +51,8 @@ set( SOURCES
    PlotSpectrumBase.h
    Repair.cpp
    Repair.h
+   RepeatBase.cpp
+   RepeatBase.h
    ReverbBase.cpp
    ReverbBase.h
    Reverse.cpp
