@@ -12,11 +12,13 @@ Rectangle {
     property string type: ""
     property string instanceId: ""
 
+    property string title: builder.contentItem ? builder.contentItem.title : ""
+    property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
+
     signal closeRequested()
 
     color: ui.theme.backgroundPrimaryColor
 
-    property string title: builder.contentItem ? builder.contentItem.title : ""
     implicitWidth: builder.contentItem ? builder.contentItem.implicitWidth : 450
     implicitHeight: builder.contentItem ? builder.contentItem.implicitHeight : 200
 

@@ -24,12 +24,17 @@ void EffectsUiEngine::setup()
 
 QQmlEngine* EffectsUiEngine::engine()
 {
-    if (!m_engine) {
-        m_engine = new QQmlEngine(this);
-        setup();
-    }
+    //! NOTE At the moment we are returning the main one.
+    //! We are making Qml view for built-in effects
+    //! It is not yet clear whether Qml is needed for custom ones
+    return uiEngine()->qmlEngine();
 
-    return m_engine;
+    // if (!m_engine) {
+    //     m_engine = new QQmlEngine(this);
+    //     setup();
+    // }
+
+    // return m_engine;
 }
 
 QQmlEngine* EffectsUiEngine::qmlEngine() const

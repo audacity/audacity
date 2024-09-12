@@ -51,18 +51,18 @@ void BuiltinEffectsRepository::init()
 
     // General
     qmlRegisterType<GeneralViewModel>("Audacity.Effects", 1, 0, "GeneralViewModel");
-    effectsViewRegister()->setDefaultUrl(u"qrc:/builtin/general/GeneralEffectView.qml");
+    effectsViewRegister()->setDefaultUrl(u"qrc:/general/GeneralEffectView.qml");
 
     // Specific
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "AmplifyViewModel");
-    regView(AmplifyEffect::Symbol, u"qrc:/builtin/amplify/AmplifyView.qml");
+    regView(AmplifyEffect::Symbol, u"qrc:/amplify/AmplifyView.qml");
 
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
-    //regView(ChirpEffect::Symbol, u"qrc:/builtin/tonegen/ChirpView.qml");
+    //regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");
 
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
-    //regView(ToneEffect::Symbol, u"qrc:/builtin/tonegen/ToneView.qml");
+    //regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
 }
 
 EffectMetaList BuiltinEffectsRepository::effectMetaList() const

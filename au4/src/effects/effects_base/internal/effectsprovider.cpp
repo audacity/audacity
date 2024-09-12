@@ -109,33 +109,16 @@ muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInst
     return rv.ret;
 }
 
-muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effect, EffectSettings& settings,
-                                         const EffectTimeParams& timeParams)
+muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,
+                                         EffectSettings& settings)
 {
-    unsigned flags = 0; // not used at the monent
-
     //! ============================================================================
-    //! NOTE Step 1 - setup effect
+    //! NOTE Step 1 - add new a track if need
     //! ============================================================================
 
     // common things used below
-    unsigned oldFlags = 0;
     WaveTrack* newTrack = nullptr;
-
     {
-        //! NOTE Step 1.1 - setup effect
-        oldFlags = effect->mUIFlags;
-        effect->mUIFlags = flags;
-        effect->mFactory = &WaveTrackFactory::Get(project);
-        effect->mProjectRate = timeParams.projectRate;
-        effect->mT0 = timeParams.t0;
-        effect->mT1 = timeParams.t1;
-
-        effect->SetTracks(&TrackList::Get(project));
-        // Update track/group counts
-        effect->CountWaveTracks();
-
-        //! NOTE Step 1.2 - add new a track if need
         // We don't yet know the effect type for code in the Nyquist Prompt, so
         // assume it requires a track and handle errors when the effect runs.
         if ((effect->GetType() == EffectTypeGenerate || effect->GetPath() == NYQUIST_PROMPT_ID) && (effect->mNumTracks == 0)) {
@@ -143,16 +126,6 @@ muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effec
             track->SetName(effect->mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
             newTrack = effect->mTracks->Add(track);
             newTrack->SetSelected(true);
-        }
-
-        //! NOTE Step 1.3 - check frequency params
-        effect->mF0 = timeParams.f0;
-        effect->mF1 = timeParams.f1;
-        if (effect->mF0 != UNDEFINED_FREQUENCY) {
-            effect->mPresetNames.push_back(L"control-f0");
-        }
-        if (effect->mF1 != UNDEFINED_FREQUENCY) {
-            effect->mPresetNames.push_back(L"control-f1");
         }
     }
 
@@ -163,31 +136,6 @@ muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effec
     // common things used below
     bool success = false;
     {
-        //! NOTE Step 2.1 - find instance
-        std::shared_ptr<EffectInstanceEx> pInstanceEx;
-
-        //! TODO It is not obvious why we only look for an instance
-        //! for interactive and unconfigured effects,
-        //! and always create a new one for the others
-        if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
-            const std::optional<EffectPlugin::InstancePointer> result = EffectBase::FindInstance(*effect);
-            if (result.has_value()) {
-                pInstanceEx = *result;
-            }
-        }
-
-        //! NOTE Step 2.2 - make new instance if not found
-        if (!pInstanceEx) {
-            // Path that skipped the dialog factory -- effect may be non-interactive
-            // or this is batch mode processing or repeat of last effect with stored
-            // settings.
-            pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(effect->MakeInstance());
-            // Note: Init may read parameters from preferences
-            if (!pInstanceEx || !pInstanceEx->Init()) {
-                return muse::make_ret(Ret::Code::InternalError);
-            }
-        }
-
         //! NOTE Step 2.3 - open transaction
         TransactionScope trans(project, "Effect");
 
@@ -230,11 +178,6 @@ muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effec
                 effect->mTracks->Remove(*newTrack);
             }
         }
-
-        // Don't hold a dangling pointer when done
-        effect->SetTracks(nullptr);
-        effect->mPresetNames.clear();
-        effect->mUIFlags = oldFlags;
     }
 
     return success ? muse::make_ok() : muse::make_ret(Ret::Code::UnknownError);

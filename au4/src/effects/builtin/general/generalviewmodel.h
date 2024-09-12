@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "../view/abstracteffectmodel.h"
+#include "../common/abstracteffectmodel.h"
 
 namespace au::effects {
 class GeneralViewModel : public AbstractEffectModel
