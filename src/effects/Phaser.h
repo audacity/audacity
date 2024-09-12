@@ -70,16 +70,15 @@ struct EffectPhaserSettings
    double mOutGain { outGainDefault  };
 };
 
-class EffectPhaser final : public EffectWithSettings<
-   EffectPhaserSettings, StatelessPerTrackEffect
->
+class PhaserBase :
+    public EffectWithSettings<EffectPhaserSettings, PerTrackEffect>
 {
 public:
-   
+
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectPhaser();
-   virtual ~EffectPhaser();
+   PhaserBase();
+   virtual ~PhaserBase();
 
    // ComponentInterface implementation
 
@@ -92,18 +91,8 @@ public:
    EffectType GetType() const override;
    RealtimeSince RealtimeSupport() const override;
 
-
-   // Effect implementation
-
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
-
-   struct Editor;
-
-private:
-   // EffectPhaser implementation
+protected:
+   // PhaserBase implementation
 
    struct Instance;
 
@@ -138,6 +127,19 @@ static constexpr EffectParameter Feedback
 static constexpr EffectParameter OutGain
 { &EffectPhaserSettings::mOutGain, L"Gain",
    EffectPhaserSettings::outGainDefault,    -30.0,    30.0,    1   };
+};
+
+class EffectPhaser : public PhaserBase, public StatelessEffectUIServices
+{
+public:
+   // Effect implementation
+
+   std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
+   const override;
+
+   struct Editor;
 };
 
 #endif

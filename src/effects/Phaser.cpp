@@ -29,13 +29,13 @@
 #include "../widgets/valnum.h"
 #include <wx/weakref.h>
 
-const EffectParameterMethods& EffectPhaser::Parameters() const
+const EffectParameterMethods& PhaserBase::Parameters() const
 {
-   static CapturedParameters<EffectPhaser,
+   static CapturedParameters<PhaserBase,
       Stages, DryWet, Freq, Phase, Depth, Feedback, OutGain
    > parameters{
 
-      [](EffectPhaser &, EffectSettings &, EffectPhaserSettings &e, bool updating)
+      [](PhaserBase &, EffectSettings &, EffectPhaserSettings &e, bool updating)
       {
          if (updating)
             e.mStages &= ~1; // must be even, but don't complain about it
@@ -52,10 +52,10 @@ const EffectParameterMethods& EffectPhaser::Parameters() const
 #define lfoskipsamples 20
 
 //
-// EffectPhaser
+// PhaserBase
 //
 
-const ComponentInterfaceSymbol EffectPhaser::Symbol
+const ComponentInterfaceSymbol PhaserBase::Symbol
 { XO("Phaser") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectPhaser > reg; }
@@ -110,8 +110,8 @@ struct EffectPhaser::Editor
    void OnPhaseText(wxCommandEvent& evt);
    void OnFreqText(wxCommandEvent& evt);
    void OnGainText(wxCommandEvent& evt);
-      
-   
+
+
    void EnableApplyFromValidate()
    {
       EnableApply(mUIParent, mUIParent->Validate());
@@ -121,11 +121,11 @@ struct EffectPhaser::Editor
    {
       return EnableApply(mUIParent, mUIParent->TransferDataFromWindow());
    }
-   
+
 };
 
 
-struct EffectPhaser::Instance
+struct PhaserBase::Instance
    : public PerTrackEffect::Instance
    , public EffectInstanceWithBlockSize
 {
@@ -168,67 +168,67 @@ struct EffectPhaser::Instance
    float DoFilter(EffectPhaserState& data, float in);
 
    EffectPhaserState mState;
-   std::vector<EffectPhaser::Instance> mSlaves;
+   std::vector<PhaserBase::Instance> mSlaves;
 };
 
 
 std::shared_ptr<EffectInstance>
-EffectPhaser::MakeInstance() const
+PhaserBase::MakeInstance() const
 {
    return std::make_shared<Instance>(*this);
 }
 
 
 
-EffectPhaser::EffectPhaser()
+PhaserBase::PhaserBase()
 {
    SetLinearEffectFlag(true);
 }
 
-EffectPhaser::~EffectPhaser()
+PhaserBase::~PhaserBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectPhaser::GetSymbol() const
+ComponentInterfaceSymbol PhaserBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectPhaser::GetDescription() const
+TranslatableString PhaserBase::GetDescription() const
 {
    return XO("Combines phase-shifted signals with the original signal");
 }
 
-ManualPageID EffectPhaser::ManualPage() const
+ManualPageID PhaserBase::ManualPage() const
 {
    return L"Phaser";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPhaser::GetType() const
+EffectType PhaserBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-auto EffectPhaser::RealtimeSupport() const -> RealtimeSince
+auto PhaserBase::RealtimeSupport() const -> RealtimeSince
 {
    return RealtimeSince::After_3_1;
 }
 
-unsigned EffectPhaser::Instance::GetAudioInCount() const
+unsigned PhaserBase::Instance::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectPhaser::Instance::GetAudioOutCount() const
+unsigned PhaserBase::Instance::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectPhaser::Instance::ProcessInitialize(
+bool PhaserBase::Instance::ProcessInitialize(
    EffectSettings& settings, double sampleRate, ChannelNames chanMap)
 {
    InstanceInit(settings, mState, sampleRate);
@@ -237,23 +237,23 @@ bool EffectPhaser::Instance::ProcessInitialize(
    return true;
 }
 
-size_t EffectPhaser::Instance::ProcessBlock(EffectSettings &settings,
+size_t PhaserBase::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    return InstanceProcess(settings, mState, inBlock, outBlock, blockLen);
 }
 
-bool EffectPhaser::Instance::RealtimeInitialize(EffectSettings&, double)
+bool PhaserBase::Instance::RealtimeInitialize(EffectSettings&, double)
 {
    SetBlockSize(512);
    mSlaves.clear();
    return true;
 }
 
-bool EffectPhaser::Instance::RealtimeAddProcessor(
+bool PhaserBase::Instance::RealtimeAddProcessor(
    EffectSettings& settings, EffectOutputs *, unsigned, float sampleRate)
 {
-   EffectPhaser::Instance slave(mProcessor);
+   PhaserBase::Instance slave(mProcessor);
 
    InstanceInit(settings, slave.mState, sampleRate);
 
@@ -262,14 +262,14 @@ bool EffectPhaser::Instance::RealtimeAddProcessor(
    return true;
 }
 
-bool EffectPhaser::Instance::RealtimeFinalize(EffectSettings &) noexcept
+bool PhaserBase::Instance::RealtimeFinalize(EffectSettings &) noexcept
 {
    mSlaves.clear();
 
    return true;
 }
 
-size_t EffectPhaser::Instance::RealtimeProcess(size_t group, EffectSettings &settings,
+size_t PhaserBase::Instance::RealtimeProcess(size_t group, EffectSettings &settings,
    const float *const *inbuf, float *const *outbuf, size_t numSamples)
 {
    if (group >= mSlaves.size())
@@ -455,9 +455,9 @@ bool EffectPhaser::Editor::ValidateUI()
 }
 
 
-// EffectPhaser implementation
+// PhaserBase implementation
 
-void EffectPhaser::Instance::InstanceInit(EffectSettings& settings, EffectPhaserState & data, float sampleRate)
+void PhaserBase::Instance::InstanceInit(EffectSettings& settings, EffectPhaserState & data, float sampleRate)
 {
    auto& ms = GetSettings(settings);
 
@@ -477,7 +477,7 @@ void EffectPhaser::Instance::InstanceInit(EffectSettings& settings, EffectPhaser
    return;
 }
 
-size_t EffectPhaser::Instance::InstanceProcess(EffectSettings &settings,
+size_t PhaserBase::Instance::InstanceProcess(EffectSettings &settings,
    EffectPhaserState & data,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
