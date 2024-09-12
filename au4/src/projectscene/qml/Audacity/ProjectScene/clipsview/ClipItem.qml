@@ -25,12 +25,13 @@ Rectangle {
 
     property bool collapsed: false
 
-    signal clipStartMoveRequested()
-    signal clipMoveRequested(bool completed)
-    signal clipEndMoveRequested()
+    signal clipStartEditRequested()
+    signal clipEndEditRequested()
 
-    signal clipLeftTrimmed(real deltaX, real posOnCanvas)
-    signal clipRightTrimmed(real deltaX, real posOnCanvas)
+    signal clipMoveRequested(bool completed)
+    signal clipLeftTrimRequested()
+    signal clipRightTrimRequested()
+
     signal requestSelected()
     signal ratioChanged(double val)
 
@@ -127,7 +128,7 @@ Rectangle {
                 onPositionChanged: function(e) {
                     root.clipItemMousePositionChanged(e.x, e.y)
 
-                    if (headerDragArea.moveActive) {
+                    if (pressed) {
                         root.clipMoveRequested(false)
                     }
                 }
@@ -135,15 +136,13 @@ Rectangle {
                 onPressed: function(e) {
                     root.requestSelected()
 
-                    root.clipStartMoveRequested()
-                    headerDragArea.moveActive = true
+                    root.clipStartEditRequested()
                 }
 
                 onReleased: function(e) {
                     root.clipMoveRequested(true)
-                    headerDragArea.moveActive = false
 
-                    root.clipEndMoveRequested()
+                    root.clipEndEditRequested()
                 }
 
                 onDoubleClicked: root.editTitle()
@@ -292,12 +291,20 @@ Rectangle {
             clipItemMousePositionChanged(xWithinClipItem, yWithinClipItem)
         }
 
-        onTrimLeftBy: function(trimByX, posOnCanvas) {
-            clipLeftTrimmed(trimByX, posOnCanvas)
+        onClipStartEditRequested: function() {
+            root.clipStartEditRequested()
         }
 
-        onTrimRightBy: function(trimByX, posOnCanvas) {
-            clipRightTrimmed(trimByX, posOnCanvas)
+        onClipEndEditRequested: function() {
+            root.clipEndEditRequested()
+        }
+
+        onTrimLeftRequested: function() {
+            root.clipLeftTrimRequested()
+        }
+
+        onTrimRightRequested: function() {
+            root.clipRightTrimRequested()
         }
     }
 

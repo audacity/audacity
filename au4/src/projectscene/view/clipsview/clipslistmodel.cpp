@@ -136,17 +136,17 @@ int ClipsListModel::indexByKey(const trackedit::ClipKey& k) const
     return -1;
 }
 
-double ClipsListModel::calculateExtraAutoScrollShift(double posOnCanvas)
+double ClipsListModel::autoScrollView(double newTime)
 {
-    secs_t posSec = m_context->positionToTime(posOnCanvas);
-    if (!muse::RealIsEqualOrMore(posSec, 0.0)) {
-        posSec = 0.0;
+    if (!muse::RealIsEqualOrMore(newTime, 0.0)) {
+        newTime = 0.0;
     }
+
     secs_t frameStartBeforeShift = m_context->frameStartTime();
-    m_context->insureVisible(posSec);
+    m_context->insureVisible(newTime);
     secs_t frameStartAfterShift = m_context->frameStartTime();
 
-    return (frameStartAfterShift - frameStartBeforeShift) * m_context->zoom();
+    return frameStartAfterShift - frameStartBeforeShift;
 }
 
 void ClipsListModel::update()
@@ -284,14 +284,25 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
     return ok;
 }
 
-void ClipsListModel::startMoveClip(const ClipKey& key)
+void ClipsListModel::startEditClip(const ClipKey& key)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return;
     }
 
-    m_moveStartTimeOffset = m_context->mousePositionTime() - item->clip().startTime;
+    double mousePositionTime = m_context->mousePositionTime();
+
+    m_clipEditStartTimeOffset = mousePositionTime - item->clip().startTime;
+    m_clipEditEndTimeOffset = item->clip().endTime - mousePositionTime;
+}
+
+void ClipsListModel::endEditClip(const ClipKey& key)
+{
+    UNUSED(key);
+
+    m_clipEditStartTimeOffset = -1.0;
+    m_clipEditEndTimeOffset = -1.0;
 }
 
 bool ClipsListModel::moveClip(const ClipKey& key, bool completed)
@@ -301,7 +312,7 @@ bool ClipsListModel::moveClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    double newStartTime = m_context->mousePositionTime() - m_moveStartTimeOffset;
+    double newStartTime = m_context->mousePositionTime() - m_clipEditStartTimeOffset;
 
     newStartTime = m_context->applySnapToTime(newStartTime);
 
@@ -309,40 +320,33 @@ bool ClipsListModel::moveClip(const ClipKey& key, bool completed)
     return ok;
 }
 
-void ClipsListModel::endMoveClip(const ClipKey& key)
-{
-    UNUSED(key);
-
-    m_moveStartTimeOffset = -1.0;
-}
-
-bool ClipsListModel::trimLeftClip(const ClipKey& key, double deltaX, double posOnCanvas)
+bool ClipsListModel::trimLeftClip(const ClipKey& key)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
 
-    deltaX += calculateExtraAutoScrollShift(posOnCanvas);
+    double newStartTime = m_context->mousePositionTime() - m_clipEditStartTimeOffset;
 
-    const secs_t deltaSec = deltaX / m_context->zoom();
+    newStartTime += autoScrollView(newStartTime);
 
-    bool ok = trackeditInteraction()->trimClipLeft(key.key, deltaSec);
+    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime);
     return ok;
 }
 
-bool ClipsListModel::trimRightClip(const ClipKey& key, double deltaX, double posOnCanvas)
+bool ClipsListModel::trimRightClip(const ClipKey& key)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
 
-    deltaX -= calculateExtraAutoScrollShift(posOnCanvas);
+    double newEndTime = m_context->mousePositionTime() + m_clipEditEndTimeOffset;
 
-    const secs_t deltaSec = deltaX / m_context->zoom();
+    newEndTime -= autoScrollView(newEndTime);
 
-    bool ok = trackeditInteraction()->trimClipRight(key.key, deltaSec);
+    bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime);
     return ok;
 }
 
