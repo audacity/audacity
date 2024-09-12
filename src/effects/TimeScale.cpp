@@ -6,22 +6,14 @@
 
   Clayton Otey
 
-*******************************************************************//**
-
-\class EffectTimeScale
-\brief An EffectTimeScale does high quality sliding time scaling/pitch shifting
-
-*//*******************************************************************/
+**********************************************************************/
 #if USE_SBSMS
 #include "TimeScale.h"
 #include "EffectEditor.h"
 #include "LoadEffects.h"
 
-#include <math.h>
-
 #include <wx/slider.h>
 
-#include "MemoryX.h"
 #include "ShuttleGui.h"
 #include "../widgets/valnum.h"
 
@@ -35,22 +27,6 @@ enum
    ID_PitchPercentChangeEnd
 };
 
-const EffectParameterMethods& TimeScaleBase::Parameters() const
-{
-   static CapturedParameters<TimeScaleBase,
-      RatePercentStart, RatePercentEnd, HalfStepsStart, HalfStepsEnd,
-      PitchPercentStart, PitchPercentEnd
-   > parameters;
-   return parameters;
-}
-
-//
-// TimeScaleBase
-//
-
-const ComponentInterfaceSymbol TimeScaleBase::Symbol
-{ wxT("Sliding Stretch"), XO("Sliding Stretch") };
-
 namespace{ BuiltinEffectsModule::Registration< EffectTimeScale > reg; }
 
 BEGIN_EVENT_TABLE(EffectTimeScale, wxEvtHandler)
@@ -63,87 +39,6 @@ BEGIN_EVENT_TABLE(EffectTimeScale, wxEvtHandler)
    EVT_SLIDER(ID_RatePercentChangeStart, EffectTimeScale::OnSlider_RatePercentChangeStart)
    EVT_SLIDER(ID_RatePercentChangeEnd, EffectTimeScale::OnSlider_RatePercentChangeEnd)
 END_EVENT_TABLE()
-
-TimeScaleBase::TimeScaleBase()
-{
-   Parameters().Reset(*this);
-
-   slideTypeRate = SlideLinearOutputRate;
-   slideTypePitch = SlideLinearOutputRate;
-   bPreview = false;
-   previewSelectedDuration = 0.0;
-
-   SetLinearEffectFlag(true);
-}
-
-TimeScaleBase::~TimeScaleBase()
-{
-}
-
-// ComponentInterface implementation
-
-ComponentInterfaceSymbol TimeScaleBase::GetSymbol() const
-{
-   return Symbol;
-}
-
-TranslatableString TimeScaleBase::GetDescription() const
-{
-   return XO("Allows continuous changes to the tempo and/or pitch");
-}
-
-ManualPageID TimeScaleBase::ManualPage() const
-{
-   return L"Sliding_Stretch";
-}
-
-// EffectDefinitionInterface implementation
-
-EffectType TimeScaleBase::GetType() const
-{
-   return EffectTypeProcess;
-}
-
-// Effect implementation
-
-double TimeScaleBase::CalcPreviewInputLength(
-   const EffectSettings &settings, double previewLength) const
-{
-   double inputLength = settings.extra.GetDuration();
-   if(inputLength == 0.0) {
-      return 0.0;
-   } else {
-      double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
-      double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
-      double tOut = previewLength/inputLength;
-      double t = SBSMSBase::getInvertedStretchedTime(rateStart1,rateEnd1,slideTypeRate,tOut);
-      return t * inputLength;
-   }
-}
-
-std::any TimeScaleBase::BeginPreview(const EffectSettings &settings)
-{
-   previewSelectedDuration = settings.extra.GetDuration();
-   return { CopyableValueRestorer{ bPreview, true } };
-}
-
-bool TimeScaleBase::Process(
-   EffectInstance &instance, EffectSettings &settings)
-{
-   double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
-   double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
-   double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
-   double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
-
-   if(bPreview) {
-      double t = (mT1-mT0) / previewSelectedDuration;
-      rateEnd1 = SBSMSBase::getRate(rateStart1,rateEnd1,slideTypeRate,t);
-      pitchEnd1 = SBSMSBase::getRate(pitchStart1,pitchEnd1,slideTypePitch,t);
-   }
-
-   SBSMSBase::setParameters(rateStart1,rateEnd1,pitchStart1,pitchEnd1,slideTypeRate,slideTypePitch,false,false,false);
-   return SBSMSBase::Process(instance, settings);
-}
 
 std::unique_ptr<EffectEditor> EffectTimeScale::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
@@ -273,22 +168,6 @@ bool EffectTimeScale::TransferDataFromWindow(EffectSettings &)
    }
 
    return true;
-}
-
-inline double TimeScaleBase::PercentChangeToRatio(double percentChange)
-{
-   return 1.0 + percentChange / 100.0;
-}
-
-inline double TimeScaleBase::HalfStepsToPercentChange(double halfSteps)
-{
-   return 100.0 * (pow(2.0,halfSteps/12.0) - 1.0);
-}
-
-inline
-double TimeScaleBase::PercentChangeToHalfSteps(double percentChange)
-{
-   return 12.0 * log2(PercentChangeToRatio(percentChange));
 }
 
 void EffectTimeScale::Update_Text_RatePercentChangeStart()

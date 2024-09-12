@@ -67,6 +67,8 @@ set( SOURCES
    SoundTouchBase.h
    StereoToMono.cpp
    StereoToMono.h
+   TimeScaleBase.cpp
+   TimeScaleBase.h
    ToneGenBase.cpp
    ToneGenBase.h
    TwoPassSimpleMono.cpp
