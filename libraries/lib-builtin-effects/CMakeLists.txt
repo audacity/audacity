@@ -25,6 +25,8 @@ set( SOURCES
    LoudnessBase.h
    NormalizeBase.cpp
    NormalizeBase.h
+   PaulstretchBase.cpp
+   PaulstretchBase.h
    Repair.cpp
    Repair.h
    ReverbBase.cpp
