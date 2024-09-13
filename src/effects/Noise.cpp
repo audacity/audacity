@@ -27,7 +27,7 @@
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
 
-const EnumValueSymbol EffectNoise::kTypeStrings[nTypes] =
+const EnumValueSymbol NoiseBase::kTypeStrings[nTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    /* i18n-hint: not a color, but "white noise" having a uniform spectrum  */
@@ -39,25 +39,25 @@ const EnumValueSymbol EffectNoise::kTypeStrings[nTypes] =
    { XC("Brownian", "noise") }
 };
 
-const EffectParameterMethods& EffectNoise::Parameters() const
+const EffectParameterMethods& NoiseBase::Parameters() const
 {
-   static CapturedParameters<EffectNoise,
+   static CapturedParameters<NoiseBase,
       Type, Amp
    > parameters;
    return parameters;
 }
 
 //
-// EffectNoise
+// NoiseBase
 //
 
-const ComponentInterfaceSymbol EffectNoise::Symbol
+const ComponentInterfaceSymbol NoiseBase::Symbol
 { XO("Noise") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectNoise > reg; }
 
 
-EffectNoise::EffectNoise()
+NoiseBase::NoiseBase()
 {
    Parameters().Reset(*this);
 
@@ -66,47 +66,47 @@ EffectNoise::EffectNoise()
    y = z = buf0 = buf1 = buf2 = buf3 = buf4 = buf5 = buf6 = 0;
 }
 
-EffectNoise::~EffectNoise()
+NoiseBase::~NoiseBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNoise::GetSymbol() const
+ComponentInterfaceSymbol NoiseBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNoise::GetDescription() const
+TranslatableString NoiseBase::GetDescription() const
 {
    return XO("Generates one of three different types of noise");
 }
 
-ManualPageID EffectNoise::ManualPage() const
+ManualPageID NoiseBase::ManualPage() const
 {
    return L"Noise";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoise::GetType() const
+EffectType NoiseBase::GetType() const
 {
    return EffectTypeGenerate;
 }
 
-unsigned EffectNoise::GetAudioOutCount() const
+unsigned NoiseBase::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectNoise::ProcessInitialize(EffectSettings &,
+bool NoiseBase::ProcessInitialize(EffectSettings &,
    double sampleRate, ChannelNames)
 {
    mSampleRate = sampleRate;
    return true;
 }
 
-size_t EffectNoise::ProcessBlock(EffectSettings &,
+size_t NoiseBase::ProcessBlock(EffectSettings &,
    const float *const *, float *const *outbuf, size_t size)
 {
    float *buffer = outbuf[0];

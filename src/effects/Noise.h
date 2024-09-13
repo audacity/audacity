@@ -21,17 +21,15 @@
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectNoise final :
-    public StatefulPerTrackEffect,
-    public StatefulEffectUIServices
+class NoiseBase : public StatefulPerTrackEffect
 {
 public:
-   static inline EffectNoise *
-   FetchParameters(EffectNoise &e, EffectSettings &) { return &e; }
+   static inline NoiseBase *
+   FetchParameters(NoiseBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectNoise();
-   virtual ~EffectNoise();
+   NoiseBase();
+   virtual ~NoiseBase();
 
    // ComponentInterface implementation
 
@@ -50,18 +48,8 @@ public:
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   // Effect implementation
-
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
-
-private:
-   // EffectNoise implementation
-
-   wxWeakRef<wxWindow> mUIParent{};
+protected:
+   // NoiseBase implementation
 
    double mSampleRate{};
    int mType;
@@ -82,10 +70,23 @@ private:
    };
    static const EnumValueSymbol kTypeStrings[nTypes];
 
-static constexpr EnumParameter Type{ &EffectNoise::mType,
+static constexpr EnumParameter Type{ &NoiseBase::mType,
    L"Type",       kWhite,  0,    nTypes - 1, 1, kTypeStrings, nTypes  };
-static constexpr EffectParameter Amp{ &EffectNoise::mAmp,
+static constexpr EffectParameter Amp{ &NoiseBase::mAmp,
    L"Amplitude",  0.8,     0.0,  1.0,           1  };
+};
+
+class EffectNoise : public NoiseBase, public StatefulEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+private:
+   wxWeakRef<wxWindow> mUIParent {};
 };
 
 #endif
