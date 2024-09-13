@@ -3,6 +3,7 @@
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 #include "libraries/lib-project-history/ProjectHistory.h"
+#include "libraries/lib-stretching-sequence/TempoChange.h"
 
 #include "au3wrap/iau3project.h"
 #include "au3wrap/internal/domconverter.h"
@@ -97,6 +98,11 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
             onTrackDataChanged(trackId);
             m_impl->trackReplacing = false;
         }
+
+        const auto tempo = ProjectTimeSignature::Get(*m_impl->prj).GetTempo();
+        if (const auto track = e.mpTrack.lock()) {
+            DoProjectTempoChange(*track, tempo);
+        }
     } break;
     default:
         break;
@@ -130,12 +136,12 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     return clips;
 }
 
-void Au3TrackeditProject::onTrackAdded(const Track &track)
+void Au3TrackeditProject::onTrackAdded(const Track& track)
 {
     m_tracksChanged.itemAdded(track);
 }
 
-void Au3TrackeditProject::onTrackChanged(const Track &track)
+void Au3TrackeditProject::onTrackChanged(const Track& track)
 {
     m_tracksChanged.itemChanged(track);
 }
