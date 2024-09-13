@@ -23,8 +23,6 @@
 
 #include "TimeWarper.h"
 
-#include "AudacityMessageBox.h"
-
 bool Generator::Process(EffectInstance &, EffectSettings &settings)
 {
    const auto duration = settings.extra.GetDuration();

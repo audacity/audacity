@@ -383,8 +383,6 @@ set( SOURCES
       effects/EqualizationUI.h
       effects/FindClipping.cpp
       effects/FindClipping.h
-      effects/Generator.cpp
-      effects/Generator.h
       effects/LegacyCompressor.cpp
       effects/LegacyCompressor.h
       effects/Limiter.cpp

@@ -25,6 +25,8 @@ set( SOURCES
    Fade.h
    FindClippingBase.cpp
    FindClippingBase.h
+   Generator.cpp
+   Generator.h
    Invert.cpp
    Invert.h
    LegacyCompressorBase.cpp
