@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include "effects/effects_base/effectstypes.h"
+
 #include "libraries/lib-builtin-effects/AmplifyBase.h"
 
 #include "../common/params.h"
@@ -14,14 +16,14 @@ public:
     AmplifyEffect();
 
     // properties
-    double peak() const;
-    double defaultRatio() const;
-    double defaultAmp() const;
+    float peak() const;
+    ratio_t defaultRatio() const;
+    db_t defaultAmp() const;
 
     // params
-    double ratio() const;
-    Param<double> amp() const;      // dB
-    void setAmp(double v);
+    ratio_t ratio() const;
+    Param<db_t> amp() const;      // dB
+    void setAmp(db_t v);
 
     bool canClip() const;
     void setCanClip(bool v);

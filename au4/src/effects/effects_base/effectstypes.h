@@ -6,10 +6,15 @@
 #include <vector>
 
 #include "global/types/string.h"
+#include "global/types/ratio.h"
 
 class Effect;
 class EffectInstanceEx;
 namespace au::effects {
+using ratio_t = muse::ratio_t;
+using db_t = muse::db_t;
+using rms_t = float;
+
 using EffectId = muse::String;              // PluginID from AU3
 using Effect = ::Effect;                    // Effect from AU3
 using EffectInstanceId = uint64_t;
