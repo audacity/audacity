@@ -15,6 +15,8 @@ set( SOURCES
    RealFFTf.h
    Spectrum.cpp
    Spectrum.h
+   SpectrumAnalyst.cpp
+   SpectrumAnalyst.h
 )
 set( LIBRARIES
    pffft

@@ -16,7 +16,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "AColor.h"
 #include "CommandManager.h"
-#include "../../SpectrumAnalyst.h"
+#include "SpectrumAnalyst.h"
 #include "LabelTrack.h"
 #include "../playabletrack/wavetrack/ui/PitchAndSpeedDialog.h"
 #include "NumberScale.h"

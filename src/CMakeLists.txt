@@ -189,8 +189,6 @@ set( SOURCES
       SpectralDataDialog.cpp
       SpectralDataManager.h
       SpectralDataManager.cpp
-      SpectrumAnalyst.cpp
-      SpectrumAnalyst.h
       SpectrumTransformer.cpp
       SpectrumTransformer.h
       SseMathFuncs.cpp
@@ -852,6 +850,8 @@ set( SOURCES
       widgets/ExpandingToolBar.h
       widgets/FileHistory.cpp
       widgets/FileHistory.h
+      widgets/FreqGauge.cpp
+      widgets/FreqGauge.h
       widgets/GeneratedUpdater.cpp
       widgets/GeneratedUpdater.h
       widgets/Grabber.cpp
