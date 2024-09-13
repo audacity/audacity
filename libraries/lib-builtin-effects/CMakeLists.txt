@@ -31,6 +31,8 @@ set( SOURCES
    LegacyCompressorBase.h
    LoudnessBase.cpp
    LoudnessBase.h
+   NoiseBase.cpp
+   NoiseBase.h
    NormalizeBase.cpp
    NormalizeBase.h
    PaulstretchBase.cpp
