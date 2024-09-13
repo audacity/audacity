@@ -33,17 +33,15 @@ class ShuttleGui;
 
 class EffectScienFilterPanel;
 
-class EffectScienFilter final :
-    public StatefulPerTrackEffect,
-    public StatefulEffectUIServices
+class ScienFilterBase : public StatefulPerTrackEffect
 {
 public:
-   static inline EffectScienFilter *
-   FetchParameters(EffectScienFilter &e, EffectSettings &) { return &e; }
+   static inline ScienFilterBase *
+   FetchParameters(ScienFilterBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectScienFilter();
-   virtual ~EffectScienFilter();
+   ScienFilterBase();
+   virtual ~ScienFilterBase();
 
    // ComponentInterface implementation
 
@@ -66,34 +64,12 @@ public:
    // Effect implementation
 
    bool Init() override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
-private:
-   // EffectScienFilter implementation
+protected:
+   // ScienFilterBase implementation
 
-   bool TransferGraphLimitsFromWindow();
    void CalcFilter();
    float FilterMagnAtFreq(float Freq);
-   void EnableDisableRippleCtl (int FilterType);
-
-   void OnSize( wxSizeEvent & evt );
-   void OnSlider( wxCommandEvent & evt );
-
-   void OnOrder( wxCommandEvent & evt );
-   void OnCutoff( wxCommandEvent & evt );
-   void OnRipple( wxCommandEvent & evt );
-   void OnStopbandRipple( wxCommandEvent & evt );
-   void OnFilterType( wxCommandEvent & evt );
-   void OnFilterSubtype( wxCommandEvent & evt );
-
-   void OnSliderDBMAX( wxCommandEvent & evt );
-   void OnSliderDBMIN( wxCommandEvent & evt );
-
-   wxWeakRef<wxWindow> mUIParent{};
 
    float mCutoff;
    float mRipple;
@@ -111,31 +87,7 @@ private:
    double mLoFreq;
    double mNyquist;
 
-   EffectScienFilterPanel *mPanel;
-   wxSlider *mdBMinSlider;
-   wxSlider *mdBMaxSlider;
-
-   wxStaticText *mRippleCtlP;
-   wxTextCtrl *mRippleCtl;
-   wxStaticText *mRippleCtlU;
-
-   wxTextCtrl *mCutoffCtl;
-
-   wxStaticText *mStopbandRippleCtlP;
-   wxTextCtrl *mStopbandRippleCtl;
-   wxStaticText *mStopbandRippleCtlU;
-
-   wxChoice *mFilterTypeCtl;
-   wxChoice *mFilterSubTypeCtl;
-   wxChoice *mFilterOrderCtl;
-
-   RulerPanel *mdBRuler;
-   RulerPanel *mfreqRuler;
-
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
-
-   friend class EffectScienFilterPanel;
 
    enum kSubTypes
    {
@@ -156,18 +108,73 @@ private:
 
    static_assert(nSubTypes == WXSIZEOF(kSubTypeStrings), "size mismatch");
 
-static constexpr EnumParameter Type{ &EffectScienFilter::mFilterType,
+static constexpr EnumParameter Type{ &ScienFilterBase::mFilterType,
    L"FilterType",       kButterworth,  0,    nTypes - 1,    1, kTypeStrings, nTypes  };
-static constexpr EnumParameter Subtype{ &EffectScienFilter::mFilterSubtype,
+static constexpr EnumParameter Subtype{ &ScienFilterBase::mFilterSubtype,
    L"FilterSubtype",    kLowPass,      0,    nSubTypes - 1, 1, kSubTypeStrings, nSubTypes  };
-static constexpr EffectParameter Order{ &EffectScienFilter::mOrder,
+static constexpr EffectParameter Order{ &ScienFilterBase::mOrder,
    L"Order",            1,             1,    10,               1  };
-static constexpr EffectParameter Cutoff{ &EffectScienFilter::mCutoff,
+static constexpr EffectParameter Cutoff{ &ScienFilterBase::mCutoff,
    L"Cutoff",           1000.0f,        1.0,  FLT_MAX,          1  };
-static constexpr EffectParameter Passband{ &EffectScienFilter::mRipple,
+static constexpr EffectParameter Passband{ &ScienFilterBase::mRipple,
    L"PassbandRipple",   1.0f,           0.0,  100.0,            1  };
-static constexpr EffectParameter Stopband{ &EffectScienFilter::mStopbandRipple,
+static constexpr EffectParameter Stopband{ &ScienFilterBase::mStopbandRipple,
    L"StopbandRipple",   30.0f,          0.0,  100.0,            1  };
+};
+
+class EffectScienFilter final :
+    public ScienFilterBase,
+    public StatefulEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+   DECLARE_EVENT_TABLE()
+private:
+   bool TransferGraphLimitsFromWindow();
+   void EnableDisableRippleCtl(int FilterType);
+
+   void OnSize(wxSizeEvent& evt);
+   void OnSlider(wxCommandEvent& evt);
+
+   void OnOrder(wxCommandEvent& evt);
+   void OnCutoff(wxCommandEvent& evt);
+   void OnRipple(wxCommandEvent& evt);
+   void OnStopbandRipple(wxCommandEvent& evt);
+   void OnFilterType(wxCommandEvent& evt);
+   void OnFilterSubtype(wxCommandEvent& evt);
+
+   void OnSliderDBMAX(wxCommandEvent& evt);
+   void OnSliderDBMIN(wxCommandEvent& evt);
+
+   wxWeakRef<wxWindow> mUIParent {};
+
+   EffectScienFilterPanel* mPanel;
+   wxSlider* mdBMinSlider;
+   wxSlider* mdBMaxSlider;
+
+   wxStaticText* mRippleCtlP;
+   wxTextCtrl* mRippleCtl;
+   wxStaticText* mRippleCtlU;
+
+   wxTextCtrl* mCutoffCtl;
+
+   wxStaticText* mStopbandRippleCtlP;
+   wxTextCtrl* mStopbandRippleCtl;
+   wxStaticText* mStopbandRippleCtlU;
+
+   wxChoice* mFilterTypeCtl;
+   wxChoice* mFilterSubTypeCtl;
+   wxChoice* mFilterOrderCtl;
+
+   RulerPanel* mdBRuler;
+   RulerPanel* mfreqRuler;
+
+   friend class EffectScienFilterPanel;
 };
 
 class EffectScienFilterPanel final : public wxPanelWrapper

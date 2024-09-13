@@ -84,7 +84,7 @@ enum
    ID_StopbandRipple
 };
 
-const EnumValueSymbol EffectScienFilter::kTypeStrings[nTypes] =
+const EnumValueSymbol ScienFilterBase::kTypeStrings[nTypes] =
 {
    /*i18n-hint: Butterworth is the name of the person after whom the filter type is named.*/
    { XO("Butterworth") },
@@ -94,19 +94,19 @@ const EnumValueSymbol EffectScienFilter::kTypeStrings[nTypes] =
    { XO("Chebyshev Type II") }
 };
 
-const EnumValueSymbol EffectScienFilter::kSubTypeStrings[nSubTypes] =
+const EnumValueSymbol ScienFilterBase::kSubTypeStrings[nSubTypes] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Lowpass") },
    { XO("Highpass") }
 };
 
-const EffectParameterMethods& EffectScienFilter::Parameters() const
+const EffectParameterMethods& ScienFilterBase::Parameters() const
 {
-   static CapturedParameters<EffectScienFilter,
+   static CapturedParameters<ScienFilterBase,
       Type, Subtype, Order, Cutoff, Passband, Stopband
    > parameters{
-      [](EffectScienFilter &, EffectSettings &, EffectScienFilter &e,
+      [](ScienFilterBase &, EffectSettings &, ScienFilterBase &e,
          bool updating){
          if (updating) {
             e.mOrderIndex = e.mOrder - 1;
@@ -119,10 +119,10 @@ const EffectParameterMethods& EffectScienFilter::Parameters() const
 }
 
 //----------------------------------------------------------------------------
-// EffectScienFilter
+// ScienFilterBase
 //----------------------------------------------------------------------------
 
-const ComponentInterfaceSymbol EffectScienFilter::Symbol
+const ComponentInterfaceSymbol ScienFilterBase::Symbol
 { XO("Classic Filters") };
 
 // true argument means don't automatically enable this effect
@@ -144,7 +144,7 @@ BEGIN_EVENT_TABLE(EffectScienFilter, wxEvtHandler)
    EVT_TEXT(ID_StopbandRipple, EffectScienFilter::OnStopbandRipple)
 END_EVENT_TABLE()
 
-EffectScienFilter::EffectScienFilter()
+ScienFilterBase::ScienFilterBase()
 {
    Parameters().Reset(*this);
    SetLinearEffectFlag(true);
@@ -158,24 +158,24 @@ EffectScienFilter::EffectScienFilter()
    mNyquist = 44100.0 / 2.0;  // only used during initialization, updated when effect is used
 }
 
-EffectScienFilter::~EffectScienFilter()
+ScienFilterBase::~ScienFilterBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectScienFilter::GetSymbol() const
+ComponentInterfaceSymbol ScienFilterBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectScienFilter::GetDescription() const
+TranslatableString ScienFilterBase::GetDescription() const
 {
    /* i18n-hint: "infinite impulse response" */
    return XO("Performs IIR filtering that emulates analog filters");
 }
 
-ManualPageID EffectScienFilter::ManualPage() const
+ManualPageID ScienFilterBase::ManualPage() const
 {
    return L"Classic_Filters";
 }
@@ -183,22 +183,22 @@ ManualPageID EffectScienFilter::ManualPage() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectScienFilter::GetType() const
+EffectType ScienFilterBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-unsigned EffectScienFilter::GetAudioInCount() const
+unsigned ScienFilterBase::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectScienFilter::GetAudioOutCount() const
+unsigned ScienFilterBase::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectScienFilter::ProcessInitialize(
+bool ScienFilterBase::ProcessInitialize(
    EffectSettings &, double, ChannelNames chanMap)
 {
    for (int iPair = 0; iPair < (mOrder + 1) / 2; iPair++)
@@ -206,7 +206,7 @@ bool EffectScienFilter::ProcessInitialize(
    return true;
 }
 
-size_t EffectScienFilter::ProcessBlock(EffectSettings &,
+size_t ScienFilterBase::ProcessBlock(EffectSettings &,
    const float *const *inBlock, float *const *outBlock, size_t blockLen)
 {
    const float *ibuf = inBlock[0];
@@ -221,7 +221,7 @@ size_t EffectScienFilter::ProcessBlock(EffectSettings &,
 
 // Effect implementation
 
-bool EffectScienFilter::Init()
+bool ScienFilterBase::Init()
 {
    int selcount = 0;
    double rate = 0.0;
@@ -515,7 +515,7 @@ bool EffectScienFilter::TransferGraphLimitsFromWindow()
    return true;
 }
 
-void EffectScienFilter::CalcFilter()
+void ScienFilterBase::CalcFilter()
 {
    switch (mFilterType)
    {
@@ -531,7 +531,7 @@ void EffectScienFilter::CalcFilter()
    }
 }
 
-float EffectScienFilter::FilterMagnAtFreq(float Freq)
+float ScienFilterBase::FilterMagnAtFreq(float Freq)
 {
    float Magn;
    if (Freq >= mNyquist)
