@@ -33,8 +33,8 @@ AudacityProject& Au3Interaction::projectRef() const
 
 bool Au3Interaction::pasteIntoNewTrack()
 {
-    auto &project = projectRef();
-    auto &tracks = ::TrackList::Get( project );
+    auto& project = projectRef();
+    auto& tracks = ::TrackList::Get(project);
     auto prj = globalContext()->currentTrackeditProject();
     secs_t selectedStartTime = globalContext()->playbackState()->playbackPosition();
 
@@ -55,10 +55,10 @@ bool Au3Interaction::pasteIntoNewTrack()
     return true;
 }
 
-::Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<::Track> track, ::TrackList &list, secs_t begin)
+::Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<::Track> track, ::TrackList& list, secs_t begin)
 {
-    auto &trackFactory = WaveTrackFactory::Get(projectRef());
-    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+    auto& trackFactory = WaveTrackFactory::Get(projectRef());
+    auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
 
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(DomConverter::trackId(track->GetId())));
     IF_ASSERT_FAILED(waveTrack) {
@@ -70,7 +70,8 @@ bool Au3Interaction::pasteIntoNewTrack()
     return pFirstTrack->SharedPointer();
 }
 
-std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksIds(const std::vector<Track> &tracks, TrackId destinationTrackId, size_t tracksNum) const
+std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks,
+                                                                                  TrackId destinationTrackId, size_t tracksNum) const
 {
     std::vector<TrackId> tracksIds;
     bool addingEnabled = false;
@@ -90,7 +91,7 @@ std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksId
     return tracksIds;
 }
 
-bool Au3Interaction::canPasteClips(const std::vector<TrackId> &dstTracksIds, secs_t begin) const
+bool Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds, secs_t begin) const
 {
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(dstTracksIds[i]));
@@ -501,7 +502,7 @@ bool Au3Interaction::mergeSelectedOnTracks(const std::vector<TrackId> tracksIds,
 {
     secs_t duration = end - begin;
 
-    for (const auto &trackId : tracksIds ) {
+    for (const auto& trackId : tracksIds) {
         bool ok = mergeSelectedOnTrack(trackId, begin, end);
         if (!ok) {
             return false;
@@ -513,7 +514,7 @@ bool Au3Interaction::mergeSelectedOnTracks(const std::vector<TrackId> tracksIds,
     return true;
 }
 
-bool Au3Interaction::trimClipLeft(const ClipKey &clipKey, secs_t deltaSec)
+bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -533,7 +534,7 @@ bool Au3Interaction::trimClipLeft(const ClipKey &clipKey, secs_t deltaSec)
     return true;
 }
 
-bool Au3Interaction::trimClipRight(const ClipKey &clipKey, secs_t deltaSec)
+bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -555,18 +556,16 @@ bool Au3Interaction::trimClipRight(const ClipKey &clipKey, secs_t deltaSec)
 
 void Au3Interaction::newMonoTrack()
 {
-    auto &project = projectRef();
-    auto &tracks = ::TrackList::Get(project);
-    auto &trackFactory = ::WaveTrackFactory::Get(project);
+    auto& project = projectRef();
+    auto& tracks = ::TrackList::Get(project);
+    auto& trackFactory = ::WaveTrackFactory::Get(project);
 
     sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();
     auto rate = ::ProjectRate::Get(project).GetRate();
 
     auto track = trackFactory.Create(defaultFormat, rate);
     track->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
-    //! TODO AU4: find out why have to set tempo for the track right there
-    //! should be set automatically to project tempo value
-    DoProjectTempoChange(*track, 120);
+
     tracks.Add(track);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -577,19 +576,16 @@ void Au3Interaction::newMonoTrack()
 
 void Au3Interaction::newStereoTrack()
 {
-    auto &project = projectRef();
-    auto &tracks = ::TrackList::Get(project);
-    auto &trackFactory = ::WaveTrackFactory::Get(project);
+    auto& project = projectRef();
+    auto& tracks = ::TrackList::Get(project);
+    auto& trackFactory = ::WaveTrackFactory::Get(project);
 
     sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();
     auto rate = ::ProjectRate::Get(project).GetRate();
 
     tracks.Add(trackFactory.Create(2, defaultFormat, rate));
-    auto &newTrack = **tracks.rbegin();
+    auto& newTrack = **tracks.rbegin();
     newTrack.SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
-    //! TODO AU4: find out why have to set tempo for the track right there
-    //! should be set automatically to project tempo value
-    DoProjectTempoChange(newTrack, 120);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     auto track = *tracks.rbegin();
