@@ -78,8 +78,6 @@ bool Au3Project::load(const muse::io::path_t& filePath)
     TrackList& tracks = TrackList::Get(m_data->projectRef());
     for (auto pTrack : tracks) {
         pTrack->LinkConsistencyFix();
-        //! TODO AU4: adjust to actual project tempo
-        DoProjectTempoChange(*pTrack, 120);
     }
 
     return true;
