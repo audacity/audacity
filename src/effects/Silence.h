@@ -18,13 +18,13 @@
 
 class NumericTextCtrl;
 
-class EffectSilence final : public Generator, public StatefulEffectUIServices
+class SilenceBase : public Generator
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectSilence();
-   virtual ~EffectSilence();
+   SilenceBase();
+   virtual ~SilenceBase();
 
    // ComponentInterface implementation
 
@@ -36,18 +36,20 @@ public:
 
    EffectType GetType() const override;
 
-   // Effect implementation
+protected:
+   // Generator implementation
 
+   bool GenerateTrack(const EffectSettings &settings, WaveTrack &tmp) override;
+};
+
+class EffectSilence final : public SilenceBase, public StatefulEffectUIServices
+{
+public:
    std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
-
-protected:
-   // Generator implementation
-
-   bool GenerateTrack(const EffectSettings &settings, WaveTrack &tmp) override;
 
 private:
    NumericTextCtrl *mDurationT;

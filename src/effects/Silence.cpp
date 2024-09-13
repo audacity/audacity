@@ -20,34 +20,34 @@
 #include "WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 
-const ComponentInterfaceSymbol EffectSilence::Symbol
+const ComponentInterfaceSymbol SilenceBase::Symbol
 /* i18n-hint: noun */
 { XC("Silence", "generator") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectSilence > reg; }
 
-EffectSilence::EffectSilence()
+SilenceBase::SilenceBase()
 {
    SetLinearEffectFlag(true);
 }
 
-EffectSilence::~EffectSilence()
+SilenceBase::~SilenceBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectSilence::GetSymbol() const
+ComponentInterfaceSymbol SilenceBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectSilence::GetDescription() const
+TranslatableString SilenceBase::GetDescription() const
 {
    return XO("Creates audio of zero amplitude");
 }
 
-ManualPageID EffectSilence::ManualPage() const
+ManualPageID SilenceBase::ManualPage() const
 {
    return L"Silence";
 }
@@ -55,7 +55,7 @@ ManualPageID EffectSilence::ManualPage() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectSilence::GetType() const
+EffectType SilenceBase::GetType() const
 {
    return EffectTypeGenerate;
 }
@@ -105,7 +105,7 @@ bool EffectSilence::TransferDataFromWindow(EffectSettings &settings)
    return true;
 }
 
-bool EffectSilence::GenerateTrack(
+bool SilenceBase::GenerateTrack(
    const EffectSettings &settings, WaveTrack &tmp)
 {
    tmp.InsertSilence(0.0, settings.extra.GetDuration());
