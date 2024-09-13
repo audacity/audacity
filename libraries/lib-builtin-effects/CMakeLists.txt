@@ -17,6 +17,8 @@ set( SOURCES
    CompressorInstance.h
    ContrastBase.cpp
    ContrastBase.h
+   DtmfBase.cpp
+   DtmfBase.h
    EchoBase.cpp
    EchoBase.h
    Fade.cpp
