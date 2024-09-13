@@ -51,16 +51,16 @@
 #define WCAG2_PASS 20.0    // dB difference required to pass WCAG2 test.
 
 
-bool ContrastDialog::GetDB(float &dB)
+bool ContrastBase::GetDB(float &dB)
 {
    float rms = float(0.0);
 
    // For stereo tracks: sqrt((mean(L)+mean(R))/2)
    double meanSq = 0.0;
 
-   auto p = FindProjectFromWindow( this );
+   auto& p = GetProject();
    auto range =
-      TrackList::Get(*p).Selected<const WaveTrack>();
+      TrackList::Get(p).Selected<const WaveTrack>();
    auto numberSelectedTracks = range.size();
    if (numberSelectedTracks > 1) {
       AudacityMessageDialog m(
@@ -134,10 +134,10 @@ bool ContrastDialog::GetDB(float &dB)
    return true;
 }
 
-void ContrastDialog::SetStartAndEndTime()
+void ContrastBase::SetStartAndEndTime()
 {
-   auto p = FindProjectFromWindow( this );
-   auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
+   auto& p = GetProject();
+   auto &selectedRegion = ViewInfo::Get( p ).selectedRegion;
    mT0 = selectedRegion.t0();
    mT1 = selectedRegion.t1();
 }
@@ -648,6 +648,11 @@ void ContrastDialog::OnReset(wxCommandEvent & /*event*/)
    mBackgroundRMSText->ChangeValue(wxT(""));
    mPassFailText->ChangeValue(wxT(""));
    mDiffText->ChangeValue(wxT(""));
+}
+
+AudacityProject& ContrastDialog::GetProject()
+{
+   return *FindProjectFromWindow(this);
 }
 
 // Remaining code hooks this add-on into the application

@@ -24,7 +24,36 @@ class WaveTrack;
 
 // Declare window functions
 
-class ContrastDialog final : public wxDialogWrapper
+class ContrastBase
+{
+public:
+   double mT0;
+   double mT1;
+   double mProjectRate;
+   double mStartTimeF;
+   double mEndTimeF;
+   double mStartTimeB;
+   double mEndTimeB;
+
+protected:
+   float foregrounddB;
+   float backgrounddB;
+   bool mForegroundIsDefined;
+   bool mBackgroundIsDefined;
+   double mT0orig;
+   double mT1orig;
+
+   bool mDoBackground;
+   bool GetDB(float& dB);
+   void SetStartAndEndTime();
+
+   double length;
+
+private:
+   virtual AudacityProject& GetProject() = 0;
+};
+
+class ContrastDialog final : public ContrastBase, public wxDialogWrapper
 {
 public:
    // constructors and destructors
@@ -43,14 +72,6 @@ public:
    NumericTextCtrl *mBackgroundStartT;
    NumericTextCtrl *mBackgroundEndT;
 
-   double mT0;
-   double mT1;
-   double mProjectRate;
-   double mStartTimeF;
-   double mEndTimeF;
-   double mStartTimeB;
-   double mEndTimeB;
-
 private:
    // handlers
    void OnChar(wxKeyEvent &event);
@@ -67,18 +88,7 @@ private:
    wxTextCtrl *mPassFailText;
    wxTextCtrl *mDiffText;
 
-   float foregrounddB;
-   float backgrounddB;
-   bool  mForegroundIsDefined;
-   bool  mBackgroundIsDefined;
-   double mT0orig;
-   double mT1orig;
-
-   bool mDoBackground;
-   bool GetDB(float & dB);
-   void SetStartAndEndTime();
-
-   double length;
+   AudacityProject& GetProject() override;
 
    DECLARE_EVENT_TABLE()
 
