@@ -51,6 +51,8 @@ set( SOURCES
    SBSMSBase.h
    ScienFilterBase.cpp
    ScienFilterBase.h
+   SilenceBase.cpp
+   SilenceBase.h
    SoundTouchBase.cpp
    SoundTouchBase.h
    StereoToMono.cpp
