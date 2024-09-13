@@ -435,8 +435,6 @@ set( SOURCES
       effects/ToneGen.h
       effects/TruncSilence.cpp
       effects/TruncSilence.h
-      effects/TwoPassSimpleMono.cpp
-      effects/TwoPassSimpleMono.h
       effects/Wahwah.cpp
       effects/Wahwah.h
 

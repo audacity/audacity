@@ -21,6 +21,8 @@ set( SOURCES
    Fade.h
    Invert.cpp
    Invert.h
+   LegacyCompressorBase.cpp
+   LegacyCompressorBase.h
    LoudnessBase.cpp
    LoudnessBase.h
    NormalizeBase.cpp
@@ -43,6 +45,8 @@ set( SOURCES
    StereoToMono.h
    ToneGenBase.cpp
    ToneGenBase.h
+   TwoPassSimpleMono.cpp
+   TwoPassSimpleMono.h
 )
 set( LIBRARIES
    lib-dynamic-range-processor-interface
