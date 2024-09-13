@@ -3,56 +3,42 @@
 */
 #include "amplifyeffect.h"
 
-#include "libraries/lib-utility/MemoryX.h"
-
-#include "global/types/number.h"
-
 #include "log.h"
 
 using namespace au::effects;
-
-static double ampByRatio(double v)
-{
-    return LINEAR_TO_DB(v);
-}
-
-static double ampToRatio(double v)
-{
-    return DB_TO_LINEAR(v);
-}
 
 AmplifyEffect::AmplifyEffect()
 {
 }
 
-double AmplifyEffect::peak() const
+float AmplifyEffect::peak() const
 {
-    return mPeak;
+    return static_cast<float>(mPeak);
 }
 
-double AmplifyEffect::defaultRatio() const
+ratio_t AmplifyEffect::defaultRatio() const
 {
     return 1.0 / mPeak;
 }
 
-double AmplifyEffect::defaultAmp() const
+db_t AmplifyEffect::defaultAmp() const
 {
-    return ampByRatio(defaultRatio());
+    return muse::linear_to_db(defaultRatio());
 }
 
-double AmplifyEffect::ratio() const
+ratio_t AmplifyEffect::ratio() const
 {
     return mRatio;
 }
 
-Param<double> AmplifyEffect::amp() const
+Param<db_t> AmplifyEffect::amp() const
 {
-    return make_param<double>(ampByRatio(mRatio), ampByRatio(Ratio.min), ampByRatio(Ratio.max));
+    return make_param<db_t>(muse::linear_to_db(mRatio), muse::linear_to_db(Ratio.min), muse::linear_to_db(Ratio.max));
 }
 
-void AmplifyEffect::setAmp(double v)
+void AmplifyEffect::setAmp(db_t v)
 {
-    mRatio = std::clamp<double>(ampToRatio(v), Ratio.min, Ratio.max);
+    mRatio = std::clamp<ratio_t>(muse::db_to_linear(v), Ratio.min, Ratio.max);
 }
 
 bool AmplifyEffect::canClip() const
@@ -75,8 +61,8 @@ bool AmplifyEffect::isApplyAllowed() const
         return false;
     }
 
-    double defRatio = defaultRatio();
-    if (mRatio < defRatio || muse::is_equal(mRatio, defRatio)) {
+    ratio_t defRatio = defaultRatio();
+    if (mRatio < defRatio || muse::is_equal(mRatio, defRatio.to_double())) {
         return true;
     }
 

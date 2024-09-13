@@ -3,8 +3,6 @@
 */
 #include "amplifyviewmodel.h"
 
-#include "global/types/number.h"
-
 #include "amplifyeffect.h"
 
 #include "log.h"
@@ -27,9 +25,9 @@ void AmplifyViewModel::init()
         return;
     }
 
-    const double initAmp = ae->defaultAmp();
+    const db_t initAmp = ae->defaultAmp();
     ae->setAmp(initAmp);
-    m_amp.val = std::numeric_limits<double>::lowest();
+    m_amp.val = std::numeric_limits<float>::lowest();
 
     m_canClip = ae->canClip();
     emit canClipChanged();
@@ -44,13 +42,13 @@ void AmplifyViewModel::update()
         return;
     }
 
-    Param<double> amp = ae->amp();
+    Param<db_t> amp = ae->amp();
     if (!muse::is_equal(m_amp.val, amp.val)) {
         m_amp = amp;
         emit ampChanged();
     }
 
-    double newPeak = LINEAR_TO_DB(ae->ratio() * ae->peak());
+    db_t newPeak = muse::linear_to_db(ae->ratio() * ae->peak());
     if (!muse::is_equal(m_newPeak, newPeak)) {
         m_newPeak = newPeak;
         emit newPeakChanged();
@@ -60,13 +58,14 @@ void AmplifyViewModel::update()
     setIsApplyAllowed(isApplyAllowed);
 }
 
-double AmplifyViewModel::amp() const
+float AmplifyViewModel::amp() const
 {
     return m_amp.val;
 }
 
-void AmplifyViewModel::setAmp(double newAmp)
+void AmplifyViewModel::setAmp(float newAmp_)
 {
+    db_t newAmp = newAmp_;
     if (muse::is_equal(m_amp.val, newAmp)) {
         return;
     }
@@ -81,23 +80,24 @@ void AmplifyViewModel::setAmp(double newAmp)
     update();
 }
 
-double AmplifyViewModel::ampMin() const
+float AmplifyViewModel::ampMin() const
 {
     return m_amp.min;
 }
 
-double AmplifyViewModel::ampMax() const
+float AmplifyViewModel::ampMax() const
 {
     return m_amp.max;
 }
 
-double AmplifyViewModel::newPeak() const
+float AmplifyViewModel::newPeak() const
 {
     return m_newPeak;
 }
 
-void AmplifyViewModel::setNewPeak(double newNewPeak)
+void AmplifyViewModel::setNewPeak(float newNewPeak_)
 {
+    db_t newNewPeak = newNewPeak_;
     if (muse::is_equal(m_newPeak, newNewPeak)) {
         return;
     }
@@ -107,31 +107,31 @@ void AmplifyViewModel::setNewPeak(double newNewPeak)
         return;
     }
 
-    double ratio = DB_TO_LINEAR(newNewPeak) / ae->peak();
-    double amp = LINEAR_TO_DB(ratio);
+    ratio_t ratio = muse::db_to_linear(newNewPeak) / ae->peak();
+    db_t amp = muse::linear_to_db(ratio);
     ae->setAmp(amp);
 
     update();
 }
 
-double AmplifyViewModel::newPeakMin() const
+float AmplifyViewModel::newPeakMin() const
 {
     AmplifyEffect* ae = effect();
     IF_ASSERT_FAILED(ae) {
         return 0.0;
     }
 
-    return m_amp.min + LINEAR_TO_DB(ae->peak());
+    return m_amp.min + muse::linear_to_db(ae->peak());
 }
 
-double AmplifyViewModel::newPeakMax() const
+float AmplifyViewModel::newPeakMax() const
 {
     AmplifyEffect* ae = effect();
     IF_ASSERT_FAILED(ae) {
         return 0.0;
     }
 
-    return m_amp.max + LINEAR_TO_DB(ae->peak());
+    return m_amp.max + muse::linear_to_db(ae->peak());
 }
 
 bool AmplifyViewModel::canClip() const
