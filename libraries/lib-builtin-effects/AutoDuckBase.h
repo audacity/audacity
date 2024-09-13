@@ -11,6 +11,7 @@
 
 #include "SettingsVisitor.h"
 #include "StatefulEffect.h"
+#include <cfloat>
 
 class WaveChannel;
 
