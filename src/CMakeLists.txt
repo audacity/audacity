@@ -315,8 +315,6 @@ set( SOURCES
 
       effects/Amplify.cpp
       effects/Amplify.h
-      effects/AnalysisTracks.cpp
-      effects/AnalysisTracks.h
       effects/AutoDuck.cpp
       effects/AutoDuck.h
       effects/BasicEffectUIServices.cpp
@@ -1303,7 +1301,6 @@ set( AUDACITY_LIBRARIES
    lib-stretching-sequence-interface
    lib-import-export-interface
    lib-export-ui-interface
-   lib-note-track-interface
    lib-wave-track-paint-interface
    lib-music-information-retrieval-interface
    lib-preference-pages-interface

@@ -3,6 +3,8 @@ Library for label track.
 ]]
 
 set( SOURCES
+   AnalysisTracks.cpp
+   AnalysisTracks.h
    LabelTrack.cpp
    LabelTrack.h
    LabelTrackEditing.cpp

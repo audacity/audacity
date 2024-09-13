@@ -12,7 +12,7 @@
 **********************************************************************/
 #if defined(USE_VAMP)
 #include "VampEffect.h"
-#include "../AnalysisTracks.h"
+#include "AnalysisTracks.h"
 #include "../EffectEditor.h"
 
 #include <vamp-hostsdk/Plugin.h>
