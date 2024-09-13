@@ -14,8 +14,6 @@ Rectangle {
     property bool clipHovered: false
     color: ui.theme.backgroundPrimaryColor
 
-    clip: true
-
     TracksListClipsModel {
         id: tracksModel
     }
@@ -236,7 +234,7 @@ Rectangle {
                 id: tracksClipsView
 
                 anchors.fill: parent
-                clip: false
+                clip: true
 
                 property real visibleContentHeight: tracksClipsView.contentHeight - tracksClipsView.contentY
 
