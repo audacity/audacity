@@ -14,10 +14,11 @@
 #define __AUDACITY_EFFECT_SILENCE__
 
 #include "Generator.h"
+#include "StatefulEffectUIServices.h"
 
 class NumericTextCtrl;
 
-class EffectSilence final : public Generator
+class EffectSilence final : public Generator, public StatefulEffectUIServices
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

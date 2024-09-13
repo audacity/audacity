@@ -16,15 +16,12 @@
 #define __AUDACITY_GENERATOR__
 
 #include "StatefulEffect.h"
-#include "StatefulEffectUIServices.h"
 #include "SampleCount.h"
 
 class TrackList;
 
 // Base class for Generators (effects which fill a given duration)
-class Generator /* not final */ :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class Generator /* not final */ : public StatefulEffect
 {
 public:
    Generator() { }
