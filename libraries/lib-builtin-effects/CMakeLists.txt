@@ -21,6 +21,8 @@ set( SOURCES
    EchoBase.h
    Fade.cpp
    Fade.h
+   FindClippingBase.cpp
+   FindClippingBase.h
    Invert.cpp
    Invert.h
    LegacyCompressorBase.cpp
