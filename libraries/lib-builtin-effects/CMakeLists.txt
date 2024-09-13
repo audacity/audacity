@@ -33,6 +33,8 @@ set( SOURCES
    NormalizeBase.h
    PaulstretchBase.cpp
    PaulstretchBase.h
+   PlotSpectrumBase.cpp
+   PlotSpectrumBase.h
    Repair.cpp
    Repair.h
    ReverbBase.cpp

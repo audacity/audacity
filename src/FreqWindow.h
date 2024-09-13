@@ -11,12 +11,10 @@
 #ifndef __AUDACITY_FREQ_WINDOW__
 #define __AUDACITY_FREQ_WINDOW__
 
+#include "PlotSpectrumBase.h"
 #include <vector>
 #include <wx/font.h> // member variable
 #include <wx/statusbr.h> // to inherit
-#include "Prefs.h"
-#include "SampleFormat.h"
-#include "SpectrumAnalyst.h"
 #include "wxPanelWrapper.h" // to inherit
 
 class wxMemoryDC;
@@ -51,29 +49,6 @@ private:
     FrequencyPlotDialog *freqWindow;
 
     DECLARE_EVENT_TABLE()
-};
-
-class PlotSpectrumBase
-{
-public:
-   PlotSpectrumBase(AudacityProject& project);
-
-protected:
-   bool GetAudio();
-
-   AudacityProject *mProject;
-   std::unique_ptr<SpectrumAnalyst> mAnalyst;
-
-   bool mDrawGrid;
-   int mSize;
-   SpectrumAnalyst::Algorithm mAlg;
-   int mFunc;
-   int mAxis;
-   int dBRange;
-   double mRate;
-   size_t mDataLen;
-   Floats mData;
-   size_t mWindowSize;
 };
 
 class FrequencyPlotDialog final :
