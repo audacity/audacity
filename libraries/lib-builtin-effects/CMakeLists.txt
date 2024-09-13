@@ -15,6 +15,8 @@ set( SOURCES
    ChangeSpeedBase.h
    CompressorInstance.cpp
    CompressorInstance.h
+   ContrastBase.cpp
+   ContrastBase.h
    EchoBase.cpp
    EchoBase.h
    Fade.cpp
