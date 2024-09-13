@@ -12,6 +12,9 @@
 \brief An TimeScaleBase does high quality sliding time scaling/pitch shifting
 
 *//*******************************************************************/
+
+#if USE_SBSMS
+
 #include "TimeScaleBase.h"
 #include "MemoryX.h"
 #include <cmath>
@@ -119,17 +122,19 @@ bool TimeScaleBase::Process(EffectInstance& instance, EffectSettings& settings)
    return SBSMSBase::Process(instance, settings);
 }
 
-inline double TimeScaleBase::PercentChangeToRatio(double percentChange)
+double TimeScaleBase::PercentChangeToRatio(double percentChange)
 {
    return 1.0 + percentChange / 100.0;
 }
 
-inline double TimeScaleBase::HalfStepsToPercentChange(double halfSteps)
+double TimeScaleBase::HalfStepsToPercentChange(double halfSteps)
 {
    return 100.0 * (pow(2.0, halfSteps / 12.0) - 1.0);
 }
 
-inline double TimeScaleBase::PercentChangeToHalfSteps(double percentChange)
+double TimeScaleBase::PercentChangeToHalfSteps(double percentChange)
 {
    return 12.0 * log2(PercentChangeToRatio(percentChange));
 }
+
+#endif // USE_SBSMS
