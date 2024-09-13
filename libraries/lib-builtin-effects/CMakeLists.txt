@@ -35,6 +35,8 @@ set( SOURCES
    Reverse.h
    SBSMSBase.cpp
    SBSMSBase.h
+   ScienFilterBase.cpp
+   ScienFilterBase.h
    SoundTouchBase.cpp
    SoundTouchBase.h
    StereoToMono.cpp
