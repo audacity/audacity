@@ -33,55 +33,55 @@
 #include "LabelTrack.h"
 #include "WaveTrack.h"
 
-const EffectParameterMethods& EffectFindClipping::Parameters() const
+const EffectParameterMethods& FindClippingBase::Parameters() const
 {
-   static CapturedParameters<EffectFindClipping,
+   static CapturedParameters<FindClippingBase,
       Start, Stop
    > parameters;
    return parameters;
 }
 
-const ComponentInterfaceSymbol EffectFindClipping::Symbol
+const ComponentInterfaceSymbol FindClippingBase::Symbol
 { XO("Find Clipping") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectFindClipping > reg; }
 
-EffectFindClipping::EffectFindClipping()
+FindClippingBase::FindClippingBase()
 {
    Parameters().Reset(*this);
 }
 
-EffectFindClipping::~EffectFindClipping()
+FindClippingBase::~FindClippingBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectFindClipping::GetSymbol() const
+ComponentInterfaceSymbol FindClippingBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectFindClipping::GetDescription() const
+TranslatableString FindClippingBase::GetDescription() const
 {
    return XO("Creates labels where clipping is detected");
 }
 
-ManualPageID EffectFindClipping::ManualPage() const
+ManualPageID FindClippingBase::ManualPage() const
 {
    return L"Find_Clipping";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectFindClipping::GetType() const
+EffectType FindClippingBase::GetType() const
 {
    return EffectTypeAnalyze;
 }
 
 // Effect implementation
 
-bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
+bool FindClippingBase::Process(EffectInstance &, EffectSettings &)
 {
    std::shared_ptr<AddedAnalysisTrack> addedTrack;
    std::optional<ModifiedAnalysisTrack> modifiedTrack;
@@ -126,7 +126,7 @@ bool EffectFindClipping::Process(EffectInstance &, EffectSettings &)
    return true;
 }
 
-bool EffectFindClipping::ProcessOne(LabelTrack &lt,
+bool FindClippingBase::ProcessOne(LabelTrack &lt,
    int count, const WaveChannel &wt, sampleCount start, sampleCount len)
 {
    bool bGoodResult = true;
