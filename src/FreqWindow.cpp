@@ -183,31 +183,18 @@ BEGIN_EVENT_TABLE(FrequencyPlotDialog, wxDialogWrapper)
    EVT_COMMAND(wxID_ANY, EVT_FREQWINDOW_RECALC, FrequencyPlotDialog::OnRecalc)
 END_EVENT_TABLE()
 
-FrequencyPlotDialog::FrequencyPlotDialog(wxWindow * parent, wxWindowID id,
-                           AudacityProject &project,
-                           const TranslatableString & title,
-                           const wxPoint & pos)
-:  wxDialogWrapper(parent, id, title, pos, wxDefaultSize,
-            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX),
-   mProject{ &project }
-,  mAnalyst(std::make_unique<SpectrumAnalyst>())
+FrequencyPlotDialog::FrequencyPlotDialog(
+   wxWindow* parent, wxWindowID id, AudacityProject& project,
+   const TranslatableString& title, const wxPoint& pos)
+    : PlotSpectrumBase { project }
+    , wxDialogWrapper(
+         parent, id, title, pos, wxDefaultSize,
+         wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX)
 {
    SetName();
 
    mMouseX = 0;
    mMouseY = 0;
-   mRate = 0;
-   mDataLen = 0;
-
-   gPrefs->Read(wxT("/FrequencyPlotDialog/DrawGrid"), &mDrawGrid, true);
-   gPrefs->Read(wxT("/FrequencyPlotDialog/SizeChoice"), &mSize, 3);
-
-   int alg;
-   gPrefs->Read(wxT("/FrequencyPlotDialog/AlgChoice"), &alg, 0);
-   mAlg = static_cast<SpectrumAnalyst::Algorithm>(alg);
-
-   gPrefs->Read(wxT("/FrequencyPlotDialog/FuncChoice"), &mFunc, 3);
-   gPrefs->Read(wxT("/FrequencyPlotDialog/AxisChoice"), &mAxis, 1);
 
    Populate();
 }
@@ -581,7 +568,7 @@ bool FrequencyPlotDialog::Show(bool show)
    return res;
 }
 
-bool FrequencyPlotDialog::GetAudio()
+bool PlotSpectrumBase::GetAudio()
 {
    mData.reset();
    mDataLen = 0;
@@ -1260,3 +1247,20 @@ AttachedItem sAttachment{
 
 }
 
+PlotSpectrumBase::PlotSpectrumBase(AudacityProject& project)
+    : mProject { &project }
+    , mAnalyst(std::make_unique<SpectrumAnalyst>())
+{
+   mRate = 0;
+   mDataLen = 0;
+
+   gPrefs->Read(wxT("/FrequencyPlotDialog/DrawGrid"), &mDrawGrid, true);
+   gPrefs->Read(wxT("/FrequencyPlotDialog/SizeChoice"), &mSize, 3);
+
+   int alg;
+   gPrefs->Read(wxT("/FrequencyPlotDialog/AlgChoice"), &alg, 0);
+   mAlg = static_cast<SpectrumAnalyst::Algorithm>(alg);
+
+   gPrefs->Read(wxT("/FrequencyPlotDialog/FuncChoice"), &mFunc, 3);
+   gPrefs->Read(wxT("/FrequencyPlotDialog/AxisChoice"), &mAxis, 1);
+}
