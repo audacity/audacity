@@ -34,9 +34,9 @@
 
 #include "WaveTrack.h"
 
-const EffectParameterMethods& EffectPaulstretch::Parameters() const
+const EffectParameterMethods& PaulstretchBase::Parameters() const
 {
-   static CapturedParameters<EffectPaulstretch,
+   static CapturedParameters<PaulstretchBase,
       Amount, Time
    > parameters;
    return parameters;
@@ -82,10 +82,10 @@ private:
 };
 
 //
-// EffectPaulstretch
+// PaulstretchBase
 //
 
-const ComponentInterfaceSymbol EffectPaulstretch::Symbol
+const ComponentInterfaceSymbol PaulstretchBase::Symbol
 { XO("Paulstretch") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectPaulstretch > reg; }
@@ -94,44 +94,44 @@ BEGIN_EVENT_TABLE(EffectPaulstretch, wxEvtHandler)
     EVT_TEXT(wxID_ANY, EffectPaulstretch::OnText)
 END_EVENT_TABLE()
 
-EffectPaulstretch::EffectPaulstretch()
+PaulstretchBase::PaulstretchBase()
 {
    Parameters().Reset(*this);
 
    SetLinearEffectFlag(true);
 }
 
-EffectPaulstretch::~EffectPaulstretch()
+PaulstretchBase::~PaulstretchBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectPaulstretch::GetSymbol() const
+ComponentInterfaceSymbol PaulstretchBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectPaulstretch::GetDescription() const
+TranslatableString PaulstretchBase::GetDescription() const
 {
    return XO("Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
-ManualPageID EffectPaulstretch::ManualPage() const
+ManualPageID PaulstretchBase::ManualPage() const
 {
    return L"Paulstretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectPaulstretch::GetType() const
+EffectType PaulstretchBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
 // Effect implementation
 
-double EffectPaulstretch::CalcPreviewInputLength(
+double PaulstretchBase::CalcPreviewInputLength(
    const EffectSettings &, double previewLength) const
 {
    // FIXME: Preview is currently at the project rate, but should really be
@@ -145,7 +145,7 @@ double EffectPaulstretch::CalcPreviewInputLength(
 }
 
 
-bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
+bool PaulstretchBase::Process(EffectInstance &, EffectSettings &)
 {
    // Pass true because sync lock adjustment is needed
    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
@@ -248,7 +248,7 @@ void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
       mUIParent, mUIParent->TransferDataFromWindow());
 }
 
-size_t EffectPaulstretch::GetBufferSize(double rate) const
+size_t PaulstretchBase::GetBufferSize(double rate) const
 {
    // Audacity's fft requires a power of 2
    float tmp = rate * mTime_resolution / 2.0;
@@ -266,7 +266,7 @@ size_t EffectPaulstretch::GetBufferSize(double rate) const
    return std::max<size_t>(stmp, 128);
 }
 
-bool EffectPaulstretch::ProcessOne(const WaveChannel &track,
+bool PaulstretchBase::ProcessOne(const WaveChannel &track,
    WaveChannel &outputTrack, double t0, double t1, int count)
 {
    const auto badAllocMessage =

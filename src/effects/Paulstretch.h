@@ -19,17 +19,15 @@
 class ShuttleGui;
 class WaveChannel;
 
-class EffectPaulstretch final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class PaulstretchBase : public StatefulEffect
 {
 public:
-   static inline EffectPaulstretch *
-   FetchParameters(EffectPaulstretch &e, EffectSettings &) { return &e; }
+   static inline PaulstretchBase *
+   FetchParameters(PaulstretchBase &e, EffectSettings &) { return &e; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectPaulstretch();
-   virtual ~EffectPaulstretch();
+   PaulstretchBase();
+   virtual ~PaulstretchBase();
 
    // ComponentInterface implementation
 
@@ -46,33 +44,41 @@ public:
    double CalcPreviewInputLength(
       const EffectSettings &settings, double previewLength) const override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
-private:
-   // EffectPaulstretch implementation
+protected:
+   // PaulstretchBase implementation
 
-   void OnText(wxCommandEvent & evt);
    size_t GetBufferSize(double rate) const;
 
    bool ProcessOne(const WaveChannel &track, WaveChannel &outputTrack,
       double t0, double t1, int count);
 
-   wxWeakRef<wxWindow> mUIParent;
-
    float mAmount;
    float mTime_resolution;  //seconds
 
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Amount{ &EffectPaulstretch::mAmount,
+static constexpr EffectParameter Amount{ &PaulstretchBase::mAmount,
    L"Stretch Factor",   10.0f,    1.0,     FLT_MAX, 1   };
-static constexpr EffectParameter Time{ &EffectPaulstretch::mTime_resolution,
+static constexpr EffectParameter Time{ &PaulstretchBase::mTime_resolution,
    L"Time Resolution",  0.25f,   0.00099f,  FLT_MAX, 1   };
+};
+
+class EffectPaulstretch final :
+    public PaulstretchBase,
+    public StatefulEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+   DECLARE_EVENT_TABLE()
+private:
+   wxWeakRef<wxWindow> mUIParent;
+   void OnText(wxCommandEvent & evt);
 };
 
 #endif
