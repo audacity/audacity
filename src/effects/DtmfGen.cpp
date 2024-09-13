@@ -33,12 +33,12 @@ namespace {
 wxString AllSymbols();
 }
 
-const EffectParameterMethods& EffectDtmf::Parameters() const
+const EffectParameterMethods& DtmfBase::Parameters() const
 {
-   static CapturedParameters<EffectDtmf,
+   static CapturedParameters<DtmfBase,
       Sequence, DutyCycle, Amplitude
    > parameters{
-      [](EffectDtmf &, EffectSettings &es, DtmfSettings &s, bool updating){
+      [](DtmfBase &, EffectSettings &es, DtmfSettings &s, bool updating){
          if (updating) {
             if (s.dtmfSequence.find_first_not_of(AllSymbols())
                 != wxString::npos)
@@ -79,86 +79,47 @@ wxString AllSymbols()
 }
 
 //
-// EffectDtmf
+// DtmfBase
 //
 
-const ComponentInterfaceSymbol EffectDtmf::Symbol
+const ComponentInterfaceSymbol DtmfBase::Symbol
 { XO("DTMF Tones") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectDtmf > reg; }
 
-EffectDtmf::EffectDtmf()
+DtmfBase::DtmfBase()
 {
 }
 
-EffectDtmf::~EffectDtmf()
+DtmfBase::~DtmfBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectDtmf::GetSymbol() const
+ComponentInterfaceSymbol DtmfBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectDtmf::GetDescription() const
+TranslatableString DtmfBase::GetDescription() const
 {
    return XO("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
 }
 
-ManualPageID EffectDtmf::ManualPage() const
+ManualPageID DtmfBase::ManualPage() const
 {
    return L"DTMF_Tones";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectDtmf::GetType() const
+EffectType DtmfBase::GetType() const
 {
    return EffectTypeGenerate;
 }
 
-//! Temporary state of the computation
-struct EffectDtmf::Instance
-   : PerTrackEffect::Instance
-   , EffectInstanceWithBlockSize
-{
-   Instance(const PerTrackEffect &effect, double t0)
-      : PerTrackEffect::Instance{ effect }
-      , mT0{ t0 }
-   {}
-
-   bool ProcessInitialize(EffectSettings &settings, double sampleRate,
-      ChannelNames chanMap) override;
-   size_t ProcessBlock(EffectSettings &settings,
-      const float *const *inBlock, float *const *outBlock, size_t blockLen)
-   override;
-
-   unsigned GetAudioInCount() const override
-   {
-      return 0;
-   }
-
-   unsigned GetAudioOutCount() const override
-   {
-      return 1;
-   }
-
-   const double mT0;
-   double mSampleRate{};
-
-   sampleCount numSamplesSequence;  // total number of samples to generate
-   sampleCount numSamplesTone;      // number of samples in a tone block
-   sampleCount numSamplesSilence;   // number of samples in a silence block
-   sampleCount diff;                // number of extra samples to redistribute
-   sampleCount numRemaining;        // number of samples left to produce in the current block
-   sampleCount curTonePos;          // position in tone to start the wave
-   bool isTone;                     // true if block is tone, otherwise silence
-   int curSeqPos;                   // index into dtmf tone string
-};
-
-bool EffectDtmf::Instance::ProcessInitialize(
+bool DtmfBase::Instance::ProcessInitialize(
    EffectSettings &settings, double sampleRate, ChannelNames)
 {
    mSampleRate = sampleRate;
@@ -216,7 +177,7 @@ bool EffectDtmf::Instance::ProcessInitialize(
    return true;
 }
 
-size_t EffectDtmf::Instance::ProcessBlock(EffectSettings &settings,
+size_t DtmfBase::Instance::ProcessBlock(EffectSettings &settings,
    const float *const *, float *const *outbuf, size_t size)
 {
    auto &dtmfSettings = GetSettings(settings);
@@ -422,7 +383,7 @@ std::unique_ptr<EffectEditor> EffectDtmf::MakeEditor(
    return result;
 }
 
-std::shared_ptr<EffectInstance> EffectDtmf::MakeInstance() const
+std::shared_ptr<EffectInstance> DtmfBase::MakeInstance() const
 {
    // TODO: don't use Effect::mT0 and Effect::mSampleRate, but use an
    // EffectContext (that class is not yet defined)
@@ -515,7 +476,7 @@ void DtmfSettings::Recalculate(EffectSettings &settings)
    EffectDtmf::GetSettings(settings) = *this;
 }
 
-bool EffectDtmf::MakeDtmfTone(float *buffer, size_t len, float fs, wxChar tone, sampleCount last, sampleCount total, float amplitude)
+bool DtmfBase::MakeDtmfTone(float *buffer, size_t len, float fs, wxChar tone, sampleCount last, sampleCount total, float amplitude)
 {
 /*
   --------------------------------------------

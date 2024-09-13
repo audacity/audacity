@@ -38,14 +38,13 @@ struct DtmfSettings {
    void Recalculate(EffectSettings &settings);
 };
 
-class EffectDtmf final
-   : public EffectWithSettings<DtmfSettings, StatelessPerTrackEffect>
+class DtmfBase : public EffectWithSettings<DtmfSettings, PerTrackEffect>
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectDtmf();
-   virtual ~EffectDtmf();
+   DtmfBase();
+   virtual ~DtmfBase();
 
    // ComponentInterface implementation
 
@@ -57,27 +56,56 @@ public:
 
    EffectType GetType() const override;
 
-   // Effect implementation
+   //! Temporary state of the computation
+   struct Instance : PerTrackEffect::Instance, EffectInstanceWithBlockSize
+   {
+      Instance(const PerTrackEffect& effect, double t0)
+          : PerTrackEffect::Instance { effect }
+          , mT0 { t0 }
+      {
+      }
 
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
+      bool ProcessInitialize(
+         EffectSettings& settings, double sampleRate,
+         ChannelNames chanMap) override;
+      size_t ProcessBlock(
+         EffectSettings& settings, const float* const* inBlock,
+         float* const* outBlock, size_t blockLen) override;
 
-   struct Instance;
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
+      unsigned GetAudioInCount() const override
+      {
+         return 0;
+      }
+
+      unsigned GetAudioOutCount() const override
+      {
+         return 1;
+      }
+
+      const double mT0;
+      double mSampleRate {};
+
+      sampleCount numSamplesSequence; // total number of samples to generate
+      sampleCount numSamplesTone;     // number of samples in a tone block
+      sampleCount numSamplesSilence;  // number of samples in a silence block
+      sampleCount diff;               // number of extra samples to redistribute
+      sampleCount
+         numRemaining; // number of samples left to produce in the current block
+      sampleCount curTonePos; // position in tone to start the wave
+      bool isTone;            // true if block is tone, otherwise silence
+      int curSeqPos;          // index into dtmf tone string
+   };
+
+std::shared_ptr<EffectInstance> MakeInstance() const override;
 
 private:
-   // EffectDtmf implementation
+   // DtmfBase implementation
 
    static bool MakeDtmfTone(float *buffer, size_t len, float fs,
                      wxChar tone, sampleCount last,
                      sampleCount total, float amplitude);
 
-public:
-   struct Editor;
-
-private:
+protected:
    const EffectParameterMethods& Parameters() const override;
 
 static constexpr EffectParameter Sequence{ &DtmfSettings::dtmfSequence,
@@ -86,6 +114,16 @@ static constexpr EffectParameter DutyCycle{ &DtmfSettings::dtmfDutyCycle,
    L"Duty Cycle", DtmfSettings::DefaultDutyCycle, 0.0,     100.0,   10.0   };
 static constexpr EffectParameter Amplitude{ &DtmfSettings::dtmfAmplitude,
    L"Amplitude",  DtmfSettings::DefaultAmplitude, 0.001,   1.0,     1      };
+};
+
+class EffectDtmf final : public DtmfBase, public StatelessEffectUIServices
+{
+public:
+   std::unique_ptr<EffectEditor> MakeEditor(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) const override;
+
+   struct Editor;
 };
 
 #endif
