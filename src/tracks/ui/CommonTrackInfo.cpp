@@ -199,9 +199,9 @@ void CommonTrackInfo::DrawCloseButton(
    else
       memDC.SelectObject(theTheme.Bitmap(bmpCloseNormal));
 
-   dc->Blit(bev.GetLeft(), bev.GetRight(), bev.width, bev.height, &memDC, 0, 0);
+   AColor::Bevel2(*dc, !down, bev, selected, hit);
 
-   AColor::Bevel2(*dc, !down, bev, selected, hit );
+   dc->Blit(bev.GetLeft(), bev.GetTop(), bev.width, bev.height, &memDC, 2, 2);
 }
 
 namespace
