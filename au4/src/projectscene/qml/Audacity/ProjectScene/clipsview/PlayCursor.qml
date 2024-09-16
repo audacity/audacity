@@ -4,33 +4,41 @@ Rectangle {
 
     id: root
 
-    width: 3
-    color: "#ffffff"
     property color borderColor: "#000000"
     property int borderWidth: 1
     property bool timelinePressed: false
 
-    // draw borders without top one
     Rectangle {
-        id: leftBorder
-        color: borderColor
-        width: borderWidth
-        height: parent.height
-        anchors.left: parent.left
-    }
-    Rectangle {
-        id: rightBorder
-        color: borderColor
-        width: borderWidth
-        height: parent.height
-        anchors.right: parent.right
-    }
-    Rectangle {
-        id: bottomBorder
-        color: borderColor
-        width: root.width
-        height: borderWidth
-        anchors.bottom: parent.bottom
+        id: cursor
+
+        x: -width / 2
+        width: 3
+        height: root.height
+        color: "#ffffff"
+
+
+        // draw borders without top one
+        Rectangle {
+            id: leftBorder
+            color: borderColor
+            width: borderWidth
+            height: parent.height
+            anchors.left: parent.left
+        }
+        Rectangle {
+            id: rightBorder
+            color: borderColor
+            width: borderWidth
+            height: parent.height
+            anchors.right: parent.right
+        }
+        Rectangle {
+            id: bottomBorder
+            color: borderColor
+            width: root.width
+            height: borderWidth
+            anchors.bottom: parent.bottom
+        }
     }
 
     signal setPlaybackPosition(real x)
@@ -45,7 +53,7 @@ Rectangle {
         property real baseRectHeight: 11
         property real vectorPulldown: 5
 
-        x: -(marker.width - 3)  / 2
+        x: -(marker.width) / 2
         y: -marker.height
 
         property real radius: 2
