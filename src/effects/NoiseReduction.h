@@ -16,15 +16,13 @@
 #include "StatefulEffect.h"
 #include "StatefulEffectUIServices.h"
 
-class EffectNoiseReduction final :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class NoiseReductionBase : public StatefulEffect
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectNoiseReduction();
-   virtual ~EffectNoiseReduction();
+   NoiseReductionBase();
+   virtual ~NoiseReductionBase();
 
    using Effect::TrackProgress;
 
@@ -39,13 +37,6 @@ public:
 
    // Effect implementation
 
-//   using Effect::TrackProgress;
-
-   int ShowHostInterface(EffectBase &plugin, wxWindow &parent,
-      const EffectDialogFactory &factory,
-      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
-      bool forceModal = false) override;
-
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
    // This object is the memory of the effect between uses
@@ -59,7 +50,7 @@ public:
       }
 
       bool PrefsIO(bool read);
-      bool Validate(EffectNoiseReduction* effect) const;
+      bool Validate(NoiseReductionBase* effect) const;
 
       size_t WindowSize() const
       {
@@ -103,14 +94,26 @@ public:
    };
 
    class Statistics;
-   class Dialog;
    class Worker;
 
-private:
-   friend class Dialog;
-
+protected:
    std::unique_ptr<Settings> mSettings;
    std::unique_ptr<Statistics> mStatistics;
+};
+
+class EffectNoiseReduction final :
+    public NoiseReductionBase,
+    public StatefulEffectUIServices
+{
+public:
+   int ShowHostInterface(EffectBase &plugin, wxWindow &parent,
+      const EffectDialogFactory &factory,
+      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
+      bool forceModal = false) override;
+
+   class Dialog;
+private:
+   friend class Dialog;
 };
 
 #endif

@@ -163,10 +163,10 @@ enum  NoiseReductionChoice {
 } // namespace
 
 //----------------------------------------------------------------------------
-// EffectNoiseReduction::Statistics
+// NoiseReductionBase::Statistics
 //----------------------------------------------------------------------------
 
-class EffectNoiseReduction::Statistics
+class NoiseReductionBase::Statistics
 {
 public:
    Statistics(size_t spectrumSize, double rate, int windowTypes)
@@ -200,17 +200,17 @@ public:
 };
 
 //----------------------------------------------------------------------------
-// EffectNoiseReduction::Settings
+// NoiseReductionBase::Settings
 //----------------------------------------------------------------------------
 
-EffectNoiseReduction::Settings::Settings()
+NoiseReductionBase::Settings::Settings()
    : mDoProfile{ true }
 {
    PrefsIO(true);
 }
 
 struct MyTransformer : TrackSpectrumTransformer {
-   MyTransformer(EffectNoiseReduction::Worker &worker,
+   MyTransformer(NoiseReductionBase::Worker &worker,
       WaveChannel *pOutputTrack,
       bool needsOutput, eWindowFunctions inWindowType,
       eWindowFunctions outWindowType, size_t windowSize,
@@ -240,21 +240,21 @@ struct MyTransformer : TrackSpectrumTransformer {
    bool DoStart() override;
    bool DoFinish() override;
 
-   EffectNoiseReduction::Worker &mWorker;
+   NoiseReductionBase::Worker &mWorker;
 };
 
 //----------------------------------------------------------------------------
-// EffectNoiseReduction::Worker
+// NoiseReductionBase::Worker
 //----------------------------------------------------------------------------
 
 // This object holds information needed only during effect calculation
-class EffectNoiseReduction::Worker final
+class NoiseReductionBase::Worker final
 {
 public:
-   typedef EffectNoiseReduction::Settings Settings;
-   typedef  EffectNoiseReduction::Statistics Statistics;
+   typedef NoiseReductionBase::Settings Settings;
+   typedef  NoiseReductionBase::Statistics Statistics;
 
-   Worker(EffectNoiseReduction &effect, const Settings &settings,
+   Worker(NoiseReductionBase &effect, const Settings &settings,
       Statistics &statistics
 #ifdef SPECTRAL_EDIT_NOISE_REDUCTION
       , double f0, double f1
@@ -276,7 +276,7 @@ public:
 
    const bool mDoProfile;
 
-   EffectNoiseReduction &mEffect;
+   NoiseReductionBase &mEffect;
    const Settings &mSettings;
    Statistics &mStatistics;
 
@@ -377,35 +377,35 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-const ComponentInterfaceSymbol EffectNoiseReduction::Symbol
+const ComponentInterfaceSymbol NoiseReductionBase::Symbol
 { XO("Noise Reduction") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectNoiseReduction > reg; }
 
-EffectNoiseReduction::EffectNoiseReduction()
-: mSettings(std::make_unique<EffectNoiseReduction::Settings>())
+NoiseReductionBase::NoiseReductionBase()
+: mSettings(std::make_unique<NoiseReductionBase::Settings>())
 {
 }
 
-EffectNoiseReduction::~EffectNoiseReduction()
+NoiseReductionBase::~NoiseReductionBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectNoiseReduction::GetSymbol() const
+ComponentInterfaceSymbol NoiseReductionBase::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectNoiseReduction::GetDescription() const
+TranslatableString NoiseReductionBase::GetDescription() const
 {
    return XO("Removes background noise such as fans, tape noise, or hums");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectNoiseReduction::GetType() const
+EffectType NoiseReductionBase::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -561,7 +561,7 @@ bool EffectNoiseReduction::Settings::PrefsIO(bool read)
    }
 }
 
-bool EffectNoiseReduction::Settings::Validate(EffectNoiseReduction *effect) const
+bool NoiseReductionBase::Settings::Validate(NoiseReductionBase *effect) const
 {
    if (StepsPerWindow() < windowTypesInfo[mWindowTypes].minSteps) {
       EffectUIServices::DoMessageBox(*effect,
@@ -595,7 +595,7 @@ MyTransformer::MyWindow::~MyWindow()
 {
 }
 
-bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
+bool NoiseReductionBase::Process(EffectInstance &, EffectSettings &)
 {
    // This same code will either reduce noise or profile it
 
@@ -676,11 +676,11 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
    return bGoodResult;
 }
 
-EffectNoiseReduction::Worker::~Worker()
+NoiseReductionBase::Worker::~Worker()
 {
 }
 
-bool EffectNoiseReduction::Worker::Process(
+bool NoiseReductionBase::Worker::Process(
    eWindowFunctions inWindowType, eWindowFunctions outWindowType,
    TrackList &tracks, double inT0, double inT1)
 {
@@ -761,7 +761,7 @@ bool EffectNoiseReduction::Worker::Process(
    return true;
 }
 
-void EffectNoiseReduction::Worker::ApplyFreqSmoothing(FloatVector &gains)
+void NoiseReductionBase::Worker::ApplyFreqSmoothing(FloatVector &gains)
 {
    // Given an array of gain mutipliers, average them
    // GEOMETRICALLY.  Don't multiply and take nth root --
@@ -794,7 +794,7 @@ void EffectNoiseReduction::Worker::ApplyFreqSmoothing(FloatVector &gains)
       gains[ii] = exp(mFreqSmoothingScratch[ii]);
 }
 
-EffectNoiseReduction::Worker::Worker(EffectNoiseReduction &effect,
+NoiseReductionBase::Worker::Worker(NoiseReductionBase &effect,
    const Settings &settings, Statistics &statistics
 #ifdef SPECTRAL_EDIT_NOISE_REDUCTION
    , double f0, double f1
@@ -877,7 +877,7 @@ bool MyTransformer::DoStart()
    return TrackSpectrumTransformer::DoStart();
 }
 
-bool EffectNoiseReduction::Worker::Processor(SpectrumTransformer &trans)
+bool NoiseReductionBase::Worker::Processor(SpectrumTransformer &trans)
 {
    auto &transformer = static_cast<MyTransformer &>(trans);
    auto &worker = transformer.mWorker;
@@ -908,7 +908,7 @@ bool EffectNoiseReduction::Worker::Processor(SpectrumTransformer &trans)
           worker.mSettings.StepSize()) / worker.mLen.as_double()));
 }
 
-void EffectNoiseReduction::Worker::FinishTrackStatistics()
+void NoiseReductionBase::Worker::FinishTrackStatistics()
 {
    const auto windows = mStatistics.mTrackWindows;
 
@@ -929,7 +929,7 @@ void EffectNoiseReduction::Worker::FinishTrackStatistics()
    }
 }
 
-void EffectNoiseReduction::Worker::GatherStatistics(MyTransformer &transformer)
+void NoiseReductionBase::Worker::GatherStatistics(MyTransformer &transformer)
 {
    ++mStatistics.mTrackWindows;
 
@@ -967,7 +967,7 @@ void EffectNoiseReduction::Worker::GatherStatistics(MyTransformer &transformer)
 // Return true iff the given band of the "center" window looks like noise.
 // Examine the band in a few neighboring windows to decide.
 inline
-bool EffectNoiseReduction::Worker::Classify(
+bool NoiseReductionBase::Worker::Classify(
    MyTransformer &transformer, unsigned nWindows, int band)
 {
    switch (mMethod) {
@@ -1039,7 +1039,7 @@ bool EffectNoiseReduction::Worker::Classify(
    }
 }
 
-void EffectNoiseReduction::Worker::ReduceNoise(MyTransformer &transformer)
+void NoiseReductionBase::Worker::ReduceNoise(MyTransformer &transformer)
 {
    auto historyLen = transformer.CurrentQueueSize();
    auto nWindows = std::min<unsigned>(mNWindowsToExamine, historyLen);
