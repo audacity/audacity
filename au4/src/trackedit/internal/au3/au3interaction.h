@@ -47,6 +47,8 @@ public:
     bool removeClipData(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
     bool splitAt(const TrackId trackId, secs_t pivot) override;
     bool mergeSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
+    bool duplicateSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
+    bool duplicateClip(const ClipKey& clipKey) override;
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec) override;
     void newMonoTrack() override;
@@ -65,8 +67,10 @@ private:
     bool canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+    bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
 
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
+    void pushProjectHistoryDuplicateState();
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 };

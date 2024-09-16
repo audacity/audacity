@@ -43,6 +43,7 @@ private:
     void doGlobalDelete();
     void doGlobalSplit();
     void doGlobalJoin();
+    void doGlobalDuplicate();
 
     void clipCut(const muse::actions::ActionData &args);
     void clipCopy(const muse::actions::ActionData &args);
@@ -57,6 +58,8 @@ private:
     void trackSplit(const muse::actions::ActionData &args);
     void trackSplitAt(const muse::actions::ActionData &args);
     void mergeSelectedOnTrack(const muse::actions::ActionData &args);
+    void duplicateSelected(const muse::actions::ActionData &args);
+    void duplicateClip(const muse::actions::ActionData &args);
 
     void toggleLoopRegion();
     void clearLoopRegion();

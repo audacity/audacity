@@ -533,6 +533,25 @@ bool Au3Interaction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, s
     return true;
 }
 
+bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+{
+    auto& tracks = ::TrackList::Get(projectRef());
+
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    auto dest = waveTrack->Copy(begin, end, false);
+    dest->MoveTo(std::max(static_cast<double>(begin), waveTrack->GetStartTime()));
+    tracks.Add(dest);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackAdded(DomConverter::track(dest.get()));
+
+    return true;
+}
+
 bool Au3Interaction::mergeSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
 {
     secs_t duration = end - begin;
@@ -545,6 +564,45 @@ bool Au3Interaction::mergeSelectedOnTracks(const std::vector<TrackId> tracksIds,
     }
 
     pushProjectHistoryJoinState(begin, duration);
+
+    return true;
+}
+
+bool Au3Interaction::duplicateSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
+{
+    for (const auto& trackId : tracksIds) {
+        bool ok = duplicateSelectedOnTrack(trackId, begin, end);
+        if (!ok) {
+            return false;
+        }
+    }
+
+    pushProjectHistoryDuplicateState();
+
+    return true;
+}
+
+bool Au3Interaction::duplicateClip(const ClipKey &clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    trackedit::secs_t begin = clip->Start();
+    trackedit::secs_t end = clip->End();
+
+    bool ok = duplicateSelectedOnTrack(clipKey.trackId, begin, end);
+    if (!ok) {
+        return false;
+    }
+
+    pushProjectHistoryDuplicateState();
 
     return true;
 }
@@ -719,4 +777,9 @@ void Au3Interaction::redo()
     } else {
         selectionController()->resetSelectedTrack();
     }
+}
+
+void Au3Interaction::pushProjectHistoryDuplicateState()
+{
+    projectHistory()->pushHistoryState("Duplicated", "Duplicate");
 }
