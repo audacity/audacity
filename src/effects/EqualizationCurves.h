@@ -18,14 +18,6 @@
 #include <vector>
 class TranslatableString;
 
-namespace EQUtils{
-int DoMessageBox(
-   const TranslatableString &name,
-   const TranslatableString &msg,
-   const TranslatableString &titleStr,
-   long style = wxOK | wxCENTRE);
-}
-
 //! One point in a curve
 class EQPoint
 {
