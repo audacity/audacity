@@ -112,7 +112,8 @@ public:
       TextButton,
       ImageButton,
       FrameButton,
-      FrameTextButton,
+      FrameTextVButton,
+      FrameTextHButton
    };
 
    enum AButtonState {
