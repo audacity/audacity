@@ -203,48 +203,6 @@ public:
 // EffectNoiseReduction::Settings
 //----------------------------------------------------------------------------
 
-// This object is the memory of the effect between uses
-// (other than noise profile statistics)
-class EffectNoiseReduction::Settings
-{
-public:
-   Settings();
-   ~Settings() {}
-
-   int PromptUser(EffectNoiseReduction *effect, EffectSettingsAccess &access,
-      wxWindow &parent, bool bHasProfile, bool bAllowTwiddleSettings);
-   bool PrefsIO(bool read);
-   bool Validate(EffectNoiseReduction *effect) const;
-
-   size_t WindowSize() const { return 1u << (3 + mWindowSizeChoice); }
-   unsigned StepsPerWindow() const { return 1u << (1 + mStepsPerWindowChoice); }
-   size_t SpectrumSize() const { return 1 + WindowSize() / 2; }
-   size_t StepSize() const { return WindowSize() / StepsPerWindow(); }
-
-   bool      mDoProfile;
-
-   // Stored in preferences:
-
-   // Basic:
-   double     mNewSensitivity;   // - log10 of a probability... yeah.
-   double     mFreqSmoothingBands; // really an integer
-   double     mNoiseGain;         // in dB, positive
-   double     mAttackTime;        // in secs
-   double     mReleaseTime;       // in secs
-
-   // Advanced:
-   double     mOldSensitivity;    // in dB, plus or minus
-
-   // Basic:
-   int        mNoiseReductionChoice;
-
-   // Advanced:
-   int        mWindowTypes;
-   int        mWindowSizeChoice;
-   int        mStepsPerWindowChoice;
-   int        mMethod;
-};
-
 EffectNoiseReduction::Settings::Settings()
    : mDoProfile{ true }
 {
