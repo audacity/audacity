@@ -1,4 +1,5 @@
 #include "EqualizationBase.h"
+#include "BasicUI.h"
 #include "EffectOutputTracks.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -274,9 +275,8 @@ bool EqualizationBase::Init()
          {
             if (track->GetRate() != rate)
             {
-               EffectUIServices::DoMessageBox(
-                  *this,
-                  XO("To apply Equalization, all selected tracks must have the same sample rate."));
+               BasicUI::ShowMessageBox(XO(
+                  "To apply Equalization, all selected tracks must have the same sample rate."));
                return (false);
             }
             ++selcount;
@@ -291,9 +291,8 @@ bool EqualizationBase::Init()
    // Unlikely, but better than crashing.
    if (hiFreq <= loFreqI)
    {
-      EffectUIServices::DoMessageBox(
-         *this, XO("Track sample rate is too low for this effect."),
-         wxOK | wxCENTRE, XO("Effect Unavailable"));
+      BasicUI::ShowMessageBox(
+         XO("Track sample rate is too low for this effect."));
       return (false);
    }
 
