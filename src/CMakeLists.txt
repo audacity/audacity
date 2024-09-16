@@ -367,8 +367,6 @@ set( SOURCES
       effects/EqualizationBandSliders.h
       effects/EqualizationCurvesDialog.cpp
       effects/EqualizationCurvesDialog.h
-      effects/EqualizationCurvesList.cpp
-      effects/EqualizationCurvesList.h
       effects/EqualizationPanel.cpp
       effects/EqualizationPanel.h
       effects/EqualizationUI.cpp

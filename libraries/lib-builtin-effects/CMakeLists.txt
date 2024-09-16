@@ -29,6 +29,8 @@ set( SOURCES
    EchoBase.h
    EqualizationCurves.cpp
    EqualizationCurves.h
+   EqualizationCurvesList.cpp
+   EqualizationCurvesList.h
    EqualizationFilter.cpp
    EqualizationFilter.h
    EqualizationParameters.cpp

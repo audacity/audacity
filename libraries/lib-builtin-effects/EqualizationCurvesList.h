@@ -19,7 +19,7 @@ class Envelope;
 struct EqualizationFilter;
 
 //! Maintains a list of preset curves for Equalization effects
-struct EqualizationCurvesList {
+struct BUILTIN_EFFECTS_API EqualizationCurvesList {
    explicit EqualizationCurvesList(EqualizationFilter &params)
       : mParameters{ params }
    {}
