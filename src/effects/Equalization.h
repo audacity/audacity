@@ -80,7 +80,7 @@ private:
    EqualizationFilter mParameters;
    EqualizationCurvesList mCurvesList{ mParameters };
    const int mOptions;
-   EqualizationUI mUI{ *this, *this, mUIParent, GetName(), mCurvesList, mOptions };
+   EqualizationUI mUI{ *this, mUIParent, GetName(), mCurvesList, mOptions };
 
    const EffectParameterMethods& Parameters() const override;
 };

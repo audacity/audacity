@@ -32,13 +32,12 @@ class EffectUIServices;
 
 class EqualizationUI : public wxEvtHandler {
 public:
-   EqualizationUI(EffectSettingsManager &manager,
+   EqualizationUI(
       EffectUIServices& uiServices,
       const wxWeakRef<wxWindow> &uiParent,
       const TranslatableString &name, EqualizationCurvesList &curvesList,
       int options
-   )  : mManager{ manager }
-      , mUIServices{ uiServices }
+   )  : mUIServices{ uiServices }
       , mUIParent{ uiParent }
       , mName{ name }
       , mCurvesList{ curvesList }
@@ -46,9 +45,6 @@ public:
    {}
 
    bool ValidateUI(EffectSettings &settings);
-   void Init() { mBands.Init(); }
-   void setCurve(int currentCurve);
-   void setCurve(const wxString &curveName);
    std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs);
@@ -83,9 +79,6 @@ private:
    void OnLinFreq( wxCommandEvent & event );
    void OnIdle( wxIdleEvent &event );
 
-   void setCurve();
-
-   EffectSettingsManager &mManager;
    EffectUIServices& mUIServices;
    const wxWeakRef<wxWindow> &mUIParent;
    EqualizationCurvesList &mCurvesList;

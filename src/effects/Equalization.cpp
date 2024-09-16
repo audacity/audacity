@@ -209,7 +209,7 @@ bool EffectEqualization::VisitSettings(
             break;
          curves[0].points.push_back( EQPoint( f,d ));
       }
-      mUI.setCurve( 0 );
+      mCurvesList.setCurve( 0 );
    }
    return true;
 }
@@ -355,8 +355,8 @@ bool EffectEqualization::Init()
 
    loFreq = loFreqI;
 
-   mUI.Init();
-   mUI.setCurve(curveName);
+   mCurvesList.Init();
+   mCurvesList.setCurve(curveName);
 
    mParameters.CalcFilter();
 
