@@ -470,9 +470,9 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
       mPanel->Show( true );
       szrV->Show(szr1, true);
       // This sizing calculation is hacky.
-      // Rather than set the true minimum size we set a size we would 
+      // Rather than set the true minimum size we set a size we would
       // like to have.
-      // This makes the default size of the dialog good, but has the 
+      // This makes the default size of the dialog good, but has the
       // downside that the user can't adjust the dialog smaller.
       wxSize sz = szrV->GetMinSize();
       sz += wxSize( 400, 100);
@@ -526,7 +526,7 @@ bool EqualizationUI::TransferDataToWindow(const EffectSettings &settings)
    szrV->Show(szrG,!drawMode);    // eq sliders
    szrH->Show(szrI,mOptions == kEqLegacy );    // interpolation choice
    szrH->Show(szrL, drawMode);    // linear freq checkbox
-   if( mGraphic) 
+   if( mGraphic)
       mGraphic->SetValue(!drawMode);
    mGridOnOff->Show( drawMode );
 
@@ -769,24 +769,24 @@ void EqualizationUI::UpdateCurves()
    const auto &curves = mCurvesList.mCurves;
 
    // Reload the curve names
-   if( mCurve ) 
+   if( mCurve )
       mCurve->Clear();
    bool selectedCurveExists = false;
    for (size_t i = 0, cnt = curves.size(); i < cnt; i++)
    {
       if (curveName == curves[ i ].Name)
          selectedCurveExists = true;
-      if( mCurve ) 
+      if( mCurve )
          mCurve->Append(curves[ i ].Name);
    }
    // In rare circumstances, curveName may not exist (bug 1891)
    if (!selectedCurveExists)
       curveName = curves[ (int)curves.size() - 1 ].Name;
-   if( mCurve ) 
+   if( mCurve )
       mCurve->SetStringSelection(curveName);
-   
+
    // Allow the control to resize
-   if( mCurve ) 
+   if( mCurve )
       mCurve->SetMinSize({-1, -1});
 
    // Set initial curve
