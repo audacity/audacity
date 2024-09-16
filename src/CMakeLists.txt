@@ -375,8 +375,6 @@ set( SOURCES
       effects/EqualizationFilter.h
       effects/EqualizationPanel.cpp
       effects/EqualizationPanel.h
-      effects/EqualizationParameters.cpp
-      effects/EqualizationParameters.h
       effects/EqualizationUI.cpp
       effects/EqualizationUI.h
       effects/FindClipping.cpp

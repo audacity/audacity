@@ -27,6 +27,8 @@ set( SOURCES
    DistortionBase.h
    EchoBase.cpp
    EchoBase.h
+   EqualizationParameters.cpp
+   EqualizationParameters.h
    Fade.cpp
    Fade.h
    FindClippingBase.cpp
