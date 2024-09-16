@@ -41,6 +41,8 @@ set( SOURCES
    LoudnessBase.h
    NoiseBase.cpp
    NoiseBase.h
+   NoiseReductionBase.cpp
+   NoiseReductionBase.h
    NormalizeBase.cpp
    NormalizeBase.h
    PaulstretchBase.cpp
@@ -80,7 +82,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-dynamic-range-processor-interface
-   lib-fft-interface
+   lib-wave-track-fft-interface
    lib-label-track-interface
    lib-note-track-interface
    $<$<BOOL:${USE_SBSMS}>:libsbsms>
