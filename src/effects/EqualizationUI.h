@@ -88,8 +88,6 @@ private:
    RulerPanel *mdBRuler;
    RulerPanel *mFreqRuler;
 
-   bool mDisallowCustom{ false };
-
    wxSizer *szrC;
    wxSizer *szrG;
    wxSizer *szrV;
