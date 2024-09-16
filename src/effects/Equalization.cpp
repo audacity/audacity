@@ -355,7 +355,6 @@ bool EffectEqualization::Init()
 
    loFreq = loFreqI;
 
-   mCurvesList.Init();
    mCurvesList.setCurve(curveName);
 
    mParameters.CalcFilter();

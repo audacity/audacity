@@ -123,6 +123,8 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   mBands.Init();
+
    auto &parameters = mCurvesList.mParameters;
    const auto &M = parameters.mM;
    const auto &loFreq = parameters.mLoFreq;

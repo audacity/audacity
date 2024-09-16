@@ -30,11 +30,6 @@ struct EqualizationCurvesList {
 
    void ForceRecalc() { mRecalcRequired = true; }
 
-   void Init()
-   {
-      // TODO
-      // mBands.Init();
-   }
    void setCurve(int currentCurve);
    void setCurve(const wxString& curveName);
 
