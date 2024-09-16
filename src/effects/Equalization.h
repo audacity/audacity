@@ -21,19 +21,17 @@
 
 class WaveChannel;
 
-class EffectEqualization :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class EqualizationBase : public StatefulEffect
 {
 public:
    static inline EqualizationParameters *
-   FetchParameters(EffectEqualization &e, EffectSettings &)
+   FetchParameters(EqualizationBase &e, EffectSettings &)
    { return &e.mParameters; }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectEqualization(int Options = kEqLegacy);
+   EqualizationBase(int Options = kEqLegacy);
 
-   virtual ~EffectEqualization();
+   virtual ~EqualizationBase();
 
    // ComponentInterface implementation
 
@@ -57,32 +55,41 @@ public:
    OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
       const override;
 
-   bool ValidateUI(const EffectPlugin &plugin, EffectSettings &) const override;
-
    // Effect implementation
 
    bool Init() override;
    bool Process(EffectInstance &instance, EffectSettings &settings) override;
 
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-
-private:
-   // EffectEqualization implementation
+protected:
+   // EqualizationBase implementation
 
    struct Task;
    bool ProcessOne(Task &task, int count, const WaveChannel &t,
       sampleCount start, sampleCount len);
 
-   wxWeakRef<wxWindow> mUIParent{};
    EqualizationFilter mParameters;
    EqualizationCurvesList mCurvesList{ mParameters };
    const int mOptions;
-   EqualizationUI mUI{ *this, mUIParent, GetName(), mCurvesList, mOptions };
 
    const EffectParameterMethods& Parameters() const override;
+};
+
+class EffectEqualization :
+    public EqualizationBase,
+    public StatefulEffectUIServices
+{
+   using EqualizationBase::EqualizationBase;
+
+   bool ValidateUI(const EffectPlugin& plugin, EffectSettings&) const override;
+
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+
+private:
+   wxWeakRef<wxWindow> mUIParent {};
+   EqualizationUI mUI { *this, mUIParent, GetName(), mCurvesList, mOptions };
 };
 
 class EffectEqualizationCurve final : public EffectEqualization

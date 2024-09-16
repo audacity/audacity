@@ -42,9 +42,9 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 
-const EffectParameterMethods& EffectEqualization::Parameters() const
+const EffectParameterMethods& EqualizationBase::Parameters() const
 {
-   static CapturedParameters<EffectEqualization,
+   static CapturedParameters<EqualizationBase,
       EqualizationParameters::FilterLength,
       // CurveName,
       EqualizationParameters::InterpLin,
@@ -52,7 +52,7 @@ const EffectParameterMethods& EffectEqualization::Parameters() const
       // specified in chains, but must keep it that way for compatibility.
       EqualizationParameters::InterpMeth
    > parameters {
-      [](EffectEqualization &effect, EffectSettings &,
+      [](EqualizationBase &effect, EffectSettings &,
          EqualizationParameters &params, bool updating
       ){
          constexpr auto nInterpolations =
@@ -68,10 +68,10 @@ const EffectParameterMethods& EffectEqualization::Parameters() const
 }
 
 ///----------------------------------------------------------------------------
-// EffectEqualization
+// EqualizationBase
 //----------------------------------------------------------------------------
 
-const ComponentInterfaceSymbol EffectEqualization::Symbol
+const ComponentInterfaceSymbol EqualizationBase::Symbol
 { XO("Equalization") };
 
 #ifdef LEGACY_EQ
@@ -90,7 +90,7 @@ const ComponentInterfaceSymbol EffectEqualizationGraphic::Symbol
 
 namespace{ BuiltinEffectsModule::Registration< EffectEqualizationGraphic > reg3; }
 
-EffectEqualization::EffectEqualization(int Options)
+EqualizationBase::EqualizationBase(int Options)
    : mParameters{ GetDefinition() }
    , mOptions{ Options }
 {
@@ -127,27 +127,27 @@ EffectEqualization::EffectEqualization(int Options)
 }
 
 
-EffectEqualization::~EffectEqualization()
+EqualizationBase::~EqualizationBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectEqualization::GetSymbol() const
+ComponentInterfaceSymbol EqualizationBase::GetSymbol() const
 {
    if( mOptions == kEqOptionGraphic )
       return EffectEqualizationGraphic::Symbol;
    if( mOptions == kEqOptionCurve )
       return EffectEqualizationCurve::Symbol;
-   return EffectEqualization::Symbol;
+   return EqualizationBase::Symbol;
 }
 
-TranslatableString EffectEqualization::GetDescription() const
+TranslatableString EqualizationBase::GetDescription() const
 {
    return XO("Adjusts the volume levels of particular frequencies");
 }
 
-ManualPageID EffectEqualization::ManualPage() const
+ManualPageID EqualizationBase::ManualPage() const
 {
    // Bug 2509: Must use _ and not space in names.
    if( mOptions == kEqOptionGraphic )
@@ -159,12 +159,12 @@ ManualPageID EffectEqualization::ManualPage() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectEqualization::GetType() const
+EffectType EqualizationBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-bool EffectEqualization::VisitSettings(
+bool EqualizationBase::VisitSettings(
    ConstSettingsVisitor &visitor, const EffectSettings &settings) const
 {
    const auto &curves = mCurvesList.mCurves;
@@ -187,7 +187,7 @@ bool EffectEqualization::VisitSettings(
    return true;
 }
 
-bool EffectEqualization::VisitSettings(
+bool EqualizationBase::VisitSettings(
    SettingsVisitor &visitor, EffectSettings &settings)
 {
    auto &curves = mCurvesList.mCurves;
@@ -215,16 +215,16 @@ bool EffectEqualization::VisitSettings(
 }
 
 OptionalMessage
-EffectEqualization::LoadFactoryDefaults(EffectSettings &settings) const
+EqualizationBase::LoadFactoryDefaults(EffectSettings &settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   if (!const_cast<EffectEqualization&>(*this).DoLoadFactoryDefaults(settings))
+   if (!const_cast<EqualizationBase&>(*this).DoLoadFactoryDefaults(settings))
       return {};
    return { nullptr };
 }
 
 OptionalMessage
-EffectEqualization::DoLoadFactoryDefaults(EffectSettings &settings)
+EqualizationBase::DoLoadFactoryDefaults(EffectSettings &settings)
 {
    mParameters.LoadDefaults(mOptions);
    return Effect::LoadFactoryDefaults(settings);
@@ -258,7 +258,7 @@ FactoryPresets[] =
 
 
 
-RegistryPaths EffectEqualization::GetFactoryPresets() const
+RegistryPaths EqualizationBase::GetFactoryPresets() const
 {
    RegistryPaths names;
 
@@ -273,7 +273,7 @@ RegistryPaths EffectEqualization::GetFactoryPresets() const
 }
 
 OptionalMessage
-EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
+EqualizationBase::LoadFactoryPreset(int id, EffectSettings &settings) const
 {
    int index = -1;
    for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
@@ -295,7 +295,7 @@ EffectEqualization::LoadFactoryPreset(int id, EffectSettings &settings) const
    ShuttleSetAutomation S;
    S.SetForWriting( &eap );
    // To do: externalize state so const_cast isn't needed
-   if (!const_cast<EffectEqualization*>(this)->VisitSettings(S, settings))
+   if (!const_cast<EqualizationBase*>(this)->VisitSettings(S, settings))
       return {};
    return { nullptr };
 }
@@ -309,7 +309,7 @@ bool EffectEqualization::ValidateUI(
 
 // Effect implementation
 
-bool EffectEqualization::Init()
+bool EqualizationBase::Init()
 {
    constexpr auto loFreqI = EqualizationFilter::loFreqI;
 
@@ -362,7 +362,7 @@ bool EffectEqualization::Init()
    return(true);
 }
 
-struct EffectEqualization::Task {
+struct EqualizationBase::Task {
    Task(size_t M, size_t idealBlockLen, WaveChannel &channel)
       : buffer{ idealBlockLen }
       , idealBlockLen{ idealBlockLen }
@@ -399,7 +399,7 @@ struct EffectEqualization::Task {
    size_t leftTailRemaining;
 };
 
-bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
+bool EqualizationBase::Process(EffectInstance &, EffectSettings &)
 {
    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
    mParameters.CalcFilter();
@@ -469,9 +469,9 @@ bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
    return mUI.TransferDataToWindow(settings);
 }
 
-// EffectEqualization implementation
+// EqualizationBase implementation
 
-bool EffectEqualization::ProcessOne(Task &task,
+bool EqualizationBase::ProcessOne(Task &task,
    int count, const WaveChannel &t, sampleCount start, sampleCount len)
 {
    constexpr auto windowSize = EqualizationFilter::windowSize;
