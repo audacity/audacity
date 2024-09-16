@@ -267,6 +267,8 @@ from there.  Audacity will look for a file called "Pause.png".
    SET_THEME_FLAGS(resFlagNewLine);
    DEFINE_IMAGE(bmpAnonymousUser, wxImage(20, 20), wxT("AnonymousUser"));
    DEFINE_IMAGE(bmpShareAudio, wxImage(20, 20), wxT("ShareAudio"));
+   DEFINE_IMAGE(bmpGoogleLogo, wxImage(20, 20), wxT("GoogleLogo"));
+   DEFINE_IMAGE(bmpFacebookLogo, wxImage(20, 21), wxT("FacebookLogo"));
 
    SET_THEME_FLAGS(resFlagNewLine);
    DEFINE_IMAGE(bmpCogwheel, wxImage(20, 20), wxT("Cogwheel"));
