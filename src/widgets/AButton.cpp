@@ -359,9 +359,10 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
    if(imageIdx == mAlternateIdx || HasAlternateImages(imageIdx))
    {
       const auto buttonState = GetState();
+      const auto isFrameTextButton = mType == FrameTextVButton || mType == FrameTextHButton;
       if(mType == ImageButton)
          dc.DrawBitmap(mImages[imageIdx][buttonState], buttonRect.GetTopLeft());
-      else if(mType == FrameButton || mType == FrameTextButton)
+      else if(mType == FrameButton || isFrameTextButton)
       {
          wxBitmap bitmap = mImages[imageIdx][buttonState];
          AColor::DrawFrame(dc, buttonRect, bitmap, mFrameMid);
@@ -377,23 +378,42 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
             if(!icon->IsOk())
                icon = &mIcons[0][AButtonUp];
          }
-         if(mType == FrameTextButton && !GetLabel().IsEmpty())
+         if(isFrameTextButton && !GetLabel().IsEmpty())
          {
             dc.SetFont(GetFont());
             auto textRect = buttonRect;
             if(icon != nullptr && icon->IsOk())
             {
-               auto fontMetrics = dc.GetFontMetrics();
-               auto sumHeight = fontMetrics.height + icon->GetHeight() + border.y;
+               const auto fontMetrics = dc.GetFontMetrics();
+               if(mType == FrameTextVButton)
+               {
+                  const auto sumHeight = fontMetrics.height + icon->GetHeight() + border.y;
 
-               dc.DrawBitmap(*icon,
-                  buttonRect.x + (buttonRect.width - icon->GetWidth()) / 2,
-                  buttonRect.y + (buttonRect.height - sumHeight) / 2);
-               textRect = wxRect(
-                     buttonRect.x,
-                     buttonRect.y + buttonRect.height / 2 + sumHeight / 2 - fontMetrics.height,
-                     buttonRect.width,
-                     fontMetrics.height);
+                  dc.DrawBitmap(*icon,
+                     buttonRect.x + (buttonRect.width - icon->GetWidth()) / 2,
+                     buttonRect.y + (buttonRect.height - sumHeight) / 2);
+                  textRect = wxRect(
+                        buttonRect.x,
+                        buttonRect.y + buttonRect.height / 2 + sumHeight / 2 - fontMetrics.height,
+                        buttonRect.width,
+                        fontMetrics.height);
+               }
+               else
+               {
+                  const auto sumWidth = icon->GetWidth() + border.x + dc.GetTextExtent(GetLabel()).GetWidth();
+                  const auto iconCenter = buttonRect.height / 2;
+                  const auto textLeft = iconCenter + icon->GetWidth() / 2 + border.x;
+
+                  dc.DrawBitmap(*icon,
+                                buttonRect.x + iconCenter - icon->GetWidth() / 2,
+                                buttonRect.y + iconCenter - icon->GetHeight() / 2);
+                  textRect = wxRect(
+                     buttonRect.x + textLeft,
+                     buttonRect.y + border.y,
+                     buttonRect.width - textLeft,
+                     buttonRect.height - border.y * 2
+                  );
+               }
             }
             dc.SetPen(GetForegroundColour());
             dc.DrawLabel(GetLabel(), textRect, wxALIGN_CENTER);
@@ -695,7 +715,8 @@ wxSize AButton::DoGetBestClientSize() const
                return icon->GetSize();
             return image.GetSize();
          }
-      case FrameTextButton:
+      case FrameTextVButton:
+      case FrameTextHButton:
          {
             //Only AButtonUp is used to estimate size
             auto icon = !mIcons.empty() ? &mIcons[0][AButtonUp] : nullptr;
@@ -708,10 +729,18 @@ wxSize AButton::DoGetBestClientSize() const
                auto bestSize = dc.GetTextExtent(GetLabel());
                if(icon != nullptr && icon->IsOk())
                {
-                  bestSize.x = std::max(bestSize.x, icon->GetWidth());
-                  bestSize.y = bestSize.y > 0
-                     ? bestSize.y + border.y + icon->GetHeight()
-                     : icon->GetHeight();
+                  if(mType == FrameTextVButton)
+                  {
+                     bestSize.x = std::max(bestSize.x, icon->GetWidth());
+                     bestSize.y = bestSize.y > 0
+                        ? bestSize.y + border.y + icon->GetHeight()
+                        : icon->GetHeight();
+                  }
+                  else
+                  {
+                     bestSize.x += image.GetWidth() + border.x;
+                     bestSize.y = std::max(image.GetHeight(), bestSize.y);
+                  }
                }
                if(bestSize.x > 0)
                   bestSize.x += border.x * 2;
