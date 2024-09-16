@@ -29,6 +29,8 @@ set( SOURCES
    EchoBase.h
    EqualizationCurves.cpp
    EqualizationCurves.h
+   EqualizationFilter.cpp
+   EqualizationFilter.h
    EqualizationParameters.cpp
    EqualizationParameters.h
    Fade.cpp
