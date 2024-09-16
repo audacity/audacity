@@ -27,7 +27,7 @@ void ClipContextMenuModel::load()
         makeSeparator(),
         makeItemWithArg("clip-cut-close-gap"),
         makeItemWithArg("clip-delete-close-gap"),
-        makeItemWithArg("clip-duplicate"),
+        makeItemWithArg("duplicate"),
         makeSeparator(),
         makeItemWithArg("track-split"),
         makeSeparator(),

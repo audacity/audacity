@@ -14,6 +14,7 @@ static const ActionCode CUT_CODE("cut");
 static const ActionCode DELETE_CODE("delete");
 static const ActionCode SPLIT_CODE("split");
 static const ActionCode JOIN_CODE("join");
+static const ActionCode DUPLICATE_CODE("duplicate");
 
 static const ActionCode CLIP_CUT_CODE("clip-cut");
 static const ActionCode CLIP_COPY_CODE("clip-copy");
@@ -25,6 +26,8 @@ static const ActionCode PASTE("paste");
 static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
 static const ActionCode MERGE_SELECTED_ON_TRACK("merge-selected-on-tracks");
+static const ActionCode DUPLICATE_SELECTED("duplicate-selected");
+static const ActionCode DUPLICATE_CLIP("duplicate-clip");
 static const ActionCode NEW_MONO_TRACK("new-mono-track");
 static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
 static const ActionCode NEW_LABEL_TRACK("new-label-track");
@@ -42,6 +45,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
     dispatcher()->reg(this, SPLIT_CODE, this, &TrackeditActionsController::doGlobalSplit);
     dispatcher()->reg(this, JOIN_CODE, this, &TrackeditActionsController::doGlobalJoin);
+    dispatcher()->reg(this, DUPLICATE_CODE, this, &TrackeditActionsController::doGlobalDuplicate);
 
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
     dispatcher()->reg(this, CLIP_COPY_CODE, this, &TrackeditActionsController::clipCopy);
@@ -55,6 +59,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
     dispatcher()->reg(this, UNDO, this, &TrackeditActionsController::undo);
     dispatcher()->reg(this, REDO, this, &TrackeditActionsController::redo);
+    dispatcher()->reg(this, DUPLICATE_SELECTED, this, &TrackeditActionsController::duplicateSelected);
+    dispatcher()->reg(this, DUPLICATE_CLIP, this, &TrackeditActionsController::duplicateClip);
     dispatcher()->reg(this, "toggle-loop-region", this, &TrackeditActionsController::toggleLoopRegion);
     dispatcher()->reg(this, "clear-loop-region", this, &TrackeditActionsController::clearLoopRegion);
     dispatcher()->reg(this, "set-loop-region-to-selection", this, &TrackeditActionsController::setLoopRegionToSelection);
@@ -147,6 +153,25 @@ void TrackeditActionsController::undo()
 void TrackeditActionsController::redo()
 {
     trackeditInteraction()->redo();
+}
+
+void TrackeditActionsController::doGlobalDuplicate()
+{
+    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+
+    if (!selectedTracks.empty()) {
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+        dispatcher()->dispatch(DUPLICATE_SELECTED,
+                               ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+    } else {
+        ClipKey selectedClipKey = selectionController()->selectedClip();
+        if (!selectedClipKey.isValid()) {
+            return;
+        }
+        dispatcher()->dispatch(DUPLICATE_CLIP, ActionData::make_arg1<ClipKey>(selectedClipKey));
+    }
 }
 
 void TrackeditActionsController::clipCut(const ActionData& args)
@@ -309,6 +334,33 @@ void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::Actio
     secs_t duration = end - begin;
 
     trackeditInteraction()->mergeSelectedOnTracks(tracksIds, begin, end);
+}
+
+void TrackeditActionsController::duplicateSelected(const muse::actions::ActionData &args)
+{
+    IF_ASSERT_FAILED(args.count() == 3) {
+        return;
+    }
+
+    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    if (tracksIds.empty()) {
+        return;
+    }
+
+    secs_t begin = args.arg<secs_t>(1);
+    secs_t end = args.arg<secs_t>(2);
+
+    trackeditInteraction()->duplicateSelectedOnTracks(tracksIds, begin, end);
+}
+
+void TrackeditActionsController::duplicateClip(const muse::actions::ActionData &args)
+{
+    IF_ASSERT_FAILED(args.count() == 1) {
+        return;
+    }
+
+    ClipKey clipKey = args.arg<ClipKey>(0);
+    trackeditInteraction()->duplicateClip(clipKey);
 }
 
 void TrackeditActionsController::toggleLoopRegion()
