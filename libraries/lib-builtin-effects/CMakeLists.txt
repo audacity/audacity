@@ -27,6 +27,8 @@ set( SOURCES
    DistortionBase.h
    EchoBase.cpp
    EchoBase.h
+   EqualizationBase.cpp
+   EqualizationBase.h
    EqualizationCurves.cpp
    EqualizationCurves.h
    EqualizationCurvesList.cpp

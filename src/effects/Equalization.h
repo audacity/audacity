@@ -14,71 +14,17 @@
 
 #include <wx/setup.h> // for wxUSE_* macros
 
+#include "EqualizationBase.h"
 #include "EqualizationUI.h"
-#include "StatefulEffect.h"
 #include "StatefulEffectUIServices.h"
-
-
-class WaveChannel;
-
-class EqualizationBase : public StatefulEffect
-{
-public:
-   static inline EqualizationParameters *
-   FetchParameters(EqualizationBase &e, EffectSettings &)
-   { return &e.mParameters; }
-   static const ComponentInterfaceSymbol Symbol;
-
-   EqualizationBase(int Options = kEqLegacy);
-
-   virtual ~EqualizationBase();
-
-   // ComponentInterface implementation
-
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
-   bool VisitSettings(SettingsVisitor &visitor, EffectSettings &settings)
-      override;
-   bool VisitSettings(
-      ConstSettingsVisitor &visitor, const EffectSettings &settings)
-      const override;
-
-   // EffectDefinitionInterface implementation
-
-   EffectType GetType() const override;
-   OptionalMessage LoadFactoryDefaults(EffectSettings &settings)
-      const override;
-   OptionalMessage DoLoadFactoryDefaults(EffectSettings &settings);
-
-   RegistryPaths GetFactoryPresets() const override;
-   OptionalMessage LoadFactoryPreset(int id, EffectSettings &settings)
-      const override;
-
-   // Effect implementation
-
-   bool Init() override;
-   bool Process(EffectInstance &instance, EffectSettings &settings) override;
-
-protected:
-   // EqualizationBase implementation
-
-   struct Task;
-   bool ProcessOne(Task &task, int count, const WaveChannel &t,
-      sampleCount start, sampleCount len);
-
-   EqualizationFilter mParameters;
-   EqualizationCurvesList mCurvesList{ mParameters };
-   const int mOptions;
-
-   const EffectParameterMethods& Parameters() const override;
-};
 
 class EffectEqualization :
     public EqualizationBase,
     public StatefulEffectUIServices
 {
    using EqualizationBase::EqualizationBase;
+
+   ComponentInterfaceSymbol GetSymbol() const override;
 
    bool ValidateUI(const EffectPlugin& plugin, EffectSettings&) const override;
 
