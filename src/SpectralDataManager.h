@@ -13,7 +13,7 @@
 
 *//*******************************************************************/
 
-#include "./SpectrumTransformer.h"
+#include "TrackSpectrumTransformer.h"
 #include "Effect.h"
 #include "tracks/playabletrack/wavetrack/ui/SpectrumView.h"
 

@@ -17,9 +17,12 @@ set( SOURCES
    Spectrum.h
    SpectrumAnalyst.cpp
    SpectrumAnalyst.h
+   SpectrumTransformer.cpp
+   SpectrumTransformer.h
 )
 set( LIBRARIES
    pffft
+   lib-math-interface
    lib-strings-interface
    lib-utility-interface
 )

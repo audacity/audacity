@@ -189,8 +189,6 @@ set( SOURCES
       SpectralDataDialog.cpp
       SpectralDataManager.h
       SpectralDataManager.cpp
-      SpectrumTransformer.cpp
-      SpectrumTransformer.h
       SseMathFuncs.cpp
       SseMathFuncs.h
       TagsEditor.cpp
@@ -1293,6 +1291,7 @@ set( AUDACITY_LIBRARIES
    lib-import-export-interface
    lib-export-ui-interface
    lib-wave-track-paint-interface
+   lib-wave-track-fft-interface
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
    lib-audacity-application-logic-interface
