@@ -410,6 +410,32 @@ EffectType EffectNoiseReduction::GetType() const
    return EffectTypeProcess;
 }
 
+namespace
+{
+int PromptUser(
+   EffectNoiseReduction::Settings& settings, EffectNoiseReduction* effect,
+   EffectSettingsAccess& access, wxWindow& parent, bool bHasProfile,
+   bool bAllowTwiddleSettings)
+{
+   EffectNoiseReduction::Dialog dlog(
+      effect, access, &settings, &parent, bHasProfile, bAllowTwiddleSettings);
+
+   dlog.CentreOnParent();
+   dlog.ShowModal();
+
+   const auto returnCode = dlog.GetReturnCode();
+   if (!returnCode)
+      return 0;
+
+   settings = dlog.GetTempSettings();
+   settings.mDoProfile = (returnCode == 1);
+
+   if (!settings.PrefsIO(false))
+      return 0;
+   return returnCode;
+}
+} // namespace
+
 //! An override still here for historical reasons, ignoring the factory
 //! and the access
 /*! We would like to make this effect behave more like others, but it does have
@@ -430,30 +456,8 @@ int EffectNoiseReduction::ShowHostInterface(EffectBase &,
 
    // We may want to twiddle the levels if we are setting
    // from a macro editing dialog
-   return mSettings->PromptUser(this, access, parent,
+   return PromptUser(*mSettings, this, access, parent,
       bool(mStatistics), IsBatchProcessing());
-}
-
-int EffectNoiseReduction::Settings::PromptUser(EffectNoiseReduction *effect,
-   EffectSettingsAccess &access, wxWindow &parent,
-   bool bHasProfile, bool bAllowTwiddleSettings)
-{
-   EffectNoiseReduction::Dialog dlog(effect, access,
-      this, &parent, bHasProfile, bAllowTwiddleSettings);
-
-   dlog.CentreOnParent();
-   dlog.ShowModal();
-
-   const auto returnCode = dlog.GetReturnCode();
-   if (!returnCode)
-      return 0;
-
-   *this = dlog.GetTempSettings();
-   mDoProfile = (returnCode == 1);
-
-   if (!PrefsIO(false))
-      return 0;
-   return returnCode;
 }
 
 namespace {

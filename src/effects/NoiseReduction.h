@@ -58,9 +58,6 @@ public:
       {
       }
 
-      int PromptUser(
-         EffectNoiseReduction* effect, EffectSettingsAccess& access,
-         wxWindow& parent, bool bHasProfile, bool bAllowTwiddleSettings);
       bool PrefsIO(bool read);
       bool Validate(EffectNoiseReduction* effect) const;
 
