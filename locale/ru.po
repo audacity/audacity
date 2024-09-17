@@ -2961,7 +2961,7 @@ msgstr "Все сообщения анонимны. Смотрите %s для �
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr "нашими Правилами конфиденциальности"
+msgstr "наши Правила конфиденциальности"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Problem details"
@@ -10204,7 +10204,7 @@ msgid ""
 "org/additional-resources/changelog|changelog]] to learn more!</p>"
 msgstr ""
 "Посмотрите [[%s|видео о выпуске]] или прочитайте [[https://support."
-"audacityteam.org/additional-resources/changelog/changelog]], "
+"audacityteam.org/additional-resources/changelog|список изменений]], "
 "чтобы узнать больше!</p>"
 
 #: src/WhatsNewDialog.cpp
@@ -16457,7 +16457,7 @@ msgstr "Обновить  Audacity"
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "П&роверить обновления"
+msgstr "П&роверять обновления"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
