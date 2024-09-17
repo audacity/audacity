@@ -117,12 +117,13 @@ ListItemBlank {
                     }
                 }
 
-                StyledSlider {
-                    Layout.fillWidth: true
-
+                VolumeSlider {
                     value: root.item.volumeLevel
-                }
 
+                    onValueChanged: {
+                        root.item.volumeLevel = value
+                    }
+                }
 
                 RowLayout {
                     Layout.fillWidth: true

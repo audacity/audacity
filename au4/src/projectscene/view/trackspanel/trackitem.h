@@ -6,6 +6,9 @@
 
 #include <QObject>
 
+#include "modularity/ioc.h"
+#include "playback/itrackplaybackcontrol.h"
+
 #include "async/asyncable.h"
 
 #include "trackedit/trackedittypes.h"
@@ -33,6 +36,8 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool forceMute READ forceMute NOTIFY forceMuteChanged)
 
     Q_PROPERTY(bool isSelected READ isSelected NOTIFY isSelectedChanged)
+
+    muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
 
 public:
     TrackItem(QObject* parent = nullptr);

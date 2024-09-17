@@ -17,6 +17,7 @@
 #include "view/common/tracksviewstatemodel.h"
 
 #include "view/toolbars/projecttoolbarmodel.h"
+
 #include "view/trackspanel/trackslistmodel.h"
 
 #include "view/clipsview/trackslistclipsmodel.h"
