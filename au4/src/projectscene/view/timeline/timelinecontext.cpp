@@ -374,9 +374,7 @@ bool TimelineContext::hasSelection() const
 
 double TimelineContext::timeToPosition(double time) const
 {
-    double p = 0.5 + m_zoom * (time - m_frameStartTime);
-    p = std::floor(p);
-    return p;
+    return m_zoom * (time - m_frameStartTime);
 }
 
 double TimelineContext::positionToTime(double position, bool withSnap) const
