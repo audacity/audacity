@@ -15,6 +15,7 @@ using namespace au::trackedit;
 constexpr int CACHE_BUFFER_PX = 200;
 constexpr double MOVE_MAX = 100000.0;
 constexpr double MOVE_MIN = 0.0;
+constexpr double MIN_CLIP_WIDTH = 3.0;
 
 ClipsListModel::ClipsListModel(QObject* parent)
     : QAbstractListModel(parent)
@@ -332,6 +333,16 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key)
     newStartTime += autoScrollView(newStartTime);
     newStartTime = m_context->applySnapToTime(newStartTime);
 
+    double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
+    double newClipTime = item->clip().endTime - newStartTime;
+    if (newClipTime < minClipTime) {
+        newStartTime = item->clip().endTime - minClipTime;
+    }
+
+    if (muse::RealIsEqual(newStartTime, item->clip().startTime)) {
+        return false;
+    }
+
     bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime);
     return ok;
 }
@@ -347,6 +358,16 @@ bool ClipsListModel::trimRightClip(const ClipKey& key)
 
     newEndTime -= autoScrollView(newEndTime);
     newEndTime = m_context->applySnapToTime(newEndTime);
+
+    double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
+    double newClipTime = newEndTime - item->clip().startTime;
+    if (newClipTime < minClipTime) {
+        newEndTime = item->clip().startTime + minClipTime;
+    }
+
+    if (muse::RealIsEqual(newEndTime, item->clip().endTime)) {
+        return false;
+    }
 
     bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime);
     return ok;
