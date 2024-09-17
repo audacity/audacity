@@ -18,6 +18,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iaudiodevicesprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/itrackplaybackcontrol.h
 
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.cpp
@@ -35,6 +36,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audioinoutmeter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audioinoutmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.h
+
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.h

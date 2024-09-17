@@ -39,6 +39,8 @@ void TrackItem::init(const trackedit::Track& track)
 {
     m_trackId = track.id;
     m_trackType = track.type;
+    m_outParams.volume = trackPlaybackControl()->volume(m_trackId);
+    m_outParams.balance = trackPlaybackControl()->balance(m_trackId);
     setTitle(track.title);
 }
 
@@ -57,14 +59,15 @@ QString TrackItem::title() const
     return m_title;
 }
 
-int TrackItem::channelCount() const {
+int TrackItem::channelCount() const
+{
     switch (m_trackType) {
     case trackedit::TrackType::Mono:
         return 1;
     case trackedit::TrackType::Stereo:
         return 2;
     default:
-       return 0;
+        return 0;
     }
 }
 
@@ -202,6 +205,8 @@ void TrackItem::setVolumeLevel(float volumeLevel)
         return;
     }
 
+    trackPlaybackControl()->setVolume(trackId(), volumeLevel);
+
     m_outParams.volume = volumeLevel;
     emit volumeLevelChanged(m_outParams.volume);
     emit outputParamsChanged(m_outParams);
@@ -212,6 +217,8 @@ void TrackItem::setBalance(int balance)
     if (m_outParams.balance * BALANCE_SCALING_FACTOR == balance) {
         return;
     }
+
+    trackPlaybackControl()->setBalance(trackId(), balance / BALANCE_SCALING_FACTOR);
 
     m_outParams.balance = balance / BALANCE_SCALING_FACTOR;
     emit balanceChanged(balance);

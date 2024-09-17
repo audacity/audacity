@@ -226,16 +226,13 @@ Canvas {
 
             drawRuler(ctx, originHPos, originVPos)
         }
-
     }
 
     onHeightChanged: {
         // Gradient and the ruler need to be updated
         prv.rulerNeedsPaint = true
-        console.log("resetting the gradient");
         prv.gradient = null
         requestPaint();
-
     }
 
     onCurrentVolumePressureChanged: {
