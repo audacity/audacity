@@ -9,22 +9,11 @@
 #include "iinteractive.h"
 #include "iprojecthistory.h"
 #include "iselectioncontroller.h"
+#include "itrackeditclipboard.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
 class AudacityProject;
-
-struct TrackData
-{
-    // Track type from Track.h
-    std::shared_ptr<Track> track;
-    au::trackedit::ClipKey clipKey;
-};
-
-struct Clipboard
-{
-    std::vector<TrackData> data;
-};
 
 namespace au::trackedit {
 class Au3Interaction : public ITrackeditInteraction
@@ -33,6 +22,7 @@ class Au3Interaction : public ITrackeditInteraction
     muse::Inject<au::trackedit::ISelectionController> selectionController;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
 
 public:
     Au3Interaction() = default;
@@ -48,6 +38,8 @@ public:
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
     void clearClipboard() override;
     bool pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
+    bool cutClipIntoClipboard(const ClipKey& clipKey) override;
+    bool cutClipDataIntoClipboard(const std::vector<TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
     bool copyTrackDataIntoClipboard(const trackedit::TrackId trackId, secs_t begin, secs_t end) override;
@@ -71,12 +63,11 @@ private:
     std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks,
                                     TrackId destinationTrackId, size_t tracksNum) const;
     bool canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
+    bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
 
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
-
-    static Clipboard s_clipboard;
 };
 }

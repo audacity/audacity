@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iselectioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojecthistory.h
+    ${CMAKE_CURRENT_LIST_DIR}/itrackeditclipboard.h
 
     ${CMAKE_CURRENT_LIST_DIR}/dom/track.h
     ${CMAKE_CURRENT_LIST_DIR}/dom/clip.cpp
@@ -33,6 +34,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3interaction.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3projecthistory.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3projecthistory.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditclipboard.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditclipboard.h
     )
 
 # AU3

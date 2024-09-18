@@ -39,11 +39,12 @@ private:
     void redo();
 
     void doGlobalCopy();
+    void doGlobalCut();
     void doGlobalDelete();
     void doGlobalSplit();
     void doGlobalJoin();
 
-    void clipCut();
+    void clipCut(const muse::actions::ActionData &args);
     void clipCopy(const muse::actions::ActionData &args);
     void clipDelete(const muse::actions::ActionData& args);
 
