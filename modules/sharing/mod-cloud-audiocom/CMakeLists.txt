@@ -26,6 +26,8 @@ set( SOURCES
    ui/dialogs/LinkSucceededDialog.h
    ui/dialogs/LinkWithTokenDialog.cpp
    ui/dialogs/LinkWithTokenDialog.h
+   ui/dialogs/LoginDialog.cpp
+   ui/dialogs/LoginDialog.h
    ui/dialogs/NotCloudProjectDialog.cpp
    ui/dialogs/NotCloudProjectDialog.h
    ui/dialogs/ProjectLimitDialog.cpp
