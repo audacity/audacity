@@ -46,7 +46,7 @@ public:
    bool IsAuthorized() const;
 
 private:
-   void OnStateChaged(bool isAuthorized);
+   void OnStateChanged(bool isAuthorized);
    void UpdateUserData();
    void OnLinkButtonPressed();
    void SetAnonymousState();
@@ -63,6 +63,7 @@ private:
    Observer::Subscription mUserDataChangedSubscription;
 
    bool mIsAuthorized { false };
+   const bool mHasLinkButton;
 }; // class UserPanel
 
 } // namespace audacity::cloud::audiocom
