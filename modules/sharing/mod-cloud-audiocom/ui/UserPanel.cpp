@@ -45,7 +45,8 @@ namespace audacity::cloud::audiocom
 namespace
 {
 const wxSize avatarSize  = { 32, 32 };
-const auto anonymousText = XO("Account not linked");
+const auto notLinkedText = XO("Account not linked");
+const auto anonymousText = XO("Anonymous");
 } // namespace
 
 UserPanel::UserPanel(
@@ -59,11 +60,14 @@ UserPanel::UserPanel(
     , mAudiocomTrace { trace }
     , mUserDataChangedSubscription { userService.Subscribe(
          [this](const auto&) { UpdateUserData(); }) }
+    , mHasLinkButton { hasLinkButton }
 {
    mUserImage = safenew UserImage(this, avatarSize);
-   mUserImage->SetLabel(anonymousText);      // for screen readers
-   mUserName =
-      safenew wxStaticText(this, wxID_ANY, anonymousText.Translation());
+   mUserImage->SetLabel(hasLinkButton ? notLinkedText : anonymousText);      // for screen readers
+   mUserName = safenew wxStaticText(
+      this,
+      wxID_ANY,
+      (hasLinkButton ? notLinkedText : anonymousText).Translation());
    mLinkButton =
       safenew wxButton(this, wxID_ANY, XXO("&Link Account").Translation());
    mLinkButton->Bind(wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
@@ -88,7 +92,7 @@ bool UserPanel::IsAuthorized() const
    return mIsAuthorized;
 }
 
-void UserPanel::OnStateChaged(bool isAuthorized)
+void UserPanel::OnStateChanged(bool isAuthorized)
 {
    if (mIsAuthorized == isAuthorized)
       return;
@@ -151,8 +155,9 @@ void UserPanel::UpdateUserData()
       mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
 
    mLinkButton->SetLabel(XXO("&Unlink Account").Translation());
+   mLinkButton->Show();
 
-   OnStateChaged(true);
+   OnStateChanged(true);
 }
 
 void UserPanel::OnLinkButtonPressed()
@@ -182,8 +187,9 @@ void UserPanel::SetAnonymousState()
    mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
    mUserImage->SetLabel(anonymousText);   // for screen readers
    mLinkButton->SetLabel(XXO("&Link Account").Translation());
+   mLinkButton->Show(mHasLinkButton);
 
-   OnStateChaged(false);
+   OnStateChanged(false);
 }
 
 } // namespace audacity::cloud::audiocom
