@@ -10,6 +10,7 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionCode COPY_CODE("copy");
+static const ActionCode CUT_CODE("cut");
 static const ActionCode DELETE_CODE("delete");
 static const ActionCode SPLIT_CODE("split");
 static const ActionCode JOIN_CODE("join");
@@ -37,6 +38,7 @@ static const ActionCode REDO("redo");
 void TrackeditActionsController::init()
 {
     dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
+    dispatcher()->reg(this, CUT_CODE, this, &TrackeditActionsController::doGlobalCut);
     dispatcher()->reg(this, DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
     dispatcher()->reg(this, SPLIT_CODE, this, &TrackeditActionsController::doGlobalSplit);
     dispatcher()->reg(this, JOIN_CODE, this, &TrackeditActionsController::doGlobalJoin);
@@ -82,6 +84,19 @@ void TrackeditActionsController::doGlobalCopy()
     ClipKey selectedClipKey = selectionController()->selectedClip();
     if (selectedClipKey.isValid()) {
         dispatcher()->dispatch(CLIP_COPY_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+    }
+}
+
+void TrackeditActionsController::doGlobalCut()
+{
+    if (selectionController()->isDataSelected()) {
+        dispatcher()->dispatch(CLIP_CUT_SELECTED_CODE);
+        return;
+    }
+
+    ClipKey selectedClipKey = selectionController()->selectedClip();
+    if (selectedClipKey.isValid()) {
+        dispatcher()->dispatch(CLIP_CUT_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
     }
 }
 
@@ -134,9 +149,15 @@ void TrackeditActionsController::redo()
     trackeditInteraction()->redo();
 }
 
-void TrackeditActionsController::clipCut()
+void TrackeditActionsController::clipCut(const ActionData& args)
 {
-    NOT_IMPLEMENTED;
+    ClipKey clipKey = args.arg<ClipKey>(0);
+    if (!clipKey.isValid()) {
+        return;
+    }
+
+    trackeditInteraction()->clearClipboard();
+    trackeditInteraction()->cutClipIntoClipboard(clipKey);
 }
 
 void TrackeditActionsController::clipCopy(const ActionData& args)
@@ -166,7 +187,13 @@ void TrackeditActionsController::clipDelete(const ActionData& args)
 
 void TrackeditActionsController::clipCutSelected()
 {
-    NOT_IMPLEMENTED;
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+    secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+    trackeditInteraction()->clearClipboard();
+    trackeditInteraction()->cutClipDataIntoClipboard(selectedTracks, selectedStartTime, selectedEndTime);
 }
 
 void TrackeditActionsController::clipCopySelected()

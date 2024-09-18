@@ -50,6 +50,13 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Set loop region out"),
              TranslatableString("action", "Set loop region out")
              ),
+    UiAction("cut",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Cut"),
+             TranslatableString("action", "Cut"),
+             IconCode::Code::CUT
+             ),
     UiAction("copy",
              au::context::UiCtxProjectFocused,
              au::context::CTX_PROJECT_FOCUSED,

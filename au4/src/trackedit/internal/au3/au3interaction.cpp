@@ -24,8 +24,6 @@
 using namespace au::trackedit;
 using namespace au::au3;
 
-Clipboard Au3Interaction::s_clipboard;
-
 AudacityProject& Au3Interaction::projectRef() const
 {
     AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
@@ -40,7 +38,7 @@ bool Au3Interaction::pasteIntoNewTrack()
     secs_t selectedStartTime = globalContext()->playbackState()->playbackPosition();
 
     ::Track* pFirstNewTrack = NULL;
-    for (auto data : s_clipboard.data) {
+    for (auto data : clipboard()->trackData()) {
         auto pNewTrack = createNewTrackAndPaste(data.track, tracks, selectedStartTime);
         if (!pFirstNewTrack) {
             pFirstNewTrack = pNewTrack.get();
@@ -94,13 +92,14 @@ std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksId
 
 bool Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds, secs_t begin) const
 {
+    auto data = clipboard()->trackData();
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(dstTracksIds[i]));
         IF_ASSERT_FAILED(dstWaveTrack) {
             return false;
         }
 
-        secs_t insertDuration = s_clipboard.data[i].track.get()->GetEndTime() - s_clipboard.data[i].track.get()->GetStartTime();
+        secs_t insertDuration = data[i].track.get()->GetEndTime() - data[i].track.get()->GetStartTime();
 
         // throws incosistency exception if project tempo is not set, see:
         // au4/src/au3wrap/internal/au3project.cpp: 92
@@ -282,12 +281,12 @@ bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const mu
 
 void Au3Interaction::clearClipboard()
 {
-    s_clipboard.data.clear();
+    clipboard()->clearTrackData();
 }
 
 bool Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTrackId)
 {
-    if (s_clipboard.data.empty()) {
+    if (clipboard()->trackDataEmpty()) {
         return false;
     }
 
@@ -299,7 +298,7 @@ bool Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTrackId
     //! TODO: we need to make sure that we get a trackList with order
     //! the same as in the TrackPanel
     auto tracks = project->trackeditProject()->trackList();
-    size_t tracksNum = s_clipboard.data.size();
+    size_t tracksNum = clipboard()->trackDataSize();
 
     // for multiple tracks copying
     std::vector<TrackId> dstTracksIds = determineDestinationTracksIds(tracks, destinationTrackId, tracksNum);
@@ -329,7 +328,7 @@ bool Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTrackId
             clipIdsBefore.insert(clip.key.clipId);
         }
 
-        dstWaveTrack->Paste(begin, *s_clipboard.data[i].track);
+        dstWaveTrack->Paste(begin, *clipboard()->trackData()[i].track);
 
         // Check which clips were added and trigger the onClipAdded event
         for (const auto& clip : prj->clipList(dstTracksIds[i])) {
@@ -341,9 +340,63 @@ bool Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTrackId
 
     if (newTracksNeeded) {
         // remove already pasted elements from the clipboard and paste the rest into the new tracks
-        s_clipboard.data.erase(s_clipboard.data.begin(), s_clipboard.data.begin() + dstTracksIds.size());
+        clipboard()->eraseTrackData(clipboard()->trackData().begin(), clipboard()->trackData().begin() + dstTracksIds.size());
         return pasteIntoNewTrack();
     }
+
+    return true;
+}
+
+bool Au3Interaction::cutClipIntoClipboard(const ClipKey &clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    auto track = waveTrack->Cut(clip->Start(), clip->End());
+    clipboard()->addTrackData(TrackData { track, clipKey });
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onClipRemoved(DomConverter::clip(waveTrack, clip.get()));
+    projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
+
+    return true;
+}
+
+bool Au3Interaction::cutClipDataIntoClipboard(const std::vector<TrackId> &tracksIds, secs_t begin, secs_t end)
+{
+    for (const auto& trackId : tracksIds) {
+        bool ok = cutTrackDataIntoClipboard(trackId, begin, end);
+        if (!ok) {
+            return false;
+        }
+    }
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
+
+    return true;
+}
+
+bool Au3Interaction::cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    auto track = waveTrack->Cut(begin, end);
+    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
+    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack));
 
     return true;
 }
@@ -361,7 +414,7 @@ bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
     }
 
     auto track = waveTrack->Copy(clip->Start(), clip->End());
-    s_clipboard.data.push_back(TrackData { track, clipKey });
+    clipboard()->addTrackData(TrackData { track, clipKey });
 
     return true;
 }
@@ -379,7 +432,7 @@ bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t be
     }
 
     auto track = waveTrack->Copy(begin, end);
-    s_clipboard.data.push_back(TrackData { track, clipKey });
+    clipboard()->addTrackData(TrackData { track, clipKey });
 
     return true;
 }
@@ -393,7 +446,7 @@ bool Au3Interaction::copyTrackDataIntoClipboard(const TrackId trackId, secs_t be
 
     auto track = waveTrack->Copy(begin, end);
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    s_clipboard.data.push_back(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(TrackData { track, dummyClipKey });
 
     return true;
 }
