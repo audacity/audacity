@@ -42,6 +42,9 @@ class CLOUD_AUDIOCOM_API OAuthService final :
     public Observer::Publisher<AuthStateChangedMessage>
 {
 public:
+   using AuthSuccessCallback = std::function<void(std::string_view)>;
+   using AuthFailureCallback = std::function<void(unsigned, std::string_view)>;
+
    //! Indicates, that service has a valid access token, i. e. that the user is authorized.
    bool HasAccessToken() const;
    //! Indicates, that the service has a possibly valid refresh token, which can be used
@@ -60,7 +63,7 @@ public:
       Callback argument will contain an access token, if any, or an empty view.
    */
    void ValidateAuth(
-      std::function<void(std::string_view)> completedHandler, AudiocomTrace,
+      AuthSuccessCallback completedHandler, AudiocomTrace,
       bool silent);
 
    //! Handle the OAuth callback
@@ -77,13 +80,28 @@ public:
    */
    bool HandleLinkURI(
       std::string_view uri, AudiocomTrace,
-      std::function<void(std::string_view)> completedHandler);
+      AuthSuccessCallback completedHandler);
 
    //! Removes access and refresh token, notifies about the logout.
    void UnlinkAccount(AudiocomTrace);
 
    //! Return the current access token, if any.
    std::string GetAccessToken() const;
+
+   static std::string MakeAuthorizeURL(std::string_view authClientId);
+
+   void Authorize(std::string_view email,
+                  std::string_view password,
+                  AuthSuccessCallback successCallback,
+                  AuthFailureCallback failureCallback,
+                  AudiocomTrace trace);
+
+   //! Register a new user with \p email and \p password
+   void Register(std::string_view email,
+                 std::string_view password,
+                 AuthSuccessCallback successCallback,
+                 AuthFailureCallback failureCallback,
+                 AudiocomTrace trace);
 
 private:
    void AuthorisePassword(
@@ -101,12 +119,18 @@ private:
       std::function<void(std::string_view)> completedHandler, bool silent);
 
    void AuthoriseCode(
-      const ServiceConfig& config, std::string_view authorizationCode,
+      const ServiceConfig& config, std::string_view authorizationCode, bool useAudioComRedirectURI,
       AudiocomTrace, std::function<void(std::string_view)> completedHandler);
 
    void DoAuthorise(
       const ServiceConfig& config, std::string_view payload, AudiocomTrace,
       std::function<void(std::string_view)> completedHandler, bool silent);
+
+   void ParseTokenResponse(std::string_view response,
+                           AuthSuccessCallback successCallback,
+                           AuthFailureCallback failureCallback,
+                           AudiocomTrace trace,
+                           bool silent);
 
    void SafePublish(const AuthStateChangedMessage& message);
 
