@@ -32,6 +32,7 @@
 #include "ExportUtils.h"
 
 #include "StringUtils.h"
+#include "UrlEncode.h"
 
 namespace audacity::cloud::audiocom
 {
@@ -44,16 +45,15 @@ const std::string_view uriPrefix = "audacity://link";
 const std::string_view usernamePrefix = "username=";
 const std::string_view passwordPrefix = "password=";
 const std::string_view tokenPrefix = "token=";
+const std::string_view authClientPrefix = "authclient=";
+const std::string_view responseTypePrefix = "response_type=";
+const std::string_view clientIdPrefix = "client_id=";
 const std::string_view authorizationCodePrefix = "authorization_code=";
+const std::string_view codePrefix = "code=";
 
-void WriteCommonFields(
-   rapidjson::Document& document, std::string_view grantType, std::string_view scope)
+void WriteClientFields(rapidjson::Document& document)
 {
    using namespace rapidjson;
-
-   document.AddMember(
-      "grant_type", StringRef(grantType.data(), grantType.size()),
-      document.GetAllocator());
 
    const auto clientID = GetServiceConfig().GetOAuthClientID();
    const auto clientSecret = GetServiceConfig().GetOAuthClientSecret();
@@ -67,9 +67,41 @@ void WriteCommonFields(
       "client_secret",
       Value(clientSecret.data(), clientSecret.size(), document.GetAllocator()),
       document.GetAllocator());
+}
+
+void WriteAccessFields(rapidjson::Document& document, std::string_view grantType, std::string_view scope)
+{
+   using namespace rapidjson;
+
+   document.AddMember(
+      "grant_type", StringRef(grantType.data(), grantType.size()),
+      document.GetAllocator());
 
    document.AddMember(
       "scope", StringRef(scope.data(), scope.size()), document.GetAllocator());
+}
+
+void WriteCommonFields(
+   rapidjson::Document& document, std::string_view grantType, std::string_view scope)
+{
+   WriteClientFields(document);
+   WriteAccessFields(document, grantType, scope);
+}
+
+template<typename Elem, typename First, typename ...Others>
+void append(std::basic_string<Elem>& dest, First&& first, Others&& ...others)
+{
+   dest.append(first);
+   if constexpr (sizeof...(others) != 0)
+      append(dest, std::forward<Others>(others)...);
+}
+
+template<typename First, typename ...Others>
+auto concat(First&& first, Others&& ...others)
+{
+   std::basic_string<typename First::value_type> dest(first);
+   append(dest, std::forward<Others>(others)...);
+   return dest;
 }
 
 } // namespace
@@ -118,6 +150,7 @@ bool OAuthService::HandleLinkURI(
    std::string_view username;
    std::string_view password;
    std::string_view authorizationCode;
+   auto useAudioComRedirectURI = false;
 
    while (!args.empty())
    {
@@ -133,14 +166,20 @@ bool OAuthService::HandleLinkURI(
       else if (IsPrefixed(arg, tokenPrefix))
          token = arg.substr(tokenPrefix.length());
       else if (IsPrefixed(arg, authorizationCodePrefix))
+      {
+         //authorization code was generated for audio.com, not audacity...
+         useAudioComRedirectURI = true;
          authorizationCode = arg.substr(authorizationCodePrefix.length());
+      }
+      else if (IsPrefixed(arg, codePrefix))
+         authorizationCode = arg.substr(codePrefix.length());
    }
 
    // We have a prioritized list of authorization methods
    if (!authorizationCode.empty())
    {
       AuthoriseCode(
-         GetServiceConfig(), authorizationCode, trace,
+         GetServiceConfig(), authorizationCode, useAudioComRedirectURI, trace,
          std::move(completedHandler));
    }
    else if (!token.empty())
@@ -244,7 +283,7 @@ void OAuthService::AuthoriseRefreshToken(
 }
 
 void OAuthService::AuthoriseCode(
-   const ServiceConfig& config, std::string_view authorizationCode,
+   const ServiceConfig& config, std::string_view authorizationCode, bool useAudioComRedirectURI,
    AudiocomTrace trace, std::function<void(std::string_view)> completedHandler)
 {
    using namespace rapidjson;
@@ -258,7 +297,7 @@ void OAuthService::AuthoriseCode(
       "code", StringRef(authorizationCode.data(), authorizationCode.size()),
       document.GetAllocator());
 
-   const auto redirectURI = config.GetOAuthRedirectURL();
+   const auto redirectURI = useAudioComRedirectURI ? config.GetOAuthRedirectURL() : std::string("audacity://link");
 
    document.AddMember(
       "redirect_uri", StringRef(redirectURI.data(), redirectURI.size()),
@@ -294,9 +333,122 @@ std::string OAuthService::GetAccessToken() const
    return {};
 }
 
+std::string OAuthService::MakeAuthorizeURL(std::string_view authClientId)
+{
+   using namespace audacity::network_manager;
+
+   return concat(
+      GetServiceConfig().GetAPIUrl("/auth/authorize?"),
+      authClientPrefix, authClientId, "&",
+      responseTypePrefix, "code", "&",
+      clientIdPrefix, GetServiceConfig().GetOAuthClientID(),
+      "&redirect_uri=audacity://link"
+   );
+}
+
+void OAuthService::Authorize(std::string_view email,
+                             std::string_view password,
+                             AuthSuccessCallback onSuccess,
+                             AuthFailureCallback onFailure,
+                             AudiocomTrace trace)
+{
+   using namespace audacity::network_manager;
+   using rapidjson::StringRef;
+
+   rapidjson::Document document;
+   document.SetObject();
+
+   WriteCommonFields(document, "password", "all");
+
+   document.AddMember(
+      "username", StringRef(email.data(), email.size()),
+      document.GetAllocator());
+
+   document.AddMember(
+      "password", StringRef(password.data(), password.size()),
+      document.GetAllocator());
+
+   rapidjson::StringBuffer buffer;
+   rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+   document.Accept(writer);
+
+   Request request(GetServiceConfig().GetAPIUrl("/auth/token"));
+   request.setHeader(common_headers::ContentType, common_content_types::ApplicationJson);
+   request.setHeader(common_headers::Accept, common_content_types::ApplicationJson);
+
+   auto response = NetworkManager::GetInstance().doPost(request,  buffer.GetString(), buffer.GetSize());
+   response->setRequestFinishedCallback(
+      [response, this, trace,
+         onSuccess = std::move(onSuccess),
+         onFailure = std::move(onFailure)](auto) mutable
+      {
+         const auto httpCode = response->getHTTPCode();
+         const auto body = response->readAll<std::string>();
+         if(httpCode == 200)
+            ParseTokenResponse(body, std::move(onSuccess), std::move(onFailure), trace, false);
+         else
+         {
+            if(onFailure)
+               onFailure(httpCode, body);
+
+            SafePublish({ {}, body, trace, false, false });
+         }
+      });
+}
+
+void OAuthService::Register(std::string_view email,
+                            std::string_view password,
+                            AuthSuccessCallback successCallback,
+                            AuthFailureCallback failureCallback,
+                            AudiocomTrace trace)
+{
+   using namespace audacity::network_manager;
+   using rapidjson::StringRef;
+
+   rapidjson::Document document;
+   document.SetObject();
+
+   WriteClientFields(document);
+
+   document.AddMember(
+      "email", StringRef(email.data(), email.size()),
+      document.GetAllocator());
+
+   document.AddMember(
+      "password", StringRef(password.data(), password.size()),
+      document.GetAllocator());
+
+   rapidjson::StringBuffer buffer;
+   rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+   document.Accept(writer);
+
+   Request request(GetServiceConfig().GetAPIUrl("/auth/register"));
+   request.setHeader(common_headers::ContentType, common_content_types::ApplicationJson);
+   request.setHeader(common_headers::Accept, common_content_types::ApplicationJson);
+
+   auto response = NetworkManager::GetInstance().doPost(request,  buffer.GetString(), buffer.GetSize());
+   response->setRequestFinishedCallback(
+      [response, this, trace,
+          successCallback = std::move(successCallback),
+          failureCallback = std::move(failureCallback)] (auto) mutable
+      {
+         const auto httpCode = response->getHTTPCode();
+         const auto body = response->readAll<std::string>();
+         if(httpCode == 200)
+            ParseTokenResponse(body, std::move(successCallback), std::move(failureCallback), trace, false);
+         else
+         {
+            if(failureCallback)
+               failureCallback(httpCode, body);
+
+            SafePublish({ {}, body, trace, false, false });
+         }
+      });
+}
+
 void OAuthService::DoAuthorise(
    const ServiceConfig& config, std::string_view payload, AudiocomTrace trace,
-   std::function<void(std::string_view)> completedHandler, bool silent)
+   AuthSuccessCallback completedHandler, bool silent)
 {
    using namespace audacity::network_manager;
 
@@ -313,7 +465,7 @@ void OAuthService::DoAuthorise(
 
    response->setRequestFinishedCallback(
       [response, this, handler = std::move(completedHandler), silent,
-       trace](auto) {
+       trace](auto) mutable {
          const auto httpCode = response->getHTTPCode();
          const auto body = response->readAll<std::string>();
 
@@ -330,48 +482,56 @@ void OAuthService::DoAuthorise(
 
             return;
          }
-
-         rapidjson::Document document;
-         document.Parse(body.data(), body.size());
-
-         if (!document.IsObject())
-         {
-            if (handler)
-               handler({});
-
-            SafePublish({ {}, body, trace, false, silent });
-            return;
-         }
-
-         const auto tokenType = document["token_type"].GetString();
-         const auto accessToken = document["access_token"].GetString();
-         const auto expiresIn = document["expires_in"].GetInt64();
-         const auto newRefreshToken = document["refresh_token"].GetString();
-
-         {
-            std::lock_guard<std::recursive_mutex> lock(mMutex);
-
-            mAccessToken = std::string(tokenType) + " " + accessToken;
-            mTokenExpirationTime =
-               Clock::now() + std::chrono::seconds(expiresIn);
-         }
-
-         BasicUI::CallAfter(
-            [token = std::string(newRefreshToken)]()
-            {
-               // At this point access token is already written,
-               // only refresh token is updated.
-               refreshToken.Write(token);
-               gPrefs->Flush();
-            });
-
-         if (handler)
-            handler(mAccessToken);
-
-         // The callback only needs the access token, so invoke it immediately.
-         // Networking is thread safe
-         SafePublish({ mAccessToken, {}, trace, true, silent });
+         ParseTokenResponse(body, std::move(handler), {}, trace, silent);
       });
+}
+
+void OAuthService::ParseTokenResponse(std::string_view body,
+                                      AuthSuccessCallback successCallback,
+                                      AuthFailureCallback failureCallback,
+                                      AudiocomTrace trace,
+                                      bool silent)
+{
+   rapidjson::Document document;
+   document.Parse(body.data(), body.size());
+
+   if (!document.IsObject())
+   {
+      if (failureCallback)
+         failureCallback(200, body);
+
+      SafePublish({ {}, body, trace, false, silent });
+      return;
+   }
+
+   const auto tokenType = document["token_type"].GetString();
+   const auto accessToken = document["access_token"].GetString();
+   const auto expiresIn = document["expires_in"].GetInt64();
+   const auto newRefreshToken = document["refresh_token"].GetString();
+
+   {
+      std::lock_guard<std::recursive_mutex> lock(mMutex);
+
+      mAccessToken = std::string(tokenType) + " " + accessToken;
+      mTokenExpirationTime =
+         Clock::now() + std::chrono::seconds(expiresIn);
+   }
+
+   BasicUI::CallAfter(
+      [token = std::string(newRefreshToken)]()
+      {
+         // At this point access token is already written,
+         // only refresh token is updated.
+         refreshToken.Write(token);
+         gPrefs->Flush();
+      });
+
+   if (successCallback)
+      successCallback(mAccessToken);
+
+   // The callback only needs the access token, so invoke it immediately.
+   // Networking is thread safe
+   SafePublish({ mAccessToken, {}, trace, true, silent });
 }
 
 void OAuthService::SafePublish(const AuthStateChangedMessage& message)
