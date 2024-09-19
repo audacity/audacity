@@ -1,9 +1,15 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.6.4
+
+This is a patch release. It fixes the following bugs: 
+   * #7310 Fixed another crash when exiting Audacity. (Thanks, Joe Souza!)
+   * #7312 Fixed projects not being compacted on close.
+
 Changes in version 3.6.3
 
 This is a patch release. It fixes the following bug: 
-   * #7622 Fixed a crash when exiting Audacity. (Thanks, Joe Souza!)
+   * #7266 Fixed a crash when exiting Audacity. (Thanks, Joe Souza!)
 
 Changes in version 3.6.2
 
