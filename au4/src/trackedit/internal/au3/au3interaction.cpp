@@ -394,6 +394,8 @@ bool Au3Interaction::copyTrackDataIntoClipboard(const TrackId trackId, secs_t be
     auto track = waveTrack->Copy(begin, end);
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
     s_clipboard.data.push_back(TrackData { track, dummyClipKey });
+
+    return true;
 }
 
 bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
@@ -408,7 +410,7 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
         return false;
     }
 
-    clip->Clear(clip->Start(), clip->End());
+    waveTrack->Clear(clip->Start(), clip->End());
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onClipRemoved(DomConverter::clip(waveTrack, clip.get()));
@@ -431,7 +433,7 @@ bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, secs_t be
     trackedit::secs_t initialClipStart = clip->Start();
     trackedit::secs_t initialClipEnd = clip->End();
 
-    clip->Clear(begin, end);
+    waveTrack->Clear(begin, end);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (begin <= initialClipStart && end >= initialClipEnd) {
