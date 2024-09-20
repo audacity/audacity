@@ -16,7 +16,7 @@
 
 class WaveChannel;
 
-class AUDACITY_DLL_API EffectTwoPassSimpleMono /* not final */
+class BUILTIN_EFFECTS_API EffectTwoPassSimpleMono /* not final */
    : public StatefulEffect
 {
 public:

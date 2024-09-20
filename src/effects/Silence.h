@@ -13,40 +13,19 @@
 #ifndef __AUDACITY_EFFECT_SILENCE__
 #define __AUDACITY_EFFECT_SILENCE__
 
-#include "Generator.h"
+#include "SilenceBase.h"
+#include "StatefulEffectUIServices.h"
 
 class NumericTextCtrl;
 
-class EffectSilence final : public Generator
+class EffectSilence final : public SilenceBase, public StatefulEffectUIServices
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
-
-   EffectSilence();
-   virtual ~EffectSilence();
-
-   // ComponentInterface implementation
-
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
-
-   // EffectDefinitionInterface implementation
-
-   EffectType GetType() const override;
-
-   // Effect implementation
-
    std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
-
-protected:
-   // Generator implementation
-
-   bool GenerateTrack(const EffectSettings &settings, WaveTrack &tmp) override;
 
 private:
    NumericTextCtrl *mDurationT;

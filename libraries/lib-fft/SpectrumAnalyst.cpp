@@ -24,58 +24,7 @@ and in the spectrogram spectral selection.
 
 #include "SpectrumAnalyst.h"
 #include "FFT.h"
-
-#include "SampleFormat.h"
-#include <wx/dcclient.h>
-
-FreqGauge::FreqGauge(wxWindow * parent, wxWindowID winid)
-:  wxStatusBar(parent, winid, wxST_SIZEGRIP)
-{
-   mRange = 0;
-}
-
-void FreqGauge::SetRange(int range, int bar, int gap)
-{
-   mRange = range;
-   mBar = bar;
-   mGap = gap;
-
-   GetFieldRect(0, mRect);
-   mRect.Inflate(-1);
-
-   mInterval = mRange / (mRect.width / (mBar + mGap));
-   mRect.width = mBar;
-   mMargin = mRect.x;
-   mLast = -1;
-
-   Update();
-}
-
-void FreqGauge::SetValue(int value)
-{
-   mCur = value / mInterval;
-
-   if (mCur != mLast)
-   {
-      wxClientDC dc(this);
-      dc.SetPen(*wxTRANSPARENT_PEN);
-      dc.SetBrush(wxColour(100, 100, 220));
-
-      while (mLast < mCur)
-      {
-         mLast++;
-         mRect.x = mMargin + mLast * (mBar + mGap);
-         dc.DrawRectangle(mRect);
-      }
-      Update();
-   }
-}
-
-void FreqGauge::Reset()
-{
-   mRange = 0;
-   Refresh(true);
-}
+#include "MemoryX.h"
 
 SpectrumAnalyst::SpectrumAnalyst()
 : mAlg(Spectrum)
@@ -92,7 +41,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
                                 size_t windowSize, double rate,
                                 const float *data, size_t dataLen,
                                 float *pYMin, float *pYMax,
-                                FreqGauge *progress)
+                                ProgressFn progress)
 {
    // Wipe old data
    mProcessed.resize(0);
@@ -121,10 +70,10 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
    auto half = mWindowSize / 2;
    mProcessed.resize(mWindowSize);
 
-   Floats in{ mWindowSize };
-   Floats out{ mWindowSize };
-   Floats out2{ mWindowSize };
-   Floats win{ mWindowSize };
+   ArrayOf<float> in{ mWindowSize };
+   ArrayOf<float> out{ mWindowSize };
+   ArrayOf<float> out2{ mWindowSize };
+   ArrayOf<float> win{ mWindowSize };
 
    for (size_t i = 0; i < mWindowSize; i++) {
       mProcessed[i] = 0.0f;
@@ -142,10 +91,6 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
       wss = 4.0 / (wss*wss);
    else
       wss = 1.0;
-
-   if (progress) {
-      progress->SetRange(dataLen);
-   }
 
    size_t start = 0;
    int windows = 0;
@@ -222,18 +167,12 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
             break;
       }                         //switch
 
-      // Update the progress bar
       if (progress) {
-         progress->SetValue(start);
+         progress(start, dataLen);
       }
 
       start += half;
       windows++;
-   }
-
-   if (progress) {
-      // Reset for next time
-      progress->Reset();
    }
 
    float mYMin = 1000000, mYMax = -1000000;

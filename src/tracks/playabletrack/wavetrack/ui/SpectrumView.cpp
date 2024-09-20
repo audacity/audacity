@@ -376,7 +376,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    const double &t0 = params.t0;
    const double playStartTime = clip.GetPlayStartTime();
-   
+
    const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectedRegion, clip,
       channel.GetTrack().GetSelected());
    const double &averagePixelsPerSecond = params.averagePixelsPerSecond;
@@ -883,7 +883,7 @@ void SpectrumView::Draw(
       const auto &pendingTracks = *artist->pPendingTracks;
 
       auto &dc = context.dc;
- 
+
       const auto pChannel = FindChannel();
       if (!pChannel)
          return;
@@ -1089,7 +1089,7 @@ unsigned SpectrumView::Char(
 #include "../../../ui/SelectHandle.h"
 #include "../../../../CommonCommandFlags.h"
 #include "Project.h"
-#include "../../../../SpectrumAnalyst.h"
+#include "SpectrumAnalyst.h"
 #include "CommandContext.h"
 
 namespace {

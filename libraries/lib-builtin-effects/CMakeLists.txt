@@ -15,16 +15,32 @@ set( SOURCES
    ChangeSpeedBase.h
    CompressorInstance.cpp
    CompressorInstance.h
+   ContrastBase.cpp
+   ContrastBase.h
+   DtmfBase.cpp
+   DtmfBase.h
    EchoBase.cpp
    EchoBase.h
    Fade.cpp
    Fade.h
+   FindClippingBase.cpp
+   FindClippingBase.h
+   Generator.cpp
+   Generator.h
    Invert.cpp
    Invert.h
+   LegacyCompressorBase.cpp
+   LegacyCompressorBase.h
    LoudnessBase.cpp
    LoudnessBase.h
+   NoiseBase.cpp
+   NoiseBase.h
    NormalizeBase.cpp
    NormalizeBase.h
+   PaulstretchBase.cpp
+   PaulstretchBase.h
+   PlotSpectrumBase.cpp
+   PlotSpectrumBase.h
    Repair.cpp
    Repair.h
    ReverbBase.cpp
@@ -33,12 +49,18 @@ set( SOURCES
    Reverse.h
    SBSMSBase.cpp
    SBSMSBase.h
+   ScienFilterBase.cpp
+   ScienFilterBase.h
+   SilenceBase.cpp
+   SilenceBase.h
    SoundTouchBase.cpp
    SoundTouchBase.h
    StereoToMono.cpp
    StereoToMono.h
    ToneGenBase.cpp
    ToneGenBase.h
+   TwoPassSimpleMono.cpp
+   TwoPassSimpleMono.h
 )
 set( LIBRARIES
    lib-dynamic-range-processor-interface

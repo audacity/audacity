@@ -11,12 +11,10 @@
 #ifndef __AUDACITY_FREQ_WINDOW__
 #define __AUDACITY_FREQ_WINDOW__
 
+#include "PlotSpectrumBase.h"
 #include <vector>
 #include <wx/font.h> // member variable
 #include <wx/statusbr.h> // to inherit
-#include "Prefs.h"
-#include "SampleFormat.h"
-#include "SpectrumAnalyst.h"
 #include "wxPanelWrapper.h" // to inherit
 
 class wxMemoryDC;
@@ -53,8 +51,10 @@ private:
     DECLARE_EVENT_TABLE()
 };
 
-class FrequencyPlotDialog final : public wxDialogWrapper,
-                                  public PrefsListener
+class FrequencyPlotDialog final :
+    public PlotSpectrumBase,
+    public wxDialogWrapper,
+    public PrefsListener
 {
 public:
    FrequencyPlotDialog(wxWindow *parent, wxWindowID id,
@@ -66,8 +66,6 @@ public:
 
 private:
    void Populate();
-
-   bool GetAudio();
 
    void PlotMouseEvent(wxMouseEvent & event);
    void PlotPaint(wxPaintEvent & event);
@@ -96,14 +94,6 @@ private:
    void UpdatePrefs() override;
 
  private:
-   bool mDrawGrid;
-   int mSize;
-   SpectrumAnalyst::Algorithm mAlg;
-   int mFunc;
-   int mAxis;
-   int dBRange;
-   AudacityProject *mProject;
-
 #ifdef __WXMSW__
    static const int fontSize = 8;
 #else
@@ -135,12 +125,6 @@ private:
    wxTextCtrl *mCursorText;
    wxTextCtrl *mPeakText;
 
-
-   double mRate;
-   size_t mDataLen;
-   Floats mData;
-   size_t mWindowSize;
-
    bool mLogAxis;
    float mYMin;
    float mYMax;
@@ -150,8 +134,6 @@ private:
 
    int mMouseX;
    int mMouseY;
-
-   std::unique_ptr<SpectrumAnalyst> mAnalyst;
 
    DECLARE_EVENT_TABLE()
 

@@ -9,15 +9,12 @@
 
 **********************************************************************/
 
-#ifndef __AUDACITY_SPECTRUM_ANALYST__
-#define __AUDACITY_SPECTRUM_ANALYST__
+#pragma once
 
 #include <vector>
-#include <wx/statusbr.h>
+#include <functional>
 
-class FreqGauge;
-
-class AUDACITY_DLL_API SpectrumAnalyst
+class FFT_API SpectrumAnalyst
 {
 public:
 
@@ -31,6 +28,8 @@ public:
       NumAlgorithms
    };
 
+   using ProgressFn = std::function<void(long long num, long long den)>;
+
    SpectrumAnalyst();
    ~SpectrumAnalyst();
 
@@ -40,7 +39,7 @@ public:
       size_t windowSize, double rate,
       const float *data, size_t dataLen,
       float *pYMin = NULL, float *pYMax = NULL, // outputs
-      FreqGauge *progress = NULL);
+      ProgressFn progress = NULL);
 
    const float *GetProcessed() const;
    int GetProcessedSize() const;
@@ -58,25 +57,3 @@ private:
    size_t mWindowSize;
    std::vector<float> mProcessed;
 };
-
-class AUDACITY_DLL_API FreqGauge final : public wxStatusBar
-{
-public:
-   FreqGauge(wxWindow * parent, wxWindowID winid);
-
-   void SetRange(int range, int bar = 12, int gap = 3);
-   void SetValue(int value);
-   void Reset();
-
-private:
-   wxRect mRect;
-   int mRange;
-   int mCur;
-   int mLast;
-   int mInterval;
-   int mBar;
-   int mGap;
-   int mMargin;
-};
-
-#endif

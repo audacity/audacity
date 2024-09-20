@@ -189,8 +189,6 @@ set( SOURCES
       SpectralDataDialog.cpp
       SpectralDataManager.h
       SpectralDataManager.cpp
-      SpectrumAnalyst.cpp
-      SpectrumAnalyst.h
       SpectrumTransformer.cpp
       SpectrumTransformer.h
       SseMathFuncs.cpp
@@ -315,8 +313,6 @@ set( SOURCES
 
       effects/Amplify.cpp
       effects/Amplify.h
-      effects/AnalysisTracks.cpp
-      effects/AnalysisTracks.h
       effects/AutoDuck.cpp
       effects/AutoDuck.h
       effects/BasicEffectUIServices.cpp
@@ -387,8 +383,6 @@ set( SOURCES
       effects/EqualizationUI.h
       effects/FindClipping.cpp
       effects/FindClipping.h
-      effects/Generator.cpp
-      effects/Generator.h
       effects/LegacyCompressor.cpp
       effects/LegacyCompressor.h
       effects/Limiter.cpp
@@ -435,8 +429,6 @@ set( SOURCES
       effects/ToneGen.h
       effects/TruncSilence.cpp
       effects/TruncSilence.h
-      effects/TwoPassSimpleMono.cpp
-      effects/TwoPassSimpleMono.h
       effects/Wahwah.cpp
       effects/Wahwah.h
 
@@ -856,6 +848,8 @@ set( SOURCES
       widgets/ExpandingToolBar.h
       widgets/FileHistory.cpp
       widgets/FileHistory.h
+      widgets/FreqGauge.cpp
+      widgets/FreqGauge.h
       widgets/GeneratedUpdater.cpp
       widgets/GeneratedUpdater.h
       widgets/Grabber.cpp
@@ -1305,7 +1299,6 @@ set( AUDACITY_LIBRARIES
    lib-stretching-sequence-interface
    lib-import-export-interface
    lib-export-ui-interface
-   lib-note-track-interface
    lib-wave-track-paint-interface
    lib-music-information-retrieval-interface
    lib-preference-pages-interface

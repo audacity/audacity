@@ -23,7 +23,7 @@ class TrackList;
 
 // For the use of analyzers, which don't need to make output wave tracks,
 // but may need to add label tracks.
-class AUDACITY_DLL_API AddedAnalysisTrack {
+class LABEL_TRACK_API AddedAnalysisTrack {
    AddedAnalysisTrack(const AddedAnalysisTrack&) = delete;
 
 public:
@@ -47,12 +47,12 @@ private:
 };
 
 // Set name to given value if that is not empty, else use default name
-std::shared_ptr<AddedAnalysisTrack> AddAnalysisTrack(Effect &effect,
+std::shared_ptr<AddedAnalysisTrack> LABEL_TRACK_API AddAnalysisTrack(Effect &effect,
    const wxString &name = wxString());
 
 // For the use of analyzers, which don't need to make output wave tracks,
 // but may need to modify label tracks.
-class AUDACITY_DLL_API ModifiedAnalysisTrack {
+class LABEL_TRACK_API ModifiedAnalysisTrack {
    ModifiedAnalysisTrack(const ModifiedAnalysisTrack&) = delete;
 
 public:
@@ -78,7 +78,7 @@ private:
 };
 
 // Set name to given value if that is not empty, else use default name
-ModifiedAnalysisTrack ModifyAnalysisTrack(Effect &effect,
+ModifiedAnalysisTrack LABEL_TRACK_API ModifyAnalysisTrack(Effect &effect,
    const LabelTrack &origTrack, const wxString &name = wxString());
 
 #endif

@@ -17,48 +17,9 @@
 #include "LoadEffects.h"
 
 #include "ShuttleGui.h"
-#include "WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 
-const ComponentInterfaceSymbol EffectSilence::Symbol
-/* i18n-hint: noun */
-{ XC("Silence", "generator") };
-
 namespace{ BuiltinEffectsModule::Registration< EffectSilence > reg; }
-
-EffectSilence::EffectSilence()
-{
-   SetLinearEffectFlag(true);
-}
-
-EffectSilence::~EffectSilence()
-{
-}
-
-// ComponentInterface implementation
-
-ComponentInterfaceSymbol EffectSilence::GetSymbol() const
-{
-   return Symbol;
-}
-
-TranslatableString EffectSilence::GetDescription() const
-{
-   return XO("Creates audio of zero amplitude");
-}
-
-ManualPageID EffectSilence::ManualPage() const
-{
-   return L"Silence";
-}
-
-
-// EffectDefinitionInterface implementation
-
-EffectType EffectSilence::GetType() const
-{
-   return EffectTypeGenerate;
-}
 
 // Effect implementation
 
@@ -102,12 +63,5 @@ bool EffectSilence::TransferDataFromWindow(EffectSettings &settings)
 {
    settings.extra.SetDuration(mDurationT->GetValue());
 
-   return true;
-}
-
-bool EffectSilence::GenerateTrack(
-   const EffectSettings &settings, WaveTrack &tmp)
-{
-   tmp.InsertSilence(0.0, settings.extra.GetDuration());
    return true;
 }

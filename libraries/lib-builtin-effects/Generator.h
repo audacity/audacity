@@ -16,15 +16,12 @@
 #define __AUDACITY_GENERATOR__
 
 #include "StatefulEffect.h"
-#include "StatefulEffectUIServices.h"
 #include "SampleCount.h"
 
 class TrackList;
 
 // Base class for Generators (effects which fill a given duration)
-class Generator /* not final */ :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class BUILTIN_EFFECTS_API Generator /* not final */ : public StatefulEffect
 {
 public:
    Generator() { }
@@ -43,7 +40,7 @@ protected:
    // Postcondition:
    // If mDuration was valid (>= 0), then the tracks are replaced by the
    // generated results and true is returned. Otherwise, return false.
-   AUDACITY_DLL_API bool Process(EffectInstance &instance, EffectSettings &settings) override;
+   bool Process(EffectInstance &instance, EffectSettings &settings) override;
 };
 
 #endif

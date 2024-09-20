@@ -14,7 +14,7 @@ Edward Hui
 #include "ChannelView.h"
 
 #include "AColor.h"
-#include "../../SpectrumAnalyst.h"
+#include "SpectrumAnalyst.h"
 #include "NumberScale.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
