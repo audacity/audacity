@@ -83,12 +83,6 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
 
     // edit menu
-    UiAction("cut-and-close-gap",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut and close gap"),
-             TranslatableString("action", "Cut and close gap")
-             ),
     UiAction("duplicate",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -100,12 +94,6 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Insert"),
              TranslatableString("action", "Insert")
-             ),
-    UiAction("delete-and-close-gap",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete and close gap"),
-             TranslatableString("action", "Delete and close gap")
              ),
     UiAction("rename-clip",
              au::context::UiCtxAny,

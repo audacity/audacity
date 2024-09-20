@@ -49,6 +49,10 @@ public:
     bool mergeSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
     bool duplicateClip(const ClipKey& clipKey) override;
+    bool clipSplitCut(const ClipKey& clipKey) override;
+    bool clipSplitDelete(const ClipKey& clipKey) override;
+    bool splitCutSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
+    bool splitDeleteSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec) override;
     void newMonoTrack() override;
@@ -69,7 +73,11 @@ private:
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
 
+    bool splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+    bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
+    void pushProjectHistorySplitDeleteState(secs_t start, secs_t duration);
     void pushProjectHistoryDuplicateState();
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
