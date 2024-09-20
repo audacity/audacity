@@ -43,6 +43,10 @@ public:
     virtual bool mergeSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateClip(const ClipKey& clipKey) = 0;
+    virtual bool clipSplitCut(const ClipKey& clipKey) = 0;
+    virtual bool clipSplitDelete(const ClipKey& clipKey) = 0;
+    virtual bool splitCutSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) = 0;
+    virtual bool splitDeleteSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec) = 0;
     virtual bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec) = 0;
     virtual void newMonoTrack() = 0;

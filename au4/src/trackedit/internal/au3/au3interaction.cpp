@@ -536,7 +536,6 @@ bool Au3Interaction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, s
 bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
     auto& tracks = ::TrackList::Get(projectRef());
-
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return false;
@@ -548,6 +547,36 @@ bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begi
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onTrackAdded(DomConverter::track(dest.get()));
+}
+
+bool Au3Interaction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    auto track = waveTrack->SplitCut(begin, end);
+    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
+    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack));
+
+    return true;
+}
+
+bool Au3Interaction::splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    waveTrack->SplitDelete(begin, end);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack));
 
     return true;
 }
@@ -603,6 +632,81 @@ bool Au3Interaction::duplicateClip(const ClipKey &clipKey)
     }
 
     pushProjectHistoryDuplicateState();
+}
+
+bool Au3Interaction::clipSplitCut(const ClipKey &clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    auto track = waveTrack->SplitCut(clip->Start(), clip->End());
+    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
+    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack));
+
+    projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
+
+    return true;
+}
+
+bool Au3Interaction::clipSplitDelete(const ClipKey &clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    waveTrack->SplitDelete(clip->Start(), clip->End());
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack));
+
+    pushProjectHistorySplitDeleteState(clip->Start(), clip->End() - clip->Start());
+
+    return true;
+}
+
+bool Au3Interaction::splitCutSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
+{
+    for (const auto& trackId : tracksIds) {
+        bool ok = splitCutSelectedOnTrack(trackId, begin, end);
+        if (!ok) {
+            return false;
+        }
+    }
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
+
+    return true;
+}
+
+bool Au3Interaction::splitDeleteSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
+{
+    secs_t duration = end - begin;
+
+    for (const auto& trackId : tracksIds) {
+        bool ok = splitDeleteSelectedOnTrack(trackId, begin, end);
+        if (!ok) {
+            return false;
+        }
+    }
+
+    pushProjectHistorySplitDeleteState(begin, duration);
 
     return true;
 }
@@ -782,4 +886,12 @@ void Au3Interaction::redo()
 void Au3Interaction::pushProjectHistoryDuplicateState()
 {
     projectHistory()->pushHistoryState("Duplicated", "Duplicate");
+}
+
+void Au3Interaction::pushProjectHistorySplitDeleteState(secs_t start, secs_t duration)
+{
+    std::stringstream ss;
+    ss << "Split-deleted " << duration << " seconds at " << start;
+
+    projectHistory()->pushHistoryState(ss.str(), "Split delete");
 }
