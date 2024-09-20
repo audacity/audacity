@@ -48,6 +48,7 @@ or ASlider.
 #include <wx/settings.h>
 #include <wx/popupwin.h>
 #include <wx/window.h>
+#include <wx/display.h>
 
 #include "AColor.h"
 #include "ImageManipulation.h"
@@ -1146,6 +1147,24 @@ bool LWSlider::DoShowDialog(wxPoint pos)
    if (pos == wxPoint(-1, -1)) {
       dlg.Center();
    }
+   wxRect screenRect = wxDisplay(wxDisplay::GetFromPoint(pos)).GetClientArea();
+   int screenOffset = 8;
+   int dlgWidth = dlg.GetSize().GetWidth();
+   int dlgHeight = dlg.GetSize().GetHeight();
+
+   if (pos.x + dlgWidth > screenRect.GetRight()) {
+      pos.x = screenRect.GetRight() - dlgWidth - screenOffset;
+   }
+   if (pos.x < screenRect.GetLeft()) {
+      pos.x = screenRect.GetLeft() + screenOffset;
+   }
+   if (pos.y + dlgHeight > screenRect.GetBottom()) {
+      pos.y = screenRect.GetBottom() - dlgHeight - screenOffset;
+   }
+   if (pos.y < screenRect.GetTop()) {
+      pos.y = screenRect.GetTop() + screenOffset;
+   }
+   dlg.SetPosition(pos);
    
    changed = (dlg.ShowModal() == wxID_OK);
    if( changed )
