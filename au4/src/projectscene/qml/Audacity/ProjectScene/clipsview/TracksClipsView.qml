@@ -286,6 +286,7 @@ Rectangle {
                     canvas: content
                     trackId: model.trackId
                     isDataSelected: model.isDataSelected
+                    isTrackSelected: model.isTrackSelected
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
                         timeline.updateCursorPosition(xWithinTrack)
