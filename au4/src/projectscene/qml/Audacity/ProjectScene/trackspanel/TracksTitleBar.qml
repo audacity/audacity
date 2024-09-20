@@ -84,7 +84,11 @@ KDDW.TitleBarBase {
             }
 
             onClicked: {
-                addNewTrack.open()
+                if (addNewTrack.isOpened) {
+                    addNewTrack.close()
+                } else {
+                    addNewTrack.open()
+                }
             }
 
             AddNewTrackPopup {
