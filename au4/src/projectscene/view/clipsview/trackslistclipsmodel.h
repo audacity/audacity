@@ -39,6 +39,7 @@ public:
 
 signals:
     void dataSelectedTracksChanged();
+    void selectedTrackChanged();
     void isVerticalRulersVisibleChanged(bool isVerticalRulersVisible);
 
 private:
@@ -47,13 +48,16 @@ private:
     enum RoleNames {
         TypeRole = Qt::UserRole + 1,
         TrackIdRole,
-        IsDataSelectedRole
+        IsDataSelectedRole,
+        IsTrackSelectedRole
     };
 
     void setDataSelectedTracks(const std::vector<trackedit::TrackId>& tracks);
+    void setSelectedTrack(const trackedit::TrackId trackId);
 
     muse::async::NotifyList<au::trackedit::Track> m_trackList;
     std::vector<trackedit::TrackId> m_dataSelectedTracks;
+    trackedit::TrackId m_selectedTrack = au::trackedit::TrackId(-1);
     bool m_isVerticalRulersVisible = false;
 };
 }

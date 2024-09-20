@@ -31,8 +31,14 @@ void TracksListClipsModel::load()
     m_trackList = prj->trackList();
 
     m_dataSelectedTracks = selectionController()->dataSelectedOnTracks();
+    m_selectedTrack = selectionController()->selectedTrack();
+
     selectionController()->dataSelectedOnTracksChanged().onReceive(this, [this](const std::vector<trackedit::TrackId>& tracks) {
         setDataSelectedTracks(tracks);
+    });
+
+    selectionController()->trackSelected().onReceive(this, [this](const trackedit::TrackId& trackId) {
+        setSelectedTrack(trackId);
     });
 
     m_trackList.onChanged(this, [this]() {
@@ -90,6 +96,9 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     case IsDataSelectedRole: {
         return muse::contains(m_dataSelectedTracks, track.id);
     }
+    case IsTrackSelectedRole: {
+        return m_selectedTrack == track.id;
+    }
     default:
         break;
     }
@@ -103,7 +112,8 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
     {
         //{ TypeRole, "trackType" },
         { TrackIdRole, "trackId" },
-        { IsDataSelectedRole, "isDataSelected" }
+        { IsDataSelectedRole, "isDataSelected" },
+        { IsTrackSelectedRole, "isTrackSelected" }
     };
     return roles;
 }
@@ -131,4 +141,14 @@ void TracksListClipsModel::setDataSelectedTracks(const std::vector<trackedit::Tr
     m_dataSelectedTracks = tracks;
     emit dataSelectedTracksChanged();
     emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+}
+
+void TracksListClipsModel::setSelectedTrack(const trackedit::TrackId trackId)
+{
+    if (m_selectedTrack == trackId) {
+        return;
+    }
+    m_selectedTrack = trackId;
+    emit selectedTrackChanged();
+    emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackSelectedRole });
 }
