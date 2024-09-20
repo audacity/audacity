@@ -1644,6 +1644,7 @@ bool AudacityApp::InitPart2()
    std::vector<wxString> failedPlugins;
    if(!playingJournal && !SkipEffectsScanAtStartup.Read())
    {
+      HideSplashScreen(true);
       auto newPlugins = PluginManager::Get().CheckPluginUpdates();
       if(!newPlugins.empty())
       {
