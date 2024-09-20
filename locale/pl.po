@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.2\n"
+"Project-Id-Version: audacity 3.6.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-09-09 00:00+0000\n"
+"PO-Revision-Date: 2024-09-20 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -9470,7 +9470,7 @@ msgstr "Efekty główne"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Applies to all tracks"
-msgstr "Ma zastosowanie do wszystkich ścieżek"
+msgstr "Mają zastosowanie do wszystkich ścieżek"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
