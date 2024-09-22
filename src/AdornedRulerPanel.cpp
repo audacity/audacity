@@ -292,7 +292,7 @@ public:
       using namespace RefreshCode;
       auto result = CommonRulerHandle::Release(event, pProject, pParent);
 
-      if (mClicked == Button::Left && !mDragged)
+      if (mClicked == Button::Left && !mDragged && !mParent->mIsRecording)
          StartPlay(*pProject, event.event);
 
       if (!mDragged || 0 != (result & Cancelled))
