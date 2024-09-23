@@ -78,7 +78,7 @@ muse::async::Notification EffectsProvider::effectMetaListChanged() const
 EffectCategoryList EffectsProvider::effectsCategoryList() const
 {
     EffectCategoryList list;
-    list.push_back({ BUILTIN_CATEGORY_ID, muse::mtrc("effects", "Build-in") });
+    list.push_back({ BUILTIN_CATEGORY_ID, muse::mtrc("effects", "Built-in") });
     if (isVstSupported()) {
         list.push_back({ VST_CATEGORY_ID, muse::mtrc("effects", "VST") });
     }

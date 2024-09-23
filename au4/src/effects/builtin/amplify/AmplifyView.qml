@@ -18,10 +18,12 @@ EffectBase {
 
     AmplifyViewModel {
         id: amplify
+        onAmpChanged: slider.value = amp
     }
 
     Component.onCompleted: {
         amplify.init()
+        slider.value = amplify.amp
     }
 
     Column {
@@ -59,9 +61,9 @@ EffectBase {
         }
 
         StyledSlider {
+            id: slider
             width: parent.width
 
-            value: amplify.amp
             to: amplify.ampMax
             from: amplify.ampMin
             stepSize: 0.1
