@@ -11,6 +11,8 @@
 
 #include "effectstypes.h"
 
+#include <optional>
+
 class AudacityProject;
 class EffectSettings;
 namespace au::effects {

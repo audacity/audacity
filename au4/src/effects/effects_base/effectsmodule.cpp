@@ -44,14 +44,14 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IEffectsViewRegister>(moduleName(), new EffectsViewRegister());
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
     ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
-    ioc()->registerExport<IEffectExecutionScenarion>(moduleName(), new EffectExecutionScenario());
+    ioc()->registerExport<IEffectExecutionScenario>(moduleName(), new EffectExecutionScenario());
 }
 
 void EffectsModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
-        ar->reg(std::make_shared<EffectsUiActions>());
+        ar->reg(std::make_shared<EffectsUiActions>(m_actionsController));
     }
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {

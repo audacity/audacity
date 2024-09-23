@@ -497,6 +497,10 @@
         <key>get-more-effects</key>
     </SC>
     <SC>
+        <key>repeat-last-effect</key>
+        <seq>Ctrl+R</seq>
+    </SC>
+    <SC>
         <key>manage-analyzers</key>
     </SC>
     <SC>

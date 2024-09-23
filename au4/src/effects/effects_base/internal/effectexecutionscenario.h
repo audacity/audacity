@@ -5,10 +5,13 @@
 
 #include "../ieffectexecutionscenario.h"
 
+#include "async/channel.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
+
+#include <optional>
 
 class AudacityProject;
 class Effect;
@@ -16,7 +19,7 @@ class EffectBase;
 class EffectInstance;
 class SimpleEffectSettingsAccess;
 namespace au::effects {
-class EffectExecutionScenario : public IEffectExecutionScenarion
+class EffectExecutionScenario : public IEffectExecutionScenario
 {
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<IEffectsProvider> effectsProvider;
@@ -26,15 +29,22 @@ public:
     EffectExecutionScenario() = default;
 
     muse::Ret performEffect(const EffectId& effectId) override;
+    bool lastProcessorIsAvailable() const override;
+    muse::async::Notification lastProcessorIsNowAvailable() const override;
+    muse::Ret repeatLastProcessor() override;
 
 private:
 
     muse::Ret doPerformEffect(AudacityProject& project, const EffectId& effectId, unsigned int flags);
+    AudacityProject& projectRef();
 
     using ShowEffectHostInterfaceCb = std::function<bool (Effect&, std::shared_ptr<EffectInstance>&, SimpleEffectSettingsAccess&)>;
     using StopPlaybackCb = std::function<void ()>;
     using SelectAllIfNoneCb = std::function<void ()>;
 
     bool DoEffect(const EffectId& effectId, AudacityProject& project, unsigned flags);
+
+    muse::async::Notification m_lastProcessorIsAvailableChanged;
+    std::optional<EffectId> m_lastProcessorId;
 };
 }
