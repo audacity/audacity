@@ -31,6 +31,7 @@ public:
     muse::Ret performEffect(const EffectId& effectId) override;
     bool lastProcessorIsAvailable() const override;
     muse::async::Notification lastProcessorIsNowAvailable() const override;
+    muse::async::Channel<EffectId> lastProcessorIdChanged() const override;
     muse::Ret repeatLastProcessor() override;
 
 private:
@@ -45,6 +46,7 @@ private:
     bool DoEffect(const EffectId& effectId, AudacityProject& project, unsigned flags);
 
     muse::async::Notification m_lastProcessorIsAvailableChanged;
+    muse::async::Channel<EffectId> m_lastProcessorIdChanged;
     std::optional<EffectId> m_lastProcessorId;
 };
 }
