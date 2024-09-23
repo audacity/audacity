@@ -16,6 +16,7 @@ public:
     struct Style {
         QColor blankBrush;
         QColor samplePen;
+        QColor highlightedSamplePen;
         QColor sampleBrush;
         QColor rmsPen;
         QColor clippedPen;
@@ -33,6 +34,8 @@ public:
         double zoom = 0.0;
         double fromTime = 0.0;
         double toTime = 0.0;
+        double selectionStartTime = 0.0;
+        double selectionEndTime = 0.0;
         double channelHeightRatio = 0.5;
         Style style;
     };
