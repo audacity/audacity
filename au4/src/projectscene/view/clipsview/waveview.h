@@ -55,7 +55,7 @@ signals:
 
 private:
 
-    void onFrameTimeChanged();
+    void updateView();
 
     TimelineContext* m_context = nullptr;
     ClipKey m_clipKey;

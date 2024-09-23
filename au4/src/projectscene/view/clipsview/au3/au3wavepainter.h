@@ -7,6 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "trackedit/iselectioncontroller.h"
 
 class WaveTrack;
 class WaveClip;

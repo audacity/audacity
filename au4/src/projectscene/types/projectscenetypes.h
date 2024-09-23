@@ -50,12 +50,17 @@ public:
     double itemStartTime = 0.0;
     double itemEndTime = 0.0;
 
+    double selectionStartTime = 0.0;
+    double selectionEndTime = 0.0;
+
     inline bool operator==(const ClipTime& other) const
     {
         return muse::is_equal(clipStartTime, other.clipStartTime)
                && muse::is_equal(clipEndTime, other.clipEndTime)
                && muse::is_equal(itemStartTime, other.itemStartTime)
-               && muse::is_equal(itemEndTime, other.itemEndTime);
+               && muse::is_equal(itemEndTime, other.itemEndTime)
+               && muse::is_equal(selectionStartTime, other.selectionStartTime)
+               && muse::is_equal(selectionEndTime, other.selectionEndTime);
     }
 
     inline bool operator!=(const ClipTime& other) const { return !this->operator==(other); }

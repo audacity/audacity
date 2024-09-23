@@ -23,6 +23,7 @@
 #include "libraries/lib-track/PendingTracks.h"
 
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
 
 constexpr double CLIPVIEW_WIDTH_MIN = 4; // px
 
@@ -97,6 +98,9 @@ struct WaveMetrics
 
     double fromTime = 0.0;
     double toTime = 0.0;
+
+    double selectionStartTime = 0.0;
+    double selectionEndTime = 0.0;
 };
 
 class WaveformPainter final : public WaveClipListener
@@ -149,6 +153,7 @@ public:
         bitmapCache->SetPaintParameters(params);
 
         const ZoomInfo zoomInfo(0.0, metrics.zoom);
+        bitmapCache->SetSelection(zoomInfo, metrics.selectionStartTime, metrics.selectionEndTime, true);
 
         auto range = bitmapCache->PerformLookup(zoomInfo, metrics.fromTime, metrics.toTime);
 
@@ -514,7 +519,7 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
     .SetBlankColor(ColorFromQColor(style.blankBrush))
     .SetSampleColors(
         ColorFromQColor(style.samplePen),
-        ColorFromQColor(style.samplePen))
+        ColorFromQColor(style.highlightedSamplePen))
     .SetShowRMS(false)
     .SetRMSColors(
         ColorFromQColor(style.rmsPen),
@@ -653,6 +658,12 @@ void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const W
     wm.zoom = params.zoom;
     wm.fromTime = params.fromTime;
     wm.toTime = params.toTime;
+
+    // calculate selection area relative to the clip itself
+    if (!muse::RealIsEqual(params.selectionStartTime, 0.0) && !muse::RealIsEqual(params.selectionEndTime, 0.0)) {
+        wm.selectionStartTime = params.selectionStartTime - clip->Start() + clip->GetTrimLeft();
+        wm.selectionEndTime = params.selectionEndTime - clip->Start() + clip->GetTrimLeft();
+    }
 
     const Geometry& g = params.geometry;
 
