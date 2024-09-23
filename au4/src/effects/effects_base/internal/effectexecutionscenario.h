@@ -31,6 +31,7 @@ public:
     muse::Ret performEffect(const EffectId& effectId) override;
     bool lastProcessorIsAvailable() const override;
     muse::async::Notification lastProcessorIsNowAvailable() const override;
+    EffectMeta lastProcessor() const override;
     muse::Ret repeatLastProcessor() override;
 
 private:

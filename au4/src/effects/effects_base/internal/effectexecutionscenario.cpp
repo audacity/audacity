@@ -39,6 +39,14 @@ AudacityProject& EffectExecutionScenario::projectRef()
     return *reinterpret_cast<::AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
 }
 
+EffectMeta EffectExecutionScenario::lastProcessor() const
+{
+    if (!m_lastProcessorId.has_value()) {
+        return EffectMeta();
+    }
+    return effectsProvider()->meta(m_lastProcessorId.value());
+}
+
 muse::Ret EffectExecutionScenario::repeatLastProcessor()
 {
     IF_ASSERT_FAILED(m_lastProcessorId) {

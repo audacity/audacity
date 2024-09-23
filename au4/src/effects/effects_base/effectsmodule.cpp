@@ -38,6 +38,7 @@ void EffectsModule::registerExports()
     m_provider = std::make_shared<EffectsProvider>();
     m_configuration = std::make_shared<EffectsConfiguration>();
     m_actionsController = std::make_shared<EffectsActionsController>();
+    m_effectsUiActions = std::make_shared<EffectsUiActions>(m_actionsController);
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
@@ -51,7 +52,7 @@ void EffectsModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
-        ar->reg(std::make_shared<EffectsUiActions>(m_actionsController));
+        ar->reg(m_effectsUiActions);
     }
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
@@ -76,6 +77,7 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     });
 
     m_actionsController->init();
+    m_effectsUiActions->init();
 
     m_provider->reloadEffects();
 }

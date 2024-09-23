@@ -8,12 +8,17 @@
 #include "context/shortcutcontext.h"
 #include "types/translatablestring.h"
 
+#include "log.h"
+
 using namespace au::effects;
 using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-const UiActionList EffectsUiActions::m_actions = {
+static const TranslatableString REPEAT_LAST_EFFECT_DEF_TITLE("action", "Repeat last effect");
+static const TranslatableString REPEAT_LAST_EFFECT_TITLE("action", "Repeat %1");
+
+UiActionList EffectsUiActions::m_actions = {
     UiAction("effect-open",
              au::context::UiCtxAny,
              au::context::CTX_ANY
@@ -21,7 +26,7 @@ const UiActionList EffectsUiActions::m_actions = {
     UiAction("repeat-last-effect",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Repeat last effect"),
+             REPEAT_LAST_EFFECT_DEF_TITLE,
              TranslatableString("action", "Repeat last effect")
              ),
 };
@@ -31,9 +36,35 @@ EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> con
 {
 }
 
+void EffectsUiActions::init()
+{
+    effectExecutionScenario()->lastProcessorIsNowAvailable().onNotify(this, [this]() {
+        auto it = std::find_if(m_actions.begin(), m_actions.end(), [](const UiAction& action) {
+            return action.code == "repeat-last-effect";
+        });
+        IF_ASSERT_FAILED(it != m_actions.end()) {
+            return;
+        }
+
+        if (effectExecutionScenario()->lastProcessorIsAvailable()) {
+            EffectMeta meta = effectExecutionScenario()->lastProcessor();
+            it->title = REPEAT_LAST_EFFECT_TITLE.arg(meta.title);
+        } else {
+            it->title = REPEAT_LAST_EFFECT_DEF_TITLE;
+        }
+
+        m_actionsChanged.send({ *it });
+    });
+}
+
 const UiActionList& EffectsUiActions::actionsList() const
 {
     return m_actions;
+}
+
+muse::async::Channel<muse::ui::UiActionList> EffectsUiActions::actionsChanged() const
+{
+    return m_actionsChanged;
 }
 
 bool EffectsUiActions::actionEnabled(const UiAction& action) const

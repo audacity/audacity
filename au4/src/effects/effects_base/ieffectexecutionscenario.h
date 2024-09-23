@@ -21,6 +21,7 @@ public:
     virtual muse::Ret performEffect(const EffectId& effectId) = 0;
     virtual bool lastProcessorIsAvailable() const = 0;
     virtual muse::async::Notification lastProcessorIsNowAvailable() const = 0;
+    virtual EffectMeta lastProcessor() const = 0;
     virtual muse::Ret repeatLastProcessor() = 0;
 };
 }
