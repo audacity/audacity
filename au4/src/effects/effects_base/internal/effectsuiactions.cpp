@@ -17,17 +17,28 @@ const UiActionList EffectsUiActions::m_actions = {
     UiAction("effect-open",
              au::context::UiCtxAny,
              au::context::CTX_ANY
-             )
+             ),
+    UiAction("repeat-last-effect",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Repeat last effect"),
+             TranslatableString("action", "Repeat last effect")
+             ),
 };
+
+EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> controller)
+    : m_controller{controller}
+{
+}
 
 const UiActionList& EffectsUiActions::actionsList() const
 {
     return m_actions;
 }
 
-bool EffectsUiActions::actionEnabled(const UiAction&) const
+bool EffectsUiActions::actionEnabled(const UiAction& action) const
 {
-    return true;
+    return m_controller->canReceiveAction(action.code);
 }
 
 bool EffectsUiActions::actionChecked(const UiAction&) const
@@ -37,8 +48,7 @@ bool EffectsUiActions::actionChecked(const UiAction&) const
 
 muse::async::Channel<ActionCodeList> EffectsUiActions::actionEnabledChanged() const
 {
-    static muse::async::Channel<ActionCodeList> ch;
-    return ch;
+    return m_controller->canReceiveActionsChanged();
 }
 
 muse::async::Channel<ActionCodeList> EffectsUiActions::actionCheckedChanged() const

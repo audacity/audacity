@@ -9,13 +9,18 @@
 #include "modularity/ioc.h"
 #include "ui/iuiactionsmodule.h"
 #include "context/iuicontextresolver.h"
+#include "effectsactionscontroller.h"
+#include "ieffectsprovider.h"
 
 namespace au::effects {
 class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
     muse::Inject<context::IUiContextResolver> uicontextResolver;
+    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
+    EffectsUiActions(std::shared_ptr<EffectsActionsController> controller);
+
     const muse::ui::UiActionList& actionsList() const override;
 
     bool actionEnabled(const muse::ui::UiAction& act) const override;
@@ -26,5 +31,6 @@ public:
 
 private:
     static const muse::ui::UiActionList m_actions;
+    const std::shared_ptr<EffectsActionsController> m_controller;
 };
 }

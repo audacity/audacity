@@ -282,8 +282,6 @@ MenuItem* AppMenuModel::makeGenerateMenu()
     MenuItemList generateItems {
         makeMenuItem("generate-plugin-manager"),
         makeSeparator(),
-        makeMenuItem("repeat-last-generator"),
-        makeSeparator(),
         makeMenuItem("generate-omitted"),
     };
 
@@ -300,8 +298,6 @@ MenuItem* AppMenuModel::makeAnalyzeMenu()
     MenuItemList analyzeItems {
         makeMenuItem("analyze-plugin-manager"),
         makeSeparator(),
-        makeMenuItem("repeat-last-analyzer"),
-        makeSeparator(),
         makeMenuItem("contrast-analyzer"),
         makeMenuItem("plot-spectrum"),
         makeMenuItem("analyzer-omitted"),
@@ -314,8 +310,6 @@ MenuItem* AppMenuModel::makeToolsMenu()
 {
     MenuItemList toolsItems {
         makeMenuItem("tools-plugin-manager"),
-        makeSeparator(),
-        makeMenuItem("repeat-last-tool"),
         makeSeparator(),
         makeMenuItem("manage-macros"),
         makeMenu(TranslatableString("appshell/menu/macros", "&Macros"), makeMacrosItems(), "menu-macros"),
