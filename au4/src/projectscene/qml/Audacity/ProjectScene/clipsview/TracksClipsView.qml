@@ -143,6 +143,19 @@ Rectangle {
 
             color: ui.theme.fontPrimaryColor
         }
+
+        Rectangle {
+            id: timelineSelRect
+
+            x: timeline.context.timeToPosition(timeline.context.selectionStartTime)
+            width: timeline.context.timeToPosition(timeline.context.selectionEndTime) - x
+
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+
+            color: "#8EC9FF"
+            opacity: 0.3
+        }
     }
 
     Rectangle {
