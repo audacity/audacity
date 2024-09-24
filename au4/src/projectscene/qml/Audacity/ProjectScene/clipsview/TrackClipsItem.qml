@@ -177,11 +177,11 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         color: "#8EC9FF"
-        opacity: 0.4
+        opacity: 0.1
         visible: root.isDataSelected
 
-        x: root.context.timeToPosition(root.context.selectionStartTime)
-        width: root.context.timeToPosition(root.context.selectionEndTime) - x
+        x: root.context.selectionStartPosition
+        width: root.context.selectionEndPosition - x
         z: 1
     }
 

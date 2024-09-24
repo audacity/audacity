@@ -147,14 +147,14 @@ Rectangle {
         Rectangle {
             id: timelineSelRect
 
-            x: timeline.context.timeToPosition(timeline.context.selectionStartTime)
-            width: timeline.context.timeToPosition(timeline.context.selectionEndTime) - x
+            x: timeline.context.selectionStartPosition
+            width: timeline.context.selectionEndPosition - x
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
             color: "#8EC9FF"
-            opacity: 0.3
+            opacity: 0.2
         }
     }
 
@@ -331,6 +331,8 @@ Rectangle {
 
         ClipsSelection {
             id: clipsSelection
+
+            context: timeline.context
             anchors.fill: parent
             onSelectionDraged: function(x1, x2, completed) {
                 selectionController.onSelectionDraged(x1, x2, completed)

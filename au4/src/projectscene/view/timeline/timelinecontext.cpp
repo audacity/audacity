@@ -36,7 +36,7 @@ void TimelineContext::init(double frameWidth)
     emit frameEndTimeChanged();
     emit frameTimeChanged();
 
-    m_selecitonStartTime = selectionController()->dataSelectedStartTime();
+    m_selectionStartTime = selectionController()->dataSelectedStartTime();
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t time) {
         setSelectionStartTime(time);
     });
@@ -62,6 +62,8 @@ void TimelineContext::init(double frameWidth)
         emit horizontalScrollChanged();
         emit selectionStartTimeChanged();
         emit selectionEndTimeChanged();
+        emit selectionStartPositionChanged();
+        emit selectionEndPositionChanged();
     });
 
     dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
@@ -299,7 +301,7 @@ qreal TimelineContext::frameCenterPosition() const
 
 qreal TimelineContext::selectionCenterPosition() const
 {
-    double centerTime = m_selecitonStartTime + (m_selectionEndTime - m_selecitonStartTime) / 2.0;
+    double centerTime = m_selectionStartTime + (m_selectionEndTime - m_selectionStartTime) / 2.0;
     return timeToPosition(centerTime);
 }
 
@@ -326,7 +328,7 @@ void TimelineContext::fitSelectionToWidth()
 
     double zoomPosition = findZoomFocusPosition();
 
-    double newZoom = m_frameWidth / (m_selectionEndTime - m_selecitonStartTime);
+    double newZoom = m_frameWidth / (m_selectionEndTime - m_selectionStartTime);
     setZoom(newZoom, zoomPosition);
 
     double centerPosition = frameCenterPosition();
@@ -369,7 +371,7 @@ void TimelineContext::updateFrameTime()
 
 bool TimelineContext::hasSelection() const
 {
-    return !muse::RealIsEqualOrLess(m_selecitonStartTime, 0.0) && !muse::RealIsEqualOrLess(m_selectionEndTime, 0.0);
+    return !muse::RealIsEqualOrLess(m_selectionStartTime, 0.0) && !muse::RealIsEqualOrLess(m_selectionEndTime, 0.0);
 }
 
 double TimelineContext::timeToPosition(double time) const
@@ -541,14 +543,15 @@ void TimelineContext::setFrameEndTime(double newFrameEndTime)
 
 double TimelineContext::selectionStartTime() const
 {
-    return m_selecitonStartTime.raw();
+    return m_selectionStartTime.raw();
 }
 
 void TimelineContext::setSelectionStartTime(double time)
 {
-    if (m_selecitonStartTime != time) {
-        m_selecitonStartTime = time;
+    if (m_selectionStartTime != time) {
+        m_selectionStartTime = time;
         emit selectionStartTimeChanged();
+        emit selectionStartPositionChanged();
         updateSelectionActive();
     }
 }
@@ -558,11 +561,22 @@ double TimelineContext::selectionEndTime() const
     return m_selectionEndTime.raw();
 }
 
+double TimelineContext::selectionStartPosition() const
+{
+    return timeToPosition(m_selectionStartTime);
+}
+
+double TimelineContext::selectionEndPosition() const
+{
+    return timeToPosition(m_selectionEndTime);
+}
+
 void TimelineContext::setSelectionEndTime(double time)
 {
     if (m_selectionEndTime != time) {
         m_selectionEndTime = time;
         emit selectionEndTimeChanged();
+        emit selectionEndPositionChanged();
         updateSelectionActive();
     }
 }
@@ -574,9 +588,9 @@ bool TimelineContext::selectionActive() const
 
 void TimelineContext::updateSelectionActive()
 {
-    bool isActive = m_selecitonStartTime >= 0.0
+    bool isActive = m_selectionStartTime >= 0.0
                     && m_selectionEndTime > 0.0
-                    && m_selectionEndTime > m_selecitonStartTime;
+                    && m_selectionEndTime > m_selectionStartTime;
 
     if (m_selectionActive == isActive) {
         return;
