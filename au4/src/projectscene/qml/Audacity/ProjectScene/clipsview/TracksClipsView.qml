@@ -332,7 +332,12 @@ Rectangle {
         ClipsSelection {
             id: clipsSelection
             anchors.fill: parent
-            onSelectionDraged: function(x1, x2, completed) { selectionController.onSelectionDraged(x1, x2, completed) }
+            onSelectionDraged: function(x1, x2, completed) {
+                selectionController.onSelectionDraged(x1, x2, completed)
+                if (completed) {
+                    playCursorController.seekToX(Math.min(x1, x2))
+                }
+            }
         }
 
         PlayCursor {
