@@ -182,6 +182,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Brian Armstrong"), developerFormat, roleContributor);
    AddCredit(wxT("David Avery"), developerFormat, roleContributor);
    AddCredit(wxT("David Bailes"), accessibilityAdvisorFormat, roleContributor);
+   AddCredit(wxT("Brian Beard (Kurtsley)"), developerFormat, roleContributor);
    AddCredit(wxT("William Bland"), developerFormat, roleContributor);
    AddCredit(wxT("Sami Boukortt"), developerFormat, roleContributor);
    AddCredit(wxT("Jeremy R. Brown"), developerFormat, roleContributor);
