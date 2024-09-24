@@ -14,6 +14,7 @@
 
 #include "PlatformCompatibility.h"
 #include <wx/stdpaths.h>
+#include <wx/utils.h>
 
 std::string PlatformCompatibility::GetUserDataDir()
 {
@@ -48,4 +49,14 @@ std::string PlatformCompatibility::GetDocumentsDir()
 std::string PlatformCompatibility::GetExecutablePath()
 {
    return wxStandardPaths::Get().GetExecutablePath().ToStdString();
+}
+
+std::string PlatformCompatibility::GetTempDir()
+{
+   return wxStandardPaths::Get().GetTempDir().ToStdString();
+}
+
+std::string PlatformCompatibility::GetHomeDir()
+{
+   return wxGetHomeDir().ToStdString();
 }

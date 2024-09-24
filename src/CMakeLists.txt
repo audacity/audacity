@@ -524,8 +524,6 @@ set( SOURCES
       # Nyquist Effects
 
       $<$<BOOL:${USE_NYQUIST}>:
-         effects/nyquist/LoadNyquist.cpp
-         effects/nyquist/LoadNyquist.h
          effects/nyquist/Nyquist.cpp
          effects/nyquist/Nyquist.h
       >
@@ -618,8 +616,6 @@ set( SOURCES
       prefs/QualityPrefs.h
       prefs/RecordingPrefs.cpp
       prefs/RecordingPrefs.h
-      prefs/SpectrogramSettings.cpp
-      prefs/SpectrogramSettings.h
       prefs/SpectrumPrefs.cpp
       prefs/SpectrumPrefs.h
       prefs/ThemePrefs.cpp
@@ -630,8 +626,8 @@ set( SOURCES
       prefs/TracksPrefs.h
       prefs/WaveformPrefs.cpp
       prefs/WaveformPrefs.h
-      prefs/WaveformSettings.cpp
-      prefs/WaveformSettings.h
+      prefs/WaveformScale.cpp
+      prefs/WaveformScale.h
 
       # Toolbars
 
@@ -741,8 +737,6 @@ set( SOURCES
       tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.h
       tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
       tracks/playabletrack/wavetrack/ui/WaveChannelView.h
-      tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-      tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
@@ -1008,7 +1002,6 @@ set( LIBRARIES
    PUBLIC
       ${CMAKE_REQUIRED_LIBRARIES}
       ZLIB::ZLIB
-      $<$<BOOL:${USE_NYQUIST}>:libnyquist>
       $<$<BOOL:${USE_VAMP}>:libvamp>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GLIB>
       $<$<PLATFORM_ID:Linux,FreeBSD,OpenBSD,NetBSD,CYGWIN>:PkgConfig::GTK>
@@ -1303,7 +1296,7 @@ set( AUDACITY_LIBRARIES
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
    lib-audacity-application-logic-interface
-   lib-builtin-effects
+   lib-builtin-effects-interface
 )
 
 if (USE_VST)
@@ -1367,6 +1360,12 @@ if( ${_OPT}has_crashreports )
          lib-breakpad-configurer-interface
       )
    endif()
+endif()
+
+if( ${_OPT}use_nyquist )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-nyquist-effects-interface
+   )
 endif()
 
 propagate_interesting_dependencies( ${TARGET} "${AUDACITY_LIBRARIES}" )

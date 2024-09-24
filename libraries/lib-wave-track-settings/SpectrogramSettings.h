@@ -26,7 +26,7 @@ class wxArrayStringEx;
 class WaveChannel;
 class WaveTrack;
 
-class AUDACITY_DLL_API SpectrogramSettings
+class WAVE_TRACK_SETTINGS_API SpectrogramSettings
    : public PrefsListener
    , public ClientData::Cloneable<>
 {
@@ -34,7 +34,7 @@ class AUDACITY_DLL_API SpectrogramSettings
 public:
 
    // Singleton for settings that are not per-track
-   class AUDACITY_DLL_API Globals
+   class WAVE_TRACK_SETTINGS_API Globals
    {
    public:
       static Globals &Get();
@@ -204,9 +204,9 @@ public:
    Floats         dWindow; // Derivative of window
 };
 
-extern AUDACITY_DLL_API IntSetting SpectrumMaxFreq;
+extern WAVE_TRACK_SETTINGS_API IntSetting SpectrumMaxFreq;
 
-class AUDACITY_DLL_API SpectrogramBounds
+class WAVE_TRACK_SETTINGS_API SpectrogramBounds
    : public ClientData::Cloneable<>
 {
 public:

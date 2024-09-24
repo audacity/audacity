@@ -300,6 +300,7 @@ set( LIBRARIES
 )
 
 set_target_properties( ${TARGET} PROPERTIES FOLDER "lib-src" )
+set_target_properties( ${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
 
 organize_source( "${CMAKE_CURRENT_SOURCE_DIR}" "" "${SOURCES}" )
 

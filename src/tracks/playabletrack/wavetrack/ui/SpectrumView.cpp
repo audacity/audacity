@@ -35,7 +35,7 @@ Paul Licameli split from WaveChannelView.cpp
 #include "WaveTrack.h"
 #include "WaveTrackLocation.h"
 #include "WaveTrackUtilities.h"
-#include "../../../../prefs/SpectrogramSettings.h"
+#include "SpectrogramSettings.h"
 
 #include <wx/dcmemory.h>
 #include <wx/graphics.h>
@@ -44,6 +44,10 @@ Paul Licameli split from WaveChannelView.cpp
 
 class BrushHandle;
 class SpectralData;
+
+static_assert(
+   SpectrogramSettings::csNumColorScheme == AColor::colorSchemes,
+   "Broken correspondence");
 
 static WaveChannelSubView::Type sType{
    WaveChannelViewConstants::Spectrum,

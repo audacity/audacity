@@ -70,7 +70,7 @@ static int ExecFromWorker(wxString *pIn, wxString *pOut)
 }
 
 /// Executes a command on the main (GUI) thread.
-static int ExecFromMain(wxString *pIn, wxString *pOut)
+int ExecFromMain(wxString *pIn, wxString *pOut)
 {
    return ExecCommand(pIn, pOut, true);
 }
@@ -90,15 +90,3 @@ void ScriptCommandRelay::StartScriptServer(tpRegScriptServerFunc scriptFn)
 
    std::thread(server, scriptFn).detach();
 }
-
-#if USE_NYQUIST
-void * ExecForLisp( char * pIn )
-{
-   wxString Str1(pIn);
-   wxString Str2;
-
-   ExecFromMain(&Str1, &Str2);
-
-   return nyq_reformat_aud_do_response(Str2);
-}
-#endif

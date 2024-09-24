@@ -13,6 +13,7 @@ Paul Licameli split from WaveChannelVRulerControls.cpp
 #include "WaveformVZoomHandle.h"
 #include "WaveChannelVRulerControls.h"
 
+#include "prefs/WaveformScale.h"
 #include "../../../ui/ChannelView.h"
 #include "NumberScale.h"
 #include "ProjectHistory.h"
@@ -20,7 +21,7 @@ Paul Licameli split from WaveChannelVRulerControls.cpp
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../UIHandle.h"
 #include "WaveTrack.h"
-#include "../../../../prefs/WaveformSettings.h"
+#include "WaveformSettings.h"
 #include "../../../../widgets/Ruler.h"
 #include "../../../../widgets/LinearUpdater.h"
 #include "../../../../widgets/RealFormat.h"
@@ -263,10 +264,10 @@ void WaveformVRulerControls::DoUpdateVRuler(
       SetLastdBRange(cache, wc);
 
    auto scaleType = settings.scaleType;
-   
+
    if (settings.isLinear()) {
       // Waveform
-      
+
       if (cache.GetLastScaleType() != WaveformSettings::stLinearAmp &&
           cache.GetLastScaleType() != WaveformSettings::stLinearDb &&
           cache.GetLastScaleType() != -1)
@@ -282,7 +283,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
             min *= sign;
          }
          sign = (max >= 0 ? 1 : -1);
-         
+
          if (max != 0.) {
             max = DB_TO_LINEAR(fabs(max) * dBRange - dBRange);
             if (max < 0.0)
@@ -291,7 +292,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
          }
          cache.SetDisplayBounds(min, max);
       }
-      
+
       vruler->SetDbMirrorValue(0.0);
       vruler->SetBounds(
          rect.x, rect.y, rect.x + rect.width, rect.y + rect.height - 1);
@@ -365,7 +366,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
             min *= sign;
          }
          sign = (max >= 0 ? 1 : -1);
-         
+
          if (max != 0.) {
             max = (LINEAR_TO_DB(fabs(max)) + dBRange) / dBRange;
             if (max < 0.0)
@@ -378,16 +379,16 @@ void WaveformVRulerControls::DoUpdateVRuler(
          SetLastdBRange(cache, wc);
          // Remap the max of the scale
          float newMax = max;
-         
+
          // This commented out code is problematic.
          // min and max may be correct, and this code cause them to change.
 #ifdef ONLY_LABEL_POSITIVE
          const float sign = (max >= 0 ? 1 : -1);
          if (max != 0.) {
-            
+
             // Ugh, duplicating from TrackPanel.cpp
 #define ZOOMLIMIT 0.001f
-            
+
             const float extreme = LINEAR_TO_DB(2);
             // recover dB value of max
             const float dB = std::min(
@@ -403,7 +404,7 @@ void WaveformVRulerControls::DoUpdateVRuler(
 #endif
          cache.SetDisplayBounds(min, newMax);
       }
-      
+
       // Old code was if ONLY_LABEL_POSITIVE were defined.
       // it uses the +1 to 0 range only.
       // the enabled code uses +1 to -1, and relies on set ticks labelling knowing about
@@ -415,21 +416,21 @@ void WaveformVRulerControls::DoUpdateVRuler(
          float topval = 0;
          int bot = rect.height;
          float botval = -dBRange;
-         
+
 #ifdef ONLY_LABEL_POSITIVE
          if (min < 0) {
             bot = top + (int)((max / (max - min))*(bot - top));
             min = 0;
          }
-         
+
          if (max > 1) {
             top += (int)((max - 1) / (max - min) * (bot - top));
             max = 1;
          }
-         
+
          if (max < 1 && max > 0)
             topval = -((1 - max) * dBRange);
-         
+
          if (min > 0) {
             botval = -((1 - min) * dBRange);
          }

@@ -39,6 +39,8 @@ namespace PlatformCompatibility
    std::string FILES_API GetPluginsDir();
    std::string FILES_API GetDocumentsDir();
    std::string FILES_API GetExecutablePath();
+   std::string FILES_API GetTempDir();
+   std::string FILES_API GetHomeDir();
 };
 
 #endif

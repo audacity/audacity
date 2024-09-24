@@ -7,6 +7,8 @@ set( SOURCES
    EffectBase.h
    Effect.cpp
    Effect.h
+   EffectManager.cpp
+   EffectManager.h
    EffectOutputTracks.cpp
    EffectOutputTracks.h
    EffectPlugin.cpp

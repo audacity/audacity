@@ -35,6 +35,8 @@ set( SOURCES
    WaveTrackSink.h
    WaveTrackUtilities.cpp
    WaveTrackUtilities.h
+   WaveChannelViewConstants.cpp
+   WaveChannelViewConstants.h
 )
 set( LIBRARIES
    lib-project-rate-interface

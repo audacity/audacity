@@ -3,8 +3,6 @@ A UI-agnostic, high-level library implementing the behavior of Audacity.
 ]]
 
 set( SOURCES
-   EffectManager.cpp
-   EffectManager.h
    AudacityApplicationLogic.cpp
    AudacityApplicationLogic.h
    AudacityApplicationLogicTypes.h

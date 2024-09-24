@@ -76,15 +76,16 @@ namespace WaveChannelViewConstants
    };
 
    // Handle remapping of enum values from 2.1.0 and earlier
+   WAVE_TRACK_API
    Display ConvertLegacyDisplayValue(int oldValue);
 
    //! String identifier for a preference for one of each type of view
-   extern AUDACITY_DLL_API const EnumValueSymbol MultiViewSymbol;
+   extern WAVE_TRACK_API const EnumValueSymbol MultiViewSymbol;
 }
 
 #include <vector>
 
-struct AUDACITY_DLL_API WaveChannelSubViewType {
+struct WAVE_TRACK_API WaveChannelSubViewType {
    using Display = WaveChannelViewConstants::Display;
 
    // Identifies the type session-wide, and determines relative position in
@@ -101,7 +102,7 @@ struct AUDACITY_DLL_API WaveChannelSubViewType {
    { return id == other.id; }
 
    // Typically a file scope statically constructed object
-   struct AUDACITY_DLL_API RegisteredType {
+   struct WAVE_TRACK_API RegisteredType {
       RegisteredType(WaveChannelSubViewType type);
    };
 

@@ -475,8 +475,6 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-menus/MenuRegistry.cpp
     ${AU3_LIBRARIES}/lib-menus/MenuRegistry.h
 
-    ${AU3_LIBRARIES}/lib-audacity-application-logic/EffectManager.cpp
-    ${AU3_LIBRARIES}/lib-audacity-application-logic/EffectManager.h
     ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogic.cpp
     ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogic.h
     ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogicTypes.h
@@ -485,6 +483,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-effects/EffectBase.h
     ${AU3_LIBRARIES}/lib-effects/Effect.cpp
     ${AU3_LIBRARIES}/lib-effects/Effect.h
+    ${AU3_LIBRARIES}/lib-effects/EffectManager.cpp
+    ${AU3_LIBRARIES}/lib-effects/EffectManager.h
     ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.cpp
     ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.h
     ${AU3_LIBRARIES}/lib-effects/EffectPlugin.cpp

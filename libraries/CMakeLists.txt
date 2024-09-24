@@ -41,6 +41,7 @@ set( LIBRARIES
    lib-realtime-effects
    lib-audio-io
    lib-wave-track
+   lib-wave-track-settings
    lib-wave-track-paint
    lib-track-selection
    lib-project-file-io
@@ -101,6 +102,10 @@ if( ${_OPT}has_crashreports )
    elseif( ${_OPT}crashreport_backend STREQUAL "crashpad" )
       list( APPEND LIBRARIES lib-crashpad-configurer )
    endif()
+endif()
+
+if ( ${_OPT}use_nyquist )
+   list( APPEND LIBRARIES lib-nyquist-effects )
 endif()
 
 # This library depends on lib-network-manager
