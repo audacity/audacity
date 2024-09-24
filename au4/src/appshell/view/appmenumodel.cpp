@@ -113,6 +113,15 @@ void AppMenuModel::setupConnections()
     //     workspacesItem.setSubitems(makeWorkspacesItems());
     // });
 
+    uiActionsRegister()->actionsChanged().onReceive(this, [this](const ui::UiActionList& acts) {
+        for (const UiAction& act : acts) {
+            MenuItem& item = findItem(act.code);
+            if (item.isValid()) {
+                item.setAction(act);
+            }
+        }
+    });
+
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
         MenuItem& effectsItem = findMenu("menu-effect");
         effectsItem.setSubitems(makeEffectsItems());

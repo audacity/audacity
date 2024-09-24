@@ -290,10 +290,13 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
 
         //! NOTE Step 8.2 - remember a successful effect
         if (!(flags & EffectManager::kDontRepeatLast) && effect->GetType() == EffectTypeProcess) {
-            const auto notify = !m_lastProcessorId.has_value();
-            m_lastProcessorId = effectId;
-            if (notify) {
-                m_lastProcessorIsAvailableChanged.notify();
+            if (m_lastProcessorId != effectId) {
+                const auto firstTime = !m_lastProcessorId.has_value();
+                m_lastProcessorId = effectId;
+                m_lastProcessorIdChanged.send(effectId);
+                if (firstTime) {
+                    m_lastProcessorIsAvailableChanged.notify();
+                }
             }
         }
     }
@@ -309,4 +312,9 @@ bool EffectExecutionScenario::lastProcessorIsAvailable() const
 muse::async::Notification EffectExecutionScenario::lastProcessorIsNowAvailable() const
 {
     return m_lastProcessorIsAvailableChanged;
+}
+
+muse::async::Channel<EffectId> EffectExecutionScenario::lastProcessorIdChanged() const
+{
+    return m_lastProcessorIdChanged;
 }
