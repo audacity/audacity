@@ -34,6 +34,8 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 
     Q_PROPERTY(double selectionStartTime READ selectionStartTime NOTIFY selectionStartTimeChanged FINAL)
     Q_PROPERTY(double selectionEndTime READ selectionEndTime NOTIFY selectionEndTimeChanged FINAL)
+    Q_PROPERTY(double selectionStartPosition READ selectionStartPosition NOTIFY selectionStartPositionChanged FINAL)
+    Q_PROPERTY(double selectionEndPosition READ selectionEndPosition NOTIFY selectionEndPositionChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
     Q_PROPERTY(qreal startHorizontalScrollPosition READ startHorizontalScrollPosition NOTIFY horizontalScrollChanged)
@@ -68,6 +70,8 @@ public:
 
     double selectionStartTime() const;
     double selectionEndTime() const;
+    double selectionStartPosition() const;
+    double selectionEndPosition() const;
     bool selectionActive() const;
 
     Q_INVOKABLE void init(double frameWidth);
@@ -115,6 +119,8 @@ signals:
 
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
+    void selectionStartPositionChanged();
+    void selectionEndPositionChanged();
     void selectionActiveChanged();
 
     void viewContentYChangeRequested(double contentY);
@@ -171,7 +177,7 @@ private:
     int m_timeSigUpper = 4;
     int m_timeSigLower = 4;
 
-    trackedit::secs_t m_selecitonStartTime = -1.0;
+    trackedit::secs_t m_selectionStartTime = -1.0;
     trackedit::secs_t m_selectionEndTime = -1.0;
     bool m_selectionActive = false;
 

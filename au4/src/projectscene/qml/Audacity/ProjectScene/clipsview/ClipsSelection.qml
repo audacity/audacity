@@ -4,6 +4,7 @@ Item {
     id: root
 
     property alias active: selRect.visible
+    property var context: null
     property real minSelection: 12 // px  4left + 4 + 4right
 
     signal selectionDraged(var x1, var x2, var completed)
@@ -15,13 +16,8 @@ Item {
     }
 
     function onSelectionChanged(p1, p2) {
-        if (p2.x > p1.x) {
-            selRect.x = p1.x
-            selRect.width = p2.x - p1.x
-        } else {
-            selRect.x = p2.x
-            selRect.width = p1.x - p2.x
-        }
+        selRect.x = root.context.selectionStartPosition
+        selRect.width = root.context.selectionEndPosition - selRect.x
 
         selRect.visible = selRect.width > root.minSelection
     }
@@ -48,7 +44,7 @@ Item {
 
         visible: false
         color: "#8EC9FF"
-        opacity: 0.1
+        opacity: 0.05
 
         Rectangle {
             anchors.top: parent.top
@@ -56,7 +52,7 @@ Item {
             anchors.left: parent.left
             width: 2
             color: "#8EC9FF"
-            opacity: 0.4
+            opacity: 0.3
         }
 
         Rectangle {
@@ -65,7 +61,7 @@ Item {
             anchors.right: parent.right
             width: 2
             color: "#8EC9FF"
-            opacity: 0.4
+            opacity: 0.3
         }
     }
 
@@ -99,6 +95,8 @@ Item {
 
         onReleased: {
             root._onSelectionDraging(true)
+            selRect.x = root.context.selectionStartPosition
+            selRect.width = root.context.selectionEndPosition - selRect.x
             leftMa.x = selRect.x
             leftMa.cursorShape = Qt.SizeHorCursor
         }
@@ -132,6 +130,7 @@ Item {
 
         onReleased: {
             root._onSelectionDraging(true)
+            selRect.width = root.context.selectionEndPosition - selRect.x
             rightMa.x = selRect.x + selRect.width - rightMa.width
             rightMa.cursorShape = Qt.SizeHorCursor
         }
