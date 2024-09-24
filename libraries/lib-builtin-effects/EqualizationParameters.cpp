@@ -23,12 +23,13 @@ const EnumValueSymbol EqualizationParameters::kInterpStrings[nInterpolations] =
    { XO("Cubic") }
 };
 
-EqualizationParameters::
-EqualizationParameters(const EffectSettingsManager &manager)
-   : mCurveName{ CurveName.def }
-   , mM{ FilterLength.def }
-   , mInterp{ InterpMeth.def }
-   , mLin{ InterpLin.def }
+EqualizationParameters::EqualizationParameters(
+   const EffectSettingsManager& manager)
+    : mSettingsManager { manager }
+    , mCurveName { CurveName.def }
+    , mM { FilterLength.def }
+    , mInterp { InterpMeth.def }
+    , mLin { InterpLin.def }
 {
    GetConfig(manager, PluginSettings::Private,
       CurrentSettingsGroup(), wxT("dBMin"), mdBMin, dBMin.def);
@@ -53,17 +54,17 @@ void EqualizationParameters::LoadDefaults(int options)
       mDrawMode = false;
 }
 
-void EqualizationParameters::SaveConfig(const EffectSettingsManager &manager)
+void EqualizationParameters::SaveConfig()
 const
 {
    // TODO: just visit these effect settings the default way
-   SetConfig(manager, PluginSettings::Private,
+   SetConfig(mSettingsManager, PluginSettings::Private,
       CurrentSettingsGroup(), wxT("dBMin"), mdBMin);
-   SetConfig(manager, PluginSettings::Private,
+   SetConfig(mSettingsManager, PluginSettings::Private,
       CurrentSettingsGroup(), wxT("dBMax"), mdBMax);
-   SetConfig(manager, PluginSettings::Private,
+   SetConfig(mSettingsManager, PluginSettings::Private,
       CurrentSettingsGroup(), wxT("DrawMode"), mDrawMode);
-   SetConfig(manager, PluginSettings::Private,
+   SetConfig(mSettingsManager, PluginSettings::Private,
       CurrentSettingsGroup(), wxT("DrawGrid"), mDrawGrid);
 }
 

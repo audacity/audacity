@@ -19,7 +19,7 @@ class Envelope;
 struct EqualizationFilter;
 
 //! Maintains a list of preset curves for Equalization effects
-struct EqualizationCurvesList {
+struct BUILTIN_EFFECTS_API EqualizationCurvesList {
    explicit EqualizationCurvesList(EqualizationFilter &params)
       : mParameters{ params }
    {}
@@ -30,8 +30,14 @@ struct EqualizationCurvesList {
 
    void ForceRecalc() { mRecalcRequired = true; }
 
+   void setCurve(int currentCurve);
+   void setCurve(const wxString& curveName);
+
    EQCurveArray mCurves;
    EqualizationFilter &mParameters;
    bool mRecalcRequired{ false };
+
+private:
+   void setCurve();
 };
 #endif

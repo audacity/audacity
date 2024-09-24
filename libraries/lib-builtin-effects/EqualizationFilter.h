@@ -21,7 +21,8 @@ using Floats = ArrayOf<float>;
 
 //! Extend EqualizationParameters with frequency domain coefficients computed
 //! from a curve or from frequency band slider positions
-struct EqualizationFilter : EqualizationParameters {
+struct BUILTIN_EFFECTS_API EqualizationFilter : EqualizationParameters
+{
    // Low frequency of the FFT.  20Hz is the
    // low range of human hearing
    static constexpr int loFreqI = 20;

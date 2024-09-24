@@ -16,6 +16,7 @@
 
 #include <wx/listctrl.h>
 #include "ShuttleGui.h"
+#include "AudacityMessageBox.h"
 #include "AudacityTextEntryDialog.h"
 
 BEGIN_EVENT_TABLE(EqualizationCurvesDialog, wxDialogWrapper)
@@ -120,6 +121,18 @@ void EqualizationCurvesDialog::PopulateList(int position)
    mList->EnsureVisible(position);
    mList->SetItemState(position, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED, wxLIST_STATE_SELECTED|wxLIST_STATE_FOCUSED);
 }
+
+namespace EQUtils
+{
+int DoMessageBox(
+   const TranslatableString& name, const TranslatableString& msg,
+   const TranslatableString& titleStr, long style = wxOK | wxCENTRE)
+{
+   // Compare with EffectUIServices::DoMessageBox
+   auto title = titleStr.empty() ? name : XO("%s: %s").Format(name, titleStr);
+   return AudacityMessageBox(msg, title, style, nullptr);
+}
+} // namespace
 
 void EqualizationCurvesDialog::OnUp(wxCommandEvent & WXUNUSED(event))
 {

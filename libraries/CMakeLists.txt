@@ -76,6 +76,7 @@ set( LIBRARIES
    lib-audacity-application-logic
    lib-builtin-effects
    lib-label-track
+   lib-wave-track-fft
 )
 
 if ( ${_OPT}use_lv2 )

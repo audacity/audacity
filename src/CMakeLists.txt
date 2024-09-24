@@ -189,8 +189,6 @@ set( SOURCES
       SpectralDataDialog.cpp
       SpectralDataManager.h
       SpectralDataManager.cpp
-      SpectrumTransformer.cpp
-      SpectrumTransformer.h
       SseMathFuncs.cpp
       SseMathFuncs.h
       TagsEditor.cpp
@@ -367,18 +365,10 @@ set( SOURCES
       effects/Equalization48x.h
       effects/EqualizationBandSliders.cpp
       effects/EqualizationBandSliders.h
-      effects/EqualizationCurves.cpp
-      effects/EqualizationCurves.h
       effects/EqualizationCurvesDialog.cpp
       effects/EqualizationCurvesDialog.h
-      effects/EqualizationCurvesList.cpp
-      effects/EqualizationCurvesList.h
-      effects/EqualizationFilter.cpp
-      effects/EqualizationFilter.h
       effects/EqualizationPanel.cpp
       effects/EqualizationPanel.h
-      effects/EqualizationParameters.cpp
-      effects/EqualizationParameters.h
       effects/EqualizationUI.cpp
       effects/EqualizationUI.h
       effects/FindClipping.cpp
@@ -1293,6 +1283,7 @@ set( AUDACITY_LIBRARIES
    lib-import-export-interface
    lib-export-ui-interface
    lib-wave-track-paint-interface
+   lib-wave-track-fft-interface
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
    lib-audacity-application-logic-interface

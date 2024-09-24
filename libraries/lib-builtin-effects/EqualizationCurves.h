@@ -18,16 +18,8 @@
 #include <vector>
 class TranslatableString;
 
-namespace EQUtils{
-int DoMessageBox(
-   const TranslatableString &name,
-   const TranslatableString &msg,
-   const TranslatableString &titleStr,
-   long style = wxOK | wxCENTRE);
-}
-
 //! One point in a curve
-class EQPoint
+class BUILTIN_EFFECTS_API EQPoint
 {
 public:
    EQPoint( const double f, const double d ) { Freq = f; dB = d; }
@@ -42,7 +34,7 @@ public:
 };
 
 //! One curve in a list
-class EQCurve
+class BUILTIN_EFFECTS_API EQCurve
 {
 public:
    EQCurve( const wxString & name = {} ) { Name = name; }
@@ -60,7 +52,7 @@ public:
 using EQCurveArray = std::vector<EQCurve>;
 
 //! Serializer of curves into XML files
-class EQCurveWriter {
+class BUILTIN_EFFECTS_API EQCurveWriter {
 public:
    explicit EQCurveWriter(const EQCurveArray &curves) : mCurves{ curves } {}
    void SaveCurves(const wxString &fileName = {});
@@ -71,7 +63,7 @@ private:
 };
 
 //! Deserializer of curves from XML files
-class EQCurveReader : public XMLTagHandler {
+class BUILTIN_EFFECTS_API EQCurveReader : public XMLTagHandler {
 public:
    EQCurveReader(
       EQCurveArray &curves, const TranslatableString &name, int options)

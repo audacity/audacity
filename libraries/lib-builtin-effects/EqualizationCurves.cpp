@@ -16,7 +16,6 @@
 #include "EqualizationParameters.h"
 
 #include <wx/log.h>
-#include "AudacityMessageBox.h"
 #include "FileNames.h"
 #include "XMLFileReader.h"
 
@@ -33,19 +32,6 @@ wxString EQCurveReader::GetPrefsPrefix()
    else if( mOptions == kEqOptionCurve )
       base = wxT("/Effects/FilterCurve/");
    return base;
-}
-
-int EQUtils::DoMessageBox(
-   const TranslatableString &name,
-   const TranslatableString &msg,
-   const TranslatableString &titleStr,
-   long style)
-{
-   // Compare with EffectUIServices::DoMessageBox
-   auto title = titleStr.empty()
-      ? name
-      : XO("%s: %s").Format( name, titleStr );
-   return AudacityMessageBox( msg, title, style, nullptr );
 }
 
 //
@@ -113,7 +99,8 @@ void EQCurveReader::LoadCurves(const wxString &fileName, bool append)
       auto msg = XO("Error Loading EQ Curves from file:\n%s\nError message says:\n%s")
          .Format( fullPath, reader.GetErrorStr() );
       // Inform user of load failure
-      EQUtils::DoMessageBox(mName, msg, XO("Error Loading EQ Curves"));
+      using namespace BasicUI;
+      ShowMessageBox(msg, MessageBoxOptions{}.IconStyle(Icon::Error));
       mCurves.push_back( _("unnamed") );  // we always need a default curve to use
       return;
    }

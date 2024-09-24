@@ -27,6 +27,16 @@ set( SOURCES
    DistortionBase.h
    EchoBase.cpp
    EchoBase.h
+   EqualizationBase.cpp
+   EqualizationBase.h
+   EqualizationCurves.cpp
+   EqualizationCurves.h
+   EqualizationCurvesList.cpp
+   EqualizationCurvesList.h
+   EqualizationFilter.cpp
+   EqualizationFilter.h
+   EqualizationParameters.cpp
+   EqualizationParameters.h
    Fade.cpp
    Fade.h
    FindClippingBase.cpp
@@ -41,6 +51,8 @@ set( SOURCES
    LoudnessBase.h
    NoiseBase.cpp
    NoiseBase.h
+   NoiseReductionBase.cpp
+   NoiseReductionBase.h
    NormalizeBase.cpp
    NormalizeBase.h
    PaulstretchBase.cpp
@@ -80,7 +92,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-dynamic-range-processor-interface
-   lib-fft-interface
+   lib-wave-track-fft-interface
    lib-label-track-interface
    lib-note-track-interface
    $<$<BOOL:${USE_SBSMS}>:libsbsms>

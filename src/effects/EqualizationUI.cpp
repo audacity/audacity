@@ -15,6 +15,7 @@
 #include "EqualizationCurvesDialog.h"
 #include "EqualizationPanel.h"
 #include "EffectEditor.h"
+#include "BasicUI.h"
 #include <wx/button.h>
 #include <wx/choice.h>
 #include <wx/radiobut.h>
@@ -92,28 +93,14 @@ protected:
 
 bool EqualizationUI::ValidateUI(EffectSettings &)
 {
-   const auto &parameters = mCurvesList.mParameters;
+   auto& parameters = mCurvesList.mParameters;
    const auto &curveName = parameters.mCurveName;
    auto &logEnvelope = parameters.mLogEnvelope;
    const auto &curves = mCurvesList.mCurves;
 
-   // If editing a macro, we don't want to be using the unnamed curve so
-   // we offer to save it.
-
-   if (mDisallowCustom && curveName == wxT("unnamed"))
-   {
-      // PRL:  This is unreachable.  mDisallowCustom is always false.
-
-      EQUtils::DoMessageBox(
-         mName,
-         XO("To use this filter curve in a macro, please choose a new name for it.\nChoose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."),
-         XO("Filter Curve EQ needs a different name") );
-      return false;
-   }
-
    EQCurveWriter{ curves }.SaveCurves();
 
-   parameters.SaveConfig(mManager);
+   parameters.SaveConfig();
 
    return true;
 }
@@ -122,6 +109,8 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
    const EffectOutputs *)
 {
+   mBands.Init();
+
    auto &parameters = mCurvesList.mParameters;
    const auto &M = parameters.mM;
    const auto &loFreq = parameters.mLoFreq;
@@ -470,9 +459,9 @@ std::unique_ptr<EffectEditor> EqualizationUI::PopulateOrExchange(
       mPanel->Show( true );
       szrV->Show(szr1, true);
       // This sizing calculation is hacky.
-      // Rather than set the true minimum size we set a size we would 
+      // Rather than set the true minimum size we set a size we would
       // like to have.
-      // This makes the default size of the dialog good, but has the 
+      // This makes the default size of the dialog good, but has the
       // downside that the user can't adjust the dialog smaller.
       wxSize sz = szrV->GetMinSize();
       sz += wxSize( 400, 100);
@@ -526,7 +515,7 @@ bool EqualizationUI::TransferDataToWindow(const EffectSettings &settings)
    szrV->Show(szrG,!drawMode);    // eq sliders
    szrH->Show(szrI,mOptions == kEqLegacy );    // interpolation choice
    szrH->Show(szrL, drawMode);    // linear freq checkbox
-   if( mGraphic) 
+   if( mGraphic)
       mGraphic->SetValue(!drawMode);
    mGridOnOff->Show( drawMode );
 
@@ -563,198 +552,6 @@ void EqualizationUI::UpdateRuler()
    mPanel->Refresh(false);
 }
 
-//
-// Make the passed curve index the active one
-//
-void EqualizationUI::setCurve(int currentCurve)
-{
-   auto &parameters = mCurvesList.mParameters;
-   constexpr auto loFreqI = EqualizationFilter::loFreqI;
-
-   const auto &lin = parameters.mLin;
-   const auto &hiFreq = parameters.mHiFreq;
-   auto &curves = mCurvesList.mCurves;
-
-   // Set current choice
-   wxASSERT( currentCurve < (int) curves.size() );
-   mCurvesList.Select(currentCurve);
-
-   int numPoints = (int) curves[currentCurve].points.size();
-
-   auto &env = parameters.ChooseEnvelope();
-   env.Flatten(0.);
-   env.SetTrackLen(1.0);
-
-   // Handle special case of no points.
-   if (numPoints == 0) {
-      mCurvesList.ForceRecalc();
-      return;
-   }
-
-   double when, value;
-
-   // Handle special case 1 point.
-   if (numPoints == 1) {
-      // only one point, so ensure it is in range then return.
-      when = curves[currentCurve].points[0].Freq;
-      if (lin) {
-         when = when / hiFreq;
-      }
-      else {   // log scale
-         // We don't go below loFreqI (20 Hz) in log view.
-         double loLog = log10((double)loFreqI);
-         double hiLog = log10(hiFreq);
-         double denom = hiLog - loLog;
-         when =
-            (log10(std::max<double>(loFreqI, when))
-             - loLog) / denom;
-      }
-      value = curves[currentCurve].points[0].dB;
-      env.Insert(std::min(1.0, std::max(0.0, when)), value);
-      mCurvesList.ForceRecalc();
-      return;
-   }
-
-   // We have at least two points, so ensure they are in frequency order.
-   std::sort(curves[currentCurve].points.begin(),
-             curves[currentCurve].points.end());
-
-   if (curves[currentCurve].points[0].Freq < 0) {
-      // Corrupt or invalid curve, so bail.
-      mCurvesList.ForceRecalc();
-      return;
-   }
-
-   if(lin) {   // linear Hz scale
-      for(int pointCount = 0; pointCount < numPoints; pointCount++) {
-         when = curves[currentCurve].points[pointCount].Freq / hiFreq;
-         value = curves[currentCurve].points[pointCount].dB;
-         if(when <= 1) {
-            env.Insert(when, value);
-            if (when == 1)
-               break;
-         }
-         else {
-            // There are more points at higher freqs,
-            // so interpolate next one then stop.
-            when = 1.0;
-            double nextDB = curves[currentCurve].points[pointCount].dB;
-            if (pointCount > 0) {
-               double nextF = curves[currentCurve].points[pointCount].Freq;
-               double lastF = curves[currentCurve].points[pointCount-1].Freq;
-               double lastDB = curves[currentCurve].points[pointCount-1].dB;
-               value = lastDB +
-                  ((nextDB - lastDB) *
-                     ((hiFreq - lastF) / (nextF - lastF)));
-            }
-            else
-               value = nextDB;
-            env.Insert(when, value);
-            break;
-         }
-      }
-   }
-   else {   // log Hz scale
-      double loLog = log10((double) loFreqI);
-      double hiLog = log10(hiFreq);
-      double denom = hiLog - loLog;
-      int firstAbove20Hz;
-
-      // log scale EQ starts at 20 Hz (threshold of hearing).
-      // so find the first point (if any) above 20 Hz.
-      for (firstAbove20Hz = 0; firstAbove20Hz < numPoints; firstAbove20Hz++) {
-         if (curves[currentCurve].points[firstAbove20Hz].Freq > loFreqI)
-            break;
-      }
-
-      if (firstAbove20Hz == numPoints) {
-         // All points below 20 Hz, so just use final point.
-         when = 0.0;
-         value = curves[currentCurve].points[numPoints-1].dB;
-         env.Insert(when, value);
-         mCurvesList.ForceRecalc();
-         return;
-      }
-
-      if (firstAbove20Hz > 0) {
-         // At least one point is before 20 Hz and there are more
-         // beyond 20 Hz, so interpolate the first
-         double prevF = curves[currentCurve].points[firstAbove20Hz-1].Freq;
-         prevF = log10(std::max(1.0, prevF)); // log zero is bad.
-         double prevDB = curves[currentCurve].points[firstAbove20Hz-1].dB;
-         double nextF = log10(curves[currentCurve].points[firstAbove20Hz].Freq);
-         double nextDB = curves[currentCurve].points[firstAbove20Hz].dB;
-         when = 0.0;
-         value = nextDB - ((nextDB - prevDB) * ((nextF - loLog) / (nextF - prevF)));
-         env.Insert(when, value);
-      }
-
-      // Now get the rest.
-      for(int pointCount = firstAbove20Hz; pointCount < numPoints; pointCount++)
-      {
-         double flog = log10(curves[currentCurve].points[pointCount].Freq);
-         wxASSERT(curves[currentCurve].points[pointCount].Freq >= loFreqI);
-
-         when = (flog - loLog)/denom;
-         value = curves[currentCurve].points[pointCount].dB;
-         if(when <= 1.0) {
-            env.Insert(when, value);
-         }
-         else {
-            // This looks weird when adjusting curve in Draw mode if
-            // there is a point off-screen.
-
-            /*
-            // we have a point beyond fs/2.  Insert it so that env code can use it.
-            // but just this one, we have no use for the rest
-            env.SetTrackLen(when); // can't Insert if the envelope isn't long enough
-            env.Insert(when, value);
-            break;
-            */
-
-            // interpolate the final point instead
-            when = 1.0;
-            if (pointCount > 0) {
-               double lastDB = curves[currentCurve].points[pointCount-1].dB;
-               double logLastF =
-                  log10(curves[currentCurve].points[pointCount-1].Freq);
-               value = lastDB +
-                  ((value - lastDB) *
-                     ((log10(hiFreq) - logLastF) / (flog - logLastF)));
-            }
-            env.Insert(when, value);
-            break;
-         }
-      }
-   }
-   mCurvesList.ForceRecalc();
-}
-
-void EqualizationUI::setCurve()
-{
-   const auto &curves = mCurvesList.mCurves;
-   setCurve((int) curves.size() - 1);
-}
-
-void EqualizationUI::setCurve(const wxString &curveName)
-{
-   const auto &curves = mCurvesList.mCurves;
-   unsigned i = 0;
-   for( i = 0; i < curves.size(); i++ )
-      if( curveName == curves[ i ].Name )
-         break;
-   if( i == curves.size())
-   {
-      EQUtils::DoMessageBox( mName,
-         XO("Requested curve not found, using 'unnamed'"),
-         XO("Curve not found"),
-         wxOK|wxICON_ERROR);
-      setCurve();
-   }
-   else
-      setCurve( i );
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // All EffectEqualization methods beyond this point interact with the UI, so
@@ -769,28 +566,28 @@ void EqualizationUI::UpdateCurves()
    const auto &curves = mCurvesList.mCurves;
 
    // Reload the curve names
-   if( mCurve ) 
+   if( mCurve )
       mCurve->Clear();
    bool selectedCurveExists = false;
    for (size_t i = 0, cnt = curves.size(); i < cnt; i++)
    {
       if (curveName == curves[ i ].Name)
          selectedCurveExists = true;
-      if( mCurve ) 
+      if( mCurve )
          mCurve->Append(curves[ i ].Name);
    }
    // In rare circumstances, curveName may not exist (bug 1891)
    if (!selectedCurveExists)
       curveName = curves[ (int)curves.size() - 1 ].Name;
-   if( mCurve ) 
+   if( mCurve )
       mCurve->SetStringSelection(curveName);
-   
+
    // Allow the control to resize
-   if( mCurve ) 
+   if( mCurve )
       mCurve->SetMinSize({-1, -1});
 
    // Set initial curve
-   setCurve( curveName );
+   mCurvesList.setCurve( curveName );
 }
 
 void EqualizationUI::UpdateDraw()
@@ -978,7 +775,7 @@ void EqualizationUI::OnCurve(wxCommandEvent & WXUNUSED(event))
 {
    // Select NEW curve
    wxASSERT( mCurve != NULL );
-   setCurve( mCurve->GetCurrentSelection() );
+   mCurvesList.setCurve( mCurve->GetCurrentSelection() );
    if( !mCurvesList.mParameters.mDrawMode )
       UpdateGraphic();
 }
@@ -993,7 +790,7 @@ void EqualizationUI::OnManage(wxCommandEvent & WXUNUSED(event))
       curves, mCurve->GetSelection());
    if (d.ShowModal()) {
       wxGetTopLevelParent(mUIParent)->Layout();
-      setCurve(d.GetItem());
+      mCurvesList.setCurve(d.GetItem());
    }
 
    // Reload the curve names

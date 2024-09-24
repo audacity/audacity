@@ -26,7 +26,7 @@ const int kEqLegacy = kEqOptionGraphic | kEqOptionCurve;
 #undef LEGACY_EQ
 
 //! Parameters of the Equalization effects that persist in configuration files
-struct EqualizationParameters {
+struct BUILTIN_EFFECTS_API EqualizationParameters {
    enum kInterpolations {
       kBspline,
       kCosine,
@@ -37,8 +37,10 @@ struct EqualizationParameters {
 
    explicit EqualizationParameters(const EffectSettingsManager &manager);
    void LoadDefaults(int options);
-   void SaveConfig(const EffectSettingsManager &manager) const;
+   void SaveConfig() const;
    bool IsLinear() const;
+
+   const EffectSettingsManager& mSettingsManager;
 
    wxString mCurveName;
    float mdBMin;
