@@ -11,57 +11,27 @@
 #ifndef __AUDACITY_EFFECT_TIMESCALE__
 #define __AUDACITY_EFFECT_TIMESCALE__
 
-
-
 #if USE_SBSMS
 
-#include "SBSMSBase.h"
-#include "ShuttleAutomation.h"
 #include "StatefulEffectUIServices.h"
+#include "TimeScaleBase.h"
 #include <wx/weakref.h>
 
 class wxSlider;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectTimeScale final : public SBSMSBase, public StatefulEffectUIServices
+class EffectTimeScale : public TimeScaleBase, public StatefulEffectUIServices
 {
 public:
-   static inline EffectTimeScale *
-   FetchParameters(EffectTimeScale &e, EffectSettings &) { return &e; }
-   static const ComponentInterfaceSymbol Symbol;
-
-   EffectTimeScale();
-   virtual ~EffectTimeScale();
-
-   // ComponentInterface implementation
-
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
-
-   // EffectDefinitionInterface implementation
-
-   EffectType GetType() const override;
-
-   // Effect implementation
-
-   std::any BeginPreview(const EffectSettings &settings) override;
-   bool Process(EffectInstance &instance, EffectSettings &settings) override;
    std::unique_ptr<EffectEditor> PopulateOrExchange(
       ShuttleGui & S, EffectInstance &instance,
       EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
    bool TransferDataToWindow(const EffectSettings &settings) override;
    bool TransferDataFromWindow(EffectSettings &settings) override;
-   double CalcPreviewInputLength(
-      const EffectSettings &settings, double previewLength) const override;
 
+   DECLARE_EVENT_TABLE()
 private:
-   // EffectTimeScale implementation
-
-   static inline double PercentChangeToRatio(double percentChange);
-   static inline double HalfStepsToPercentChange(double halfSteps);
-   static inline double PercentChangeToHalfSteps(double percentChange);
 
    void OnText_RatePercentChangeStart(wxCommandEvent & evt);
    void OnText_RatePercentChangeEnd(wxCommandEvent & evt);
@@ -84,17 +54,6 @@ private:
 
    wxWeakRef<wxWindow> mUIParent{};
 
-   bool bPreview;
-   double previewSelectedDuration;
-   SlideType slideTypeRate;
-   SlideType slideTypePitch;
-   double m_RatePercentChangeStart;
-   double m_RatePercentChangeEnd;
-   double m_PitchHalfStepsStart;
-   double m_PitchHalfStepsEnd;
-   double m_PitchPercentChangeStart;
-   double m_PitchPercentChangeEnd;
-
    wxTextCtrl *m_pTextCtrl_RatePercentChangeStart;
    wxTextCtrl *m_pTextCtrl_RatePercentChangeEnd;
    wxSlider *m_pSlider_RatePercentChangeStart;
@@ -103,22 +62,6 @@ private:
    wxTextCtrl *m_pTextCtrl_PitchHalfStepsEnd;
    wxTextCtrl *m_pTextCtrl_PitchPercentChangeStart;
    wxTextCtrl *m_pTextCtrl_PitchPercentChangeEnd;
-
-   const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
-
-static constexpr EffectParameter RatePercentStart{ &EffectTimeScale::m_RatePercentChangeStart,
-   L"RatePercentChangeStart",  0.0,  -90.0,   500,   1  };
-static constexpr EffectParameter RatePercentEnd{ &EffectTimeScale::m_RatePercentChangeEnd,
-   L"RatePercentChangeEnd",    0.0,  -90.0,   500,   1  };
-static constexpr EffectParameter HalfStepsStart{ &EffectTimeScale::m_PitchHalfStepsStart,
-   L"PitchHalfStepsStart",     0.0,  -12.0,   12.0,  1  };
-static constexpr EffectParameter HalfStepsEnd{ &EffectTimeScale::m_PitchHalfStepsEnd,
-   L"PitchHalfStepsEnd",       0.0,  -12.0,   12.0,  1  };
-static constexpr EffectParameter PitchPercentStart{ &EffectTimeScale::m_PitchPercentChangeStart,
-   L"PitchPercentChangeStart", 0.0,  -50.0,   100.0, 1  };
-static constexpr EffectParameter PitchPercentEnd{ &EffectTimeScale::m_PitchPercentChangeEnd,
-   L"PitchPercentChangeEnd",   0.0,  -50.0,   100.0, 1  };
 };
 
 #endif // __AUDACITY_EFFECT_TIMESCALE
