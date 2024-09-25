@@ -1,2 +1,13 @@
 # Normalize line endings of all files that Git considers to be text
-* text=auto
+* text eol=lf
+#except images and sounds
+*.png -text 
+*.jpg -text 
+*.icns -text 
+*.wav -text 
+*.au -text 
+*.ico -text 
+# and weird stuff in lib-src
+*.ttl text=auto
+*.aps text=auto
+*.trig text=auto
