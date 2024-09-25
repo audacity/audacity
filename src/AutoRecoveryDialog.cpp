@@ -468,7 +468,7 @@ bool ShowAutoRecoveryDialogIfNeeded(AudacityProject *&pproj, bool *didRecoverAny
    //    http://trac.wxwidgets.org/ticket/16440
    //
    // This must be done before "dlg" is declared.
-   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
+   wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI | wxEVT_CATEGORY_USER_INPUT);
 
    AutoRecoveryDialog dialog(pproj);
 
