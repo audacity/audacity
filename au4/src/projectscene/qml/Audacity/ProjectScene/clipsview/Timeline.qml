@@ -13,7 +13,7 @@ Rectangle {
 
     signal clicked(var mouse)
 
-    color: ui.theme.backgroundPrimaryColor
+    color: ui.theme.backgroundSecondaryColor
 
     //! NOTE This element must be the same width as the track wave visible area.
     //! If this is different, than appropriate changes must be made.
