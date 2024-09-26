@@ -466,7 +466,7 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
     waveTrack->Clear(clip->Start(), clip->End());
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->onClipRemoved(DomConverter::clip(waveTrack, clip.get()));
+    prj->onTrackChanged(DomConverter::track(waveTrack));
 
     return true;
 }
@@ -483,17 +483,10 @@ bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, secs_t be
         return false;
     }
 
-    trackedit::secs_t initialClipStart = clip->Start();
-    trackedit::secs_t initialClipEnd = clip->End();
-
     waveTrack->Clear(begin, end);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (begin <= initialClipStart && end >= initialClipEnd) {
-        prj->onClipRemoved(DomConverter::clip(waveTrack, clip.get()));
-    } else {
-        prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
-    }
+    prj->onTrackChanged(DomConverter::track(waveTrack));
 
     return true;
 }
