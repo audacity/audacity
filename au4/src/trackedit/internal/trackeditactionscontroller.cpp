@@ -274,6 +274,8 @@ void TrackeditActionsController::clipCutSelected()
 
     trackeditInteraction()->clearClipboard();
     trackeditInteraction()->cutClipDataIntoClipboard(selectedTracks, selectedStartTime, selectedEndTime);
+
+    selectionController()->resetDataSelection();
 }
 
 void TrackeditActionsController::clipCopySelected()
@@ -325,6 +327,7 @@ void TrackeditActionsController::clipDeleteSelected()
     }
 
     pushProjectHistoryDeleteState(start, duration);
+    selectionController()->resetDataSelection();
 }
 
 void TrackeditActionsController::paste()
@@ -463,6 +466,8 @@ void TrackeditActionsController::splitCutSelected(const muse::actions::ActionDat
 
     trackeditInteraction()->clearClipboard();
     trackeditInteraction()->splitCutSelectedOnTracks(tracksIds, begin, end);
+
+    selectionController()->resetDataSelection();
 }
 
 void TrackeditActionsController::splitDeleteSelected(const muse::actions::ActionData &args)
@@ -480,6 +485,8 @@ void TrackeditActionsController::splitDeleteSelected(const muse::actions::Action
     secs_t end = args.arg<secs_t>(2);
 
     trackeditInteraction()->splitDeleteSelectedOnTracks(tracksIds, begin, end);
+
+    selectionController()->resetDataSelection();
 }
 
 void TrackeditActionsController::toggleLoopRegion()
