@@ -36,7 +36,8 @@ public:
 
     // data selection
     virtual void resetDataSelection() = 0;
-    virtual bool isDataSelected() = 0;
+    virtual bool isDataSelected() const = 0;
+    virtual bool isDataSelectedOnTrack(TrackId trackId) const = 0;
 
     virtual std::vector<TrackId> dataSelectedOnTracks() const = 0;
     virtual void setDataSelectedOnTracks(const std::vector<TrackId>& trackIds, bool complete) = 0;

@@ -31,7 +31,8 @@ public:
 
     // data selection
     void resetDataSelection() override;
-    bool isDataSelected() override;
+    bool isDataSelected() const override;
+    bool isDataSelectedOnTrack(TrackId trackId) const override;
 
     std::vector<trackedit::TrackId> dataSelectedOnTracks() const override;
     void setDataSelectedOnTracks(const std::vector<trackedit::TrackId>& trackIds, bool complete) override;
