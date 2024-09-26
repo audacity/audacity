@@ -147,7 +147,7 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
 
    // Success, commit the savepoint
    trans.Commit();
-   
+
    if (begin != end)
       EnqueueMessage({ UndoRedoMessage::Purge });
 }
