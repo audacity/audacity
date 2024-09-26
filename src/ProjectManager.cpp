@@ -530,6 +530,11 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
+   auto& undoManager = UndoManager::Get(project);
+   constexpr auto doAutoSave = false;
+   ProjectHistory::Get(project).SetStateTo(
+      undoManager.GetSavedState(), doAutoSave);
+
    // Compact the project.
    projectFileManager.CompactProjectOnClose();
 
@@ -540,7 +545,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
 
    // This can reduce reference counts of sample blocks in the project's
    // tracks.
-   UndoManager::Get(project).ClearStates();
+   undoManager.ClearStates();
 
    // Delete all the tracks to free up memory
    tracks.Clear();
