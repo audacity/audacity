@@ -33,6 +33,7 @@ private:
    void OnContinue(wxCommandEvent&);
    void OnContinueWithGoogle(wxCommandEvent&);
    void OnContinueWithFacebook(wxCommandEvent&);
+   void onUserCredentialsChange(wxCommandEvent&);
 
    void ContinueCreateAccount();
    void ContinueSignIn();

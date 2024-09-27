@@ -59,16 +59,27 @@ namespace
       return label;
    }
 
-   auto DefaultErrorHandler(LoginDialog* dialog)
+   auto DefaultErrorHandler(LoginDialog* dialog, LoginDialog::Mode mode)
    {
-      return [weak = wxWeakRef(dialog)](auto code, auto error)
+      return [weak = wxWeakRef(dialog), mode](auto code, auto error)
       {
-         BasicUI::CallAfter([weak, code, error = std::string(error)]
+         BasicUI::CallAfter([weak, mode, code, error = std::string(error)]
          {
             if(weak)
                weak->Enable();
 
-            BasicUI::ShowMessageBox(XO("%s").Format(error));
+            if (mode == LoginDialog::Mode::Create)
+            {
+               BasicUI::ShowMessageBox(XXO("Oops! It looks like there was an issue with your input.\n"
+                                           "Please ensure your email is correct and "
+                                           "that your password is at least 8 characters long"));
+            }
+            else
+            {
+               BasicUI::ShowMessageBox(XXO("Sorry, but it seems the email or password you entered is incorrect.\n"
+                                           "Please double-check your credentials and try again!"));
+               
+            }
          });
       };
    }
@@ -158,6 +169,9 @@ void LoginDialog::LayoutControls()
          vSizer->Add(safenew wxHyperlinkCtrl(this, wxID_ANY, _("Forgot your password?"), RestorePasswordURL));
          
       topSizer->Add(vSizer.release(), 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 16);
+
+      mEmail->Bind(wxEVT_TEXT, &LoginDialog::onUserCredentialsChange, this);
+      mPassword->Bind(wxEVT_TEXT, &LoginDialog::onUserCredentialsChange, this);
    }
    if(mMode == Mode::Create)
    {
@@ -182,6 +196,7 @@ void LoginDialog::LayoutControls()
       hSizer->AddSpacer(8);
       hSizer->Add(mContinue = safenew wxButton(this, wxID_OK, _("Continue")));
       topSizer->Add(hSizer.release(), 0, wxALIGN_RIGHT | wxALL, 16);
+      mContinue->Disable();
    }
 
    mEmail->SetFocus();
@@ -217,6 +232,18 @@ void LoginDialog::OnContinueWithFacebook(wxCommandEvent&)
    ContinueAuthorize("facebook");
 }
 
+void LoginDialog::onUserCredentialsChange(wxCommandEvent&)
+{
+   if (mEmail->IsEmpty() || mPassword->IsEmpty())
+   {
+      mContinue->Disable();
+   }
+   else
+   {
+      mContinue->Enable();
+   }
+}
+
 void LoginDialog::ContinueCreateAccount()
 {
    Disable();
@@ -243,7 +270,7 @@ void LoginDialog::ContinueCreateAccount()
                weakThis->EndModal(wxID_OK);
          });
       },
-      DefaultErrorHandler(this),
+      DefaultErrorHandler(this, mMode),
       AudiocomTrace::ignore);
 }
 
@@ -271,7 +298,7 @@ void LoginDialog::ContinueSignIn()
                weakThis->EndModal(wxID_OK);
          });
       },
-      DefaultErrorHandler(this),
+      DefaultErrorHandler(this, mMode),
       AudiocomTrace::ignore);
 }
 
