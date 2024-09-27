@@ -11,7 +11,6 @@ Rectangle {
 
     id: root
 
-    property bool clipHovered: false
     color: ui.theme.backgroundPrimaryColor
 
     TracksListClipsModel {
@@ -209,10 +208,6 @@ Rectangle {
                 selectionController.onPositionChanged(e.x, e.y)
 
                 timeline.updateCursorPosition(e.x)
-
-                if (root.clipHovered) {
-                    root.clipHovered = false
-                }
             }
             onReleased: e => {
                 if (selectionController.isLeftSelection(e.x)) {
@@ -220,13 +215,6 @@ Rectangle {
                 }
                 selectionController.onReleased(e.x, e.y)
                 clipsSelection.active = false
-            }
-
-            onClicked: e => {
-                if (!root.clipHovered) {
-                    selectionController.resetSelectedClip()
-                }
-                selectionController.onClicked(e.x, e.y)
             }
         }
 
@@ -303,10 +291,6 @@ Rectangle {
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
                         timeline.updateCursorPosition(xWithinTrack)
-
-                        if (!root.clipHovered) {
-                            root.clipHovered = true
-                        }
                     }
 
                     onClipSelectedRequested: {
