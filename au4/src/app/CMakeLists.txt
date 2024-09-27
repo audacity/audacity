@@ -237,7 +237,6 @@ if (OS_IS_WIN)
     install(DIRECTORY
             ${QT_INSTALL_QML}
             DESTINATION .
-            REGEX ".*d\\.dll" EXCLUDE
             REGEX ".pdb" EXCLUDE
             REGEX ".*QtMultimedia.*" EXCLUDE
             REGEX ".*QtSensors.*" EXCLUDE
