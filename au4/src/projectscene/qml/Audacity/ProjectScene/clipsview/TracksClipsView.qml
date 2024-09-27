@@ -54,10 +54,6 @@ Rectangle {
     SelectionViewController {
         id: selectionController
         context: timeline.context
-
-        onSelectionStarted: clipsSelection.onSelectionStarted()
-        onSelectionChanged: function(p1, p2) { clipsSelection.onSelectionChanged(p1, p2) }
-        onSelectionEnded: function(p1, p2) { clipsSelection.onSelectionEnded(p1, p2) }
     }
 
     Component.onCompleted: {
@@ -203,6 +199,7 @@ Rectangle {
                 playCursorController.seekToX(e.x)
                 selectionController.onPressed(e.x, e.y)
                 selectionController.resetSelectedClip()
+                clipsSelection.visible = true
             }
             onPositionChanged: function(e) {
                 mouseOnTracks = e.y < tracksClipsView.visibleContentHeight
@@ -219,7 +216,7 @@ Rectangle {
                     playCursorController.seekToX(e.x)
                 }
                 selectionController.onReleased(e.x, e.y)
-                clipsSelection.active = false
+                clipsSelection.visible = false
             }
 
             onClicked: e => {
@@ -311,7 +308,15 @@ Rectangle {
 
                     onClipSelectedRequested: {
                         selectionController.resetDataSelection()
-                        clipsSelection.active = false
+                        clipsSelection.visible = false
+                    }
+
+                    onSelectionDraged: function(x1, x2, completed) {
+                        selectionController.onSelectionDraged(x1, x2, completed)
+                    }
+
+                    onSeekToX: function(x) {
+                        playCursorController.seekToX(x)
                     }
                 }
             }
@@ -329,17 +334,17 @@ Rectangle {
             }
         }
 
-        ClipsSelection {
+        Rectangle {
             id: clipsSelection
 
-            context: timeline.context
-            anchors.fill: parent
-            onSelectionDraged: function(x1, x2, completed) {
-                selectionController.onSelectionDraged(x1, x2, completed)
-                if (completed) {
-                    playCursorController.seekToX(Math.min(x1, x2))
-                }
-            }
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            color: "#8EC9FF"
+            opacity: 0.05
+            visible: false
+
+            x: timeline.context.selectionStartPosition
+            width: timeline.context.selectionEndPosition - x
         }
 
         PlayCursor {

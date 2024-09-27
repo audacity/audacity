@@ -24,6 +24,9 @@ Item {
     signal trackItemMousePositionChanged(real x, real y)
     signal clipSelectedRequested()
 
+    signal selectionDraged(var x1, var x2, var completed)
+    signal seekToX(var x)
+
     height: trackViewState.trackHeight
 
     ClipsListModel {
@@ -172,17 +175,21 @@ Item {
         }
     }
 
-    Rectangle {
-        id: selRect
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        color: "#8EC9FF"
-        opacity: 0.1
-        visible: root.isDataSelected
+    ClipsSelection {
+        id: clipsSelection
 
-        x: root.context.selectionStartPosition
-        width: root.context.selectionEndPosition - x
+        isDataSelected: root.isDataSelected
+        context: root.context
+
+        anchors.fill: parent
         z: 1
+
+        onSelectionDraged: function(x1, x2, completed) {
+            root.selectionDraged(x1, x2, completed)
+            if (completed) {
+                root.seekToX(Math.min(x1, x2))
+            }
+        }
     }
 
     Rectangle {

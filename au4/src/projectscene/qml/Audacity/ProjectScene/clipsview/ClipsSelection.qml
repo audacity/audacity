@@ -3,48 +3,25 @@ import QtQuick
 Item {
     id: root
 
+    property bool isDataSelected: false
     property alias active: selRect.visible
     property var context: null
     property real minSelection: 12 // px  4left + 4 + 4right
 
     signal selectionDraged(var x1, var x2, var completed)
 
-    function onSelectionStarted() {
-        selRect.visible = false
-        leftMa.visible = false
-        rightMa.visible = false
-    }
-
-    function onSelectionChanged(p1, p2) {
-        selRect.x = root.context.selectionStartPosition
-        selRect.width = root.context.selectionEndPosition - selRect.x
-
-        selRect.visible = selRect.width > root.minSelection
-    }
-
-    function onSelectionEnded(p1, p2) {
-        if (selRect.visible) {
-            leftMa.x = selRect.x
-            leftMa.visible = true
-
-            rightMa.x = selRect.x + selRect.width - rightMa.width
-            rightMa.visible = true
-        }
-    }
-
-    function _onSelectionDraging(completed) {
-        root.selectionDraged(selRect.x, selRect.x + selRect.width, completed)
-    }
-
     Rectangle {
         id: selRect
+
+        x: root.context.selectionStartPosition
+        width: root.context.selectionEndPosition - selRect.x
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: false
+        visible: isDataSelected
         color: "#8EC9FF"
-        opacity: 0.05
+        opacity: 0.1
 
         Rectangle {
             anchors.top: parent.top
@@ -68,10 +45,12 @@ Item {
     MouseArea {
         id: leftMa
 
+        x: selRect.x
+
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: false
+        visible: isDataSelected
         width: 4
         cursorShape: Qt.SizeHorCursor
 
@@ -82,22 +61,19 @@ Item {
             leftMa.cursorShape = Qt.ArrowCursor
             leftMa.startX = selRect.x
             leftMa.startW = selRect.width
+            leftMa.x = selRect.x
         }
 
         onPositionChanged: function(mouse) {
             var newWidth = leftMa.startW + (mouse.x * -1)
             if (newWidth > root.minSelection) {
-                selRect.x = leftMa.startX + mouse.x
-                selRect.width = newWidth
-                root._onSelectionDraging(false)
+                root.selectionDraged(leftMa.startX + mouse.x, leftMa.startX + mouse.x + newWidth, false)
             }
         }
 
         onReleased: {
-            root._onSelectionDraging(true)
-            selRect.x = root.context.selectionStartPosition
-            selRect.width = root.context.selectionEndPosition - selRect.x
-            leftMa.x = selRect.x
+            root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
+            leftMa.x = Qt.binding(function() { return selRect.x })
             leftMa.cursorShape = Qt.SizeHorCursor
         }
     }
@@ -105,10 +81,12 @@ Item {
     MouseArea {
         id: rightMa
 
+        x: selRect.x + selRect.width - rightMa.width
+
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: false
+        visible: isDataSelected
         width: 4
         cursorShape: Qt.SizeHorCursor
 
@@ -118,20 +96,19 @@ Item {
         onPressed: function(mouse) {
             rightMa.cursorShape = Qt.ArrowCursor
             rightMa.startW = selRect.width
+            rightMa.x = selRect.x + selRect.width - rightMa.width
         }
 
         onPositionChanged: function(mouse) {
             var newWidth = rightMa.startW + mouse.x
             if (newWidth > root.minSelection) {
-                selRect.width = newWidth
-                root._onSelectionDraging(false)
+                root.selectionDraged(selRect.x, selRect.x + newWidth, false)
             }
         }
 
         onReleased: {
-            root._onSelectionDraging(true)
-            selRect.width = root.context.selectionEndPosition - selRect.x
-            rightMa.x = selRect.x + selRect.width - rightMa.width
+            root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
+            rightMa.x = Qt.binding(function() {return selRect.x + selRect.width - rightMa.width })
             rightMa.cursorShape = Qt.SizeHorCursor
         }
     }
