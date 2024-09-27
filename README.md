@@ -1,7 +1,7 @@
 # Audacity
 
 
-[**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux and other operating systems.
+[**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux, and other operating systems.
 
 - **Recording** from any real or virtual audio device that is available to the host system.
 - **Export / Import** a wide range of audio formats, extensible with FFmpeg.
