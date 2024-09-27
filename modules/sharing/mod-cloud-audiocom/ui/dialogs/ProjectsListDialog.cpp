@@ -38,6 +38,8 @@
 #include "UnsyncedProjectDialog.h"
 
 #include "CloudProjectOpenUtils.h"
+#include "OAuthService.h"
+#include "UserService.h"
 
 #if wxUSE_ACCESSIBILITY
 #   include "WindowAccessible.h"
@@ -274,10 +276,17 @@ public:
       if (selectedRow.empty())
          return {};
 
+      auto& userService = GetUserService();
+      auto& oauthService = GetOAuthService();
+      auto& serviceConfig = GetServiceConfig();
+
+      auto userId = audacity::ToUTF8(userService.GetUserId());
       auto& item = mResponse.Items[selectedRow[0]];
 
-      return GetServiceConfig().GetProjectPageUrl(
-         item.Username, item.Id, AudiocomTrace::OpenFromCloudMenu);
+      auto projectPage = serviceConfig.GetProjectPagePath(item.Username, item.Id, AudiocomTrace::OpenFromCloudMenu);
+      auto url = oauthService.MakeAudioComAuthorizeURL(userId, projectPage);
+
+      return url;
    }
 
 private:

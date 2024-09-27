@@ -50,6 +50,8 @@ const std::string_view responseTypePrefix = "response_type=";
 const std::string_view clientIdPrefix = "client_id=";
 const std::string_view authorizationCodePrefix = "authorization_code=";
 const std::string_view codePrefix = "code=";
+const std::string_view urlPrefix = "url=";
+const std::string_view userPrefix = "user=";
 
 void WriteClientFields(rapidjson::Document& document)
 {
@@ -173,6 +175,11 @@ bool OAuthService::HandleLinkURI(
       }
       else if (IsPrefixed(arg, codePrefix))
          authorizationCode = arg.substr(codePrefix.length());
+   }
+
+   // Some browsers (safari) add an extra hash symbol we don't need
+   if (!authorizationCode.empty() && authorizationCode.back() == '#') {
+      authorizationCode.remove_suffix(1);
    }
 
    // We have a prioritized list of authorization methods
@@ -333,7 +340,7 @@ std::string OAuthService::GetAccessToken() const
    return {};
 }
 
-std::string OAuthService::MakeAuthorizeURL(std::string_view authClientId)
+std::string OAuthService::MakeOAuthRequestURL(std::string_view authClientId)
 {
    using namespace audacity::network_manager;
 
@@ -343,6 +350,24 @@ std::string OAuthService::MakeAuthorizeURL(std::string_view authClientId)
       responseTypePrefix, "code", "&",
       clientIdPrefix, GetServiceConfig().GetOAuthClientID(),
       "&redirect_uri=audacity://link"
+   );
+}
+
+std::string OAuthService::MakeAudioComAuthorizeURL(std::string_view userId, std::string_view redirectUrl)
+{
+   auto token = GetAccessToken();
+
+   // Remove token type from the token string
+   size_t pos = token.find(' ');
+   if (pos != std::string::npos) {
+      token = token.substr(pos + 1);
+   }
+
+   return concat(
+      GetServiceConfig().GetAuthWithRedirectURL(), "?",
+      tokenPrefix, token, "&",
+      userPrefix, userId, "&",
+      urlPrefix, redirectUrl
    );
 }
 

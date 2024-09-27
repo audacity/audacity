@@ -33,6 +33,8 @@
 #include "MemoryX.h"
 
 #include "CloudProjectsDatabase.h"
+#include "OAuthService.h"
+#include "UserService.h"
 
 #include "Track.h"
 
@@ -625,13 +627,20 @@ void ProjectCloudExtension::OnProjectPathChanged()
 std::string
 ProjectCloudExtension::GetCloudProjectPage(AudiocomTrace trace) const
 {
+   auto& oauthService = GetOAuthService();
+   auto& serviceConfig = GetServiceConfig();
+
+   auto userId = audacity::ToUTF8(GetUserService().GetUserId());
+
    const auto projectId =
       ProjectCloudExtension::Get(mProject).GetCloudProjectId();
 
    const auto userSlug =
       CloudProjectsDatabase::Get().GetProjectUserSlug(projectId);
 
-   return GetServiceConfig().GetProjectPageUrl(userSlug, projectId, trace);
+   auto projectPage = serviceConfig.GetProjectPagePath(userSlug, projectId, trace);
+   auto url = oauthService.MakeAudioComAuthorizeURL(userId, projectPage);
+   return url;
 }
 
 bool ProjectCloudExtension::IsBlockLocked(int64_t blockID) const

@@ -88,7 +88,12 @@ public:
    //! Return the current access token, if any.
    std::string GetAccessToken() const;
 
-   static std::string MakeAuthorizeURL(std::string_view authClientId);
+   //! Creates a link to authorization request dialog
+   // with selected OAuth provider
+   static std::string MakeOAuthRequestURL(std::string_view authClientId);
+
+   //! Creates a link to authorize audio.com using current auth token
+   std::string MakeAudioComAuthorizeURL(std::string_view userId, std::string_view redirectUrl);
 
    void Authorize(std::string_view email,
                   std::string_view password,

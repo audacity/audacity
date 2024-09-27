@@ -54,7 +54,12 @@ StringSetting audioComFinishUploadPage {
    L"https://audio.com/audacity/upload?audioId={audio_id}&token={auth_token}&clientId={auth_client_id}&" MTM_CAMPAIGN
 };
 
-StringSetting audioComFrontendUrl { L"/CloudServices/AudioCom/FrontendURL",
+StringSetting audioComAuthWithRedirectURL {
+   L"/CloudServices/AudioCom/AuthWithRedirectURL",
+   L"https://audio.com/auth/check-and-redirect"
+};
+
+StringSetting audioComFrontendURL { L"/CloudServices/AudioCom/FrontendURL",
                                     L"https://audio.com" };
 
 StringSetting audioComAudioDownloadMimeType {
@@ -121,14 +126,15 @@ std::string GetButtonName(AudiocomTrace trace)
 
 ServiceConfig::ServiceConfig()
 {
-   mApiEndpoint       = audacity::ToUTF8(audioComApiEndpoint.Read());
-   mOAuthClientID     = audacity::ToUTF8(audioComOAuthClientID.Read());
-   mOAuthClientSecret = audacity::ToUTF8(audioComOAuthClientSecret.Read());
-   mOAuthRedirectURL  = audacity::ToUTF8(audioComOAuthRedirectURL.Read());
-   mOAuthLoginPage    = audacity::ToUTF8(audioComOAuthLoginPage.Read());
-   mFinishUploadPage  = audacity::ToUTF8(audioComFinishUploadPage.Read());
-   mFrontendURL       = audacity::ToUTF8(audioComFrontendUrl.Read());
-   mPreferredMimeType = audacity::ToUTF8(audioComAudioDownloadMimeType.Read());
+   mApiEndpoint         = audacity::ToUTF8(audioComApiEndpoint.Read());
+   mOAuthClientID       = audacity::ToUTF8(audioComOAuthClientID.Read());
+   mOAuthClientSecret   = audacity::ToUTF8(audioComOAuthClientSecret.Read());
+   mOAuthRedirectURL    = audacity::ToUTF8(audioComOAuthRedirectURL.Read());
+   mAuthWithRedirectURL = audacity::ToUTF8(audioComAuthWithRedirectURL.Read());
+   mOAuthLoginPage      = audacity::ToUTF8(audioComOAuthLoginPage.Read());
+   mFinishUploadPage    = audacity::ToUTF8(audioComFinishUploadPage.Read());
+   mFrontendURL         = audacity::ToUTF8(audioComFrontendURL.Read());
+   mPreferredMimeType   = audacity::ToUTF8(audioComAudioDownloadMimeType.Read());
 }
 
 std::string ServiceConfig::GetAPIEndpoint() const
@@ -158,6 +164,11 @@ std::string ServiceConfig::GetOAuthClientSecret() const
 std::string ServiceConfig::GetOAuthRedirectURL() const
 {
    return mOAuthRedirectURL;
+}
+
+std::string ServiceConfig::GetAuthWithRedirectURL() const
+{
+   return mAuthWithRedirectURL;
 }
 
 std::string ServiceConfig::GetAPIUrl(std::string_view apiURI) const
@@ -342,16 +353,15 @@ std::string ServiceConfig::GetNetworkStatsUrl(std::string_view projectId) const
       });
 }
 
-std::string ServiceConfig::GetProjectPageUrl(
-   std::string_view userId, std::string_view projectId,
+std::string ServiceConfig::GetProjectPagePath(
+   std::string_view userSlug, std::string_view projectSlug,
    AudiocomTrace trace) const
 {
    return Substitute(
-      "{frontend_url}/{user_slug}/projects/{project_id}?" MTM_CAMPAIGN,
+      "/{user_slug}/projects/{project_slug}&" MTM_CAMPAIGN,
       {
-         { "frontend_url", mFrontendURL },
-         { "user_slug", userId },
-         { "project_id", projectId },
+         { "user_slug", userSlug },
+         { "project_slug", projectSlug },
          { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
          { "button_name", GetButtonName(trace) },
       });

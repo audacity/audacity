@@ -101,6 +101,7 @@ bool LoginDialog::SignIn(wxWindow* parent)
    while(true)
    {
       LoginDialog dialog(parent, wxID_ANY, mode);
+      dialog.wxDialogWrapper::Center();
       auto result = dialog.wxDialogWrapper::ShowModal();
       if(result == ID_SIGNIN)
          mode = Mode::SignIn;
@@ -283,6 +284,6 @@ void LoginDialog::OnOAuthStateChanged(audacity::cloud::audiocom::AuthStateChange
 void LoginDialog::ContinueAuthorize(std::string_view authClientId)
 {
    BasicUI::OpenInDefaultBrowser(
-      audacity::cloud::audiocom::OAuthService::MakeAuthorizeURL(authClientId)
+      audacity::cloud::audiocom::OAuthService::MakeOAuthRequestURL(authClientId)
    );
 }

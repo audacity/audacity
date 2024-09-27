@@ -35,6 +35,9 @@ public:
    std::string GetOAuthClientSecret() const;
    //! OAuth2 redirect URL. Only used to satisfy the protocol
    std::string GetOAuthRedirectURL() const;
+   //! Audio.com authorization API to automatically login current user 
+   //  in the default browser when opening the project from audacity
+   std::string GetAuthWithRedirectURL() const;
    //! Helper to construct the full URLs for the API
    std::string GetAPIUrl(std::string_view apiURI) const;
    //! Helper to construct the page URL for the anonymous upload last stage
@@ -70,8 +73,7 @@ public:
       std::string_view projectId, std::string_view snapshotId) const;
 
    std::string GetNetworkStatsUrl(std::string_view projectId) const;
-   std::string GetProjectPageUrl(
-      std::string_view userId, std::string_view projectId,
+   std::string GetProjectPagePath(std::string_view userSlug, std::string_view projectSlug,
       AudiocomTrace) const;
    std::string
    GetProjectsPageUrl(std::string_view userId, AudiocomTrace) const;
@@ -82,6 +84,7 @@ private:
    std::string mOAuthClientSecret;
    std::string mOAuthRedirectURL;
    std::string mOAuthLoginPage;
+   std::string mAuthWithRedirectURL;
    std::string mFinishUploadPage;
    std::string mFrontendURL;
    std::string mPreferredMimeType;
