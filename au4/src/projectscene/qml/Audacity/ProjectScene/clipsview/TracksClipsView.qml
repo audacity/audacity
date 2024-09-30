@@ -223,7 +223,6 @@ Rectangle {
                 if (!root.clipHovered) {
                     selectionController.resetSelectedClip()
                 }
-                selectionController.onClicked(e.x, e.y)
             }
         }
 
