@@ -177,7 +177,7 @@ void LoginDialog::LayoutControls()
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       //i18b-hint: followed by hyperlink, keep whitespace at the end
-      hSizer->Add(MakeLabel(this, _("Already have and account? ")));
+      hSizer->Add(MakeLabel(this, _("Already have an account? ")));
       hSizer->Add(safenew wxHyperlinkCtrl(this, ID_SIGNIN, _("Sign in here"), ""));
       topSizer->Add(hSizer.release(), 0, wxEXPAND | wxLEFT | wxRIGHT, 16);
    }

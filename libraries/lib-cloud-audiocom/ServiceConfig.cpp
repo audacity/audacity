@@ -367,14 +367,13 @@ std::string ServiceConfig::GetProjectPagePath(
       });
 }
 
-std::string ServiceConfig::GetProjectsPageUrl(
-   std::string_view userId, AudiocomTrace trace) const
+std::string ServiceConfig::GetProjectsPagePath(
+   std::string_view userSlug, AudiocomTrace trace) const
 {
    return Substitute(
-      "{frontend_url}/{user_slug}/projects?" MTM_CAMPAIGN,
+      "/{user_slug}/projects?" MTM_CAMPAIGN,
       {
-         { "frontend_url", mFrontendURL },
-         { "user_slug", userId },
+         { "user_slug", userSlug },
          { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
          { "button_name", GetButtonName(trace) },
       });

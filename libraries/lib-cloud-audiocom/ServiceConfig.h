@@ -76,7 +76,7 @@ public:
    std::string GetProjectPagePath(std::string_view userSlug, std::string_view projectSlug,
       AudiocomTrace) const;
    std::string
-   GetProjectsPageUrl(std::string_view userId, AudiocomTrace) const;
+   GetProjectsPagePath(std::string_view userSlug, AudiocomTrace) const;
 
 private:
    std::string mApiEndpoint;

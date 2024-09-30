@@ -154,7 +154,7 @@ void UserPanel::UpdateUserData()
    else
       mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
 
-   mLinkButton->SetLabel(XXO("&Unlink Account").Translation());
+   mLinkButton->SetLabel(XXO("&Sign Out").Translation());
    mLinkButton->Show();
 
    OnStateChanged(true);
