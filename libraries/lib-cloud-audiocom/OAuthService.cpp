@@ -177,9 +177,11 @@ bool OAuthService::HandleLinkURI(
          authorizationCode = arg.substr(codePrefix.length());
    }
 
-   // Some browsers (safari) add an extra hash symbol we don't need
-   if (!authorizationCode.empty() && authorizationCode.back() == '#') {
-      authorizationCode.remove_suffix(1);
+   // Some browsers (safari) add an extra trailing chars we don't need
+   size_t hashPos = authorizationCode.find('#');
+    
+   if (hashPos != std::string::npos) {
+      authorizationCode = authorizationCode.substr(0, hashPos);
    }
 
    // We have a prioritized list of authorization methods
