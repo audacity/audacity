@@ -109,7 +109,7 @@ Rectangle {
         anchors.left: timelineIndent.right
         anchors.right: parent.right
 
-        height: 32
+        height: 40
 
         function updateCursorPosition(x) {
             lineCursor.x = x

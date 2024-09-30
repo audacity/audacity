@@ -14,11 +14,13 @@ KDDW.TitleBarBase {
     property var navigationOrder
     property var contextMenuModel
 
+    property int expectedHeight: 39
+
     signal addRequested(type: int, quantity: int)
 
     anchors.fill: parent
     implicitHeight: gripButton.implicitHeight
-    heightWhenVisible: 31
+    heightWhenVisible: expectedHeight
 
     RowLayout {
         id: rowLayout
@@ -28,7 +30,7 @@ KDDW.TitleBarBase {
         FlatButton {
             id: gripButton
 
-            Layout.preferredHeight: 31
+            Layout.preferredHeight: root.expectedHeight
             Layout.preferredWidth: 28
             backgroundRadius: 0
 
@@ -61,7 +63,7 @@ KDDW.TitleBarBase {
 
             width: root.verticalPanelDefaultWidth - gripButton.width
             Layout.fillWidth: true
-            Layout.preferredHeight: 31
+            Layout.preferredHeight: root.expectedHeight
 
             accessible.name: qsTrc("projectscene", "Add Track")
             backgroundRadius: 0
