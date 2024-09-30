@@ -72,14 +72,20 @@ void SelectionViewController::onReleased(double x, double y)
         std::swap(x1, x2);
     }
 
+    const std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+
     if ((x2 - x1) < MIN_SELECTION_PX) {
+        // Click without drag
+        if (!tracks.empty()) {
+            selectionController()->setSelectedTrack(tracks[0]);
+        } else {
+            selectionController()->resetSelectedTrack();
+        }
         return;
     }
 
     setSelectionActive(true);
 
-    // tracks
-    std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
     if (!tracks.empty()) {
         selectionController()->setSelectedTrack(tracks[0]);
     }
@@ -88,17 +94,6 @@ void SelectionViewController::onReleased(double x, double y)
     // time
     selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), true);
     selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), true);
-}
-
-void SelectionViewController::onClicked(double x, double y)
-{
-    Q_UNUSED(x);
-    std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
-    if (!tracks.empty()) {
-        selectionController()->setSelectedTrack(tracks[0]);
-    } else {
-        selectionController()->resetSelectedTrack();
-    }
 }
 
 void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
