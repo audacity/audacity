@@ -1,4 +1,6 @@
 import QtQuick
+import Muse.Ui
+import Muse.UiComponents
 
 Rectangle {
 
@@ -7,6 +9,9 @@ Rectangle {
     property color borderColor: "#000000"
     property int borderWidth: 1
     property bool timelinePressed: false
+
+    signal setPlaybackPosition(real x)
+    signal playCursorMousePositionChanged(real x)
 
     Rectangle {
         id: cursor
@@ -41,22 +46,29 @@ Rectangle {
         }
     }
 
-    signal setPlaybackPosition(real x)
-    signal playCursorMousePositionChanged(real x)
+    StyledIconLabel {
+        id: playheadIcon
 
-    Canvas {
-        id: marker
+        x: -(playheadIcon.width) / 2 - 0.5
+        y: -playheadIcon.height
+        z: 1
 
-        width: 17
-        height: baseRectHeight + vectorPulldown
+        iconCode: IconCode.PLAYHEAD_FILLED
 
-        property real baseRectHeight: 11
-        property real vectorPulldown: 5
+        font.pixelSize: 17
+        color: "black"
 
-        x: -(marker.width) / 2
-        y: -marker.height
+        StyledIconLabel {
+            id: playheadFill
 
-        property real radius: 2
+            x: 1.1
+            y: 0.9
+
+            iconCode: IconCode.PLAYHEAD_FILLED
+
+            font.pixelSize: 15
+            color: "white"
+        }
 
         MouseArea {
             anchors.fill: parent
@@ -72,54 +84,5 @@ Rectangle {
             }
         }
 
-        onPaint: {
-            const ctx = getContext("2d")
-
-            ctx.clearRect(0, 0, width, height)
-
-            ctx.fillStyle = root.color
-            ctx.strokeStyle = root.border.color
-            ctx.lineWidth = 2
-
-            ctx.beginPath()
-
-            let b = ctx.lineWidth / 2
-
-            // start with top-left corner, move clockwise
-            ctx.moveTo(radius, b)
-
-            ctx.lineTo(width - radius, b)
-            ctx.quadraticCurveTo(width - b, b + 1, width - b, radius)
-
-            ctx.lineTo(width - b, (baseRectHeight - 1))
-            {
-                let cx1 = width - radius - b
-                let cx2 = baseRectHeight - b
-                let ang1 = 45 * (Math.PI / 180)
-                let x1 = cx1 + (radius * Math.cos(ang1));
-                let y1 = cx2 + (radius * Math.sin(ang1));
-                ctx.quadraticCurveTo(width - b, baseRectHeight - b, x1, y1)
-            }
-
-            ctx.lineTo((width / 2) + radius, height - radius)
-            ctx.quadraticCurveTo(width / 2, height, (width / 2) - radius, height - radius)
-
-            {
-                let cx1 = b
-                let cx2 = baseRectHeight - b
-                let ang1 = 135 * (Math.PI / 180)
-                let x1 = cx1 + (radius * Math.cos(ang1));
-                let y1 = cx2 + (radius * Math.sin(ang1));
-                ctx.lineTo(b - x1, y1)
-            }
-
-            ctx.quadraticCurveTo(b, baseRectHeight - b, b, (baseRectHeight - 1))
-
-            ctx.lineTo(b, radius)
-            ctx.quadraticCurveTo(b, b, radius, b)
-
-            ctx.stroke()
-            ctx.fill()
-        }
     }
 }
