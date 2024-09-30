@@ -149,13 +149,13 @@ void LoginDialog::LayoutControls()
 
    {
       auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      vSizer->Add(MakeLabel(this, _("Email")));
+      vSizer->Add(MakeLabel(this, _("Email")), 0, wxBOTTOM, 5);
       vSizer->Add(mEmail = safenew wxTextCtrl(this, wxID_ANY), 0, wxEXPAND);
       topSizer->Add(vSizer.release(), 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 16);
    }
    {
       auto vSizer = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      vSizer->Add(MakeLabel(this, _("Password")));
+      vSizer->Add(MakeLabel(this, _("Password")), 0, wxBOTTOM, 5);
       vSizer->Add(mPassword = 
          safenew wxTextCtrl(
             this,
@@ -166,7 +166,7 @@ void LoginDialog::LayoutControls()
             wxTE_PASSWORD),
          0, wxEXPAND);
       if(mMode == Mode::SignIn)
-         vSizer->Add(safenew wxHyperlinkCtrl(this, wxID_ANY, _("Forgot your password?"), RestorePasswordURL));
+         vSizer->Add(safenew wxHyperlinkCtrl(this, wxID_ANY, _("Forgot your password?"), RestorePasswordURL), 0, wxTOP, 10);
          
       topSizer->Add(vSizer.release(), 0, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 16);
 
@@ -177,7 +177,7 @@ void LoginDialog::LayoutControls()
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       //i18b-hint: followed by hyperlink, keep whitespace at the end
-      hSizer->Add(MakeLabel(this, _("Already have an account? ")));
+      hSizer->Add(MakeLabel(this, _("Already have an account? ")), 0, wxALIGN_CENTER_VERTICAL);
       hSizer->Add(safenew wxHyperlinkCtrl(this, ID_SIGNIN, _("Sign in here"), ""));
       topSizer->Add(hSizer.release(), 0, wxEXPAND | wxLEFT | wxRIGHT, 16);
    }
@@ -185,7 +185,7 @@ void LoginDialog::LayoutControls()
    {
       auto hSizer = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
       //i18b-hint: followed by hyperlink, keep whitespace at the end
-      hSizer->Add(MakeLabel(this, _("Need an account? ")));
+      hSizer->Add(MakeLabel(this, _("Need an account? ")), 0, wxALIGN_CENTER_VERTICAL);
       hSizer->Add(safenew wxHyperlinkCtrl(this, ID_CREATE_ACCOUNT, _("Create cloud account"), ""));
       topSizer->Add(hSizer.release(), 0, wxEXPAND | wxALL, 16);
    }
