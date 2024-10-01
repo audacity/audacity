@@ -463,8 +463,6 @@ bool TracksListModel::removeRows(int row, int count, const QModelIndex& parent)
 
 void TracksListModel::onProjectChanged()
 {
-    this->disconnectAll();
-
     if (m_isLoadingBlocked) {
         m_projectChangedWhileLoadingWasBlocked = true;
         return;
