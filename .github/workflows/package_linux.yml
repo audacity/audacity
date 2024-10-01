@@ -131,7 +131,7 @@ jobs:
     needs: [generate_source_tarball, generate_docker_images]
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4
       with:
         path: .
     - shell: bash
