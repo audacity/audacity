@@ -127,13 +127,12 @@ void ApplicationActionController::onDropEvent(QDropEvent*)
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 {
     //! TODO AU4
-    // if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow())
-    //     || event->type() == QEvent::Quit) {
-    //     bool accepted = quit(false);
-    //     event->setAccepted(accepted);
-
-    //     return true;
-    // }
+    if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow())
+        || event->type() == QEvent::Quit) {
+        const bool accepted = quit();
+        event->setAccepted(accepted);
+        return true;
+    }
 
     // if (event->type() == QEvent::FileOpen && watched == qApp) {
     //     const QFileOpenEvent* openEvent = static_cast<const QFileOpenEvent*>(event);
@@ -155,35 +154,19 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 
 bool ApplicationActionController::quit()
 {
-    //! TODO AU4
-//     if (m_quiting) {
-//         return false;
-//     }
+    if (m_quiting) {
+        return false;
+    }
 
-//     m_quiting = true;
-//     DEFER {
-//         m_quiting = false;
-//     };
+    m_quiting = true;
+    DEFER {
+        m_quiting = false;
+    };
 
-//     if (!projectFilesController()->closeOpenedProject()) {
-//         return false;
-//     }
-
-//     if (isAllInstances) {
-//         multiInstancesProvider()->quitForAll();
-//     }
-
-//     if (multiInstancesProvider()->instances().size() == 1 && !installerPath.empty()) {
-// #if defined(Q_OS_LINUX)
-//         interactive()->revealInFileBrowser(installerPath);
-// #else
-//         interactive()->openUrl(QUrl::fromLocalFile(installerPath.toQString()));
-// #endif
-//     }
-
-//     if (multiInstancesProvider()->instances().size() > 1) {
-//         multiInstancesProvider()->notifyAboutInstanceWasQuited();
-//     }
+    constexpr auto quit = true;
+    if (!projectFilesController()->closeOpenedProject(quit)) {
+        return false;
+    }
 
     QCoreApplication::exit();
     return true;
@@ -243,9 +226,10 @@ void ApplicationActionController::openPreferencesDialog()
 void ApplicationActionController::revertToFactorySettings()
 {
     std::string title = muse::trc("appshell", "Are you sure you want to revert to factory settings?");
-    std::string question = muse::trc("appshell", "This action will reset all your app preferences and delete all custom palettes and custom shortcuts. "
-                                                 "The list of recent scores will also be cleared.\n\n"
-                                                 "This action will not delete any of your scores.");
+    std::string question = muse::trc("appshell",
+                                     "This action will reset all your app preferences and delete all custom palettes and custom shortcuts. "
+                                     "The list of recent scores will also be cleared.\n\n"
+                                     "This action will not delete any of your scores.");
 
     int revertBtn = int(muse::IInteractive::Button::Apply);
     muse::IInteractive::Result result = interactive()->warning(title, question,
