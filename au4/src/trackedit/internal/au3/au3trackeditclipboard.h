@@ -15,6 +15,7 @@ class Au3TrackeditClipboard : public ITrackeditClipboard
 {
 public:
     std::vector<TrackData> trackData() const override;
+    TrackData trackData(size_t i) const override;
     void clearTrackData() override;
     bool trackDataEmpty() const override;
     size_t trackDataSize() const override;

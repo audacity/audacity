@@ -37,7 +37,7 @@ public:
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
     void clearClipboard() override;
-    bool pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
+    muse::Ret pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
     bool cutClipDataIntoClipboard(const std::vector<TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
@@ -64,11 +64,11 @@ public:
 
 private:
     AudacityProject& projectRef() const;
-    bool pasteIntoNewTrack();
+    muse::Ret pasteIntoNewTrack();
     ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList &list, secs_t begin);
     std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks,
                                     TrackId destinationTrackId, size_t tracksNum) const;
-    bool canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
+    muse::Ret canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
