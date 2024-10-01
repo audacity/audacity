@@ -7,6 +7,7 @@
 #include "global/async/channel.h"
 
 #include "trackedittypes.h"
+#include "types/ret.h"
 
 namespace au::trackedit {
 //! NOTE Interface for interacting with the project
@@ -31,7 +32,7 @@ public:
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
     virtual void clearClipboard() = 0;
-    virtual bool pasteFromClipboard(secs_t begin, TrackId trackId) = 0;
+    virtual muse::Ret pasteFromClipboard(secs_t begin, TrackId trackId) = 0;
     virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;
     virtual bool cutClipDataIntoClipboard(const std::vector<TrackId>& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool copyClipIntoClipboard(const ClipKey& clipKey) = 0;

@@ -3,6 +3,7 @@
 */
 #include "trackeditactionscontroller.h"
 #include "project/internal/audacityproject.h"
+#include "trackediterrors.h"
 #include "translation.h"
 
 using namespace muse;
@@ -338,7 +339,10 @@ void TrackeditActionsController::paste()
     TrackId selectedTrackId = selectionController()->selectedTrack();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
-        trackeditInteraction()->pasteFromClipboard(selectedStartTime, selectedTrackId);
+        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, selectedTrackId);
+        if (!ret) {
+            interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
+        }
 
         pushProjectHistoryPasteState();
     }

@@ -14,6 +14,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iselectioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojecthistory.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditclipboard.h
+    ${CMAKE_CURRENT_LIST_DIR}/trackediterrors.h
 
     ${CMAKE_CURRENT_LIST_DIR}/dom/track.h
     ${CMAKE_CURRENT_LIST_DIR}/dom/clip.cpp

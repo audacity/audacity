@@ -12,6 +12,11 @@ std::vector<au::trackedit::TrackData> Au3TrackeditClipboard::trackData() const
     return m_tracksData;
 }
 
+TrackData Au3TrackeditClipboard::trackData(size_t i) const
+{
+    return m_tracksData.at(i);
+}
+
 void Au3TrackeditClipboard::clearTrackData()
 {
     m_tracksData.clear();
