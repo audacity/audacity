@@ -68,7 +68,7 @@ void ApplicationActionController::onDragEnterEvent(QDragEnterEvent* event)
     onDragMoveEvent(event);
 }
 
-void ApplicationActionController::onDragMoveEvent(QDragMoveEvent* event)
+void ApplicationActionController::onDragMoveEvent(QDragMoveEvent*)
 {
     //! TODO AU4
     // const QMimeData* mime = event->mimeData();
@@ -83,7 +83,7 @@ void ApplicationActionController::onDragMoveEvent(QDragMoveEvent* event)
     // }
 }
 
-void ApplicationActionController::onDropEvent(QDropEvent* event)
+void ApplicationActionController::onDropEvent(QDropEvent*)
 {
     //! TODO AU4
     // const QMimeData* mime = event->mimeData();
