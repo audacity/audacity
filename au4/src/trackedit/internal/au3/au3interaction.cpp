@@ -109,6 +109,13 @@ bool Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds, sec
             //! TODO AU4: show dialog
             return false;
         }
+
+        if (dstWaveTrack->NChannels() == 1 && data[i].track.get()->NChannels() == 2) {
+            interactive()->error(muse::trc("message", "Message"), std::string(
+                "The content you are trying to paste will span across more tracks than you"
+                " currently have available. Add more tracks and try again."));
+            return false;
+        }
     }
 
     return true;
