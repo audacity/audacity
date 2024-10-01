@@ -96,8 +96,6 @@ bool Au3Project::save(const muse::io::path_t& filePath)
 
 void Au3Project::close()
 {
-    UndoManager::Get(m_data->projectRef()).ClearStates();
-
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     projectFileIO.CloseProject();
 }

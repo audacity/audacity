@@ -82,6 +82,11 @@ void Audacity4Project::close()
 {
     m_aboutCloseBegin.notify();
 
+    const auto history = projectHistory();
+    history->undoUnsaved();
+    history->clearUnsaved();
+    save();
+
     m_au3Project->close();
 
     m_aboutCloseEnd.notify();
