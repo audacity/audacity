@@ -23,6 +23,8 @@ public:
     void undo() override;
     bool redoAvailable() override;
     void redo() override;
+    void undoUnsaved() override;
+    void clearUnsaved() override;
     void pushHistoryState(
         const std::string& longDescription, const std::string& shortDescription) override;
 

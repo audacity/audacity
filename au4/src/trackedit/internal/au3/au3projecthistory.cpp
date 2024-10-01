@@ -49,6 +49,26 @@ void au::trackedit::Au3ProjectHistory::redo()
         });
 }
 
+void au::trackedit::Au3ProjectHistory::undoUnsaved()
+{
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+    while (undoManager.UnsavedChanges())
+    {
+        undoManager.Undo(
+            [&]( const UndoStackElem& elem ){
+            ::ProjectHistory::Get(project).PopState(elem.state);
+        });
+    }
+}
+
+void au::trackedit::Au3ProjectHistory::clearUnsaved()
+{
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+    undoManager.ClearStates();
+}
+
 void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
 {
     auto& project = projectRef();

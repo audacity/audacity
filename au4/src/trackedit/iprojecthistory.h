@@ -18,7 +18,8 @@ public:
     virtual void undo() = 0;
     virtual bool redoAvailable() = 0;
     virtual void redo() = 0;
-
+    virtual void undoUnsaved() = 0;
+    virtual void clearUnsaved() = 0;
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
 };
 
