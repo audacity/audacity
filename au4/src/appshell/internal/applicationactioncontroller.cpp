@@ -44,10 +44,8 @@ void ApplicationActionController::preInit()
 
 void ApplicationActionController::init()
 {
-    dispatcher()->reg(this, "quit", [this](const ActionData& args) {
-        bool isAllInstances = args.count() > 0 ? args.arg<bool>(0) : true;
-        muse::io::path_t installatorPath = args.count() > 1 ? args.arg<muse::io::path_t>(1) : "";
-        quit(isAllInstances, installatorPath);
+    dispatcher()->reg(this, "quit", [this] {
+        quit();
     });
 
     dispatcher()->reg(this, "restart", [this]() {
@@ -155,7 +153,7 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
     return QObject::eventFilter(watched, event);
 }
 
-bool ApplicationActionController::quit(bool isAllInstances, const muse::io::path_t& installerPath)
+bool ApplicationActionController::quit()
 {
     //! TODO AU4
 //     if (m_quiting) {
