@@ -6,9 +6,10 @@
 
 #include "iprojecthistory.h"
 
-#include "async/asyncable.h"
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
+
+class AudacityProject;
 
 namespace au::trackedit {
 class Au3ProjectHistory : public IProjectHistory
@@ -22,7 +23,12 @@ public:
     void undo() override;
     bool redoAvailable() override;
     void redo() override;
+    void undoUnsaved() override;
+    void clearUnsaved() override;
+    void pushHistoryState(
+        const std::string& longDescription, const std::string& shortDescription) override;
 
-    void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) override;
+private:
+    ::AudacityProject& projectRef();
 };
 }

@@ -75,7 +75,7 @@ private:
 
     void setupConnections();
 
-    bool quit(bool isAllInstances, const muse::io::path_t& installerPath = muse::io::path_t());
+    bool quit();
     void restart();
 
     void toggleFullScreen();

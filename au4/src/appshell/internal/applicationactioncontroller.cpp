@@ -44,10 +44,8 @@ void ApplicationActionController::preInit()
 
 void ApplicationActionController::init()
 {
-    dispatcher()->reg(this, "quit", [this](const ActionData& args) {
-        bool isAllInstances = args.count() > 0 ? args.arg<bool>(0) : true;
-        muse::io::path_t installatorPath = args.count() > 1 ? args.arg<muse::io::path_t>(1) : "";
-        quit(isAllInstances, installatorPath);
+    dispatcher()->reg(this, "quit", [this] {
+        quit();
     });
 
     dispatcher()->reg(this, "restart", [this]() {
@@ -70,7 +68,7 @@ void ApplicationActionController::onDragEnterEvent(QDragEnterEvent* event)
     onDragMoveEvent(event);
 }
 
-void ApplicationActionController::onDragMoveEvent(QDragMoveEvent* event)
+void ApplicationActionController::onDragMoveEvent(QDragMoveEvent*)
 {
     //! TODO AU4
     // const QMimeData* mime = event->mimeData();
@@ -85,7 +83,7 @@ void ApplicationActionController::onDragMoveEvent(QDragMoveEvent* event)
     // }
 }
 
-void ApplicationActionController::onDropEvent(QDropEvent* event)
+void ApplicationActionController::onDropEvent(QDropEvent*)
 {
     //! TODO AU4
     // const QMimeData* mime = event->mimeData();
@@ -129,13 +127,12 @@ void ApplicationActionController::onDropEvent(QDropEvent* event)
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 {
     //! TODO AU4
-    // if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow())
-    //     || event->type() == QEvent::Quit) {
-    //     bool accepted = quit(false);
-    //     event->setAccepted(accepted);
-
-    //     return true;
-    // }
+    if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow())
+        || event->type() == QEvent::Quit) {
+        const bool accepted = quit();
+        event->setAccepted(accepted);
+        return true;
+    }
 
     // if (event->type() == QEvent::FileOpen && watched == qApp) {
     //     const QFileOpenEvent* openEvent = static_cast<const QFileOpenEvent*>(event);
@@ -155,37 +152,21 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
     return QObject::eventFilter(watched, event);
 }
 
-bool ApplicationActionController::quit(bool isAllInstances, const muse::io::path_t& installerPath)
+bool ApplicationActionController::quit()
 {
-    //! TODO AU4
-//     if (m_quiting) {
-//         return false;
-//     }
+    if (m_quiting) {
+        return false;
+    }
 
-//     m_quiting = true;
-//     DEFER {
-//         m_quiting = false;
-//     };
+    m_quiting = true;
+    DEFER {
+        m_quiting = false;
+    };
 
-//     if (!projectFilesController()->closeOpenedProject()) {
-//         return false;
-//     }
-
-//     if (isAllInstances) {
-//         multiInstancesProvider()->quitForAll();
-//     }
-
-//     if (multiInstancesProvider()->instances().size() == 1 && !installerPath.empty()) {
-// #if defined(Q_OS_LINUX)
-//         interactive()->revealInFileBrowser(installerPath);
-// #else
-//         interactive()->openUrl(QUrl::fromLocalFile(installerPath.toQString()));
-// #endif
-//     }
-
-//     if (multiInstancesProvider()->instances().size() > 1) {
-//         multiInstancesProvider()->notifyAboutInstanceWasQuited();
-//     }
+    constexpr auto quit = true;
+    if (!projectFilesController()->closeOpenedProject(quit)) {
+        return false;
+    }
 
     QCoreApplication::exit();
     return true;
@@ -245,9 +226,10 @@ void ApplicationActionController::openPreferencesDialog()
 void ApplicationActionController::revertToFactorySettings()
 {
     std::string title = muse::trc("appshell", "Are you sure you want to revert to factory settings?");
-    std::string question = muse::trc("appshell", "This action will reset all your app preferences and delete all custom palettes and custom shortcuts. "
-                                                 "The list of recent scores will also be cleared.\n\n"
-                                                 "This action will not delete any of your scores.");
+    std::string question = muse::trc("appshell",
+                                     "This action will reset all your app preferences and delete all custom palettes and custom shortcuts. "
+                                     "The list of recent scores will also be cleared.\n\n"
+                                     "This action will not delete any of your scores.");
 
     int revertBtn = int(muse::IInteractive::Button::Apply);
     muse::IInteractive::Result result = interactive()->warning(title, question,
