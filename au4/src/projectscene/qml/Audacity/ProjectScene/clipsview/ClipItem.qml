@@ -218,7 +218,7 @@ Rectangle {
                 width: 16
                 height: 16
                 anchors.right: parent.right
-                anchors.rightMargin: root.rightVisibleMargin + 4
+                anchors.rightMargin: 4
                 anchors.verticalCenter: parent.verticalCenter
 
                 menuModel: contextMenuModel
