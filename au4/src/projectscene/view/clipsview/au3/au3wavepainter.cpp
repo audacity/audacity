@@ -525,8 +525,8 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
         ColorFromQColor(style.rmsPen),
         ColorFromQColor(style.rmsPen))
     .SetBackgroundColors(
-        ColorFromQColor(style.blankBrush),
-        ColorFromQColor(style.blankBrush))
+        ColorFromQColor(style.normalBackground),
+        ColorFromQColor(style.selectedBackground))
     .SetClippingColors(
         ColorFromQColor(style.clippedPen),
         ColorFromQColor(style.clippedPen))

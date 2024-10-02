@@ -19,6 +19,9 @@ Rectangle {
     property var canvas: null
     property color clipColor: "#677CE4"
     property bool clipSelected: false
+    property bool isDataSelected: false
+    property int selectionStart: 0
+    property int selectionWidth: 0
 
     property real leftVisibleMargin: 0
     property real rightVisibleMargin: 0
@@ -116,6 +119,20 @@ Rectangle {
             z: 2
 
             visible: !root.collapsed || root.hover
+
+            Rectangle {
+                id: headerSelectionRectangle
+
+                x: root.selectionStart
+                z: 0 // Ensure this is below the header content
+                width: Math.min(root.selectionWidth, header.width)
+
+                anchors.top: header.top
+                anchors.bottom: header.bottom
+
+                color: waveView.transformColor(clipColor)
+                visible: root.isDataSelected
+            }
 
             MouseArea {
                 id: headerDragArea
@@ -319,8 +336,8 @@ Rectangle {
             name: "NORMAL"
             when: !root.clipSelected && !headerDragArea.containsMouse
             PropertyChanges { target: header; color: root.clipColor }
-            PropertyChanges { target: titleLabel; color: "#ffffff"}
-            PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
+            PropertyChanges { target: titleLabel; color: "#000000"}
+            PropertyChanges { target: menuBtn; iconColor: "#000000"}
         },
 
         State {

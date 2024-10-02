@@ -149,8 +149,8 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
-            color: "#8EC9FF"
-            opacity: 0.2
+            color: "#ABE7FF"
+            opacity: 0.3
         }
     }
 
@@ -338,7 +338,7 @@ Rectangle {
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            color: "#8EC9FF"
+            color: "#ABE7FF"
             opacity: 0.05
             visible: false
 

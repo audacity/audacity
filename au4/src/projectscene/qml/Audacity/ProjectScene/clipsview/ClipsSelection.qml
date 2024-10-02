@@ -20,26 +20,7 @@ Item {
         anchors.bottom: parent.bottom
 
         visible: isDataSelected
-        color: "#8EC9FF"
-        opacity: 0.1
-
-        Rectangle {
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            width: 2
-            color: "#8EC9FF"
-            opacity: 0.3
-        }
-
-        Rectangle {
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            width: 2
-            color: "#8EC9FF"
-            opacity: 0.3
-        }
+        color: "transparent"
     }
 
     MouseArea {

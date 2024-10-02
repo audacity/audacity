@@ -115,6 +115,10 @@ Item {
                 clipKey: clipItem.key
                 clipTime: clipItem.time
                 clipSelected: clipItem.selected
+                isDataSelected: root.isDataSelected
+                selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : root.context.selectionStartPosition - clipItem.x
+                selectionWidth: root.context.selectionStartPosition < clipItem.x ?
+                                    root.context.selectionEndPosition - clipItem.x : root.context.selectionEndPosition - root.context.selectionStartPosition
                 leftVisibleMargin: clipItem.leftVisibleMargin
                 rightVisibleMargin: clipItem.rightVisibleMargin
                 collapsed: trackViewState.isTrackCollapsed
@@ -171,6 +175,8 @@ Item {
         }
     }
 
+    // this one is transparent, it's on top of the clips
+    // to have extend/reduce selection area handles
     ClipsSelection {
         id: clipsSelection
 
@@ -188,8 +194,23 @@ Item {
         }
     }
 
+    // this one is drawn below the clips
     Rectangle {
-        id: selectedHighlight
+        id: clipSelectionRectangle
+
+        x: root.context.selectionStartPosition
+        width: root.context.selectionEndPosition - x
+
+        anchors.top: root.top
+        anchors.bottom: root.bottom
+
+        visible: root.isDataSelected
+        color: "#ABE7FF"
+        opacity: 0.3
+    }
+
+    Rectangle {
+        id: selectedTrackHighlight
         z: 0
         anchors.fill: parent
         color: "#FFFFFF"

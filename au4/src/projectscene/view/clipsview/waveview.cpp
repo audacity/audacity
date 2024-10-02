@@ -62,13 +62,17 @@ void WaveView::paint(QPainter* painter)
 
     if (m_clipSelected) {
         params.style.blankBrush = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
+        params.style.normalBackground = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
+        params.style.selectedBackground = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
         params.style.highlightedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_HIGHLIGHT_COLOR, 0.8);
         params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
     } else {
         params.style.blankBrush = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.9);
+        params.style.normalBackground = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
+        params.style.selectedBackground = transformColor(muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8));
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.6);
-        params.style.highlightedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_HIGHLIGHT_COLOR, 0.8);
+        params.style.highlightedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.75);
         params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
     }
 
@@ -171,4 +175,21 @@ void WaveView::setChannelHeightRatio(double channelHeightRatio)
     m_channelHeightRatio = channelHeightRatio;
     emit channelHeightRatioChanged();
     update();
+}
+
+QColor WaveView::transformColor(const QColor &originalColor) const
+{
+    int r = originalColor.red();
+    int g = originalColor.green();
+    int b = originalColor.blue();
+
+    int deltaRed = (r < 240) ? 51 : (255 - r);
+    int deltaGreen = (g < 240) ? 69 : (255 - g);
+    int deltaBlue = 77;
+
+    int newRed = qBound(0, r + deltaRed, 255);
+    int newGreen = qBound(0, g + deltaGreen, 255);
+    int newBlue = qBound(0, b + deltaBlue, 255);
+
+    return QColor(newRed, newGreen, newBlue);
 }
