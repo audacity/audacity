@@ -67,7 +67,7 @@ Item {
                 property QtObject clipItem: model.item
 
                 height: parent.height
-                width: clipItem.width
+                width: Math.max(3, clipItem.width)
                 x: clipItem.x
 
                 asynchronous: true
@@ -78,10 +78,6 @@ Item {
                     }
 
                     if (clipItem.x > (clipsContaner.width + clipsModel.cacheBufferPx)) {
-                        return null
-                    }
-
-                    if (clipItem.width < 2) {
                         return null
                     }
 
