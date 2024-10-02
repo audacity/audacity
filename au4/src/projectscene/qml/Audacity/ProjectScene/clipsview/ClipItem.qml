@@ -83,6 +83,7 @@ Rectangle {
 
         onClicked: function(e) {
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
+            root.requestSelected()
         }
 
         onPositionChanged: {
@@ -225,6 +226,10 @@ Rectangle {
 
                 onHandleMenuItem: function(itemId) {
                     contextMenuModel.handleMenuItem(itemId)
+                }
+
+                onClicked: {
+                    root.requestSelected()
                 }
             }
         }
