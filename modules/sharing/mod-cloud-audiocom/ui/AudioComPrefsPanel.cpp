@@ -82,7 +82,7 @@ public:
             S.SetBorder(8);
             S.AddWindow(
                safenew UserPanel { GetServiceConfig(), GetOAuthService(),
-                                   GetUserService(), true,
+                                   GetUserService(), UserPanel::LinkMode::Link,
                                    AudiocomTrace::PrefsPanel, S.GetParent() },
                wxEXPAND);
          }

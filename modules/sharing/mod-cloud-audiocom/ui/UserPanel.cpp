@@ -51,7 +51,7 @@ const auto anonymousText = XO("Anonymous");
 
 UserPanel::UserPanel(
    const ServiceConfig& serviceConfig, OAuthService& authService,
-   UserService& userService, bool hasLinkButton, AudiocomTrace trace,
+   UserService& userService, LinkMode linkMode, AudiocomTrace trace,
    wxWindow* parent, const wxPoint& pos, const wxSize& size)
     : wxPanelWrapper { parent, wxID_ANY, pos, size }
     , mServiceConfig { serviceConfig }
@@ -60,18 +60,22 @@ UserPanel::UserPanel(
     , mAudiocomTrace { trace }
     , mUserDataChangedSubscription { userService.Subscribe(
          [this](const auto&) { UpdateUserData(); }) }
-    , mHasLinkButton { hasLinkButton }
+    , mLinkMode { linkMode }
 {
    mUserImage = safenew UserImage(this, avatarSize);
-   mUserImage->SetLabel(hasLinkButton ? notLinkedText : anonymousText);      // for screen readers
+   mUserImage->SetLabel( mLinkMode == LinkMode::Link ? 
+                         notLinkedText : anonymousText );      // for screen readers
    mUserName = safenew wxStaticText(
       this,
       wxID_ANY,
-      (hasLinkButton ? notLinkedText : anonymousText).Translation());
+      ( mLinkMode == LinkMode::Link ? 
+        notLinkedText : anonymousText).Translation() );
+
    mLinkButton =
       safenew wxButton(this, wxID_ANY, XXO("&Link Account").Translation());
    mLinkButton->Bind(wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
-   mLinkButton->Show(hasLinkButton);
+   
+   mLinkButton->Show(mLinkMode == LinkMode::Link);
 
    auto sizer = safenew wxBoxSizer { wxHORIZONTAL };
 
@@ -154,7 +158,9 @@ void UserPanel::UpdateUserData()
    else
       mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
 
-   mLinkButton->SetLabel(XXO("&Sign Out").Translation());
+   mLinkButton->SetLabel(( mLinkMode == LinkMode::Link ? 
+     XXO("&Unlink Account") :
+     XXO("&Sign Out") ).Translation());
    mLinkButton->Show();
 
    OnStateChanged(true);
@@ -187,7 +193,7 @@ void UserPanel::SetAnonymousState()
    mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
    mUserImage->SetLabel(anonymousText);   // for screen readers
    mLinkButton->SetLabel(XXO("&Link Account").Translation());
-   mLinkButton->Show(mHasLinkButton);
+   mLinkButton->Show(mLinkMode == LinkMode::Link);
 
    OnStateChanged(false);
 }

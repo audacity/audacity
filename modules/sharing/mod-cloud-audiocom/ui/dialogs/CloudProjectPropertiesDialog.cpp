@@ -37,7 +37,8 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    GetAuthorizationHandler().PushSuppressDialogs();
 
    mUserPanel =
-      new UserPanel(serviceConfig, authService, userService, false, trace, this);
+      new UserPanel(serviceConfig, authService, userService,
+                    UserPanel::LinkMode::SignIn, trace, this);
 
    mProjectName = new wxTextCtrl { this,          wxID_ANY,
                                    projectName,   wxDefaultPosition,

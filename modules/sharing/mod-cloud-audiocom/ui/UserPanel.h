@@ -35,9 +35,17 @@ class UserPanel final
    , public Observer::Publisher<UserPanelStateChangedMessage>
 {
 public:
+
+   // TODO this will use different text depending on user panel location,
+   // due to discrepancies in cloud login flow, to be unified
+   enum class LinkMode {
+      Link,
+      SignIn,
+   };
+
    UserPanel(
       const ServiceConfig& serviceConfig, OAuthService& authService,
-      UserService& userService, bool hasLinkButton, AudiocomTrace,
+      UserService& userService, LinkMode linkMode, AudiocomTrace,
       wxWindow* parent = nullptr, const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize);
 
@@ -63,7 +71,7 @@ private:
    Observer::Subscription mUserDataChangedSubscription;
 
    bool mIsAuthorized { false };
-   const bool mHasLinkButton;
+   const LinkMode mLinkMode;
 }; // class UserPanel
 
 } // namespace audacity::cloud::audiocom
