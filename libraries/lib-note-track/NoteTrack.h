@@ -96,7 +96,6 @@ private:
 
 public:
    void MoveTo(double origin) override { mOrigin = origin; }
-   void ShiftBy(double t0, double delta) override;
 
    Alg_seq &GetSeq() const;
 

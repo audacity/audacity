@@ -287,7 +287,6 @@ public:
    virtual ~WaveTrack();
 
    void MoveTo(double o) override;
-   void ShiftBy(double t0, double delta) override;
 
    bool LinkConsistencyFix(bool doFix) override;
 

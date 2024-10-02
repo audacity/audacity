@@ -570,22 +570,6 @@ void WaveTrack::MoveTo(double origin)
    WaveTrackData::Get(*this).SetOrigin(origin);
 }
 
-/*! @excsafety{No-fail} */
-void WaveTrack::ShiftBy(double t0, double delta)
-{
-   for (const auto &pInterval : Intervals())
-   {   // assume No-fail-guarantee
-      if(pInterval->Start() >= t0)
-         pInterval->ShiftBy(delta);
-   }
-   const auto origin = WaveTrackData::Get(*this).GetOrigin();
-   if(t0 <= origin)
-   {
-      const auto offset = t0 >= 0 ? delta : t0 + delta;
-      WaveTrackData::Get(*this).SetOrigin(origin + offset);
-   }
-}
-
 auto WaveTrack::DuplicateWithOtherTempo(double newTempo) const -> Holder
 {
    const auto srcCopy = Duplicate();

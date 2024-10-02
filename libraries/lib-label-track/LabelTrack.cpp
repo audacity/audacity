@@ -193,7 +193,6 @@ LabelTrack::~LabelTrack()
 {
 }
 
-
 void LabelTrack::MoveTo(double origin)
 {
    if (!mLabels.empty()) {
@@ -201,17 +200,6 @@ void LabelTrack::MoveTo(double origin)
       for (auto &labelStruct: mLabels) {
          labelStruct.selectedRegion.move(offset);
       }
-   }
-}
-
-void LabelTrack::ShiftBy(double t0, double delta)
-{
-   if (mLabels.empty())
-   return;
-   for (auto &labelStruct: mLabels)
-   {
-      if(labelStruct.selectedRegion.t0() >= t0)
-         labelStruct.selectedRegion.move(delta);
    }
 }
 

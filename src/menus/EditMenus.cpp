@@ -700,25 +700,6 @@ void OnPaste(const CommandContext &context)
    // TODO: What if we clicked past the end of the track?
 
    if (bPastedSomething) {
-
-      if(!isSyncLocked && GetEditClipsCanMove())
-      {
-         //Special case when pasting without sync lock and
-         //"...move other clips" option is 
-         //Also shift all intervals in all other tracks that
-         //starts after t0
-         const auto offset = srcTracks->GetEndTime() - (t1 - t0);
-         for(auto track : tracks.Any<Track>())
-         {
-            const auto it = std::find_if(correspondence.begin(), correspondence.end(),
-                                   [=](auto& p) { return p.first == track; });
-            if(it != correspondence.end())
-               continue;
-
-            track->ShiftBy(t0, offset);
-         }
-      }
-
       ViewInfo::Get(project).selectedRegion
          .setTimes( t0, t0 + clipboard.Duration() );
 

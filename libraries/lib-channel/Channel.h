@@ -295,9 +295,6 @@ public:
    //! Change start time by given duration
    void ShiftBy(double t) { MoveTo(GetStartTime() + t); }
 
-   //! Shift all intervals that starts after `t0` by `delta` seconds
-   virtual void ShiftBy(double t0, double delta) = 0;
-
    //! Change start time to given time point
    virtual void MoveTo(double o) = 0;
 
