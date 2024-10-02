@@ -28,9 +28,15 @@ static muse::draw::Color trackColor(const au::trackedit::TrackId& trackId)
 {
     //! TODO AU4 Just for tests
     static std::vector<muse::draw::Color> colors = {
-        muse::draw::Color::fromString("#677CE4"),
-        muse::draw::Color::fromString("#2C79B0"),
-        muse::draw::Color::fromString("#2D9696")
+        muse::draw::Color::fromString("#66A3FF"),
+        muse::draw::Color::fromString("#9996FC"),
+        muse::draw::Color::fromString("#DA8CCC"),
+        muse::draw::Color::fromString("#F08080"),
+        muse::draw::Color::fromString("#FF9E65"),
+        muse::draw::Color::fromString("#E8C050"),
+        muse::draw::Color::fromString("#74BE59"),
+        muse::draw::Color::fromString("#34B494"),
+        muse::draw::Color::fromString("#48BECF")
     };
     size_t colorIdx = std::llabs(trackId);
     if (colorIdx >= colors.size()) {

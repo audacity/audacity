@@ -43,6 +43,8 @@ public:
     double channelHeightRatio() const;
     void setChannelHeightRatio(double channelHeightRatio);
 
+    Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
+
     void paint(QPainter* painter) override;
 
 signals:
