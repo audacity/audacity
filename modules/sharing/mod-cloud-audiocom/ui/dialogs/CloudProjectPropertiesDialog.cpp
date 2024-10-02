@@ -155,9 +155,10 @@ void CloudProjectPropertiesDialog::SetupEvents()
 {
    mSaveToCloud->Bind(wxEVT_BUTTON, [this](auto&)
    {
+      Disable();
       if(!GetOAuthService().HasAccessToken())
          LoginDialog::SignIn(this);
-      
+      Enable();
       if(GetOAuthService().HasAccessToken())
          EndModal(wxID_OK);
    });

@@ -65,21 +65,22 @@ namespace
       {
          BasicUI::CallAfter([weak, mode, code, error = std::string(error)]
          {
-            if(weak)
-               weak->Enable();
-
+            using namespace BasicUI;
             if (mode == LoginDialog::Mode::Create)
             {
-               BasicUI::ShowMessageBox(XXO("Oops! It looks like there was an issue with your input.\n"
-                                           "Please ensure your email is correct and "
-                                           "that your password is at least 8 characters long"));
+               ShowMessageBox(XXO("Oops! It looks like there was an issue with your input.\n"
+                                  "Please ensure your email is correct and "
+                                  "that your password is at least 8 characters long"),
+                                  MessageBoxOptions {}.IconStyle(Icon::Error));
             }
             else
             {
-               BasicUI::ShowMessageBox(XXO("Sorry, but it seems the email or password you entered is incorrect.\n"
-                                           "Please double-check your credentials and try again!"));
-               
+               ShowMessageBox(XXO("Sorry, but it seems the email or password you entered is incorrect.\n"
+                                  "Please double-check your credentials and try again!"),
+                                  MessageBoxOptions {}.IconStyle(Icon::Error));
             }
+            if(weak)
+               weak->Enable();
          });
       };
    }
