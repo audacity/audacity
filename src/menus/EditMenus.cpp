@@ -705,10 +705,10 @@ void OnPaste(const CommandContext &context)
       {
          //Special case when pasting without sync lock and
          //"...move other clips" option is 
-         //Also shift all intervals in all other tracks that
+         //Also shift all intervals in all other selected tracks that
          //starts after t0
          const auto offset = srcTracks->GetEndTime() - (t1 - t0);
-         for(auto track : tracks.Any<Track>())
+         for(auto track : tracks.Selected<Track>())
          {
             const auto it = std::find_if(correspondence.begin(), correspondence.end(),
                                    [=](auto& p) { return p.first == track; });
