@@ -32,8 +32,8 @@ Rectangle {
     signal clipEndEditRequested()
 
     signal clipMoveRequested(bool completed)
-    signal clipLeftTrimRequested()
-    signal clipRightTrimRequested()
+    signal clipLeftTrimRequested(bool completed)
+    signal clipRightTrimRequested(bool completed)
 
     signal requestSelected()
     signal ratioChanged(double val)
@@ -321,12 +321,12 @@ Rectangle {
             root.clipEndEditRequested()
         }
 
-        onTrimLeftRequested: function() {
-            root.clipLeftTrimRequested()
+        onTrimLeftRequested: function(completed) {
+            root.clipLeftTrimRequested(completed)
         }
 
-        onTrimRightRequested: function() {
-            root.clipRightTrimRequested()
+        onTrimRightRequested: function(completed) {
+            root.clipRightTrimRequested(completed)
         }
     }
 

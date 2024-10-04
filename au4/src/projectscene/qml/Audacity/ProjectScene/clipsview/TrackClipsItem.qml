@@ -137,12 +137,12 @@ Item {
                     clipsModel.moveClip(clipItem.key, completed)
                 }
 
-                onClipLeftTrimRequested: function() {
-                    clipsModel.trimLeftClip(clipItem.key)
+                onClipLeftTrimRequested: function(completed) {
+                    clipsModel.trimLeftClip(clipItem.key, completed)
                 }
 
-                onClipRightTrimRequested: function() {
-                    clipsModel.trimRightClip(clipItem.key)
+                onClipRightTrimRequested: function(completed) {
+                    clipsModel.trimRightClip(clipItem.key, completed)
                 }
 
                 onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
