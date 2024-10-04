@@ -222,6 +222,12 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
 
     m_clipStartTimeChanged.send(clipKey, newStartTime, completed);
 
+    if (completed) {
+        //! TODO AU4: later when having keyboard arrow shortcut for moving clips
+        //! make use of UndoPush::CONSOLIDATE arg in UndoManager
+        projectHistory()->pushHistoryState("Clip moved", "Move clip");
+    }
+
     return true;
 }
 
