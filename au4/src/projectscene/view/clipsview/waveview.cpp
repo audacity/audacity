@@ -65,14 +65,14 @@ void WaveView::paint(QPainter* painter)
         params.style.normalBackground = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
         params.style.selectedBackground = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
-        params.style.highlightedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_HIGHLIGHT_COLOR, 0.8);
+        params.style.selectedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_HIGHLIGHT_COLOR, 0.8);
         params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
     } else {
         params.style.blankBrush = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.9);
         params.style.normalBackground = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
         params.style.selectedBackground = transformColor(muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8));
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.6);
-        params.style.highlightedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.75);
+        params.style.selectedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.75);
         params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
     }
 
