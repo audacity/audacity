@@ -716,7 +716,7 @@ bool Au3Interaction::splitDeleteSelectedOnTracks(const std::vector<TrackId> trac
     return true;
 }
 
-bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec)
+bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool completed)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -733,10 +733,14 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec)
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
+    if (completed) {
+        projectHistory()->pushHistoryState("Clip trimmed", "Trim clip");
+    }
+
     return true;
 }
 
-bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec)
+bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool completed)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -752,6 +756,10 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec)
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    if (completed) {
+        projectHistory()->pushHistoryState("Clip trimmed", "Trim clip");
+    }
 
     return true;
 }

@@ -335,7 +335,7 @@ bool ClipsListModel::moveClip(const ClipKey& key, bool completed)
     return ok;
 }
 
-bool ClipsListModel::trimLeftClip(const ClipKey& key)
+bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -357,11 +357,11 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key)
         return false;
     }
 
-    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime);
+    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, completed);
     return ok;
 }
 
-bool ClipsListModel::trimRightClip(const ClipKey& key)
+bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -383,7 +383,7 @@ bool ClipsListModel::trimRightClip(const ClipKey& key)
         return false;
     }
 
-    bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime);
+    bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, completed);
     return ok;
 }
 

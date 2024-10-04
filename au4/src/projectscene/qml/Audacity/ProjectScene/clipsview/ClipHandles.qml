@@ -23,8 +23,8 @@ Item {
     signal clipStartEditRequested()
     signal clipEndEditRequested()
 
-    signal trimLeftRequested()
-    signal trimRightRequested()
+    signal trimLeftRequested(bool completed)
+    signal trimRightRequested(bool completed)
 
     Item {
         id: leftTrimHandle
@@ -84,6 +84,9 @@ Item {
             }
 
             onReleased: function(e) {
+                root.trimLeftRequested(true)
+
+                // this needs to be always at the very end
                 root.clipEndEditRequested()
             }
 
@@ -101,7 +104,7 @@ Item {
                 clipHandlesMousePositionChanged(mouseX + leftTrimHandle.x, mouseY)
 
                 if (pressed) {
-                    root.trimLeftRequested()
+                    root.trimLeftRequested(false)
                 }
             }
         }
@@ -164,6 +167,9 @@ Item {
             }
 
             onReleased: function(e) {
+                root.trimRightRequested(true)
+
+                // this needs to be always at the very end
                 root.clipEndEditRequested()
             }
 
@@ -181,7 +187,7 @@ Item {
                 clipHandlesMousePositionChanged(mouseX + rightTrimHandle.x, mouseY)
 
                 if (pressed) {
-                    root.trimRightRequested()
+                    root.trimRightRequested(false)
                 }
             }
         }

@@ -53,8 +53,8 @@ public:
     bool clipSplitDelete(const ClipKey& clipKey) override;
     bool splitCutSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
     bool splitDeleteSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
-    bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec) override;
-    bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec) override;
+    bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
+    bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     void newMonoTrack() override;
     void newStereoTrack() override;
     void newLabelTrack() override;
