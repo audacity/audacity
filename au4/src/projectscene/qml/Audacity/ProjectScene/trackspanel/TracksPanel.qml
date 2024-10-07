@@ -26,9 +26,7 @@ Item {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVericalYChanged: {
-            if (!view.moving) {
-                view.contentY = tracksViewState.tracksVericalY
-            }
+            view.contentY = tracksViewState.tracksVericalY
         }
     }
 

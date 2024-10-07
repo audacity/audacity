@@ -35,9 +35,7 @@ Rectangle {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVericalYChanged: {
-            if (!tracksClipsView.moving) {
-                tracksClipsView.contentY = tracksViewState.tracksVericalY
-            }
+            tracksClipsView.contentY = tracksViewState.tracksVericalY
         }
     }
 
