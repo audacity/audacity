@@ -40,7 +40,7 @@ wxString GetFactoryPresetsBasePath()
       return wxString(commonFolderPath) + "\\VST3 Presets\\";
    return {};
 #elif __WXMAC__
-   return wxString("Library/Audio/Presets/");
+   return wxString("/Library/Audio/Presets/");
 #elif __WXGTK__
    return wxString("/usr/local/share/vst3/presets/");
 #endif
