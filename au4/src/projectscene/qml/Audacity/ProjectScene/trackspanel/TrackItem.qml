@@ -183,6 +183,7 @@ ListItemBlank {
                 id: volumePressureMeters
                 model: root.item.channelCount
                 VolumePressureMeter {
+                    height: root.height
                     currentVolumePressure: index === 0 ? root.item.leftChannelPressure :
                                                          root.item.rightChannelPressure
                 }

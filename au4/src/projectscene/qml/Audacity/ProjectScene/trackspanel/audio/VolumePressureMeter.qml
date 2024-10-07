@@ -26,7 +26,6 @@ Canvas {
     property bool isClipping: currentVolumePressure >= maxDisplayedVolumePressure
 
     width: root.showRuler ? indicatorWidth + 20 : indicatorWidth
-    height: parent.height
 
     QtObject {
         id: prv
