@@ -157,10 +157,14 @@ void CloudProjectPropertiesDialog::SetupEvents()
    {
       Disable();
       if(!GetOAuthService().HasAccessToken())
-         LoginDialog::SignIn(this);
+      {
+         LoginDialog::SignIn(this, LoginDialog::Mode::Create);
+      }
       Enable();
       if(GetOAuthService().HasAccessToken())
+      {
          EndModal(wxID_OK);
+      }
    });
    mSaveLocally->Bind(wxEVT_BUTTON, [this](auto&) { EndModal(wxID_SAVE); });
    mCancel->Bind(wxEVT_BUTTON, [this](auto&) { EndModal(wxID_CANCEL); });

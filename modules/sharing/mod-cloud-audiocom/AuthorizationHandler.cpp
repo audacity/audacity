@@ -17,6 +17,7 @@
 #include "OAuthService.h"
 #include "ServiceConfig.h"
 
+#include "ui/dialogs/LoginDialog.h"
 #include "ui/dialogs/LinkAccountDialog.h"
 #include "ui/dialogs/LinkFailedDialog.h"
 #include "ui/dialogs/LinkSucceededDialog.h"
@@ -123,8 +124,7 @@ AuthResult PerformBlockingAuth(
                             std::string(result.errorMessage) });
       });
 
-   OpenInDefaultBrowser(
-      { audacity::ToWXString(GetServiceConfig().GetOAuthLoginPage(trace)) });
+   LoginDialog::SignIn(nullptr, LoginDialog::Mode::SignIn);
 
    auto waitResult = WaitForAuth(promise.get_future(), project);
 

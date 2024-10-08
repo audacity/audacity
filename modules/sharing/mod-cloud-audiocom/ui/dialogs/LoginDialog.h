@@ -20,7 +20,7 @@ public:
       SignIn,
    };
 
-   static bool SignIn(wxWindow* parent);
+   static bool SignIn(wxWindow* parent, Mode mode = Mode::SignIn);
 
 private:
 

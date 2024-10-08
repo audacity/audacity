@@ -107,9 +107,8 @@ LoginDialog::LoginDialog(wxWindow* parent, wxWindowID id, Mode mode)
    LayoutControls();
 }
 
-bool LoginDialog::SignIn(wxWindow* parent)
+bool LoginDialog::SignIn(wxWindow* parent, Mode mode)
 {
-   auto mode = Mode::SignIn;
    while(true)
    {
       LoginDialog dialog(parent, wxID_ANY, mode);
