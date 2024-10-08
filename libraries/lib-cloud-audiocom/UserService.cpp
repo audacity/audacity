@@ -42,6 +42,7 @@ wxString MakeAvatarPath()
    return avatarFileName.GetFullPath();
 }
 
+StringSetting userId { L"/cloud/audiocom/userId", "" };
 StringSetting userName { L"/cloud/audiocom/userName", "" };
 StringSetting displayName { L"/cloud/audiocom/displayName", "" };
 StringSetting avatarEtag { L"/cloud/audiocom/avatarEtag", "" };
@@ -96,15 +97,19 @@ void UserService::UpdateUserData()
          if (!document.IsObject())
             return;
 
+         const auto id = document["id"].GetString();
          const auto username = document["username"].GetString();
          const auto avatar = document["avatar"].GetString();
          const auto profileName = document["profile"]["name"].GetString();
 
          BasicUI::CallAfter(
-            [this, username = std::string(username),
+            [this, 
+             id = std::string(id),
+             username = std::string(username),
              profileName = std::string(profileName),
              avatar = std::string(avatar)]()
             {
+               userId.Write(audacity::ToWXString(id));
                userName.Write(audacity::ToWXString(username));
                displayName.Write(audacity::ToWXString(profileName));
 
@@ -126,6 +131,7 @@ void UserService::ClearUserData()
          if (GetUserSlug().empty())
             return;
 
+         userId.Write({});
          userName.Write({});
          displayName.Write({});
          avatarEtag.Write({});
@@ -222,6 +228,11 @@ void UserService::DownloadAvatar(std::string_view url)
                Publish({});
             });
       });
+}
+
+wxString UserService::GetUserId() const
+{
+   return userId.Read();
 }
 
 wxString UserService::GetDisplayName() const

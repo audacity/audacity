@@ -32,6 +32,8 @@ public:
    //! Reset the user profile data
    void ClearUserData();
 
+   //! Gets user id
+   wxString GetUserId() const;
    //! "Slug" used to construct shareable URLs
    wxString GetUserSlug() const;
    //! Get the user name to display in the dialog

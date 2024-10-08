@@ -31,8 +31,10 @@ set( IMAGE_LIST
    EditEffects.png
    EnvCursor.png
    Envelope.png
+   FacebookLogo.png
    FFwd.png
    FFwdDisabled.png
+   GoogleLogo.png
    GrabberDropLoc.png
    HelpIcon.png
    HiliteButtonExpand.png

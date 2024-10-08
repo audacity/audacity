@@ -142,10 +142,15 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
 
       if (result == ProjectLimitDialog::VisitAudioComIdentifier())
       {
-         const auto slug = audacity::ToUTF8(GetUserService().GetUserSlug());
+         auto& userService = GetUserService();
+         auto& oauthService = GetOAuthService();
+         auto& serviceConfig = GetServiceConfig();
 
-         BasicUI::OpenInDefaultBrowser(
-            GetServiceConfig().GetProjectsPageUrl(slug, message.audiocomTrace));
+         const auto slug = audacity::ToUTF8(userService.GetUserSlug());
+         const auto projectsPath = serviceConfig.GetProjectsPagePath(slug, message.audiocomTrace);
+         const auto url = oauthService.MakeAudioComAuthorizeURL(slug, projectsPath);
+
+         BasicUI::OpenInDefaultBrowser(url);
 
          WaitForActionDialog {
             &mProject,

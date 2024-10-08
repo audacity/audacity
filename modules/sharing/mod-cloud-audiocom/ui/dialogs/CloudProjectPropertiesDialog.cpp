@@ -19,10 +19,12 @@
 #include <wx/textctrl.h>
 
 #include "../UserPanel.h"
+#include "LoginDialog.h"
 
 #include "AccessibilityUtils.h"
 #include "AuthorizationHandler.h"
 #include "CodeConversions.h"
+#include "OAuthService.h"
 
 namespace audacity::cloud::audiocom::sync
 {
@@ -35,23 +37,13 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    GetAuthorizationHandler().PushSuppressDialogs();
 
    mUserPanel =
-      new UserPanel(serviceConfig, authService, userService, true, trace, this);
-
-   mUserStateChangedSubscription =
-      mUserPanel->Subscribe([this](auto) { OnUpdateCloudSaveState(); });
+      new UserPanel(serviceConfig, authService, userService,
+                    UserPanel::LinkMode::SignIn, trace, this);
 
    mProjectName = new wxTextCtrl { this,          wxID_ANY,
                                    projectName,   wxDefaultPosition,
                                    wxDefaultSize, wxTE_PROCESS_ENTER };
    mProjectName->SetName(XO("Project Name").Translation());
-
-   mAnonStateText = safenew wxStaticText {
-      this, wxID_ANY,
-      XO("Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed.")
-         .Translation()
-   };
-
-   mAnonStateText->Wrap(450 - 32);
 
    if (!projectName.empty())
    {
@@ -141,8 +133,6 @@ void CloudProjectPropertiesDialog::LayoutControls()
 
    topSizer->AddSpacer(spacerHeight);
 
-   topSizer->Add(mAnonStateText, 0, wxEXPAND | wxLEFT | wxRIGHT, 16);
-
    topSizer->AddSpacer(2 * spacerHeight);
 
    auto buttonSizer = new wxBoxSizer { wxHORIZONTAL };
@@ -159,13 +149,23 @@ void CloudProjectPropertiesDialog::LayoutControls()
    SetSizer(topSizer);
    Fit();
    Centre(wxBOTH);
-
-   mAnonStateText->Show(!mUserPanel->IsAuthorized());
 }
 
 void CloudProjectPropertiesDialog::SetupEvents()
 {
-   mSaveToCloud->Bind(wxEVT_BUTTON, [this](auto&) { EndModal(wxID_OK); });
+   mSaveToCloud->Bind(wxEVT_BUTTON, [this](auto&)
+   {
+      Disable();
+      if(!GetOAuthService().HasAccessToken())
+      {
+         LoginDialog::SignIn(this, LoginDialog::Mode::Create);
+      }
+      Enable();
+      if(GetOAuthService().HasAccessToken())
+      {
+         EndModal(wxID_OK);
+      }
+   });
    mSaveLocally->Bind(wxEVT_BUTTON, [this](auto&) { EndModal(wxID_SAVE); });
    mCancel->Bind(wxEVT_BUTTON, [this](auto&) { EndModal(wxID_CANCEL); });
 
@@ -210,12 +210,7 @@ std::string CloudProjectPropertiesDialog::GetProjectName() const
 
 void CloudProjectPropertiesDialog::OnUpdateCloudSaveState()
 {
-   mSaveToCloud->Enable(
-      mUserPanel->IsAuthorized() && !GetProjectName().empty());
-
-   mAnonStateText->Show(!mUserPanel->IsAuthorized());
-   Fit();
-   Layout();
+   mSaveToCloud->Enable(!GetProjectName().empty());
 }
 
 } // namespace audacity::cloud::audiocom::sync

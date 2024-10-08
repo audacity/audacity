@@ -597,7 +597,7 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
       s.SetBorder(16);
 
       userPanel = safenew UserPanel { GetServiceConfig(),    GetOAuthService(),
-                                      GetUserService(),      true,
+                                      GetUserService(),      UserPanel::LinkMode::Link,
                                       parent.mAudiocomTrace, s.GetParent() };
 
       mUserDataChangedSubscription = userPanel->Subscribe(

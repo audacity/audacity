@@ -70,8 +70,5 @@ private:
    wxButton* mSaveToCloud {};
    wxButton* mSaveLocally {};
    wxButton* mCancel {};
-   wxStaticText* mAnonStateText {};
-
-   Observer::Subscription mUserStateChangedSubscription {};
 };
 } // namespace audacity::cloud::audiocom::sync
