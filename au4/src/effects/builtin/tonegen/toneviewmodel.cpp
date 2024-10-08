@@ -113,3 +113,20 @@ void ToneViewModel::setDuration(double newDuration)
     s->extra.SetDuration(newDuration);
     e->setDuration(newDuration);
 }
+
+QString ToneViewModel::durationFormat() const
+{
+    if (const auto s = settings()) {
+        return QString::fromStdString(s->extra.GetDurationFormat().GET().ToStdString());
+    }
+    return "";
+}
+
+void ToneViewModel::setDurationFormat(const QString& newDurationFormat)
+{
+    auto s = settings();
+    IF_ASSERT_FAILED(s) {
+        return;
+    }
+    s->extra.SetDurationFormat(NumericFormatID { newDurationFormat.toStdString() });
+}

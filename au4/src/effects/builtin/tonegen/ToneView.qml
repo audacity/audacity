@@ -114,11 +114,15 @@ EffectBase {
             Timecode {
                id: timecode
                value: tone.duration
-               currentFormat: 2
+               currentFormatStr: tone.durationFormat
                enabled: true
 
                onValueChanged: {
                    tone.duration = timecode.value
+               }
+
+               onCurrentFormatChanged: {
+                   tone.durationFormat = timecode.currentFormatStr
                }
             }
         }

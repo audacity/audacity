@@ -20,6 +20,8 @@ class ToneViewModel : public AbstractEffectModel
     Q_PROPERTY(double duration READ duration WRITE setDuration NOTIFY
                durationChanged)
     Q_PROPERTY(double sampleRate READ sampleRate NOTIFY sampleRateChanged)
+    Q_PROPERTY(QString durationFormat READ durationFormat WRITE setDurationFormat NOTIFY
+               durationFormatChanged)
 
 public:
     Q_INVOKABLE void init();
@@ -33,6 +35,8 @@ public:
     double duration() const;
     void setDuration(double newDuration);
     double sampleRate() const;
+    QString durationFormat() const;
+    void setDurationFormat(const QString& newDurationFormat);
 
 signals:
     void sampleRateChanged();
@@ -40,6 +44,7 @@ signals:
     void frequencyChanged();
     void waveformChanged();
     void durationChanged();
+    void durationFormatChanged();
 
 private:
     ToneEffect* effect() const;

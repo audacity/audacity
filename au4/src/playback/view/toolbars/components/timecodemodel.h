@@ -23,6 +23,7 @@ class TimecodeModel : public QAbstractListModel
 
     Q_PROPERTY(QVariantList availableFormats READ availableFormats NOTIFY availableFormatsChanged)
     Q_PROPERTY(int currentFormat READ currentFormat WRITE setCurrentFormat NOTIFY currentFormatChanged FINAL)
+    Q_PROPERTY(QString currentFormatStr READ currentFormatStr WRITE setCurrentFormatStr NOTIFY currentFormatChanged FINAL)
 
     Q_PROPERTY(int currentEditedFieldIndex READ currentEditedFieldIndex
                WRITE setCurrentEditedFieldIndex NOTIFY currentEditedFieldIndexChanged FINAL)
@@ -70,6 +71,9 @@ public:
 
     int currentFormat() const;
     void setCurrentFormat(int format);
+
+    QString currentFormatStr() const;
+    void setCurrentFormatStr(const QString& formatStr);
 
     int currentEditedFieldIndex() const;
     void setCurrentEditedFieldIndex(int index);
