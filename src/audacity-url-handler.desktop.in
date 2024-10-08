@@ -1,0 +1,68 @@
+[Desktop Entry]
+Name=Audacity
+GenericName=Sound Editor
+GenericName[ar]=محرر أصوات
+GenericName[ca]=Editor d'àudio
+GenericName[co]=Editore audio
+GenericName[da]=Lydredigeringsprogram
+GenericName[de]=Audio-Editor
+GenericName[el]=Επεξεργαστής ήχου
+GenericName[es]=Editor de audio
+GenericName[fr]=Éditeur audio
+GenericName[hi]=ध्वनि संपादक
+GenericName[gu]=ધ્વનિ સંપાદક
+GenericName[kn]=ಧ್ವನಿ ಸಂಪಾದಕ
+GenericName[it]=editore di suoni
+GenericName[ta]=ஒலி ஆசிரியர்
+GenericName[la]=sonus editor
+GenericName[ja]=音声編集ソフト
+GenericName[ko]=오디오 편집기
+GenericName[lt]=Garsų rengyklė
+GenericName[nl]=Geluidseditor
+GenericName[pl]=Edytor dźwięku
+GenericName[pt_BR]=Editor de áudio
+GenericName[pt_PT]=Editor de áudio
+GenericName[ru]=Редактор звуковых файлов
+GenericName[sk]=Zvukový Editor
+GenericName[tr]=Ses Düzenleyici
+GenericName[uk]=Редактор звукових файлів
+GenericName[zh_CN]=音频编辑器
+GenericName[zh_TW]=音訊編輯器
+
+Comment=Record and edit audio files
+Comment[ar]=سجل و حرر ملفات صوت
+Comment[ca]=Enregistreu i editeu els fitxers d'àudio
+Comment[co]=Arregistrà è mudificà schedarii audio
+Comment[da]=Optag og rediger lydfiler
+Comment[de]=Audio-Dateien aufnehmen und bearbeiten
+Comment[el]=Ηχογράφηση και επεξεργασία αρχείων ήχου
+Comment[es]=Grabar y editar archivos de audio
+Comment[fr]=Enregistrer et éditer des fichiers audio
+Comment[hi]=ऑडियो फ़ाइल अंकित व संपादित करता है
+Comment[ja]=音声ファイルの録音と編集
+Comment[ko]=오디오 파일 녹음과 편집
+Comment[lt]=Įrašyti ir montuoti garso failus
+Comment[nl]=Audiobestanden opnemen en bewerken
+Comment[pl]=Nagrywaj i edytuj pliki dźwiękowe
+Comment[pt_BR]=Gravar e editar arquivos de áudio
+Comment[pt_PT]=Gravar e editar ficheiros de áudio
+Comment[ru]=Запись и редактирование звуковых файлов
+Comment[sk]=Nahráva a upravuje audio súbory.
+Comment[tr]=Ses dosyalarını kaydetme ve düzenleme
+Comment[uk]=Запис і редагування звукових файлів
+Comment[zh_CN]=录音和编辑音频文件
+Comment[zh_TW]=錄音和編輯音訊檔案
+
+Icon=@AUDACITY_NAME@
+StartupWMClass=Audacity
+
+Type=Application
+Categories=AudioVideo;Audio;AudioVideoEditing;
+
+Keywords=sound;music editing;voice channel;frequency;modulation;audio trim;clipping;noise reduction;multi track audio editor;edit;mixing;WAV;AIFF;FLAC;MP2;MP3;
+
+Exec=@AUDACITY_NAME@ -u %u
+StartupNotify=false
+Terminal=false
+MimeType=x-scheme-handler/audacity;
+NoDisplay=true
