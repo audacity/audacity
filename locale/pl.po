@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.4\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"PO-Revision-Date: 2024-10-08 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -8155,7 +8155,7 @@ msgstr "P&rzerysuj..."
 
 #: src/FreqWindow.cpp
 msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "Aby wykreślić widmo, wszystkie zaznaczone ścieżki muszą mieć taką samą częstotliwość próbkowania."
+msgstr "Aby narysować widmo, wszystkie zaznaczone ścieżki muszą mieć taką samą częstotliwość próbkowania."
 
 #: src/FreqWindow.cpp
 msgid ""
@@ -11080,7 +11080,7 @@ msgstr "&Głośność (dB):"
 
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
-msgstr "&Link regulacji głośności do kontroli dźwięku"
+msgstr "Połącz kontro&lę głośności z kontrolą dźwięku"
 
 #: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
 msgid "Change Pitch"
@@ -20642,7 +20642,7 @@ msgstr "Łączenie stereo"
 
 #: plug-ins/noisegate.ny
 msgid "Link Stereo Tracks"
-msgstr "Łącz ścieżki stereo"
+msgstr "Połącz ścieżki stereo"
 
 #: plug-ins/noisegate.ny
 msgid "Don't Link Stereo"
