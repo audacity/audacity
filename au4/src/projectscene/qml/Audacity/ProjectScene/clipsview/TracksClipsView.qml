@@ -224,6 +224,15 @@ Rectangle {
                     selectionController.resetSelectedClip()
                 }
             }
+
+            onDoubleClicked: e => {
+                if (root.clipHovered) {
+                    selectionController.selectClipAudioData(e.x, e.y)
+                } else {
+                    selectionController.selectTrackAudioData(e.y)
+                }
+                clipsSelection.visible = false
+            }
         }
 
         StyledViewScrollAndZoomArea {
