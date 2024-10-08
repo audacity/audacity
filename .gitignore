@@ -31,6 +31,7 @@ lib-src/twolame/doc/html/Doxyfile
 lib-src/twolame/libtwolame/config.h
 locale/POTFILES
 src/audacity.desktop
+src/audacity-url-handler.desktop
 src/RevisionIdent.h
 src/configunix.h
 src/configwin.h

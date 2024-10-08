@@ -8,7 +8,7 @@ set( SOURCES
    URLSchemesRegistry.h
 
    $<$<PLATFORM_ID:Windows>:win/SchemeRegistrar.cpp>
-   $<$<PLATFORM_ID:Darwin>:macos/SchemeRegistrar.cpp>
+   $<$<NOT:$<PLATFORM_ID:Windows>>:SchemeRegistrar.cpp>
 )
 
 set( LIBRARIES
