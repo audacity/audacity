@@ -12,6 +12,7 @@ Rectangle {
     id: root
 
     property bool clipHovered: false
+    property var hoveredClipKey: null
     color: ui.theme.backgroundPrimaryColor
 
     TracksListClipsModel {
@@ -228,6 +229,15 @@ Rectangle {
                     selectionController.resetSelectedClip()
                 }
             }
+
+            onDoubleClicked: e => {
+                if (root.clipHovered) {
+                    selectionController.selectClipAudioData(root.hoveredClipKey)
+                } else {
+                    selectionController.selectTrackAudioData(e.y)
+                }
+                clipsSelection.visible = false
+            }
         }
 
         StyledViewScrollAndZoomArea {
@@ -289,12 +299,13 @@ Rectangle {
                     isDataSelected: model.isDataSelected
                     isTrackSelected: model.isTrackSelected
 
-                    onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
+                    onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         timeline.updateCursorPosition(xWithinTrack)
 
                         if (!root.clipHovered) {
                             root.clipHovered = true
                         }
+                        root.hoveredClipKey = clipKey
                     }
 
                     onClipSelectedRequested: {
