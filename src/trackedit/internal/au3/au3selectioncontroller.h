@@ -31,6 +31,8 @@ public:
     muse::async::Channel<trackedit::ClipKey> clipSelected() const override;
 
     // data selection
+    void setSelectedTrackAudioData(trackedit::TrackId trackId) override;
+    void setSelectedClipAudioData(trackedit::TrackId trackId, secs_t time) override;
     void resetDataSelection() override;
     bool timeSelectionIsNotEmpty() const override;
     bool isDataSelectedOnTrack(TrackId trackId) const override;
