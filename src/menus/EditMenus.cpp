@@ -790,7 +790,7 @@ void OnSplitCut(const CommandContext &context)
       selectedRegion.t0(), selectedRegion.t1(), project.shared_from_this());
 
    ProjectHistory::Get(project)
-      .PushState(XO("Split-cut to the clipboard"), XO("Split Cut"));
+      .PushState(XO("Cut to clipboard and leave gap"), XO("Cut and leave gap"));
 }
 
 void OnSplitDelete(const CommandContext &context)
@@ -1181,11 +1181,11 @@ auto EditMenu()
             Menu( wxT("RemoveSpecial"), XXO("R&emove Special"),
                Section( "",
                   /* i18n-hint: (verb) Do a special kind of cut*/
-                  Command( wxT("SplitCut"), XXO("Spl&it Cut"), OnSplitCut,
+                  Command( wxT("SplitCut"), XXO("&Cut and leave gap"), OnSplitCut,
                      NotBusyTimeAndTracksFlags,
                      Options{ wxT("Ctrl+Alt+X") } ),
                   /* i18n-hint: (verb) Do a special kind of DELETE*/
-                  Command( wxT("SplitDelete"), XXO("Split D&elete"), OnSplitDelete,
+                  Command( wxT("SplitDelete"), XXO("&Delete and leave gap"), OnSplitDelete,
                      NotBusyTimeAndTracksFlags,
                      Options{ wxT("Ctrl+Alt+K") } )
                ),

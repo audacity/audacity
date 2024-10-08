@@ -511,11 +511,8 @@ void OnSplitCutLabels(const CommandContext &context)
    EditClipboardByLabel(project, tracks, selectedRegion, copyfunc);
 
    ProjectHistory::Get(project).PushState(
-      /* i18n-hint: (verb) Audacity has just split cut the labeled audio
-         regions*/
-      XO("Split Cut labeled audio regions to clipboard"),
-      /* i18n-hint: (verb) Do a special kind of cut on the labels*/
-      XO("Split Cut Labeled Audio"));
+      XO("Cut labeled audio regions to clipboard and leave gap"),
+      XO("Cut labeled audio and leave gap"));
 }
 
 void OnSplitDeleteLabels(const CommandContext &context)
@@ -745,21 +742,21 @@ auto LabelEditMenus()
          Command( wxT("CutLabels"), XXO("&Cut"), OnCutLabels,
             AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
                TimeSelectedFlag(),
-               Options{ wxT("Alt+X"), XO("Label Cut") } ),
+               Options{ wxT("Alt+X"), XO("Cut by label") } ),
          Command( wxT("DeleteLabels"), XXO("&Delete"), OnDeleteLabels,
             AudioIONotBusyFlag() | LabelsSelectedFlag() | WaveTracksExistFlag() |
                TimeSelectedFlag(),
-            Options{ wxT("Alt+K"), XO("Label Delete") } )
+            Options{ wxT("Alt+K"), XO("Delete by label") } )
       ),
 
       Section( "",
          /* i18n-hint: (verb) A special way to cut out a piece of audio*/
-         Command( wxT("SplitCutLabels"), XXO("&Split Cut"),
+         Command( wxT("SplitCutLabels"), XXO("C&ut and leave gap"),
             OnSplitCutLabels, NotBusyLabelsAndWaveFlags,
-            Options{ wxT("Alt+Shift+X"), XO("Label Split Cut") } ),
-         Command( wxT("SplitDeleteLabels"), XXO("Sp&lit Delete"),
+            Options{ wxT("Alt+Shift+X"), XO("Cut by labels and leave gap") } ),
+         Command( wxT("SplitDeleteLabels"), XXO("De&lete and leave gap"),
             OnSplitDeleteLabels, NotBusyLabelsAndWaveFlags,
-            Options{ wxT("Alt+Shift+K"), XO("Label Split Delete") } )
+            Options{ wxT("Alt+Shift+K"), XO("Delete by labels and leave gap") } )
       ),
 
       Section( "",
