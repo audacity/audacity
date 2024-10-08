@@ -21,7 +21,7 @@ Item {
     signal interactionEnded()
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
-    signal trackItemMousePositionChanged(real x, real y)
+    signal trackItemMousePositionChanged(real x, real y, var clipKey)
     signal clipSelectedRequested()
 
     signal selectionDraged(var x1, var x2, var completed)
@@ -148,7 +148,7 @@ Item {
                 onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
                     var yWithinTrack = yWithinClip
                     var xWithinTrack = xWithinClip + clipItem.x
-                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack)
+                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, clipItem.key)
                 }
 
                 onRequestSelected: {

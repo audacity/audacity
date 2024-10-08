@@ -11,6 +11,7 @@
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/domaccessor.h"
 
 #include "log.h"
 
@@ -80,6 +81,29 @@ void Au3SelectionController::setSelectedClip(const au::trackedit::ClipKey& clipK
 muse::async::Channel<au::trackedit::ClipKey> Au3SelectionController::clipSelected() const
 {
     return m_selectedClip.selected;
+}
+
+void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
+{
+    auto& tracks = ::TrackList::Get(projectRef());
+    ::Track* au3Track = tracks.FindById(::TrackId(trackId));
+
+    secs_t audioDataStartTime = au3Track->GetStartTime();
+    secs_t audioDataEndTime = au3Track->GetEndTime();
+
+    setDataSelectedStartTime(audioDataStartTime, true);
+    setDataSelectedEndTime(audioDataEndTime, true);
+}
+
+void Au3SelectionController::setSelectedClipAudioData(trackedit::TrackId trackId, secs_t time)
+{
+    const auto& clip = au3::DomAccessor::findWaveClip(projectRef(), trackId, time);
+
+    secs_t audioDataStartTime = clip->Start();
+    secs_t audioDataEndTime = clip->End();
+
+    setDataSelectedStartTime(audioDataStartTime, true);
+    setDataSelectedEndTime(audioDataEndTime, true);
 }
 
 // data selection
