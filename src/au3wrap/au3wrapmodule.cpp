@@ -5,6 +5,7 @@
 
 #include <wx/log.h>
 
+#include "FileNames.h"
 #include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
@@ -16,6 +17,10 @@
 #include "internal/au3audiodevicesprovider.h"
 #include "internal/au3commonsettings.h"
 #include "internal/au3basicui.h"
+
+#include "au3wrap/internal/wxtypes_convert.h"
+
+#include "QtCore/qstandardpaths.h"
 
 #include "log.h"
 
@@ -51,6 +56,10 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     }
 
     m_audioDevicesProvider->init();
+
+    //! TODO AU4: we probably want to have preferences for temporary directory later
+    muse::String tempDir = globalConfiguration()->userAppDataPath().toString();
+    UpdateDefaultPath(FileNames::Operation::Temp, wxFromString(tempDir));
 
     static Au3BasicUI uiServices;
     (void)BasicUI::Install(&uiServices);

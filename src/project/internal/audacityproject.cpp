@@ -21,6 +21,17 @@ Audacity4Project::Audacity4Project()
 {
 }
 
+Ret Audacity4Project::createNew()
+{
+    m_au3Project = au3ProjectCreator()->create();
+    m_au3Project->open();
+    m_trackeditProject = trackeditProjectCreator()->create(m_au3Project);
+    m_isNewlyCreated = true;
+    m_viewState = viewStateCreator()->createViewState();
+
+    return muse::make_ret(Ret::Code::Ok);
+}
+
 muse::Ret Audacity4Project::load(const muse::io::path_t& path, bool forceMode, const std::string& format_)
 {
     TRACEFUNC;
@@ -85,7 +96,6 @@ void Audacity4Project::close()
     const auto history = projectHistory();
     history->undoUnsaved();
     history->clearUnsaved();
-    save();
 
     m_au3Project->close();
 

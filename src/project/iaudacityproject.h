@@ -17,6 +17,7 @@ class IAudacityProject
 public:
     virtual ~IAudacityProject() = default;
 
+    virtual muse::Ret createNew() = 0;
     virtual muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") = 0;
 
     virtual void close() = 0;

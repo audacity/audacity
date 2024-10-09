@@ -49,6 +49,8 @@ class Audacity4Project : public IAudacityProject
 public:
     Audacity4Project();
 
+    muse::Ret createNew() override;
+
     muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") override;
     void close() override;
     muse::async::Notification aboutCloseBegin() const override;
