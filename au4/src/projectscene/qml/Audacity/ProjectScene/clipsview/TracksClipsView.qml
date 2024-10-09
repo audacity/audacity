@@ -103,6 +103,8 @@ Rectangle {
         anchors.left: timelineIndent.right
         anchors.right: parent.right
 
+        clip: true
+
         height: 40
 
         function updateCursorPosition(x) {
