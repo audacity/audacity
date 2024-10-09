@@ -39,14 +39,18 @@ namespace
 #  define SHOW_MUSEHUB
 #endif
 
-const char* WhatsNewURL = "https://audacityteam.org/3.6.0-video";
+const char* WhatsNewURL = "https://audacityteam.org/3.7.0-video";
+const char* ChangeLogURL = "https://support.audacityteam.org/additional-resources/changelog";
 const char* MuseHubURL = "https://www.musehub.com";
+const char* PromoURL = "https://audacityteam.org/audacitypromo";
 
 #if defined(SHOW_MUSEHUB)
-   constexpr auto WindowWidth = 720;
+   constexpr auto WindowWidth = 860;
 #else
-   constexpr auto WindowWidth = 400;
+   constexpr auto WindowWidth = 440;
 #endif
+
+constexpr auto WindowHeight = 460;
 
 }
 AttachedWindows::RegisteredFactory sWhatsNewWindow{
@@ -95,10 +99,10 @@ wxString MakeWhatsNewText()
       << wxT("<p><center>")
       << wxT(R"(<p><a href=")") << WhatsNewURL << wxT(R"(">)")
       // Bug: (Windows) specified width and height should match exactly to the size of the image
-      << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="263" height="148" /><br></a></p>)")
+      << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="352" height="198" /><br></a></p>)")
       << wxT("<h3>") << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING) << wxT("</h3>")
       << wxT("<p>")
-      << XO("Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>").Format(WhatsNewURL);
+      << XO("Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>").Format(WhatsNewURL, ChangeLogURL);
 
    return FormatHtmlText(o.GetString());
 }
@@ -110,11 +114,43 @@ wxString MakeGetPluginsText()
    s
       << wxT("<body>")
       << wxT("<p><center>")
-      << wxT(R"(<p><a href=")") << MuseHubURL << wxT(R"(">)")
+      << wxT(R"(<p><a href=")") << PromoURL << wxT(R"(">)")
       // Bug: (Windows) specified width and height should match exactly to the size of the image
-      << wxT(R"(<img src="memory:musehub.jpeg" width="263" height="148" /><br></a></p>)")
+      << wxT(R"(<img src="memory:musehub.jpeg" width="352" height="198" /><br></a></p>)")
+#if 0
+      //we want to keep these strings, but not display them at the moment
       << wxT("<h3>") << XO("Get free plugins & sounds")<< wxT("</h3>")
       << XO("<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>").Format(MuseHubURL);
+
+      //we also may need these strings in the future. Adding them to the catalogue now so we don't have to send out multiple translation CTAs
+
+      << wxT("<h3>") << wxT("VocalStrip - Solid State Logic")<< wxT("</h3>")
+      << wxT("<p>") << XO("A vocal processing effect that enhances vocal clarity and depth.") << wxT(" ")
+      << wxT("<h3>") << wxT("Crystalline Next-gen Reverb")<< wxT("</h3>")
+      << wxT("<p>") << XO("A multipurpose reverb plugin for spacious, natural-sounding effects.") << wxT(" ")
+      << wxT("<h3>") << wxT("Ampkit Guitar Modeller")<< wxT("</h3>")
+      << wxT("<p>") << XO("A guitar amp and effects modelling plugin for realistic tones and customizable sounds.") << wxT(" ")
+      << wxT("<h3>") << wxT("BOREALIS Dynamic Reverb")<< wxT("</h3>")
+      << wxT("<p>") << XO("A responsive reverb plugin that adapts to track dynamics for immersive soundscapes.") << wxT(" ")
+      << wxT("<h3>") << wxT("LANDR FX Voice")<< wxT("</h3>")
+      << wxT("<p>") << XO("A vocal multi-effect plugin that enhances vocal tracks for professional results.") << wxT(" ")
+      << wxT("<h3>") << wxT("LANDR FX Bass")<< wxT("</h3>")
+      << wxT("<p>") << XO("A bass effect plugin designed to deliver punchy, clear low-end sound.") << wxT(" ")
+      << wxT("<h3>") << wxT("LANDR FX Acoustic:")<< wxT("</h3>")
+      << wxT("<p>") << XO("A plugin for acoustic sound perfection, enhancing warmth and clarity.") << wxT(" ")
+      << wxT("<h3>") << wxT("Pristine Voice")<< wxT("</h3>")
+      << wxT("<p>") << XO("An amazing voice enhancement plugin for crystal-clear, professional vocal effects.") << wxT(" ")
+      << wxT("<h3>") << wxT("Remix Source Separation")<< wxT("</h3>")
+      << wxT("<p>") << XO("A real-time stem separation tool to isolate vocals, drums, and instruments.") << wxT(" ")
+      << wxT("<h3>") << wxT("Recommended effects plugins for Audacity")<< wxT("</h3>")
+      << wxT("<p>") << XO("Check out a variety of plugins by well known developers available on [[%s|MuseHub]].").Format(MuseHubURL) 
+
+#endif
+
+      << wxT("<h3>") << wxT("Polyspectral Multiband Compressor")<< wxT("</h3>")
+      << wxT("<p>") << XO("A multiband compressor offering precise control over frequencies.") << wxT(" ")
+      /*i18n-hint: MuseHub is a name of a product, see musehub.com. */
+      << XO("Available on [[%s|MuseHub]].").Format(MuseHubURL) << wxT("</p>");
 
    return FormatHtmlText(o.GetString());
 }
@@ -127,11 +163,8 @@ END_EVENT_TABLE()
 WhatsNewDialog::WhatsNewDialog(wxWindow* parent, wxWindowID id)
    : wxDialogWrapper(parent, id, XO("Welcome to Audacity!"))
 {
-#if defined(__WXOSX__)
-   SetSize(WindowWidth, 400);
-#else
-   SetSize(FromDIP(wxSize(WindowWidth, 430)));
-#endif
+
+   SetSize(FromDIP(wxSize(WindowWidth, WindowHeight)));
 
 #if defined(__WXMSW__)
    //On Windows UI controls doesn't use same theme preference
