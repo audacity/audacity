@@ -22,7 +22,7 @@ StyledPopupView {
 
         anchors.fill: parent
 
-        Text {
+        StyledTextLabel {
             anchors.right: parent.right
             text: {
                 let value = root.volume.toFixed(1);
