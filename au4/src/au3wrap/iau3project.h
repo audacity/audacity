@@ -17,6 +17,7 @@ public:
 
     virtual ~IAu3Project() = default;
 
+    virtual void open() = 0;
     virtual bool load(const muse::io::path_t& filePath) = 0;
     virtual bool save(const muse::io::path_t& fileName) = 0;
     virtual void close() = 0;
