@@ -128,15 +128,14 @@ void ProjectActionsController::newProject()
         return;
     }
 
-    muse::Ret ret = interactive()->open(NEW_PROJECT_URI).ret;
+    IAudacityProjectPtr project = std::make_shared<Audacity4Project>();
+    project->createNew();
 
-    if (ret) {
-        ret = openPageIfNeed(PROJECT_PAGE_URI);
-    }
+    globalContext()->setCurrentProject(project);
 
-    if (!ret) {
-        LOGE() << ret.toString();
-    }
+    projectHistory()->init();
+
+    openPageIfNeed(PROJECT_PAGE_URI);
 }
 
 void ProjectActionsController::openProject(const muse::actions::ActionData& args)
@@ -222,12 +221,11 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
 
 bool ProjectActionsController::saveProject(const muse::io::path_t& path)
 {
-    //! TODO AU4: this should ask for local/cloud save
-    //! use saveProject(SaveMode saveMode, SaveLocationType saveLocationType, bool force)
-    //! when implemented
-    //!
-    //! for now it saves at current file
-    return saveProjectLocally(path);
+    if (!path.empty()) {
+        return saveProjectLocally(path);
+    }
+
+    return saveProject(SaveMode::Save);
 }
 
 bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)

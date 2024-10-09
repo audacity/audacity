@@ -17,6 +17,7 @@ public:
 
     static std::shared_ptr<Au3Project> create();
 
+    void open() override;
     bool load(const muse::io::path_t& filePath) override;
     bool save(const muse::io::path_t& fileName) override;
     void close() override;
