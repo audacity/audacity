@@ -32,7 +32,7 @@ Item {
         anchors.bottom: parent.bottom
 
         visible: isDataSelected
-        width: 4
+        width: 8
         cursorShape: Qt.SizeHorCursor
 
         property real startX: 0
@@ -68,7 +68,7 @@ Item {
         anchors.bottom: parent.bottom
 
         visible: isDataSelected
-        width: 4
+        width: 8
         cursorShape: Qt.SizeHorCursor
 
         property real startX: 0
