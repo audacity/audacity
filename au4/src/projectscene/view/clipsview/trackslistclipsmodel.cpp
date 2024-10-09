@@ -51,6 +51,9 @@ void TracksListClipsModel::load()
         beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
         m_trackList.push_back(track);
         endInsertRows();
+
+        subscribeOnTrackHeightChanges(track.id);
+        updateTotalTracksHeight();
     });
 
     m_trackList.onItemRemoved(this, [this](const trackedit::Track& track) {
@@ -62,6 +65,9 @@ void TracksListClipsModel::load()
                 break;
             }
         }
+
+        unsubscribeFromTrackHeightChanges(track.id);
+        updateTotalTracksHeight();
     });
 
     m_trackList.onItemChanged(this, [this](const trackedit::Track& track) {
@@ -76,6 +82,12 @@ void TracksListClipsModel::load()
     });
 
     endResetModel();
+
+    for (const trackedit::Track& track : m_trackList) {
+        subscribeOnTrackHeightChanges(track.id);
+    }
+
+    updateTotalTracksHeight();
 }
 
 int TracksListClipsModel::rowCount(const QModelIndex&) const
@@ -151,4 +163,54 @@ void TracksListClipsModel::setSelectedTrack(const trackedit::TrackId trackId)
     m_selectedTrack = trackId;
     emit selectedTrackChanged();
     emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackSelectedRole });
+}
+
+void TracksListClipsModel::updateTotalTracksHeight()
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+    if (!viewState) {
+        return;
+    }
+
+    int height = 0;
+
+    for (const trackedit::Track& track : m_trackList) {
+        height += viewState->trackHeight(track.id).val;
+    }
+
+    setTotalTracksHeight(height);
+}
+
+void TracksListClipsModel::subscribeOnTrackHeightChanges(const trackedit::TrackId trackId)
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+
+    muse::ValCh<int> trackHeightCh = viewState->trackHeight(trackId);
+    trackHeightCh.ch.onReceive(this, [this](int) {
+        updateTotalTracksHeight();
+    });
+}
+
+void TracksListClipsModel::unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId)
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+    viewState->trackHeight(trackId).ch.resetOnReceive(this);
+}
+
+int TracksListClipsModel::totalTracksHeight() const
+{
+    return m_totalTracksHeight;
+}
+
+void TracksListClipsModel::setTotalTracksHeight(int height)
+{
+    if (m_totalTracksHeight == height) {
+        return;
+    }
+
+    m_totalTracksHeight = height;
+    emit totalTracksHeightChanged();
 }

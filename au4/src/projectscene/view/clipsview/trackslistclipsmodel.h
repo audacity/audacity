@@ -21,6 +21,8 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
 
     Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
 
+    Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
+
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<trackedit::ISelectionController> selectionController;
@@ -37,10 +39,15 @@ public:
 
     bool isVerticalRulersVisible() const;
 
+    int totalTracksHeight() const;
+    void setTotalTracksHeight(int height);
+
 signals:
     void dataSelectedTracksChanged();
     void selectedTrackChanged();
     void isVerticalRulersVisibleChanged(bool isVerticalRulersVisible);
+
+    void totalTracksHeightChanged();
 
 private:
     void setIsVerticalRulersVisible(bool isVerticalRulersVisible);
@@ -55,9 +62,14 @@ private:
     void setDataSelectedTracks(const std::vector<trackedit::TrackId>& tracks);
     void setSelectedTrack(const trackedit::TrackId trackId);
 
+    void updateTotalTracksHeight();
+    void subscribeOnTrackHeightChanges(const trackedit::TrackId trackId);
+    void unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId);
+
     muse::async::NotifyList<au::trackedit::Track> m_trackList;
     std::vector<trackedit::TrackId> m_dataSelectedTracks;
     trackedit::TrackId m_selectedTrack = au::trackedit::TrackId(-1);
     bool m_isVerticalRulersVisible = false;
+    int m_totalTracksHeight = 0;
 };
 }
