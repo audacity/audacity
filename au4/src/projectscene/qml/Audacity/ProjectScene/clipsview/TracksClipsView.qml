@@ -16,6 +16,10 @@ Rectangle {
 
     TracksListClipsModel {
         id: tracksModel
+
+        onTotalTracksHeightChanged: {
+            timeline.context.onResizeFrameContentHeight(tracksModel.totalTracksHeight)
+        }
     }
 
     ProjectPropertiesModel {
@@ -245,7 +249,7 @@ Rectangle {
                 anchors.fill: parent
                 clip: true
 
-                property real visibleContentHeight: tracksClipsView.contentHeight - tracksClipsView.contentY
+                property real visibleContentHeight: tracksModel.totalTracksHeight - tracksClipsView.contentY
 
                 ScrollBar.horizontal: null
                 ScrollBar.vertical: null
@@ -253,10 +257,6 @@ Rectangle {
                 onContentYChanged: {
                     tracksViewState.changeTracksVericalY(tracksClipsView.contentY)
                     timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
-                }
-
-                onContentHeightChanged: {
-                    timeline.context.onResizeFrameContentHeight(tracksClipsView.contentHeight)
                 }
 
                 onHeightChanged: {
@@ -275,8 +275,8 @@ Rectangle {
                     }
 
                     function onViewContentYChangeRequested(contentY) {
-                        if (tracksClipsView.contentY + contentY + tracksClipsView.height > tracksClipsView.contentHeight) {
-                            tracksClipsView.contentY += tracksClipsView.contentHeight - (tracksClipsView.contentY + tracksClipsView.height)
+                        if (tracksClipsView.contentY + contentY + tracksClipsView.height > tracksModel.totalTracksHeight) {
+                            tracksClipsView.contentY += tracksModel.totalTracksHeight - (tracksClipsView.contentY + tracksClipsView.height)
                         } else if (tracksClipsView.contentY + contentY < 0) {
                             tracksClipsView.contentY = 0 - tracksClipsView.contentY
                         } else {
