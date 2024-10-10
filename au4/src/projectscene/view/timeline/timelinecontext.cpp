@@ -11,7 +11,7 @@
 
 static constexpr double ZOOM_MIN = 0.001;
 static constexpr double ZOOM_MAX = 6000000.0;
-static constexpr int PIXELSSTEPSFACTOR = 5;
+static constexpr int PIXELSSTEPSFACTOR = 1;
 
 using namespace au::projectscene;
 
@@ -124,7 +124,7 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
             shiftFrameTime(abs * correction);
         } else {
             shiftFrameTime(-dx * correction);
-            emit shiftViewByY(dy* correction);
+            emit viewContentYChangeRequested(-dy);
         }
     }
 }
