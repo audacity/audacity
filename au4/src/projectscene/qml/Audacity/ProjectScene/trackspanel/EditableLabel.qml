@@ -61,6 +61,32 @@ Item {
             currentText: root.text
             property string newText: root.text
 
+            onShortcutOverride: function(event) {
+                if (event.key === Qt.Key_Up || event.key === Qt.Key_Down) {
+                    event.accepted = true
+                    return true
+                }
+                return false
+            }
+
+            onKeyPress: function(event) {
+                let newPosition
+
+                if (event.key === Qt.Key_Up)
+                    newPosition = 0
+                else if (event.key === Qt.Key_Down)
+                    newPosition = newText.length
+                else
+                    return false
+
+                if (event.modifiers & Qt.ShiftModifier)
+                    selectText(cursorPosition, newPosition)
+                else
+                    cursorPosition = newPosition
+
+                return true
+            }
+
             onTextEdited: function(text) {
                 newText = text
             }
