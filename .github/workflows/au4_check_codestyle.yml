@@ -1,4 +1,4 @@
-name: CI_codestyle
+name: '[AU4] Check: Codestyle'
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
     - master
 
 jobs:
-  codestyle:    
+  au4_codestyle:    
     runs-on: ubuntu-20.04
     steps:
     - name: Clone repository
