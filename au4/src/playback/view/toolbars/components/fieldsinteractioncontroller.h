@@ -36,11 +36,15 @@ signals:
 
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
+    bool needOverrideShortcut(QEvent* event) const;
+
     bool isMouseWithinBoundaries(const QPoint& mousePos) const;
 
     void moveCurrentEditedField(int moveKey);
     void adjustCurrentEditedField(int adjustKey);
     void scrollCurrentEditedField(int pixelsYScrolled, int stepsYScrolled);
+
+    void finishEditing();
 
     QString m_valueString;
 

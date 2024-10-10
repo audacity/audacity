@@ -77,11 +77,22 @@ int FieldsInteractionController::rowCount() const
 
 bool FieldsInteractionController::eventFilter(QObject* watched, QEvent* event)
 {
+    if (event->type() == QEvent::ShortcutOverride) {
+        bool needOverride = needOverrideShortcut(event);
+        if (needOverride) {
+            event->accept();
+            return true;
+        } else {
+            finishEditing();
+            return false;
+        }
+    }
+
     if (event->type() == QEvent::KeyPress) {
         QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event);
         int key = keyEvent->key();
         if (key == Qt::Key_Escape) {
-            setCurrentEditedFieldIndex(-1);
+            finishEditing();
             return true;
         } else if (key >= Qt::Key_0 && key <= Qt::Key_9) {
             QString newValueStr = m_valueString;
@@ -101,7 +112,7 @@ bool FieldsInteractionController::eventFilter(QObject* watched, QEvent* event)
         }
     } else if (event->type() == QEvent::MouseButtonPress) {
         if (!isMouseWithinBoundaries(QCursor::pos())) {
-            setCurrentEditedFieldIndex(-1);
+            finishEditing();
         }
     } else if (event->type() == QEvent::Wheel && isMouseWithinBoundaries(QCursor::pos())) {
         QWheelEvent* wheelEvent = dynamic_cast<QWheelEvent*>(event);
@@ -110,6 +121,29 @@ bool FieldsInteractionController::eventFilter(QObject* watched, QEvent* event)
     }
 
     return QObject::eventFilter(watched, event);
+}
+
+bool FieldsInteractionController::needOverrideShortcut(QEvent* event) const
+{
+    int key = dynamic_cast<QKeyEvent*>(event)->key();
+
+    bool isDigit = key >= Qt::Key_0 && key <= Qt::Key_9;
+    if (isDigit) {
+        return true;
+    }
+
+    static const std::set<int> navigationKeys {
+        Qt::Key_Left,
+        Qt::Key_Right,
+        Qt::Key_Up,
+        Qt::Key_Down,
+
+        Qt::Key_Escape,
+        Qt::Key_Enter,
+        Qt::Key_Return
+    };
+
+    return muse::contains(navigationKeys, key);
 }
 
 bool FieldsInteractionController::isMouseWithinBoundaries(const QPoint& mousePos) const
@@ -188,4 +222,9 @@ void FieldsInteractionController::scrollCurrentEditedField(int pixelsYScrolled, 
         adjustCurrentEditedField(Qt::Key_Down);
         m_scrolled = 0;
     }
+}
+
+void FieldsInteractionController::finishEditing()
+{
+    setCurrentEditedFieldIndex(-1);
 }
