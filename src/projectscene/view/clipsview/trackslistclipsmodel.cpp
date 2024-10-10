@@ -31,14 +31,14 @@ void TracksListClipsModel::load()
     m_trackList = prj->trackList();
 
     m_dataSelectedTracks = selectionController()->dataSelectedOnTracks();
-    m_selectedTrack = selectionController()->selectedTrack();
+    m_selectedTracks = selectionController()->selectedTracks();
 
-    selectionController()->dataSelectedOnTracksChanged().onReceive(this, [this](const std::vector<trackedit::TrackId>& tracks) {
+    selectionController()->dataSelectedOnTracksChanged().onReceive(this, [this](const trackedit::TrackIdList& tracks) {
         setDataSelectedTracks(tracks);
     });
 
-    selectionController()->trackSelected().onReceive(this, [this](const trackedit::TrackId& trackId) {
-        setSelectedTrack(trackId);
+    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& tracksIds) {
+        setSelectedTracks(tracksIds);
     });
 
     m_trackList.onChanged(this, [this]() {
@@ -109,7 +109,7 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
         return muse::contains(m_dataSelectedTracks, track.id);
     }
     case IsTrackSelectedRole: {
-        return m_selectedTrack == track.id;
+        return muse::contains(m_selectedTracks, track.id);
     }
     default:
         break;
@@ -145,7 +145,7 @@ void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisib
     emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
 }
 
-void TracksListClipsModel::setDataSelectedTracks(const std::vector<trackedit::TrackId>& tracks)
+void TracksListClipsModel::setDataSelectedTracks(const trackedit::TrackIdList& tracks)
 {
     if (m_dataSelectedTracks == tracks) {
         return;
@@ -155,12 +155,12 @@ void TracksListClipsModel::setDataSelectedTracks(const std::vector<trackedit::Tr
     emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
 }
 
-void TracksListClipsModel::setSelectedTrack(const trackedit::TrackId trackId)
+void TracksListClipsModel::setSelectedTracks(const trackedit::TrackIdList& tracksIds)
 {
-    if (m_selectedTrack == trackId) {
+    if (m_selectedTracks == tracksIds) {
         return;
     }
-    m_selectedTrack = trackId;
+    m_selectedTracks = tracksIds;
     emit selectedTrackChanged();
     emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackSelectedRole });
 }
