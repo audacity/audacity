@@ -124,7 +124,6 @@ signals:
     void selectionActiveChanged();
 
     void viewContentYChangeRequested(double contentY);
-    void shiftViewByY(double dy);
 
     void horizontalScrollChanged();
     void verticalScrollChanged();

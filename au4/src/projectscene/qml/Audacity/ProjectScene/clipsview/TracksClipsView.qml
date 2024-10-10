@@ -266,19 +266,11 @@ Rectangle {
                 Connections {
                     target: timeline.context
 
-                    function onShiftViewByY(shift) {
-                        if (shift > 0) {
-                            tracksClipsView.flick(0, tracksClipsView.maximumFlickVelocity)
-                        } else if (shift < 0) {
-                            tracksClipsView.flick(0, -tracksClipsView.maximumFlickVelocity)
-                        }
-                    }
-
                     function onViewContentYChangeRequested(contentY) {
                         if (tracksClipsView.contentY + contentY + tracksClipsView.height > tracksModel.totalTracksHeight) {
                             tracksClipsView.contentY += tracksModel.totalTracksHeight - (tracksClipsView.contentY + tracksClipsView.height)
                         } else if (tracksClipsView.contentY + contentY < 0) {
-                            tracksClipsView.contentY = 0 - tracksClipsView.contentY
+                            tracksClipsView.contentY = 0
                         } else {
                             tracksClipsView.contentY += contentY
                         }
