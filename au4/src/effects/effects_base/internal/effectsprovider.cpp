@@ -4,12 +4,14 @@
 #include "effectsprovider.h"
 
 #include "global/translation.h"
+#include "au3wrap/internal/domconverter.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-transactions/TransactionScope.h"
+#include "libraries/lib-exceptions/AudacityException.h"
 
 #include "libraries/lib-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
 #include "libraries/lib-basic-ui/BasicUI.h"
@@ -124,7 +126,10 @@ muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effec
         if ((effect->GetType() == EffectTypeGenerate || effect->GetPath() == NYQUIST_PROMPT_ID) && (effect->mNumTracks == 0)) {
             auto track = effect->mFactory->Create();
             track->SetName(effect->mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
-            newTrack = effect->mTracks->Add(track);
+            // The track-added event should be issued synchronously.
+            newTrack = effect->mTracks->Add(
+                track, TrackList::DoAssignId::Yes,
+                TrackList::EventPublicationSynchrony::Synchronous);
             newTrack->SetSelected(true);
         }
     }
@@ -157,7 +162,12 @@ muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effec
             auto vr = valueRestorer(effect->mProgress, progress.get());
 
             assert(pInstanceEx); // null check above
-            returnVal = pInstanceEx->Process(settings);
+            try {
+                returnVal = pInstanceEx->Process(settings);
+            } catch (const ::AudacityException& e) {
+                // TODO: display message box using info from `e`.
+                returnVal = false;
+            }
         }
 
         success = returnVal;
@@ -173,10 +183,13 @@ muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effec
     //! ============================================================================
 
     {
-        if (!success) {
+        if (success) {
             if (newTrack) {
-                effect->mTracks->Remove(*newTrack);
+                const auto trackeditProject = globalContext()->currentTrackeditProject();
+                trackeditProject->onTrackAdded(au3::DomConverter::track(*effect->mTracks->rbegin()));
             }
+        } else if (newTrack) {
+            effect->mTracks->Remove(*newTrack);
         }
     }
 
