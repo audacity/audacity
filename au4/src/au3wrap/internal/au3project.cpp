@@ -48,6 +48,12 @@ std::shared_ptr<Au3Project> Au3Project::create()
     return p;
 }
 
+void Au3Project::open()
+{
+    auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
+    projectFileIO.OpenProject();
+}
+
 bool Au3Project::load(const muse::io::path_t& filePath)
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
