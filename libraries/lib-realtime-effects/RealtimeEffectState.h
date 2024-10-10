@@ -46,6 +46,8 @@ public:
    RealtimeEffectState &operator =(const RealtimeEffectState &other) = delete;
    ~RealtimeEffectState();
 
+   std::shared_ptr<RealtimeEffectState> Clone() const;
+
    //! May be called with nonempty id at most once in the lifetime of a state
    /*!
     Call with empty id is ignored.
