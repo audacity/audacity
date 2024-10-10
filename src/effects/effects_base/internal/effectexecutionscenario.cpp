@@ -13,7 +13,6 @@
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-project-rate/ProjectRate.h"
-#include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-menus/CommandManager.h"
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-project-history/ProjectHistory.h"
@@ -59,7 +58,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     EffectManager& em = EffectManager::Get();
     Effect* effect = nullptr;
 
-    NotifyingSelectedRegion& selectedRegion = ViewInfo::Get(project).selectedRegion;
+    auto selectionCtrl = selectionController();
+    const auto t0 = selectionCtrl->dataSelectedStartTime();
+    const auto t1 = selectionCtrl->dataSelectedEndTime();
     bool isSelection = false;
 
     {
@@ -77,11 +78,11 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
         //! NOTE Step 1.3 - check selection
 
-        IF_ASSERT_FAILED(muse::RealIsEqualOrMore(selectedRegion.duration(), 0.0)) {
+        IF_ASSERT_FAILED(muse::RealIsEqualOrMore(t1 - t0, 0.0)) {
             return muse::make_ret(Ret::Code::InternalError);
         }
 
-        isSelection = selectedRegion.t1() > selectedRegion.t0();
+        isSelection = t1 > t0;
 
         //! TODO Should we do something if there is no selection and the effect is not a generator? Maybe add a check... or automatically select all...
 
@@ -103,7 +104,6 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     EffectTimeParams tp;
     tp.projectRate = ProjectRate::Get(project).GetRate();
 
-    double oldDuration = 0.0;
     {
         //! NOTE Step 2.1 - get effect settings
         settings = em.GetDefaultSettings(ID);
@@ -112,28 +112,30 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         }
 
         //! NOTE Step 2.2 - get oldDuration for EffectTypeGenerate
+        double duration = 0.0;
         if (effect->GetType() == EffectTypeGenerate) {
             GetConfig(effect->GetDefinition(), PluginSettings::Private,
                       CurrentSettingsGroup(),
-                      EffectSettingsExtra::DurationKey(), oldDuration, effect->GetDefaultDuration());
+                      EffectSettingsExtra::DurationKey(), duration, effect->GetDefaultDuration());
         }
 
         //! NOTE Step 2.3 - check selected time
-        double duration = 0.0;
-        tp.t0 = selectedRegion.t0();
-        tp.t1 = selectedRegion.t1();
+        double quantizedDuration = duration;
+        tp.t0 = t0;
+        tp.t1 = t1;
         if (tp.t1 > tp.t0) {
             // there is a selection: let's fit in there...
             // MJS: note that this is just for the TTC and is independent of the track rate
             // but we do need to make sure we have the right number of samples at the project rate
             double quantMT0 = QUANTIZED_TIME(tp.t0, tp.projectRate);
             double quantMT1 = QUANTIZED_TIME(tp.t1, tp.projectRate);
-            duration = quantMT1 - quantMT0;
-            tp.t1 = tp.t0 + duration;
+            quantizedDuration = quantMT1 - quantMT0;
+            tp.t1 = tp.t0 + quantizedDuration;
         }
 
-        tp.f0 = selectedRegion.f0();
-        tp.f1 = selectedRegion.f1();
+        //! TODO when we support spectral display and selection
+        //   tp.f0 = f0;
+        //   tp.f1 = f1;
 
         //! NOTE Step 2.4 - update settings
         wxString newFormat = (isSelection
@@ -141,7 +143,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
                               : NumericConverterFormats::DefaultSelectionFormat()
                               ).Internal();
 
-        settings->extra.SetDuration(duration);
+        settings->extra.SetDuration(quantizedDuration);
         settings->extra.SetDurationFormat(newFormat);
     }
 
@@ -151,7 +153,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! ============================================================================
     unsigned oldFlags = 0;
     {
-        //! NOTE Step 1.1 - setup effect
+        //! NOTE Step 3.1 - setup effect
         oldFlags = effect->mUIFlags;
         effect->mUIFlags = flags;
         effect->mFactory = &WaveTrackFactory::Get(project);
@@ -163,7 +165,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         // Update track/group counts
         effect->CountWaveTracks();
 
-        //! NOTE Step 1.2 - check frequency params
+        //! NOTE Step 3.2 - check frequency params
         effect->mF0 = tp.f0;
         effect->mF1 = tp.f1;
         if (effect->mF0 != UNDEFINED_FREQUENCY) {
@@ -228,24 +230,16 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
         //! NOTE Step 7.2 - update selected region after process
 
-        //! TODO It is not clear, can the effect change the selected region?
-        //! Or is it done because the selected region changes when
-        //! setting the parameters (because of QUANTIZED_TIME)
-        //! Should we notify the UI about the change of the selected region and show the user its change?
+        //! Generators, and even some processors (e.g. tempo change), need an update of the selection.
         if (success && (effect->mT1 >= effect->mT0)) {
-            selectedRegion.setTimes(effect->mT0, effect->mT1);
-        }
-
-        //! NOTE Step 7.3 - cleanup
-        if (!success) {
-            // On failure, restore the old duration setting
-            settings->extra.SetDuration(oldDuration);
+            selectionCtrl->setDataSelectedStartTime(effect->mT0, true);
+            selectionCtrl->setDataSelectedEndTime(effect->mT1, true);
         }
     }
 
     //! NOTE break if not success
     if (!success) {
-        return muse::make_ret(Ret::Code::UnknownError);
+        return success;
     }
 
     //! ============================================================================
@@ -274,6 +268,13 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
                     m_lastProcessorIsAvailableChanged.notify();
                 }
             }
+        }
+
+        //! NOTE Step 8.3 - update plugin registry for next use
+        if (effect->GetType() == EffectTypeGenerate) {
+            SetConfig(effect->GetDefinition(), PluginSettings::Private,
+                      CurrentSettingsGroup(),
+                      EffectSettingsExtra::DurationKey(), effect->mT1 - effect->mT0);
         }
     }
 

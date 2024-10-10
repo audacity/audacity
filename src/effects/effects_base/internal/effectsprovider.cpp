@@ -2,8 +2,10 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectsprovider.h"
+#include "effecterrors.h"
 
 #include "global/translation.h"
+#include "au3wrap/internal/domconverter.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
@@ -11,6 +13,7 @@
 #include "libraries/lib-effects/MixAndRender.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-transactions/TransactionScope.h"
+#include "libraries/lib-exceptions/AudacityException.h"
 
 #include "libraries/lib-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
 #include "libraries/lib-basic-ui/BasicUI.h"
@@ -46,7 +49,7 @@ void EffectsProvider::reloadEffects()
     m_effects.clear();
     m_effectsCategories.clear();
 
-    // build-in
+    // built-in
     {
         EffectMetaList metaList = builtinEffectsRepository()->effectMetaList();
         for (EffectMeta meta : metaList) {
@@ -132,7 +135,10 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
         if ((effect->GetType() == EffectTypeGenerate || effect->GetPath() == NYQUIST_PROMPT_ID) && (effect->mNumTracks == 0)) {
             auto track = effect->mFactory->Create();
             track->SetName(effect->mTracks->MakeUniqueTrackName(au3::Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
-            newTrack = effect->mTracks->Add(track);
+            // The track-added event should be issued synchronously.
+            newTrack = effect->mTracks->Add(
+                track, TrackList::DoAssignId::Yes,
+                TrackList::EventPublicationSynchrony::Synchronous);
             newTrack->SetSelected(true);
         }
     }
@@ -142,7 +148,7 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
     //! ============================================================================
 
     // common things used below
-    bool success = false;
+    muse::Ret success = make_ret(Ret::Code::Ok);
     {
         //! NOTE Step 2.3 - open transaction
         TransactionScope trans(project, "Effect");
@@ -152,7 +158,6 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
         //! TODO It is not clear what the skip flag is and why it can be set,
         //! in what cases when calling this function
         //! it is not necessary to call the main thing - the process
-        bool returnVal = true;
         bool skipFlag = static_cast<EffectBase*>(effect)->CheckWhetherSkipEffect(settings);
         if (skipFlag == false) {
             using namespace BasicUI;
@@ -165,10 +170,19 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
             auto vr = valueRestorer(effect->mProgress, progress.get());
 
             assert(pInstanceEx); // null check above
-            returnVal = pInstanceEx->Process(settings);
+            try {
+                if (pInstanceEx->Process(settings) == false) {
+                    // It failed but we don't know why.
+                    success = make_ret(Err::EffectProcessFailed);
+                }
+            } catch (::AudacityException& e) {
+                std::string message = "";
+                if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
+                    message = box->ErrorMessage().Translation().ToStdString();
+                }
+                success = make_ret(Err::EffectProcessFailed, message);
+            }
         }
-
-        success = returnVal;
 
         //! NOTE Step 2.5 - commit transaction on success
         if (success) {
@@ -181,14 +195,17 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
     //! ============================================================================
 
     {
-        if (!success) {
+        if (success) {
             if (newTrack) {
-                effect->mTracks->Remove(*newTrack);
+                const auto trackeditProject = globalContext()->currentTrackeditProject();
+                trackeditProject->notifyAboutTrackAdded(au3::DomConverter::track(*effect->mTracks->rbegin()));
             }
+        } else if (newTrack) {
+            effect->mTracks->Remove(*newTrack);
         }
     }
 
-    return success ? muse::make_ok() : muse::make_ret(Ret::Code::UnknownError);
+    return success;
 }
 
 void EffectsProvider::doEffectPreview(EffectBase& effect,

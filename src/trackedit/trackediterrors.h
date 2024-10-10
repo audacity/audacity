@@ -8,10 +8,12 @@
 #include "translation.h"
 
 namespace au::trackedit {
+static constexpr int TRACKEDIT_FIRST = 6000; // TODO This has to go in framework's ret.h
+
 enum class Err {
     Undefined       = int(muse::Ret::Code::Undefined),
     NoError         = int(muse::Ret::Code::Ok),
-    UnknownError    = int(muse::Ret::Code::UnknownError),
+    UnknownError    = TRACKEDIT_FIRST,
 
     WaveTrackNotFound,
     ClipNotFound,

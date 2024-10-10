@@ -26,7 +26,11 @@ void EffectsActionsController::doEffect(const muse::actions::ActionData& args)
 
     muse::String effectId = args.arg<muse::String>(0);
 
-    effectExecutionScenario()->performEffect(effectId);
+    const auto ret = effectExecutionScenario()->performEffect(effectId);
+    if (!ret && muse::Ret::Code(ret.code()) != muse::Ret::Code::Cancel) {
+        const auto& title = effectsProvider()->meta(effectId).title;
+        interactive()->error(title.toStdString(), ret.text());
+    }
 }
 
 void EffectsActionsController::repeatLastEffect()

@@ -10,6 +10,7 @@
 #include "context/iglobalcontext.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
+#include "trackedit/iselectioncontroller.h"
 
 #include "au3wrap/au3types.h"
 
@@ -25,6 +26,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectInstancesRegister> effectInstancesRegister;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
     EffectExecutionScenario() = default;
