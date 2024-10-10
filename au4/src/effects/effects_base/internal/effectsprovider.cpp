@@ -10,6 +10,7 @@
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-transactions/TransactionScope.h"
+#include "libraries/lib-exceptions/AudacityException.h"
 
 #include "libraries/lib-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
 #include "libraries/lib-basic-ui/BasicUI.h"
@@ -157,7 +158,12 @@ muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effec
             auto vr = valueRestorer(effect->mProgress, progress.get());
 
             assert(pInstanceEx); // null check above
-            returnVal = pInstanceEx->Process(settings);
+            try {
+                returnVal = pInstanceEx->Process(settings);
+            } catch (const ::AudacityException& e) {
+                // TODO: display message box using info from `e`.
+                returnVal = false;
+            }
         }
 
         success = returnVal;
