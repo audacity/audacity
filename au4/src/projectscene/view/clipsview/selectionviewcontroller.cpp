@@ -107,6 +107,19 @@ void SelectionViewController::onSelectionDraged(double x1, double x2, bool compl
     selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), completed);
 }
 
+void SelectionViewController::selectTrackAudioData(double y)
+{
+    const std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    selectionController()->setSelectedTrackAudioData(tracks.at(0));
+}
+
+void SelectionViewController::selectClipAudioData(double x, double y)
+{
+    const std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    const secs_t time = m_context->positionToTime(x);
+    selectionController()->setSelectedClipAudioData(tracks.at(0), time);
+}
+
 void SelectionViewController::resetSelectedClip()
 {
     selectionController()->resetSelectedClip();
