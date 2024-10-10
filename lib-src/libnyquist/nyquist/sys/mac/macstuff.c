@@ -210,7 +210,10 @@ void setup_preferences(char *filename)
         pf = fopen((char *) prefname, "w");
         if (pf == NULL) return;
         cp = strrchr((char *) filename, ':');
-        if (cp == NULL) return;
+        if (cp == NULL) {
+            fclose(pf);
+            return;
+        }
         cp[1] = 0;
         /* now, filename is the path. If filename ends in runtime, this
          * is probably the standard nyquist runtime folder. We should put
