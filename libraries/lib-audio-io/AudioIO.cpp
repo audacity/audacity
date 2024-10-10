@@ -1750,11 +1750,11 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
    return supportedRate;
 }
 
-double AudioIO::GetStreamTime()
+double AudioIO::GetStreamTime(bool ignorePlaybackState) const
 {
    // Sequence time readout for the main thread
 
-   if( !IsStreamActive() )
+   if (!ignorePlaybackState && !IsStreamActive())
       return BAD_STREAM_TIME;
 
    return mPlaybackSchedule.GetSequenceTime();

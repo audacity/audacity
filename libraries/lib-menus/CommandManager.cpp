@@ -826,12 +826,15 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
    if (flags != AlwaysEnabledFlag && !entry->enabled)
       return false;
 
+   std::vector<MenuItemEnabler::PostCommandAction> posts;
+
    if (!alwaysEnabled && entry->flags.any()) {
 
       const auto NiceName = entry->label.Stripped(
          TranslatableString::Ellipses | TranslatableString::MenuCodes );
       // NB: The call may have the side effect of changing flags.
-      bool allowed = ReportIfActionNotAllowed(NiceName, flags, entry->flags);
+      bool allowed =
+         ReportIfActionNotAllowed(NiceName, flags, entry->flags, posts);
       // If the function was disallowed, it STILL should count as having been
       // handled (by doing nothing or by telling the user of the problem).
       // Otherwise we may get other handlers having a go at obeying the command.
@@ -847,6 +850,8 @@ bool CommandManager::HandleCommandEntry(const CommandListEntry * entry,
    if (pGivenContext)
       context.temporarySelection = pGivenContext->temporarySelection;
    ExecuteCommand(context, evt, *entry);
+   for (auto& post : posts)
+      post();
    return true;
 }
 
@@ -1319,11 +1324,12 @@ CommandFlag CommandManager::GetUpdateFlags(bool quick) const
 }
 
 bool CommandManager::ReportIfActionNotAllowed(
-   const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd )
+   const TranslatableString& Name, CommandFlag& flags, CommandFlag flagsRqd,
+   std::vector<MenuItemEnabler::PostCommandAction>& posts)
 {
-   auto &project = mProject;
-   bool bAllowed = TryToMakeActionAllowed( flags, flagsRqd );
-   if( bAllowed )
+   auto& project = mProject;
+   bool bAllowed = TryToMakeActionAllowed(flags, flagsRqd, posts);
+   if (bAllowed)
       return true;
    TellUserWhyDisallowed( Name, flags & flagsRqd, flagsRqd);
    return false;
@@ -1333,9 +1339,10 @@ bool CommandManager::ReportIfActionNotAllowed(
 /// If not, then try some recovery action to make it so.
 /// @return whether compatible or not after any actions taken.
 bool CommandManager::TryToMakeActionAllowed(
-   CommandFlag & flags, CommandFlag flagsRqd )
+   CommandFlag& flags, CommandFlag flagsRqd,
+   std::vector<MenuItemEnabler::PostCommandAction>& posts)
 {
-   auto &project = mProject;
+   auto& project = mProject;
 
    if( flags.none() )
       flags = GetUpdateFlags();
@@ -1355,12 +1362,17 @@ bool CommandManager::TryToMakeActionAllowed(
          (MissingFlags & enabler.possibleFlags()).any()
       ) {
          // Then try the function
-         enabler.tryEnable( project, flagsRqd );
+         if (const auto post = enabler.tryEnable(project, flagsRqd))
+            posts.push_back(std::move(post));
          flags = GetUpdateFlags();
       }
       ++iter;
    }
-   return (flags & flagsRqd) == flagsRqd;
+
+   const auto success = (flags & flagsRqd) == flagsRqd;
+   if (!success)
+      posts.clear();
+   return success;
 }
 
 void CommandManager::TellUserWhyDisallowed(

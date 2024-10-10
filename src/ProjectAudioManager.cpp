@@ -471,7 +471,12 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 void ProjectAudioManager::PlayCurrentRegion(bool newDefault /* = false */,
                                        bool cutpreview /* = false */)
 {
-   auto &projectAudioManager = *this;
+   DoPlayCurrentRegion(newDefault, cutpreview, false);
+}
+
+void ProjectAudioManager::DoPlayCurrentRegion(
+   bool newDefault, bool cutpreview, bool resume)
+{   auto &projectAudioManager = *this;
    bool canStop = projectAudioManager.CanStopAudioStream();
 
    if ( !canStop )
@@ -492,10 +497,22 @@ void ProjectAudioManager::PlayCurrentRegion(bool newDefault /* = false */,
          cutpreview ? PlayMode::cutPreviewPlay
          : newDefault ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
+      if (const auto io = AudioIO::Get(); io && resume)
+      {
+         constexpr auto ignorePlaybackState = true;
+         options.pStartTime = io->GetStreamTime(true);
+      }
       PlayPlayRegion(SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
                      options,
                      mode);
    }
+}
+
+void ProjectAudioManager::ResumePlayback()
+{
+   // What are these `cutpreview` and `newDefault` flags? Nowhere is
+   // PlayCurrentRegion called with any of them set to `trzue`.
+   DoPlayCurrentRegion(false, false, true);
 }
 
 void ProjectAudioManager::Stop(bool stopStream /* = true*/)
@@ -761,17 +778,6 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
    const AudioIOStartStreamOptions &options)
 {
    auto &projectAudioManager = *this;
-
-   CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
-
-   // NB: The call may have the side effect of changing flags.
-   bool allowed = CommandManager::Get(project).TryToMakeActionAllowed(
-      flags,
-      AudioIONotBusyFlag() | CanStopAudioStreamFlag());
-
-   if (!allowed)
-      return false;
-   // ...end of code from CommandHandler.
 
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
@@ -1321,16 +1327,18 @@ void ProjectAudioManager::DoPlayStopSelect()
    }
 }
 
-static RegisteredMenuItemEnabler stopIfPaused{{
-   []{ return PausedFlag(); },
-   []{ return AudioIONotBusyFlag(); },
-   []( const AudacityProject &project ){
-      return CommandManager::Get( project ).mStopIfWasPaused; },
-   []( AudacityProject &project, CommandFlag ){
-      if ( CommandManager::Get( project ).mStopIfWasPaused )
-         ProjectAudioManager::Get( project ).StopIfPaused();
-   }
-}};
+static RegisteredMenuItemEnabler stopIfPaused {
+   { [] { return PausedFlag(); }, [] { return AudioIONotBusyFlag(); },
+     [](const AudacityProject& project) {
+        return CommandManager::Get(project).mStopIfWasPaused;
+     },
+     [](AudacityProject& project,
+        CommandFlag) -> MenuItemEnabler::PostCommandAction {
+        if (CommandManager::Get(project).mStopIfWasPaused)
+           ProjectAudioManager::Get(project).StopIfPaused();
+        return {};
+     } }
+};
 
 // GetSelectedProperties collects information about
 // currently selected audio tracks
