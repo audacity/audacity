@@ -13,7 +13,7 @@ public:
     Au3TrackeditProject(const std::shared_ptr<au::au3::IAu3Project>& au3project);
     ~Au3TrackeditProject();
 
-    std::vector<TrackId> trackIdList() const override;
+    TrackIdList trackIdList() const override;
     muse::async::NotifyList<Track> trackList() const override;
     Clip clip(const ClipKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;

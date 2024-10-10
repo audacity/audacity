@@ -26,38 +26,34 @@ using namespace au::au3;
 
 // clip selection
 
-void Au3SelectionController::resetSelectedTrack()
+void Au3SelectionController::resetSelectedTracks()
 {
     MYLOG() << "resetSelectedTrack";
 
-    auto& tracks = Au3TrackList::Get(projectRef());
-    for (Au3Track* au3Track : tracks) {
-        au3Track->SetSelected(false);
-    }
-
-    m_selectedTrack.set(au::trackedit::TrackId(-1), true);
+    setSelectedTracks({}, true);
 }
 
-au::trackedit::TrackId Au3SelectionController::selectedTrack() const
+TrackIdList Au3SelectionController::selectedTracks() const
 {
-    return m_selectedTrack.val;
+    return m_selectedTracks.val;
 }
 
-void Au3SelectionController::setSelectedTrack(trackedit::TrackId trackId)
+void Au3SelectionController::setSelectedTracks(const TrackIdList &tracksIds)
 {
-    MYLOG() << "track: " << trackId;
+    MYLOG() << "tracks: " << tracksIds;
 
     auto& tracks = Au3TrackList::Get(projectRef());
     for (Au3Track* au3Track : tracks) {
-        au3Track->SetSelected(au3Track->GetId() == Au3TrackId(trackId));
+        au3Track->SetSelected(std::find_if(tracksIds.begin(), tracksIds.end(),
+                                [&au3Track](const trackedit::TrackId trackId) { return au3Track->GetId() == ::TrackId(trackId); }) != tracksIds.end());
     }
 
-    m_selectedTrack.set(trackId, true);
+    m_selectedTracks.set(tracksIds, true);
 }
 
-muse::async::Channel<au::trackedit::TrackId> Au3SelectionController::trackSelected() const
+muse::async::Channel<TrackIdList> Au3SelectionController::tracksSelected() const
 {
-    return m_selectedTrack.selected;
+    return m_selectedTracks.selected;
 }
 
 void Au3SelectionController::resetSelectedClip()
@@ -89,14 +85,14 @@ void Au3SelectionController::resetDataSelection()
     MYLOG() << "resetDataSelection";
 
     auto& tracks = Au3TrackList::Get(projectRef());
-    for (trackedit::TrackId trackId : m_selectedTrackIds.val) {
-        Au3Track* au3Track = tracks.FindById(Au3TrackId(trackId));
+    for (trackedit::TrackId trackId : m_dataSelectedTrackIds.val) {
+        Au3Track* au3Track = tracks.FindById(::TrackId(trackId));
         if (au3Track) {
             au3Track->SetSelected(false);
         }
     }
 
-    m_selectedTrackIds.set(std::vector<au::trackedit::TrackId>(), true);
+    m_dataSelectedTrackIds.set(TrackIdList(), true);
     m_selectedStartTime.set(-1.0, true);
     m_selectedEndTime.set(-1.0, true);
 }
@@ -108,16 +104,16 @@ bool Au3SelectionController::isDataSelected() const
 
 bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const
 {
-    return std::find(m_selectedTrackIds.val.begin(), m_selectedTrackIds.val.end(), trackId) != m_selectedTrackIds.val.end();
+    return std::find(m_dataSelectedTrackIds.val.begin(), m_dataSelectedTrackIds.val.end(), trackId) != m_dataSelectedTrackIds.val.end();
 }
 
-std::vector<au::trackedit::TrackId> Au3SelectionController::dataSelectedOnTracks() const
+TrackIdList Au3SelectionController::dataSelectedOnTracks() const
 {
-    return m_selectedTrackIds.val;
+    return m_dataSelectedTrackIds.val;
 }
 
 void Au3SelectionController::setDataSelectedOnTracks(
-    const std::vector<au::trackedit::TrackId>& trackIds,
+    const TrackIdList& trackIds,
     bool complete)
 {
     MYLOG() << "trackIds: " << trackIds << ", complete: " << complete;
@@ -131,19 +127,19 @@ void Au3SelectionController::setDataSelectedOnTracks(
         }
     }
 
-    m_selectedTrackIds.set(trackIds, complete);
+    m_dataSelectedTrackIds.set(trackIds, complete);
 }
 
-muse::async::Channel<std::vector<au::trackedit::TrackId> >
+muse::async::Channel<TrackIdList>
 Au3SelectionController::dataSelectedOnTracksChanged() const
 {
-    return m_selectedTrackIds.changed;
+    return m_dataSelectedTrackIds.changed;
 }
 
-muse::async::Channel<std::vector<au::trackedit::TrackId> >
+muse::async::Channel<TrackIdList>
 Au3SelectionController::dataSelectedOnTracksSelected() const
 {
-    return m_selectedTrackIds.selected;
+    return m_dataSelectedTrackIds.selected;
 }
 
 au::trackedit::secs_t Au3SelectionController::dataSelectedStartTime() const

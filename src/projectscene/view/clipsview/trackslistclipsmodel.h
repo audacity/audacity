@@ -59,16 +59,16 @@ private:
         IsTrackSelectedRole
     };
 
-    void setDataSelectedTracks(const std::vector<trackedit::TrackId>& tracks);
-    void setSelectedTrack(const trackedit::TrackId trackId);
+    void setDataSelectedTracks(const trackedit::TrackIdList& tracks);
+    void setSelectedTracks(const trackedit::TrackIdList& tracksIds);
 
     void updateTotalTracksHeight();
     void subscribeOnTrackHeightChanges(const trackedit::TrackId trackId);
     void unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId);
 
     muse::async::NotifyList<au::trackedit::Track> m_trackList;
-    std::vector<trackedit::TrackId> m_dataSelectedTracks;
-    trackedit::TrackId m_selectedTrack = au::trackedit::TrackId(-1);
+    trackedit::TrackIdList m_dataSelectedTracks;
+    trackedit::TrackIdList m_selectedTracks;
     bool m_isVerticalRulersVisible = false;
     int m_totalTracksHeight = 0;
 };

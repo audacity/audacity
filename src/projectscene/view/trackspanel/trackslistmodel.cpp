@@ -1,6 +1,7 @@
 #include "trackslistmodel.h"
 
 #include "global/async/async.h"
+#include "global/containers.h"
 
 #include "uicomponents/view/itemmultiselectionmodel.h"
 
@@ -14,7 +15,7 @@ TracksListModel::TracksListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
     m_selectionModel = new muse::uicomponents::ItemMultiSelectionModel(this);
-    m_selectionModel->setAllowedModifiers(Qt::ShiftModifier);
+    m_selectionModel->setAllowedModifiers(Qt::ShiftModifier | Qt::ControlModifier);
 
     connect(m_selectionModel, &muse::uicomponents::ItemMultiSelectionModel::selectionChanged,
             [this](const QItemSelection& selected, const QItemSelection& deselected) {
@@ -25,9 +26,16 @@ TracksListModel::TracksListModel(QObject* parent)
         updateRemovingAvailability();
     });
 
-    onSelectedTrack(selectionController()->selectedTrack());
-    selectionController()->trackSelected().onReceive(this, [this](trackedit::TrackId k) {
-        onSelectedTrack(k);
+    onSelectedTracks(selectionController()->selectedTracks());
+
+    selectionController()->tracksSelected().onReceive(this, [this](trackedit::TrackIdList tracksIds) {
+        onSelectedTracks(tracksIds);
+    });
+
+    selectionController()->dataSelectedOnTracksSelected().onReceive(this, [this](trackedit::TrackIdList tracksIds) {
+        if (!tracksIds.empty()) {
+            m_audioDataSelected = true;
+        }
     });
 
     connect(this, &TracksListModel::rowsInserted, this, [this]() {
@@ -156,6 +164,13 @@ QItemSelectionModel* TracksListModel::selectionModel() const
 
 void TracksListModel::selectRow(int rowIndex)
 {
+    if (m_audioDataSelected) {
+        selectionController()->resetSelectedTracks();
+        clearSelection();
+        m_audioDataSelected = false;
+    }
+
+    selectionController()->resetDataSelection();
     QModelIndex modelIndex = index(rowIndex);
     m_selectionModel->select(modelIndex);
 }
@@ -325,15 +340,30 @@ void TracksListModel::setIsRemovingAvailable(bool isRemovingAvailable)
 
 void TracksListModel::setItemsSelected(const QModelIndexList& indexes, bool selected)
 {
+    trackedit::TrackIdList idsToModify;
     for (const QModelIndex& index : indexes) {
         if (TrackItem* item = modelIndexToItem(index)) {
             item->setIsSelected(selected);
-
-            if (selected) {
-                selectionController()->setSelectedTrack(item->trackId());
-            }
+            idsToModify.push_back(item->trackId());
         }
     }
+
+    // keep selectionController in sync with muse::uicomponents::ItemMultiSelectionModel
+    auto alreadySelectedTracksIds = selectionController()->selectedTracks();
+    if (selected) {
+        // if selecting new tracks, add them to the existing selection
+        alreadySelectedTracksIds.insert(alreadySelectedTracksIds.end(), idsToModify.begin(), idsToModify.end());
+    } else {
+        // if deselecting tracks, remove them from the existing selection
+        alreadySelectedTracksIds.erase(
+            std::remove_if(alreadySelectedTracksIds.begin(), alreadySelectedTracksIds.end(),
+                           [&idsToModify](const TrackId& trackId) {
+                               return muse::contains(idsToModify, trackId);
+                           }),
+            alreadySelectedTracksIds.end());
+
+    }
+    selectionController()->setSelectedTracks(alreadySelectedTracksIds);
 }
 
 QHash<int, QByteArray> TracksListModel::roleNames() const
@@ -526,9 +556,9 @@ TrackItem* TracksListModel::modelIndexToItem(const QModelIndex& index) const
     return m_trackList.at(index.row());
 }
 
-void TracksListModel::onSelectedTrack(trackedit::TrackId trackId)
+void TracksListModel::onSelectedTracks(const TrackIdList &tracksIds)
 {
     for (TrackItem* item : m_trackList) {
-        item->setIsSelected(item->trackId() == trackId);
+        item->setIsSelected(muse::contains(tracksIds, item->trackId()));
     }
 }
