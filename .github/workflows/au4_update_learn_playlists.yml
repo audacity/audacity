@@ -1,4 +1,4 @@
-name: Collect playlists for Home->Learn page
+name: '[AU4] Update: Learn playlists'
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ defaults:
     shell: bash
 
 jobs:
-  update-get-started-playlist:
+  au4_update_playlists:
     runs-on: ubuntu-20.04
     steps:
       - name: Clone repository
