@@ -10,6 +10,7 @@
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
+#include "domconverter.h"
 #include "TempoChange.h"
 
 //! HACK
@@ -50,6 +51,17 @@ std::shared_ptr<Au3Project> Au3Project::create()
 
 bool Au3Project::load(const muse::io::path_t& filePath)
 {
+    TrackList& tracks = TrackList::Get(m_data->projectRef());
+    mTrackListSubstription = tracks.Subscribe([this](const TrackListEvent& event)
+    {
+        if (event.mType == TrackListEvent::ADDITION) {
+            const auto tempo = ProjectTimeSignature::Get(m_data->projectRef()).GetTempo();
+            if (const auto track = event.mpTrack.lock()) {
+                DoProjectTempoChange(*track, tempo);
+            }
+        }
+    });
+
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     std::string sstr = filePath.toStdString();
     FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
@@ -75,7 +87,6 @@ bool Au3Project::load(const muse::io::path_t& filePath)
 
     //! TODO Look like, need doing all from method  ProjectFileManager::FixTracks
     //! and maybe what is done before this method (ProjectFileManager::ReadProjectFile)
-    TrackList& tracks = TrackList::Get(m_data->projectRef());
     for (auto pTrack : tracks) {
         pTrack->LinkConsistencyFix();
     }
