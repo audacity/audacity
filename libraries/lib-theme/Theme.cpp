@@ -1073,19 +1073,24 @@ void ThemeBase::LoadOneThemeComponents( teThemeType id, bool bOkIfNotFound )
 
 void ThemeBase::SaveThemeComponents()
 {
-   ValueRestorer cleanup{ mpSet };
-   for (auto &[key, data] : GetThemeCacheLookup())
-      if (!SaveOneThemeComponents( key.Internal() ))
+   // Save whatever is active (to extract from loaded caches)
+   SaveOneThemeComponents("active");
+
+   ValueRestorer cleanup{ *mpSet };
+   for (auto& [key, data] : GetThemeCacheLookup())
+   {
+      SwitchTheme(key.Internal());
+      if (!SaveOneThemeComponents(key.Internal()))
          // Some file failed to save, message was given
          return;
+   }
    BasicUI::ShowMessageBox(
       XO("Themes written to:\n  %s/*/Components/.").Format(GetFilePath()));
 }
 
-bool ThemeBase::SaveOneThemeComponents( teThemeType id )
+bool ThemeBase::SaveOneThemeComponents(teThemeType id)
 {
    using namespace BasicUI;
-   SwitchTheme( id );
    auto &resources = *mpSet;
    // IF directory doesn't exist THEN create it
    const auto dir = ThemeComponentsDir(GetFilePath(), id);
