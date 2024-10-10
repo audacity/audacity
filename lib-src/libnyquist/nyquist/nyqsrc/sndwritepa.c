@@ -161,6 +161,33 @@ void local_toplevel(void)
     }
 }
 
+// case-insensitive version of strstr (seems easier than allocating new
+//     strings and converting to lower case before strstr)
+const char *strstrlc(const char *str, const char *pat)
+{
+    while (true) {  // for each starting position in str
+        const char *s = str;  // search from current location in str
+        const char *p = pat;  // for a match to entire string pat
+        int match = true;
+        while (*p) { // protect against empty string
+            if (!*s) {  // if we hit end of str before end of pat, we can
+                return NULL; // never find all of pat in str
+            }
+            if (tolower(*s) != tolower(*p)) {
+                match = false;
+                break; // failed to match pat to str
+            }
+            s++;
+            p++;
+        }
+        if (match) {
+            return str; // we matched all of pat to str
+        }
+        str++;
+    }
+    return NULL;  // we never reach this
+}
+
 
 LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
 {
@@ -181,6 +208,16 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
     if (pref == s_unbound) pref = NULL;
     if (stringp(pref)) pref_string = getstring(pref);
     else if (fixp(pref)) pref_num = (int) getfixnum(pref);
+    else {
+        // *snd-device* receives priority and can be set in NyquistIDE
+        // if not set or set to "", which causes the NyquistIDE to set
+        // *snd-device* to nil, we look in another place: 
+        // *snd-device-default*
+        pref = xlenter("*SND-DEVICE-DEFAULT*");
+        if (pref == s_unbound) pref = NULL;
+        if (stringp(pref)) pref_string = getstring(pref);
+        else if (fixp(pref)) pref_num = (int) getfixnum(pref);
+    }
 
     if (!portaudio_initialized) {
         if (portaudio_error(Pa_Initialize(), 
@@ -198,7 +235,7 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
     output_parameters.suggestedLatency = sound_latency;
 
     // Initialize the audio stream for output
-    // If this is Linux, prefer to open ALSA device
+    // If this is Linux, prefer to open ALSA device(
     num_devices = Pa_GetDeviceCount();
     // nyquist_printf("num_devices %d\n", num_devices);
     for (i = 0; i < num_devices; i++) {
@@ -210,8 +247,10 @@ LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
         }
         if (j == -1) {
             if (pref_num >= 0 && pref_num == i) j = i;
-            else if (pref_string &&
-                     strstr(device_info->name, (char *) pref_string)) j = i;
+            else if (pref_string &&  // use case insensitive search:
+                     strstrlc(device_info->name, (const char *) pref_string)) {
+                j = i;
+            }
         }
         // giving preference to first ALSA device seems to be a bad idea
         // if (j == -1 && host_info->type == paALSA) {
