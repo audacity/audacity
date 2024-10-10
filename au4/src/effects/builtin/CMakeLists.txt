@@ -31,6 +31,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/chirpeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.h
     )
 
 # AU3
