@@ -865,6 +865,12 @@ class TRACK_API TrackList final
    void clear() = delete;
 
  public:
+   // Whether TrackList assigns an ID to the track or not.
+   enum class DoAssignId { Yes, No };
+   // Whether the resulting `TrackListEvent::ADDITION` should be called
+   // synchronously or deferred.
+   enum class EventPublicationSynchrony { Synchronous, Asynchronous };
+
    static TrackList &Get( AudacityProject &project );
    static const TrackList &Get( const AudacityProject &project );
 
@@ -988,7 +994,8 @@ public:
 
 private:
    Track *DoAddToHead(const std::shared_ptr<Track> &t);
-   Track *DoAdd(const std::shared_ptr<Track> &t, bool assignIds);
+   Track* DoAdd(
+      const std::shared_ptr<Track>& t, DoAssignId, EventPublicationSynchrony);
 
    template< typename TrackType, typename InTrackType >
       static TrackIterRange< TrackType >
@@ -1044,10 +1051,13 @@ public:
 
    /// Add a Track, giving it a fresh id if `this` is not temporary and
    /// assignIds is true
-   template<typename TrackKind>
-      TrackKind *Add(const std::shared_ptr<TrackKind> &t,
-         bool assignIds = true)
-            { return static_cast<TrackKind*>(DoAdd(t, assignIds)); }
+   template <typename TrackKind>
+   TrackKind *Add(const std::shared_ptr<TrackKind> &t,
+                  DoAssignId assignId = DoAssignId::Yes,
+                  EventPublicationSynchrony synchrony =
+                      EventPublicationSynchrony::Asynchronous) {
+     return static_cast<TrackKind *>(DoAdd(t, assignId, synchrony));
+   }
 
    /*!
     Replace track `t` with the first track in the given list, return
@@ -1209,7 +1219,7 @@ private:
    void DataEvent(
       const std::shared_ptr<Track> &pTrack, bool allChannels, int code );
    void DeletionEvent(std::weak_ptr<Track> node, bool duringReplace);
-   void AdditionEvent(TrackNodePointer node);
+   void AdditionEvent(TrackNodePointer node, EventPublicationSynchrony);
    void ResizingEvent(TrackNodePointer node);
 
    void SwapNodes(TrackNodePointer s1, TrackNodePointer s2);
