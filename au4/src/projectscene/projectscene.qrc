@@ -12,10 +12,13 @@
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBarBackground.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/KnobControl.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/BalanceKnob.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/BalanceTooltip.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumePressureMeter.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeSlider.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeTooltip.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/PlayCursor.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/VerticalRulersPanel.qml</file>
@@ -29,7 +32,5 @@
         <file>qml/Audacity/ProjectScene/clipsview/ClipItemSmall.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipHandles.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ChannelSplitter.qml</file>
-        <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeSlider.qml</file>
-        <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeTooltip.qml</file>
     </qresource>
 </RCC>

@@ -34,6 +34,7 @@ public:
 
     bool trimTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) override;
     bool silenceTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) override;
+    bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
     void clearClipboard() override;

@@ -8,7 +8,7 @@
 using namespace au::au3;
 using namespace muse;
 
-WaveTrack* DomAccessor::findWaveTrack(AudacityProject& prj, const TrackId& au3trackId)
+Track* DomAccessor::findTrack(AudacityProject& prj, const TrackId& au3trackId)
 {
     Track* track = nullptr;
     TrackList& tracks = TrackList::Get(prj);
@@ -19,7 +19,12 @@ WaveTrack* DomAccessor::findWaveTrack(AudacityProject& prj, const TrackId& au3tr
         }
     }
 
-    return dynamic_cast<WaveTrack*>(track);
+    return track;
+}
+
+WaveTrack* DomAccessor::findWaveTrack(AudacityProject& prj, const TrackId& au3trackId)
+{
+    return dynamic_cast<WaveTrack*>(findTrack(prj, au3trackId));
 }
 
 std::shared_ptr<WaveClip> DomAccessor::findWaveClip(WaveTrack* track, uint64_t au3ClipId)
@@ -43,7 +48,7 @@ std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const 
     return findWaveClip(t, index);
 }
 
-size_t DomAccessor::findClipIndexById(const WaveTrack *track, const trackedit::ClipId &clipId)
+size_t DomAccessor::findClipIndexById(const WaveTrack* track, const trackedit::ClipId& clipId)
 {
     size_t index = 0;
     for (const auto& interval : track->Intervals()) {
@@ -56,7 +61,7 @@ size_t DomAccessor::findClipIndexById(const WaveTrack *track, const trackedit::C
     return muse::nidx;
 }
 
-au::trackedit::ClipId DomAccessor::findClipIdByIndex(const WaveTrack *track, size_t clipIndex)
+au::trackedit::ClipId DomAccessor::findClipIdByIndex(const WaveTrack* track, size_t clipIndex)
 {
     auto it = std::next(track->Intervals().begin(), clipIndex);
     if (it != track->Intervals().end()) {
@@ -65,7 +70,7 @@ au::trackedit::ClipId DomAccessor::findClipIdByIndex(const WaveTrack *track, siz
     return -1;
 }
 
-au::trackedit::ClipId DomAccessor::findMatchedClip(WaveTrack *track, const WaveTrack *originTrack, const trackedit::ClipId &originClipId)
+au::trackedit::ClipId DomAccessor::findMatchedClip(WaveTrack* track, const WaveTrack* originTrack, const trackedit::ClipId& originClipId)
 {
     size_t idx = findClipIndexById(originTrack, originClipId);
     if (idx == muse::nidx) {
