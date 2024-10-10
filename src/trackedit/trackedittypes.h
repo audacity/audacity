@@ -20,6 +20,8 @@ using balance_t = float;
 using TrackId = long;
 using ClipId = uint64_t;
 
+using TrackIdList = std::vector<TrackId>;
+
 struct ClipKey
 {
     TrackId trackId = -1;

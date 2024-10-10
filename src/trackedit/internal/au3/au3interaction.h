@@ -40,20 +40,20 @@ public:
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
-    bool cutClipDataIntoClipboard(const std::vector<TrackId>& tracksIds, secs_t begin, secs_t end) override;
+    bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
-    bool copyTrackDataIntoClipboard(const trackedit::TrackId trackId, secs_t begin, secs_t end) override;
+    bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClipData(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
-    bool splitAt(const TrackId trackId, secs_t pivot) override;
-    bool mergeSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
-    bool duplicateSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
+    bool splitTracksAt(const TrackIdList &tracksIds, secs_t pivot) override;
+    bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateClip(const ClipKey& clipKey) override;
     bool clipSplitCut(const ClipKey& clipKey) override;
     bool clipSplitDelete(const ClipKey& clipKey) override;
-    bool splitCutSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
-    bool splitDeleteSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
+    bool splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
+    bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     void newMonoTrack() override;
@@ -65,11 +65,11 @@ public:
 
 private:
     au3::Au3Project& projectRef() const;
-    muse::Ret pasteIntoNewTrack();
+    TrackIdList pasteIntoNewTracks();
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
-    std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,
+    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,
                                                        size_t tracksNum) const;
-    muse::Ret canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
+    muse::Ret canPasteClips(const TrackIdList& tracksIds,  secs_t begin) const;
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
