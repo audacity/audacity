@@ -9,6 +9,7 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 
 set(MODULE_SRC
     # public
+    ${CMAKE_CURRENT_LIST_DIR}/effecterrors.h
     ${CMAKE_CURRENT_LIST_DIR}/effectsettings.cpp
     ${CMAKE_CURRENT_LIST_DIR}/effectsettings.h
     ${CMAKE_CURRENT_LIST_DIR}/effectsmodule.cpp

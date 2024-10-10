@@ -6,13 +6,14 @@
 #include <memory>
 
 #include "../iau3project.h"
+#include "modularity/ioc.h"
+#include "libraries/lib-utility/Observer.h"
 
 namespace au::au3 {
 struct Au3ProjectData;
 class Au3Project : public IAu3Project
 {
 public:
-
     Au3Project();
 
     static std::shared_ptr<Au3Project> create();
@@ -30,6 +31,7 @@ public:
 private:
 
     std::shared_ptr<Au3ProjectData> m_data;
+    Observer::Subscription mTrackListSubstription;
 };
 
 class Au3ProjectCreator : public IAu3ProjectCreator

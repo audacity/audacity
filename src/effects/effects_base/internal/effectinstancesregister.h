@@ -22,7 +22,6 @@ public:
     EffectSettings* settingsById(const EffectInstanceId& instanceId) const override;
 
 private:
-
     struct RegisteredEffectInstance {
         Effect* effect = nullptr;
         EffectSettings* settings = nullptr;

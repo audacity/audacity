@@ -20,6 +20,7 @@
 
 #include "tonegen/chirpeffect.h"
 #include "tonegen/toneeffect.h"
+#include "tonegen/toneviewmodel.h"
 
 #include "log.h"
 
@@ -62,7 +63,8 @@ void BuiltinEffectsRepository::init()
     //regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");
 
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
-    //regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
+    qmlRegisterType<ToneViewModel>("Audacity.Effects", 1, 0, "ToneViewModel");
+    regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
 }
 
 EffectMetaList BuiltinEffectsRepository::effectMetaList() const
