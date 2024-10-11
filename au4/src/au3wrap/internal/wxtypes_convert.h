@@ -18,7 +18,7 @@ inline muse::String wxToString(const wxString& s)
 
 inline wxString wxFromString(const muse::String& s)
 {
-    return wxString(s.toStdString());
+    return wxString(s.toStdWString());
 }
 }
 
