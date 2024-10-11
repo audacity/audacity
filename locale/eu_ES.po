@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-08-01 14:17+0300\n"
+"POT-Creation-Date: 2024-10-11 15:07+0200\n"
 "PO-Revision-Date: 2021-06-11 23:23+0200\n"
 "Last-Translator: Osoitz Elkorobarrutia <oelkoro@gmail.com>, 2017\n"
 "Language-Team: Basque (https://www.transifex.com/librezale/teams/76773/eu/)\n"
@@ -16,6 +16,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.3\n"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Plugin Error"
+msgstr "Balio errorea"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#, c-format
+msgid "Applied effect: %s"
+msgstr "Aplikatutako efektua: %s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Errepikatu %s"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -97,7 +124,14 @@ msgstr "Erreprodukzio latentzia handia: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-msgid "Supported Rates:\n"
+#, fuzzy
+msgid "Supported Playback Rates:\n"
+msgstr "Onartutako ratioak:\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Capture Rates:\n"
 msgstr "Onartutako ratioak:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -123,6 +157,10 @@ msgid "No playback device found for '%s'.\n"
 msgstr ""
 "Ez da erreprodukzio-gailurik topatu '%s'-rentzat.\n"
 "\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Supported Rates:\n"
+msgstr "Onartutako ratioak:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
@@ -199,16 +237,15 @@ msgstr ""
 "Errorea grabaketa gailua irekitzean.\n"
 "Errore-kodea: %s"
 
-#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
-#: libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-audio-io/AudioIO.cpp
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/ProjectAudioManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/EffectPreview.cpp
+#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -261,8 +298,9 @@ msgstr "Ezin izan da aurre-ezarpenak ezarpenen fitxategian gorde"
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
-#: libraries/lib-lv2/LV2EffectBase.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-lv2/LV2EffectBase.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
+#: src/effects/EffectUI.cpp
 msgid "n/a"
 msgstr "e/e"
 
@@ -294,9 +332,10 @@ msgstr "Audio unitateen efektuak"
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp
 #: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#: src/effects/vamp/LoadVamp.cpp
 msgid "The Audacity Team"
 msgstr "Audacity Taldea"
 
@@ -354,6 +393,975 @@ msgstr "XML datuak hutsik zeuden bihurtu aurretik"
 msgid "Message"
 msgstr "Mezua"
 
+#: libraries/lib-builtin-effects/AmplifyBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Amplify"
+msgstr "Anplifikatu"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Auto Duck"
+msgstr "Auto Duck"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "Pista baten edo batzuen bolumena gutxiagotzen (duck)  du beti ere \"kontrol\" pista  baten bolumena zehaztutako maila batera iristen bada"
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks'
+#. (reduces the volume) of the audio automatically when there is
+#. sound on another track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "Audiorik ez duen pista bat hautatu duzu. AutoDuck-ek bakarrik audio pistak prozesa ditzake."
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+#. the volume) of the audio automatically when there is sound on another
+#. track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Auto Duck-ek kontrol pista bat behar du zeina hautatutako pist(ar)en azpiak kokatuko den."
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Rendering Control-Track Time-Stretched Audio"
+msgstr ""
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Bass and Treble"
+msgstr "Soinu baxuak eta altuak"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+msgid "Simple tone control effect"
+msgstr "Tonu-kontrol efektu sinplea"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Pitch"
+msgstr "Aldatu tonua"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "Changes the pitch of a track without changing its tempo"
+msgstr "Aldatzen du pista baten tonua bere tempoa aldatu gabe"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "High Quality Pitch Change"
+msgstr "Kalitate oneko tonu aldaketa"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Change Speed and Pitch"
+msgstr "Aldatu abiadura"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+msgid "Changes the speed of a track, also changing its pitch"
+msgstr "Aldatzen du pistaren abiadura, bere tonua ere aldatuz"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Tempo"
+msgstr "Aldatu tempoa"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "Changes the tempo of a selection without changing its pitch"
+msgstr "Aldatzen du hautapenaren tempoa bere tonua aldatu gabe"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "High Quality Tempo Change"
+msgstr "Kalitate oneko tempo-aldaketa"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Click Removal"
+msgstr "Klik ezabatzailea"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Click Removal is designed to remove clicks on audio tracks"
+msgstr "Klik ezabatzailea diseinatuta dago audio pisten klikak ezabatzeko"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Algorithm not effective on this audio. Nothing changed."
+msgstr "Algoritmo hau ez da eraginkorra audio honetan. Ez da ezer aldatu."
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#, c-format
+msgid "Selection must be larger than %d samples."
+msgstr "Hautapena %d lagin baino handiagoa izan behar da."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "You can only measure one track at a time."
+msgstr "Pista bakoitza banaka neurtu behar, bestela ezin da."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "Please select an audio track."
+msgstr "Hautatu audio-pista bat."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Invalid audio selection.\n"
+"Please ensure that audio is selected."
+msgstr ""
+"Audio hautapen baliogabea\n"
+"Egiaztatu audioa hautatuta dagoela."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+"Ez dago ezer neurtzeko.\n"
+"Hautatu pista baten zati bat."
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Clipping"
+msgstr "Asetasun-distortsio gogorra"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Clipping"
+msgstr "Asetasun-distortsio leuna"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Overdrive"
+msgstr "Overdrive leuna"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Medium Overdrive"
+msgstr "Overdrive ertaina"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Overdrive"
+msgstr "Overdrive gogorra"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Cubic Curve (odd harmonics)"
+msgstr "Kurba kubikoa (harmoniko bakoitiak)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Even Harmonics"
+msgstr "Harmoniko bikoitiak"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Expand and Compress"
+msgstr "Zabaldu eta konprimitu"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller"
+msgstr "Orekatzailea"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Rectifier Distortion"
+msgstr "Artezgailuaren distortsioa"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Limiter 1413"
+msgstr "Mugagailu gogorra 1413"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Hard clip -12dB, 80% make-up gain"
+msgstr "Klip gogorra  -12dB, 80% make-up irabazia"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Soft clip -12dB, 80% make-up gain"
+msgstr "Klip biguna  -12dB, 80% make-up irabazia"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Fuzz Box"
+msgstr "Fuzz Box"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Walkie-talkie"
+msgstr "Walkie-talkie"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Blues drive sustain"
+msgstr "Blues drive sustain"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Light Crunch Overdrive"
+msgstr "Overdrive karraska arina"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Heavy Overdrive"
+msgstr "Overdrive astuna"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "3rd Harmonic (Perfect Fifth)"
+msgstr "3. harmonikoa (bostun perfektua)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Valve Overdrive"
+msgstr "Balbuletako overdrive"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "2nd Harmonic (Octave)"
+msgstr "2. harmonikoa (Zortziduna)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Gated Expansion Distortion"
+msgstr "Atetutako hedapen distortsioa"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Light, -70dB noise floor"
+msgstr "Orekatzailea, arina, -70db hondo-zarata"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Moderate, -70dB noise floor"
+msgstr "Orekatzailea, neurriduna, -70db hondo-zarata"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavy, -70dB noise floor"
+msgstr "Orekatzailea, astuna, -70db hondo-zarata"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavier, -70dB noise floor"
+msgstr "Orekatzailea, astunagoa, -70db hondo-zarata"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heaviest, -70dB noise floor"
+msgstr "Orekatzailea, astunena, -70db hondo-zarata"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Half-wave Rectifier"
+msgstr "Uhin erdiko artezgailua"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier"
+msgstr "Uhin osoko artezgailua"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier (DC blocked)"
+msgstr "Uhin osoko artezgailua (DC blokeatuta)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Percussion Limiter"
+msgstr "Perkusio-mugagailua"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Distortion"
+msgstr "Distortsioa"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Waveshaping distortion effect"
+msgstr "Uhin-formaren distortsio efektua"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "DTMF Tones"
+msgstr "DTMF tonuak"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "Sortzen ditu maiztasun anitzeko tonu bikoitzak (DTMF) telefonoen teklatuak sortzen dituenen antzekoak"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid ""
+"DTMF sequence empty.\n"
+"Check ALL settings for this effect."
+msgstr ""
+"DTMF sekuentzia hutsik dago.\n"
+"Egiaztatu efektu horren ezarpen GUZTIAK."
+
+#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
+msgid "Echo"
+msgstr "Oihartzuna"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+msgid "Repeats the selected audio again and again"
+msgstr "Errepikatu hautatutako audioa behin eta berriz"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Requested value exceeds memory capacity."
+msgstr "Eskatutako balioak memoriaren kapazitatea gainditzen du."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Equalization"
+msgstr "Ekualizazioa"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Adjusts the volume levels of particular frequencies"
+msgstr "Maiztasun zehatz batzuen bolumen mailak doitzen ditu"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "100Hz Rumble"
+msgstr "100Hz burrunba"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "AM Radio"
+msgstr "AM irratia"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Boost"
+msgstr "Baxuak indartu"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Cut"
+msgstr "Baxuak moztu"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Low rolloff for speech"
+msgstr "Hizketarako iraupen txikia"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "RIAA"
+msgstr "RIAA"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Telephone"
+msgstr "Telefonoa"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Boost"
+msgstr "Altuak indartu"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Cut"
+msgstr "Altuak moztu"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "Ekualizazioa aplikatzeko, hautatutako pista guztiek lagin-maiztasun berbera eduki behar dute."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Track sample rate is too low for this effect."
+msgstr "Pistaren lagin-maiztasuna txikiegia da efektu honentzat."
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr "izen gabea"
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"Errorea EQ kurbak fitxategitik kargatzean:\n"
+"%s\n"
+"Errore mezuak hau dio:\n"
+"%s"
+
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "Error Saving Equalization Curves"
+msgstr "Errorea ekualizazio-kurbak gordetzean"
+
+#: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr "Eskatutako kurba ez da aurkitu, 'izen gabea' erabiliz"
+
+#. i18n-hint: Technical term for a kind of curve.
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "B-Spline-a"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "Kosinua"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "Kubikoa"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade In"
+msgstr "Agertu"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-in to the selected audio"
+msgstr "Aplikatzen du pixkanaka agertze lineala hautatutako audioan"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade Out"
+msgstr "Desagertu"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-out to the selected audio"
+msgstr "Aplikatzen du pixkanaka desagertze lineala hautatutako audioan"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Find Clipping"
+msgstr "Bilatu asetasun-distortsioa"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Creates labels where clipping is detected"
+msgstr "Etiketak sortzen ditu asetasun-distortsioa antzemandako tokietan"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Clipping"
+msgstr "Asetasun-distortsioa"
+
+#. i18n-hint: Two numbers are substituted; the second is the
+#. size of a set, the first is the size of a subset, and not
+#. understood as an ordinal (i.e., not meaning "first", or
+#. "second", etc.)
+#.
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#, fuzzy, c-format
+msgctxt "find clipping"
+msgid "%lld of %lld"
+msgstr "%s %d of %d"
+
+#: libraries/lib-builtin-effects/Generator.cpp
+msgid "There is not enough room available to generate the audio"
+msgstr "Ez dago leku nahikorik audioa sortzeko"
+
+#: libraries/lib-builtin-effects/Invert.cpp resources/EffectsMenuDefaults.xml
+msgid "Invert"
+msgstr "Alderantzikatu"
+
+#: libraries/lib-builtin-effects/Invert.cpp
+msgid "Flips the audio samples upside-down, reversing their polarity"
+msgstr "Alderantziz jartzen ditu audio laginak, haien polaritatea alderarantzikatuz"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Konpresorea"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Audioaren tarte dinamikoa konprimitzen du"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Loudness Normalization"
+msgstr "Ozentasunaren normalizazioa"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Sets the loudness of one or more tracks"
+msgstr "Ezartzen du pista baten edo batzuen ozentasuna"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Normalizing Loudness...\n"
+msgstr "Ozentasuna normalizatzen...\n"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing: %s"
+msgstr "Analizatzen: %s"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing: %s"
+msgstr "Prozesatzen: %s"
+
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "White"
+msgstr "Zuria"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Pink"
+msgstr "Arrosa"
+
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Brownian"
+msgstr "Browndar"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Noise"
+msgstr "Zarata"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Generates one of three different types of noise"
+msgstr "Hiru zarata moten arteko bat sortzen du"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median"
+msgstr "Mediana"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Second greatest"
+msgstr "Bigarren handiena"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Old"
+msgstr "Zaharra"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Noise Reduction"
+msgstr "Zarata-murrizketa"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Removes background noise such as fans, tape noise, or hums"
+msgstr "Atzeko planoko zarata kentzen du, esaterako, haizagailuak, zintaren zarata edo burrunba"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block are too few for the window types."
+msgstr "Urratsak blokeko gutxiegi dira leiho motentzat."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block cannot exceed the window size."
+msgstr "Urratsak blokeko ezin dira leihoaren tamaina baino handiagoak izan."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median method is not implemented for more than four steps per window."
+msgstr "Medianaren metodoa ez dago inplementatuta leihoko lau urrats baino gehiagorako."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "You must specify the same window size for steps 1 and 2."
+msgstr "Leiho tamaina bera zehaztu behar duzu 1. eta 2. urratsetan."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Warning: window types are not the same as for profiling."
+msgstr "Abisua: leiho motak ez dira profilatzeko erabilitakoen berdinak."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "All noise profile data must have the same sample rate."
+msgstr "Zarata-profil datu guztiak lagin-maiztasun bera izan behar dute."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "Zarata-profilaren lagin-maiztasunak prozesatuko den soinuarenarekin bat etorri behar du."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Selected noise profile is too short."
+msgstr "Hautatutako zarata-profila laburregia da."
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Normalize"
+msgstr "Normalizatu"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Sets the peak amplitude of one or more tracks"
+msgstr "Ezartzen du pista baten edo batzuen gailur-anplitudea"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset and Normalizing...\n"
+msgstr "DC desplazamendua kentzen eta normalizatzen...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset...\n"
+msgstr "DC desplazamendua kentzen...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Normalizing without removing DC offset...\n"
+msgstr "DC desplazamendua kendu gabe normalizatzen...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Not doing anything...\n"
+msgstr "Deus egin gabe...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing first track of stereo pair: %s"
+msgstr "Estereo bikotearen lehen pista analizatzen: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Estereo bikotearen bigarren pista analizatzen: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing stereo channels independently: %s"
+msgstr "Estereo kanalak banaka prozesatzen: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing first track of stereo pair: %s"
+msgstr "Estereo bikotearen lehen pista prozesatzen: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing second track of stereo pair: %s"
+msgstr "Estereo bikotearen bigarren pista prozesatzen: %s"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Paulstretch"
+msgstr "Paulstretch"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
+msgstr "Erabili Paulstrech bakarrik muturreko denbora-luzatzetan edo \"stasis\" efektuan"
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Audio selection too short to preview.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"Audio hautapena txikiegia da aurreikusteko.\n"
+"\n"
+"Saia zaitez audio hautapena luzatzen gutxienez %.1f segundo,\n"
+"edo 'Denboraren bereizmena' %.1f edo txikiagora ekartzen."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Unable to Preview.\n"
+"\n"
+"For the current audio selection, the maximum\n"
+"'Time Resolution' is %.1f seconds."
+msgstr ""
+"Ezin da aurreikusi.\n"
+"\n"
+"Uneko audio-hautapenerako gehienezko\n"
+" 'Denbora-bereizmena' %.1f segundokoa da."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"The 'Time Resolution' is too long for the selection.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"'Denboraren bereizmena' luzeegia da hautapenerako.\n"
+"\n"
+"Saiatu audio hautapena handitzen gutxienez %.1f segundo,\n"
+"edo 'Denboraren bereizmena' murrizten gehienez %.1f segundora."
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Phaser"
+msgstr "Phaser-a"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+msgid "Combines phase-shifted signals with the original signal"
+msgstr "Konbinatzen ditu fase desplazatutako seinaleak jatorrizko seinaleekin"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, fuzzy
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "Espektroa marrazteko, hautatutako pista guztiek lagin-maiztasun bera izan behar dute."
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid ""
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
+msgstr ""
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, c-format
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "Audio gehiegi hautatu dituzu. Audioaren lehen %.1f segundoak baino ez dira analizatuko."
+
+#: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
+msgid "Repair"
+msgstr "Konpondu"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "Sets the peak amplitude of a one or more tracks"
+msgstr "Pista baten edo gehiagoren anplitude-gailurra ezartzen du"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "The Repair effect cannot be applied within stretched or shrunk clips"
+msgstr ""
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"\n"
+"Zoom in and select a tiny fraction of a second to repair."
+msgstr ""
+"Konpontze efektua diseinatuta dago erabiltzeko hondatutako audioen sekzio oso txikietan (128 lagin arte).\n"
+"\n"
+"Handiagotu bistaratzea eta hautatu segundo baten zati txiki bat konpontzeko."
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"Repair works by using audio data outside the selection region.\n"
+"\n"
+"Please select a region that has audio touching at least one side of it.\n"
+"\n"
+"The more surrounding audio, the better it performs."
+msgstr ""
+"Konpontze efektuak lan egiten du audio datuak hautapen areatik kanpo erabiliaz.\n"
+"Hautatu area bat haren zati bat ukitzen duen audio bat duena.\n"
+"\n"
+"Zenbat eta inguruko audio gehiago, hainbat hobe."
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Repeat"
+msgstr "Errepikatu"
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+msgid "Repeats the selection the specified number of times"
+msgstr "Hautapena zehaztutako aldi kopurua errepikatzen du"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Acoustic"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Ambience"
+msgstr "Isilunea"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Artificial"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Clean"
+msgstr "Garbitu"
+
+#. i18n-hint: This is the name of an effect preset
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Modern"
+msgstr "Modua:"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal I"
+msgstr "Bokala I"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal II"
+msgstr "Bokala II"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Dance Vocal"
+msgstr "Isolatu ahotsak"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Modern Vocal"
+msgstr "Kendu ahotsak"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Voice Tail"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Bathroom"
+msgstr "Bainugela"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Bright"
+msgstr "Gela txiki distiratsua"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Dark"
+msgstr "Gela txiki iluna"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Medium Room"
+msgstr "Gela ertaina"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Large Room"
+msgstr "Gela handia"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Church Hall"
+msgstr "Elizako aretoa"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Cathedral"
+msgstr "Katedrala"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Big Cave"
+msgstr ""
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Reverb"
+msgstr "Erreberberazioa"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Adds ambience or a \"hall effect\""
+msgstr "Giroa edo \"areto efektua\" gehitzen du"
+
+#: libraries/lib-builtin-effects/Reverse.cpp resources/EffectsMenuDefaults.xml
+msgid "Reverse"
+msgstr "Atzekoz aurrera jarri"
+
+#: libraries/lib-builtin-effects/Reverse.cpp
+msgid "Reverses the selected audio"
+msgstr "Hautatutako audioa itzulbiratzen du"
+
+#: libraries/lib-builtin-effects/SBSMSBase.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "SBSMS Denbora / Tonu luzatzea"
+
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Butterworth"
+msgstr "Butterworth"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type I"
+msgstr "Chebyshev mota I"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type II"
+msgstr "Chebyshev mota II"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Lowpass"
+msgstr "Behe-pasea"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Highpass"
+msgstr "Goi-pasea"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Classic Filters"
+msgstr "Iragazki klasikoak"
+
+#. i18n-hint: "infinite impulse response"
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Performs IIR filtering that emulates analog filters"
+msgstr "Erabili IIR iragazia zeinak Iragazi analogikoak emulatzen ditu"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "To apply a filter, all selected tracks must have the same sample rate."
+msgstr "Iragazki bat aplikatzeko, hautatutako pista guztiek lagin-maiztasun bera izan behar dute."
+
+#. i18n-hint: noun
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgctxt "generator"
+msgid "Silence"
+msgstr "Isilunea"
+
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgid "Creates audio of zero amplitude"
+msgstr "Zero anplitudeko audioa sortzen du"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Stereo To Mono"
+msgstr "Estereotik monora"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Converts stereo tracks to mono"
+msgstr "Pista estereoak mono bihurtzen ditu"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Mixing down to mono"
+msgstr "Monora nahasten"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Sliding Stretch"
+msgstr "Luzaketa irristakorra"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+msgid "Allows continuous changes to the tempo and/or pitch"
+msgstr "Tempo edota tonu aldaketak behin eta berriro ahalbidetzen ditu"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "Lineala"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Logarithmic"
+msgstr "Logaritmikoa"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sine"
+msgstr "Sinusoidala"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Square"
+msgstr "Karratua"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sawtooth"
+msgstr "Zerra-hortz"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgid "Square, no alias"
+msgstr "Karratua, ezizenik ez"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#, fuzzy
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Triangelua"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Truncate Detected Silence"
+msgstr "Moztu antzemandako isiltasuna"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Compress Excess Silence"
+msgstr "Konprimitu gehiegizko isiltasuna"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Truncate Silence"
+msgstr "Moztu isiltasuna"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr "Bolumena zehaztutako mailaren azpitik duten pasarteen luzera automatikoki laburtzen du"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "Banaka modu independentean moztean, sync-lock pista talde bakoitzeko hautatutako audio-pista bakarra egon daiteke."
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Wahwah"
+msgstr "Wah-wah"
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr "Tonu-kalitatearen aldaketa azkarrak, 1970. hamarkadan hain entzuna zen gitarra-soinu haren antzera"
+
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 #, fuzzy
 msgid "Cannot proceed to upload."
@@ -406,14 +1414,6 @@ msgstr ""
 #, fuzzy
 msgid "Failed to deserialize the response"
 msgstr "Ezin izan da berreskuratu aurre-ezarpenen edukia"
-
-#. i18n-hint: This is the name of an effect preset.
-#. i18n-hint: This is the name of an effect preset
-#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Modern"
-msgstr "Modua:"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -589,10 +1589,10 @@ msgid "Play it Loud"
 msgstr "Audioa erreproduzitzen"
 
 #: libraries/lib-effects/Effect.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: plug-ins/beat.ny
+#: src/commands/AudacityCommand.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1099,6 +2099,45 @@ msgstr ""
 msgid "Import Project"
 msgstr "Inportatu proiektua"
 
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "SubRip text file"
+msgstr "Testu fitxategia"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "WebVTT file"
+msgstr "HTML fitxategia"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "Estandarra"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "Hedatua (maiztasun tarterekin)"
+
+#: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
+msgid "Labels"
+msgstr "Etiketak"
+
+#. i18n-hint: (noun) it's the name of a kind of track.
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Label track.
+#: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
+#: src/LabelDialog.h src/TrackPanelAx.cpp
+msgid "Label Track"
+msgstr "Etiketa-pista"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "One or more saved labels could not be read."
+msgstr "Gordetako etiketa bat edo gehiago ezin izan da irakurri."
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -1145,7 +2184,7 @@ msgstr "LV2 efektuak"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "LV2 efektuentzako euskarria dakar Audacity-ra"
 
-#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectPresetDialog.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -1164,6 +2203,116 @@ msgstr "Triangelua"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "Formaduna"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C"
+msgstr "C"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯"
+msgstr "C♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D"
+msgstr "D"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯"
+msgstr "D♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E"
+msgstr "E"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F"
+msgstr "F"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯"
+msgstr "F♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G"
+msgstr "G"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯"
+msgstr "G♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A"
+msgstr "A"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯"
+msgstr "A♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B"
+msgstr "B"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♭"
+msgstr "D♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E♭"
+msgstr "E♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♭"
+msgstr "G♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♭"
+msgstr "A♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B♭"
+msgstr "B♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯/D♭"
+msgstr "C♯/D♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯/E♭"
+msgstr "D♯/E♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯/G♭"
+msgstr "F♯/G♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯/A♭"
+msgstr "G♯/A"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯/B♭"
+msgstr "A♯/B♭"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -1204,14 +2353,6 @@ msgstr "Formatu ezezaguna"
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "Agindua"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Errepikatu %s"
 
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
@@ -1859,6 +3000,150 @@ msgstr "10>01000 hamarkada|0.434294482"
 msgid "thousandths of decades"
 msgstr "milaka hamarkada"
 
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Nyquist Effects"
+msgstr "Nyquist efektuak"
+
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Provides Nyquist Effects support to Audacity"
+msgstr "Nyquist efektuentzako euskarria dakar Audacity-ra"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Applying Nyquist Effect..."
+msgstr "Nyquist-en efektua aplikatzen..."
+
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. * Prompt"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist Worker"
+msgstr "Nyquist langilea"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "Gaizki osatutako Nyquist plugin goiburua"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+"Gaitu pistaren espektrograma ikuspegia\n"
+"efektu \"espektralak\" aplikatu aurretik."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid ""
+"To use 'Spectral effects', enable 'Spectral Selection'\n"
+"in the track Spectrogram settings and select the\n"
+"frequency range for the effect to act on."
+msgstr ""
+"'Efektu espektralak' erabiltzeko, gaitu 'Hautapen espektrala'\n"
+"pistaren espektrogramaren ezarpenetan eta hautatu\n"
+"efektuak eragingo duen maiztasun tartea."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
+msgstr "errorea: \"%s\" fitxategia goiburuan zehaztuta dago baina ez da aurkitu pluginaren bidean.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Audio selection required."
+msgstr "Audio hautapena behar bada."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Processing complete."
+msgstr "Prozesatzea osatuta."
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr "';type tool' efektuek ezin dute Nyquist-tik audioa itzuli.\n"
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr "';type tool' efektuek ezin dute Nyquist-tik etiketak itzuli.\n"
+
+#. i18n-hint: "%s" is replaced by name of plug-in.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "nyx_error returned from %s.\n"
+msgstr "%s -ek itzulitako nyx-errorea.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "plug-in"
+msgstr "plugina"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned a list."
+msgstr "Nyquist-ek zerrenda bat itzuli du."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist-ek balio hau itzuli du: %f"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nyquist-ek balio hau itzuli du: %d"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned too many audio channels.\n"
+msgstr "Nyquist-ek audio-kanal gehiegi itzuli ditu.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned one audio channel as an array.\n"
+msgstr "Nyquist-ek audio-kanal bat matrize gisa itzuli ditu.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned an empty array.\n"
+msgstr "Nyquist-ek matrize huts bat itzuli ditu.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned nil audio.\n"
+msgstr "Nyquist itzulitako nil audioa.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[Abisua: Nyquist-ek UTF-8 kate baliogabea itzuli du, hemen Latin-1 kodeketara bihurtu da]"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "Audacity-ren bertsio honek ez du onartzen Nyquist pluginaren bertsioa %ld"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not open file"
+msgstr "Ezin izan da fitxategia ireki"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Your code looks like SAL syntax, but there is no 'return' statement.\n"
+"For SAL, use a return statement such as:\n"
+"\treturn *track* * 0.1\n"
+"or for LISP, begin with an open parenthesis such as:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+msgstr ""
+"Zure kodeak SAL sintaxiaren itxura du, baina ez dago 'return' adierazpenik.\n"
+"SAL erabiltzeko, erabili honako adierazpen bat:\n"
+"\treturn *track* * 0.1\n"
+"edo LISP bada, hasi parentesi ireki batekin:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+
+#. i18n-hint: refers to programming "languages"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not determine language"
+msgstr "Ezin izan da zehaztu hizkuntza"
+
+#. i18n-hint: default exported file name when exporting from unsaved project
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/TimerRecordDialog.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "untitled"
+msgstr "izengabea"
+
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Audio Track"
 msgstr "Audio-pista"
@@ -2327,7 +3612,7 @@ msgid "Writable Sample Track"
 msgstr "Lagindu berriro pista"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/effects/Contrast.cpp
 msgid "&Close"
 msgstr "&Itxi"
 
@@ -2961,6 +4246,141 @@ msgstr "Ezin izan da aurre-ezarpenen fitxategia kargatu."
 msgid "Failed to save VST3 preset to file"
 msgstr "Ezin izan du aurre-ezarpenen izena ezartzen"
 
+#. i18n-hint: The name of a frequency scale in psychoacoustics
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Mel"
+msgstr "Mel"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Bark"
+msgstr "Bark"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "ERB"
+msgstr "ERB"
+
+#. i18n-hint: Time units, that is Period = 1 / Frequency
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Period"
+msgstr "Periodoa"
+
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (Roseus)"
+msgstr "Kolorea (lehenetsia)"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Kolorea (klasikoa)"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Gris-eskala"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Alderantzizko gris-eskala"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Frequencies"
+msgstr "Maiztasunak"
+
+#. i18n-hint: the Reassignment algorithm for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Reassignment"
+msgstr "Berresleitzea"
+
+#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Pitch (EAC)"
+msgstr "Tonua (EAC)"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr "Gehienezko maiztasunak 100 Hz edo gehiago izan behar du"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be at least 0 Hz"
+msgstr "Gutxieneko maiztasunak gutxienez 0 Hz izan behar du"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be less than maximum frequency"
+msgstr "Gutxieneko maiztasunak gehienezko maiztasunak baino gutxiago  izan behar du"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The range must be at least 1 dB"
+msgstr "Tarteak gutxienez 1 dBkoa izan behar du"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain cannot be negative"
+msgstr "Maiztasun irabazia ezin da negatiboa izan"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain must be no more than 60 dB/dec"
+msgstr "Maiztasun irabazia ezin da 60dB/dec baino gehiago izan"
+
+#. i18n-hint: abbreviates amplitude
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Linear (amp)"
+msgstr "Lineala barrura"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Logarithmic (dB)"
+msgstr "Logaritmikoa (dB)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Linear (dB)"
+msgstr "Lineala"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-36 dB (shallow range for high-amplitude editing)"
+msgstr "-36 dB (anplitude handian editatzeko bitartea)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-48 dB (PCM range of 8 bit samples)"
+msgstr "-48 dB (8 biteko laginen PCM bitartea)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-60 dB (PCM range of 10 bit samples)"
+msgstr "-60 dB (10 biteko laginen PCM bitartea)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-72 dB (PCM range of 12 bit samples)"
+msgstr "-72 dB (12 biteko laginen PCM bitartea)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-84 dB (PCM range of 14 bit samples)"
+msgstr "-84 dB (14 biteko laginen PCM bitartea)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-96 dB (PCM range of 16 bit samples)"
+msgstr "-96 dB (16 biteko laginen PCM bitartea)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-120 dB (approximate limit of human hearing)"
+msgstr "-120 dB (gizakion entzumenaren gutxi gorabeherako muga)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-145 dB (PCM range of 24 bit samples)"
+msgstr "-145 dB (24 biteko laginen PCM bitartea)"
+
 #: libraries/lib-wave-track/Sequence.cpp
 #, c-format
 msgid ""
@@ -2983,6 +4403,11 @@ msgstr "&Prozesatzen: "
 #, fuzzy
 msgid "Rendering Clip"
 msgstr "Aldatu izena..."
+
+#: libraries/lib-wave-track/WaveChannelViewConstants.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "&Multi-view"
+msgstr "Ikuspegi anitza"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -3233,6 +4658,7 @@ msgstr "Gelditu"
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
@@ -4719,9 +6145,9 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (fitxategi txikiagoak)"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane, 320 kbps"
+#, fuzzy
+msgid "Excessive, 320 kbps"
 msgstr "Zentzugabea, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4736,10 +6162,9 @@ msgstr "Estandar, 170-210 kbps"
 msgid "Medium, 145-185 kbps"
 msgstr "Tartekoa, 145-185 kbps"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane"
-msgstr "Zentzugabea"
+msgid "Excessive"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -6030,12 +7455,21 @@ msgid "Account not linked"
 msgstr "Fitxategia ongi deskodetu da\n"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Unlink Account"
 msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "&Sign Out"
+msgstr "Lineala kanpora"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -6126,10 +7560,6 @@ msgid "Project Name"
 msgstr "Proiektua"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
 msgstr ""
 
@@ -6216,6 +7646,77 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
 msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create cloud account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to cloud"
+msgstr "Lerrokatu amaiera amaierara"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Oops! It looks like there was an issue with your input.\n"
+"Please ensure your email is correct and that your password is at least 8 characters long"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Sorry, but it seems the email or password you entered is incorrect.\n"
+"Please double-check your credentials and try again!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create an account to save to the cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to save to the cloud"
+msgstr "Gorde erregistroa hemen:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Google"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Facebook"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Email"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Password"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Forgot your password?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Already have an account? "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in here"
+msgstr "Lerrokatu amaiera"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Need an account? "
+msgstr "Swing kopurua"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Parte hartzaileak"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -6499,12 +8000,6 @@ msgstr "Proiektuaren babeskopia egiten"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
 msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-#, fuzzy
-msgid "Continue"
-msgstr "Parte hartzaileak"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 #, fuzzy
@@ -7177,16 +8672,16 @@ msgstr ""
 "Azken fitxategien zerrendatik kendu egin da."
 
 #: src/AudacityApp.cpp
+msgid "Audacity is starting up..."
+msgstr "Audacity abiatzen ari da..."
+
+#: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr "SQLite liburutegiaren hasieratzeak huts egin du. Audacityk ezin du aurrera egin."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Blokearen tamainak 256 eta 100000000 bitartekoa izan behar du\n"
-
-#: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "Audacity abiatzen ari da..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -7435,7 +8930,9 @@ msgstr ""
 "\n"
 "\"Irten Audacity\" aukeratzen baduzu, zure proiektua gorde gabeko egoeran utzi ahal izango da, irekitzen duzun hurrengoan berreskuratuko dena."
 
+#. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Quit Audacity"
 msgstr "&Irten Audacity-tik"
 
@@ -8270,6 +9767,29 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "Aktibatu uzteen hautematea"
 
+#: src/EffectAndCommandPluginManager.cpp
+#, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in 'Help > Diagnostics > Show Log'"
+msgstr ""
+"Saiatzen huts egin duen efektua hasieratzen:\n"
+"\n"
+"%s\n"
+"\n"
+"Informazio gehiago hemen: Laguntza > Diaganostikoak > Erakutsi erregistroa'"
+
+#: src/EffectAndCommandPluginManager.cpp
+msgid "Command failed to initialize"
+msgstr "Aginduak huts egin du hasieratzean"
+
+#: src/ExportLabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "Esportatutako etiketen estiloa:"
+
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
 msgstr "Maiztasunaren analisia"
@@ -8366,22 +9886,6 @@ msgstr "&Ardatza:"
 #: src/FreqWindow.cpp
 msgid "&Replot..."
 msgstr "&Birmarraztu..."
-
-#: src/FreqWindow.cpp
-#, fuzzy
-msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "Espektroa marrazteko, hautatutako pista guztiek lagin-maiztasun bera izan behar dute."
-
-#: src/FreqWindow.cpp
-msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
-msgstr ""
-
-#: src/FreqWindow.cpp
-#, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "Audio gehiegi hautatu dituzu. Audioaren lehen %.1f segundoak baino ez dira analizatuko."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -8604,49 +10108,6 @@ msgstr "Etiketa-pista berria"
 msgid "Enter track name"
 msgstr "Idatzi pistaren izena"
 
-#. i18n-hint: (noun) it's the name of a kind of track.
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Label track.
-#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
-#: src/TrackPanelAx.cpp
-msgid "Label Track"
-msgstr "Etiketa-pista"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "SubRip text file"
-msgstr "Testu fitxategia"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "WebVTT file"
-msgstr "HTML fitxategia"
-
-#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
-msgid "Labels"
-msgstr "Etiketak"
-
-#: src/LabelTrack.cpp
-msgid "S&tandard"
-msgstr "Estandarra"
-
-#: src/LabelTrack.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "Hedatua (maiztasun tarterekin)"
-
-#: src/LabelTrack.cpp
-msgid "Exported Label Style:"
-msgstr "Esportatutako etiketen estiloa:"
-
-#: src/LabelTrack.cpp
-msgid "Importing WebVTT files is not currently supported."
-msgstr ""
-
-#: src/LabelTrack.cpp
-msgid "One or more saved labels could not be read."
-msgstr "Gordetako etiketa bat edo gehiago ezin izan da irakurri."
-
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
 #: src/LangChoice.cpp
@@ -8694,13 +10155,14 @@ msgstr "Laster-teklak kendu dira"
 msgid "Audacity Mixer%s"
 msgstr "Audacity nahasgailu-taula %s"
 
-#. i18n-hint: title of the Gain slider, used to adjust the volume
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#. i18n-hint: title of the Volume slider, used to adjust the volume
+#. i18n-hint: Title of the Volume slider, used to adjust the volume
+#: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Gain"
-msgstr "Irabazia"
+#, fuzzy
+msgid "Volume"
+msgstr "Bolumena "
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -8741,8 +10203,9 @@ msgstr "Seinale mailaren neurgailua"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Moved gain slider"
-msgstr "Irabazi-graduatzailea lekuz aldatu da"
+#, fuzzy
+msgid "Moved volume slider"
+msgstr "Mugituta abiadura-graduatzailea"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -8758,116 +10221,6 @@ msgstr "Pan graduatzailea lekuz aldatu da"
 #, fuzzy
 msgid "&Mixer"
 msgstr "Nahasgailua"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C"
-msgstr "C"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯"
-msgstr "C♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D"
-msgstr "D"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯"
-msgstr "D♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E"
-msgstr "E"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F"
-msgstr "F"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯"
-msgstr "F♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G"
-msgstr "G"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯"
-msgstr "G♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A"
-msgstr "A"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯"
-msgstr "A♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B"
-msgstr "B"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♭"
-msgstr "D♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E♭"
-msgstr "E♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♭"
-msgstr "G♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♭"
-msgstr "A♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B♭"
-msgstr "B♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯/D♭"
-msgstr "C♯/D♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯/E♭"
-msgstr "D♯/E♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯/G♭"
-msgstr "F♯/G♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯/A♭"
-msgstr "G♯/A"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯/B♭"
-msgstr "A♯/B♭"
 
 #: src/PluginDataModel.cpp
 #, c-format
@@ -9645,17 +10998,6 @@ msgstr "'%s' behera mugitu da"
 msgid "Change effect order"
 msgstr "Aldatu abiadura"
 
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid ""
-"This plugin could not be loaded.\n"
-"It may have been deleted."
-msgstr ""
-
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Plugin Error"
-msgstr "Balio errorea"
-
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
@@ -9897,12 +11239,6 @@ msgstr "Iraupena"
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "Audacity-ren programatutako grabazioa"
-
-#. i18n-hint: default exported file name when exporting from unsaved project
-#: src/TimerRecordDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "untitled"
-msgstr "izengabea"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -10429,7 +11765,7 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -10439,6 +11775,57 @@ msgstr ""
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal processing effect that enhances vocal clarity and depth."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#. i18n-hint: MuseHub is a name of a product, see musehub.com.
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Available on [[%s|MuseHub]]."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -10460,7 +11847,7 @@ msgstr "Ez erakutsi berriro hau abiatzean"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
-#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -10624,7 +12011,7 @@ msgstr "LISP"
 msgid "Brief"
 msgstr "Labur"
 
-#: src/commands/GetInfoCommand.cpp src/effects/EffectManager.cpp
+#: src/commands/GetInfoCommand.cpp src/effects/EffectPresetDialog.cpp
 msgid "Type:"
 msgstr "Mota:"
 
@@ -11069,8 +12456,9 @@ msgid "Set Track Audio"
 msgstr "Ezarri audio pista"
 
 #: src/commands/SetTrackInfoCommand.cpp
-msgid "Gain:"
-msgstr "Irabazia:"
+#, fuzzy
+msgid "Volume:"
+msgstr "Bolumena "
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -11079,26 +12467,6 @@ msgstr "Panoramikoa:"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Visuals"
 msgstr "Ezarri pisten ikuspegiak"
-
-#. i18n-hint: abbreviates amplitude
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-#, fuzzy
-msgid "Linear (amp)"
-msgstr "Lineala barrura"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Logarithmic (dB)"
-msgstr "Logaritmikoa (dB)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-#, fuzzy
-msgid "Linear (dB)"
-msgstr "Lineala"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -11175,10 +12543,6 @@ msgstr "Ezartzen du hainbat pistaren hainbat balio."
 msgid "Long Message"
 msgstr "Mezu luzea"
 
-#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
-msgid "Amplify"
-msgstr "Anplifikatu"
-
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "Zuk hautatutako audioaren bolumena igo edo jaisten du"
@@ -11198,32 +12562,6 @@ msgstr "Anplitude-gailur &berria (dB):"
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
 msgstr "&Onartu asetasun-distortsioa"
-
-#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
-msgid "Auto Duck"
-msgstr "Auto Duck"
-
-#: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Pista baten edo batzuen bolumena gutxiagotzen (duck)  du beti ere \"kontrol\" pista  baten bolumena zehaztutako maila batera iristen bada"
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks'
-#. (reduces the volume) of the audio automatically when there is
-#. sound on another track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "Audiorik ez duen pista bat hautatu duzu. AutoDuck-ek bakarrik audio pistak prozesa ditzake."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
-#. the volume) of the audio automatically when there is sound on another
-#. track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Auto Duck-ek kontrol pista bat behar du zeina hautatutako pist(ar)en azpiak kokatuko den."
-
-#: src/effects/AutoDuck.cpp
-msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr ""
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -11286,14 +12624,6 @@ msgstr "%s: ez da baliozko aurrezarpen-fitxategia.\n"
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr "%s bestelako efektu, sogailu edo analizatzailearentzat da.\n"
 
-#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
-msgid "Bass and Treble"
-msgstr "Soinu baxuak eta altuak"
-
-#: src/effects/BassTreble.cpp
-msgid "Simple tone control effect"
-msgstr "Tonu-kontrol efektu sinplea"
-
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
 msgstr "Tonu-kontrolak"
@@ -11325,18 +12655,6 @@ msgstr "&Bolumena (dB):"
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
 msgstr "&Lotu bolumen kontrola eta tonu kontrolak"
-
-#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Pitch"
-msgstr "Aldatu tonua"
-
-#: src/effects/ChangePitch.cpp
-msgid "Changes the pitch of a track without changing its tempo"
-msgstr "Aldatzen du pista baten tonua bere tempoa aldatu gabe"
-
-#: src/effects/ChangePitch.cpp
-msgid "High Quality Pitch Change"
-msgstr "Kalitate oneko tonu aldaketa"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
@@ -11434,15 +12752,6 @@ msgstr "45"
 msgid "78"
 msgstr "78"
 
-#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Change Speed and Pitch"
-msgstr "Aldatu abiadura"
-
-#: src/effects/ChangeSpeed.cpp
-msgid "Changes the speed of a track, also changing its pitch"
-msgstr "Aldatzen du pistaren abiadura, bere tonua ere aldatuz"
-
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
 msgstr "&Abiadura multiplikatzailea:"
@@ -11507,18 +12816,6 @@ msgctxt "change speed"
 msgid "to"
 msgstr "hona"
 
-#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Tempo"
-msgstr "Aldatu tempoa"
-
-#: src/effects/ChangeTempo.cpp
-msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Aldatzen du hautapenaren tempoa bere tonua aldatu gabe"
-
-#: src/effects/ChangeTempo.cpp
-msgid "High Quality Tempo Change"
-msgstr "Kalitate oneko tempo-aldaketa"
-
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
 msgstr "Pultsuak minutuko"
@@ -11566,23 +12863,6 @@ msgstr "h&ona"
 msgid "Length in seconds from %s, to"
 msgstr "Luzera segundotan %s-tik hona"
 
-#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
-msgid "Click Removal"
-msgstr "Klik ezabatzailea"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "Klik ezabatzailea diseinatuta dago audio pisten klikak ezabatzeko"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr "Algoritmo hau ez da eraginkorra audio honetan. Ez da ezer aldatu."
-
-#: src/effects/ClickRemoval.cpp
-#, c-format
-msgid "Selection must be larger than %d samples."
-msgstr "Hautapena %d lagin baino handiagoa izan behar da."
-
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Atalasea (txikiagoa sentikorragoa da):"
@@ -11606,30 +12886,6 @@ msgstr "Konpresorea"
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr ""
-
-#: src/effects/Contrast.cpp
-msgid "You can only measure one track at a time."
-msgstr "Pista bakoitza banaka neurtu behar, bestela ezin da."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Hautatu audio-pista bat."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Invalid audio selection.\n"
-"Please ensure that audio is selected."
-msgstr ""
-"Audio hautapen baliogabea\n"
-"Egiaztatu audioa hautatuta dagoela."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Nothing to measure.\n"
-"Please select a section of a track."
-msgstr ""
-"Ez dago ezer neurtzeko.\n"
-"Hautatu pista baten zati bat."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -11867,132 +13123,6 @@ msgid "Contrast..."
 msgstr "Kontrastea..."
 
 #: src/effects/Distortion.cpp
-msgid "Hard Clipping"
-msgstr "Asetasun-distortsio gogorra"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Clipping"
-msgstr "Asetasun-distortsio leuna"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Overdrive"
-msgstr "Overdrive leuna"
-
-#: src/effects/Distortion.cpp
-msgid "Medium Overdrive"
-msgstr "Overdrive ertaina"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Overdrive"
-msgstr "Overdrive gogorra"
-
-#: src/effects/Distortion.cpp
-msgid "Cubic Curve (odd harmonics)"
-msgstr "Kurba kubikoa (harmoniko bakoitiak)"
-
-#: src/effects/Distortion.cpp
-msgid "Even Harmonics"
-msgstr "Harmoniko bikoitiak"
-
-#: src/effects/Distortion.cpp
-msgid "Expand and Compress"
-msgstr "Zabaldu eta konprimitu"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller"
-msgstr "Orekatzailea"
-
-#: src/effects/Distortion.cpp
-msgid "Rectifier Distortion"
-msgstr "Artezgailuaren distortsioa"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Limiter 1413"
-msgstr "Mugagailu gogorra 1413"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Klip gogorra  -12dB, 80% make-up irabazia"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "Klip biguna  -12dB, 80% make-up irabazia"
-
-#: src/effects/Distortion.cpp
-msgid "Fuzz Box"
-msgstr "Fuzz Box"
-
-#: src/effects/Distortion.cpp src/effects/Equalization.cpp
-msgid "Walkie-talkie"
-msgstr "Walkie-talkie"
-
-#: src/effects/Distortion.cpp
-msgid "Blues drive sustain"
-msgstr "Blues drive sustain"
-
-#: src/effects/Distortion.cpp
-msgid "Light Crunch Overdrive"
-msgstr "Overdrive karraska arina"
-
-#: src/effects/Distortion.cpp
-msgid "Heavy Overdrive"
-msgstr "Overdrive astuna"
-
-#: src/effects/Distortion.cpp
-msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "3. harmonikoa (bostun perfektua)"
-
-#: src/effects/Distortion.cpp
-msgid "Valve Overdrive"
-msgstr "Balbuletako overdrive"
-
-#: src/effects/Distortion.cpp
-msgid "2nd Harmonic (Octave)"
-msgstr "2. harmonikoa (Zortziduna)"
-
-#: src/effects/Distortion.cpp
-msgid "Gated Expansion Distortion"
-msgstr "Atetutako hedapen distortsioa"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Light, -70dB noise floor"
-msgstr "Orekatzailea, arina, -70db hondo-zarata"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "Orekatzailea, neurriduna, -70db hondo-zarata"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "Orekatzailea, astuna, -70db hondo-zarata"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "Orekatzailea, astunagoa, -70db hondo-zarata"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "Orekatzailea, astunena, -70db hondo-zarata"
-
-#: src/effects/Distortion.cpp
-msgid "Half-wave Rectifier"
-msgstr "Uhin erdiko artezgailua"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier"
-msgstr "Uhin osoko artezgailua"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier (DC blocked)"
-msgstr "Uhin osoko artezgailua (DC blokeatuta)"
-
-#: src/effects/Distortion.cpp
-msgid "Percussion Limiter"
-msgstr "Perkusio-mugagailua"
-
-#: src/effects/Distortion.cpp
 msgid "Upper Threshold"
 msgstr "Goiko atalasea"
 
@@ -12011,14 +13141,6 @@ msgstr "2 parametroa"
 #: src/effects/Distortion.cpp
 msgid "Number of repeats"
 msgstr "Errepikapen kopurua"
-
-#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
-msgid "Distortion"
-msgstr "Distortsioa"
-
-#: src/effects/Distortion.cpp
-msgid "Waveshaping distortion effect"
-msgstr "Uhin-formaren distortsio efektua"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion type:"
@@ -12115,22 +13237,6 @@ msgstr "(0tik  100era):"
 #: src/effects/Distortion.cpp
 msgid "(0 to 5):"
 msgstr "(0tik 5era):"
-
-#: src/effects/DtmfGen.cpp
-msgid "DTMF Tones"
-msgstr "DTMF tonuak"
-
-#: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Sortzen ditu maiztasun anitzeko tonu bikoitzak (DTMF) telefonoen teklatuak sortzen dituenen antzekoak"
-
-#: src/effects/DtmfGen.cpp
-msgid ""
-"DTMF sequence empty.\n"
-"Check ALL settings for this effect."
-msgstr ""
-"DTMF sekuentzia hutsik dago.\n"
-"Egiaztatu efektu horren ezarpen GUZTIAK."
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF &sequence:"
@@ -12282,19 +13388,6 @@ msgstr "Konpresioa"
 msgid "awaiting playback"
 msgstr "Hasi eta e&rreproduzitu"
 
-#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
-msgid "Echo"
-msgstr "Oihartzuna"
-
-#: src/effects/Echo.cpp
-msgid "Repeats the selected audio again and again"
-msgstr "Errepikatu hautatutako audioa behin eta berriz"
-
-#: src/effects/Echo.cpp src/effects/FindClipping.cpp
-#: src/effects/Paulstretch.cpp
-msgid "Requested value exceeds memory capacity."
-msgstr "Eskatutako balioak memoriaren kapazitatea gainditzen du."
-
 #: src/effects/Echo.cpp
 msgid "&Delay time (seconds):"
 msgstr "&Atzerapen-denbora (segundoak):"
@@ -12303,77 +13396,29 @@ msgstr "&Atzerapen-denbora (segundoak):"
 msgid "D&ecay factor:"
 msgstr "&Gainbehera-faktorea:"
 
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied effect: %s"
-msgstr "Aplikatutako efektua: %s"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied command: %s"
-msgstr "Aplikatutako agindua: %s"
-
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Select Preset"
 msgstr "Hautatu aurre-ezarpena"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "&Preset:"
 msgstr "&Aurre-ezarpena:"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "User Presets"
 msgstr "Erabiltzailearen aurre-ezarpenak"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "Factory Presets"
 msgstr "Fabrikako ezarpenak"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Current Settings"
 msgstr "Uneko ezarpenak"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Factory Defaults"
 msgstr "Fabrikako lehenetsiak"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following effect failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"Saiatzen huts egin duen efektua hasieratzen:\n"
-"\n"
-"%s\n"
-"\n"
-"Informazio gehiago hemen: 'Laguntza >  Diagnostikoak > Erakutsi erregistroa'"
-
-#: src/effects/EffectManager.cpp
-msgid "Effect failed to initialize"
-msgstr "Efektuak huts egin du hasieratzean"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following command failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"Saiatzen huts egin duen efektua hasieratzen:\n"
-"\n"
-"%s\n"
-"\n"
-"Informazio gehiago hemen: Laguntza > Diaganostikoak > Erakutsi erregistroa'"
-
-#: src/effects/EffectManager.cpp
-msgid "Command failed to initialize"
-msgstr "Aginduak huts egin du hasieratzean"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
@@ -12468,10 +13513,6 @@ msgstr ""
 "\n"
 "Gainidatzi?"
 
-#: src/effects/Equalization.cpp
-msgid "Equalization"
-msgstr "Ekualizazioa"
-
 #: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "EQ kurba iragazkia"
@@ -12480,58 +13521,6 @@ msgstr "EQ kurba iragazkia"
 #: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "EQ grafikoa"
-
-#: src/effects/Equalization.cpp
-msgid "Adjusts the volume levels of particular frequencies"
-msgstr "Maiztasun zehatz batzuen bolumen mailak doitzen ditu"
-
-#: src/effects/Equalization.cpp
-msgid "100Hz Rumble"
-msgstr "100Hz burrunba"
-
-#: src/effects/Equalization.cpp
-msgid "AM Radio"
-msgstr "AM irratia"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Boost"
-msgstr "Baxuak indartu"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Cut"
-msgstr "Baxuak moztu"
-
-#: src/effects/Equalization.cpp
-msgid "Low rolloff for speech"
-msgstr "Hizketarako iraupen txikia"
-
-#: src/effects/Equalization.cpp
-msgid "RIAA"
-msgstr "RIAA"
-
-#: src/effects/Equalization.cpp
-msgid "Telephone"
-msgstr "Telefonoa"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Boost"
-msgstr "Altuak indartu"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Cut"
-msgstr "Altuak moztu"
-
-#: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Ekualizazioa aplikatzeko, hautatutako pista guztiek lagin-maiztasun berbera eduki behar dute."
-
-#: src/effects/Equalization.cpp
-msgid "Track sample rate is too low for this effect."
-msgstr "Pistaren lagin-maiztasuna txikiegia da efektu honentzat."
-
-#: src/effects/Equalization.cpp
-msgid "Effect Unavailable"
-msgstr "Efektua ez dago erabilgarri"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -12571,33 +13560,6 @@ msgstr "%gk"
 #, c-format
 msgid "%d dB"
 msgstr "%d dB"
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/EqualizationCurves.cpp
-msgid "unnamed"
-msgstr "izen gabea"
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/EqualizationCurves.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-"Errorea EQ kurbak fitxategitik kargatzean:\n"
-"%s\n"
-"Errore mezuak hau dio:\n"
-"%s"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Loading EQ Curves"
-msgstr "Errorea EQ kurbak kargatzean"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Saving Equalization Curves"
-msgstr "Errorea ekualizazio-kurbak gordetzean"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -12725,31 +13687,6 @@ msgstr "Kurbak esportatuta"
 msgid "No curves exported"
 msgstr "Ez da kurbarik esportatu"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/EqualizationParameters.cpp
-msgid "B-spline"
-msgstr "B-Spline-a"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cosine"
-msgstr "Kosinua"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cubic"
-msgstr "Kubikoa"
-
-#: src/effects/EqualizationUI.cpp
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"Macro batean kurba iragazki hau erabiltzeko, aldatu haren izena.\n"
-"Hautatu 'Gorde/Kudeatu kurbak...' botoia eta aldatu izena \"izenik gabeko\" kurbari, eta gero erabili."
-
-#: src/effects/EqualizationUI.cpp
-msgid "Filter Curve EQ needs a different name"
-msgstr "EQ kurba iragazkiak beste izen bat behar du"
-
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
 msgstr "+ dB"
@@ -12830,53 +13767,6 @@ msgstr "Erakutsi sareta-marrak"
 msgid "Show g&rid lines"
 msgstr "Erakutsi sa&reta-marrak"
 
-#: src/effects/EqualizationUI.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr "Eskatutako kurba ez da aurkitu, 'izen gabea' erabiliz"
-
-#: src/effects/EqualizationUI.cpp
-msgid "Curve not found"
-msgstr "Ez da kurba aurkitu"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade In"
-msgstr "Agertu"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade Out"
-msgstr "Desagertu"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-in to the selected audio"
-msgstr "Aplikatzen du pixkanaka agertze lineala hautatutako audioan"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-out to the selected audio"
-msgstr "Aplikatzen du pixkanaka desagertze lineala hautatutako audioan"
-
-#: src/effects/FindClipping.cpp
-msgid "Find Clipping"
-msgstr "Bilatu asetasun-distortsioa"
-
-#: src/effects/FindClipping.cpp
-msgid "Creates labels where clipping is detected"
-msgstr "Etiketak sortzen ditu asetasun-distortsioa antzemandako tokietan"
-
-#: src/effects/FindClipping.cpp
-msgid "Clipping"
-msgstr "Asetasun-distortsioa"
-
-#. i18n-hint: Two numbers are substituted; the second is the
-#. size of a set, the first is the size of a subset, and not
-#. understood as an ordinal (i.e., not meaning "first", or
-#. "second", etc.)
-#.
-#: src/effects/FindClipping.cpp
-#, fuzzy, c-format
-msgctxt "find clipping"
-msgid "%lld of %lld"
-msgstr "%s %d of %d"
-
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
 msgstr "&Hasi atalasea (laginak):"
@@ -12884,27 +13774,6 @@ msgstr "&Hasi atalasea (laginak):"
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
 msgstr "&Gelditu atalasea (laginak):"
-
-#: src/effects/Generator.cpp
-msgid "There is not enough room available to generate the audio"
-msgstr "Ez dago leku nahikorik audioa sortzeko"
-
-#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
-msgid "Invert"
-msgstr "Alderantzikatu"
-
-#: src/effects/Invert.cpp
-msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr "Alderantziz jartzen ditu audio laginak, haien polaritatea alderarantzikatuz"
-
-#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Legacy Compressor"
-msgstr "Konpresorea"
-
-#: src/effects/LegacyCompressor.cpp
-msgid "Compresses the dynamic range of audio"
-msgstr "Audioaren tarte dinamikoa konprimitzen du"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
@@ -13033,28 +13902,6 @@ msgstr "hautemandako ozentasuna"
 msgid "RMS"
 msgstr "RMS"
 
-#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
-msgid "Loudness Normalization"
-msgstr "Ozentasunaren normalizazioa"
-
-#: src/effects/Loudness.cpp
-msgid "Sets the loudness of one or more tracks"
-msgstr "Ezartzen du pista baten edo batzuen ozentasuna"
-
-#: src/effects/Loudness.cpp
-msgid "Normalizing Loudness...\n"
-msgstr "Ozentasuna normalizatzen...\n"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing: %s"
-msgstr "Analizatzen: %s"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Processing: %s"
-msgstr "Prozesatzen: %s"
-
 #: src/effects/Loudness.cpp
 msgid "&Normalize"
 msgstr "&Normalizatu"
@@ -13084,89 +13931,9 @@ msgstr "Tratatu mono mono-dual gisa (gomendatua)"
 msgid "(Maximum 0dB)"
 msgstr "(Gehienez 0dB)"
 
-#. i18n-hint: not a color, but "white noise" having a uniform spectrum
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "White"
-msgstr "Zuria"
-
-#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
-#. in low frequencies
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Pink"
-msgstr "Arrosa"
-
-#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Brownian"
-msgstr "Browndar"
-
-#: src/effects/Noise.cpp
-msgid "Noise"
-msgstr "Zarata"
-
-#: src/effects/Noise.cpp
-msgid "Generates one of three different types of noise"
-msgstr "Hiru zarata moten arteko bat sortzen du"
-
 #: src/effects/Noise.cpp
 msgid "&Noise type:"
 msgstr "&Zarata mota:"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median"
-msgstr "Mediana"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Second greatest"
-msgstr "Bigarren handiena"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Old"
-msgstr "Zaharra"
-
-#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
-#: resources/EffectsMenuDefaults.xml
-msgid "Noise Reduction"
-msgstr "Zarata-murrizketa"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "Atzeko planoko zarata kentzen du, esaterako, haizagailuak, zintaren zarata edo burrunba"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block are too few for the window types."
-msgstr "Urratsak blokeko gutxiegi dira leiho motentzat."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block cannot exceed the window size."
-msgstr "Urratsak blokeko ezin dira leihoaren tamaina baino handiagoak izan."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median method is not implemented for more than four steps per window."
-msgstr "Medianaren metodoa ez dago inplementatuta leihoko lau urrats baino gehiagorako."
-
-#: src/effects/NoiseReduction.cpp
-msgid "You must specify the same window size for steps 1 and 2."
-msgstr "Leiho tamaina bera zehaztu behar duzu 1. eta 2. urratsetan."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Warning: window types are not the same as for profiling."
-msgstr "Abisua: leiho motak ez dira profilatzeko erabilitakoen berdinak."
-
-#: src/effects/NoiseReduction.cpp
-msgid "All noise profile data must have the same sample rate."
-msgstr "Zarata-profil datu guztiak lagin-maiztasun bera izan behar dute."
-
-#: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "Zarata-profilaren lagin-maiztasunak prozesatuko den soinuarenarekin bat etorri behar du."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Selected noise profile is too short."
-msgstr "Hautatutako zarata-profila laburregia da."
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Noise reduction (dB):"
@@ -13334,55 +14101,6 @@ msgstr "4 (lehenetsia)"
 msgid "Discrimination &method:"
 msgstr "Bereizketa &metodoa:"
 
-#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
-msgid "Normalize"
-msgstr "Normalizatu"
-
-#: src/effects/Normalize.cpp
-msgid "Sets the peak amplitude of one or more tracks"
-msgstr "Ezartzen du pista baten edo batzuen gailur-anplitudea"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset and Normalizing...\n"
-msgstr "DC desplazamendua kentzen eta normalizatzen...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset...\n"
-msgstr "DC desplazamendua kentzen...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Normalizing without removing DC offset...\n"
-msgstr "DC desplazamendua kendu gabe normalizatzen...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Not doing anything...\n"
-msgstr "Deus egin gabe...\n"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing first track of stereo pair: %s"
-msgstr "Estereo bikotearen lehen pista analizatzen: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Estereo bikotearen bigarren pista analizatzen: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing stereo channels independently: %s"
-msgstr "Estereo kanalak banaka prozesatzen: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing first track of stereo pair: %s"
-msgstr "Estereo bikotearen lehen pista prozesatzen: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing second track of stereo pair: %s"
-msgstr "Estereo bikotearen bigarren pista prozesatzen: %s"
-
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
 msgstr "&Kendu DC desplazamendua (zentratu bertikalki 0.0an)"
@@ -13399,14 +14117,6 @@ msgstr "Anplitude-gailurra dB"
 msgid "N&ormalize stereo channels independently"
 msgstr "N&ormalizatu estereo kanalak banaka"
 
-#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
-msgid "Paulstretch"
-msgstr "Paulstretch"
-
-#: src/effects/Paulstretch.cpp
-msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Erabili Paulstrech bakarrik muturreko denbora-luzatzetan edo \"stasis\" efektuan"
-
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
@@ -13418,56 +14128,6 @@ msgstr "&Luzatze-faktorea:"
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
 msgstr "&Denboraren bereizmena (segundo):"
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Audio selection too short to preview.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"Audio hautapena txikiegia da aurreikusteko.\n"
-"\n"
-"Saia zaitez audio hautapena luzatzen gutxienez %.1f segundo,\n"
-"edo 'Denboraren bereizmena' %.1f edo txikiagora ekartzen."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Unable to Preview.\n"
-"\n"
-"For the current audio selection, the maximum\n"
-"'Time Resolution' is %.1f seconds."
-msgstr ""
-"Ezin da aurreikusi.\n"
-"\n"
-"Uneko audio-hautapenerako gehienezko\n"
-" 'Denbora-bereizmena' %.1f segundokoa da."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"The 'Time Resolution' is too long for the selection.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"'Denboraren bereizmena' luzeegia da hautapenerako.\n"
-"\n"
-"Saiatu audio hautapena handitzen gutxienez %.1f segundo,\n"
-"edo 'Denboraren bereizmena' murrizten gehienez %.1f segundora."
-
-#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
-msgid "Phaser"
-msgstr "Phaser-a"
-
-#: src/effects/Phaser.cpp
-msgid "Combines phase-shifted signals with the original signal"
-msgstr "Konbinatzen ditu fase desplazatutako seinaleak jatorrizko seinaleekin"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
@@ -13533,49 +14193,6 @@ msgstr ""
 "%d - %s\n"
 "\n"
 
-#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
-msgid "Repair"
-msgstr "Konpondu"
-
-#: src/effects/Repair.cpp
-msgid "Sets the peak amplitude of a one or more tracks"
-msgstr "Pista baten edo gehiagoren anplitude-gailurra ezartzen du"
-
-#: src/effects/Repair.cpp
-msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
-
-#: src/effects/Repair.cpp
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
-"\n"
-"Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Konpontze efektua diseinatuta dago erabiltzeko hondatutako audioen sekzio oso txikietan (128 lagin arte).\n"
-"\n"
-"Handiagotu bistaratzea eta hautatu segundo baten zati txiki bat konpontzeko."
-
-#: src/effects/Repair.cpp
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
-"\n"
-"Please select a region that has audio touching at least one side of it.\n"
-"\n"
-"The more surrounding audio, the better it performs."
-msgstr ""
-"Konpontze efektuak lan egiten du audio datuak hautapen areatik kanpo erabiliaz.\n"
-"Hautatu area bat haren zati bat ukitzen duen audio bat duena.\n"
-"\n"
-"Zenbat eta inguruko audio gehiago, hainbat hobe."
-
-#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
-msgid "Repeat"
-msgstr "Errepikatu"
-
-#: src/effects/Repeat.cpp
-msgid "Repeats the selection the specified number of times"
-msgstr "Hautapena zehaztutako aldi kopurua errepikatzen du"
-
 #: src/effects/Repeat.cpp
 msgid "&Number of repeats to add:"
 msgstr "&Gehitu beharreko errepikapen kopurua:"
@@ -13601,103 +14218,6 @@ msgstr "Hautapen-luzera berria: %s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "Abisua: errepikapenik ez."
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Acoustic"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Ambience"
-msgstr "Isilunea"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Artificial"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Clean"
-msgstr "Garbitu"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal I"
-msgstr "Bokala I"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal II"
-msgstr "Bokala II"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Dance Vocal"
-msgstr "Isolatu ahotsak"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Modern Vocal"
-msgstr "Kendu ahotsak"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Voice Tail"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Bathroom"
-msgstr "Bainugela"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Bright"
-msgstr "Gela txiki distiratsua"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Dark"
-msgstr "Gela txiki iluna"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Medium Room"
-msgstr "Gela ertaina"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Large Room"
-msgstr "Gela handia"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Church Hall"
-msgstr "Elizako aretoa"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Cathedral"
-msgstr "Katedrala"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Big Cave"
-msgstr ""
-
-#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverb"
-msgstr "Erreberberazioa"
-
-#: src/effects/Reverb.cpp
-msgid "Adds ambience or a \"hall effect\""
-msgstr "Giroa edo \"areto efektua\" gehitzen du"
 
 #: src/effects/Reverb.cpp
 msgid "&Room Size (%):"
@@ -13738,54 +14258,6 @@ msgstr "Estero-zaba&lera (%):"
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
 msgstr "He&zea soilik"
-
-#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverse"
-msgstr "Atzekoz aurrera jarri"
-
-#: src/effects/Reverse.cpp
-msgid "Reverses the selected audio"
-msgstr "Hautatutako audioa itzulbiratzen du"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "SBSMS Denbora / Tonu luzatzea"
-
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Butterworth"
-msgstr "Butterworth"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type I"
-msgstr "Chebyshev mota I"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type II"
-msgstr "Chebyshev mota II"
-
-#: src/effects/ScienFilter.cpp
-msgid "Lowpass"
-msgstr "Behe-pasea"
-
-#: src/effects/ScienFilter.cpp
-msgid "Highpass"
-msgstr "Goi-pasea"
-
-#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
-msgid "Classic Filters"
-msgstr "Iragazki klasikoak"
-
-#. i18n-hint: "infinite impulse response"
-#: src/effects/ScienFilter.cpp
-msgid "Performs IIR filtering that emulates analog filters"
-msgstr "Erabili IIR iragazia zeinak Iragazi analogikoak emulatzen ditu"
-
-#: src/effects/ScienFilter.cpp
-msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "Iragazki bat aplikatzeko, hautatutako pista guztiek lagin-maiztasun bera izan behar dute."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -13917,36 +14389,6 @@ msgstr "Berrezarri lehenespenak"
 msgid "%.3f"
 msgstr "%.3f"
 
-#. i18n-hint: noun
-#: src/effects/Silence.cpp
-msgctxt "generator"
-msgid "Silence"
-msgstr "Isilunea"
-
-#: src/effects/Silence.cpp
-msgid "Creates audio of zero amplitude"
-msgstr "Zero anplitudeko audioa sortzen du"
-
-#: src/effects/StereoToMono.cpp
-msgid "Stereo To Mono"
-msgstr "Estereotik monora"
-
-#: src/effects/StereoToMono.cpp
-msgid "Converts stereo tracks to mono"
-msgstr "Pista estereoak mono bihurtzen ditu"
-
-#: src/effects/StereoToMono.cpp
-msgid "Mixing down to mono"
-msgstr "Monora nahasten"
-
-#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
-msgid "Sliding Stretch"
-msgstr "Luzaketa irristakorra"
-
-#: src/effects/TimeScale.cpp
-msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "Tempo edota tonu aldaketak behin eta berriro ahalbidetzen ditu"
-
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
 msgstr "Hasierako tempo aldaketa (%)"
@@ -13974,37 +14416,6 @@ msgstr "Amaierako tonu aldaketa"
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
 msgstr "(tonu&erdiak) [-12 - 12]:"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
-msgid "Linear"
-msgstr "Lineala"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-msgid "Logarithmic"
-msgstr "Logaritmikoa"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sine"
-msgstr "Sinusoidala"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Square"
-msgstr "Karratua"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sawtooth"
-msgstr "Zerra-hortz"
-
-#: src/effects/ToneGen.cpp
-msgid "Square, no alias"
-msgstr "Karratua, ezizenik ez"
-
-#: src/effects/ToneGen.cpp
-#, fuzzy
-msgctxt "waveform"
-msgid "Triangle"
-msgstr "Triangelua"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
@@ -14049,26 +14460,6 @@ msgstr "Anplitudearen amaiera"
 #: src/effects/ToneGen.cpp
 msgid "I&nterpolation:"
 msgstr "I&nterpolazioa:"
-
-#: src/effects/TruncSilence.cpp
-msgid "Truncate Detected Silence"
-msgstr "Moztu antzemandako isiltasuna"
-
-#: src/effects/TruncSilence.cpp
-msgid "Compress Excess Silence"
-msgstr "Konprimitu gehiegizko isiltasuna"
-
-#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
-msgid "Truncate Silence"
-msgstr "Moztu isiltasuna"
-
-#: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "Bolumena zehaztutako mailaren azpitik duten pasarteen luzera automatikoki laburtzen du"
-
-#: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "Banaka modu independentean moztean, sync-lock pista talde bakoitzeko hautatutako audio-pista bakarra egon daiteke."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -14204,14 +14595,6 @@ msgstr "Prozesatzearen zati gisa, VST efektu batzuek Audacity-ra audioa itzultze
 #, fuzzy
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "VST efektu gehienek interfaze grafiko bat dute parametroen balioak ezartzeko. Testua soilik duen oinarrizko metodoa ere eskuragarri dago. Ireki berriro efektua eragina izan dezan."
-
-#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
-msgid "Wahwah"
-msgstr "Wah-wah"
-
-#: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Tonu-kalitatearen aldaketa azkarrak, 1970. hamarkadan hain entzuna zen gitarra-soinu haren antzera"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14352,154 +14735,6 @@ msgstr "Prozesatzearen zati gisa, LV2 efektu batzuek Audacity-ra audioa itzultze
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "LV2 efektuek interfaze grafiko bat izan dezakete parametroen balioak ezartzeko. Testua soilik duen oinarrizko metodoa ere eskuragarri dago. Ireki berriro efektua eragina izan dezan."
 
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Nyquist Effects"
-msgstr "Nyquist efektuak"
-
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Nyquist efektuentzako euskarria dakar Audacity-ra"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Applying Nyquist Effect..."
-msgstr "Nyquist-en efektua aplikatzen..."
-
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Worker"
-msgstr "Nyquist langilea"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Ill-formed Nyquist plug-in header"
-msgstr "Gaizki osatutako Nyquist plugin goiburua"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Enable track spectrogram view before\n"
-"applying 'Spectral' effects."
-msgstr ""
-"Gaitu pistaren espektrograma ikuspegia\n"
-"efektu \"espektralak\" aplikatu aurretik."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"To use 'Spectral effects', enable 'Spectral Selection'\n"
-"in the track Spectrogram settings and select the\n"
-"frequency range for the effect to act on."
-msgstr ""
-"'Efektu espektralak' erabiltzeko, gaitu 'Hautapen espektrala'\n"
-"pistaren espektrogramaren ezarpenetan eta hautatu\n"
-"efektuak eragingo duen maiztasun tartea."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "errorea: \"%s\" fitxategia goiburuan zehaztuta dago baina ez da aurkitu pluginaren bidean.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Audio selection required."
-msgstr "Audio hautapena behar bada."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "Nyquist Errorea"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Debug Output: "
-msgstr "Arazketa-irteera: "
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Processing complete."
-msgstr "Prozesatzea osatuta."
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "';type tool' efektuek ezin dute Nyquist-tik audioa itzuli.\n"
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "';type tool' efektuek ezin dute Nyquist-tik etiketak itzuli.\n"
-
-#. i18n-hint: "%s" is replaced by name of plug-in.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "nyx_error returned from %s.\n"
-msgstr "%s -ek itzulitako nyx-errorea.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "plug-in"
-msgstr "plugina"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned a list."
-msgstr "Nyquist-ek zerrenda bat itzuli du."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %f"
-msgstr "Nyquist-ek balio hau itzuli du: %f"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %d"
-msgstr "Nyquist-ek balio hau itzuli du: %d"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned too many audio channels.\n"
-msgstr "Nyquist-ek audio-kanal gehiegi itzuli ditu.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Nyquist-ek audio-kanal bat matrize gisa itzuli ditu.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned an empty array.\n"
-msgstr "Nyquist-ek matrize huts bat itzuli ditu.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned nil audio.\n"
-msgstr "Nyquist itzulitako nil audioa.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Abisua: Nyquist-ek UTF-8 kate baliogabea itzuli du, hemen Latin-1 kodeketara bihurtu da]"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Audacity-ren bertsio honek ez du onartzen Nyquist pluginaren bertsioa %ld"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not open file"
-msgstr "Ezin izan da fitxategia ireki"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Your code looks like SAL syntax, but there is no 'return' statement.\n"
-"For SAL, use a return statement such as:\n"
-"\treturn *track* * 0.1\n"
-"or for LISP, begin with an open parenthesis such as:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-msgstr ""
-"Zure kodeak SAL sintaxiaren itxura du, baina ez dago 'return' adierazpenik.\n"
-"SAL erabiltzeko, erabili honako adierazpen bat:\n"
-"\treturn *track* * 0.1\n"
-"edo LISP bada, hasi parentesi ireki batekin:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Error in Nyquist code"
-msgstr "Errorea Nyquist kodean"
-
-#. i18n-hint: refers to programming "languages"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not determine language"
-msgstr "Ezin izan da zehaztu hizkuntza"
-
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
@@ -14569,6 +14804,10 @@ msgstr "Hautatu fitxategi bat"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Save file as"
 msgstr "Gorde fitxategia honela"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Debug Output: "
+msgstr "Arazketa-irteera: "
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
@@ -15098,12 +15337,13 @@ msgid "Duplicate"
 msgstr "Bikoiztu"
 
 #: src/menus/EditMenus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Zatitu-ebaki arbelera"
+#, fuzzy
+msgid "Cut to clipboard and leave gap"
+msgstr "Ebaki arbelera"
 
 #: src/menus/EditMenus.cpp
-msgid "Split Cut"
-msgstr "Ebaki eta zatitu"
+msgid "Cut and leave gap"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15199,13 +15439,13 @@ msgstr "&Kendu berezia"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
-msgid "Spl&it Cut"
-msgstr "Zatitu-ebak&i"
+msgid "&Cut and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
-msgid "Split D&elete"
-msgstr "Zatitu-&ezabatu"
+msgid "&Delete and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15340,10 +15580,10 @@ msgstr "&Etiketak..."
 msgid "&Raw Data..."
 msgstr "Datu go&rdinak..."
 
-#. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
-msgid "E&xit"
-msgstr "I&rten"
+#, fuzzy
+msgid "&Close Project"
+msgstr "&Gorde proiektua"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15464,16 +15704,15 @@ msgstr "Ezabatuta etiketa duten audio-areak"
 msgid "Delete Labeled Audio"
 msgstr "Ezabatu etiketadun audioa"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
-#. regions
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Ebaki eta zatitu etiketadun audio-areak arbelera"
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard and leave gap"
+msgstr "Ebaki etiketadun audio-areak arbelera"
 
-#. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Ebaki eta zatitu etiketadun audioa"
+#, fuzzy
+msgid "Cut labeled audio and leave gap"
+msgstr "Ebaki etiketadun audio-areak arbelera"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15586,29 +15825,31 @@ msgid "&Cut"
 msgstr "&Ebaki"
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Cut"
-msgstr "Etiketa mozketa"
+msgid "Cut by label"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Delete"
-msgstr "Etiketa ezabaketa"
+#, fuzzy
+msgid "Delete by label"
+msgstr "&Ezabatu etiketa"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
-msgid "&Split Cut"
-msgstr "Zatitu-eba&ki"
+msgid "C&ut and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Cut"
-msgstr "Etiketa ebaki eta zatitu"
+msgid "Cut by labels and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Sp&lit Delete"
-msgstr "Bana&tu-ezabatu"
+msgid "De&lete and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Delete"
-msgstr "Etiketa zatitu eta ezabatu"
+#, fuzzy
+msgid "Delete by labels and leave gap"
+msgstr "Ezabatuta etiketa duten audio-areak"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16223,6 +16464,10 @@ msgid "Adjusted gain"
 msgstr "Doitutako irabazia"
 
 #: src/menus/TrackMenus.cpp
+msgid "Gain"
+msgstr "Irabazia"
+
+#: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
 msgstr "Doitutako pan"
 
@@ -16731,7 +16976,7 @@ msgstr "Jauzi hautapenaren amaierara"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Enable E&xtra Menus"
+msgid "E&xtra Menus"
 msgstr "Gaitu ebaki-&lerroak"
 
 #: src/menus/ViewMenus.cpp
@@ -16741,7 +16986,7 @@ msgstr "&Erakutsi asetasun-distortsioa (bai/ez)"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Show &RMS in Waveform"
+msgid "Sho&w RMS in Waveform"
 msgstr "&Erakutsi asetasun-distortsioa (bai/ez)"
 
 #: src/prefs/ApplicationPrefs.cpp
@@ -17201,38 +17446,6 @@ msgstr "Interfazea"
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
 msgstr "Interfazearen hobespenak"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (anplitude handian editatzeko bitartea)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (8 biteko laginen PCM bitartea)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (10 biteko laginen PCM bitartea)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (12 biteko laginen PCM bitartea)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (14 biteko laginen PCM bitartea)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (16 biteko laginen PCM bitartea)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (gizakion entzumenaren gutxi gorabeherako muga)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (24 biteko laginen PCM bitartea)"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -17779,89 +17992,6 @@ msgstr "Pre-ro&ll:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
 msgstr "Cross&fade:"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Mel"
-msgstr "Mel"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Bark"
-msgstr "Bark"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
-#: src/prefs/SpectrogramSettings.cpp
-msgid "ERB"
-msgstr "ERB"
-
-#. i18n-hint: Time units, that is Period = 1 / Frequency
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Period"
-msgstr "Periodoa"
-
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
-#: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Color (Roseus)"
-msgstr "Kolorea (lehenetsia)"
-
-#. i18n-hint: Classic color scheme(from theme) for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "Kolorea (klasikoa)"
-
-#. i18n-hint: Grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "Gris-eskala"
-
-#. i18n-hint: Inverse grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "Alderantzizko gris-eskala"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Frequencies"
-msgstr "Maiztasunak"
-
-#. i18n-hint: the Reassignment algorithm for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Reassignment"
-msgstr "Berresleitzea"
-
-#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Pitch (EAC)"
-msgstr "Tonua (EAC)"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Maximum frequency must be 100 Hz or above"
-msgstr "Gehienezko maiztasunak 100 Hz edo gehiago izan behar du"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be at least 0 Hz"
-msgstr "Gutxieneko maiztasunak gutxienez 0 Hz izan behar du"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be less than maximum frequency"
-msgstr "Gutxieneko maiztasunak gehienezko maiztasunak baino gutxiago  izan behar du"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The range must be at least 1 dB"
-msgstr "Tarteak gutxienez 1 dBkoa izan behar du"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain cannot be negative"
-msgstr "Maiztasun irabazia ezin da negatiboa izan"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain must be no more than 60 dB/dec"
-msgstr "Maiztasun irabazia ezin da 60dB/dec baino gehiago izan"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrogram Settings"
@@ -19199,11 +19329,6 @@ msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s %d of %d clip %s"
 msgstr[1] "%s %d of %d clips %s"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "&Multi-view"
-msgstr "Ikuspegi anitza"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -21886,6 +22011,100 @@ msgstr "Es&pektrala"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#~ msgid "Insane"
+#~ msgstr "Zentzugabea"
+
+#~ msgid "Moved gain slider"
+#~ msgstr "Irabazi-graduatzailea lekuz aldatu da"
+
+#~ msgid "Gain:"
+#~ msgstr "Irabazia:"
+
+#, c-format
+#~ msgid "Applied command: %s"
+#~ msgstr "Aplikatutako agindua: %s"
+
+#, c-format
+#~ msgid ""
+#~ "Attempting to initialize the following effect failed:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "More information may be available in 'Help > Diagnostics > Show Log'"
+#~ msgstr ""
+#~ "Saiatzen huts egin duen efektua hasieratzen:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "Informazio gehiago hemen: 'Laguntza >  Diagnostikoak > Erakutsi erregistroa'"
+
+#~ msgid "Effect failed to initialize"
+#~ msgstr "Efektuak huts egin du hasieratzean"
+
+#~ msgid "Effect Unavailable"
+#~ msgstr "Efektua ez dago erabilgarri"
+
+#~ msgid "Error Loading EQ Curves"
+#~ msgstr "Errorea EQ kurbak kargatzean"
+
+#~ msgid ""
+#~ "To use this filter curve in a macro, please choose a new name for it.\n"
+#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+#~ msgstr ""
+#~ "Macro batean kurba iragazki hau erabiltzeko, aldatu haren izena.\n"
+#~ "Hautatu 'Gorde/Kudeatu kurbak...' botoia eta aldatu izena \"izenik gabeko\" kurbari, eta gero erabili."
+
+#~ msgid "Filter Curve EQ needs a different name"
+#~ msgstr "EQ kurba iragazkiak beste izen bat behar du"
+
+#~ msgid "Curve not found"
+#~ msgstr "Ez da kurba aurkitu"
+
+#~ msgid "Nyquist Error"
+#~ msgstr "Nyquist Errorea"
+
+#~ msgid "Error in Nyquist code"
+#~ msgstr "Errorea Nyquist kodean"
+
+#~ msgid "Split-cut to the clipboard"
+#~ msgstr "Zatitu-ebaki arbelera"
+
+#~ msgid "Split Cut"
+#~ msgstr "Ebaki eta zatitu"
+
+#~ msgid "Spl&it Cut"
+#~ msgstr "Zatitu-ebak&i"
+
+#~ msgid "Split D&elete"
+#~ msgstr "Zatitu-&ezabatu"
+
+#~ msgid "E&xit"
+#~ msgstr "I&rten"
+
+#~ msgid "Split Cut labeled audio regions to clipboard"
+#~ msgstr "Ebaki eta zatitu etiketadun audio-areak arbelera"
+
+#~ msgid "Split Cut Labeled Audio"
+#~ msgstr "Ebaki eta zatitu etiketadun audioa"
+
+#~ msgid "Label Cut"
+#~ msgstr "Etiketa mozketa"
+
+#~ msgid "Label Delete"
+#~ msgstr "Etiketa ezabaketa"
+
+#~ msgid "&Split Cut"
+#~ msgstr "Zatitu-eba&ki"
+
+#~ msgid "Label Split Cut"
+#~ msgstr "Etiketa ebaki eta zatitu"
+
+#~ msgid "Sp&lit Delete"
+#~ msgstr "Bana&tu-ezabatu"
+
+#~ msgid "Label Split Delete"
+#~ msgstr "Etiketa zatitu eta ezabatu"
 
 #~ msgid "Change upper speed limit (%) to:"
 #~ msgstr "Aldatu goiko abiadura-muga (%) hona:"

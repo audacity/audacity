@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-08-30 16:51+0300\n"
+"POT-Creation-Date: 2024-10-11 15:07+0200\n"
 "PO-Revision-Date: 2024-08-30 21:14+0200\n"
 "Last-Translator: 王晨旭 <wcxu21@126.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/klyok/teams/690/zh_CN/)\n"
@@ -30,6 +30,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.4.4\n"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+"无法加载此插件。\n"
+"可能已被删除。"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid "Plugin Error"
+msgstr "插件错误"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#, c-format
+msgid "Applied effect: %s"
+msgstr "已应用效果器：%s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "重复 %s"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -111,7 +139,14 @@ msgstr "高播放延迟：%g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-msgid "Supported Rates:\n"
+#, fuzzy
+msgid "Supported Playback Rates:\n"
+msgstr "受支持的采样率：\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Capture Rates:\n"
 msgstr "受支持的采样率：\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -133,6 +168,10 @@ msgstr "选择播放设备：%d - %s\n"
 #, c-format
 msgid "No playback device found for '%s'.\n"
 msgstr "未找到适用于 '%s' 的播放设备。\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Supported Rates:\n"
+msgstr "受支持的采样率：\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
@@ -207,16 +246,15 @@ msgstr ""
 "打开录制设备时出错。\n"
 "错误代码：%s"
 
-#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
-#: libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-audio-io/AudioIO.cpp
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/ProjectAudioManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/EffectPreview.cpp
+#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -269,8 +307,9 @@ msgstr "无法将预设存入配置文件"
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
-#: libraries/lib-lv2/LV2EffectBase.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-lv2/LV2EffectBase.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
+#: src/effects/EffectUI.cpp
 msgid "n/a"
 msgstr "不可用"
 
@@ -302,9 +341,10 @@ msgstr "Audio Unit 效果器"
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp
 #: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#: src/effects/vamp/LoadVamp.cpp
 msgid "The Audacity Team"
 msgstr "Audacity 团队"
 
@@ -362,6 +402,966 @@ msgstr "转换后 XML 数据为空"
 msgid "Message"
 msgstr "消息"
 
+#: libraries/lib-builtin-effects/AmplifyBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Amplify"
+msgstr "增幅（放大）"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Auto Duck"
+msgstr "自动回避(用于DJ的自动音量调节)"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "无论指定的“控制”轨道是否达到了特定的电平，都自动减少（回避）一个或多个轨道的音量"
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks'
+#. (reduces the volume) of the audio automatically when there is
+#. sound on another track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "您选择的轨道不包含音频。自动回避只能处理音轨。"
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+#. the volume) of the audio automatically when there is sound on another
+#. track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "自动回避需要在当前选中轨道下放置一条控制轨道。"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Rendering Control-Track Time-Stretched Audio"
+msgstr "渲染控制轨道时间拉伸音频"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Bass and Treble"
+msgstr "低音和高音"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+msgid "Simple tone control effect"
+msgstr "简易音调控制效果器"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Pitch"
+msgstr "改变音高"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "Changes the pitch of a track without changing its tempo"
+msgstr "改变轨道音高并保持速度不变"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "High Quality Pitch Change"
+msgstr "高质量的音高改变"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Speed and Pitch"
+msgstr "变速并变调"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+msgid "Changes the speed of a track, also changing its pitch"
+msgstr "改变轨道的速率，同时改变音高"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Tempo"
+msgstr "改变速度"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "Changes the tempo of a selection without changing its pitch"
+msgstr "改变选区的速度并保持音高不变"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "High Quality Tempo Change"
+msgstr "高质量速度改变"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Click Removal"
+msgstr "消除咔嚓声"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Click Removal is designed to remove clicks on audio tracks"
+msgstr "咔嚓声移除工具用于移除音频中的咔嚓声"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Algorithm not effective on this audio. Nothing changed."
+msgstr "算法未在此音频上生效。无任何改变。"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#, c-format
+msgid "Selection must be larger than %d samples."
+msgstr "选区必须大于 %d 个采样点。"
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "You can only measure one track at a time."
+msgstr "一次只能测量一个音轨。"
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "Please select an audio track."
+msgstr "请选择一个音轨。"
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Invalid audio selection.\n"
+"Please ensure that audio is selected."
+msgstr "音频选择无效请确保选择音频。"
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+"没有可供测量的目标。\n"
+"请选择音轨的区段用于测量。"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Clipping"
+msgstr "硬截幅"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Clipping"
+msgstr "软截幅"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Overdrive"
+msgstr "软过载"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Medium Overdrive"
+msgstr "中过载"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Overdrive"
+msgstr "硬过载"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Cubic Curve (odd harmonics)"
+msgstr "立方曲线（奇次谐波）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Even Harmonics"
+msgstr "偶次谐波"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Expand and Compress"
+msgstr "展开和压缩"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller"
+msgstr "水平器"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Rectifier Distortion"
+msgstr "整流器失真"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Limiter 1413"
+msgstr "硬限幅器 1413"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Hard clip -12dB, 80% make-up gain"
+msgstr "硬切（Hard clip），-12 dB，80% 增益补偿（make-up gain）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Soft clip -12dB, 80% make-up gain"
+msgstr "软切（Soft clip），-12 dB，80% 增益补偿（make-up gain）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Fuzz Box"
+msgstr "绒盒（Fuzz Box）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Walkie-talkie"
+msgstr "对讲机（Walkie-talkie）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Blues drive sustain"
+msgstr "布鲁斯驱动延持（Blues drive sustain）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Light Crunch Overdrive"
+msgstr "轻嘎吱过载（Light Crunch Overdrive）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Heavy Overdrive"
+msgstr "重过载（Heavy Overdrive）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "3rd Harmonic (Perfect Fifth)"
+msgstr "三次谐波（纯五度）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Valve Overdrive"
+msgstr "阀过载（Valve Overdrive）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "2nd Harmonic (Octave)"
+msgstr "二次谐波（八度）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Gated Expansion Distortion"
+msgstr "门扩展失真（Gated Expansion Distortion）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Light, -70dB noise floor"
+msgstr "水平器，轻，-70 dB 本底噪音"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Moderate, -70dB noise floor"
+msgstr "水平器，中，-70 dB 本底噪音"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavy, -70dB noise floor"
+msgstr "水平器，重，-70 dB 本底噪音"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavier, -70dB noise floor"
+msgstr "水平器，更重，-70 dB 本底噪音"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heaviest, -70dB noise floor"
+msgstr "水平器，最重，-70 dB 本底噪音"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Half-wave Rectifier"
+msgstr "半波整流器"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier"
+msgstr "全波整流器"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier (DC blocked)"
+msgstr "全波整流器（DC 阻断）"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Percussion Limiter"
+msgstr "打击限幅器"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Distortion"
+msgstr "失真"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Waveshaping distortion effect"
+msgstr "波形失真影响"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "DTMF Tones"
+msgstr "DTMF 音"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "生成双音多频（DTMF）音，类似于电话按键音"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid ""
+"DTMF sequence empty.\n"
+"Check ALL settings for this effect."
+msgstr ""
+"空的 DTMF 序列\n"
+"检查此效果器的“所有”设置。"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
+msgid "Echo"
+msgstr "回声"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+msgid "Repeats the selected audio again and again"
+msgstr "一遍遍地重复选中音频"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Requested value exceeds memory capacity."
+msgstr "请求值超过内存容量。"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Equalization"
+msgstr "均衡器（EQ）"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Adjusts the volume levels of particular frequencies"
+msgstr "调整特定频率的音量"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "100Hz Rumble"
+msgstr "100Hz 轰响"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "AM Radio"
+msgstr "AM 广播"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Boost"
+msgstr "低音增幅"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Cut"
+msgstr "低音切除"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Low rolloff for speech"
+msgstr "语音低滚降"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "RIAA"
+msgstr "RIAA"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Telephone"
+msgstr "电话"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Boost"
+msgstr "高音增幅"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Cut"
+msgstr "高音切除"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "如果想应用均衡器，所有选择的轨道必须拥有相同的采样率。"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Track sample rate is too low for this effect."
+msgstr "轨道的采样率太低，无法应用此效果器。"
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr "未命名"
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"从文件导入均衡器曲线出错：\n"
+"%s\n"
+"出错信息：\n"
+"%s"
+
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "Error Saving Equalization Curves"
+msgstr "保存均衡曲线时出错"
+
+#: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr "请求的曲线图没有找到，正在使用“未命名”"
+
+#. i18n-hint: Technical term for a kind of curve.
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "B-样条"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "余弦函数"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "立方函数"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade In"
+msgstr "淡入"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-in to the selected audio"
+msgstr "为选区应用线性淡入"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade Out"
+msgstr "淡出"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-out to the selected audio"
+msgstr "为选区应用线性淡出"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Find Clipping"
+msgstr "寻找截幅失真"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Creates labels where clipping is detected"
+msgstr "检测到截幅失真时创建标签"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Clipping"
+msgstr "截幅失真"
+
+#. i18n-hint: Two numbers are substituted; the second is the
+#. size of a set, the first is the size of a subset, and not
+#. understood as an ordinal (i.e., not meaning "first", or
+#. "second", etc.)
+#.
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#, c-format
+msgctxt "find clipping"
+msgid "%lld of %lld"
+msgstr "%lld，共 %lld"
+
+#: libraries/lib-builtin-effects/Generator.cpp
+msgid "There is not enough room available to generate the audio"
+msgstr "空间不足，不能生成音频"
+
+#: libraries/lib-builtin-effects/Invert.cpp resources/EffectsMenuDefaults.xml
+msgid "Invert"
+msgstr "反相（上下）"
+
+#: libraries/lib-builtin-effects/Invert.cpp
+msgid "Flips the audio samples upside-down, reversing their polarity"
+msgstr "上下翻转音频，反相"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy Compressor"
+msgstr "传统压缩器"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "压缩音频的动态范围"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Loudness Normalization"
+msgstr "响度标准化"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Sets the loudness of one or more tracks"
+msgstr "设置一个或多个音轨的峰值振幅"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Normalizing Loudness...\n"
+msgstr "标准化响度…\n"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing: %s"
+msgstr "分析中：%s"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing: %s"
+msgstr "处理中：%s"
+
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "White"
+msgstr "白噪声"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Pink"
+msgstr "粉红噪声"
+
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Brownian"
+msgstr "布朗噪声"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Noise"
+msgstr "噪声"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Generates one of three different types of noise"
+msgstr "产生三种之一的不同类型的噪声"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median"
+msgstr "中等"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Second greatest"
+msgstr "次好"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Old"
+msgstr "旧的"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Noise Reduction"
+msgstr "降噪"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Removes background noise such as fans, tape noise, or hums"
+msgstr "移除背景噪声，如风扇声，磁带噪音，嗡嗡声"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block are too few for the window types."
+msgstr "相对于当前窗口类型每个块的音级过少。"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block cannot exceed the window size."
+msgstr "每个块的音级不能超出窗口大小。"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median method is not implemented for more than four steps per window."
+msgstr "每窗口大于4个音级时无法应用中等模式。"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "You must specify the same window size for steps 1 and 2."
+msgstr "步骤 1 和步骤 2 必须使用相同的窗口大小。"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Warning: window types are not the same as for profiling."
+msgstr "警告：窗口类型和样本所需的不一致。"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "All noise profile data must have the same sample rate."
+msgstr "所有噪音样本必须使用相同的采样率。"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "噪音样本的采样率必须和声音的匹配才能继续。"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Selected noise profile is too short."
+msgstr "选择的噪音样本太短。"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Normalize"
+msgstr "标准化"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Sets the peak amplitude of one or more tracks"
+msgstr "设置一个或多个音轨的峰值振幅"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset and Normalizing...\n"
+msgstr "移除 DC 偏移并标准化…\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset...\n"
+msgstr "移除 DC 偏移...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Normalizing without removing DC offset...\n"
+msgstr "标准化不移除 DC 偏移…\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Not doing anything...\n"
+msgstr "未在做任何事...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing first track of stereo pair: %s"
+msgstr "正在分析立体声配对组中的第一个音轨：%s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "正在分析立体声配对组中的第二个音轨：%s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing stereo channels independently: %s"
+msgstr "独立地处理立体声道：%s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing first track of stereo pair: %s"
+msgstr "正在处理立体声配对组中的第一个音轨：%s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing second track of stereo pair: %s"
+msgstr "正在处理立体声配对组中的第二个音轨：%s"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Paulstretch"
+msgstr "Paulstretch"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
+msgstr "Paulstretch 仅用于极端的时间拉伸或“静止”效果"
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Audio selection too short to preview.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"音频选区太短，无法预览。\n"
+"\n"
+"尝试增加音频选区至少 %.1f 秒，\n"
+"或减少“时间分辨率”至小于 %.1f 秒。"
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Unable to Preview.\n"
+"\n"
+"For the current audio selection, the maximum\n"
+"'Time Resolution' is %.1f seconds."
+msgstr ""
+"无法预览。\n"
+"\n"
+"当前音频选区的\n"
+"“时间分辨率” 上限是 %.1f 秒。"
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"The 'Time Resolution' is too long for the selection.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"选择的时间分辨率太长。\n"
+"尝试增加音频选择至少 %.1f 秒，\n"
+"或减少“时间分辨率”至小于 %.1f 秒。"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Phaser"
+msgstr "相位器"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+msgid "Combines phase-shifted signals with the original signal"
+msgstr "将原始信号与移相后的信号结合"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "为了进行频谱分析，所有选定的轨道必须具有相同的采样率。"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid ""
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
+msgstr ""
+"无法分析音频。这可能是因为片段被拉伸或改变了音调。\n"
+"请在分析前尝试重置被拉伸的片段，或者混合与渲染轨道。"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, c-format
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "选择的音频过长。只分析开头的 %.1f 秒的音频。"
+
+#: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
+msgid "Repair"
+msgstr "修复"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "Sets the peak amplitude of a one or more tracks"
+msgstr "设置一个或多个音轨的峰值振幅"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "The Repair effect cannot be applied within stretched or shrunk clips"
+msgstr "修复效果无法应用于拉伸或收缩的片段"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"\n"
+"Zoom in and select a tiny fraction of a second to repair."
+msgstr ""
+"修复效果器适用于修复很短的受损音频(最多128个采样点)。\n"
+"\n"
+"放大音轨并选中大约1秒时长的小片段进行修复。"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"Repair works by using audio data outside the selection region.\n"
+"\n"
+"Please select a region that has audio touching at least one side of it.\n"
+"\n"
+"The more surrounding audio, the better it performs."
+msgstr ""
+"修复是通过使用选区外的数据起作用的。\n"
+"\n"
+"请选择一个至少一侧邻接音频的选区。\n"
+"\n"
+"周围的音频越多，修复效果越好。"
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Repeat"
+msgstr "重复"
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+msgid "Repeats the selection the specified number of times"
+msgstr "将选区重复指定的次数"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Acoustic"
+msgstr "声学"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Ambience"
+msgstr "环境"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Artificial"
+msgstr "人工"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Clean"
+msgstr "干净"
+
+#. i18n-hint: This is the name of an effect preset
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern"
+msgstr "现代"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal I"
+msgstr "人声 I"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal II"
+msgstr "人声 II"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Dance Vocal"
+msgstr "舞蹈声乐"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Modern Vocal"
+msgstr "现代声乐"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Voice Tail"
+msgstr "声音尾部"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Bathroom"
+msgstr "澡堂"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Bright"
+msgstr "明亮的小房间"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Dark"
+msgstr "黑暗的小房间"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Medium Room"
+msgstr "中等大小房间"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Large Room"
+msgstr "大房间"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Church Hall"
+msgstr "教堂走廊"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Cathedral"
+msgstr "大教堂"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Big Cave"
+msgstr "大山洞"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Reverb"
+msgstr "混响"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Adds ambience or a \"hall effect\""
+msgstr "添加氛围效果或者“大厅效果器”"
+
+#: libraries/lib-builtin-effects/Reverse.cpp resources/EffectsMenuDefaults.xml
+msgid "Reverse"
+msgstr "反向（时间）"
+
+#: libraries/lib-builtin-effects/Reverse.cpp
+msgid "Reverses the selected audio"
+msgstr "反向选择的音频"
+
+#: libraries/lib-builtin-effects/SBSMSBase.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "SBSMS 时间／音高拉伸"
+
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Butterworth"
+msgstr "巴特沃斯(Butterworth)"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type I"
+msgstr "切比雪夫(Chebyshev)滤波器 I"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type II"
+msgstr "切比雪夫滤波器 II"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Lowpass"
+msgstr "低通"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Highpass"
+msgstr "高通"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Classic Filters"
+msgstr "经典滤波器"
+
+#. i18n-hint: "infinite impulse response"
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Performs IIR filtering that emulates analog filters"
+msgstr "执行 IIR 滤波以模拟模拟信号滤波器"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "To apply a filter, all selected tracks must have the same sample rate."
+msgstr "如果想应用过滤器，所有选择的轨道必须拥有相同的采样率。"
+
+#. i18n-hint: noun
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgctxt "generator"
+msgid "Silence"
+msgstr "使静音"
+
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgid "Creates audio of zero amplitude"
+msgstr "创建没有任何振幅的音频"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Stereo To Mono"
+msgstr "立体声转单声道"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Converts stereo tracks to mono"
+msgstr "将立体声轨转换为单声道"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Mixing down to mono"
+msgstr "混合为单声道"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Sliding Stretch"
+msgstr "滑动拉伸"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+msgid "Allows continuous changes to the tempo and/or pitch"
+msgstr "连续性地改变速度或者/且改变音调"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "线性"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Logarithmic"
+msgstr "对数"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sine"
+msgstr "正弦"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Square"
+msgstr "方波"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sawtooth"
+msgstr "锯齿波"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgid "Square, no alias"
+msgstr "方波，无混叠"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "三角形"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Truncate Detected Silence"
+msgstr "截去检测到的静音"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Compress Excess Silence"
+msgstr "压缩多余的静音"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Truncate Silence"
+msgstr "截去静音"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr "自动减小指定音量以下片段的长度"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "当独立截断时，每个同步锁定的轨道组中只能有一个选定的音轨。"
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Wahwah"
+msgstr "哇哇声"
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr "快速音调变奏，类似于70年代流行的吉他声"
+
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
 msgstr "无法进行上传"
@@ -407,13 +1407,6 @@ msgstr "本地项目数据在同步完成前已被删除"
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
 msgstr "反序列化响应时失败"
-
-#. i18n-hint: This is the name of an effect preset.
-#. i18n-hint: This is the name of an effect preset
-#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#: src/effects/Reverb.cpp
-msgid "Modern"
-msgstr "现代"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -576,10 +1569,10 @@ msgid "Play it Loud"
 msgstr "大声播放"
 
 #: libraries/lib-effects/Effect.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: plug-ins/beat.ny
+#: src/commands/AudacityCommand.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1077,6 +2070,43 @@ msgstr ""
 msgid "Import Project"
 msgstr "导入项目"
 
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "SubRip text file"
+msgstr "SubRip 文本文件"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "WebVTT file"
+msgstr "WebVTT 文件"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "标准(&T)"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "展宽（频域）(&X)"
+
+#: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
+msgid "Labels"
+msgstr "标签"
+
+#. i18n-hint: (noun) it's the name of a kind of track.
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Label track.
+#: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
+#: src/LabelDialog.h src/TrackPanelAx.cpp
+msgid "Label Track"
+msgstr "标签轨"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr "暂不支持导入 WebVTT 文件。"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "One or more saved labels could not be read."
+msgstr "一个或更多已保存标签无法读取。"
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -1123,7 +2153,7 @@ msgstr "LV2 效果器"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "为 Audacity 提供 LV2 效果器支持"
 
-#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectPresetDialog.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -1141,6 +2171,116 @@ msgstr "三角形"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "给定形"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C"
+msgstr "C"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯"
+msgstr "C♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D"
+msgstr "D"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯"
+msgstr "D♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E"
+msgstr "E"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F"
+msgstr "F"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯"
+msgstr "F♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G"
+msgstr "G"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯"
+msgstr "G♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A"
+msgstr "A"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯"
+msgstr "A♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B"
+msgstr "B"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♭"
+msgstr "D♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E♭"
+msgstr "E♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♭"
+msgstr "G♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♭"
+msgstr "A♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B♭"
+msgstr "B♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯/D♭"
+msgstr "C♯/D♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯/E♭"
+msgstr "D♯/E♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯/G♭"
+msgstr "F♯/G♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯/A♭"
+msgstr "G♯/A♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯/B♭"
+msgstr "A♯/B♭"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -1181,14 +2321,6 @@ msgstr "未知格式"
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "命令"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "重复 %s"
 
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
@@ -1827,6 +2959,144 @@ msgstr "10>01000 十乘|0.434294482"
 msgid "thousandths of decades"
 msgstr "千分之十"
 
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Nyquist Effects"
+msgstr "奈奎斯特效果器"
+
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Provides Nyquist Effects support to Audacity"
+msgstr "为 Audacity 提供奈奎斯特效果器支持"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Applying Nyquist Effect..."
+msgstr "正在应用奈奎斯特效果器…"
+
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. * Prompt"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist Worker"
+msgstr "奈奎斯特提示符"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "格式不良的奈奎斯特插件头"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr "在应用“频谱”效果之前，请启用轨道频谱图视图。"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid ""
+"To use 'Spectral effects', enable 'Spectral Selection'\n"
+"in the track Spectrogram settings and select the\n"
+"frequency range for the effect to act on."
+msgstr "要使用“光谱效应”，请在轨道光谱图设置中启用“光谱选择”，并选择要作用的效果器的频率范围。"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
+msgstr "错误：在头部指定的文件“%s”未在插件路径下找到。\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Audio selection required."
+msgstr "需要自动选择。"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Processing complete."
+msgstr "处理完成。"
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr "“;type tool”效果不能从奈奎斯特返回音频。\n"
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr "“;type tool”效果不能从奈奎斯特返回标签。\n"
+
+#. i18n-hint: "%s" is replaced by name of plug-in.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "nyx_error returned from %s.\n"
+msgstr "nyx_error，返回自 %s。\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "plug-in"
+msgstr "插件"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned a list."
+msgstr "Nyquist 返回了一个列表。"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist 返回的值：%f"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nyquist 返回的值：%d"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned too many audio channels.\n"
+msgstr "Nyquist 返回了过多的音频声道。\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned one audio channel as an array.\n"
+msgstr "Nyquist 将一个音频声道返回为一个数组。\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned an empty array.\n"
+msgstr "Nyquist 返回了一个空的数组.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned nil audio.\n"
+msgstr "Nyquist 没有返回音频。\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[警告：Nyquist 返回了无效的 UTF-8 字符，在此被转换为 Latin-1 字符]"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "此版本的 Audacity 在编译时没有附带针对 Nyquist 插件版本 %ld 的支持"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not open file"
+msgstr "无法打开文件"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Your code looks like SAL syntax, but there is no 'return' statement.\n"
+"For SAL, use a return statement such as:\n"
+"\treturn *track* * 0.1\n"
+"or for LISP, begin with an open parenthesis such as:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+msgstr ""
+"代码看起来像是 SAL 语法，但是缺少 return 语句。要么当成 SAL 语句加上类似下句的 SAL return 语句\n"
+"\treturn s * 0.1\n"
+"要么作为 LISP 语句在开始位置加上符合 LISP 语法的圆括号，例如\n"
+"\t(mult s 0.1)\n"
+"."
+
+#. i18n-hint: refers to programming "languages"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not determine language"
+msgstr "无法确定语言"
+
+#. i18n-hint: default exported file name when exporting from unsaved project
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/TimerRecordDialog.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "untitled"
+msgstr "未命名"
+
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Audio Track"
 msgstr "音轨"
@@ -2294,7 +3564,7 @@ msgid "Writable Sample Track"
 msgstr "可写入采样轨道"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/effects/Contrast.cpp
 msgid "&Close"
 msgstr "关闭(&C)"
 
@@ -2896,6 +4166,138 @@ msgstr "无法应用 VST3 预设文件%s"
 msgid "Failed to save VST3 preset to file"
 msgstr "保存 VST3 预设到文件失败"
 
+#. i18n-hint: The name of a frequency scale in psychoacoustics
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Mel"
+msgstr "梅尔刻度"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Bark"
+msgstr "Bark"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "ERB"
+msgstr "ERB"
+
+#. i18n-hint: Time units, that is Period = 1 / Frequency
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Period"
+msgstr "周期"
+
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (Roseus)"
+msgstr "彩色（玫瑰）"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "彩色（经典）"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "灰度"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "反转灰度"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Frequencies"
+msgstr "频率"
+
+#. i18n-hint: the Reassignment algorithm for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Reassignment"
+msgstr "重新分配"
+
+#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Pitch (EAC)"
+msgstr "音高 (EAC)"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr "最高频率必须不低于100Hz"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be at least 0 Hz"
+msgstr "最低频率必须至少是 0 Hz"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be less than maximum frequency"
+msgstr "最低频率必须小于最高频率"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The range must be at least 1 dB"
+msgstr "范围必须至少是 1 dB"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain cannot be negative"
+msgstr "频率增益不能为负"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain must be no more than 60 dB/dec"
+msgstr "频率增益必须小于 60 dB/dec"
+
+#. i18n-hint: abbreviates amplitude
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Linear (amp)"
+msgstr "线性 (amp)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Logarithmic (dB)"
+msgstr "对数 (dB)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Linear (dB)"
+msgstr "线性（dB）"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-36 dB (shallow range for high-amplitude editing)"
+msgstr "-36 dB (小范围，适用于大振幅编辑)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-48 dB (PCM range of 8 bit samples)"
+msgstr "-48 dB (PCM  8 bit 采样范围)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-60 dB (PCM range of 10 bit samples)"
+msgstr "-60 dB (PCM 10 bit 采样范围)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-72 dB (PCM range of 12 bit samples)"
+msgstr "-72 dB (PCM 12 bit 采样范围)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-84 dB (PCM range of 14 bit samples)"
+msgstr "-84 dB (PCM 14 bit 采样范围)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-96 dB (PCM range of 16 bit samples)"
+msgstr "-96 dB (PCM 16 bit 采样范围)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-120 dB (approximate limit of human hearing)"
+msgstr "-120 dB (接近人类听力的极限)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-145 dB (PCM range of 24 bit samples)"
+msgstr "-145 dB (PCM 24 bit 采样范围)"
+
 #: libraries/lib-wave-track/Sequence.cpp
 #, c-format
 msgid ""
@@ -2916,6 +4318,11 @@ msgstr "正在预处理"
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Rendering Clip"
 msgstr "正在渲染片段"
+
+#: libraries/lib-wave-track/WaveChannelViewConstants.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "&Multi-view"
+msgstr "多视图(&M)"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -3164,6 +4571,7 @@ msgstr "停止"
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
@@ -4637,9 +6045,9 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps （更小的文件）"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane, 320 kbps"
+#, fuzzy
+msgid "Excessive, 320 kbps"
 msgstr "发狂，320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4654,10 +6062,9 @@ msgstr "标准，170-210 kbps"
 msgid "Medium, 145-185 kbps"
 msgstr "中等，145-185 kbps"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane"
-msgstr "发狂"
+msgid "Excessive"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -5880,12 +7287,21 @@ msgid "Account not linked"
 msgstr "帐户未关联"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
 msgstr "关联账户(&L)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Unlink Account"
 msgstr "取消帐户链接(&U)"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "&Sign Out"
+msgstr "线性出"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -5969,10 +7385,6 @@ msgid "Project Name"
 msgstr "项目名称"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr "云端保存需要与 Audacity 关联的免费 audio.com 帐户。按上方的“关联帐户”继续。"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
 msgstr "私人"
 
@@ -6054,6 +7466,77 @@ msgstr "继续 (&C)"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
 msgstr "链接 audio.com 帐户(&I)..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create cloud account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to cloud"
+msgstr "对齐终点至终点"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Oops! It looks like there was an issue with your input.\n"
+"Please ensure your email is correct and that your password is at least 8 characters long"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Sorry, but it seems the email or password you entered is incorrect.\n"
+"Please double-check your credentials and try again!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Create an account to save to the cloud"
+msgstr "此项目不再保存到云端"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to save to the cloud"
+msgstr "此项目不再保存到云端"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Google"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Facebook"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Email"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Password"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Forgot your password?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Already have an account? "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in here"
+msgstr "登录"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Need an account? "
+msgstr "关联账户"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "继续"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -6309,11 +7792,6 @@ msgstr "同步你的项目"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
 msgstr "工作时，项目将在后台同步。您可以随时在 Audacity 的右下角查看同步状态"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "继续"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
@@ -7221,7 +8699,9 @@ msgstr ""
 "\n"
 "如果你选择“退出 Audacity”，你的项目会保留未保存状态，下一次打开时会恢复。"
 
+#. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Quit Audacity"
 msgstr "退出 Audacity (&Q)"
 
@@ -8061,6 +9541,29 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "关闭丢失侦测"
 
+#: src/EffectAndCommandPluginManager.cpp
+#, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in 'Help > Diagnostics > Show Log'"
+msgstr ""
+"尝试初始化下列命令时失败：\n"
+"\n"
+"%s\n"
+"\n"
+"更多信息有可能可在 帮助 > 诊断 > 显示日志 中获取到"
+
+#: src/EffectAndCommandPluginManager.cpp
+msgid "Command failed to initialize"
+msgstr "命令初始化失败"
+
+#: src/ExportLabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "导出标签样式："
+
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
 msgstr "频率分析"
@@ -8157,23 +9660,6 @@ msgstr "轴(&A)："
 #: src/FreqWindow.cpp
 msgid "&Replot..."
 msgstr "重绘(&R)..."
-
-#: src/FreqWindow.cpp
-msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "为了进行频谱分析，所有选定的轨道必须具有相同的采样率。"
-
-#: src/FreqWindow.cpp
-msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
-msgstr ""
-"无法分析音频。这可能是因为片段被拉伸或改变了音调。\n"
-"请在分析前尝试重置被拉伸的片段，或者混合与渲染轨道。"
-
-#: src/FreqWindow.cpp
-#, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "选择的音频过长。只分析开头的 %.1f 秒的音频。"
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -8391,47 +9877,6 @@ msgstr "新建标签轨"
 msgid "Enter track name"
 msgstr "输入轨道名称"
 
-#. i18n-hint: (noun) it's the name of a kind of track.
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Label track.
-#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
-#: src/TrackPanelAx.cpp
-msgid "Label Track"
-msgstr "标签轨"
-
-#: src/LabelTrack.cpp
-msgid "SubRip text file"
-msgstr "SubRip 文本文件"
-
-#: src/LabelTrack.cpp
-msgid "WebVTT file"
-msgstr "WebVTT 文件"
-
-#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
-msgid "Labels"
-msgstr "标签"
-
-#: src/LabelTrack.cpp
-msgid "S&tandard"
-msgstr "标准(&T)"
-
-#: src/LabelTrack.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "展宽（频域）(&X)"
-
-#: src/LabelTrack.cpp
-msgid "Exported Label Style:"
-msgstr "导出标签样式："
-
-#: src/LabelTrack.cpp
-msgid "Importing WebVTT files is not currently supported."
-msgstr "暂不支持导入 WebVTT 文件。"
-
-#: src/LabelTrack.cpp
-msgid "One or more saved labels could not be read."
-msgstr "一个或更多已保存标签无法读取。"
-
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
 #: src/LangChoice.cpp
@@ -8479,13 +9924,14 @@ msgstr "快捷键已被移除"
 msgid "Audacity Mixer%s"
 msgstr "Audacity 混音器 %s"
 
-#. i18n-hint: title of the Gain slider, used to adjust the volume
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#. i18n-hint: title of the Volume slider, used to adjust the volume
+#. i18n-hint: Title of the Volume slider, used to adjust the volume
+#: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Gain"
-msgstr "音量增强"
+#, fuzzy
+msgid "Volume"
+msgstr "音量    "
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -8526,8 +9972,9 @@ msgstr "信号电平指示"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Moved gain slider"
-msgstr "已移动音量增强滑杆"
+#, fuzzy
+msgid "Moved volume slider"
+msgstr "已移动速度滑杆"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -8542,116 +9989,6 @@ msgstr "已移动左右声道平衡滑杆"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "混音器 (&M)"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C"
-msgstr "C"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯"
-msgstr "C♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D"
-msgstr "D"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯"
-msgstr "D♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E"
-msgstr "E"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F"
-msgstr "F"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯"
-msgstr "F♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G"
-msgstr "G"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯"
-msgstr "G♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A"
-msgstr "A"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯"
-msgstr "A♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B"
-msgstr "B"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♭"
-msgstr "D♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E♭"
-msgstr "E♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♭"
-msgstr "G♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♭"
-msgstr "A♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B♭"
-msgstr "B♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯/D♭"
-msgstr "C♯/D♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯/E♭"
-msgstr "D♯/E♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯/G♭"
-msgstr "F♯/G♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯/A♭"
-msgstr "G♯/A♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯/B♭"
-msgstr "A♯/B♭"
 
 #: src/PluginDataModel.cpp
 #, c-format
@@ -9413,18 +10750,6 @@ msgstr "下移 %s 于 %s"
 msgid "Change effect order"
 msgstr "改变效果器顺序"
 
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid ""
-"This plugin could not be loaded.\n"
-"It may have been deleted."
-msgstr ""
-"无法加载此插件。\n"
-"可能已被删除。"
-
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid "Plugin Error"
-msgstr "插件错误"
-
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
@@ -9657,12 +10982,6 @@ msgstr "持续时间"
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "Audacity 定时录音"
-
-#. i18n-hint: default exported file name when exporting from unsaved project
-#: src/TimerRecordDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "untitled"
-msgstr "未命名"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -10181,8 +11500,8 @@ msgstr "Audacity %s 版本的新功能"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr "观看[[%s|发行视频]]或阅读[[https://support.audacityteam.org/additional-resources/changelog|更新日志]]了解更多信息！</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -10192,6 +11511,57 @@ msgstr "获取免费插件和声音"
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
 msgstr "<p>查看我们的 [[%s|Muse Hub 应用程序]] 为 Audacity 用户提供各种音频插件</p>"
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal processing effect that enhances vocal clarity and depth."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#. i18n-hint: MuseHub is a name of a product, see musehub.com.
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Available on [[%s|MuseHub]]."
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -10211,7 +11581,7 @@ msgstr "启动时不再显示"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
-#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -10377,7 +11747,7 @@ msgstr "LISP"
 msgid "Brief"
 msgstr "简约"
 
-#: src/commands/GetInfoCommand.cpp src/effects/EffectManager.cpp
+#: src/commands/GetInfoCommand.cpp src/effects/EffectPresetDialog.cpp
 msgid "Type:"
 msgstr "类型："
 
@@ -10822,8 +12192,9 @@ msgid "Set Track Audio"
 msgstr "设置轨道音频"
 
 #: src/commands/SetTrackInfoCommand.cpp
-msgid "Gain:"
-msgstr "增强："
+#, fuzzy
+msgid "Volume:"
+msgstr "音量    "
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -10832,24 +12203,6 @@ msgstr "声道平衡："
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Visuals"
 msgstr "设置轨道外观"
-
-#. i18n-hint: abbreviates amplitude
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Linear (amp)"
-msgstr "线性 (amp)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Logarithmic (dB)"
-msgstr "对数 (dB)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Linear (dB)"
-msgstr "线性（dB）"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -10925,10 +12278,6 @@ msgstr "设置轨道的各个值。"
 msgid "Long Message"
 msgstr "长消息"
 
-#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
-msgid "Amplify"
-msgstr "增幅（放大）"
-
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "增加或减小选中音频的音量"
@@ -10948,32 +12297,6 @@ msgstr "新峰值振幅 (dB) (&N)："
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
 msgstr "允许截幅失真(&W)"
-
-#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
-msgid "Auto Duck"
-msgstr "自动回避(用于DJ的自动音量调节)"
-
-#: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "无论指定的“控制”轨道是否达到了特定的电平，都自动减少（回避）一个或多个轨道的音量"
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks'
-#. (reduces the volume) of the audio automatically when there is
-#. sound on another track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "您选择的轨道不包含音频。自动回避只能处理音轨。"
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
-#. the volume) of the audio automatically when there is sound on another
-#. track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "自动回避需要在当前选中轨道下放置一条控制轨道。"
-
-#: src/effects/AutoDuck.cpp
-msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr "渲染控制轨道时间拉伸音频"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -11036,14 +12359,6 @@ msgstr "%s 不是一个有效的预设文件。\n"
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr "%s: 用于不同的效果器，生成器或分析器。\n"
 
-#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
-msgid "Bass and Treble"
-msgstr "低音和高音"
-
-#: src/effects/BassTreble.cpp
-msgid "Simple tone control effect"
-msgstr "简易音调控制效果器"
-
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
 msgstr "音调控制"
@@ -11075,18 +12390,6 @@ msgstr "音量（dB）(&V)："
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
 msgstr "将音量控件链接到音调控件(&L)"
-
-#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Pitch"
-msgstr "改变音高"
-
-#: src/effects/ChangePitch.cpp
-msgid "Changes the pitch of a track without changing its tempo"
-msgstr "改变轨道音高并保持速度不变"
-
-#: src/effects/ChangePitch.cpp
-msgid "High Quality Pitch Change"
-msgstr "高质量的音高改变"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
@@ -11184,14 +12487,6 @@ msgstr "45"
 msgid "78"
 msgstr "78"
 
-#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Speed and Pitch"
-msgstr "变速并变调"
-
-#: src/effects/ChangeSpeed.cpp
-msgid "Changes the speed of a track, also changing its pitch"
-msgstr "改变轨道的速率，同时改变音高"
-
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
 msgstr "速率倍数(&S)："
@@ -11256,18 +12551,6 @@ msgctxt "change speed"
 msgid "to"
 msgstr "到"
 
-#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Tempo"
-msgstr "改变速度"
-
-#: src/effects/ChangeTempo.cpp
-msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "改变选区的速度并保持音高不变"
-
-#: src/effects/ChangeTempo.cpp
-msgid "High Quality Tempo Change"
-msgstr "高质量速度改变"
-
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
 msgstr "每分钟的节拍数"
@@ -11315,23 +12598,6 @@ msgstr "到(&O)"
 msgid "Length in seconds from %s, to"
 msgstr "长度（秒）从 %s 至"
 
-#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
-msgid "Click Removal"
-msgstr "消除咔嚓声"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "咔嚓声移除工具用于移除音频中的咔嚓声"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr "算法未在此音频上生效。无任何改变。"
-
-#: src/effects/ClickRemoval.cpp
-#, c-format
-msgid "Selection must be larger than %d samples."
-msgstr "选区必须大于 %d 个采样点。"
-
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
 msgstr "阈值（越低越敏感）(&T)："
@@ -11355,28 +12621,6 @@ msgstr "压缩器"
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr "减少“动态范围”，或者响亮部分和安静部分之间的差异。"
-
-#: src/effects/Contrast.cpp
-msgid "You can only measure one track at a time."
-msgstr "一次只能测量一个音轨。"
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "请选择一个音轨。"
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Invalid audio selection.\n"
-"Please ensure that audio is selected."
-msgstr "音频选择无效请确保选择音频。"
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Nothing to measure.\n"
-"Please select a section of a track."
-msgstr ""
-"没有可供测量的目标。\n"
-"请选择音轨的区段用于测量。"
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -11614,132 +12858,6 @@ msgid "Contrast..."
 msgstr "对照..."
 
 #: src/effects/Distortion.cpp
-msgid "Hard Clipping"
-msgstr "硬截幅"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Clipping"
-msgstr "软截幅"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Overdrive"
-msgstr "软过载"
-
-#: src/effects/Distortion.cpp
-msgid "Medium Overdrive"
-msgstr "中过载"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Overdrive"
-msgstr "硬过载"
-
-#: src/effects/Distortion.cpp
-msgid "Cubic Curve (odd harmonics)"
-msgstr "立方曲线（奇次谐波）"
-
-#: src/effects/Distortion.cpp
-msgid "Even Harmonics"
-msgstr "偶次谐波"
-
-#: src/effects/Distortion.cpp
-msgid "Expand and Compress"
-msgstr "展开和压缩"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller"
-msgstr "水平器"
-
-#: src/effects/Distortion.cpp
-msgid "Rectifier Distortion"
-msgstr "整流器失真"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Limiter 1413"
-msgstr "硬限幅器 1413"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "硬切（Hard clip），-12 dB，80% 增益补偿（make-up gain）"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "软切（Soft clip），-12 dB，80% 增益补偿（make-up gain）"
-
-#: src/effects/Distortion.cpp
-msgid "Fuzz Box"
-msgstr "绒盒（Fuzz Box）"
-
-#: src/effects/Distortion.cpp src/effects/Equalization.cpp
-msgid "Walkie-talkie"
-msgstr "对讲机（Walkie-talkie）"
-
-#: src/effects/Distortion.cpp
-msgid "Blues drive sustain"
-msgstr "布鲁斯驱动延持（Blues drive sustain）"
-
-#: src/effects/Distortion.cpp
-msgid "Light Crunch Overdrive"
-msgstr "轻嘎吱过载（Light Crunch Overdrive）"
-
-#: src/effects/Distortion.cpp
-msgid "Heavy Overdrive"
-msgstr "重过载（Heavy Overdrive）"
-
-#: src/effects/Distortion.cpp
-msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "三次谐波（纯五度）"
-
-#: src/effects/Distortion.cpp
-msgid "Valve Overdrive"
-msgstr "阀过载（Valve Overdrive）"
-
-#: src/effects/Distortion.cpp
-msgid "2nd Harmonic (Octave)"
-msgstr "二次谐波（八度）"
-
-#: src/effects/Distortion.cpp
-msgid "Gated Expansion Distortion"
-msgstr "门扩展失真（Gated Expansion Distortion）"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Light, -70dB noise floor"
-msgstr "水平器，轻，-70 dB 本底噪音"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "水平器，中，-70 dB 本底噪音"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "水平器，重，-70 dB 本底噪音"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "水平器，更重，-70 dB 本底噪音"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "水平器，最重，-70 dB 本底噪音"
-
-#: src/effects/Distortion.cpp
-msgid "Half-wave Rectifier"
-msgstr "半波整流器"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier"
-msgstr "全波整流器"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier (DC blocked)"
-msgstr "全波整流器（DC 阻断）"
-
-#: src/effects/Distortion.cpp
-msgid "Percussion Limiter"
-msgstr "打击限幅器"
-
-#: src/effects/Distortion.cpp
 msgid "Upper Threshold"
 msgstr "上限"
 
@@ -11758,14 +12876,6 @@ msgstr "参数 2"
 #: src/effects/Distortion.cpp
 msgid "Number of repeats"
 msgstr "重复次数"
-
-#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
-msgid "Distortion"
-msgstr "失真"
-
-#: src/effects/Distortion.cpp
-msgid "Waveshaping distortion effect"
-msgstr "波形失真影响"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion type:"
@@ -11862,22 +12972,6 @@ msgstr "（0 ~ 100）："
 #: src/effects/Distortion.cpp
 msgid "(0 to 5):"
 msgstr "（0 ~ 5）："
-
-#: src/effects/DtmfGen.cpp
-msgid "DTMF Tones"
-msgstr "DTMF 音"
-
-#: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "生成双音多频（DTMF）音，类似于电话按键音"
-
-#: src/effects/DtmfGen.cpp
-msgid ""
-"DTMF sequence empty.\n"
-"Check ALL settings for this effect."
-msgstr ""
-"空的 DTMF 序列\n"
-"检查此效果器的“所有”设置。"
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF &sequence:"
@@ -12013,19 +13107,6 @@ msgstr "目标压缩"
 msgid "awaiting playback"
 msgstr "等待播放"
 
-#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
-msgid "Echo"
-msgstr "回声"
-
-#: src/effects/Echo.cpp
-msgid "Repeats the selected audio again and again"
-msgstr "一遍遍地重复选中音频"
-
-#: src/effects/Echo.cpp src/effects/FindClipping.cpp
-#: src/effects/Paulstretch.cpp
-msgid "Requested value exceeds memory capacity."
-msgstr "请求值超过内存容量。"
-
 #: src/effects/Echo.cpp
 msgid "&Delay time (seconds):"
 msgstr "延迟时间（秒）(&D)："
@@ -12034,77 +13115,29 @@ msgstr "延迟时间（秒）(&D)："
 msgid "D&ecay factor:"
 msgstr "衰減系数(&E)："
 
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied effect: %s"
-msgstr "已应用效果器：%s"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied command: %s"
-msgstr "已应用命令：%s"
-
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Select Preset"
 msgstr "选择预设"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "&Preset:"
 msgstr "预设(&P)："
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "User Presets"
 msgstr "用户预设"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "Factory Presets"
 msgstr "出厂预设"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Current Settings"
 msgstr "当前设置"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Factory Defaults"
 msgstr "出厂设置"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following effect failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"尝试初始化下列效果器时失败：\n"
-"\n"
-"%s\n"
-"\n"
-"更多信息有可能可在 帮助 > 诊断 > 显示日志 中获取到"
-
-#: src/effects/EffectManager.cpp
-msgid "Effect failed to initialize"
-msgstr "效果器初始化失败"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following command failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"尝试初始化下列命令时失败：\n"
-"\n"
-"%s\n"
-"\n"
-"更多信息有可能可在 帮助 > 诊断 > 显示日志 中获取到"
-
-#: src/effects/EffectManager.cpp
-msgid "Command failed to initialize"
-msgstr "命令初始化失败"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
@@ -12198,10 +13231,6 @@ msgstr ""
 "\n"
 "是否替换？"
 
-#: src/effects/Equalization.cpp
-msgid "Equalization"
-msgstr "均衡器（EQ）"
-
 #: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "过滤曲线 EQ"
@@ -12210,58 +13239,6 @@ msgstr "过滤曲线 EQ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "图形均衡器"
-
-#: src/effects/Equalization.cpp
-msgid "Adjusts the volume levels of particular frequencies"
-msgstr "调整特定频率的音量"
-
-#: src/effects/Equalization.cpp
-msgid "100Hz Rumble"
-msgstr "100Hz 轰响"
-
-#: src/effects/Equalization.cpp
-msgid "AM Radio"
-msgstr "AM 广播"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Boost"
-msgstr "低音增幅"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Cut"
-msgstr "低音切除"
-
-#: src/effects/Equalization.cpp
-msgid "Low rolloff for speech"
-msgstr "语音低滚降"
-
-#: src/effects/Equalization.cpp
-msgid "RIAA"
-msgstr "RIAA"
-
-#: src/effects/Equalization.cpp
-msgid "Telephone"
-msgstr "电话"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Boost"
-msgstr "高音增幅"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Cut"
-msgstr "高音切除"
-
-#: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "如果想应用均衡器，所有选择的轨道必须拥有相同的采样率。"
-
-#: src/effects/Equalization.cpp
-msgid "Track sample rate is too low for this effect."
-msgstr "轨道的采样率太低，无法应用此效果器。"
-
-#: src/effects/Equalization.cpp
-msgid "Effect Unavailable"
-msgstr "效果器不可用"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -12301,33 +13278,6 @@ msgstr "%gk"
 #, c-format
 msgid "%d dB"
 msgstr "%d dB"
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/EqualizationCurves.cpp
-msgid "unnamed"
-msgstr "未命名"
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/EqualizationCurves.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-"从文件导入均衡器曲线出错：\n"
-"%s\n"
-"出错信息：\n"
-"%s"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Loading EQ Curves"
-msgstr "导入均衡器曲线出错"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Saving Equalization Curves"
-msgstr "保存均衡曲线时出错"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -12455,31 +13405,6 @@ msgstr "已导出的曲线"
 msgid "No curves exported"
 msgstr "没有导出任何曲线"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/EqualizationParameters.cpp
-msgid "B-spline"
-msgstr "B-样条"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cosine"
-msgstr "余弦函数"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cubic"
-msgstr "立方函数"
-
-#: src/effects/EqualizationUI.cpp
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"为了在宏中使用这个过滤曲线，请为其选择一个新名称。\n"
-"点击“保存/管理曲线...”按钮并重命名“未命名”曲线，再使用它。"
-
-#: src/effects/EqualizationUI.cpp
-msgid "Filter Curve EQ needs a different name"
-msgstr "过滤曲线 EQ 需要一个不同的名字"
-
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
 msgstr "+ 分贝"
@@ -12560,53 +13485,6 @@ msgstr "显示网格线"
 msgid "Show g&rid lines"
 msgstr "显示网格线(&R)"
 
-#: src/effects/EqualizationUI.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr "请求的曲线图没有找到，正在使用“未命名”"
-
-#: src/effects/EqualizationUI.cpp
-msgid "Curve not found"
-msgstr "曲线图没有找到"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade In"
-msgstr "淡入"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade Out"
-msgstr "淡出"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-in to the selected audio"
-msgstr "为选区应用线性淡入"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-out to the selected audio"
-msgstr "为选区应用线性淡出"
-
-#: src/effects/FindClipping.cpp
-msgid "Find Clipping"
-msgstr "寻找截幅失真"
-
-#: src/effects/FindClipping.cpp
-msgid "Creates labels where clipping is detected"
-msgstr "检测到截幅失真时创建标签"
-
-#: src/effects/FindClipping.cpp
-msgid "Clipping"
-msgstr "截幅失真"
-
-#. i18n-hint: Two numbers are substituted; the second is the
-#. size of a set, the first is the size of a subset, and not
-#. understood as an ordinal (i.e., not meaning "first", or
-#. "second", etc.)
-#.
-#: src/effects/FindClipping.cpp
-#, c-format
-msgctxt "find clipping"
-msgid "%lld of %lld"
-msgstr "%lld，共 %lld"
-
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
 msgstr "开始阈值(样本数) (&S)："
@@ -12614,26 +13492,6 @@ msgstr "开始阈值(样本数) (&S)："
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
 msgstr "停止阈值(样本数) (&O)："
-
-#: src/effects/Generator.cpp
-msgid "There is not enough room available to generate the audio"
-msgstr "空间不足，不能生成音频"
-
-#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
-msgid "Invert"
-msgstr "反相（上下）"
-
-#: src/effects/Invert.cpp
-msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr "上下翻转音频，反相"
-
-#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-msgid "Legacy Compressor"
-msgstr "传统压缩器"
-
-#: src/effects/LegacyCompressor.cpp
-msgid "Compresses the dynamic range of audio"
-msgstr "压缩音频的动态范围"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
@@ -12762,28 +13620,6 @@ msgstr "感知响度"
 msgid "RMS"
 msgstr "方均根"
 
-#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
-msgid "Loudness Normalization"
-msgstr "响度标准化"
-
-#: src/effects/Loudness.cpp
-msgid "Sets the loudness of one or more tracks"
-msgstr "设置一个或多个音轨的峰值振幅"
-
-#: src/effects/Loudness.cpp
-msgid "Normalizing Loudness...\n"
-msgstr "标准化响度…\n"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing: %s"
-msgstr "分析中：%s"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Processing: %s"
-msgstr "处理中：%s"
-
 #: src/effects/Loudness.cpp
 msgid "&Normalize"
 msgstr "标准化(&N)"
@@ -12813,89 +13649,9 @@ msgstr "将单声道视为双声道 (推荐) (&T)"
 msgid "(Maximum 0dB)"
 msgstr "（最大 0 分贝）"
 
-#. i18n-hint: not a color, but "white noise" having a uniform spectrum
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "White"
-msgstr "白噪声"
-
-#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
-#. in low frequencies
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Pink"
-msgstr "粉红噪声"
-
-#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Brownian"
-msgstr "布朗噪声"
-
-#: src/effects/Noise.cpp
-msgid "Noise"
-msgstr "噪声"
-
-#: src/effects/Noise.cpp
-msgid "Generates one of three different types of noise"
-msgstr "产生三种之一的不同类型的噪声"
-
 #: src/effects/Noise.cpp
 msgid "&Noise type:"
 msgstr "噪声类型(&N)："
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median"
-msgstr "中等"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Second greatest"
-msgstr "次好"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Old"
-msgstr "旧的"
-
-#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
-#: resources/EffectsMenuDefaults.xml
-msgid "Noise Reduction"
-msgstr "降噪"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "移除背景噪声，如风扇声，磁带噪音，嗡嗡声"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block are too few for the window types."
-msgstr "相对于当前窗口类型每个块的音级过少。"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block cannot exceed the window size."
-msgstr "每个块的音级不能超出窗口大小。"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median method is not implemented for more than four steps per window."
-msgstr "每窗口大于4个音级时无法应用中等模式。"
-
-#: src/effects/NoiseReduction.cpp
-msgid "You must specify the same window size for steps 1 and 2."
-msgstr "步骤 1 和步骤 2 必须使用相同的窗口大小。"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Warning: window types are not the same as for profiling."
-msgstr "警告：窗口类型和样本所需的不一致。"
-
-#: src/effects/NoiseReduction.cpp
-msgid "All noise profile data must have the same sample rate."
-msgstr "所有噪音样本必须使用相同的采样率。"
-
-#: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "噪音样本的采样率必须和声音的匹配才能继续。"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Selected noise profile is too short."
-msgstr "选择的噪音样本太短。"
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Noise reduction (dB):"
@@ -13063,55 +13819,6 @@ msgstr "4（默认）"
 msgid "Discrimination &method:"
 msgstr "辨别方法(&M)："
 
-#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
-msgid "Normalize"
-msgstr "标准化"
-
-#: src/effects/Normalize.cpp
-msgid "Sets the peak amplitude of one or more tracks"
-msgstr "设置一个或多个音轨的峰值振幅"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset and Normalizing...\n"
-msgstr "移除 DC 偏移并标准化…\n"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset...\n"
-msgstr "移除 DC 偏移...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Normalizing without removing DC offset...\n"
-msgstr "标准化不移除 DC 偏移…\n"
-
-#: src/effects/Normalize.cpp
-msgid "Not doing anything...\n"
-msgstr "未在做任何事...\n"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing first track of stereo pair: %s"
-msgstr "正在分析立体声配对组中的第一个音轨：%s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "正在分析立体声配对组中的第二个音轨：%s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing stereo channels independently: %s"
-msgstr "独立地处理立体声道：%s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing first track of stereo pair: %s"
-msgstr "正在处理立体声配对组中的第一个音轨：%s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing second track of stereo pair: %s"
-msgstr "正在处理立体声配对组中的第二个音轨：%s"
-
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
 msgstr "移除 DC 偏移量(垂直居中于 0.0) (&R)"
@@ -13128,14 +13835,6 @@ msgstr "峰值振幅（dB）"
 msgid "N&ormalize stereo channels independently"
 msgstr "分别标准化立体声的两个声道(&T)"
 
-#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
-msgid "Paulstretch"
-msgstr "Paulstretch"
-
-#: src/effects/Paulstretch.cpp
-msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Paulstretch 仅用于极端的时间拉伸或“静止”效果"
-
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
@@ -13147,55 +13846,6 @@ msgstr "拉伸系数(&S)："
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
 msgstr "时间分辨率(秒)(&T)："
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Audio selection too short to preview.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"音频选区太短，无法预览。\n"
-"\n"
-"尝试增加音频选区至少 %.1f 秒，\n"
-"或减少“时间分辨率”至小于 %.1f 秒。"
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Unable to Preview.\n"
-"\n"
-"For the current audio selection, the maximum\n"
-"'Time Resolution' is %.1f seconds."
-msgstr ""
-"无法预览。\n"
-"\n"
-"当前音频选区的\n"
-"“时间分辨率” 上限是 %.1f 秒。"
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"The 'Time Resolution' is too long for the selection.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"选择的时间分辨率太长。\n"
-"尝试增加音频选择至少 %.1f 秒，\n"
-"或减少“时间分辨率”至小于 %.1f 秒。"
-
-#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
-msgid "Phaser"
-msgstr "相位器"
-
-#: src/effects/Phaser.cpp
-msgid "Combines phase-shifted signals with the original signal"
-msgstr "将原始信号与移相后的信号结合"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
@@ -13259,50 +13909,6 @@ msgstr "输出增益 (分贝)"
 msgid "%s - %s"
 msgstr "%s - %s"
 
-#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
-msgid "Repair"
-msgstr "修复"
-
-#: src/effects/Repair.cpp
-msgid "Sets the peak amplitude of a one or more tracks"
-msgstr "设置一个或多个音轨的峰值振幅"
-
-#: src/effects/Repair.cpp
-msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "修复效果无法应用于拉伸或收缩的片段"
-
-#: src/effects/Repair.cpp
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
-"\n"
-"Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"修复效果器适用于修复很短的受损音频(最多128个采样点)。\n"
-"\n"
-"放大音轨并选中大约1秒时长的小片段进行修复。"
-
-#: src/effects/Repair.cpp
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
-"\n"
-"Please select a region that has audio touching at least one side of it.\n"
-"\n"
-"The more surrounding audio, the better it performs."
-msgstr ""
-"修复是通过使用选区外的数据起作用的。\n"
-"\n"
-"请选择一个至少一侧邻接音频的选区。\n"
-"\n"
-"周围的音频越多，修复效果越好。"
-
-#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
-msgid "Repeat"
-msgstr "重复"
-
-#: src/effects/Repeat.cpp
-msgid "Repeats the selection the specified number of times"
-msgstr "将选区重复指定的次数"
-
 #: src/effects/Repeat.cpp
 msgid "&Number of repeats to add:"
 msgstr "要添加的重复次数(&N):"
@@ -13328,99 +13934,6 @@ msgstr "新选区的长度：%s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "警告：没有重复。"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Acoustic"
-msgstr "声学"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Ambience"
-msgstr "环境"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Artificial"
-msgstr "人工"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Clean"
-msgstr "干净"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal I"
-msgstr "人声 I"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal II"
-msgstr "人声 II"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Dance Vocal"
-msgstr "舞蹈声乐"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Modern Vocal"
-msgstr "现代声乐"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Voice Tail"
-msgstr "声音尾部"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Bathroom"
-msgstr "澡堂"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Bright"
-msgstr "明亮的小房间"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Dark"
-msgstr "黑暗的小房间"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Medium Room"
-msgstr "中等大小房间"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Large Room"
-msgstr "大房间"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Church Hall"
-msgstr "教堂走廊"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Cathedral"
-msgstr "大教堂"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Big Cave"
-msgstr "大山洞"
-
-#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverb"
-msgstr "混响"
-
-#: src/effects/Reverb.cpp
-msgid "Adds ambience or a \"hall effect\""
-msgstr "添加氛围效果或者“大厅效果器”"
 
 #: src/effects/Reverb.cpp
 msgid "&Room Size (%):"
@@ -13461,54 +13974,6 @@ msgstr "立体声宽度(%) (&T)："
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
 msgstr "仅湿(&N)"
-
-#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverse"
-msgstr "反向（时间）"
-
-#: src/effects/Reverse.cpp
-msgid "Reverses the selected audio"
-msgstr "反向选择的音频"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "SBSMS 时间／音高拉伸"
-
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Butterworth"
-msgstr "巴特沃斯(Butterworth)"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type I"
-msgstr "切比雪夫(Chebyshev)滤波器 I"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type II"
-msgstr "切比雪夫滤波器 II"
-
-#: src/effects/ScienFilter.cpp
-msgid "Lowpass"
-msgstr "低通"
-
-#: src/effects/ScienFilter.cpp
-msgid "Highpass"
-msgstr "高通"
-
-#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
-msgid "Classic Filters"
-msgstr "经典滤波器"
-
-#. i18n-hint: "infinite impulse response"
-#: src/effects/ScienFilter.cpp
-msgid "Performs IIR filtering that emulates analog filters"
-msgstr "执行 IIR 滤波以模拟模拟信号滤波器"
-
-#: src/effects/ScienFilter.cpp
-msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "如果想应用过滤器，所有选择的轨道必须拥有相同的采样率。"
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -13640,36 +14105,6 @@ msgstr "恢复默认设置"
 msgid "%.3f"
 msgstr "%.3f"
 
-#. i18n-hint: noun
-#: src/effects/Silence.cpp
-msgctxt "generator"
-msgid "Silence"
-msgstr "使静音"
-
-#: src/effects/Silence.cpp
-msgid "Creates audio of zero amplitude"
-msgstr "创建没有任何振幅的音频"
-
-#: src/effects/StereoToMono.cpp
-msgid "Stereo To Mono"
-msgstr "立体声转单声道"
-
-#: src/effects/StereoToMono.cpp
-msgid "Converts stereo tracks to mono"
-msgstr "将立体声轨转换为单声道"
-
-#: src/effects/StereoToMono.cpp
-msgid "Mixing down to mono"
-msgstr "混合为单声道"
-
-#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
-msgid "Sliding Stretch"
-msgstr "滑动拉伸"
-
-#: src/effects/TimeScale.cpp
-msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "连续性地改变速度或者/且改变音调"
-
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
 msgstr "起始速度改变（%）"
@@ -13697,36 +14132,6 @@ msgstr "终点音调变化"
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
 msgstr "(半音阶)[-12 到 12] (&E):"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
-msgid "Linear"
-msgstr "线性"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-msgid "Logarithmic"
-msgstr "对数"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sine"
-msgstr "正弦"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Square"
-msgstr "方波"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sawtooth"
-msgstr "锯齿波"
-
-#: src/effects/ToneGen.cpp
-msgid "Square, no alias"
-msgstr "方波，无混叠"
-
-#: src/effects/ToneGen.cpp
-msgctxt "waveform"
-msgid "Triangle"
-msgstr "三角形"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
@@ -13771,26 +14176,6 @@ msgstr "结束振幅"
 #: src/effects/ToneGen.cpp
 msgid "I&nterpolation:"
 msgstr "内插算法(&N)："
-
-#: src/effects/TruncSilence.cpp
-msgid "Truncate Detected Silence"
-msgstr "截去检测到的静音"
-
-#: src/effects/TruncSilence.cpp
-msgid "Compress Excess Silence"
-msgstr "压缩多余的静音"
-
-#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
-msgid "Truncate Silence"
-msgstr "截去静音"
-
-#: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "自动减小指定音量以下片段的长度"
-
-#: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "当独立截断时，每个同步锁定的轨道组中只能有一个选定的音轨。"
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -13921,14 +14306,6 @@ msgstr "作为其处理过程的一部分，某些 VST3 效果器必须延迟将
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "大部分 VST3 效果器都有用于设置参数值的图形界面。也可以使用基本的纯文本方法。重新打开效果器以使其生效。"
-
-#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
-msgid "Wahwah"
-msgstr "哇哇声"
-
-#: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "快速音调变奏，类似于70年代流行的吉他声"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14068,148 +14445,6 @@ msgstr "作为其处理中的一部分过程，某些 LV2 效果器必须延迟�
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "LV2 效果器可有用于设置参数值的图形界面。也可以使用基本的纯文本方法。 重新打开效果器以使其生效。"
 
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Nyquist Effects"
-msgstr "奈奎斯特效果器"
-
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
-msgstr "为 Audacity 提供奈奎斯特效果器支持"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Applying Nyquist Effect..."
-msgstr "正在应用奈奎斯特效果器…"
-
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Worker"
-msgstr "奈奎斯特提示符"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Ill-formed Nyquist plug-in header"
-msgstr "格式不良的奈奎斯特插件头"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Enable track spectrogram view before\n"
-"applying 'Spectral' effects."
-msgstr "在应用“频谱”效果之前，请启用轨道频谱图视图。"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"To use 'Spectral effects', enable 'Spectral Selection'\n"
-"in the track Spectrogram settings and select the\n"
-"frequency range for the effect to act on."
-msgstr "要使用“光谱效应”，请在轨道光谱图设置中启用“光谱选择”，并选择要作用的效果器的频率范围。"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "错误：在头部指定的文件“%s”未在插件路径下找到。\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Audio selection required."
-msgstr "需要自动选择。"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "Nyquist 错误"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Debug Output: "
-msgstr "调试输出： "
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Processing complete."
-msgstr "处理完成。"
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "“;type tool”效果不能从奈奎斯特返回音频。\n"
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "“;type tool”效果不能从奈奎斯特返回标签。\n"
-
-#. i18n-hint: "%s" is replaced by name of plug-in.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "nyx_error returned from %s.\n"
-msgstr "nyx_error，返回自 %s。\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "plug-in"
-msgstr "插件"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned a list."
-msgstr "Nyquist 返回了一个列表。"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %f"
-msgstr "Nyquist 返回的值：%f"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %d"
-msgstr "Nyquist 返回的值：%d"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned too many audio channels.\n"
-msgstr "Nyquist 返回了过多的音频声道。\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Nyquist 将一个音频声道返回为一个数组。\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned an empty array.\n"
-msgstr "Nyquist 返回了一个空的数组.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned nil audio.\n"
-msgstr "Nyquist 没有返回音频。\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[警告：Nyquist 返回了无效的 UTF-8 字符，在此被转换为 Latin-1 字符]"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "此版本的 Audacity 在编译时没有附带针对 Nyquist 插件版本 %ld 的支持"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not open file"
-msgstr "无法打开文件"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Your code looks like SAL syntax, but there is no 'return' statement.\n"
-"For SAL, use a return statement such as:\n"
-"\treturn *track* * 0.1\n"
-"or for LISP, begin with an open parenthesis such as:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-msgstr ""
-"代码看起来像是 SAL 语法，但是缺少 return 语句。要么当成 SAL 语句加上类似下句的 SAL return 语句\n"
-"\treturn s * 0.1\n"
-"要么作为 LISP 语句在开始位置加上符合 LISP 语法的圆括号，例如\n"
-"\t(mult s 0.1)\n"
-"."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Error in Nyquist code"
-msgstr "Nyquist 代码错误"
-
-#. i18n-hint: refers to programming "languages"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not determine language"
-msgstr "无法确定语言"
-
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
@@ -14279,6 +14514,10 @@ msgstr "选择一个文件"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Save file as"
 msgstr "保存文件为"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Debug Output: "
+msgstr "调试输出： "
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
@@ -14781,12 +15020,13 @@ msgid "Duplicate"
 msgstr "创建副本"
 
 #: src/menus/EditMenus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "分离并剪切到剪贴板"
+#, fuzzy
+msgid "Cut to clipboard and leave gap"
+msgstr "剪切到剪贴板"
 
 #: src/menus/EditMenus.cpp
-msgid "Split Cut"
-msgstr "分离并剪切"
+msgid "Cut and leave gap"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -14882,13 +15122,13 @@ msgstr "特殊移除(&E)"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
-msgid "Spl&it Cut"
-msgstr "分离并剪切(&I)"
+msgid "&Cut and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
-msgid "Split D&elete"
-msgstr "分离并删除(&E)"
+msgid "&Delete and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15019,10 +15259,10 @@ msgstr "标签(&L)..."
 msgid "&Raw Data..."
 msgstr "原始数据(&R)..."
 
-#. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
-msgid "E&xit"
-msgstr "退出(&X)"
+#, fuzzy
+msgid "&Close Project"
+msgstr "保存项目(&S)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15142,16 +15382,15 @@ msgstr "已经删除标签的音频区域"
 msgid "Delete Labeled Audio"
 msgstr "删除标签的音频"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
-#. regions
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "分离并剪切已标签的音频到剪贴板"
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard and leave gap"
+msgstr "将标签的音频区域剪切到剪贴板"
 
-#. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "分离并剪切已标签的音频"
+#, fuzzy
+msgid "Cut labeled audio and leave gap"
+msgstr "将标签的音频区域剪切到剪贴板"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15262,29 +15501,31 @@ msgid "&Cut"
 msgstr "剪切(&C)"
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Cut"
-msgstr "标签剪切"
+msgid "Cut by label"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Delete"
-msgstr "标签删除"
+#, fuzzy
+msgid "Delete by label"
+msgstr "删除标签(&D)"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
-msgid "&Split Cut"
-msgstr "分离并剪切(&S)"
+msgid "C&ut and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Cut"
-msgstr "分离并剪切标签"
+msgid "Cut by labels and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Sp&lit Delete"
-msgstr "分离并删除(&L)"
+msgid "De&lete and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Delete"
-msgstr "分离并删除标签"
+#, fuzzy
+msgid "Delete by labels and leave gap"
+msgstr "已经删除标签的音频区域"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -15895,6 +16136,10 @@ msgid "Adjusted gain"
 msgstr "调整过的音量增强"
 
 #: src/menus/TrackMenus.cpp
+msgid "Gain"
+msgstr "音量增强"
+
+#: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
 msgstr "已调整的左右平衡"
 
@@ -16391,7 +16636,8 @@ msgid "Skip to Selection End"
 msgstr "跳至选区终点"
 
 #: src/menus/ViewMenus.cpp
-msgid "Enable E&xtra Menus"
+#, fuzzy
+msgid "E&xtra Menus"
 msgstr "启用额外菜单(&X)"
 
 #: src/menus/ViewMenus.cpp
@@ -16399,7 +16645,8 @@ msgid "&Show Clipping in Waveform"
 msgstr "在波形中显示片段(&S)"
 
 #: src/menus/ViewMenus.cpp
-msgid "Show &RMS in Waveform"
+#, fuzzy
+msgid "Sho&w RMS in Waveform"
 msgstr "以波形显示 ​​RMS(&R)"
 
 #: src/prefs/ApplicationPrefs.cpp
@@ -16840,38 +17087,6 @@ msgstr "接口"
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
 msgstr "GUI 首选项设置"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (小范围，适用于大振幅编辑)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (PCM  8 bit 采样范围)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (PCM 10 bit 采样范围)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (PCM 12 bit 采样范围)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (PCM 14 bit 采样范围)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (PCM 16 bit 采样范围)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (接近人类听力的极限)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (PCM 24 bit 采样范围)"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -17416,88 +17631,6 @@ msgstr "预卷(&L)："
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
 msgstr "交叉渐变(&F)："
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Mel"
-msgstr "梅尔刻度"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Bark"
-msgstr "Bark"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
-#: src/prefs/SpectrogramSettings.cpp
-msgid "ERB"
-msgstr "ERB"
-
-#. i18n-hint: Time units, that is Period = 1 / Frequency
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Period"
-msgstr "周期"
-
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (Roseus)"
-msgstr "彩色（玫瑰）"
-
-#. i18n-hint: Classic color scheme(from theme) for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "彩色（经典）"
-
-#. i18n-hint: Grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "灰度"
-
-#. i18n-hint: Inverse grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "反转灰度"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Frequencies"
-msgstr "频率"
-
-#. i18n-hint: the Reassignment algorithm for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Reassignment"
-msgstr "重新分配"
-
-#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Pitch (EAC)"
-msgstr "音高 (EAC)"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Maximum frequency must be 100 Hz or above"
-msgstr "最高频率必须不低于100Hz"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be at least 0 Hz"
-msgstr "最低频率必须至少是 0 Hz"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be less than maximum frequency"
-msgstr "最低频率必须小于最高频率"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The range must be at least 1 dB"
-msgstr "范围必须至少是 1 dB"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain cannot be negative"
-msgstr "频率增益不能为负"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain must be no more than 60 dB/dec"
-msgstr "频率增益必须小于 60 dB/dec"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrogram Settings"
@@ -18794,11 +18927,6 @@ msgstr "静音/取消静音轨道"
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s, %d of %d 个片段"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "&Multi-view"
-msgstr "多视图(&M)"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -21418,3 +21546,104 @@ msgstr "频谱工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "传统"
+
+#~ msgid "Insane"
+#~ msgstr "发狂"
+
+#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+#~ msgstr "云端保存需要与 Audacity 关联的免费 audio.com 帐户。按上方的“关联帐户”继续。"
+
+#~ msgid "Moved gain slider"
+#~ msgstr "已移动音量增强滑杆"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+#~ msgstr "观看[[%s|发行视频]]或阅读[[https://support.audacityteam.org/additional-resources/changelog|更新日志]]了解更多信息！</p>"
+
+#~ msgid "Gain:"
+#~ msgstr "增强："
+
+#, c-format
+#~ msgid "Applied command: %s"
+#~ msgstr "已应用命令：%s"
+
+#, c-format
+#~ msgid ""
+#~ "Attempting to initialize the following effect failed:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "More information may be available in 'Help > Diagnostics > Show Log'"
+#~ msgstr ""
+#~ "尝试初始化下列效果器时失败：\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "更多信息有可能可在 帮助 > 诊断 > 显示日志 中获取到"
+
+#~ msgid "Effect failed to initialize"
+#~ msgstr "效果器初始化失败"
+
+#~ msgid "Effect Unavailable"
+#~ msgstr "效果器不可用"
+
+#~ msgid "Error Loading EQ Curves"
+#~ msgstr "导入均衡器曲线出错"
+
+#~ msgid ""
+#~ "To use this filter curve in a macro, please choose a new name for it.\n"
+#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+#~ msgstr ""
+#~ "为了在宏中使用这个过滤曲线，请为其选择一个新名称。\n"
+#~ "点击“保存/管理曲线...”按钮并重命名“未命名”曲线，再使用它。"
+
+#~ msgid "Filter Curve EQ needs a different name"
+#~ msgstr "过滤曲线 EQ 需要一个不同的名字"
+
+#~ msgid "Curve not found"
+#~ msgstr "曲线图没有找到"
+
+#~ msgid "Nyquist Error"
+#~ msgstr "Nyquist 错误"
+
+#~ msgid "Error in Nyquist code"
+#~ msgstr "Nyquist 代码错误"
+
+#~ msgid "Split-cut to the clipboard"
+#~ msgstr "分离并剪切到剪贴板"
+
+#~ msgid "Split Cut"
+#~ msgstr "分离并剪切"
+
+#~ msgid "Spl&it Cut"
+#~ msgstr "分离并剪切(&I)"
+
+#~ msgid "Split D&elete"
+#~ msgstr "分离并删除(&E)"
+
+#~ msgid "E&xit"
+#~ msgstr "退出(&X)"
+
+#~ msgid "Split Cut labeled audio regions to clipboard"
+#~ msgstr "分离并剪切已标签的音频到剪贴板"
+
+#~ msgid "Split Cut Labeled Audio"
+#~ msgstr "分离并剪切已标签的音频"
+
+#~ msgid "Label Cut"
+#~ msgstr "标签剪切"
+
+#~ msgid "Label Delete"
+#~ msgstr "标签删除"
+
+#~ msgid "&Split Cut"
+#~ msgstr "分离并剪切(&S)"
+
+#~ msgid "Label Split Cut"
+#~ msgstr "分离并剪切标签"
+
+#~ msgid "Sp&lit Delete"
+#~ msgstr "分离并删除(&L)"
+
+#~ msgid "Label Split Delete"
+#~ msgstr "分离并删除标签"

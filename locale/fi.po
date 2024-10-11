@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-08-01 14:17+0300\n"
+"POT-Creation-Date: 2024-10-11 15:07+0200\n"
 "PO-Revision-Date: 2024-05-27 11:13+0300\n"
 "Last-Translator: Heino Keränen, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/klyok/teams/690/fi/)\n"
@@ -22,6 +22,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+"Tätä laajennusta ei voitu ladata.\n"
+"Se on saatettu poistaa."
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid "Plugin Error"
+msgstr "Laajennuksen virhe"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#, c-format
+msgid "Applied effect: %s"
+msgstr "Käytetty tehoste: %s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Toista - %s"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -101,7 +129,14 @@ msgstr "Korkea toistoviive: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-msgid "Supported Rates:\n"
+#, fuzzy
+msgid "Supported Playback Rates:\n"
+msgstr "Tuetut taajuudet:\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Capture Rates:\n"
 msgstr "Tuetut taajuudet:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -123,6 +158,10 @@ msgstr "Valittu toistolaite: %d - %s\n"
 #, c-format
 msgid "No playback device found for '%s'.\n"
 msgstr "Kohteelle ei löytynyt '%s' toistolaitetta.\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Supported Rates:\n"
+msgstr "Tuetut taajuudet:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
@@ -197,16 +236,15 @@ msgstr ""
 "Virhe avattaessa tallennuslaitetta.\n"
 "Virhekoodi: %s"
 
-#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
-#: libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-audio-io/AudioIO.cpp
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/ProjectAudioManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/EffectPreview.cpp
+#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -259,8 +297,9 @@ msgstr "Esiasetusta ei voi tallentaa asetustiedostoon"
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
-#: libraries/lib-lv2/LV2EffectBase.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-lv2/LV2EffectBase.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
+#: src/effects/EffectUI.cpp
 msgid "n/a"
 msgstr "--"
 
@@ -292,9 +331,10 @@ msgstr "Ääniyksikön tehosteet"
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp
 #: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#: src/effects/vamp/LoadVamp.cpp
 msgid "The Audacity Team"
 msgstr "Audacity-tiimi"
 
@@ -352,6 +392,973 @@ msgstr "XML-tiedot ovat tyhjiä muuntamisen jälkeen"
 msgid "Message"
 msgstr "Viesti"
 
+#: libraries/lib-builtin-effects/AmplifyBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Amplify"
+msgstr "Vahvista"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Auto Duck"
+msgstr "Automaattinen voimakkuuden lasku"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "Vähentää (hiljentää) yhden tai useamman raidan äänenvoimakkuutta aina, kun tietyn \"ohjausraidan\" äänenvoimakkuus saavuttaa tietyn tason"
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks'
+#. (reduces the volume) of the audio automatically when there is
+#. sound on another track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "Valitsit raidan, joka ei sisällä ääntä. Automaattinen voimakkuuden lasku voi käsitellä vain ääniraitoja."
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+#. the volume) of the audio automatically when there is sound on another
+#. track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Automaattinen voimakkuuden lasku tarvitsee ohjausraidan, joka on sijoitettava valittujen raitojen alapuolelle."
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Rendering Control-Track Time-Stretched Audio"
+msgstr "Ohjausraidan aikavenytetyn äänen renderöinti"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Bass and Treble"
+msgstr "Basso ja diskantti"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+msgid "Simple tone control effect"
+msgstr "Yksinkertainen sävyn säätötehoste"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Pitch"
+msgstr "Muuta sävelkorkeutta"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "Changes the pitch of a track without changing its tempo"
+msgstr "Muuttaa raidan sävelkorkeutta muuttamatta sen tempoa"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "High Quality Pitch Change"
+msgstr "Korkealaatuinen sävelkorkeuden muutos"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Speed and Pitch"
+msgstr "Muuta nopeutta ja sävelkorkeutta"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+msgid "Changes the speed of a track, also changing its pitch"
+msgstr "Muuttaa raidan nopeutta ja myös sen sävelkorkeutta"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Tempo"
+msgstr "Muuta tempoa"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "Changes the tempo of a selection without changing its pitch"
+msgstr "Muuttaa valinnan tempoa muuttamatta sen sävelkorkeutta"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "High Quality Tempo Change"
+msgstr "Korkealaatuinen tempomuutos"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Click Removal"
+msgstr "Naksausten poisto"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Click Removal is designed to remove clicks on audio tracks"
+msgstr "Naksauksen poistaminen on suunniteltu poistamaan ääniraitojen naksaukset"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Algorithm not effective on this audio. Nothing changed."
+msgstr "Algoritmi ei tehonnut valittuun ääneen. Mikään ei muuttunut."
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#, c-format
+msgid "Selection must be larger than %d samples."
+msgstr "Valinnan tulee olla vähintään %d näytettä."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "You can only measure one track at a time."
+msgstr "Voit mitata vain yhtä raitaa kerrallaan."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "Please select an audio track."
+msgstr "Valitse ääniraita."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Invalid audio selection.\n"
+"Please ensure that audio is selected."
+msgstr ""
+"Virheellinen äänivalinta.\n"
+"Varmista, että ääni on valittuna."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+"Ei mitään mitattavaa.\n"
+"Valitse raidan osa."
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Clipping"
+msgstr "Kova leikkaus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Clipping"
+msgstr "Pehmeä leikkaus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Overdrive"
+msgstr "Pehmeä yliohjaus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Medium Overdrive"
+msgstr "Keskimääräinen yliohjaus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Overdrive"
+msgstr "Kova yliohjaus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Cubic Curve (odd harmonics)"
+msgstr "Kolmannen asteen käyrä (parittomat yläsävelet)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Even Harmonics"
+msgstr "Parilliset yläsävelet"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Expand and Compress"
+msgstr "Laajenna ja kompressoi"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller"
+msgstr "Voimakkuuden tasoitin"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Rectifier Distortion"
+msgstr "Tasasuuntaussärö"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Limiter 1413"
+msgstr "Kova rajoitin 1413"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Hard clip -12dB, 80% make-up gain"
+msgstr "Kova leikkaus -12dB, 80% korvaava vahvistus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Soft clip -12dB, 80% make-up gain"
+msgstr "Pehmeä leikkaus -12dB, 80% korvaava vahvistus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Fuzz Box"
+msgstr "Äänensärkijä"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Walkie-talkie"
+msgstr "Radiopuhelin"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Blues drive sustain"
+msgstr "Blues-kaiku"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Light Crunch Overdrive"
+msgstr "Kevyt räsähdysyliohjaus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Heavy Overdrive"
+msgstr "Raskas yliohjaus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "3rd Harmonic (Perfect Fifth)"
+msgstr "3. yläsävel (puhdas kvintti)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Valve Overdrive"
+msgstr "Venttiilin yliohjaus"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "2nd Harmonic (Octave)"
+msgstr "2. yläsävel (oktaavi)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Gated Expansion Distortion"
+msgstr "Porttilaajennuksen särö"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Light, -70dB noise floor"
+msgstr "Tasoitin, kevyt, -70dB kohinataso"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Moderate, -70dB noise floor"
+msgstr "Tasoitin, keskitaso, -70dB kohinataso"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavy, -70dB noise floor"
+msgstr "Tasoitin, raskas, -70dB kohinataso"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavier, -70dB noise floor"
+msgstr "Tasoitin, raskaampi, -70dB kohinataso"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heaviest, -70dB noise floor"
+msgstr "Tasoitin, raskain, -70dB kohinataso"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Half-wave Rectifier"
+msgstr "Puoliaaltotasasuuntaaja"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier"
+msgstr "Kokoaaltotasasuuntaaja"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier (DC blocked)"
+msgstr "Kokoaaltotasasuuntaaja (estä tasavirta)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Percussion Limiter"
+msgstr "Lyömäsoittimien rajoitin"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Distortion"
+msgstr "Särö"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Waveshaping distortion effect"
+msgstr "Aaltomuodon särötehoste"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "DTMF Tones"
+msgstr "DTMF-äänet"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "Tuottaa kaksisävyisiä monitaajuusääniä (DTMF), kuten puhelimissa olevan näppäimistöäänet"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid ""
+"DTMF sequence empty.\n"
+"Check ALL settings for this effect."
+msgstr ""
+"DTMF-sarja  on tyhjä.\n"
+"Tarkista KAIKKI tämän tehosteen asetukset."
+
+#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
+msgid "Echo"
+msgstr "Kaiku"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+msgid "Repeats the selected audio again and again"
+msgstr "Toistaa valittua ääntä uudestaan ja uudestaan"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Requested value exceeds memory capacity."
+msgstr "Pyydetty arvo ylittää muistikapasiteetin."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Equalization"
+msgstr "Taajuuskorjaus"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Adjusts the volume levels of particular frequencies"
+msgstr "Säätää tiettyjen taajuuksien voimakkuustasoja"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "100Hz Rumble"
+msgstr "100Hz-jyrinä"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "AM Radio"
+msgstr "AM-radio"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Boost"
+msgstr "Basson tehostus"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Cut"
+msgstr "Basson leikkaus"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Low rolloff for speech"
+msgstr "Matala taajuusvaimennus puheelle"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "RIAA"
+msgstr "RIAA"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Telephone"
+msgstr "Puhelin"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Boost"
+msgstr "Diskantin tehostus"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Cut"
+msgstr "Diskantin leikkaus"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "Jotta taajuuskorjaus voidaan suorittaa, kaikilla valituilla raidoilla täytyy olla sama näytetaajuus."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Track sample rate is too low for this effect."
+msgstr "Raidan näytteenottotaajuus on liian alhainen tätä tehostetta varten."
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr "nimetön"
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"Virhe korjauskäyrien latauksessa tiedostosta:\n"
+"%s\n"
+"Virheilmoitus:\n"
+"%s"
+
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "Error Saving Equalization Curves"
+msgstr "Taajuuskorjainkäyrän tallennusvirhe"
+
+#: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr "Pyydettyä käyrää ei löydy, käytetään 'nimetöntä'"
+
+#. i18n-hint: Technical term for a kind of curve.
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "B-splini"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "Kosini"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "Kolmannen asteen käyrä"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade In"
+msgstr "Häivytä sisään"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-in to the selected audio"
+msgstr "Soveltaa lineaarista sisäänhäivytystä valittuun ääneen"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade Out"
+msgstr "Häivytä ulos"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-out to the selected audio"
+msgstr "Soveltaa lineaarista uloshäivytystä valittuun ääneen"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Find Clipping"
+msgstr "Etsi leikkautuminen"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Creates labels where clipping is detected"
+msgstr "Luo merkkejä kohtiin, joissa havaitaan leikkautumista"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Clipping"
+msgstr "Leikkautuminen"
+
+#. i18n-hint: Two numbers are substituted; the second is the
+#. size of a set, the first is the size of a subset, and not
+#. understood as an ordinal (i.e., not meaning "first", or
+#. "second", etc.)
+#.
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#, c-format
+msgctxt "find clipping"
+msgid "%lld of %lld"
+msgstr "%lld / %lld"
+
+#: libraries/lib-builtin-effects/Generator.cpp
+msgid "There is not enough room available to generate the audio"
+msgstr "Tilaa ei ole tarpeeksi käytettävissä äänen tuottamiseen"
+
+#: libraries/lib-builtin-effects/Invert.cpp resources/EffectsMenuDefaults.xml
+msgid "Invert"
+msgstr "Käännä vaihe"
+
+#: libraries/lib-builtin-effects/Invert.cpp
+msgid "Flips the audio samples upside-down, reversing their polarity"
+msgstr "Kääntää ääninäytteet ja niiden napaisuuden ylösalaisin"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Kompressori"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Kompressoi äänen dynaamista aluetta"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Loudness Normalization"
+msgstr "Äänekkyyden normalisointi"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Sets the loudness of one or more tracks"
+msgstr "Asettaa yhden tai useamman raidan voimakkuuden"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Normalizing Loudness...\n"
+msgstr "Normalisoidaan äänekkyyttä...\n"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing: %s"
+msgstr "Analysoidaan: %s"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing: %s"
+msgstr "Käsitellään: %s"
+
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "White"
+msgstr "Valkoinen"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Pink"
+msgstr "Pinkki"
+
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Brownian"
+msgstr "Brownin kohina"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Noise"
+msgstr "Kohina"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Generates one of three different types of noise"
+msgstr "Luo yhtä kolmesta erityyppisestä kohinasta"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median"
+msgstr "Keskimääräinen"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Second greatest"
+msgstr "Toiseksi suurin"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Old"
+msgstr "Vanha"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Noise Reduction"
+msgstr "Kohinan vaimennus"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Removes background noise such as fans, tape noise, or hums"
+msgstr "Poistaa taustaääniä, kuten puhaltimen ääntä, nauhan sihinää tai huminaa"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block are too few for the window types."
+msgstr "Askeleiden määrä lohkoa kohden on liian alhainen ikkunatyypeille."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block cannot exceed the window size."
+msgstr "Askeleiden määrä lohkoa kohden ei voi ylittää ikkunan kokoa."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median method is not implemented for more than four steps per window."
+msgstr "Mediaanimenetelmää ei ole toteutettu enemmässä kuin neljässä askeleessa per ikkuna."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "You must specify the same window size for steps 1 and 2."
+msgstr "Määritä sama ikkunakoko vaiheille 1. ja 2."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Warning: window types are not the same as for profiling."
+msgstr "Varoitus: Ikkunatyypit eivät ole samoja kuin profiloinnissa."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "All noise profile data must have the same sample rate."
+msgstr "Kaikissa kohinanpoistomalleissa on oltava sama näytteenottotaajuus."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "Kohinaprofiilin näytteenottotaajuuden on vastattava käsiteltävän äänen taajuutta."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Selected noise profile is too short."
+msgstr "Valittu kohinaprofiili on liian lyhyt."
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Normalize"
+msgstr "Normalisoi"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Sets the peak amplitude of one or more tracks"
+msgstr "Asettaa yhden tai useamman raidan huippuamplitudin"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset and Normalizing...\n"
+msgstr "Nollataan tasajännitetaso ja normalisoidaan...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset...\n"
+msgstr "Nollataan tasajännitetaso...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Normalizing without removing DC offset...\n"
+msgstr "Normalisoidaan nollaamatta tasajännitetasoa...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Not doing anything...\n"
+msgstr "Ei tee mitään...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing first track of stereo pair: %s"
+msgstr "Analysoidaan stereoparin ensimmäistä raitaa: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Analysoidaan stereoparin toista raitaa: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing stereo channels independently: %s"
+msgstr "Käsitellään stereokanavia itsenäisesti: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing first track of stereo pair: %s"
+msgstr "Käsitellään stereoparin ensimmäistä raitaa: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing second track of stereo pair: %s"
+msgstr "Käsitellään stereoparin toista raitaa: %s"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Paulstretch"
+msgstr "Paulstretch"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
+msgstr "Paulstretch on vain äärimmäiselle aikavenytykselle tai pysäytystehosteelle"
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Audio selection too short to preview.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"Valittu ääni on liian lyhyt esikuunteluun.\n"
+"\n"
+"Yritä pidentää valintaa vähintään %.1f sekuntiin\n"
+"tai vähentää aikaresoluutiota alle %.1f sekuntiin."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Unable to Preview.\n"
+"\n"
+"For the current audio selection, the maximum\n"
+"'Time Resolution' is %.1f seconds."
+msgstr ""
+"Esikuuntelua ei voitu suorittaa.\n"
+"\n"
+"Enimmäisaikaresoluutio nykyiselle\n"
+"äänivalinnalle on %.1f sekuntia."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"The 'Time Resolution' is too long for the selection.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"Aikaresoluutio on liian pitkä valinnalle.\n"
+"\n"
+"Yritä pidentää valintaa vähintään %.1f sekuntiin\n"
+"tai vähentää aikaresoluutiota alle %.1f sekuntiin."
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Phaser"
+msgstr "Vaiheistaja"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+msgid "Combines phase-shifted signals with the original signal"
+msgstr "Yhdistää vaihesiirrettyjä signaaleja alkuperäiseen signaaliin"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "Spektrin piirtämistä varten kaikilla valituilla raidoilla on oltava sama näytetaajuus."
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid ""
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
+msgstr ""
+"Ääntä ei voitu analysoida. Tämä voi johtua venymisestä tai sävelkorkeuden siirtymisestä leikkeessä.\n"
+"Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analysointia"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, c-format
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "Liikaa ääntä valittu. Vain ensimmäiset %.1f sekuntia analysoidaan."
+
+#: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
+msgid "Repair"
+msgstr "Korjaa"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "Sets the peak amplitude of a one or more tracks"
+msgstr "Asettaa yhden tai useamman raidan huippuamplitudin"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "The Repair effect cannot be applied within stretched or shrunk clips"
+msgstr "Korjaustoimintoa ei voi käyttää venytetyissä tai kutistetuissa leikkeissä"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"\n"
+"Zoom in and select a tiny fraction of a second to repair."
+msgstr ""
+"Tätä korjaustoimintoa on tarkoitettu käytettäväksi vain hyvin lyhyihin vahingoittuneisiin äänen osiin (enintään 128 näytettä).\n"
+"\n"
+"Suurenna näkymää ja valitse vain sekunnin murto-osa korjattavaksesi."
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"Repair works by using audio data outside the selection region.\n"
+"\n"
+"Please select a region that has audio touching at least one side of it.\n"
+"\n"
+"The more surrounding audio, the better it performs."
+msgstr ""
+"Korjaus toimii käyttämällä valinta-alueen ulkopuolista ääntä.\n"
+"\n"
+"Valitse alue, jossa ääni koskettaa vähintään toista sen puolta.\n"
+"\n"
+"Mitä enemmän ympäröivää ääntä, sitä paremmin se toimii."
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Repeat"
+msgstr "Toista valintaa"
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+msgid "Repeats the selection the specified number of times"
+msgstr "Toistaa valinnan määritetyn määrän kertoja"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Acoustic"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Ambience"
+msgstr "Hiljaisuus"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Artificial"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Clean"
+msgstr "Tyhjennä"
+
+#. i18n-hint: This is the name of an effect preset
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Modern"
+msgstr "Tila:"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal I"
+msgstr "Ääni I"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal II"
+msgstr "Ääni II"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Dance Vocal"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Modern Vocal"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Voice Tail"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Bathroom"
+msgstr "Kylpyhuone"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Bright"
+msgstr "Pieni valoisa huone"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Dark"
+msgstr "Pieni pimeä huone"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Medium Room"
+msgstr "Keskikokoinen huone"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Large Room"
+msgstr "Suuri huone"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Church Hall"
+msgstr "Kirkkosali"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Cathedral"
+msgstr "Katedraali"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Big Cave"
+msgstr ""
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Reverb"
+msgstr "Jälkikaiku"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Adds ambience or a \"hall effect\""
+msgstr "Lisää tunnelmaa tai \"hallitehostetta\""
+
+#: libraries/lib-builtin-effects/Reverse.cpp resources/EffectsMenuDefaults.xml
+msgid "Reverse"
+msgstr "Takaperin"
+
+#: libraries/lib-builtin-effects/Reverse.cpp
+msgid "Reverses the selected audio"
+msgstr "Kääntää valitun äänen toisinpäin"
+
+#: libraries/lib-builtin-effects/SBSMSBase.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "SBSMS-ajan/sävelkorkeuden venytys"
+
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Butterworth"
+msgstr "Butterworth"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type I"
+msgstr "Chebyshev Type I"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type II"
+msgstr "Chebyshev Type II"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Lowpass"
+msgstr "Alipäästö"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Highpass"
+msgstr "Ylipäästö"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Classic Filters"
+msgstr "Klassiset suodattimet"
+
+#. i18n-hint: "infinite impulse response"
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Performs IIR filtering that emulates analog filters"
+msgstr "Suorittaa IIR-suodatuksen, joka emuloi analogisia suodattimia"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "To apply a filter, all selected tracks must have the same sample rate."
+msgstr "Kaikilla valituilla raidoilla täytyy olla sama näytteenottotaajuus, jotta suodatinta voidaan käyttää."
+
+#. i18n-hint: noun
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgctxt "generator"
+msgid "Silence"
+msgstr "Hiljaisuus"
+
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgid "Creates audio of zero amplitude"
+msgstr "Luo ääntä nolla-amplitudilla"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Stereo To Mono"
+msgstr "Stereo monoksi"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Converts stereo tracks to mono"
+msgstr "Muuntaa stereoraidan monoksi"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Mixing down to mono"
+msgstr "Miksataan monoksi"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Sliding Stretch"
+msgstr "Liukuva venytys"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+msgid "Allows continuous changes to the tempo and/or pitch"
+msgstr "Sallii jatkuvat muutokset tempoon ja/tai sävelkorkeuteen"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "Lineaarinen"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Logarithmic"
+msgstr "Logaritminen"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sine"
+msgstr "Sini"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Square"
+msgstr "Kantti"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sawtooth"
+msgstr "Sahalaita"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgid "Square, no alias"
+msgstr "Kantti, laskostumaton"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Kolmio"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Truncate Detected Silence"
+msgstr "Lyhennä havaittu hiljaisuus"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Compress Excess Silence"
+msgstr "Pakkaa liika hiljaisuus"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Truncate Silence"
+msgstr "Lyhennä hiljaisuus"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr "Lyhentää automaattisesti kappaleen osia, joissa äänenvoimakkuus on alle määrätyn rajan"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "Kun katkaistaan itsenäisesti, kussakin tahtilukitussa raitaryhmässä voi olla vain yksi valittu ääniraita."
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Wahwah"
+msgstr "Wahwah"
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr "Nopeat äänenlaadun vaihtelut, kuten 1970-luvulla suositussa kitaratehosteessa"
+
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
 msgstr "Lähetystä ei voi jatkaa."
@@ -397,14 +1404,6 @@ msgstr "Paikalliset projektitiedot poistettiin ennen kuin synkronointi on valmis
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
 msgstr "Vastauksen jäsennys epäonnistui"
-
-#. i18n-hint: This is the name of an effect preset.
-#. i18n-hint: This is the name of an effect preset
-#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Modern"
-msgstr "Tila:"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -578,10 +1577,10 @@ msgid "Play it Loud"
 msgstr "Toistetaan ääntä"
 
 #: libraries/lib-effects/Effect.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: plug-ins/beat.ny
+#: src/commands/AudacityCommand.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1078,6 +2077,43 @@ msgstr ""
 msgid "Import Project"
 msgstr "Tuo projekti"
 
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "SubRip text file"
+msgstr "SubRip-tekstitiedosto"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "WebVTT file"
+msgstr "WebVTT -tiedosto"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "&Vakio"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "&Laajennettu (taajuusalueet)"
+
+#: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
+msgid "Labels"
+msgstr "Merkit"
+
+#. i18n-hint: (noun) it's the name of a kind of track.
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Label track.
+#: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
+#: src/LabelDialog.h src/TrackPanelAx.cpp
+msgid "Label Track"
+msgstr "Merkkiraita"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr "WebVTT -tiedostojen tuontia ei tällä hetkellä tueta."
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "One or more saved labels could not be read."
+msgstr "Vähintään yhtä tallennettua merkkiä ei voitu lukea."
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -1124,7 +2160,7 @@ msgstr "LV2-tehosteet"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "Tarjoaa LV2 tehostetuen Audacitylle"
 
-#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectPresetDialog.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -1142,6 +2178,116 @@ msgstr "Kolmio"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "Muotoiltu"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C"
+msgstr "C"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯"
+msgstr "C♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D"
+msgstr "D"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯"
+msgstr "D♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E"
+msgstr "E"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F"
+msgstr "F"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯"
+msgstr "F♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G"
+msgstr "G"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯"
+msgstr "G♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A"
+msgstr "A"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯"
+msgstr "A♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B"
+msgstr "B"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♭"
+msgstr "D♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E♭"
+msgstr "E♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♭"
+msgstr "G♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♭"
+msgstr "A♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B♭"
+msgstr "B♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯/D♭"
+msgstr "C♯/D♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯/E♭"
+msgstr "D♯/E♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯/G♭"
+msgstr "F♯/G♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯/A♭"
+msgstr "G♯/A♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯/B♭"
+msgstr "A♯/B♭"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -1182,14 +2328,6 @@ msgstr "Tuntematon muoto"
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "Komento"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Toista - %s"
 
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
@@ -1829,6 +2967,150 @@ msgstr "10>01000 vuosikymmentä|0.434294482"
 msgid "thousandths of decades"
 msgstr "vuosikymmenten tuhannesosat"
 
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Nyquist Effects"
+msgstr "Nyquist-tehosteet"
+
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Provides Nyquist Effects support to Audacity"
+msgstr "Huolehtii Audacityn Nyquist-tehostetuesta"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Applying Nyquist Effect..."
+msgstr "Suoritetaan Nyquist-tehostetta..."
+
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. * Prompt"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist Worker"
+msgstr "Nyquist-kehote"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "Huonosti muotoiltu Nyquist-laajennusotsikko"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+"Ota raidan spektrogrammi käyttöön\n"
+"käyttääksesi spektritehosteita."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid ""
+"To use 'Spectral effects', enable 'Spectral Selection'\n"
+"in the track Spectrogram settings and select the\n"
+"frequency range for the effect to act on."
+msgstr ""
+"Jos haluat käyttää spektritehosteita, ota 'Spektrivalinta'\n"
+"spektrogrammin asetuksista käyttöön ja valitse\n"
+"taajuusalue, jolle tehoste suoritetaan."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
+msgstr "virhe: Otsikossa määritetty tiedosto %s, mutta sitä ei löydy laajennuspolusta.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Audio selection required."
+msgstr "Äänivalinta vaaditaan."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Processing complete."
+msgstr "Käsittely valmis."
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr "';type tool' -tehosteet eivät voi palauttaa ääntä Nyquististä.\n"
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr "';type tool' -tehosteet eivät voi palauttaa merkkejä Nyquististä.\n"
+
+#. i18n-hint: "%s" is replaced by name of plug-in.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "nyx_error returned from %s.\n"
+msgstr "nyx_error palautettiin kohteesta %s.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "plug-in"
+msgstr "laajennus"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned a list."
+msgstr "Nyquist palautti listan."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist palautti arvon: %f"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nyquist palautti arvon: %d"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned too many audio channels.\n"
+msgstr "Nyquist palautti liian monta äänikanavaa.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned one audio channel as an array.\n"
+msgstr "Nyquist palautti yhden äänikanavan taulukkona.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned an empty array.\n"
+msgstr "Nyquist palautti tyhjän taulukon.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned nil audio.\n"
+msgstr "Nyquist palautti tyhjän äänen.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[Varoitus: Nyquist palautti virheellisen UTF-8 -merkkijonon, joka muunnettiin tässä Latin-1 -muotoon]"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "Tämä Audacity-versio ei tue Nyquist-laajennusversiota %ld"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not open file"
+msgstr "Tiedostoa ei voitu avata"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Your code looks like SAL syntax, but there is no 'return' statement.\n"
+"For SAL, use a return statement such as:\n"
+"\treturn *track* * 0.1\n"
+"or for LISP, begin with an open parenthesis such as:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+msgstr ""
+"Koodi näyttää SAL-syntaksilta, mutta palautuslausetta ei ole.\n"
+"Käytä SAL:ssa palautuslausetta, kuten:\n"
+"\treturn *track* * 0.1\n"
+"tai LISPin tapauksessa aloita avoimella sulkeella, kuten:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+
+#. i18n-hint: refers to programming "languages"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not determine language"
+msgstr "Kieltä ei voitu määrittää"
+
+#. i18n-hint: default exported file name when exporting from unsaved project
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/TimerRecordDialog.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "untitled"
+msgstr "nimetön"
+
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Audio Track"
 msgstr "Ääniraita"
@@ -2296,7 +3578,7 @@ msgid "Writable Sample Track"
 msgstr "Kirjoitettava näyteraita"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/effects/Contrast.cpp
 msgid "&Close"
 msgstr "&Sulje"
 
@@ -2899,6 +4181,138 @@ msgstr "VST3-esiasetustiedostoa %s ei voi käyttää"
 msgid "Failed to save VST3 preset to file"
 msgstr "VST3-esiasetuksen tallentaminen tiedostoon epäonnistui"
 
+#. i18n-hint: The name of a frequency scale in psychoacoustics
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Mel"
+msgstr "Mel"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Bark"
+msgstr "Bark"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "ERB"
+msgstr "ERB"
+
+#. i18n-hint: Time units, that is Period = 1 / Frequency
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Period"
+msgstr "Aikaväli"
+
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (Roseus)"
+msgstr "Väri (Roseus)"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Väri (klassinen)"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Harmaasävy"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Käänteinen harmaasävy"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Frequencies"
+msgstr "Taajuudet"
+
+#. i18n-hint: the Reassignment algorithm for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Reassignment"
+msgstr "Uudelleenmääritys"
+
+#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Pitch (EAC)"
+msgstr "Sävelkorkeus (EAC)"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr "Ylimmän taajuuden täytyy olla vähintään 100 Hz"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be at least 0 Hz"
+msgstr "Alimman taajuuden täytyy olla vähintään 0 Hz"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be less than maximum frequency"
+msgstr "Alimman taajuuden on oltava ylintä taajuutta pienempi"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The range must be at least 1 dB"
+msgstr "Alueen on oltava vähintään 1 dB"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain cannot be negative"
+msgstr "Taajuusvahvistus ei voi olla negatiivinen"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain must be no more than 60 dB/dec"
+msgstr "Taajuusvahvistus ei saa olla yli 60 dB/dek"
+
+#. i18n-hint: abbreviates amplitude
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Linear (amp)"
+msgstr "Lineaarinen (amp)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Logarithmic (dB)"
+msgstr "Logaritminen (dB)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Linear (dB)"
+msgstr "Lineaarinen (dB)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-36 dB (shallow range for high-amplitude editing)"
+msgstr "-36 dB (ylimalkainen alue korkea-amplitudiselle muokkaukselle)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-48 dB (PCM range of 8 bit samples)"
+msgstr "-48 dB (8-bittisen PCM:n näytealue)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-60 dB (PCM range of 10 bit samples)"
+msgstr "-60 dB (10-bittisen PCM:n näytealue)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-72 dB (PCM range of 12 bit samples)"
+msgstr "-72 dB (12-bittisen PCM:n näytealue)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-84 dB (PCM range of 14 bit samples)"
+msgstr "-84 dB (14-bittisen PCM:n näytealue)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-96 dB (PCM range of 16 bit samples)"
+msgstr "-96 dB (16-bittisen PCM:n näytealue)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-120 dB (approximate limit of human hearing)"
+msgstr "-120 dB (suunnilleen ihmiskuulon raja)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-145 dB (PCM range of 24 bit samples)"
+msgstr "-145 dB (24-bittisen PCM:n näytealue)"
+
 #: libraries/lib-wave-track/Sequence.cpp
 #, c-format
 msgid ""
@@ -2919,6 +4333,11 @@ msgstr "Esikäsittely"
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Rendering Clip"
 msgstr "Leikkeen renderöinti"
+
+#: libraries/lib-wave-track/WaveChannelViewConstants.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "&Multi-view"
+msgstr "&Moninäkymä"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -3167,6 +4586,7 @@ msgstr "Pysäytä"
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
@@ -4644,9 +6064,9 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (pienemmät tiedostot)"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane, 320 kbps"
+#, fuzzy
+msgid "Excessive, 320 kbps"
 msgstr "Maksimi, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4661,10 +6081,9 @@ msgstr "Normaali, 170-210 kbps"
 msgid "Medium, 145-185 kbps"
 msgstr "Keskitaso, 145-185 kbps"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane"
-msgstr "Älytön"
+msgid "Excessive"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -5890,12 +7309,21 @@ msgid "Account not linked"
 msgstr "Tiliä ei ole linkitetty"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
 msgstr "&Linkitä tili"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Unlink Account"
 msgstr "&Poista tilin linkitys"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "&Sign Out"
+msgstr "Lineaarinen ulos"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -5979,10 +7407,6 @@ msgid "Project Name"
 msgstr "Projektin nimi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr "Pilvitallennus vaatii ilmaisen audio.com-tilin, joka on linkitetty Audacityyn. Jatka klikkaamalla \"Yhdistä tili\" yllä."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
 msgstr "Yksityinen"
 
@@ -6064,6 +7488,77 @@ msgstr "&Jatka"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
 msgstr "L&inkitä audio.com-tili..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create cloud account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to cloud"
+msgstr "Asettele peräjälkeen"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Oops! It looks like there was an issue with your input.\n"
+"Please ensure your email is correct and that your password is at least 8 characters long"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Sorry, but it seems the email or password you entered is incorrect.\n"
+"Please double-check your credentials and try again!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Create an account to save to the cloud"
+msgstr "Tätä projektia ei enää tallenneta pilveen"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to save to the cloud"
+msgstr "Tätä projektia ei enää tallenneta pilveen"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Google"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Facebook"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Email"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Password"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Forgot your password?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Already have an account? "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in here"
+msgstr "Kirjaudu sisään"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Need an account? "
+msgstr "Linkitä tili"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "Jatka"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -6321,11 +7816,6 @@ msgstr "Synkronoidaan projektia"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
 msgstr "Projekti synkronoituu taustalla, kun työskentelet. Voit tarkistaa synkronoinnin tilan Audacityn oikeasta alakulmasta milloin tahansa"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "Jatka"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
@@ -6967,16 +8457,16 @@ msgstr ""
 "Se on poistettu luettelosta 'Viimeksi avatut tiedostot'."
 
 #: src/AudacityApp.cpp
+msgid "Audacity is starting up..."
+msgstr "Audacity käynnistyy..."
+
+#: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr "SQLite-kirjastoa ei voitu alustaa.  Audacity ei voi käynnistyä."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Lohkon koko täytyy olla välillä 256 - 100000000\n"
-
-#: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "Audacity käynnistyy..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -7233,7 +8723,9 @@ msgstr ""
 "\n"
 "Jos valitset \"Lopeta Audacity\", projektisi saatetaan jättää tallentamattomaan tilaan, joka palautetaan, kun avaat sen seuraavan kerran."
 
+#. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Quit Audacity"
 msgstr "&Lopeta Audacity"
 
@@ -8072,6 +9564,29 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "Sammuta katkosten tunnistus"
 
+#: src/EffectAndCommandPluginManager.cpp
+#, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in 'Help > Diagnostics > Show Log'"
+msgstr ""
+"Seuraavan komennon alustaminen epäonnistui:\n"
+"\n"
+"%s\n"
+"\n"
+"Lisätietoja voi olla kohdassa 'Ohje > Diagnostiikka > Näytä loki'"
+
+#: src/EffectAndCommandPluginManager.cpp
+msgid "Command failed to initialize"
+msgstr "Komennon alustaminen epäonnistui"
+
+#: src/ExportLabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "Vietyjen merkkien tyyli:"
+
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
 msgstr "Taajuusanalyysi"
@@ -8168,23 +9683,6 @@ msgstr "Aks&eli:"
 #: src/FreqWindow.cpp
 msgid "&Replot..."
 msgstr "&Päivitä..."
-
-#: src/FreqWindow.cpp
-msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "Spektrin piirtämistä varten kaikilla valituilla raidoilla on oltava sama näytetaajuus."
-
-#: src/FreqWindow.cpp
-msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
-msgstr ""
-"Ääntä ei voitu analysoida. Tämä voi johtua venymisestä tai sävelkorkeuden siirtymisestä leikkeessä.\n"
-"Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analysointia"
-
-#: src/FreqWindow.cpp
-#, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "Liikaa ääntä valittu. Vain ensimmäiset %.1f sekuntia analysoidaan."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -8402,47 +9900,6 @@ msgstr "Uusi merkkiraita"
 msgid "Enter track name"
 msgstr "Kirjoita raidan nimi"
 
-#. i18n-hint: (noun) it's the name of a kind of track.
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Label track.
-#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
-#: src/TrackPanelAx.cpp
-msgid "Label Track"
-msgstr "Merkkiraita"
-
-#: src/LabelTrack.cpp
-msgid "SubRip text file"
-msgstr "SubRip-tekstitiedosto"
-
-#: src/LabelTrack.cpp
-msgid "WebVTT file"
-msgstr "WebVTT -tiedosto"
-
-#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
-msgid "Labels"
-msgstr "Merkit"
-
-#: src/LabelTrack.cpp
-msgid "S&tandard"
-msgstr "&Vakio"
-
-#: src/LabelTrack.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "&Laajennettu (taajuusalueet)"
-
-#: src/LabelTrack.cpp
-msgid "Exported Label Style:"
-msgstr "Vietyjen merkkien tyyli:"
-
-#: src/LabelTrack.cpp
-msgid "Importing WebVTT files is not currently supported."
-msgstr "WebVTT -tiedostojen tuontia ei tällä hetkellä tueta."
-
-#: src/LabelTrack.cpp
-msgid "One or more saved labels could not be read."
-msgstr "Vähintään yhtä tallennettua merkkiä ei voitu lukea."
-
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
 #: src/LangChoice.cpp
@@ -8490,13 +9947,14 @@ msgstr "Pikanäppäimet on poistettu"
 msgid "Audacity Mixer%s"
 msgstr "Audacity mikseri %s"
 
-#. i18n-hint: title of the Gain slider, used to adjust the volume
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#. i18n-hint: title of the Volume slider, used to adjust the volume
+#. i18n-hint: Title of the Volume slider, used to adjust the volume
+#: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Gain"
-msgstr "Vahvistus"
+#, fuzzy
+msgid "Volume"
+msgstr "Voimakkuus    "
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -8537,8 +9995,9 @@ msgstr "Signaalin tason mittari"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Moved gain slider"
-msgstr "Siirretty vahvistussäädintä"
+#, fuzzy
+msgid "Moved volume slider"
+msgstr "Siirretty nopeussäädintä"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -8553,116 +10012,6 @@ msgstr "Siirretty panorointisäädintä"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "&Mikseri"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C"
-msgstr "C"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯"
-msgstr "C♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D"
-msgstr "D"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯"
-msgstr "D♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E"
-msgstr "E"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F"
-msgstr "F"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯"
-msgstr "F♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G"
-msgstr "G"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯"
-msgstr "G♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A"
-msgstr "A"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯"
-msgstr "A♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B"
-msgstr "B"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♭"
-msgstr "D♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E♭"
-msgstr "E♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♭"
-msgstr "G♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♭"
-msgstr "A♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B♭"
-msgstr "B♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯/D♭"
-msgstr "C♯/D♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯/E♭"
-msgstr "D♯/E♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯/G♭"
-msgstr "F♯/G♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯/A♭"
-msgstr "G♯/A♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯/B♭"
-msgstr "A♯/B♭"
 
 #: src/PluginDataModel.cpp
 #, c-format
@@ -9428,18 +10777,6 @@ msgstr "Siirretty %s alas kohteessa %s"
 msgid "Change effect order"
 msgstr "Muuta efektijärjestystä"
 
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid ""
-"This plugin could not be loaded.\n"
-"It may have been deleted."
-msgstr ""
-"Tätä laajennusta ei voitu ladata.\n"
-"Se on saatettu poistaa."
-
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid "Plugin Error"
-msgstr "Laajennuksen virhe"
-
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
@@ -9674,12 +11011,6 @@ msgstr "Kesto"
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "Audacityn ajastettu äänitys"
-
-#. i18n-hint: default exported file name when exporting from unsaved project
-#: src/TimerRecordDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "untitled"
-msgstr "nimetön"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -10204,8 +11535,8 @@ msgstr "Mitä uutta Audacityssä %s"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr "Katso [[%s|julkaise video]] tai lue [[https://support.audacityteam.org/additional-resources/changelog|changelog]] saadaksesi lisätietoja!</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -10215,6 +11546,57 @@ msgstr "Hanki ilmaisia ​​laajennuksia ja ääniä"
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
 msgstr "<p>Tutustu [[%s|Muse Hub -sovellukseen]], josta löydät laajan valikoiman äänilaajennuksia Audacityn käyttäjille</p>"
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal processing effect that enhances vocal clarity and depth."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#. i18n-hint: MuseHub is a name of a product, see musehub.com.
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Available on [[%s|MuseHub]]."
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -10234,7 +11616,7 @@ msgstr "Älä näytä tätä käynnistyksessä"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
-#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -10398,7 +11780,7 @@ msgstr "LISP"
 msgid "Brief"
 msgstr "Lyhyt"
 
-#: src/commands/GetInfoCommand.cpp src/effects/EffectManager.cpp
+#: src/commands/GetInfoCommand.cpp src/effects/EffectPresetDialog.cpp
 msgid "Type:"
 msgstr "Tyyppi:"
 
@@ -10843,8 +12225,9 @@ msgid "Set Track Audio"
 msgstr "Aseta raidan ääni"
 
 #: src/commands/SetTrackInfoCommand.cpp
-msgid "Gain:"
-msgstr "Vahvistus:"
+#, fuzzy
+msgid "Volume:"
+msgstr "Voimakkuus    "
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -10853,24 +12236,6 @@ msgstr "Panorointi:"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Visuals"
 msgstr "Määritä raidan visualisoinnit"
-
-#. i18n-hint: abbreviates amplitude
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Linear (amp)"
-msgstr "Lineaarinen (amp)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Logarithmic (dB)"
-msgstr "Logaritminen (dB)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Linear (dB)"
-msgstr "Lineaarinen (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -10946,10 +12311,6 @@ msgstr "Määrittää raidalle erilaisia arvoja."
 msgid "Long Message"
 msgstr "Pitkä viesti"
 
-#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
-msgid "Amplify"
-msgstr "Vahvista"
-
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "Kasvattaa tai vähentää valitsemaasi äänen voimakkuutta"
@@ -10969,32 +12330,6 @@ msgstr "&Uusi huippuamplitudi (dB):"
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
 msgstr "&Salli leikkautuminen"
-
-#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
-msgid "Auto Duck"
-msgstr "Automaattinen voimakkuuden lasku"
-
-#: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Vähentää (hiljentää) yhden tai useamman raidan äänenvoimakkuutta aina, kun tietyn \"ohjausraidan\" äänenvoimakkuus saavuttaa tietyn tason"
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks'
-#. (reduces the volume) of the audio automatically when there is
-#. sound on another track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "Valitsit raidan, joka ei sisällä ääntä. Automaattinen voimakkuuden lasku voi käsitellä vain ääniraitoja."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
-#. the volume) of the audio automatically when there is sound on another
-#. track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Automaattinen voimakkuuden lasku tarvitsee ohjausraidan, joka on sijoitettava valittujen raitojen alapuolelle."
-
-#: src/effects/AutoDuck.cpp
-msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr "Ohjausraidan aikavenytetyn äänen renderöinti"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -11057,14 +12392,6 @@ msgstr "%s: ei ole kelvollinen esiasetustiedosto.\n"
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr "%s: on tarkoitettu eri tehosteille, generaattorille tai analysaattorille.\n"
 
-#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
-msgid "Bass and Treble"
-msgstr "Basso ja diskantti"
-
-#: src/effects/BassTreble.cpp
-msgid "Simple tone control effect"
-msgstr "Yksinkertainen sävyn säätötehoste"
-
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
 msgstr "Ääniohjaukset"
@@ -11096,18 +12423,6 @@ msgstr "Äänenvoimakkuus (dB):"
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
 msgstr "&Yhdistä äänenvoimakkuuden säätö äänisäätimiin"
-
-#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Pitch"
-msgstr "Muuta sävelkorkeutta"
-
-#: src/effects/ChangePitch.cpp
-msgid "Changes the pitch of a track without changing its tempo"
-msgstr "Muuttaa raidan sävelkorkeutta muuttamatta sen tempoa"
-
-#: src/effects/ChangePitch.cpp
-msgid "High Quality Pitch Change"
-msgstr "Korkealaatuinen sävelkorkeuden muutos"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
@@ -11205,14 +12520,6 @@ msgstr "45"
 msgid "78"
 msgstr "78"
 
-#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Speed and Pitch"
-msgstr "Muuta nopeutta ja sävelkorkeutta"
-
-#: src/effects/ChangeSpeed.cpp
-msgid "Changes the speed of a track, also changing its pitch"
-msgstr "Muuttaa raidan nopeutta ja myös sen sävelkorkeutta"
-
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
 msgstr "Nopeu&skerroin:"
@@ -11277,18 +12584,6 @@ msgctxt "change speed"
 msgid "to"
 msgstr "uusi"
 
-#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Tempo"
-msgstr "Muuta tempoa"
-
-#: src/effects/ChangeTempo.cpp
-msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Muuttaa valinnan tempoa muuttamatta sen sävelkorkeutta"
-
-#: src/effects/ChangeTempo.cpp
-msgid "High Quality Tempo Change"
-msgstr "Korkealaatuinen tempomuutos"
-
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
 msgstr "Iskua minuutissa"
@@ -11336,23 +12631,6 @@ msgstr "uus&i"
 msgid "Length in seconds from %s, to"
 msgstr "Pituus sekunteina %s ->"
 
-#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
-msgid "Click Removal"
-msgstr "Naksausten poisto"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "Naksauksen poistaminen on suunniteltu poistamaan ääniraitojen naksaukset"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr "Algoritmi ei tehonnut valittuun ääneen. Mikään ei muuttunut."
-
-#: src/effects/ClickRemoval.cpp
-#, c-format
-msgid "Selection must be larger than %d samples."
-msgstr "Valinnan tulee olla vähintään %d näytettä."
-
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
 msgstr "Kynnysarvo (ma&talampi on herkempi):"
@@ -11376,30 +12654,6 @@ msgstr "Kompressori"
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr "Vähentää \"dynaamista aluetta\" eli äänekkäiden ja hiljaisten osien välisiä eroja."
-
-#: src/effects/Contrast.cpp
-msgid "You can only measure one track at a time."
-msgstr "Voit mitata vain yhtä raitaa kerrallaan."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Valitse ääniraita."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Invalid audio selection.\n"
-"Please ensure that audio is selected."
-msgstr ""
-"Virheellinen äänivalinta.\n"
-"Varmista, että ääni on valittuna."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Nothing to measure.\n"
-"Please select a section of a track."
-msgstr ""
-"Ei mitään mitattavaa.\n"
-"Valitse raidan osa."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -11637,132 +12891,6 @@ msgid "Contrast..."
 msgstr "Kontrasti..."
 
 #: src/effects/Distortion.cpp
-msgid "Hard Clipping"
-msgstr "Kova leikkaus"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Clipping"
-msgstr "Pehmeä leikkaus"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Overdrive"
-msgstr "Pehmeä yliohjaus"
-
-#: src/effects/Distortion.cpp
-msgid "Medium Overdrive"
-msgstr "Keskimääräinen yliohjaus"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Overdrive"
-msgstr "Kova yliohjaus"
-
-#: src/effects/Distortion.cpp
-msgid "Cubic Curve (odd harmonics)"
-msgstr "Kolmannen asteen käyrä (parittomat yläsävelet)"
-
-#: src/effects/Distortion.cpp
-msgid "Even Harmonics"
-msgstr "Parilliset yläsävelet"
-
-#: src/effects/Distortion.cpp
-msgid "Expand and Compress"
-msgstr "Laajenna ja kompressoi"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller"
-msgstr "Voimakkuuden tasoitin"
-
-#: src/effects/Distortion.cpp
-msgid "Rectifier Distortion"
-msgstr "Tasasuuntaussärö"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Limiter 1413"
-msgstr "Kova rajoitin 1413"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Kova leikkaus -12dB, 80% korvaava vahvistus"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "Pehmeä leikkaus -12dB, 80% korvaava vahvistus"
-
-#: src/effects/Distortion.cpp
-msgid "Fuzz Box"
-msgstr "Äänensärkijä"
-
-#: src/effects/Distortion.cpp src/effects/Equalization.cpp
-msgid "Walkie-talkie"
-msgstr "Radiopuhelin"
-
-#: src/effects/Distortion.cpp
-msgid "Blues drive sustain"
-msgstr "Blues-kaiku"
-
-#: src/effects/Distortion.cpp
-msgid "Light Crunch Overdrive"
-msgstr "Kevyt räsähdysyliohjaus"
-
-#: src/effects/Distortion.cpp
-msgid "Heavy Overdrive"
-msgstr "Raskas yliohjaus"
-
-#: src/effects/Distortion.cpp
-msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "3. yläsävel (puhdas kvintti)"
-
-#: src/effects/Distortion.cpp
-msgid "Valve Overdrive"
-msgstr "Venttiilin yliohjaus"
-
-#: src/effects/Distortion.cpp
-msgid "2nd Harmonic (Octave)"
-msgstr "2. yläsävel (oktaavi)"
-
-#: src/effects/Distortion.cpp
-msgid "Gated Expansion Distortion"
-msgstr "Porttilaajennuksen särö"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Light, -70dB noise floor"
-msgstr "Tasoitin, kevyt, -70dB kohinataso"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "Tasoitin, keskitaso, -70dB kohinataso"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "Tasoitin, raskas, -70dB kohinataso"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "Tasoitin, raskaampi, -70dB kohinataso"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "Tasoitin, raskain, -70dB kohinataso"
-
-#: src/effects/Distortion.cpp
-msgid "Half-wave Rectifier"
-msgstr "Puoliaaltotasasuuntaaja"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier"
-msgstr "Kokoaaltotasasuuntaaja"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier (DC blocked)"
-msgstr "Kokoaaltotasasuuntaaja (estä tasavirta)"
-
-#: src/effects/Distortion.cpp
-msgid "Percussion Limiter"
-msgstr "Lyömäsoittimien rajoitin"
-
-#: src/effects/Distortion.cpp
 msgid "Upper Threshold"
 msgstr "Ylempi kynnys"
 
@@ -11781,14 +12909,6 @@ msgstr "Parametri 2"
 #: src/effects/Distortion.cpp
 msgid "Number of repeats"
 msgstr "Toistojen määrä"
-
-#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
-msgid "Distortion"
-msgstr "Särö"
-
-#: src/effects/Distortion.cpp
-msgid "Waveshaping distortion effect"
-msgstr "Aaltomuodon särötehoste"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion type:"
@@ -11885,22 +13005,6 @@ msgstr "(0 -> 100):"
 #: src/effects/Distortion.cpp
 msgid "(0 to 5):"
 msgstr "(0 -> 5):"
-
-#: src/effects/DtmfGen.cpp
-msgid "DTMF Tones"
-msgstr "DTMF-äänet"
-
-#: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Tuottaa kaksisävyisiä monitaajuusääniä (DTMF), kuten puhelimissa olevan näppäimistöäänet"
-
-#: src/effects/DtmfGen.cpp
-msgid ""
-"DTMF sequence empty.\n"
-"Check ALL settings for this effect."
-msgstr ""
-"DTMF-sarja  on tyhjä.\n"
-"Tarkista KAIKKI tämän tehosteen asetukset."
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF &sequence:"
@@ -12045,19 +13149,6 @@ msgstr "Pakkaus"
 msgid "awaiting playback"
 msgstr "odottaa toistoa"
 
-#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
-msgid "Echo"
-msgstr "Kaiku"
-
-#: src/effects/Echo.cpp
-msgid "Repeats the selected audio again and again"
-msgstr "Toistaa valittua ääntä uudestaan ja uudestaan"
-
-#: src/effects/Echo.cpp src/effects/FindClipping.cpp
-#: src/effects/Paulstretch.cpp
-msgid "Requested value exceeds memory capacity."
-msgstr "Pyydetty arvo ylittää muistikapasiteetin."
-
 #: src/effects/Echo.cpp
 msgid "&Delay time (seconds):"
 msgstr "&Viiveen kesto (sek.):"
@@ -12066,77 +13157,29 @@ msgstr "&Viiveen kesto (sek.):"
 msgid "D&ecay factor:"
 msgstr "Vaim&ennuskerroin:"
 
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied effect: %s"
-msgstr "Käytetty tehoste: %s"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied command: %s"
-msgstr "Käytetty tehoste: %s"
-
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Select Preset"
 msgstr "Valitse esiasetus"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "&Preset:"
 msgstr "&Esiasetus:"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "User Presets"
 msgstr "Esiasetukset"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "Factory Presets"
 msgstr "Tehdasesiasetukset"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Current Settings"
 msgstr "Nykyiset asetukset"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Factory Defaults"
 msgstr "Tehdasoletukset"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following effect failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"Seuraavan tehosteen alustaminen epäonnistui:\n"
-"\n"
-"%s\n"
-"\n"
-"Lisätietoja voi olla kohdassa 'Ohje > Diagnostiikka > Näytä loki'"
-
-#: src/effects/EffectManager.cpp
-msgid "Effect failed to initialize"
-msgstr "Tehosteen alustus epäonnistui"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following command failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"Seuraavan komennon alustaminen epäonnistui:\n"
-"\n"
-"%s\n"
-"\n"
-"Lisätietoja voi olla kohdassa 'Ohje > Diagnostiikka > Näytä loki'"
-
-#: src/effects/EffectManager.cpp
-msgid "Command failed to initialize"
-msgstr "Komennon alustaminen epäonnistui"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
@@ -12230,10 +13273,6 @@ msgstr ""
 "\n"
 "Korvataanko?"
 
-#: src/effects/Equalization.cpp
-msgid "Equalization"
-msgstr "Taajuuskorjaus"
-
 #: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "Käyrätaajuuskorjain"
@@ -12242,58 +13281,6 @@ msgstr "Käyrätaajuuskorjain"
 #: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Palkkitaajuuskorjain"
-
-#: src/effects/Equalization.cpp
-msgid "Adjusts the volume levels of particular frequencies"
-msgstr "Säätää tiettyjen taajuuksien voimakkuustasoja"
-
-#: src/effects/Equalization.cpp
-msgid "100Hz Rumble"
-msgstr "100Hz-jyrinä"
-
-#: src/effects/Equalization.cpp
-msgid "AM Radio"
-msgstr "AM-radio"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Boost"
-msgstr "Basson tehostus"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Cut"
-msgstr "Basson leikkaus"
-
-#: src/effects/Equalization.cpp
-msgid "Low rolloff for speech"
-msgstr "Matala taajuusvaimennus puheelle"
-
-#: src/effects/Equalization.cpp
-msgid "RIAA"
-msgstr "RIAA"
-
-#: src/effects/Equalization.cpp
-msgid "Telephone"
-msgstr "Puhelin"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Boost"
-msgstr "Diskantin tehostus"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Cut"
-msgstr "Diskantin leikkaus"
-
-#: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Jotta taajuuskorjaus voidaan suorittaa, kaikilla valituilla raidoilla täytyy olla sama näytetaajuus."
-
-#: src/effects/Equalization.cpp
-msgid "Track sample rate is too low for this effect."
-msgstr "Raidan näytteenottotaajuus on liian alhainen tätä tehostetta varten."
-
-#: src/effects/Equalization.cpp
-msgid "Effect Unavailable"
-msgstr "Tehoste ei ole käytettävissä"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -12333,33 +13320,6 @@ msgstr "%gk"
 #, c-format
 msgid "%d dB"
 msgstr "%d dB"
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/EqualizationCurves.cpp
-msgid "unnamed"
-msgstr "nimetön"
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/EqualizationCurves.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-"Virhe korjauskäyrien latauksessa tiedostosta:\n"
-"%s\n"
-"Virheilmoitus:\n"
-"%s"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Loading EQ Curves"
-msgstr "Virhe taajuuskorjauskäyrien latauksessa"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Saving Equalization Curves"
-msgstr "Taajuuskorjainkäyrän tallennusvirhe"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -12487,31 +13447,6 @@ msgstr "Käyrät viety"
 msgid "No curves exported"
 msgstr "Käyriä ei viety"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/EqualizationParameters.cpp
-msgid "B-spline"
-msgstr "B-splini"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cosine"
-msgstr "Kosini"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cubic"
-msgstr "Kolmannen asteen käyrä"
-
-#: src/effects/EqualizationUI.cpp
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"Jos haluat käyttää tätä korjauskäyrää makrossa, valitse sille uusi nimi.\n"
-"Valitse 'Tallenna/hallitse käyriä...' -painiketta ja nimeä uudelleen \"nimetön\" käyrä, sitten käytä sitä."
-
-#: src/effects/EqualizationUI.cpp
-msgid "Filter Curve EQ needs a different name"
-msgstr "Käyrätaajuuskorjain tarvitsee eri nimen"
-
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
 msgstr "+ dB"
@@ -12592,53 +13527,6 @@ msgstr "Näytä apuviivat"
 msgid "Show g&rid lines"
 msgstr "Näytä &apuviivat"
 
-#: src/effects/EqualizationUI.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr "Pyydettyä käyrää ei löydy, käytetään 'nimetöntä'"
-
-#: src/effects/EqualizationUI.cpp
-msgid "Curve not found"
-msgstr "Käyrää ei löydy"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade In"
-msgstr "Häivytä sisään"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade Out"
-msgstr "Häivytä ulos"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-in to the selected audio"
-msgstr "Soveltaa lineaarista sisäänhäivytystä valittuun ääneen"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-out to the selected audio"
-msgstr "Soveltaa lineaarista uloshäivytystä valittuun ääneen"
-
-#: src/effects/FindClipping.cpp
-msgid "Find Clipping"
-msgstr "Etsi leikkautuminen"
-
-#: src/effects/FindClipping.cpp
-msgid "Creates labels where clipping is detected"
-msgstr "Luo merkkejä kohtiin, joissa havaitaan leikkautumista"
-
-#: src/effects/FindClipping.cpp
-msgid "Clipping"
-msgstr "Leikkautuminen"
-
-#. i18n-hint: Two numbers are substituted; the second is the
-#. size of a set, the first is the size of a subset, and not
-#. understood as an ordinal (i.e., not meaning "first", or
-#. "second", etc.)
-#.
-#: src/effects/FindClipping.cpp
-#, c-format
-msgctxt "find clipping"
-msgid "%lld of %lld"
-msgstr "%lld / %lld"
-
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
 msgstr "Al&kukynnys (näytteinä):"
@@ -12646,27 +13534,6 @@ msgstr "Al&kukynnys (näytteinä):"
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
 msgstr "Loppukynny&s (näytteinä):"
-
-#: src/effects/Generator.cpp
-msgid "There is not enough room available to generate the audio"
-msgstr "Tilaa ei ole tarpeeksi käytettävissä äänen tuottamiseen"
-
-#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
-msgid "Invert"
-msgstr "Käännä vaihe"
-
-#: src/effects/Invert.cpp
-msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr "Kääntää ääninäytteet ja niiden napaisuuden ylösalaisin"
-
-#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Legacy Compressor"
-msgstr "Kompressori"
-
-#: src/effects/LegacyCompressor.cpp
-msgid "Compresses the dynamic range of audio"
-msgstr "Kompressoi äänen dynaamista aluetta"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
@@ -12795,28 +13662,6 @@ msgstr "havaittu äänekkyys"
 msgid "RMS"
 msgstr "RMS"
 
-#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
-msgid "Loudness Normalization"
-msgstr "Äänekkyyden normalisointi"
-
-#: src/effects/Loudness.cpp
-msgid "Sets the loudness of one or more tracks"
-msgstr "Asettaa yhden tai useamman raidan voimakkuuden"
-
-#: src/effects/Loudness.cpp
-msgid "Normalizing Loudness...\n"
-msgstr "Normalisoidaan äänekkyyttä...\n"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing: %s"
-msgstr "Analysoidaan: %s"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Processing: %s"
-msgstr "Käsitellään: %s"
-
 #: src/effects/Loudness.cpp
 msgid "&Normalize"
 msgstr "Normalisoi"
@@ -12846,89 +13691,9 @@ msgstr "&Käsittele monoa kaksoismonona (suositus)"
 msgid "(Maximum 0dB)"
 msgstr "(Enintään 0 dB)"
 
-#. i18n-hint: not a color, but "white noise" having a uniform spectrum
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "White"
-msgstr "Valkoinen"
-
-#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
-#. in low frequencies
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Pink"
-msgstr "Pinkki"
-
-#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Brownian"
-msgstr "Brownin kohina"
-
-#: src/effects/Noise.cpp
-msgid "Noise"
-msgstr "Kohina"
-
-#: src/effects/Noise.cpp
-msgid "Generates one of three different types of noise"
-msgstr "Luo yhtä kolmesta erityyppisestä kohinasta"
-
 #: src/effects/Noise.cpp
 msgid "&Noise type:"
 msgstr "Kohi&natyyppi:"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median"
-msgstr "Keskimääräinen"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Second greatest"
-msgstr "Toiseksi suurin"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Old"
-msgstr "Vanha"
-
-#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
-#: resources/EffectsMenuDefaults.xml
-msgid "Noise Reduction"
-msgstr "Kohinan vaimennus"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "Poistaa taustaääniä, kuten puhaltimen ääntä, nauhan sihinää tai huminaa"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block are too few for the window types."
-msgstr "Askeleiden määrä lohkoa kohden on liian alhainen ikkunatyypeille."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block cannot exceed the window size."
-msgstr "Askeleiden määrä lohkoa kohden ei voi ylittää ikkunan kokoa."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median method is not implemented for more than four steps per window."
-msgstr "Mediaanimenetelmää ei ole toteutettu enemmässä kuin neljässä askeleessa per ikkuna."
-
-#: src/effects/NoiseReduction.cpp
-msgid "You must specify the same window size for steps 1 and 2."
-msgstr "Määritä sama ikkunakoko vaiheille 1. ja 2."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Warning: window types are not the same as for profiling."
-msgstr "Varoitus: Ikkunatyypit eivät ole samoja kuin profiloinnissa."
-
-#: src/effects/NoiseReduction.cpp
-msgid "All noise profile data must have the same sample rate."
-msgstr "Kaikissa kohinanpoistomalleissa on oltava sama näytteenottotaajuus."
-
-#: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "Kohinaprofiilin näytteenottotaajuuden on vastattava käsiteltävän äänen taajuutta."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Selected noise profile is too short."
-msgstr "Valittu kohinaprofiili on liian lyhyt."
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Noise reduction (dB):"
@@ -13096,55 +13861,6 @@ msgstr "4 (oletus)"
 msgid "Discrimination &method:"
 msgstr "Erottelu&menetelmä:"
 
-#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
-msgid "Normalize"
-msgstr "Normalisoi"
-
-#: src/effects/Normalize.cpp
-msgid "Sets the peak amplitude of one or more tracks"
-msgstr "Asettaa yhden tai useamman raidan huippuamplitudin"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset and Normalizing...\n"
-msgstr "Nollataan tasajännitetaso ja normalisoidaan...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset...\n"
-msgstr "Nollataan tasajännitetaso...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Normalizing without removing DC offset...\n"
-msgstr "Normalisoidaan nollaamatta tasajännitetasoa...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Not doing anything...\n"
-msgstr "Ei tee mitään...\n"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing first track of stereo pair: %s"
-msgstr "Analysoidaan stereoparin ensimmäistä raitaa: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Analysoidaan stereoparin toista raitaa: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing stereo channels independently: %s"
-msgstr "Käsitellään stereokanavia itsenäisesti: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing first track of stereo pair: %s"
-msgstr "Käsitellään stereoparin ensimmäistä raitaa: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing second track of stereo pair: %s"
-msgstr "Käsitellään stereoparin toista raitaa: %s"
-
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
 msgstr "&Poista tasavirtasiirtymä (keskipiste 0.0 pystysuoraan)"
@@ -13161,14 +13877,6 @@ msgstr "Huippuamplitudi dB"
 msgid "N&ormalize stereo channels independently"
 msgstr "N&ormalisoi stereokanavat itsenäisesti"
 
-#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
-msgid "Paulstretch"
-msgstr "Paulstretch"
-
-#: src/effects/Paulstretch.cpp
-msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Paulstretch on vain äärimmäiselle aikavenytykselle tai pysäytystehosteelle"
-
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
@@ -13180,56 +13888,6 @@ msgstr "Venytyskerroin:"
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
 msgstr "Aikaresoluu&tio (sekuntia):"
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Audio selection too short to preview.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"Valittu ääni on liian lyhyt esikuunteluun.\n"
-"\n"
-"Yritä pidentää valintaa vähintään %.1f sekuntiin\n"
-"tai vähentää aikaresoluutiota alle %.1f sekuntiin."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Unable to Preview.\n"
-"\n"
-"For the current audio selection, the maximum\n"
-"'Time Resolution' is %.1f seconds."
-msgstr ""
-"Esikuuntelua ei voitu suorittaa.\n"
-"\n"
-"Enimmäisaikaresoluutio nykyiselle\n"
-"äänivalinnalle on %.1f sekuntia."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"The 'Time Resolution' is too long for the selection.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"Aikaresoluutio on liian pitkä valinnalle.\n"
-"\n"
-"Yritä pidentää valintaa vähintään %.1f sekuntiin\n"
-"tai vähentää aikaresoluutiota alle %.1f sekuntiin."
-
-#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
-msgid "Phaser"
-msgstr "Vaiheistaja"
-
-#: src/effects/Phaser.cpp
-msgid "Combines phase-shifted signals with the original signal"
-msgstr "Yhdistää vaihesiirrettyjä signaaleja alkuperäiseen signaaliin"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
@@ -13293,50 +13951,6 @@ msgstr "Lähtövahvistus (dB)"
 msgid "%s - %s"
 msgstr "%s - %s"
 
-#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
-msgid "Repair"
-msgstr "Korjaa"
-
-#: src/effects/Repair.cpp
-msgid "Sets the peak amplitude of a one or more tracks"
-msgstr "Asettaa yhden tai useamman raidan huippuamplitudin"
-
-#: src/effects/Repair.cpp
-msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "Korjaustoimintoa ei voi käyttää venytetyissä tai kutistetuissa leikkeissä"
-
-#: src/effects/Repair.cpp
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
-"\n"
-"Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Tätä korjaustoimintoa on tarkoitettu käytettäväksi vain hyvin lyhyihin vahingoittuneisiin äänen osiin (enintään 128 näytettä).\n"
-"\n"
-"Suurenna näkymää ja valitse vain sekunnin murto-osa korjattavaksesi."
-
-#: src/effects/Repair.cpp
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
-"\n"
-"Please select a region that has audio touching at least one side of it.\n"
-"\n"
-"The more surrounding audio, the better it performs."
-msgstr ""
-"Korjaus toimii käyttämällä valinta-alueen ulkopuolista ääntä.\n"
-"\n"
-"Valitse alue, jossa ääni koskettaa vähintään toista sen puolta.\n"
-"\n"
-"Mitä enemmän ympäröivää ääntä, sitä paremmin se toimii."
-
-#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
-msgid "Repeat"
-msgstr "Toista valintaa"
-
-#: src/effects/Repeat.cpp
-msgid "Repeats the selection the specified number of times"
-msgstr "Toistaa valinnan määritetyn määrän kertoja"
-
 #: src/effects/Repeat.cpp
 msgid "&Number of repeats to add:"
 msgstr "Lisättävie&n toistojen määrä:"
@@ -13362,101 +13976,6 @@ msgstr "Uusi valinnan pituus: %s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "Varoitus: Ei toistoa."
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Acoustic"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Ambience"
-msgstr "Hiljaisuus"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Artificial"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Clean"
-msgstr "Tyhjennä"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal I"
-msgstr "Ääni I"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal II"
-msgstr "Ääni II"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Dance Vocal"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Modern Vocal"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Voice Tail"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Bathroom"
-msgstr "Kylpyhuone"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Bright"
-msgstr "Pieni valoisa huone"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Dark"
-msgstr "Pieni pimeä huone"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Medium Room"
-msgstr "Keskikokoinen huone"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Large Room"
-msgstr "Suuri huone"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Church Hall"
-msgstr "Kirkkosali"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Cathedral"
-msgstr "Katedraali"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Big Cave"
-msgstr ""
-
-#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverb"
-msgstr "Jälkikaiku"
-
-#: src/effects/Reverb.cpp
-msgid "Adds ambience or a \"hall effect\""
-msgstr "Lisää tunnelmaa tai \"hallitehostetta\""
 
 #: src/effects/Reverb.cpp
 msgid "&Room Size (%):"
@@ -13497,54 +14016,6 @@ msgstr "S&tereon leveys (%):"
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
 msgstr "Pelkkä märkä (&kaiku)"
-
-#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverse"
-msgstr "Takaperin"
-
-#: src/effects/Reverse.cpp
-msgid "Reverses the selected audio"
-msgstr "Kääntää valitun äänen toisinpäin"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "SBSMS-ajan/sävelkorkeuden venytys"
-
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Butterworth"
-msgstr "Butterworth"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type I"
-msgstr "Chebyshev Type I"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type II"
-msgstr "Chebyshev Type II"
-
-#: src/effects/ScienFilter.cpp
-msgid "Lowpass"
-msgstr "Alipäästö"
-
-#: src/effects/ScienFilter.cpp
-msgid "Highpass"
-msgstr "Ylipäästö"
-
-#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
-msgid "Classic Filters"
-msgstr "Klassiset suodattimet"
-
-#. i18n-hint: "infinite impulse response"
-#: src/effects/ScienFilter.cpp
-msgid "Performs IIR filtering that emulates analog filters"
-msgstr "Suorittaa IIR-suodatuksen, joka emuloi analogisia suodattimia"
-
-#: src/effects/ScienFilter.cpp
-msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "Kaikilla valituilla raidoilla täytyy olla sama näytteenottotaajuus, jotta suodatinta voidaan käyttää."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -13676,36 +14147,6 @@ msgstr "Palauta oletukset"
 msgid "%.3f"
 msgstr "%.3f"
 
-#. i18n-hint: noun
-#: src/effects/Silence.cpp
-msgctxt "generator"
-msgid "Silence"
-msgstr "Hiljaisuus"
-
-#: src/effects/Silence.cpp
-msgid "Creates audio of zero amplitude"
-msgstr "Luo ääntä nolla-amplitudilla"
-
-#: src/effects/StereoToMono.cpp
-msgid "Stereo To Mono"
-msgstr "Stereo monoksi"
-
-#: src/effects/StereoToMono.cpp
-msgid "Converts stereo tracks to mono"
-msgstr "Muuntaa stereoraidan monoksi"
-
-#: src/effects/StereoToMono.cpp
-msgid "Mixing down to mono"
-msgstr "Miksataan monoksi"
-
-#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
-msgid "Sliding Stretch"
-msgstr "Liukuva venytys"
-
-#: src/effects/TimeScale.cpp
-msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "Sallii jatkuvat muutokset tempoon ja/tai sävelkorkeuteen"
-
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
 msgstr "Tempon alkumuutos (%)"
@@ -13733,36 +14174,6 @@ msgstr "Sävelkorkeuden loppumuutos"
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
 msgstr "(puolisäv&elaskeleet) [-12 -> 12]:"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
-msgid "Linear"
-msgstr "Lineaarinen"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-msgid "Logarithmic"
-msgstr "Logaritminen"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sine"
-msgstr "Sini"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Square"
-msgstr "Kantti"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sawtooth"
-msgstr "Sahalaita"
-
-#: src/effects/ToneGen.cpp
-msgid "Square, no alias"
-msgstr "Kantti, laskostumaton"
-
-#: src/effects/ToneGen.cpp
-msgctxt "waveform"
-msgid "Triangle"
-msgstr "Kolmio"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
@@ -13807,26 +14218,6 @@ msgstr "Amplitudi lopussa"
 #: src/effects/ToneGen.cpp
 msgid "I&nterpolation:"
 msgstr "I&nterpolointi:"
-
-#: src/effects/TruncSilence.cpp
-msgid "Truncate Detected Silence"
-msgstr "Lyhennä havaittu hiljaisuus"
-
-#: src/effects/TruncSilence.cpp
-msgid "Compress Excess Silence"
-msgstr "Pakkaa liika hiljaisuus"
-
-#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
-msgid "Truncate Silence"
-msgstr "Lyhennä hiljaisuus"
-
-#: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "Lyhentää automaattisesti kappaleen osia, joissa äänenvoimakkuus on alle määrätyn rajan"
-
-#: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "Kun katkaistaan itsenäisesti, kussakin tahtilukitussa raitaryhmässä voi olla vain yksi valittu ääniraita."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -13957,14 +14348,6 @@ msgstr "Joidenkin VST3-tehosteiden on viivästettävä äänen palauttamista Aud
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "Useimmissa VST3-tehosteissa on graafinen käyttöliittymä parametriarvojen asettamista varten. Saatavilla on myös pelkkä teksti -perusmenetelmä. Avaa tehoste uudelleen, jotta tämä tulee voimaan."
-
-#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
-msgid "Wahwah"
-msgstr "Wahwah"
-
-#: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Nopeat äänenlaadun vaihtelut, kuten 1970-luvulla suositussa kitaratehosteessa"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14105,154 +14488,6 @@ msgstr "Joidenkin LV2-tehosteiden pitää käsittelyn takia viivästää äänen
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "LV2-tehosteilla voi olla graafinen käyttöliittymä parametriarvojen asettamiseen. Käytettävissä on myös perustekstimenetelmä.  Avaa tehoste uudelleen, jotta tämä tulee voimaan."
 
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Nyquist Effects"
-msgstr "Nyquist-tehosteet"
-
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Huolehtii Audacityn Nyquist-tehostetuesta"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Applying Nyquist Effect..."
-msgstr "Suoritetaan Nyquist-tehostetta..."
-
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Worker"
-msgstr "Nyquist-kehote"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Ill-formed Nyquist plug-in header"
-msgstr "Huonosti muotoiltu Nyquist-laajennusotsikko"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Enable track spectrogram view before\n"
-"applying 'Spectral' effects."
-msgstr ""
-"Ota raidan spektrogrammi käyttöön\n"
-"käyttääksesi spektritehosteita."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"To use 'Spectral effects', enable 'Spectral Selection'\n"
-"in the track Spectrogram settings and select the\n"
-"frequency range for the effect to act on."
-msgstr ""
-"Jos haluat käyttää spektritehosteita, ota 'Spektrivalinta'\n"
-"spektrogrammin asetuksista käyttöön ja valitse\n"
-"taajuusalue, jolle tehoste suoritetaan."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "virhe: Otsikossa määritetty tiedosto %s, mutta sitä ei löydy laajennuspolusta.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Audio selection required."
-msgstr "Äänivalinta vaaditaan."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "Nyquist-virhe"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Debug Output: "
-msgstr "Virheenkorjaustulos: "
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Processing complete."
-msgstr "Käsittely valmis."
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "';type tool' -tehosteet eivät voi palauttaa ääntä Nyquististä.\n"
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "';type tool' -tehosteet eivät voi palauttaa merkkejä Nyquististä.\n"
-
-#. i18n-hint: "%s" is replaced by name of plug-in.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "nyx_error returned from %s.\n"
-msgstr "nyx_error palautettiin kohteesta %s.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "plug-in"
-msgstr "laajennus"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned a list."
-msgstr "Nyquist palautti listan."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %f"
-msgstr "Nyquist palautti arvon: %f"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %d"
-msgstr "Nyquist palautti arvon: %d"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned too many audio channels.\n"
-msgstr "Nyquist palautti liian monta äänikanavaa.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Nyquist palautti yhden äänikanavan taulukkona.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned an empty array.\n"
-msgstr "Nyquist palautti tyhjän taulukon.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned nil audio.\n"
-msgstr "Nyquist palautti tyhjän äänen.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Varoitus: Nyquist palautti virheellisen UTF-8 -merkkijonon, joka muunnettiin tässä Latin-1 -muotoon]"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Tämä Audacity-versio ei tue Nyquist-laajennusversiota %ld"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not open file"
-msgstr "Tiedostoa ei voitu avata"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Your code looks like SAL syntax, but there is no 'return' statement.\n"
-"For SAL, use a return statement such as:\n"
-"\treturn *track* * 0.1\n"
-"or for LISP, begin with an open parenthesis such as:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-msgstr ""
-"Koodi näyttää SAL-syntaksilta, mutta palautuslausetta ei ole.\n"
-"Käytä SAL:ssa palautuslausetta, kuten:\n"
-"\treturn *track* * 0.1\n"
-"tai LISPin tapauksessa aloita avoimella sulkeella, kuten:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Error in Nyquist code"
-msgstr "Virhe Nyquist-koodissa"
-
-#. i18n-hint: refers to programming "languages"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not determine language"
-msgstr "Kieltä ei voitu määrittää"
-
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
@@ -14322,6 +14557,10 @@ msgstr "Valitse tiedosto"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Save file as"
 msgstr "Tallenna tiedosto nimellä"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Debug Output: "
+msgstr "Virheenkorjaustulos: "
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
@@ -14827,12 +15066,13 @@ msgid "Duplicate"
 msgstr "Kahdenna"
 
 #: src/menus/EditMenus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Halkaise ja leikkaa leikepöydälle"
+#, fuzzy
+msgid "Cut to clipboard and leave gap"
+msgstr "Leikkaa leikepöydälle"
 
 #: src/menus/EditMenus.cpp
-msgid "Split Cut"
-msgstr "Halkaise ja leikkaa"
+msgid "Cut and leave gap"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -14928,13 +15168,13 @@ msgstr "Erityispoisto"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
-msgid "Spl&it Cut"
-msgstr "Halkaise ja le&ikkaa"
+msgid "&Cut and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
-msgid "Split D&elete"
-msgstr "Halkaise ja p&oista"
+msgid "&Delete and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15065,10 +15305,10 @@ msgstr "&Merkkejä..."
 msgid "&Raw Data..."
 msgstr "&Raakadata..."
 
-#. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
-msgid "E&xit"
-msgstr "&Lopeta"
+#, fuzzy
+msgid "&Close Project"
+msgstr "&Tallenna projekti"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15188,16 +15428,15 @@ msgstr "Poistettiin merkityt äänialueet"
 msgid "Delete Labeled Audio"
 msgstr "Poista merkitty ääni"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
-#. regions
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Halkaistiin ja leikattiin merkityt äänialueet"
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard and leave gap"
+msgstr "Leikkaa merkityt äänialueet leikepöydälle"
 
-#. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Halkaise ja leikkaa merkitty ääni"
+#, fuzzy
+msgid "Cut labeled audio and leave gap"
+msgstr "Leikkaa merkityt äänialueet leikepöydälle"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15308,29 +15547,31 @@ msgid "&Cut"
 msgstr "&Leikkaa"
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Cut"
-msgstr "Leikkaa merkillä"
+msgid "Cut by label"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Delete"
-msgstr "Poista merkillä"
+#, fuzzy
+msgid "Delete by label"
+msgstr "&Poista merkki"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
-msgid "&Split Cut"
-msgstr "&Halkaise ja leikkaa"
+msgid "C&ut and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Cut"
-msgstr "Halkaise ja leikkaa merkillä"
+msgid "Cut by labels and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Sp&lit Delete"
-msgstr "Ha&lkaise ja poista"
+msgid "De&lete and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Delete"
-msgstr "Halkaise ja poista merkillä"
+#, fuzzy
+msgid "Delete by labels and leave gap"
+msgstr "Poistettiin merkityt äänialueet"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -15942,6 +16183,10 @@ msgid "Adjusted gain"
 msgstr "Muokattiin vahvistusta"
 
 #: src/menus/TrackMenus.cpp
+msgid "Gain"
+msgstr "Vahvistus"
+
+#: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
 msgstr "Muokattiin panorointia"
 
@@ -16439,7 +16684,8 @@ msgid "Skip to Selection End"
 msgstr "Hyppää valinnan loppuun"
 
 #: src/menus/ViewMenus.cpp
-msgid "Enable E&xtra Menus"
+#, fuzzy
+msgid "E&xtra Menus"
 msgstr "Ota lisä&valikot käyttöön"
 
 #: src/menus/ViewMenus.cpp
@@ -16448,7 +16694,7 @@ msgstr "&Näytä leike aaltomuodossa"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Show &RMS in Waveform"
+msgid "Sho&w RMS in Waveform"
 msgstr "&Näytä leike aaltomuodossa"
 
 #: src/prefs/ApplicationPrefs.cpp
@@ -16889,38 +17135,6 @@ msgstr "Käyttöliittymä"
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
 msgstr "Käyttöliittymäasetukset"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (ylimalkainen alue korkea-amplitudiselle muokkaukselle)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (8-bittisen PCM:n näytealue)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (10-bittisen PCM:n näytealue)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (12-bittisen PCM:n näytealue)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (14-bittisen PCM:n näytealue)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (16-bittisen PCM:n näytealue)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (suunnilleen ihmiskuulon raja)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (24-bittisen PCM:n näytealue)"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -17464,88 +17678,6 @@ msgstr "Esike&laus:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
 msgstr "Risti&häivytys:"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Mel"
-msgstr "Mel"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Bark"
-msgstr "Bark"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
-#: src/prefs/SpectrogramSettings.cpp
-msgid "ERB"
-msgstr "ERB"
-
-#. i18n-hint: Time units, that is Period = 1 / Frequency
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Period"
-msgstr "Aikaväli"
-
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (Roseus)"
-msgstr "Väri (Roseus)"
-
-#. i18n-hint: Classic color scheme(from theme) for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "Väri (klassinen)"
-
-#. i18n-hint: Grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "Harmaasävy"
-
-#. i18n-hint: Inverse grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "Käänteinen harmaasävy"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Frequencies"
-msgstr "Taajuudet"
-
-#. i18n-hint: the Reassignment algorithm for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Reassignment"
-msgstr "Uudelleenmääritys"
-
-#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Pitch (EAC)"
-msgstr "Sävelkorkeus (EAC)"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Maximum frequency must be 100 Hz or above"
-msgstr "Ylimmän taajuuden täytyy olla vähintään 100 Hz"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be at least 0 Hz"
-msgstr "Alimman taajuuden täytyy olla vähintään 0 Hz"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be less than maximum frequency"
-msgstr "Alimman taajuuden on oltava ylintä taajuutta pienempi"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The range must be at least 1 dB"
-msgstr "Alueen on oltava vähintään 1 dB"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain cannot be negative"
-msgstr "Taajuusvahvistus ei voi olla negatiivinen"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain must be no more than 60 dB/dec"
-msgstr "Taajuusvahvistus ei saa olla yli 60 dB/dek"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrogram Settings"
@@ -18845,11 +18977,6 @@ msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s, %d / %d leikkeestä"
 msgstr[1] "%s, %d / %d leikkeestä"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "&Multi-view"
-msgstr "&Moninäkymä"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -21478,6 +21605,107 @@ msgstr "Spektrityökalut"
 #, fuzzy
 msgid "Legacy"
 msgstr "Laillisuus"
+
+#~ msgid "Insane"
+#~ msgstr "Älytön"
+
+#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+#~ msgstr "Pilvitallennus vaatii ilmaisen audio.com-tilin, joka on linkitetty Audacityyn. Jatka klikkaamalla \"Yhdistä tili\" yllä."
+
+#~ msgid "Moved gain slider"
+#~ msgstr "Siirretty vahvistussäädintä"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+#~ msgstr "Katso [[%s|julkaise video]] tai lue [[https://support.audacityteam.org/additional-resources/changelog|changelog]] saadaksesi lisätietoja!</p>"
+
+#~ msgid "Gain:"
+#~ msgstr "Vahvistus:"
+
+#, c-format
+#~ msgid "Applied command: %s"
+#~ msgstr "Käytetty tehoste: %s"
+
+#, c-format
+#~ msgid ""
+#~ "Attempting to initialize the following effect failed:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "More information may be available in 'Help > Diagnostics > Show Log'"
+#~ msgstr ""
+#~ "Seuraavan tehosteen alustaminen epäonnistui:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "Lisätietoja voi olla kohdassa 'Ohje > Diagnostiikka > Näytä loki'"
+
+#~ msgid "Effect failed to initialize"
+#~ msgstr "Tehosteen alustus epäonnistui"
+
+#~ msgid "Effect Unavailable"
+#~ msgstr "Tehoste ei ole käytettävissä"
+
+#~ msgid "Error Loading EQ Curves"
+#~ msgstr "Virhe taajuuskorjauskäyrien latauksessa"
+
+#~ msgid ""
+#~ "To use this filter curve in a macro, please choose a new name for it.\n"
+#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+#~ msgstr ""
+#~ "Jos haluat käyttää tätä korjauskäyrää makrossa, valitse sille uusi nimi.\n"
+#~ "Valitse 'Tallenna/hallitse käyriä...' -painiketta ja nimeä uudelleen \"nimetön\" käyrä, sitten käytä sitä."
+
+#~ msgid "Filter Curve EQ needs a different name"
+#~ msgstr "Käyrätaajuuskorjain tarvitsee eri nimen"
+
+#~ msgid "Curve not found"
+#~ msgstr "Käyrää ei löydy"
+
+#~ msgid "Nyquist Error"
+#~ msgstr "Nyquist-virhe"
+
+#~ msgid "Error in Nyquist code"
+#~ msgstr "Virhe Nyquist-koodissa"
+
+#~ msgid "Split-cut to the clipboard"
+#~ msgstr "Halkaise ja leikkaa leikepöydälle"
+
+#~ msgid "Split Cut"
+#~ msgstr "Halkaise ja leikkaa"
+
+#~ msgid "Spl&it Cut"
+#~ msgstr "Halkaise ja le&ikkaa"
+
+#~ msgid "Split D&elete"
+#~ msgstr "Halkaise ja p&oista"
+
+#~ msgid "E&xit"
+#~ msgstr "&Lopeta"
+
+#~ msgid "Split Cut labeled audio regions to clipboard"
+#~ msgstr "Halkaistiin ja leikattiin merkityt äänialueet"
+
+#~ msgid "Split Cut Labeled Audio"
+#~ msgstr "Halkaise ja leikkaa merkitty ääni"
+
+#~ msgid "Label Cut"
+#~ msgstr "Leikkaa merkillä"
+
+#~ msgid "Label Delete"
+#~ msgstr "Poista merkillä"
+
+#~ msgid "&Split Cut"
+#~ msgstr "&Halkaise ja leikkaa"
+
+#~ msgid "Label Split Cut"
+#~ msgstr "Halkaise ja leikkaa merkillä"
+
+#~ msgid "Sp&lit Delete"
+#~ msgstr "Ha&lkaise ja poista"
+
+#~ msgid "Label Split Delete"
+#~ msgstr "Halkaise ja poista merkillä"
 
 #~ msgctxt "clip name template"
 #~ msgid "%s %i"

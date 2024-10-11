@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-08-01 14:17+0300\n"
+"POT-Creation-Date: 2024-10-11 15:07+0200\n"
 "PO-Revision-Date: 2014-10-06 05:34-0000\n"
 "Last-Translator: Miroslav Nikolic\n"
 "Language-Team: Serbian <>\n"
@@ -18,6 +18,33 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Project-Style: default\n"
 "X-Generator: Poedit 1.6.9\n"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Plugin Error"
+msgstr "Greška LOF-a"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#, c-format
+msgid "Applied effect: %s"
+msgstr "Primenjeno je dejstvo: %s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Ponovi %s"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -99,7 +126,13 @@ msgstr ""
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy
-msgid "Supported Rates:\n"
+msgid "Supported Playback Rates:\n"
+msgstr "Protoci uzorka"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Capture Rates:\n"
 msgstr "Protoci uzorka"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -121,6 +154,11 @@ msgstr "Izaberi uređaj puštanja"
 #, c-format
 msgid "No playback device found for '%s'.\n"
 msgstr ""
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Rates:\n"
+msgstr "Protoci uzorka"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
@@ -199,16 +237,15 @@ msgid ""
 "Error code: %s"
 msgstr "Greška prilikom otvaranja zvučnog uređaja. "
 
-#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
-#: libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-audio-io/AudioIO.cpp
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/ProjectAudioManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/EffectPreview.cpp
+#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -262,8 +299,9 @@ msgstr "Ne mogu da otvorim/stvorim probnu datoteku."
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
-#: libraries/lib-lv2/LV2EffectBase.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-lv2/LV2EffectBase.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
+#: src/effects/EffectUI.cpp
 msgid "n/a"
 msgstr "neprimenljivo"
 
@@ -295,9 +333,10 @@ msgstr "Efekti zvučne jedinice"
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp
 #: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#: src/effects/vamp/LoadVamp.cpp
 #, fuzzy
 msgid "The Audacity Team"
 msgstr "Tim podrške Odvažnosti"
@@ -361,6 +400,1000 @@ msgstr "pretvaranje protoka uzorka"
 msgid "Message"
 msgstr ""
 
+#: libraries/lib-builtin-effects/AmplifyBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Amplify"
+msgstr "Pojačaj"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Auto Duck"
+msgstr "Samoutišavanje"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr ""
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks'
+#. (reduces the volume) of the audio automatically when there is
+#. sound on another track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "Izabrali ste numeru koja ne sadrži zvuk. Samoutišavanje može da obradi samo zvučne numere."
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+#. the volume) of the audio automatically when there is sound on another
+#. track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Samoutišavanje zahteva upravljačku numeru koja mora biti postavljena ispod izabrane numere."
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Rendering Control-Track Time-Stretched Audio"
+msgstr ""
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Bass and Treble"
+msgstr "Niskotonac i visokotonac"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+#, fuzzy
+msgid "Simple tone control effect"
+msgstr "Skupi izbor na levo"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Pitch"
+msgstr "Izmeni vrhunac"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+#, fuzzy
+msgid "Changes the pitch of a track without changing its tempo"
+msgstr "Izmeni vrhunac bez menjanja takta"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "High Quality Pitch Change"
+msgstr ""
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Change Speed and Pitch"
+msgstr "Izmeni brzinu"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+#, fuzzy
+msgid "Changes the speed of a track, also changing its pitch"
+msgstr "Izmeni vrhunac bez menjanja takta"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Tempo"
+msgstr "Izmeni takt"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#, fuzzy
+msgid "Changes the tempo of a selection without changing its pitch"
+msgstr "Izmeni takt bez menjanja vrhunca"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#, fuzzy
+msgid "High Quality Tempo Change"
+msgstr "Krajnja promena takta (%)"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Click Removal"
+msgstr "Uklanjanje klika"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Click Removal is designed to remove clicks on audio tracks"
+msgstr ""
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Algorithm not effective on this audio. Nothing changed."
+msgstr "Algoritam nije delotvoran na ovom zvuku. Nema izmena."
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#, c-format
+msgid "Selection must be larger than %d samples."
+msgstr "Izbor mora biti veći od %d uzorka."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "You can only measure one track at a time."
+msgstr "Možete da merite samo jednu numeru odjednom."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+#, fuzzy
+msgid "Please select an audio track."
+msgstr "Molim izaberite radnju"
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Invalid audio selection.\n"
+"Please ensure that audio is selected."
+msgstr ""
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+"Nema ničega za merenje.\n"
+"Molim izaberite odeljak numere."
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, fuzzy
+msgid "Hard Clipping"
+msgstr "Nađite odsečke"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, fuzzy
+msgid "Soft Clipping"
+msgstr "&Prikaži odsecanje"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, fuzzy
+msgid "Soft Overdrive"
+msgstr "Potvrdi prepisivanje"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, fuzzy
+msgid "Medium Overdrive"
+msgstr "Potvrdi prepisivanje"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Overdrive"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Cubic Curve (odd harmonics)"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Even Harmonics"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, fuzzy
+msgid "Expand and Compress"
+msgstr "Sažimatelj dinamičkog opsega"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, fuzzy
+msgid "Leveller"
+msgstr "Izravnavač"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, fuzzy
+msgid "Rectifier Distortion"
+msgstr "Izobličenje"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Limiter 1413"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Hard clip -12dB, 80% make-up gain"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Soft clip -12dB, 80% make-up gain"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Fuzz Box"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Walkie-talkie"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Blues drive sustain"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Light Crunch Overdrive"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Heavy Overdrive"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "3rd Harmonic (Perfect Fifth)"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Valve Overdrive"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "2nd Harmonic (Octave)"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Gated Expansion Distortion"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Light, -70dB noise floor"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Moderate, -70dB noise floor"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavy, -70dB noise floor"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavier, -70dB noise floor"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heaviest, -70dB noise floor"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Half-wave Rectifier"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier (DC blocked)"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Percussion Limiter"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Distortion"
+msgstr "Izobličenje"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Waveshaping distortion effect"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+#, fuzzy
+msgid "DTMF Tones"
+msgstr "DTMF tonovi..."
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr ""
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid ""
+"DTMF sequence empty.\n"
+"Check ALL settings for this effect."
+msgstr ""
+
+#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
+msgid "Echo"
+msgstr "Odjek"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#, fuzzy
+msgid "Repeats the selected audio again and again"
+msgstr "Izvozim izabrani zvuk kao %s"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Requested value exceeds memory capacity."
+msgstr ""
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Equalization"
+msgstr "Ujednačavanje"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Adjusts the volume levels of particular frequencies"
+msgstr ""
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "100Hz Rumble"
+msgstr ""
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "AM Radio"
+msgstr ""
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+#, fuzzy
+msgid "Bass Boost"
+msgstr "Niskotonac (dB):"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+#, fuzzy
+msgid "Bass Cut"
+msgstr "Niskotonac"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Low rolloff for speech"
+msgstr ""
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "RIAA"
+msgstr ""
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Telephone"
+msgstr ""
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+#, fuzzy
+msgid "Treble Boost"
+msgstr "Visokotonac"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+#, fuzzy
+msgid "Treble Cut"
+msgstr "Visokotonac"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "Da primenite ujednačavanje, sve izabrane numere moraju biti istog protoka uzorka."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+#, fuzzy
+msgid "Track sample rate is too low for this effect."
+msgstr "Numere su previše duge za ponavljanje izbora."
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr "neimenovana"
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"Greška učitavanja EKu krivih iz datoteke:\n"
+"%s\n"
+"Poruka greške glasi:\n"
+"%s"
+
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "Error Saving Equalization Curves"
+msgstr "Greška čuvanja krivih ujednačavanja"
+
+#: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr "Nisam našao zahtevanu krivu, koristiću „neimenovanu“"
+
+#. i18n-hint: Technical term for a kind of curve.
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "B-sp linija"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "Kosinusno"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "Kubično"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade In"
+msgstr "Pojavi se"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+#, fuzzy
+msgid "Applies a linear fade-in to the selected audio"
+msgstr "Kliknite i prevucite da razvučete izabranu oblast."
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade Out"
+msgstr "Iščezni"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-out to the selected audio"
+msgstr ""
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Find Clipping"
+msgstr "Nađite odsečke"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Creates labels where clipping is detected"
+msgstr ""
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Clipping"
+msgstr "Odsecanje"
+
+#. i18n-hint: Two numbers are substituted; the second is the
+#. size of a set, the first is the size of a subset, and not
+#. understood as an ordinal (i.e., not meaning "first", or
+#. "second", etc.)
+#.
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#, c-format
+msgctxt "find clipping"
+msgid "%lld of %lld"
+msgstr ""
+
+#: libraries/lib-builtin-effects/Generator.cpp
+msgid "There is not enough room available to generate the audio"
+msgstr "Nema dovoljno dostupnog mesta za stvaranje zvuka"
+
+#: libraries/lib-builtin-effects/Invert.cpp resources/EffectsMenuDefaults.xml
+msgid "Invert"
+msgstr "Preokreni"
+
+#: libraries/lib-builtin-effects/Invert.cpp
+msgid "Flips the audio samples upside-down, reversing their polarity"
+msgstr ""
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Sažimatelj"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr ""
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Loudness Normalization"
+msgstr ""
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Sets the loudness of one or more tracks"
+msgstr ""
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#, fuzzy
+msgid "Normalizing Loudness...\n"
+msgstr "Normalizuj najveći doseg na"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, fuzzy, c-format
+msgid "Analyzing: %s"
+msgstr "Analiziram: "
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, fuzzy, c-format
+msgid "Processing: %s"
+msgstr "Obrađujem: "
+
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+#, fuzzy
+msgctxt "noise"
+msgid "White"
+msgstr "Belo"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+#, fuzzy
+msgctxt "noise"
+msgid "Pink"
+msgstr "Roze"
+
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+#, fuzzy
+msgctxt "noise"
+msgid "Brownian"
+msgstr "Braon"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+#, fuzzy
+msgid "Noise"
+msgstr "Buka:"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Generates one of three different types of noise"
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#, fuzzy
+msgid "Median"
+msgstr "Srednje"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#, fuzzy
+msgid "Second greatest"
+msgstr "Druga numera"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Old"
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Noise Reduction"
+msgstr "Smanjenje buke"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Removes background noise such as fans, tape noise, or hums"
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block are too few for the window types."
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block cannot exceed the window size."
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median method is not implemented for more than four steps per window."
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "You must specify the same window size for steps 1 and 2."
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Warning: window types are not the same as for profiling."
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#, fuzzy
+msgid "All noise profile data must have the same sample rate."
+msgstr "Da primenite propusnik, sve izabrane numere moraju biti istog protoka uzorka."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr ""
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#, fuzzy
+msgid "Selected noise profile is too short."
+msgstr "Izbor je previše mali za ponavljanje."
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Normalize"
+msgstr "Normalizuj"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Sets the peak amplitude of one or more tracks"
+msgstr ""
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset and Normalizing...\n"
+msgstr "Uklanjam DC pomeraj i normalizujem...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset...\n"
+msgstr "Uklanjam DC pomeraj...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Normalizing without removing DC offset...\n"
+msgstr "Normalizujem bez uklanjanja DC pomeraja...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Not doing anything...\n"
+msgstr ""
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, fuzzy, c-format
+msgid "Analyzing first track of stereo pair: %s"
+msgstr "Analiziram prvu numeru stereo para: "
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, fuzzy, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Analiziram drugu numeru stereo para: "
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, fuzzy, c-format
+msgid "Processing stereo channels independently: %s"
+msgstr "Obrađujem stereo kanale nezavisno: "
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, fuzzy, c-format
+msgid "Processing first track of stereo pair: %s"
+msgstr "Obređujem prvu numeru stereo para: "
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, fuzzy, c-format
+msgid "Processing second track of stereo pair: %s"
+msgstr "Obređujem drugu numeru stereo para: "
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Paulstretch"
+msgstr "Polstreč..."
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
+msgstr ""
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Audio selection too short to preview.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Unable to Preview.\n"
+"\n"
+"For the current audio selection, the maximum\n"
+"'Time Resolution' is %.1f seconds."
+msgstr ""
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"The 'Time Resolution' is too long for the selection.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Phaser"
+msgstr "Faznik"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+msgid "Combines phase-shifted signals with the original signal"
+msgstr ""
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, fuzzy
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "Da iscrtate spektar, sve izabrane numere moraju biti istog protoka uzorka."
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid ""
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
+msgstr ""
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, fuzzy, c-format
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "Previše zvuka je izabrano.  Samo prve %.1f sekunde zvuka će biti analizirane."
+
+#: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
+msgid "Repair"
+msgstr "Popravi"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "Sets the peak amplitude of a one or more tracks"
+msgstr ""
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "The Repair effect cannot be applied within stretched or shrunk clips"
+msgstr ""
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"\n"
+"Zoom in and select a tiny fraction of a second to repair."
+msgstr ""
+"Efekat popravke je namenjen za korišćenje\n"
+"na vrlo kratkim odeljcima oštećenog zvuka\n"
+"(najviše do 128 uzoraka).\n"
+"\n"
+"Uvećajte i izaberite uzani deo sekunde za popravku."
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"Repair works by using audio data outside the selection region.\n"
+"\n"
+"Please select a region that has audio touching at least one side of it.\n"
+"\n"
+"The more surrounding audio, the better it performs."
+msgstr ""
+"Popravka radi korišćenjem podataka zvuka izvan oblasti izbora.\n"
+"\n"
+"Molim izaberite oblast koja ima zvuk koji dodiruje barem jednu njegovu stranu.\n"
+"\n"
+"Više okolnog zvuka, bolje će je obaviti."
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Repeat"
+msgstr "Ponovi"
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+msgid "Repeats the selection the specified number of times"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Acoustic"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Ambience"
+msgstr "Utišaj"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Artificial"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Clean"
+msgstr "&Očisti"
+
+#. i18n-hint: This is the name of an effect preset
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Modern"
+msgstr "Umereno"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal I"
+msgstr "I vokal"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal II"
+msgstr "II vokal"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Dance Vocal"
+msgstr "&Odeli"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Modern Vocal"
+msgstr "Ukloni &poseban"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Voice Tail"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Bathroom"
+msgstr "Kupatilo"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Bright"
+msgstr "Svetla sobica"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Dark"
+msgstr "Tamna sobica"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Medium Room"
+msgstr "Srednja soba"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Large Room"
+msgstr "Velika soba"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Church Hall"
+msgstr "Crkveni hol"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Cathedral"
+msgstr "Katedrala"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Big Cave"
+msgstr ""
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Reverb"
+msgstr "Odjek"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Adds ambience or a \"hall effect\""
+msgstr ""
+
+#: libraries/lib-builtin-effects/Reverse.cpp resources/EffectsMenuDefaults.xml
+msgid "Reverse"
+msgstr "Obrni"
+
+#: libraries/lib-builtin-effects/Reverse.cpp
+#, fuzzy
+msgid "Reverses the selected audio"
+msgstr "Izvozim izabrani zvuk kao %s"
+
+#: libraries/lib-builtin-effects/SBSMSBase.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr ""
+
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Butterworth"
+msgstr "Batervotdov"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type I"
+msgstr "Čebišev I vrste"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type II"
+msgstr "Čebišev II vrste"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Lowpass"
+msgstr "Niskopropusni"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Highpass"
+msgstr "Visokopropusni"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Classic Filters"
+msgstr "Uobičajeni propusnici"
+
+#. i18n-hint: "infinite impulse response"
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Performs IIR filtering that emulates analog filters"
+msgstr ""
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "To apply a filter, all selected tracks must have the same sample rate."
+msgstr "Da primenite propusnik, sve izabrane numere moraju biti istog protoka uzorka."
+
+#. i18n-hint: noun
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+#, fuzzy
+msgctxt "generator"
+msgid "Silence"
+msgstr "Utišaj"
+
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgid "Creates audio of zero amplitude"
+msgstr ""
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+#, fuzzy
+msgid "Stereo To Mono"
+msgstr "Stereo u mono"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+#, fuzzy
+msgid "Converts stereo tracks to mono"
+msgstr "Stereo &numera u mono"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+#, fuzzy
+msgid "Mixing down to mono"
+msgstr "Mešanje u &mono za vreme izvoza"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Sliding Stretch"
+msgstr "Razvuci"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+msgid "Allows continuous changes to the tempo and/or pitch"
+msgstr ""
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "Linearno"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Logarithmic"
+msgstr "Logaritamsko"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sine"
+msgstr "Sinus"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Square"
+msgstr "Kvadrat"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sawtooth"
+msgstr "Zub testere"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgid "Square, no alias"
+msgstr "Kvadrat, bez alijasa"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#, fuzzy
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Trouglasto"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Truncate Detected Silence"
+msgstr "Skrati otkrivenu tišinu"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Compress Excess Silence"
+msgstr "Sažmi prekomernu tišinu"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Truncate Silence"
+msgstr "Skrati tišinu"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr ""
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr ""
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Wahwah"
+msgstr "Vauvau"
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr ""
+
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 #, fuzzy
 msgid "Cannot proceed to upload."
@@ -413,14 +1446,6 @@ msgstr ""
 #, fuzzy
 msgid "Failed to deserialize the response"
 msgstr "Ne mogu da dovučem opis toka"
-
-#. i18n-hint: This is the name of an effect preset.
-#. i18n-hint: This is the name of an effect preset
-#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Modern"
-msgstr "Umereno"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -596,10 +1621,10 @@ msgid "Play it Loud"
 msgstr "Puštanje zvuka"
 
 #: libraries/lib-effects/Effect.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: plug-ins/beat.ny
+#: src/commands/AudacityCommand.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "Dnevnik Odvažnosti"
@@ -1100,6 +2125,46 @@ msgstr ""
 msgid "Import Project"
 msgstr "Uvezi podešenost"
 
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "SubRip text file"
+msgstr "Datoteke naziva:"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "WebVTT file"
+msgstr "MP3 datoteke"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "S&tandard"
+msgstr "Obično"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
+msgid "Labels"
+msgstr "Natpisa"
+
+#. i18n-hint: (noun) it's the name of a kind of track.
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Label track.
+#: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
+#: src/LabelDialog.h src/TrackPanelAx.cpp
+msgid "Label Track"
+msgstr "Natpis numere"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "One or more saved labels could not be read."
+msgstr ""
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -1150,7 +2215,7 @@ msgstr "VST efekti"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr ""
 
-#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectPresetDialog.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -1169,6 +2234,119 @@ msgstr "Trouglasto"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "Oblikovano"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+#, fuzzy
+msgid "C"
+msgstr "LC"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+#, fuzzy
+msgid "G"
+msgstr "GB"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+#, fuzzy
+msgid "B"
+msgstr "dB"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♭"
+msgstr ""
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯/D♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯/E♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯/G♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯/A♭"
+msgstr ""
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯/B♭"
+msgstr ""
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -1212,14 +2390,6 @@ msgstr ""
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "Naredba"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Ponovi %s"
 
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
@@ -1865,6 +3035,154 @@ msgstr "01000,01000 kadrova|24"
 msgid "thousandths of decades"
 msgstr ""
 
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+#, fuzzy
+msgid "Nyquist Effects"
+msgstr "Ponovo pregledaj dejstva"
+
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Provides Nyquist Effects support to Audacity"
+msgstr ""
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Applying Nyquist Effect..."
+msgstr "Primenjujem Nikvist efekat..."
+
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. * Prompt"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "Nyquist Worker"
+msgstr "Upit Nikvista..."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "Izlaz Nikvista: "
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"To use 'Spectral effects', enable 'Spectral Selection'\n"
+"in the track Spectrogram settings and select the\n"
+"frequency range for the effect to act on."
+msgstr ""
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
+msgstr ""
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "Audio selection required."
+msgstr "Nije izabran lanac"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "Processing complete."
+msgstr "Obrađujem: "
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr ""
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr ""
+
+#. i18n-hint: "%s" is replaced by name of plug-in.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy, c-format
+msgid "nyx_error returned from %s.\n"
+msgstr "MP3 koder je vratio grešku „%ld“"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "plug-in"
+msgstr "Naziv priključka"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "Nyquist returned a list."
+msgstr "Nikvist nije vratio zvuk.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nikvist je vratio vrednost:"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nikvist je vratio vrednost:"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned too many audio channels.\n"
+msgstr "Nikvist je vratio previše zvučnih kanala.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned one audio channel as an array.\n"
+msgstr "Nikvist je vratio jedan zvučni kanal kao niz.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned an empty array.\n"
+msgstr "Nikvist je vratio prazan niz.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "Nyquist returned nil audio.\n"
+msgstr "Nikvist nije vratio zvuk.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[Upozorenje: Nikvist je vratio neispravnu UTF-8 nisku, pretvorenu ovde kao Latin-1]"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy, c-format
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "Ovo izdanje Odvažnosti nije sastavljeno sa %s podrškom."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "Could not open file"
+msgstr "Ne mogu da otvorim datoteku "
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid ""
+"Your code looks like SAL syntax, but there is no 'return' statement.\n"
+"For SAL, use a return statement such as:\n"
+"\treturn *track* * 0.1\n"
+"or for LISP, begin with an open parenthesis such as:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+msgstr ""
+"Vaš kod izgleda kao SAL sintaksa, ali nema povratnog iskaza. Ili koristite povratni iskaz kao što je\n"
+"        return s * 0.1\n"
+"za SAL, ili počnite sa otvorenom zagradom kao što je\n"
+"\t(mult s 0.1)\n"
+" za LISP."
+
+#. i18n-hint: refers to programming "languages"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid "Could not determine language"
+msgstr "Ne mogu da otvorim datoteku: "
+
+#. i18n-hint: default exported file name when exporting from unsaved project
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/TimerRecordDialog.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "untitled"
+msgstr "bez naslova"
+
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Audio Track"
 msgstr "Zvučna numera"
@@ -2305,7 +3623,7 @@ msgid "Writable Sample Track"
 msgstr "Ponovo uzorkuj numeru"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/effects/Contrast.cpp
 msgid "&Close"
 msgstr "&Zatvori"
 
@@ -2935,6 +4253,149 @@ msgstr "Ne mogu da otvorim/stvorim probnu datoteku."
 msgid "Failed to save VST3 preset to file"
 msgstr "Ne mogu da otvorim/stvorim probnu datoteku."
 
+#. i18n-hint: The name of a frequency scale in psychoacoustics
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Mel"
+msgstr ""
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Bark"
+msgstr ""
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "ERB"
+msgstr ""
+
+#. i18n-hint: Time units, that is Period = 1 / Frequency
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#, fuzzy
+msgid "Period"
+msgstr "Kadar:"
+
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (Roseus)"
+msgstr "Osnovno uvećavanje"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Uobičajeni propusnici"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Razmera"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "&Linearno"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#, fuzzy
+msgid "Frequencies"
+msgstr "Učestalost"
+
+#. i18n-hint: the Reassignment algorithm for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Reassignment"
+msgstr ""
+
+#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Pitch (EAC)"
+msgstr "Vrhunac (EAC)"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr "Najveća učestanost mora biti 100 Hz ili iznad"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be at least 0 Hz"
+msgstr "Najmanja učestanost mora biti barem 0 Hz"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be less than maximum frequency"
+msgstr "Najmanja učestanost mora biti manja od najveće učestanosti"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The range must be at least 1 dB"
+msgstr "Opseg mora biti barem 1 dB"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain cannot be negative"
+msgstr "Pojačanje učestanosti ne može biti negativno"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain must be no more than 60 dB/dec"
+msgstr "Pojačanje učestanosti mora biti ne više od 60 dB/dec"
+
+#. i18n-hint: abbreviates amplitude
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Linear (amp)"
+msgstr "Linearno"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Logarithmic (dB)"
+msgstr "Logaritamsko"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Linear (dB)"
+msgstr "Linearno"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-36 dB (shallow range for high-amplitude editing)"
+msgstr "-36 dB (površan opseg za visokodosežno uređivanje)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-48 dB (PCM range of 8 bit samples)"
+msgstr "-48 dB (PCM opseg 8-bitnih uzoraka)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-60 dB (PCM range of 10 bit samples)"
+msgstr "-60 dB (PCM opseg 10-bitnih uzoraka)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#, fuzzy
+msgid "-72 dB (PCM range of 12 bit samples)"
+msgstr "-60 dB (PCM opseg 10-bitnih uzoraka)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#, fuzzy
+msgid "-84 dB (PCM range of 14 bit samples)"
+msgstr "-145 dB (PCM opseg 24-bitnih uzoraka)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-96 dB (PCM range of 16 bit samples)"
+msgstr "-96 dB (PCM opseg 16-bitnih uzoraka)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-120 dB (approximate limit of human hearing)"
+msgstr "-120 dB (približna granica ljudskog sluha)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-145 dB (PCM range of 24 bit samples)"
+msgstr "-145 dB (PCM opseg 24-bitnih uzoraka)"
+
 #: libraries/lib-wave-track/Sequence.cpp
 #, fuzzy, c-format
 msgid ""
@@ -2958,6 +4419,12 @@ msgstr "&Obrađujem: "
 #, fuzzy
 msgid "Rendering Clip"
 msgstr "Preimenuj..."
+
+#: libraries/lib-wave-track/WaveChannelViewConstants.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#, fuzzy
+msgid "&Multi-view"
+msgstr "Više"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 #, fuzzy
@@ -3214,6 +4681,7 @@ msgstr "Zaustavi"
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
@@ -4719,9 +6187,8 @@ msgstr ""
 msgid "45-85 kbps (Smaller files)"
 msgstr "(manje datoteke)"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane, 320 kbps"
+msgid "Excessive, 320 kbps"
 msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4736,10 +6203,9 @@ msgstr ""
 msgid "Medium, 145-185 kbps"
 msgstr ""
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane"
-msgstr "Nezdravo"
+msgid "Excessive"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -6083,12 +7549,21 @@ msgid "Account not linked"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Unlink Account"
 msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "&Sign Out"
+msgstr "Linearno"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -6178,10 +7653,6 @@ msgid "Project Name"
 msgstr "Projekti"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
 msgstr ""
 
@@ -6267,6 +7738,77 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
 msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create cloud account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to cloud"
+msgstr "Poravnaj &kraj sa krajem"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Oops! It looks like there was an issue with your input.\n"
+"Please ensure your email is correct and that your password is at least 8 characters long"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Sorry, but it seems the email or password you entered is incorrect.\n"
+"Please double-check your credentials and try again!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create an account to save to the cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to save to the cloud"
+msgstr "Sačuvaj dnevnik u:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Google"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Facebook"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Email"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Password"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Forgot your password?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Already have an account? "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in here"
+msgstr "Poravnaj %s"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Need an account? "
+msgstr "Izobličenje"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Ostali saradnici"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -6549,12 +8091,6 @@ msgstr "Čuvanje p&raznog projekta"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
 msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-#, fuzzy
-msgid "Continue"
-msgstr "Ostali saradnici"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
@@ -7234,16 +8770,16 @@ msgstr ""
 "Uklonjena je sa spiska nedavnih datoteka."
 
 #: src/AudacityApp.cpp
+msgid "Audacity is starting up..."
+msgstr "Odvažnost se pokreće..."
+
+#: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr ""
-
-#: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "Odvažnost se pokreće..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -7481,7 +9017,9 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 
+#. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/menus/FileMenus.cpp
 #, fuzzy
 msgid "&Quit Audacity"
 msgstr "Zatvori Odvažnost"
@@ -8352,6 +9890,28 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr ""
 
+#: src/EffectAndCommandPluginManager.cpp
+#, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in 'Help > Diagnostics > Show Log'"
+msgstr ""
+
+#: src/EffectAndCommandPluginManager.cpp
+#, fuzzy
+msgid "Command failed to initialize"
+msgstr ""
+"FLAC šifrer nije uspeo da započne\n"
+"Stanje: %d"
+
+#: src/ExportLabelTrack.cpp
+#, fuzzy
+msgid "Exported Label Style:"
+msgstr "Izvezi natpise kao:"
+
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
 msgstr "Analiziranje učestanosti"
@@ -8455,22 +10015,6 @@ msgstr "Osa"
 #, fuzzy
 msgid "&Replot..."
 msgstr "&Ponovo iscrtaj"
-
-#: src/FreqWindow.cpp
-#, fuzzy
-msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "Da iscrtate spektar, sve izabrane numere moraju biti istog protoka uzorka."
-
-#: src/FreqWindow.cpp
-msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
-msgstr ""
-
-#: src/FreqWindow.cpp
-#, fuzzy, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "Previše zvuka je izabrano.  Samo prve %.1f sekunde zvuka će biti analizirane."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -8703,51 +10247,6 @@ msgstr "Novi natpis numere"
 msgid "Enter track name"
 msgstr "Unesite naziv numere"
 
-#. i18n-hint: (noun) it's the name of a kind of track.
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Label track.
-#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
-#: src/TrackPanelAx.cpp
-msgid "Label Track"
-msgstr "Natpis numere"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "SubRip text file"
-msgstr "Datoteke naziva:"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "WebVTT file"
-msgstr "MP3 datoteke"
-
-#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
-msgid "Labels"
-msgstr "Natpisa"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "S&tandard"
-msgstr "Obično"
-
-#: src/LabelTrack.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr ""
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "Exported Label Style:"
-msgstr "Izvezi natpise kao:"
-
-#: src/LabelTrack.cpp
-msgid "Importing WebVTT files is not currently supported."
-msgstr ""
-
-#: src/LabelTrack.cpp
-msgid "One or more saved labels could not be read."
-msgstr ""
-
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
 #: src/LangChoice.cpp
@@ -8796,13 +10295,14 @@ msgstr ""
 msgid "Audacity Mixer%s"
 msgstr "Tabla mešača%s"
 
-#. i18n-hint: title of the Gain slider, used to adjust the volume
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#. i18n-hint: title of the Volume slider, used to adjust the volume
+#. i18n-hint: Title of the Volume slider, used to adjust the volume
+#: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Gain"
-msgstr "Pojačanje"
+#, fuzzy
+msgid "Volume"
+msgstr "Jačina zvuka    "
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -8843,8 +10343,9 @@ msgstr "Merač nivoa signala"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Moved gain slider"
-msgstr "Pomeren je klizač pojačanja"
+#, fuzzy
+msgid "Moved volume slider"
+msgstr "Pomeren je klizač brzine"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -8860,119 +10361,6 @@ msgstr "Pomeren je klizač kanalisanja"
 #, fuzzy
 msgid "&Mixer"
 msgstr "Mešač"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-#, fuzzy
-msgid "C"
-msgstr "LC"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-#, fuzzy
-msgid "G"
-msgstr "GB"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-#, fuzzy
-msgid "B"
-msgstr "dB"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♭"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E♭"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♭"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♭"
-msgstr ""
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B♭"
-msgstr ""
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯/D♭"
-msgstr ""
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯/E♭"
-msgstr ""
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯/G♭"
-msgstr ""
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯/A♭"
-msgstr ""
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯/B♭"
-msgstr ""
 
 #: src/PluginDataModel.cpp
 #, fuzzy, c-format
@@ -9746,17 +11134,6 @@ msgstr "„%s“ je premeštena %s"
 msgid "Change effect order"
 msgstr "Izmeni brzinu"
 
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid ""
-"This plugin could not be loaded.\n"
-"It may have been deleted."
-msgstr ""
-
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Plugin Error"
-msgstr "Greška LOF-a"
-
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
@@ -9999,12 +11376,6 @@ msgstr "Trajanje"
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "Vremensko snimanje Odvažnosti"
-
-#. i18n-hint: default exported file name when exporting from unsaved project
-#: src/TimerRecordDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "untitled"
-msgstr "bez naslova"
 
 #: src/TimerRecordDialog.cpp
 #, fuzzy
@@ -10543,7 +11914,7 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -10553,6 +11924,57 @@ msgstr ""
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal processing effect that enhances vocal clarity and depth."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#. i18n-hint: MuseHub is a name of a product, see musehub.com.
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Available on [[%s|MuseHub]]."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -10574,7 +11996,7 @@ msgstr "Ne prikazuj više pri pokretanju"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
-#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -10755,7 +12177,7 @@ msgstr ""
 msgid "Brief"
 msgstr ""
 
-#: src/commands/GetInfoCommand.cpp src/effects/EffectManager.cpp
+#: src/commands/GetInfoCommand.cpp src/effects/EffectPresetDialog.cpp
 msgid "Type:"
 msgstr ""
 
@@ -11276,8 +12698,8 @@ msgstr "Ućutkaj zvuk"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
-msgid "Gain:"
-msgstr "Pojačanje"
+msgid "Volume:"
+msgstr "Jačina zvuka    "
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -11287,27 +12709,6 @@ msgstr ""
 #, fuzzy
 msgid "Set Track Visuals"
 msgstr "Poređaj &numere"
-
-#. i18n-hint: abbreviates amplitude
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-#, fuzzy
-msgid "Linear (amp)"
-msgstr "Linearno"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-#, fuzzy
-msgid "Logarithmic (dB)"
-msgstr "Logaritamsko"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-#, fuzzy
-msgid "Linear (dB)"
-msgstr "Linearno"
 
 #: src/commands/SetTrackInfoCommand.cpp
 #, fuzzy
@@ -11395,10 +12796,6 @@ msgstr ""
 msgid "Long Message"
 msgstr ""
 
-#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
-msgid "Amplify"
-msgstr "Pojačaj"
-
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
 msgstr ""
@@ -11421,32 +12818,6 @@ msgstr "Doseg novog vrhunca (dB):"
 #, fuzzy
 msgid "Allo&w clipping"
 msgstr "Dopusti odsecanje"
-
-#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
-msgid "Auto Duck"
-msgstr "Samoutišavanje"
-
-#: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr ""
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks'
-#. (reduces the volume) of the audio automatically when there is
-#. sound on another track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "Izabrali ste numeru koja ne sadrži zvuk. Samoutišavanje može da obradi samo zvučne numere."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
-#. the volume) of the audio automatically when there is sound on another
-#. track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Samoutišavanje zahteva upravljačku numeru koja mora biti postavljena ispod izabrane numere."
-
-#: src/effects/AutoDuck.cpp
-msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr ""
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -11519,15 +12890,6 @@ msgstr "Ne mogu da otvorim/stvorim probnu datoteku."
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr ""
 
-#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
-msgid "Bass and Treble"
-msgstr "Niskotonac i visokotonac"
-
-#: src/effects/BassTreble.cpp
-#, fuzzy
-msgid "Simple tone control effect"
-msgstr "Skupi izbor na levo"
-
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
 msgstr ""
@@ -11560,19 +12922,6 @@ msgstr "&Visokotonac (dB):"
 
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
-msgstr ""
-
-#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Pitch"
-msgstr "Izmeni vrhunac"
-
-#: src/effects/ChangePitch.cpp
-#, fuzzy
-msgid "Changes the pitch of a track without changing its tempo"
-msgstr "Izmeni vrhunac bez menjanja takta"
-
-#: src/effects/ChangePitch.cpp
-msgid "High Quality Pitch Change"
 msgstr ""
 
 #: src/effects/ChangePitch.cpp
@@ -11680,16 +13029,6 @@ msgstr "4"
 msgid "78"
 msgstr "7"
 
-#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Change Speed and Pitch"
-msgstr "Izmeni brzinu"
-
-#: src/effects/ChangeSpeed.cpp
-#, fuzzy
-msgid "Changes the speed of a track, also changing its pitch"
-msgstr "Izmeni vrhunac bez menjanja takta"
-
 #: src/effects/ChangeSpeed.cpp
 #, fuzzy
 msgid "&Speed Multiplier:"
@@ -11764,20 +13103,6 @@ msgctxt "change speed"
 msgid "to"
 msgstr "do"
 
-#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Tempo"
-msgstr "Izmeni takt"
-
-#: src/effects/ChangeTempo.cpp
-#, fuzzy
-msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Izmeni takt bez menjanja vrhunca"
-
-#: src/effects/ChangeTempo.cpp
-#, fuzzy
-msgid "High Quality Tempo Change"
-msgstr "Krajnja promena takta (%)"
-
 #: src/effects/ChangeTempo.cpp
 #, fuzzy
 msgid "Beats per minute"
@@ -11832,23 +13157,6 @@ msgstr "do"
 msgid "Length in seconds from %s, to"
 msgstr "Na trajanje u sekundama"
 
-#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
-msgid "Click Removal"
-msgstr "Uklanjanje klika"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr ""
-
-#: src/effects/ClickRemoval.cpp
-msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr "Algoritam nije delotvoran na ovom zvuku. Nema izmena."
-
-#: src/effects/ClickRemoval.cpp
-#, c-format
-msgid "Selection must be larger than %d samples."
-msgstr "Izbor mora biti veći od %d uzorka."
-
 #: src/effects/ClickRemoval.cpp
 #, fuzzy
 msgid "&Threshold (lower is more sensitive):"
@@ -11874,29 +13182,6 @@ msgstr "Sažimatelj"
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr ""
-
-#: src/effects/Contrast.cpp
-msgid "You can only measure one track at a time."
-msgstr "Možete da merite samo jednu numeru odjednom."
-
-#: src/effects/Contrast.cpp
-#, fuzzy
-msgid "Please select an audio track."
-msgstr "Molim izaberite radnju"
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Invalid audio selection.\n"
-"Please ensure that audio is selected."
-msgstr ""
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Nothing to measure.\n"
-"Please select a section of a track."
-msgstr ""
-"Nema ničega za merenje.\n"
-"Molim izaberite odeljak numere."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -12142,139 +13427,6 @@ msgstr "Suprotnost..."
 
 #: src/effects/Distortion.cpp
 #, fuzzy
-msgid "Hard Clipping"
-msgstr "Nađite odsečke"
-
-#: src/effects/Distortion.cpp
-#, fuzzy
-msgid "Soft Clipping"
-msgstr "&Prikaži odsecanje"
-
-#: src/effects/Distortion.cpp
-#, fuzzy
-msgid "Soft Overdrive"
-msgstr "Potvrdi prepisivanje"
-
-#: src/effects/Distortion.cpp
-#, fuzzy
-msgid "Medium Overdrive"
-msgstr "Potvrdi prepisivanje"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Overdrive"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Cubic Curve (odd harmonics)"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Even Harmonics"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-#, fuzzy
-msgid "Expand and Compress"
-msgstr "Sažimatelj dinamičkog opsega"
-
-#: src/effects/Distortion.cpp
-#, fuzzy
-msgid "Leveller"
-msgstr "Izravnavač"
-
-#: src/effects/Distortion.cpp
-#, fuzzy
-msgid "Rectifier Distortion"
-msgstr "Izobličenje"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Limiter 1413"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Hard clip -12dB, 80% make-up gain"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Soft clip -12dB, 80% make-up gain"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Fuzz Box"
-msgstr ""
-
-#: src/effects/Distortion.cpp src/effects/Equalization.cpp
-msgid "Walkie-talkie"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Blues drive sustain"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Light Crunch Overdrive"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Heavy Overdrive"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "3rd Harmonic (Perfect Fifth)"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Valve Overdrive"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "2nd Harmonic (Octave)"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Gated Expansion Distortion"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Light, -70dB noise floor"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Moderate, -70dB noise floor"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavy, -70dB noise floor"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavier, -70dB noise floor"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Half-wave Rectifier"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier (DC blocked)"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-msgid "Percussion Limiter"
-msgstr ""
-
-#: src/effects/Distortion.cpp
-#, fuzzy
 msgid "Upper Threshold"
 msgstr "Osetljivost"
 
@@ -12296,14 +13448,6 @@ msgstr "Parametri"
 #, fuzzy
 msgid "Number of repeats"
 msgstr "Broj ponavljanja:"
-
-#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
-msgid "Distortion"
-msgstr "Izobličenje"
-
-#: src/effects/Distortion.cpp
-msgid "Waveshaping distortion effect"
-msgstr ""
 
 #: src/effects/Distortion.cpp
 #, fuzzy
@@ -12415,21 +13559,6 @@ msgstr "(%) [-50 do 100]:"
 #, fuzzy
 msgid "(0 to 5):"
 msgstr "(%) [-50 do 100]:"
-
-#: src/effects/DtmfGen.cpp
-#, fuzzy
-msgid "DTMF Tones"
-msgstr "DTMF tonovi..."
-
-#: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr ""
-
-#: src/effects/DtmfGen.cpp
-msgid ""
-"DTMF sequence empty.\n"
-"Check ALL settings for this effect."
-msgstr ""
 
 #: src/effects/DtmfGen.cpp
 #, fuzzy
@@ -12585,20 +13714,6 @@ msgstr "Sažimanje:"
 msgid "awaiting playback"
 msgstr "Klizač puštanja"
 
-#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
-msgid "Echo"
-msgstr "Odjek"
-
-#: src/effects/Echo.cpp
-#, fuzzy
-msgid "Repeats the selected audio again and again"
-msgstr "Izvozim izabrani zvuk kao %s"
-
-#: src/effects/Echo.cpp src/effects/FindClipping.cpp
-#: src/effects/Paulstretch.cpp
-msgid "Requested value exceeds memory capacity."
-msgstr ""
-
 #: src/effects/Echo.cpp
 #, fuzzy
 msgid "&Delay time (seconds):"
@@ -12609,79 +13724,35 @@ msgstr "Vreme zastoja (u sekundama):"
 msgid "D&ecay factor:"
 msgstr "Faktor raspada:"
 
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied effect: %s"
-msgstr "Primenjeno je dejstvo: %s"
-
-#: src/effects/EffectManager.cpp
-#, fuzzy, c-format
-msgid "Applied command: %s"
-msgstr "Primenjeno je dejstvo: %s"
-
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 #, fuzzy
 msgid "Select Preset"
 msgstr "Obriši podešenost"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 #, fuzzy
 msgid "&Preset:"
 msgstr "Podešenost:"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 #, fuzzy
 msgid "User Presets"
 msgstr "Pretpodešavanja"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 #, fuzzy
 msgid "Factory Presets"
 msgstr "Uvezi podešenost"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 #, fuzzy
 msgid "Current Settings"
 msgstr "Podešavanja dejstva"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 #, fuzzy
 msgid "Factory Defaults"
 msgstr "Postavi &osnovno"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following effect failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-
-#: src/effects/EffectManager.cpp
-#, fuzzy
-msgid "Effect failed to initialize"
-msgstr ""
-"FLAC šifrer nije uspeo da započne\n"
-"Stanje: %d"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following command failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-
-#: src/effects/EffectManager.cpp
-#, fuzzy
-msgid "Command failed to initialize"
-msgstr ""
-"FLAC šifrer nije uspeo da započne\n"
-"Stanje: %d"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
@@ -12780,10 +13851,6 @@ msgid ""
 "Replace?"
 msgstr "Datoteka pod nazivom „%s“ već postoji.  Da je zamenim?"
 
-#: src/effects/Equalization.cpp
-msgid "Equalization"
-msgstr "Ujednačavanje"
-
 #: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Filter Curve EQ"
@@ -12793,64 +13860,6 @@ msgstr "Izaberi krivu"
 #: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Grafički EKu"
-
-#: src/effects/Equalization.cpp
-msgid "Adjusts the volume levels of particular frequencies"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "100Hz Rumble"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "AM Radio"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Bass Boost"
-msgstr "Niskotonac (dB):"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Bass Cut"
-msgstr "Niskotonac"
-
-#: src/effects/Equalization.cpp
-msgid "Low rolloff for speech"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "RIAA"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-msgid "Telephone"
-msgstr ""
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Treble Boost"
-msgstr "Visokotonac"
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Treble Cut"
-msgstr "Visokotonac"
-
-#: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Da primenite ujednačavanje, sve izabrane numere moraju biti istog protoka uzorka."
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Track sample rate is too low for this effect."
-msgstr "Numere su previše duge za ponavljanje izbora."
-
-#: src/effects/Equalization.cpp
-#, fuzzy
-msgid "Effect Unavailable"
-msgstr "Pregled nije dostupan"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -12884,33 +13893,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%d dB"
 msgstr "%3d dB"
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/EqualizationCurves.cpp
-msgid "unnamed"
-msgstr "neimenovana"
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/EqualizationCurves.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-"Greška učitavanja EKu krivih iz datoteke:\n"
-"%s\n"
-"Poruka greške glasi:\n"
-"%s"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Loading EQ Curves"
-msgstr "Greška učitavanja EKu krivih"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Saving Equalization Curves"
-msgstr "Greška čuvanja krivih ujednačavanja"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -13038,33 +14020,6 @@ msgstr "Krive su izvezene"
 msgid "No curves exported"
 msgstr "Krive nisu izvezene"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/EqualizationParameters.cpp
-msgid "B-spline"
-msgstr "B-sp linija"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cosine"
-msgstr "Kosinusno"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cubic"
-msgstr "Kubično"
-
-#: src/effects/EqualizationUI.cpp
-#, fuzzy
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"Da koristite ovu EKu krivu u grupnom lancu, molim izaberite novi naziv za nj.\n"
-"Izaberite „Sačuvaj/upravljaj krivama...“ i promenite naziv „neimenovane“ krive, i nakon toga upotrebite ovo."
-
-#: src/effects/EqualizationUI.cpp
-#, fuzzy
-msgid "Filter Curve EQ needs a different name"
-msgstr "EKu kriva zahteva drugačiji naziv"
-
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
 msgstr ""
@@ -13150,54 +14105,6 @@ msgstr "Prikaži mrežu duž &Y ose"
 msgid "Show g&rid lines"
 msgstr "Prikaži mrežu duž &Y ose"
 
-#: src/effects/EqualizationUI.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr "Nisam našao zahtevanu krivu, koristiću „neimenovanu“"
-
-#: src/effects/EqualizationUI.cpp
-msgid "Curve not found"
-msgstr "Nisam našao krivu"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade In"
-msgstr "Pojavi se"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade Out"
-msgstr "Iščezni"
-
-#: src/effects/Fade.cpp
-#, fuzzy
-msgid "Applies a linear fade-in to the selected audio"
-msgstr "Kliknite i prevucite da razvučete izabranu oblast."
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-out to the selected audio"
-msgstr ""
-
-#: src/effects/FindClipping.cpp
-msgid "Find Clipping"
-msgstr "Nađite odsečke"
-
-#: src/effects/FindClipping.cpp
-msgid "Creates labels where clipping is detected"
-msgstr ""
-
-#: src/effects/FindClipping.cpp
-msgid "Clipping"
-msgstr "Odsecanje"
-
-#. i18n-hint: Two numbers are substituted; the second is the
-#. size of a set, the first is the size of a subset, and not
-#. understood as an ordinal (i.e., not meaning "first", or
-#. "second", etc.)
-#.
-#: src/effects/FindClipping.cpp
-#, c-format
-msgctxt "find clipping"
-msgid "%lld of %lld"
-msgstr ""
-
 #: src/effects/FindClipping.cpp
 #, fuzzy
 msgid "&Start threshold (samples):"
@@ -13207,27 +14114,6 @@ msgstr "Pokreni osetljivost (uzorcima):"
 #, fuzzy
 msgid "St&op threshold (samples):"
 msgstr "Zaustavi osetljivost (uzorcima):"
-
-#: src/effects/Generator.cpp
-msgid "There is not enough room available to generate the audio"
-msgstr "Nema dovoljno dostupnog mesta za stvaranje zvuka"
-
-#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
-msgid "Invert"
-msgstr "Preokreni"
-
-#: src/effects/Invert.cpp
-msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr ""
-
-#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Legacy Compressor"
-msgstr "Sažimatelj"
-
-#: src/effects/LegacyCompressor.cpp
-msgid "Compresses the dynamic range of audio"
-msgstr ""
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
@@ -13364,29 +14250,6 @@ msgstr "Normalizuj najveći doseg na"
 msgid "RMS"
 msgstr ""
 
-#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
-msgid "Loudness Normalization"
-msgstr ""
-
-#: src/effects/Loudness.cpp
-msgid "Sets the loudness of one or more tracks"
-msgstr ""
-
-#: src/effects/Loudness.cpp
-#, fuzzy
-msgid "Normalizing Loudness...\n"
-msgstr "Normalizuj najveći doseg na"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Analyzing: %s"
-msgstr "Analiziram: "
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Processing: %s"
-msgstr "Obrađujem: "
-
 #: src/effects/Loudness.cpp
 #, fuzzy
 msgid "&Normalize"
@@ -13419,99 +14282,10 @@ msgstr ""
 msgid "(Maximum 0dB)"
 msgstr ".  Najviše 0dB."
 
-#. i18n-hint: not a color, but "white noise" having a uniform spectrum
-#: src/effects/Noise.cpp
-#, fuzzy
-msgctxt "noise"
-msgid "White"
-msgstr "Belo"
-
-#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
-#. in low frequencies
-#: src/effects/Noise.cpp
-#, fuzzy
-msgctxt "noise"
-msgid "Pink"
-msgstr "Roze"
-
-#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
-#: src/effects/Noise.cpp
-#, fuzzy
-msgctxt "noise"
-msgid "Brownian"
-msgstr "Braon"
-
-#: src/effects/Noise.cpp
-#, fuzzy
-msgid "Noise"
-msgstr "Buka:"
-
-#: src/effects/Noise.cpp
-msgid "Generates one of three different types of noise"
-msgstr ""
-
 #: src/effects/Noise.cpp
 #, fuzzy
 msgid "&Noise type:"
 msgstr "Vrsta buke:"
-
-#: src/effects/NoiseReduction.cpp
-#, fuzzy
-msgid "Median"
-msgstr "Srednje"
-
-#: src/effects/NoiseReduction.cpp
-#, fuzzy
-msgid "Second greatest"
-msgstr "Druga numera"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Old"
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
-#: resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Noise Reduction"
-msgstr "Smanjenje buke"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block are too few for the window types."
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block cannot exceed the window size."
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median method is not implemented for more than four steps per window."
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp
-msgid "You must specify the same window size for steps 1 and 2."
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp
-msgid "Warning: window types are not the same as for profiling."
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp
-#, fuzzy
-msgid "All noise profile data must have the same sample rate."
-msgstr "Da primenite propusnik, sve izabrane numere moraju biti istog protoka uzorka."
-
-#: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr ""
-
-#: src/effects/NoiseReduction.cpp
-#, fuzzy
-msgid "Selected noise profile is too short."
-msgstr "Izbor je previše mali za ponavljanje."
 
 #: src/effects/NoiseReduction.cpp
 #, fuzzy
@@ -13697,55 +14471,6 @@ msgstr "Osnovno uvećavanje"
 msgid "Discrimination &method:"
 msgstr ""
 
-#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
-msgid "Normalize"
-msgstr "Normalizuj"
-
-#: src/effects/Normalize.cpp
-msgid "Sets the peak amplitude of one or more tracks"
-msgstr ""
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset and Normalizing...\n"
-msgstr "Uklanjam DC pomeraj i normalizujem...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset...\n"
-msgstr "Uklanjam DC pomeraj...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Normalizing without removing DC offset...\n"
-msgstr "Normalizujem bez uklanjanja DC pomeraja...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Not doing anything...\n"
-msgstr ""
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Analyzing first track of stereo pair: %s"
-msgstr "Analiziram prvu numeru stereo para: "
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Analiziram drugu numeru stereo para: "
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Processing stereo channels independently: %s"
-msgstr "Obrađujem stereo kanale nezavisno: "
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Processing first track of stereo pair: %s"
-msgstr "Obređujem prvu numeru stereo para: "
-
-#: src/effects/Normalize.cpp
-#, fuzzy, c-format
-msgid "Processing second track of stereo pair: %s"
-msgstr "Obređujem drugu numeru stereo para: "
-
 #: src/effects/Normalize.cpp
 #, fuzzy
 msgid "&Remove DC offset (center on 0.0 vertically)"
@@ -13766,15 +14491,6 @@ msgstr "Doseg novog vrhunca (dB):"
 msgid "N&ormalize stereo channels independently"
 msgstr "Normalizujte stereo kanale nezavisno"
 
-#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Paulstretch"
-msgstr "Polstreč..."
-
-#: src/effects/Paulstretch.cpp
-msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr ""
-
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
@@ -13788,44 +14504,6 @@ msgstr "Faktor razvlačenja:"
 #, fuzzy
 msgid "&Time Resolution (seconds):"
 msgstr "Vremenska rezolucija (sekunde):"
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Audio selection too short to preview.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Unable to Preview.\n"
-"\n"
-"For the current audio selection, the maximum\n"
-"'Time Resolution' is %.1f seconds."
-msgstr ""
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"The 'Time Resolution' is too long for the selection.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-
-#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
-msgid "Phaser"
-msgstr "Faznik"
-
-#: src/effects/Phaser.cpp
-msgid "Combines phase-shifted signals with the original signal"
-msgstr ""
 
 #: src/effects/Phaser.cpp
 #, fuzzy
@@ -13897,52 +14575,6 @@ msgstr "Vlažno &pojačanje (dB):"
 msgid "%s - %s"
 msgstr " — L"
 
-#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
-msgid "Repair"
-msgstr "Popravi"
-
-#: src/effects/Repair.cpp
-msgid "Sets the peak amplitude of a one or more tracks"
-msgstr ""
-
-#: src/effects/Repair.cpp
-msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
-
-#: src/effects/Repair.cpp
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
-"\n"
-"Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Efekat popravke je namenjen za korišćenje\n"
-"na vrlo kratkim odeljcima oštećenog zvuka\n"
-"(najviše do 128 uzoraka).\n"
-"\n"
-"Uvećajte i izaberite uzani deo sekunde za popravku."
-
-#: src/effects/Repair.cpp
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
-"\n"
-"Please select a region that has audio touching at least one side of it.\n"
-"\n"
-"The more surrounding audio, the better it performs."
-msgstr ""
-"Popravka radi korišćenjem podataka zvuka izvan oblasti izbora.\n"
-"\n"
-"Molim izaberite oblast koja ima zvuk koji dodiruje barem jednu njegovu stranu.\n"
-"\n"
-"Više okolnog zvuka, bolje će je obaviti."
-
-#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
-msgid "Repeat"
-msgstr "Ponovi"
-
-#: src/effects/Repeat.cpp
-msgid "Repeats the selection the specified number of times"
-msgstr ""
-
 #: src/effects/Repeat.cpp
 #, fuzzy
 msgid "&Number of repeats to add:"
@@ -13970,103 +14602,6 @@ msgstr "Trajanje novog izbora: "
 
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Acoustic"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Ambience"
-msgstr "Utišaj"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Artificial"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Clean"
-msgstr "&Očisti"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal I"
-msgstr "I vokal"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal II"
-msgstr "II vokal"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Dance Vocal"
-msgstr "&Odeli"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Modern Vocal"
-msgstr "Ukloni &poseban"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Voice Tail"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Bathroom"
-msgstr "Kupatilo"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Bright"
-msgstr "Svetla sobica"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Dark"
-msgstr "Tamna sobica"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Medium Room"
-msgstr "Srednja soba"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Large Room"
-msgstr "Velika soba"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Church Hall"
-msgstr "Crkveni hol"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Cathedral"
-msgstr "Katedrala"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Big Cave"
-msgstr ""
-
-#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverb"
-msgstr "Odjek"
-
-#: src/effects/Reverb.cpp
-msgid "Adds ambience or a \"hall effect\""
 msgstr ""
 
 #: src/effects/Reverb.cpp
@@ -14108,55 +14643,6 @@ msgstr "&Širina sterea (%):"
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
 msgstr "Samo &vlažno"
-
-#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverse"
-msgstr "Obrni"
-
-#: src/effects/Reverse.cpp
-#, fuzzy
-msgid "Reverses the selected audio"
-msgstr "Izvozim izabrani zvuk kao %s"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
-
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Butterworth"
-msgstr "Batervotdov"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type I"
-msgstr "Čebišev I vrste"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type II"
-msgstr "Čebišev II vrste"
-
-#: src/effects/ScienFilter.cpp
-msgid "Lowpass"
-msgstr "Niskopropusni"
-
-#: src/effects/ScienFilter.cpp
-msgid "Highpass"
-msgstr "Visokopropusni"
-
-#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
-msgid "Classic Filters"
-msgstr "Uobičajeni propusnici"
-
-#. i18n-hint: "infinite impulse response"
-#: src/effects/ScienFilter.cpp
-msgid "Performs IIR filtering that emulates analog filters"
-msgstr ""
-
-#: src/effects/ScienFilter.cpp
-msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "Da primenite propusnik, sve izabrane numere moraju biti istog protoka uzorka."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -14304,41 +14790,6 @@ msgstr "Postavi &osnovno"
 msgid "%.3f"
 msgstr ""
 
-#. i18n-hint: noun
-#: src/effects/Silence.cpp
-#, fuzzy
-msgctxt "generator"
-msgid "Silence"
-msgstr "Utišaj"
-
-#: src/effects/Silence.cpp
-msgid "Creates audio of zero amplitude"
-msgstr ""
-
-#: src/effects/StereoToMono.cpp
-#, fuzzy
-msgid "Stereo To Mono"
-msgstr "Stereo u mono"
-
-#: src/effects/StereoToMono.cpp
-#, fuzzy
-msgid "Converts stereo tracks to mono"
-msgstr "Stereo &numera u mono"
-
-#: src/effects/StereoToMono.cpp
-#, fuzzy
-msgid "Mixing down to mono"
-msgstr "Mešanje u &mono za vreme izvoza"
-
-#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Sliding Stretch"
-msgstr "Razvuci"
-
-#: src/effects/TimeScale.cpp
-msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr ""
-
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
 msgstr "Početna promena takta (%)"
@@ -14368,37 +14819,6 @@ msgstr "Krajnji pomeraj vrhunca"
 #, fuzzy
 msgid "(s&emitones) [-12 to 12]:"
 msgstr "(polutonovi) [-12 do 12]:"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
-msgid "Linear"
-msgstr "Linearno"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-msgid "Logarithmic"
-msgstr "Logaritamsko"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sine"
-msgstr "Sinus"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Square"
-msgstr "Kvadrat"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sawtooth"
-msgstr "Zub testere"
-
-#: src/effects/ToneGen.cpp
-msgid "Square, no alias"
-msgstr "Kvadrat, bez alijasa"
-
-#: src/effects/ToneGen.cpp
-#, fuzzy
-msgctxt "waveform"
-msgid "Triangle"
-msgstr "Trouglasto"
 
 #: src/effects/ToneGen.cpp
 #, fuzzy
@@ -14448,26 +14868,6 @@ msgstr "Kraj dosega"
 #, fuzzy
 msgid "I&nterpolation:"
 msgstr "Umetanje:"
-
-#: src/effects/TruncSilence.cpp
-msgid "Truncate Detected Silence"
-msgstr "Skrati otkrivenu tišinu"
-
-#: src/effects/TruncSilence.cpp
-msgid "Compress Excess Silence"
-msgstr "Sažmi prekomernu tišinu"
-
-#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
-msgid "Truncate Silence"
-msgstr "Skrati tišinu"
-
-#: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr ""
-
-#: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -14613,14 +15013,6 @@ msgstr ""
 #, fuzzy
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "Većina VST dejstava ima grafičko sučelje za podešavanje vrednosti parametara."
-
-#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
-msgid "Wahwah"
-msgstr "Vauvau"
-
-#: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr ""
 
 #: src/effects/Wahwah.cpp
 #, fuzzy
@@ -14773,161 +15165,6 @@ msgstr ""
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "Većina VST dejstava ima grafičko sučelje za podešavanje vrednosti parametara."
 
-#: src/effects/nyquist/LoadNyquist.cpp
-#, fuzzy
-msgid "Nyquist Effects"
-msgstr "Ponovo pregledaj dejstva"
-
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
-msgstr ""
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Applying Nyquist Effect..."
-msgstr "Primenjujem Nikvist efekat..."
-
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist Worker"
-msgstr "Upit Nikvista..."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Ill-formed Nyquist plug-in header"
-msgstr "Izlaz Nikvista: "
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Enable track spectrogram view before\n"
-"applying 'Spectral' effects."
-msgstr ""
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"To use 'Spectral effects', enable 'Spectral Selection'\n"
-"in the track Spectrogram settings and select the\n"
-"frequency range for the effect to act on."
-msgstr ""
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr ""
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Audio selection required."
-msgstr "Nije izabran lanac"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist Error"
-msgstr "Upit Nikvista"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Debug Output: "
-msgstr "Izlaz Nikvista: "
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Processing complete."
-msgstr "Obrađujem: "
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr ""
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr ""
-
-#. i18n-hint: "%s" is replaced by name of plug-in.
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
-msgid "nyx_error returned from %s.\n"
-msgstr "MP3 koder je vratio grešku „%ld“"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "plug-in"
-msgstr "Naziv priključka"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist returned a list."
-msgstr "Nikvist nije vratio zvuk.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
-msgid "Nyquist returned the value: %f"
-msgstr "Nikvist je vratio vrednost:"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
-msgid "Nyquist returned the value: %d"
-msgstr "Nikvist je vratio vrednost:"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned too many audio channels.\n"
-msgstr "Nikvist je vratio previše zvučnih kanala.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Nikvist je vratio jedan zvučni kanal kao niz.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned an empty array.\n"
-msgstr "Nikvist je vratio prazan niz.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Nyquist returned nil audio.\n"
-msgstr "Nikvist nije vratio zvuk.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Upozorenje: Nikvist je vratio neispravnu UTF-8 nisku, pretvorenu ovde kao Latin-1]"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Ovo izdanje Odvažnosti nije sastavljeno sa %s podrškom."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Could not open file"
-msgstr "Ne mogu da otvorim datoteku "
-
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid ""
-"Your code looks like SAL syntax, but there is no 'return' statement.\n"
-"For SAL, use a return statement such as:\n"
-"\treturn *track* * 0.1\n"
-"or for LISP, begin with an open parenthesis such as:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-msgstr ""
-"Vaš kod izgleda kao SAL sintaksa, ali nema povratnog iskaza. Ili koristite povratni iskaz kao što je\n"
-"        return s * 0.1\n"
-"za SAL, ili počnite sa otvorenom zagradom kao što je\n"
-"\t(mult s 0.1)\n"
-" za LISP."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Error in Nyquist code"
-msgstr "Greška u kodu Nikvista"
-
-#. i18n-hint: refers to programming "languages"
-#: src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Could not determine language"
-msgstr "Ne mogu da otvorim datoteku: "
-
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
@@ -14996,6 +15233,11 @@ msgstr "Izaberite MIDI datoteku..."
 #, fuzzy
 msgid "Save file as"
 msgstr "Sačuvaj datoteke"
+
+#: src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Debug Output: "
+msgstr "Izlaz Nikvista: "
 
 #: src/effects/vamp/LoadVamp.cpp
 #, fuzzy
@@ -15543,12 +15785,13 @@ msgid "Duplicate"
 msgstr "Udvostruči"
 
 #: src/menus/EditMenus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Iseci podelu u ostavu"
+#, fuzzy
+msgid "Cut to clipboard and leave gap"
+msgstr "Isecite u ostavu"
 
 #: src/menus/EditMenus.cpp
-msgid "Split Cut"
-msgstr "Iseci podelu"
+msgid "Cut and leave gap"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15645,13 +15888,13 @@ msgstr "Ukloni &poseban"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
-msgid "Spl&it Cut"
-msgstr "&Iseci podelu"
+msgid "&Cut and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
-msgid "Split D&elete"
-msgstr "Obriši po&delu"
+msgid "&Delete and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15788,10 +16031,10 @@ msgstr "&Oznake..."
 msgid "&Raw Data..."
 msgstr "&Sirove podatke..."
 
-#. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
-msgid "E&xit"
-msgstr "&Izađi"
+#, fuzzy
+msgid "&Close Project"
+msgstr "&Sačuvaj projekat"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
@@ -15926,16 +16169,15 @@ msgstr "Obrisane oblasti natpisanog zvuka"
 msgid "Delete Labeled Audio"
 msgstr "Obriši natpisani zvuk"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
-#. regions
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Podelite isečene natpisane oblasti zvuka u spisak isečaka"
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard and leave gap"
+msgstr "Isecite natpisane oblasti zvuka u spisak isečaka"
 
-#. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Podeli isečeni natpisani zvuk"
+#, fuzzy
+msgid "Cut labeled audio and leave gap"
+msgstr "Isecite natpisane oblasti zvuka u spisak isečaka"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -16050,33 +16292,31 @@ msgid "&Cut"
 msgstr "&Iseci"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
-msgid "Label Cut"
-msgstr "Uredi natpis"
+msgid "Cut by label"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 #, fuzzy
-msgid "Label Delete"
-msgstr "Obriši podelu"
+msgid "Delete by label"
+msgstr "&Obriši natpis"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
-msgid "&Split Cut"
-msgstr "&Iseci podelu"
+msgid "C&ut and leave gap"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "Cut by labels and leave gap"
+msgstr ""
+
+#: src/menus/LabelMenus.cpp
+msgid "De&lete and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 #, fuzzy
-msgid "Label Split Cut"
-msgstr "Iseci podelu"
-
-#: src/menus/LabelMenus.cpp
-msgid "Sp&lit Delete"
-msgstr "O&briši podelu"
-
-#: src/menus/LabelMenus.cpp
-#, fuzzy
-msgid "Label Split Delete"
-msgstr "Obriši podelu"
+msgid "Delete by labels and leave gap"
+msgstr "Obrisane oblasti natpisanog zvuka"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16787,6 +17027,10 @@ msgid "Adjusted gain"
 msgstr "Doterano je pojačanje"
 
 #: src/menus/TrackMenus.cpp
+msgid "Gain"
+msgstr "Pojačanje"
+
+#: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
 msgstr "Doterano je kanalisanje"
 
@@ -17356,7 +17600,7 @@ msgstr "na &kraj izbora"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Enable E&xtra Menus"
+msgid "E&xtra Menus"
 msgstr "Uključi linije &odsecanja"
 
 #: src/menus/ViewMenus.cpp
@@ -17366,7 +17610,7 @@ msgstr "&Prikaži odsecanje"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Show &RMS in Waveform"
+msgid "Sho&w RMS in Waveform"
 msgstr "&Prikaži odsecanje"
 
 #: src/prefs/ApplicationPrefs.cpp
@@ -17845,40 +18089,6 @@ msgstr "Sučelje"
 #, fuzzy
 msgid "Preferences for GUI"
 msgstr "Postavke: "
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (površan opseg za visokodosežno uređivanje)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (PCM opseg 8-bitnih uzoraka)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (PCM opseg 10-bitnih uzoraka)"
-
-#: src/prefs/GUIPrefs.cpp
-#, fuzzy
-msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-60 dB (PCM opseg 10-bitnih uzoraka)"
-
-#: src/prefs/GUIPrefs.cpp
-#, fuzzy
-msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-145 dB (PCM opseg 24-bitnih uzoraka)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (PCM opseg 16-bitnih uzoraka)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (približna granica ljudskog sluha)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (PCM opseg 24-bitnih uzoraka)"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -18443,94 +18653,6 @@ msgstr ""
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
 msgstr ""
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Mel"
-msgstr ""
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Bark"
-msgstr ""
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
-#: src/prefs/SpectrogramSettings.cpp
-msgid "ERB"
-msgstr ""
-
-#. i18n-hint: Time units, that is Period = 1 / Frequency
-#: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
-msgid "Period"
-msgstr "Kadar:"
-
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
-#: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Color (Roseus)"
-msgstr "Osnovno uvećavanje"
-
-#. i18n-hint: Classic color scheme(from theme) for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "Uobičajeni propusnici"
-
-#. i18n-hint: Grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "Razmera"
-
-#. i18n-hint: Inverse grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "&Linearno"
-
-#: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
-msgid "Frequencies"
-msgstr "Učestalost"
-
-#. i18n-hint: the Reassignment algorithm for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Reassignment"
-msgstr ""
-
-#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Pitch (EAC)"
-msgstr "Vrhunac (EAC)"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Maximum frequency must be 100 Hz or above"
-msgstr "Najveća učestanost mora biti 100 Hz ili iznad"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be at least 0 Hz"
-msgstr "Najmanja učestanost mora biti barem 0 Hz"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be less than maximum frequency"
-msgstr "Najmanja učestanost mora biti manja od najveće učestanosti"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The range must be at least 1 dB"
-msgstr "Opseg mora biti barem 1 dB"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain cannot be negative"
-msgstr "Pojačanje učestanosti ne može biti negativno"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain must be no more than 60 dB/dec"
-msgstr "Pojačanje učestanosti mora biti ne više od 60 dB/dec"
 
 #: src/prefs/SpectrumPrefs.cpp
 #, fuzzy
@@ -19981,12 +20103,6 @@ msgid_plural "%s, %d of %d clips"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
-msgid "&Multi-view"
-msgstr "Više"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -22821,6 +22937,98 @@ msgstr "Spektar"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#~ msgid "Insane"
+#~ msgstr "Nezdravo"
+
+#~ msgid "Moved gain slider"
+#~ msgstr "Pomeren je klizač pojačanja"
+
+#, fuzzy
+#~ msgid "Gain:"
+#~ msgstr "Pojačanje"
+
+#, fuzzy, c-format
+#~ msgid "Applied command: %s"
+#~ msgstr "Primenjeno je dejstvo: %s"
+
+#, fuzzy
+#~ msgid "Effect failed to initialize"
+#~ msgstr ""
+#~ "FLAC šifrer nije uspeo da započne\n"
+#~ "Stanje: %d"
+
+#, fuzzy
+#~ msgid "Effect Unavailable"
+#~ msgstr "Pregled nije dostupan"
+
+#~ msgid "Error Loading EQ Curves"
+#~ msgstr "Greška učitavanja EKu krivih"
+
+#, fuzzy
+#~ msgid ""
+#~ "To use this filter curve in a macro, please choose a new name for it.\n"
+#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+#~ msgstr ""
+#~ "Da koristite ovu EKu krivu u grupnom lancu, molim izaberite novi naziv za nj.\n"
+#~ "Izaberite „Sačuvaj/upravljaj krivama...“ i promenite naziv „neimenovane“ krive, i nakon toga upotrebite ovo."
+
+#, fuzzy
+#~ msgid "Filter Curve EQ needs a different name"
+#~ msgstr "EKu kriva zahteva drugačiji naziv"
+
+#~ msgid "Curve not found"
+#~ msgstr "Nisam našao krivu"
+
+#, fuzzy
+#~ msgid "Nyquist Error"
+#~ msgstr "Upit Nikvista"
+
+#~ msgid "Error in Nyquist code"
+#~ msgstr "Greška u kodu Nikvista"
+
+#~ msgid "Split-cut to the clipboard"
+#~ msgstr "Iseci podelu u ostavu"
+
+#~ msgid "Split Cut"
+#~ msgstr "Iseci podelu"
+
+#~ msgid "Spl&it Cut"
+#~ msgstr "&Iseci podelu"
+
+#~ msgid "Split D&elete"
+#~ msgstr "Obriši po&delu"
+
+#~ msgid "E&xit"
+#~ msgstr "&Izađi"
+
+#~ msgid "Split Cut labeled audio regions to clipboard"
+#~ msgstr "Podelite isečene natpisane oblasti zvuka u spisak isečaka"
+
+#~ msgid "Split Cut Labeled Audio"
+#~ msgstr "Podeli isečeni natpisani zvuk"
+
+#, fuzzy
+#~ msgid "Label Cut"
+#~ msgstr "Uredi natpis"
+
+#, fuzzy
+#~ msgid "Label Delete"
+#~ msgstr "Obriši podelu"
+
+#~ msgid "&Split Cut"
+#~ msgstr "&Iseci podelu"
+
+#, fuzzy
+#~ msgid "Label Split Cut"
+#~ msgstr "Iseci podelu"
+
+#~ msgid "Sp&lit Delete"
+#~ msgstr "O&briši podelu"
+
+#, fuzzy
+#~ msgid "Label Split Delete"
+#~ msgstr "Obriši podelu"
 
 #~ msgid "Change upper speed limit (%) to:"
 #~ msgstr "Promeni gornje ograničenje brzine na (%):"

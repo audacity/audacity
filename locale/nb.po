@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-10-11 15:07+0200\n"
 "PO-Revision-Date: 2024-08-19 21:02+0200\n"
 "Last-Translator: Imre Eilertsen <imreeil42@gmail.com>\n"
 "Language-Team: Imre Eilertsen <imreeil42@gmail.com>\n"
@@ -18,6 +18,36 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.4\n"
 "X-Poedit-Bookmarks: 1429,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+"Dette tillegget kunne ikke lastes inn.\n"
+"Den kan ha blitt slettet."
+
+#  i18n-hint: You do not need to translate "LOF"
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid "Plugin Error"
+msgstr "Tilleggsfeil"
+
+# "Anvende" or "Legge til"? (not all marked fuzzy)
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#, c-format
+msgid "Applied effect: %s"
+msgstr "Anvendt effekt: %s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Repeter %s"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -97,7 +127,14 @@ msgstr "Høy avspillingsforsinkelse: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-msgid "Supported Rates:\n"
+#, fuzzy
+msgid "Supported Playback Rates:\n"
+msgstr "Støttede rater:\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Capture Rates:\n"
 msgstr "Støttede rater:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -119,6 +156,10 @@ msgstr "Valgt avspillingsenhet: %d - %s\n"
 #, c-format
 msgid "No playback device found for '%s'.\n"
 msgstr "Ingen avspillingsenhet funnet for: ‘%s’.\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Supported Rates:\n"
+msgstr "Støttede rater:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
@@ -193,16 +234,15 @@ msgstr ""
 "Feil ved åpning av opptaksenhet.\n"
 "Feilkode: %s"
 
-#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
-#: libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-audio-io/AudioIO.cpp
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/ProjectAudioManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/EffectPreview.cpp
+#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -267,8 +307,9 @@ msgstr "Kunne ikke lagre forhåndsinnstillinger i konfigurasjonsfil"
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
-#: libraries/lib-lv2/LV2EffectBase.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-lv2/LV2EffectBase.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
+#: src/effects/EffectUI.cpp
 msgid "n/a"
 msgstr "(ingen)"
 
@@ -300,9 +341,10 @@ msgstr "Lydenhetseffekter"
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp
 #: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#: src/effects/vamp/LoadVamp.cpp
 msgid "The Audacity Team"
 msgstr "Audacity-teamet"
 
@@ -360,6 +402,968 @@ msgstr "XML-data er tom etter konvertering"
 msgid "Message"
 msgstr "Melding"
 
+#: libraries/lib-builtin-effects/AmplifyBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Amplify"
+msgstr "Forsterk"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Auto Duck"
+msgstr "Autodukk"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "Senker volumet i et eller flere spor, når volumet i et spesifikt kontrollspor går over en bestemt grense"
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks'
+#. (reduces the volume) of the audio automatically when there is
+#. sound on another track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "Du valgte et spor som ikke inneholder lyd. AutoDuck kan bare behandle lydspor."
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+#. the volume) of the audio automatically when there is sound on another
+#. track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Autodukk trenger et kontrollspor som må plasseres under de valgte sporene."
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Rendering Control-Track Time-Stretched Audio"
+msgstr ""
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Bass and Treble"
+msgstr "Bass og diskant"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+msgid "Simple tone control effect"
+msgstr "Enkel tonekontrolleffekt"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Pitch"
+msgstr "Endre tonehøyde"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "Changes the pitch of a track without changing its tempo"
+msgstr "Endrer tonehøyden til et spor uten å endre dens tempo"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "High Quality Pitch Change"
+msgstr "Høykvalitets tonefallskifte"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Speed and Pitch"
+msgstr "Endre hastighet og tonehøyde"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+msgid "Changes the speed of a track, also changing its pitch"
+msgstr "Endrer farten til et spor, og endrer også tonefallet dens"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Tempo"
+msgstr "Endre tempo"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "Changes the tempo of a selection without changing its pitch"
+msgstr "Endrer tempoet til en markering uten å endre dens tonehøyde"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "High Quality Tempo Change"
+msgstr "Høykvalitets tempoendring"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Click Removal"
+msgstr "Klikkfjerning"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Click Removal is designed to remove clicks on audio tracks"
+msgstr "Klikkfjerner er lagd for å fjerne klikk i lydspor"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Algorithm not effective on this audio. Nothing changed."
+msgstr "Algoritmen er ikke effektiv for denne lyden. Ingenting ble endret."
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#, c-format
+msgid "Selection must be larger than %d samples."
+msgstr "Utvalget må være mer enn %d samplinger."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "You can only measure one track at a time."
+msgstr "Du kan bare måle ett spor om gangen."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "Please select an audio track."
+msgstr "Vennligst velg et lydspor."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Invalid audio selection.\n"
+"Please ensure that audio is selected."
+msgstr ""
+"Ugyldig lydutvalg.\n"
+"Vennligst sørg for at det faktisk er lyd som er valgt."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+"Ingenting å måle.\n"
+"Vennligst marker en del av sporet."
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Clipping"
+msgstr "Streng klipping"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Clipping"
+msgstr "Myk klipping"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Overdrive"
+msgstr "Myk overbelastning"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Medium Overdrive"
+msgstr "Middels overbelastning"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Overdrive"
+msgstr "Streng overbelasting"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Cubic Curve (odd harmonics)"
+msgstr "Kubisk kurve (oddetallsharmonier)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Even Harmonics"
+msgstr "Jevne harmonier"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Expand and Compress"
+msgstr "Utvid og komprimer"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller"
+msgstr "Utjevner"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Rectifier Distortion"
+msgstr "Korrigereringsforstyrrelse"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Limiter 1413"
+msgstr "Streng begrenser for 1413"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Hard clip -12dB, 80% make-up gain"
+msgstr "Streng klipping i -12dB, 80% utjevningsforsterkning"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Soft clip -12dB, 80% make-up gain"
+msgstr "Mykklipp -12dB, 80% utjevningsforsterkning"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Fuzz Box"
+msgstr "Frynseboks"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Walkie-talkie"
+msgstr "Walkie-talkie"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Blues drive sustain"
+msgstr "Blues-drivvedlikehold"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Light Crunch Overdrive"
+msgstr "Lettknasende overbelastning"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Heavy Overdrive"
+msgstr "Streng overbelasting"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "3rd Harmonic (Perfect Fifth)"
+msgstr "Tredje harmoni (Perfekt femte)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Valve Overdrive"
+msgstr "Pipe-overbelastning"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "2nd Harmonic (Octave)"
+msgstr "Andre harmoni (Oktav)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Gated Expansion Distortion"
+msgstr "Forstyrrelse i form av inngjerdet utvidelse"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Light, -70dB noise floor"
+msgstr "Utjevner, lett, -70dB støygrense"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Moderate, -70dB noise floor"
+msgstr "Utjevner, moderat, -70dB støygrense"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavy, -70dB noise floor"
+msgstr "Utjevner, tung, -70dB støygrense"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavier, -70dB noise floor"
+msgstr "Utjevner, tyngre, -70dB støygrense"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heaviest, -70dB noise floor"
+msgstr "Utjevner, tungest, -70dB støygrense"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Half-wave Rectifier"
+msgstr "Halvbølge-korrigerer"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier"
+msgstr "Fullbølge-korrigerer"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier (DC blocked)"
+msgstr "Fullbølge-korrigerer (Strømkursblokkert)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Percussion Limiter"
+msgstr "Perkusjonsbegrenser"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Distortion"
+msgstr "Forstyrrelse"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Waveshaping distortion effect"
+msgstr "Bølgeformingsforstyrrelseseffekt"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "DTMF Tones"
+msgstr "DTMF-toner"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "Lager dobbel-tone flerfrekvenstoner (DTMF) slik som de som lages av tastaturet på telefoner"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid ""
+"DTMF sequence empty.\n"
+"Check ALL settings for this effect."
+msgstr ""
+"Tom DTMF-sekvens.\n"
+"Sjekk ALLE innstillingene for effekten."
+
+#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
+msgid "Echo"
+msgstr "Ekko"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+msgid "Repeats the selected audio again and again"
+msgstr "Repeterer den markerte lyden om og om igjen"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Requested value exceeds memory capacity."
+msgstr "Den ønskede verdien overgår minnekapasiteten."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Equalization"
+msgstr "Tonekontroll (EQ)"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Adjusts the volume levels of particular frequencies"
+msgstr "Justerer volumnivåene til spesielle frekvenser"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "100Hz Rumble"
+msgstr "100Hz rumling"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "AM Radio"
+msgstr "AM-radio"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Boost"
+msgstr "BassBoost"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Cut"
+msgstr "Basskutt"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Low rolloff for speech"
+msgstr "Lav rolloff for tale"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "RIAA"
+msgstr "RIAA"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Telephone"
+msgstr "Telefon"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Boost"
+msgstr "Diskantforsterkning"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Cut"
+msgstr "Diskantkutt"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "For å bruke Equaliseren, må alle markerte spor ha samme samplingsfrekvens."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Track sample rate is too low for this effect."
+msgstr "Sporets samplingsfrekvens er for lav for denne effekten."
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr "uten navn"
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"Feil ved innlasting av Equaliser-kurver fra filen:\n"
+"%s\n"
+"Feilmeldingen sier:\n"
+"%s"
+
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "Error Saving Equalization Curves"
+msgstr "Feil ved lagring av EQ-kurver"
+
+#: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr "Den ønskede kurven ble ikke funnet, bruker 'uten navn'"
+
+#. i18n-hint: Technical term for a kind of curve.
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "B-spline"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "Cosinus"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "Kubisk"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade In"
+msgstr "Ton inn"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-in to the selected audio"
+msgstr "Legger til en lineær innfalming til den markerte lyden"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade Out"
+msgstr "Ton ut"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-out to the selected audio"
+msgstr "Legger til en lineær utfalming til den valgte lyden"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Find Clipping"
+msgstr "Finn klipping"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Creates labels where clipping is detected"
+msgstr "Skaper merkinger der hvor klipping er oppdaget"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Clipping"
+msgstr "Klipping"
+
+#. i18n-hint: Two numbers are substituted; the second is the
+#. size of a set, the first is the size of a subset, and not
+#. understood as an ordinal (i.e., not meaning "first", or
+#. "second", etc.)
+#.
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#, c-format
+msgctxt "find clipping"
+msgid "%lld of %lld"
+msgstr "%lld av %lld"
+
+#: libraries/lib-builtin-effects/Generator.cpp
+msgid "There is not enough room available to generate the audio"
+msgstr "Det var ikke nok tilgjengelig plass til å generere lyden"
+
+#: libraries/lib-builtin-effects/Invert.cpp resources/EffectsMenuDefaults.xml
+msgid "Invert"
+msgstr "Inverter"
+
+#: libraries/lib-builtin-effects/Invert.cpp
+msgid "Flips the audio samples upside-down, reversing their polarity"
+msgstr "Vender lydsamplingene opp ned, og reverserer polariteten deres"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Komprimering"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Komprimer lydens dynamiske rekkevidde"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Loudness Normalization"
+msgstr "Lydstyrkenormalisering"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Sets the loudness of one or more tracks"
+msgstr "Setter lydstyrke for ett eller flere spor"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Normalizing Loudness...\n"
+msgstr "Normaliser lydstyrken…\n"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing: %s"
+msgstr "Analyserer: %s"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing: %s"
+msgstr "Behandler: %s"
+
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "White"
+msgstr "Hvit"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Pink"
+msgstr "Rosa"
+
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Brownian"
+msgstr "Brunsk"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Noise"
+msgstr "Støy"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Generates one of three different types of noise"
+msgstr "Genererer en av tre forskjellige typer støy"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median"
+msgstr "Median"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Second greatest"
+msgstr "Nest største"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Old"
+msgstr "Gamle"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Noise Reduction"
+msgstr "Støyreduksjon"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Removes background noise such as fans, tape noise, or hums"
+msgstr "Fjerner bakgrunnslyd, slik som vifter, opptaksstøy eller summing"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block are too few for the window types."
+msgstr "Antallet steg per blokk er for lavt for vindustypene."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block cannot exceed the window size."
+msgstr "Steg per blokk kan ikke overstige vindusstørrelsen."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median method is not implemented for more than four steps per window."
+msgstr "Median-metoden er ikke i bruk i mer enn fire steg per vindu."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "You must specify the same window size for steps 1 and 2."
+msgstr "Du må velge den samme vindusstørrelse for trinn 1 og 2."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Warning: window types are not the same as for profiling."
+msgstr "Advarsel: Vindustypene er ikke de samme som for profilering."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "All noise profile data must have the same sample rate."
+msgstr "All støyprofildataen må ha samme samplingsfrekvens."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "Samplingsraten til støyprofilen må være det samme som lyden som skal prosesseres."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Selected noise profile is too short."
+msgstr "Den markerte støyprofilen er for kort."
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Normalize"
+msgstr "Normaliser"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Sets the peak amplitude of one or more tracks"
+msgstr "Velger toppbredden for én eller flere spor"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset and Normalizing...\n"
+msgstr "Fjerner strømkursavviket og normaliserer...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset...\n"
+msgstr "Fjerner strømkursavvik...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Normalizing without removing DC offset...\n"
+msgstr "Normaliserer uten å fjerne strømkursavviket...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Not doing anything...\n"
+msgstr "Den gjør ikke noe …\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing first track of stereo pair: %s"
+msgstr "Analyserer første spor i et stereopar: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Analyserer spor #2 i et stereospor: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing stereo channels independently: %s"
+msgstr "Behandler stereokanaler for seg selv: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing first track of stereo pair: %s"
+msgstr "Behandler første spor i et stereopar: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing second track of stereo pair: %s"
+msgstr "Behandler spor 2 i et stereopar: %s"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Paulstretch"
+msgstr "Paulstretch"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
+msgstr "Paulstretch er bare for en ekstrem tidsstrekk- eller \"stase\"-effekt"
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Audio selection too short to preview.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"Lydutvalget er for kort til å forhåndsvises.\n"
+"\n"
+"Prøv med å forlenge lydutvalget til minst %.1f sekunder,\n"
+"eller reduser 'Tidsresolusjon'-mengden til mindre enn %.1f sekunder."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Unable to Preview.\n"
+"\n"
+"For the current audio selection, the maximum\n"
+"'Time Resolution' is %.1f seconds."
+msgstr ""
+"Kunne ikke forhåndsvise dette.\n"
+"\n"
+"For det nåværende lydutvalget, er den maksimale\n"
+"'Tidsresolusjon'-mengden på %.1f sekunder."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"The 'Time Resolution' is too long for the selection.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"'Tidsresolusjon'-mengden er for lang for utvalget.\n"
+"\n"
+"Prøv med å forlenge lydutvalget til minst %.1f sekunder,\n"
+"eller reduser 'Tidsresolusjon'-mengden til mindre enn %.1f sekunder."
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Phaser"
+msgstr "Phaser"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+msgid "Combines phase-shifted signals with the original signal"
+msgstr "Kombinerer faseskiftede signaler med det opprinnelige signalet"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr ""
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid ""
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
+msgstr ""
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, c-format
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "For mye lyd ble markert. Bare de første %.1f sekundene med lyd vil bli analysert."
+
+#: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
+msgid "Repair"
+msgstr "Reparer"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "Sets the peak amplitude of a one or more tracks"
+msgstr "Velger toppbredden for én eller flere spor"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "The Repair effect cannot be applied within stretched or shrunk clips"
+msgstr "Reparasjonseffekten kan ikke brukes innenfor strukkede eller krympede klipp"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"\n"
+"Zoom in and select a tiny fraction of a second to repair."
+msgstr ""
+"Reparer-effekten er ment å brukes på veldig korte bolker med skadet lyd (opp til 128 datapunkter).\n"
+"\n"
+"Zoom inn og velg en liten brøkdel av et sekund som skal repareres."
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"Repair works by using audio data outside the selection region.\n"
+"\n"
+"Please select a region that has audio touching at least one side of it.\n"
+"\n"
+"The more surrounding audio, the better it performs."
+msgstr ""
+"Reparer fungerer ved å bruke lyddata rundt det merkede området.\n"
+"\n"
+"Vennligst merk et område som berører lyd på minst en av sidene.\n"
+"\n"
+"Effekten fungerer bedre jo mer lyd som finnes rundt området."
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Repeat"
+msgstr "Repeter"
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+msgid "Repeats the selection the specified number of times"
+msgstr "Repeterer utvalget en bestemt mengde ganger"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Acoustic"
+msgstr "Akustisk"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Ambience"
+msgstr "Frisk"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Artificial"
+msgstr "Kunstig"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Clean"
+msgstr "Ren"
+
+#. i18n-hint: This is the name of an effect preset
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern"
+msgstr "Moderne"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal I"
+msgstr "Vokal I"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal II"
+msgstr "Vokal II"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Dance Vocal"
+msgstr "Danseklubbvokal"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Modern Vocal"
+msgstr "Moderne vokal"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Voice Tail"
+msgstr "Voice Tail"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Bathroom"
+msgstr "Bad"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Bright"
+msgstr "Lite lyst rom"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Dark"
+msgstr "Lite mørkt rom"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Medium Room"
+msgstr "Middels rom"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Large Room"
+msgstr "Stort rom"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Church Hall"
+msgstr "Kirkesal"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Cathedral"
+msgstr "Katedral"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Big Cave"
+msgstr "Big Cave"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Reverb"
+msgstr "Klang"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Adds ambience or a \"hall effect\""
+msgstr "Legger til ekko eller en \"sal-effekt\""
+
+#: libraries/lib-builtin-effects/Reverse.cpp resources/EffectsMenuDefaults.xml
+msgid "Reverse"
+msgstr "Baklengs"
+
+#: libraries/lib-builtin-effects/Reverse.cpp
+msgid "Reverses the selected audio"
+msgstr "Eksporterer den markerte lyden"
+
+#: libraries/lib-builtin-effects/SBSMSBase.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "SBSMS-tid / Tonefall-strekking"
+
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Butterworth"
+msgstr "Butterworth"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type I"
+msgstr "Tsjebysjeff type I"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type II"
+msgstr "Tsjebysjeff type II"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Lowpass"
+msgstr "Lav passering"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Highpass"
+msgstr "Høy passering"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Classic Filters"
+msgstr "Klassiske filtre"
+
+#. i18n-hint: "infinite impulse response"
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Performs IIR filtering that emulates analog filters"
+msgstr "Utfører IIR-filtrering som etterligner analoge filtre"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "To apply a filter, all selected tracks must have the same sample rate."
+msgstr "For å bruke et filter, må alle markerte spor være av samme samplingsfrekvens."
+
+#. i18n-hint: noun
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgctxt "generator"
+msgid "Silence"
+msgstr "Stillhet"
+
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgid "Creates audio of zero amplitude"
+msgstr "Lager lyd med null amplitude"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Stereo To Mono"
+msgstr "Stereo til mono"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Converts stereo tracks to mono"
+msgstr "Konverterer stereospor til mono"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Mixing down to mono"
+msgstr "Mikse ned til mono"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Sliding Stretch"
+msgstr "Skliende strekk"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+msgid "Allows continuous changes to the tempo and/or pitch"
+msgstr "Tillater stadige endringer av tempoet og/eller tonefallet"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "Lineær"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Logarithmic"
+msgstr "Logaritmisk"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sine"
+msgstr "Sinus"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Square"
+msgstr "Kvadrat"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sawtooth"
+msgstr "Sagtenner"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgid "Square, no alias"
+msgstr "Kvadrat, ingen alias"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Triangel"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Truncate Detected Silence"
+msgstr "Kort ned oppdaget stillhet"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Compress Excess Silence"
+msgstr "Komprimer overflødig stillhet"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Truncate Silence"
+msgstr "Fjern stillhet"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr "Reduserer automatisk varigheten av passasjer hvor volumet er under et bestemt nivå"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "Når du korter ned uavhengig, kan det bare være ett valgt lydspor i hver synk-låste sporgruppe."
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Wahwah"
+msgstr "Wahwah"
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr "Ville variasjoner i tonekvalitet, slik som i den gitarlyden som var så popular på 70-tallet"
+
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
 msgstr "Kan ikke fortsette opplasting."
@@ -405,13 +1409,6 @@ msgstr "Lokale prosjektdata ble fjernet før synkroniseringen var ferdig"
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
 msgstr ""
-
-#. i18n-hint: This is the name of an effect preset.
-#. i18n-hint: This is the name of an effect preset
-#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#: src/effects/Reverb.cpp
-msgid "Modern"
-msgstr "Moderne"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -574,10 +1571,10 @@ msgid "Play it Loud"
 msgstr "Play it Loud"
 
 #: libraries/lib-effects/Effect.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: plug-ins/beat.ny
+#: src/commands/AudacityCommand.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1073,6 +2070,43 @@ msgstr ""
 msgid "Import Project"
 msgstr "Importer prosjekt"
 
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "SubRip text file"
+msgstr "SubRip-tekstfil"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "WebVTT file"
+msgstr "WebVTT-fil"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "S&tandard"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "Utvidet (med frekvensrekkevidder)"
+
+#: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
+msgid "Labels"
+msgstr "Kommentarer"
+
+#. i18n-hint: (noun) it's the name of a kind of track.
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Label track.
+#: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
+#: src/LabelDialog.h src/TrackPanelAx.cpp
+msgid "Label Track"
+msgstr "Kommentarspor"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr "Å importere WebVTT-filer støttes ikke for øyeblikket."
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "One or more saved labels could not be read."
+msgstr "En eller flere lagrede merker kunne ikke bli innlest."
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -1119,7 +2153,7 @@ msgstr "LV2-effekter"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "Sørger for LV2-effektstøtte i Audacity"
 
-#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectPresetDialog.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -1137,6 +2171,116 @@ msgstr "Triangel"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "Utformet"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C"
+msgstr "C"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯"
+msgstr "C♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D"
+msgstr "D"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯"
+msgstr "D♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E"
+msgstr "E"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F"
+msgstr "F"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯"
+msgstr "F♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G"
+msgstr "G"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯"
+msgstr "G♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A"
+msgstr "A"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯"
+msgstr "A♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B"
+msgstr "B"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♭"
+msgstr "D♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E♭"
+msgstr "E♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♭"
+msgstr "G♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♭"
+msgstr "A♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B♭"
+msgstr "B♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯/D♭"
+msgstr "C♯/D♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯/E♭"
+msgstr "D♯/E♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯/G♭"
+msgstr "F♯/G♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯/A♭"
+msgstr "G♯/A♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯/B♭"
+msgstr "A♯/B♭"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -1177,14 +2321,6 @@ msgstr "Ukjent format"
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "Kommando"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Repeter %s"
 
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
@@ -1827,6 +2963,150 @@ msgstr "10<01000 tiere|0,434294482"
 msgid "thousandths of decades"
 msgstr "tusendeler av"
 
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Nyquist Effects"
+msgstr "Nyquist-effekter"
+
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Provides Nyquist Effects support to Audacity"
+msgstr "Sørger for Nyquist-effektstøtte i Audacity"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Applying Nyquist Effect..."
+msgstr "Anvender Nyquist-effekt..."
+
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. * Prompt"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist Worker"
+msgstr "&Nyquist-arbeider"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "Misformet Nyquist-tilleggstoppområde"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+"Skru på spektrogramvisning på sporet før\n"
+"du bruker ‘spektral’-effekter."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid ""
+"To use 'Spectral effects', enable 'Spectral Selection'\n"
+"in the track Spectrogram settings and select the\n"
+"frequency range for the effect to act on."
+msgstr ""
+"For å bruke 'Spektraleffekter', aktiver 'Spektralutvalg'\n"
+"i sporets spektrograminnstillinger, og velg\n"
+"frekvensrekkevidden som effekten skal bruke."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
+msgstr "feil: Filen «%s» er spesifisert i toppområdet, men ble ikke funnet i tilleggsfilbanen.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Audio selection required."
+msgstr "Lydmarkering er påkrevd."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Processing complete."
+msgstr "Behandling fullført."
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr "';type tool'-effekter kan ikke motta lyd fra Nyquist.\n"
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr "';type tool'-effekter kan ikke motta merker fra Nyquist.\n"
+
+#. i18n-hint: "%s" is replaced by name of plug-in.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "nyx_error returned from %s.\n"
+msgstr "nyx_error ble meldt tilbake om fra %s.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "plug-in"
+msgstr "tillegg"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned a list."
+msgstr "Nyquist returnerte en liste."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist returnerte verdien: %f"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nyquist returnerte verdien: %d"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned too many audio channels.\n"
+msgstr "Nyquist sendte tilbake for mange lydkanaler.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned one audio channel as an array.\n"
+msgstr "Nyquist sendte tilbake én lydkanal som en tabell.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned an empty array.\n"
+msgstr "Nyquist returnerte en tom verdi.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned nil audio.\n"
+msgstr "Nyquist sendte ikke tilbake noe lyd.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[Advarsel: Nyquist meldte fra med en ugyldig UTF-8 streng, som her er konvertert til Latin-1]"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "Denne versjonen av Audacity støtter ikke Nyquist-tilleggsversjonen %ld"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not open file"
+msgstr "Klarte ikke å åpne filen"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Your code looks like SAL syntax, but there is no 'return' statement.\n"
+"For SAL, use a return statement such as:\n"
+"\treturn *track* * 0.1\n"
+"or for LISP, begin with an open parenthesis such as:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+msgstr ""
+"Koden din ser ut som SAL-syntaks, men ingen tilbakemelding kom tilbake.\n"
+"For SAL, bruk et returneringsutsagn, slik som:\n"
+"\treturn *track* * 0.1\n"
+"eller for LISP, begynn med en åpen parantes, slik som\n"
+"\t(mult *track* 0.1)\n"
+"."
+
+#. i18n-hint: refers to programming "languages"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not determine language"
+msgstr "Kunne ikke bestemme kodespråket"
+
+#. i18n-hint: default exported file name when exporting from unsaved project
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/TimerRecordDialog.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "untitled"
+msgstr "uten tittel"
+
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Audio Track"
 msgstr "Lydspor"
@@ -2294,7 +3574,7 @@ msgid "Writable Sample Track"
 msgstr "Skrivbart sporeksempel"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/effects/Contrast.cpp
 msgid "&Close"
 msgstr "&Lukk"
 
@@ -2897,6 +4177,138 @@ msgstr "Kunne ikke bruke VST3-innstillingsfil %s"
 msgid "Failed to save VST3 preset to file"
 msgstr "Kunne ikke lagre VST3-innstillinger til fil"
 
+#. i18n-hint: The name of a frequency scale in psychoacoustics
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Mel"
+msgstr "Mel-skala"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Bark"
+msgstr "Bark"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "ERB"
+msgstr "ERB"
+
+#. i18n-hint: Time units, that is Period = 1 / Frequency
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Period"
+msgstr "Periode"
+
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (Roseus)"
+msgstr "Farge (Roseus)"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Farge (klassisk)"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Gråskala"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Invertert gråskala"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Frequencies"
+msgstr "Frekvenser"
+
+#. i18n-hint: the Reassignment algorithm for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Reassignment"
+msgstr "Omfordeling"
+
+#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Pitch (EAC)"
+msgstr "Tonehøyde (EAC)"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr "Maksfrekvensen må være 100 Hz eller høyere"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be at least 0 Hz"
+msgstr "Minimumsfrekvensen må være minst 0 Hz"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be less than maximum frequency"
+msgstr "Minimumsfrekvensen må være mindre enn maksimumsfrekvensen"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The range must be at least 1 dB"
+msgstr "Rekkevidden må være minst 1 dB"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain cannot be negative"
+msgstr "Frekvensvolumet kan ikke være negativt"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain must be no more than 60 dB/dec"
+msgstr "Frekvensvolumet må være mer enn 60 dB/des"
+
+#. i18n-hint: abbreviates amplitude
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Linear (amp)"
+msgstr "Lineær (amp)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Logarithmic (dB)"
+msgstr "Logaritmisk (dB)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Linear (dB)"
+msgstr "Lineær (dB)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-36 dB (shallow range for high-amplitude editing)"
+msgstr "-36 dB (smalt område for redigering av høy amplitude)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-48 dB (PCM range of 8 bit samples)"
+msgstr "-48 dB (PCM-område for 8 bit datapunkter)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-60 dB (PCM range of 10 bit samples)"
+msgstr "-60 dB (PCM-område for 10 bit datapunkter)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-72 dB (PCM range of 12 bit samples)"
+msgstr "-72 dB (PCM-område for 12 bit datapunkter)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-84 dB (PCM range of 14 bit samples)"
+msgstr "-84 dB (PCM-område for 14 bits datapunkter)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-96 dB (PCM range of 16 bit samples)"
+msgstr "-96 dB (PCM-område for 16 bit datapunkter)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-120 dB (approximate limit of human hearing)"
+msgstr "-120 dB (omtrentlig grense for menneskets hørsel)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-145 dB (PCM range of 24 bit samples)"
+msgstr "-145 dB (PCM-område for 24 bits datapunkter)"
+
 #: libraries/lib-wave-track/Sequence.cpp
 #, c-format
 msgid ""
@@ -2917,6 +4329,11 @@ msgstr "Forhåndsprosessering"
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Rendering Clip"
 msgstr ""
+
+#: libraries/lib-wave-track/WaveChannelViewConstants.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "&Multi-view"
+msgstr "&Multivisning"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -3166,6 +4583,7 @@ msgstr "Stopp"
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
@@ -4648,9 +6066,9 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (mindre filer)"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane, 320 kbps"
+#, fuzzy
+msgid "Excessive, 320 kbps"
 msgstr "Spinnvill, 320 kb/s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4665,10 +6083,9 @@ msgstr "Standard, 170-210 kb/s"
 msgid "Medium, 145-185 kbps"
 msgstr "Middels, 145-185 kb/s"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane"
-msgstr "Sinnssyk"
+msgid "Excessive"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -5895,12 +7312,21 @@ msgid "Account not linked"
 msgstr "Kontoen er ikke tilknyttet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Anonymous"
+msgstr "Anonymt"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
 msgstr "&Koble sammen konto"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Unlink Account"
 msgstr "&Frakoble konto"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "&Sign Out"
+msgstr "Lineær ut"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -5984,10 +7410,6 @@ msgid "Project Name"
 msgstr "Prosjektets navn"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
 msgstr "Privat"
 
@@ -6069,6 +7491,77 @@ msgstr "F&ortsett"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
 msgstr "Koble sammen audio.com-konto…"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create cloud account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to cloud"
+msgstr "Koordiner slutten til slutten"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Oops! It looks like there was an issue with your input.\n"
+"Please ensure your email is correct and that your password is at least 8 characters long"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Sorry, but it seems the email or password you entered is incorrect.\n"
+"Please double-check your credentials and try again!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Create an account to save to the cloud"
+msgstr "Dette prosjektet er ikke lenger skylagret"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to save to the cloud"
+msgstr "Dette prosjektet er ikke lenger skylagret"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Google"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Facebook"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Email"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Password"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Forgot your password?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Already have an account? "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in here"
+msgstr "Logg på"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Need an account? "
+msgstr "Koble konto"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "Fortsett"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -6326,11 +7819,6 @@ msgstr "Synkroniserer prosjektet ditt"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
 msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "Fortsett"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
@@ -6976,16 +8464,16 @@ msgstr ""
 "Den har blitt fjernet fra lista med nylig brukte filer."
 
 #: src/AudacityApp.cpp
+msgid "Audacity is starting up..."
+msgstr "Audacity starter opp..."
+
+#: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr "SQLite-biblioteket kunne ikke initialiseres.  Audacity kan ikke fortsette."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "Blokkstørrelsen må være mellom 256 og 100000000\n"
-
-#: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "Audacity starter opp..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -7225,7 +8713,9 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 
+#. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Quit Audacity"
 msgstr "&Avslutt Audacity"
 
@@ -8065,6 +9555,29 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "Skru av lydutfalloppdagelse"
 
+#: src/EffectAndCommandPluginManager.cpp
+#, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in 'Help > Diagnostics > Show Log'"
+msgstr ""
+"Den følgende kommandoen mislyktes:\n"
+"\n"
+"%s\n"
+"\n"
+"Mer informasjon kan være tilgjengelig i ‘Hjelp > Diagnostikk > Vis logg’"
+
+#: src/EffectAndCommandPluginManager.cpp
+msgid "Command failed to initialize"
+msgstr "Kommandoen klarte ikke å starte opp"
+
+#: src/ExportLabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "Eksportert merkelappstil:"
+
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
 msgstr "Frekvensanalyse"
@@ -8168,21 +9681,6 @@ msgstr "&Akse:"
 #: src/FreqWindow.cpp
 msgid "&Replot..."
 msgstr "&Tegn igjen..."
-
-#: src/FreqWindow.cpp
-msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr ""
-
-#: src/FreqWindow.cpp
-msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
-msgstr ""
-
-#: src/FreqWindow.cpp
-#, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "For mye lyd ble markert. Bare de første %.1f sekundene med lyd vil bli analysert."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -8400,47 +9898,6 @@ msgstr "Nytt kommentarspor"
 msgid "Enter track name"
 msgstr "Skriv inn spornavn"
 
-#. i18n-hint: (noun) it's the name of a kind of track.
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Label track.
-#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
-#: src/TrackPanelAx.cpp
-msgid "Label Track"
-msgstr "Kommentarspor"
-
-#: src/LabelTrack.cpp
-msgid "SubRip text file"
-msgstr "SubRip-tekstfil"
-
-#: src/LabelTrack.cpp
-msgid "WebVTT file"
-msgstr "WebVTT-fil"
-
-#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
-msgid "Labels"
-msgstr "Kommentarer"
-
-#: src/LabelTrack.cpp
-msgid "S&tandard"
-msgstr "S&tandard"
-
-#: src/LabelTrack.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "Utvidet (med frekvensrekkevidder)"
-
-#: src/LabelTrack.cpp
-msgid "Exported Label Style:"
-msgstr "Eksportert merkelappstil:"
-
-#: src/LabelTrack.cpp
-msgid "Importing WebVTT files is not currently supported."
-msgstr "Å importere WebVTT-filer støttes ikke for øyeblikket."
-
-#: src/LabelTrack.cpp
-msgid "One or more saved labels could not be read."
-msgstr "En eller flere lagrede merker kunne ikke bli innlest."
-
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
 #: src/LangChoice.cpp
@@ -8488,15 +9945,14 @@ msgstr "Snarveier er fjernet"
 msgid "Audacity Mixer%s"
 msgstr "Audacity miksepult%s"
 
-#  i18n-hint: Title of the Gain slider, used to adjust the volume
-#  i18n-hint: Title of the Gain slider, used to adjust the volume
-#. i18n-hint: title of the Gain slider, used to adjust the volume
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#. i18n-hint: title of the Volume slider, used to adjust the volume
+#. i18n-hint: Title of the Volume slider, used to adjust the volume
+#: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Gain"
-msgstr "Sporvolum"
+#, fuzzy
+msgid "Volume"
+msgstr "Volum    "
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -8538,8 +9994,9 @@ msgstr "Signalnivåmåler"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Moved gain slider"
-msgstr "Flyttet glidebryter for sporvolum"
+#, fuzzy
+msgid "Moved volume slider"
+msgstr "Beveget på Velocity-glideren"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -8554,116 +10011,6 @@ msgstr "Flyttet glidebryter for panorering"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "&Mikser"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C"
-msgstr "C"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯"
-msgstr "C♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D"
-msgstr "D"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯"
-msgstr "D♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E"
-msgstr "E"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F"
-msgstr "F"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯"
-msgstr "F♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G"
-msgstr "G"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯"
-msgstr "G♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A"
-msgstr "A"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯"
-msgstr "A♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B"
-msgstr "B"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♭"
-msgstr "D♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E♭"
-msgstr "E♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♭"
-msgstr "G♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♭"
-msgstr "A♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B♭"
-msgstr "B♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯/D♭"
-msgstr "C♯/D♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯/E♭"
-msgstr "D♯/E♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯/G♭"
-msgstr "F♯/G♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯/A♭"
-msgstr "G♯/A♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯/B♭"
-msgstr "A♯/B♭"
 
 #: src/PluginDataModel.cpp
 #, c-format
@@ -9430,19 +10777,6 @@ msgstr "Flyttet %s ned i %s"
 msgid "Change effect order"
 msgstr "Endre effektrekkefølge"
 
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid ""
-"This plugin could not be loaded.\n"
-"It may have been deleted."
-msgstr ""
-"Dette tillegget kunne ikke lastes inn.\n"
-"Den kan ha blitt slettet."
-
-#  i18n-hint: You do not need to translate "LOF"
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid "Plugin Error"
-msgstr "Tilleggsfeil"
-
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
@@ -9675,12 +11009,6 @@ msgstr "Varighet"
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "Audacity nedtellingsopptak"
-
-#. i18n-hint: default exported file name when exporting from unsaved project
-#: src/TimerRecordDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "untitled"
-msgstr "uten tittel"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -10206,8 +11534,8 @@ msgstr "Hva er nytt i Audacity %s"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr "Se [[%s|lanseringsvideoen]] eller les [[https://support.audacityteam.org/additional-resources/changelog|endringsloggen]] for å lære mer!</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -10217,6 +11545,57 @@ msgstr "Få gratis tillegg og lyder"
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
 msgstr "<p>Ta en titt på [[%s|Muse Hub-appen]] for et bredt utvalg av lydtillegg for Audacity-brukere</p>"
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal processing effect that enhances vocal clarity and depth."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#. i18n-hint: MuseHub is a name of a product, see musehub.com.
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Available on [[%s|MuseHub]]."
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -10236,7 +11615,7 @@ msgstr "Ikke vis dette ved neste oppstart"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
-#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -10400,7 +11779,7 @@ msgstr "LISP"
 msgid "Brief"
 msgstr "Raskt"
 
-#: src/commands/GetInfoCommand.cpp src/effects/EffectManager.cpp
+#: src/commands/GetInfoCommand.cpp src/effects/EffectPresetDialog.cpp
 msgid "Type:"
 msgstr "Type:"
 
@@ -10845,11 +12224,10 @@ msgstr "Fokusert"
 msgid "Set Track Audio"
 msgstr "Bestem sporets lyd"
 
-#  i18n-hint: Title of the Gain slider, used to adjust the volume
-#  i18n-hint: Title of the Gain slider, used to adjust the volume
 #: src/commands/SetTrackInfoCommand.cpp
-msgid "Gain:"
-msgstr "Volumbryter:"
+#, fuzzy
+msgid "Volume:"
+msgstr "Volum    "
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -10858,24 +12236,6 @@ msgstr "Panorer:"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Visuals"
 msgstr "Bestem sporets visualiteter"
-
-#. i18n-hint: abbreviates amplitude
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Linear (amp)"
-msgstr "Lineær (amp)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Logarithmic (dB)"
-msgstr "Logaritmisk (dB)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Linear (dB)"
-msgstr "Lineær (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -10951,10 +12311,6 @@ msgstr "Bestemmer diverse verdier for et spor."
 msgid "Long Message"
 msgstr "Lang beskjed"
 
-#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
-msgid "Amplify"
-msgstr "Forsterk"
-
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "Øker eller senker volumet på lyden du har valgt"
@@ -10974,32 +12330,6 @@ msgstr "&Ny toppamplitude (dB):"
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
 msgstr "Tillat klipping"
-
-#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
-msgid "Auto Duck"
-msgstr "Autodukk"
-
-#: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Senker volumet i et eller flere spor, når volumet i et spesifikt kontrollspor går over en bestemt grense"
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks'
-#. (reduces the volume) of the audio automatically when there is
-#. sound on another track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "Du valgte et spor som ikke inneholder lyd. AutoDuck kan bare behandle lydspor."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
-#. the volume) of the audio automatically when there is sound on another
-#. track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Autodukk trenger et kontrollspor som må plasseres under de valgte sporene."
-
-#: src/effects/AutoDuck.cpp
-msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr ""
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -11062,14 +12392,6 @@ msgstr "%s: er ikke en forhåndsinnstillingsfil.\n"
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr "%s: er til en annen effekt, generator og analyseverktøy.\n"
 
-#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
-msgid "Bass and Treble"
-msgstr "Bass og diskant"
-
-#: src/effects/BassTreble.cpp
-msgid "Simple tone control effect"
-msgstr "Enkel tonekontrolleffekt"
-
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
 msgstr "Tonekontrollere"
@@ -11101,18 +12423,6 @@ msgstr "&Volum (dB):"
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
 msgstr "&Tilknytt volumkontrolleren til tonekontrollerne"
-
-#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Pitch"
-msgstr "Endre tonehøyde"
-
-#: src/effects/ChangePitch.cpp
-msgid "Changes the pitch of a track without changing its tempo"
-msgstr "Endrer tonehøyden til et spor uten å endre dens tempo"
-
-#: src/effects/ChangePitch.cpp
-msgid "High Quality Pitch Change"
-msgstr "Høykvalitets tonefallskifte"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
@@ -11210,14 +12520,6 @@ msgstr "45"
 msgid "78"
 msgstr "78"
 
-#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Speed and Pitch"
-msgstr "Endre hastighet og tonehøyde"
-
-#: src/effects/ChangeSpeed.cpp
-msgid "Changes the speed of a track, also changing its pitch"
-msgstr "Endrer farten til et spor, og endrer også tonefallet dens"
-
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
 msgstr "Fart&smultiplikator:"
@@ -11282,18 +12584,6 @@ msgctxt "change speed"
 msgid "to"
 msgstr "til"
 
-#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Tempo"
-msgstr "Endre tempo"
-
-#: src/effects/ChangeTempo.cpp
-msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Endrer tempoet til en markering uten å endre dens tonehøyde"
-
-#: src/effects/ChangeTempo.cpp
-msgid "High Quality Tempo Change"
-msgstr "Høykvalitets tempoendring"
-
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
 msgstr "Slag per minutt"
@@ -11341,23 +12631,6 @@ msgstr "til"
 msgid "Length in seconds from %s, to"
 msgstr "Lengde i sekunder fra %s, til"
 
-#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
-msgid "Click Removal"
-msgstr "Klikkfjerning"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "Klikkfjerner er lagd for å fjerne klikk i lydspor"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr "Algoritmen er ikke effektiv for denne lyden. Ingenting ble endret."
-
-#: src/effects/ClickRemoval.cpp
-#, c-format
-msgid "Selection must be larger than %d samples."
-msgstr "Utvalget må være mer enn %d samplinger."
-
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Terskel (lavere er mer sensitiv):"
@@ -11381,30 +12654,6 @@ msgstr "Komprimering"
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr "Reduserer \"dynamisk område\", eller forskjeller mellom høylytte og stille partier."
-
-#: src/effects/Contrast.cpp
-msgid "You can only measure one track at a time."
-msgstr "Du kan bare måle ett spor om gangen."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Vennligst velg et lydspor."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Invalid audio selection.\n"
-"Please ensure that audio is selected."
-msgstr ""
-"Ugyldig lydutvalg.\n"
-"Vennligst sørg for at det faktisk er lyd som er valgt."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Nothing to measure.\n"
-"Please select a section of a track."
-msgstr ""
-"Ingenting å måle.\n"
-"Vennligst marker en del av sporet."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -11642,132 +12891,6 @@ msgid "Contrast..."
 msgstr "Kontrast..."
 
 #: src/effects/Distortion.cpp
-msgid "Hard Clipping"
-msgstr "Streng klipping"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Clipping"
-msgstr "Myk klipping"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Overdrive"
-msgstr "Myk overbelastning"
-
-#: src/effects/Distortion.cpp
-msgid "Medium Overdrive"
-msgstr "Middels overbelastning"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Overdrive"
-msgstr "Streng overbelasting"
-
-#: src/effects/Distortion.cpp
-msgid "Cubic Curve (odd harmonics)"
-msgstr "Kubisk kurve (oddetallsharmonier)"
-
-#: src/effects/Distortion.cpp
-msgid "Even Harmonics"
-msgstr "Jevne harmonier"
-
-#: src/effects/Distortion.cpp
-msgid "Expand and Compress"
-msgstr "Utvid og komprimer"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller"
-msgstr "Utjevner"
-
-#: src/effects/Distortion.cpp
-msgid "Rectifier Distortion"
-msgstr "Korrigereringsforstyrrelse"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Limiter 1413"
-msgstr "Streng begrenser for 1413"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Streng klipping i -12dB, 80% utjevningsforsterkning"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "Mykklipp -12dB, 80% utjevningsforsterkning"
-
-#: src/effects/Distortion.cpp
-msgid "Fuzz Box"
-msgstr "Frynseboks"
-
-#: src/effects/Distortion.cpp src/effects/Equalization.cpp
-msgid "Walkie-talkie"
-msgstr "Walkie-talkie"
-
-#: src/effects/Distortion.cpp
-msgid "Blues drive sustain"
-msgstr "Blues-drivvedlikehold"
-
-#: src/effects/Distortion.cpp
-msgid "Light Crunch Overdrive"
-msgstr "Lettknasende overbelastning"
-
-#: src/effects/Distortion.cpp
-msgid "Heavy Overdrive"
-msgstr "Streng overbelasting"
-
-#: src/effects/Distortion.cpp
-msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "Tredje harmoni (Perfekt femte)"
-
-#: src/effects/Distortion.cpp
-msgid "Valve Overdrive"
-msgstr "Pipe-overbelastning"
-
-#: src/effects/Distortion.cpp
-msgid "2nd Harmonic (Octave)"
-msgstr "Andre harmoni (Oktav)"
-
-#: src/effects/Distortion.cpp
-msgid "Gated Expansion Distortion"
-msgstr "Forstyrrelse i form av inngjerdet utvidelse"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Light, -70dB noise floor"
-msgstr "Utjevner, lett, -70dB støygrense"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "Utjevner, moderat, -70dB støygrense"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "Utjevner, tung, -70dB støygrense"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "Utjevner, tyngre, -70dB støygrense"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "Utjevner, tungest, -70dB støygrense"
-
-#: src/effects/Distortion.cpp
-msgid "Half-wave Rectifier"
-msgstr "Halvbølge-korrigerer"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier"
-msgstr "Fullbølge-korrigerer"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier (DC blocked)"
-msgstr "Fullbølge-korrigerer (Strømkursblokkert)"
-
-#: src/effects/Distortion.cpp
-msgid "Percussion Limiter"
-msgstr "Perkusjonsbegrenser"
-
-#: src/effects/Distortion.cpp
 msgid "Upper Threshold"
 msgstr "Øvre terskel"
 
@@ -11786,14 +12909,6 @@ msgstr "Parameter 2"
 #: src/effects/Distortion.cpp
 msgid "Number of repeats"
 msgstr "Antall repeteringer"
-
-#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
-msgid "Distortion"
-msgstr "Forstyrrelse"
-
-#: src/effects/Distortion.cpp
-msgid "Waveshaping distortion effect"
-msgstr "Bølgeformingsforstyrrelseseffekt"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion type:"
@@ -11890,22 +13005,6 @@ msgstr "(0 til 100):"
 #: src/effects/Distortion.cpp
 msgid "(0 to 5):"
 msgstr "(0 til 5):"
-
-#: src/effects/DtmfGen.cpp
-msgid "DTMF Tones"
-msgstr "DTMF-toner"
-
-#: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Lager dobbel-tone flerfrekvenstoner (DTMF) slik som de som lages av tastaturet på telefoner"
-
-#: src/effects/DtmfGen.cpp
-msgid ""
-"DTMF sequence empty.\n"
-"Check ALL settings for this effect."
-msgstr ""
-"Tom DTMF-sekvens.\n"
-"Sjekk ALLE innstillingene for effekten."
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF &sequence:"
@@ -12041,19 +13140,6 @@ msgstr "Tilsiktet komprimering"
 msgid "awaiting playback"
 msgstr "venter på avspilling"
 
-#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
-msgid "Echo"
-msgstr "Ekko"
-
-#: src/effects/Echo.cpp
-msgid "Repeats the selected audio again and again"
-msgstr "Repeterer den markerte lyden om og om igjen"
-
-#: src/effects/Echo.cpp src/effects/FindClipping.cpp
-#: src/effects/Paulstretch.cpp
-msgid "Requested value exceeds memory capacity."
-msgstr "Den ønskede verdien overgår minnekapasiteten."
-
 #: src/effects/Echo.cpp
 msgid "&Delay time (seconds):"
 msgstr "Forsinkelsesti&d (sekunder):"
@@ -12062,79 +13148,29 @@ msgstr "Forsinkelsesti&d (sekunder):"
 msgid "D&ecay factor:"
 msgstr "D&ecay-faktor:"
 
-# "Anvende" or "Legge til"? (not all marked fuzzy)
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied effect: %s"
-msgstr "Anvendt effekt: %s"
-
-# "Anvende" or "Legge til"? (not all marked fuzzy)
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied command: %s"
-msgstr "Benyttet kommando: %s"
-
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Select Preset"
 msgstr "Velg forhåndsinnstilling"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "&Preset:"
 msgstr "&Forhåndsinnstilling:"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "User Presets"
 msgstr "Forhåndsinnstillinger"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "Factory Presets"
 msgstr "Fabrikkinnstillinger"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Current Settings"
 msgstr "Nåværende innstillinger"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Factory Defaults"
 msgstr "Fabrikkstandarder"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following effect failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"Forsøket på å starte opp den følgende effekten feilet:\n"
-"\n"
-"%s\n"
-"\n"
-"Mer informasjon kan være tilgjengelig i ‘Hjelp > Diagnostikk > Vis logg’"
-
-#: src/effects/EffectManager.cpp
-msgid "Effect failed to initialize"
-msgstr "Effekten klarte ikke å starte opp"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following command failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"Den følgende kommandoen mislyktes:\n"
-"\n"
-"%s\n"
-"\n"
-"Mer informasjon kan være tilgjengelig i ‘Hjelp > Diagnostikk > Vis logg’"
-
-#: src/effects/EffectManager.cpp
-msgid "Command failed to initialize"
-msgstr "Kommandoen klarte ikke å starte opp"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
@@ -12228,10 +13264,6 @@ msgstr ""
 "\n"
 "Vil du overskrive?"
 
-#: src/effects/Equalization.cpp
-msgid "Equalization"
-msgstr "Tonekontroll (EQ)"
-
 #: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "Filterkurve-EQ"
@@ -12240,58 +13272,6 @@ msgstr "Filterkurve-EQ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Grafisk EQ"
-
-#: src/effects/Equalization.cpp
-msgid "Adjusts the volume levels of particular frequencies"
-msgstr "Justerer volumnivåene til spesielle frekvenser"
-
-#: src/effects/Equalization.cpp
-msgid "100Hz Rumble"
-msgstr "100Hz rumling"
-
-#: src/effects/Equalization.cpp
-msgid "AM Radio"
-msgstr "AM-radio"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Boost"
-msgstr "BassBoost"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Cut"
-msgstr "Basskutt"
-
-#: src/effects/Equalization.cpp
-msgid "Low rolloff for speech"
-msgstr "Lav rolloff for tale"
-
-#: src/effects/Equalization.cpp
-msgid "RIAA"
-msgstr "RIAA"
-
-#: src/effects/Equalization.cpp
-msgid "Telephone"
-msgstr "Telefon"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Boost"
-msgstr "Diskantforsterkning"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Cut"
-msgstr "Diskantkutt"
-
-#: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "For å bruke Equaliseren, må alle markerte spor ha samme samplingsfrekvens."
-
-#: src/effects/Equalization.cpp
-msgid "Track sample rate is too low for this effect."
-msgstr "Sporets samplingsfrekvens er for lav for denne effekten."
-
-#: src/effects/Equalization.cpp
-msgid "Effect Unavailable"
-msgstr "Effekten er utilgjengelig"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -12331,33 +13311,6 @@ msgstr "%gk"
 #, c-format
 msgid "%d dB"
 msgstr "%d dB"
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/EqualizationCurves.cpp
-msgid "unnamed"
-msgstr "uten navn"
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/EqualizationCurves.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-"Feil ved innlasting av Equaliser-kurver fra filen:\n"
-"%s\n"
-"Feilmeldingen sier:\n"
-"%s"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Loading EQ Curves"
-msgstr "Feil ved innlasting av Equaliser-kurver"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Saving Equalization Curves"
-msgstr "Feil ved lagring av EQ-kurver"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -12485,31 +13438,6 @@ msgstr "Kurver eksportert"
 msgid "No curves exported"
 msgstr "Ingen kurver eksportert"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/EqualizationParameters.cpp
-msgid "B-spline"
-msgstr "B-spline"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cosine"
-msgstr "Cosinus"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cubic"
-msgstr "Kubisk"
-
-#: src/effects/EqualizationUI.cpp
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"Gi denne EQ-kurven et nytt navn før du bruker den i en makro.\n"
-"Velg 'Lagre/behandle kurver...'-knappen og gi et nytt navn til kurven ‘uten navn’. Så bruker du den."
-
-#: src/effects/EqualizationUI.cpp
-msgid "Filter Curve EQ needs a different name"
-msgstr "Filterlkurve-EQ-en trenger et annet navn"
-
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
 msgstr "+ dB"
@@ -12590,53 +13518,6 @@ msgstr "Vis rutenett"
 msgid "Show g&rid lines"
 msgstr "Vis r&utenett"
 
-#: src/effects/EqualizationUI.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr "Den ønskede kurven ble ikke funnet, bruker 'uten navn'"
-
-#: src/effects/EqualizationUI.cpp
-msgid "Curve not found"
-msgstr "Ingen kurver ble funnet"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade In"
-msgstr "Ton inn"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade Out"
-msgstr "Ton ut"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-in to the selected audio"
-msgstr "Legger til en lineær innfalming til den markerte lyden"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-out to the selected audio"
-msgstr "Legger til en lineær utfalming til den valgte lyden"
-
-#: src/effects/FindClipping.cpp
-msgid "Find Clipping"
-msgstr "Finn klipping"
-
-#: src/effects/FindClipping.cpp
-msgid "Creates labels where clipping is detected"
-msgstr "Skaper merkinger der hvor klipping er oppdaget"
-
-#: src/effects/FindClipping.cpp
-msgid "Clipping"
-msgstr "Klipping"
-
-#. i18n-hint: Two numbers are substituted; the second is the
-#. size of a set, the first is the size of a subset, and not
-#. understood as an ordinal (i.e., not meaning "first", or
-#. "second", etc.)
-#.
-#: src/effects/FindClipping.cpp
-#, c-format
-msgctxt "find clipping"
-msgid "%lld of %lld"
-msgstr "%lld av %lld"
-
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
 msgstr "&Startterskel (samples):"
@@ -12644,27 +13525,6 @@ msgstr "&Startterskel (samples):"
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
 msgstr "St&oppterskel (samples):"
-
-#: src/effects/Generator.cpp
-msgid "There is not enough room available to generate the audio"
-msgstr "Det var ikke nok tilgjengelig plass til å generere lyden"
-
-#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
-msgid "Invert"
-msgstr "Inverter"
-
-#: src/effects/Invert.cpp
-msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr "Vender lydsamplingene opp ned, og reverserer polariteten deres"
-
-#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Legacy Compressor"
-msgstr "Komprimering"
-
-#: src/effects/LegacyCompressor.cpp
-msgid "Compresses the dynamic range of audio"
-msgstr "Komprimer lydens dynamiske rekkevidde"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
@@ -12793,28 +13653,6 @@ msgstr "opplevd lydstyrke"
 msgid "RMS"
 msgstr "RMS"
 
-#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
-msgid "Loudness Normalization"
-msgstr "Lydstyrkenormalisering"
-
-#: src/effects/Loudness.cpp
-msgid "Sets the loudness of one or more tracks"
-msgstr "Setter lydstyrke for ett eller flere spor"
-
-#: src/effects/Loudness.cpp
-msgid "Normalizing Loudness...\n"
-msgstr "Normaliser lydstyrken…\n"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing: %s"
-msgstr "Analyserer: %s"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Processing: %s"
-msgstr "Behandler: %s"
-
 #: src/effects/Loudness.cpp
 msgid "&Normalize"
 msgstr "&Normaliser"
@@ -12844,89 +13682,9 @@ msgstr "&Behandle mono som dobbel-mono (anbefalt)"
 msgid "(Maximum 0dB)"
 msgstr "(Maksimalt 0dB)"
 
-#. i18n-hint: not a color, but "white noise" having a uniform spectrum
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "White"
-msgstr "Hvit"
-
-#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
-#. in low frequencies
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Pink"
-msgstr "Rosa"
-
-#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Brownian"
-msgstr "Brunsk"
-
-#: src/effects/Noise.cpp
-msgid "Noise"
-msgstr "Støy"
-
-#: src/effects/Noise.cpp
-msgid "Generates one of three different types of noise"
-msgstr "Genererer en av tre forskjellige typer støy"
-
 #: src/effects/Noise.cpp
 msgid "&Noise type:"
 msgstr "Støytype:"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median"
-msgstr "Median"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Second greatest"
-msgstr "Nest største"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Old"
-msgstr "Gamle"
-
-#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
-#: resources/EffectsMenuDefaults.xml
-msgid "Noise Reduction"
-msgstr "Støyreduksjon"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "Fjerner bakgrunnslyd, slik som vifter, opptaksstøy eller summing"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block are too few for the window types."
-msgstr "Antallet steg per blokk er for lavt for vindustypene."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block cannot exceed the window size."
-msgstr "Steg per blokk kan ikke overstige vindusstørrelsen."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median method is not implemented for more than four steps per window."
-msgstr "Median-metoden er ikke i bruk i mer enn fire steg per vindu."
-
-#: src/effects/NoiseReduction.cpp
-msgid "You must specify the same window size for steps 1 and 2."
-msgstr "Du må velge den samme vindusstørrelse for trinn 1 og 2."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Warning: window types are not the same as for profiling."
-msgstr "Advarsel: Vindustypene er ikke de samme som for profilering."
-
-#: src/effects/NoiseReduction.cpp
-msgid "All noise profile data must have the same sample rate."
-msgstr "All støyprofildataen må ha samme samplingsfrekvens."
-
-#: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "Samplingsraten til støyprofilen må være det samme som lyden som skal prosesseres."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Selected noise profile is too short."
-msgstr "Den markerte støyprofilen er for kort."
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Noise reduction (dB):"
@@ -13094,55 +13852,6 @@ msgstr "4 (standard)"
 msgid "Discrimination &method:"
 msgstr "Skille&metode:"
 
-#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
-msgid "Normalize"
-msgstr "Normaliser"
-
-#: src/effects/Normalize.cpp
-msgid "Sets the peak amplitude of one or more tracks"
-msgstr "Velger toppbredden for én eller flere spor"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset and Normalizing...\n"
-msgstr "Fjerner strømkursavviket og normaliserer...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset...\n"
-msgstr "Fjerner strømkursavvik...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Normalizing without removing DC offset...\n"
-msgstr "Normaliserer uten å fjerne strømkursavviket...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Not doing anything...\n"
-msgstr "Den gjør ikke noe …\n"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing first track of stereo pair: %s"
-msgstr "Analyserer første spor i et stereopar: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Analyserer spor #2 i et stereospor: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing stereo channels independently: %s"
-msgstr "Behandler stereokanaler for seg selv: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing first track of stereo pair: %s"
-msgstr "Behandler første spor i et stereopar: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing second track of stereo pair: %s"
-msgstr "Behandler spor 2 i et stereopar: %s"
-
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
 msgstr "Fje&rn DC-offset (sentrer vertikalt på 0.0)"
@@ -13159,14 +13868,6 @@ msgstr "Topp-amplitude dB"
 msgid "N&ormalize stereo channels independently"
 msgstr "N&ormaliser stereokanalene uavhengig"
 
-#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
-msgid "Paulstretch"
-msgstr "Paulstretch"
-
-#: src/effects/Paulstretch.cpp
-msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Paulstretch er bare for en ekstrem tidsstrekk- eller \"stase\"-effekt"
-
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
@@ -13178,56 +13879,6 @@ msgstr "&Strekkfaktor:"
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
 msgstr "&Tidsoppløsning (sekunder):"
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Audio selection too short to preview.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"Lydutvalget er for kort til å forhåndsvises.\n"
-"\n"
-"Prøv med å forlenge lydutvalget til minst %.1f sekunder,\n"
-"eller reduser 'Tidsresolusjon'-mengden til mindre enn %.1f sekunder."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Unable to Preview.\n"
-"\n"
-"For the current audio selection, the maximum\n"
-"'Time Resolution' is %.1f seconds."
-msgstr ""
-"Kunne ikke forhåndsvise dette.\n"
-"\n"
-"For det nåværende lydutvalget, er den maksimale\n"
-"'Tidsresolusjon'-mengden på %.1f sekunder."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"The 'Time Resolution' is too long for the selection.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"'Tidsresolusjon'-mengden er for lang for utvalget.\n"
-"\n"
-"Prøv med å forlenge lydutvalget til minst %.1f sekunder,\n"
-"eller reduser 'Tidsresolusjon'-mengden til mindre enn %.1f sekunder."
-
-#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
-msgid "Phaser"
-msgstr "Phaser"
-
-#: src/effects/Phaser.cpp
-msgid "Combines phase-shifted signals with the original signal"
-msgstr "Kombinerer faseskiftede signaler med det opprinnelige signalet"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
@@ -13291,50 +13942,6 @@ msgstr "Utdatasporvolum (dB)"
 msgid "%s - %s"
 msgstr "%s - %s"
 
-#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
-msgid "Repair"
-msgstr "Reparer"
-
-#: src/effects/Repair.cpp
-msgid "Sets the peak amplitude of a one or more tracks"
-msgstr "Velger toppbredden for én eller flere spor"
-
-#: src/effects/Repair.cpp
-msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "Reparasjonseffekten kan ikke brukes innenfor strukkede eller krympede klipp"
-
-#: src/effects/Repair.cpp
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
-"\n"
-"Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Reparer-effekten er ment å brukes på veldig korte bolker med skadet lyd (opp til 128 datapunkter).\n"
-"\n"
-"Zoom inn og velg en liten brøkdel av et sekund som skal repareres."
-
-#: src/effects/Repair.cpp
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
-"\n"
-"Please select a region that has audio touching at least one side of it.\n"
-"\n"
-"The more surrounding audio, the better it performs."
-msgstr ""
-"Reparer fungerer ved å bruke lyddata rundt det merkede området.\n"
-"\n"
-"Vennligst merk et område som berører lyd på minst en av sidene.\n"
-"\n"
-"Effekten fungerer bedre jo mer lyd som finnes rundt området."
-
-#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
-msgid "Repeat"
-msgstr "Repeter"
-
-#: src/effects/Repeat.cpp
-msgid "Repeats the selection the specified number of times"
-msgstr "Repeterer utvalget en bestemt mengde ganger"
-
 #: src/effects/Repeat.cpp
 msgid "&Number of repeats to add:"
 msgstr "A&ntall gjentakelser å legge til:"
@@ -13360,99 +13967,6 @@ msgstr "Lengde på ny markering: %s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "Advarsel: Ingen loop."
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Acoustic"
-msgstr "Akustisk"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Ambience"
-msgstr "Frisk"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Artificial"
-msgstr "Kunstig"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Clean"
-msgstr "Ren"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal I"
-msgstr "Vokal I"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal II"
-msgstr "Vokal II"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Dance Vocal"
-msgstr "Danseklubbvokal"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Modern Vocal"
-msgstr "Moderne vokal"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Voice Tail"
-msgstr "Voice Tail"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Bathroom"
-msgstr "Bad"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Bright"
-msgstr "Lite lyst rom"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Dark"
-msgstr "Lite mørkt rom"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Medium Room"
-msgstr "Middels rom"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Large Room"
-msgstr "Stort rom"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Church Hall"
-msgstr "Kirkesal"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Cathedral"
-msgstr "Katedral"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Big Cave"
-msgstr "Big Cave"
-
-#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverb"
-msgstr "Klang"
-
-#: src/effects/Reverb.cpp
-msgid "Adds ambience or a \"hall effect\""
-msgstr "Legger til ekko eller en \"sal-effekt\""
 
 #: src/effects/Reverb.cpp
 msgid "&Room Size (%):"
@@ -13493,54 +14007,6 @@ msgstr "Stereobredde (%):"
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
 msgstr "Kun u&tdata"
-
-#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverse"
-msgstr "Baklengs"
-
-#: src/effects/Reverse.cpp
-msgid "Reverses the selected audio"
-msgstr "Eksporterer den markerte lyden"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "SBSMS-tid / Tonefall-strekking"
-
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Butterworth"
-msgstr "Butterworth"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type I"
-msgstr "Tsjebysjeff type I"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type II"
-msgstr "Tsjebysjeff type II"
-
-#: src/effects/ScienFilter.cpp
-msgid "Lowpass"
-msgstr "Lav passering"
-
-#: src/effects/ScienFilter.cpp
-msgid "Highpass"
-msgstr "Høy passering"
-
-#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
-msgid "Classic Filters"
-msgstr "Klassiske filtre"
-
-#. i18n-hint: "infinite impulse response"
-#: src/effects/ScienFilter.cpp
-msgid "Performs IIR filtering that emulates analog filters"
-msgstr "Utfører IIR-filtrering som etterligner analoge filtre"
-
-#: src/effects/ScienFilter.cpp
-msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "For å bruke et filter, må alle markerte spor være av samme samplingsfrekvens."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -13673,36 +14139,6 @@ msgstr "Gjenopprett standardverdier"
 msgid "%.3f"
 msgstr "%.3f"
 
-#. i18n-hint: noun
-#: src/effects/Silence.cpp
-msgctxt "generator"
-msgid "Silence"
-msgstr "Stillhet"
-
-#: src/effects/Silence.cpp
-msgid "Creates audio of zero amplitude"
-msgstr "Lager lyd med null amplitude"
-
-#: src/effects/StereoToMono.cpp
-msgid "Stereo To Mono"
-msgstr "Stereo til mono"
-
-#: src/effects/StereoToMono.cpp
-msgid "Converts stereo tracks to mono"
-msgstr "Konverterer stereospor til mono"
-
-#: src/effects/StereoToMono.cpp
-msgid "Mixing down to mono"
-msgstr "Mikse ned til mono"
-
-#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
-msgid "Sliding Stretch"
-msgstr "Skliende strekk"
-
-#: src/effects/TimeScale.cpp
-msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "Tillater stadige endringer av tempoet og/eller tonefallet"
-
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
 msgstr "Innledende endring i tempo (%)"
@@ -13730,36 +14166,6 @@ msgstr "Siste toneskifte"
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
 msgstr "(s&emitoner) [-12 til 12]:"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
-msgid "Linear"
-msgstr "Lineær"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-msgid "Logarithmic"
-msgstr "Logaritmisk"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sine"
-msgstr "Sinus"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Square"
-msgstr "Kvadrat"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sawtooth"
-msgstr "Sagtenner"
-
-#: src/effects/ToneGen.cpp
-msgid "Square, no alias"
-msgstr "Kvadrat, ingen alias"
-
-#: src/effects/ToneGen.cpp
-msgctxt "waveform"
-msgid "Triangle"
-msgstr "Triangel"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
@@ -13804,26 +14210,6 @@ msgstr "Amplitude slutt"
 #: src/effects/ToneGen.cpp
 msgid "I&nterpolation:"
 msgstr "I&nterpolering:"
-
-#: src/effects/TruncSilence.cpp
-msgid "Truncate Detected Silence"
-msgstr "Kort ned oppdaget stillhet"
-
-#: src/effects/TruncSilence.cpp
-msgid "Compress Excess Silence"
-msgstr "Komprimer overflødig stillhet"
-
-#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
-msgid "Truncate Silence"
-msgstr "Fjern stillhet"
-
-#: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "Reduserer automatisk varigheten av passasjer hvor volumet er under et bestemt nivå"
-
-#: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "Når du korter ned uavhengig, kan det bare være ett valgt lydspor i hver synk-låste sporgruppe."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -13954,14 +14340,6 @@ msgstr "Noen VST3-effekter må forsinke lyden tilbake til Audacity som del av be
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "De fleste VST3-effekter har et grafisk grensesnitt å velge parameterverdier. En enkel tekst-variant er også tilgjengelig.  Åpne effekten på nytt for å bruke denne."
-
-#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
-msgid "Wahwah"
-msgstr "Wahwah"
-
-#: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Ville variasjoner i tonekvalitet, slik som i den gitarlyden som var så popular på 70-tallet"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14102,154 +14480,6 @@ msgstr "Noen LV2-effekter må forsinke lyden tilbake til Audacity som del av beh
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "LV2-effekter kan ha et grafisk grensesnitt for å velge parameterverdier. En enkel tekst-variant er også tilgjengelig. Åpne effekten på nytt for å bruke denne."
 
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Nyquist Effects"
-msgstr "Nyquist-effekter"
-
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Sørger for Nyquist-effektstøtte i Audacity"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Applying Nyquist Effect..."
-msgstr "Anvender Nyquist-effekt..."
-
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Worker"
-msgstr "&Nyquist-arbeider"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Ill-formed Nyquist plug-in header"
-msgstr "Misformet Nyquist-tilleggstoppområde"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Enable track spectrogram view before\n"
-"applying 'Spectral' effects."
-msgstr ""
-"Skru på spektrogramvisning på sporet før\n"
-"du bruker ‘spektral’-effekter."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"To use 'Spectral effects', enable 'Spectral Selection'\n"
-"in the track Spectrogram settings and select the\n"
-"frequency range for the effect to act on."
-msgstr ""
-"For å bruke 'Spektraleffekter', aktiver 'Spektralutvalg'\n"
-"i sporets spektrograminnstillinger, og velg\n"
-"frekvensrekkevidden som effekten skal bruke."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "feil: Filen «%s» er spesifisert i toppområdet, men ble ikke funnet i tilleggsfilbanen.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Audio selection required."
-msgstr "Lydmarkering er påkrevd."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "Nyquist-feil"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Debug Output: "
-msgstr "Feilsøkingsutdata: "
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Processing complete."
-msgstr "Behandling fullført."
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "';type tool'-effekter kan ikke motta lyd fra Nyquist.\n"
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "';type tool'-effekter kan ikke motta merker fra Nyquist.\n"
-
-#. i18n-hint: "%s" is replaced by name of plug-in.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "nyx_error returned from %s.\n"
-msgstr "nyx_error ble meldt tilbake om fra %s.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "plug-in"
-msgstr "tillegg"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned a list."
-msgstr "Nyquist returnerte en liste."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %f"
-msgstr "Nyquist returnerte verdien: %f"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %d"
-msgstr "Nyquist returnerte verdien: %d"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned too many audio channels.\n"
-msgstr "Nyquist sendte tilbake for mange lydkanaler.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Nyquist sendte tilbake én lydkanal som en tabell.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned an empty array.\n"
-msgstr "Nyquist returnerte en tom verdi.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned nil audio.\n"
-msgstr "Nyquist sendte ikke tilbake noe lyd.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Advarsel: Nyquist meldte fra med en ugyldig UTF-8 streng, som her er konvertert til Latin-1]"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Denne versjonen av Audacity støtter ikke Nyquist-tilleggsversjonen %ld"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not open file"
-msgstr "Klarte ikke å åpne filen"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Your code looks like SAL syntax, but there is no 'return' statement.\n"
-"For SAL, use a return statement such as:\n"
-"\treturn *track* * 0.1\n"
-"or for LISP, begin with an open parenthesis such as:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-msgstr ""
-"Koden din ser ut som SAL-syntaks, men ingen tilbakemelding kom tilbake.\n"
-"For SAL, bruk et returneringsutsagn, slik som:\n"
-"\treturn *track* * 0.1\n"
-"eller for LISP, begynn med en åpen parantes, slik som\n"
-"\t(mult *track* 0.1)\n"
-"."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Error in Nyquist code"
-msgstr "Feil i Nyquist-koden"
-
-#. i18n-hint: refers to programming "languages"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not determine language"
-msgstr "Kunne ikke bestemme kodespråket"
-
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
@@ -14320,6 +14550,10 @@ msgstr "Velg en fil"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Save file as"
 msgstr "Lagre filen som"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Debug Output: "
+msgstr "Feilsøkingsutdata: "
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
@@ -14837,12 +15071,13 @@ msgid "Duplicate"
 msgstr "Dupliser"
 
 #: src/menus/EditMenus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Kløyv og klipp ut til utklippstavlen"
+#, fuzzy
+msgid "Cut to clipboard and leave gap"
+msgstr "Klipp ut til utklippstavlen"
 
 #: src/menus/EditMenus.cpp
-msgid "Split Cut"
-msgstr "Kløyv og klipp ut"
+msgid "Cut and leave gap"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -14938,13 +15173,13 @@ msgstr "F&jern spesiell"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
-msgid "Spl&it Cut"
-msgstr "Kløyv og klipp u&t"
+msgid "&Cut and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
-msgid "Split D&elete"
-msgstr "Kløy&v og slett"
+msgid "&Delete and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15078,10 +15313,10 @@ msgstr "&Kommentarer..."
 msgid "&Raw Data..."
 msgstr "&Rådata..."
 
-#. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
-msgid "E&xit"
-msgstr "A&vslutt"
+#, fuzzy
+msgid "&Close Project"
+msgstr "Lagre &prosjekt"
 
 # Visstnok brukt to ganger, men som substantiv begge gangene?
 #: src/menus/FileMenus.cpp
@@ -15203,16 +15438,15 @@ msgstr "Slettet markerte lydområder"
 msgid "Delete Labeled Audio"
 msgstr "Slett merkede regioner"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
-#. regions
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Kløyvet og klippet ut merkede lydområder til utklippstavlen"
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard and leave gap"
+msgstr "Klippet ut merkede lydområder til utklippstavlen"
 
-#. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Kløyv og klipp ut kommentarer"
+#, fuzzy
+msgid "Cut labeled audio and leave gap"
+msgstr "Klippet ut merkede lydområder til utklippstavlen"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15323,29 +15557,31 @@ msgid "&Cut"
 msgstr "&Klipp ut"
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Cut"
-msgstr "Merk utklipping"
+msgid "Cut by label"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Delete"
-msgstr "Merk sletting"
+#, fuzzy
+msgid "Delete by label"
+msgstr "&Slett merke"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
-msgid "&Split Cut"
-msgstr "Kløyv og klipp u&t"
+msgid "C&ut and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Cut"
-msgstr "Merk oppdelingsutklipping"
+msgid "Cut by labels and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Sp&lit Delete"
-msgstr "Kløy&v og slett"
+msgid "De&lete and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Delete"
-msgstr "Merk oppdelingssletting"
+#, fuzzy
+msgid "Delete by labels and leave gap"
+msgstr "Slettet markerte lydområder"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -15957,6 +16193,12 @@ msgstr "Synkroniserer MIDI- og lyd-spor"
 msgid "Adjusted gain"
 msgstr "Justerte sporvolum"
 
+#  i18n-hint: Title of the Gain slider, used to adjust the volume
+#  i18n-hint: Title of the Gain slider, used to adjust the volume
+#: src/menus/TrackMenus.cpp
+msgid "Gain"
+msgstr "Sporvolum"
+
 #: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
 msgstr "Justerte panorering"
@@ -16454,7 +16696,8 @@ msgid "Skip to Selection End"
 msgstr "Hopp til slutten av markeringen"
 
 #: src/menus/ViewMenus.cpp
-msgid "Enable E&xtra Menus"
+#, fuzzy
+msgid "E&xtra Menus"
 msgstr "Skru på e&kstra menyer"
 
 #: src/menus/ViewMenus.cpp
@@ -16462,7 +16705,8 @@ msgid "&Show Clipping in Waveform"
 msgstr "&Vis klipping i bølgeform"
 
 #: src/menus/ViewMenus.cpp
-msgid "Show &RMS in Waveform"
+#, fuzzy
+msgid "Sho&w RMS in Waveform"
 msgstr "Vis &RMS i bølgeform"
 
 #: src/prefs/ApplicationPrefs.cpp
@@ -16904,38 +17148,6 @@ msgstr "Grensesnitt"
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
 msgstr "Innstillinger for grensesnitt"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (smalt område for redigering av høy amplitude)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (PCM-område for 8 bit datapunkter)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (PCM-område for 10 bit datapunkter)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (PCM-område for 12 bit datapunkter)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (PCM-område for 14 bits datapunkter)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (PCM-område for 16 bit datapunkter)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (omtrentlig grense for menneskets hørsel)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (PCM-område for 24 bits datapunkter)"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -17480,88 +17692,6 @@ msgstr "Før-ru&lling:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
 msgstr "Kryss&ton:"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Mel"
-msgstr "Mel-skala"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Bark"
-msgstr "Bark"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
-#: src/prefs/SpectrogramSettings.cpp
-msgid "ERB"
-msgstr "ERB"
-
-#. i18n-hint: Time units, that is Period = 1 / Frequency
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Period"
-msgstr "Periode"
-
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (Roseus)"
-msgstr "Farge (Roseus)"
-
-#. i18n-hint: Classic color scheme(from theme) for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "Farge (klassisk)"
-
-#. i18n-hint: Grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "Gråskala"
-
-#. i18n-hint: Inverse grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "Invertert gråskala"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Frequencies"
-msgstr "Frekvenser"
-
-#. i18n-hint: the Reassignment algorithm for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Reassignment"
-msgstr "Omfordeling"
-
-#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Pitch (EAC)"
-msgstr "Tonehøyde (EAC)"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Maximum frequency must be 100 Hz or above"
-msgstr "Maksfrekvensen må være 100 Hz eller høyere"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be at least 0 Hz"
-msgstr "Minimumsfrekvensen må være minst 0 Hz"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be less than maximum frequency"
-msgstr "Minimumsfrekvensen må være mindre enn maksimumsfrekvensen"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The range must be at least 1 dB"
-msgstr "Rekkevidden må være minst 1 dB"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain cannot be negative"
-msgstr "Frekvensvolumet kan ikke være negativt"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain must be no more than 60 dB/dec"
-msgstr "Frekvensvolumet må være mer enn 60 dB/des"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrogram Settings"
@@ -18864,11 +18994,6 @@ msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s, %d av %d klipp"
 msgstr[1] "%s, %d av %d klipp"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "&Multi-view"
-msgstr "&Multivisning"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -21479,6 +21604,107 @@ msgstr "Spektralverktøy"
 msgid "Legacy"
 msgstr "Juridisk"
 
+#~ msgid "Insane"
+#~ msgstr "Sinnssyk"
+
+#~ msgid "Moved gain slider"
+#~ msgstr "Flyttet glidebryter for sporvolum"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+#~ msgstr "Se [[%s|lanseringsvideoen]] eller les [[https://support.audacityteam.org/additional-resources/changelog|endringsloggen]] for å lære mer!</p>"
+
+#  i18n-hint: Title of the Gain slider, used to adjust the volume
+#  i18n-hint: Title of the Gain slider, used to adjust the volume
+#~ msgid "Gain:"
+#~ msgstr "Volumbryter:"
+
+# "Anvende" or "Legge til"? (not all marked fuzzy)
+#, c-format
+#~ msgid "Applied command: %s"
+#~ msgstr "Benyttet kommando: %s"
+
+#, c-format
+#~ msgid ""
+#~ "Attempting to initialize the following effect failed:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "More information may be available in 'Help > Diagnostics > Show Log'"
+#~ msgstr ""
+#~ "Forsøket på å starte opp den følgende effekten feilet:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "Mer informasjon kan være tilgjengelig i ‘Hjelp > Diagnostikk > Vis logg’"
+
+#~ msgid "Effect failed to initialize"
+#~ msgstr "Effekten klarte ikke å starte opp"
+
+#~ msgid "Effect Unavailable"
+#~ msgstr "Effekten er utilgjengelig"
+
+#~ msgid "Error Loading EQ Curves"
+#~ msgstr "Feil ved innlasting av Equaliser-kurver"
+
+#~ msgid ""
+#~ "To use this filter curve in a macro, please choose a new name for it.\n"
+#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+#~ msgstr ""
+#~ "Gi denne EQ-kurven et nytt navn før du bruker den i en makro.\n"
+#~ "Velg 'Lagre/behandle kurver...'-knappen og gi et nytt navn til kurven ‘uten navn’. Så bruker du den."
+
+#~ msgid "Filter Curve EQ needs a different name"
+#~ msgstr "Filterlkurve-EQ-en trenger et annet navn"
+
+#~ msgid "Curve not found"
+#~ msgstr "Ingen kurver ble funnet"
+
+#~ msgid "Nyquist Error"
+#~ msgstr "Nyquist-feil"
+
+#~ msgid "Error in Nyquist code"
+#~ msgstr "Feil i Nyquist-koden"
+
+#~ msgid "Split-cut to the clipboard"
+#~ msgstr "Kløyv og klipp ut til utklippstavlen"
+
+#~ msgid "Split Cut"
+#~ msgstr "Kløyv og klipp ut"
+
+#~ msgid "Spl&it Cut"
+#~ msgstr "Kløyv og klipp u&t"
+
+#~ msgid "Split D&elete"
+#~ msgstr "Kløy&v og slett"
+
+#~ msgid "E&xit"
+#~ msgstr "A&vslutt"
+
+#~ msgid "Split Cut labeled audio regions to clipboard"
+#~ msgstr "Kløyvet og klippet ut merkede lydområder til utklippstavlen"
+
+#~ msgid "Split Cut Labeled Audio"
+#~ msgstr "Kløyv og klipp ut kommentarer"
+
+#~ msgid "Label Cut"
+#~ msgstr "Merk utklipping"
+
+#~ msgid "Label Delete"
+#~ msgstr "Merk sletting"
+
+#~ msgid "&Split Cut"
+#~ msgstr "Kløyv og klipp u&t"
+
+#~ msgid "Label Split Cut"
+#~ msgstr "Merk oppdelingsutklipping"
+
+#~ msgid "Sp&lit Delete"
+#~ msgstr "Kløy&v og slett"
+
+#~ msgid "Label Split Delete"
+#~ msgstr "Merk oppdelingssletting"
+
 #~ msgctxt "clip name template"
 #~ msgid "%s %i"
 #~ msgstr "%s %i"
@@ -21899,9 +22125,6 @@ msgstr "Juridisk"
 
 #~ msgid "&Screenshot..."
 #~ msgstr "&Skjermklipp ..."
-
-#~ msgid "Anonymous"
-#~ msgstr "Anonymt"
 
 #~ msgid "Screenshot"
 #~ msgstr "Skjermklipp"

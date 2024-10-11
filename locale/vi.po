@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-08-30 16:51+0300\n"
+"POT-Creation-Date: 2024-10-11 15:07+0200\n"
 "PO-Revision-Date: 2024-08-30 16:41+0200\n"
 "Last-Translator: brad freedom <brad.freedom@gmail.com>, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/klyok/teams/690/vi/)\n"
@@ -27,6 +27,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.4.4\n"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+"Plugin - tính năng bổ sung này không thể nạp được.\n"
+"Nó có thể đã bị xóa."
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid "Plugin Error"
+msgstr "Lỗi Plugin Tính năng bổ sung"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#, c-format
+msgid "Applied effect: %s"
+msgstr "Đã áp dụng hiệu ứng: %s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Lặp lại %s"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -106,7 +134,14 @@ msgstr "Độ trễ phát tiếng cao: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-msgid "Supported Rates:\n"
+#, fuzzy
+msgid "Supported Playback Rates:\n"
+msgstr "Tỷ lệ được chấp nhận: \n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Capture Rates:\n"
 msgstr "Tỷ lệ được chấp nhận: \n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -128,6 +163,10 @@ msgstr "Thiết bị phát âm thanh được chọn: %d - %s\n"
 #, c-format
 msgid "No playback device found for '%s'.\n"
 msgstr "Không tìm thấy thiết bị phát âm thanh cho '%s'.\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Supported Rates:\n"
+msgstr "Tỷ lệ được chấp nhận: \n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
@@ -200,16 +239,15 @@ msgstr ""
 "Lỗi khi mở thiết bị ghi âm.\n"
 "Mã lỗi:  %s"
 
-#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
-#: libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-audio-io/AudioIO.cpp
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/ProjectAudioManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/EffectPreview.cpp
+#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -262,8 +300,9 @@ msgstr "Không thể lưu thiết lập sẵn vào tập tin cài đặt"
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
-#: libraries/lib-lv2/LV2EffectBase.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-lv2/LV2EffectBase.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
+#: src/effects/EffectUI.cpp
 msgid "n/a"
 msgstr "N/a"
 
@@ -295,9 +334,10 @@ msgstr "Hiệu ứng đơn âm"
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp
 #: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#: src/effects/vamp/LoadVamp.cpp
 msgid "The Audacity Team"
 msgstr "Nhóm hỗ trợ Audacity"
 
@@ -355,6 +395,967 @@ msgstr "Dữ liệu XML trống sau khi chuyển đổi"
 msgid "Message"
 msgstr "Tin nhắn"
 
+#: libraries/lib-builtin-effects/AmplifyBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Amplify"
+msgstr "Amplify - Khuếch đại"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Auto Duck"
+msgstr "Auto Duck - Tự động giảm âm lượng cho đoạn âm"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "Giảm (nhỏ) âm lượng của (các) track mỗi khi âm lượng đạt đến một mức độ nhất định"
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks'
+#. (reduces the volume) of the audio automatically when there is
+#. sound on another track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "Bạn đã chọn một track toàn khoảng lặng. Hiệu ứng Tự động điều biên chỉ có thể xử lý các track có thông tin."
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+#. the volume) of the audio automatically when there is sound on another
+#. track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Auto Duck yêu cầu có một track điều khiển nằm dưới (các) track được chọn."
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Rendering Control-Track Time-Stretched Audio"
+msgstr "Kết xuất Audio đã bị kéo giản và  theo dõi điều khiển"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Bass and Treble"
+msgstr "Bass and Treble - Âm trầm và Âm bổng"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+msgid "Simple tone control effect"
+msgstr "Hiệu ứng điều chỉnh giai điệu đơn giản"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Pitch"
+msgstr "Change Pitch - Thay đổi độ cao của âm"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "Changes the pitch of a track without changing its tempo"
+msgstr "Thay đổi độ cao của track mà không ảnh hưởng đến nhịp điệu"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "High Quality Pitch Change"
+msgstr "Thay đổi độ cao của âm HQ Chất Lượng Cao"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Speed and Pitch"
+msgstr "Thay đổi Tốc độ và Cao độ"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+msgid "Changes the speed of a track, also changing its pitch"
+msgstr "Thay đổi tốc độ của track, cũng đồng nghĩa với thay đổi độ cao của nó"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Tempo"
+msgstr "Change Tempo - Thay đổi nhịp điệu"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "Changes the tempo of a selection without changing its pitch"
+msgstr "Thay đổi nhịp độ của vùng chọn mà không ảnh hưởng đến độ cao"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "High Quality Tempo Change"
+msgstr "Thay đổi nhịp điệu  HQ Chất Lượng Cao"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Click Removal"
+msgstr "Click Removal - Xóa tiếng rè"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Click Removal is designed to remove clicks on audio tracks"
+msgstr "nút \"click xóa\" được dùng để xóa các tiếng lách cách trên track audio"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Algorithm not effective on this audio. Nothing changed."
+msgstr "Thuật toán vô hiệu đối với Audio này. Thay đổi không hiệu lực."
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#, c-format
+msgid "Selection must be larger than %d samples."
+msgstr "Vùng chọn phải lớn hơn %dmẫu."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "You can only measure one track at a time."
+msgstr "Bạn chỉ có thể đo lần lượt từng track tại từng thời điểm."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "Please select an audio track."
+msgstr "Hãy chọn một track audio."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Invalid audio selection.\n"
+"Please ensure that audio is selected."
+msgstr ""
+"Vùng chọn audio không hợp lệ.\n"
+"Hãy kiểm tra lại các audio đã chọn"
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+"Lệnh đo không hiệu lực.\n"
+"Hãy chọn một vùng của track trước khi đo."
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Clipping"
+msgstr "Điểm ghim cứng"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Clipping"
+msgstr "Điểm ghim mềm"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Overdrive"
+msgstr "Tăng tốc nhẹ"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Medium Overdrive"
+msgstr "Tăng tốc vừa"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Overdrive"
+msgstr "Tăng tốc mạnh"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Cubic Curve (odd harmonics)"
+msgstr "Vòng cung lập phương (đơn âm)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Even Harmonics"
+msgstr "Âm ngang"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Expand and Compress"
+msgstr "Giải và nén"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller"
+msgstr "Cân bằng âm lượng"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Rectifier Distortion"
+msgstr "Biến thể bộ chỉnh lưu"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Limiter 1413"
+msgstr "Bộ hạn chế cứng 1413"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Hard clip -12dB, 80% make-up gain"
+msgstr "Ghim chặc -12dB, 80% độ phủ màu"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Soft clip -12dB, 80% make-up gain"
+msgstr "Ghim lỏng -12dB, 80% độ phủ màu"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Fuzz Box"
+msgstr "Hộp tách âm"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Walkie-talkie"
+msgstr "Walkie-talkie - Máy bộ đàm "
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Blues drive sustain"
+msgstr "Vọng âm truyền động "
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Light Crunch Overdrive"
+msgstr "Bộ tăng tiếng rít nhẹ"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Heavy Overdrive"
+msgstr "Tăng tốc cực mạnh"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "3rd Harmonic (Perfect Fifth)"
+msgstr "Họa âm thứ 3 (chuẩn thứ 5)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Valve Overdrive"
+msgstr "Tăng tốc cần bấm"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "2nd Harmonic (Octave)"
+msgstr "Họa ba thứ 2 (quãng tám)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Gated Expansion Distortion"
+msgstr "Cổng biến âm mở rộng"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Light, -70dB noise floor"
+msgstr "Leveller, Light - Nhẹ, -70dB Noise Floor - Nhiễu nhỏ nhất"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Moderate, -70dB noise floor"
+msgstr "Leveller, Moderate - Vừa phải, -70dB Noise floor - Nhiễu nhỏ nhất"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavy, -70dB noise floor"
+msgstr "Leveller, Heavy - Nặng, -70dB Noise floor - Nhiễu nhỏ nhất"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavier, -70dB noise floor"
+msgstr "Leveller, Heavier - Nặng Hơn, -70dB Noise floor - Nhiễu nhỏ nhất"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heaviest, -70dB noise floor"
+msgstr "Leveller, Heaviest - Nặng Nhất, -70dB Noise floor - Nhiễu nhỏ nhất"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Half-wave Rectifier"
+msgstr "Bộ chỉnh lưu nửa sóng"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier"
+msgstr "Bộ chỉnh lưu toàn sóng"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier (DC blocked)"
+msgstr "Full-wave Rectifier - Bộ chỉnh lưu toàn sóng (DC bị chặn)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Percussion Limiter"
+msgstr "Bộ hạn chế âm gõ"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Distortion"
+msgstr "Distortion - Biến thể"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Waveshaping distortion effect"
+msgstr "Hiệu ứng định dạng sóng biến đổi"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "DTMF Tones"
+msgstr "DTMF Tones - Âm phím điện thoại"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "Phát âm thanh kép đa tân số (DTMF). những âm thanh này được hổ trợ bằng các phím trên điện thoại"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid ""
+"DTMF sequence empty.\n"
+"Check ALL settings for this effect."
+msgstr ""
+"Chuỗi DTMF trống.\n"
+"Kiểm tra tất cả cài đặt cho hiệu ứng này."
+
+#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
+msgid "Echo"
+msgstr "Echo - Tiếng vọng"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+msgid "Repeats the selected audio again and again"
+msgstr "Lập lại nhiều lần audio được chọn. "
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Requested value exceeds memory capacity."
+msgstr "Giá trị yêu cầu vượt quá dung lượng bộ nhớ."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Equalization"
+msgstr "Cân bằng tần số"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Adjusts the volume levels of particular frequencies"
+msgstr "Điều chỉnh mức âm lượng của các tần số cụ thể"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "100Hz Rumble"
+msgstr "100Hz Rumble"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "AM Radio"
+msgstr "AM Radio"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Boost"
+msgstr "Khuếch đại Bass - âm Trầm"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Cut"
+msgstr "Bass Cut"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Low rolloff for speech"
+msgstr "Hiệu suất thấp cho âm thanh"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "RIAA"
+msgstr "RIAA"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Telephone"
+msgstr "Telephone"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Boost"
+msgstr "Treble Boost"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Cut"
+msgstr "Treble Cut"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "Để áp dụng cân bằng. tất cả các track được chọn phải có cùng tốc độ lấy mẫu"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Track sample rate is too low for this effect."
+msgstr "Tốc độ lấy mẫu track là quá thấp cho hiệu ứng này"
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr "Không tên"
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"Lỗi khi nhập EQ Curves từ tập tin\n"
+"%s\n"
+"Thông báo lỗi:\n"
+"%s"
+
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "Error Saving Equalization Curves"
+msgstr "Lỗi khi lưu EQ Curves"
+
+#: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr "Không tìm thấy biểu đồ, thử dùng \"không tên\""
+
+#. i18n-hint: Technical term for a kind of curve.
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "B-spline"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "Cosine"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "Khối"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade In"
+msgstr "Fade In - Âm lượng tăng dần"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-in to the selected audio"
+msgstr "Áp dụng độ mờ dần vào trong tuyến tính cho âm thanh đã chọn"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade Out"
+msgstr "Fade Out - Âm lượng giảm dần"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-out to the selected audio"
+msgstr "Áp dụng độ mờ dần ra ngoài tuyến tính cho âm thanh đã chọn"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Find Clipping"
+msgstr "Find Clipping - Tìm điểm ghim"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Creates labels where clipping is detected"
+msgstr "Tạo bảng không chứa ghim"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Clipping"
+msgstr "Đang Ghim"
+
+#. i18n-hint: Two numbers are substituted; the second is the
+#. size of a set, the first is the size of a subset, and not
+#. understood as an ordinal (i.e., not meaning "first", or
+#. "second", etc.)
+#.
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#, c-format
+msgctxt "find clipping"
+msgid "%lld of %lld"
+msgstr "%lld of %lld"
+
+#: libraries/lib-builtin-effects/Generator.cpp
+msgid "There is not enough room available to generate the audio"
+msgstr "Không có đủ chỗ chứa để tạo âm thanh"
+
+#: libraries/lib-builtin-effects/Invert.cpp resources/EffectsMenuDefaults.xml
+msgid "Invert"
+msgstr "Invert - Đảo"
+
+#: libraries/lib-builtin-effects/Invert.cpp
+msgid "Flips the audio samples upside-down, reversing their polarity"
+msgstr "Lật ngược các mẫu âm thanh, đảo ngược cực tính của chúng"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy Compressor"
+msgstr "Bộ nén phiên bản cũ"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Nén dải động của audio"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Loudness Normalization"
+msgstr "Loudness Normalization - Cường độ âm thanh chuẩn hoá "
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Sets the loudness of one or more tracks"
+msgstr "Thiết lập cường độ âm thanh cho track"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Normalizing Loudness...\n"
+msgstr "Đang chuẩn hoá cường độ âm thanh...\n"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing: %s"
+msgstr "Đang phân tích: %s"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing: %s"
+msgstr " Đang Xử lý: %s"
+
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "White"
+msgstr "Màu trắng"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Pink"
+msgstr "Pink"
+
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Brownian"
+msgstr "Brownian"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Noise"
+msgstr "Nhiễu"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Generates one of three different types of noise"
+msgstr "Phát một trong ba loại âm khác nhau"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median"
+msgstr "Trung bình"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Second greatest"
+msgstr "Số giây lớn nhất"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Old"
+msgstr "Cũ"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Noise Reduction"
+msgstr "Noise reduction - Giảm Nhiễu"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Removes background noise such as fans, tape noise, or hums"
+msgstr "Xóa tạp âm như tiếng quạt, tiếng chạy băng, hoặc tiếng vo ve "
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block are too few for the window types."
+msgstr "Các bước trên mỗi khối quá ít đối với các loại cửa sổ."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block cannot exceed the window size."
+msgstr "Các bước trên mỗi khối quá nhiểu với kích thước cừa số. "
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median method is not implemented for more than four steps per window."
+msgstr "Phép tính trung bình không được thực hiện quá bốn lần trên mỗi cửa sổ."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "You must specify the same window size for steps 1 and 2."
+msgstr "Bạn phải chỉ định cùng một kích thước cửa sổ cho các bước 1 và 2. "
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Warning: window types are not the same as for profiling."
+msgstr "Cảnh báo: các kiểu cửa sổ không giống nhau để định dạng."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "All noise profile data must have the same sample rate."
+msgstr "Tất cả dữ liệu tiếng ồn phải có cùng tốc độ lấy mẫu."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "Tốc độ lấy mẫu của dữ liệu tiếng ồn phải phù hợp với tốc độ lấy mẫu của âm thanh để có thể được xử lý."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Selected noise profile is too short."
+msgstr "Dữ liệu tiếng ồn được chọn quá ngắn."
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Normalize"
+msgstr "Normalize - Chuẩn hoá"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Sets the peak amplitude of one or more tracks"
+msgstr "Thiết lập biên độ đỉnh cho track"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset and Normalizing...\n"
+msgstr "Loại bỏ độ di DC và chuẩn hóa ...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset...\n"
+msgstr "Loại bỏ độ di DC...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Normalizing without removing DC offset...\n"
+msgstr "Chuẩn hoá mà không cần loại bỏ độ di DC \n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Not doing anything...\n"
+msgstr "Không làm gì cả...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing first track of stereo pair: %s"
+msgstr "Phân tích track đầu tiền trong chuỗi stereo: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "Phân tích track thứ hai trong chuỗi stereo: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing stereo channels independently: %s"
+msgstr "Xử lý độc lập các kênh stereo: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing first track of stereo pair: %s"
+msgstr "Xử lý track đầu tiền trong chuỗi stereo: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing second track of stereo pair: %s"
+msgstr "Xử lý track thứ hai trong chuỗi stereo: %s"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Paulstretch"
+msgstr "Paulstretch - Kéo dài âm tối đa"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
+msgstr "Paulstretch chỉ dùng được cho hiệu ứng vọng thời gian hoặc \"hiệu ứng hiệu ứng đóng băng\""
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Audio selection too short to preview.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"Audio được chọn quá ngắn để xem trước.\n"
+"\n"
+"hãy chọn thêm và mở rộng audio ít nhất là %.1f giây.\n"
+"hoặc giảm thời gian phân giải còn ít nhất hơn %.1f giây."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Unable to Preview.\n"
+"\n"
+"For the current audio selection, the maximum\n"
+"'Time Resolution' is %.1f seconds."
+msgstr ""
+"Không xem trước được\n"
+"\n"
+"Audio đang được chọn là cực đại.\n"
+"\"Thời gian phân giải\" là %.1fgiây."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"The 'Time Resolution' is too long for the selection.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"Thời gian phân giải quá dài.\n"
+"\n"
+"Hãy chọn thêm và mở rộng audio ít nhất là %.1f giây.\n"
+"hoặc giảm thời gian phân giải còn ít nhất hơn %.1f giây."
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Phaser"
+msgstr "Phaser - Dịch pha"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+msgid "Combines phase-shifted signals with the original signal"
+msgstr "Kết hợp các tín hiệu lệch pha với tín hiệu gốc"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "Để vẽ phổ, tất cả các đoạn âm được chọn phải có cùng tỷ lệ tốc độ mẫu."
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid ""
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
+msgstr ""
+"Không thể phân tích âm thanh. Điều này có thể là do clip bị kéo giãn hoặc bị lệch cao độ.\n"
+"Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộn và hiển thị các bản nhạc trước khi phân tích"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, c-format
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "Quá nhiều Audio đã được lựa chọn. Chỉ %.1f giây đầu của audio sẽ được phân tích."
+
+#: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
+msgid "Repair"
+msgstr "Repair - Sửa"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "Sets the peak amplitude of a one or more tracks"
+msgstr "Thiết lập biên độ đỉnh cho track"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "The Repair effect cannot be applied within stretched or shrunk clips"
+msgstr "Không thể áp dụng hiệu ứng Sửa chữa trong các đoạn video bị kéo dài hoặc co lại."
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"\n"
+"Zoom in and select a tiny fraction of a second to repair."
+msgstr ""
+"Hiệu ứng Sửa chữa chỉ áp dụng cho một vùng âm thanh bị hỏng rất ngắn (tối đa 128 mẫu).\n"
+"\n"
+"Phóng to và chọn khung thời gian cần sửa chữa."
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"Repair works by using audio data outside the selection region.\n"
+"\n"
+"Please select a region that has audio touching at least one side of it.\n"
+"\n"
+"The more surrounding audio, the better it performs."
+msgstr ""
+"Sửa chữa dự án bằng cách sử dụng dữ liệu âm thanh bên ngoài vùng lựa chọn.\n"
+"\n"
+"Hãy chọn một vùng chứa âm thanh liên "
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Repeat"
+msgstr "Repeat - Lặp lại"
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+msgid "Repeats the selection the specified number of times"
+msgstr "Lặp lại âm thanh đã chọn với số lần chỉ định"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Acoustic"
+msgstr "Acoustic"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Ambience"
+msgstr "Ambience"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Artificial"
+msgstr "Artificial"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Clean"
+msgstr "Dọn sạch"
+
+#. i18n-hint: This is the name of an effect preset
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern"
+msgstr "Hiện đại."
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal I"
+msgstr "Vocal I"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal II"
+msgstr "Vocal II"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Dance Vocal"
+msgstr "Giọng nhạc Dance"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Modern Vocal"
+msgstr "Giọng hiện đại"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Voice Tail"
+msgstr "Âm đuôi"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Bathroom"
+msgstr "Phòng tắm"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Bright"
+msgstr "Ánh sáng trong phòng nhỏ"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Dark"
+msgstr "Bóng tối trong phòng nhỏ"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Medium Room"
+msgstr "Phòng vừa"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Large Room"
+msgstr "Phòng rộng"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Church Hall"
+msgstr "Đại sảnh nhà thờ"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Cathedral"
+msgstr "Nhà thờ lớn"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Big Cave"
+msgstr "Hang động lớn"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Reverb"
+msgstr "Reverb - Tiếng vọng"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Adds ambience or a \"hall effect\""
+msgstr "Nhập biên độ hoặc \"hiệu ứng đại sảnh\""
+
+#: libraries/lib-builtin-effects/Reverse.cpp resources/EffectsMenuDefaults.xml
+msgid "Reverse"
+msgstr "Reverse - Đảo ngược"
+
+#: libraries/lib-builtin-effects/Reverse.cpp
+msgid "Reverses the selected audio"
+msgstr "Đảo chiều audio đã chọn"
+
+#: libraries/lib-builtin-effects/SBSMSBase.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "SBSMS Time / Pitch Stretch"
+
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Butterworth"
+msgstr "Butterworth"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type I"
+msgstr "Chebyshev Type I"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type II"
+msgstr "Chebyshev Type II"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Lowpass"
+msgstr "Lọc thông thấp"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Highpass"
+msgstr "Lọc thông cao"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Classic Filters"
+msgstr "Classic Filters - Bộ lọc cổ điển"
+
+#. i18n-hint: "infinite impulse response"
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Performs IIR filtering that emulates analog filters"
+msgstr "Thực hiện lọc IIR mô phỏng các bộ lọc tương tự"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "To apply a filter, all selected tracks must have the same sample rate."
+msgstr "Để áp dụng bộ lọc. tất cả các track được chọn phải có cùng tốc độ lấy mẫu"
+
+#. i18n-hint: noun
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgctxt "generator"
+msgid "Silence"
+msgstr "Im lặng"
+
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgid "Creates audio of zero amplitude"
+msgstr "Tạo audio với biên độ 0"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Stereo To Mono"
+msgstr "Stereo sang mono"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Converts stereo tracks to mono"
+msgstr "Chuyển đổi các track stereo thành track mono"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Mixing down to mono"
+msgstr "Trộn mono"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Sliding Stretch"
+msgstr "Sliding Stretch - Khoảng trượt"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+msgid "Allows continuous changes to the tempo and/or pitch"
+msgstr "Cho phép thay đổi liên tục nhịp độ và / hoặc cao độ"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "Tuyến tính"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Logarithmic"
+msgstr "Logarith"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sine"
+msgstr "Sin"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Square"
+msgstr "Vuông"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sawtooth"
+msgstr "Răng cưa"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgid "Square, no alias"
+msgstr "Vuông, không có biệt danh"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "Tam giác"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Truncate Detected Silence"
+msgstr "Cắt rút bỏ khoảng lặng đã phát hiện"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Compress Excess Silence"
+msgstr "Nén khoảng lặng thừa"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Truncate Silence"
+msgstr "Truncate Silence - Cắt bỏ khoảng lặng"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr "Tự động giảm độ dài của các đoạn có âm lượng dưới một mức cụ thể"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "Khi cắt âm độc lập, có thể chỉ có một track được chọn trong mỗi Nhóm track đã khóa đồng bộ hóa."
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Wahwah"
+msgstr "Wahwah - Hiệu ứng ghita điện "
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr "Các thay đổi chất lượng âm điệu nhanh, tương tự những âm thanh guitar rất phổ biến trong thập niên 70"
+
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
 msgstr "Không thể tiếp tục xuất dữ liệu"
@@ -400,13 +1401,6 @@ msgstr "Dữ liệu bố cục dự án đã bị xóa trước khi quá trình 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
 msgstr "Lỗi chuyển đổi thông tin phản hồi"
-
-#. i18n-hint: This is the name of an effect preset.
-#. i18n-hint: This is the name of an effect preset
-#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#: src/effects/Reverb.cpp
-msgid "Modern"
-msgstr "Hiện đại."
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -569,10 +1563,10 @@ msgid "Play it Loud"
 msgstr "Play it Loud"
 
 #: libraries/lib-effects/Effect.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: plug-ins/beat.ny
+#: src/commands/AudacityCommand.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -1064,6 +2058,43 @@ msgstr ""
 msgid "Import Project"
 msgstr "Nhập Dự Án"
 
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "SubRip text file"
+msgstr "Tập tin phụ đề"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "WebVTT file"
+msgstr "Tập tin WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "&Chuẩn"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "Mở & rộng (với dải tần số)"
+
+#: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
+msgid "Labels"
+msgstr "Các nhãn"
+
+#. i18n-hint: (noun) it's the name of a kind of track.
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Label track.
+#: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
+#: src/LabelDialog.h src/TrackPanelAx.cpp
+msgid "Label Track"
+msgstr "Nhãn của track"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr "Chức năng thêm tập tin WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "One or more saved labels could not be read."
+msgstr "Không xác thực được một hoặc nhiều nhãn đã lưu."
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -1110,7 +2141,7 @@ msgstr "Hiệu ứng LV2 Effects"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "Cung cấp hỗ trợ hiệu ứng LV2 cho Audacity"
 
-#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectPresetDialog.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -1128,6 +2159,116 @@ msgstr "Tam giác"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "Có hình dạng"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C"
+msgstr "C"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯"
+msgstr "C♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D"
+msgstr "D"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯"
+msgstr "D♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E"
+msgstr "E"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F"
+msgstr "F"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯"
+msgstr "F♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G"
+msgstr "G"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯"
+msgstr "G♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A"
+msgstr "A"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯"
+msgstr "A♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B"
+msgstr "B"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♭"
+msgstr "D♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E♭"
+msgstr "E♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♭"
+msgstr "G♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♭"
+msgstr "A♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B♭"
+msgstr "B♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯/D♭"
+msgstr "C♯/D♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯/E♭"
+msgstr "D♯/E♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯/G♭"
+msgstr "F♯/G♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯/A♭"
+msgstr "G♯/A♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯/B♭"
+msgstr "A♯/B♭"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -1168,14 +2309,6 @@ msgstr "Đuôi tập tin không xác định"
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "Lệnh"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Lặp lại %s"
 
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
@@ -1812,6 +2945,149 @@ msgstr "10>01000 decades|0.434294482"
 msgid "thousandths of decades"
 msgstr "phần nghìn của thập kỷ"
 
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Nyquist Effects"
+msgstr "Hiệu ứng Nyquist"
+
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Provides Nyquist Effects support to Audacity"
+msgstr "Cung cấp hỗ trợ hiệu ứng Nyquist cho Audacity"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Applying Nyquist Effect..."
+msgstr "Đang áp dụng hiệu ứng Nyquist..."
+
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. * Prompt"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist Worker"
+msgstr "Nyquist Worker"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "Ill-hình thành tiêu đề trình cắm thêm Nyquist"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+"Bật chế độ xem biểu đồ âm phổ trước khi\n"
+"áp dụng hiệu ứng 'Âm phổ'."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid ""
+"To use 'Spectral effects', enable 'Spectral Selection'\n"
+"in the track Spectrogram settings and select the\n"
+"frequency range for the effect to act on."
+msgstr ""
+"Để dùng \"hiệu ứng quang phổ\", bật \"Lựa chọn quang phổ\"\n"
+"trong cài đặt ảnh phổ và chọn\n"
+" vùng tần số cho hiệu ứng."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
+msgstr "lỗi: tập tin \"%s\" lẽ ra phải có trong tiêu đề nhưng không thể tìm thấy trong đường dẫn plug-in.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Audio selection required."
+msgstr "Vùng chọn audio yêu cầu"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Processing complete."
+msgstr "Đã xử lý xong."
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr "Hiệu ứng ';công cụ phân loại' không thể trở lại audio từ Nyquist.\n"
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr "Hiệu ứng ';công cụ phân loại' không thể rút nhãn về từ Nyquist.\n"
+
+#. i18n-hint: "%s" is replaced by name of plug-in.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "nyx_error returned from %s.\n"
+msgstr "Nyx_error từ %s.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "plug-in"
+msgstr "Plug-in \"điện toán\""
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned a list."
+msgstr "Nyquist đã trả lại một danh sách."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist trả về giá trị: %f"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nyquist trả về giá trị: %d"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned too many audio channels.\n"
+msgstr "Nyquist trả về quá nhiều kênh âm thanh.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned one audio channel as an array.\n"
+msgstr "Nyquist trả về một kênh âm thanh dưới dạng chuỗi.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned an empty array.\n"
+msgstr "Nyquist trả về một danh sách trống.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned nil audio.\n"
+msgstr "Không có audio nào được trả về từ Nyquist.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[Cảnh báo: Nyquist trả về chuỗi UTF-8 không hợp lệ, được chuyển đổi thành Latin-1 ở đây]"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "Phiên bản Audacity này không hỗ trợ phiên bản plug-in Nyquist %ld"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not open file"
+msgstr "Không mở được tập tin"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Your code looks like SAL syntax, but there is no 'return' statement.\n"
+"For SAL, use a return statement such as:\n"
+"\treturn *track* * 0.1\n"
+"or for LISP, begin with an open parenthesis such as:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+msgstr ""
+"Đoạn mã cuả bạn có vẻ giống SAL syntax, nhưng không có lệnh \"return\".\n"
+"để chạy SAL, bạn cần dùng lệnh \"return\" ví dụ:\n"
+"\treturn *track* * 0.1\n"
+"hoặc để chạy LISP, hãy bắt đầu với dấu ngoặc, ví dụ:\n"
+"\t(mult *track* 0.1)"
+
+#. i18n-hint: refers to programming "languages"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not determine language"
+msgstr "Không xác định được ngôn ngữ"
+
+#. i18n-hint: default exported file name when exporting from unsaved project
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/TimerRecordDialog.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "untitled"
+msgstr "Chưa có tiêu đề"
+
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Audio Track"
 msgstr "Track Âm thanh"
@@ -2279,7 +3555,7 @@ msgid "Writable Sample Track"
 msgstr "Đoạn âm lấy mẫu có thể ghi được"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/effects/Contrast.cpp
 msgid "&Close"
 msgstr "&Đóng"
 
@@ -2878,6 +4154,138 @@ msgstr "Không thể áp dụng tập tin VST3 được thiết lập sẵn%s"
 msgid "Failed to save VST3 preset to file"
 msgstr "Lưu cài đặt VST3 thành tệp thất bại"
 
+#. i18n-hint: The name of a frequency scale in psychoacoustics
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Mel"
+msgstr "Mel"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Bark"
+msgstr "Bark"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "ERB"
+msgstr "ERB"
+
+#. i18n-hint: Time units, that is Period = 1 / Frequency
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Period"
+msgstr "Chu kỳ"
+
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (Roseus)"
+msgstr "Màu (Hồng)"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr "Màu (cổ điển)"
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr "Thang đo độ xám"
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr "Thang đo độ xám ngược chiều"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Frequencies"
+msgstr "Tần số (Hz)"
+
+#. i18n-hint: the Reassignment algorithm for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Reassignment"
+msgstr "Gán lại giá trí"
+
+#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Pitch (EAC)"
+msgstr "Độ cao của âm (EAC)"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr "Tần số lớn nhất phải lớn hơn 100 Hz"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be at least 0 Hz"
+msgstr "Tần số nhỏ nhất phải lớn hơn 0 Hz"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be less than maximum frequency"
+msgstr "Số tần số nhỏ nhất phải nhỏ hơn số tần số lớn nhất"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The range must be at least 1 dB"
+msgstr "Biên độ thấp nhất là 1 dB"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain cannot be negative"
+msgstr "Khuếch đại tần số không được dùng số âm"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain must be no more than 60 dB/dec"
+msgstr "Khuếch đại tần số không được quá 60 dB/dec"
+
+#. i18n-hint: abbreviates amplitude
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Linear (amp)"
+msgstr "Tuyến tính (khuếch đại)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Logarithmic (dB)"
+msgstr "Lôgarit (dB)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Linear (dB)"
+msgstr "Tuyến tính (dB)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-36 dB (shallow range for high-amplitude editing)"
+msgstr "-36 dB (bị giới hạn khi chỉnh sửa âm có biên độ lớn)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-48 dB (PCM range of 8 bit samples)"
+msgstr "-48 dB (PCM dùng 8 bit lấy mẫu)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-60 dB (PCM range of 10 bit samples)"
+msgstr "-60 dB (PCM dùng 10 bit lấy mẫu)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-72 dB (PCM range of 12 bit samples)"
+msgstr "-72 dB (PCM dùng 12 bit lấy mẫu)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-84 dB (PCM range of 14 bit samples)"
+msgstr "-84 dB (PCM dùng 14 bit lấy mẫu)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-96 dB (PCM range of 16 bit samples)"
+msgstr "-96 dB (PCM dùng 16 bit lấy mẫu)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-120 dB (approximate limit of human hearing)"
+msgstr "-120 dB (xấp xỉ giới hạn nghe của con người)"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-145 dB (PCM range of 24 bit samples)"
+msgstr "-145 dB (PCM dùng 24 bit lấy mẫu)"
+
 #: libraries/lib-wave-track/Sequence.cpp
 #, c-format
 msgid ""
@@ -2898,6 +4306,11 @@ msgstr "Trước xử lý"
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Rendering Clip"
 msgstr "Đang xuất Clip"
+
+#: libraries/lib-wave-track/WaveChannelViewConstants.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "&Multi-view"
+msgstr "&Hiển thị nhiều tệp cùng lúc"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -3146,6 +4559,7 @@ msgstr "Dừng"
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
@@ -4616,9 +6030,9 @@ msgstr "65-105 kbps"
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (Tệp nhỏ hơn)"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane, 320 kbps"
+#, fuzzy
+msgid "Excessive, 320 kbps"
 msgstr "Tối đa, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4633,10 +6047,9 @@ msgstr "Mặc định, 170-210 kbps"
 msgid "Medium, 145-185 kbps"
 msgstr "Trung bình, 145-185 kbps"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane"
-msgstr "Trên cả tuyệt"
+msgid "Excessive"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -5861,12 +7274,21 @@ msgid "Account not linked"
 msgstr "Tài khoản không được kết nối"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
 msgstr "&Liên kết Tài khoản"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Unlink Account"
 msgstr "&Hủy liên kết Tài khoản"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "&Sign Out"
+msgstr "Tuyến tính hướng ra phía ngoài"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -5950,10 +7372,6 @@ msgid "Project Name"
 msgstr "Tên dự án"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr "Việc lưu vào đám mây yêu cầu phải có tài khoản audio.com miễn phí được liên kết với Audacity. Nhấn vào \"Liên kết tài khoản\" ở trên để tiếp tục."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
 msgstr "Riêng tư"
 
@@ -6035,6 +7453,77 @@ msgstr "Tiếp&tục"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
 msgstr "L&iên kết tài khoản audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create cloud account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to cloud"
+msgstr "Sắp xếp đến cuối vùng chọn"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Oops! It looks like there was an issue with your input.\n"
+"Please ensure your email is correct and that your password is at least 8 characters long"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Sorry, but it seems the email or password you entered is incorrect.\n"
+"Please double-check your credentials and try again!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Create an account to save to the cloud"
+msgstr "Dự án này không còn được lưu trên đám mấy"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to save to the cloud"
+msgstr "Dự án này không còn được lưu trên đám mấy"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Google"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Facebook"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Email"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Password"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Forgot your password?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Already have an account? "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in here"
+msgstr "Đăng nhập"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Need an account? "
+msgstr "Liên kết tài khoản"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "Tiếp tục"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -6290,11 +7779,6 @@ msgstr "Đang đồng bộ dự án của bạn"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
 msgstr "Dự án sẽ đồng bộ hóa ở chế độ trong nền trong lúc bạn làm việc. Bạn có thể kiểm tra trạng thái đồng bộ hóa ở góc dưới bên phải của Audacity bất cứ lúc nào"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "Tiếp tục"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
@@ -7197,7 +8681,9 @@ msgstr ""
 "\n"
 "Nếu bạn chọn \"Thoát Audacity\", dự án của bạn có thể bị giữ ở trạng thái chưa được lưu và sẽ được khôi phục vào lần tiếp theo bạn mở nó."
 
+#. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Quit Audacity"
 msgstr "&Thoát Audacity"
 
@@ -8031,6 +9517,29 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "Tắt phát hiện khoảng hụt tiếng 'dropout'"
 
+#: src/EffectAndCommandPluginManager.cpp
+#, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in 'Help > Diagnostics > Show Log'"
+msgstr ""
+"Chạy thử lệnh không thành công:\n"
+"\n"
+"%s\n"
+"\n"
+"Vào \"trợ giúp>chẩn đoán>hiển thị bản ghi\" để có thêm thông tin chi tiết"
+
+#: src/EffectAndCommandPluginManager.cpp
+msgid "Command failed to initialize"
+msgstr "Không thể chạy lệnh"
+
+#: src/ExportLabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "Kiểu nhãn đã xuất:"
+
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
 msgstr "Bộ phân tích tần số"
@@ -8127,23 +9636,6 @@ msgstr "&Trục tọa độ:"
 #: src/FreqWindow.cpp
 msgid "&Replot..."
 msgstr "&Tái tạo tọa độ..."
-
-#: src/FreqWindow.cpp
-msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "Để vẽ phổ, tất cả các đoạn âm được chọn phải có cùng tỷ lệ tốc độ mẫu."
-
-#: src/FreqWindow.cpp
-msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
-msgstr ""
-"Không thể phân tích âm thanh. Điều này có thể là do clip bị kéo giãn hoặc bị lệch cao độ.\n"
-"Hãy thử đặt lại bất kỳ đoạn clip bị kéo dài nào hoặc trộn và hiển thị các bản nhạc trước khi phân tích"
-
-#: src/FreqWindow.cpp
-#, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "Quá nhiều Audio đã được lựa chọn. Chỉ %.1f giây đầu của audio sẽ được phân tích."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -8361,47 +9853,6 @@ msgstr "Nhãn mới cho track"
 msgid "Enter track name"
 msgstr "Nhập tên track"
 
-#. i18n-hint: (noun) it's the name of a kind of track.
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Label track.
-#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
-#: src/TrackPanelAx.cpp
-msgid "Label Track"
-msgstr "Nhãn của track"
-
-#: src/LabelTrack.cpp
-msgid "SubRip text file"
-msgstr "Tập tin phụ đề"
-
-#: src/LabelTrack.cpp
-msgid "WebVTT file"
-msgstr "Tập tin WebVTT"
-
-#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
-msgid "Labels"
-msgstr "Các nhãn"
-
-#: src/LabelTrack.cpp
-msgid "S&tandard"
-msgstr "&Chuẩn"
-
-#: src/LabelTrack.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "Mở & rộng (với dải tần số)"
-
-#: src/LabelTrack.cpp
-msgid "Exported Label Style:"
-msgstr "Kiểu nhãn đã xuất:"
-
-#: src/LabelTrack.cpp
-msgid "Importing WebVTT files is not currently supported."
-msgstr "Chức năng thêm tập tin WebVTT"
-
-#: src/LabelTrack.cpp
-msgid "One or more saved labels could not be read."
-msgstr "Không xác thực được một hoặc nhiều nhãn đã lưu."
-
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
 #: src/LangChoice.cpp
@@ -8449,13 +9900,14 @@ msgstr "Phím tắt đã bị xóa"
 msgid "Audacity Mixer%s"
 msgstr "Bộ trộn và xử lý âm thanh Audacity%s"
 
-#. i18n-hint: title of the Gain slider, used to adjust the volume
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#. i18n-hint: title of the Volume slider, used to adjust the volume
+#. i18n-hint: Title of the Volume slider, used to adjust the volume
+#: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Gain"
-msgstr "Độ khuếch đại"
+#, fuzzy
+msgid "Volume"
+msgstr "Âm lượng"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -8496,8 +9948,9 @@ msgstr "Thước đo mức tín hiệu"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Moved gain slider"
-msgstr "Đã di chuyển thanh trượt khuếch đại"
+#, fuzzy
+msgid "Moved volume slider"
+msgstr "Đã di chuyển thanh trượt vận tốc "
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -8512,116 +9965,6 @@ msgstr "Đã di chuyển thanh trượt cân bằng trái/phải"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "&Trộn Âm"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C"
-msgstr "C"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯"
-msgstr "C♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D"
-msgstr "D"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯"
-msgstr "D♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E"
-msgstr "E"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F"
-msgstr "F"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯"
-msgstr "F♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G"
-msgstr "G"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯"
-msgstr "G♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A"
-msgstr "A"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯"
-msgstr "A♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B"
-msgstr "B"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♭"
-msgstr "D♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E♭"
-msgstr "E♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♭"
-msgstr "G♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♭"
-msgstr "A♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B♭"
-msgstr "B♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯/D♭"
-msgstr "C♯/D♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯/E♭"
-msgstr "D♯/E♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯/G♭"
-msgstr "F♯/G♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯/A♭"
-msgstr "G♯/A♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯/B♭"
-msgstr "A♯/B♭"
 
 #: src/PluginDataModel.cpp
 #, c-format
@@ -9381,18 +10724,6 @@ msgstr "Chuyển %s xuống trong %s"
 msgid "Change effect order"
 msgstr "Thay đổi thứ tự hiệu ứng"
 
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid ""
-"This plugin could not be loaded.\n"
-"It may have been deleted."
-msgstr ""
-"Plugin - tính năng bổ sung này không thể nạp được.\n"
-"Nó có thể đã bị xóa."
-
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid "Plugin Error"
-msgstr "Lỗi Plugin Tính năng bổ sung"
-
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
@@ -9623,12 +10954,6 @@ msgstr "Độ dài"
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "Bộ thu âm định thời của Audacity"
-
-#. i18n-hint: default exported file name when exporting from unsaved project
-#: src/TimerRecordDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "untitled"
-msgstr "Chưa có tiêu đề"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -10152,8 +11477,8 @@ msgstr "Các tính năng mới trong Audacity %s"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr "Xem [[%s||release video]] hoặc đọc [[https://support.audacityteam.org/additional-resources/changelog|changelog]] để biết thêm thông tin!</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -10163,6 +11488,57 @@ msgstr "Nhận plugin & âm thanh miễn phí"
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
 msgstr "<p>Ghé thăm [[%s|Muse Hub app]] của chúng tôi "
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal processing effect that enhances vocal clarity and depth."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#. i18n-hint: MuseHub is a name of a product, see musehub.com.
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Available on [[%s|MuseHub]]."
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -10182,7 +11558,7 @@ msgstr "Không hiện hộp thoại này nữa"
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
-#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -10346,7 +11722,7 @@ msgstr "LISP"
 msgid "Brief"
 msgstr "Bản tóm tắt"
 
-#: src/commands/GetInfoCommand.cpp src/effects/EffectManager.cpp
+#: src/commands/GetInfoCommand.cpp src/effects/EffectPresetDialog.cpp
 msgid "Type:"
 msgstr "Loại:"
 
@@ -10791,8 +12167,9 @@ msgid "Set Track Audio"
 msgstr "Đặt Audio track"
 
 #: src/commands/SetTrackInfoCommand.cpp
-msgid "Gain:"
-msgstr "Gain - Độ khuếch đại:"
+#, fuzzy
+msgid "Volume:"
+msgstr "Âm lượng"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -10801,24 +12178,6 @@ msgstr "Cân bằng:"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Visuals"
 msgstr "Đặt góc nhìn cho track "
-
-#. i18n-hint: abbreviates amplitude
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Linear (amp)"
-msgstr "Tuyến tính (khuếch đại)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Logarithmic (dB)"
-msgstr "Lôgarit (dB)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Linear (dB)"
-msgstr "Tuyến tính (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -10894,10 +12253,6 @@ msgstr "Đặt các giá trị cho track"
 msgid "Long Message"
 msgstr "Tin nhắn dài"
 
-#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
-msgid "Amplify"
-msgstr "Amplify - Khuếch đại"
-
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "Tăng hoặc giảm âm lượng của audio bạn đã chọn"
@@ -10917,32 +12272,6 @@ msgstr "&Đỉnh khuếch đại mới (dB):"
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
 msgstr "Cho phé&p ghim đỉnh"
-
-#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
-msgid "Auto Duck"
-msgstr "Auto Duck - Tự động giảm âm lượng cho đoạn âm"
-
-#: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Giảm (nhỏ) âm lượng của (các) track mỗi khi âm lượng đạt đến một mức độ nhất định"
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks'
-#. (reduces the volume) of the audio automatically when there is
-#. sound on another track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "Bạn đã chọn một track toàn khoảng lặng. Hiệu ứng Tự động điều biên chỉ có thể xử lý các track có thông tin."
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
-#. the volume) of the audio automatically when there is sound on another
-#. track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Auto Duck yêu cầu có một track điều khiển nằm dưới (các) track được chọn."
-
-#: src/effects/AutoDuck.cpp
-msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr "Kết xuất Audio đã bị kéo giản và  theo dõi điều khiển"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -11005,14 +12334,6 @@ msgstr "%s: không phải là một tập tin thiết lập sẵn hợp lệ.\n"
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr "%s: cho một hiệu ứng khác,  phát hoặc phân tích.\n"
 
-#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
-msgid "Bass and Treble"
-msgstr "Bass and Treble - Âm trầm và Âm bổng"
-
-#: src/effects/BassTreble.cpp
-msgid "Simple tone control effect"
-msgstr "Hiệu ứng điều chỉnh giai điệu đơn giản"
-
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
 msgstr "Điều chỉnh giai điệu."
@@ -11044,18 +12365,6 @@ msgstr "&Âm lượng (dB):"
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
 msgstr "&Liên kết bộ điều khiển âm lượng với bộ điêu khiển giai điệu"
-
-#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Pitch"
-msgstr "Change Pitch - Thay đổi độ cao của âm"
-
-#: src/effects/ChangePitch.cpp
-msgid "Changes the pitch of a track without changing its tempo"
-msgstr "Thay đổi độ cao của track mà không ảnh hưởng đến nhịp điệu"
-
-#: src/effects/ChangePitch.cpp
-msgid "High Quality Pitch Change"
-msgstr "Thay đổi độ cao của âm HQ Chất Lượng Cao"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
@@ -11153,14 +12462,6 @@ msgstr "45"
 msgid "78"
 msgstr "78"
 
-#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Speed and Pitch"
-msgstr "Thay đổi Tốc độ và Cao độ"
-
-#: src/effects/ChangeSpeed.cpp
-msgid "Changes the speed of a track, also changing its pitch"
-msgstr "Thay đổi tốc độ của track, cũng đồng nghĩa với thay đổi độ cao của nó"
-
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
 msgstr "&Bộ nhân tốc độ"
@@ -11225,18 +12526,6 @@ msgctxt "change speed"
 msgid "to"
 msgstr "Đến"
 
-#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Tempo"
-msgstr "Change Tempo - Thay đổi nhịp điệu"
-
-#: src/effects/ChangeTempo.cpp
-msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "Thay đổi nhịp độ của vùng chọn mà không ảnh hưởng đến độ cao"
-
-#: src/effects/ChangeTempo.cpp
-msgid "High Quality Tempo Change"
-msgstr "Thay đổi nhịp điệu  HQ Chất Lượng Cao"
-
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
 msgstr "Nhịp điệu mỗi phút"
@@ -11284,23 +12573,6 @@ msgstr "Đế&n"
 msgid "Length in seconds from %s, to"
 msgstr "Trường độ trên giây từ %s, đếm"
 
-#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
-msgid "Click Removal"
-msgstr "Click Removal - Xóa tiếng rè"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "nút \"click xóa\" được dùng để xóa các tiếng lách cách trên track audio"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr "Thuật toán vô hiệu đối với Audio này. Thay đổi không hiệu lực."
-
-#: src/effects/ClickRemoval.cpp
-#, c-format
-msgid "Selection must be larger than %d samples."
-msgstr "Vùng chọn phải lớn hơn %dmẫu."
-
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Ngưỡng (càng bé càng nhạy):"
@@ -11324,30 +12596,6 @@ msgstr "Compressor - Bộ nén"
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr "Giảm \"dải động\" hoặc sự khác biệt giữa phần âm lớn và phần không có âm thanh."
-
-#: src/effects/Contrast.cpp
-msgid "You can only measure one track at a time."
-msgstr "Bạn chỉ có thể đo lần lượt từng track tại từng thời điểm."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "Hãy chọn một track audio."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Invalid audio selection.\n"
-"Please ensure that audio is selected."
-msgstr ""
-"Vùng chọn audio không hợp lệ.\n"
-"Hãy kiểm tra lại các audio đã chọn"
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Nothing to measure.\n"
-"Please select a section of a track."
-msgstr ""
-"Lệnh đo không hiệu lực.\n"
-"Hãy chọn một vùng của track trước khi đo."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -11585,132 +12833,6 @@ msgid "Contrast..."
 msgstr "Contrast - Tương phản..."
 
 #: src/effects/Distortion.cpp
-msgid "Hard Clipping"
-msgstr "Điểm ghim cứng"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Clipping"
-msgstr "Điểm ghim mềm"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Overdrive"
-msgstr "Tăng tốc nhẹ"
-
-#: src/effects/Distortion.cpp
-msgid "Medium Overdrive"
-msgstr "Tăng tốc vừa"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Overdrive"
-msgstr "Tăng tốc mạnh"
-
-#: src/effects/Distortion.cpp
-msgid "Cubic Curve (odd harmonics)"
-msgstr "Vòng cung lập phương (đơn âm)"
-
-#: src/effects/Distortion.cpp
-msgid "Even Harmonics"
-msgstr "Âm ngang"
-
-#: src/effects/Distortion.cpp
-msgid "Expand and Compress"
-msgstr "Giải và nén"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller"
-msgstr "Cân bằng âm lượng"
-
-#: src/effects/Distortion.cpp
-msgid "Rectifier Distortion"
-msgstr "Biến thể bộ chỉnh lưu"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Limiter 1413"
-msgstr "Bộ hạn chế cứng 1413"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Ghim chặc -12dB, 80% độ phủ màu"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "Ghim lỏng -12dB, 80% độ phủ màu"
-
-#: src/effects/Distortion.cpp
-msgid "Fuzz Box"
-msgstr "Hộp tách âm"
-
-#: src/effects/Distortion.cpp src/effects/Equalization.cpp
-msgid "Walkie-talkie"
-msgstr "Walkie-talkie - Máy bộ đàm "
-
-#: src/effects/Distortion.cpp
-msgid "Blues drive sustain"
-msgstr "Vọng âm truyền động "
-
-#: src/effects/Distortion.cpp
-msgid "Light Crunch Overdrive"
-msgstr "Bộ tăng tiếng rít nhẹ"
-
-#: src/effects/Distortion.cpp
-msgid "Heavy Overdrive"
-msgstr "Tăng tốc cực mạnh"
-
-#: src/effects/Distortion.cpp
-msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "Họa âm thứ 3 (chuẩn thứ 5)"
-
-#: src/effects/Distortion.cpp
-msgid "Valve Overdrive"
-msgstr "Tăng tốc cần bấm"
-
-#: src/effects/Distortion.cpp
-msgid "2nd Harmonic (Octave)"
-msgstr "Họa ba thứ 2 (quãng tám)"
-
-#: src/effects/Distortion.cpp
-msgid "Gated Expansion Distortion"
-msgstr "Cổng biến âm mở rộng"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Light, -70dB noise floor"
-msgstr "Leveller, Light - Nhẹ, -70dB Noise Floor - Nhiễu nhỏ nhất"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "Leveller, Moderate - Vừa phải, -70dB Noise floor - Nhiễu nhỏ nhất"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "Leveller, Heavy - Nặng, -70dB Noise floor - Nhiễu nhỏ nhất"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "Leveller, Heavier - Nặng Hơn, -70dB Noise floor - Nhiễu nhỏ nhất"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "Leveller, Heaviest - Nặng Nhất, -70dB Noise floor - Nhiễu nhỏ nhất"
-
-#: src/effects/Distortion.cpp
-msgid "Half-wave Rectifier"
-msgstr "Bộ chỉnh lưu nửa sóng"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier"
-msgstr "Bộ chỉnh lưu toàn sóng"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier (DC blocked)"
-msgstr "Full-wave Rectifier - Bộ chỉnh lưu toàn sóng (DC bị chặn)"
-
-#: src/effects/Distortion.cpp
-msgid "Percussion Limiter"
-msgstr "Bộ hạn chế âm gõ"
-
-#: src/effects/Distortion.cpp
 msgid "Upper Threshold"
 msgstr "Ngưỡng trên"
 
@@ -11729,14 +12851,6 @@ msgstr "Tham số 2"
 #: src/effects/Distortion.cpp
 msgid "Number of repeats"
 msgstr "Số lần lặp lại"
-
-#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
-msgid "Distortion"
-msgstr "Distortion - Biến thể"
-
-#: src/effects/Distortion.cpp
-msgid "Waveshaping distortion effect"
-msgstr "Hiệu ứng định dạng sóng biến đổi"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion type:"
@@ -11833,22 +12947,6 @@ msgstr "(0 đến 100):"
 #: src/effects/Distortion.cpp
 msgid "(0 to 5):"
 msgstr "(0 đến 5):"
-
-#: src/effects/DtmfGen.cpp
-msgid "DTMF Tones"
-msgstr "DTMF Tones - Âm phím điện thoại"
-
-#: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Phát âm thanh kép đa tân số (DTMF). những âm thanh này được hổ trợ bằng các phím trên điện thoại"
-
-#: src/effects/DtmfGen.cpp
-msgid ""
-"DTMF sequence empty.\n"
-"Check ALL settings for this effect."
-msgstr ""
-"Chuỗi DTMF trống.\n"
-"Kiểm tra tất cả cài đặt cho hiệu ứng này."
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF &sequence:"
@@ -11984,19 +13082,6 @@ msgstr "Mục tiêu nén"
 msgid "awaiting playback"
 msgstr "đang chờ phát lại"
 
-#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
-msgid "Echo"
-msgstr "Echo - Tiếng vọng"
-
-#: src/effects/Echo.cpp
-msgid "Repeats the selected audio again and again"
-msgstr "Lập lại nhiều lần audio được chọn. "
-
-#: src/effects/Echo.cpp src/effects/FindClipping.cpp
-#: src/effects/Paulstretch.cpp
-msgid "Requested value exceeds memory capacity."
-msgstr "Giá trị yêu cầu vượt quá dung lượng bộ nhớ."
-
 #: src/effects/Echo.cpp
 msgid "&Delay time (seconds):"
 msgstr "&Thời gian Trễ (giây):"
@@ -12005,77 +13090,29 @@ msgstr "&Thời gian Trễ (giây):"
 msgid "D&ecay factor:"
 msgstr "Hệ& số suy hao:"
 
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied effect: %s"
-msgstr "Đã áp dụng hiệu ứng: %s"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied command: %s"
-msgstr "Đã áp dụng lệnh: %s"
-
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Select Preset"
 msgstr "Chọn thiết lập sẵn"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "&Preset:"
 msgstr "&Preset- Thiết lập sẵn:"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "User Presets"
 msgstr "Thiết lập sẵn của người dùng"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "Factory Presets"
 msgstr "Thiết lập sẵn mặc định"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Current Settings"
 msgstr "Cài đặt hiện tại"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Factory Defaults"
 msgstr "Thiết lập sẵn mặc định"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following effect failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"Khởi chạy hiệu ứng không thành công:\n"
-"\n"
-"%s\n"
-"\n"
-"vào \"trờ giúp>chẩn đoán>hiển thị bản ghi\" để có thêm thông tin chi tiết"
-
-#: src/effects/EffectManager.cpp
-msgid "Effect failed to initialize"
-msgstr "Không thể chạy hiệu ứng"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following command failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"Chạy thử lệnh không thành công:\n"
-"\n"
-"%s\n"
-"\n"
-"Vào \"trợ giúp>chẩn đoán>hiển thị bản ghi\" để có thêm thông tin chi tiết"
-
-#: src/effects/EffectManager.cpp
-msgid "Command failed to initialize"
-msgstr "Không thể chạy lệnh"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
@@ -12169,10 +13206,6 @@ msgstr ""
 "\n"
 "Bạn có muốn thay thế không? "
 
-#: src/effects/Equalization.cpp
-msgid "Equalization"
-msgstr "Cân bằng tần số"
-
 #: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "Filter Curve EQ - Biểu đồ bộ lọc EQ "
@@ -12181,58 +13214,6 @@ msgstr "Filter Curve EQ - Biểu đồ bộ lọc EQ "
 #: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Graphic EQ - EQ đồ hoạ"
-
-#: src/effects/Equalization.cpp
-msgid "Adjusts the volume levels of particular frequencies"
-msgstr "Điều chỉnh mức âm lượng của các tần số cụ thể"
-
-#: src/effects/Equalization.cpp
-msgid "100Hz Rumble"
-msgstr "100Hz Rumble"
-
-#: src/effects/Equalization.cpp
-msgid "AM Radio"
-msgstr "AM Radio"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Boost"
-msgstr "Khuếch đại Bass - âm Trầm"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Cut"
-msgstr "Bass Cut"
-
-#: src/effects/Equalization.cpp
-msgid "Low rolloff for speech"
-msgstr "Hiệu suất thấp cho âm thanh"
-
-#: src/effects/Equalization.cpp
-msgid "RIAA"
-msgstr "RIAA"
-
-#: src/effects/Equalization.cpp
-msgid "Telephone"
-msgstr "Telephone"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Boost"
-msgstr "Treble Boost"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Cut"
-msgstr "Treble Cut"
-
-#: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Để áp dụng cân bằng. tất cả các track được chọn phải có cùng tốc độ lấy mẫu"
-
-#: src/effects/Equalization.cpp
-msgid "Track sample rate is too low for this effect."
-msgstr "Tốc độ lấy mẫu track là quá thấp cho hiệu ứng này"
-
-#: src/effects/Equalization.cpp
-msgid "Effect Unavailable"
-msgstr "Hiệu ứng không có sẵn"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -12272,33 +13253,6 @@ msgstr "%gk"
 #, c-format
 msgid "%d dB"
 msgstr "%d dB"
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/EqualizationCurves.cpp
-msgid "unnamed"
-msgstr "Không tên"
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/EqualizationCurves.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-"Lỗi khi nhập EQ Curves từ tập tin\n"
-"%s\n"
-"Thông báo lỗi:\n"
-"%s"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Loading EQ Curves"
-msgstr "Lỗi khi nhập EQ Curves"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Saving Equalization Curves"
-msgstr "Lỗi khi lưu EQ Curves"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -12426,31 +13380,6 @@ msgstr "Biểu đồ đã xuất"
 msgid "No curves exported"
 msgstr "Không có biểu đồ đã xuất"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/EqualizationParameters.cpp
-msgid "B-spline"
-msgstr "B-spline"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cosine"
-msgstr "Cosine"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cubic"
-msgstr "Khối"
-
-#: src/effects/EqualizationUI.cpp
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"Để sử dụng biểu đồ bộ lọc này trong macro, vui lòng đặt tên mới cho nó.\n"
-"Chọn vào \"lưu/quản lý biểu đồ...\" chọn và đặt lại tên cho \"biểu đồ chưa có tên\""
-
-#: src/effects/EqualizationUI.cpp
-msgid "Filter Curve EQ needs a different name"
-msgstr "Biểu đồ bộ lọc EQ cần một tên khác"
-
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
 msgstr "+ dB"
@@ -12531,53 +13460,6 @@ msgstr "Hiển thị đường kẻ lưới"
 msgid "Show g&rid lines"
 msgstr "Hiển thị đường kẻ &lưới "
 
-#: src/effects/EqualizationUI.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr "Không tìm thấy biểu đồ, thử dùng \"không tên\""
-
-#: src/effects/EqualizationUI.cpp
-msgid "Curve not found"
-msgstr "Không tìm cong được"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade In"
-msgstr "Fade In - Âm lượng tăng dần"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade Out"
-msgstr "Fade Out - Âm lượng giảm dần"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-in to the selected audio"
-msgstr "Áp dụng độ mờ dần vào trong tuyến tính cho âm thanh đã chọn"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-out to the selected audio"
-msgstr "Áp dụng độ mờ dần ra ngoài tuyến tính cho âm thanh đã chọn"
-
-#: src/effects/FindClipping.cpp
-msgid "Find Clipping"
-msgstr "Find Clipping - Tìm điểm ghim"
-
-#: src/effects/FindClipping.cpp
-msgid "Creates labels where clipping is detected"
-msgstr "Tạo bảng không chứa ghim"
-
-#: src/effects/FindClipping.cpp
-msgid "Clipping"
-msgstr "Đang Ghim"
-
-#. i18n-hint: Two numbers are substituted; the second is the
-#. size of a set, the first is the size of a subset, and not
-#. understood as an ordinal (i.e., not meaning "first", or
-#. "second", etc.)
-#.
-#: src/effects/FindClipping.cpp
-#, c-format
-msgctxt "find clipping"
-msgid "%lld of %lld"
-msgstr "%lld of %lld"
-
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
 msgstr "&Ngưỡng bắt đầu (mẫu):"
@@ -12585,26 +13467,6 @@ msgstr "&Ngưỡng bắt đầu (mẫu):"
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
 msgstr "Ngưỡng kết& thúc (mẫu):"
-
-#: src/effects/Generator.cpp
-msgid "There is not enough room available to generate the audio"
-msgstr "Không có đủ chỗ chứa để tạo âm thanh"
-
-#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
-msgid "Invert"
-msgstr "Invert - Đảo"
-
-#: src/effects/Invert.cpp
-msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr "Lật ngược các mẫu âm thanh, đảo ngược cực tính của chúng"
-
-#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-msgid "Legacy Compressor"
-msgstr "Bộ nén phiên bản cũ"
-
-#: src/effects/LegacyCompressor.cpp
-msgid "Compresses the dynamic range of audio"
-msgstr "Nén dải động của audio"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
@@ -12733,28 +13595,6 @@ msgstr "Cường độ âm thanh được cảm nhận "
 msgid "RMS"
 msgstr "RMS - Trung Bình Bậc Hai"
 
-#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
-msgid "Loudness Normalization"
-msgstr "Loudness Normalization - Cường độ âm thanh chuẩn hoá "
-
-#: src/effects/Loudness.cpp
-msgid "Sets the loudness of one or more tracks"
-msgstr "Thiết lập cường độ âm thanh cho track"
-
-#: src/effects/Loudness.cpp
-msgid "Normalizing Loudness...\n"
-msgstr "Đang chuẩn hoá cường độ âm thanh...\n"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing: %s"
-msgstr "Đang phân tích: %s"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Processing: %s"
-msgstr " Đang Xử lý: %s"
-
 #: src/effects/Loudness.cpp
 msgid "&Normalize"
 msgstr "&Normalize - Chuẩn hoá"
@@ -12784,89 +13624,9 @@ msgstr "Xử lý đơn âm như đơn âm kép (nên dùng)"
 msgid "(Maximum 0dB)"
 msgstr "(Tối đa 0dB)"
 
-#. i18n-hint: not a color, but "white noise" having a uniform spectrum
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "White"
-msgstr "Màu trắng"
-
-#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
-#. in low frequencies
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Pink"
-msgstr "Pink"
-
-#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Brownian"
-msgstr "Brownian"
-
-#: src/effects/Noise.cpp
-msgid "Noise"
-msgstr "Nhiễu"
-
-#: src/effects/Noise.cpp
-msgid "Generates one of three different types of noise"
-msgstr "Phát một trong ba loại âm khác nhau"
-
 #: src/effects/Noise.cpp
 msgid "&Noise type:"
 msgstr "Loại &Nhiễu"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median"
-msgstr "Trung bình"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Second greatest"
-msgstr "Số giây lớn nhất"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Old"
-msgstr "Cũ"
-
-#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
-#: resources/EffectsMenuDefaults.xml
-msgid "Noise Reduction"
-msgstr "Noise reduction - Giảm Nhiễu"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "Xóa tạp âm như tiếng quạt, tiếng chạy băng, hoặc tiếng vo ve "
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block are too few for the window types."
-msgstr "Các bước trên mỗi khối quá ít đối với các loại cửa sổ."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block cannot exceed the window size."
-msgstr "Các bước trên mỗi khối quá nhiểu với kích thước cừa số. "
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median method is not implemented for more than four steps per window."
-msgstr "Phép tính trung bình không được thực hiện quá bốn lần trên mỗi cửa sổ."
-
-#: src/effects/NoiseReduction.cpp
-msgid "You must specify the same window size for steps 1 and 2."
-msgstr "Bạn phải chỉ định cùng một kích thước cửa sổ cho các bước 1 và 2. "
-
-#: src/effects/NoiseReduction.cpp
-msgid "Warning: window types are not the same as for profiling."
-msgstr "Cảnh báo: các kiểu cửa sổ không giống nhau để định dạng."
-
-#: src/effects/NoiseReduction.cpp
-msgid "All noise profile data must have the same sample rate."
-msgstr "Tất cả dữ liệu tiếng ồn phải có cùng tốc độ lấy mẫu."
-
-#: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "Tốc độ lấy mẫu của dữ liệu tiếng ồn phải phù hợp với tốc độ lấy mẫu của âm thanh để có thể được xử lý."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Selected noise profile is too short."
-msgstr "Dữ liệu tiếng ồn được chọn quá ngắn."
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Noise reduction (dB):"
@@ -13034,55 +13794,6 @@ msgstr "4 (mặc định)"
 msgid "Discrimination &method:"
 msgstr "Phương pháp& phân tách:"
 
-#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
-msgid "Normalize"
-msgstr "Normalize - Chuẩn hoá"
-
-#: src/effects/Normalize.cpp
-msgid "Sets the peak amplitude of one or more tracks"
-msgstr "Thiết lập biên độ đỉnh cho track"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset and Normalizing...\n"
-msgstr "Loại bỏ độ di DC và chuẩn hóa ...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset...\n"
-msgstr "Loại bỏ độ di DC...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Normalizing without removing DC offset...\n"
-msgstr "Chuẩn hoá mà không cần loại bỏ độ di DC \n"
-
-#: src/effects/Normalize.cpp
-msgid "Not doing anything...\n"
-msgstr "Không làm gì cả...\n"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing first track of stereo pair: %s"
-msgstr "Phân tích track đầu tiền trong chuỗi stereo: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "Phân tích track thứ hai trong chuỗi stereo: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing stereo channels independently: %s"
-msgstr "Xử lý độc lập các kênh stereo: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing first track of stereo pair: %s"
-msgstr "Xử lý track đầu tiền trong chuỗi stereo: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing second track of stereo pair: %s"
-msgstr "Xử lý track thứ hai trong chuỗi stereo: %s"
-
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
 msgstr "&Loại bỏ độ di DC (tâm ở 0.0 theo chiều dọc)"
@@ -13099,14 +13810,6 @@ msgstr "Biên độ đỉnh dv"
 msgid "N&ormalize stereo channels independently"
 msgstr "Chuẩn& hoá kênh stereo riêng biệt"
 
-#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
-msgid "Paulstretch"
-msgstr "Paulstretch - Kéo dài âm tối đa"
-
-#: src/effects/Paulstretch.cpp
-msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Paulstretch chỉ dùng được cho hiệu ứng vọng thời gian hoặc \"hiệu ứng hiệu ứng đóng băng\""
-
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
@@ -13118,56 +13821,6 @@ msgstr "&Hiệu số vọng:"
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
 msgstr "&Thời gian xử lý (giây):"
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Audio selection too short to preview.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"Audio được chọn quá ngắn để xem trước.\n"
-"\n"
-"hãy chọn thêm và mở rộng audio ít nhất là %.1f giây.\n"
-"hoặc giảm thời gian phân giải còn ít nhất hơn %.1f giây."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Unable to Preview.\n"
-"\n"
-"For the current audio selection, the maximum\n"
-"'Time Resolution' is %.1f seconds."
-msgstr ""
-"Không xem trước được\n"
-"\n"
-"Audio đang được chọn là cực đại.\n"
-"\"Thời gian phân giải\" là %.1fgiây."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"The 'Time Resolution' is too long for the selection.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"Thời gian phân giải quá dài.\n"
-"\n"
-"Hãy chọn thêm và mở rộng audio ít nhất là %.1f giây.\n"
-"hoặc giảm thời gian phân giải còn ít nhất hơn %.1f giây."
-
-#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
-msgid "Phaser"
-msgstr "Phaser - Dịch pha"
-
-#: src/effects/Phaser.cpp
-msgid "Combines phase-shifted signals with the original signal"
-msgstr "Kết hợp các tín hiệu lệch pha với tín hiệu gốc"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
@@ -13231,48 +13884,6 @@ msgstr "Đầu ra Gain (dB)"
 msgid "%s - %s"
 msgstr "%s - %s"
 
-#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
-msgid "Repair"
-msgstr "Repair - Sửa"
-
-#: src/effects/Repair.cpp
-msgid "Sets the peak amplitude of a one or more tracks"
-msgstr "Thiết lập biên độ đỉnh cho track"
-
-#: src/effects/Repair.cpp
-msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "Không thể áp dụng hiệu ứng Sửa chữa trong các đoạn video bị kéo dài hoặc co lại."
-
-#: src/effects/Repair.cpp
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
-"\n"
-"Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"Hiệu ứng Sửa chữa chỉ áp dụng cho một vùng âm thanh bị hỏng rất ngắn (tối đa 128 mẫu).\n"
-"\n"
-"Phóng to và chọn khung thời gian cần sửa chữa."
-
-#: src/effects/Repair.cpp
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
-"\n"
-"Please select a region that has audio touching at least one side of it.\n"
-"\n"
-"The more surrounding audio, the better it performs."
-msgstr ""
-"Sửa chữa dự án bằng cách sử dụng dữ liệu âm thanh bên ngoài vùng lựa chọn.\n"
-"\n"
-"Hãy chọn một vùng chứa âm thanh liên "
-
-#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
-msgid "Repeat"
-msgstr "Repeat - Lặp lại"
-
-#: src/effects/Repeat.cpp
-msgid "Repeats the selection the specified number of times"
-msgstr "Lặp lại âm thanh đã chọn với số lần chỉ định"
-
 #: src/effects/Repeat.cpp
 msgid "&Number of repeats to add:"
 msgstr "&Nhập số lần lập lại:"
@@ -13298,99 +13909,6 @@ msgstr "Độ dài vùng chọn mới: %s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "Cảnh báo: không được lập lại."
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Acoustic"
-msgstr "Acoustic"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Ambience"
-msgstr "Ambience"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Artificial"
-msgstr "Artificial"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Clean"
-msgstr "Dọn sạch"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal I"
-msgstr "Vocal I"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal II"
-msgstr "Vocal II"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Dance Vocal"
-msgstr "Giọng nhạc Dance"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Modern Vocal"
-msgstr "Giọng hiện đại"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Voice Tail"
-msgstr "Âm đuôi"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Bathroom"
-msgstr "Phòng tắm"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Bright"
-msgstr "Ánh sáng trong phòng nhỏ"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Dark"
-msgstr "Bóng tối trong phòng nhỏ"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Medium Room"
-msgstr "Phòng vừa"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Large Room"
-msgstr "Phòng rộng"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Church Hall"
-msgstr "Đại sảnh nhà thờ"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Cathedral"
-msgstr "Nhà thờ lớn"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Big Cave"
-msgstr "Hang động lớn"
-
-#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverb"
-msgstr "Reverb - Tiếng vọng"
-
-#: src/effects/Reverb.cpp
-msgid "Adds ambience or a \"hall effect\""
-msgstr "Nhập biên độ hoặc \"hiệu ứng đại sảnh\""
 
 #: src/effects/Reverb.cpp
 msgid "&Room Size (%):"
@@ -13431,54 +13949,6 @@ msgstr "Chiều rộng stereo (%):"
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
 msgstr "Chỉ Wet (âm tiếng vang)"
-
-#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverse"
-msgstr "Reverse - Đảo ngược"
-
-#: src/effects/Reverse.cpp
-msgid "Reverses the selected audio"
-msgstr "Đảo chiều audio đã chọn"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "SBSMS Time / Pitch Stretch"
-
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Butterworth"
-msgstr "Butterworth"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type I"
-msgstr "Chebyshev Type I"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type II"
-msgstr "Chebyshev Type II"
-
-#: src/effects/ScienFilter.cpp
-msgid "Lowpass"
-msgstr "Lọc thông thấp"
-
-#: src/effects/ScienFilter.cpp
-msgid "Highpass"
-msgstr "Lọc thông cao"
-
-#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
-msgid "Classic Filters"
-msgstr "Classic Filters - Bộ lọc cổ điển"
-
-#. i18n-hint: "infinite impulse response"
-#: src/effects/ScienFilter.cpp
-msgid "Performs IIR filtering that emulates analog filters"
-msgstr "Thực hiện lọc IIR mô phỏng các bộ lọc tương tự"
-
-#: src/effects/ScienFilter.cpp
-msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "Để áp dụng bộ lọc. tất cả các track được chọn phải có cùng tốc độ lấy mẫu"
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -13610,36 +14080,6 @@ msgstr "Quay về chế độ mặc định"
 msgid "%.3f"
 msgstr "%.3f"
 
-#. i18n-hint: noun
-#: src/effects/Silence.cpp
-msgctxt "generator"
-msgid "Silence"
-msgstr "Im lặng"
-
-#: src/effects/Silence.cpp
-msgid "Creates audio of zero amplitude"
-msgstr "Tạo audio với biên độ 0"
-
-#: src/effects/StereoToMono.cpp
-msgid "Stereo To Mono"
-msgstr "Stereo sang mono"
-
-#: src/effects/StereoToMono.cpp
-msgid "Converts stereo tracks to mono"
-msgstr "Chuyển đổi các track stereo thành track mono"
-
-#: src/effects/StereoToMono.cpp
-msgid "Mixing down to mono"
-msgstr "Trộn mono"
-
-#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
-msgid "Sliding Stretch"
-msgstr "Sliding Stretch - Khoảng trượt"
-
-#: src/effects/TimeScale.cpp
-msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "Cho phép thay đổi liên tục nhịp độ và / hoặc cao độ"
-
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
 msgstr "Thay đổi nhịp độ ban đầu (%)"
@@ -13667,36 +14107,6 @@ msgstr "Thay đổi độ cao cuối của âm"
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
 msgstr "(s&emitones) [-12 to 12]:"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
-msgid "Linear"
-msgstr "Tuyến tính"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-msgid "Logarithmic"
-msgstr "Logarith"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sine"
-msgstr "Sin"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Square"
-msgstr "Vuông"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sawtooth"
-msgstr "Răng cưa"
-
-#: src/effects/ToneGen.cpp
-msgid "Square, no alias"
-msgstr "Vuông, không có biệt danh"
-
-#: src/effects/ToneGen.cpp
-msgctxt "waveform"
-msgid "Triangle"
-msgstr "Tam giác"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
@@ -13741,26 +14151,6 @@ msgstr "Kết Thúc Biên Độ"
 #: src/effects/ToneGen.cpp
 msgid "I&nterpolation:"
 msgstr "N&ội suy:"
-
-#: src/effects/TruncSilence.cpp
-msgid "Truncate Detected Silence"
-msgstr "Cắt rút bỏ khoảng lặng đã phát hiện"
-
-#: src/effects/TruncSilence.cpp
-msgid "Compress Excess Silence"
-msgstr "Nén khoảng lặng thừa"
-
-#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
-msgid "Truncate Silence"
-msgstr "Truncate Silence - Cắt bỏ khoảng lặng"
-
-#: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "Tự động giảm độ dài của các đoạn có âm lượng dưới một mức cụ thể"
-
-#: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "Khi cắt âm độc lập, có thể chỉ có một track được chọn trong mỗi Nhóm track đã khóa đồng bộ hóa."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -13891,14 +14281,6 @@ msgstr "Là một phần của quá trình xử lý, một số hiệu ứng VST
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "Hầu hết các hiệu ứng VST3 đều có giao diện biểu đồ để thiết lập các giá trị tham số. Một giao thức văn bản cơ bản cũng được hổ trợ. Mở lại hiệu ứng để áp dụng giao diện này."
-
-#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
-msgid "Wahwah"
-msgstr "Wahwah - Hiệu ứng ghita điện "
-
-#: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Các thay đổi chất lượng âm điệu nhanh, tương tự những âm thanh guitar rất phổ biến trong thập niên 70"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14039,153 +14421,6 @@ msgstr "Là một phần của quá trình xử lý, một số hiệu ứng LV2
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "Hiệu ứng LV2 có thể có giao diện đồ họa để thiết lập các giá trị tham số. Một phương pháp chỉ văn bản cơ bản cũng có sẵn. Mở lại hiệu ứng để điều này có hiệu lực."
 
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Nyquist Effects"
-msgstr "Hiệu ứng Nyquist"
-
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Cung cấp hỗ trợ hiệu ứng Nyquist cho Audacity"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Applying Nyquist Effect..."
-msgstr "Đang áp dụng hiệu ứng Nyquist..."
-
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Worker"
-msgstr "Nyquist Worker"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Ill-formed Nyquist plug-in header"
-msgstr "Ill-hình thành tiêu đề trình cắm thêm Nyquist"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Enable track spectrogram view before\n"
-"applying 'Spectral' effects."
-msgstr ""
-"Bật chế độ xem biểu đồ âm phổ trước khi\n"
-"áp dụng hiệu ứng 'Âm phổ'."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"To use 'Spectral effects', enable 'Spectral Selection'\n"
-"in the track Spectrogram settings and select the\n"
-"frequency range for the effect to act on."
-msgstr ""
-"Để dùng \"hiệu ứng quang phổ\", bật \"Lựa chọn quang phổ\"\n"
-"trong cài đặt ảnh phổ và chọn\n"
-" vùng tần số cho hiệu ứng."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "lỗi: tập tin \"%s\" lẽ ra phải có trong tiêu đề nhưng không thể tìm thấy trong đường dẫn plug-in.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Audio selection required."
-msgstr "Vùng chọn audio yêu cầu"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "Lỗi Nyquist"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Debug Output: "
-msgstr "Sửa lỗi đầu ra:"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Processing complete."
-msgstr "Đã xử lý xong."
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "Hiệu ứng ';công cụ phân loại' không thể trở lại audio từ Nyquist.\n"
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "Hiệu ứng ';công cụ phân loại' không thể rút nhãn về từ Nyquist.\n"
-
-#. i18n-hint: "%s" is replaced by name of plug-in.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "nyx_error returned from %s.\n"
-msgstr "Nyx_error từ %s.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "plug-in"
-msgstr "Plug-in \"điện toán\""
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned a list."
-msgstr "Nyquist đã trả lại một danh sách."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %f"
-msgstr "Nyquist trả về giá trị: %f"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %d"
-msgstr "Nyquist trả về giá trị: %d"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned too many audio channels.\n"
-msgstr "Nyquist trả về quá nhiều kênh âm thanh.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Nyquist trả về một kênh âm thanh dưới dạng chuỗi.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned an empty array.\n"
-msgstr "Nyquist trả về một danh sách trống.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned nil audio.\n"
-msgstr "Không có audio nào được trả về từ Nyquist.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Cảnh báo: Nyquist trả về chuỗi UTF-8 không hợp lệ, được chuyển đổi thành Latin-1 ở đây]"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Phiên bản Audacity này không hỗ trợ phiên bản plug-in Nyquist %ld"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not open file"
-msgstr "Không mở được tập tin"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Your code looks like SAL syntax, but there is no 'return' statement.\n"
-"For SAL, use a return statement such as:\n"
-"\treturn *track* * 0.1\n"
-"or for LISP, begin with an open parenthesis such as:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-msgstr ""
-"Đoạn mã cuả bạn có vẻ giống SAL syntax, nhưng không có lệnh \"return\".\n"
-"để chạy SAL, bạn cần dùng lệnh \"return\" ví dụ:\n"
-"\treturn *track* * 0.1\n"
-"hoặc để chạy LISP, hãy bắt đầu với dấu ngoặc, ví dụ:\n"
-"\t(mult *track* 0.1)"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Error in Nyquist code"
-msgstr "Lỗi trong mã Nyquist"
-
-#. i18n-hint: refers to programming "languages"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not determine language"
-msgstr "Không xác định được ngôn ngữ"
-
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
@@ -14255,6 +14490,10 @@ msgstr "Chọn một tập tin"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Save file as"
 msgstr "Lưu tập tin thành tập tin khác"
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Debug Output: "
+msgstr "Sửa lỗi đầu ra:"
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
@@ -14757,12 +14996,13 @@ msgid "Duplicate"
 msgstr "Nhân đôi"
 
 #: src/menus/EditMenus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "Chia rồi cắt vào bộ nhớ sao chép Clipboard"
+#, fuzzy
+msgid "Cut to clipboard and leave gap"
+msgstr "Cắt vào bộ nhớ sao chép Clipboard"
 
 #: src/menus/EditMenus.cpp
-msgid "Split Cut"
-msgstr "Chia và Cắt"
+msgid "Cut and leave gap"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -14858,13 +15098,13 @@ msgstr "Xó&a hiệu ứng đặc biệt"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
-msgid "Spl&it Cut"
-msgstr "Ch&ia và Cắt"
+msgid "&Cut and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
-msgid "Split D&elete"
-msgstr "Chia &và Xoá"
+msgid "&Delete and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -14995,10 +15235,10 @@ msgstr "&Nhãn..."
 msgid "&Raw Data..."
 msgstr "&Dữ liệu thô..."
 
-#. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
-msgid "E&xit"
-msgstr "Th&oát"
+#, fuzzy
+msgid "&Close Project"
+msgstr "&Lưu Dự án"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15118,16 +15358,15 @@ msgstr "Vùng Audio được dán nhãn đã bị xoá "
 msgid "Delete Labeled Audio"
 msgstr "Xoá audio được dán nhãn"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
-#. regions
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "Đã chia và cắt các phần Audio có nhãn vào bộ nhớ sao chép Clipboard"
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard and leave gap"
+msgstr "Đã cắt các phần Audio có nhãn vào bộ nhớ sao chép Clipboard"
 
-#. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "Chia và cắt audio được dán nhãn "
+#, fuzzy
+msgid "Cut labeled audio and leave gap"
+msgstr "Đã cắt các phần Audio có nhãn vào bộ nhớ sao chép Clipboard"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15238,29 +15477,31 @@ msgid "&Cut"
 msgstr "&Cắt"
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Cut"
-msgstr "Dán nhãn tại điểm cắt"
+msgid "Cut by label"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Delete"
-msgstr "Nhãn Xoa"
+#, fuzzy
+msgid "Delete by label"
+msgstr "&Xoá Nhãn"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
-msgid "&Split Cut"
-msgstr "Chi&a và cắt"
+msgid "C&ut and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Cut"
-msgstr "Dán nhãn tại điểm Chi&a và cắt"
+msgid "Cut by labels and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Sp&lit Delete"
-msgstr "Chia &và Xoá"
+msgid "De&lete and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Delete"
-msgstr "Dán nhãn tại điểm Chia và Xoa"
+#, fuzzy
+msgid "Delete by labels and leave gap"
+msgstr "Vùng Audio được dán nhãn đã bị xoá "
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -15871,6 +16112,10 @@ msgid "Adjusted gain"
 msgstr "Đã điều chỉnh độ khuếch đại"
 
 #: src/menus/TrackMenus.cpp
+msgid "Gain"
+msgstr "Độ khuếch đại"
+
+#: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
 msgstr "Đã điều chỉnh cân bằng trái/phải"
 
@@ -16367,7 +16612,8 @@ msgid "Skip to Selection End"
 msgstr "Di chuyên đến kết thúc vùng chọn:"
 
 #: src/menus/ViewMenus.cpp
-msgid "Enable E&xtra Menus"
+#, fuzzy
+msgid "E&xtra Menus"
 msgstr "Kích hoạt menu b&ổ sung"
 
 #: src/menus/ViewMenus.cpp
@@ -16375,7 +16621,8 @@ msgid "&Show Clipping in Waveform"
 msgstr "&Hiển thị Clipping theo dạng sóng"
 
 #: src/menus/ViewMenus.cpp
-msgid "Show &RMS in Waveform"
+#, fuzzy
+msgid "Sho&w RMS in Waveform"
 msgstr "Hiển thị &RMS ở dạng sóng"
 
 #: src/prefs/ApplicationPrefs.cpp
@@ -16816,38 +17063,6 @@ msgstr "Giao diện"
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
 msgstr "Tuỳ chọn cho GUI (Giao diện đồ họa người dùng)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 dB (bị giới hạn khi chỉnh sửa âm có biên độ lớn)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 dB (PCM dùng 8 bit lấy mẫu)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (PCM dùng 10 bit lấy mẫu)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (PCM dùng 12 bit lấy mẫu)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (PCM dùng 14 bit lấy mẫu)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 dB (PCM dùng 16 bit lấy mẫu)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 dB (xấp xỉ giới hạn nghe của con người)"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (PCM dùng 24 bit lấy mẫu)"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -17392,88 +17607,6 @@ msgstr "Trước khi &cuộn:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
 msgstr "Cross&fade -Trộn chéo: "
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Mel"
-msgstr "Mel"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Bark"
-msgstr "Bark"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
-#: src/prefs/SpectrogramSettings.cpp
-msgid "ERB"
-msgstr "ERB"
-
-#. i18n-hint: Time units, that is Period = 1 / Frequency
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Period"
-msgstr "Chu kỳ"
-
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (Roseus)"
-msgstr "Màu (Hồng)"
-
-#. i18n-hint: Classic color scheme(from theme) for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr "Màu (cổ điển)"
-
-#. i18n-hint: Grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr "Thang đo độ xám"
-
-#. i18n-hint: Inverse grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr "Thang đo độ xám ngược chiều"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Frequencies"
-msgstr "Tần số (Hz)"
-
-#. i18n-hint: the Reassignment algorithm for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Reassignment"
-msgstr "Gán lại giá trí"
-
-#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Pitch (EAC)"
-msgstr "Độ cao của âm (EAC)"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Maximum frequency must be 100 Hz or above"
-msgstr "Tần số lớn nhất phải lớn hơn 100 Hz"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be at least 0 Hz"
-msgstr "Tần số nhỏ nhất phải lớn hơn 0 Hz"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be less than maximum frequency"
-msgstr "Số tần số nhỏ nhất phải nhỏ hơn số tần số lớn nhất"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The range must be at least 1 dB"
-msgstr "Biên độ thấp nhất là 1 dB"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain cannot be negative"
-msgstr "Khuếch đại tần số không được dùng số âm"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain must be no more than 60 dB/dec"
-msgstr "Khuếch đại tần số không được quá 60 dB/dec"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrogram Settings"
@@ -18770,11 +18903,6 @@ msgstr "&Tắt/bật âm thanh của track đã chọn"
 msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s, %d của %d clips"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "&Multi-view"
-msgstr "&Hiển thị nhiều tệp cùng lúc"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -21392,3 +21520,104 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Phiên bản cũ"
+
+#~ msgid "Insane"
+#~ msgstr "Trên cả tuyệt"
+
+#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+#~ msgstr "Việc lưu vào đám mây yêu cầu phải có tài khoản audio.com miễn phí được liên kết với Audacity. Nhấn vào \"Liên kết tài khoản\" ở trên để tiếp tục."
+
+#~ msgid "Moved gain slider"
+#~ msgstr "Đã di chuyển thanh trượt khuếch đại"
+
+#, c-format
+#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+#~ msgstr "Xem [[%s||release video]] hoặc đọc [[https://support.audacityteam.org/additional-resources/changelog|changelog]] để biết thêm thông tin!</p>"
+
+#~ msgid "Gain:"
+#~ msgstr "Gain - Độ khuếch đại:"
+
+#, c-format
+#~ msgid "Applied command: %s"
+#~ msgstr "Đã áp dụng lệnh: %s"
+
+#, c-format
+#~ msgid ""
+#~ "Attempting to initialize the following effect failed:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "More information may be available in 'Help > Diagnostics > Show Log'"
+#~ msgstr ""
+#~ "Khởi chạy hiệu ứng không thành công:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "vào \"trờ giúp>chẩn đoán>hiển thị bản ghi\" để có thêm thông tin chi tiết"
+
+#~ msgid "Effect failed to initialize"
+#~ msgstr "Không thể chạy hiệu ứng"
+
+#~ msgid "Effect Unavailable"
+#~ msgstr "Hiệu ứng không có sẵn"
+
+#~ msgid "Error Loading EQ Curves"
+#~ msgstr "Lỗi khi nhập EQ Curves"
+
+#~ msgid ""
+#~ "To use this filter curve in a macro, please choose a new name for it.\n"
+#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+#~ msgstr ""
+#~ "Để sử dụng biểu đồ bộ lọc này trong macro, vui lòng đặt tên mới cho nó.\n"
+#~ "Chọn vào \"lưu/quản lý biểu đồ...\" chọn và đặt lại tên cho \"biểu đồ chưa có tên\""
+
+#~ msgid "Filter Curve EQ needs a different name"
+#~ msgstr "Biểu đồ bộ lọc EQ cần một tên khác"
+
+#~ msgid "Curve not found"
+#~ msgstr "Không tìm cong được"
+
+#~ msgid "Nyquist Error"
+#~ msgstr "Lỗi Nyquist"
+
+#~ msgid "Error in Nyquist code"
+#~ msgstr "Lỗi trong mã Nyquist"
+
+#~ msgid "Split-cut to the clipboard"
+#~ msgstr "Chia rồi cắt vào bộ nhớ sao chép Clipboard"
+
+#~ msgid "Split Cut"
+#~ msgstr "Chia và Cắt"
+
+#~ msgid "Spl&it Cut"
+#~ msgstr "Ch&ia và Cắt"
+
+#~ msgid "Split D&elete"
+#~ msgstr "Chia &và Xoá"
+
+#~ msgid "E&xit"
+#~ msgstr "Th&oát"
+
+#~ msgid "Split Cut labeled audio regions to clipboard"
+#~ msgstr "Đã chia và cắt các phần Audio có nhãn vào bộ nhớ sao chép Clipboard"
+
+#~ msgid "Split Cut Labeled Audio"
+#~ msgstr "Chia và cắt audio được dán nhãn "
+
+#~ msgid "Label Cut"
+#~ msgstr "Dán nhãn tại điểm cắt"
+
+#~ msgid "Label Delete"
+#~ msgstr "Nhãn Xoa"
+
+#~ msgid "&Split Cut"
+#~ msgstr "Chi&a và cắt"
+
+#~ msgid "Label Split Cut"
+#~ msgstr "Dán nhãn tại điểm Chi&a và cắt"
+
+#~ msgid "Sp&lit Delete"
+#~ msgstr "Chia &và Xoá"
+
+#~ msgid "Label Split Delete"
+#~ msgstr "Dán nhãn tại điểm Chia và Xoa"
