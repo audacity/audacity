@@ -27,6 +27,7 @@ public:
     AmplifyViewModel() = default;
 
     Q_INVOKABLE void init();
+    Q_INVOKABLE void preview();
 
     float amp() const;
     void setAmp(float newAmp);

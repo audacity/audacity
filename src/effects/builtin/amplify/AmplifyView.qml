@@ -16,6 +16,10 @@ EffectBase {
     width: 300
     height: 200
 
+    function preview() {
+        amplify.preview()
+    }
+
     AmplifyViewModel {
         id: amplify
         onAmpChanged: slider.value = amp

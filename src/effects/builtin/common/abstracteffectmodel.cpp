@@ -11,7 +11,7 @@ AbstractEffectModel::AbstractEffectModel(QObject* parent)
 
 Effect* AbstractEffectModel::effect() const
 {
-    EffectInstanceId id = m_instanceId.toULongLong();
+    EffectInstanceId id = this->instanceId();
     IF_ASSERT_FAILED(id != 0) {
         return nullptr;
     }
@@ -19,12 +19,17 @@ Effect* AbstractEffectModel::effect() const
     return effectInstancesRegister()->instanceById(id);
 }
 
-QString AbstractEffectModel::instanceId() const
+EffectInstanceId AbstractEffectModel::instanceId() const
+{
+    return m_instanceId.toULongLong();
+}
+
+QString AbstractEffectModel::instanceId_prop() const
 {
     return m_instanceId;
 }
 
-void AbstractEffectModel::setInstanceId(const QString& newInstanceId)
+void AbstractEffectModel::setInstanceId_prop(const QString& newInstanceId)
 {
     if (m_instanceId == newInstanceId) {
         return;
