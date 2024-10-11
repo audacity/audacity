@@ -16,6 +16,7 @@ class DomAccessor
 {
 public:
 
+    static Track* findTrack(AudacityProject& prj, const TrackId& au3trackId);
     static WaveTrack* findWaveTrack(AudacityProject& prj, const TrackId& au3trackId);
     static std::shared_ptr<WaveClip> findWaveClip(WaveTrack* track, uint64_t au3ClipId);
     static std::shared_ptr<WaveClip> findWaveClip(AudacityProject& prj, const TrackId& au3trackId, size_t index);

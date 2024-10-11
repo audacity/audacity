@@ -8,6 +8,7 @@
 
 #include "modularity/ioc.h"
 #include "playback/itrackplaybackcontrol.h"
+#include "trackedit/itrackeditinteraction.h"
 
 #include "async/asyncable.h"
 
@@ -23,7 +24,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool outputOnly READ outputOnly CONSTANT)
 
     Q_PROPERTY(QVariant trackId READ trackId_property CONSTANT)
-    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(int channelCount READ channelCount CONSTANT)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
@@ -38,6 +39,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isSelected READ isSelected NOTIFY isSelectedChanged)
 
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:
     TrackItem(QObject* parent = nullptr);

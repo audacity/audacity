@@ -34,6 +34,7 @@ ListItemBlank {
     height: trackViewState.trackHeight
     clip: true
 
+    signal renameTrackRequested()
     signal duplicateRequested()
     signal deleteRequested()
 
@@ -48,6 +49,10 @@ ListItemBlank {
         trackViewState.init()
     }
 
+    onRenameTrackRequested: {
+        title.edit()
+    }
+
     RowLayout {
         anchors.fill: parent
 
@@ -55,6 +60,7 @@ ListItemBlank {
 
         TrackSelectionBar {
             id: selectionBar
+
             isSelected: root.isSelected
         }
 
@@ -73,17 +79,23 @@ ListItemBlank {
                     iconCode: IconCode.MICROPHONE
                 }
 
-                StyledTextLabel {
+                EditableLabel {
+                    id: title
+
                     Layout.fillWidth: true
+                    Layout.fillHeight: true
 
                     text: root.item.title
-                    font: ui.theme.bodyBoldFont
-                    horizontalAlignment: Text.AlignLeft
+
+                    onTextEdited: function(text) {
+                        root.item.title = text
+                    }
                 }
 
                 MenuButton {
                     Component.onCompleted: {
                         var operations = [
+                                    { "id": "rename-track", "title": qsTrc("track", "Rename track") },
                                     { "id": "duplicate", "title": qsTrc("track", "Duplicate") },
                                     { "id": "delete", "title": qsTrc("track", "Delete") }
                                 ]
@@ -93,6 +105,9 @@ ListItemBlank {
 
                     onHandleMenuItem: function(itemId) {
                         switch(itemId) {
+                        case "rename-track":
+                            root.renameTrackRequested()
+                            break
                         case "duplicate":
                             root.duplicateRequested()
                             break

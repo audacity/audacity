@@ -29,6 +29,7 @@ public:
 
     virtual bool trimTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool silenceTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) = 0;
+    virtual bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) = 0;
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
     virtual void clearClipboard() = 0;
