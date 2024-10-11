@@ -35,6 +35,11 @@ void AmplifyViewModel::init()
     update();
 }
 
+void AmplifyViewModel::preview()
+{
+    effectExecutionScenario()->previewEffect(this->instanceId());
+}
+
 void AmplifyViewModel::update()
 {
     AmplifyEffect* ae = effect();

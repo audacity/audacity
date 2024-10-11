@@ -37,5 +37,7 @@ public:
 
     virtual muse::Ret performEffect(AudacityProject& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                                     EffectSettings& settings) = 0;
+
+    virtual muse::Ret previewEffect(AudacityProject& project, Effect* effect, EffectSettings& settings) = 0;
 };
 }
