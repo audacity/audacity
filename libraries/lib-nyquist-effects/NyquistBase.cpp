@@ -552,7 +552,7 @@ bool NyquistBase::Init()
                ShowMessageBox(
                   XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
                      "in the track Spectrogram settings and select the\n"
-                     "frequency range for the effect to act von."),
+                     "frequency range for the effect to act on."),
                   MessageBoxOptions {}.IconStyle(Icon::Error));
             return false;
          }

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-08-01 14:17+0300\n"
+"POT-Creation-Date: 2024-10-11 15:07+0200\n"
 "PO-Revision-Date: 2021-11-06 08:05+0000\n"
 "Last-Translator: Aishwarya Kulkarni\n"
 "Language-Team: Marathi (http://www.transifex.com/klyok/audacity/language/mr/)\n"
@@ -23,6 +23,33 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+msgid ""
+"This plugin could not be loaded.\n"
+"It may have been deleted."
+msgstr ""
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Plugin Error"
+msgstr "मूल्य त्रुटी"
+
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#, c-format
+msgid "Applied effect: %s"
+msgstr "लागू केलेला प्रभाव:%s"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "%s पुन्हा करा"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -102,7 +129,14 @@ msgstr "उच्च प्लेबॅक विलंब:%g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-msgid "Supported Rates:\n"
+#, fuzzy
+msgid "Supported Playback Rates:\n"
+msgstr "समर्थित दर :\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#, fuzzy
+msgid "Supported Capture Rates:\n"
 msgstr "समर्थित दर :\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -124,6 +158,10 @@ msgstr "निवडलेले पुनर्मुद्रणाचे उ�
 #, c-format
 msgid "No playback device found for '%s'.\n"
 msgstr "यासाठी कोणतेही पुनर्मुद्रणाचे उपकरण आढळले नाही'%s'.\n"
+
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+msgid "Supported Rates:\n"
+msgstr "समर्थित दर :\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
@@ -196,16 +234,15 @@ msgstr ""
 "ध्वनीमुद्रण उपकरण उघडताना त्रुटी.\n"
 "त्रुटी क्रमांक: %s"
 
-#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
-#: libraries/lib-vst3/VST3Wrapper.cpp
+#: libraries/lib-audio-io/AudioIO.cpp
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#: libraries/lib-files/FileNames.cpp libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
-#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
-#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
-#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
-#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
-#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/ProjectAudioManager.cpp
+#: src/TimerRecordDialog.cpp src/effects/EffectPreview.cpp
+#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
+#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -260,8 +297,9 @@ msgstr "कॉन्फिगरेशन धारिकामध्ये प�
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
-#: libraries/lib-lv2/LV2EffectBase.cpp src/effects/ChangeSpeed.cpp
-#: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-lv2/LV2EffectBase.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
+#: src/effects/EffectUI.cpp
 msgid "n/a"
 msgstr "लागू नाही/"
 
@@ -293,9 +331,10 @@ msgstr "ध्वनी एकक प्रभाव"
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp
 #: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
-#: src/effects/nyquist/LoadNyquist.cpp src/effects/vamp/LoadVamp.cpp
+#: src/effects/vamp/LoadVamp.cpp
 msgid "The Audacity Team"
 msgstr "ऑड्यासिटी संघ"
 
@@ -353,6 +392,977 @@ msgstr "रूपांतरणानंतर एक्सएमएल मा�
 msgid "Message"
 msgstr "संदेश"
 
+#: libraries/lib-builtin-effects/AmplifyBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Amplify"
+msgstr "विस्तार करा"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Auto Duck"
+msgstr "स्वंय सोडा"
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "जेव्हा निर्दिष्ट \"नियंत्रण\" गीतपट्ट्याचे खंड विशिष्ट स्तरावर पोहोचते तेव्हा एक किंवा अधिक गीतपट्ट्याचे खंड कमी करते (डक)"
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks'
+#. (reduces the volume) of the audio automatically when there is
+#. sound on another track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "आपण एक ध्वनी निवडला आहे, जो रिक्त  आहे. ऑटोडक केवळ ध्वनी गीतपट्वट्रया प्रक्रिया करू शकते"
+
+#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
+#. the volume) of the audio automatically when there is sound on another
+#. track.  Not as in 'Donald-Duck'!
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "ऑटोडकला एक नियंत्रण गीतपट्टा आवश्यक आहे जो निवडलेल्या ध्वनीच्या खाली ठेवायला हवा."
+
+#: libraries/lib-builtin-effects/AutoDuckBase.cpp
+msgid "Rendering Control-Track Time-Stretched Audio"
+msgstr ""
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Bass and Treble"
+msgstr "बास आणि ट्रेबल"
+
+#: libraries/lib-builtin-effects/BassTrebleBase.cpp
+msgid "Simple tone control effect"
+msgstr "सामान्य ध्वनी नियंत्रण प्रभाव"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Pitch"
+msgstr "ध्वनीच्या खेळपट्टीत बदल"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "Changes the pitch of a track without changing its tempo"
+msgstr "संगीत लय किंवा गती ना बदलता ध्वनीची खेळपट्टी बदला"
+
+#: libraries/lib-builtin-effects/ChangePitchBase.cpp
+msgid "High Quality Pitch Change"
+msgstr "उच्च गुणवत्ता ध्वनी खेळपट्टीत बदल"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Change Speed and Pitch"
+msgstr "वेग बदला"
+
+#: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
+msgid "Changes the speed of a track, also changing its pitch"
+msgstr "ध्वनीची गती बदलण्याने, ध्वनीची खेळपट्टी देखील बदलत आहे"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Change Tempo"
+msgstr "गति बदला"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "Changes the tempo of a selection without changing its pitch"
+msgstr "निवडीचा पट्टी न बदलता संगीत लय किंवा गती बदल"
+
+#: libraries/lib-builtin-effects/ChangeTempoBase.cpp
+msgid "High Quality Tempo Change"
+msgstr "उच्च गुणवत्ता स्वर परिवर्तन"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Click Removal"
+msgstr "काढण्यासाठी क्लिक करा"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Click Removal is designed to remove clicks on audio tracks"
+msgstr "क्लिक करून काढणे हे ऑडिओ ट्रॅकवरील क्लिक्स काढून टाकण्यासाठी रचित केले आहे"
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+msgid "Algorithm not effective on this audio. Nothing changed."
+msgstr "या ध्वनी वर प्रभावी नाही. काहीही बदलले नाही."
+
+#: libraries/lib-builtin-effects/ClickRemovalBase.cpp
+#, c-format
+msgid "Selection must be larger than %d samples."
+msgstr "निवड %d नमुन्यांपेक्षा मोठी असणे आवश्यक आहे."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "You can only measure one track at a time."
+msgstr "आपण एका वेळी फक्त एक ध्वनीपट्टा मोजु शकता."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid "Please select an audio track."
+msgstr "कृपया एक ध्वनीपट्टा निवडा."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Invalid audio selection.\n"
+"Please ensure that audio is selected."
+msgstr ""
+"अवैध ध्वनी  निवड.\n"
+"कृपया ध्वनी  निवडलेला असल्याची खात्री करा."
+
+#: libraries/lib-builtin-effects/ContrastBase.cpp
+msgid ""
+"Nothing to measure.\n"
+"Please select a section of a track."
+msgstr ""
+"मोजण्यासाठी काहीही नाही.\n"
+"कृपया ध्वनीपट्टाचा एक विभाग निवडा."
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Clipping"
+msgstr "कठीण कात्रण"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Clipping"
+msgstr "मृदू कात्रण"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Soft Overdrive"
+msgstr "मऊ अधिक लोड लावणे"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Medium Overdrive"
+msgstr "मध्यम  अधिक लोड लावणे"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Overdrive"
+msgstr "कठीण अधिक लोड लावणे"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Cubic Curve (odd harmonics)"
+msgstr "घनाकृती वक्र (विषम सुसंवाद)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Even Harmonics"
+msgstr "सम हारमोनिक्स"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Expand and Compress"
+msgstr "विस्तृत करा आणि संकुचित करा"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller"
+msgstr "पातळी देणारे"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Rectifier Distortion"
+msgstr "दुरुस्त करणाने विरूपण"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Hard Limiter 1413"
+msgstr "कठीण लिमिटर 1413"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Hard clip -12dB, 80% make-up gain"
+msgstr "कठीण फीत -12dB, 80% मेक-अप लाभ"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#, no-c-format
+msgid "Soft clip -12dB, 80% make-up gain"
+msgstr "मऊ फीत -12 डीबी, 80% मेक-अप गेन"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Fuzz Box"
+msgstr "मऊ पेटी"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Walkie-talkie"
+msgstr "वॉकी-टॉकी"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Blues drive sustain"
+msgstr "ब्लूज ड्राईव्ह टिकाव"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Light Crunch Overdrive"
+msgstr "हलके खरखरीचे आवाज अधिलिखित करा."
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Heavy Overdrive"
+msgstr "भारी वाढवण्याच्या"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "3rd Harmonic (Perfect Fifth)"
+msgstr "तिसरा हार्मोनिक (संभाषण)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Valve Overdrive"
+msgstr "व्हॉल्व्ह अधिक लोड लावणे"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "2nd Harmonic (Octave)"
+msgstr "2 रा हार्मोनिक (अष्टक)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Gated Expansion Distortion"
+msgstr "द्वारबंद विस्तार विरूपण"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Light, -70dB noise floor"
+msgstr "पातळी, हलका, -70dB आवाज मजला"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Moderate, -70dB noise floor"
+msgstr "पातळी देणारे, सामान्य, -70dB  गोंगाट तळ"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavy, -70dB noise floor"
+msgstr "पातळी देणारे, सामान्य, -70dB गोंगाट तळ"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heavier, -70dB noise floor"
+msgstr "पातळी देणारे, अधिक वजनदार, -70dB गोंगाट तळ"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Leveller, Heaviest, -70dB noise floor"
+msgstr "पातळी देणारे, सर्वात वजनदार, -70dB गोंगाट तळ"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Half-wave Rectifier"
+msgstr "अर्धा-तरंग दुरुस्त करणारा"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier"
+msgstr "पूर्ण-तरंग दुरुस्त करणारा"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Full-wave Rectifier (DC blocked)"
+msgstr "पूर्ण-लाट दुरुस्त करणारा (डीसी अवरोधित)"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Percussion Limiter"
+msgstr "आघाताची मर्यादा"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Distortion"
+msgstr "विरूपण"
+
+#: libraries/lib-builtin-effects/DistortionBase.cpp
+msgid "Waveshaping distortion effect"
+msgstr "तरंगरूप विरूपणाचा प्रभाव"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "DTMF Tones"
+msgstr "डी.टीएम.एफ. स्वर"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "टेलिफोनवर कीबोर्डद्वारे तयार केल्याप्रमाणे ड्युअल-ध्वनी अनेक-वारंवारता (DTMF)ध्वनी व्युत्पन्न करते"
+
+#: libraries/lib-builtin-effects/DtmfBase.cpp
+msgid ""
+"DTMF sequence empty.\n"
+"Check ALL settings for this effect."
+msgstr ""
+"डीटीएमएफ क्रम रिक्त.\n"
+"या प्रभावासाठी सर्व समायोजन तपासा."
+
+#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
+msgid "Echo"
+msgstr "प्रतिध्वनी"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+msgid "Repeats the selected audio again and again"
+msgstr "ऑड्यासिटी प्राधान्ये पूर्वनियोजित करा"
+
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Requested value exceeds memory capacity."
+msgstr "विनंती केलेले मूल्य मेमरी क्षमतेपेक्षा जास्त आहे."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Equalization"
+msgstr "समानीकरण"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Adjusts the volume levels of particular frequencies"
+msgstr "विशिष्ट वारंवारतेच्या आवाजाची पातळी समायोजित करते"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "100Hz Rumble"
+msgstr "100हर्ट्ज खडखडाट"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "AM Radio"
+msgstr "एएम रेडिओ"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Boost"
+msgstr "बास बूस्ट"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Bass Cut"
+msgstr "बास कट"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Low rolloff for speech"
+msgstr "भाषणासाठी कमी रोलऑफ"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "RIAA"
+msgstr "आरआयएए"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Telephone"
+msgstr "दूरध्वनी"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Boost"
+msgstr "तिप्पट वाढ"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Treble Cut"
+msgstr "ट्रेबल कट"
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "समिकरण लागू करण्यासाठी, सर्व निवडलेल्या गीतपट्ट्यामध्ये समान नमुना दर असणे आवश्यक आहे."
+
+#: libraries/lib-builtin-effects/EqualizationBase.cpp
+msgid "Track sample rate is too low for this effect."
+msgstr "या प्रभावासाठी गीतपट्टा नमुना दर खूपच कमी आहे."
+
+#. i18n-hint: name of the 'unnamed' custom curve
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "unnamed"
+msgstr "अनामिक"
+
+#. i18n-hint: EQ stands for 'Equalization'.
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+#, c-format
+msgid ""
+"Error Loading EQ Curves from file:\n"
+"%s\n"
+"Error message says:\n"
+"%s"
+msgstr ""
+"धारिकामधून ईक्यू वक्र लोड करताना त्रुटी:\n"
+"%s\n"
+"त्रुटी संदेश म्हणतोः\n"
+"%s"
+
+#: libraries/lib-builtin-effects/EqualizationCurves.cpp
+msgid "Error Saving Equalization Curves"
+msgstr "समानता वक्र जतन करताना त्रुटी"
+
+#: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
+msgid "Requested curve not found, using 'unnamed'"
+msgstr "'अनामिक' वापरुन विनंती केलेले वक्र सापडले नाही"
+
+#. i18n-hint: Technical term for a kind of curve.
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "B-spline"
+msgstr "बी-स्प्लिन"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cosine"
+msgstr "कोसाइन (Cosine)"
+
+#: libraries/lib-builtin-effects/EqualizationParameters.cpp
+msgid "Cubic"
+msgstr "घन"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade In"
+msgstr "ठळक होत जाणे (फेड इन)"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-in to the selected audio"
+msgstr "निवडलेल्या ध्वनी वर एक रेखीय ठळकपणा (फेड इन) लागू करते"
+
+#: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
+msgid "Fade Out"
+msgstr "घटणे (फेड आउट)"
+
+#: libraries/lib-builtin-effects/Fade.cpp
+msgid "Applies a linear fade-out to the selected audio"
+msgstr "निवडलेल्या ध्वनी वर एक रेखीय घट (फेड आउट) लागू करते"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Find Clipping"
+msgstr "कात्रण शोधा"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Creates labels where clipping is detected"
+msgstr "जेथे क्लिपिंग आढळले आहे तेथे नावपट्टी तयार करते"
+
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+msgid "Clipping"
+msgstr "कात्रण"
+
+#. i18n-hint: Two numbers are substituted; the second is the
+#. size of a set, the first is the size of a subset, and not
+#. understood as an ordinal (i.e., not meaning "first", or
+#. "second", etc.)
+#.
+#: libraries/lib-builtin-effects/FindClippingBase.cpp
+#, fuzzy, c-format
+msgctxt "find clipping"
+msgid "%lld of %lld"
+msgstr "%s %d च्या%d"
+
+#: libraries/lib-builtin-effects/Generator.cpp
+msgid "There is not enough room available to generate the audio"
+msgstr "ध्वनी  व्युत्पन्न करण्यासाठी पर्याप्त जागा उपलब्ध नाही"
+
+#: libraries/lib-builtin-effects/Invert.cpp resources/EffectsMenuDefaults.xml
+msgid "Invert"
+msgstr "उलटे"
+
+#: libraries/lib-builtin-effects/Invert.cpp
+msgid "Flips the audio samples upside-down, reversing their polarity"
+msgstr "नमुने उलट करून ध्वनी त्यांची ध्रुवीयता उलट करते."
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "संकुचित करणारा"
+
+#: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "\"ध्वनी ची गतिमान श्रेणी संकुचित करा \""
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Loudness Normalization"
+msgstr "कर्कशपणा सामान्यीकरण"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Sets the loudness of one or more tracks"
+msgstr "एक किंवा अधिक गीतपट्ट्याचा जोर स्थापित करते"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+msgid "Normalizing Loudness...\n"
+msgstr "कर्कशपणा सामान्य करीत आहे...\n"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing: %s"
+msgstr "विश्लेषण करीत आहे:%s"
+
+#: libraries/lib-builtin-effects/LoudnessBase.cpp
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing: %s"
+msgstr "प्रक्रिया करीत आहे:%s"
+
+#. i18n-hint: not a color, but "white noise" having a uniform spectrum
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "White"
+msgstr "पांढरा"
+
+#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
+#. in low frequencies
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Pink"
+msgstr "गुलाबी"
+
+#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgctxt "noise"
+msgid "Brownian"
+msgstr "ब्राउनियन"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Noise"
+msgstr "गोंगाट"
+
+#: libraries/lib-builtin-effects/NoiseBase.cpp
+msgid "Generates one of three different types of noise"
+msgstr "तीनपैकी एक प्रकारचा आवाज व्युत्पन्न करतो"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median"
+msgstr "मध्यम "
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Second greatest"
+msgstr "दुसरा सर्वात मोठा "
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Old"
+msgstr "जुना "
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Noise Reduction"
+msgstr "गोंगाट कमी करणे"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Removes background noise such as fans, tape noise, or hums"
+msgstr "पंखे, टेपचा आवाज किंवा हुंकार यासारखे पार्श्वभूमी आवाज काढून टाकते"
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block are too few for the window types."
+msgstr "विंडो प्रकारांसाठी प्रति-ब्लॉक पायऱ्या खूप कमी आहेत."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Steps per block cannot exceed the window size."
+msgstr "प्रति तुकडा पायर्‍या विंडोच्या आकारापेक्षा जास्त असू शकत नाहीत."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Median method is not implemented for more than four steps per window."
+msgstr "प्रति विंडो चार पेक्षा जास्त चरणांसाठी मीडियन पद्धत लागू केली जात नाही."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "You must specify the same window size for steps 1 and 2."
+msgstr "चरण 1 आणि 2 साठी आपण समान विंडो आकार निर्दिष्ट करणे आवश्यक आहे."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Warning: window types are not the same as for profiling."
+msgstr "खबरदारीचा इशारा: विंडोचे प्रभाव प्रोफाइल करण्यासाठी सारखे नाहीत."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "All noise profile data must have the same sample rate."
+msgstr "सर्व ध्वनी प्रोफाइल माहितीमध्ये समान नमुना दर असणे आवश्यक आहे."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "ध्वनी प्रोफाइलचा नमुना दर प्रक्रियेसाठी असलेल्या ध्वनीशी जुळला पाहिजे."
+
+#: libraries/lib-builtin-effects/NoiseReductionBase.cpp
+msgid "Selected noise profile is too short."
+msgstr "निवडलेला ध्वनी प्रोफाइल खूप लहान आहे."
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Normalize"
+msgstr "सामान्यीकरण"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Sets the peak amplitude of one or more tracks"
+msgstr "एक किंवा अधिक ट्रॅकचे टोकाचा विस्तार सेट करते"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset and Normalizing...\n"
+msgstr "DC ऑफसेट काढून टाकत आहे आणि सामान्यीकरण करीत आहे ...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Removing DC offset...\n"
+msgstr "डीसी ऑफसेट काढत आहे ...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Normalizing without removing DC offset...\n"
+msgstr "डीसी ऑफसेट न काढता सामान्य करीत आहे ...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+msgid "Not doing anything...\n"
+msgstr "काहीही करत नाही ...\n"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing first track of stereo pair: %s"
+msgstr "स्टिरीओ जोडीच्या प्रथम गीतपट्ट्याचे विश्लेषण करीत आहे: %s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Analyzing second track of stereo pair: %s"
+msgstr "स्टिरीओ जोडीच्या दुसर्‍या गीतपट्ट्याचे विश्लेषण:%s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing stereo channels independently: %s"
+msgstr "स्टीरिओ वाहिनी स्वतंत्रपणे प्रक्रिया करत आहे:%s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing first track of stereo pair: %s"
+msgstr "स्टीरिओ जोडीच्या पहिल्या गीतपट्ट्यावर प्रक्रिया करीत आहे:%s"
+
+#: libraries/lib-builtin-effects/NormalizeBase.cpp
+#, c-format
+msgid "Processing second track of stereo pair: %s"
+msgstr "स्टीरिओ जोडीच्या दुसर्‍या गीतपट्ट्यावर प्रक्रिया करीत आहे:%s"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Paulstretch"
+msgstr "पॉलस्ट्रेच"
+
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
+msgstr "पॉलस्ट्रेच हे केवळ अत्यंत ताणलेला वेळ _टाईम-स्ट्रेच) किंवा \"स्टॅसिस\" प्रभावासाठी आहे"
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Audio selection too short to preview.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"पूर्वावलोकनासाठी केलेली ध्वनीची निवड खूपच लहान आहे.\n"
+"\n"
+"ध्वनीची निवड %.1fकमीत कमी सेकंदांपर्यंत वाढवून पहा \n"
+"किंवा 'टाइम रिझोल्यूशन' %.1fसेकंदांपेक्षा कमी करून पहा."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"Unable to Preview.\n"
+"\n"
+"For the current audio selection, the maximum\n"
+"'Time Resolution' is %.1f seconds."
+msgstr ""
+"पूर्वावलोकन करण्यास असमर्थ.\n"
+"\n"
+"सध्याच्या ध्वनीच्या निवडीसाठी, कमाल 'टाइम रिझोल्यूशन' %.1fसेकंद आहे."
+
+#. i18n-hint: 'Time Resolution' is the name of a control in the
+#. Paulstretch effect.
+#: libraries/lib-builtin-effects/PaulstretchBase.cpp
+#, c-format
+msgid ""
+"The 'Time Resolution' is too long for the selection.\n"
+"\n"
+"Try increasing the audio selection to at least %.1f seconds,\n"
+"or reducing the 'Time Resolution' to less than %.1f seconds."
+msgstr ""
+"निवडीसाठी 'वेळ रिझोल्यूशन' खूप लांब आहे.\n"
+"\n"
+"ध्वनी  निवड कमीतकमी %.1f सेकंदापर्यंत वाढवण्याचा प्रयत्न करा,\n"
+"किंवा 'वेळ रिझोल्यूशन' %.1f सेकंदांपेक्षा कमी करून पाहा"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Phaser"
+msgstr "स्वरुप"
+
+#: libraries/lib-builtin-effects/PhaserBase.cpp
+msgid "Combines phase-shifted signals with the original signal"
+msgstr "मूळ सिग्नलसह चरण-स्थानांतरित सिग्नल एकत्रित करते"
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, fuzzy
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "स्पेक्ट्रम रचण्यासाठी, सर्व निवडलेले गीतपट्टे समान नमुन्याचे दर असले पाहिजेत."
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+msgid ""
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
+msgstr ""
+
+#: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
+#, c-format
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "बरेच ध्वनी निवडले होते. केवळ पहिल्या%.1f सेकंदाच्या ध्वनीचे विश्लेषण केले जाईल"
+
+#: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
+msgid "Repair"
+msgstr "दुरुस्ती"
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "Sets the peak amplitude of a one or more tracks"
+msgstr ""
+"एक किंवा अधिक गीतपट्ट्या\n"
+"च्या टोकाचे आयाम सेट करते. "
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid "The Repair effect cannot be applied within stretched or shrunk clips"
+msgstr ""
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
+"\n"
+"Zoom in and select a tiny fraction of a second to repair."
+msgstr ""
+"दुरूस्तीचा प्रभाव खराब झालेल्या ध्वनी च्या अगदी लहान भागांवर (१२८ नमुने पर्यंत) वापरण्याचा हेतू आहे.\n"
+"\n"
+"दृश्यरूप मोठे करा आणि दुरुस्तीसाठी सेकंदाचा एक लहान भाग निवडा."
+
+#: libraries/lib-builtin-effects/Repair.cpp
+msgid ""
+"Repair works by using audio data outside the selection region.\n"
+"\n"
+"Please select a region that has audio touching at least one side of it.\n"
+"\n"
+"The more surrounding audio, the better it performs."
+msgstr ""
+"निवड प्रदेशाबाहेर ध्वनी  माहिती वापरुन दुरुस्ती कार्य करते.\n"
+"\n"
+"कृपया त्या प्रदेशाच्या कमीत कमी एका बाजूला ध्वनी  स्पर्श करणारा प्रदेश निवडा.\n"
+"\n"
+"जितका सभोवतालचा ध्वनी अधिक, तितके ते अधिक चांगले कार्य करते."
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Repeat"
+msgstr "पुनरावृत्ती"
+
+#: libraries/lib-builtin-effects/RepeatBase.cpp
+msgid "Repeats the selection the specified number of times"
+msgstr "निवडीची निर्दिष्ट केलेल्या वेळाची पुनरावृत्त करते"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Acoustic"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Ambience"
+msgstr "शांतता"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Artificial"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Clean"
+msgstr "स्वच्छ करा"
+
+#. i18n-hint: This is the name of an effect preset
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Modern"
+msgstr "रीत:"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal I"
+msgstr "मौखिक १"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Vocal II"
+msgstr "मौखिक २"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Dance Vocal"
+msgstr "स्वर वेगळे ठेवणे"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#, fuzzy
+msgid "Modern Vocal"
+msgstr "स्वर काढा"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Voice Tail"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Bathroom"
+msgstr "बाथरूम"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Bright"
+msgstr "लहान  उज्ज्वल खोली"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Small Room Dark"
+msgstr "लहान गडद खोली "
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Medium Room"
+msgstr "मध्यम खोली"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Large Room"
+msgstr "मोठी खोली"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Church Hall"
+msgstr "चर्च हॉल"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Cathedral"
+msgstr "कॅथेड्रल"
+
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Big Cave"
+msgstr ""
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Reverb"
+msgstr "रिव्हर्ब"
+
+#: libraries/lib-builtin-effects/ReverbBase.cpp
+msgid "Adds ambience or a \"hall effect\""
+msgstr "वातावरण किंवा \"हॉल प्रभाव\" जोडते"
+
+#: libraries/lib-builtin-effects/Reverse.cpp resources/EffectsMenuDefaults.xml
+msgid "Reverse"
+msgstr "उलटे"
+
+#: libraries/lib-builtin-effects/Reverse.cpp
+msgid "Reverses the selected audio"
+msgstr "निवडलेला ध्वनी उलट करते"
+
+#: libraries/lib-builtin-effects/SBSMSBase.h
+msgid "SBSMS Time / Pitch Stretch"
+msgstr "एसबीएसएमएस वेळ / पट्टीचा ताण"
+
+#. i18n-hint: Butterworth is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Butterworth"
+msgstr "बटरवर्थ"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type I"
+msgstr "चेबीशेव प्रकार I"
+
+#. i18n-hint: Chebyshev is the name of the person after whom the filter type
+#. is named.
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Chebyshev Type II"
+msgstr "चेबीशेव प्रकार II"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Lowpass"
+msgstr "कमी-प्रवेश"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Highpass"
+msgstr "उच्च प्रवेश"
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Classic Filters"
+msgstr "अभिजात चाळण्या"
+
+#. i18n-hint: "infinite impulse response"
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "Performs IIR filtering that emulates analog filters"
+msgstr "एनालॉग फिल्टरचे अनुकरण करणारे आयआयआर फिल्टरिंग करते."
+
+#: libraries/lib-builtin-effects/ScienFilterBase.cpp
+msgid "To apply a filter, all selected tracks must have the same sample rate."
+msgstr "चाळण लागू करण्यासाठी, सर्व निवडलेल्या गीतपट्ट्यांवर समान नमुना दर असणे आवश्यक आहे."
+
+#. i18n-hint: noun
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgctxt "generator"
+msgid "Silence"
+msgstr "शांतता"
+
+#: libraries/lib-builtin-effects/SilenceBase.cpp
+msgid "Creates audio of zero amplitude"
+msgstr "शून्य मोठेपणाचा ध्वनी  तयार करतो"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Stereo To Mono"
+msgstr "स्टीरिओ ते मोनो"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Converts stereo tracks to mono"
+msgstr "स्टीरिओ गीतपट्टा मोनोमध्ये रूपांतरित करते"
+
+#: libraries/lib-builtin-effects/StereoToMono.cpp
+msgid "Mixing down to mono"
+msgstr ""
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Sliding Stretch"
+msgstr "सरकता सरळ"
+
+#: libraries/lib-builtin-effects/TimeScaleBase.cpp
+msgid "Allows continuous changes to the tempo and/or pitch"
+msgstr "ध्वनीची गती आणि / किंवा पट्टीवर सतत बदल करण्यास अनुमती देते"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
+msgid "Linear"
+msgstr "रेखीय"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Logarithmic"
+msgstr "लॉगरिदमिक"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sine"
+msgstr "साइन"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Square"
+msgstr "वर्ग"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp plug-ins/tremolo.ny
+msgid "Sawtooth"
+msgstr "सावटूथ"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+msgid "Square, no alias"
+msgstr "वर्ग, उपनाव नाही"
+
+#: libraries/lib-builtin-effects/ToneGenBase.cpp
+#, fuzzy
+msgctxt "waveform"
+msgid "Triangle"
+msgstr "त्रिकोण"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Truncate Detected Silence"
+msgstr "काटछाट सापडलेला मौन"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Compress Excess Silence"
+msgstr "जास्तीची शांतता संकुचित करा"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Truncate Silence"
+msgstr "शांतता छाटून टाका"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr "आवाज एका निर्दिष्ट स्तरापेक्षा कमी आहे तेथे स्वयंचलितपणे परिच्छेदाची लांबी कमी करते"
+
+#: libraries/lib-builtin-effects/TruncSilenceBase.cpp
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "स्वतंत्रपणे छाटताना, प्रत्येक समक्रमित-कुलूप लावा केलेल्या गीतपट्टा गटामध्ये केवळ एक निवडलेला ध्वनी  गीतपट्टा असू शकतो."
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+#: resources/EffectsMenuDefaults.xml
+msgid "Wahwah"
+msgstr "वा-वा (Wahwah)"
+
+#: libraries/lib-builtin-effects/WahWahBase.cpp
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr "1970's० च्या दशकात गिटार ध्वनीप्रमाणे लोकप्रिय वेगवान ध्वनी गुणवत्तेतील विविधता"
+
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
 msgstr ""
@@ -402,14 +1412,6 @@ msgstr ""
 #, fuzzy
 msgid "Failed to deserialize the response"
 msgstr "प्रीसेट सामग्री पुनर्प्राप्त करण्यात अयशस्वी"
-
-#. i18n-hint: This is the name of an effect preset.
-#. i18n-hint: This is the name of an effect preset
-#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Modern"
-msgstr "रीत:"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -585,10 +1587,10 @@ msgid "Play it Loud"
 msgstr "गाणे वाजवत आहे"
 
 #: libraries/lib-effects/Effect.cpp
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: plug-ins/beat.ny
+#: src/commands/AudacityCommand.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "ऑड्यासिटी"
 
@@ -1069,6 +2071,45 @@ msgstr ""
 msgid "Import Project"
 msgstr ""
 
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "SubRip text file"
+msgstr "मजकूर धारिका"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+#, fuzzy
+msgid "WebVTT file"
+msgstr "HTML धारिका "
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "S&tandard"
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
+#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
+msgid "Labels"
+msgstr "नावपट्टी"
+
+#. i18n-hint: (noun) it's the name of a kind of track.
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Label track.
+#: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
+#: src/LabelDialog.h src/TrackPanelAx.cpp
+msgid "Label Track"
+msgstr "नावपट्टी असलेला गीतपपट्टा"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "One or more saved labels could not be read."
+msgstr "एक किंवा अधिक जतन केलेल्या नावपट्टया वाचल्या जाऊ शकत नाहीत."
+
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
 #.
@@ -1115,7 +2156,7 @@ msgstr "LV2 प्रभाव"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "ऑड्यासिटीला LV 2 प्रभाव समर्थन प्रदान करते"
 
-#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectPresetDialog.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -1134,6 +2175,116 @@ msgstr "त्रिकोण"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "आकार असलेले"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C"
+msgstr "सी"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯"
+msgstr "सी♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D"
+msgstr "डी"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯"
+msgstr "डी♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E"
+msgstr "इ"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F"
+msgstr "एफ"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯"
+msgstr "एफ♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G"
+msgstr "जी"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯"
+msgstr "जी♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A"
+msgstr "ए"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯"
+msgstr "ए♯"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B"
+msgstr "बी"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♭"
+msgstr "डी♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "E♭"
+msgstr "इ♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♭"
+msgstr "जी♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♭"
+msgstr "ए♭"
+
+#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "B♭"
+msgstr "बी♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "C♯/D♭"
+msgstr "सी♯/डी♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "D♯/E♭"
+msgstr "डी♯/इ♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "F♯/G♭"
+msgstr "एफ♯/जी♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "G♯/A♭"
+msgstr "जी♯/ए♭"
+
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#: libraries/lib-math/PitchName.cpp
+msgid "A♯/B♭"
+msgstr "ए♯/बी♭"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -1174,14 +2325,6 @@ msgstr "माहीत नसलेले स्वरूप"
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
 msgstr "आज्ञा"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "%s पुन्हा करा"
 
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
@@ -1821,6 +2964,148 @@ msgstr ""
 msgid "thousandths of decades"
 msgstr "दशकाचे हजार"
 
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Nyquist Effects"
+msgstr "'नाइक्विस्ट (Nyquist) प्रभाव"
+
+#: libraries/lib-nyquist-effects/LoadNyquist.cpp
+msgid "Provides Nyquist Effects support to Audacity"
+msgstr "ऑड्यासिटीला 'एन.वाय.क्विस्ट (Nyquist) प्रभाव समर्थन प्रदान करते"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Applying Nyquist Effect..."
+msgstr "'एन.वाय.क्विस्ट (Nyquist) प्रभाव लागू करीत आहे ..."
+
+#. i18n-hint: It is acceptable to translate this the same as for "Nyquist
+#. * Prompt"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist Worker"
+msgstr "'एन.वाय.क्विस्ट (Nyquist) कार्यकर्ता"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Ill-formed Nyquist plug-in header"
+msgstr "III - निर्मिती 'एन.वाय.क्विस्ट (Nyquist) प्लग-इन शीर्षलेख"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Enable track spectrogram view before\n"
+"applying 'Spectral' effects."
+msgstr ""
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, fuzzy
+msgid ""
+"To use 'Spectral effects', enable 'Spectral Selection'\n"
+"in the track Spectrogram settings and select the\n"
+"frequency range for the effect to act on."
+msgstr ""
+"'वर्णक्रमीय प्रभाव' वापरण्यासाठी, 'वर्णक्रमीय निवड' सुरू करा\n"
+"गीतपट्टा स्पेक्ट्रोग्राम समायोजनमध्ये आणि निवडा\n"
+"प्रभावावर कार्य करण्यासाठी वारंवारिता श्रेणी."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
+msgstr "त्रुटी: धारिका \"%s\" शीर्षलेखात निर्दिष्ट परंतु प्लग-इन पथात आढळली नाही.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Audio selection required."
+msgstr "ध्वनी निवड आवश्यक आहे ."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Processing complete."
+msgstr "प्रक्रिया पूर्ण झाली ."
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return audio from Nyquist.\n"
+msgstr "'; प्रकार साधन' प्रभाव Nyquist कडील ध्वनी परत करू शकत नाहीत.\n"
+
+#. i18n-hint: Don't translate ';type tool'.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "';type tool' effects cannot return labels from Nyquist.\n"
+msgstr "'; प्रकार साधन' प्रभाव Nyquist कडील नावे परत करू शकत नाहीत.\n"
+
+#. i18n-hint: "%s" is replaced by name of plug-in.
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "nyx_error returned from %s.\n"
+msgstr "nyx_error %s वरून परत आला. \n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "plug-in"
+msgstr "प्लग-इन"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned a list."
+msgstr "Nyquist एक यादी परत."
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %f"
+msgstr "Nyquist ने परत केलेले मूल्य: %f"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "Nyquist returned the value: %d"
+msgstr "Nyquist ने परत केलेले मूल्य: %d"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned too many audio channels.\n"
+msgstr "'एन.वाय.क्विस्ट (Nyquist) बर्‍याच ध्वनी वाहिन्या परत केले.\n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned one audio channel as an array.\n"
+msgstr "'एन.वाय.क्विस्ट (Nyquist) ध्वनी  वाहिनी रचनावर परत केले. \n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned an empty array.\n"
+msgstr "'एन.वाय.क्विस्ट (Nyquist) ने रिक्त रचना परत केली. \n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Nyquist returned nil audio.\n"
+msgstr "'एन.वाय.क्विस्ट (Nyquist) रिक्त ध्वनी  परत केला. \n"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[खबरदारीचा इशारा: एन.वाय.क्विस्टने अवैध यूटीएफ -8 स्ट्रिंग परत केली, येथे लॅटिन -1 म्हणून रुपांतरित केली गेली.]"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+#, c-format
+msgid "This version of Audacity does not support Nyquist plug-in version %ld"
+msgstr "ऑड्यासिटीची ही आवृत्ती 'एन.वाय.क्विस्ट (Nyquist) प्लग-इन आवृत्ती %ld चे समर्थन करत नाही"
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not open file"
+msgstr "\"धारिका उघडू शकली नाही.\""
+
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid ""
+"Your code looks like SAL syntax, but there is no 'return' statement.\n"
+"For SAL, use a return statement such as:\n"
+"\treturn *track* * 0.1\n"
+"or for LISP, begin with an open parenthesis such as:\n"
+"\t(mult *track* 0.1)\n"
+" ."
+msgstr ""
+"आपला सांकेतिक आज्ञावली एसएएल मांडणीसारखा दिसत आहे, परंतु तेथे 'रिटर्न' विधान नाही.\n"
+"एसएएलसाठी रिटर्न स्टेटमेंट वापरा जसेः\n"
+"रिटर्न * गीतपट्टा * * 0.1\n"
+"किंवा एलआयएसपीसाठी, खुल्या कंसांसह प्रारंभ करा जसे की:\n"
+"(मल्टी * गीतपट्टा * 0.1)\n"
+"  ."
+
+#. i18n-hint: refers to programming "languages"
+#: libraries/lib-nyquist-effects/NyquistBase.cpp
+msgid "Could not determine language"
+msgstr "भाषा ठरवू शकलो नाही"
+
+#. i18n-hint: default exported file name when exporting from unsaved project
+#: libraries/lib-nyquist-effects/NyquistBase.cpp src/TimerRecordDialog.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "untitled"
+msgstr "शीर्षक नसलेले"
+
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Audio Track"
 msgstr "ध्वनी गीतपट्टा"
@@ -2237,7 +3522,7 @@ msgid "Writable Sample Track"
 msgstr "नमुना गीतपट्टा"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
-#: src/effects/Contrast.cpp src/menus/FileMenus.cpp
+#: src/effects/Contrast.cpp
 msgid "&Close"
 msgstr "बंद करा(&C)"
 
@@ -2866,6 +4151,141 @@ msgstr "प्रेसेट धारिका लोड करण्यात
 msgid "Failed to save VST3 preset to file"
 msgstr "प्रीसेट नाव स्थापित करण्यात अयशस्वी"
 
+#. i18n-hint: The name of a frequency scale in psychoacoustics
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Mel"
+msgstr "मेल"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Bark"
+msgstr "भुंकणे"
+
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "ERB"
+msgstr "इ आर बी"
+
+#. i18n-hint: Time units, that is Period = 1 / Frequency
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Period"
+msgstr "काळ"
+
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+#, fuzzy
+msgctxt "spectrum prefs"
+msgid "Color (Roseus)"
+msgstr "रंग"
+
+#. i18n-hint: Classic color scheme(from theme) for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Color (classic)"
+msgstr ""
+
+#. i18n-hint: Grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Grayscale"
+msgstr ""
+
+#. i18n-hint: Inverse grayscale color scheme for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgctxt "spectrum prefs"
+msgid "Inverse grayscale"
+msgstr ""
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Frequencies"
+msgstr "वारंवारता"
+
+#. i18n-hint: the Reassignment algorithm for spectrograms
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Reassignment"
+msgstr "पुन्हा नियुक्त करणे"
+
+#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Pitch (EAC)"
+msgstr "ध्वनीची खेळपट्टी (EAC)"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Maximum frequency must be 100 Hz or above"
+msgstr "कमाल वारंवारता 100 Hz किंवा वरील असणे आवश्यक आहे"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be at least 0 Hz"
+msgstr "किमान वारंवारता किमान 0 Hz असावी"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "Minimum frequency must be less than maximum frequency"
+msgstr "किमान वारंवारता कमाल वारंवारतेपेक्षा कमी असणे आवश्यक आहे"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The range must be at least 1 dB"
+msgstr "श्रेणी किमान 1 डीबी असणे आवश्यक आहे"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain cannot be negative"
+msgstr "वारंवारता वाढणे नकारात्मक असू शकत नाही"
+
+#: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
+msgid "The frequency gain must be no more than 60 dB/dec"
+msgstr "वारंवारता वाढ 60 डीबी / डेकपेक्षा जास्त नसावी"
+
+#. i18n-hint: abbreviates amplitude
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Linear (amp)"
+msgstr "रेषीय प्रवेश"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+msgid "Logarithmic (dB)"
+msgstr "लॉगरिद्मिक (डीबी)"
+
+#. i18n-hint: abbreviates decibels
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+#: src/commands/SetTrackInfoCommand.cpp
+#, fuzzy
+msgid "Linear (dB)"
+msgstr "रेखीय"
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-36 dB (shallow range for high-amplitude editing)"
+msgstr "-36 डीबी (उच्च विस्तार संपादनासाठी वरवरची रेंज)."
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-48 dB (PCM range of 8 bit samples)"
+msgstr "-48 डीबी (8 बिट नमुन्यांचे पीसीएम श्रेणी)."
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-60 dB (PCM range of 10 bit samples)"
+msgstr "-60 डीबी (10 बिट नमुन्यांचे पीसीएम श्रेणी)."
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-72 dB (PCM range of 12 bit samples)"
+msgstr "-72 डीबी (12 बिट नमुन्यांचे पीसीएम श्रेणी)."
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-84 dB (PCM range of 14 bit samples)"
+msgstr "-84 डीबी (14 बिट नमुन्यांचे पीसीएम श्रेणी)."
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-96 dB (PCM range of 16 bit samples)"
+msgstr "-96 डीबी (16 बिट नमुन्यांचे पीसीएम श्रेणी)."
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-120 dB (approximate limit of human hearing)"
+msgstr "-120 डीबी (माणसाची ऐकण्याची अंदाजे मर्यादा)."
+
+#: libraries/lib-wave-track-settings/WaveformSettings.cpp
+msgid "-145 dB (PCM range of 24 bit samples)"
+msgstr "-145 डीबी (24 बिट नमुन्यांचे पीसीएम श्रेणी)"
+
 #: libraries/lib-wave-track/Sequence.cpp
 #, c-format
 msgid ""
@@ -2888,6 +4308,11 @@ msgstr "प्रक्रिया चालू आहे(&P): "
 #, fuzzy
 msgid "Rendering Clip"
 msgstr "पुनर्नामित करा(&R)..."
+
+#: libraries/lib-wave-track/WaveChannelViewConstants.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+msgid "&Multi-view"
+msgstr "बहु-दृश्य"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -3138,6 +4563,7 @@ msgstr "थांबा"
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
@@ -4608,9 +6034,9 @@ msgstr "६५ -१०५ केबीपीएस (kbps)"
 msgid "45-85 kbps (Smaller files)"
 msgstr "४५-८५ केबीपीएस (kbps) (लहान धारिका)"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane, 320 kbps"
+#, fuzzy
+msgid "Excessive, 320 kbps"
 msgstr "इनसेन, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4625,10 +6051,9 @@ msgstr "सामान्य, 170-210 kbps"
 msgid "Medium, 145-185 kbps"
 msgstr "मध्यम, 145-185 kbps"
 
-#. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-msgid "Insane"
-msgstr "इनसेन"
+msgid "Excessive"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -5908,12 +7333,21 @@ msgid "Account not linked"
 msgstr "बेंचमार्क(Benchmark) यशस्वीरित्या पूर्ण झाले.\\n  \n"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Anonymous"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Unlink Account"
 msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "&Sign Out"
+msgstr "रेखीय बाहेर पडा"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -6003,10 +7437,6 @@ msgid "Project Name"
 msgstr "प्रकल्प"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
 msgstr ""
 
@@ -6093,6 +7523,77 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
 msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create cloud account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to cloud"
+msgstr "या टोकापासून त्या टोकापर्यंत संरेखित करा"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Oops! It looks like there was an issue with your input.\n"
+"Please ensure your email is correct and that your password is at least 8 characters long"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid ""
+"Sorry, but it seems the email or password you entered is incorrect.\n"
+"Please double-check your credentials and try again!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Create an account to save to the cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in to save to the cloud"
+msgstr "यावर नोंदवही जतन करा:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Google"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Continue with Facebook"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Email"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Password"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Forgot your password?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+msgid "Already have an account? "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Sign in here"
+msgstr "शेवट संरेखित करा"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#, fuzzy
+msgid "Need an account? "
+msgstr "दोलन परिमाण"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "योगदानकर्ते"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -6370,12 +7871,6 @@ msgstr "रिक्त प्रकल्प जतन करत आहे(&e)"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
 msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-#, fuzzy
-msgid "Continue"
-msgstr "योगदानकर्ते"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 #, fuzzy
@@ -7030,16 +8525,16 @@ msgstr ""
 "ते अलीकडील धारिकेच्या सूचीमधून काढले गेले आहे."
 
 #: src/AudacityApp.cpp
+msgid "Audacity is starting up..."
+msgstr "ऑड्यासिटी सुरु होत आहे..."
+
+#: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
 msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
 msgstr "ब्लॉक आकार २५६ ते १०००००००० दरम्यान असणे आवश्यक आहे\n"
-
-#: src/AudacityApp.cpp
-msgid "Audacity is starting up..."
-msgstr "ऑड्यासिटी सुरु होत आहे..."
 
 #. i18n-hint: "New" is an action (verb) to create a NEW project
 #: src/AudacityApp.cpp src/BatchProcessDialog.cpp src/menus/FileMenus.cpp
@@ -7255,7 +8750,9 @@ msgid ""
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 
+#. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
+#: src/menus/FileMenus.cpp
 msgid "&Quit Audacity"
 msgstr ""
 
@@ -8082,6 +9579,29 @@ msgstr ""
 msgid "Turn off dropout detection"
 msgstr "ड्रॉपआउट शोध बंद करा"
 
+#: src/EffectAndCommandPluginManager.cpp
+#, c-format
+msgid ""
+"Attempting to initialize the following command failed:\n"
+"\n"
+"%s\n"
+"\n"
+"More information may be available in 'Help > Diagnostics > Show Log'"
+msgstr ""
+"खालील आज्ञा प्रारंभ करण्याचा प्रयत्न अयशस्वी:\n"
+"\n"
+"%s\n"
+"\n"
+"अधिक माहिती 'मदत > निदान > लॉग दर्शवा' मध्ये उपलब्ध असू शकते"
+
+#: src/EffectAndCommandPluginManager.cpp
+msgid "Command failed to initialize"
+msgstr "आज्ञा आरंभ करण्यात अयशस्वी"
+
+#: src/ExportLabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr ""
+
 #: src/FreqWindow.cpp
 msgid "Frequency Analysis"
 msgstr "वारंवारतेचे विश्लेषण"
@@ -8178,22 +9698,6 @@ msgstr "अक्ष:(&A)"
 #: src/FreqWindow.cpp
 msgid "&Replot..."
 msgstr "पुनर्मुद्रण... (&R)"
-
-#: src/FreqWindow.cpp
-#, fuzzy
-msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "स्पेक्ट्रम रचण्यासाठी, सर्व निवडलेले गीतपट्टे समान नमुन्याचे दर असले पाहिजेत."
-
-#: src/FreqWindow.cpp
-msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
-msgstr ""
-
-#: src/FreqWindow.cpp
-#, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "बरेच ध्वनी निवडले होते. केवळ पहिल्या%.1f सेकंदाच्या ध्वनीचे विश्लेषण केले जाईल"
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -8415,49 +9919,6 @@ msgstr "नवीन नावपट्टी असलेला गीतपप
 msgid "Enter track name"
 msgstr "गीतपट्ट्याचे नाव दाखल करा"
 
-#. i18n-hint: (noun) it's the name of a kind of track.
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Label track.
-#: src/LabelDialog.cpp src/LabelDialog.h src/LabelTrack.cpp
-#: src/TrackPanelAx.cpp
-msgid "Label Track"
-msgstr "नावपट्टी असलेला गीतपपट्टा"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "SubRip text file"
-msgstr "मजकूर धारिका"
-
-#: src/LabelTrack.cpp
-#, fuzzy
-msgid "WebVTT file"
-msgstr "HTML धारिका "
-
-#: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
-msgid "Labels"
-msgstr "नावपट्टी"
-
-#: src/LabelTrack.cpp
-msgid "S&tandard"
-msgstr ""
-
-#: src/LabelTrack.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr ""
-
-#: src/LabelTrack.cpp
-msgid "Exported Label Style:"
-msgstr ""
-
-#: src/LabelTrack.cpp
-msgid "Importing WebVTT files is not currently supported."
-msgstr ""
-
-#: src/LabelTrack.cpp
-msgid "One or more saved labels could not be read."
-msgstr "एक किंवा अधिक जतन केलेल्या नावपट्टया वाचल्या जाऊ शकत नाहीत."
-
 #. i18n-hint: Title on a dialog indicating that this is the first
 #. * time Audacity has been run.
 #: src/LangChoice.cpp
@@ -8505,13 +9966,14 @@ msgstr "सोपेमार्ग काढून टाकले आहेत
 msgid "Audacity Mixer%s"
 msgstr "ऑड्यासिटीची मिश्रण फळी %s"
 
-#. i18n-hint: title of the Gain slider, used to adjust the volume
-#. i18n-hint: Title of the Gain slider, used to adjust the volume
-#: src/MixerBoard.cpp src/menus/TrackMenus.cpp
+#. i18n-hint: title of the Volume slider, used to adjust the volume
+#. i18n-hint: Title of the Volume slider, used to adjust the volume
+#: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Gain"
-msgstr "मिळवा"
+#, fuzzy
+msgid "Volume"
+msgstr "आवाज "
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -8552,8 +10014,9 @@ msgstr "संकेत पातळी मीटर"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-msgid "Moved gain slider"
-msgstr "मिळवण्याची घसारपट्टी स्थानांतरित केली"
+#, fuzzy
+msgid "Moved volume slider"
+msgstr "गति घसारपट्टी स्थानांतरित केली"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -8569,116 +10032,6 @@ msgstr "पॅन स्लायडर स्थानांतरित के
 #, fuzzy
 msgid "&Mixer"
 msgstr "मिश्रक"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C"
-msgstr "सी"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯"
-msgstr "सी♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D"
-msgstr "डी"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯"
-msgstr "डी♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E"
-msgstr "इ"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F"
-msgstr "एफ"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯"
-msgstr "एफ♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G"
-msgstr "जी"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯"
-msgstr "जी♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A"
-msgstr "ए"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯"
-msgstr "ए♯"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B"
-msgstr "बी"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♭"
-msgstr "डी♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "E♭"
-msgstr "इ♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♭"
-msgstr "जी♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♭"
-msgstr "ए♭"
-
-#. i18n-hint: Name of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "B♭"
-msgstr "बी♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "C♯/D♭"
-msgstr "सी♯/डी♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "D♯/E♭"
-msgstr "डी♯/इ♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "F♯/G♭"
-msgstr "एफ♯/जी♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "G♯/A♭"
-msgstr "जी♯/ए♭"
-
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
-#: src/PitchName.cpp
-msgid "A♯/B♭"
-msgstr "ए♯/बी♭"
 
 #: src/PluginDataModel.cpp
 #, c-format
@@ -9421,17 +10774,6 @@ msgstr "हलविले '%s' खाली"
 msgid "Change effect order"
 msgstr "वेग बदला"
 
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-msgid ""
-"This plugin could not be loaded.\n"
-"It may have been deleted."
-msgstr ""
-
-#: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-#, fuzzy
-msgid "Plugin Error"
-msgstr "मूल्य त्रुटी"
-
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
@@ -9667,12 +11009,6 @@ msgstr "कालावधी"
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
 msgstr "ऑड्यासिटी वेळ-मोजपट्टी ध्वनिमुद्रण"
-
-#. i18n-hint: default exported file name when exporting from unsaved project
-#: src/TimerRecordDialog.cpp src/effects/nyquist/Nyquist.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "untitled"
-msgstr "शीर्षक नसलेले"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -10198,7 +11534,7 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -10208,6 +11544,57 @@ msgstr ""
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal processing effect that enhances vocal clarity and depth."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#. i18n-hint: MuseHub is a name of a product, see musehub.com.
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Available on [[%s|MuseHub]]."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -10229,7 +11616,7 @@ msgstr "सुरु झाल्यावर हे पुन्हा दर�
 
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
-#: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
+#: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -10393,7 +11780,7 @@ msgstr "एल.आय.एस.पी."
 msgid "Brief"
 msgstr "संक्षिप्त"
 
-#: src/commands/GetInfoCommand.cpp src/effects/EffectManager.cpp
+#: src/commands/GetInfoCommand.cpp src/effects/EffectPresetDialog.cpp
 msgid "Type:"
 msgstr "प्रकार:"
 
@@ -10838,8 +12225,9 @@ msgid "Set Track Audio"
 msgstr "गीतपट्ट्याच्या ध्वनीची रचना करा."
 
 #: src/commands/SetTrackInfoCommand.cpp
-msgid "Gain:"
-msgstr "मिळवा:"
+#, fuzzy
+msgid "Volume:"
+msgstr "आवाज "
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -10848,26 +12236,6 @@ msgstr "पॅन:"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Visuals"
 msgstr "गीतपट्टा प्रदर्शन निवड करा"
-
-#. i18n-hint: abbreviates amplitude
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-#, fuzzy
-msgid "Linear (amp)"
-msgstr "रेषीय प्रवेश"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-msgid "Logarithmic (dB)"
-msgstr "लॉगरिद्मिक (डीबी)"
-
-#. i18n-hint: abbreviates decibels
-#: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformSettings.cpp
-#, fuzzy
-msgid "Linear (dB)"
-msgstr "रेखीय"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -10943,10 +12311,6 @@ msgstr "गीतपट्ट्यासाठी विविध मूल्�
 msgid "Long Message"
 msgstr "मोठा संदेश"
 
-#: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
-msgid "Amplify"
-msgstr "विस्तार करा"
-
 #: src/effects/Amplify.cpp
 msgid "Increases or decreases the volume of the audio you have selected"
 msgstr "आपण निवडलेल्या ध्वनी मात्रा वाढवा किंवा कमी करा"
@@ -10966,32 +12330,6 @@ msgstr "नवीन टोकाचा आयाम (डीबी)(&N):"
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
 msgstr "कात्रणला अनुमती द्या(&W)"
-
-#: src/effects/AutoDuck.cpp resources/EffectsMenuDefaults.xml
-msgid "Auto Duck"
-msgstr "स्वंय सोडा"
-
-#: src/effects/AutoDuck.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "जेव्हा निर्दिष्ट \"नियंत्रण\" गीतपट्ट्याचे खंड विशिष्ट स्तरावर पोहोचते तेव्हा एक किंवा अधिक गीतपट्ट्याचे खंड कमी करते (डक)"
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks'
-#. (reduces the volume) of the audio automatically when there is
-#. sound on another track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "आपण एक ध्वनी निवडला आहे, जो रिक्त  आहे. ऑटोडक केवळ ध्वनी गीतपट्वट्रया प्रक्रिया करू शकते"
-
-#. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
-#. the volume) of the audio automatically when there is sound on another
-#. track.  Not as in 'Donald-Duck'!
-#: src/effects/AutoDuck.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "ऑटोडकला एक नियंत्रण गीतपट्टा आवश्यक आहे जो निवडलेल्या ध्वनीच्या खाली ठेवायला हवा."
-
-#: src/effects/AutoDuck.cpp
-msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr ""
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -11054,14 +12392,6 @@ msgstr "%s: ही एक वैध पूर्वनिर्धारित �
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
 msgstr "%s: हा भिन्न प्रभाव, जनरेटर किंवा विश्लेषक यासाठी आहे.\n"
 
-#: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
-msgid "Bass and Treble"
-msgstr "बास आणि ट्रेबल"
-
-#: src/effects/BassTreble.cpp
-msgid "Simple tone control effect"
-msgstr "सामान्य ध्वनी नियंत्रण प्रभाव"
-
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
 msgstr "स्वर नियंत्रण"
@@ -11093,18 +12423,6 @@ msgstr "आवाज(&V) (dB):"
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
 msgstr "ध्वनी नियंत्रणावर आवाज नियंत्रण जोडा(&L)"
-
-#: src/effects/ChangePitch.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Pitch"
-msgstr "ध्वनीच्या खेळपट्टीत बदल"
-
-#: src/effects/ChangePitch.cpp
-msgid "Changes the pitch of a track without changing its tempo"
-msgstr "संगीत लय किंवा गती ना बदलता ध्वनीची खेळपट्टी बदला"
-
-#: src/effects/ChangePitch.cpp
-msgid "High Quality Pitch Change"
-msgstr "उच्च गुणवत्ता ध्वनी खेळपट्टीत बदल"
 
 #: src/effects/ChangePitch.cpp
 #, c-format
@@ -11202,15 +12520,6 @@ msgstr "४५"
 msgid "78"
 msgstr "७८"
 
-#: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Change Speed and Pitch"
-msgstr "वेग बदला"
-
-#: src/effects/ChangeSpeed.cpp
-msgid "Changes the speed of a track, also changing its pitch"
-msgstr "ध्वनीची गती बदलण्याने, ध्वनीची खेळपट्टी देखील बदलत आहे"
-
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
 msgstr "वेग गुणक(&S):"
@@ -11275,18 +12584,6 @@ msgctxt "change speed"
 msgid "to"
 msgstr "च्यापर्यत"
 
-#: src/effects/ChangeTempo.cpp resources/EffectsMenuDefaults.xml
-msgid "Change Tempo"
-msgstr "गति बदला"
-
-#: src/effects/ChangeTempo.cpp
-msgid "Changes the tempo of a selection without changing its pitch"
-msgstr "निवडीचा पट्टी न बदलता संगीत लय किंवा गती बदल"
-
-#: src/effects/ChangeTempo.cpp
-msgid "High Quality Tempo Change"
-msgstr "उच्च गुणवत्ता स्वर परिवर्तन"
-
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
 msgstr "प्रति मिनिट ठेका"
@@ -11334,23 +12631,6 @@ msgstr "च्यापर्यत(&o)"
 msgid "Length in seconds from %s, to"
 msgstr "%s पासून ते सेकंदात लांबी"
 
-#: src/effects/ClickRemoval.cpp resources/EffectsMenuDefaults.xml
-msgid "Click Removal"
-msgstr "काढण्यासाठी क्लिक करा"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr "क्लिक करून काढणे हे ऑडिओ ट्रॅकवरील क्लिक्स काढून टाकण्यासाठी रचित केले आहे"
-
-#: src/effects/ClickRemoval.cpp
-msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr "या ध्वनी वर प्रभावी नाही. काहीही बदलले नाही."
-
-#: src/effects/ClickRemoval.cpp
-#, c-format
-msgid "Selection must be larger than %d samples."
-msgstr "निवड %d नमुन्यांपेक्षा मोठी असणे आवश्यक आहे."
-
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
 msgstr "सुरवात (कमी अधिक संवेदनशील आहे):"
@@ -11374,30 +12654,6 @@ msgstr "संकुचित करणारा"
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr ""
-
-#: src/effects/Contrast.cpp
-msgid "You can only measure one track at a time."
-msgstr "आपण एका वेळी फक्त एक ध्वनीपट्टा मोजु शकता."
-
-#: src/effects/Contrast.cpp
-msgid "Please select an audio track."
-msgstr "कृपया एक ध्वनीपट्टा निवडा."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Invalid audio selection.\n"
-"Please ensure that audio is selected."
-msgstr ""
-"अवैध ध्वनी  निवड.\n"
-"कृपया ध्वनी  निवडलेला असल्याची खात्री करा."
-
-#: src/effects/Contrast.cpp
-msgid ""
-"Nothing to measure.\n"
-"Please select a section of a track."
-msgstr ""
-"मोजण्यासाठी काहीही नाही.\n"
-"कृपया ध्वनीपट्टाचा एक विभाग निवडा."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
@@ -11635,132 +12891,6 @@ msgid "Contrast..."
 msgstr "तीव्रता..."
 
 #: src/effects/Distortion.cpp
-msgid "Hard Clipping"
-msgstr "कठीण कात्रण"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Clipping"
-msgstr "मृदू कात्रण"
-
-#: src/effects/Distortion.cpp
-msgid "Soft Overdrive"
-msgstr "मऊ अधिक लोड लावणे"
-
-#: src/effects/Distortion.cpp
-msgid "Medium Overdrive"
-msgstr "मध्यम  अधिक लोड लावणे"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Overdrive"
-msgstr "कठीण अधिक लोड लावणे"
-
-#: src/effects/Distortion.cpp
-msgid "Cubic Curve (odd harmonics)"
-msgstr "घनाकृती वक्र (विषम सुसंवाद)"
-
-#: src/effects/Distortion.cpp
-msgid "Even Harmonics"
-msgstr "सम हारमोनिक्स"
-
-#: src/effects/Distortion.cpp
-msgid "Expand and Compress"
-msgstr "विस्तृत करा आणि संकुचित करा"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller"
-msgstr "पातळी देणारे"
-
-#: src/effects/Distortion.cpp
-msgid "Rectifier Distortion"
-msgstr "दुरुस्त करणाने विरूपण"
-
-#: src/effects/Distortion.cpp
-msgid "Hard Limiter 1413"
-msgstr "कठीण लिमिटर 1413"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "कठीण फीत -12dB, 80% मेक-अप लाभ"
-
-#: src/effects/Distortion.cpp
-#, no-c-format
-msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "मऊ फीत -12 डीबी, 80% मेक-अप गेन"
-
-#: src/effects/Distortion.cpp
-msgid "Fuzz Box"
-msgstr "मऊ पेटी"
-
-#: src/effects/Distortion.cpp src/effects/Equalization.cpp
-msgid "Walkie-talkie"
-msgstr "वॉकी-टॉकी"
-
-#: src/effects/Distortion.cpp
-msgid "Blues drive sustain"
-msgstr "ब्लूज ड्राईव्ह टिकाव"
-
-#: src/effects/Distortion.cpp
-msgid "Light Crunch Overdrive"
-msgstr "हलके खरखरीचे आवाज अधिलिखित करा."
-
-#: src/effects/Distortion.cpp
-msgid "Heavy Overdrive"
-msgstr "भारी वाढवण्याच्या"
-
-#: src/effects/Distortion.cpp
-msgid "3rd Harmonic (Perfect Fifth)"
-msgstr "तिसरा हार्मोनिक (संभाषण)"
-
-#: src/effects/Distortion.cpp
-msgid "Valve Overdrive"
-msgstr "व्हॉल्व्ह अधिक लोड लावणे"
-
-#: src/effects/Distortion.cpp
-msgid "2nd Harmonic (Octave)"
-msgstr "2 रा हार्मोनिक (अष्टक)"
-
-#: src/effects/Distortion.cpp
-msgid "Gated Expansion Distortion"
-msgstr "द्वारबंद विस्तार विरूपण"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Light, -70dB noise floor"
-msgstr "पातळी, हलका, -70dB आवाज मजला"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "पातळी देणारे, सामान्य, -70dB  गोंगाट तळ"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "पातळी देणारे, सामान्य, -70dB गोंगाट तळ"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "पातळी देणारे, अधिक वजनदार, -70dB गोंगाट तळ"
-
-#: src/effects/Distortion.cpp
-msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "पातळी देणारे, सर्वात वजनदार, -70dB गोंगाट तळ"
-
-#: src/effects/Distortion.cpp
-msgid "Half-wave Rectifier"
-msgstr "अर्धा-तरंग दुरुस्त करणारा"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier"
-msgstr "पूर्ण-तरंग दुरुस्त करणारा"
-
-#: src/effects/Distortion.cpp
-msgid "Full-wave Rectifier (DC blocked)"
-msgstr "पूर्ण-लाट दुरुस्त करणारा (डीसी अवरोधित)"
-
-#: src/effects/Distortion.cpp
-msgid "Percussion Limiter"
-msgstr "आघाताची मर्यादा"
-
-#: src/effects/Distortion.cpp
 msgid "Upper Threshold"
 msgstr "वरची सीमा"
 
@@ -11779,14 +12909,6 @@ msgstr "घटक 2"
 #: src/effects/Distortion.cpp
 msgid "Number of repeats"
 msgstr "पुनरावृत्तीची संख्या"
-
-#: src/effects/Distortion.cpp resources/EffectsMenuDefaults.xml
-msgid "Distortion"
-msgstr "विरूपण"
-
-#: src/effects/Distortion.cpp
-msgid "Waveshaping distortion effect"
-msgstr "तरंगरूप विरूपणाचा प्रभाव"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion type:"
@@ -11883,22 +13005,6 @@ msgstr "(0 ते  100):"
 #: src/effects/Distortion.cpp
 msgid "(0 to 5):"
 msgstr "(0 ते  5):"
-
-#: src/effects/DtmfGen.cpp
-msgid "DTMF Tones"
-msgstr "डी.टीएम.एफ. स्वर"
-
-#: src/effects/DtmfGen.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "टेलिफोनवर कीबोर्डद्वारे तयार केल्याप्रमाणे ड्युअल-ध्वनी अनेक-वारंवारता (DTMF)ध्वनी व्युत्पन्न करते"
-
-#: src/effects/DtmfGen.cpp
-msgid ""
-"DTMF sequence empty.\n"
-"Check ALL settings for this effect."
-msgstr ""
-"डीटीएमएफ क्रम रिक्त.\n"
-"या प्रभावासाठी सर्व समायोजन तपासा."
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF &sequence:"
@@ -12050,19 +13156,6 @@ msgstr "संकुचन"
 msgid "awaiting playback"
 msgstr "प्रारंभ करा आणि पुनर्मुद्रण करा."
 
-#: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
-msgid "Echo"
-msgstr "प्रतिध्वनी"
-
-#: src/effects/Echo.cpp
-msgid "Repeats the selected audio again and again"
-msgstr "ऑड्यासिटी प्राधान्ये पूर्वनियोजित करा"
-
-#: src/effects/Echo.cpp src/effects/FindClipping.cpp
-#: src/effects/Paulstretch.cpp
-msgid "Requested value exceeds memory capacity."
-msgstr "विनंती केलेले मूल्य मेमरी क्षमतेपेक्षा जास्त आहे."
-
 #: src/effects/Echo.cpp
 msgid "&Delay time (seconds):"
 msgstr "विलंब वेळ (सेकंद):"
@@ -12071,77 +13164,29 @@ msgstr "विलंब वेळ (सेकंद):"
 msgid "D&ecay factor:"
 msgstr "क्षय घटक:"
 
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied effect: %s"
-msgstr "लागू केलेला प्रभाव:%s"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid "Applied command: %s"
-msgstr "लागू केलेली आज्ञा:%s"
-
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Select Preset"
 msgstr "पूर्वनिर्धारित निवडा"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "&Preset:"
 msgstr "पूर्व-निर्धारित:"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "User Presets"
 msgstr "वापरकर्त्याचे पूर्व-निर्धारित"
 
-#: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
+#: src/effects/EffectPresetDialog.cpp src/effects/EffectUI.cpp
 msgid "Factory Presets"
 msgstr "कारखान्यातील पूर्वनिर्धारितः"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Current Settings"
 msgstr "सध्याचे समाजोयन"
 
-#: src/effects/EffectManager.cpp
+#: src/effects/EffectPresetDialog.cpp
 msgid "Factory Defaults"
 msgstr "कारखान्यातील पूर्वनिर्धारित"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following effect failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"खालील प्रभाव प्रारंभ करण्याचा प्रयत्न अयशस्वी:\n"
-"\n"
-"%s\n"
-"\n"
-"अधिक माहिती 'मदत > निदान > लॉग दर्शवा' मध्ये उपलब्ध असू शकते"
-
-#: src/effects/EffectManager.cpp
-msgid "Effect failed to initialize"
-msgstr "प्रभाव सुरु करण्यात अयशस्वी"
-
-#: src/effects/EffectManager.cpp
-#, c-format
-msgid ""
-"Attempting to initialize the following command failed:\n"
-"\n"
-"%s\n"
-"\n"
-"More information may be available in 'Help > Diagnostics > Show Log'"
-msgstr ""
-"खालील आज्ञा प्रारंभ करण्याचा प्रयत्न अयशस्वी:\n"
-"\n"
-"%s\n"
-"\n"
-"अधिक माहिती 'मदत > निदान > लॉग दर्शवा' मध्ये उपलब्ध असू शकते"
-
-#: src/effects/EffectManager.cpp
-msgid "Command failed to initialize"
-msgstr "आज्ञा आरंभ करण्यात अयशस्वी"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
@@ -12236,10 +13281,6 @@ msgstr ""
 "\n"
 "पुनर्स्थित करायची?"
 
-#: src/effects/Equalization.cpp
-msgid "Equalization"
-msgstr "समानीकरण"
-
 #: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "चाळणी वक्र ईक्यू"
@@ -12248,58 +13289,6 @@ msgstr "चाळणी वक्र ईक्यू"
 #: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "ग्राफ़िक EQ"
-
-#: src/effects/Equalization.cpp
-msgid "Adjusts the volume levels of particular frequencies"
-msgstr "विशिष्ट वारंवारतेच्या आवाजाची पातळी समायोजित करते"
-
-#: src/effects/Equalization.cpp
-msgid "100Hz Rumble"
-msgstr "100हर्ट्ज खडखडाट"
-
-#: src/effects/Equalization.cpp
-msgid "AM Radio"
-msgstr "एएम रेडिओ"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Boost"
-msgstr "बास बूस्ट"
-
-#: src/effects/Equalization.cpp
-msgid "Bass Cut"
-msgstr "बास कट"
-
-#: src/effects/Equalization.cpp
-msgid "Low rolloff for speech"
-msgstr "भाषणासाठी कमी रोलऑफ"
-
-#: src/effects/Equalization.cpp
-msgid "RIAA"
-msgstr "आरआयएए"
-
-#: src/effects/Equalization.cpp
-msgid "Telephone"
-msgstr "दूरध्वनी"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Boost"
-msgstr "तिप्पट वाढ"
-
-#: src/effects/Equalization.cpp
-msgid "Treble Cut"
-msgstr "ट्रेबल कट"
-
-#: src/effects/Equalization.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "समिकरण लागू करण्यासाठी, सर्व निवडलेल्या गीतपट्ट्यामध्ये समान नमुना दर असणे आवश्यक आहे."
-
-#: src/effects/Equalization.cpp
-msgid "Track sample rate is too low for this effect."
-msgstr "या प्रभावासाठी गीतपट्टा नमुना दर खूपच कमी आहे."
-
-#: src/effects/Equalization.cpp
-msgid "Effect Unavailable"
-msgstr "प्रभाव अनुपलब्ध"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -12339,33 +13328,6 @@ msgstr "%gके"
 #, c-format
 msgid "%d dB"
 msgstr "%d डी.बी."
-
-#. i18n-hint: name of the 'unnamed' custom curve
-#: src/effects/EqualizationCurves.cpp
-msgid "unnamed"
-msgstr "अनामिक"
-
-#. i18n-hint: EQ stands for 'Equalization'.
-#: src/effects/EqualizationCurves.cpp
-#, c-format
-msgid ""
-"Error Loading EQ Curves from file:\n"
-"%s\n"
-"Error message says:\n"
-"%s"
-msgstr ""
-"धारिकामधून ईक्यू वक्र लोड करताना त्रुटी:\n"
-"%s\n"
-"त्रुटी संदेश म्हणतोः\n"
-"%s"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Loading EQ Curves"
-msgstr "EQ  वक्र लोड करताना त्रुटी"
-
-#: src/effects/EqualizationCurves.cpp
-msgid "Error Saving Equalization Curves"
-msgstr "समानता वक्र जतन करताना त्रुटी"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -12493,31 +13455,6 @@ msgstr "वक्र निर्यात केले"
 msgid "No curves exported"
 msgstr "वक्र निर्यात केले नाही"
 
-#. i18n-hint: Technical term for a kind of curve.
-#: src/effects/EqualizationParameters.cpp
-msgid "B-spline"
-msgstr "बी-स्प्लिन"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cosine"
-msgstr "कोसाइन (Cosine)"
-
-#: src/effects/EqualizationParameters.cpp
-msgid "Cubic"
-msgstr "घन"
-
-#: src/effects/EqualizationUI.cpp
-msgid ""
-"To use this filter curve in a macro, please choose a new name for it.\n"
-"Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-msgstr ""
-"हे फिल्टर वक्र मॅक्रोमध्ये वापरण्यासाठी कृपया यासाठी एक नवीन नाव निवडा.\n"
-"'वक्र जतन / व्यवस्थापित करा ...' बटण निवडा आणि 'अज्ञात' वक्र पुनर्नामित करा, त्यानंतर ते वापरा."
-
-#: src/effects/EqualizationUI.cpp
-msgid "Filter Curve EQ needs a different name"
-msgstr "फिल्टर कर्व्ह ईक्यू ला भिन्न नावाची आवश्यकता आहे"
-
 #: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
 msgid "+ dB"
 msgstr "+ डी.बी."
@@ -12598,53 +13535,6 @@ msgstr "ग्रिड रेषा दाखवा"
 msgid "Show g&rid lines"
 msgstr "ग्रीड रेषा दर्शवा"
 
-#: src/effects/EqualizationUI.cpp
-msgid "Requested curve not found, using 'unnamed'"
-msgstr "'अनामिक' वापरुन विनंती केलेले वक्र सापडले नाही"
-
-#: src/effects/EqualizationUI.cpp
-msgid "Curve not found"
-msgstr "वक्र सापडला नाही"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade In"
-msgstr "ठळक होत जाणे (फेड इन)"
-
-#: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
-msgid "Fade Out"
-msgstr "घटणे (फेड आउट)"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-in to the selected audio"
-msgstr "निवडलेल्या ध्वनी वर एक रेखीय ठळकपणा (फेड इन) लागू करते"
-
-#: src/effects/Fade.cpp
-msgid "Applies a linear fade-out to the selected audio"
-msgstr "निवडलेल्या ध्वनी वर एक रेखीय घट (फेड आउट) लागू करते"
-
-#: src/effects/FindClipping.cpp
-msgid "Find Clipping"
-msgstr "कात्रण शोधा"
-
-#: src/effects/FindClipping.cpp
-msgid "Creates labels where clipping is detected"
-msgstr "जेथे क्लिपिंग आढळले आहे तेथे नावपट्टी तयार करते"
-
-#: src/effects/FindClipping.cpp
-msgid "Clipping"
-msgstr "कात्रण"
-
-#. i18n-hint: Two numbers are substituted; the second is the
-#. size of a set, the first is the size of a subset, and not
-#. understood as an ordinal (i.e., not meaning "first", or
-#. "second", etc.)
-#.
-#: src/effects/FindClipping.cpp
-#, fuzzy, c-format
-msgctxt "find clipping"
-msgid "%lld of %lld"
-msgstr "%s %d च्या%d"
-
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
 msgstr "सीमा सुरु करा (नमुने):"
@@ -12652,27 +13542,6 @@ msgstr "सीमा सुरु करा (नमुने):"
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
 msgstr "सीमा थांबवा (नमुने):"
-
-#: src/effects/Generator.cpp
-msgid "There is not enough room available to generate the audio"
-msgstr "ध्वनी  व्युत्पन्न करण्यासाठी पर्याप्त जागा उपलब्ध नाही"
-
-#: src/effects/Invert.cpp resources/EffectsMenuDefaults.xml
-msgid "Invert"
-msgstr "उलटे"
-
-#: src/effects/Invert.cpp
-msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr "नमुने उलट करून ध्वनी त्यांची ध्रुवीयता उलट करते."
-
-#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Legacy Compressor"
-msgstr "संकुचित करणारा"
-
-#: src/effects/LegacyCompressor.cpp
-msgid "Compresses the dynamic range of audio"
-msgstr "\"ध्वनी ची गतिमान श्रेणी संकुचित करा \""
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
@@ -12801,28 +13670,6 @@ msgstr "जाणवलेला जोर"
 msgid "RMS"
 msgstr "आरएमएस"
 
-#: src/effects/Loudness.cpp resources/EffectsMenuDefaults.xml
-msgid "Loudness Normalization"
-msgstr "कर्कशपणा सामान्यीकरण"
-
-#: src/effects/Loudness.cpp
-msgid "Sets the loudness of one or more tracks"
-msgstr "एक किंवा अधिक गीतपट्ट्याचा जोर स्थापित करते"
-
-#: src/effects/Loudness.cpp
-msgid "Normalizing Loudness...\n"
-msgstr "कर्कशपणा सामान्य करीत आहे...\n"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing: %s"
-msgstr "विश्लेषण करीत आहे:%s"
-
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#, c-format
-msgid "Processing: %s"
-msgstr "प्रक्रिया करीत आहे:%s"
-
 #: src/effects/Loudness.cpp
 msgid "&Normalize"
 msgstr "&सामान्यीकृत करा"
@@ -12852,89 +13699,9 @@ msgstr "मोनोला ड्युअल-मोनो म्हणून �
 msgid "(Maximum 0dB)"
 msgstr "(जास्तीत जास्त 0डीबी)"
 
-#. i18n-hint: not a color, but "white noise" having a uniform spectrum
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "White"
-msgstr "पांढरा"
-
-#. i18n-hint: not a color, but "pink noise" having a spectrum with more power
-#. in low frequencies
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Pink"
-msgstr "गुलाबी"
-
-#. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
-#: src/effects/Noise.cpp
-msgctxt "noise"
-msgid "Brownian"
-msgstr "ब्राउनियन"
-
-#: src/effects/Noise.cpp
-msgid "Noise"
-msgstr "गोंगाट"
-
-#: src/effects/Noise.cpp
-msgid "Generates one of three different types of noise"
-msgstr "तीनपैकी एक प्रकारचा आवाज व्युत्पन्न करतो"
-
 #: src/effects/Noise.cpp
 msgid "&Noise type:"
 msgstr "& गोंगाट प्रकार:"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median"
-msgstr "मध्यम "
-
-#: src/effects/NoiseReduction.cpp
-msgid "Second greatest"
-msgstr "दुसरा सर्वात मोठा "
-
-#: src/effects/NoiseReduction.cpp
-msgid "Old"
-msgstr "जुना "
-
-#: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
-#: resources/EffectsMenuDefaults.xml
-msgid "Noise Reduction"
-msgstr "गोंगाट कमी करणे"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "पंखे, टेपचा आवाज किंवा हुंकार यासारखे पार्श्वभूमी आवाज काढून टाकते"
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block are too few for the window types."
-msgstr "विंडो प्रकारांसाठी प्रति-ब्लॉक पायऱ्या खूप कमी आहेत."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Steps per block cannot exceed the window size."
-msgstr "प्रति तुकडा पायर्‍या विंडोच्या आकारापेक्षा जास्त असू शकत नाहीत."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Median method is not implemented for more than four steps per window."
-msgstr "प्रति विंडो चार पेक्षा जास्त चरणांसाठी मीडियन पद्धत लागू केली जात नाही."
-
-#: src/effects/NoiseReduction.cpp
-msgid "You must specify the same window size for steps 1 and 2."
-msgstr "चरण 1 आणि 2 साठी आपण समान विंडो आकार निर्दिष्ट करणे आवश्यक आहे."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Warning: window types are not the same as for profiling."
-msgstr "खबरदारीचा इशारा: विंडोचे प्रभाव प्रोफाइल करण्यासाठी सारखे नाहीत."
-
-#: src/effects/NoiseReduction.cpp
-msgid "All noise profile data must have the same sample rate."
-msgstr "सर्व ध्वनी प्रोफाइल माहितीमध्ये समान नमुना दर असणे आवश्यक आहे."
-
-#: src/effects/NoiseReduction.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "ध्वनी प्रोफाइलचा नमुना दर प्रक्रियेसाठी असलेल्या ध्वनीशी जुळला पाहिजे."
-
-#: src/effects/NoiseReduction.cpp
-msgid "Selected noise profile is too short."
-msgstr "निवडलेला ध्वनी प्रोफाइल खूप लहान आहे."
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Noise reduction (dB):"
@@ -13102,55 +13869,6 @@ msgstr "4 (पूर्वनियोजित)"
 msgid "Discrimination &method:"
 msgstr "भेदभाव पद्धत&:"
 
-#: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
-msgid "Normalize"
-msgstr "सामान्यीकरण"
-
-#: src/effects/Normalize.cpp
-msgid "Sets the peak amplitude of one or more tracks"
-msgstr "एक किंवा अधिक ट्रॅकचे टोकाचा विस्तार सेट करते"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset and Normalizing...\n"
-msgstr "DC ऑफसेट काढून टाकत आहे आणि सामान्यीकरण करीत आहे ...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Removing DC offset...\n"
-msgstr "डीसी ऑफसेट काढत आहे ...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Normalizing without removing DC offset...\n"
-msgstr "डीसी ऑफसेट न काढता सामान्य करीत आहे ...\n"
-
-#: src/effects/Normalize.cpp
-msgid "Not doing anything...\n"
-msgstr "काहीही करत नाही ...\n"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing first track of stereo pair: %s"
-msgstr "स्टिरीओ जोडीच्या प्रथम गीतपट्ट्याचे विश्लेषण करीत आहे: %s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Analyzing second track of stereo pair: %s"
-msgstr "स्टिरीओ जोडीच्या दुसर्‍या गीतपट्ट्याचे विश्लेषण:%s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing stereo channels independently: %s"
-msgstr "स्टीरिओ वाहिनी स्वतंत्रपणे प्रक्रिया करत आहे:%s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing first track of stereo pair: %s"
-msgstr "स्टीरिओ जोडीच्या पहिल्या गीतपट्ट्यावर प्रक्रिया करीत आहे:%s"
-
-#: src/effects/Normalize.cpp
-#, c-format
-msgid "Processing second track of stereo pair: %s"
-msgstr "स्टीरिओ जोडीच्या दुसर्‍या गीतपट्ट्यावर प्रक्रिया करीत आहे:%s"
-
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
 msgstr "डीसी ऑफसेट काढा& (अनुलंब 0.0 वर मध्यभागी)"
@@ -13167,14 +13885,6 @@ msgstr "टोकाचा आयाम dB"
 msgid "N&ormalize stereo channels independently"
 msgstr "स्टीरिओ वाहिनी स्वतंत्रपणे सामान्य करा&"
 
-#: src/effects/Paulstretch.cpp resources/EffectsMenuDefaults.xml
-msgid "Paulstretch"
-msgstr "पॉलस्ट्रेच"
-
-#: src/effects/Paulstretch.cpp
-msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "पॉलस्ट्रेच हे केवळ अत्यंत ताणलेला वेळ _टाईम-स्ट्रेच) किंवा \"स्टॅसिस\" प्रभावासाठी आहे"
-
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
@@ -13186,55 +13896,6 @@ msgstr "ताण & घटक:"
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
 msgstr "वेळ& रेझोल्युशन (सेकंद):"
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Audio selection too short to preview.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"पूर्वावलोकनासाठी केलेली ध्वनीची निवड खूपच लहान आहे.\n"
-"\n"
-"ध्वनीची निवड %.1fकमीत कमी सेकंदांपर्यंत वाढवून पहा \n"
-"किंवा 'टाइम रिझोल्यूशन' %.1fसेकंदांपेक्षा कमी करून पहा."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"Unable to Preview.\n"
-"\n"
-"For the current audio selection, the maximum\n"
-"'Time Resolution' is %.1f seconds."
-msgstr ""
-"पूर्वावलोकन करण्यास असमर्थ.\n"
-"\n"
-"सध्याच्या ध्वनीच्या निवडीसाठी, कमाल 'टाइम रिझोल्यूशन' %.1fसेकंद आहे."
-
-#. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
-#: src/effects/Paulstretch.cpp
-#, c-format
-msgid ""
-"The 'Time Resolution' is too long for the selection.\n"
-"\n"
-"Try increasing the audio selection to at least %.1f seconds,\n"
-"or reducing the 'Time Resolution' to less than %.1f seconds."
-msgstr ""
-"निवडीसाठी 'वेळ रिझोल्यूशन' खूप लांब आहे.\n"
-"\n"
-"ध्वनी  निवड कमीतकमी %.1f सेकंदापर्यंत वाढवण्याचा प्रयत्न करा,\n"
-"किंवा 'वेळ रिझोल्यूशन' %.1f सेकंदांपेक्षा कमी करून पाहा"
-
-#: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
-msgid "Phaser"
-msgstr "स्वरुप"
-
-#: src/effects/Phaser.cpp
-msgid "Combines phase-shifted signals with the original signal"
-msgstr "मूळ सिग्नलसह चरण-स्थानांतरित सिग्नल एकत्रित करते"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
@@ -13298,52 +13959,6 @@ msgstr "उत्पादित मिळकत (डी.बी):"
 msgid "%s - %s"
 msgstr "%d - %s \n"
 
-#: src/effects/Repair.cpp resources/EffectsMenuDefaults.xml
-msgid "Repair"
-msgstr "दुरुस्ती"
-
-#: src/effects/Repair.cpp
-msgid "Sets the peak amplitude of a one or more tracks"
-msgstr ""
-"एक किंवा अधिक गीतपट्ट्या\n"
-"च्या टोकाचे आयाम सेट करते. "
-
-#: src/effects/Repair.cpp
-msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
-
-#: src/effects/Repair.cpp
-msgid ""
-"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
-"\n"
-"Zoom in and select a tiny fraction of a second to repair."
-msgstr ""
-"दुरूस्तीचा प्रभाव खराब झालेल्या ध्वनी च्या अगदी लहान भागांवर (१२८ नमुने पर्यंत) वापरण्याचा हेतू आहे.\n"
-"\n"
-"दृश्यरूप मोठे करा आणि दुरुस्तीसाठी सेकंदाचा एक लहान भाग निवडा."
-
-#: src/effects/Repair.cpp
-msgid ""
-"Repair works by using audio data outside the selection region.\n"
-"\n"
-"Please select a region that has audio touching at least one side of it.\n"
-"\n"
-"The more surrounding audio, the better it performs."
-msgstr ""
-"निवड प्रदेशाबाहेर ध्वनी  माहिती वापरुन दुरुस्ती कार्य करते.\n"
-"\n"
-"कृपया त्या प्रदेशाच्या कमीत कमी एका बाजूला ध्वनी  स्पर्श करणारा प्रदेश निवडा.\n"
-"\n"
-"जितका सभोवतालचा ध्वनी अधिक, तितके ते अधिक चांगले कार्य करते."
-
-#: src/effects/Repeat.cpp resources/EffectsMenuDefaults.xml
-msgid "Repeat"
-msgstr "पुनरावृत्ती"
-
-#: src/effects/Repeat.cpp
-msgid "Repeats the selection the specified number of times"
-msgstr "निवडीची निर्दिष्ट केलेल्या वेळाची पुनरावृत्त करते"
-
 #: src/effects/Repeat.cpp
 msgid "&Number of repeats to add:"
 msgstr "जोडण्यासाठी पुनरावृत्तीची संख्या&:"
@@ -13369,103 +13984,6 @@ msgstr "नवीन निवड लांबी:%s"
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
 msgstr "खबरदारीचा इशारा: पुनरावृत्ती होत नाही."
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Acoustic"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Ambience"
-msgstr "शांतता"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Artificial"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Clean"
-msgstr "स्वच्छ करा"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal I"
-msgstr "मौखिक १"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Vocal II"
-msgstr "मौखिक २"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Dance Vocal"
-msgstr "स्वर वेगळे ठेवणे"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-#, fuzzy
-msgid "Modern Vocal"
-msgstr "स्वर काढा"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Voice Tail"
-msgstr ""
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Bathroom"
-msgstr "बाथरूम"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Bright"
-msgstr "लहान  उज्ज्वल खोली"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Small Room Dark"
-msgstr "लहान गडद खोली "
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Medium Room"
-msgstr "मध्यम खोली"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Large Room"
-msgstr "मोठी खोली"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Church Hall"
-msgstr "चर्च हॉल"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Cathedral"
-msgstr "कॅथेड्रल"
-
-#. i18n-hint: This is the name of an effect preset
-#: src/effects/Reverb.cpp
-msgid "Big Cave"
-msgstr ""
-
-#: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverb"
-msgstr "रिव्हर्ब"
-
-#: src/effects/Reverb.cpp
-msgid "Adds ambience or a \"hall effect\""
-msgstr "वातावरण किंवा \"हॉल प्रभाव\" जोडते"
 
 #: src/effects/Reverb.cpp
 msgid "&Room Size (%):"
@@ -13506,54 +14024,6 @@ msgstr "स्टीरिओ रूंदी (%)(&t):"
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
 msgstr "फक्त ओले(&n)"
-
-#: src/effects/Reverse.cpp resources/EffectsMenuDefaults.xml
-msgid "Reverse"
-msgstr "उलटे"
-
-#: src/effects/Reverse.cpp
-msgid "Reverses the selected audio"
-msgstr "निवडलेला ध्वनी उलट करते"
-
-#: src/effects/SBSMSEffect.h
-msgid "SBSMS Time / Pitch Stretch"
-msgstr "एसबीएसएमएस वेळ / पट्टीचा ताण"
-
-#. i18n-hint: Butterworth is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Butterworth"
-msgstr "बटरवर्थ"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type I"
-msgstr "चेबीशेव प्रकार I"
-
-#. i18n-hint: Chebyshev is the name of the person after whom the filter type is named.
-#: src/effects/ScienFilter.cpp
-msgid "Chebyshev Type II"
-msgstr "चेबीशेव प्रकार II"
-
-#: src/effects/ScienFilter.cpp
-msgid "Lowpass"
-msgstr "कमी-प्रवेश"
-
-#: src/effects/ScienFilter.cpp
-msgid "Highpass"
-msgstr "उच्च प्रवेश"
-
-#: src/effects/ScienFilter.cpp resources/EffectsMenuDefaults.xml
-msgid "Classic Filters"
-msgstr "अभिजात चाळण्या"
-
-#. i18n-hint: "infinite impulse response"
-#: src/effects/ScienFilter.cpp
-msgid "Performs IIR filtering that emulates analog filters"
-msgstr "एनालॉग फिल्टरचे अनुकरण करणारे आयआयआर फिल्टरिंग करते."
-
-#: src/effects/ScienFilter.cpp
-msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "चाळण लागू करण्यासाठी, सर्व निवडलेल्या गीतपट्ट्यांवर समान नमुना दर असणे आवश्यक आहे."
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -13685,36 +14155,6 @@ msgstr "पूर्वनिर्धारीत करा"
 msgid "%.3f"
 msgstr "%.3f"
 
-#. i18n-hint: noun
-#: src/effects/Silence.cpp
-msgctxt "generator"
-msgid "Silence"
-msgstr "शांतता"
-
-#: src/effects/Silence.cpp
-msgid "Creates audio of zero amplitude"
-msgstr "शून्य मोठेपणाचा ध्वनी  तयार करतो"
-
-#: src/effects/StereoToMono.cpp
-msgid "Stereo To Mono"
-msgstr "स्टीरिओ ते मोनो"
-
-#: src/effects/StereoToMono.cpp
-msgid "Converts stereo tracks to mono"
-msgstr "स्टीरिओ गीतपट्टा मोनोमध्ये रूपांतरित करते"
-
-#: src/effects/StereoToMono.cpp
-msgid "Mixing down to mono"
-msgstr ""
-
-#: src/effects/TimeScale.cpp resources/EffectsMenuDefaults.xml
-msgid "Sliding Stretch"
-msgstr "सरकता सरळ"
-
-#: src/effects/TimeScale.cpp
-msgid "Allows continuous changes to the tempo and/or pitch"
-msgstr "ध्वनीची गती आणि / किंवा पट्टीवर सतत बदल करण्यास अनुमती देते"
-
 #: src/effects/TimeScale.cpp
 msgid "Initial Tempo Change (%)"
 msgstr "आरंभिक गति परिवर्तन(%)"
@@ -13742,37 +14182,6 @@ msgstr "शेवटची ध्वनीची खेळपट्टी हल
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
 msgstr "(सेमिटोन&) [-12 to 12]:"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-#: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
-msgid "Linear"
-msgstr "रेखीय"
-
-#: src/effects/ToneGen.cpp src/prefs/SpectrogramSettings.cpp
-msgid "Logarithmic"
-msgstr "लॉगरिदमिक"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sine"
-msgstr "साइन"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Square"
-msgstr "वर्ग"
-
-#: src/effects/ToneGen.cpp plug-ins/tremolo.ny
-msgid "Sawtooth"
-msgstr "सावटूथ"
-
-#: src/effects/ToneGen.cpp
-msgid "Square, no alias"
-msgstr "वर्ग, उपनाव नाही"
-
-#: src/effects/ToneGen.cpp
-#, fuzzy
-msgctxt "waveform"
-msgid "Triangle"
-msgstr "त्रिकोण"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
@@ -13817,26 +14226,6 @@ msgstr "मोठेपणा समाप्त"
 #: src/effects/ToneGen.cpp
 msgid "I&nterpolation:"
 msgstr "अंतर्गणना :"
-
-#: src/effects/TruncSilence.cpp
-msgid "Truncate Detected Silence"
-msgstr "काटछाट सापडलेला मौन"
-
-#: src/effects/TruncSilence.cpp
-msgid "Compress Excess Silence"
-msgstr "जास्तीची शांतता संकुचित करा"
-
-#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
-msgid "Truncate Silence"
-msgstr "शांतता छाटून टाका"
-
-#: src/effects/TruncSilence.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "आवाज एका निर्दिष्ट स्तरापेक्षा कमी आहे तेथे स्वयंचलितपणे परिच्छेदाची लांबी कमी करते"
-
-#: src/effects/TruncSilence.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "स्वतंत्रपणे छाटताना, प्रत्येक समक्रमित-कुलूप लावा केलेल्या गीतपट्टा गटामध्ये केवळ एक निवडलेला ध्वनी  गीतपट्टा असू शकतो."
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -13972,14 +14361,6 @@ msgstr "त्यांच्या प्रक्रियेचा भाग 
 #, fuzzy
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "मापदंड मुल्ये स्थापित करण्यासाठी बर्‍याच व्हीएसटी प्रभावांमध्ये ग्राफिकल संवादपटल असतो. केवळ एक मूलभूत मजकूर पद्धत उपलब्ध आहे. याचा परिणाम होण्यासाठी पुन्हा प्रभाव वापरा."
-
-#: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
-msgid "Wahwah"
-msgstr "वा-वा (Wahwah)"
-
-#: src/effects/Wahwah.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "1970's० च्या दशकात गिटार ध्वनीप्रमाणे लोकप्रिय वेगवान ध्वनी गुणवत्तेतील विविधता"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14120,152 +14501,6 @@ msgstr "त्यांच्या प्रक्रियेचा एक भ
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr "मापदंड मुल्ये स्थापित करण्यासाठी एलव्ही 2 प्रभावामध्ये ग्राफिकल संवादपटल असू शकतो. केवळ एक मूलभूत मजकूर पद्धत उपलब्ध आहे. याचा परिणाम होण्यासाठी पुन्हा प्रभाव वापरा."
 
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Nyquist Effects"
-msgstr "'नाइक्विस्ट (Nyquist) प्रभाव"
-
-#: src/effects/nyquist/LoadNyquist.cpp
-msgid "Provides Nyquist Effects support to Audacity"
-msgstr "ऑड्यासिटीला 'एन.वाय.क्विस्ट (Nyquist) प्रभाव समर्थन प्रदान करते"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Applying Nyquist Effect..."
-msgstr "'एन.वाय.क्विस्ट (Nyquist) प्रभाव लागू करीत आहे ..."
-
-#. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Worker"
-msgstr "'एन.वाय.क्विस्ट (Nyquist) कार्यकर्ता"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Ill-formed Nyquist plug-in header"
-msgstr "III - निर्मिती 'एन.वाय.क्विस्ट (Nyquist) प्लग-इन शीर्षलेख"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Enable track spectrogram view before\n"
-"applying 'Spectral' effects."
-msgstr ""
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"To use 'Spectral effects', enable 'Spectral Selection'\n"
-"in the track Spectrogram settings and select the\n"
-"frequency range for the effect to act on."
-msgstr ""
-"'वर्णक्रमीय प्रभाव' वापरण्यासाठी, 'वर्णक्रमीय निवड' सुरू करा\n"
-"गीतपट्टा स्पेक्ट्रोग्राम समायोजनमध्ये आणि निवडा\n"
-"प्रभावावर कार्य करण्यासाठी वारंवारिता श्रेणी."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "त्रुटी: धारिका \"%s\" शीर्षलेखात निर्दिष्ट परंतु प्लग-इन पथात आढळली नाही.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Audio selection required."
-msgstr "ध्वनी निवड आवश्यक आहे ."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist Error"
-msgstr "'एन.वाय.क्विस्ट (Nyquist) त्रुटी"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Debug Output: "
-msgstr "त्रुटिसुधार आउटपुट: "
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Processing complete."
-msgstr "प्रक्रिया पूर्ण झाली ."
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "'; प्रकार साधन' प्रभाव Nyquist कडील ध्वनी परत करू शकत नाहीत.\n"
-
-#. i18n-hint: Don't translate ';type tool'.
-#: src/effects/nyquist/Nyquist.cpp
-msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "'; प्रकार साधन' प्रभाव Nyquist कडील नावे परत करू शकत नाहीत.\n"
-
-#. i18n-hint: "%s" is replaced by name of plug-in.
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "nyx_error returned from %s.\n"
-msgstr "nyx_error %s वरून परत आला. \n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "plug-in"
-msgstr "प्लग-इन"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned a list."
-msgstr "Nyquist एक यादी परत."
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %f"
-msgstr "Nyquist ने परत केलेले मूल्य: %f"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "Nyquist returned the value: %d"
-msgstr "Nyquist ने परत केलेले मूल्य: %d"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned too many audio channels.\n"
-msgstr "'एन.वाय.क्विस्ट (Nyquist) बर्‍याच ध्वनी वाहिन्या परत केले.\n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "'एन.वाय.क्विस्ट (Nyquist) ध्वनी  वाहिनी रचनावर परत केले. \n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned an empty array.\n"
-msgstr "'एन.वाय.क्विस्ट (Nyquist) ने रिक्त रचना परत केली. \n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Nyquist returned nil audio.\n"
-msgstr "'एन.वाय.क्विस्ट (Nyquist) रिक्त ध्वनी  परत केला. \n"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[खबरदारीचा इशारा: एन.वाय.क्विस्टने अवैध यूटीएफ -8 स्ट्रिंग परत केली, येथे लॅटिन -1 म्हणून रुपांतरित केली गेली.]"
-
-#: src/effects/nyquist/Nyquist.cpp
-#, c-format
-msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "ऑड्यासिटीची ही आवृत्ती 'एन.वाय.क्विस्ट (Nyquist) प्लग-इन आवृत्ती %ld चे समर्थन करत नाही"
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not open file"
-msgstr "\"धारिका उघडू शकली नाही.\""
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid ""
-"Your code looks like SAL syntax, but there is no 'return' statement.\n"
-"For SAL, use a return statement such as:\n"
-"\treturn *track* * 0.1\n"
-"or for LISP, begin with an open parenthesis such as:\n"
-"\t(mult *track* 0.1)\n"
-" ."
-msgstr ""
-"आपला सांकेतिक आज्ञावली एसएएल मांडणीसारखा दिसत आहे, परंतु तेथे 'रिटर्न' विधान नाही.\n"
-"एसएएलसाठी रिटर्न स्टेटमेंट वापरा जसेः\n"
-"रिटर्न * गीतपट्टा * * 0.1\n"
-"किंवा एलआयएसपीसाठी, खुल्या कंसांसह प्रारंभ करा जसे की:\n"
-"(मल्टी * गीतपट्टा * 0.1)\n"
-"  ."
-
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Error in Nyquist code"
-msgstr "'एन.वाय.क्विस्ट (Nyquist) सांकेतिक आज्ञावली मध्ये त्रुटी"
-
-#. i18n-hint: refers to programming "languages"
-#: src/effects/nyquist/Nyquist.cpp
-msgid "Could not determine language"
-msgstr "भाषा ठरवू शकलो नाही"
-
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "\"%s\" is not a valid file path."
@@ -14335,6 +14570,10 @@ msgstr "धारिका निवडा"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Save file as"
 msgstr "धारिका अशी जतन करा ..."
+
+#: src/effects/nyquist/Nyquist.cpp
+msgid "Debug Output: "
+msgstr "त्रुटिसुधार आउटपुट: "
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
@@ -14863,12 +15102,13 @@ msgid "Duplicate"
 msgstr "हुबेहूब प्रत "
 
 #: src/menus/EditMenus.cpp
-msgid "Split-cut to the clipboard"
-msgstr "विभाजित करून काढून टाका व क्लिपबोर्डवर घ्या."
+#, fuzzy
+msgid "Cut to clipboard and leave gap"
+msgstr "काढून टाकून क्लिपबोर्डवर घ्या"
 
 #: src/menus/EditMenus.cpp
-msgid "Split Cut"
-msgstr "विभाजित करून काढून टाका"
+msgid "Cut and leave gap"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -14964,13 +15204,13 @@ msgstr "विशेष काढून टाका(&e)"
 
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
-msgid "Spl&it Cut"
-msgstr "विभाजित करून काढून टाका(&i)"
+msgid "&Cut and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
-msgid "Split D&elete"
-msgstr "विभाजन करून हटवा(&e)"
+msgid "&Delete and leave gap"
+msgstr ""
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15104,10 +15344,10 @@ msgstr "नावपट्टया ...(&L)"
 msgid "&Raw Data..."
 msgstr "कच्ची माहिती...(&R)"
 
-#. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
-msgid "E&xit"
-msgstr "बाहेर पडा(&x)"
+#, fuzzy
+msgid "&Close Project"
+msgstr "प्रकल्प जतन करा(&S)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15228,16 +15468,15 @@ msgstr "नावपट्टी असलेले गीतपट्ट्य�
 msgid "Delete Labeled Audio"
 msgstr "नावपट्टी असलेला गीतपट्टा हटवा"
 
-#. i18n-hint: (verb) Audacity has just split cut the labeled audio
-#. regions
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut labeled audio regions to clipboard"
-msgstr "नावपट्टी असलेले गीतपट्ट्यांचे प्रदेश विभाजित करून काढून टाकून क्लिपबोर्डवर घ्या"
+#, fuzzy
+msgid "Cut labeled audio regions to clipboard and leave gap"
+msgstr "नावपट्टी असलेले गीतपट्ट्यांचे प्रदेश काढून टाकून क्लिपबोर्डवर घ्या. "
 
-#. i18n-hint: (verb) Do a special kind of cut on the labels
 #: src/menus/LabelMenus.cpp
-msgid "Split Cut Labeled Audio"
-msgstr "नावपट्टी असलेला गीतपट्टा विभाजित करून काढून टाका"
+#, fuzzy
+msgid "Cut labeled audio and leave gap"
+msgstr "नावपट्टी असलेले गीतपट्ट्यांचे प्रदेश काढून टाकून क्लिपबोर्डवर घ्या. "
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15350,29 +15589,31 @@ msgid "&Cut"
 msgstr "काढून टाका(&C)"
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Cut"
-msgstr "नावपट्टी छेदा"
+msgid "Cut by label"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Delete"
-msgstr "नावपट्टी हटवा"
+#, fuzzy
+msgid "Delete by label"
+msgstr "नावपट्टी हटवा(&d)"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
-msgid "&Split Cut"
-msgstr "विभाजन करून काढून टाका(&S)"
+msgid "C&ut and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Cut"
-msgstr "नावपट्टी विभाजन करून  काढून टाका"
+msgid "Cut by labels and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Sp&lit Delete"
-msgstr "विभाजन करून हटवा(&l)"
+msgid "De&lete and leave gap"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-msgid "Label Split Delete"
-msgstr "वेगळे केलेली नावपट्टी हटवा"
+#, fuzzy
+msgid "Delete by labels and leave gap"
+msgstr "नावपट्टी असलेले गीतपट्ट्यांचे प्रदेश काढून हटविले"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -15987,6 +16228,10 @@ msgid "Adjusted gain"
 msgstr "समायोजित केलेली वाढ"
 
 #: src/menus/TrackMenus.cpp
+msgid "Gain"
+msgstr "मिळवा"
+
+#: src/menus/TrackMenus.cpp
 msgid "Adjusted Pan"
 msgstr "समायोजित केलेले पॅन"
 
@@ -16489,7 +16734,7 @@ msgstr "निवडीच्या शेवटी जा"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Enable E&xtra Menus"
+msgid "E&xtra Menus"
 msgstr "ओळी काढून टाकणे सक्रिय करा. (&l)"
 
 #: src/menus/ViewMenus.cpp
@@ -16499,7 +16744,7 @@ msgstr "क्लिप दर्शवा (चालू / बंद)(&S)"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Show &RMS in Waveform"
+msgid "Sho&w RMS in Waveform"
 msgstr "क्लिप दर्शवा (चालू / बंद)(&S)"
 
 #: src/prefs/ApplicationPrefs.cpp
@@ -16947,38 +17192,6 @@ msgstr "आंतरपृष्ठ"
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
 msgstr "जी.यु.आय.साठी प्राधान्ये"
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-36 dB (shallow range for high-amplitude editing)"
-msgstr "-36 डीबी (उच्च विस्तार संपादनासाठी वरवरची रेंज)."
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-48 dB (PCM range of 8 bit samples)"
-msgstr "-48 डीबी (8 बिट नमुन्यांचे पीसीएम श्रेणी)."
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 डीबी (10 बिट नमुन्यांचे पीसीएम श्रेणी)."
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 डीबी (12 बिट नमुन्यांचे पीसीएम श्रेणी)."
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 डीबी (14 बिट नमुन्यांचे पीसीएम श्रेणी)."
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-96 dB (PCM range of 16 bit samples)"
-msgstr "-96 डीबी (16 बिट नमुन्यांचे पीसीएम श्रेणी)."
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-120 dB (approximate limit of human hearing)"
-msgstr "-120 डीबी (माणसाची ऐकण्याची अंदाजे मर्यादा)."
-
-#: src/prefs/GUIPrefs.cpp
-msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 डीबी (24 बिट नमुन्यांचे पीसीएम श्रेणी)"
 
 #: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
@@ -17526,89 +17739,6 @@ msgstr "आधीचा-रोल:"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
 msgstr "क्रॉसफेड:"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Mel"
-msgstr "मेल"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Bark"
-msgstr "भुंकणे"
-
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
-#: src/prefs/SpectrogramSettings.cpp
-msgid "ERB"
-msgstr "इ आर बी"
-
-#. i18n-hint: Time units, that is Period = 1 / Frequency
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Period"
-msgstr "काळ"
-
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
-#: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
-msgctxt "spectrum prefs"
-msgid "Color (Roseus)"
-msgstr "रंग"
-
-#. i18n-hint: Classic color scheme(from theme) for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Color (classic)"
-msgstr ""
-
-#. i18n-hint: Grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Grayscale"
-msgstr ""
-
-#. i18n-hint: Inverse grayscale color scheme for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgctxt "spectrum prefs"
-msgid "Inverse grayscale"
-msgstr ""
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Frequencies"
-msgstr "वारंवारता"
-
-#. i18n-hint: the Reassignment algorithm for spectrograms
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Reassignment"
-msgstr "पुन्हा नियुक्त करणे"
-
-#. i18n-hint: EAC abbreviates "Enhanced Autocorrelation"
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Pitch (EAC)"
-msgstr "ध्वनीची खेळपट्टी (EAC)"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Maximum frequency must be 100 Hz or above"
-msgstr "कमाल वारंवारता 100 Hz किंवा वरील असणे आवश्यक आहे"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be at least 0 Hz"
-msgstr "किमान वारंवारता किमान 0 Hz असावी"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "Minimum frequency must be less than maximum frequency"
-msgstr "किमान वारंवारता कमाल वारंवारतेपेक्षा कमी असणे आवश्यक आहे"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The range must be at least 1 dB"
-msgstr "श्रेणी किमान 1 डीबी असणे आवश्यक आहे"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain cannot be negative"
-msgstr "वारंवारता वाढणे नकारात्मक असू शकत नाही"
-
-#: src/prefs/SpectrogramSettings.cpp
-msgid "The frequency gain must be no more than 60 dB/dec"
-msgstr "वारंवारता वाढ 60 डीबी / डेकपेक्षा जास्त नसावी"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrogram Settings"
@@ -18944,11 +19074,6 @@ msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] ""
 msgstr[1] ""
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-msgid "&Multi-view"
-msgstr "बहु-दृश्य"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -21602,6 +21727,100 @@ msgstr "वर्णक्रमीय (&p)"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#~ msgid "Insane"
+#~ msgstr "इनसेन"
+
+#~ msgid "Moved gain slider"
+#~ msgstr "मिळवण्याची घसारपट्टी स्थानांतरित केली"
+
+#~ msgid "Gain:"
+#~ msgstr "मिळवा:"
+
+#, c-format
+#~ msgid "Applied command: %s"
+#~ msgstr "लागू केलेली आज्ञा:%s"
+
+#, c-format
+#~ msgid ""
+#~ "Attempting to initialize the following effect failed:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "More information may be available in 'Help > Diagnostics > Show Log'"
+#~ msgstr ""
+#~ "खालील प्रभाव प्रारंभ करण्याचा प्रयत्न अयशस्वी:\n"
+#~ "\n"
+#~ "%s\n"
+#~ "\n"
+#~ "अधिक माहिती 'मदत > निदान > लॉग दर्शवा' मध्ये उपलब्ध असू शकते"
+
+#~ msgid "Effect failed to initialize"
+#~ msgstr "प्रभाव सुरु करण्यात अयशस्वी"
+
+#~ msgid "Effect Unavailable"
+#~ msgstr "प्रभाव अनुपलब्ध"
+
+#~ msgid "Error Loading EQ Curves"
+#~ msgstr "EQ  वक्र लोड करताना त्रुटी"
+
+#~ msgid ""
+#~ "To use this filter curve in a macro, please choose a new name for it.\n"
+#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
+#~ msgstr ""
+#~ "हे फिल्टर वक्र मॅक्रोमध्ये वापरण्यासाठी कृपया यासाठी एक नवीन नाव निवडा.\n"
+#~ "'वक्र जतन / व्यवस्थापित करा ...' बटण निवडा आणि 'अज्ञात' वक्र पुनर्नामित करा, त्यानंतर ते वापरा."
+
+#~ msgid "Filter Curve EQ needs a different name"
+#~ msgstr "फिल्टर कर्व्ह ईक्यू ला भिन्न नावाची आवश्यकता आहे"
+
+#~ msgid "Curve not found"
+#~ msgstr "वक्र सापडला नाही"
+
+#~ msgid "Nyquist Error"
+#~ msgstr "'एन.वाय.क्विस्ट (Nyquist) त्रुटी"
+
+#~ msgid "Error in Nyquist code"
+#~ msgstr "'एन.वाय.क्विस्ट (Nyquist) सांकेतिक आज्ञावली मध्ये त्रुटी"
+
+#~ msgid "Split-cut to the clipboard"
+#~ msgstr "विभाजित करून काढून टाका व क्लिपबोर्डवर घ्या."
+
+#~ msgid "Split Cut"
+#~ msgstr "विभाजित करून काढून टाका"
+
+#~ msgid "Spl&it Cut"
+#~ msgstr "विभाजित करून काढून टाका(&i)"
+
+#~ msgid "Split D&elete"
+#~ msgstr "विभाजन करून हटवा(&e)"
+
+#~ msgid "E&xit"
+#~ msgstr "बाहेर पडा(&x)"
+
+#~ msgid "Split Cut labeled audio regions to clipboard"
+#~ msgstr "नावपट्टी असलेले गीतपट्ट्यांचे प्रदेश विभाजित करून काढून टाकून क्लिपबोर्डवर घ्या"
+
+#~ msgid "Split Cut Labeled Audio"
+#~ msgstr "नावपट्टी असलेला गीतपट्टा विभाजित करून काढून टाका"
+
+#~ msgid "Label Cut"
+#~ msgstr "नावपट्टी छेदा"
+
+#~ msgid "Label Delete"
+#~ msgstr "नावपट्टी हटवा"
+
+#~ msgid "&Split Cut"
+#~ msgstr "विभाजन करून काढून टाका(&S)"
+
+#~ msgid "Label Split Cut"
+#~ msgstr "नावपट्टी विभाजन करून  काढून टाका"
+
+#~ msgid "Sp&lit Delete"
+#~ msgstr "विभाजन करून हटवा(&l)"
+
+#~ msgid "Label Split Delete"
+#~ msgstr "वेगळे केलेली नावपट्टी हटवा"
 
 #~ msgid "Change upper speed limit (%) to:"
 #~ msgstr "जास्तीत जास्त वेग मर्यादा (%) यावर बदला:"
