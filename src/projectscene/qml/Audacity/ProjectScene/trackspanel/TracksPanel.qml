@@ -56,6 +56,7 @@ Item {
             Layout.fillHeight: true
 
             spacing: 0
+            cacheBuffer: 3000
 
             ScrollBar.vertical: null
             onContentYChanged: {
