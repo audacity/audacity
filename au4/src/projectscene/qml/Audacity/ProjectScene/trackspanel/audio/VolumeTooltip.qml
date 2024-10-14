@@ -13,6 +13,7 @@ StyledPopupView {
 
     placement: PopupView.PreferAbove
     openPolicies: PopupView.NoActivateFocus
+    closePolicies: PopupView.NoAutoClose
 
     property double volume
     property rect contentRect: fontMetrics.boundingRect("-60.0dB")
@@ -23,6 +24,8 @@ StyledPopupView {
         anchors.fill: parent
 
         StyledTextLabel {
+            id: label
+
             anchors.right: parent.right
             text: {
                 let value = root.volume.toFixed(1);
@@ -34,7 +37,7 @@ StyledPopupView {
     FontMetrics {
         id: fontMetrics
 
-        font: ui.theme.defaultFont
+        font: label.font
     }
 
     Timer {

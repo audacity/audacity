@@ -10,34 +10,75 @@ StyledSlider {
 
     Layout.fillWidth: true
 
-    property double volumeLevel: 0
     property double snapPoint: 0.0
     property double snapRange: 2.0
 
     from: -60.0
     to: 12.0
 
+    QtObject {
+        id: prv
+
+        property bool dragActive: false
+        property real handleWidth: root.handle ? root.handle.width : 0
+        property real innerMargin: handleWidth / 2
+    }
+
     VolumeTooltip {
         id: tooltip
+
         parent: root.handle
         volume: root.value
     }
 
+    // We have to reimplement dragging to allow the tooltip
+    // to stay on when the mouse is moved outside of the component
     MouseArea {
-        acceptedButtons: Qt.NoButton
+        id: mouseArea
+
         anchors.fill: parent
+
         hoverEnabled: true
+
+        onPressed: {
+            prv.dragActive = true
+            root.value = sliderValue()
+        }
+
+        onReleased: {
+            prv.dragActive = false
+            if (!containsMouse) {
+                tooltip.hide()
+            }
+        }
+
         onEntered: {
             tooltip.show()
         }
-        onExited: {
-            tooltip.hide()
-        }
-    }
 
-    onMoved: {
-        if (Math.abs(value - snapPoint) < snapRange) {
-            value = snapPoint
+        onExited: {
+            if (!prv.dragActive) {
+                tooltip.hide()
+            }
+        }
+
+        onPositionChanged: {
+            if (!prv.dragActive) {
+                return
+            }
+
+            let value = sliderValue()
+            if (Math.abs(value - snapPoint) < snapRange) {
+                value = snapPoint
+            }
+
+            root.value = value
+        }
+
+        function sliderValue() {
+            let relativePos = (mouseX - prv.innerMargin) / (width - prv.handleWidth)
+            relativePos = Math.max(0, Math.min(1, relativePos))
+            return relativePos * (root.to - root.from) + root.from
         }
     }
 }
