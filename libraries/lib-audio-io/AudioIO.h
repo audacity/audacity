@@ -565,7 +565,7 @@ public:
     * too. So the returned time should be always between
     * t0 and t1
     */
-   double GetStreamTime();
+   double GetStreamTime(bool ignorePlaybackState = false) const;
 
    static void AudioThread(std::atomic<bool> &finish);
 

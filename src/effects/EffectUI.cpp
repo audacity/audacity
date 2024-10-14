@@ -556,22 +556,6 @@ void EffectUIHost::OnApply(wxCommandEvent & evt)
       return;
    }
 
-   // Honor the "select all if none" preference...a little hackish, but whatcha gonna do...
-   if (!mIsBatch &&
-       mEffectUIHost.GetDefinition().GetType() != EffectTypeGenerate &&
-       mEffectUIHost.GetDefinition().GetType() != EffectTypeTool &&
-       ViewInfo::Get( project ).selectedRegion.isPoint())
-   {
-      auto flags = AlwaysEnabledFlag;
-      bool allowed =
-      CommandManager::Get( project ).ReportIfActionNotAllowed(
-         mEffectUIHost.GetDefinition().GetName(),
-         flags,
-         WaveTracksSelectedFlag() | TimeSelectedFlag());
-      if (!allowed)
-         return;
-   }
-
    if (!TransferDataFromWindow() ||
        // This is the main place where there is a side-effect on the config
        // file to remember the last-used settings of an effect, just before

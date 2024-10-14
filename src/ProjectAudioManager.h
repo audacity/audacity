@@ -122,8 +122,10 @@ public:
       bool newDefault = false, //!< See ProjectAudioIO::GetDefaultOptions
       bool cutpreview = false);
 
+   void ResumePlayback();
+
    void OnPause();
-   
+
 
    // Stop playing or recording
    void Stop(bool stopStream = true);
@@ -136,6 +138,7 @@ public:
    PlayMode GetLastPlayMode() const { return mLastPlayMode; }
 
 private:
+   void DoPlayCurrentRegion(bool newDefault, bool cutpreview, bool resume);
 
    void TogglePaused();
    void SetPausedOff();
