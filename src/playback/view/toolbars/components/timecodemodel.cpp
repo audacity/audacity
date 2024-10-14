@@ -235,7 +235,8 @@ void TimecodeModel::initFieldInteractionController()
 
 void TimecodeModel::updateValueString()
 {
-    QString newValueString = m_formatter->valueToString(m_value, false).valueString;
+    constexpr auto toNearest = true;
+    QString newValueString = m_formatter->valueToString(m_value, toNearest).valueString;
 
     if (newValueString.size() != m_valueString.size()) {
         beginResetModel();
