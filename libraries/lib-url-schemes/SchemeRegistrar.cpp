@@ -12,9 +12,9 @@
 #include <string_view>
 #include <functional>
 
-void SetSchemaRegistrar(std::function<bool(std::string_view)> registrar);
+#include "URLSchemesRegistry.h"
 
 auto registrar = ([]() {
-   SetSchemaRegistrar([](std::string_view) { return true; });
+   URLSchemesRegistry::Get().SetRegistrar([](std::string_view) { return true; });
    return true;
 })();
