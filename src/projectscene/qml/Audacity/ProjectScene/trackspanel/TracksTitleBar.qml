@@ -16,7 +16,7 @@ KDDW.TitleBarBase {
 
     property int expectedHeight: 39
 
-    signal addRequested(type: int, quantity: int)
+    signal addRequested(type: int)
 
     anchors.fill: parent
     implicitHeight: gripButton.implicitHeight
@@ -96,9 +96,8 @@ KDDW.TitleBarBase {
             AddNewTrackPopup {
                 id: addNewTrack
 
-                onCreateTracks: (type, quantity) => {
-                    root.addRequested(type, quantity)
-                    addNewTrack.close()
+                onCreateTrack: (type) => {
+                    root.addRequested(type)
                 }
             }
         }

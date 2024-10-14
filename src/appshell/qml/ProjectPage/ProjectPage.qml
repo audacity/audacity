@@ -156,7 +156,7 @@ DockPage {
         DockPanel {
             id: tracksPanel
 
-            signal add(type: int, quantity: int)
+            signal add(type: int)
 
             objectName: pageModel.tracksPanelName()
             title: qsTrc("appshell", "Tracks")
@@ -172,8 +172,8 @@ DockPage {
             dropDestinations: root.verticalPanelDropDestinations
 
             titleBar: TracksTitleBar {
-                onAddRequested: function(type, quantity) {
-                    tracksPanel.add(type, quantity)
+                onAddRequested: function(type) {
+                    tracksPanel.add(type)
                 }
             }
 
@@ -184,8 +184,8 @@ DockPage {
                 Connections {
                     target: tracksPanel
 
-                    function onAdd(type, quantity) {
-                        tp.tracksModel.addTracks(type, quantity)
+                    function onAdd(type) {
+                        tp.tracksModel.addTrack(type)
                     }
                 }
 

@@ -142,13 +142,6 @@ void TracksListModel::addTrack(TrackTypes::Type type)
     }
 }
 
-void TracksListModel::addTracks(TrackTypes::Type type, int quantity)
-{
-    for (int i = 0; i < quantity; ++i) {
-        addTrack(type);
-    }
-}
-
 void TracksListModel::duplicateTrack(int index)
 {
     UNUSED(index);
