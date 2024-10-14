@@ -267,6 +267,11 @@ Rectangle {
                     target: timeline.context
 
                     function onViewContentYChangeRequested(contentY) {
+                        let canMove = tracksModel.totalTracksHeight > tracksClipsView.height
+                        if (!canMove) {
+                            return
+                        }
+
                         if (tracksClipsView.contentY + contentY + tracksClipsView.height > tracksModel.totalTracksHeight) {
                             tracksClipsView.contentY += tracksModel.totalTracksHeight - (tracksClipsView.contentY + tracksClipsView.height)
                         } else if (tracksClipsView.contentY + contentY < 0) {
