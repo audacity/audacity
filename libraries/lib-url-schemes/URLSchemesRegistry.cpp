@@ -16,24 +16,17 @@
 #include <vector>
 #include <memory>
 
-namespace
-{
-std::function<bool(std::string_view)> SchemeRegistrar;
-}
-
-void SetSchemaRegistrar(std::function<bool(std::string_view)> registrar);
-void SetSchemaRegistrar(std::function<bool(std::string_view)> registrar)
+void URLSchemesRegistry::SetRegistrar(SchemeRegistrar registrar)
 {
    // Only a single registrar is allowed.
-   assert(!SchemeRegistrar);
+   assert(!m_registrar);
 
-   SchemeRegistrar = std::move(registrar);
+   m_registrar = std::move(registrar);
 }
-
 
 bool URLSchemesRegistry::IsURLHandlingSupported() const noexcept
 {
-   return !!SchemeRegistrar;
+   return !!m_registrar;
 }
 
 URLSchemesRegistry& URLSchemesRegistry::Get()
@@ -44,10 +37,10 @@ URLSchemesRegistry& URLSchemesRegistry::Get()
 
 bool URLSchemesRegistry::RegisterScheme(std::string_view schema)
 {
-   if (!SchemeRegistrar)
+   if (!m_registrar)
       return false;
 
-   return SchemeRegistrar(schema);
+   return m_registrar(schema);
 }
 
 void URLSchemesRegistry::HandleURL(std::string_view url)

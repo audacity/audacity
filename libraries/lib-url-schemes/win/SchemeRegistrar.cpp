@@ -18,6 +18,7 @@
 #include <exception>
 
 #include "CodeConversions.h"
+#include "URLSchemesRegistry.h"
 
 /*
 *
@@ -102,7 +103,7 @@ private:
 void SetSchemaRegistrar(std::function<bool(std::string_view)> registrar);
 
 auto registrar = ([]() {
-   SetSchemaRegistrar([](std::string_view schemaView) {
+   URLSchemesRegistry::Get().SetRegistrar([](std::string_view schemaView) {
       constexpr size_t fileNameBufferSize = MAX_PATH + 1;
       wchar_t filenameBuffer[fileNameBufferSize] = { 0 };
 

@@ -32,8 +32,12 @@ class URL_SCHEMES_API URLSchemesRegistry final :
    URLSchemesRegistry& operator=(const URLSchemesRegistry&) = delete;
 
 public:
+   using SchemeRegistrar = std::function<bool(std::string_view)>;
+
    //! Retrieves the registry instance
    static URLSchemesRegistry& Get();
+
+   void SetRegistrar(SchemeRegistrar registrar);
 
    //! Returns true, if Audacity can handle custom URLs
    bool IsURLHandlingSupported() const noexcept;
@@ -56,4 +60,8 @@ public:
    //! effectively sending URLschemeHandlerMessage to
    //! subscribers.
    void HandleURL(std::string_view url);
+
+private:
+   SchemeRegistrar m_registrar;
+
 };
