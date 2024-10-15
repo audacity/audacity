@@ -2,7 +2,6 @@ name: '[AU4] Build: Windows'
 
 on:
   pull_request:
-    paths: ["au4/**"]
     branches:
     - master
     
@@ -20,7 +19,7 @@ on:
         required: false
         default: ''
 env:
-  CI_DIR: au4/buildscripts/ci   
+  CI_DIR: buildscripts/ci   
 
 jobs:
   au4_build_windows:

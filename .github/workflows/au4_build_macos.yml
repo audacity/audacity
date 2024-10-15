@@ -2,7 +2,6 @@ name: '[AU4] Build: macOS'
 
 on:
   pull_request:
-    paths: ["au4/**"]
     branches:
     - master
     
@@ -22,7 +21,7 @@ on:
         default: ''
 
 env:
-  CI_DIR: au4/buildscripts/ci
+  CI_DIR: buildscripts/ci
   DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
 
 jobs:
