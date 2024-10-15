@@ -74,7 +74,7 @@ namespace
         );
 
         if(result != google_breakpad::RESULT_SUCCEEDED)
-            errorString = wxString::Format("SendMinidump filed with result: %s", StringifyReportResult(result));
+            errorString = wxString::Format("Failed to send crash report with error: %s", StringifyReportResult(result));
         
         return result == google_breakpad::RESULT_SUCCEEDED;
     }
@@ -94,7 +94,7 @@ namespace
             files["comments.txt"] = commentsFilePath.ToStdString();
         }
 
-        std::string response, error;
+        std::string response, resultErr;
         bool success = google_breakpad::HTTPUpload::SendRequest(
             url,
             arguments,
@@ -104,10 +104,10 @@ namespace
             std::string(),
             &response,
             NULL,
-            &error);
+            &resultErr);
 
         if(!success)
-            errorString = wxString::Format("SendMinidump failed with error: %s", error.c_str());
+            error = wxString::Format("Failed to send crash report with error: %s", resultErr.c_str());
             
         return success;
     }
@@ -421,7 +421,7 @@ bool CrashReportApp::OnInit()
         {
             wxString error;
             auto result = SendMinidump(mURL, mMinidumpPath, mArguments, wxEmptyString, error);
-            if(!result && mShowError)
+            if(!result)
                 wxMessageBox(error);
         }
     }
@@ -467,7 +467,6 @@ void CrashReportApp::OnInitCmdLine(wxCmdLineParser& parser)
     static const wxCmdLineEntryDesc cmdLineEntryDesc[] =
     {
          { wxCMD_LINE_SWITCH, "s", "silent", "Send without displaying the confirmation dialog" },
-         {wxCMD_LINE_SWITCH, "e", "error_code", "Show error code/message on sending failure" },
          { wxCMD_LINE_OPTION, "u", "url", "Crash report server URL", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
          { wxCMD_LINE_OPTION, "a", "args", "A set of arguments to send", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
          { wxCMD_LINE_PARAM,  NULL, NULL, "path to minidump file", wxCMD_LINE_VAL_STRING, wxCMD_LINE_OPTION_MANDATORY },
@@ -501,7 +500,6 @@ bool CrashReportApp::OnCmdLineParsed(wxCmdLineParser& parser)
     }
     mMinidumpPath = parser.GetParam(0);
     mSilent = parser.Found("s");
-    mShowError = parser.Found("e");
     
     return wxApp::OnCmdLineParsed(parser);
 }
@@ -538,10 +536,7 @@ void CrashReportApp::ShowCrashReport(const wxString& header, const wxString& tex
 
                 if (!result)
                 {
-                    if(mShowError)
-                        wxMessageBox(error);
-                    else
-                        wxMessageBox(_("Failed to send crash report"));
+                    wxMessageBox(error);
                 }
                 return result;
             });
