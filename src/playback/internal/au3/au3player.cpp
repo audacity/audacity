@@ -235,6 +235,12 @@ void Au3Player::seek(const muse::secs_t newPosition)
     m_playbackPosition.set(newPosition);
 }
 
+void Au3Player::rewind()
+{
+    seek(0.0);
+    m_playbackRewound.notify();
+}
+
 void Au3Player::stop()
 {
     m_playbackStatus.set(PlaybackStatus::Stopped);
@@ -349,6 +355,11 @@ muse::secs_t Au3Player::playbackPosition() const
 muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const
 {
     return m_playbackPosition.ch;
+}
+
+muse::async::Notification Au3Player::playbackRewound() const
+{
+    return m_playbackRewound;
 }
 
 Au3Project& Au3Player::projectRef() const

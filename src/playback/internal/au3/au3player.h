@@ -30,6 +30,7 @@ public:
 
     void play() override;
     void seek(const muse::secs_t newPosition) override;
+    void rewind() override;
     void stop() override;
     void pause() override;
     void resume() override;
@@ -43,6 +44,7 @@ public:
 
     muse::secs_t playbackPosition() const override;
     muse::async::Channel<muse::secs_t> playbackPositionChanged() const override;
+    muse::async::Notification playbackRewound() const override;
 
     muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) override;
 
@@ -61,6 +63,7 @@ private:
 
     muse::Timer m_positionUpdateTimer;
     muse::ValCh<muse::secs_t> m_playbackPosition;
+    muse::async::Notification m_playbackRewound;
     double m_startOffset = 0.0;
 };
 }
