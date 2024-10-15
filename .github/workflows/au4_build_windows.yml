@@ -45,7 +45,7 @@ jobs:
 
         cmake -DEVENT=${{ github.event_name }} \
               -DBUILD_MODE=${BUILD_MODE} \
-              -DARTIFACT_INFO="Lin_${ADD_INFO}" \
+              -DARTIFACT_INFO="Win_${ADD_INFO}" \
               -P ${CI_DIR}/common/ci_configure.cmake 
 
         DO_BUILD='true'
