@@ -30,15 +30,29 @@ void TracksListClipsModel::load()
 
     m_trackList = prj->trackList();
 
-    m_dataSelectedTracks = selectionController()->dataSelectedOnTracks();
-    m_selectedTracks = selectionController()->selectedTracks();
-
-    selectionController()->dataSelectedOnTracksChanged().onReceive(this, [this](const trackedit::TrackIdList& tracks) {
-        setDataSelectedTracks(tracks);
+    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& tracksIds) {
+        Q_UNUSED(tracksIds);
+        if (m_trackList.empty()) {
+            return;
+        }
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackSelectedRole });
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
     });
 
-    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& tracksIds) {
-        setSelectedTracks(tracksIds);
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
+        Q_UNUSED(begin);
+        if (m_trackList.empty()) {
+            return;
+        }
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+    });
+
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t end) {
+        Q_UNUSED(end);
+        if (m_trackList.empty()) {
+            return;
+        }
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
     });
 
     m_trackList.onChanged(this, [this]() {
@@ -106,10 +120,10 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     case TrackIdRole:
         return QVariant::fromValue(track.id);
     case IsDataSelectedRole: {
-        return muse::contains(m_dataSelectedTracks, track.id);
+        return muse::contains(selectionController()->selectedTracks(), track.id) && selectionController()->timeSelectionIsNotEmpty();
     }
     case IsTrackSelectedRole: {
-        return muse::contains(m_selectedTracks, track.id);
+        return muse::contains(selectionController()->selectedTracks(), track.id);
     }
     default:
         break;
@@ -143,26 +157,6 @@ void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisib
 
     m_isVerticalRulersVisible = isVerticalRulersVisible;
     emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
-}
-
-void TracksListClipsModel::setDataSelectedTracks(const trackedit::TrackIdList& tracks)
-{
-    if (m_dataSelectedTracks == tracks) {
-        return;
-    }
-    m_dataSelectedTracks = tracks;
-    emit dataSelectedTracksChanged();
-    emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
-}
-
-void TracksListClipsModel::setSelectedTracks(const trackedit::TrackIdList& tracksIds)
-{
-    if (m_selectedTracks == tracksIds) {
-        return;
-    }
-    m_selectedTracks = tracksIds;
-    emit selectedTrackChanged();
-    emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackSelectedRole });
 }
 
 void TracksListClipsModel::updateTotalTracksHeight()

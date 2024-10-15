@@ -44,7 +44,7 @@ public:
 
 signals:
     void dataSelectedTracksChanged();
-    void selectedTrackChanged();
+    void selectedTracksChanged();
     void isVerticalRulersVisibleChanged(bool isVerticalRulersVisible);
 
     void totalTracksHeightChanged();
@@ -59,16 +59,11 @@ private:
         IsTrackSelectedRole
     };
 
-    void setDataSelectedTracks(const trackedit::TrackIdList& tracks);
-    void setSelectedTracks(const trackedit::TrackIdList& tracksIds);
-
     void updateTotalTracksHeight();
     void subscribeOnTrackHeightChanges(const trackedit::TrackId trackId);
     void unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId);
 
     muse::async::NotifyList<au::trackedit::Track> m_trackList;
-    trackedit::TrackIdList m_dataSelectedTracks;
-    trackedit::TrackIdList m_selectedTracks;
     bool m_isVerticalRulersVisible = false;
     int m_totalTracksHeight = 0;
 };

@@ -35,17 +35,20 @@ TrackIdList Au3SelectionController::selectedTracks() const
     return m_selectedTracks.val;
 }
 
-void Au3SelectionController::setSelectedTracks(const TrackIdList &tracksIds)
+void Au3SelectionController::setSelectedTracks(const TrackIdList &tracksIds, bool complete)
 {
     MYLOG() << "tracks: " << tracksIds;
 
     auto& tracks = ::TrackList::Get(projectRef());
     for (::Track* au3Track : tracks) {
-        au3Track->SetSelected(std::find_if(tracksIds.begin(), tracksIds.end(),
-                                [&au3Track](const trackedit::TrackId trackId) { return au3Track->GetId() == ::TrackId(trackId); }) != tracksIds.end());
+        if (muse::contains(tracksIds, au3::DomConverter::trackId(au3Track->GetId()))) {
+            au3Track->SetSelected(true);
+        } else {
+            au3Track->SetSelected(false);
+        }
     }
 
-    m_selectedTracks.set(tracksIds, true);
+    m_selectedTracks.set(tracksIds, complete);
 }
 
 muse::async::Channel<TrackIdList> Au3SelectionController::tracksSelected() const
@@ -81,62 +84,18 @@ void Au3SelectionController::resetDataSelection()
 {
     MYLOG() << "resetDataSelection";
 
-    auto& tracks = ::TrackList::Get(projectRef());
-    for (trackedit::TrackId trackId : m_dataSelectedTrackIds.val) {
-        ::Track* au3Track = tracks.FindById(::TrackId(trackId));
-        if (au3Track) {
-            au3Track->SetSelected(false);
-        }
-    }
-
-    m_dataSelectedTrackIds.set(TrackIdList(), true);
     m_selectedStartTime.set(-1.0, true);
     m_selectedEndTime.set(-1.0, true);
 }
 
-bool Au3SelectionController::isDataSelected() const
+bool Au3SelectionController::timeSelectionIsNotEmpty() const
 {
-    return muse::RealIsEqualOrMore(m_selectedStartTime.val, 0.0) && m_selectedEndTime.val > 0.0;
+    return muse::RealIsEqualOrMore(m_selectedStartTime.val, 0.0) && m_selectedEndTime.val > 0.0 && !muse::RealIsEqualOrLess(m_selectedEndTime.val, m_selectedStartTime.val);
 }
 
 bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const
 {
-    return std::find(m_dataSelectedTrackIds.val.begin(), m_dataSelectedTrackIds.val.end(), trackId) != m_dataSelectedTrackIds.val.end();
-}
-
-TrackIdList Au3SelectionController::dataSelectedOnTracks() const
-{
-    return m_dataSelectedTrackIds.val;
-}
-
-void Au3SelectionController::setDataSelectedOnTracks(
-    const TrackIdList& trackIds,
-    bool complete)
-{
-    MYLOG() << "trackIds: " << trackIds << ", complete: " << complete;
-
-    auto& tracks = ::TrackList::Get(projectRef());
-    for (::Track* au3Track : tracks) {
-        if (muse::contains(trackIds, au3::DomConverter::trackId(au3Track->GetId()))) {
-            au3Track->SetSelected(true);
-        } else {
-            au3Track->SetSelected(false);
-        }
-    }
-
-    m_dataSelectedTrackIds.set(trackIds, complete);
-}
-
-muse::async::Channel<TrackIdList>
-Au3SelectionController::dataSelectedOnTracksChanged() const
-{
-    return m_dataSelectedTrackIds.changed;
-}
-
-muse::async::Channel<TrackIdList>
-Au3SelectionController::dataSelectedOnTracksSelected() const
-{
-    return m_dataSelectedTrackIds.selected;
+    return muse::contains(m_selectedTracks.val, trackId) && timeSelectionIsNotEmpty();
 }
 
 au::trackedit::secs_t Au3SelectionController::dataSelectedStartTime() const
