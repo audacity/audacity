@@ -47,7 +47,7 @@ void PlaybackModule::registerExports()
 
     ioc()->registerExport<PlaybackConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IPlaybackController>(moduleName(), m_controller);
-    ioc()->registerExport<playback::IPlayback>(moduleName(), m_playback);
+    ioc()->registerExport<IPlayback>(moduleName(), m_playback);
 
     ioc()->registerExport<ITrackPlaybackControl>(moduleName(), new Au3TrackPlaybackControl());
 }

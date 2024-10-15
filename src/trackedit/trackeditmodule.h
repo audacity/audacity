@@ -8,6 +8,7 @@
 namespace au::trackedit {
 class TrackeditActionsController;
 class TrackeditUiActions;
+class Au3SelectionController;
 class TrackeditModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -21,5 +22,6 @@ public:
 private:
     std::shared_ptr<TrackeditActionsController> m_trackeditController;
     std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
+    std::shared_ptr<Au3SelectionController> m_selectionController;
 };
 }
