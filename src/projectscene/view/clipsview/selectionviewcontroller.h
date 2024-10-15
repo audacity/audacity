@@ -41,6 +41,8 @@ public:
     Q_INVOKABLE void resetDataSelection();
     Q_INVOKABLE bool isLeftSelection(double x);
 
+    Q_INVOKABLE double clipStartPosition(const ClipKey &clipKey);
+
     bool selectionActive() const;
     void setSelectionActive(bool newSelectionActive);
 
