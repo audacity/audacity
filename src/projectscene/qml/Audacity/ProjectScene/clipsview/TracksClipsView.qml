@@ -218,8 +218,10 @@ Rectangle {
             onDoubleClicked: e => {
                 if (root.clipHovered) {
                     selectionController.selectClipAudioData(root.hoveredClipKey)
+                    playCursorController.seekToX(selectionController.clipStartPosition(root.hoveredClipKey))
                 } else {
                     selectionController.selectTrackAudioData(e.y)
+                    playCursorController.seekToX(timeline.context.selectionStartPosition)
                 }
                 clipsSelection.visible = false
             }
