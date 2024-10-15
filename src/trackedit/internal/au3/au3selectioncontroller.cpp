@@ -160,8 +160,9 @@ void Au3SelectionController::resetDataSelection()
 {
     MYLOG() << "resetDataSelection";
 
-    m_selectedStartTime.set(-1.0, true);
-    m_selectedEndTime.set(-1.0, true);
+    const auto playbackPosition = playback()->player()->playbackPosition();
+    m_selectedStartTime.set(playbackPosition, true);
+    m_selectedEndTime.set(playbackPosition, true);
 }
 
 bool Au3SelectionController::timeSelectionIsNotEmpty() const
