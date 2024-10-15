@@ -28,7 +28,7 @@ StyledPopupView {
         RowLayout {
 
             width: parent.width
-            height: 64
+            height: 72
             spacing: 12
 
             Repeater {
@@ -39,8 +39,8 @@ StyledPopupView {
                 ]
 
                 FlatButton {
-                    Layout.preferredWidth: 64
-                    Layout.preferredHeight: 64
+                    Layout.preferredWidth: 80
+                    Layout.preferredHeight: 72
                     Layout.fillHeight: true
                     accentButton: false
                     enabled: true
