@@ -47,7 +47,7 @@ include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 ###########################################
 # AudacityDependencies
 ###########################################
-set(AUDACITY_ROOT ${CMAKE_CURRENT_LIST_DIR}/../au3)
+set(AUDACITY_ROOT ${CMAKE_CURRENT_LIST_DIR}/au3)
 add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 set(AUDACITY_CMAKE_MODULE_PATH "${AUDACITY_ROOT}/cmake-proxies/cmake-modules")
 set(CMAKE_MODULE_PATH
