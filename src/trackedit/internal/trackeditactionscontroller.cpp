@@ -96,7 +96,7 @@ void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& ac
 
 void TrackeditActionsController::doGlobalCopy()
 {
-    if (selectionController()->isDataSelected()) {
+    if (selectionController()->timeSelectionIsNotEmpty()) {
         dispatcher()->dispatch(CLIP_COPY_SELECTED_CODE);
         return;
     }
@@ -109,7 +109,7 @@ void TrackeditActionsController::doGlobalCopy()
 
 void TrackeditActionsController::doGlobalCut()
 {
-    if (selectionController()->isDataSelected()) {
+    if (selectionController()->timeSelectionIsNotEmpty()) {
         dispatcher()->dispatch(CLIP_CUT_SELECTED_CODE);
         return;
     }
@@ -122,7 +122,7 @@ void TrackeditActionsController::doGlobalCut()
 
 void TrackeditActionsController::doGlobalDelete()
 {
-    if (selectionController()->isDataSelected()) {
+    if (selectionController()->timeSelectionIsNotEmpty()) {
         dispatcher()->dispatch(CLIP_DELETE_SELECTED_CODE);
         return;
     }
@@ -135,8 +135,8 @@ void TrackeditActionsController::doGlobalDelete()
 
 void TrackeditActionsController::doGlobalSplitCut()
 {
-    if (selectionController()->isDataSelected()) {
-        auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
@@ -156,8 +156,8 @@ void TrackeditActionsController::doGlobalSplitCut()
 
 void TrackeditActionsController::doGlobalSplitDelete()
 {
-    if (selectionController()->isDataSelected()) {
-        auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
@@ -194,7 +194,7 @@ void TrackeditActionsController::doGlobalSplit()
 
 void TrackeditActionsController::doGlobalJoin()
 {
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
@@ -214,7 +214,7 @@ void TrackeditActionsController::redo()
 
 void TrackeditActionsController::doGlobalDuplicate()
 {
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
 
     if (!selectedTracks.empty()) {
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
@@ -270,7 +270,7 @@ void TrackeditActionsController::clipDelete(const ActionData& args)
 void TrackeditActionsController::clipCutSelected()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
@@ -283,7 +283,7 @@ void TrackeditActionsController::clipCutSelected()
 void TrackeditActionsController::clipCopySelected()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
@@ -302,7 +302,7 @@ void TrackeditActionsController::clipCopySelected()
 void TrackeditActionsController::clipDeleteSelected()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     auto selectedStartTime = selectionController()->dataSelectedStartTime();
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
@@ -549,7 +549,7 @@ void TrackeditActionsController::newLabelTrack()
 void TrackeditActionsController::trimAudioOutsideSelection()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     auto selectedStartTime = selectionController()->dataSelectedStartTime();
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
@@ -568,7 +568,7 @@ void TrackeditActionsController::trimAudioOutsideSelection()
 void TrackeditActionsController::silenceAudioSelection()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     auto selectedStartTime = selectionController()->dataSelectedStartTime();
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();

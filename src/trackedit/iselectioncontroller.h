@@ -25,7 +25,7 @@ public:
     // track selection
     virtual void resetSelectedTracks() = 0;
     virtual TrackIdList selectedTracks() const = 0;
-    virtual void setSelectedTracks(const TrackIdList &trackId) = 0;
+    virtual void setSelectedTracks(const TrackIdList &trackIds, bool complete = true) = 0;
     virtual muse::async::Channel<TrackIdList> tracksSelected() const = 0;
 
     // clip selection
@@ -36,13 +36,8 @@ public:
 
     // data selection
     virtual void resetDataSelection() = 0;
-    virtual bool isDataSelected() const = 0;
+    virtual bool timeSelectionIsNotEmpty() const = 0;
     virtual bool isDataSelectedOnTrack(TrackId trackId) const = 0;
-
-    virtual TrackIdList dataSelectedOnTracks() const = 0;
-    virtual void setDataSelectedOnTracks(const TrackIdList& trackIds, bool complete) = 0;
-    virtual muse::async::Channel<TrackIdList> dataSelectedOnTracksChanged() const = 0;
-    virtual muse::async::Channel<TrackIdList> dataSelectedOnTracksSelected() const = 0;
 
     virtual secs_t dataSelectedStartTime() const = 0;
     virtual void setDataSelectedStartTime(secs_t time, bool complete) = 0;

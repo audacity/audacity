@@ -22,13 +22,9 @@ void SelectionViewController::onPressed(double x, double y)
     m_startPoint = QPointF(x, y);
     emit selectionStarted();
 
-    if (!selectionController()->isDataSelected()) {
-        TrackIdList tracks = determinateTracks(m_startPoint.y(), y);
-        selectionController()->setDataSelectedOnTracks(tracks, true);
-    } else {
-        setSelectionActive(false);
-        selectionController()->resetDataSelection();
-    }
+    resetDataSelection();
+    TrackIdList tracks = determinateTracks(y, y);
+    selectionController()->setSelectedTracks(tracks, true);
 }
 
 void SelectionViewController::onPositionChanged(double x, double y)
@@ -42,8 +38,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
 
     // tracks
     TrackIdList tracks = determinateTracks(m_startPoint.y(), y);
-    selectionController()->setSelectedTracks(tracks);
-    selectionController()->setDataSelectedOnTracks(tracks, false);
+    selectionController()->setSelectedTracks(tracks, true);
 
     // time
     double x1 = m_startPoint.x();
@@ -90,7 +85,7 @@ void SelectionViewController::onReleased(double x, double y)
     if (!tracks.empty()) {
         selectionController()->setSelectedTracks(tracks);
     }
-    selectionController()->setDataSelectedOnTracks(tracks, true);
+    selectionController()->setSelectedTracks(tracks, true);
 
     // time
     selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), true);
