@@ -2,8 +2,6 @@
 
 ## NOTE: These instructions are work-in-progress and will be finalized after restructuring. 
 
-Audacity is a 
-
 ## Requirements
 
 * CMake
@@ -15,4 +13,4 @@ Audacity is a
 
 Maybe more. Qt Creator tends to be useful. 
 
-To compile, target the CMakeLists.txt in au4/, NOT the one in /. 
+Also, large parts of Audacity 4 are based on MuseScore Studio. So many parts from https://github.com/musescore/MuseScore/wiki/Set-up-developer-environment may apply here too. 
