@@ -96,13 +96,3 @@ bool TracksViewStateModel::isTrackCollapsed() const
 {
     return m_isTrackCollapsed.val;
 }
-
-void TracksViewStateModel::setOverrideCursor(Qt::CursorShape cursor)
-{
-    QGuiApplication::setOverrideCursor(QCursor(cursor));
-}
-
-void TracksViewStateModel::resetOverrideCursor()
-{
-    QGuiApplication::restoreOverrideCursor();
-}

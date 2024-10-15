@@ -81,8 +81,10 @@ Rectangle {
     MouseArea {
         id: hoverArea
         anchors.fill: parent
-        acceptedButtons: Qt.RightButton
+
         hoverEnabled: true
+        cursorShape: Qt.IBeamCursor
+        acceptedButtons: Qt.RightButton
 
         onClicked: function(e) {
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)

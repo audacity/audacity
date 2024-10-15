@@ -179,21 +179,7 @@ Rectangle {
             id: mainMouseArea
             anchors.fill: parent
 
-            property bool mouseOnTracks: false
-            property bool isNeedSelectionCursor: !selectionController.selectionActive && mainMouseArea.mouseOnTracks
             hoverEnabled: true
-            onContainsMouseChanged: {
-                if (!containsMouse) {
-                    mouseOnTracks = false
-                }
-            }
-            onIsNeedSelectionCursorChanged: {
-                if (isNeedSelectionCursor) {
-                    tracksViewState.setOverrideCursor(Qt.IBeamCursor)
-                } else {
-                    tracksViewState.resetOverrideCursor()
-                }
-            }
 
             onWheel: function(wheelEvent) {
                 timeline.onWheel(wheelEvent.x, wheelEvent.pixelDelta, wheelEvent.angleDelta)
@@ -206,7 +192,6 @@ Rectangle {
                 clipsSelection.visible = true
             }
             onPositionChanged: function(e) {
-                mouseOnTracks = e.y < tracksClipsView.visibleContentHeight
                 selectionController.onPositionChanged(e.x, e.y)
 
                 timeline.updateCursorPosition(e.x)
@@ -309,6 +294,11 @@ Rectangle {
                     onSeekToX: function(x) {
                         playCursorController.seekToX(x)
                     }
+                }
+
+                HoverHandler {
+                    property bool isNeedSelectionCursor: !selectionController.selectionActive
+                    cursorShape: isNeedSelectionCursor ? Qt.IBeamCursor : Qt.ArrowCursor
                 }
             }
 
