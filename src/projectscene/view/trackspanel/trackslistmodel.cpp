@@ -32,8 +32,18 @@ TracksListModel::TracksListModel(QObject* parent)
         onSelectedTracks(tracksIds);
     });
 
-    selectionController()->dataSelectedOnTracksSelected().onReceive(this, [this](trackedit::TrackIdList tracksIds) {
-        if (!tracksIds.empty()) {
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
+        // TODO AU4! remove it when ItemMultiSelectionModel is extended
+        Q_UNUSED(begin);
+        if (selectionController()->timeSelectionIsNotEmpty()) {
+            m_audioDataSelected = true;
+        }
+    });
+
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t end) {
+        // TODO AU4! remove it when ItemMultiSelectionModel is extended
+        Q_UNUSED(end);
+        if (selectionController()->timeSelectionIsNotEmpty()) {
             m_audioDataSelected = true;
         }
     });
