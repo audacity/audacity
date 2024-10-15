@@ -41,11 +41,9 @@ body:
       label: Audacity Version
       description: What version of Audacity are you running?
       options:
-        - current master / alpha / nightly build
-        - latest beta
-        - latest stable version (from audacityteam.org/download)
-        - stable version (from a Linux repository)
-        - other
+        - Audacity 3.7.x
+        - Audacity 4 alpha
+        - Other
     validations:
       required: true
   - type: dropdown
@@ -67,8 +65,3 @@ body:
       label: Additional context
       description: Further information which may be relevant to this bug
       placeholder: Sound card, Screenshots, commit ID, related bugs, ...
-  - type: markdown
-    attributes:
-      value: >
-        Please note that Audacity is currently undergoing major restructuring. See the [Roadmap](https://github.com/audacity/audacity/wiki/Roadmap)
-        for further info. Bug fixes may be delayed or postponed significantly. 

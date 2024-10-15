@@ -1,6 +1,6 @@
-name: AU4 Issue
+name: Internal task
 description: Development tasks of Audacity 4. For internal use.
-labels: ["AU4"]
+labels: ["Task"]
 body:
   - type: textarea
     id: desc

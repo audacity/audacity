@@ -3,17 +3,17 @@ description: Request an existing feature to be made better, or a new feature
 labels: ["Enhancement Request"]
 body:
   - type: textarea
-    id: idea
-    attributes:
-      label: Your idea
-      description: Describe your idea in a few sentences.
-    validations:
-      required: true
-  - type: textarea
     id: whatfor
     attributes:
       label: Problem to be solved
       description: What problem would your idea solve?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: Describe your idea in a few sentences.
     validations:
       required: true
   - type: textarea
