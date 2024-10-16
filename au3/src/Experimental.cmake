@@ -38,10 +38,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # A Frequency Grid for the Spectrum Log(f) & Find Notes modes
    #FFT_Y_GRID
 
-   # Andy Coder, 03.Mar 2009:
-   # Allow keyboard seeking before initial playback position
-   #SEEK_BEHIND_CURSOR
-
    # Edward Hui 1 Jul 2021
    #BRUSH_TOOL
 

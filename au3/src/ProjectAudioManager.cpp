@@ -347,9 +347,6 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
    if (!hasaudio)
       return -1;  // No need to continue without audio tracks
 
-#if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
-   double initSeek = 0.0;
-#endif
    double loopOffset = 0.0;
 
    if (t1 == t0) {
@@ -382,14 +379,6 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
          else if (t0 > tracks.GetEndTime()) {
             t0 = tracks.GetEndTime();
          }
-#if defined(EXPERIMENTAL_SEEK_BEHIND_CURSOR)
-         else {
-            initSeek = t0;         //AC: initSeek is where playback will 'start'
-            if (!pStartTime)
-               pStartTime.emplace(initSeek);
-            t0 = tracks.GetStartTime();
-         }
-#endif
       }
       t1 = tracks.GetEndTime();
    }
