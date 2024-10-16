@@ -36,6 +36,11 @@ void TimelineContext::init(double frameWidth)
     emit frameEndTimeChanged();
     emit frameTimeChanged();
 
+    selectionController()->clipSelected().onReceive(this, [this](const trackedit::ClipKey&) {
+        setClipSelected();
+        updateSelectedClipTime();
+    });
+
     m_selectionStartTime = selectionController()->dataSelectedStartTime();
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t time) {
         setSelectionStartTime(time);
@@ -64,6 +69,10 @@ void TimelineContext::init(double frameWidth)
         emit selectionEndTimeChanged();
         emit selectionStartPositionChanged();
         emit selectionEndPositionChanged();
+        if (clipSelected()) {
+            emit selectedClipStartPositionChanged();
+            emit selectedClipEndPositionChanged();
+        }
     });
 
     dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
@@ -586,6 +595,31 @@ bool TimelineContext::selectionActive() const
     return m_selectionActive;
 }
 
+double TimelineContext::selectedClipStartTime() const
+{
+    return m_selectedClipStartTime.raw();
+}
+
+double TimelineContext::selectedClipEndTime() const
+{
+    return m_selectedClipEndTime.raw();
+}
+
+double TimelineContext::selectedClipStartPosition() const
+{
+    return timeToPosition(m_selectedClipStartTime);
+}
+
+double TimelineContext::selectedClipEndPosition() const
+{
+    return timeToPosition(m_selectedClipEndTime);
+}
+
+bool TimelineContext::clipSelected() const
+{
+    return m_clipSelected;
+}
+
 void TimelineContext::updateSelectionActive()
 {
     bool isActive = m_selectionStartTime >= 0.0
@@ -597,6 +631,43 @@ void TimelineContext::updateSelectionActive()
     }
     m_selectionActive = isActive;
     emit selectionActiveChanged();
+}
+
+void TimelineContext::setClipStartTime(double time)
+{
+    if (m_selectedClipStartTime != time) {
+        m_selectedClipStartTime = time;
+        emit selectedClipStartTimeChanged();
+        emit selectedClipStartPositionChanged();
+    }
+}
+
+void TimelineContext::setClipEndTime(double time)
+{
+    if (m_selectedClipEndTime != time) {
+        m_selectedClipEndTime = time;
+        emit selectedClipEndTimeChanged();
+        emit selectedClipEndPositionChanged();
+    }
+}
+
+void TimelineContext::setClipSelected()
+{
+    bool selected = selectionController()->selectedClip().isValid();
+
+    if (m_clipSelected == selected) {
+        return;
+    }
+    m_clipSelected = selected;
+    emit clipSelectedChanged();
+}
+
+void TimelineContext::updateSelectedClipTime()
+{
+    if (clipSelected()) {
+        setClipStartTime(selectionController()->selectedClipStartTime());
+        setClipEndTime(selectionController()->selectedClipEndTime());
+    }
 }
 
 void TimelineContext::updateTimeSignature()

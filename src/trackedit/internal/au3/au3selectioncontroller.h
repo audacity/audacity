@@ -29,7 +29,8 @@ public:
     trackedit::ClipKey selectedClip() const override;
     void setSelectedClip(const trackedit::ClipKey& clipKey) override;
     muse::async::Channel<trackedit::ClipKey> clipSelected() const override;
-    double selectedClipStartTime(const trackedit::ClipKey& clipKey) const override;
+    double selectedClipStartTime() const override;
+    double selectedClipEndTime() const override;
 
     // data selection
     void setSelectedTrackAudioData(trackedit::TrackId trackId) override;
