@@ -59,11 +59,6 @@ IntSetting SpectrumRange{
    L"/Spectrum/Range", 80 };
 IntSetting SpectrumZeroPaddingFactor{
    L"/Spectrum/ZeroPaddingFactor", 2 };
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-BoolSetting SpectrumYGrid{
-   L"/Spectrum/FFTYGrid", false};
-#endif
 }
 
 SpectrogramSettings::Globals::Globals()
@@ -147,9 +142,6 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    , spectralSelection(other.spectralSelection)
 #endif
    , algorithm(other.algorithm)
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   , fftYGrid(other.fftYGrid)
-#endif
 
    // Do not copy these!
    , hFFT{}
@@ -176,9 +168,6 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
       spectralSelection = other.spectralSelection;
 #endif
       algorithm = other.algorithm;
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-      fftYGrid = other.fftYGrid;
-#endif
 
       // Invalidate the caches
       DestroyWindows();
@@ -362,11 +351,6 @@ void SpectrogramSettings::LoadPrefs()
 
    algorithm = static_cast<Algorithm>(SpectrumAlgorithm.Read());
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   fftYGrid = SpectrumYGrid.Read();
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
-
    // Enforce legal values
    Validate(true);
 
@@ -401,11 +385,6 @@ void SpectrogramSettings::SavePrefs()
 #endif
 
    SpectrumAlgorithm.Write(static_cast<int>(algorithm));
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   SpectrumYGrid.Write(fftYGrid);
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
 }
 
 // This is a temporary hack until SpectrogramSettings gets fully integrated
@@ -449,11 +428,6 @@ void SpectrogramSettings::UpdatePrefs()
 
    if (algorithm == defaults().algorithm)
       algorithm = static_cast<Algorithm>(SpectrumAlgorithm.Read());
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   if (fftYGrid == defaults().fftYGrid)
-      fftYGrid = SpectrumYGrid.Read();
-#endif //EXPERIMENTAL_FFT_Y_GRID
 
    // Enforce legal values
    Validate(true);

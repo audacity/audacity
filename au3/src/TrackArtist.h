@@ -100,10 +100,6 @@ public:
    wxBrush beatStrongSelBrush[2];
    wxBrush beatWeakSelBrush[2];
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   bool fftYGridOld;
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
    const SelectedRegion *pSelectedRegion{};
    ZoomInfo *pZoomInfo{};
    const PendingTracks *pPendingTracks{};

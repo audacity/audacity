@@ -276,11 +276,6 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       mTempSettings.spectralSelection);
 #endif
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-         S.TieCheckBox(XO("Show a grid along the &Y-axis"),
-            mTempSettings.fftYGrid);
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
    // S.EndStatic();
 
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH

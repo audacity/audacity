@@ -182,10 +182,6 @@ public:
    };
    Algorithm algorithm;
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   bool fftYGrid;
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
    // Following fields are derived from preferences.
 
    // Variables used for computing the spectrum

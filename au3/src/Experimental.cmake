@@ -28,9 +28,6 @@
 ]]
 
 set( EXPERIMENTAL_OPTIONS_LIST
-   # AM, 22.Nov 2007:
-   # A Frequency Grid for the Spectrum Log(f) & Find Notes modes
-   #FFT_Y_GRID
 
    # Edward Hui 1 Jul 2021
    #BRUSH_TOOL

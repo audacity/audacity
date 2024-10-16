@@ -399,10 +399,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    const int &range = settings.range;
    const int &gain = settings.gain;
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   const bool &fftYGrid = settings.fftYGrid;
-#endif
-
    dc.SetPen(*wxTRANSPARENT_PEN);
 
    // We draw directly to a bit image in memory,
@@ -447,27 +443,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       bins[yy] = nextBin;
    }
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   const float
-      log2 = logf(2.0f),
-      scale2 = (lmax - lmin) / log2,
-      lmin2 = lmin / log2;
-
-   ArrayOf<bool> yGrid{size_t(mid.height)};
-   for (int yy = 0; yy < mid.height; ++yy) {
-      float n = (float(yy) / mid.height*scale2 - lmin2) * 12;
-      float n2 = (float(yy + 1) / mid.height*scale2 - lmin2) * 12;
-      float f = float(minFreq) / (fftSkipPoints + 1)*powf(2.0f, n / 12.0f + lmin2);
-      float f2 = float(minFreq) / (fftSkipPoints + 1)*powf(2.0f, n2 / 12.0f + lmin2);
-      n = logf(f / 440) / log2 * 12;
-      n2 = logf(f2 / 440) / log2 * 12;
-      if (floor(n) < floor(n2))
-         yGrid[yy] = true;
-      else
-         yGrid[yy] = false;
-   }
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
    auto &clipCache = WaveClipSpectrumCache::Get(clip);
    auto &specPxCache = clipCache.mSpecPxCaches[clip.GetChannelIndex()];
    if (!updated && specPxCache &&
@@ -477,9 +452,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       && range == specPxCache->range
       && minFreq == specPxCache->minFreq
       && maxFreq == specPxCache->maxFreq
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   && fftYGrid==fftYGridOld
-#endif //EXPERIMENTAL_FFT_Y_GRID
    ) {
       // Wave clip's spectrum cache is up to date,
       // and so is the spectrum pixel cache
@@ -683,14 +655,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
          unsigned char rv, gv, bv;
          GetColorGradient(value, selected, colorScheme, &rv, &gv, &bv);
-
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-         if (fftYGrid && yGrid[yy]) {
-            rv /= 1.1f;
-            gv /= 1.1f;
-            bv /= 1.1f;
-         }
-#endif //EXPERIMENTAL_FFT_Y_GRID
          int px = ((mid.height - 1 - yy) * mid.width + xx);
          px *=3;
          data[px++] = rv;
