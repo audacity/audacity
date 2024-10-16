@@ -50,12 +50,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Define to enable the device change handler
    #DEVICE_CHANGE_HANDLER
 
-   # PRL 11 Jul 2017
-   # Highlight more things in TrackPanel when the mouse moves over them,
-   # using deliberately ugly pens and brushes until there is better cooperation
-   # with themes
-   #TRACK_PANEL_HIGHLIGHTING
-
    # Paul Licameli (PRL) 28 Dec 2017
    # Easy drag-and-drop to add Nyquist, LADSPA, and VST plug-ins
    #DRAG_DROP_PLUG_INS

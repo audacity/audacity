@@ -775,10 +775,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 
    bool highlightEnvelope = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-   highlightEnvelope = target && target->GetEnvelope() == &envelope;
-#endif
 
    //If clip is "too small" draw a placeholder instead of
    //attempting to fit the contents into a few pixels
@@ -857,10 +853,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    const double threshold2 = 3 * sampleRate / stretchRatio;
 
    bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-      auto target = dynamic_cast<SampleHandle*>(context.target.get());
-      highlight = target && target->FindChannel().get() == &track;
-#endif
 
    const bool showIndividualSamples = zoomInfo.GetZoom() > threshold1;
    const bool showPoints = zoomInfo.GetZoom() > threshold2;
@@ -985,12 +977,6 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
 
    bool highlight = false;
    bool gripHit = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   auto target = dynamic_cast<TimeShiftHandle*>(context.target.get());
-   gripHit = target && target->IsGripHit();
-   highlight = target && target->FindTrack().get() ==
-      &static_cast<const Track &>(channel.GetChannelGroup());
-#endif
 
    const bool dB = !WaveformSettings::Get(channel).isLinear();
 
