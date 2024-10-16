@@ -35,7 +35,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrackUtilities.h"
 #include "RealtimeEffectManager.h"
 #include "../../../../prefs/PrefsDialog.h"
-#include "../../../../prefs/ThemePrefs.h"
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
 #include "UserException.h"

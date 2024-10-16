@@ -117,8 +117,6 @@ from ThemeBase.  It contains the Audacity specific list of icons and images
 and overloads for the required virtual functions.  A singleton instance, 
 \p theTheme is created by Audacity.
 
-Another class, ThemePrefs, provides the GUI for loading and saving theme 
-information.
 
 <hr>
 
