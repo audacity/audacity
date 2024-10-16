@@ -44,10 +44,7 @@ void EnvelopeEditor::DrawPoints(const Envelope &env,
    const auto &zoomInfo = *artist->pZoomInfo;
 
    bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-   highlight = target && target->GetEnvelope() == &env;
-#endif
+
    wxPen &pen = highlight ? AColor::uglyPen : AColor::envelopePen;
    dc.SetPen( pen );
    dc.SetBrush(*wxWHITE_BRUSH);

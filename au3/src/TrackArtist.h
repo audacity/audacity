@@ -100,17 +100,6 @@ public:
    wxBrush beatStrongSelBrush[2];
    wxBrush beatWeakSelBrush[2];
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   bool fftYGridOld;
-#endif //EXPERIMENTAL_FFT_Y_GRID
-
-#ifdef EXPERIMENTAL_FIND_NOTES
-   bool fftFindNotesOld;
-   int findNotesMinAOld;
-   int findNotesNOld;
-   bool findNotesQuantizeOld;
-#endif
-
    const SelectedRegion *pSelectedRegion{};
    ZoomInfo *pZoomInfo{};
    const PendingTracks *pPendingTracks{};

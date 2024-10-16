@@ -89,12 +89,6 @@ class SpectrumPrefs final : public PrefsPanel
 
    wxChoice *mAlgorithmChoice;
 
-
-#ifdef EXPERIMENTAL_FIND_NOTES
-   wxTextCtrl *mFindNotesMinA;
-   wxTextCtrl *mFindNotesN;
-#endif
-
    wxCheckBox *mDefaultsCheckbox;
 
    SpectrogramSettings mTempSettings, mOrigSettings;

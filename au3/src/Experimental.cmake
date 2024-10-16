@@ -28,46 +28,9 @@
 ]]
 
 set( EXPERIMENTAL_OPTIONS_LIST
-   # ACH 08 Jan 2014
-   # EQ accelerated code
-   #EQ_SSE_THREADED
-
-   # JKC an experiment to work around bug 2709
-   # disabled.
-   #CEE_NUMBERS_OPTION
-
-   # Define this so that sync-lock tiles shine through spectrogram.
-   # The spectrogram pastes a bitmap over the tiles.
-   # This makes it use alpha blending, most transparent where least intense.
-   #SPECTROGRAM_OVERLAY
-
-   #August 2009 - Theming not locked down enough for a stable release.
-   # This turns on the Theme panel in Prefs dialog.
-   #THEME_PREFS
-
-   #ROLL_UP_DIALOG
-   #RIGHT_ALIGNED_TEXTBOXES
-   #VOICE_DETECTION
-
-   # Andreas Micheler, 20.Nov 2007:
-   # A spectrumLogF-like view mode with notes quantization.
-   # Just select the "Find Notes" checkbox in the spectrum prefs
-   # to activate it instead of the Spectrum log(f) mode.
-   #FIND_NOTES
-
-   # AM, 22.Nov 2007:
-   # A Frequency Grid for the Spectrum Log(f) & Find Notes modes
-   #FFT_Y_GRID
-
-   # Andy Coder, 03.Mar 2009:
-   # Allow keyboard seeking before initial playback position
-   #SEEK_BEHIND_CURSOR
 
    # Edward Hui 1 Jul 2021
    #BRUSH_TOOL
-
-   # Paul Licameli (PRL) 29 Nov 2014
-   #IMPROVED_SEEKING
 
    #MIDI_IN
 
@@ -81,31 +44,9 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # USE_MIDI must be defined in order for SCOREALIGN to work
    #SCOREALIGN
 
-   #Automatically tries to find an acceptable input volume
-   #AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-
-   # Define to make the meters look like a row of LEDs
-   #METER_LED_STYLE
-
    # Define to enable the device change handler
    #DEVICE_CHANGE_HANDLER
 
-   # PRL 11 Jul 2017
-   # Highlight more things in TrackPanel when the mouse moves over them,
-   # using deliberately ugly pens and brushes until there is better cooperation
-   # with themes
-   #TRACK_PANEL_HIGHLIGHTING
-
-   # Paul Licameli (PRL) 28 Dec 2017
-   # Easy drag-and-drop to add Nyquist, LADSPA, and VST plug-ins
-   #DRAG_DROP_PLUG_INS
-
-   # PRL 5 Jan 2018
-   # Easy change of keystroke bindings for menu items
-   #
-   # PRL disabled 31 Aug 2021 because, at least on Mac, it misfires the
-   # preference dialog whenever any keystroke shortcuts with Shift+ are used
-   # EASY_CHANGE_KEY_BINDINGS
 )
 
 # Now define the flags

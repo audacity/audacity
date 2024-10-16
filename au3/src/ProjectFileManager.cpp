@@ -996,15 +996,6 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
       if (wxStrncmp(buf, "SQLite", 6) != 0)
       {
          // Not a database
-#ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
-         // Is it a plug-in?
-         if (PluginManager::Get().DropFile(fileName)) {
-            MenuCreator::RebuildAllMenuBars();
-            // Plug-in installation happened, not really opening of a file,
-            // so return null
-            return nullptr;
-         }
-#endif
          auto &project = chooser(false);
          // Undo history is incremented inside this:
          if (Get(project).Import(fileName))

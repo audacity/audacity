@@ -549,29 +549,6 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                r.SetRight(mBar[i].r.GetRight());
                dc.GradientFillLinear(r, yellow, red);
             }
-#ifdef EXPERIMENTAL_METER_LED_STYLE
-            if (!mBar[i].vert)
-            {
-               wxRect r = mBar[i].r;
-               wxPen BackgroundPen;
-               BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
-               dc.SetPen( BackgroundPen );
-               int i;
-               for(i=0;i<r.width;i++)
-               {
-                  // 2 pixel spacing between the LEDs
-                  if( (i%7)<2 ){
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
-                  } else {
-                     // The LEDs have triangular ends.
-                     // This code shapes the ends.
-                     int j = abs( (i%7)-4);
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
-                     AColor::Line( dc, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
-                  }
-               }
-            }
-#endif
          }
       }
 
@@ -980,10 +957,6 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 {
    MeterUpdateMsg msg;
    int numChanges = 0;
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   double maxPeak = 0.0;
-   bool discarded = false;
-#endif
 
    // We shouldn't receive any events if the meter is disabled, but clear it to be safe
    if (mMeterDisabled) {
@@ -1048,27 +1021,10 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
          }
 
          mBar[j].tailPeakCount = msg.tailPeakCount[j];
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (mT > gAudioIO->AILAGetLastDecisionTime()) {
-            discarded = false;
-            maxPeak = msg.peak[j] > maxPeak ? msg.peak[j] : maxPeak;
-            wxPrintf("%f@%f ", msg.peak[j], mT);
-         }
-         else {
-            discarded = true;
-            wxPrintf("%f@%f discarded\n", msg.peak[j], mT);
-         }
-#endif
       }
    } // while
 
    if (numChanges > 0) {
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (gAudioIO->AILAIsActive() && mIsInput && !discarded) {
-            gAudioIO->AILAProcess(maxPeak);
-            putchar('\n');
-         }
-      #endif
       RepaintBarsNow();
    }
 }

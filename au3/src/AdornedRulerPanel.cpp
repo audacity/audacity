@@ -50,7 +50,6 @@
 #include "UIHandle.h"
 #include "ViewInfo.h"
 #include "prefs/TracksPrefs.h"
-#include "prefs/ThemePrefs.h"
 #include "toolbars/ToolBar.h"
 #include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"

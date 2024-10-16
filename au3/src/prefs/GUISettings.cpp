@@ -23,13 +23,6 @@ wxString GUISettings::SetLang( const wxString & lang )
       ::AudacityMessageBox(
          XO("Language \"%s\" is unknown").Format( lang ) );
 
-#ifdef EXPERIMENTAL_CEE_NUMBERS_OPTION
-   bool forceCeeNumbers;
-   gPrefs->Read(wxT("/Locale/CeeNumberFormat"), &forceCeeNumbers, false);
-   if( forceCeeNumbers )
-      Internat::SetCeeNumberFormat();
-#endif
-
 #ifdef __WXMAC__
       wxApp::s_macHelpMenuTitleName = _("&Help");
 #endif

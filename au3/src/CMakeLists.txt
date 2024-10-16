@@ -608,8 +608,6 @@ set( SOURCES
       prefs/RecordingPrefs.h
       prefs/SpectrumPrefs.cpp
       prefs/SpectrumPrefs.h
-      prefs/ThemePrefs.cpp
-      prefs/ThemePrefs.h
       prefs/TracksBehaviorsPrefs.cpp
       prefs/TracksBehaviorsPrefs.h
       prefs/TracksPrefs.cpp
@@ -653,8 +651,6 @@ set( SOURCES
       toolbars/ToolManager.h
       toolbars/ToolsToolBar.cpp
       toolbars/ToolsToolBar.h
-      toolbars/TranscriptionToolBar.cpp
-      toolbars/TranscriptionToolBar.h
 
       # Tracks
 
@@ -828,8 +824,6 @@ set( SOURCES
       widgets/CustomUpdaterPosition.h
       widgets/CustomUpdaterValue.cpp
       widgets/CustomUpdaterValue.h
-      widgets/ExpandingToolBar.cpp
-      widgets/ExpandingToolBar.h
       widgets/FileHistory.cpp
       widgets/FileHistory.h
       widgets/FreqGauge.cpp

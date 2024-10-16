@@ -11,7 +11,7 @@
 \class PrefsPanel
 \brief Base class for a panel in the PrefsDialog.  Classes derived from 
 this class include BatchPrefs, DirectoriesPrefs, GUIPrefs, KeyConfigPrefs, 
-MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
+MousePrefs, QualityPrefs, SpectrumPrefs.
 
   The interface works like this: Each panel in the preferences dialog
   must derive from PrefsPanel. You must override Apply() with code

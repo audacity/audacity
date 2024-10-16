@@ -675,11 +675,7 @@ wxTextCtrl * ShuttleGuiBase::AddTextBox(
    }
    miProp=0;
 
-#ifdef EXPERIMENTAL_RIGHT_ALIGNED_TEXTBOXES
-   long flags = wxTE_RIGHT;
-#else
    long flags = wxTE_LEFT;
-#endif
 
    mpWind = pTextCtrl = safenew wxTextCtrlWrapper(GetParent(), miId, Value,
       wxDefaultPosition, Size, GetStyle( flags ));
@@ -710,11 +706,7 @@ wxTextCtrl * ShuttleGuiBase::AddNumericTextBox(
    }
    miProp=0;
 
-#ifdef EXPERIMENTAL_RIGHT_ALIGNED_TEXTBOXES
-   long flags = wxTE_RIGHT;
-#else
    long flags = wxTE_LEFT;
-#endif
 
    if (acceptEnter)
       flags = wxTE_PROCESS_ENTER;

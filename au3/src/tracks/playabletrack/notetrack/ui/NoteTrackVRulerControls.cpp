@@ -122,9 +122,6 @@ void NoteTrackVRulerControls::Draw(
       --rect.height;
 
       bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-      highlight = rect.Contains(context.lastState.GetPosition());
-#endif
 
       const auto artist = TrackArtist::Get( context );
       UpdateRuler(rect);
