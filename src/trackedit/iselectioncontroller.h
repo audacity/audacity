@@ -33,7 +33,8 @@ public:
     virtual ClipKey selectedClip() const = 0;
     virtual void setSelectedClip(const ClipKey& clipKey) = 0;
     virtual muse::async::Channel<ClipKey> clipSelected() const = 0;
-    virtual double selectedClipStartTime(const trackedit::ClipKey& clipKey) const = 0;
+    virtual double selectedClipStartTime() const = 0;
+    virtual double selectedClipEndTime() const = 0;
 
     // data selection
     virtual void setSelectedTrackAudioData(trackedit::TrackId trackId) = 0;
