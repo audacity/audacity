@@ -82,8 +82,13 @@ muse::async::Channel<au::trackedit::ClipKey> Au3SelectionController::clipSelecte
     return m_selectedClip.selected;
 }
 
-double Au3SelectionController::selectedClipStartTime(const ClipKey &clipKey) const
+double Au3SelectionController::selectedClipStartTime() const
 {
+    auto clipKey = selectedClip();
+    if (!clipKey.isValid()) {
+        return -1.0;
+    }
+
     WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return false;
@@ -95,6 +100,26 @@ double Au3SelectionController::selectedClipStartTime(const ClipKey &clipKey) con
     }
 
     return clip->Start();
+}
+
+double Au3SelectionController::selectedClipEndTime() const
+{
+    auto clipKey = selectedClip();
+    if (!clipKey.isValid()) {
+        return -1.0;
+    }
+
+    WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    return clip->End();
 }
 
 void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)

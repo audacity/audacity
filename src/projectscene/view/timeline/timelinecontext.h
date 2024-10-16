@@ -38,6 +38,12 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(double selectionEndPosition READ selectionEndPosition NOTIFY selectionEndPositionChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
+    Q_PROPERTY(double selectedClipStartTime READ selectedClipStartTime NOTIFY selectedClipStartTimeChanged FINAL)
+    Q_PROPERTY(double selectedClipEndTime READ selectedClipEndTime NOTIFY selectedClipEndTimeChanged FINAL)
+    Q_PROPERTY(double selectedClipStartPosition READ selectedClipStartPosition NOTIFY selectedClipStartPositionChanged FINAL)
+    Q_PROPERTY(double selectedClipEndPosition READ selectedClipEndPosition NOTIFY selectedClipEndPositionChanged FINAL)
+    Q_PROPERTY(bool clipSelected READ clipSelected NOTIFY clipSelectedChanged FINAL)
+
     Q_PROPERTY(qreal startHorizontalScrollPosition READ startHorizontalScrollPosition NOTIFY horizontalScrollChanged)
     Q_PROPERTY(qreal horizontalScrollbarSize READ horizontalScrollbarSize NOTIFY horizontalScrollChanged)
     Q_PROPERTY(
@@ -74,6 +80,12 @@ public:
     double selectionEndPosition() const;
     bool selectionActive() const;
 
+    double selectedClipStartTime() const;
+    double selectedClipEndTime() const;
+    double selectedClipStartPosition() const;
+    double selectedClipEndPosition() const;
+    bool clipSelected() const;
+
     Q_INVOKABLE void init(double frameWidth);
 
     Q_INVOKABLE void onResizeFrameWidth(double frameWidth);
@@ -106,6 +118,8 @@ public:
 
     qreal verticalScrollbarSize() const;
 
+    void updateSelectedClipTime();
+
 signals:
 
     void frameStartTimeChanged();
@@ -122,6 +136,12 @@ signals:
     void selectionStartPositionChanged();
     void selectionEndPositionChanged();
     void selectionActiveChanged();
+
+    void selectedClipStartTimeChanged();
+    void selectedClipEndTimeChanged();
+    void selectedClipStartPositionChanged();
+    void selectedClipEndPositionChanged();
+    void clipSelectedChanged();
 
     void viewContentYChangeRequested(double contentY);
 
@@ -154,6 +174,10 @@ private:
     void setSelectionEndTime(double time);
     void updateSelectionActive();
 
+    void setClipStartTime(double time);
+    void setClipEndTime(double time);
+    void setClipSelected();
+
     void updateTimeSignature();
 
     qreal horizontalScrollableSize() const;
@@ -179,6 +203,10 @@ private:
     trackedit::secs_t m_selectionStartTime = -1.0;
     trackedit::secs_t m_selectionEndTime = -1.0;
     bool m_selectionActive = false;
+
+    trackedit::secs_t m_selectedClipStartTime = -1.0;
+    trackedit::secs_t m_selectedClipEndTime = -1.0;
+    bool m_clipSelected = false;
 
     std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
 

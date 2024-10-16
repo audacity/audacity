@@ -130,11 +130,6 @@ bool SelectionViewController::isLeftSelection(double x)
     return m_startPoint.x() > x;
 }
 
-double SelectionViewController::clipStartPosition(const ClipKey &clipKey)
-{
-    return m_context->timeToPosition(selectionController()->selectedClipStartTime(clipKey.key));
-}
-
 IProjectViewStatePtr SelectionViewController::viewState() const
 {
     IAudacityProjectPtr prj = globalContext()->currentProject();

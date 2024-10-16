@@ -148,8 +148,8 @@ Rectangle {
         Rectangle {
             id: timelineSelRect
 
-            x: timeline.context.selectionStartPosition
-            width: timeline.context.selectionEndPosition - x
+            x: timeline.context.clipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
+            width: timeline.context.clipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
@@ -218,7 +218,7 @@ Rectangle {
             onDoubleClicked: e => {
                 if (root.clipHovered) {
                     selectionController.selectClipAudioData(root.hoveredClipKey)
-                    playCursorController.seekToX(selectionController.clipStartPosition(root.hoveredClipKey))
+                    playCursorController.seekToX(timeline.context.selectedClipStartPosition)
                 } else {
                     selectionController.selectTrackAudioData(e.y)
                     playCursorController.seekToX(timeline.context.selectionStartPosition)
