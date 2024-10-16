@@ -826,8 +826,6 @@ set( SOURCES
       widgets/CustomUpdaterPosition.h
       widgets/CustomUpdaterValue.cpp
       widgets/CustomUpdaterValue.h
-      widgets/ExpandingToolBar.cpp
-      widgets/ExpandingToolBar.h
       widgets/FileHistory.cpp
       widgets/FileHistory.h
       widgets/FreqGauge.cpp
