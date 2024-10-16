@@ -155,14 +155,7 @@ struct SeekInfo
 void SeekWhenAudioActive(double seekStep, wxLongLong &lastSelectionAdjustment)
 {
    auto gAudioIO = AudioIO::Get();
-#ifdef EXPERIMENTAL_IMPROVED_SEEKING
-   if (gAudioIO->GetLastPlaybackTime() < lastSelectionAdjustment) {
-      // Allow time for the last seek to output a buffer before
-      // discarding samples again
-      // Do not advance mLastSelectionAdjustment
-      return;
-   }
-#endif
+
    lastSelectionAdjustment = ::wxGetUTCTimeMillis();
 
    gAudioIO->SeekStream(seekStep);

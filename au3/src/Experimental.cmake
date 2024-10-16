@@ -32,9 +32,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Edward Hui 1 Jul 2021
    #BRUSH_TOOL
 
-   # Paul Licameli (PRL) 29 Nov 2014
-   #IMPROVED_SEEKING
-
    #MIDI_IN
 
    # JKC, 17 Aug 2017
