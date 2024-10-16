@@ -29,9 +29,6 @@
 
 set( EXPERIMENTAL_OPTIONS_LIST
 
-   # JKC an experiment to work around bug 2709
-   # disabled.
-   #CEE_NUMBERS_OPTION
 
    # Define this so that sync-lock tiles shine through spectrogram.
    # The spectrogram pastes a bitmap over the tiles.

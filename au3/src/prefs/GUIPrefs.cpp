@@ -148,11 +148,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
          {"/GUI/RtlWorkaround",
           true});
 #endif
-#ifdef EXPERIMENTAL_CEE_NUMBERS_OPTION
-      S.TieCheckBox(XXO("Never use comma as decimal point"),
-                    {wxT("/Locale/CeeNumberFormat"),
-                     false});
-#endif
    }
    S.EndStatic();
 
