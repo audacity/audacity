@@ -28,12 +28,6 @@
 ]]
 
 set( EXPERIMENTAL_OPTIONS_LIST
-   # Andreas Micheler, 20.Nov 2007:
-   # A spectrumLogF-like view mode with notes quantization.
-   # Just select the "Find Notes" checkbox in the spectrum prefs
-   # to activate it instead of the Spectrum log(f) mode.
-   #FIND_NOTES
-
    # AM, 22.Nov 2007:
    # A Frequency Grid for the Spectrum Log(f) & Find Notes modes
    #FFT_Y_GRID

@@ -186,13 +186,6 @@ public:
    bool fftYGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-   bool fftFindNotes;
-   double findNotesMinA;
-   int numberOfMaxima;
-   bool findNotesQuantize;
-#endif //EXPERIMENTAL_FIND_NOTES
-
    // Following fields are derived from preferences.
 
    // Variables used for computing the spectrum
