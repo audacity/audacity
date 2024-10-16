@@ -651,8 +651,6 @@ set( SOURCES
       toolbars/ToolManager.h
       toolbars/ToolsToolBar.cpp
       toolbars/ToolsToolBar.h
-      toolbars/TranscriptionToolBar.cpp
-      toolbars/TranscriptionToolBar.h
 
       # Tracks
 

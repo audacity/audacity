@@ -28,8 +28,6 @@
 ]]
 
 set( EXPERIMENTAL_OPTIONS_LIST
-   #VOICE_DETECTION
-
    # Andreas Micheler, 20.Nov 2007:
    # A spectrumLogF-like view mode with notes quantization.
    # Just select the "Find Notes" checkbox in the spectrum prefs
