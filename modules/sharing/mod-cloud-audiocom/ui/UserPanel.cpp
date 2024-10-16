@@ -144,12 +144,15 @@ void UserPanel::UpdateUserData()
       return;
    }
 
-   const auto displayName = userService.GetDisplayName();
+   wxString displayName = userService.GetDisplayName();
 
-   if (!displayName.empty()) {
-      mUserName->SetLabel(displayName);
-      mUserImage->wxPanel::SetLabel(displayName);  // for screen readers
+   if (displayName.empty())
+   {
+      displayName = userService.GetUserSlug();
    }
+
+   mUserName->SetLabel(displayName);
+   mUserImage->wxPanel::SetLabel(displayName);  // for screen readers
 
    const auto avatarPath = userService.GetAvatarPath();
 
