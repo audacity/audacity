@@ -47,9 +47,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    #Automatically tries to find an acceptable input volume
    #AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 
-   # Define to make the meters look like a row of LEDs
-   #METER_LED_STYLE
-
    # Define to enable the device change handler
    #DEVICE_CHANGE_HANDLER
 
