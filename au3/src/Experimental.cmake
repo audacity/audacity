@@ -28,8 +28,6 @@
 ]]
 
 set( EXPERIMENTAL_OPTIONS_LIST
-
-   #RIGHT_ALIGNED_TEXTBOXES
    #VOICE_DETECTION
 
    # Andreas Micheler, 20.Nov 2007:
