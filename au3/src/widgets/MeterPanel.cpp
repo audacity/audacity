@@ -957,10 +957,6 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 {
    MeterUpdateMsg msg;
    int numChanges = 0;
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   double maxPeak = 0.0;
-   bool discarded = false;
-#endif
 
    // We shouldn't receive any events if the meter is disabled, but clear it to be safe
    if (mMeterDisabled) {
@@ -1025,27 +1021,10 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
          }
 
          mBar[j].tailPeakCount = msg.tailPeakCount[j];
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (mT > gAudioIO->AILAGetLastDecisionTime()) {
-            discarded = false;
-            maxPeak = msg.peak[j] > maxPeak ? msg.peak[j] : maxPeak;
-            wxPrintf("%f@%f ", msg.peak[j], mT);
-         }
-         else {
-            discarded = true;
-            wxPrintf("%f@%f discarded\n", msg.peak[j], mT);
-         }
-#endif
       }
    } // while
 
    if (numChanges > 0) {
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (gAudioIO->AILAIsActive() && mIsInput && !discarded) {
-            gAudioIO->AILAProcess(maxPeak);
-            putchar('\n');
-         }
-      #endif
       RepaintBarsNow();
    }
 }

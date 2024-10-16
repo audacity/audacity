@@ -223,10 +223,6 @@ void Au3Player::stop()
         gAudioIO->StopStream();
     }
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-    gAudioIO->AILADisable();
-#endif
-
     //Make sure you tell gAudioIO to unpause
     gAudioIO->SetPaused(false);
 

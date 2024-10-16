@@ -115,11 +115,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "Gain.h"
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   #define LOWER_BOUND 0.0
-   #define UPPER_BOUND 1.0
-#endif
-
 using std::max;
 using std::min;
 
@@ -256,10 +251,6 @@ AudioIO::AudioIO()
    mPortStreamV19 = NULL;
 
    mNumPauseFrames = 0;
-
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   mAILAActive = false;
-#endif
 
    mLastPaError = paNoError;
 
@@ -1010,10 +1001,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
    mpTransportState = std::make_unique<TransportState>(mOwningProject,
       mPlaybackSequences, mNumPlaybackChannels, mRate);
-
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   AILASetStartTime();
-#endif
 
    if (pStartTime)
    {
@@ -2424,176 +2411,6 @@ void AudioIoCallback::SetListener(
 
    mListener = listener;
 }
-
-// Automated Input Level Adjustment - Automatically tries to find an acceptable input volume
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-
-#include "ProjectStatus.h"
-
-void AudioIO::AILAInitialize() {
-   gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
-   gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);
-   gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mAILAGoalDelta,      AILA_DEF_DELTA_PEAK);
-   gPrefs->Read(wxT("/AudioIO/AnalysisTime"),          &mAILAAnalysisTime,   AILA_DEF_ANALYSIS_TIME);
-   gPrefs->Read(wxT("/AudioIO/NumberAnalysis"),        &mAILATotalAnalysis,  AILA_DEF_NUMBER_ANALYSIS);
-   mAILAGoalDelta         /= 100.0;
-   mAILAGoalPoint         /= 100.0;
-   mAILAAnalysisTime      /= 1000.0;
-   mAILAMax                = 0.0;
-   mAILALastStartTime      = max(0.0, mPlaybackSchedule.mT0);
-   mAILAClipped            = false;
-   mAILAAnalysisCounter    = 0;
-   mAILAChangeFactor       = 1.0;
-   mAILALastChangeType     = 0;
-   mAILATopLevel           = 1.0;
-   mAILAAnalysisEndTime    = -1.0;
-}
-
-void AudioIO::AILADisable() {
-   mAILAActive = false;
-}
-
-bool AudioIO::AILAIsActive() {
-   return mAILAActive;
-}
-
-void AudioIO::AILASetStartTime() {
-   mAILAAbsolutStartTime = Pa_GetStreamTime(mPortStreamV19);
-   wxPrintf("START TIME %f\n\n", mAILAAbsolutStartTime);
-}
-
-double AudioIO::AILAGetLastDecisionTime() {
-   return mAILAAnalysisEndTime;
-}
-
-void AudioIO::AILAProcess(double maxPeak) {
-   const auto proj = mOwningProject.lock();
-   if (proj && mAILAActive) {
-      if (mInputMeter && mInputMeter->IsClipping()) {
-         mAILAClipped = true;
-         wxPrintf("clipped");
-      }
-
-      mAILAMax = max(mAILAMax, maxPeak);
-
-      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis) && mPlaybackSchedule.GetSequenceTime() - mAILALastStartTime >= mAILAAnalysisTime) {
-         auto ToLinearIfDB = [](double value, int dbRange) {
-            if (dbRange >= 0)
-               value = pow(10.0, (-(1.0-value) * dbRange)/20.0);
-            return value;
-         };
-
-         putchar('\n');
-         mAILAMax = mInputMeter ? ToLinearIfDB(mAILAMax, mInputMeter->GetDBRange()) : 0.0;
-         double iv = (double) Px_GetInputVolume(mPortMixer);
-         unsigned short changetype = 0; //0 - no change, 1 - increase change, 2 - decrease change
-         wxPrintf("mAILAAnalysisCounter:%d\n", mAILAAnalysisCounter);
-         wxPrintf("\tmAILAClipped:%d\n", mAILAClipped);
-         wxPrintf("\tmAILAMax (linear):%f\n", mAILAMax);
-         wxPrintf("\tmAILAGoalPoint:%f\n", mAILAGoalPoint);
-         wxPrintf("\tmAILAGoalDelta:%f\n", mAILAGoalDelta);
-         wxPrintf("\tiv:%f\n", iv);
-         wxPrintf("\tmAILAChangeFactor:%f\n", mAILAChangeFactor);
-         if (mAILAClipped || mAILAMax > mAILAGoalPoint + mAILAGoalDelta) {
-            wxPrintf("too high:\n");
-            mAILATopLevel = min(mAILATopLevel, iv);
-            wxPrintf("\tmAILATopLevel:%f\n", mAILATopLevel);
-            //if clipped or too high
-            if (iv <= LOWER_BOUND) {
-               //we can't improve it more now
-               if (mAILATotalAnalysis != 0) {
-                  mAILAActive = false;
-                  ProjectStatus::Get( *proj ).Set(
-                     XO(
-"Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.") );
-               }
-               wxPrintf("\talready min vol:%f\n", iv);
-            }
-            else {
-               float vol = (float) max(LOWER_BOUND, iv+(mAILAGoalPoint-mAILAMax)*mAILAChangeFactor);
-               Px_SetInputVolume(mPortMixer, vol);
-               auto msg = XO(
-"Automated Recording Level Adjustment decreased the volume to %f.").Format( vol );
-               ProjectStatus::Get( *proj ).Set(msg);
-               changetype = 1;
-               wxPrintf("\tnew vol:%f\n", vol);
-               float check = Px_GetInputVolume(mPortMixer);
-               wxPrintf("\tverified %f\n", check);
-            }
-         }
-         else if ( mAILAMax < mAILAGoalPoint - mAILAGoalDelta ) {
-            //if too low
-            wxPrintf("too low:\n");
-            if (iv >= UPPER_BOUND || iv + 0.005 > mAILATopLevel) { //condition for too low volumes and/or variable volumes that cause mAILATopLevel to decrease too much
-               //we can't improve it more
-               if (mAILATotalAnalysis != 0) {
-                  mAILAActive = false;
-                  ProjectStatus::Get( *proj ).Set(
-                     XO(
-"Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.") );
-               }
-               wxPrintf("\talready max vol:%f\n", iv);
-            }
-            else {
-               float vol = (float) min(UPPER_BOUND, iv+(mAILAGoalPoint-mAILAMax)*mAILAChangeFactor);
-               if (vol > mAILATopLevel) {
-                  vol = (iv + mAILATopLevel)/2.0;
-                  wxPrintf("\tTruncated vol:%f\n", vol);
-               }
-               Px_SetInputVolume(mPortMixer, vol);
-               auto msg = XO(
-"Automated Recording Level Adjustment increased the volume to %.2f.")
-                  .Format( vol );
-               ProjectStatus::Get( *proj ).Set(msg);
-               changetype = 2;
-               wxPrintf("\tnew vol:%f\n", vol);
-               float check = Px_GetInputVolume(mPortMixer);
-               wxPrintf("\tverified %f\n", check);
-            }
-         }
-
-         mAILAAnalysisCounter++;
-         //const PaStreamInfo* info = Pa_GetStreamInfo(mPortStreamV19);
-         //double latency = 0.0;
-         //if (info)
-         //   latency = info->inputLatency;
-         //mAILAAnalysisEndTime = mTime+latency;
-         mAILAAnalysisEndTime = Pa_GetStreamTime(mPortStreamV19) - mAILAAbsolutStartTime;
-         mAILAMax             = 0;
-         wxPrintf("\tA decision was made @ %f\n", mAILAAnalysisEndTime);
-         mAILAClipped         = false;
-         mAILALastStartTime   = mPlaybackSchedule.GetSequenceTime();
-
-         if (changetype == 0)
-            mAILAChangeFactor *= 0.8; //time factor
-         else if (mAILALastChangeType == changetype)
-            mAILAChangeFactor *= 1.1; //concordance factor
-         else
-            mAILAChangeFactor *= 0.7; //discordance factor
-         mAILALastChangeType = changetype;
-         putchar('\n');
-      }
-
-      if (mAILAActive && mAILATotalAnalysis != 0 && mAILAAnalysisCounter >= mAILATotalAnalysis) {
-         mAILAActive = false;
-         if (mAILAMax > mAILAGoalPoint + mAILAGoalDelta)
-            ProjectStatus::Get( *proj ).Set(
-               XO(
-"Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.") );
-         else if (mAILAMax < mAILAGoalPoint - mAILAGoalDelta)
-            ProjectStatus::Get( *proj ).Set(
-               XO(
-"Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.") );
-         else {
-            auto msg = XO(
-"Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume.")
-               .Format( Px_GetInputVolume(mPortMixer) );
-            ProjectStatus::Get( *proj ).Set(msg);
-         }
-      }
-   }
-}
-#endif
 
 static void DoSoftwarePlaythrough(constSamplePtr inputBuffer,
                                   sampleFormat inputFormat,
