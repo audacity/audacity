@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include <QCoreApplication>
+
 #include "progressdialog.h"
 
 ProgressDialog::ProgressDialog()

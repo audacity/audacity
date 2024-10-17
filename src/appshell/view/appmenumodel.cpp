@@ -66,7 +66,8 @@ void AppMenuModel::load()
         makeAnalyzeMenu(),
         makeToolsMenu(),
         makeExtraMenu(),
-        makeHelpMenu()
+        makeHelpMenu(),
+        makeDiagnosticMenu()
     };
 
     setItems(items);
@@ -400,6 +401,45 @@ MenuItem* AppMenuModel::makeHelpMenu()
     // }
 
     return makeMenu(TranslatableString("appshell/menu/help", "&Help"), helpItems, "menu-help");
+}
+
+muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
+{
+    MenuItemList systemItems {
+        makeMenuItem("diagnostic-show-paths"),
+        makeMenuItem("diagnostic-show-graphicsinfo"),
+        makeMenuItem("diagnostic-show-profiler"),
+    };
+
+    MenuItemList items {
+        makeMenuItem("diagnostic-save-diagnostic-files"),
+        makeMenu(TranslatableString("appshell/menu/diagnostics", "&System"), systemItems, "menu-system")
+    };
+
+    if (globalConfiguration()->devModeEnabled()) {
+        MenuItemList actionsItems {
+            makeMenuItem("diagnostic-show-actions")
+        };
+
+        MenuItemList accessibilityItems {
+            makeMenuItem("diagnostic-show-navigation-tree"),
+            makeMenuItem("diagnostic-show-accessible-tree"),
+            makeMenuItem("diagnostic-accessible-tree-dump"),
+        };
+
+        //! TODO AU4
+        // MenuItemList autobotItems {
+        //     makeMenuItem("autobot-show-scripts"),
+        // };
+
+        items << makeMenu(TranslatableString("appshell/menu/diagnostics", "A&ctions"), actionsItems, "menu-actions")
+              << makeMenu(TranslatableString("appshell/menu/diagnostics", "&Accessibility"), accessibilityItems, "menu-accessibility");
+        //! TODO AU4
+        // << makeMenu(TranslatableString("appshell/menu/diagnostics", "Auto&bot"), autobotItems, "menu-autobot")
+        // << makeMenuItem("multiinstances-dev-show-info");
+    }
+
+    return makeMenu(TranslatableString("appshell/menu/diagnostics", "&Diagnostics"), items, "menu-diagnostic");
 }
 
 MenuItemList AppMenuModel::makeRecentProjectsItems()
