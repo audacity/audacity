@@ -62,13 +62,21 @@ StyledPopupView {
         }
     }
 
-    function show() {
-        openTimer.restart()
+    function show(noDelay = false) {
+        if (noDelay) {
+            open()
+        } else {
+            openTimer.restart()
+        }
         closeTimer.stop()
     }
 
-    function hide() {
-        closeTimer.restart()
+    function hide(noDelay = false) {
+        if (noDelay) {
+            close()
+        } else {
+            closeTimer.restart()
+        }
         openTimer.stop()
     }
 }
