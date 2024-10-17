@@ -65,7 +65,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CLIP_DELETE_SELECTED_CODE, this, &TrackeditActionsController::clipDeleteSelected);
     dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
-    dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::trackSplitAt);
+    dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::tracksSplitAt);
     dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
     dispatcher()->reg(this, UNDO, this, &TrackeditActionsController::undo);
     dispatcher()->reg(this, REDO, this, &TrackeditActionsController::redo);
@@ -96,7 +96,7 @@ void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& ac
 
 void TrackeditActionsController::doGlobalCopy()
 {
-    if (selectionController()->isDataSelected()) {
+    if (selectionController()->timeSelectionIsNotEmpty()) {
         dispatcher()->dispatch(CLIP_COPY_SELECTED_CODE);
         return;
     }
@@ -109,7 +109,7 @@ void TrackeditActionsController::doGlobalCopy()
 
 void TrackeditActionsController::doGlobalCut()
 {
-    if (selectionController()->isDataSelected()) {
+    if (selectionController()->timeSelectionIsNotEmpty()) {
         dispatcher()->dispatch(CLIP_CUT_SELECTED_CODE);
         return;
     }
@@ -122,7 +122,7 @@ void TrackeditActionsController::doGlobalCut()
 
 void TrackeditActionsController::doGlobalDelete()
 {
-    if (selectionController()->isDataSelected()) {
+    if (selectionController()->timeSelectionIsNotEmpty()) {
         dispatcher()->dispatch(CLIP_DELETE_SELECTED_CODE);
         return;
     }
@@ -135,13 +135,13 @@ void TrackeditActionsController::doGlobalDelete()
 
 void TrackeditActionsController::doGlobalSplitCut()
 {
-    if (selectionController()->isDataSelected()) {
-        auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(SPLIT_CUT_SELECTED,
-                           ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
         return;
     }
 
@@ -156,13 +156,13 @@ void TrackeditActionsController::doGlobalSplitCut()
 
 void TrackeditActionsController::doGlobalSplitDelete()
 {
-    if (selectionController()->isDataSelected()) {
-        auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(SPLIT_DELETE_SELECTED,
-                           ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
         return;
     }
 
@@ -177,28 +177,29 @@ void TrackeditActionsController::doGlobalSplitDelete()
 
 void TrackeditActionsController::doGlobalSplit()
 {
-    TrackId trackIdToSplit = selectionController()->selectedTrack();
-    if (trackIdToSplit == -1) {
-        trackIdToSplit = selectionController()->selectedClip().trackId;
+    TrackIdList tracksIdsToSplit = selectionController()->selectedTracks();
+
+    if (tracksIdsToSplit.empty()) {
+        tracksIdsToSplit.push_back(selectionController()->selectedClip().trackId);
     }
 
-    if (trackIdToSplit == -1) {
+    if (tracksIdsToSplit.empty()) {
         return;
     }
 
     secs_t playbackPosition = globalContext()->playbackState()->playbackPosition();
 
-    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<trackedit::TrackId, secs_t>(trackIdToSplit, playbackPosition));
+    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>(tracksIdsToSplit, playbackPosition));
 }
 
 void TrackeditActionsController::doGlobalJoin()
 {
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
     dispatcher()->dispatch(MERGE_SELECTED_ON_TRACK,
-                           ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
 }
 
 void TrackeditActionsController::undo()
@@ -213,14 +214,14 @@ void TrackeditActionsController::redo()
 
 void TrackeditActionsController::doGlobalDuplicate()
 {
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
 
     if (!selectedTracks.empty()) {
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(DUPLICATE_SELECTED,
-                               ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
     } else {
         ClipKey selectedClipKey = selectionController()->selectedClip();
         if (!selectedClipKey.isValid()) {
@@ -269,7 +270,7 @@ void TrackeditActionsController::clipDelete(const ActionData& args)
 void TrackeditActionsController::clipCutSelected()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
@@ -282,7 +283,7 @@ void TrackeditActionsController::clipCutSelected()
 void TrackeditActionsController::clipCopySelected()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
@@ -301,7 +302,7 @@ void TrackeditActionsController::clipCopySelected()
 void TrackeditActionsController::clipDeleteSelected()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     auto selectedStartTime = selectionController()->dataSelectedStartTime();
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
@@ -336,7 +337,12 @@ void TrackeditActionsController::paste()
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
     double selectedStartTime = globalContext()->playbackState()->playbackPosition();
-    TrackId selectedTrackId = selectionController()->selectedTrack();
+
+    if (selectionController()->selectedTracks().empty()) {
+        return;
+    }
+
+    TrackId selectedTrackId = selectionController()->selectedTracks().at(0);
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, selectedTrackId);
@@ -364,20 +370,20 @@ void TrackeditActionsController::trackSplit(const ActionData &args)
     dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<trackedit::TrackId, secs_t>(trackIdToSplit, playbackPosition));
 }
 
-void TrackeditActionsController::trackSplitAt(const ActionData& args)
+void TrackeditActionsController::tracksSplitAt(const ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 2) {
         return;
     }
 
-    TrackId trackId = args.arg<TrackId>(0);
-    if (trackId == -1) {
+    TrackIdList tracksIds = args.arg<TrackIdList>(0);
+    if (tracksIds.empty()) {
         return;
     }
 
     secs_t playbackPosition = args.arg<secs_t>(1);
 
-    trackeditInteraction()->splitAt(trackId, playbackPosition);
+    trackeditInteraction()->splitTracksAt(tracksIds, playbackPosition);
 }
 
 void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::ActionData &args)
@@ -386,7 +392,7 @@ void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::Actio
         return;
     }
 
-    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    TrackIdList tracksIds = args.arg<TrackIdList>(0);
     if (tracksIds.empty()) {
         return;
     }
@@ -404,7 +410,7 @@ void TrackeditActionsController::duplicateSelected(const muse::actions::ActionDa
         return;
     }
 
-    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    TrackIdList tracksIds = args.arg<TrackIdList>(0);
     if (tracksIds.empty()) {
         return;
     }
@@ -460,7 +466,7 @@ void TrackeditActionsController::splitCutSelected(const muse::actions::ActionDat
         return;
     }
 
-    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    TrackIdList tracksIds = args.arg<TrackIdList>(0);
     if (tracksIds.empty()) {
         return;
     }
@@ -480,7 +486,7 @@ void TrackeditActionsController::splitDeleteSelected(const muse::actions::Action
         return;
     }
 
-    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    TrackIdList tracksIds = args.arg<TrackIdList>(0);
     if (tracksIds.empty()) {
         return;
     }
@@ -543,7 +549,7 @@ void TrackeditActionsController::newLabelTrack()
 void TrackeditActionsController::trimAudioOutsideSelection()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     auto selectedStartTime = selectionController()->dataSelectedStartTime();
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
@@ -562,7 +568,7 @@ void TrackeditActionsController::trimAudioOutsideSelection()
 void TrackeditActionsController::silenceAudioSelection()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    auto selectedTracks = selectionController()->selectedTracks();
     auto selectedStartTime = selectionController()->dataSelectedStartTime();
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();

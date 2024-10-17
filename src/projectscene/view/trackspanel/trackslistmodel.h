@@ -91,7 +91,7 @@ private:
     bool removeRows(int row, int count, const QModelIndex& parent) override;
 
     void onProjectChanged();
-    void onSelectedTrack(trackedit::TrackId trackId);
+    void onSelectedTracks(const trackedit::TrackIdList &tracksIds);
 
     TrackItem* buildTrackItem(const trackedit::Track& track);
     TrackItem* findTrackItem(const trackedit::TrackId& trackId);
@@ -119,6 +119,7 @@ private:
     bool m_projectChangedWhileLoadingWasBlocked = false;
 
     bool m_dragInProgress = false;
+    bool m_audioDataSelected = false;
 
     QList<TrackItem*> m_trackList;
     muse::uicomponents::ItemMultiSelectionModel* m_selectionModel = nullptr;

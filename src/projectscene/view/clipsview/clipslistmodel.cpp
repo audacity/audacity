@@ -390,6 +390,7 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
 void ClipsListModel::selectClip(const ClipKey& key)
 {
     selectionController()->setSelectedClip(key.key);
+    selectionController()->setSelectedTracks(TrackIdList({key.key.trackId}));
 }
 
 void ClipsListModel::unselectClip(const ClipKey& key)

@@ -18,10 +18,10 @@ public:
     Au3SelectionController() = default;
 
     // track selection
-    void resetSelectedTrack() override;
-    trackedit::TrackId selectedTrack() const override;
-    void setSelectedTrack(trackedit::TrackId trackId) override;
-    muse::async::Channel<trackedit::TrackId> trackSelected() const override;
+    void resetSelectedTracks() override;
+    trackedit::TrackIdList selectedTracks() const override;
+    void setSelectedTracks(const trackedit::TrackIdList &trackIds, bool complete = true) override;
+    muse::async::Channel<trackedit::TrackIdList> tracksSelected() const override;
 
     // clip selection
     void resetSelectedClip() override;
@@ -31,13 +31,8 @@ public:
 
     // data selection
     void resetDataSelection() override;
-    bool isDataSelected() const override;
+    bool timeSelectionIsNotEmpty() const override;
     bool isDataSelectedOnTrack(TrackId trackId) const override;
-
-    std::vector<trackedit::TrackId> dataSelectedOnTracks() const override;
-    void setDataSelectedOnTracks(const std::vector<trackedit::TrackId>& trackIds, bool complete) override;
-    muse::async::Channel<std::vector<trackedit::TrackId>> dataSelectedOnTracksChanged() const override;
-    muse::async::Channel<std::vector<trackedit::TrackId>> dataSelectedOnTracksSelected() const override;
 
     trackedit::secs_t dataSelectedStartTime() const override;
     void setDataSelectedStartTime(trackedit::secs_t time, bool complete) override;
@@ -69,13 +64,12 @@ private:
     };
 
     // track selection
-    Val<trackedit::TrackId> m_selectedTrack;
+    Val<TrackIdList> m_selectedTracks;
 
     // clip selection
     Val<trackedit::ClipKey> m_selectedClip;
 
     // data selection
-    Val<std::vector<trackedit::TrackId>> m_selectedTrackIds;
     Val<trackedit::secs_t> m_selectedStartTime;
     Val<trackedit::secs_t> m_selectedEndTime;
 };
