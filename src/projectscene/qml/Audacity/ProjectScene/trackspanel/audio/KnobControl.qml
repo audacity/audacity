@@ -38,6 +38,8 @@ Dial {
     signal decreaseRequested()
     signal mouseEntered()
     signal mouseExited()
+    signal mousePressed()
+    signal mouseReleased()
 
     QtObject {
         id: prv
@@ -199,6 +201,7 @@ Dial {
             prv.dragStartX = mouse.x
             prv.dragStartY = mouse.y
             prv.dragActive = true
+            mousePressed()
         }
 
         onEntered: {
@@ -218,6 +221,7 @@ Dial {
             if (!containsMouse) {
                 mouseExited()
             }
+            mouseReleased()
         }
 
         onPositionChanged: function(mouse)  {
