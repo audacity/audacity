@@ -233,13 +233,14 @@ void ClipsListModel::positionViewAtClip(const Clip& clip)
     double frameStartTime = m_context->frameStartTime();
     double frameEndTime = m_context->frameEndTime();
 
-    if (frameStartTime < clip.startTime && frameEndTime > clip.startTime) {
+    if (frameStartTime <= clip.startTime && frameEndTime > clip.startTime) {
         return;
     }
 
     double OFFSET = (frameEndTime - frameStartTime) / 4.0;
+    double newTime = std::max(clip.startTime - OFFSET, 0.0);
 
-    m_context->moveToFrameTime(clip.startTime - OFFSET);
+    m_context->moveToFrameTime(newTime);
 }
 
 int ClipsListModel::rowCount(const QModelIndex&) const
