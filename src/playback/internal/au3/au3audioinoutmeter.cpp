@@ -2,6 +2,9 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include <algorithm>
+#include <cmath>
+
 #include "au3audioinoutmeter.h"
 
 #include "libraries/lib-utility/MemoryX.h"
@@ -41,7 +44,7 @@ void au::playback::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned 
 
     for (unsigned long i = 0; i < numFrames; i++) {
         for (unsigned int j = 0; j < num; j++) {
-            peak[j] = std::max(peak[j], fabs(sptr[j]));
+            peak[j] = std::max(peak[j], static_cast<float>(fabs(sptr[j])));
             rms[j] += sptr[j] * sptr[j];
 
             // In addition to looking for mNumPeakSamplesToClip peaked

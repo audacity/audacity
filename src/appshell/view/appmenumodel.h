@@ -93,7 +93,7 @@ private:
     muse::uicomponents::MenuItem* makeToolsMenu();
     muse::uicomponents::MenuItem* makeExtraMenu();
     muse::uicomponents::MenuItem* makeHelpMenu();
-    // muse::uicomponents::MenuItem* makeDiagnosticMenu();
+    muse::uicomponents::MenuItem* makeDiagnosticMenu();
 
     muse::uicomponents::MenuItemList makeRecentProjectsItems();
     muse::uicomponents::MenuItemList appendClearRecentSection(const muse::uicomponents::MenuItemList& recentScores);

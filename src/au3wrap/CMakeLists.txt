@@ -588,8 +588,8 @@ if (AU_MODULE_EFFECTS_VST)
     set(MODULE_LINK ${MODULE_LINK} vst_sdk_3)
 endif()
 
-set(MODULE_USE_PCH_NONE ON)
-set(MODULE_USE_UNITY_NONE ON)
+set(MODULE_USE_PCH OFF)
+set(MODULE_USE_UNITY OFF)
 
 setup_module()
 
