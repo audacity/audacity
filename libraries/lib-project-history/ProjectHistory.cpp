@@ -117,8 +117,12 @@ void ProjectHistory::PopState(const UndoState &state, bool doAutosave)
          pExtension->RestoreUndoRedoState(project);
 }
 
-void ProjectHistory::SetStateTo(unsigned int n, bool doAutosave)
+void ProjectHistory::SetStateTo(int n, bool doAutosave)
 {
+   assert(n >= 0);
+   if (n < 0)
+      return;
+
    auto &project = mProject;
    auto &undoManager = UndoManager::Get( project );
 
