@@ -698,7 +698,6 @@ bool MacroCommands::ApplyMacro(
             undoManager.Undo(
                [&]( const UndoStackElem &elem ){
                   history.PopState( elem.state ); } );
-            undoManager.AbandonRedo();
          });
       }
    });
