@@ -217,9 +217,23 @@ class PROJECT_HISTORY_API UndoManager final
    void AbandonRedo();
 
    AudacityProject &mProject;
- 
-   int current;
-   int saved;
+
+   class SavedStateManager
+   {
+      public:
+         int GetValue() const;
+         void SetValue(int value);
+         void DecrementValue();
+         void MarkUnsaved();
+         bool IsMarkedUnsaved() const;
+
+      private:
+         int mValue = -1;
+         bool mMarkedUnsaved = false;
+   };
+
+   int current = -1;
+   SavedStateManager mSaved;
 
    UndoStack stack;
 
