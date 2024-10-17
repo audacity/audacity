@@ -12,6 +12,7 @@ Rectangle {
     id: root
 
     property bool clipHovered: false
+    property var hoveredClipKey: null
     color: ui.theme.backgroundPrimaryColor
 
     TracksListClipsModel {
@@ -147,8 +148,8 @@ Rectangle {
         Rectangle {
             id: timelineSelRect
 
-            x: timeline.context.selectionStartPosition
-            width: timeline.context.selectionEndPosition - x
+            x: timeline.context.clipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
+            width: timeline.context.clipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
@@ -212,6 +213,17 @@ Rectangle {
                 if (!root.clipHovered) {
                     selectionController.resetSelectedClip()
                 }
+            }
+
+            onDoubleClicked: e => {
+                if (root.clipHovered) {
+                    selectionController.selectClipAudioData(root.hoveredClipKey)
+                    playCursorController.seekToX(timeline.context.selectedClipStartPosition)
+                } else {
+                    selectionController.selectTrackAudioData(e.y)
+                    playCursorController.seekToX(timeline.context.selectionStartPosition)
+                }
+                clipsSelection.visible = false
             }
         }
 
@@ -279,12 +291,13 @@ Rectangle {
                     isDataSelected: model.isDataSelected
                     isTrackSelected: model.isTrackSelected
 
-                    onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
+                    onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         timeline.updateCursorPosition(xWithinTrack)
 
                         if (!root.clipHovered) {
                             root.clipHovered = true
                         }
+                        root.hoveredClipKey = clipKey
                     }
 
                     onClipSelectedRequested: {

@@ -332,6 +332,8 @@ bool ClipsListModel::moveClip(const ClipKey& key, bool completed)
     newStartTime = m_context->applySnapToTime(newStartTime);
 
     bool ok = trackeditInteraction()->changeClipStartTime(key.key, newStartTime, completed);
+    m_context->updateSelectedClipTime();
+
     return ok;
 }
 
@@ -358,6 +360,8 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
     }
 
     bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, completed);
+    m_context->updateSelectedClipTime();
+
     return ok;
 }
 
@@ -384,6 +388,8 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
     }
 
     bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, completed);
+    m_context->updateSelectedClipTime();
+
     return ok;
 }
 
