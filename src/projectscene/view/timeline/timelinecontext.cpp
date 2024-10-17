@@ -23,7 +23,12 @@ TimelineContext::TimelineContext(QObject* parent)
 
 void TimelineContext::init(double frameWidth)
 {
-    m_zoom = configuration()->zoom();
+    double initialTimeRange = trackEditProject()->totalTime().to_double() * 2;
+    if (muse::is_zero(initialTimeRange)) {
+        m_zoom = configuration()->zoom();
+    } else {
+        m_zoom = m_frameWidth / initialTimeRange;
+    }
     emit zoomChanged();
 
     m_frameWidth = frameWidth;
