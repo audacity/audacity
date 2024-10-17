@@ -531,9 +531,12 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // SetMenuBar(NULL);
 
    auto& undoManager = UndoManager::Get(project);
-   constexpr auto doAutoSave = false;
-   ProjectHistory::Get(project).SetStateTo(
-      undoManager.GetSavedState(), doAutoSave);
+   if (undoManager.GetSavedState() >= 0)
+   {
+      constexpr auto doAutoSave = false;
+      ProjectHistory::Get(project).SetStateTo(
+         undoManager.GetSavedState(), doAutoSave);
+   }
 
    // Compact the project.
    projectFileManager.CompactProjectOnClose();
