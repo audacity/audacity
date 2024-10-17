@@ -156,7 +156,7 @@ class PROJECT_HISTORY_API UndoManager final
  public:
    static UndoManager &Get( AudacityProject &project );
    static const UndoManager &Get( const AudacityProject &project );
- 
+
    explicit
    UndoManager( AudacityProject &project );
    ~UndoManager();
