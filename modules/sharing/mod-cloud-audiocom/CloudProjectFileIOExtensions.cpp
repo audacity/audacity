@@ -94,7 +94,7 @@ class IOExtension final : public ProjectFileIOExtension
          // Errors would be handled by the UI extension
          return OnSaveAction::Cancelled;
 
-      if (!projectSaveCallback(audacity::ToUTF8(filePath), fileRenamed))
+      if (!projectSaveCallback(filePath, fileRenamed))
       {
          if (result.Operation)
             result.Operation->Abort();
@@ -205,7 +205,7 @@ class IOExtension final : public ProjectFileIOExtension
       const auto filePath = sync::MakeSafeProjectPath(dir, result.second);
 
       return PerformCloudSave(
-         project, result.second, audacity::ToUTF8(filePath),
+         project, audacity::ToUTF8(result.second), audacity::ToUTF8(filePath),
          projectSaveCallback, true, mAudiocomTrace);
    }
 

@@ -76,7 +76,7 @@ CloudProjectPropertiesDialog::~CloudProjectPropertiesDialog()
    GetAuthorizationHandler().PopSuppressDialogs();
 }
 
-std::pair<CloudProjectPropertiesDialog::Action, std::string>
+std::pair<CloudProjectPropertiesDialog::Action, wxString>
 CloudProjectPropertiesDialog::Show(
    const ServiceConfig& serviceConfig, OAuthService& authService,
    UserService& userService, const wxString& projectName, wxWindow* parent,
@@ -201,11 +201,11 @@ void CloudProjectPropertiesDialog::SetupEvents()
    mProjectName->Bind(wxEVT_TEXT_ENTER, [this](auto&) { OnSubmit(); });
 }
 
-std::string CloudProjectPropertiesDialog::GetProjectName() const
+wxString CloudProjectPropertiesDialog::GetProjectName() const
 {
    wxString result { mProjectName->GetValue() };
    result.Trim(true).Trim(false);
-   return audacity::ToUTF8(result);
+   return result;
 }
 
 void CloudProjectPropertiesDialog::OnUpdateCloudSaveState()
