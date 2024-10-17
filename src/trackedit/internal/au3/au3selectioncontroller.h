@@ -5,17 +5,22 @@
 
 #include "../../iselectioncontroller.h"
 
+#include "async/asyncable.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "playback/iplayback.h"
 
 class AudacityProject;
 namespace au::trackedit {
-class Au3SelectionController : public ISelectionController
+class Au3SelectionController : public ISelectionController, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     Au3SelectionController() = default;
+
+    void init();
 
     // track selection
     void resetSelectedTrack() override;

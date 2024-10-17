@@ -23,6 +23,15 @@ using namespace au::trackedit;
 
 // clip selection
 
+void Au3SelectionController::init()
+{
+    playback()->player()->playbackRewound().onNotify(this, [this] {
+        MYLOG() << "playback rewound";
+        setDataSelectedStartTime(0, true);
+        setDataSelectedEndTime(0, true);
+    });
+}
+
 void Au3SelectionController::resetSelectedTrack()
 {
     MYLOG() << "resetSelectedTrack";
@@ -94,13 +103,14 @@ void Au3SelectionController::resetDataSelection()
     }
 
     m_selectedTrackIds.set(std::vector<au::trackedit::TrackId>(), true);
-    m_selectedStartTime.set(-1.0, true);
-    m_selectedEndTime.set(-1.0, true);
+    const auto playbackPosition = playback()->player()->playbackPosition();
+    m_selectedStartTime.set(playbackPosition, true);
+    m_selectedEndTime.set(playbackPosition, true);
 }
 
 bool Au3SelectionController::isDataSelected() const
 {
-    return muse::RealIsEqualOrMore(m_selectedStartTime.val, 0.0) && m_selectedEndTime.val > 0.0;
+    return m_selectedEndTime.val > m_selectedStartTime.val;
 }
 
 bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const

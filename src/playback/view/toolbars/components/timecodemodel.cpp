@@ -26,8 +26,8 @@ TimecodeModel::TimecodeModel(QObject* parent)
 {
     // translate all
     m_availableViewFormats = {
-        { ViewFormatType::Seconds, muse::qtrc("playback", "Seconds"), "01000,01000s" },
-        { ViewFormatType::SecondsMilliseconds, muse::qtrc("playback", "Seconds + milliseconds"), "01000,01000>01000 s" },
+        { ViewFormatType::Seconds, muse::qtrc("playback", "seconds"), "01000,01000s" },
+        { ViewFormatType::SecondsMilliseconds, muse::qtrc("playback", "seconds + milliseconds"), "01000,01000>01000 s" },
         { ViewFormatType::HHMMSS, muse::qtrc("playback", "hh:mm:ss"), "0100 h 060 m 060 s" },
         { ViewFormatType::DDHHMMSS, muse::qtrc("playback", "dd:hh:mm:ss"), "0100 d 024 h 060 m 060 s" },
 
@@ -35,7 +35,7 @@ TimecodeModel::TimecodeModel(QObject* parent)
         { ViewFormatType::HHMMSSMilliseconds, muse::qtrc("playback", "hh:mm:ss + milliseconds"), "0100 h 060 m 060>01000 s" },
 
         { ViewFormatType::HHMMSSSamples, muse::qtrc("playback", "hh:mm:ss + samples"), "0100 h 060 m 060 s+># samples" },
-        { ViewFormatType::Samples, muse::qtrc("playback", "Samples"), "01000,01000,01000 samples|#" },
+        { ViewFormatType::Samples, muse::qtrc("playback", "samples"), "01000,01000,01000 samples|#" },
 
         { ViewFormatType::HHMMSSFilmFrames, muse::qtrc("playback", "hh:mm:ss + film frames (24 fps)"), "0100 h 060 m 060 s+>24 frames" },
         { ViewFormatType::FilmFrames, muse::qtrc("playback", "Film frames (24 fps)"), "01000,01000 frames|24" },
@@ -161,6 +161,22 @@ void TimecodeModel::setCurrentFormat(int format)
     emit valueChanged();
 }
 
+QString TimecodeModel::currentFormatStr() const
+{
+    return m_availableViewFormats[m_currentFormat].title;
+}
+
+void TimecodeModel::setCurrentFormatStr(const QString& title)
+{
+    for (int i = 0; i < m_availableViewFormats.size(); ++i) {
+        if (m_availableViewFormats[i].title == title) {
+            setCurrentFormat(i);
+            return;
+        }
+    }
+    // TODO log error
+}
+
 int TimecodeModel::currentEditedFieldIndex() const
 {
     return m_fieldsInteractionController->currentEditedFieldIndex();
@@ -219,7 +235,8 @@ void TimecodeModel::initFieldInteractionController()
 
 void TimecodeModel::updateValueString()
 {
-    QString newValueString = m_formatter->valueToString(m_value, false).valueString;
+    constexpr auto toNearest = true;
+    QString newValueString = m_formatter->valueToString(m_value, toNearest).valueString;
 
     if (newValueString.size() != m_valueString.size()) {
         beginResetModel();
@@ -256,6 +273,7 @@ void TimecodeModel::setSampleRate(double sampleRate)
     updateValueString();
 
     emit sampleRateChanged();
+    emit currentFormatChanged();
 }
 
 double TimecodeModel::tempo() const
