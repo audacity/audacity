@@ -81,8 +81,6 @@ const UndoManager &UndoManager::Get( const AudacityProject &project )
 UndoManager::UndoManager( AudacityProject &project )
    : mProject{ project }
 {
-   current = -1;
-   saved = -1;
 }
 
 UndoManager::~UndoManager()
@@ -141,8 +139,8 @@ void UndoManager::RemoveStates(size_t begin, size_t end)
 
       if (current > begin)
         --current;
-      if (saved > static_cast<int>(begin))
-        --saved;
+      if (mSaved.GetValue() > static_cast<int>(begin))
+        mSaved.DecrementValue();
    }
 
    // Success, commit the savepoint
@@ -156,7 +154,7 @@ void UndoManager::ClearStates()
 {
    RemoveStates(0, stack.size());
    current = -1;
-   saved = -1;
+   mSaved.SetValue(-1);
 }
 
 unsigned int UndoManager::GetNumStates()
@@ -228,11 +226,6 @@ void UndoManager::PushState(const TranslatableString &longDescription,
        lastAction.Translation() == longDescription.Translation() &&
        mayConsolidate ) {
       ModifyState();
-      // MB: If the "saved" state was modified by ModifyState, reset
-      //  it so that UnsavedChanges returns true.
-      if (current == saved) {
-         saved = -1;
-      }
       return;
    }
 
@@ -254,9 +247,8 @@ void UndoManager::PushState(const TranslatableString &longDescription,
 
 void UndoManager::AbandonRedo()
 {
-   if (saved > current) {
-      saved = -1;
-   }
+   if (mSaved.GetValue() > current)
+      mSaved.SetValue(-1);
    RemoveStates( current + 1, stack.size() );
 }
 
@@ -344,22 +336,22 @@ void UndoManager::VisitStates(
 
 void UndoManager::MarkUnsaved()
 {
-   saved = -1;
+   mSaved.MarkUnsaved();
 }
 
 bool UndoManager::UnsavedChanges() const
 {
-   return (saved != current);
+   return mSaved.IsMarkedUnsaved() || mSaved.GetValue() != current;
 }
 
 void UndoManager::StateSaved()
 {
-   saved = current;
+   mSaved.SetValue(current);
 }
 
 int UndoManager::GetSavedState() const
 {
-   return saved;
+   return mSaved.GetValue();
 }
 
 // currently unused
@@ -372,3 +364,29 @@ int UndoManager::GetSavedState() const
 //                t ? t->GetEndTime()-t->GetStartTime() : 0);
 //   }
 //}
+
+int UndoManager::SavedStateManager::GetValue() const
+{
+   return mValue;
+}
+
+void UndoManager::SavedStateManager::SetValue(int value)
+{
+   mValue = value;
+   mMarkedUnsaved = false;
+}
+
+void UndoManager::SavedStateManager::DecrementValue()
+{
+   SetValue(mValue - 1);
+}
+
+void UndoManager::SavedStateManager::MarkUnsaved()
+{
+   mMarkedUnsaved = true;
+}
+
+bool UndoManager::SavedStateManager::IsMarkedUnsaved() const
+{
+   return mMarkedUnsaved;
+}
