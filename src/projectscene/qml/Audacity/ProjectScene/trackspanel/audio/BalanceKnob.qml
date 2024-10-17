@@ -20,11 +20,15 @@ KnobControl {
         value: root.value
     }
 
+    onMousePressed: {
+        tooltip.show(true)
+    }
+
     onMouseEntered: {
         tooltip.show()
     }
 
     onMouseExited: {
-        tooltip.hide()
+        tooltip.hide(true)
     }
 }
