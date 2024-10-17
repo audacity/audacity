@@ -15,6 +15,8 @@ Rectangle {
     property var hoveredClipKey: null
     color: ui.theme.backgroundPrimaryColor
 
+    clip:true
+
     TracksListClipsModel {
         id: tracksModel
 
@@ -342,7 +344,7 @@ Rectangle {
             opacity: 0.05
             visible: false
 
-            x: timeline.context.selectionStartPosition
+            x: Math.max(timeline.context.selectionStartPosition, 0.0)
             width: timeline.context.selectionEndPosition - x
         }
 
