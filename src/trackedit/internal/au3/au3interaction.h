@@ -37,6 +37,10 @@ public:
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
+    bool changeClipPitch(const ClipKey& clipKey, int pitch) override;
+    bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
+    bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
+    bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;

@@ -12,6 +12,7 @@ using namespace muse::actions;
 static const ActionCode VERTICAL_RULERS_CODE("toggle-vertical-rulers");
 static const ActionCode MINUTES_SECONDS_RULER("minutes-seconds-ruler");
 static const ActionCode BEATS_MEASURES_RULER("beats-measures-ruler");
+static const ActionCode CLIP_PITCH_AND_SPEED_CODE("clip-pitch-speed");
 
 void ProjectSceneActionsController::init()
 {
@@ -20,6 +21,7 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, VERTICAL_RULERS_CODE, this, &ProjectSceneActionsController::toggleVerticalRulers);
     dispatcher()->reg(this, "update-display-while-playing", this, &ProjectSceneActionsController::updateDisplayWhilePlaying);
     dispatcher()->reg(this, "pinned-play-head", this, &ProjectSceneActionsController::pinnedPlayHead);
+    dispatcher()->reg(this, CLIP_PITCH_AND_SPEED_CODE, this, &ProjectSceneActionsController::openClipPitchAndSpeedEdit);
 }
 
 void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -64,6 +66,25 @@ void ProjectSceneActionsController::updateDisplayWhilePlaying()
 void ProjectSceneActionsController::pinnedPlayHead()
 {
     NOT_IMPLEMENTED;
+}
+
+void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() == 1) {
+        return;
+    }
+
+    trackedit::ClipKey clipKey = args.arg<trackedit::ClipKey>(0);
+    if (!clipKey.isValid()) {
+        return;
+    }
+
+    muse::UriQuery query("audacity://projectscene/editpitchandspeed");
+    query.addParam("trackId", muse::Val(std::to_string(clipKey.trackId)));
+    query.addParam("clipId", muse::Val(std::to_string(clipKey.clipId)));
+    query.addParam("focusItemName", muse::Val("pitch"));
+
+    interactive()->open(query);
 }
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const

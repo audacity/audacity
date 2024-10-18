@@ -15,6 +15,8 @@ void ClipListItem::setClip(const trackedit::Clip& clip)
     m_clip = clip;
 
     emit titleChanged();
+    emit pitchChanged();
+    emit speedPercentageChanged();
 }
 
 const au::trackedit::Clip& ClipListItem::clip() const
@@ -125,4 +127,14 @@ void ClipListItem::setRightVisibleMargin(double newRightVisibleMargin)
     }
     m_rightVisibleMargin = newRightVisibleMargin;
     emit rightVisibleMarginChanged();
+}
+
+int ClipListItem::pitch() const
+{
+    return m_clip.pitch;
+}
+
+int ClipListItem::speedPercentage() const
+{
+    return std::round(100.0 / m_clip.speed);
 }

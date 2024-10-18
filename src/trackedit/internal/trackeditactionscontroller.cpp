@@ -26,6 +26,7 @@ static const ActionCode CLIP_DELETE_CODE("clip-delete");
 static const ActionCode CLIP_CUT_SELECTED_CODE("clip-cut-selected");
 static const ActionCode CLIP_COPY_SELECTED_CODE("clip-copy-selected");
 static const ActionCode CLIP_DELETE_SELECTED_CODE("clip-delete-selected");
+static const ActionCode CLIP_RENDER_PITCH_AND_SPEED_CODE("clip-render-pitch-speed");
 static const ActionCode PASTE("paste");
 static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
@@ -63,6 +64,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CLIP_CUT_SELECTED_CODE, this, &TrackeditActionsController::clipCutSelected);
     dispatcher()->reg(this, CLIP_COPY_SELECTED_CODE, this, &TrackeditActionsController::clipCopySelected);
     dispatcher()->reg(this, CLIP_DELETE_SELECTED_CODE, this, &TrackeditActionsController::clipDeleteSelected);
+    dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
     dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
     dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::tracksSplitAt);
@@ -680,6 +682,22 @@ void TrackeditActionsController::silenceAudioSelection()
     pushProjectHistoryTrackSilenceState(selectedStartTime, selectedEndTime);
 }
 
+void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() == 1) {
+        return;
+    }
+
+    trackedit::ClipKey clipKey = args.arg<trackedit::ClipKey>(0);
+    if (!clipKey.isValid()) {
+        return;
+    }
+
+    trackeditInteraction()->renderClipPitchAndSpeed(clipKey);
+
+    pushProjectHistoryRenderClipStretchingState();
+}
+
 void TrackeditActionsController::pushProjectHistoryTrackAddedState()
 {
     projectHistory()->pushHistoryState("Created new audio track", "New track");
@@ -712,6 +730,11 @@ void TrackeditActionsController::pushProjectHistoryDeleteState(secs_t start, sec
     ss << "Delete " << duration << " seconds at " << start;
 
     projectHistory()->pushHistoryState(ss.str(), "Delete");
+}
+
+void TrackeditActionsController::pushProjectHistoryRenderClipStretchingState()
+{
+    projectHistory()->pushHistoryState("Rendered time-stretched audio", "Render");
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode& actionCode) const

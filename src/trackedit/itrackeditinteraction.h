@@ -39,6 +39,10 @@ public:
     virtual bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) = 0;
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
+    virtual bool changeClipPitch(const ClipKey& clipKey, int pitch) = 0;
+    virtual bool changeClipSpeed(const ClipKey& clipKey, double speed) = 0;
+    virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
+    virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual void clearClipboard() = 0;
     virtual muse::Ret pasteFromClipboard(secs_t begin, TrackId trackId) = 0;
     virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;
