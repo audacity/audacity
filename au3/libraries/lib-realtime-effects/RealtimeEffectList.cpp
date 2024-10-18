@@ -9,8 +9,9 @@
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
-#include "Project.h"
 #include "Channel.h"
+#include "Project.h"
+#include "UndoManager.h"
 
 RealtimeEffectList::RealtimeEffectList()
 {
@@ -20,8 +21,13 @@ RealtimeEffectList::~RealtimeEffectList()
 {
 }
 
-// Deep copy of states
 std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
+{
+   return Duplicate();
+}
+
+// Deep copy of states
+std::unique_ptr<RealtimeEffectList> RealtimeEffectList::Duplicate() const
 {
    auto result = std::make_unique<RealtimeEffectList>();
    for (auto &pState : mStates)
@@ -275,12 +281,6 @@ void RealtimeEffectList::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(XMLTag());
 }
 
-void RealtimeEffectList::RestoreUndoRedoState(AudacityProject &project) noexcept
-{
-   // Restore per-project states
-   Set(project, shared_from_this());
-}
-
 bool RealtimeEffectList::IsActive() const
 {
    return mActive.load(std::memory_order_relaxed);
@@ -291,8 +291,30 @@ void RealtimeEffectList::SetActive(bool value)
    (LockGuard{ mLock }, mActive.store(value, std::memory_order_relaxed));
 }
 
+struct MasterEffectListRestorer final : UndoStateExtension
+{
+   MasterEffectListRestorer(AudacityProject &project)
+      : list{ RealtimeEffectList::Get(project).Duplicate() }
+   {
+   }
+
+   void RestoreUndoRedoState(AudacityProject& project) override
+   {
+      auto& projectList = RealtimeEffectList::Get(project);
+      // Unlike in `Duplicate`, we don't manipulate the lists directly but use
+      // the API so that the updates are published.
+      projectList.Clear();
+      for (auto i = 0; i < list->GetStatesCount(); ++i)
+         projectList.AddState(list->GetStateAt(i));
+      projectList.SetActive(list->IsActive());
+   }
+
+   const std::unique_ptr<RealtimeEffectList> list;
+};
+
 static UndoRedoExtensionRegistry::Entry sEntry {
-   [](AudacityProject &project) -> std::shared_ptr<UndoStateExtension> {
-      return RealtimeEffectList::Get(project).shared_from_this();
+   [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
+   {
+      return std::make_shared<MasterEffectListRestorer>(project);
    }
 };
