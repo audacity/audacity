@@ -156,7 +156,7 @@ class PROJECT_HISTORY_API UndoManager final
  public:
    static UndoManager &Get( AudacityProject &project );
    static const UndoManager &Get( const AudacityProject &project );
- 
+
    explicit
    UndoManager( AudacityProject &project );
    ~UndoManager();
@@ -171,7 +171,6 @@ class PROJECT_HISTORY_API UndoManager final
    void RenameState( int state,
       const TranslatableString &longDescription,
       const TranslatableString &shortDescription);
-   void AbandonRedo();
    void ClearStates();
    void RemoveStates(
       size_t begin, //!< inclusive start of range
@@ -215,6 +214,7 @@ class PROJECT_HISTORY_API UndoManager final
 
    void EnqueueMessage(UndoRedoMessage message);
    void RemoveStateAt(int n);
+   void AbandonRedo();
 
    AudacityProject &mProject;
  
