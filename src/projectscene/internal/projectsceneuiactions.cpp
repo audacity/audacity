@@ -146,6 +146,12 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              TranslatableString("action", "Move play cursor right"),
              TranslatableString("action", "Move play cursor right")
              ),
+    UiAction("clip-pitch-speed",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Pitch and speed"),
+             TranslatableString("action", "Pitch and speed")
+             )
 };
 
 ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller)

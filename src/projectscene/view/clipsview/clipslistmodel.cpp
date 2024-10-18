@@ -17,6 +17,8 @@ constexpr double MOVE_MAX = 100000.0;
 constexpr double MOVE_MIN = 0.0;
 constexpr double MIN_CLIP_WIDTH = 3.0;
 
+static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
+
 ClipsListModel::ClipsListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
@@ -297,6 +299,26 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
 {
     bool ok = trackeditInteraction()->changeClipTitle(key.key, newTitle);
     return ok;
+}
+
+void ClipsListModel::openClipPitchEdit(const ClipKey& key)
+{
+    muse::UriQuery query(EDIT_PITCH_AND_SPEED_URI);
+    query.addParam("trackId", muse::Val(std::to_string(key.key.trackId)));
+    query.addParam("clipId", muse::Val(std::to_string(key.key.clipId)));
+    query.addParam("focusItemName", muse::Val("pitch"));
+
+    interactive()->open(query);
+}
+
+void ClipsListModel::openClipSpeedEdit(const ClipKey& key)
+{
+    muse::UriQuery query(EDIT_PITCH_AND_SPEED_URI);
+    query.addParam("trackId", muse::Val(std::to_string(key.key.trackId)));
+    query.addParam("clipId", muse::Val(std::to_string(key.key.clipId)));
+    query.addParam("focusItemName", muse::Val("speed"));
+
+    interactive()->open(query);
 }
 
 void ClipsListModel::startEditClip(const ClipKey& key)

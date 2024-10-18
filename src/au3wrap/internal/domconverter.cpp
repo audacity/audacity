@@ -63,6 +63,10 @@ au::trackedit::Clip DomConverter::clip(const WaveTrack* waveTrack, const WaveCli
     clip.color = trackColor(clip.key.trackId);
     clip.stereo = au3clip->NChannels() > 1;
 
+    clip.pitch = au3clip->GetCentShift();
+    clip.speed = au3clip->GetStretchRatio();
+    clip.optimizeForVoice = au3clip->GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
+
     return clip;
 }
 

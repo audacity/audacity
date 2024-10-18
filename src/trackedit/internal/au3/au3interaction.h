@@ -37,6 +37,10 @@ public:
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
+    bool changeClipPitch(const ClipKey& clipKey, int pitch) override;
+    bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
+    bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
+    bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
@@ -66,9 +70,9 @@ public:
 private:
     AudacityProject& projectRef() const;
     muse::Ret pasteIntoNewTrack();
-    ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList &list, secs_t begin);
-    std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks,
-                                    TrackId destinationTrackId, size_t tracksNum) const;
+    ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList& list, secs_t begin);
+    std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,
+                                                       size_t tracksNum) const;
     muse::Ret canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);

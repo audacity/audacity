@@ -114,6 +114,8 @@ Item {
                 clipColor: clipItem.color
                 clipKey: clipItem.key
                 clipTime: clipItem.time
+                pitch: clipItem.pitch
+                speedPercentage: clipItem.speedPercentage
                 clipSelected: clipItem.selected
                 isDataSelected: root.isDataSelected
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : root.context.selectionStartPosition - clipItem.x
@@ -170,6 +172,14 @@ Item {
 
                 onRatioChanged: function (ratio) {
                     root.channelHeightRatio = ratio
+                }
+
+                onPitchChangeRequested: {
+                    clipsModel.openClipPitchEdit(clipItem.key)
+                }
+
+                onSpeedChangeRequested: {
+                    clipsModel.openClipSpeedEdit(clipItem.key)
                 }
             }
         }

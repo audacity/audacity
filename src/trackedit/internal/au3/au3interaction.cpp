@@ -11,6 +11,7 @@
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-wave-track/TimeStretching.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
@@ -267,7 +268,7 @@ bool Au3Interaction::silenceTrackData(TrackId trackId, secs_t begin, secs_t end)
     return true;
 }
 
-bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String &title)
+bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String& title)
 {
     ::Track* track = DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
     IF_ASSERT_FAILED(track) {
@@ -300,6 +301,90 @@ bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const mu
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
+bool Au3Interaction::changeClipPitch(const ClipKey& clipKey, int pitch)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    clip->SetCentShift(pitch);
+    LOGD() << "changed pitch of clip: " << clipKey.clipId << ", track: " << clipKey.trackId << ", pitch: " << pitch;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
+bool Au3Interaction::changeClipSpeed(const ClipKey& clipKey, double speed)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    TimeStretching::SetClipStretchRatio(*waveTrack, *clip, speed);
+    LOGD() << "changed speed of clip: " << clipKey.clipId << ", track: " << clipKey.trackId << ", speed: " << speed;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
+bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    clip->SetPitchAndSpeedPreset(optimize ? PitchAndSpeedPreset::OptimizeForVoice : PitchAndSpeedPreset::Default);
+    LOGD() << "changed optimize for voice of clip: " << clipKey.clipId << ", track: " << clipKey.trackId << ", optimize: " << optimize;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
+bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, {});
+    LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->onTrackChanged(DomConverter::track(waveTrack)); //! todo: replase with onClipChanged
 
     return true;
 }
@@ -381,7 +466,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     return muse::make_ok();
 }
 
-bool Au3Interaction::cutClipIntoClipboard(const ClipKey &clipKey)
+bool Au3Interaction::cutClipIntoClipboard(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -403,7 +488,7 @@ bool Au3Interaction::cutClipIntoClipboard(const ClipKey &clipKey)
     return true;
 }
 
-bool Au3Interaction::cutClipDataIntoClipboard(const std::vector<TrackId> &tracksIds, secs_t begin, secs_t end)
+bool Au3Interaction::cutClipDataIntoClipboard(const std::vector<TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     for (const auto& trackId : tracksIds) {
         bool ok = cutTrackDataIntoClipboard(trackId, begin, end);
@@ -638,7 +723,7 @@ bool Au3Interaction::duplicateSelectedOnTracks(const std::vector<TrackId> tracks
     return true;
 }
 
-bool Au3Interaction::duplicateClip(const ClipKey &clipKey)
+bool Au3Interaction::duplicateClip(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -661,7 +746,7 @@ bool Au3Interaction::duplicateClip(const ClipKey &clipKey)
     pushProjectHistoryDuplicateState();
 }
 
-bool Au3Interaction::clipSplitCut(const ClipKey &clipKey)
+bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -685,7 +770,7 @@ bool Au3Interaction::clipSplitCut(const ClipKey &clipKey)
     return true;
 }
 
-bool Au3Interaction::clipSplitDelete(const ClipKey &clipKey)
+bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -887,7 +972,7 @@ void Au3Interaction::undo()
 }
 
 void Au3Interaction::redo()
-{   
+{
     if (!projectHistory()->redoAvailable()) {
         interactive()->error(muse::trc("redo", "Redo"), std::string("Redo not available"));
         return;
