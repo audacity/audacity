@@ -33,6 +33,7 @@
 #include "RealtimeEffectManager.h"
 #include "RealtimeEffectState.h"
 #include "Theme.h"
+#include "UndoManager.h"
 #include "Viewport.h"
 #include "wxWidgetsWindowPlacement.h"
 
