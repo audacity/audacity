@@ -56,19 +56,22 @@ public:
     bool splitDeleteSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
+    audio::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+
     void newMonoTrack() override;
     void newStereoTrack() override;
     void newLabelTrack() override;
-    audio::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+    void deleteTrack(const TrackId trackId) override;
+
     void undo() override;
     void redo() override;
 
 private:
     AudacityProject& projectRef() const;
     muse::Ret pasteIntoNewTrack();
-    ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList &list, secs_t begin);
-    std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks,
-                                    TrackId destinationTrackId, size_t tracksNum) const;
+    ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList& list, secs_t begin);
+    std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,
+                                                       size_t tracksNum) const;
     muse::Ret canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);

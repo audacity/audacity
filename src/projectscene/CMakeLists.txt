@@ -31,10 +31,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.h
