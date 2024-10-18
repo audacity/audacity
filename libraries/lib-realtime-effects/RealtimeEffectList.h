@@ -13,9 +13,9 @@
 #include <optional>
 #include <vector>
 
+#include "ClientData.h"
 #include "PluginProvider.h" // for PluginID
 #include "spinlock.h"
-#include "UndoManager.h"
 #include "XMLTagHandler.h"
 #include "Observer.h"
 
@@ -45,7 +45,6 @@ class REALTIME_EFFECTS_API RealtimeEffectList final
    : public std::enable_shared_from_this<RealtimeEffectList>
    , public ClientData::Base
    , public ClientData::Cloneable<>
-   , public UndoStateExtension
    , public XMLTagHandler
    , public Observer::Publisher<RealtimeEffectListMessage>
 {
@@ -64,6 +63,7 @@ public:
    //! Should be called (for pushing undo states) only from main thread, to
    //! avoid races
    std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
+   std::unique_ptr<RealtimeEffectList> Duplicate() const;
 
    static RealtimeEffectList &Get(AudacityProject &project);
    static const RealtimeEffectList &Get(const AudacityProject &project);
@@ -152,8 +152,6 @@ public:
 
    //! Use only in the main thread, to avoid races
    void WriteXML(XMLWriter &xmlFile) const;
-
-   void RestoreUndoRedoState(AudacityProject &project) noexcept override;
 
    //! Non-blocking atomic boolean load
    bool IsActive() const;
