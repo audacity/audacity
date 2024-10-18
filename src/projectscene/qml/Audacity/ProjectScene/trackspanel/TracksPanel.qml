@@ -98,16 +98,8 @@ Item {
                     view.interactive = true
                 }
 
-                onDuplicateRequested: {
-                    tracksModel.duplicateTrack(model.index)
-                }
-
-                onDeleteRequested: {
-                    tracksModel.deleteTrack(model.index)
-                }
-
                 onOpenEffectsRequested: {
-                        tracksModel.openEffectsForTrack(model.index)
+                    tracksModel.openEffectsForTrack(model.index)
                 }
             }
         }
