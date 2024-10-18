@@ -50,7 +50,7 @@ public:
       SaveLocally
    };
 
-   static std::pair<Action, std::string> Show(
+   static std::pair<Action, wxString> Show(
       const ServiceConfig& serviceConfig, OAuthService& authService,
       UserService& userService, const wxString& projectName, wxWindow* parent,
       bool allowLocalSave, AudiocomTrace);
@@ -60,7 +60,7 @@ private:
    void LayoutControls();
    void SetupEvents();
 
-   std::string GetProjectName() const;
+   wxString GetProjectName() const;
    void OnUpdateCloudSaveState();
 
    UserPanel* mUserPanel {};
