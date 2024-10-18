@@ -93,11 +93,14 @@ private:
     void trimAudioOutsideSelection();
     void silenceAudioSelection();
 
+    void renderClipPitchAndSpeed(const muse::actions::ActionData& args);
+
     void pushProjectHistoryTrackAddedState();
     void pushProjectHistoryTrackTrimState(secs_t start, secs_t end);
     void pushProjectHistoryTrackSilenceState(secs_t start, secs_t end);
     void pushProjectHistoryPasteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+    void pushProjectHistoryRenderClipStretchingState();
 
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;

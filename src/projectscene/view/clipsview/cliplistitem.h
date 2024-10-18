@@ -29,6 +29,9 @@ class ClipListItem : public QObject
 
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged FINAL)
 
+    Q_PROPERTY(int pitch READ pitch NOTIFY pitchChanged FINAL)
+    Q_PROPERTY(int speedPercentage READ speedPercentage NOTIFY speedPercentageChanged FINAL)
+
 public:
     ClipListItem(QObject* parent);
 
@@ -59,6 +62,9 @@ public:
     double rightVisibleMargin() const;
     void setRightVisibleMargin(double newRightVisibleMargin);
 
+    int pitch() const;
+    int speedPercentage() const;
+
 signals:
     void titleChanged();
     void xChanged();
@@ -67,6 +73,8 @@ signals:
     void rightVisibleMarginChanged();
     void timeChanged();
     void selectedChanged();
+    void pitchChanged();
+    void speedPercentageChanged();
 
 private:
     trackedit::Clip m_clip;

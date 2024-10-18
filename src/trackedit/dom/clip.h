@@ -18,6 +18,10 @@ struct Clip {
     double endTime = 0.0;
     bool stereo = false;
 
+    int pitch = 0;
+    double speed = 0.0;
+    bool optimizeForVoice = false;
+
     inline bool isValid() const { return key.isValid(); }
 };
 
