@@ -231,8 +231,6 @@ private:
    wxString ConvertID(const PluginID & ID);
 
 private:
-   friend std::default_delete<PluginManager>;
-   static std::unique_ptr<PluginManager> mInstance;
 
    bool IsDirty();
    void SetDirty(bool dirty = true);

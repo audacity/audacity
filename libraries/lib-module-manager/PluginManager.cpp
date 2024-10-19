@@ -321,9 +321,6 @@ bool PluginManager::RemoveConfig(ConfigurationType type, const PluginID & ID,
 //
 // ============================================================================
 
-// The one and only PluginManager
-std::unique_ptr<PluginManager> PluginManager::mInstance{};
-
 // ----------------------------------------------------------------------------
 // Creation/Destruction
 // ----------------------------------------------------------------------------
@@ -379,12 +376,8 @@ static PluginManager::ConfigFactory sFactory;
 
 PluginManager & PluginManager::Get()
 {
-   if (!mInstance)
-   {
-      mInstance.reset(safenew PluginManager);
-   }
-
-   return *mInstance;
+   static PluginManager instance;
+   return instance;
 }
 
 void PluginManager::Initialize(ConfigFactory factory)
