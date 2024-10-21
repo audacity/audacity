@@ -5,12 +5,12 @@
 
 #include "effects/effects_base/effectstypes.h"
 
-#include "libraries/lib-builtin-effects/AmplifyBase.h"
+#include "AmplifyBase.h"
 
 #include "../common/params.h"
 
 namespace au::effects {
-class AmplifyEffect : public ::AmplifyBase
+class AmplifyEffect : public AmplifyBase
 {
 public:
     AmplifyEffect();

@@ -22,6 +22,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/general/generalviewmodel.h
 
     # built-in effects
+    ${CMAKE_CURRENT_LIST_DIR}/amplify/AmplifyBase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/amplify/AmplifyBase.h
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyviewmodel.cpp
@@ -39,8 +41,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
 set(AU3_SRC
     ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.cpp
     ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/AmplifyBase.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/AmplifyBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
 )
