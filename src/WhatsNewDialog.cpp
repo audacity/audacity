@@ -39,6 +39,11 @@ namespace
 #  define SHOW_MUSEHUB
 #endif
 
+enum {
+   WhatsNewID_WatchReleaseVideo = wxID_HIGHEST + 1,
+   WhatsNewID_GoToMuseHub,
+};
+
 const char* WhatsNewURL = "https://audacityteam.org/3.7.0-video";
 const char* ChangeLogURL = "https://support.audacityteam.org/additional-resources/changelog";
 const char* MuseHubURL = "https://www.musehub.com";
@@ -50,7 +55,12 @@ const char* PromoURL = "https://audacityteam.org/audacitypromo";
    constexpr auto WindowWidth = 440;
 #endif
 
-constexpr auto WindowHeight = 460;
+// wxHTML renders text with smaller line spacing on macOS
+#if defined (__WXOSX__)
+constexpr auto WindowHeight = 470;
+#else
+constexpr auto WindowHeight = 490;
+#endif
 
 }
 AttachedWindows::RegisteredFactory sWhatsNewWindow{
@@ -122,6 +132,9 @@ wxString MakeGetPluginsText()
       << wxT("<h3>") << XO("Get free plugins & sounds")<< wxT("</h3>")
       << XO("<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>").Format(MuseHubURL);
 
+      /*i18n-hint: MuseHub is a name of a product, see musehub.com. */
+      // << XO("Available on [[%s|MuseHub]].").Format(MuseHubURL) << wxT("</p>");
+
       //we also may need these strings in the future. Adding them to the catalogue now so we don't have to send out multiple translation CTAs
 
       << wxT("<h3>") << wxT("VocalStrip - Solid State Logic")<< wxT("</h3>")
@@ -148,15 +161,15 @@ wxString MakeGetPluginsText()
 #endif
 
       << wxT("<h3>") << wxT("Polyspectral Multiband Compressor")<< wxT("</h3>")
-      << wxT("<p>") << XO("A multiband compressor offering precise control over frequencies.") << wxT(" ")
-      /*i18n-hint: MuseHub is a name of a product, see musehub.com. */
-      << XO("Available on [[%s|MuseHub]].").Format(MuseHubURL) << wxT("</p>");
+      << wxT("<p>") << XO("A multiband compressor offering precise control over frequencies.");
 
    return FormatHtmlText(o.GetString());
 }
 }
 
 BEGIN_EVENT_TABLE(WhatsNewDialog, wxDialogWrapper)
+   EVT_BUTTON(WhatsNewID_WatchReleaseVideo, WhatsNewDialog::OnWatchReleaseVideo)
+   EVT_BUTTON(WhatsNewID_GoToMuseHub, WhatsNewDialog::OnGoToMuseHub)
    EVT_BUTTON(wxID_OK, WhatsNewDialog::OnOK)
 END_EVENT_TABLE()
 
@@ -197,33 +210,48 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
    S.StartHorizontalLay(wxEXPAND);
    {
-      S.SetBorder(20);
-      const auto whatsnew = safenew LinkingHtmlWindow(S.GetParent());
-      whatsnew->SetPage(MakeWhatsNewText());
-      whatsnew->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
-      S
-         .Prop(1)
+      S.StartVerticalLay(wxEXPAND | wxLEFT);
+      {
+         S.AddSpace(15);
+         const auto whatsnew = safenew LinkingHtmlWindow(S.GetParent());
+         whatsnew->SetPage(MakeWhatsNewText());
+         whatsnew->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
+         S
+            .Prop(1)
 #if defined(SHOW_MUSEHUB)
-         .Position(wxEXPAND | wxLEFT | wxTOP | wxBOTTOM)
+            .Position(wxEXPAND | wxLEFT | wxTOP)
 #else
-         .Position(wxEXPAND | wxALL)
+            .Position(wxEXPAND | wxALL)
 #endif
-         .AddWindow(whatsnew);
+            .AddWindow(whatsnew);
 
+         S
+            .Id(WhatsNewID_WatchReleaseVideo)
+            .Position(wxALL | wxALIGN_CENTRE)
+            .AddButton(XXO("Watch the release video"), wxALL, true);
+      }
+      S.EndVerticalLay();
 #if defined(SHOW_MUSEHUB)
-      S.AddSpace(20);
-
-      const auto getplugins = safenew LinkingHtmlWindow(S.GetParent());
-      getplugins->SetPage(MakeGetPluginsText());
-      getplugins->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
-      S
-         .Prop(1)
-         .Position(wxEXPAND | wxTOP | wxRIGHT | wxBOTTOM)
-         .AddWindow(getplugins);
+      S.StartVerticalLay(wxEXPAND);
+      {
+         S.AddSpace(15);
+         const auto getplugins = safenew LinkingHtmlWindow(S.GetParent());
+         getplugins->SetPage(MakeGetPluginsText());
+         getplugins->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
+         S
+            .Prop(1)
+            .Position(wxEXPAND | wxTOP | wxRIGHT)
+            .AddWindow(getplugins);
+         S
+            .Id(WhatsNewID_GoToMuseHub)
+            .Position(wxALL | wxALIGN_CENTRE)
+            .AddButton(XXO("Available on MuseHub"), wxALL, true);
+      }
+      S.EndVerticalLay();
 #endif
    }
    S.EndHorizontalLay();
-
+   S.AddSpace(25);
    const auto line = safenew wxWindow(S.GetParent(), wxID_ANY);
    line->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
    line->SetSize(-1, 1);
@@ -283,4 +311,14 @@ void WhatsNewDialog::OnOK(wxCommandEvent& evt)
    gPrefs->Write(wxT("/GUI/ShowSplashScreen"), !mDontShowAgain->IsChecked() );
    gPrefs->Flush();
    wxDialogWrapper::Show(false);
+}
+
+void WhatsNewDialog::OnWatchReleaseVideo(wxCommandEvent& evt)
+{
+   OpenInDefaultBrowser(WhatsNewURL);
+}
+
+void WhatsNewDialog::OnGoToMuseHub(wxCommandEvent& evt)
+{
+   OpenInDefaultBrowser(PromoURL);
 }

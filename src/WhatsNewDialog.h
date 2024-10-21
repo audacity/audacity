@@ -29,6 +29,8 @@ public:
 private:
    void Populate(ShuttleGui& S);
    void OnOK(wxCommandEvent&);
+   void OnWatchReleaseVideo(wxCommandEvent&);
+   void OnGoToMuseHub(wxCommandEvent&);
 
    DECLARE_EVENT_TABLE()
 };
