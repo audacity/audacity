@@ -779,6 +779,10 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool 
         return false;
     }
 
+    if (completed) {
+        makeRoomForClip(clipKey);
+    }
+
     clip->TrimLeft(deltaSec);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -801,6 +805,10 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
+    }
+
+    if (completed) {
+        makeRoomForClip(clipKey);
     }
 
     clip->TrimRight(deltaSec);
