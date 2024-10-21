@@ -85,6 +85,7 @@ private:
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId, size_t tracksNum) const;
     muse::Ret canPasteClips(const TrackIdList& tracksIds,  secs_t begin) const;
+    muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);

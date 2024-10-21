@@ -133,6 +133,92 @@ Au3Interaction::Au3Interaction()
     m_progress = std::make_shared<muse::Progress>();
 }
 
+muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+
+    clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
+        return c1->GetPlayStartTime() < c2->GetPlayStartTime();
+    });
+
+    for (const auto& otherClip : clips) {
+        if (clip == otherClip) {
+            //! NOTE do not modify the clip the action was taken on
+            continue;
+        }
+
+        //! NOTE check if clip hovers whole other clip
+        if (clip->GetPlayStartTime() <= otherClip->GetPlayStartTime()
+            && clip->GetPlayEndTime() >= otherClip->GetPlayEndTime()) {
+
+            otherClip->Clear(otherClip->Start(), otherClip->End());
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+            continue;
+        }
+
+        //! NOTE check if clip hovers left side of the clip
+        if (clip->GetPlayStartTime() <= otherClip->GetPlayStartTime()
+            && clip->GetPlayEndTime() <= otherClip->GetPlayEndTime()
+            && clip->GetPlayEndTime() >= otherClip->GetPlayStartTime()) {
+
+            secs_t overlap = clip->GetPlayEndTime() - otherClip->GetPlayStartTime();
+            otherClip->TrimLeft(overlap);
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+            continue;
+        }
+
+        //! NOTE check if clip hovers right side of the clip
+        if (clip->GetPlayStartTime() >= otherClip->GetPlayStartTime()
+            && clip->GetPlayStartTime() <= otherClip->GetPlayEndTime()
+            && clip->GetPlayEndTime() >= otherClip->GetPlayEndTime()) {
+
+            secs_t overlap = otherClip->GetPlayEndTime() - clip->GetPlayStartTime();
+            otherClip->TrimRight(overlap);
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+            continue;
+        }
+
+        //! NOTE check if clip boundaries are within other clip
+        if (clip->GetPlayStartTime() >= otherClip->GetPlayStartTime()
+            && clip->GetPlayEndTime() <= otherClip->GetPlayEndTime()) {
+            secs_t otherClipStartTime = otherClip->GetPlayStartTime();
+            secs_t otherClipEndTime = otherClip->GetPlayEndTime();
+
+            auto leftClip = waveTrack->CopyClip(*otherClip, true);
+            waveTrack->InsertInterval(std::move(leftClip), false);
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+
+            secs_t rightClipOverlap = clip->GetPlayEndTime() - otherClip->GetPlayStartTime();
+            otherClip->TrimLeft(rightClipOverlap);
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+            leftClip->SetPlayStartTime(otherClipStartTime);
+            secs_t leftClipOverlap = otherClipEndTime - clip->GetPlayStartTime();
+            leftClip->TrimRight(leftClipOverlap);
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, leftClip.get()));
+
+            continue;
+        }
+    }
+
+    return muse::make_ret(muse::Ret::Code::Ok);
+}
+
 muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
@@ -160,71 +246,14 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
         return false;
     }
 
-    //! NOTE Let's check for intersection with the previous and next clips
-    //! Clips in AU3 model may not be sorted by time, so we need to get all clips and sort them by time
+    if (completed)
     {
-        std::list<std::shared_ptr<Au3WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+        makeRoomForClip(clipKey);
+    }
 
-        clips.sort([](const std::shared_ptr<Au3WaveClip>& c1, const std::shared_ptr<Au3WaveClip>& c2) {
-            return c1->GetPlayStartTime() < c2->GetPlayStartTime();
-        });
-
-        auto it = std::find_if(clips.begin(), clips.end(), [&clip](const std::shared_ptr<Au3WaveClip>& c) {
-            return clip.get() == c.get();
-        });
-        IF_ASSERT_FAILED(it != clips.end()) {
-            return false;
-        }
-
-        //! NOTE If the new time is greater than the previous one, we check for an intersection with the next one
-        if (newStartTime > clip->GetPlayStartTime()) {
-            auto nextIt = ++it;
-            //! NOTE Let's check if the clip is not the last one
-            if (nextIt != clips.end()) {
-                std::shared_ptr<Au3WaveClip> nextClip = *nextIt;
-                secs_t nextStartTime = nextClip->GetPlayStartTime();
-                secs_t deltaSec = newStartTime - clip->GetPlayStartTime();
-
-                // check collision
-                if ((clip->GetPlayEndTime() + deltaSec) > nextStartTime) {
-                    //! NOTE If we have reached the limit, we do nothing.
-                    //! TODO maybe there is a problem here, the end time of the clip may coincide with the start time of the next clip
-                    if (muse::is_equal(clip->GetPlayEndTime(), nextStartTime.to_double())) {
-                        LOGW() << "You can't change the clip time because it overlaps with the next one.";
-                        return false;
-                    }
-                    //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
-                    else {
-                        deltaSec = nextStartTime - clip->GetPlayEndTime();
-                        newStartTime = clip->GetPlayStartTime() + deltaSec;
-                    }
-                }
-            }
-        }
-
-        if (newStartTime < clip->GetPlayStartTime()) {
-            //! NOTE For the first clip, the end time is 0.0
-            secs_t prevEndTime = 0.0;
-            if (it != clips.begin()) {
-                auto prevIt = --it;
-                std::shared_ptr<Au3WaveClip> pervClip = *prevIt;
-                prevEndTime = pervClip->GetPlayEndTime();
-            }
-
-            // check collision
-            if (newStartTime < prevEndTime) {
-                //! NOTE If we have reached the limit, we do nothing.
-                //! TODO maybe there is a problem here, the start time of the clip may coincide with the end time of the prev clip
-                if (muse::is_equal(clip->GetPlayStartTime(), prevEndTime.to_double())) {
-                    LOGW() << "You can't change the clip time because it overlaps with the prev one.";
-                    return false;
-                }
-                //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
-                else {
-                    newStartTime = prevEndTime;
-                }
-            }
-        }
+    if (!muse::RealIsEqualOrMore(newStartTime, 0.0)) {
+        LOGW() << "You can't change the clip time to less than 0.0";
+        return false;
     }
 
     //! TODO Not sure what this method needs to be called to change the position, will need to clarify
