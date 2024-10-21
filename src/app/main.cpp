@@ -92,8 +92,20 @@ static void crashCallback(int signum)
 
 #endif
 
+#ifdef Q_OS_WIN
+#include <crtdbg.h> // _CrtSetDbgFlag
+#endif
+
 int main(int argc, char** argv)
 {
+#ifdef Q_OS_WIN
+    // Configure memory leak detection in debug builds.
+    // At the moment we keep it disabled because it causes shutdown to take about 10 seconds.
+    // A ticket was logged to investigate this further: https://github.com/audacity/audacity/issues/7568
+    constexpr auto enableMemoryLeakReport = false;
+    _CrtSetDbgFlag(enableMemoryLeakReport ? _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF : _CRTDBG_ALLOC_MEM_DF);
+#endif
+
 #ifndef MUE_BUILD_CRASHPAD_CLIENT
     signal(SIGSEGV, crashCallback);
     signal(SIGILL, crashCallback);
