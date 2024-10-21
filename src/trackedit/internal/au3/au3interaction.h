@@ -70,6 +70,7 @@ private:
     std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,
                                                        size_t tracksNum) const;
     muse::Ret canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
+    muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
