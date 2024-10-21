@@ -22,8 +22,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/general/generalviewmodel.h
 
     # built-in effects
-    ${CMAKE_CURRENT_LIST_DIR}/amplify/AmplifyBase.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/amplify/AmplifyBase.h
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/amplify/amplifyviewmodel.cpp
