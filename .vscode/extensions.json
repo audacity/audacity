@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools",
+        "zachflower.uncrustify" // for code formatting
+    ],
+}

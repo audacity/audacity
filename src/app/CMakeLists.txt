@@ -273,14 +273,14 @@ if (OS_IS_WIN)
               USE_SOURCE_PERMISSIONS
           )
 
-    if (MSVC AND DEVELOPER)
+    if (MSVC)
         set_target_properties(${EXECUTABLE_NAME} PROPERTIES
             VS_DEBUGGER_COMMAND "${CMAKE_INSTALL_PREFIX}/bin/${EXECUTABLE_NAME}"
             VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin"
         )
-    endif()
 
-    if (DEVELOPER)
+        # Unlike VSCode, Visual Studio doesn't have pre-launch tasks we could use to run the `INSTALL` target.
+        # Instead, we copy the executable to the install directory after the build.
         add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/bin
             COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${EXECUTABLE_NAME}> ${CMAKE_INSTALL_PREFIX}/bin

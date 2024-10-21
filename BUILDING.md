@@ -66,6 +66,9 @@ TODO: generalize to other OSes
 
 Note: the default generator is Ninja. Have it installed, or change the "cmake.generator" value in `.vscode/settings.json` to something else (eg `Visual Studio 16 2019`).
 
+#### Open the workspace
+One way of doing this is by executing Ctrl+Shift+P, and choosing "Open Workspace from File". Navigate to the root of the repository and select the `.vscode/audacity.code-workspace` file. Else, you can open the folder, then the workspace file, and click the "Open Workspace" button.
+
 #### Install recommended extensions
 When opening the repository in VSCode, you will be prompted to install recommended extensions. You can do it then. If you missed it, you can install them later by executing Ctrl+Shift+P, typing `Extensions: Show Recommended Extensions`, and installing the recommended extensions.
 

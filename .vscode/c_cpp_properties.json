@@ -1,0 +1,22 @@
+{
+   "configurations": [
+      {
+         "name": "Win32",
+         "includePath": [
+            "${workspaceFolder}/**",
+            "${QTDIR}/include/**"
+         ],
+         "defines": [
+            "_DEBUG",
+            "UNICODE",
+            "_UNICODE"
+         ],
+         "compilerPath": "cl.exe",
+         "cStandard": "c17",
+         "cppStandard": "c++17",
+         "intelliSenseMode": "msvc-x64",
+         "configurationProvider": "ms-vscode.cmake-tools"
+      }
+   ],
+   "version": 4
+}
