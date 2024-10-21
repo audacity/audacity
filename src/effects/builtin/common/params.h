@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include "effects/effects_base/effectstypes.h" // IWYU pragma: export
+
 namespace au::effects {
 template<typename T>
 struct Param
