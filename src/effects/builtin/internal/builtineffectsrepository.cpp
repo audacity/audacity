@@ -17,36 +17,26 @@
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
-
 #include "tonegen/chirpeffect.h"
 #include "tonegen/toneeffect.h"
+#include "reverb/reverbeffect.h"
 
 #include "log.h"
 
 using namespace au::effects;
 
-static EffectMeta effectMeta(const ComponentInterfaceSymbol& symbol)
-{
-    EffectMeta meta;
-    meta.categoryId = BUILTIN_CATEGORY_ID;
-    if (symbol == AmplifyEffect::Symbol) {
-        meta.title = muse::mtrc("effects", "Amplify");
-        meta.description = muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected");
-    } else if (symbol == ChirpEffect::Symbol) {
-        meta.title = muse::mtrc("effects", "Chirp");
-        meta.description = muse::mtrc("effects", "Generates an ascending or descending tone of one of four types");
-    } else if (symbol == ToneEffect::Symbol) {
-        meta.title = muse::mtrc("effects", "Tone");
-        meta.description = muse::mtrc("effects", "Generates a constant frequency tone of one of four types");
-    }
-
-    return meta;
-}
-
 void BuiltinEffectsRepository::init()
 {
     auto regView = [this](const ::ComponentInterfaceSymbol& symbol, const muse::String& url) {
         effectsViewRegister()->regUrl(au3::wxToString(symbol.Internal()), url);
+    };
+
+    auto regMeta = [this](const ::ComponentInterfaceSymbol& symbol, const muse::String& title, const muse::String& description) {
+        EffectMeta meta;
+        meta.categoryId = BUILTIN_CATEGORY_ID;
+        meta.title = title;
+        meta.description = description;
+        m_metas.insert({ symbol, meta });
     };
 
     // General
@@ -57,12 +47,42 @@ void BuiltinEffectsRepository::init()
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "AmplifyViewModel");
     regView(AmplifyEffect::Symbol, u"qrc:/amplify/AmplifyView.qml");
+    regMeta(AmplifyEffect::Symbol,
+            muse::mtrc("effects", "Amplify"),
+            muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected")
+            );
 
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
-    //regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");
+    regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");
+    regMeta(ChirpEffect::Symbol,
+            muse::mtrc("effects", "Chirp"),
+            muse::mtrc("effects", "Generates an ascending or descending tone of one of four types")
+            );
 
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
-    //regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
+    regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
+    regMeta(ToneEffect::Symbol,
+            muse::mtrc("effects", "Tone"),
+            muse::mtrc("effects", "Generates a constant frequency tone of one of four types")
+            );
+
+    static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
+    qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "ReverbViewModel");
+    regView(ReverbEffect::Symbol, u"qrc:/reverb/ReverbView.qml");
+    regMeta(ReverbEffect::Symbol,
+            muse::mtrc("effects", "Reverb"),
+            muse::mtrc("effects", "Reverb effect")
+            );
+}
+
+EffectMeta BuiltinEffectsRepository::effectMeta(const ComponentInterfaceSymbol& symbol) const
+{
+    auto it = m_metas.find(symbol);
+    if (it == m_metas.end()) {
+        LOGW() << "not found effect meta for symbol: " << au3::wxToStdSting(symbol.Internal());
+        return EffectMeta();
+    }
+    return it->second;
 }
 
 EffectMetaList BuiltinEffectsRepository::effectMetaList() const
@@ -71,8 +91,8 @@ EffectMetaList BuiltinEffectsRepository::effectMetaList() const
 
     const auto range = PluginManager::Get().PluginsOfType(PluginTypeEffect);
     for (const PluginDescriptor& desc : range) {
-        LOGDA() << " ID: " << au3::wxToStdSting(desc.GetID())
-                << ", Symbol: " << au3::wxToStdSting(desc.GetSymbol().Internal());
+        LOGD() << " ID: " << au3::wxToStdSting(desc.GetID())
+               << ", Symbol: " << au3::wxToStdSting(desc.GetSymbol().Internal());
 
         EffectMeta meta = effectMeta(desc.GetSymbol());
         meta.id = au3::wxToString(desc.GetID());
