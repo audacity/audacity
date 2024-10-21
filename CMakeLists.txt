@@ -163,6 +163,11 @@ endif()
 add_subdirectory(${muse_framework_SOURCE_DIR}/framework ${muse_framework_BINARY_DIR})
 add_subdirectory(src)
 
+if (MSVC)
+    # Now that the `audacity` target is defined, we can set it as the startup project in Visual Studio.
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT audacity)
+endif()
+
 ###########################################
 # Setup Packaging
 ###########################################
