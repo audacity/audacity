@@ -43,7 +43,8 @@ public:
    ~ProjectHistory() override;
 
    void InitialState();
-   void SetStateTo(unsigned int n, bool doAutosave = true);
+   //! @pre n >= 0
+   void SetStateTo(int n, bool doAutosave = true);
    bool UndoAvailable() const;
    bool RedoAvailable() const;
    void PushState(
