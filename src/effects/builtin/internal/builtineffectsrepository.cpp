@@ -20,6 +20,7 @@
 #include "tonegen/chirpeffect.h"
 #include "tonegen/toneeffect.h"
 #include "reverb/reverbeffect.h"
+#include "reverb/reverbviewmodel.h"
 
 #include "log.h"
 
@@ -67,7 +68,7 @@ void BuiltinEffectsRepository::init()
             );
 
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
-    qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "ReverbViewModel");
+    qmlRegisterType<ReverbViewModel>("Audacity.Effects", 1, 0, "ReverbViewModel");
     regView(ReverbEffect::Symbol, u"qrc:/reverb/ReverbView.qml");
     regMeta(ReverbEffect::Symbol,
             muse::mtrc("effects", "Reverb"),

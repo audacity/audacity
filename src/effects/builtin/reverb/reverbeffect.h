@@ -81,8 +81,7 @@ public:
 
     EffectType GetType() const override;
     RegistryPaths GetFactoryPresets() const override;
-    OptionalMessage
-    LoadFactoryPreset(int id, EffectSettings& settings) const override;
+    OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings) const override;
 
     RealtimeSince RealtimeSupport() const override;
 
@@ -100,8 +99,7 @@ public:
 
         // Realtime section
 
-        bool
-        RealtimeInitialize(EffectSettings& settings, double sampleRate) override;
+        bool RealtimeInitialize(EffectSettings& settings, double sampleRate) override;
 
         bool RealtimeAddProcessor(
             EffectSettings& settings, EffectOutputs*, unsigned numChannels, float sampleRate) override;
@@ -132,22 +130,23 @@ public:
         double mLastSampleRate { 0 };
     };
 
-protected:
     const EffectParameterMethods& Parameters() const override;
 
-    static constexpr EffectParameter RoomSize {& ReverbSettings::mRoomSize,
-                                               L"RoomSize",
-                                               ReverbSettings::roomSizeDefault,
-                                               0,
-                                               100,
-                                               1 };
+    static constexpr EffectParameter RoomSize {
+        & ReverbSettings::mRoomSize,
+        L"RoomSize",
+        ReverbSettings::roomSizeDefault,
+        0,
+        100,
+        1 };
 
-    static constexpr EffectParameter PreDelay {& ReverbSettings::mPreDelay,
-                                               L"Delay",
-                                               ReverbSettings::preDelayDefault,
-                                               0,
-                                               200,
-                                               1 };
+    static constexpr EffectParameter PreDelay {
+        & ReverbSettings::mPreDelay,
+        L"Delay",
+        ReverbSettings::preDelayDefault,
+        0,
+        200,
+        1 };
 
     static constexpr EffectParameter Reverberance {
         & ReverbSettings::mReverberance,
@@ -167,33 +166,37 @@ protected:
         1
     };
 
-    static constexpr EffectParameter ToneLow {& ReverbSettings::mToneLow,
-                                              L"ToneLow",
-                                              ReverbSettings::toneLowDefault,
-                                              0,
-                                              100,
-                                              1 };
+    static constexpr EffectParameter ToneLow {
+        & ReverbSettings::mToneLow,
+        L"ToneLow",
+        ReverbSettings::toneLowDefault,
+        0,
+        100,
+        1 };
 
-    static constexpr EffectParameter ToneHigh {& ReverbSettings::mToneHigh,
-                                               L"ToneHigh",
-                                               ReverbSettings::toneHighDefault,
-                                               0,
-                                               100,
-                                               1 };
+    static constexpr EffectParameter ToneHigh {
+        & ReverbSettings::mToneHigh,
+        L"ToneHigh",
+        ReverbSettings::toneHighDefault,
+        0,
+        100,
+        1 };
 
-    static constexpr EffectParameter WetGain {& ReverbSettings::mWetGain,
-                                              L"WetGain",
-                                              ReverbSettings::wetGainDefault,
-                                              -20,
-                                              10,
-                                              1 };
+    static constexpr EffectParameter WetGain {
+        & ReverbSettings::mWetGain,
+        L"WetGain",
+        ReverbSettings::wetGainDefault,
+        -20,
+        10,
+        1 };
 
-    static constexpr EffectParameter DryGain {& ReverbSettings::mDryGain,
-                                              L"DryGain",
-                                              ReverbSettings::dryGainDefault,
-                                              -20,
-                                              10,
-                                              1 };
+    static constexpr EffectParameter DryGain {
+        & ReverbSettings::mDryGain,
+        L"DryGain",
+        ReverbSettings::dryGainDefault,
+        -20,
+        10,
+        1 };
 
     static constexpr EffectParameter StereoWidth {
         & ReverbSettings::mStereoWidth,
@@ -204,11 +207,12 @@ protected:
         1
     };
 
-    static constexpr EffectParameter WetOnly {& ReverbSettings::mWetOnly,
-                                              L"WetOnly",
-                                              ReverbSettings::wetOnlyDefault,
+    static constexpr EffectParameter WetOnly {
+        & ReverbSettings::mWetOnly,
+        L"WetOnly",
+        ReverbSettings::wetOnlyDefault,
                                      false,
                                      true,
-                                              1 };
+        1 };
 };
 } // namespace au::effects
