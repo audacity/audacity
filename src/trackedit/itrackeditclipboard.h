@@ -14,6 +14,8 @@ struct TrackData
     // Track type from Track.h
     std::shared_ptr<::Track> track;
     au::trackedit::ClipKey clipKey;
+
+    inline bool isValid() const { return clipKey.isValid() && track != nullptr; }
 };
 
 class ITrackeditClipboard : MODULE_EXPORT_INTERFACE
