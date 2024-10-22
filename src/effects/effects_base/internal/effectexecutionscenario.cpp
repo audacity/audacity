@@ -17,7 +17,6 @@
 #include "libraries/lib-menus/CommandManager.h"
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-project-history/ProjectHistory.h"
-#include "libraries/lib-transactions/TransactionScope.h"
 #include "libraries/lib-module-manager/ConfigInterface.h"
 #include "libraries/lib-numeric-formats/NumericConverterFormats.h"
 
@@ -100,19 +99,17 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! ============================================================================
 
     // common things used below
-    std::shared_ptr<SimpleEffectSettingsAccess> pAccess;
-    EffectSettings settings;
+    EffectSettings* settings = nullptr;
     EffectTimeParams tp;
     tp.projectRate = ProjectRate::Get(project).GetRate();
 
     double oldDuration = 0.0;
     {
         //! NOTE Step 2.1 - get effect settings
-        EffectSettings* pSettings = em.GetDefaultSettings(ID);
-        IF_ASSERT_FAILED(pSettings) {
+        settings = em.GetDefaultSettings(ID);
+        IF_ASSERT_FAILED(settings) {
             return muse::make_ret(Ret::Code::InternalError);
         }
-        pAccess = std::make_shared<SimpleEffectSettingsAccess>(*pSettings);
 
         //! NOTE Step 2.2 - get oldDuration for EffectTypeGenerate
         if (effect->GetType() == EffectTypeGenerate) {
@@ -144,21 +141,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
                               : NumericConverterFormats::DefaultSelectionFormat()
                               ).Internal();
 
-        //! NOTE Step 2.5 - get current settings (make local settings)
-        settings = pAccess->Get();
-
-        //! NOTE Step 2.6 - update settings
-        auto updater = [&](EffectSettings& settings) {
-            settings.extra.SetDuration(duration);
-            settings.extra.SetDurationFormat(newFormat);
-            return nullptr;
-        };
-        // Update our copy of settings; update the EffectSettingsAccess too,
-        // if we are going to show a dialog
-        updater(settings);
-        if (pAccess) {
-            pAccess->ModifySettings(updater);
-        }
+        settings->extra.SetDuration(duration);
+        settings->extra.SetDurationFormat(newFormat);
     }
 
     //! ============================================================================
@@ -207,19 +191,14 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             muse::String type = au3::wxToString(effect->GetSymbol().Internal());
-            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effect, &settings);
+            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effect, settings);
             muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
             effectInstancesRegister()->unregInstance(effect);
             if (ret) {
-                effect->SaveUserPreset(CurrentSettingsGroup(), settings);
+                effect->SaveUserPreset(CurrentSettingsGroup(), *settings);
             } else {
                 LOGE() << "failed show effect: " << type << ", ret: " << ret.toString();
                 return ret;
-            }
-
-            //! NOTE Step 2.7.2 - update local settings after modify by showEffect
-            if (ret) {
-                settings = pAccess->Get();
             }
         }
 
@@ -233,7 +212,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     // common things used below
     Ret success;
     {
-        success = effectsProvider()->performEffect(project, effect, pInstanceEx, settings);
+        success = effectsProvider()->performEffect(project, effect, pInstanceEx, *settings);
     }
 
     //! ============================================================================
@@ -260,12 +239,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         //! NOTE Step 7.3 - cleanup
         if (!success) {
             // On failure, restore the old duration setting
-            settings.extra.SetDuration(oldDuration);
+            settings->extra.SetDuration(oldDuration);
         }
-
-        //! TODO Should we do this only if it is not successful? (restore the oldDuration).
-        //! If it is successful, according to logic, there is nothing to update, everything is up to date
-        pAccess->Set(std::move(settings), nullptr);
     }
 
     //! NOTE break if not success
