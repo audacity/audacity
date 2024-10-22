@@ -29,6 +29,15 @@ Rectangle {
         builder.load(root.type, root.instanceId, root)
     }
 
+    function preview() {
+        console.debug("[qml] EffectsViewer preview ")
+        if (!builder.contentItem) {
+            return;
+        }
+
+        builder.contentItem.preview()
+    }
+
     EffectBuilder {
         id: builder
 

@@ -34,6 +34,8 @@ public:
     muse::async::Channel<EffectId> lastProcessorIdChanged() const override;
     muse::Ret repeatLastProcessor() override;
 
+    muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) override;
+
 private:
 
     muse::Ret doPerformEffect(AudacityProject& project, const EffectId& effectId, unsigned int flags);

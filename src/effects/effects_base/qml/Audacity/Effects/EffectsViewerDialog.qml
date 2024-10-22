@@ -34,15 +34,6 @@ StyledDialogView {
         width: parent.width
         anchors.bottom: parent.bottom
 
-        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Apply ]
-
-        onStandardButtonClicked: function(buttonId) {
-            switch(buttonId) {
-            case ButtonBoxModel.Cancel: root.reject(); break;
-            case ButtonBoxModel.Apply: root.accept(); break;
-            }
-        }
-
         //! TODO Move function to ButtonBox (Muse framework)
         function buttonById(id) {
             for (var i = 0; i < bbox.count; i++) {
@@ -57,6 +48,29 @@ StyledDialogView {
 
         Component.onCompleted: {
             bbox.buttonById(ButtonBoxModel.Apply).enabled = false
+        }
+
+        FlatButton {
+            text: qsTrc("global", "Preview")
+            buttonRole: ButtonBoxModel.CustomRole
+            buttonId: ButtonBoxModel.CustomButton + 1
+            isLeftSide: true
+            onClicked: viewer.preview()
+        }
+
+        FlatButton {
+            text: qsTrc("global", "Cancel")
+            buttonRole: ButtonBoxModel.AcceptRole
+            buttonId: ButtonBoxModel.Cancel
+            onClicked: root.reject()
+        }
+
+        FlatButton {
+            text: qsTrc("global", "Apply")
+            buttonRole: ButtonBoxModel.DestructiveRole
+            buttonId: ButtonBoxModel.Apply
+            accentButton: true
+            onClicked: root.accept()
         }
     }
 }
