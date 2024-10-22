@@ -175,6 +175,7 @@ linuxdeploy/*
 appimagetool/*
 
 .build.*/
+.cache/
 .conan/
 .debug/
 build-*
