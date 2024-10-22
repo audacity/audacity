@@ -1,0 +1,3 @@
+{
+    "cmake.installPrefix": "${workspaceFolder}/build/install"
+}
