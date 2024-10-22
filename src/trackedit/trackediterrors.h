@@ -14,9 +14,12 @@ enum class Err {
     UnknownError    = int(muse::Ret::Code::UnknownError),
 
     WaveTrackNotFound,
+    ClipNotFound,
     TrackEmpty,
     NotEnoughSpaceForPaste,
-    StereoClipIntoMonoTrack
+    StereoClipIntoMonoTrack,
+    FailedToMakeRoomForClip,
+    NotEnoughDataInClipboard
 };
 
 inline muse::Ret make_ret(Err e)
@@ -28,12 +31,15 @@ inline muse::Ret make_ret(Err e)
     case Err::NoError: return muse::Ret(retCode);
     case Err::UnknownError: return muse::Ret(retCode);
     case Err::WaveTrackNotFound: return muse::Ret(retCode);
+    case Err::ClipNotFound: return muse::Ret(retCode);
     case Err::TrackEmpty: return muse::Ret(retCode);
     case Err::NotEnoughSpaceForPaste: return muse::Ret(retCode, muse::trc("trackedit", "Not enough space to paste clip into"));
     case Err::StereoClipIntoMonoTrack: return muse::Ret(retCode,
                          muse::trc("trackedit",
                                    "Stereo audio clips cannot be pasted onto mono tracks. "
                                    "Please convert the stereo clip to mono before pasting."));
+    case Err::FailedToMakeRoomForClip: return muse::Ret(retCode);
+    case Err::NotEnoughDataInClipboard: return muse::Ret(retCode);
     }
 
     return muse::Ret(static_cast<int>(e));
