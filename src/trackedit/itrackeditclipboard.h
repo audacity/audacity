@@ -13,6 +13,8 @@ struct TrackData
 {
     std::shared_ptr<au3::Au3Track> track;
     au::trackedit::ClipKey clipKey;
+
+    inline bool isValid() const { return clipKey.isValid() && track != nullptr; }
 };
 
 class ITrackeditClipboard : MODULE_EXPORT_INTERFACE

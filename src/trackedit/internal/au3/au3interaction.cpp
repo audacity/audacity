@@ -102,15 +102,19 @@ TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Trac
     return tracksIds;
 }
 
-muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, secs_t begin) const
+muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, const std::vector<TrackData> &clipsToPaste, secs_t begin) const
 {
+    IF_ASSERT_FAILED(dstTracksIds.size() <= clipsToPaste.size()) {
+        return make_ret(trackedit::Err::NotEnoughDataInClipboard);
+    }
+
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
         IF_ASSERT_FAILED(dstWaveTrack) {
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
 
-        secs_t insertDuration = clipboard()->trackData(i).track.get()->GetEndTime() - clipboard()->trackData(i).track.get()->GetStartTime();
+        secs_t insertDuration = clipsToPaste.at(i).track.get()->GetEndTime() - clipsToPaste.at(i).track.get()->GetStartTime();
 
         // throws incosistency exception if project tempo is not set, see:
         // au4/src/au3wrap/internal/au3project.cpp: 92
@@ -139,12 +143,12 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
 
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return make_ret(trackedit::Err::WaveTrackNotFound);
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
-        return false;
+        return make_ret(trackedit::Err::ClipNotFound);
     }
 
     std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
@@ -160,19 +164,19 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
         }
 
         //! NOTE check if clip hovers whole other clip
-        if (clip->GetPlayStartTime() <= otherClip->GetPlayStartTime()
-            && clip->GetPlayEndTime() >= otherClip->GetPlayEndTime()) {
+        if (muse::RealIsEqualOrLess(clip->GetPlayStartTime(), otherClip->GetPlayStartTime())
+            && muse::RealIsEqualOrMore(clip->GetPlayEndTime(), otherClip->GetPlayEndTime())) {
 
-            otherClip->Clear(otherClip->Start(), otherClip->End());
-            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+            waveTrack->RemoveInterval(otherClip);
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
             continue;
         }
 
         //! NOTE check if clip hovers left side of the clip
-        if (clip->GetPlayStartTime() <= otherClip->GetPlayStartTime()
-            && clip->GetPlayEndTime() <= otherClip->GetPlayEndTime()
-            && clip->GetPlayEndTime() >= otherClip->GetPlayStartTime()) {
+        if (muse::RealIsEqualOrLess(clip->GetPlayStartTime(), otherClip->GetPlayStartTime())
+            && muse::RealIsEqualOrLess(clip->GetPlayEndTime(), otherClip->GetPlayEndTime())
+            && muse::RealIsEqualOrMore(clip->GetPlayEndTime(), otherClip->GetPlayStartTime())) {
 
             secs_t overlap = clip->GetPlayEndTime() - otherClip->GetPlayStartTime();
             otherClip->TrimLeft(overlap);
@@ -182,9 +186,9 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
         }
 
         //! NOTE check if clip hovers right side of the clip
-        if (clip->GetPlayStartTime() >= otherClip->GetPlayStartTime()
-            && clip->GetPlayStartTime() <= otherClip->GetPlayEndTime()
-            && clip->GetPlayEndTime() >= otherClip->GetPlayEndTime()) {
+        if (muse::RealIsEqualOrMore(clip->GetPlayStartTime(), otherClip->GetPlayStartTime())
+            && muse::RealIsEqualOrLess(clip->GetPlayStartTime(), otherClip->GetPlayEndTime())
+            && muse::RealIsEqualOrMore(clip->GetPlayEndTime(), otherClip->GetPlayEndTime())) {
 
             secs_t overlap = otherClip->GetPlayEndTime() - clip->GetPlayStartTime();
             otherClip->TrimRight(overlap);
@@ -194,8 +198,8 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
         }
 
         //! NOTE check if clip boundaries are within other clip
-        if (clip->GetPlayStartTime() >= otherClip->GetPlayStartTime()
-            && clip->GetPlayEndTime() <= otherClip->GetPlayEndTime()) {
+        if (muse::RealIsEqualOrMore(clip->GetPlayStartTime(), otherClip->GetPlayStartTime())
+            && muse::RealIsEqualOrLess(clip->GetPlayEndTime(), otherClip->GetPlayEndTime())) {
             secs_t otherClipStartTime = otherClip->GetPlayStartTime();
             secs_t otherClipEndTime = otherClip->GetPlayEndTime();
 
@@ -209,6 +213,110 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
 
             leftClip->SetPlayStartTime(otherClipStartTime);
             secs_t leftClipOverlap = otherClipEndTime - clip->GetPlayStartTime();
+            leftClip->TrimRight(leftClipOverlap);
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, leftClip.get()));
+
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+
+            continue;
+        }
+    }
+
+    return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId> &tracksIds, const std::vector<TrackData> &trackData, secs_t begin)
+{
+    IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
+        return make_ret(trackedit::Err::NotEnoughDataInClipboard);
+    }
+
+    for (size_t i = 0; i < tracksIds.size(); ++i) {
+        secs_t insertDuration = trackData.at(i).track.get()->GetEndTime() - trackData.at(i).track.get()->GetStartTime();
+
+        auto ok = makeRoomForDataOnTrack(tracksIds.at(i), begin, begin + insertDuration);
+        if (!ok) {
+            return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        }
+    }
+
+    return muse::make_ok();
+}
+
+muse::Ret Au3Interaction::makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return make_ret(trackedit::Err::WaveTrackNotFound);
+    }
+
+    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+
+    clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
+        return c1->GetPlayStartTime() < c2->GetPlayStartTime();
+    });
+
+    for (const auto& otherClip : clips) {
+        //! NOTE check if clip hovers whole other clip
+        if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+            && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+
+            waveTrack->RemoveInterval(otherClip);
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+
+            continue;
+        }
+
+        //! NOTE check if clip hovers left side of the clip
+        if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+            && muse::RealIsEqualOrLess(end, otherClip->GetPlayEndTime())
+            && muse::RealIsEqualOrMore(end, otherClip->GetPlayStartTime())) {
+
+            //! TODO AU4: calculate overlap precisely based on how pasting logic works
+            //! for now, add 2 samples to make enough space for data
+            secs_t overlap = (end - otherClip->GetPlayStartTime()) + (2 / waveTrack->GetRate());
+            otherClip->TrimLeft(overlap);
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+            continue;
+        }
+
+        //! NOTE check if clip hovers right side of the clip
+        if (muse::RealIsEqualOrMore(begin, otherClip->GetPlayStartTime())
+            && muse::RealIsEqualOrLess(begin, otherClip->GetPlayEndTime())
+            && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+
+            //! TODO AU4: calculate overlap precisely based on how pasting logic works
+            //! for now, add 2 samples to make enough space for data
+            secs_t overlap = (otherClip->GetPlayEndTime() - begin) + (2 / waveTrack->GetRate());
+            otherClip->TrimRight(overlap);
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+            continue;
+        }
+
+        //! NOTE check if clip boundaries are within other clip
+        if (muse::RealIsEqualOrMore(begin, otherClip->GetPlayStartTime())
+            && muse::RealIsEqualOrLess(end, otherClip->GetPlayEndTime())) {
+            secs_t otherClipStartTime = otherClip->GetPlayStartTime();
+            secs_t otherClipEndTime = otherClip->GetPlayEndTime();
+
+            auto leftClip = waveTrack->CopyClip(*otherClip, true);
+            waveTrack->InsertInterval(std::move(leftClip), false);
+            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+
+            //! TODO AU4: calculate overlap precisely based on how pasting logic works
+            //! for now, add 2 samples to make enough space for data
+            secs_t rightClipOverlap = (end - otherClip->GetPlayStartTime()) + (2 / waveTrack->GetRate());
+            otherClip->TrimLeft(rightClipOverlap);
+            prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+            //! TODO AU4: calculate overlap precisely based on how pasting logic works
+            //! for now, add 2 samples to make enough space for data
+            leftClip->SetPlayStartTime(otherClipStartTime);
+            secs_t leftClipOverlap = (otherClipEndTime - begin) + (2 / waveTrack->GetRate());
             leftClip->TrimRight(leftClipOverlap);
             prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, leftClip.get()));
 
@@ -248,7 +356,10 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
 
     if (completed)
     {
-        makeRoomForClip(clipKey);
+        auto ok = makeRoomForClip(clipKey);
+        if (!ok) {
+            return false;
+        }
     }
 
     if (!muse::RealIsEqualOrMore(newStartTime, 0.0)) {
@@ -537,8 +648,22 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     }
 
     // check if copied data fits into selected area
-    auto ret = canPasteClips(dstTracksIds, begin);
+    auto copiedData = clipboard()->trackData();
+    auto ret = canPasteClips(dstTracksIds, copiedData, begin);
     if (!ret) {
+        if (!ret.code() == static_cast<int>(trackedit::Err::NotEnoughSpaceForPaste)) {
+            return ret;
+        }
+
+        auto ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin);
+        if (!ok) {
+            make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        }
+    }
+
+    //! NOTE This shouldn't happen, leaving this for now
+    //! for debugging purposes
+    if (!canPasteClips(dstTracksIds, copiedData, begin)) {
         return ret;
     }
 
@@ -976,7 +1101,10 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool 
     }
 
     if (completed) {
-        makeRoomForClip(clipKey);
+        auto ok = makeRoomForClip(clipKey);
+        if (!ok) {
+            return false;
+        }
     }
 
     clip->TrimLeft(deltaSec);
@@ -1004,7 +1132,10 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool
     }
 
     if (completed) {
-        makeRoomForClip(clipKey);
+        auto ok = makeRoomForClip(clipKey);
+        if (!ok) {
+            make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        }
     }
 
     clip->TrimRight(deltaSec);
