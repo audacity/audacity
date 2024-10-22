@@ -318,3 +318,10 @@ muse::async::Channel<EffectId> EffectExecutionScenario::lastProcessorIdChanged()
 {
     return m_lastProcessorIdChanged;
 }
+
+muse::Ret EffectExecutionScenario::previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings)
+{
+    AudacityProject& project = projectRef();
+    Effect* effect = effectInstancesRegister()->instanceById(effectInstanceId);
+    return effectsProvider()->previewEffect(project, effect, settings);
+}

@@ -36,6 +36,8 @@ public:
     muse::Ret performEffect(AudacityProject& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                             EffectSettings& settings) override;
 
+    muse::Ret previewEffect(AudacityProject& project, Effect* effect, EffectSettings& settings) override;
+
 private:
 
     bool isVstSupported() const;
