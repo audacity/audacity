@@ -831,6 +831,24 @@ void Au3Interaction::newLabelTrack()
     NOT_IMPLEMENTED;
 }
 
+void Au3Interaction::deleteTrack(const TrackId trackId)
+{
+    auto& project = projectRef();
+    auto& tracks = ::TrackList::Get(project);
+    ::Track* au3Track = DomAccessor::findTrack(project, ::TrackId(trackId));
+    if (!au3Track) {
+        return;
+    }
+    auto track = DomConverter::track(au3Track);
+
+    tracks.Remove(*au3Track);
+
+    trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
+    trackEdit->onTrackRemoved(track);
+
+    projectHistory()->pushHistoryState("Delete track", "Delete track");
+}
+
 muse::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));

@@ -115,7 +115,44 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Duplicate"),
              TranslatableString("action", "Duplicate")
              ),
-    // clip
+    // track actions
+    UiAction("track-rename",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Rename"),
+             TranslatableString("action", "Rename track")
+             ),
+    UiAction("track-duplicate",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Duplicate"),
+             TranslatableString("action", "Duplicate track")
+             ),
+    UiAction("track-delete",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Delete"),
+             TranslatableString("action", "Delete track")
+             ),
+    UiAction("track-make-stereo",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Make stereo"),
+             TranslatableString("action", "Make stereo")
+             ),
+    UiAction("track-swap-stereo",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Swap stereo"),
+             TranslatableString("action", "Swap stereo")
+             ),
+    UiAction("track-split-stereo",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Split stereo"),
+             TranslatableString("action", "Split stereo")
+             ),
+    // clip actions
     UiAction("clip-cut",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

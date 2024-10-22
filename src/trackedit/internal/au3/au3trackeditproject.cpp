@@ -152,7 +152,7 @@ void Au3TrackeditProject::onTrackChanged(const Track& track)
     m_tracksChanged.itemChanged(track);
 }
 
-void Au3TrackeditProject::onTrackRemoved(const Track &track)
+void Au3TrackeditProject::onTrackRemoved(const Track& track)
 {
     m_tracksChanged.itemRemoved(track);
 }
