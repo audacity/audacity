@@ -29,6 +29,7 @@ signals:
 protected:
 
     Effect* effect() const;
+    EffectSettings* settings() const;
 
 private:
     QString m_instanceId;

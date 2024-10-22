@@ -206,11 +206,11 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
     {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             muse::String type = au3::wxToString(effect->GetSymbol().Internal());
-            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effect);
+            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effect, &settings);
             muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
             effectInstancesRegister()->unregInstance(effect);
             if (ret) {
-                effect->SaveUserPreset(CurrentSettingsGroup(), pAccess->Get());
+                effect->SaveUserPreset(CurrentSettingsGroup(), settings);
             } else {
                 LOGE() << "failed show effect: " << type << ", ret: " << ret.toString();
                 return ret;
