@@ -273,6 +273,20 @@ if (OS_IS_WIN)
               USE_SOURCE_PERMISSIONS
           )
 
+    if (MSVC)
+        set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+            VS_DEBUGGER_COMMAND "${CMAKE_INSTALL_PREFIX}/bin/${EXECUTABLE_NAME}"
+            VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin"
+        )
+
+        # Unlike VSCode, Visual Studio doesn't have pre-launch tasks we could use to run the `INSTALL` target.
+        # Instead, we copy the executable to the install directory after the build.
+        add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/bin
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${EXECUTABLE_NAME}> ${CMAKE_INSTALL_PREFIX}/bin
+        )
+    endif()
+
 ###########################################
 # Linux
 ###########################################
@@ -323,22 +337,5 @@ if (MSVC)
    # Force the "install" and "package" targets not to depend on the "all" target.
    set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY true)
    set(CMAKE_SKIP_PACKAGE_ALL_DEPENDENCY true)
-
-   # Set the startup project to "mscore".
-   if (NOT ${CMAKE_VERSION} VERSION_LESS "3.6.0")
-      set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT mscore)
-   endif ()
-
-   # Set the debugging properties for the "mscore" project.
-   file(TO_NATIVE_PATH "${CMAKE_INSTALL_PREFIX}/bin" VS_DEBUGGER_WORKING_DIRECTORY)
-   if (NOT ${CMAKE_VERSION} VERSION_LESS "3.12.0")
-      set_target_properties(${EXECUTABLE_NAME} PROPERTIES VS_DEBUGGER_COMMAND "${VS_DEBUGGER_WORKING_DIRECTORY}\\${MUSESCORE_EXECUTABLE_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
-   endif ()
-   if (NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
-      set_target_properties(${EXECUTABLE_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${VS_DEBUGGER_WORKING_DIRECTORY}")
-   endif ()
-   if (NOT ${CMAKE_VERSION} VERSION_LESS "3.13.0")
-      set_target_properties(${EXECUTABLE_NAME} PROPERTIES VS_DEBUGGER_COMMAND_ARGUMENTS "--debug")
-   endif ()
 
 endif (MSVC)
