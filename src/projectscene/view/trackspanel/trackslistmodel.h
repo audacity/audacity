@@ -91,6 +91,11 @@ private:
 
     void onProjectChanged();
     void onSelectedTrack(trackedit::TrackId trackId);
+    void onTracksChanged();
+    void onTrackAdded(const trackedit::Track& track);
+    void onTrackRemoved(const trackedit::Track& track);
+    void onTrackChanged(const trackedit::Track& track);
+    void onTrackInserted(const trackedit::Track& track, int pos);
 
     TrackItem* buildTrackItem(const trackedit::Track& track);
     TrackItem* findTrackItem(const trackedit::TrackId& trackId);

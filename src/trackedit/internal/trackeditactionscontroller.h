@@ -79,6 +79,7 @@ private:
     void newLabelTrack();
 
     void deleteTrack(const muse::actions::ActionData& args);
+    void duplicateTrack(const muse::actions::ActionData& args);
 
     void trimAudioOutsideSelection();
     void silenceAudioSelection();

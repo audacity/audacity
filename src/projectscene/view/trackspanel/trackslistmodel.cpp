@@ -61,48 +61,30 @@ void TracksListModel::load()
         return;
     }
 
-    muse::async::NotifyList<Track> tracks = prj->trackList();
+    std::vector<Track> tracks = prj->trackList();
 
     for (const Track& track : tracks) {
         m_trackList.push_back(buildTrackItem(track));
     }
 
-    auto updateTrackItem = [this](const Track& track) {
-        auto trackItem = findTrackItem(track.id);
-        if (!trackItem) {
-            return;
-        }
-
-        trackItem->init(track);
-        updateRemovingAvailability();
-    };
-
-    tracks.onChanged(this, [this]() {
-        muse::async::Async::call(this, [this]() {
-            load();
-        });
+    prj->tracksChanged().onReceive(this, [this]() {
+        onTracksChanged();
     });
 
-    tracks.onItemAdded(this, [this, updateTrackItem](const Track& track) {
-        beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
-        m_trackList.push_back(buildTrackItem(track));
-        updateTrackItem(track);
-        endInsertRows();
+    prj->trackAdded().onReceive(this, [this](const Track& track) {
+        onTrackAdded(track);
     });
 
-    tracks.onItemRemoved(this, [this](const Track& track) {
-        for (int i = 0; i < m_trackList.size(); ++i) {
-            if (m_trackList.at(i)->trackId() == track.id) {
-                beginRemoveRows(QModelIndex(), i, i);
-                m_trackList.erase(m_trackList.begin() + i);
-                endRemoveRows();
-                break;
-            }
-        }
+    prj->trackRemoved().onReceive(this, [this](const Track& track) {
+        onTrackRemoved(track);
     });
 
-    tracks.onItemChanged(this, [updateTrackItem](const Track& track) {
-        updateTrackItem(track);
+    prj->trackChanged().onReceive(this, [this](const Track& track) {
+        onTrackChanged(track);
+    });
+
+    prj->trackInserted().onReceive(this, [this](const Track& track, int pos) {
+        onTrackInserted(track, pos);
     });
 
     endResetModel();
@@ -525,4 +507,54 @@ void TracksListModel::onSelectedTrack(trackedit::TrackId trackId)
     for (TrackItem* item : m_trackList) {
         item->setIsSelected(item->trackId() == trackId);
     }
+}
+
+void TracksListModel::onTracksChanged()
+{
+    muse::async::Async::call(this, [this]() {
+        load();
+    });
+}
+
+void TracksListModel::onTrackAdded(const trackedit::Track& track)
+{
+    beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
+    m_trackList.push_back(buildTrackItem(track));
+    onTrackChanged(track);
+    endInsertRows();
+}
+
+void TracksListModel::onTrackRemoved(const trackedit::Track& track)
+{
+    for (int i = 0; i < m_trackList.size(); ++i) {
+        if (m_trackList.at(i)->trackId() == track.id) {
+            beginRemoveRows(QModelIndex(), i, i);
+            m_trackList.erase(m_trackList.begin() + i);
+            endRemoveRows();
+            break;
+        }
+    }
+}
+
+void TracksListModel::onTrackChanged(const trackedit::Track& track)
+{
+    auto trackItem = findTrackItem(track.id);
+    if (!trackItem) {
+        return;
+    }
+
+    trackItem->init(track);
+    updateRemovingAvailability();
+}
+
+void TracksListModel::onTrackInserted(const trackedit::Track& track, int pos)
+{
+    int index = pos >= 0 && pos <= m_trackList.size() ? pos : m_trackList.size();
+
+    beginInsertRows(QModelIndex(), index, index);
+
+    m_trackList.insert(index, buildTrackItem(track));
+    onTrackChanged(track);
+
+    endInsertRows();
 }

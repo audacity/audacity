@@ -268,7 +268,7 @@ void Au3Record::init()
         // so onClipChanged accepts it
         auto pendingClipWithFakeId = DomConverter::clip(pendingWaveTrack, pendingClip.get());
         pendingClipWithFakeId.key.clipId = clipKey.clipId;
-        prj->onClipChanged(pendingClipWithFakeId);
+        prj->notifyAboutClipChanged(pendingClipWithFakeId);
     });
 
     s_recordingListener->commitRequested().onNotify(this, [this]() {
@@ -368,7 +368,7 @@ muse::Ret Au3Record::start()
                 transportTracks.playbackSequences.begin(), end,
                 [&wt](const auto& playbackSequence) {
                 return playbackSequence->FindChannelGroup()
-                       == wt->FindChannelGroup();
+                == wt->FindChannelGroup();
             });
             if (it != end) {
                 transportTracks.playbackSequences.erase(it);
@@ -512,7 +512,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 // prerollSequences should be a subset of playbackSequences.
                 const auto& range = transportSequences.playbackSequences;
                 bool prerollTrack = any_of(range.begin(), range.end(),
-                                           [&](const auto& pSequence){
+                                           [&](const auto& pSequence) {
                     return shared.get() == pSequence->FindChannelGroup();
                 });
                 if (prerollTrack) {
@@ -549,7 +549,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 // A function that copies all the non-sample data between
                 // wave tracks; in case the track recorded to changes scale
                 // type (for instance), during the recording.
-                auto updater = [newClipKey](Track& d, const Track& s){
+                auto updater = [newClipKey](Track& d, const Track& s) {
                     assert(d.NChannels() == s.NChannels());
                     auto& dst = static_cast<WaveTrack&>(d);
                     auto& src = static_cast<const WaveTrack&>(s);
@@ -575,7 +575,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
 
                 trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get());
                 trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-                prj->onClipAdded(_newClip);
+                prj->notifyAboutClipAdded(_newClip);
             }
             pendingTracks.UpdatePendingTracks();
         }

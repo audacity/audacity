@@ -55,6 +55,7 @@ public:
     virtual void newStereoTrack() = 0;
     virtual void newLabelTrack() = 0;
     virtual void deleteTrack(const TrackId trackId) = 0;
+    virtual void duplicateTrack(const TrackId trackId) = 0;
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
     virtual void undo() = 0;
     virtual void redo() = 0;
