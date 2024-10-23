@@ -52,7 +52,7 @@ EffectBase {
             anchors.left: label.right
             anchors.verticalCenter: parent.verticalCenter
             width: 60
-            currentValue: param.value
+            currentValue: param.value.toFixed(1) // same as slider step
             onValueEdited: function(newVal) {
                 param.value = newVal
             }
