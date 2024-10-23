@@ -193,6 +193,21 @@ void Au3Player::play()
     m_playbackStatus.set(PlaybackStatus::Running);
 }
 
+int Au3Player::playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options)
+{
+    TransportSequences seqs = makeTransportTracks(trackList, options.selectedOnly, options.nonWaveToo);
+
+    double mixerLimit = options.mixerLimit;
+    if (mixerLimit < 0.0) {
+        mixerLimit = t1;
+    }
+
+    AudacityProject& project = projectRef();
+    AudioIOStartStreamOptions sopts = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
+
+    return audioEngine()->startStream(seqs, t0, t1, mixerLimit, sopts);
+}
+
 void Au3Player::seek(const muse::secs_t newPosition)
 {
     LOGD() << "newPosition: " << newPosition;

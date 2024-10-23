@@ -22,4 +22,10 @@ enum class PlaybackStatus {
 
 static constexpr audio::volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
 static constexpr audio::volume_dbfs_t MIN_DISPLAYED_DBFS = -60.f; // 0%
+
+struct PlayTracksOptions {
+    bool selectedOnly = false;
+    bool nonWaveToo = false;
+    double mixerLimit = -1.0;
+};
 }
