@@ -54,6 +54,7 @@ private:
 
     IProjectViewStatePtr viewState() const;
     std::vector<trackedit::TrackId> trackIdList() const;
+    void setSelection(double x1, double x2, bool complete);
 
     std::vector<trackedit::TrackId> determinateTracks(double y1, double y2) const;
 

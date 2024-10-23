@@ -17,6 +17,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/common/params.h
     ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/general/generalviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/general/generalviewmodel.h
@@ -31,6 +35,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/chirpeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.h
     )
 
 # AU3

@@ -27,6 +27,7 @@ public:
 
     void play() override;
     void seek(const audio::secs_t newPosition) override;
+    void rewind() override;
     void stop() override;
     void pause() override;
     void resume() override;
@@ -39,6 +40,7 @@ public:
 
     audio::secs_t playbackPosition() const override;
     muse::async::Channel<audio::secs_t> playbackPositionChanged() const override;
+    muse::async::Notification playbackRewound() const override;
 
 private:
     AudacityProject& projectRef() const;
@@ -52,5 +54,6 @@ private:
 
     muse::Timer m_positionUpdateTimer;
     muse::ValCh<audio::secs_t> m_playbackPosition;
+    muse::async::Notification m_playbackRewound;
 };
 }

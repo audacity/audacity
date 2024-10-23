@@ -76,6 +76,7 @@ protected:
 
    MessageBoxException( const MessageBoxException& );
 
+public:
    //! %Format the error message for this exception.
    virtual TranslatableString ErrorMessage() const = 0;
    virtual wxString ErrorHelpUrl() const { return helpUrl; };
@@ -220,7 +221,7 @@ noexcept(
    catch ( AudacityException &e ) {
    #ifndef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
       const auto uncaughtExceptionsCount = std::uncaught_exceptions();
-   #endif  
+   #endif
       auto end = finally( [&]()
       noexcept(noexcept(
          std::function<void(AudacityException*)>{
@@ -230,9 +231,9 @@ noexcept(
          // other exception object.
       #ifdef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
          if (!std::uncaught_exception()) {
-      #else         
+      #else
          if (uncaughtExceptionsCount >= std::uncaught_exceptions()) {
-      #endif      
+      #endif
             auto pException = std::current_exception(); // This points to e
             AudacityException::EnqueueAction(
                pException, std::move(delayedHandler));

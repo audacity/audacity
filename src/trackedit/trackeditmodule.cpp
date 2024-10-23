@@ -49,11 +49,12 @@ void TrackeditModule::registerExports()
 {
     m_trackeditController = std::make_shared<TrackeditActionsController>();
     m_trackeditUiActions = std::make_shared<TrackeditUiActions>(m_trackeditController);
+    m_selectionController = std::make_shared<Au3SelectionController>();
 
     ioc()->registerExport<ITrackeditActionsController>(moduleName(), m_trackeditController);
     ioc()->registerExport<ITrackeditProjectCreator>(moduleName(), new Au3TrackeditProjectCreator());
     ioc()->registerExport<ITrackeditInteraction>(moduleName(), new Au3Interaction());
-    ioc()->registerExport<ISelectionController>(moduleName(), new Au3SelectionController());
+    ioc()->registerExport<ISelectionController>(moduleName(), m_selectionController);
     ioc()->registerExport<IProjectHistory>(moduleName(), new Au3ProjectHistory());
     ioc()->registerExport<ITrackeditClipboard>(moduleName(), new Au3TrackeditClipboard());
 }
@@ -70,6 +71,7 @@ void TrackeditModule::onInit(const muse::IApplication::RunMode&)
 {
     m_trackeditController->init();
     m_trackeditUiActions->init();
+    m_selectionController->init();
 }
 
 void TrackeditModule::onDeinit()

@@ -211,7 +211,10 @@ void PlaybackController::rewindToStart()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
-    seek(0.0);
+    IF_ASSERT_FAILED(player()) {
+        return;
+    }
+    player()->rewind();
 }
 
 void PlaybackController::rewindToEnd()
