@@ -22,13 +22,9 @@ void SelectionViewController::onPressed(double x, double y)
     m_startPoint = QPointF(x, y);
     emit selectionStarted();
 
-    if (!selectionController()->isDataSelected()) {
-        std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
-        selectionController()->setDataSelectedOnTracks(tracks, true);
-    } else {
-        setSelectionActive(false);
-        selectionController()->resetDataSelection();
-    }
+    resetDataSelection();
+    TrackIdList tracks = determinateTracks(y, y);
+    selectionController()->setSelectedTracks(tracks, true);
 }
 
 void SelectionViewController::onPositionChanged(double x, double y)
@@ -41,8 +37,8 @@ void SelectionViewController::onPositionChanged(double x, double y)
     emit selectionChanged(m_startPoint, QPointF(x, y));
 
     // tracks
-    std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
-    selectionController()->setDataSelectedOnTracks(tracks, false);
+    TrackIdList tracks = determinateTracks(m_startPoint.y(), y);
+    selectionController()->setSelectedTracks(tracks, true);
 
     // time
     double x1 = m_startPoint.x();
@@ -72,14 +68,14 @@ void SelectionViewController::onReleased(double x, double y)
         std::swap(x1, x2);
     }
 
-    const std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    const TrackIdList tracks = determinateTracks(m_startPoint.y(), y);
 
     if ((x2 - x1) < MIN_SELECTION_PX) {
         // Click without drag
         if (!tracks.empty()) {
-            selectionController()->setSelectedTrack(tracks[0]);
+            selectionController()->setSelectedTracks(tracks);
         } else {
-            selectionController()->resetSelectedTrack();
+            selectionController()->resetSelectedTracks();
         }
         return;
     }
@@ -87,9 +83,9 @@ void SelectionViewController::onReleased(double x, double y)
     setSelectionActive(true);
 
     if (!tracks.empty()) {
-        selectionController()->setSelectedTrack(tracks[0]);
+        selectionController()->setSelectedTracks(tracks);
     }
-    selectionController()->setDataSelectedOnTracks(tracks, true);
+    selectionController()->setSelectedTracks(tracks, true);
 
     // time
     selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), true);
@@ -129,13 +125,13 @@ IProjectViewStatePtr SelectionViewController::viewState() const
     return prj ? prj->viewState() : nullptr;
 }
 
-std::vector<TrackId> SelectionViewController::trackIdList() const
+TrackIdList SelectionViewController::trackIdList() const
 {
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    return prj ? prj->trackIdList() : std::vector<TrackId>();
+    return prj ? prj->trackIdList() : TrackIdList();
 }
 
-std::vector<TrackId> SelectionViewController::determinateTracks(double y1, double y2) const
+TrackIdList SelectionViewController::determinateTracks(double y1, double y2) const
 {
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -154,12 +150,12 @@ std::vector<TrackId> SelectionViewController::determinateTracks(double y1, doubl
         y1 = 1;
     }
 
-    std::vector<TrackId> tracks = trackIdList();
+    TrackIdList tracks = trackIdList();
     if (tracks.empty()) {
         return { -1, -1 };
     }
 
-    std::vector<TrackId> ret;
+    TrackIdList ret;
 
     int tracksVericalY = vs->tracksVericalY().val;
     int trackTop = -tracksVericalY;

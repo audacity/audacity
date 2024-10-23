@@ -31,12 +31,14 @@ AudacityProject& Au3Interaction::projectRef() const
     return *project;
 }
 
-muse::Ret Au3Interaction::pasteIntoNewTrack()
+TrackIdList Au3Interaction::pasteIntoNewTracks()
 {
     auto& project = projectRef();
     auto& tracks = ::TrackList::Get(project);
     auto prj = globalContext()->currentTrackeditProject();
     secs_t selectedStartTime = globalContext()->playbackState()->playbackPosition();
+
+    TrackIdList tracksIdsPastedInto;
 
     ::Track* pFirstNewTrack = NULL;
     for (auto data : clipboard()->trackData()) {
@@ -45,14 +47,16 @@ muse::Ret Au3Interaction::pasteIntoNewTrack()
             pFirstNewTrack = pNewTrack.get();
         }
 
-        prj->onTrackAdded(DomConverter::track(pNewTrack.get()));
+        auto newTrack = DomConverter::track(pNewTrack.get());
+        prj->onTrackAdded(newTrack);
         for (const auto& clip : prj->clipList(DomConverter::trackId(pNewTrack->GetId()))) {
             prj->onClipAdded(clip);
         }
-    }
-    selectionController()->setSelectedTrack(DomConverter::trackId(pFirstNewTrack->GetId()));
 
-    return muse::make_ok();
+        tracksIdsPastedInto.push_back(newTrack.id);
+    }
+
+    return tracksIdsPastedInto;
 }
 
 ::Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<::Track> track, ::TrackList& list, secs_t begin)
@@ -70,10 +74,10 @@ muse::Ret Au3Interaction::pasteIntoNewTrack()
     return pFirstTrack->SharedPointer();
 }
 
-std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks,
+TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks,
                                                                                   TrackId destinationTrackId, size_t tracksNum) const
 {
-    std::vector<TrackId> tracksIds;
+    TrackIdList tracksIds;
     bool addingEnabled = false;
 
     for (const auto& track : tracks) {
@@ -91,7 +95,7 @@ std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksId
     return tracksIds;
 }
 
-muse::Ret Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds, secs_t begin) const
+muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, secs_t begin) const
 {
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(dstTracksIds[i]));
@@ -316,7 +320,9 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     }
 
     if (destinationTrackId == -1) {
-        return pasteIntoNewTrack();
+        auto tracksIdsToSelect = pasteIntoNewTracks();
+        selectionController()->setSelectedTracks(tracksIdsToSelect);
+        return muse::make_ok();
     }
 
     project::IAudacityProjectPtr project = globalContext()->currentProject();
@@ -326,7 +332,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     size_t tracksNum = clipboard()->trackDataSize();
 
     // for multiple tracks copying
-    std::vector<TrackId> dstTracksIds = determineDestinationTracksIds(tracks, destinationTrackId, tracksNum);
+    TrackIdList dstTracksIds = determineDestinationTracksIds(tracks, destinationTrackId, tracksNum);
 
     bool newTracksNeeded = false;
     size_t newTracksCount = 0;
@@ -375,8 +381,11 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     if (newTracksNeeded) {
         // remove already pasted elements from the clipboard and paste the rest into the new tracks
         clipboard()->eraseTrackData(clipboard()->trackData().begin(), clipboard()->trackData().begin() + dstTracksIds.size());
-        return pasteIntoNewTrack();
+        auto tracksIdsToSelect = pasteIntoNewTracks();
+        dstTracksIds.insert(dstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
     }
+
+    selectionController()->setSelectedTracks(dstTracksIds);
 
     return muse::make_ok();
 }
@@ -403,7 +412,7 @@ bool Au3Interaction::cutClipIntoClipboard(const ClipKey &clipKey)
     return true;
 }
 
-bool Au3Interaction::cutClipDataIntoClipboard(const std::vector<TrackId> &tracksIds, secs_t begin, secs_t end)
+bool Au3Interaction::cutClipDataIntoClipboard(const TrackIdList &tracksIds, secs_t begin, secs_t end)
 {
     for (const auto& trackId : tracksIds) {
         bool ok = cutTrackDataIntoClipboard(trackId, begin, end);
@@ -525,17 +534,19 @@ bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, secs_t be
     return true;
 }
 
-bool Au3Interaction::splitAt(TrackId trackId, secs_t pivot)
+bool Au3Interaction::splitTracksAt(const TrackIdList &tracksIds, secs_t pivot)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
+    for (const auto& trackId : tracksIds) {
+        WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        waveTrack->SplitAt(pivot);
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->onTrackChanged(DomConverter::track(waveTrack));
     }
-
-    waveTrack->SplitAt(pivot);
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->onTrackChanged(DomConverter::track(waveTrack));
 
     projectHistory()->pushHistoryState("Split", "Split");
 
@@ -608,7 +619,7 @@ bool Au3Interaction::splitDeleteSelectedOnTrack(const TrackId trackId, secs_t be
     return true;
 }
 
-bool Au3Interaction::mergeSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
+bool Au3Interaction::mergeSelectedOnTracks(const TrackIdList &tracksIds, secs_t begin, secs_t end)
 {
     secs_t duration = end - begin;
 
@@ -624,7 +635,7 @@ bool Au3Interaction::mergeSelectedOnTracks(const std::vector<TrackId> tracksIds,
     return true;
 }
 
-bool Au3Interaction::duplicateSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
+bool Au3Interaction::duplicateSelectedOnTracks(const TrackIdList &tracksIds, secs_t begin, secs_t end)
 {
     for (const auto& trackId : tracksIds) {
         bool ok = duplicateSelectedOnTrack(trackId, begin, end);
@@ -707,7 +718,7 @@ bool Au3Interaction::clipSplitDelete(const ClipKey &clipKey)
     return true;
 }
 
-bool Au3Interaction::splitCutSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
+bool Au3Interaction::splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
 {
     for (const auto& trackId : tracksIds) {
         bool ok = splitCutSelectedOnTrack(trackId, begin, end);
@@ -722,7 +733,7 @@ bool Au3Interaction::splitCutSelectedOnTracks(const std::vector<TrackId> tracksI
     return true;
 }
 
-bool Au3Interaction::splitDeleteSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end)
+bool Au3Interaction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
 {
     secs_t duration = end - begin;
 
@@ -803,7 +814,7 @@ void Au3Interaction::newMonoTrack()
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onTrackAdded(DomConverter::track(track.get()));
 
-    selectionController()->setSelectedTrack(DomConverter::trackId(track->GetId()));
+    selectionController()->setSelectedTracks(TrackIdList(DomConverter::trackId(track->GetId())));
 }
 
 void Au3Interaction::newStereoTrack()
@@ -823,7 +834,7 @@ void Au3Interaction::newStereoTrack()
     auto track = *tracks.rbegin();
     prj->onTrackAdded(DomConverter::track(track));
 
-    selectionController()->setSelectedTrack(DomConverter::trackId(track->GetId()));
+    selectionController()->setSelectedTracks(TrackIdList(DomConverter::trackId(track->GetId())));
 }
 
 void Au3Interaction::newLabelTrack()
@@ -868,7 +879,7 @@ void Au3Interaction::undo()
     int selectedIndex = std::distance(trackIdList.begin(),
                                       std::find(trackIdList.begin(),
                                                 trackIdList.end(),
-                                                selectionController()->selectedTrack()));
+                                                selectionController()->selectedTracks().at(0)));
 
     projectHistory()->undo();
 
@@ -880,9 +891,9 @@ void Au3Interaction::undo()
     // Update selected track id
     auto newTrackIdList = trackeditProject->trackIdList();
     if (selectedIndex >= 0 && selectedIndex < newTrackIdList.size()) {
-        selectionController()->setSelectedTrack(newTrackIdList[selectedIndex]);
+        selectionController()->setSelectedTracks(newTrackIdList);
     } else {
-        selectionController()->resetSelectedTrack();
+        selectionController()->resetSelectedTracks();
     }
 }
 
@@ -900,7 +911,7 @@ void Au3Interaction::redo()
     int selectedIndex = std::distance(trackIdList.begin(),
                                       std::find(trackIdList.begin(),
                                                 trackIdList.end(),
-                                                selectionController()->selectedTrack()));
+                                                selectionController()->selectedTracks().at(0)));
 
     projectHistory()->redo();
 
@@ -912,9 +923,9 @@ void Au3Interaction::redo()
     // Update selected track id
     auto newTrackIdList = trackeditProject->trackIdList();
     if (selectedIndex >= 0 && selectedIndex < newTrackIdList.size()) {
-        selectionController()->setSelectedTrack(newTrackIdList[selectedIndex]);
+        selectionController()->setSelectedTracks(newTrackIdList);
     } else {
-        selectionController()->resetSelectedTrack();
+        selectionController()->resetSelectedTracks();
     }
 }
 

@@ -53,9 +53,9 @@ signals:
 private:
 
     IProjectViewStatePtr viewState() const;
-    std::vector<trackedit::TrackId> trackIdList() const;
+    trackedit::TrackIdList trackIdList() const;
 
-    std::vector<trackedit::TrackId> determinateTracks(double y1, double y2) const;
+    trackedit::TrackIdList determinateTracks(double y1, double y2) const;
 
     TimelineContext* m_context = nullptr;
 
