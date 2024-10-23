@@ -32,8 +32,8 @@ public:
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
 
-    bool trimTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) override;
-    bool silenceTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) override;
+    bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
+    bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
@@ -49,7 +49,7 @@ public:
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
     bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
-    bool removeClipData(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
+    bool removeClipsData(const std::vector<trackedit::ClipKey>& clipsKeys, secs_t begin, secs_t end) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
@@ -91,6 +91,15 @@ private:
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
     void pushProjectHistorySplitDeleteState(secs_t start, secs_t duration);
     void pushProjectHistoryDuplicateState();
+
+    void pushProjectHistoryTrackAddedState();
+    void pushProjectHistoryTracksTrimState(secs_t start, secs_t end);
+    void pushProjectHistoryTrackSilenceState(secs_t start, secs_t end);
+    void pushProjectHistoryPasteState();
+    void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+    void pushProjectHistoryChangeClipPitchState();
+    void pushProjectHistoryChangeClipSpeedState();
+    void pushProjectHistoryRenderClipStretchingState();
 
     bool canMoveTrack(const TrackId trackId, const TrackMoveDirection direction);
     int trackPosition(const TrackId trackId);
