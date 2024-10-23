@@ -10,7 +10,7 @@
 #include "global/progress.h"
 #include "actions/actiontypes.h"
 
-#include "audiotypes.h"
+#include "playbacktypes.h"
 
 namespace au::playback {
 class IPlaybackController : MODULE_EXPORT_INTERFACE
@@ -34,8 +34,8 @@ public:
     virtual muse::async::Channel<uint32_t> midiTickPlayed() const = 0;
     virtual float playbackPositionInSeconds() const = 0;
 
-    virtual muse::async::Channel<audio::TrackId> trackAdded() const = 0;
-    virtual muse::async::Channel<audio::TrackId> trackRemoved() const = 0;
+    virtual muse::async::Channel<playback::TrackId> trackAdded() const = 0;
+    virtual muse::async::Channel<playback::TrackId> trackRemoved() const = 0;
 
     // virtual notation::INotationSoloMuteState::SoloMuteState trackSoloMuteState(const engraving::InstrumentTrackId& trackId) const = 0;
     // virtual void setTrackSoloMuteState(const engraving::InstrumentTrackId& trackId,

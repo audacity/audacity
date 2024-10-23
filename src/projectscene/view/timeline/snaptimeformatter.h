@@ -4,11 +4,10 @@
 #pragma once
 
 #include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 
+#include "projectscene/iprojectviewstate.h"
 #include "../../types/projectscenetypes.h"
-#include "playback/audiotypes.h"
 
 namespace au::projectscene {
 class SnapTimeFormatter
@@ -16,8 +15,8 @@ class SnapTimeFormatter
     muse::Inject<playback::IPlayback> playback;
 
 public:
-    audio::secs_t snapTime(audio::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const;
-    audio::secs_t singleStep(audio::secs_t time, const Snap& snap, Direction direction, trackedit::TimeSignature timeSig) const;
+    muse::secs_t snapTime(muse::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const;
+    muse::secs_t singleStep(muse::secs_t time, const Snap& snap, Direction direction, trackedit::TimeSignature timeSig) const;
 
 private:
     double snapTypeMultiplier(SnapType type, bool triplets, trackedit::TimeSignature timeSig) const;

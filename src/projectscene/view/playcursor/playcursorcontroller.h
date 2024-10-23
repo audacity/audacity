@@ -64,7 +64,7 @@ private:
 
     context::IPlaybackStatePtr playbackState() const;
 
-    void updatePositionX(audio::secs_t secs);
+    void updatePositionX(muse::secs_t secs);
 
     TimelineContext* m_context = nullptr;
     double m_positionX = 0.0;

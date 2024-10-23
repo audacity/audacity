@@ -117,7 +117,7 @@ muse::Ret Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds
     return muse::make_ok();
 }
 
-au::audio::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
+muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -267,7 +267,7 @@ bool Au3Interaction::silenceTrackData(TrackId trackId, secs_t begin, secs_t end)
     return true;
 }
 
-bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String &title)
+bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String& title)
 {
     ::Track* track = DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
     IF_ASSERT_FAILED(track) {
@@ -381,7 +381,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     return muse::make_ok();
 }
 
-bool Au3Interaction::cutClipIntoClipboard(const ClipKey &clipKey)
+bool Au3Interaction::cutClipIntoClipboard(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -403,7 +403,7 @@ bool Au3Interaction::cutClipIntoClipboard(const ClipKey &clipKey)
     return true;
 }
 
-bool Au3Interaction::cutClipDataIntoClipboard(const std::vector<TrackId> &tracksIds, secs_t begin, secs_t end)
+bool Au3Interaction::cutClipDataIntoClipboard(const std::vector<TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     for (const auto& trackId : tracksIds) {
         bool ok = cutTrackDataIntoClipboard(trackId, begin, end);
@@ -638,7 +638,7 @@ bool Au3Interaction::duplicateSelectedOnTracks(const std::vector<TrackId> tracks
     return true;
 }
 
-bool Au3Interaction::duplicateClip(const ClipKey &clipKey)
+bool Au3Interaction::duplicateClip(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -661,7 +661,7 @@ bool Au3Interaction::duplicateClip(const ClipKey &clipKey)
     pushProjectHistoryDuplicateState();
 }
 
-bool Au3Interaction::clipSplitCut(const ClipKey &clipKey)
+bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -685,7 +685,7 @@ bool Au3Interaction::clipSplitCut(const ClipKey &clipKey)
     return true;
 }
 
-bool Au3Interaction::clipSplitDelete(const ClipKey &clipKey)
+bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -831,7 +831,7 @@ void Au3Interaction::newLabelTrack()
     NOT_IMPLEMENTED;
 }
 
-au::audio::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) const
+muse::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -887,7 +887,7 @@ void Au3Interaction::undo()
 }
 
 void Au3Interaction::redo()
-{   
+{
     if (!projectHistory()->redoAvailable()) {
         interactive()->error(muse::trc("redo", "Redo"), std::string("Redo not available"));
         return;

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "playback/audiotypes.h"
+#include "au3audio/audiotypes.h"
 #include "modularity/imoduleinterface.h"
 
 namespace au::playback {

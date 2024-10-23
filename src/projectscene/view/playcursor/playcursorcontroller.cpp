@@ -22,9 +22,10 @@
 
 #include "playcursorcontroller.h"
 
+#include "global/realfn.h"
+
 using namespace au::projectscene;
 using namespace muse::actions;
-
 
 PlayCursorController::PlayCursorController(QObject* parent)
     : QObject(parent)
@@ -38,7 +39,7 @@ au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
 
 void PlayCursorController::init()
 {
-    playbackState()->playbackPositionChanged().onReceive(this, [this](audio::secs_t secs) {
+    playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t secs) {
         updatePositionX(secs);
     });
 }
@@ -56,7 +57,7 @@ void PlayCursorController::seekToX(double x)
     }
 }
 
-void PlayCursorController::updatePositionX(audio::secs_t secs)
+void PlayCursorController::updatePositionX(muse::secs_t secs)
 {
     m_context->insureVisible(secs);
 

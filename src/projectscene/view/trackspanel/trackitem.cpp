@@ -6,6 +6,8 @@
 
 #include <QString>
 
+#include "playback/playbacktypes.h"
+
 #include "log.h"
 
 using namespace au::projectscene;
@@ -20,8 +22,8 @@ static const std::string CHAIN_ORDER_KEY("chainOrder");
 
 TrackItem::TrackItem(QObject* parent)
     : QObject(parent),
-    m_leftChannelPressure(MIN_DISPLAYED_DBFS),
-    m_rightChannelPressure(MIN_DISPLAYED_DBFS)
+    m_leftChannelPressure(playback::MIN_DISPLAYED_DBFS),
+    m_rightChannelPressure(playback::MIN_DISPLAYED_DBFS)
 {
     connect(this, &TrackItem::mutedChanged, this, [this]() {
         if (muted()) {
@@ -277,8 +279,8 @@ void TrackItem::setAudioChannelVolumePressure(const trackedit::audioch_t chNum, 
 
 void TrackItem::resetAudioChannelsVolumePressure()
 {
-    setLeftChannelPressure(MIN_DISPLAYED_DBFS);
-    setRightChannelPressure(MIN_DISPLAYED_DBFS);
+    setLeftChannelPressure(playback::MIN_DISPLAYED_DBFS);
+    setRightChannelPressure(playback::MIN_DISPLAYED_DBFS);
 }
 
 bool TrackItem::outputOnly() const

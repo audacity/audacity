@@ -3,7 +3,7 @@
 #include "global/async/promise.h"
 #include "global/async/channel.h"
 
-#include "audiotypes.h"
+#include "au3audio/audiotypes.h"
 
 //! NOTE Implemented in Au3Wrap
 namespace au::playback {

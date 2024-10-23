@@ -5,7 +5,7 @@
 
 using namespace au::playback;
 
-au::playback::IPlayerPtr Au3Playback::player(audio::TrackSequenceId) const
+au::playback::IPlayerPtr Au3Playback::player(TrackSequenceId) const
 {
     if (!m_player) {
         m_player = std::make_shared<Au3Player>();

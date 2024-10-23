@@ -9,7 +9,7 @@
 #include "global/async/promise.h"
 #include "global/async/channel.h"
 
-#include "playback/audiotypes.h"
+#include "au3audio/audiotypes.h"
 
 namespace au::record {
 class IAudioInput
@@ -26,4 +26,3 @@ public:
 
 using IAudioInputPtr = std::shared_ptr<IAudioInput>;
 }
-

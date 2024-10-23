@@ -7,6 +7,8 @@
 #include <wx/types.h>
 #include <wx/utils.h>
 
+#include "global/realfn.h"
+
 #include "ClipInterface.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -626,7 +628,7 @@ void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
 
     //! Pending tracks are same as project tracks, but with new tracks when recording, so we need draw them
     Track* pendingTrack = &PendingTracks::Get(projectRef())
-                   .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId)));
+                          .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId)));
 
     WaveTrack* pendingWaveTrack = dynamic_cast<WaveTrack*>(pendingTrack);
     IF_ASSERT_FAILED(pendingWaveTrack) {

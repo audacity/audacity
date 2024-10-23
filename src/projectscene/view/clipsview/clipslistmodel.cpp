@@ -3,6 +3,7 @@
 */
 #include "clipslistmodel.h"
 
+#include "global/realfn.h"
 #include "global/async/async.h"
 
 #include "types/projectscenetypes.h"

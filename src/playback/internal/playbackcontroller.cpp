@@ -3,7 +3,7 @@
 */
 #include "playbackcontroller.h"
 
-#include "audiotypes.h"
+#include "../playbacktypes.h"
 
 using namespace muse;
 using namespace au::audio;
@@ -119,7 +119,7 @@ Notification PlaybackController::isPlayingChanged() const
     return m_isPlayingChanged;
 }
 
-void PlaybackController::seek(const audio::secs_t secs)
+void PlaybackController::seek(const muse::secs_t secs)
 {
     IF_ASSERT_FAILED(player()) {
         return;

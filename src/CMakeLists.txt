@@ -41,6 +41,7 @@ endif()
 add_subdirectory(trackedit)
 
 if (AU_BUILD_PLAYBACK_MODULE)
+    add_subdirectory(au3audio)
     add_subdirectory(playback)
 endif()
 

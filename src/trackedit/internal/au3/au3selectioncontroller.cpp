@@ -8,7 +8,8 @@
 
 #include "au3wrap/internal/domconverter.h"
 
-#include "containers.h"
+#include "global/containers.h"
+#include "global/realfn.h"
 
 #include "log.h"
 

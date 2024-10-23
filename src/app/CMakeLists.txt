@@ -88,6 +88,7 @@ set(LINK_LIB
     context
     project
     projectscene
+    audio
     playback
     record
     effects_base
