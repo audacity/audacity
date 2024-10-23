@@ -27,7 +27,7 @@ class Au3Interaction : public ITrackeditInteraction
 public:
     Au3Interaction() = default;
 
-    audio::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
+    muse::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
 
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
@@ -59,16 +59,16 @@ public:
     void newMonoTrack() override;
     void newStereoTrack() override;
     void newLabelTrack() override;
-    audio::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+    muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
     void undo() override;
     void redo() override;
 
 private:
     AudacityProject& projectRef() const;
     muse::Ret pasteIntoNewTrack();
-    ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList &list, secs_t begin);
-    std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks,
-                                    TrackId destinationTrackId, size_t tracksNum) const;
+    ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList& list, secs_t begin);
+    std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,
+                                                       size_t tracksNum) const;
     muse::Ret canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);

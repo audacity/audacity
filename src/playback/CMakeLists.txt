@@ -11,7 +11,7 @@ set(MODULE_SRC
     #public
     ${CMAKE_CURRENT_LIST_DIR}/playbackmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playbackmodule.h
-    ${CMAKE_CURRENT_LIST_DIR}/audiotypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/playbacktypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iplayback.h
     ${CMAKE_CURRENT_LIST_DIR}/iplayer.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiooutput.h

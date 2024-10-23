@@ -13,6 +13,7 @@
 #include "../iplayback.h"
 #include "record/irecordcontroller.h"
 
+#include "au3audio/audiotypes.h"
 #include "../iplayer.h"
 #include "../iplaybackcontroller.h"
 
@@ -43,8 +44,8 @@ public:
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
     float playbackPositionInSeconds() const override;
 
-    muse::async::Channel<audio::TrackId> trackAdded() const override;
-    muse::async::Channel<audio::TrackId> trackRemoved() const override;
+    muse::async::Channel<playback::TrackId> trackAdded() const override;
+    muse::async::Channel<playback::TrackId> trackRemoved() const override;
 
     // ISoloMuteState::SoloMuteState trackSoloMuteState(const TrackId& trackId) const override;
     // void setTrackSoloMuteState(const TrackId& trackId,
@@ -83,7 +84,7 @@ private:
     void pause();
     void stop();
     void resume();
-    void seek(const audio::secs_t secs);
+    void seek(const muse::secs_t secs);
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
@@ -109,7 +110,7 @@ private:
     void updateSoloMuteStates();
     void updateAuxMuteStates();
 
-    void setCurrentPlaybackTime(audio::msecs_t msecs);
+    void setCurrentPlaybackTime(playback::msecs_t msecs);
 
     using TrackAddFinished = std::function<void ()>;
 
@@ -124,10 +125,10 @@ private:
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     muse::async::Notification m_currentSequenceIdChanged;
-    audio::msecs_t m_currentPlaybackTimeMsecs = 0;
+    playback::msecs_t m_currentPlaybackTimeMsecs = 0;
 
-    muse::async::Channel<audio::TrackId> m_trackAdded;
-    muse::async::Channel<audio::TrackId> m_trackRemoved;
+    muse::async::Channel<playback::TrackId> m_trackAdded;
+    muse::async::Channel<playback::TrackId> m_trackRemoved;
 
     muse::async::Channel<audio::aux_channel_idx_t, std::string> m_auxChannelNameChanged;
 

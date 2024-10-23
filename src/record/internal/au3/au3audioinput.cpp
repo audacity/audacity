@@ -12,7 +12,7 @@
 #include "playback/internal/au3/au3audioinoutmeter.h"
 #include "au3wrap/internal/au3types.h"
 
-#include "playback/audiotypes.h"
+#include "au3audio/audiotypes.h"
 
 #include "log.h"
 

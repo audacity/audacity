@@ -22,13 +22,9 @@
 
 #include "commonaudioapiconfigurationmodel.h"
 
-#include "audio/audiotypes.h"
-
-#include "translation.h"
 #include "log.h"
 
 using namespace au::appshell;
-using namespace muse::audio;
 
 CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* parent)
     : QObject(parent)
@@ -110,5 +106,6 @@ QList<unsigned int> CommonAudioApiConfigurationModel::bufferSizeList() const
 
 void CommonAudioApiConfigurationModel::bufferSizeSelected(const QString& bufferSizeStr)
 {
+    UNUSED(bufferSizeStr);
 // audioConfiguration()->setDriverBufferSize(bufferSizeStr.toInt());
 }

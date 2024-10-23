@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "global/async/channel.h"
-#include "playback/audiotypes.h"
+#include "playback/playbacktypes.h"
 
 namespace au::context {
 //! NOTE The current player is in the global context.
@@ -18,11 +18,11 @@ class IPlaybackState
 public:
     virtual ~IPlaybackState() = default;
 
-    virtual audio::PlaybackStatus playbackStatus() const = 0;
-    virtual muse::async::Channel<audio::PlaybackStatus> playbackStatusChanged() const = 0;
+    virtual playback::PlaybackStatus playbackStatus() const = 0;
+    virtual muse::async::Channel<playback::PlaybackStatus> playbackStatusChanged() const = 0;
 
-    virtual audio::secs_t playbackPosition() const = 0;
-    virtual muse::async::Channel<audio::secs_t> playbackPositionChanged() const = 0;
+    virtual muse::secs_t playbackPosition() const = 0;
+    virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
 };
 
 using IPlaybackStatePtr = std::shared_ptr<IPlaybackState>;

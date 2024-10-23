@@ -14,7 +14,7 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
                                                  QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    playbackState()->playbackPositionChanged().onReceive(this, [this](audio::secs_t) {
+    playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t) {
         emit currentValueChanged();
     });
 

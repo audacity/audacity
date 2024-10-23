@@ -3,10 +3,13 @@
 */
 #include "playbacktoolbarrecordlevelitem.h"
 
+#include "playback/playbacktypes.h"
+
 #include <QVariantMap>
 
 using namespace au::record;
 using namespace au::audio;
+using namespace au::playback;
 
 PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action,
                                                                muse::uicomponents::ToolBarItemType::Type type, QObject* parent)

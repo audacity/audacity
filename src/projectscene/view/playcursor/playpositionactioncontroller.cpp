@@ -22,6 +22,8 @@
 
 #include "playpositionactioncontroller.h"
 
+#include "global/realfn.h"
+
 using namespace au::projectscene;
 using namespace muse::actions;
 
@@ -72,9 +74,9 @@ void PlayPositionActionController::playPositionIncrease()
 
 void PlayPositionActionController::snapCurrentPosition()
 {
-    audio::secs_t currentPlaybackPosition = globalContext()->playbackState()->playbackPosition();
+    muse::secs_t currentPlaybackPosition = globalContext()->playbackState()->playbackPosition();
     double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);
-    audio::secs_t secs = m_context->positionToTime(currentXPosition, true);
+    muse::secs_t secs = m_context->positionToTime(currentXPosition, true);
     if (muse::RealIsEqualOrMore(secs, 0.0) || !muse::RealIsEqual(secs, currentPlaybackPosition)) {
         dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
     }
@@ -85,8 +87,8 @@ void PlayPositionActionController::applySingleStep(Direction direction)
     IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
     bool snapEnabled = viewState->isSnapEnabled();
 
-    audio::secs_t currentPlaybackPosition = globalContext()->playbackState()->playbackPosition();
-    audio::secs_t secs = 0;
+    muse::secs_t currentPlaybackPosition = globalContext()->playbackState()->playbackPosition();
+    muse::secs_t secs = 0;
 
     if (snapEnabled) {
         double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);

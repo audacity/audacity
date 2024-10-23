@@ -25,8 +25,8 @@ Au3Player::Au3Player()
         updatePlaybackPosition();
     });
 
-    m_playbackStatus.ch.onReceive(this, [this](audio::PlaybackStatus st) {
-        if (st == audio::PlaybackStatus::Running) {
+    m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
+        if (st == PlaybackStatus::Running) {
             m_positionUpdateTimer.start();
         } else {
             m_positionUpdateTimer.stop();
@@ -36,11 +36,11 @@ Au3Player::Au3Player()
 
 void Au3Player::play()
 {
-    if (m_playbackStatus.val == audio::PlaybackStatus::Paused) {
+    if (m_playbackStatus.val == PlaybackStatus::Paused) {
         auto gAudioIO = AudioIO::Get();
         gAudioIO->SetPaused(false);
 
-        m_playbackStatus.set(audio::PlaybackStatus::Running);
+        m_playbackStatus.set(PlaybackStatus::Running);
         return;
     }
 
@@ -188,10 +188,10 @@ void Au3Player::play()
         }
     }
 
-    m_playbackStatus.set(audio::PlaybackStatus::Running);
+    m_playbackStatus.set(PlaybackStatus::Running);
 }
 
-void Au3Player::seek(const audio::secs_t newPosition)
+void Au3Player::seek(const muse::secs_t newPosition)
 {
     LOGD() << "newPosition: " << newPosition;
 
@@ -208,7 +208,7 @@ void Au3Player::seek(const audio::secs_t newPosition)
 
 void Au3Player::stop()
 {
-    m_playbackStatus.set(audio::PlaybackStatus::Stopped);
+    m_playbackStatus.set(PlaybackStatus::Stopped);
 
     //! NOTE: copied from ProjectAudioManager::Stop
     bool stopStream = true;
@@ -251,7 +251,7 @@ void Au3Player::pause()
 
     gAudioIO->SetPaused(true);
 
-    m_playbackStatus.set(audio::PlaybackStatus::Paused);
+    m_playbackStatus.set(PlaybackStatus::Paused);
 }
 
 void Au3Player::resume()
@@ -264,20 +264,20 @@ void Au3Player::resume()
 
     gAudioIO->SetPaused(false);
 
-    m_playbackStatus.set(audio::PlaybackStatus::Running);
+    m_playbackStatus.set(PlaybackStatus::Running);
 }
 
-au::audio::PlaybackStatus Au3Player::playbackStatus() const
+PlaybackStatus Au3Player::playbackStatus() const
 {
     return m_playbackStatus.val;
 }
 
-muse::async::Channel<au::audio::PlaybackStatus> Au3Player::playbackStatusChanged() const
+muse::async::Channel<PlaybackStatus> Au3Player::playbackStatusChanged() const
 {
     return m_playbackStatus.ch;
 }
 
-muse::async::Promise<bool> Au3Player::setLoop(const audio::secs_t from, const audio::secs_t to)
+muse::async::Promise<bool> Au3Player::setLoop(const muse::secs_t from, const muse::secs_t to)
 {
     UNUSED(from);
     UNUSED(to);
@@ -299,12 +299,12 @@ void Au3Player::updatePlaybackPosition()
     m_playbackPosition.set(std::max(0.0, AudioIO::Get()->GetStreamTime()));
 }
 
-au::audio::secs_t Au3Player::playbackPosition() const
+muse::secs_t Au3Player::playbackPosition() const
 {
     return m_playbackPosition.val;
 }
 
-muse::async::Channel<au::audio::secs_t> Au3Player::playbackPositionChanged() const
+muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const
 {
     return m_playbackPosition.ch;
 }

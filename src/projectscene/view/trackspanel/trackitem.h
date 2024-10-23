@@ -13,7 +13,6 @@
 #include "async/asyncable.h"
 
 #include "trackedit/trackedittypes.h"
-#include "playback/audiotypes.h"
 #include "trackedit/dom/track.h"
 
 namespace au::projectscene {

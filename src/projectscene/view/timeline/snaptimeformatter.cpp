@@ -3,6 +3,8 @@
 */
 #include "snaptimeformatter.h"
 
+#include "global/containers.h"
+
 #include "playback/iaudiooutput.h"
 
 using namespace au::projectscene;
@@ -97,7 +99,7 @@ static double frameMultiplier(SnapType type)
     return muse::value(rates, type, 1);
 }
 
-au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const
+muse::secs_t SnapTimeFormatter::snapTime(muse::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const
 {
     double multiplier = snapTypeMultiplier(snap.type, snap.isSnapTriplets, timeSig);
 
@@ -107,8 +109,8 @@ au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, const Snap& sn
     return 0.0;
 }
 
-au::audio::secs_t SnapTimeFormatter::singleStep(audio::secs_t time, const Snap& snap, Direction direction,
-                                                trackedit::TimeSignature timeSig) const
+muse::secs_t SnapTimeFormatter::singleStep(muse::secs_t time, const Snap& snap, Direction direction,
+                                           trackedit::TimeSignature timeSig) const
 {
     double multiplier = snapTypeMultiplier(snap.type, snap.isSnapTriplets, timeSig);
 

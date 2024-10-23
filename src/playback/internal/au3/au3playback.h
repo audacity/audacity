@@ -13,7 +13,7 @@ class Au3Playback : public IPlayback
 public:
     Au3Playback() = default;
 
-    std::shared_ptr<playback::IPlayer> player(audio::TrackSequenceId id = -1) const override;
+    std::shared_ptr<playback::IPlayer> player(TrackSequenceId id = -1) const override;
 
     std::shared_ptr<playback::IAudioOutput> audioOutput() const override;
 

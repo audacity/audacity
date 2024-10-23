@@ -8,7 +8,7 @@
 #include "global/async/promise.h"
 #include "global/async/channel.h"
 
-#include "playback/audiotypes.h"
+#include "au3audio/audiotypes.h"
 
 #include "libraries/lib-audio-devices/Meter.h"
 
