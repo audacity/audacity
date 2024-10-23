@@ -528,7 +528,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
 
     if (newTracksNeeded) {
         // remove already pasted elements from the clipboard and paste the rest into the new tracks
-        clipboard()->eraseTrackData(clipboard()->trackData().begin(), clipboard()->trackData().begin() + dstTracksIds.size());
+        clipboard()->eraseFromBeginning(dstTracksIds.size());
         return pasteIntoNewTrack();
     }
 
