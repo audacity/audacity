@@ -36,7 +36,7 @@ Au3Project& Au3Interaction::projectRef() const
     return *project;
 }
 
-TrackIdList Au3Interaction::pasteIntoNewTracks()
+TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<TrackData>& tracksData)
 {
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
@@ -46,7 +46,7 @@ TrackIdList Au3Interaction::pasteIntoNewTracks()
     TrackIdList tracksIdsPastedInto;
 
     Au3Track* pFirstNewTrack = NULL;
-    for (auto data : clipboard()->trackData()) {
+    for (auto data : tracksData) {
         auto pNewTrack = createNewTrackAndPaste(data.track, tracks, selectedStartTime);
         if (!pFirstNewTrack) {
             pFirstNewTrack = pNewTrack.get();
@@ -627,8 +627,9 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
         return make_ret(trackedit::Err::TrackEmpty);
     }
 
+    auto copiedData = clipboard()->trackData();
     if (destinationTrackId == -1) {
-        auto tracksIdsToSelect = pasteIntoNewTracks();
+        auto tracksIdsToSelect = pasteIntoNewTracks(copiedData);
         selectionController()->setSelectedTracks(tracksIdsToSelect);
         return muse::make_ok();
     }
@@ -648,7 +649,6 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     }
 
     // check if copied data fits into selected area
-    auto copiedData = clipboard()->trackData();
     auto ret = canPasteClips(dstTracksIds, copiedData, begin);
     if (!ret) {
         if (!ret.code() == static_cast<int>(trackedit::Err::NotEnoughSpaceForPaste)) {
@@ -700,8 +700,8 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
 
     if (newTracksNeeded) {
         // remove already pasted elements from the clipboard and paste the rest into the new tracks
-        clipboard()->eraseTrackData(clipboard()->trackData().begin(), clipboard()->trackData().begin() + dstTracksIds.size());
-        auto tracksIdsToSelect = pasteIntoNewTracks();
+        copiedData.erase(copiedData.begin(), copiedData.begin() + dstTracksIds.size());
+        auto tracksIdsToSelect = pasteIntoNewTracks(copiedData);
         dstTracksIds.insert(dstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
     }
 

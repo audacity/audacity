@@ -81,7 +81,7 @@ public:
 
 private:
     au3::Au3Project& projectRef() const;
-    TrackIdList pasteIntoNewTracks();
+    TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId, size_t tracksNum) const;
     muse::Ret canPasteClips(const TrackIdList& tracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const;

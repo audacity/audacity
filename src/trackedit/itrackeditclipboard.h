@@ -30,6 +30,5 @@ public:
     virtual bool trackDataEmpty() const = 0;
     virtual size_t trackDataSize() const = 0;
     virtual void addTrackData(const TrackData& trackData) = 0;
-    virtual void eraseTrackData(std::vector<TrackData>::iterator begin, std::vector<TrackData>::iterator end) = 0;
 };
 }

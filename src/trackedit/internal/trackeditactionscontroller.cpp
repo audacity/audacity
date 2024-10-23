@@ -369,11 +369,12 @@ void TrackeditActionsController::paste()
     auto tracks = project->trackeditProject()->trackList();
     double selectedStartTime = globalContext()->playbackState()->playbackPosition();
 
+    TrackId selectedTrackId;
     if (selectionController()->selectedTracks().empty()) {
-        return;
+        selectedTrackId = -1;
+    } else {
+        selectedTrackId = selectionController()->selectedTracks().at(0);
     }
-
-    TrackId selectedTrackId = selectionController()->selectedTracks().at(0);
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, selectedTrackId);
