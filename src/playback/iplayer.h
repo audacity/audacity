@@ -7,7 +7,7 @@
 
 #include "playbacktypes.h"
 
-//! NOTE Implemented in Au3Wrap
+class TrackList;
 namespace au::playback {
 class IPlayer
 {
@@ -28,6 +28,9 @@ public:
 
     virtual muse::secs_t playbackPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
+
+    // tracks
+    virtual int playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options = {}) = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;

@@ -5,7 +5,6 @@
 #include "au3audio/audiotypes.h" // IWYU pragma: export
 #include "playbacktypes.h"
 
-//! NOTE Implemented in Au3Wrap
 namespace au::playback {
 class IPlayer;
 class IAudioOutput;
