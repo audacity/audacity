@@ -7,6 +7,7 @@
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 
 #include "au3wrap/internal/domconverter.h"
+#include "au3wrap/internal/domaccessor.h"
 
 #include "global/containers.h"
 #include "global/realfn.h"
@@ -78,6 +79,69 @@ void Au3SelectionController::setSelectedClip(const au::trackedit::ClipKey& clipK
 muse::async::Channel<au::trackedit::ClipKey> Au3SelectionController::clipSelected() const
 {
     return m_selectedClip.selected;
+}
+
+double Au3SelectionController::selectedClipStartTime() const
+{
+    auto clipKey = selectedClip();
+    if (!clipKey.isValid()) {
+        return -1.0;
+    }
+
+    WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    return clip->Start();
+}
+
+double Au3SelectionController::selectedClipEndTime() const
+{
+    auto clipKey = selectedClip();
+    if (!clipKey.isValid()) {
+        return -1.0;
+    }
+
+    WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    return clip->End();
+}
+
+void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
+{
+    auto& tracks = ::TrackList::Get(projectRef());
+    ::Track* au3Track = tracks.FindById(::TrackId(trackId));
+
+    secs_t audioDataStartTime = au3Track->GetStartTime();
+    secs_t audioDataEndTime = au3Track->GetEndTime();
+
+    setDataSelectedStartTime(audioDataStartTime, true);
+    setDataSelectedEndTime(audioDataEndTime, true);
+}
+
+void Au3SelectionController::setSelectedClipAudioData(trackedit::TrackId trackId, secs_t time)
+{
+    const auto& clip = au3::DomAccessor::findWaveClip(projectRef(), trackId, time);
+
+    secs_t audioDataStartTime = clip->Start();
+    secs_t audioDataEndTime = clip->End();
+
+    setDataSelectedStartTime(audioDataStartTime, true);
+    setDataSelectedEndTime(audioDataEndTime, true);
 }
 
 // data selection

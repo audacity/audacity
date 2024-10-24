@@ -48,7 +48,21 @@ std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const 
     return findWaveClip(t, index);
 }
 
-size_t DomAccessor::findClipIndexById(const WaveTrack* track, const trackedit::ClipId& clipId)
+std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const trackedit::TrackId &trackId, trackedit::secs_t time)
+{
+    TrackList& tracks = TrackList::Get(prj);
+    WaveTrack* au3Track = dynamic_cast<WaveTrack*>(tracks.FindById(::TrackId(trackId)));
+
+    for (const std::shared_ptr<WaveClip>& clip : au3Track->Intervals()) {
+        if (clip->Start() <= time && clip->End() >= time) {
+            return clip;
+        }
+    }
+
+    return nullptr;
+}
+
+size_t DomAccessor::findClipIndexById(const WaveTrack *track, const trackedit::ClipId &clipId)
 {
     size_t index = 0;
     for (const auto& interval : track->Intervals()) {
