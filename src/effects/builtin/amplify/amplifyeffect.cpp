@@ -6,7 +6,10 @@
 #include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 
+#include "au3wrap/au3types.h"
+
 using namespace au::effects;
+using namespace au::au3;
 
 const EffectParameterMethods& AmplifyEffect::Parameters() const
 {
@@ -177,12 +180,12 @@ OptionalMessage AmplifyEffect::DoLoadFactoryDefaults(EffectSettings& /*settings*
 
 bool AmplifyEffect::Init()
 {
-    auto range = inputTracks()->Selected<const WaveTrack>();
+    auto range = inputTracks()->Selected<const Au3WaveTrack>();
     bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {
         return TimeStretching::HasPitchOrSpeed(*pTrack, mT0, mT1);
     });
     if (hasPitchOrSpeed) {
-        range = MakeOutputTracks()->Get().Selected<const WaveTrack>();
+        range = MakeOutputTracks()->Get().Selected<const Au3WaveTrack>();
     }
     mPeak = 0.0;
     for (auto t : range) {

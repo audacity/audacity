@@ -11,10 +11,14 @@
 
 #include "WaveTrack.h"
 
+#include "au3wrap/au3types.h"
+
+using namespace au::au3;
+
 static const ChannelGroup::Attachments::RegisteredFactory
 key2{ [](auto &) { return std::make_unique<WaveformScale>(); } };
 
-WaveformScale &WaveformScale::Get(const WaveTrack &track)
+WaveformScale &WaveformScale::Get(const Au3WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
    return mutTrack.Attachments::Get<WaveformScale>(key2);

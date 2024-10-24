@@ -26,6 +26,9 @@
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
+#include "au3wrap/au3types.h"
+
+using namespace au::au3;
 
 constexpr double CLIPVIEW_WIDTH_MIN = 4; // px
 
@@ -46,7 +49,7 @@ class WaveformSettings final : public ClientData::Cloneable<>
 public:
     //! Create waveform settings for the track on demand
     //! Mutative access to attachment even if the track argument is const
-    static WaveformSettings& Get(const WaveTrack& track);
+    static WaveformSettings& Get(const Au3WaveTrack& track);
 
     static WaveformSettings& defaults();
 
@@ -555,7 +558,7 @@ static bool showIndividualSamples(const WaveClip& clip, bool zoom)
 
 static void DrawWaveform(int channelIndex,
                          QPainter& painter,
-                         WaveTrack& track,
+                         Au3WaveTrack& track,
                          const WaveClip& clip,
                          const WaveMetrics& metrics,
                          double zoom,
@@ -624,13 +627,13 @@ void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     //     return;
     // }
     // LOGD() << "trackId: " << clipKey.trackId << ", clip: " << clipKey.index;
-    WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
 
     //! Pending tracks are same as project tracks, but with new tracks when recording, so we need draw them
     Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
                              .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId)));
 
-    WaveTrack* pendingWaveTrack = dynamic_cast<WaveTrack*>(pendingTrack);
+    Au3WaveTrack* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(pendingTrack);
     IF_ASSERT_FAILED(pendingWaveTrack) {
         return;
     }
@@ -648,11 +651,11 @@ void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     doPaint(painter, pendingWaveTrack, pendingClip.get(), params);
 }
 
-void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const WaveClip* clip, const Params& params)
+void Au3WavePainter::doPaint(QPainter& painter, const Au3WaveTrack* _track, const WaveClip* clip, const Params& params)
 {
     auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 
-    WaveTrack* track = const_cast<WaveTrack*>(_track);
+    Au3WaveTrack* track = const_cast<Au3WaveTrack*>(_track);
 
     const bool dB = !WaveformSettings::Get(*track).isLinear();
 

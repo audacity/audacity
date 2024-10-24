@@ -109,7 +109,7 @@ PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject& proj)
     result.allSameRate = true;
 
     const auto selectedTracks{
-        Au3TrackList::Get(proj).Selected<const WaveTrack>() };
+        Au3TrackList::Get(proj).Selected<const Au3WaveTrack>() };
 
     for (const auto& track : selectedTracks) {
         if (rateOfSelection != RATE_NOT_SELECTED
@@ -157,7 +157,7 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(AudacityProject& proj, bo
     WritableSampleTrackArray candidates;
     std::vector<unsigned> channelCounts;
     size_t totalChannels = 0;
-    const auto range = trackList.Any<WaveTrack>();
+    const auto range = trackList.Any<Au3WaveTrack>();
     for (auto candidate : selectedOnly ? range + &Au3Track::IsSelected : range) {
         if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate) {
             continue;
@@ -183,7 +183,7 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(AudacityProject& proj, bo
                 channelCounts.erase(channelCounts.begin());
                 totalChannels -= nOldChannels;
             }
-            candidates.push_back(candidate->SharedPointer<WaveTrack>());
+            candidates.push_back(candidate->SharedPointer<Au3WaveTrack>());
             channelCounts.push_back(nChannels);
             totalChannels += nChannels;
             if (totalChannels >= recordingChannels) {
@@ -206,7 +206,7 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
 {
     TransportSequences result;
     {
-        const auto range = trackList.Any<WaveTrack>()
+        const auto range = trackList.Any<Au3WaveTrack>()
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(
@@ -242,12 +242,12 @@ void Au3Record::init()
     });
 
     s_recordingListener->recordingClipChanged().onReceive(this, [this](const trackedit::ClipKey& clipKey) {
-        WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+        Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
 
         Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
                                  .SubstitutePendingChangedTrack(*origWaveTrack);
 
-        WaveTrack* pendingWaveTrack = dynamic_cast<WaveTrack*>(pendingTrack);
+        Au3WaveTrack* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(pendingTrack);
         IF_ASSERT_FAILED(pendingWaveTrack) {
             return;
         }
@@ -319,7 +319,7 @@ muse::Ret Au3Record::start()
         existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
         if (!existingTracks.empty()) {
             t0 = std::max(t0,
-                          Au3TrackList::Get(project).Selected<const WaveTrack>()
+                          Au3TrackList::Get(project).Selected<const Au3WaveTrack>()
                           .max(&Au3Track::GetEndTime));
             options.rate = rateOfSelected;
         } else {
@@ -471,7 +471,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
     bool appendRecord = !sequences.captureSequences.empty();
 
     auto insertEmptyInterval
-        =[&](WaveTrack& track, double t0, bool placeholder) {
+        =[&](Au3WaveTrack& track, double t0, bool placeholder) {
         wxString name;
         for (auto i = 1;; ++i) {
             //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
@@ -499,8 +499,8 @@ Ret Au3Record::doRecord(AudacityProject& project,
             // Append recording:
             // Pad selected/all wave tracks to make them all the same length
             for (const auto& sequence : sequences.captureSequences) {
-                WaveTrack* wt{};
-                if (!(wt = dynamic_cast<WaveTrack*>(sequence.get()))) {
+                Au3WaveTrack* wt{};
+                if (!(wt = dynamic_cast<Au3WaveTrack*>(sequence.get()))) {
                     assert(false);
                     continue;
                 }
@@ -509,7 +509,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 // If the track was chosen for recording and playback both,
                 // remember the original in preroll tracks, before making the
                 // pending replacement.
-                const auto shared = wt->SharedPointer<WaveTrack>();
+                const auto shared = wt->SharedPointer<Au3WaveTrack>();
                 // prerollSequences should be a subset of playbackSequences.
                 const auto& range = transportSequences.playbackSequences;
                 bool prerollTrack = any_of(range.begin(), range.end(),
@@ -539,7 +539,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 assert(
                     !recordingStartsBeforeTrackEnd
                     || lastClip->WithinPlayRegion(recordingStart));
-                WaveTrack::IntervalHolder newClip{};
+                Au3WaveTrack::IntervalHolder newClip{};
                 if (!recordingStartsBeforeTrackEnd
                     || lastClip->HasPitchOrSpeed()) {
                     newClip = insertEmptyInterval(*wt, t0, true);
@@ -552,8 +552,8 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 // type (for instance), during the recording.
                 auto updater = [newClipKey](Au3Track& d, const Au3Track& s){
                     assert(d.NChannels() == s.NChannels());
-                    auto& dst = static_cast<WaveTrack&>(d);
-                    auto& src = static_cast<const WaveTrack&>(s);
+                    auto& dst = static_cast<Au3WaveTrack&>(d);
+                    auto& src = static_cast<const Au3WaveTrack&>(s);
                     dst.Init(src);
 
                     s_recordingListener->recordingClipChanged().send(newClipKey);
@@ -561,7 +561,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
 
                 // Get a copy of the track to be appended, to be pushed into
                 // undo history only later.
-                const auto pending = static_cast<WaveTrack*>(
+                const auto pending = static_cast<Au3WaveTrack*>(
                     pendingTracks.RegisterPendingChangedTrack(updater, wt)
                     );
                 // Source clip was marked as placeholder so that it would not be
@@ -572,7 +572,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 if (auto copiedClip = pending->NewestOrNewClip()) {
                     copiedClip->SetIsPlaceholder(false);
                 }
-                transportSequences.captureSequences.push_back(pending->SharedPointer<WaveTrack>());
+                transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
                 trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get());
                 trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -587,7 +587,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
             wxString defaultTrackName, defaultRecordingTrackName;
 
             // Count the tracks.
-            auto numTracks = trackList.Any<const WaveTrack>().size();
+            auto numTracks = trackList.Any<const Au3WaveTrack>().size();
 
             auto recordingChannels = std::max(1, AudioIORecordChannels.Read());
 
@@ -595,7 +595,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
             gPrefs->Read(wxT("/GUI/TrackNames/TrackNumber"), &useTrackNumber, false);
             gPrefs->Read(wxT("/GUI/TrackNames/DateStamp"), &useDateStamp, false);
             gPrefs->Read(wxT("/GUI/TrackNames/TimeStamp"), &useTimeStamp, false);
-            defaultTrackName = trackList.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference());
+            defaultTrackName = trackList.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference());
             gPrefs->Read(wxT("/GUI/TrackNames/RecodingTrackName"), &defaultRecordingTrackName, defaultTrackName);
 
             wxString baseTrackName = recordingNameCustom ? defaultRecordingTrackName : defaultTrackName;
@@ -604,7 +604,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
             const auto first = *newTracks->begin();
             int trackCounter = 0;
             const auto minimizeChannelView = false;//recordingChannels > 2 && !TracksPrefs::TracksFitVerticallyZoomed.Read();
-            for (auto newTrack : newTracks->Any<WaveTrack>()) {
+            for (auto newTrack : newTracks->Any<Au3WaveTrack>()) {
                 // Quantize bounds to the rate of the new track.
                 if (newTrack == first) {
                     if (t0 < DBL_MAX) {
@@ -651,7 +651,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 insertEmptyInterval(*newTrack, t0, false);
 
                 transportSequences.captureSequences.push_back(
-                    std::static_pointer_cast<WaveTrack>(newTrack->shared_from_this())
+                    std::static_pointer_cast<Au3WaveTrack>(newTrack->shared_from_this())
                     );
 
                 for (auto channel : newTrack->Channels()) {

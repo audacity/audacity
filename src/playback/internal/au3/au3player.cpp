@@ -93,7 +93,7 @@ void Au3Player::play()
     if (nonWaveToo) {
         hasaudio = !tracks.Any<PlayableTrack>().empty();
     } else {
-        hasaudio = !tracks.Any<WaveTrack>().empty();
+        hasaudio = !tracks.Any<Au3WaveTrack>().empty();
     }
 
     double latestEnd = tracks.GetEndTime();
@@ -330,7 +330,7 @@ TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool 
 {
     TransportSequences result;
     {
-        const auto range = trackList.Any<WaveTrack>()
+        const auto range = trackList.Any<Au3WaveTrack>()
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(

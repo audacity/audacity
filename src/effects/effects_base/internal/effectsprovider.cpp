@@ -124,13 +124,13 @@ muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effec
     //! ============================================================================
 
     // common things used below
-    WaveTrack* newTrack = nullptr;
+    au3::Au3WaveTrack* newTrack = nullptr;
     {
         // We don't yet know the effect type for code in the Nyquist Prompt, so
         // assume it requires a track and handle errors when the effect runs.
         if ((effect->GetType() == EffectTypeGenerate || effect->GetPath() == NYQUIST_PROMPT_ID) && (effect->mNumTracks == 0)) {
             auto track = effect->mFactory->Create();
-            track->SetName(effect->mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+            track->SetName(effect->mTracks->MakeUniqueTrackName(au3::Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
             newTrack = effect->mTracks->Add(track);
             newTrack->SetSelected(true);
         }
@@ -325,7 +325,7 @@ static void EffectPreview(EffectBase& effect,
     // Generators need to generate per track.
     if (isLinearEffect && !isGenerator) {
         auto newTrack = MixAndRender(
-            saveTracks->Selected<const WaveTrack>(),
+            saveTracks->Selected<const au::au3::Au3WaveTrack>(),
             Mixer::WarpOptions { saveTracks->GetOwner() },
             wxString {}, // Don't care about the name of the temporary tracks
             factory, rate, floatSample, mT0, t1);
@@ -337,7 +337,7 @@ static void EffectPreview(EffectBase& effect,
         newTrack->MoveTo(0);
         newTrack->SetSelected(true);
     } else {
-        for (auto src : saveTracks->Selected<const WaveTrack>()) {
+        for (auto src : saveTracks->Selected<const au::au3::Au3WaveTrack>()) {
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(true);
             mTracks->Add(dest);

@@ -55,7 +55,7 @@ au::trackedit::TrackId DomConverter::trackId(const Au3TrackId& au3trackId)
     return *(reinterpret_cast<const long*>(&au3trackId));
 }
 
-au::trackedit::Clip DomConverter::clip(const WaveTrack* waveTrack, const WaveClip* au3clip)
+au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const WaveClip* au3clip)
 {
     au::trackedit::Clip clip;
     clip.key.trackId = trackId(waveTrack->GetId());
