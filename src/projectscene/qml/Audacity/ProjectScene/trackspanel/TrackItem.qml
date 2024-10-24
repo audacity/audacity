@@ -45,12 +45,37 @@ ListItemBlank {
         trackId: root.item ? root.item.trackId : -1
     }
 
-    Component.onCompleted: {
-        trackViewState.init()
+    TrackContextMenuModel {
+        id: contextMenuModel
+        trackId: root.item ? root.item.trackId : -1
+
+        onTrackRenameRequested: titleEdit()
     }
 
-    onRenameTrackRequested: {
+    Component.onCompleted: {
+        trackViewState.init()
+        contextMenuModel.load()
+    }
+
+    ContextMenuLoader {
+        id: contextMenuLoader
+
+        onHandleMenuItem: function(itemId) {
+            contextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
+    function titleEdit() {
         title.edit()
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+
+        onClicked: function(e) {
+            contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
+        }
     }
 
     RowLayout {
@@ -93,28 +118,10 @@ ListItemBlank {
                 }
 
                 MenuButton {
-                    Component.onCompleted: {
-                        var operations = [
-                                    { "id": "rename-track", "title": qsTrc("track", "Rename track") },
-                                    { "id": "duplicate", "title": qsTrc("track", "Duplicate") },
-                                    { "id": "delete", "title": qsTrc("track", "Delete") }
-                                ]
-
-                        menuModel = operations
-                    }
+                    menuModel: contextMenuModel
 
                     onHandleMenuItem: function(itemId) {
-                        switch(itemId) {
-                        case "rename-track":
-                            root.renameTrackRequested()
-                            break
-                        case "duplicate":
-                            root.duplicateRequested()
-                            break
-                        case "delete":
-                            root.deleteRequested()
-                            break
-                        }
+                        contextMenuModel.handleMenuItem(itemId)
                     }
                 }
             }

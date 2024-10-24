@@ -55,7 +55,7 @@ void ClipsListModel::reload()
         return;
     }
 
-    prj->trackList().onItemChanged(this, [this](const Track& track){
+    prj->trackChanged().onReceive(this, [this](const Track& track) {
         if (track.id == m_trackId) {
             reload();
         }

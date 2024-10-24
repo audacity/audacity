@@ -84,6 +84,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, NEW_MONO_TRACK, this, &TrackeditActionsController::newMonoTrack);
     dispatcher()->reg(this, NEW_STEREO_TRACK, this, &TrackeditActionsController::newStereoTrack);
     dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
+    dispatcher()->reg(this, "track-delete", this, &TrackeditActionsController::deleteTrack);
+    dispatcher()->reg(this, "track-duplicate", this, &TrackeditActionsController::duplicateTrack);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
@@ -141,7 +143,8 @@ void TrackeditActionsController::doGlobalSplitCut()
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(SPLIT_CUT_SELECTED,
-                           ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                               ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime,
+                                                                                           selectedEndTime));
         return;
     }
 
@@ -162,7 +165,8 @@ void TrackeditActionsController::doGlobalSplitDelete()
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(SPLIT_DELETE_SELECTED,
-                           ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                               ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime,
+                                                                                           selectedEndTime));
         return;
     }
 
@@ -220,7 +224,8 @@ void TrackeditActionsController::doGlobalDuplicate()
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(DUPLICATE_SELECTED,
-                               ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                               ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime,
+                                                                                           selectedEndTime));
     } else {
         ClipKey selectedClipKey = selectionController()->selectedClip();
         if (!selectedClipKey.isValid()) {
@@ -348,7 +353,7 @@ void TrackeditActionsController::paste()
     }
 }
 
-void TrackeditActionsController::trackSplit(const ActionData &args)
+void TrackeditActionsController::trackSplit(const ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
@@ -380,13 +385,13 @@ void TrackeditActionsController::trackSplitAt(const ActionData& args)
     trackeditInteraction()->splitAt(trackId, playbackPosition);
 }
 
-void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::ActionData &args)
+void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
     }
 
-    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId> >(0);
     if (tracksIds.empty()) {
         return;
     }
@@ -398,13 +403,13 @@ void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::Actio
     trackeditInteraction()->mergeSelectedOnTracks(tracksIds, begin, end);
 }
 
-void TrackeditActionsController::duplicateSelected(const muse::actions::ActionData &args)
+void TrackeditActionsController::duplicateSelected(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
     }
 
-    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId> >(0);
     if (tracksIds.empty()) {
         return;
     }
@@ -415,7 +420,7 @@ void TrackeditActionsController::duplicateSelected(const muse::actions::ActionDa
     trackeditInteraction()->duplicateSelectedOnTracks(tracksIds, begin, end);
 }
 
-void TrackeditActionsController::duplicateClip(const muse::actions::ActionData &args)
+void TrackeditActionsController::duplicateClip(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
@@ -425,7 +430,7 @@ void TrackeditActionsController::duplicateClip(const muse::actions::ActionData &
     trackeditInteraction()->duplicateClip(clipKey);
 }
 
-void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData &args)
+void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
@@ -440,7 +445,7 @@ void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData &a
     trackeditInteraction()->clipSplitCut(clipKey);
 }
 
-void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData &args)
+void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
@@ -454,13 +459,13 @@ void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData
     trackeditInteraction()->clipSplitDelete(clipKey);
 }
 
-void TrackeditActionsController::splitCutSelected(const muse::actions::ActionData &args)
+void TrackeditActionsController::splitCutSelected(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
     }
 
-    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId> >(0);
     if (tracksIds.empty()) {
         return;
     }
@@ -474,13 +479,13 @@ void TrackeditActionsController::splitCutSelected(const muse::actions::ActionDat
     selectionController()->resetDataSelection();
 }
 
-void TrackeditActionsController::splitDeleteSelected(const muse::actions::ActionData &args)
+void TrackeditActionsController::splitDeleteSelected(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
     }
 
-    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId>>(0);
+    std::vector<TrackId> tracksIds = args.arg<std::vector<TrackId> >(0);
     if (tracksIds.empty()) {
         return;
     }
@@ -538,6 +543,42 @@ void TrackeditActionsController::newStereoTrack()
 void TrackeditActionsController::newLabelTrack()
 {
     trackeditInteraction()->newLabelTrack();
+}
+
+void TrackeditActionsController::deleteTrack(const muse::actions::ActionData& args)
+{
+    TrackId trackId { -1 };
+    if (args.count()) {
+        // Call from the context menu
+        trackId = args.arg<TrackId>(0);
+    } else {
+        // Call from shortcut
+        trackId = selectionController()->selectedTrack();
+    }
+
+    if (trackId == -1) {
+        return;
+    }
+
+    trackeditInteraction()->deleteTrack(trackId);
+}
+
+void TrackeditActionsController::duplicateTrack(const muse::actions::ActionData& args)
+{
+    TrackId trackId { -1 };
+    if (args.count()) {
+        // Call from the context menu
+        trackId = args.arg<TrackId>(0);
+    } else {
+        // Call from shortcut
+        trackId = selectionController()->selectedTrack();
+    }
+
+    if (trackId == -1) {
+        return;
+    }
+
+    trackeditInteraction()->duplicateTrack(trackId);
 }
 
 void TrackeditActionsController::trimAudioOutsideSelection()

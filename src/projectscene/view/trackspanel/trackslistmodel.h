@@ -43,9 +43,8 @@ public:
 
     Q_INVOKABLE void addTrack(TrackTypes::Type type);
     Q_INVOKABLE void addTracks(TrackTypes::Type type, int quantity);
-    Q_INVOKABLE void duplicateTrack(int index);
-    Q_INVOKABLE void deleteTrack(int index);
-    Q_INVOKABLE void openEffectsForTrack(int index);
+    Q_INVOKABLE void duplicateTrack(int row);
+    Q_INVOKABLE void openEffectsForTrack(int row);
 
     Q_INVOKABLE QItemSelectionModel* selectionModel() const;
     Q_INVOKABLE void selectRow(int rowIndex);
@@ -92,6 +91,11 @@ private:
 
     void onProjectChanged();
     void onSelectedTrack(trackedit::TrackId trackId);
+    void onTracksChanged();
+    void onTrackAdded(const trackedit::Track& track);
+    void onTrackRemoved(const trackedit::Track& track);
+    void onTrackChanged(const trackedit::Track& track);
+    void onTrackInserted(const trackedit::Track& track, int pos);
 
     TrackItem* buildTrackItem(const trackedit::Track& track);
     TrackItem* findTrackItem(const trackedit::TrackId& trackId);
