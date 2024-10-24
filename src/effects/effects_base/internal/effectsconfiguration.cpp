@@ -3,9 +3,20 @@
 */
 #include "effectsconfiguration.h"
 
+#include "global/settings.h"
+
 using namespace au::effects;
 
-muse::io::path_t EffectsConfiguration::defaultPath() const
+static const std::string moduleName("effects");
+
+static const muse::Settings::Key PREVIEW_DURATION(moduleName, "effects/previewDuration");
+
+void EffectsConfiguration::init()
 {
-    return globalConfiguration()->appDataPath() + "/builtineffects";
+    muse::settings()->setDefaultValue(PREVIEW_DURATION, muse::Val(6.0)); // sec
+}
+
+muse::secs_t EffectsConfiguration::previewDuration() const
+{
+    return muse::settings()->value(PREVIEW_DURATION).toDouble();
 }

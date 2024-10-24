@@ -3,16 +3,15 @@
  */
 #pragma once
 
-#include "libraries/lib-preferences/BasicSettings.h"
-
-#include "types/val.h"
 #include <QSettings>
 
+#include "libraries/lib-preferences/BasicSettings.h"
+
 namespace au::au3 {
-class EffectSettings final : public audacity::BasicSettings
+class EffectConfigSettings final : public audacity::BasicSettings
 {
 public:
-    EffectSettings(const std::string& filename);
+    EffectConfigSettings(const std::string& filename);
 
     wxString GetGroup() const override;
     wxArrayString GetChildGroups() const override;

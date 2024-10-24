@@ -5,6 +5,8 @@
 
 #include "modularity/ioc.h"
 
+#include "internal/audioengine.h"
+
 using namespace au::audio;
 using namespace muse::modularity;
 
@@ -15,6 +17,9 @@ std::string AudioModule::moduleName() const
 
 void AudioModule::registerExports()
 {
+    m_audioEngine = std::make_shared<AudioEngine>();
+
+    ioc()->registerExport(moduleName(), m_audioEngine);
 }
 
 void AudioModule::resolveImports()

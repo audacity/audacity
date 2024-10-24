@@ -11,6 +11,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "au3audio/iaudioengine.h"
 
 class AudacityProject;
 class TrackList;
@@ -19,11 +20,14 @@ struct TransportSequences;
 namespace au::playback {
 class Au3Player : public IPlayer, public muse::async::Asyncable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<au::audio::IAudioEngine> audioEngine;
 
 public:
 
     Au3Player();
+
+    bool canPlay() const override;
 
     void play() override;
     void seek(const muse::secs_t newPosition) override;
@@ -31,6 +35,7 @@ public:
     void pause() override;
     void resume() override;
 
+    bool isRunning() const override;
     PlaybackStatus playbackStatus() const override;
     muse::async::Channel<PlaybackStatus> playbackStatusChanged() const override;
 
@@ -40,17 +45,22 @@ public:
     muse::secs_t playbackPosition() const override;
     muse::async::Channel<muse::secs_t> playbackPositionChanged() const override;
 
+    muse::Ret playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options = {}) override;
+
 private:
     AudacityProject& projectRef() const;
 
     bool canStopAudioStream() const;
-    TransportSequences makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo);
+    TransportSequences makeTransportTracks(TrackList& trackList, bool selectedOnly);
 
-    void updatePlaybackPosition();
+    muse::Ret doPlayTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options = {});
+
+    void updatePlaybackState();
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
 
     muse::Timer m_positionUpdateTimer;
     muse::ValCh<muse::secs_t> m_playbackPosition;
+    double m_startOffset = 0.0;
 };
 }

@@ -11,10 +11,8 @@
 
 #include "effectstypes.h"
 
-#include <optional>
-
 class AudacityProject;
-class EffectSettings;
+struct EffectSettings;
 namespace au::effects {
 class IEffectsProvider : MODULE_EXPORT_INTERFACE
 {

@@ -5,7 +5,7 @@
 
 #include "modularity/imoduleinterface.h"
 
-#include "global/io/path.h"
+#include "global/types/secs.h"
 
 namespace au::effects {
 class IEffectsConfiguration : MODULE_EXPORT_INTERFACE
@@ -15,6 +15,6 @@ public:
 
     virtual ~IEffectsConfiguration() = default;
 
-    virtual muse::io::path_t defaultPath() const = 0;
+    virtual muse::secs_t previewDuration() const = 0;
 };
 }

@@ -3,6 +3,8 @@
 */
 #include "au3player.h"
 
+#include "global/types/number.h"
+
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
@@ -22,7 +24,7 @@ Au3Player::Au3Player()
     : m_positionUpdateTimer(std::chrono::microseconds(1000))
 {
     m_positionUpdateTimer.onTimeout(this, [this]() {
-        updatePlaybackPosition();
+        updatePlaybackState();
     });
 
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
@@ -32,6 +34,11 @@ Au3Player::Au3Player()
             m_positionUpdateTimer.stop();
         }
     });
+}
+
+bool Au3Player::canPlay() const
+{
+    return !audioEngine()->isBusy();
 }
 
 void Au3Player::play()
@@ -146,9 +153,10 @@ void Au3Player::play()
         }
     }
 
-    int token = -1;
-
-    if (t1 != t0) {
+    muse::Ret ret;
+    PlayTracksOptions opts;
+    m_startOffset = 0.0;
+    if (!muse::is_equal(t1, t0)) {
         if (cutpreview) {
             const double tless = std::min(t0, t1);
             const double tgreater = std::max(t0, t1);
@@ -156,19 +164,12 @@ void Au3Player::play()
             gPrefs->Read(wxT("/AudioIO/CutPreviewBeforeLen"), &beforeLen, 2.0);
             gPrefs->Read(wxT("/AudioIO/CutPreviewAfterLen"), &afterLen, 1.0);
             double tcp0 = tless - beforeLen;
-            const double diff = tgreater - tless;
             double tcp1 = tgreater + afterLen;
             if (backwards) {
                 std::swap(tcp0, tcp1);
             }
-            AudioIOStartStreamOptions myOptions = options;
-            // myOptions.policyFactory
-            //     =[tless, diff](auto&) -> std::unique_ptr<PlaybackPolicy> {
-            //     return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
-            // };
-            token = gAudioIO->StartStream(
-                makeTransportTracks(TrackList::Get(project), false, nonWaveToo),
-                tcp0, tcp1, tcp1, myOptions);
+
+            ret = doPlayTracks(TrackList::Get(project), tcp0, tcp1, opts);
         } else {
             double mixerLimit = t1;
             if (newDefault) {
@@ -177,18 +178,43 @@ void Au3Player::play()
                     t1 = latestEnd;
                 }
             }
-            token = gAudioIO->StartStream(
-                makeTransportTracks(tracks, false, nonWaveToo),
-                t0, t1, mixerLimit, options);
-        }
-        if (token != 0) {
-            ProjectAudioIO::Get(project).SetAudioIOToken(token);
-        } else {
-            // XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
+            opts.mixerLimit = mixerLimit;
+            ret = doPlayTracks(TrackList::Get(project), t0, t1, opts);
         }
     }
 
     m_playbackStatus.set(PlaybackStatus::Running);
+}
+
+muse::Ret Au3Player::playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options)
+{
+    muse::Ret ret = doPlayTracks(trackList, t0, t1, options);
+    if (ret) {
+        m_playbackStatus.set(PlaybackStatus::Running);
+    }
+    return ret;
+}
+
+muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options)
+{
+    TransportSequences seqs = makeTransportTracks(trackList, options.selectedOnly);
+
+    double mixerLimit = options.mixerLimit;
+    if (mixerLimit < 0.0) {
+        mixerLimit = t1;
+    }
+
+    m_startOffset = options.startOffset;
+
+    AudacityProject& project = projectRef();
+    AudioIOStartStreamOptions sopts = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
+
+    int token = audioEngine()->startStream(seqs, t0, t1, mixerLimit, sopts);
+    if (token != 0) {
+        ProjectAudioIO::Get(project).SetAudioIOToken(token);
+    }
+
+    return token > 0 ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
 }
 
 void Au3Player::seek(const muse::secs_t newPosition)
@@ -267,6 +293,11 @@ void Au3Player::resume()
     m_playbackStatus.set(PlaybackStatus::Running);
 }
 
+bool Au3Player::isRunning() const
+{
+    return playbackStatus() == PlaybackStatus::Running;
+}
+
 PlaybackStatus Au3Player::playbackStatus() const
 {
     return m_playbackStatus.val;
@@ -294,9 +325,20 @@ void Au3Player::resetLoop()
     NOT_IMPLEMENTED;
 }
 
-void Au3Player::updatePlaybackPosition()
+void Au3Player::updatePlaybackState()
 {
-    m_playbackPosition.set(std::max(0.0, AudioIO::Get()->GetStreamTime()));
+    int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
+    bool isActive = AudioIO::Get()->IsStreamActive(token);
+    double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
+
+    //LOGDA() << "token: " << token << ", isActive: " << isActive << ", time: " << time;
+
+    if (isActive) {
+        m_playbackPosition.set(std::max(0.0, time));
+    } else {
+        m_playbackPosition.set(0);
+        stop();
+    }
 }
 
 muse::secs_t Au3Player::playbackPosition() const
@@ -324,7 +366,7 @@ bool Au3Player::canStopAudioStream() const
            || gAudioIO->GetOwningProject().get() == &project;
 }
 
-TransportSequences Au3Player::makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo)
+TransportSequences Au3Player::makeTransportTracks(TrackList& trackList, bool selectedOnly)
 {
     TransportSequences result;
     {
@@ -335,23 +377,5 @@ TransportSequences Au3Player::makeTransportTracks(TrackList& trackList, bool sel
                 StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
-#ifdef EXPERIMENTAL_MIDI_OUT
-    if (nonWaveToo) {
-        const auto range = trackList.Any<const PlayableTrack>()
-                           + (selectedOnly ? &Track::IsSelected : &Track::Any);
-        for (auto pTrack : range) {
-            if (!track_cast<const SampleTrack*>(pTrack)) {
-                if (auto pSequence
-                        =std::dynamic_pointer_cast<const OtherPlayableSequence>(
-                              pTrack->shared_from_this())
-                        ) {
-                    result.otherPlayableSequences.push_back(pSequence);
-                }
-            }
-        }
-    }
-#else
-    UNUSED(nonWaveToo);
-#endif
     return result;
 }
