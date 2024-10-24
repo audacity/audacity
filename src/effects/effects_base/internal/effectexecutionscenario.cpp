@@ -31,13 +31,13 @@ static const int UNDEFINED_FREQUENCY = -1;
 
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
-    AudacityProject& project = projectRef();
+    au3::Au3Project& project = projectRef();
     return doPerformEffect(project, effectId, 0);
 }
 
-AudacityProject& EffectExecutionScenario::projectRef()
+au::au3::Au3Project& EffectExecutionScenario::projectRef()
 {
-    return *reinterpret_cast<::AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    return *reinterpret_cast<au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
 }
 
 muse::Ret EffectExecutionScenario::repeatLastProcessor()
@@ -45,11 +45,11 @@ muse::Ret EffectExecutionScenario::repeatLastProcessor()
     IF_ASSERT_FAILED(m_lastProcessorId) {
         return muse::make_ret(Ret::Code::UnknownError);
     }
-    AudacityProject& project = projectRef();
+    au3::Au3Project& project = projectRef();
     return doPerformEffect(project, *m_lastProcessorId, EffectManager::kConfigured);
 }
 
-muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, const EffectId& effectId, unsigned flags)
+muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned flags)
 {
     //! ============================================================================
     //! NOTE Step 1 - check input params (effect is present and available, selection)
@@ -322,7 +322,7 @@ muse::async::Channel<EffectId> EffectExecutionScenario::lastProcessorIdChanged()
 
 muse::Ret EffectExecutionScenario::previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings)
 {
-    AudacityProject& project = projectRef();
+    au3::Au3Project& project = projectRef();
     Effect* effect = effectInstancesRegister()->instanceById(effectInstanceId);
     return effectsProvider()->previewEffect(project, effect, settings);
 }

@@ -10,7 +10,6 @@
 
 #include "au3wrap/au3types.h"
 
-class AudacityProject;
 namespace au::projectscene {
 class Au3WavePainter : public IWavePainter
 {
@@ -22,7 +21,7 @@ public:
     void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params) override;
 
 private:
-    AudacityProject& projectRef() const;
+    au3::Au3Project& projectRef() const;
     void doPaint(QPainter& painter, const au3::Au3WaveTrack* track, const au3::Au3WaveClip* clip, const Params& params);
 };
 }

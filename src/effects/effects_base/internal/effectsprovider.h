@@ -33,10 +33,10 @@ public:
 
     muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
 
-    muse::Ret performEffect(AudacityProject& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
+    muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                             EffectSettings& settings) override;
 
-    muse::Ret previewEffect(AudacityProject& project, Effect* effect, EffectSettings& settings) override;
+    muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) override;
 
 private:
 

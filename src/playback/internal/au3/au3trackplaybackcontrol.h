@@ -7,7 +7,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-class AudacityProject;
+#include "au3wrap/au3types.h"
 
 namespace au::playback {
 using au::audio::volume_dbfs_t;
@@ -26,6 +26,6 @@ public:
     void setBalance(long trackId, balance_t balance) override;
 
 private:
-    AudacityProject& projectRef() const;
+    au3::Au3Project& projectRef() const;
 };
 }

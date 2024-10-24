@@ -5,7 +5,6 @@
 
 #include "../../itrackeditproject.h"
 
-class AudacityProject;
 struct TrackListEvent;
 namespace au::trackedit {
 class Au3TrackeditProject : public ITrackeditProject
@@ -23,7 +22,7 @@ public:
 
     void onTrackAdded(const Track& track) override;
     void onTrackChanged(const Track& track) override;
-    void onTrackRemoved(const Track &track) override;
+    void onTrackRemoved(const Track& track) override;
 
     void onClipChanged(const Clip& clip) override;
     void onClipAdded(const Clip& clip) override;

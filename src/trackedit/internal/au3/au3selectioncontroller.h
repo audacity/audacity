@@ -8,7 +8,8 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-class AudacityProject;
+#include "au3wrap/au3types.h"
+
 namespace au::trackedit {
 class Au3SelectionController : public ISelectionController
 {
@@ -50,7 +51,7 @@ public:
     muse::async::Channel<trackedit::secs_t> dataSelectedEndTimeSelected() const override;
 
 private:
-    AudacityProject& projectRef() const;
+    au3::Au3Project& projectRef() const;
 
     template<typename T>
     struct Val {

@@ -11,7 +11,7 @@
 #include "libraries/lib-project-rate/ProjectRate.h"
 
 #include "au3audioinoutmeter.h"
-#include "au3wrap/internal/au3types.h"
+#include "au3wrap/au3types.h"
 
 #include "au3audio/audiotypes.h"
 
@@ -39,7 +39,7 @@ Au3AudioOutput::Au3AudioOutput()
 
 void Au3AudioOutput::initMeter()
 {
-    AudacityProject* project = projectRef();
+    Au3Project* project = projectRef();
     if (!project) {
         return;
     }
@@ -90,7 +90,7 @@ muse::async::Channel<float> Au3AudioOutput::playbackVolumeChanged() const
 
 au::audio::sample_rate_t Au3AudioOutput::sampleRate() const
 {
-    AudacityProject* project = projectRef();
+    Au3Project* project = projectRef();
     if (!project) {
         return 1.0;
     }
@@ -108,11 +108,11 @@ muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::Audio
     return m_outputMeter->signalChanges();
 }
 
-AudacityProject* Au3AudioOutput::projectRef() const
+Au3Project* Au3AudioOutput::projectRef() const
 {
     if (!globalContext()->currentProject()) {
         return nullptr;
     }
 
-    return reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    return reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
 }

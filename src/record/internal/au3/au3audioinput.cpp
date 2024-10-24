@@ -10,7 +10,7 @@
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
 #include "playback/internal/au3/au3audioinoutmeter.h"
-#include "au3wrap/internal/au3types.h"
+#include "au3wrap/au3types.h"
 
 #include "au3audio/audiotypes.h"
 
@@ -38,7 +38,7 @@ Au3AudioInput::Au3AudioInput()
 
 void Au3AudioInput::initMeter()
 {
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
 
     auto& projectAudioIO = ProjectAudioIO::Get(project);
     projectAudioIO.SetCaptureMeter(m_inputMeter);
@@ -84,8 +84,8 @@ muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::Audio
     return m_inputMeter->signalChanges();
 }
 
-AudacityProject& Au3AudioInput::projectRef() const
+Au3Project& Au3AudioInput::projectRef() const
 {
-    AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }

@@ -10,6 +10,7 @@
 #include "libraries/lib-project/Project.h"
 
 using namespace au::trackedit;
+using namespace au::au3;
 
 void au::trackedit::Au3ProjectHistory::init()
 {
@@ -45,8 +46,8 @@ void au::trackedit::Au3ProjectHistory::redo()
     auto& undoManager = UndoManager::Get(project);
     undoManager.Redo(
         [&]( const UndoStackElem& elem ){
-            ::ProjectHistory::Get(project).PopState(elem.state);
-        });
+        ::ProjectHistory::Get(project).PopState(elem.state);
+    });
 }
 
 void au::trackedit::Au3ProjectHistory::undoUnsaved()
@@ -75,7 +76,7 @@ void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longD
     ::ProjectHistory::Get(project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} });
 }
 
-::AudacityProject& au::trackedit::Au3ProjectHistory::projectRef()
+Au3Project& au::trackedit::Au3ProjectHistory::projectRef()
 {
-    return *reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    return *reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
 }

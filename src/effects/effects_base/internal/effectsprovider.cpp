@@ -116,7 +116,7 @@ muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInst
     return rv.ret;
 }
 
-muse::Ret EffectsProvider::performEffect(AudacityProject& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,
+muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,
                                          EffectSettings& settings)
 {
     //! ============================================================================
@@ -420,7 +420,7 @@ static void EffectPreview(EffectBase& effect,
     }
 }
 
-muse::Ret EffectsProvider::previewEffect(AudacityProject&, Effect* effect, EffectSettings& settings)
+muse::Ret EffectsProvider::previewEffect(au3::Au3Project&, Effect* effect, EffectSettings& settings)
 {
     std::shared_ptr<SimpleEffectSettingsAccess> pAccess = std::make_shared<SimpleEffectSettingsAccess>(settings);
     EffectPreview(*effect, *pAccess.get(), nullptr, false);

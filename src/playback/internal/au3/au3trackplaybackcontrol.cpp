@@ -6,9 +6,9 @@
 using namespace au::playback;
 using namespace au::au3;
 
-AudacityProject& Au3TrackPlaybackControl::projectRef() const
+Au3Project& Au3TrackPlaybackControl::projectRef() const
 {
-    AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }
 

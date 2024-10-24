@@ -19,7 +19,7 @@ using namespace au::au3;
 
 struct Au3TrackeditProject::Au3Impl
 {
-    AudacityProject* prj = nullptr;
+    Au3Project* prj = nullptr;
     Au3TrackList* trackList = nullptr;
 
     // events
@@ -30,7 +30,7 @@ struct Au3TrackeditProject::Au3Impl
 Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3project)
 {
     m_impl = std::make_shared<Au3Impl>();
-    m_impl->prj = reinterpret_cast<AudacityProject*>(au3project->au3ProjectPtr());
+    m_impl->prj = reinterpret_cast<Au3Project*>(au3project->au3ProjectPtr());
     m_impl->trackList = &Au3TrackList::Get(*m_impl->prj);
     m_impl->tracksSubc = m_impl->trackList->Subscribe([this](const TrackListEvent& e) {
         onTrackListEvent(e);

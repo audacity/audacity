@@ -9,7 +9,7 @@
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 
-class AudacityProject;
+#include "au3wrap/au3types.h"
 
 namespace au::trackedit {
 class Au3ProjectHistory : public IProjectHistory
@@ -29,6 +29,6 @@ public:
         const std::string& longDescription, const std::string& shortDescription) override;
 
 private:
-    ::AudacityProject& projectRef();
+    au3::Au3Project& projectRef();
 };
 }
