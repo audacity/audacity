@@ -6,6 +6,9 @@
 #include "../../itrackeditinteraction.h"
 
 #include "Track.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+
 #include "iinteractive.h"
 #include "iprojecthistory.h"
 #include "iselectioncontroller.h"
@@ -88,6 +91,7 @@ private:
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin);
+    void trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin, secs_t end, std::shared_ptr<WaveClip> otherClip);
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
