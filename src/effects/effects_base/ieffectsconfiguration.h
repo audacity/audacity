@@ -5,8 +5,6 @@
 
 #include "modularity/imoduleinterface.h"
 
-#include "global/io/path.h"
-
 namespace au::effects {
 class IEffectsConfiguration : MODULE_EXPORT_INTERFACE
 {
@@ -14,7 +12,5 @@ class IEffectsConfiguration : MODULE_EXPORT_INTERFACE
 public:
 
     virtual ~IEffectsConfiguration() = default;
-
-    virtual muse::io::path_t defaultPath() const = 0;
 };
 }

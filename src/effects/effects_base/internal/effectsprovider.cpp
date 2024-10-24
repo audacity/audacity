@@ -216,7 +216,7 @@ void EffectsProvider::doEffectPreview(EffectBase& effect,
     }
 
     auto player = playback()->player();
-    if (!player->canPlay()) {
+    if (!player->isBusy()) {
         LOGW() << "can't play, maybe audio is busy";
         return;
     }
@@ -228,9 +228,7 @@ void EffectsProvider::doEffectPreview(EffectBase& effect,
     bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
     bool isGenerator = effect.GetType() == EffectTypeGenerate;
 
-    // Mix a few seconds of audio from all of the tracks
-    double previewLen;
-    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen, 6.0);
+    const double previewLen = effect.mT1 - effect.mT0;
 
     const auto& settings = access.Get();
     if (isNyquist && isGenerator) {
@@ -351,8 +349,9 @@ void EffectsProvider::doEffectPreview(EffectBase& effect,
         t1 = std::min(mT0 + previewLen, mT1);
 
         // Start audio playing
-        playback::PlayTracksOptions opt = { .selectedOnly = true,
-                                            .startOffset = startOffset };
+        playback::PlayTracksOptions opt;
+        opt.selectedOnly = true;
+        opt.startOffset = startOffset;
         muse::Ret ret = player->playTracks(*mTracks, mT0, t1, opt);
 
         if (ret) {
@@ -373,7 +372,7 @@ void EffectsProvider::doEffectPreview(EffectBase& effect,
 
             player->stop();
 
-            while (!player->canPlay()) {
+            while (!player->isBusy()) {
                 using namespace std::chrono;
                 std::this_thread::sleep_for(100ms);
             }

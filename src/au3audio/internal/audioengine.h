@@ -13,7 +13,7 @@ public:
 
     bool isBusy() const override;
 
-    int startStream(const TransportSequences& sequences, double t0, double t1, double mixerLimit,
+    int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
                     const AudioIOStartStreamOptions& options) override;
 };
 }

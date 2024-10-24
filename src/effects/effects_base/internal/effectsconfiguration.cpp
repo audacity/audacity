@@ -3,9 +3,13 @@
 */
 #include "effectsconfiguration.h"
 
+#include "global/settings.h"
+
 using namespace au::effects;
 
-muse::io::path_t EffectsConfiguration::defaultPath() const
+static const std::string moduleName("effects");
+
+void EffectsConfiguration::init()
 {
-    return globalConfiguration()->appDataPath() + "/builtineffects";
+
 }

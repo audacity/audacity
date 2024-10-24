@@ -15,7 +15,7 @@ class IPlayer
 public:
     virtual ~IPlayer() = default;
 
-    virtual bool canPlay() const = 0;
+    virtual bool isBusy() const = 0;
 
     virtual void play() = 0;
     virtual void seek(const muse::secs_t newPosition) = 0;
@@ -34,7 +34,7 @@ public:
     virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
 
     // tracks
-    virtual muse::Ret playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options = {}) = 0;
+    virtual muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) = 0;
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;

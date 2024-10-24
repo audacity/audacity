@@ -13,9 +13,7 @@
 
 #include "effectstypes.h"
 
-#include <optional>
-
-class EffectSettings;
+struct EffectSettings;
 namespace au::effects {
 class IEffectsProvider : MODULE_EXPORT_INTERFACE
 {
