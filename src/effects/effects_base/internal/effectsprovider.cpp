@@ -228,8 +228,7 @@ void EffectsProvider::doEffectPreview(EffectBase& effect,
     bool isGenerator = effect.GetType() == EffectTypeGenerate;
 
     // Mix a few seconds of audio from all of the tracks
-    double previewLen;
-    gPrefs->Read(wxT("/AudioIO/EffectsPreviewLen"), &previewLen, 6.0);
+    double previewLen = configuration()->previewDuration();
 
     const auto& settings = access.Get();
     if (isNyquist && isGenerator) {
@@ -350,8 +349,9 @@ void EffectsProvider::doEffectPreview(EffectBase& effect,
         t1 = std::min(mT0 + previewLen, mT1);
 
         // Start audio playing
-        playback::PlayTracksOptions opt = { .selectedOnly = true,
-                                            .startOffset = startOffset };
+        playback::PlayTracksOptions opt;
+        opt.selectedOnly = true;
+        opt.startOffset = startOffset;
         muse::Ret ret = player->playTracks(*mTracks, mT0, t1, opt);
 
         if (ret) {
