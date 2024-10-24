@@ -91,20 +91,26 @@ std::vector<au::trackedit::TrackId> Au3Interaction::determineDestinationTracksId
     return tracksIds;
 }
 
-muse::Ret Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds, secs_t begin) const
+muse::Ret Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds, const std::vector<TrackData> &clipsToPaste, secs_t begin) const
 {
+    IF_ASSERT_FAILED(dstTracksIds.size() <= clipsToPaste.size()) {
+        return make_ret(trackedit::Err::NotEnoughDataInClipboard);
+    }
+
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(dstTracksIds[i]));
         IF_ASSERT_FAILED(dstWaveTrack) {
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
 
-        secs_t insertDuration = clipboard()->trackData(i).track.get()->GetEndTime() - clipboard()->trackData(i).track.get()->GetStartTime();
+        //! NOTE need to snap begin just like Paste() function do
+        secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
+        secs_t insertDuration = clipsToPaste.at(i).track.get()->GetEndTime();
 
         // throws incosistency exception if project tempo is not set, see:
         // au4/src/au3wrap/internal/au3project.cpp: 92
         // Paste func throws exception if there's not enough space to paste in (exception handler calls BasicUI logic)
-        if (!dstWaveTrack->IsEmpty(begin, begin + insertDuration)) {
+        if (!dstWaveTrack->IsEmpty(snappedBegin, snappedBegin + insertDuration)) {
             LOGD() << "Not enough space to paste clip into";
             return make_ret(trackedit::Err::NotEnoughSpaceForPaste);
         }
@@ -115,6 +121,147 @@ muse::Ret Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds
     }
 
     return muse::make_ok();
+}
+
+muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return make_ret(trackedit::Err::WaveTrackNotFound);
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return make_ret(trackedit::Err::ClipNotFound);
+    }
+
+    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+
+    clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
+        return c1->GetPlayStartTime() < c2->GetPlayStartTime();
+    });
+
+    for (const auto& otherClip : clips) {
+        if (clip == otherClip) {
+            //! NOTE do not modify the clip the action was taken on
+            continue;
+        }
+
+        trimOrDeleteOverlapping(waveTrack, clip->GetPlayStartTime(), clip->GetPlayEndTime(), otherClip);
+    }
+
+    return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId> &tracksIds, const std::vector<TrackData> &trackData, secs_t begin)
+{
+    IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
+        return make_ret(trackedit::Err::NotEnoughDataInClipboard);
+    }
+
+    for (size_t i = 0; i < tracksIds.size(); ++i) {
+        WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
+        IF_ASSERT_FAILED(dstWaveTrack) {
+            return make_ret(trackedit::Err::WaveTrackNotFound);
+        }
+
+        //! NOTE need to snap begin just like Paste() function do
+        secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
+        secs_t insertDuration = trackData.at(i).track.get()->GetEndTime();
+
+        auto ok = makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
+        if (!ok) {
+            return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        }
+    }
+
+    return muse::make_ok();
+}
+
+muse::Ret Au3Interaction::makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return make_ret(trackedit::Err::WaveTrackNotFound);
+    }
+
+    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+
+    clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
+        return c1->GetPlayStartTime() < c2->GetPlayStartTime();
+    });
+
+    for (const auto& otherClip : clips) {
+        trimOrDeleteOverlapping(waveTrack, begin, end, otherClip);
+    }
+
+    return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+void Au3Interaction::trimOrDeleteOverlapping(WaveTrack *waveTrack, secs_t begin, secs_t end, std::shared_ptr<WaveClip> otherClip)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+        && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+
+        waveTrack->RemoveInterval(otherClip);
+        prj->onTrackChanged(DomConverter::track(waveTrack));
+
+        return;
+    }
+
+    //! NOTE check if clip boundaries are within other clip
+    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+        && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+        secs_t otherClipStartTime = otherClip->GetPlayStartTime();
+        secs_t otherClipEndTime = otherClip->GetPlayEndTime();
+
+        auto leftClip = waveTrack->CopyClip(*otherClip, true);
+        waveTrack->InsertInterval(std::move(leftClip), false);
+        prj->onTrackChanged(DomConverter::track(waveTrack));
+
+        secs_t rightClipOverlap = (end - otherClip->GetPlayStartTime());
+        otherClip->TrimLeft(rightClipOverlap);
+        prj->onClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+        leftClip->SetPlayStartTime(otherClipStartTime);
+        secs_t leftClipOverlap = (otherClipEndTime - begin);
+        leftClip->TrimRight(leftClipOverlap);
+        prj->onClipChanged(DomConverter::clip(waveTrack, leftClip.get()));
+
+        prj->onTrackChanged(DomConverter::track(waveTrack));
+
+        return;
+    }
+
+    //! NOTE check if clip hovers left side of the clip
+    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+        && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())
+        && muse::RealIsEqualOrMore(end, otherClip->GetPlayStartTime())) {
+
+        secs_t overlap = (end - otherClip->GetPlayStartTime());
+        otherClip->TrimLeft(overlap);
+        prj->onClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+        return;
+    }
+
+    //! NOTE check if clip hovers right side of the clip
+    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
+        && muse::RealIsEqualOrLess(begin, otherClip->GetPlayEndTime())
+        && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+
+        secs_t overlap = (otherClip->GetPlayEndTime() - begin);
+        otherClip->TrimRight(overlap);
+        prj->onClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
+
+        return;
+    }
 }
 
 muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
@@ -144,71 +291,17 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
         return false;
     }
 
-    //! NOTE Let's check for intersection with the previous and next clips
-    //! Clips in AU3 model may not be sorted by time, so we need to get all clips and sort them by time
+    if (completed)
     {
-        std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
-
-        clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
-            return c1->GetPlayStartTime() < c2->GetPlayStartTime();
-        });
-
-        auto it = std::find_if(clips.begin(), clips.end(), [&clip](const std::shared_ptr<WaveClip>& c) {
-            return clip.get() == c.get();
-        });
-        IF_ASSERT_FAILED(it != clips.end()) {
+        auto ok = makeRoomForClip(clipKey);
+        if (!ok) {
             return false;
         }
+    }
 
-        //! NOTE If the new time is greater than the previous one, we check for an intersection with the next one
-        if (newStartTime > clip->GetPlayStartTime()) {
-            auto nextIt = ++it;
-            //! NOTE Let's check if the clip is not the last one
-            if (nextIt != clips.end()) {
-                std::shared_ptr<WaveClip> nextClip = *nextIt;
-                secs_t nextStartTime = nextClip->GetPlayStartTime();
-                secs_t deltaSec = newStartTime - clip->GetPlayStartTime();
-
-                // check collision
-                if ((clip->GetPlayEndTime() + deltaSec) > nextStartTime) {
-                    //! NOTE If we have reached the limit, we do nothing.
-                    //! TODO maybe there is a problem here, the end time of the clip may coincide with the start time of the next clip
-                    if (muse::is_equal(clip->GetPlayEndTime(), nextStartTime.to_double())) {
-                        LOGW() << "You can't change the clip time because it overlaps with the next one.";
-                        return false;
-                    }
-                    //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
-                    else {
-                        deltaSec = nextStartTime - clip->GetPlayEndTime();
-                        newStartTime = clip->GetPlayStartTime() + deltaSec;
-                    }
-                }
-            }
-        }
-
-        if (newStartTime < clip->GetPlayStartTime()) {
-            //! NOTE For the first clip, the end time is 0.0
-            secs_t prevEndTime = 0.0;
-            if (it != clips.begin()) {
-                auto prevIt = --it;
-                std::shared_ptr<WaveClip> pervClip = *prevIt;
-                prevEndTime = pervClip->GetPlayEndTime();
-            }
-
-            // check collision
-            if (newStartTime < prevEndTime) {
-                //! NOTE If we have reached the limit, we do nothing.
-                //! TODO maybe there is a problem here, the start time of the clip may coincide with the end time of the prev clip
-                if (muse::is_equal(clip->GetPlayStartTime(), prevEndTime.to_double())) {
-                    LOGW() << "You can't change the clip time because it overlaps with the prev one.";
-                    return false;
-                }
-                //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
-                else {
-                    newStartTime = prevEndTime;
-                }
-            }
-        }
+    if (!muse::RealIsEqualOrMore(newStartTime, 0.0)) {
+        LOGW() << "You can't change the clip time to less than 0.0";
+        return false;
     }
 
     //! TODO Not sure what this method needs to be called to change the position, will need to clarify
@@ -336,8 +429,22 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     }
 
     // check if copied data fits into selected area
-    auto ret = canPasteClips(dstTracksIds, begin);
+    auto copiedData = clipboard()->trackData();
+    auto ret = canPasteClips(dstTracksIds, copiedData, begin);
     if (!ret) {
+        if (!ret.code() == static_cast<int>(trackedit::Err::NotEnoughSpaceForPaste)) {
+            return ret;
+        }
+
+        auto ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin);
+        if (!ok) {
+            make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        }
+    }
+
+    //! NOTE This shouldn't happen, leaving this for now
+    //! for debugging purposes
+    if (!canPasteClips(dstTracksIds, copiedData, begin)) {
         return ret;
     }
 
@@ -374,7 +481,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
 
     if (newTracksNeeded) {
         // remove already pasted elements from the clipboard and paste the rest into the new tracks
-        clipboard()->eraseTrackData(clipboard()->trackData().begin(), clipboard()->trackData().begin() + dstTracksIds.size());
+        clipboard()->eraseFromBeginning(dstTracksIds.size());
         return pasteIntoNewTrack();
     }
 
@@ -750,6 +857,13 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool 
         return false;
     }
 
+    if (completed) {
+        auto ok = makeRoomForClip(clipKey);
+        if (!ok) {
+            return false;
+        }
+    }
+
     clip->TrimLeft(deltaSec);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -772,6 +886,13 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
+    }
+
+    if (completed) {
+        auto ok = makeRoomForClip(clipKey);
+        if (!ok) {
+            make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        }
     }
 
     clip->TrimRight(deltaSec);

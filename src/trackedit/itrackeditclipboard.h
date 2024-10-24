@@ -14,6 +14,8 @@ struct TrackData
     // Track type from Track.h
     std::shared_ptr<::Track> track;
     au::trackedit::ClipKey clipKey;
+
+    inline bool isValid() const { return clipKey.isValid() && track != nullptr; }
 };
 
 class ITrackeditClipboard : MODULE_EXPORT_INTERFACE
@@ -29,6 +31,6 @@ public:
     virtual bool trackDataEmpty() const = 0;
     virtual size_t trackDataSize() const = 0;
     virtual void addTrackData(const TrackData& trackData) = 0;
-    virtual void eraseTrackData(std::vector<TrackData>::iterator begin, std::vector<TrackData>::iterator end) = 0;
+    virtual void eraseFromBeginning(size_t i) = 0;
 };
 }
