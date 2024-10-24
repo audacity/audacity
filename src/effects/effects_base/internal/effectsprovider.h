@@ -5,6 +5,7 @@
 
 #include "modularity/ioc.h"
 #include "global/iinteractive.h"
+#include "playback/iplayback.h"
 #include "effects/builtin/ibuiltineffectsrepository.h"
 #include "effects/vst/ivsteffectsrepository.h"
 #include "effects/nyquist/inyquisteffectsrepository.h"
@@ -12,6 +13,8 @@
 
 #include "../ieffectsprovider.h"
 
+class EffectBase;
+class EffectSettingsAccess;
 namespace au::effects {
 class EffectsProvider : public IEffectsProvider
 {
@@ -20,6 +23,7 @@ class EffectsProvider : public IEffectsProvider
     muse::Inject<IVstEffectsRepository> vstEffectsRepository;
     muse::Inject<INyquistEffectsRepository> nyquistEffectsRepository;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<playback::IPlayback> playback;
 
 public:
     void reloadEffects() override;
@@ -42,6 +46,8 @@ private:
 
     bool isVstSupported() const;
     bool isNyquistSupported() const;
+
+    void doEffectPreview(EffectBase& effect, EffectSettingsAccess& access, std::function<void()> updateUI, bool dryOnly);
 
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
