@@ -7,11 +7,9 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "trackedit/iselectioncontroller.h"
 
 #include "au3wrap/au3types.h"
 
-class WaveClip;
 class AudacityProject;
 namespace au::projectscene {
 class Au3WavePainter : public IWavePainter
@@ -25,6 +23,6 @@ public:
 
 private:
     AudacityProject& projectRef() const;
-    void doPaint(QPainter& painter, const au3::Au3WaveTrack* track, const WaveClip* clip, const Params& params);
+    void doPaint(QPainter& painter, const au3::Au3WaveTrack* track, const au3::Au3WaveClip* clip, const Params& params);
 };
 }

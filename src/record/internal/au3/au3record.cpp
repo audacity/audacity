@@ -257,7 +257,7 @@ void Au3Record::init()
             return;
         }
 
-        std::shared_ptr<WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, pendingClipId);
+        std::shared_ptr<Au3WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, pendingClipId);
         IF_ASSERT_FAILED(pendingClip) {
             return;
         }

@@ -112,9 +112,9 @@ class WaveformPainter final : public WaveClipListener
 {
 public:
 
-    static WaveformPainter& Get(const WaveClip& cache);
+    static WaveformPainter& Get(const Au3WaveClip& cache);
 
-    WaveformPainter& EnsureClip(const WaveClip& clip)
+    WaveformPainter& EnsureClip(const Au3WaveClip& clip)
     {
         const auto changed = mChanged.exchange(false);
         if (&clip != mWaveClip || changed) {
@@ -208,7 +208,7 @@ public:
     }
 
 private:
-    const WaveClip* mWaveClip {};
+    const Au3WaveClip* mWaveClip {};
 
     struct ChannelCaches final
     {
@@ -243,13 +243,13 @@ auto WaveformSettings::Clone() const -> PointerType
     return std::make_unique<WaveformSettings>(*this);
 }
 
-static WaveClip::Attachments::RegisteredFactory sKeyW{ [](WaveClip&) {
+static Au3WaveClip::Attachments::RegisteredFactory sKeyW{ [](Au3WaveClip&) {
         return std::make_unique<WaveformPainter>();
     } };
 
-WaveformPainter& WaveformPainter::Get(const WaveClip& clip)
+WaveformPainter& WaveformPainter::Get(const Au3WaveClip& clip)
 {
-    return const_cast< WaveClip& >(clip)   // Consider it mutable data
+    return const_cast< Au3WaveClip& >(clip)   // Consider it mutable data
            .Attachments::Get<WaveformPainter>(sKeyW).EnsureClip(clip);
 }
 
@@ -384,7 +384,7 @@ int GetWaveYPos(float value, float min, float max,
 void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rect,
                            const Style& style,
                            const ZoomInfo& zoomInfo,
-                           const WaveClip& clip,
+                           const Au3WaveClip& clip,
                            int leftOffset,
                            float zoomMin, float zoomMax,
                            bool dB, float dBRange,
@@ -508,7 +508,7 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
 void DrawMinMaxRMS(int channelIndex, QPainter& painter,
                    const WaveMetrics& metrics,
                    const Style& style,
-                   const WaveClip& clip,
+                   const Au3WaveClip& clip,
                    double zoomMin, double zoomMax,
                    bool dB, double dbRange)
 {
@@ -544,7 +544,7 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
     waveformPainter.Draw(channelIndex, painter, paintParameters, _metrics);
 }
 
-static bool showIndividualSamples(const WaveClip& clip, bool zoom)
+static bool showIndividualSamples(const Au3WaveClip& clip, bool zoom)
 {
     const double sampleRate = clip.GetRate();
     const double stretchRatio = clip.GetStretchRatio();
@@ -559,7 +559,7 @@ static bool showIndividualSamples(const WaveClip& clip, bool zoom)
 static void DrawWaveform(int channelIndex,
                          QPainter& painter,
                          Au3WaveTrack& track,
-                         const WaveClip& clip,
+                         const Au3WaveClip& clip,
                          const WaveMetrics& metrics,
                          double zoom,
                          const Style& style,
@@ -643,7 +643,7 @@ void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
         return;
     }
 
-    std::shared_ptr<WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, pendingClipId);
+    std::shared_ptr<Au3WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, pendingClipId);
     IF_ASSERT_FAILED(pendingClip) {
         return;
     }
@@ -651,7 +651,7 @@ void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     doPaint(painter, pendingWaveTrack, pendingClip.get(), params);
 }
 
-void Au3WavePainter::doPaint(QPainter& painter, const Au3WaveTrack* _track, const WaveClip* clip, const Params& params)
+void Au3WavePainter::doPaint(QPainter& painter, const Au3WaveTrack* _track, const Au3WaveClip* clip, const Params& params)
 {
     auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 

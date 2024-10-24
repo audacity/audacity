@@ -125,7 +125,7 @@ muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) co
         return -1.0;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return -1.0;
     }
@@ -140,7 +140,7 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -148,13 +148,13 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
     //! NOTE Let's check for intersection with the previous and next clips
     //! Clips in AU3 model may not be sorted by time, so we need to get all clips and sort them by time
     {
-        std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+        std::list<std::shared_ptr<Au3WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
 
-        clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
+        clips.sort([](const std::shared_ptr<Au3WaveClip>& c1, const std::shared_ptr<Au3WaveClip>& c2) {
             return c1->GetPlayStartTime() < c2->GetPlayStartTime();
         });
 
-        auto it = std::find_if(clips.begin(), clips.end(), [&clip](const std::shared_ptr<WaveClip>& c) {
+        auto it = std::find_if(clips.begin(), clips.end(), [&clip](const std::shared_ptr<Au3WaveClip>& c) {
             return clip.get() == c.get();
         });
         IF_ASSERT_FAILED(it != clips.end()) {
@@ -166,7 +166,7 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
             auto nextIt = ++it;
             //! NOTE Let's check if the clip is not the last one
             if (nextIt != clips.end()) {
-                std::shared_ptr<WaveClip> nextClip = *nextIt;
+                std::shared_ptr<Au3WaveClip> nextClip = *nextIt;
                 secs_t nextStartTime = nextClip->GetPlayStartTime();
                 secs_t deltaSec = newStartTime - clip->GetPlayStartTime();
 
@@ -192,7 +192,7 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
             secs_t prevEndTime = 0.0;
             if (it != clips.begin()) {
                 auto prevIt = --it;
-                std::shared_ptr<WaveClip> pervClip = *prevIt;
+                std::shared_ptr<Au3WaveClip> pervClip = *prevIt;
                 prevEndTime = pervClip->GetPlayEndTime();
             }
 
@@ -291,7 +291,7 @@ bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const mu
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -389,7 +389,7 @@ bool Au3Interaction::cutClipIntoClipboard(const ClipKey& clipKey)
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -443,7 +443,7 @@ bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -461,7 +461,7 @@ bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t be
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -493,7 +493,7 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -513,7 +513,7 @@ bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, secs_t be
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -648,7 +648,7 @@ bool Au3Interaction::duplicateClip(const ClipKey& clipKey)
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -671,7 +671,7 @@ bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -695,7 +695,7 @@ bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -748,7 +748,7 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool 
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -772,7 +772,7 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool
         return false;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return false;
     }
@@ -841,7 +841,7 @@ muse::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) con
         return -1.0;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
         return -1.0;
     }
