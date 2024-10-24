@@ -56,10 +56,13 @@ public:
     bool splitDeleteSelectedOnTracks(const std::vector<TrackId> tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
+    muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+    
     void newMonoTrack() override;
     void newStereoTrack() override;
     void newLabelTrack() override;
-    muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+    void deleteTrack(const TrackId trackId) override;
+
     void undo() override;
     void redo() override;
 

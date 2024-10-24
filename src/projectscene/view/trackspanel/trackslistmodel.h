@@ -43,9 +43,8 @@ public:
 
     Q_INVOKABLE void addTrack(TrackTypes::Type type);
     Q_INVOKABLE void addTracks(TrackTypes::Type type, int quantity);
-    Q_INVOKABLE void duplicateTrack(int index);
-    Q_INVOKABLE void deleteTrack(int index);
-    Q_INVOKABLE void openEffectsForTrack(int index);
+    Q_INVOKABLE void duplicateTrack(int row);
+    Q_INVOKABLE void openEffectsForTrack(int row);
 
     Q_INVOKABLE QItemSelectionModel* selectionModel() const;
     Q_INVOKABLE void selectRow(int rowIndex);
