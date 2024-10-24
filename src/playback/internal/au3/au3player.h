@@ -50,7 +50,8 @@ private:
     au3::Au3Project& projectRef() const;
 
     bool canStopAudioStream() const;
-    TransportSequences makeTransportTracks(au3::Au3TrackList& trackList, bool selectedOnly, bool nonWaveToo);
+
+    TransportSequences makeTransportTracks(au3::Au3TrackList& trackList, bool selectedOnly);
 
     muse::Ret doPlayTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options = {});
 
