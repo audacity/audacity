@@ -20,6 +20,7 @@
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
 #include "au3wrap/au3types.h"
+#include "playback/iplayer.h"
 
 #include "log.h"
 
@@ -190,37 +191,8 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
     return success ? muse::make_ok() : muse::make_ret(Ret::Code::UnknownError);
 }
 
-static TransportSequences MakeTransportTracks(
-    TrackList& trackList, bool selectedOnly, bool nonWaveToo = false)
-{
-    TransportSequences result;
-    {
-        const auto range = trackList.Any<WaveTrack>()
-                           + (selectedOnly ? &Track::IsSelected : &Track::Any);
-        for (auto pTrack : range) {
-            result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
-        }
-    }
-    if (nonWaveToo) {
-        const auto range = trackList.Any<const PlayableTrack>()
-                           + (selectedOnly ? &Track::IsSelected : &Track::Any);
-        for (auto pTrack : range) {
-            if (!track_cast<const SampleTrack*>(pTrack)) {
-                if (auto pSequence
-                        =std::dynamic_pointer_cast<const OtherPlayableSequence>(
-                              pTrack->shared_from_this())
-                        ) {
-                    result.otherPlayableSequences.push_back(pSequence);
-                }
-            }
-        }
-    }
-    return result;
-}
-
-static void EffectPreview(EffectBase& effect,
-                          EffectSettingsAccess& access, std::function<void()> updateUI, bool dryOnly)
+void EffectsProvider::doEffectPreview(EffectBase& effect,
+                                      EffectSettingsAccess& access, std::function<void()> updateUI, bool dryOnly)
 {
     auto cleanup0 = effect.BeginPreview(access.Get());
 
@@ -243,8 +215,9 @@ static void EffectPreview(EffectBase& effect,
         return;
     }
 
-    auto gAudioIO = AudioIO::Get();
-    if (gAudioIO->IsBusy()) {
+    auto player = playback()->player();
+    if (!player->canPlay()) {
+        LOGW() << "can't play, maybe audio is busy";
         return;
     }
 
@@ -286,9 +259,7 @@ static void EffectPreview(EffectBase& effect,
         if (!dryOnly) {
             // TODO remove this reinitialization of state within the Effect object
             // It is done indirectly via Effect::Instance
-            if (auto pInstance
-                    =std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance())
-                    ) {
+            if (auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance())) {
                 pInstance->Init();
             }
         }
@@ -347,6 +318,7 @@ static void EffectPreview(EffectBase& effect,
     // NEW tracks start at time zero.
     // Adjust mT0 and mT1 to be the times to process, and to
     // play back in these tracks
+    double startOffset = mT0;
     mT1 -= mT0;
     mT0 = 0.0;
 
@@ -367,45 +339,41 @@ static void EffectPreview(EffectBase& effect,
 
         access.ModifySettings([&](EffectSettings& settings){
             // Preview of non-realtime effect
-            auto pInstance
-                =std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance());
+            auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance());
             success = pInstance && pInstance->Process(settings);
             return nullptr;
         });
     }
 
     if (success) {
-        auto tracks = MakeTransportTracks(*mTracks, true);
-
         // Some effects (Paulstretch) may need to generate more
         // than previewLen, so take the min.
         t1 = std::min(mT0 + previewLen, mT1);
 
         // Start audio playing
-        auto options = ProjectAudioIO::GetDefaultOptions(*pProject);
-        int token = gAudioIO->StartStream(tracks, mT0, t1, t1, options);
+        playback::PlayTracksOptions opt = { .selectedOnly = true,
+                                            .startOffset = startOffset };
+        muse::Ret ret = player->playTracks(*mTracks, mT0, t1, opt);
 
-        if (token) {
+        if (ret) {
             using namespace BasicUI;
             auto previewing = BasicUI::ProgressResult::Success;
             // The progress dialog must be deleted before stopping the stream
             // to allow events to flow to the app during StopStream processing.
             // The progress dialog blocks these events.
             {
-                auto progress = MakeProgress(effect.GetName(),
-                                             XO("Previewing"), ProgressShowStop);
+                auto progress = MakeProgress(effect.GetName(), XO("Previewing"), ProgressShowStop);
 
-                while (gAudioIO->IsStreamActive(token) && previewing == BasicUI::ProgressResult::Success) {
+                while (player->isRunning() && previewing == BasicUI::ProgressResult::Success) {
                     using namespace std::chrono;
                     std::this_thread::sleep_for(100ms);
-                    previewing = progress->Poll(
-                        gAudioIO->GetStreamTime() - mT0, t1 - mT0);
+                    previewing = progress->Poll(player->playbackPosition() - mT0 - startOffset, t1 - mT0);
                 }
             }
 
-            gAudioIO->StopStream();
+            player->stop();
 
-            while (gAudioIO->IsBusy()) {
+            while (!player->canPlay()) {
                 using namespace std::chrono;
                 std::this_thread::sleep_for(100ms);
             }
@@ -423,7 +391,7 @@ static void EffectPreview(EffectBase& effect,
 muse::Ret EffectsProvider::previewEffect(au3::Au3Project&, Effect* effect, EffectSettings& settings)
 {
     std::shared_ptr<SimpleEffectSettingsAccess> pAccess = std::make_shared<SimpleEffectSettingsAccess>(settings);
-    EffectPreview(*effect, *pAccess.get(), nullptr, false);
+    doEffectPreview(*effect, *pAccess.get(), nullptr, false);
 
     return muse::make_ok();
 }

@@ -24,7 +24,7 @@ Au3Player::Au3Player()
     : m_positionUpdateTimer(std::chrono::microseconds(1000))
 {
     m_positionUpdateTimer.onTimeout(this, [this]() {
-        updatePlaybackPosition();
+        updatePlaybackState();
     });
 
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
@@ -34,6 +34,11 @@ Au3Player::Au3Player()
             m_positionUpdateTimer.stop();
         }
     });
+}
+
+bool Au3Player::canPlay() const
+{
+    return !audioEngine()->isBusy();
 }
 
 void Au3Player::play()
@@ -149,7 +154,7 @@ void Au3Player::play()
     }
 
     int token = -1;
-
+    m_startOffset = 0.0;
     if (t1 != t0) {
         if (cutpreview) {
             const double tless = std::min(t0, t1);
@@ -193,7 +198,16 @@ void Au3Player::play()
     m_playbackStatus.set(PlaybackStatus::Running);
 }
 
-int Au3Player::playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options)
+muse::Ret Au3Player::playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options)
+{
+    muse::Ret ret = doPlayTracks(trackList, t0, t1, options);
+    if (ret) {
+        m_playbackStatus.set(PlaybackStatus::Running);
+    }
+    return ret;
+}
+
+muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options)
 {
     TransportSequences seqs = makeTransportTracks(trackList, options.selectedOnly, options.nonWaveToo);
 
@@ -202,10 +216,17 @@ int Au3Player::playTracks(TrackList& trackList, double t0, double t1, const Play
         mixerLimit = t1;
     }
 
+    m_startOffset = options.startOffset;
+
     AudacityProject& project = projectRef();
     AudioIOStartStreamOptions sopts = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
 
-    return audioEngine()->startStream(seqs, t0, t1, mixerLimit, sopts);
+    int token = audioEngine()->startStream(seqs, t0, t1, mixerLimit, sopts);
+    if (token != 0) {
+        ProjectAudioIO::Get(project).SetAudioIOToken(token);
+    }
+
+    return token > 0 ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
 }
 
 void Au3Player::seek(const muse::secs_t newPosition)
@@ -284,6 +305,11 @@ void Au3Player::resume()
     m_playbackStatus.set(PlaybackStatus::Running);
 }
 
+bool Au3Player::isRunning() const
+{
+    return playbackStatus() == PlaybackStatus::Running;
+}
+
 PlaybackStatus Au3Player::playbackStatus() const
 {
     return m_playbackStatus.val;
@@ -311,9 +337,20 @@ void Au3Player::resetLoop()
     NOT_IMPLEMENTED;
 }
 
-void Au3Player::updatePlaybackPosition()
+void Au3Player::updatePlaybackState()
 {
-    m_playbackPosition.set(std::max(0.0, AudioIO::Get()->GetStreamTime()));
+    int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
+    bool isActive = AudioIO::Get()->IsStreamActive(token);
+    double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
+
+    //LOGDA() << "token: " << token << ", isActive: " << isActive << ", time: " << time;
+
+    if (isActive) {
+        m_playbackPosition.set(std::max(0.0, time));
+    } else {
+        m_playbackPosition.set(0);
+        stop();
+    }
 }
 
 muse::secs_t Au3Player::playbackPosition() const

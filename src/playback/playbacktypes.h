@@ -27,5 +27,6 @@ struct PlayTracksOptions {
     bool selectedOnly = false;
     bool nonWaveToo = false;
     double mixerLimit = -1.0;
+    double startOffset = 0.0;
 };
 }
