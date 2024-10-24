@@ -808,6 +808,9 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
       (WaveChannelView::GetFirst(*left).GetHeight() +
       WaveChannelView::GetFirst(*right).GetHeight()) / 2;
 
+   float origPanLeft = left->GetPan();
+   float origPanRight = right->GetPan();
+
    left->SetPan(-1.0f);
    right->SetPan(1.0f);
    auto mix = MixAndRender(
@@ -823,6 +826,13 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
       //use widest sample format
       std::max(left->GetSampleFormat(), right->GetSampleFormat()),
       0.0, 0.0);
+
+   if (!mix)
+   {
+      left->SetPan(origPanLeft);
+      right->SetPan(origPanRight);
+      return;
+   }
 
    tracks.Insert(*first, mix);
    tracks.Remove(*left);
