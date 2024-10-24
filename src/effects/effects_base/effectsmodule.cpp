@@ -8,14 +8,13 @@
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
 
+#include "internal/effectconfigsettings.h"
 #include "internal/effectsprovider.h"
 #include "internal/effectsconfiguration.h"
 #include "internal/effectsactionscontroller.h"
 #include "internal/effectsuiactions.h"
 #include "internal/effectinstancesregister.h"
 #include "internal/effectexecutionscenario.h"
-
-#include "effectsettings.h"
 
 #include "view/effectsviewregister.h"
 #include "view/effectbuilder.h"
@@ -73,9 +72,10 @@ void EffectsModule::registerUiTypes()
 void EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     PluginManager::Get().Initialize([](const FilePath& localFileName) {
-        return std::make_unique<au3::EffectSettings>(localFileName.ToStdString());
+        return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
     });
 
+    m_configuration->init();
     m_actionsController->init();
     m_uiActions->init();
     m_provider->reloadEffects();

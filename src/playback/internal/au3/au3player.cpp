@@ -38,7 +38,7 @@ Au3Player::Au3Player()
     });
 }
 
-bool Au3Player::canPlay() const
+bool Au3Player::isBusy() const
 {
     return !audioEngine()->isBusy();
 }
@@ -173,14 +173,14 @@ void Au3Player::play()
 
             ret = doPlayTracks(Au3TrackList::Get(project), tcp0, tcp1, opts);
         } else {
-            double mixerLimit = t1;
+            double mixerEndTime = t1;
             if (newDefault) {
-                mixerLimit = latestEnd;
+                mixerEndTime = latestEnd;
                 if (pStartTime && *pStartTime >= t1) {
                     t1 = latestEnd;
                 }
             }
-            opts.mixerLimit = mixerLimit;
+            opts.mixerEndTime = mixerEndTime;
             ret = doPlayTracks(TrackList::Get(project), t0, t1, opts);
         }
     }
@@ -188,22 +188,22 @@ void Au3Player::play()
     m_playbackStatus.set(PlaybackStatus::Running);
 }
 
-muse::Ret Au3Player::playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options)
+muse::Ret Au3Player::playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options)
 {
-    muse::Ret ret = doPlayTracks(trackList, t0, t1, options);
+    muse::Ret ret = doPlayTracks(trackList, startTime, endTime, options);
     if (ret) {
         m_playbackStatus.set(PlaybackStatus::Running);
     }
     return ret;
 }
 
-muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options)
+muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options)
 {
     TransportSequences seqs = makeTransportTracks(trackList, options.selectedOnly);
 
-    double mixerLimit = options.mixerLimit;
-    if (mixerLimit < 0.0) {
-        mixerLimit = t1;
+    double mixerEndTime = options.mixerEndTime;
+    if (mixerEndTime < 0.0) {
+        mixerEndTime = endTime;
     }
 
     m_startOffset = options.startOffset;
@@ -211,12 +211,13 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double t0, double t1, co
     AudacityProject& project = projectRef();
     AudioIOStartStreamOptions sopts = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
 
-    int token = audioEngine()->startStream(seqs, t0, t1, mixerLimit, sopts);
-    if (token != 0) {
+    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, sopts);
+    bool success = token != 0;
+    if (success) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);
     }
 
-    return token > 0 ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
+    return success ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
 }
 
 void Au3Player::seek(const muse::secs_t newPosition)
@@ -338,7 +339,7 @@ void Au3Player::updatePlaybackState()
     if (isActive) {
         m_playbackPosition.set(std::max(0.0, time));
     } else {
-        m_playbackPosition.set(0);
+        m_playbackPosition.set(0.0);
         stop();
     }
 }

@@ -16,6 +16,6 @@ class EffectsConfiguration : public IEffectsConfiguration
 public:
     EffectsConfiguration() = default;
 
-    muse::io::path_t defaultPath() const override;
+    void init();
 };
 }

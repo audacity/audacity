@@ -26,7 +26,7 @@ public:
 
     Au3Player();
 
-    bool canPlay() const override;
+    bool isBusy() const override;
 
     void play() override;
     void seek(const muse::secs_t newPosition) override;
@@ -44,7 +44,7 @@ public:
     muse::secs_t playbackPosition() const override;
     muse::async::Channel<muse::secs_t> playbackPositionChanged() const override;
 
-    muse::Ret playTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options = {}) override;
+    muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) override;
 
 private:
     au3::Au3Project& projectRef() const;
@@ -53,7 +53,7 @@ private:
 
     TransportSequences makeTransportTracks(au3::Au3TrackList& trackList, bool selectedOnly);
 
-    muse::Ret doPlayTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options = {});
+    muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
 
     void updatePlaybackState();
 
