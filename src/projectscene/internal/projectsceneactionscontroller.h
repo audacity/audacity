@@ -38,6 +38,8 @@ private:
     void updateDisplayWhilePlaying();
     void pinnedPlayHead();
 
+    void openClipPitchAndSpeedEdit(const muse::actions::ActionData& args);
+
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
 }

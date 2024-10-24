@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 
 import Muse.Ui
 import Muse.UiComponents
@@ -14,6 +15,8 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
+    property int pitch: 0
+    property int speedPercentage: 0.0
     property alias showChannelSplitter: channelSplitter.visible
     property alias channelHeightRatio: channelSplitter.channelHeightRatio
     property var canvas: null
@@ -37,6 +40,9 @@ Rectangle {
 
     signal requestSelected()
     signal ratioChanged(double val)
+
+    signal pitchChangeRequested()
+    signal speedChangeRequested()
 
     signal titleEditStarted()
     signal titleEditAccepted(var newTitle)
@@ -173,7 +179,7 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
-                anchors.right: menuBtn.left
+                anchors.right: buttonsRow.left
                 anchors.leftMargin: root.leftVisibleMargin + 4
                 anchors.rightMargin: 8
                 horizontalAlignment: Qt.AlignLeft
@@ -233,22 +239,60 @@ Rectangle {
                 }
             }
 
-            MenuButton {
-                id: menuBtn
-                width: 16
-                height: 16
+            Row {
+                id: buttonsRow
+
                 anchors.right: parent.right
                 anchors.rightMargin: 4
                 anchors.verticalCenter: parent.verticalCenter
 
-                menuModel: contextMenuModel
+                spacing: 2
 
-                onHandleMenuItem: function(itemId) {
-                    contextMenuModel.handleMenuItem(itemId)
+                ClipItemPropertyButton {
+                    id: pitchBtn
+
+                    text: {
+                        let semis = Math.trunc(root.pitch / 100)
+                        let cents = Math.abs(root.pitch % 100).toString().padStart(2, "0")
+                        return semis + (cents > "00" ? "." + cents : "")
+                    }
+                    icon: root.pitch > 0 ? IconCode.ARROW_UP : IconCode.ARROW_DOWN
+
+                    visible: root.pitch !== 0
+
+                    onClicked: {
+                        root.pitchChangeRequested()
+                    }
                 }
 
-                onClicked: {
-                    root.requestSelected()
+                ClipItemPropertyButton {
+                    id: speedBtn
+
+                    icon: IconCode.CLOCK
+                    text: root.speedPercentage + "%"
+
+                    visible: root.speedPercentage !== 100
+
+                    onClicked: {
+                        root.speedChangeRequested()
+                    }
+                }
+
+                MenuButton {
+                    id: menuBtn
+                    width: 16
+                    height: 16
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    menuModel: contextMenuModel
+
+                    onHandleMenuItem: function(itemId) {
+                        contextMenuModel.handleMenuItem(itemId)
+                    }
+
+                    onClicked: {
+                        root.requestSelected()
+                    }
                 }
             }
         }
@@ -339,6 +383,8 @@ Rectangle {
             when: !root.clipSelected && !headerDragArea.containsMouse
             PropertyChanges { target: header; color: root.clipColor }
             PropertyChanges { target: titleLabel; color: "#000000"}
+            PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
+            PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: menuBtn; iconColor: "#000000"}
         },
 
@@ -347,6 +393,8 @@ Rectangle {
             when: root.clipSelected && !headerDragArea.containsMouse
             PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.3) }
             PropertyChanges { target: titleLabel; color: "#000000" }
+            PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
+            PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: menuBtn; iconColor: "#000000"}
         },
 
@@ -355,6 +403,8 @@ Rectangle {
             when: !root.clipSelected && headerDragArea.containsMouse
             PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.8)}
             PropertyChanges { target: titleLabel; color: "#ffffff"}
+            PropertyChanges { target: pitchBtn; textColor: "#ffffff"; iconColor: "#ffffff" }
+            PropertyChanges { target: speedBtn; textColor: "#ffffff"; iconColor: "#ffffff" }
             PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
         },
 
@@ -363,6 +413,8 @@ Rectangle {
             when: root.clipSelected && headerDragArea.containsMouse
             PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.2) }
             PropertyChanges { target: titleLabel; color: "#000000"}
+            PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
+            PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: menuBtn; iconColor: "#000000"}
         }
     ]

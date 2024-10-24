@@ -32,5 +32,11 @@
         <file>qml/Audacity/ProjectScene/clipsview/ClipItemSmall.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipHandles.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ChannelSplitter.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/ClipItemPropertyButton.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PitchAndSpeedChangeDialog.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PropertyView.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/PitchSection.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/GeneralSection.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/SpeedSection.qml</file>
     </qresource>
 </RCC>

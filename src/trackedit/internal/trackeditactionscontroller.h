@@ -47,8 +47,8 @@ private:
     void doGlobalJoin();
     void doGlobalDuplicate();
 
-    void clipCut(const muse::actions::ActionData &args);
-    void clipCopy(const muse::actions::ActionData &args);
+    void clipCut(const muse::actions::ActionData& args);
+    void clipCopy(const muse::actions::ActionData& args);
     void clipDelete(const muse::actions::ActionData& args);
 
     void clipCutSelected();
@@ -57,15 +57,15 @@ private:
 
     void paste();
 
-    void trackSplit(const muse::actions::ActionData &args);
-    void trackSplitAt(const muse::actions::ActionData &args);
-    void mergeSelectedOnTrack(const muse::actions::ActionData &args);
-    void duplicateSelected(const muse::actions::ActionData &args);
-    void duplicateClip(const muse::actions::ActionData &args);
-    void clipSplitCut(const muse::actions::ActionData &args);
-    void clipSplitDelete(const muse::actions::ActionData &args);
-    void splitCutSelected(const muse::actions::ActionData &args);
-    void splitDeleteSelected(const muse::actions::ActionData &args);
+    void trackSplit(const muse::actions::ActionData& args);
+    void trackSplitAt(const muse::actions::ActionData& args);
+    void mergeSelectedOnTrack(const muse::actions::ActionData& args);
+    void duplicateSelected(const muse::actions::ActionData& args);
+    void duplicateClip(const muse::actions::ActionData& args);
+    void clipSplitCut(const muse::actions::ActionData& args);
+    void clipSplitDelete(const muse::actions::ActionData& args);
+    void splitCutSelected(const muse::actions::ActionData& args);
+    void splitDeleteSelected(const muse::actions::ActionData& args);
 
     void toggleLoopRegion();
     void clearLoopRegion();
@@ -81,11 +81,7 @@ private:
     void trimAudioOutsideSelection();
     void silenceAudioSelection();
 
-    void pushProjectHistoryTrackAddedState();
-    void pushProjectHistoryTrackTrimState(secs_t start, secs_t end);
-    void pushProjectHistoryTrackSilenceState(secs_t start, secs_t end);
-    void pushProjectHistoryPasteState();
-    void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+    void renderClipPitchAndSpeed(const muse::actions::ActionData& args);
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
