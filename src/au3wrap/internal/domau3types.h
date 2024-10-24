@@ -9,7 +9,7 @@ namespace au::au3 {
 struct WaveClipID {
     uint64_t id = -1;
 
-    WaveClipID(const WaveClip* au3clip)
+    WaveClipID(const Au3WaveClip* au3clip)
         : id(reinterpret_cast<uint64_t>(au3clip)) {}
 };
 }

@@ -2,6 +2,8 @@
 
 #include "au3types.h"
 #include "libraries/lib-track/Track.h"
+#include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 
 #include "wxtypes_convert.h"
 #include "domau3types.h"
@@ -55,7 +57,7 @@ au::trackedit::TrackId DomConverter::trackId(const Au3TrackId& au3trackId)
     return *(reinterpret_cast<const long*>(&au3trackId));
 }
 
-au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const WaveClip* au3clip)
+au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
 {
     au::trackedit::Clip clip;
     clip.key.trackId = trackId(waveTrack->GetId());

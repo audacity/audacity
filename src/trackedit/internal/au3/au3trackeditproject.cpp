@@ -126,7 +126,7 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     }
 
     muse::async::NotifyList<au::trackedit::Clip> clips;
-    for (const std::shared_ptr<const WaveClip>& interval : waveTrack->Intervals()) {
+    for (const std::shared_ptr<const Au3WaveClip>& interval : waveTrack->Intervals()) {
         au::trackedit::Clip clip = DomConverter::clip(waveTrack, interval.get());
         clips.push_back(std::move(clip));
     }
@@ -164,7 +164,7 @@ au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
         return Clip();
     }
 
-    std::shared_ptr<WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.clipId);
+    std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.clipId);
     IF_ASSERT_FAILED(au3Clip) {
         return Clip();
     }
