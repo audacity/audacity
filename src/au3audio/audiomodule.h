@@ -8,6 +8,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::audio {
+class AudioEngine;
 class AudioModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -21,5 +22,7 @@ public:
     void onDeinit() override;
 
 private:
+
+    std::shared_ptr<AudioEngine> m_audioEngine;
 };
 }

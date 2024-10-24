@@ -13,7 +13,7 @@ class IPlayback : MODULE_EXPORT_INTERFACE
     INTERFACE_ID(IPlayback)
 
 public:
-    ~IPlayback() = default;
+    virtual ~IPlayback() = default;
 
     //! NOTE At the moment SequenceId not used
     virtual std::shared_ptr<IPlayer> player(TrackSequenceId id = -1) const = 0;
