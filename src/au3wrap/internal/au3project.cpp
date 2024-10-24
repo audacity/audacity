@@ -32,9 +32,9 @@ std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
 
 struct au::au3::Au3ProjectData
 {
-    std::shared_ptr<AudacityProject> project;
+    std::shared_ptr<Au3Project> project;
 
-    AudacityProject& projectRef() { return *project.get(); }
+    Au3Project& projectRef() { return *project.get(); }
 };
 
 Au3ProjectAccessor::Au3ProjectAccessor()
@@ -45,7 +45,7 @@ Au3ProjectAccessor::Au3ProjectAccessor()
 std::shared_ptr<Au3ProjectAccessor> Au3ProjectAccessor::create()
 {
     std::shared_ptr<Au3ProjectAccessor> p = std::make_shared<Au3ProjectAccessor>();
-    p->m_data->project = AudacityProject::Create();
+    p->m_data->project = Au3Project::Create();
     return p;
 }
 

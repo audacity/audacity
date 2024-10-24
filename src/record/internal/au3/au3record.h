@@ -9,9 +9,10 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
+#include "au3wrap/au3types.h"
+
 #include "../../irecord.h"
 
-class AudacityProject;
 class TransportSequences;
 struct AudioIOStartStreamOptions;
 
@@ -31,9 +32,9 @@ public:
     IAudioInputPtr audioInput() const override;
 
 private:
-    AudacityProject& projectRef() const;
+    au3::Au3Project& projectRef() const;
 
-    muse::Ret doRecord(AudacityProject& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
+    muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
                        const AudioIOStartStreamOptions& options);
     void cancelRecording();
     bool canStopAudioStream() const;

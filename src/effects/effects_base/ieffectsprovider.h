@@ -9,11 +9,12 @@
 
 #include "modularity/imoduleinterface.h"
 
+#include "au3wrap/au3types.h"
+
 #include "effectstypes.h"
 
 #include <optional>
 
-class AudacityProject;
 class EffectSettings;
 namespace au::effects {
 class IEffectsProvider : MODULE_EXPORT_INTERFACE
@@ -35,9 +36,9 @@ public:
     // type - is Symbol of effect
     virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;
 
-    virtual muse::Ret performEffect(AudacityProject& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
+    virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                                     EffectSettings& settings) = 0;
 
-    virtual muse::Ret previewEffect(AudacityProject& project, Effect* effect, EffectSettings& settings) = 0;
+    virtual muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) = 0;
 };
 }

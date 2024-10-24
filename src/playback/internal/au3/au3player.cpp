@@ -48,7 +48,7 @@ void Au3Player::play()
 
     //! NOTE: copied from ProjectAudioManager::PlayPlayRegion
 
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
 
     auto options = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
     bool backwards = false;
@@ -200,7 +200,7 @@ void Au3Player::seek(const muse::secs_t newPosition)
     //! TODO At the moment not work
     //! there probably should be a different implementation
 
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
     playRegion.SetStart(newPosition);
@@ -230,7 +230,7 @@ void Au3Player::stop()
 
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
     auto& projectAudioIO = ProjectAudioIO::Get(project);
     auto meter = projectAudioIO.GetPlaybackMeter();
     if (meter) {
@@ -311,16 +311,16 @@ muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const
     return m_playbackPosition.ch;
 }
 
-AudacityProject& Au3Player::projectRef() const
+Au3Project& Au3Player::projectRef() const
 {
-    AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }
 
 bool Au3Player::canStopAudioStream() const
 {
     auto gAudioIO = AudioIO::Get();
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
     return !gAudioIO->IsStreamActive()
            || gAudioIO->IsMonitoring()
            || gAudioIO->GetOwningProject().get() == &project;

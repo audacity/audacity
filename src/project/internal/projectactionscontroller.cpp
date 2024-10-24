@@ -9,6 +9,8 @@
 
 #include "UndoManager.h"
 
+#include "au3wrap/au3types.h"
+
 #include "log.h"
 
 using namespace muse;
@@ -182,7 +184,7 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
 
     bool result = true;
 
-    AudacityProject* internalAu3Project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    au3::Au3Project* internalAu3Project = reinterpret_cast<au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
 
     if (UndoManager::Get(*internalAu3Project).UnsavedChanges()) {
         IInteractive::Button btn = askAboutSavingProject(project);

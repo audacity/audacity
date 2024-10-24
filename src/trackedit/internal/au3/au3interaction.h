@@ -15,8 +15,6 @@
 
 #include "au3wrap/au3types.h"
 
-class AudacityProject;
-
 namespace au::trackedit {
 class Au3Interaction : public ITrackeditInteraction
 {
@@ -66,7 +64,7 @@ public:
     void redo() override;
 
 private:
-    AudacityProject& projectRef() const;
+    au3::Au3Project& projectRef() const;
     muse::Ret pasteIntoNewTrack();
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,

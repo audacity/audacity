@@ -9,9 +9,9 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "../../iaudioinput.h"
+#include "au3wrap/au3types.h"
 
-class AudacityProject;
+#include "../../iaudioinput.h"
 
 namespace au::playback {
 class InOutMeter;
@@ -32,7 +32,7 @@ public:
     muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal>> recordSignalChanges() const override;
 
 private:
-    AudacityProject& projectRef() const;
+    au3::Au3Project& projectRef() const;
 
     void initMeter();
 

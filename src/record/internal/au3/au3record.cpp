@@ -85,7 +85,7 @@ private:
 std::shared_ptr<RecordingListener> s_recordingListener;
 
 static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
-    [](AudacityProject& project, bool newDefault) -> AudioIOStartStreamOptions {
+    [](Au3Project& project, bool newDefault) -> AudioIOStartStreamOptions {
         auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
         options.listener = s_recordingListener;
         return options;
@@ -101,7 +101,7 @@ struct PropertiesOfSelected
 
 // GetSelectedProperties collects information about
 // currently selected audio tracks
-PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject& proj)
+PropertiesOfSelected GetPropertiesOfSelected(const Au3Project& proj)
 {
     double rateOfSelection = RATE_NOT_SELECTED;
 
@@ -126,7 +126,7 @@ PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject& proj)
     return result;
 }
 
-WritableSampleTrackArray ChooseExistingRecordingTracks(AudacityProject& proj, bool selectedOnly, double targetRate)
+WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, bool selectedOnly, double targetRate)
 {
     auto p = &proj;
     size_t recordingChannels = std::max(0, AudioIORecordChannels.Read());
@@ -289,7 +289,7 @@ muse::Ret Au3Record::start()
     // gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
     const bool appendRecord = true;//(altAppearance == bPreferNewTrack);
 
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
 
     const auto& selectedRegion = ViewInfo::Get(project).selectedRegion;
     double t0 = selectedRegion.t0();
@@ -416,7 +416,7 @@ muse::Ret Au3Record::stop()
 
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
     auto& projectAudioIO = ProjectAudioIO::Get(project);
     auto meter = projectAudioIO.GetPlaybackMeter();
     if (meter) {
@@ -436,13 +436,13 @@ IAudioInputPtr Au3Record::audioInput() const
     return m_audioInput;
 }
 
-AudacityProject& Au3Record::projectRef() const
+Au3Project& Au3Record::projectRef() const
 {
-    AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }
 
-Ret Au3Record::doRecord(AudacityProject& project,
+Ret Au3Record::doRecord(Au3Project& project,
                         const TransportSequences& sequences,
                         double t0, double t1,
                         bool altAppearance,
@@ -688,7 +688,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
 
 void Au3Record::cancelRecording()
 {
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
     PendingTracks::Get(project).ClearPendingTracks();
 
     //todo: reset tracks
@@ -697,7 +697,7 @@ void Au3Record::cancelRecording()
 bool Au3Record::canStopAudioStream() const
 {
     auto gAudioIO = AudioIO::Get();
-    AudacityProject& project = projectRef();
+    Au3Project& project = projectRef();
     return !gAudioIO->IsStreamActive()
            || gAudioIO->IsMonitoring()
            || gAudioIO->GetOwningProject().get() == &project;

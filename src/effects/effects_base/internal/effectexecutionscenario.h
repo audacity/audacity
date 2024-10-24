@@ -11,9 +11,10 @@
 #include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
 
+#include "au3wrap/au3types.h"
+
 #include <optional>
 
-class AudacityProject;
 class Effect;
 class EffectBase;
 class EffectInstance;
@@ -38,14 +39,14 @@ public:
 
 private:
 
-    muse::Ret doPerformEffect(AudacityProject& project, const EffectId& effectId, unsigned int flags);
-    AudacityProject& projectRef();
+    muse::Ret doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned int flags);
+    au3::Au3Project& projectRef();
 
     using ShowEffectHostInterfaceCb = std::function<bool (Effect&, std::shared_ptr<EffectInstance>&, SimpleEffectSettingsAccess&)>;
     using StopPlaybackCb = std::function<void ()>;
     using SelectAllIfNoneCb = std::function<void ()>;
 
-    bool DoEffect(const EffectId& effectId, AudacityProject& project, unsigned flags);
+    bool DoEffect(const EffectId& effectId, au3::Au3Project& project, unsigned flags);
 
     muse::async::Notification m_lastProcessorIsAvailableChanged;
     muse::async::Channel<EffectId> m_lastProcessorIdChanged;
