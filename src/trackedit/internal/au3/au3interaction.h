@@ -13,6 +13,8 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
+#include "au3wrap/au3types.h"
+
 class AudacityProject;
 
 namespace au::trackedit {
@@ -66,7 +68,7 @@ public:
 private:
     AudacityProject& projectRef() const;
     muse::Ret pasteIntoNewTrack();
-    ::Track::Holder createNewTrackAndPaste(std::shared_ptr<::Track> data, ::TrackList& list, secs_t begin);
+    au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     std::vector<TrackId> determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,
                                                        size_t tracksNum) const;
     muse::Ret canPasteClips(const std::vector<TrackId>& tracksIds,  secs_t begin) const;

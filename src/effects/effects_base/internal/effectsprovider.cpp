@@ -19,6 +19,8 @@
 #include "libraries/lib-stretching-sequence/StretchingSequence.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
+#include "au3wrap/au3types.h"
+
 #include "log.h"
 
 using namespace muse;
@@ -317,7 +319,7 @@ static void EffectPreview(EffectBase& effect,
     // Build NEW tracklist from rendering tracks
     // Set the same owning project, so FindProject() can see it within Process()
     const auto pProject = saveTracks->GetOwner();
-    mTracks = TrackList::Create(pProject);
+    mTracks = au::au3::Au3TrackList::Create(pProject);
 
     // Linear Effect preview optimised by pre-mixing to one track.
     // Generators need to generate per track.

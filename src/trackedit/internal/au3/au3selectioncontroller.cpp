@@ -3,13 +3,14 @@
 */
 #include "au3selectioncontroller.h"
 
+#include "global/containers.h"
+#include "global/realfn.h"
+
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 
 #include "au3wrap/internal/domconverter.h"
-
-#include "global/containers.h"
-#include "global/realfn.h"
+#include "au3wrap/au3types.h"
 
 #include "log.h"
 
@@ -21,6 +22,7 @@
 #endif
 
 using namespace au::trackedit;
+using namespace au::au3;
 
 // clip selection
 
@@ -28,8 +30,8 @@ void Au3SelectionController::resetSelectedTrack()
 {
     MYLOG() << "resetSelectedTrack";
 
-    auto& tracks = ::TrackList::Get(projectRef());
-    for (::Track* au3Track : tracks) {
+    auto& tracks = Au3TrackList::Get(projectRef());
+    for (Au3Track* au3Track : tracks) {
         au3Track->SetSelected(false);
     }
 
@@ -45,9 +47,9 @@ void Au3SelectionController::setSelectedTrack(trackedit::TrackId trackId)
 {
     MYLOG() << "track: " << trackId;
 
-    auto& tracks = ::TrackList::Get(projectRef());
-    for (::Track* au3Track : tracks) {
-        au3Track->SetSelected(au3Track->GetId() == ::TrackId(trackId));
+    auto& tracks = Au3TrackList::Get(projectRef());
+    for (Au3Track* au3Track : tracks) {
+        au3Track->SetSelected(au3Track->GetId() == Au3TrackId(trackId));
     }
 
     m_selectedTrack.set(trackId, true);
@@ -86,9 +88,9 @@ void Au3SelectionController::resetDataSelection()
 {
     MYLOG() << "resetDataSelection";
 
-    auto& tracks = ::TrackList::Get(projectRef());
+    auto& tracks = Au3TrackList::Get(projectRef());
     for (trackedit::TrackId trackId : m_selectedTrackIds.val) {
-        ::Track* au3Track = tracks.FindById(::TrackId(trackId));
+        Au3Track* au3Track = tracks.FindById(Au3TrackId(trackId));
         if (au3Track) {
             au3Track->SetSelected(false);
         }
@@ -120,8 +122,8 @@ void Au3SelectionController::setDataSelectedOnTracks(
 {
     MYLOG() << "trackIds: " << trackIds << ", complete: " << complete;
 
-    auto& tracks = ::TrackList::Get(projectRef());
-    for (::Track* au3Track : tracks) {
+    auto& tracks = Au3TrackList::Get(projectRef());
+    for (Au3Track* au3Track : tracks) {
         if (muse::contains(trackIds, au3::DomConverter::trackId(au3Track->GetId()))) {
             au3Track->SetSelected(true);
         } else {

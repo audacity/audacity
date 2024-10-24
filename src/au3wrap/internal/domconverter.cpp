@@ -1,14 +1,17 @@
 #include "domconverter.h"
 
+#include "au3types.h"
 #include "libraries/lib-track/Track.h"
 
 #include "wxtypes_convert.h"
 #include "domau3types.h"
 
+#include "../au3types.h"
+
 using namespace au::au3;
 
 namespace {
-static au::trackedit::TrackType trackType(const ::Track* track)
+static au::trackedit::TrackType trackType(const Au3Track* track)
 {
     switch (track->NChannels()) {
     case 0:
@@ -47,7 +50,7 @@ static muse::draw::Color trackColor(const au::trackedit::TrackId& trackId)
 }
 }
 
-au::trackedit::TrackId DomConverter::trackId(const TrackId& au3trackId)
+au::trackedit::TrackId DomConverter::trackId(const Au3TrackId& au3trackId)
 {
     return *(reinterpret_cast<const long*>(&au3trackId));
 }
@@ -66,7 +69,7 @@ au::trackedit::Clip DomConverter::clip(const WaveTrack* waveTrack, const WaveCli
     return clip;
 }
 
-au::trackedit::Track DomConverter::track(const ::Track* waveTrack)
+au::trackedit::Track DomConverter::track(const Au3Track* waveTrack)
 {
     trackedit::Track au4t;
     au4t.id = DomConverter::trackId(waveTrack->GetId());

@@ -12,10 +12,10 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-class AudacityProject;
-class TrackList;
-struct TransportSequences;
+#include "au3wrap/au3types.h"
 
+class AudacityProject;
+struct TransportSequences;
 namespace au::playback {
 class Au3Player : public IPlayer, public muse::async::Asyncable
 {
@@ -44,7 +44,7 @@ private:
     AudacityProject& projectRef() const;
 
     bool canStopAudioStream() const;
-    TransportSequences makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo);
+    TransportSequences makeTransportTracks(au::au3::Au3TrackList& trackList, bool selectedOnly, bool nonWaveToo);
 
     void updatePlaybackPosition();
 

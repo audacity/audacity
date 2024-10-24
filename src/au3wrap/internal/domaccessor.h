@@ -6,17 +6,18 @@
 #include <memory>
 #include <list>
 
-#include "trackedit/trackedittypes.h"
-
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
+
+#include "trackedit/trackedittypes.h"
+#include "../au3types.h"
 
 namespace au::au3 {
 class DomAccessor
 {
 public:
 
-    static Track* findTrack(AudacityProject& prj, const TrackId& au3trackId);
+    static Au3Track* findTrack(Au3Project& prj, const Au3TrackId& au3trackId);
     static WaveTrack* findWaveTrack(AudacityProject& prj, const TrackId& au3trackId);
     static std::shared_ptr<WaveClip> findWaveClip(WaveTrack* track, uint64_t au3ClipId);
     static std::shared_ptr<WaveClip> findWaveClip(AudacityProject& prj, const TrackId& au3trackId, size_t index);

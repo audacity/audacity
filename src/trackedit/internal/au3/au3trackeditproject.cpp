@@ -20,7 +20,7 @@ using namespace au::au3;
 struct Au3TrackeditProject::Au3Impl
 {
     AudacityProject* prj = nullptr;
-    ::TrackList* trackList = nullptr;
+    Au3TrackList* trackList = nullptr;
 
     // events
     Observer::Subscription tracksSubc;
@@ -31,7 +31,7 @@ Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3
 {
     m_impl = std::make_shared<Au3Impl>();
     m_impl->prj = reinterpret_cast<AudacityProject*>(au3project->au3ProjectPtr());
-    m_impl->trackList = &::TrackList::Get(*m_impl->prj);
+    m_impl->trackList = &Au3TrackList::Get(*m_impl->prj);
     m_impl->tracksSubc = m_impl->trackList->Subscribe([this](const TrackListEvent& e) {
         onTrackListEvent(e);
     });
@@ -46,7 +46,7 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
 {
     std::vector<au::trackedit::TrackId> au4trackIds;
 
-    for (const ::Track* t : *m_impl->trackList) {
+    for (const Au3Track* t : *m_impl->trackList) {
         au4trackIds.push_back(DomConverter::trackId(t->GetId()));
     }
 
@@ -57,7 +57,7 @@ muse::async::NotifyList<au::trackedit::Track> Au3TrackeditProject::trackList() c
 {
     muse::async::NotifyList<Track> au4tracks;
 
-    for (const ::Track* t : *m_impl->trackList) {
+    for (const Au3Track* t : *m_impl->trackList) {
         Track au4t = DomConverter::track(t);
         au4tracks.push_back(std::move(au4t));
     }
@@ -152,7 +152,7 @@ void Au3TrackeditProject::onTrackChanged(const Track& track)
     m_tracksChanged.itemChanged(track);
 }
 
-void Au3TrackeditProject::onTrackRemoved(const Track &track)
+void Au3TrackeditProject::onTrackRemoved(const Track& track)
 {
     m_tracksChanged.itemRemoved(track);
 }

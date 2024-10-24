@@ -22,6 +22,7 @@
 #include "libraries/lib-numeric-formats/NumericConverterFormats.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "au3wrap/au3types.h"
 
 using namespace muse;
 using namespace au::effects;
@@ -174,7 +175,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(AudacityProject& project, con
         effect->mT0 = tp.t0;
         effect->mT1 = tp.t1;
 
-        effect->SetTracks(&TrackList::Get(project));
+        effect->SetTracks(&au3::Au3TrackList::Get(project));
         // Update track/group counts
         effect->CountWaveTracks();
 

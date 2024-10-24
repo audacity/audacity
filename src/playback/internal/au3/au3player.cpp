@@ -13,10 +13,12 @@
 #include "libraries/lib-audio-devices/Meter.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "au3wrap/au3types.h"
 
 #include "log.h"
 
 using namespace au::playback;
+using namespace au::au3;
 
 Au3Player::Au3Player()
     : m_positionUpdateTimer(std::chrono::microseconds(1000))
@@ -51,7 +53,7 @@ void Au3Player::play()
     auto options = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
     bool backwards = false;
 
-    auto& tracks = TrackList::Get(project);
+    auto& tracks = Au3TrackList::Get(project);
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
@@ -167,7 +169,7 @@ void Au3Player::play()
             //     return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             // };
             token = gAudioIO->StartStream(
-                makeTransportTracks(TrackList::Get(project), false, nonWaveToo),
+                makeTransportTracks(Au3TrackList::Get(project), false, nonWaveToo),
                 tcp0, tcp1, tcp1, myOptions);
         } else {
             double mixerLimit = t1;
@@ -324,12 +326,12 @@ bool Au3Player::canStopAudioStream() const
            || gAudioIO->GetOwningProject().get() == &project;
 }
 
-TransportSequences Au3Player::makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo)
+TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool selectedOnly, bool nonWaveToo)
 {
     TransportSequences result;
     {
         const auto range = trackList.Any<WaveTrack>()
-                           + (selectedOnly ? &Track::IsSelected : &Track::Any);
+                           + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(
                 StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
