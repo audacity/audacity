@@ -25,7 +25,6 @@ static constexpr audio::volume_dbfs_t MIN_DISPLAYED_DBFS = -60.f; // 0%
 
 struct PlayTracksOptions {
     bool selectedOnly = false;
-    bool nonWaveToo = false;
     double mixerLimit = -1.0;
     double startOffset = 0.0;
 };

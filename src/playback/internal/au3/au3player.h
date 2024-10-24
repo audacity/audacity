@@ -51,7 +51,7 @@ private:
     AudacityProject& projectRef() const;
 
     bool canStopAudioStream() const;
-    TransportSequences makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo);
+    TransportSequences makeTransportTracks(TrackList& trackList, bool selectedOnly);
 
     muse::Ret doPlayTracks(TrackList& trackList, double t0, double t1, const PlayTracksOptions& options = {});
 
