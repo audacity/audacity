@@ -43,12 +43,13 @@ StyledSlider {
         onPressed: {
             prv.dragActive = true
             root.value = sliderValue()
+            tooltip.show(true)
         }
 
         onReleased: {
             prv.dragActive = false
             if (!containsMouse) {
-                tooltip.hide()
+                tooltip.hide(true)
             }
         }
 
@@ -58,7 +59,7 @@ StyledSlider {
 
         onExited: {
             if (!prv.dragActive) {
-                tooltip.hide()
+                tooltip.hide(true)
             }
         }
 
