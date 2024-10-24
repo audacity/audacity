@@ -242,7 +242,7 @@ void Au3Record::init()
     });
 
     s_recordingListener->recordingClipChanged().onReceive(this, [this](const trackedit::ClipKey& clipKey) {
-        Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+        Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
 
         Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
                                  .SubstitutePendingChangedTrack(*origWaveTrack);

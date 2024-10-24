@@ -627,11 +627,11 @@ void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     //     return;
     // }
     // LOGD() << "trackId: " << clipKey.trackId << ", clip: " << clipKey.index;
-    Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
 
     //! Pending tracks are same as project tracks, but with new tracks when recording, so we need draw them
     Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
-                             .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId)));
+                             .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId)));
 
     Au3WaveTrack* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(pendingTrack);
     IF_ASSERT_FAILED(pendingWaveTrack) {
