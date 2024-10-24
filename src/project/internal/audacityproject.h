@@ -11,7 +11,7 @@
 #include "trackedit/itrackeditproject.h"
 
 namespace au::au3 {
-class Au3Project;
+class Au3ProjectAccessor;
 }
 
 namespace au::project {

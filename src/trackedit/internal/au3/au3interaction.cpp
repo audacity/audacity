@@ -34,11 +34,11 @@ AudacityProject& Au3Interaction::projectRef() const
 muse::Ret Au3Interaction::pasteIntoNewTrack()
 {
     auto& project = projectRef();
-    auto& tracks = ::TrackList::Get(project);
+    auto& tracks = Au3TrackList::Get(project);
     auto prj = globalContext()->currentTrackeditProject();
     secs_t selectedStartTime = globalContext()->playbackState()->playbackPosition();
 
-    ::Track* pFirstNewTrack = NULL;
+    Au3Track* pFirstNewTrack = NULL;
     for (auto data : clipboard()->trackData()) {
         auto pNewTrack = createNewTrackAndPaste(data.track, tracks, selectedStartTime);
         if (!pFirstNewTrack) {
@@ -55,7 +55,7 @@ muse::Ret Au3Interaction::pasteIntoNewTrack()
     return muse::make_ok();
 }
 
-::Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<::Track> track, ::TrackList& list, secs_t begin)
+Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track> track, Au3TrackList& list, secs_t begin)
 {
     auto& trackFactory = WaveTrackFactory::Get(projectRef());
     auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
@@ -269,7 +269,7 @@ bool Au3Interaction::silenceTrackData(TrackId trackId, secs_t begin, secs_t end)
 
 bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String& title)
 {
-    ::Track* track = DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
+    Au3Track* track = DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
     IF_ASSERT_FAILED(track) {
         return false;
     }
@@ -562,8 +562,8 @@ bool Au3Interaction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, s
 
 bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
-    auto& tracks = ::TrackList::Get(projectRef());
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    auto& tracks = Au3TrackList::Get(projectRef());
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return false;
     }
@@ -574,11 +574,13 @@ bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begi
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onTrackAdded(DomConverter::track(dest.get()));
+
+    return true;
 }
 
 bool Au3Interaction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return false;
     }
@@ -789,7 +791,7 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool
 void Au3Interaction::newMonoTrack()
 {
     auto& project = projectRef();
-    auto& tracks = ::TrackList::Get(project);
+    auto& tracks = Au3TrackList::Get(project);
     auto& trackFactory = ::WaveTrackFactory::Get(project);
 
     sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();
@@ -809,7 +811,7 @@ void Au3Interaction::newMonoTrack()
 void Au3Interaction::newStereoTrack()
 {
     auto& project = projectRef();
-    auto& tracks = ::TrackList::Get(project);
+    auto& tracks = Au3TrackList::Get(project);
     auto& trackFactory = ::WaveTrackFactory::Get(project);
 
     sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();

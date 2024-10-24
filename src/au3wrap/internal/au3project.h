@@ -9,13 +9,13 @@
 
 namespace au::au3 {
 struct Au3ProjectData;
-class Au3Project : public IAu3Project
+class Au3ProjectAccessor : public IAu3Project
 {
 public:
 
-    Au3Project();
+    Au3ProjectAccessor();
 
-    static std::shared_ptr<Au3Project> create();
+    static std::shared_ptr<Au3ProjectAccessor> create();
 
     void open() override;
     bool load(const muse::io::path_t& filePath) override;

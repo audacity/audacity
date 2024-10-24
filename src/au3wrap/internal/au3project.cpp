@@ -19,6 +19,7 @@
 #include "libraries/lib-project-file-io/SqliteSampleBlock.cpp"
 
 #include "wxtypes_convert.h"
+#include "../au3types.h"
 
 #include "log.h"
 
@@ -26,7 +27,7 @@ using namespace au::au3;
 
 std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
 {
-    return Au3Project::create();
+    return Au3ProjectAccessor::create();
 }
 
 struct au::au3::Au3ProjectData
@@ -36,25 +37,25 @@ struct au::au3::Au3ProjectData
     AudacityProject& projectRef() { return *project.get(); }
 };
 
-Au3Project::Au3Project()
+Au3ProjectAccessor::Au3ProjectAccessor()
 {
     m_data = std::make_shared<Au3ProjectData>();
 }
 
-std::shared_ptr<Au3Project> Au3Project::create()
+std::shared_ptr<Au3ProjectAccessor> Au3ProjectAccessor::create()
 {
-    std::shared_ptr<Au3Project> p = std::make_shared<Au3Project>();
+    std::shared_ptr<Au3ProjectAccessor> p = std::make_shared<Au3ProjectAccessor>();
     p->m_data->project = AudacityProject::Create();
     return p;
 }
 
-void Au3Project::open()
+void Au3ProjectAccessor::open()
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     projectFileIO.OpenProject();
 }
 
-bool Au3Project::load(const muse::io::path_t& filePath)
+bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     std::string sstr = filePath.toStdString();
@@ -81,7 +82,7 @@ bool Au3Project::load(const muse::io::path_t& filePath)
 
     //! TODO Look like, need doing all from method  ProjectFileManager::FixTracks
     //! and maybe what is done before this method (ProjectFileManager::ReadProjectFile)
-    TrackList& tracks = TrackList::Get(m_data->projectRef());
+    Au3TrackList& tracks = Au3TrackList::Get(m_data->projectRef());
     for (auto pTrack : tracks) {
         pTrack->LinkConsistencyFix();
     }
@@ -89,10 +90,10 @@ bool Au3Project::load(const muse::io::path_t& filePath)
     return true;
 }
 
-bool Au3Project::save(const muse::io::path_t& filePath)
+bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
-    TrackList& tracks = TrackList::Get(m_data->projectRef());
+    Au3TrackList& tracks = Au3TrackList::Get(m_data->projectRef());
     auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), &tracks);
     if (result) {
         UndoManager::Get(m_data->projectRef()).StateSaved();
@@ -100,13 +101,13 @@ bool Au3Project::save(const muse::io::path_t& filePath)
     return result;
 }
 
-void Au3Project::close()
+void Au3ProjectAccessor::close()
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     projectFileIO.CloseProject();
 }
 
-std::string Au3Project::title() const
+std::string Au3ProjectAccessor::title() const
 {
     if (!m_data->project) {
         return std::string();
@@ -115,7 +116,7 @@ std::string Au3Project::title() const
     return wxToStdSting(m_data->project->GetProjectName());
 }
 
-uintptr_t Au3Project::au3ProjectPtr() const
+uintptr_t Au3ProjectAccessor::au3ProjectPtr() const
 {
     return reinterpret_cast<uintptr_t>(m_data->project.get());
 }

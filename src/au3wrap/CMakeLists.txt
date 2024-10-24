@@ -28,6 +28,7 @@ endif()
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/au3types.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3project.h
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/progressdialog.cpp

@@ -30,6 +30,7 @@
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/internal/domau3types.h"
+#include "au3wrap/au3types.h"
 
 #include "recorderrors.h"
 
@@ -108,7 +109,7 @@ PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject& proj)
     result.allSameRate = true;
 
     const auto selectedTracks{
-        TrackList::Get(proj).Selected<const WaveTrack>() };
+        Au3TrackList::Get(proj).Selected<const WaveTrack>() };
 
     for (const auto& track : selectedTracks) {
         if (rateOfSelection != RATE_NOT_SELECTED
@@ -152,12 +153,12 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(AudacityProject& proj, bo
         return {};
     }
 
-    auto& trackList = TrackList::Get(*p);
+    auto& trackList = Au3TrackList::Get(*p);
     WritableSampleTrackArray candidates;
     std::vector<unsigned> channelCounts;
     size_t totalChannels = 0;
     const auto range = trackList.Any<WaveTrack>();
-    for (auto candidate : selectedOnly ? range + &Track::IsSelected : range) {
+    for (auto candidate : selectedOnly ? range + &Au3Track::IsSelected : range) {
         if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate) {
             continue;
         }
@@ -201,12 +202,12 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(AudacityProject& proj, bo
     return {};
 }
 
-TransportSequences MakeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo)
+TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnly, bool nonWaveToo)
 {
     TransportSequences result;
     {
         const auto range = trackList.Any<WaveTrack>()
-                           + (selectedOnly ? &Track::IsSelected : &Track::Any);
+                           + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(
                 StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
@@ -214,7 +215,7 @@ TransportSequences MakeTransportTracks(TrackList& trackList, bool selectedOnly, 
     }
     if (nonWaveToo) {
         const auto range = trackList.Any<const PlayableTrack>()
-                           + (selectedOnly ? &Track::IsSelected : &Track::Any);
+                           + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             if (!track_cast<const SampleTrack*>(pTrack)) {
                 if (auto pSequence
@@ -243,8 +244,8 @@ void Au3Record::init()
     s_recordingListener->recordingClipChanged().onReceive(this, [this](const trackedit::ClipKey& clipKey) {
         WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
 
-        Track* pendingTrack = &PendingTracks::Get(projectRef())
-                              .SubstitutePendingChangedTrack(*origWaveTrack);
+        Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
+                                 .SubstitutePendingChangedTrack(*origWaveTrack);
 
         WaveTrack* pendingWaveTrack = dynamic_cast<WaveTrack*>(pendingTrack);
         IF_ASSERT_FAILED(pendingWaveTrack) {
@@ -318,8 +319,8 @@ muse::Ret Au3Record::start()
         existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
         if (!existingTracks.empty()) {
             t0 = std::max(t0,
-                          TrackList::Get(project).Selected<const WaveTrack>()
-                          .max(&Track::GetEndTime));
+                          Au3TrackList::Get(project).Selected<const WaveTrack>()
+                          .max(&Au3Track::GetEndTime));
             options.rate = rateOfSelected;
         } else {
             if (anySelected && rateOfSelected != options.rate) {
@@ -361,7 +362,7 @@ muse::Ret Au3Record::start()
         // playback.
         /* TODO: set up stereo tracks if that is how the user has set up
           * their preferences, and choose sample format based on prefs */
-        transportTracks = MakeTransportTracks(TrackList::Get(project), false, true);
+        transportTracks = MakeTransportTracks(Au3TrackList::Get(project), false, true);
         for (const auto& wt : existingTracks) {
             auto end = transportTracks.playbackSequences.end();
             auto it = std::find_if(
@@ -465,7 +466,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
     transportSequences.captureSequences.clear();
 
     const auto p = &project;
-    auto& trackList = TrackList::Get(project);
+    auto& trackList = Au3TrackList::Get(project);
 
     bool appendRecord = !sequences.captureSequences.empty();
 
@@ -549,7 +550,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 // A function that copies all the non-sample data between
                 // wave tracks; in case the track recorded to changes scale
                 // type (for instance), during the recording.
-                auto updater = [newClipKey](Track& d, const Track& s){
+                auto updater = [newClipKey](Au3Track& d, const Au3Track& s){
                     assert(d.NChannels() == s.NChannels());
                     auto& dst = static_cast<WaveTrack&>(d);
                     auto& src = static_cast<const WaveTrack&>(s);

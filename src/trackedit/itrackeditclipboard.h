@@ -3,16 +3,15 @@
 */
 #pragma once
 
-#include "Track.h"
 #include "modularity/imoduleinterface.h"
 #include "trackedittypes.h"
 
-namespace au::trackedit {
+#include "au3wrap/au3types.h"
 
+namespace au::trackedit {
 struct TrackData
 {
-    // Track type from Track.h
-    std::shared_ptr<::Track> track;
+    std::shared_ptr<au3::Au3Track> track;
     au::trackedit::ClipKey clipKey;
 };
 
