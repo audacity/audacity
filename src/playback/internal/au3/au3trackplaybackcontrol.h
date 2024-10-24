@@ -7,7 +7,6 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-class WaveTrack;
 class AudacityProject;
 
 namespace au::playback {

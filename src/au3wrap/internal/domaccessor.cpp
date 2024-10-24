@@ -22,12 +22,12 @@ Au3Track* DomAccessor::findTrack(Au3Project& prj, const Au3TrackId& au3trackId)
     return track;
 }
 
-WaveTrack* DomAccessor::findWaveTrack(AudacityProject& prj, const TrackId& au3trackId)
+Au3WaveTrack* DomAccessor::findWaveTrack(AudacityProject& prj, const TrackId& au3trackId)
 {
-    return dynamic_cast<WaveTrack*>(findTrack(prj, au3trackId));
+    return dynamic_cast<Au3WaveTrack*>(findTrack(prj, au3trackId));
 }
 
-std::shared_ptr<WaveClip> DomAccessor::findWaveClip(WaveTrack* track, uint64_t au3ClipId)
+std::shared_ptr<WaveClip> DomAccessor::findWaveClip(Au3WaveTrack* track, uint64_t au3ClipId)
 {
     for (const std::shared_ptr<WaveClip>& interval : track->Intervals()) {
         if (WaveClipID(interval.get()).id == au3ClipId) {
@@ -39,16 +39,16 @@ std::shared_ptr<WaveClip> DomAccessor::findWaveClip(WaveTrack* track, uint64_t a
 }
 
 // TODO: if you need this one, fix it first (indexes are not in use anymore)
-std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const TrackId& au3trackId, size_t index)
+std::shared_ptr<WaveClip> DomAccessor::findWaveClip(Au3Project& prj, const Au3TrackId& au3trackId, size_t index)
 {
-    WaveTrack* t = findWaveTrack(prj, au3trackId);
+    Au3WaveTrack* t = findWaveTrack(prj, au3trackId);
     if (!t) {
         return nullptr;
     }
     return findWaveClip(t, index);
 }
 
-size_t DomAccessor::findClipIndexById(const WaveTrack* track, const trackedit::ClipId& clipId)
+size_t DomAccessor::findClipIndexById(const Au3WaveTrack* track, const trackedit::ClipId& clipId)
 {
     size_t index = 0;
     for (const auto& interval : track->Intervals()) {
@@ -61,7 +61,7 @@ size_t DomAccessor::findClipIndexById(const WaveTrack* track, const trackedit::C
     return muse::nidx;
 }
 
-au::trackedit::ClipId DomAccessor::findClipIdByIndex(const WaveTrack* track, size_t clipIndex)
+au::trackedit::ClipId DomAccessor::findClipIdByIndex(const Au3WaveTrack* track, size_t clipIndex)
 {
     auto it = std::next(track->Intervals().begin(), clipIndex);
     if (it != track->Intervals().end()) {
@@ -70,7 +70,8 @@ au::trackedit::ClipId DomAccessor::findClipIdByIndex(const WaveTrack* track, siz
     return -1;
 }
 
-au::trackedit::ClipId DomAccessor::findMatchedClip(WaveTrack* track, const WaveTrack* originTrack, const trackedit::ClipId& originClipId)
+au::trackedit::ClipId DomAccessor::findMatchedClip(const Au3WaveTrack* track, const Au3WaveTrack* originTrack,
+                                                   const trackedit::ClipId& originClipId)
 {
     size_t idx = findClipIndexById(originTrack, originClipId);
     if (idx == muse::nidx) {
@@ -80,7 +81,7 @@ au::trackedit::ClipId DomAccessor::findMatchedClip(WaveTrack* track, const WaveT
     return DomAccessor::findClipIdByIndex(track, idx);
 }
 
-std::list<std::shared_ptr<WaveClip> > DomAccessor::waveClipsAsList(WaveTrack* track)
+std::list<std::shared_ptr<WaveClip> > DomAccessor::waveClipsAsList(Au3WaveTrack* track)
 {
     std::list<std::shared_ptr<WaveClip> > clips = { track->Intervals().begin(), track->Intervals().end() };
     return clips;
