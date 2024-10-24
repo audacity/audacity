@@ -22,7 +22,7 @@ Au3Track* DomAccessor::findTrack(Au3Project& prj, const Au3TrackId& au3trackId)
     return track;
 }
 
-Au3WaveTrack* DomAccessor::findWaveTrack(Au3Project& prj, const TrackId& au3trackId)
+Au3WaveTrack* DomAccessor::findWaveTrack(Au3Project& prj, const Au3TrackId& au3trackId)
 {
     return dynamic_cast<Au3WaveTrack*>(findTrack(prj, au3trackId));
 }
