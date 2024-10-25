@@ -123,6 +123,26 @@ DockPage {
                 navigationPanel.section: root.topToolKeyNavSec
                 navigationPanel.order: 2
             }
+        },
+
+        DockToolBar {
+            id: undoRedoToolBar
+
+            objectName: pageModel.undoRedoToolBarName()
+            title: qsTrc("appshell", "Undo/redo toolbar")
+
+            floatable: false
+            closable: false
+            resizable: false
+            separatorsVisible: false
+
+            alignment: DockToolBarAlignment.Right
+            contentBottomPadding: 2
+
+            UndoRedoToolBar {
+                navigationPanel.section: root.topToolKeyNavSec
+                navigationPanel.order: 2
+            }
         }
     ]
 
