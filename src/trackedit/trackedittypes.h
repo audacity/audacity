@@ -17,8 +17,8 @@ using volume_dbfs_t = float;
 using gain_t = float;
 using balance_t = float;
 
-using TrackId = long;
-using ClipId = uint64_t;
+using TrackId = int64_t;
+using ClipId = int64_t;
 
 using TrackIdList = std::vector<TrackId>;
 

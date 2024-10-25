@@ -68,7 +68,7 @@ void Au3SelectionController::setSelectedTracks(const TrackIdList& tracksIds, boo
 
     auto& tracks = Au3TrackList::Get(projectRef());
     for (Au3Track* au3Track : tracks) {
-        if (muse::contains(tracksIds, au3::DomConverter::trackId(au3Track->GetId()))) {
+        if (muse::contains(tracksIds, TrackId(au3Track->GetId()))) {
             au3Track->SetSelected(true);
         } else {
             au3Track->SetSelected(false);
@@ -251,7 +251,7 @@ void Au3SelectionController::updateSelectionController()
     auto& tracks = Au3TrackList::Get(projectRef());
     TrackIdList selectedTracks;
     for (const auto& selectedTrack : tracks.Selected()) {
-        selectedTracks.push_back(DomConverter::trackId(selectedTrack->GetId()));
+        selectedTracks.push_back(selectedTrack->GetId());
     }
 
     m_selectedTracks.set(selectedTracks, true);

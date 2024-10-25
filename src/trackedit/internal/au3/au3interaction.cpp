@@ -54,7 +54,7 @@ TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<TrackData>& tra
 
         auto newTrack = DomConverter::track(pNewTrack.get());
         prj->notifyAboutTrackAdded(newTrack);
-        for (const auto& clip : prj->clipList(DomConverter::trackId(pNewTrack->GetId()))) {
+        for (const auto& clip : prj->clipList(pNewTrack->GetId())) {
             prj->notifyAboutClipAdded(clip);
         }
 
@@ -104,7 +104,7 @@ TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Trac
     return tracksIds;
 }
 
-muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, const std::vector<TrackData> &clipsToPaste, secs_t begin) const
+muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const
 {
     IF_ASSERT_FAILED(dstTracksIds.size() <= clipsToPaste.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
@@ -141,7 +141,7 @@ Au3Interaction::Au3Interaction()
     m_progress = std::make_shared<muse::Progress>();
 }
 
-muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
+muse::Ret Au3Interaction::makeRoomForClip(const ClipKey& clipKey)
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
@@ -173,7 +173,8 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey &clipKey)
     return muse::make_ret(muse::Ret::Code::Ok);
 }
 
-muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId> &tracksIds, const std::vector<TrackData> &trackData, secs_t begin)
+muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData,
+                                                  secs_t begin)
 {
     IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
@@ -220,13 +221,12 @@ muse::Ret Au3Interaction::makeRoomForDataOnTrack(const TrackId trackId, secs_t b
     return muse::make_ret(muse::Ret::Code::Ok);
 }
 
-void Au3Interaction::trimOrDeleteOverlapping(WaveTrack *waveTrack, secs_t begin, secs_t end, std::shared_ptr<WaveClip> otherClip)
+void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin, secs_t end, std::shared_ptr<WaveClip> otherClip)
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
     if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
         && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
-
         waveTrack->RemoveInterval(otherClip);
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
@@ -261,7 +261,6 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack *waveTrack, secs_t begin,
     if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
         && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())
         && muse::RealIsEqualOrMore(end, otherClip->GetPlayStartTime())) {
-
         secs_t overlap = (end - otherClip->GetPlayStartTime());
         otherClip->TrimLeft(overlap);
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
@@ -273,7 +272,6 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack *waveTrack, secs_t begin,
     if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
         && muse::RealIsEqualOrLess(begin, otherClip->GetPlayEndTime())
         && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
-
         secs_t overlap = (otherClip->GetPlayEndTime() - begin);
         otherClip->TrimRight(overlap);
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
@@ -309,8 +307,7 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
         return false;
     }
 
-    if (completed)
-    {
+    if (completed) {
         auto ok = makeRoomForClip(clipKey);
         if (!ok) {
             return false;
@@ -1121,7 +1118,7 @@ void Au3Interaction::newMonoTrack()
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackAdded(DomConverter::track(track.get()));
 
-    selectionController()->setSelectedTracks(TrackIdList(DomConverter::trackId(track->GetId())));
+    selectionController()->setSelectedTracks(TrackIdList(TrackId(track->GetId())));
 
     pushProjectHistoryTrackAddedState();
 }
@@ -1143,7 +1140,7 @@ void Au3Interaction::newStereoTrack()
     auto track = *tracks.rbegin();
     prj->notifyAboutTrackAdded(DomConverter::track(track));
 
-    selectionController()->setSelectedTracks(TrackIdList(DomConverter::trackId(track->GetId())));
+    selectionController()->setSelectedTracks(TrackIdList(TrackId(track->GetId())));
 
     pushProjectHistoryTrackAddedState();
 }

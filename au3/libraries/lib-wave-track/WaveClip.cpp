@@ -222,10 +222,14 @@ double WaveClipChannel::GetStretchRatio() const
    return GetClip().GetStretchRatio();
 }
 
+
+static int64_t s_lastClipId = 0;
+
 WaveClip::WaveClip(size_t width,
    const SampleBlockFactoryPtr &factory,
    sampleFormat format, int rate)
 {
+   mId = ++s_lastClipId;
    assert(width > 0);
    mRate = rate;
    mSequences.resize(width);
@@ -250,6 +254,7 @@ WaveClip::WaveClip(
    // current sample block factory, because we might be copying
    // from one project to another
 
+   mId = orig.mId;
    mSequenceOffset = orig.mSequenceOffset;
    mTrimLeft = orig.mTrimLeft;
    mTrimRight = orig.mTrimRight;
@@ -290,6 +295,7 @@ WaveClip::WaveClip(
 {
    assert(orig.CountSamples(t0, t1) > 0);
 
+   mId = orig.mId;
    mSequenceOffset = orig.mSequenceOffset;
 
    //Adjust trim values to sample-boundary
@@ -337,6 +343,11 @@ WaveClip::WaveClip(
 WaveClip::~WaveClip()
 {
    Observer::Publisher<WaveClipDtorCalled>::Publish(WaveClipDtorCalled {});
+}
+
+int64_t WaveClip::GetId() const
+{
+    return mId;
 }
 
 double WaveClip::Start() const

@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <cstdint>
+
 class AudacityProject;
 
 class TrackId;
@@ -20,6 +22,7 @@ using Au3Track = ::Track;
 using Au3TrackList = ::TrackList;
 using Au3WaveTrack = ::WaveTrack;
 
+using Au3ClipId = int64_t;
 using Au3WaveClip = ::WaveClip;
 
 inline int au3VolumeToLocal(float volume)

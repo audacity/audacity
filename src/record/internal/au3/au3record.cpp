@@ -22,7 +22,6 @@
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "au3wrap/internal/domau3types.h"
 #include "au3wrap/au3types.h"
 
 #include "recorderrors.h"
@@ -184,7 +183,7 @@ void Au3Record::init()
         pendingTracks.UpdatePendingTracks();
     });
 
-    audioEngine()->recordingClipChanged().onReceive(this, [this](const au::au3::Au3TrackId& trackId, const au::au3::WaveClipID& clipId) {
+    audioEngine()->recordingClipChanged().onReceive(this, [this](const au3::Au3TrackId& trackId, const au3::Au3ClipId& clipId) {
         Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), trackId);
 
         Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
@@ -195,7 +194,7 @@ void Au3Record::init()
             return;
         }
 
-        auto pendingClipId = DomAccessor::findMatchedClip(pendingWaveTrack, origWaveTrack, clipId.id);
+        auto pendingClipId = DomAccessor::findMatchedClip(pendingWaveTrack, origWaveTrack, clipId);
         if (pendingClipId == -1) {
             return;
         }
@@ -211,7 +210,7 @@ void Au3Record::init()
         // to make that possible we need to assign orignal clip's ID to the pending clip
         // so onClipChanged accepts it
         auto pendingClipWithFakeId = DomConverter::clip(pendingWaveTrack, pendingClip.get());
-        pendingClipWithFakeId.key.clipId = clipId.id;
+        pendingClipWithFakeId.key.clipId = clipId;
         prj->notifyAboutClipChanged(pendingClipWithFakeId);
     });
 
@@ -490,7 +489,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 // A function that copies all the non-sample data between
                 // wave tracks; in case the track recorded to changes scale
                 // type (for instance), during the recording.
-                auto updater = [this, trackId = wt->GetId(), clipId = au::au3::WaveClipID(newClip.get())](Au3Track& d, const Au3Track& s){
+                auto updater = [this, trackId = wt->GetId(), clipId = newClip->GetId()](Au3Track& d, const Au3Track& s){
                     assert(d.NChannels() == s.NChannels());
                     auto& dst = static_cast<Au3WaveTrack&>(d);
                     auto& src = static_cast<const Au3WaveTrack&>(s);

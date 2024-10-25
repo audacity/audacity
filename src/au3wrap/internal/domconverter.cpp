@@ -6,7 +6,6 @@
 #include "libraries/lib-wave-track/WaveTrack.h"
 
 #include "wxtypes_convert.h"
-#include "domau3types.h"
 
 #include "../au3types.h"
 
@@ -52,16 +51,11 @@ static muse::draw::Color trackColor(const au::trackedit::TrackId& trackId)
 }
 }
 
-au::trackedit::TrackId DomConverter::trackId(const Au3TrackId& au3trackId)
-{
-    return *(reinterpret_cast<const long*>(&au3trackId));
-}
-
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
 {
     au::trackedit::Clip clip;
-    clip.key.trackId = trackId(waveTrack->GetId());
-    clip.key.clipId = WaveClipID(au3clip).id;
+    clip.key.trackId = waveTrack->GetId();
+    clip.key.clipId = au3clip->GetId();
     clip.title = wxToString(au3clip->GetName());
     clip.startTime = au3clip->GetPlayStartTime();
     clip.endTime = au3clip->GetPlayEndTime();
@@ -78,7 +72,7 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
 au::trackedit::Track DomConverter::track(const Au3Track* waveTrack)
 {
     trackedit::Track au4t;
-    au4t.id = DomConverter::trackId(waveTrack->GetId());
+    au4t.id = waveTrack->GetId();
     au4t.title = wxToString(waveTrack->GetName());
     au4t.type = trackType(waveTrack);
     au4t.color = trackColor(au4t.id);

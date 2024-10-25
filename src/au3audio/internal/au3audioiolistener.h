@@ -11,7 +11,6 @@
 #include "libraries/lib-audio-io/AudioIOListener.h"
 
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/domau3types.h"
 
 namespace au::audio {
 class Au3AudioIOListener : public AudioIOListener, public muse::async::Asyncable
@@ -40,14 +39,14 @@ public:
     muse::async::Notification commitRequested() const { return m_commitRequested; }
     muse::async::Notification finished() const { return m_finished; }
 
-    muse::async::Channel<au3::Au3TrackId, au3::WaveClipID> recordingClipChanged() const { return m_recordingClipChanged; }
+    muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const { return m_recordingClipChanged; }
 
 private:
     muse::async::Notification m_updateRequested;
     muse::async::Notification m_commitRequested;
     muse::async::Notification m_finished;
 
-    muse::async::Channel<au3::Au3TrackId, au3::WaveClipID> m_recordingClipChanged;
+    muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> m_recordingClipChanged;
 
     muse::Timer m_timer;
 };
