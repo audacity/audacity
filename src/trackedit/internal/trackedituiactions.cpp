@@ -101,13 +101,15 @@ const UiActionList TrackeditUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Undo"),
-             TranslatableString("action", "Undo")
+             TranslatableString("action", "Undo"),
+             IconCode::Code::UNDO
              ),
     UiAction("redo",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Redo"),
-             TranslatableString("action", "Redo")
+             TranslatableString("action", "Redo"),
+             IconCode::Code::REDO
              ),
     UiAction("duplicate",
              au::context::UiCtxAny,
