@@ -233,6 +233,7 @@ WaveClip::WaveClip(size_t width,
    const SampleBlockFactoryPtr &factory,
    sampleFormat format, int rate)
 {
+   mId = ++s_lastClipId;
    assert(width > 0);
    mRate = rate;
    mSequences.resize(width);
@@ -257,6 +258,7 @@ WaveClip::WaveClip(
    // current sample block factory, because we might be copying
    // from one project to another
 
+   mId = orig.mId;
    mSequenceOffset = orig.mSequenceOffset;
    mTrimLeft = orig.mTrimLeft;
    mTrimRight = orig.mTrimRight;
@@ -298,6 +300,7 @@ WaveClip::WaveClip(
 {
    assert(orig.CountSamples(t0, t1) > 0);
 
+   mId = orig.mId;
    mSequenceOffset = orig.mSequenceOffset;
 
    //Adjust trim values to sample-boundary
