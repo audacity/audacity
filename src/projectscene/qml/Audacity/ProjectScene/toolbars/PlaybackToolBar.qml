@@ -22,15 +22,26 @@ Item {
 
     property alias navigationPanel: view.navigationPanel
 
-    width: view.width + /*spacing*/ 4 + customizeButton.width
-    height: 48 // todo
+    width: {
+        let contentWidth = view.width + prv.customizeButtonSpaceWidth
+        return maximumWidth > 0 ? Math.max(contentWidth, maximumWidth) : contentWidth
+    }
+    height: view.height
+
+    QtObject {
+        id: prv
+
+        property int customizeButtonSpaceWidth: 8 /* spacing */ + customizeButton.width + customizeButton.anchors.rightMargin
+    }
 
     StyledToolBarView {
         id: view
 
         anchors.verticalCenter: parent.verticalCenter
 
-        rowHeight: root.height - view.spacing - 1
+        rowHeight: 48
+        separatorHeight: 28
+        maximumWidth: root.maximumWidth - prv.customizeButtonSpaceWidth
 
         model: PlaybackToolBarModel {}
 
@@ -231,9 +242,10 @@ Item {
     FlatButton {
         id: customizeButton
 
-        anchors.margins: 4
-        anchors.left: view.right
-        anchors.verticalCenter: root.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: 12
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 12
 
         width: 28
         height: width
