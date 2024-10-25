@@ -133,18 +133,23 @@ DockPage {
             objectName: pageModel.playbackToolBarName()
             title: qsTrc("appshell", "Play Tool Bar")
 
-            thickness: 48 // todo
-
             dropDestinations: [
                 root.toolBarTopDropDestination,
                 root.toolBarBottomDropDestination
             ]
 
+            //! small hack: needed so that when the screen is quickly reduced the dock system works correctly
+            minimumWidth: 300
+
             PlaybackToolBar {
                 floating: playbackToolBar.floating
 
-                maximumWidth: playbackToolBar.width
+                maximumWidth: playbackToolBar.width - 30 /* grip button */
                 maximumHeight: playbackToolBar.height
+
+                onHeightChanged: {
+                    playbackToolBar.thickness = height
+                }
 
                 navigationPanel.section: root.playbackToolBarKeyNavSec
                 navigationPanel.order: 1

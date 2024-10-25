@@ -13,5 +13,7 @@ StyledToolBarView {
 
     spacing: 2
 
+    rowHeight: 28
+
     model: ProjectToolBarModel { }
 }
