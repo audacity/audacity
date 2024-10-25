@@ -47,7 +47,7 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
     std::vector<au::trackedit::TrackId> au4trackIds;
 
     for (const Au3Track* t : *m_impl->trackList) {
-        au4trackIds.push_back(DomConverter::trackId(t->GetId()));
+        au4trackIds.push_back(t->GetId());
     }
 
     return au4trackIds;
@@ -82,7 +82,7 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
     TrackId trackId = -1;
     auto track = e.mpTrack.lock();
     if (track) {
-        trackId = DomConverter::trackId(track->GetId());
+        trackId = track->GetId();
     }
     LOGD() << "trackId: " << trackId << ", type: " << eventTypeToString(e);
 

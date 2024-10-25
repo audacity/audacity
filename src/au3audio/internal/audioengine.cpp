@@ -7,7 +7,6 @@
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/domau3types.h"
 
 #include "defaultplaybackpolicy.h"
 #include "au3audioiolistener.h"
@@ -76,7 +75,7 @@ muse::async::Notification AudioEngine::finished() const
     return s_audioIOListener->finished();
 }
 
-muse::async::Channel<au::au3::Au3TrackId, au::au3::WaveClipID> AudioEngine::recordingClipChanged() const
+muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> AudioEngine::recordingClipChanged() const
 {
     return s_audioIOListener->recordingClipChanged();
 }

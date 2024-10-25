@@ -16,7 +16,6 @@
 #include "Envelope.h"
 #include "FrameStatistics.h"
 #include "WaveformScale.h"
-#include "au3wrap/internal/domau3types.h"
 #include "graphics/Color.h"
 
 #include "waveform/WaveBitmapCache.h"

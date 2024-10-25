@@ -1,6 +1,5 @@
 #include "domaccessor.h"
 
-#include "domau3types.h"
 #include "containers.h"
 
 #include "log.h"
@@ -27,10 +26,10 @@ Au3WaveTrack* DomAccessor::findWaveTrack(Au3Project& prj, const Au3TrackId& au3t
     return dynamic_cast<Au3WaveTrack*>(findTrack(prj, au3trackId));
 }
 
-std::shared_ptr<Au3WaveClip> DomAccessor::findWaveClip(Au3WaveTrack* track, uint64_t au3ClipId)
+std::shared_ptr<Au3WaveClip> DomAccessor::findWaveClip(Au3WaveTrack* track, int64_t au3ClipId)
 {
     for (const std::shared_ptr<Au3WaveClip>& interval : track->Intervals()) {
-        if (WaveClipID(interval.get()).id == au3ClipId) {
+        if (interval->GetId() == au3ClipId) {
             return interval;
         }
     }
@@ -66,7 +65,7 @@ size_t DomAccessor::findClipIndexById(const Au3WaveTrack* track, const trackedit
 {
     size_t index = 0;
     for (const auto& interval : track->Intervals()) {
-        if (WaveClipID(interval.get()).id == clipId) {
+        if (interval->GetId() == clipId) {
             return index;
         }
         index++;
@@ -79,7 +78,7 @@ au::trackedit::ClipId DomAccessor::findClipIdByIndex(const Au3WaveTrack* track, 
 {
     auto it = std::next(track->Intervals().begin(), clipIndex);
     if (it != track->Intervals().end()) {
-        return au::au3::WaveClipID((*it).get()).id;
+        return (*it).get()->GetId();
     }
     return -1;
 }

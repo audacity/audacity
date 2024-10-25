@@ -285,6 +285,8 @@ public:
 
    virtual ~WaveClip();
 
+   int64_t GetId() const;
+
    // Satisfying WideChannelGroupInterval
    double Start() const override;
    double End() const override;
@@ -938,6 +940,8 @@ private:
          mTrimRight;
       bool committed{ false };
    };
+
+   int64_t mId = -1;
 
    //! Real-time durations, i.e., stretching the clip modifies these.
    //! @{

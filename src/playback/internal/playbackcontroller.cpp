@@ -51,7 +51,7 @@ void PlaybackController::init()
     m_player->playbackPositionChanged().onReceive(this, [this](const muse::secs_t& position) {
         project::IAudacityProjectPtr project = globalContext()->currentProject();
         if (!project) {
-            return false;
+            return;
         }
 
         if (totalPlayTime() == position) {

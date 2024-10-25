@@ -78,8 +78,8 @@ template<typename T>
 class TrackId
 {
 public:
-   TrackId() : mValue(-1) {}
-   explicit TrackId (long value) : mValue(value) {}
+    TrackId() = default;
+   explicit TrackId (int64_t value) : mValue(value) {}
 
    bool operator == (const TrackId &other) const
    { return mValue == other.mValue; }
@@ -92,8 +92,11 @@ public:
    bool operator <  (const TrackId &other) const
    { return mValue <  other.mValue; }
 
+   inline operator int64_t() const { return mValue; }
+   inline int64_t raw() const { return mValue; }
+
 private:
-   long mValue;
+   int64_t mValue = -1;
 };
 
 //! Template generated base class for Track lets it host opaque UI related objects
