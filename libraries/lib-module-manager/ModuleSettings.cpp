@@ -102,9 +102,11 @@ int ModuleSettings::GetModuleStatus(const FilePath &fname)
    wxString StatusPref = wxString( wxT("/Module/") ) + ShortName;
    wxString DateTimePref = wxString( wxT("/ModuleDateTime/") ) + ShortName;
 
-   wxString ModulePath = gPrefs->Read( PathPref, wxEmptyString );
-   if( ModulePath.IsSameAs( fname ) )
+   if( gPrefs->Exists(StatusPref) )
    {
+      // Update module path in case it was changed
+      gPrefs->Write( PathPref, fname );
+
       gPrefs->Read( StatusPref, &iStatus, static_cast<int>(kModuleNew) );
 
       wxDateTime DateTime = FileName.GetModificationTime();
