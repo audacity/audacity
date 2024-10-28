@@ -67,6 +67,8 @@ public:
     virtual void moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
     virtual void undo() = 0;
+    virtual bool canUndo() = 0;
     virtual void redo() = 0;
+    virtual bool canRedo() = 0;
 };
 }

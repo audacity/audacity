@@ -62,7 +62,7 @@ void TrackeditModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
-        ar->reg(std::make_shared<TrackeditUiActions>(m_trackeditController));
+        ar->reg(m_trackeditUiActions);
     }
 }
 

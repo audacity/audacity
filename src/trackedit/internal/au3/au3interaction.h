@@ -67,7 +67,9 @@ public:
     void moveTracksTo(const TrackIdList& trackIds, int to) override;
 
     void undo() override;
+    bool canUndo() override;
     void redo() override;
+    bool canRedo() override;
 
 private:
     au3::Au3Project& projectRef() const;

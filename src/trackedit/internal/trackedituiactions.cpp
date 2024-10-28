@@ -346,6 +346,10 @@ TrackeditUiActions::TrackeditUiActions(std::shared_ptr<TrackeditActionsControlle
 
 void TrackeditUiActions::init()
 {
+    m_controller->actionEnabledChanged().onReceive(this, [this](const ActionCode& code) {
+        m_actionEnabledChanged.send({ code });
+    });
+
     m_controller->actionCheckedChanged().onReceive(this, [this](const ActionCode& code) {
         m_actionCheckedChanged.send({ code });
     });

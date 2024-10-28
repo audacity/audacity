@@ -28,11 +28,15 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
 public:
     void init();
 
+    bool actionEnabled(const muse::actions::ActionCode& actionCode) const override;
+    muse::async::Channel<muse::actions::ActionCode> actionEnabledChanged() const override;
+
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
     muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
-    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
+    bool canReceiveAction(const muse::actions::ActionCode& actionCode) const override;
 
 private:
+    void notifyActionEnabledChanged(const muse::actions::ActionCode& actionCode);
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
     void undo();
@@ -95,6 +99,7 @@ private:
     void pushProjectHistoryPasteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
 
+    muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
 }

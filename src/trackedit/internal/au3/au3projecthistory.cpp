@@ -32,6 +32,8 @@ void au::trackedit::Au3ProjectHistory::undo()
         [&]( const UndoStackElem& elem ){
         ::ProjectHistory::Get(project).PopState(elem.state);
     });
+
+    m_isUndoRedoAvailableChanged.notify();
 }
 
 bool au::trackedit::Au3ProjectHistory::redoAvailable()
@@ -48,6 +50,8 @@ void au::trackedit::Au3ProjectHistory::redo()
         [&]( const UndoStackElem& elem ){
         ::ProjectHistory::Get(project).PopState(elem.state);
     });
+
+    m_isUndoRedoAvailableChanged.notify();
 }
 
 void au::trackedit::Au3ProjectHistory::undoUnsaved()
@@ -74,6 +78,13 @@ void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longD
 {
     auto& project = projectRef();
     ::ProjectHistory::Get(project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} });
+
+    m_isUndoRedoAvailableChanged.notify();
+}
+
+muse::async::Notification Au3ProjectHistory::isUndoRedoAvailableChanged() const
+{
+    return m_isUndoRedoAvailableChanged;
 }
 
 Au3Project& au::trackedit::Au3ProjectHistory::projectRef()
