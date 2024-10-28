@@ -4,7 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Paval Shalamitski <yehekim@gmail.com>, 2024
+# Link Winterberg, 2024
 # Thomas De Rocker, 2024
 #
 #, fuzzy
@@ -12,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-04-06 16:47+0000\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Thomas De Rocker, 2024\n"
-"Language-Team: Dutch (https://app.transifex.com/klyok/teams/690/nl/)\n"
+"Language-Team: Dutch (https://app.transifex.com/audacity/teams/164520/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,15 +128,13 @@ msgstr "Hoge afspeelvertraging: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "Ondersteunde rates:\n"
+msgstr ""
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "Ondersteunde rates:\n"
+msgstr ""
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -820,13 +818,12 @@ msgstr "Draait de audiosamples om, hun polariteit omkerend"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Compressor"
-msgstr "Glue Compressor"
+msgstr "Oude compressor"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
-msgstr ""
+msgstr "Comprimeert het dynamische bereik van audio"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -2983,12 +2980,11 @@ msgstr ""
 "'spectrale' effecten toepast."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
-msgstr "Om 'spectrale effecten' te gebruiken, schakelt u spectrale selectie' in in de spectrogram-instellingen van de track en selecteert u het frequentiebereik voor het effect om op te handelen."
+msgstr ""
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -6047,9 +6043,8 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (kleinere bestanden)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "Waanzinnig, 320 kbps"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -7149,7 +7144,7 @@ msgstr "Audio-voorbeeld genereren..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Open trace audio.com"
-msgstr ""
+msgstr "Trace audio.com openen"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7298,9 +7293,8 @@ msgid "&Unlink Account"
 msgstr "Account ontkoppelen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "Lineair uit"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7471,9 +7465,8 @@ msgid "Create cloud account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "Einde op einde uitlijnen"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7488,14 +7481,12 @@ msgid ""
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "Dit project wordt niet langer in de Cloud opgeslagen"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "Dit project wordt niet langer in de Cloud opgeslagen"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
@@ -7522,14 +7513,12 @@ msgid "Already have an account? "
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "Aanmelden"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "Account koppelen"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -9922,9 +9911,8 @@ msgstr "Audacity mixer%s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "Volume    "
+msgstr ""
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9965,9 +9953,8 @@ msgstr "Signaalniveaumeter"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "Snelheidsschuif verplaatst"
+msgstr ""
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10100,10 +10087,10 @@ msgstr "Te weinig compatibele tracks geselecteerd"
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr "%s.%i"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -11553,15 +11540,19 @@ msgstr ""
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr ""
 
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
-
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Welkom bij Audacity!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "Video bekijken"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "Beschikbare opnamebronnen:\n"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12186,9 +12177,8 @@ msgid "Set Track Audio"
 msgstr "Track-audio instellen"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "Volume    "
+msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -13489,9 +13479,9 @@ msgstr "Stop drempelwaarde (samples):"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%3d dB"
-msgstr "%d dB"
+msgstr "%3d dB"
 
 #: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -13499,62 +13489,57 @@ msgid "%.2f secs"
 msgstr "%.2f seconden"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f secs"
-msgstr "%.2f seconden"
+msgstr "%.1f seconden"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.0f:1"
-msgstr "%.0f ms"
+msgstr "%.0f:1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f:1"
-msgstr "%.1f %%"
+msgstr "%.1f:1"
 
 #: src/effects/LegacyCompressor.cpp
 #, c-format
 msgid "Ratio %.0f to 1"
-msgstr ""
+msgstr "Ratio %.0f op 1"
 
 #: src/effects/LegacyCompressor.cpp
 #, c-format
 msgid "Ratio %.1f to 1"
-msgstr ""
+msgstr "Ratio %.1f op 1"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Noise Floor:"
-msgstr "Ruisdrempel"
+msgstr "Ruisdrempel:"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Ratio:"
 msgstr "Ratio:"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Ratio"
-msgstr "Ratio:"
+msgstr "Ratio"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Attack Time:"
-msgstr "Attack-tijd"
+msgstr "Attack-tijd:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Attack Time"
 msgstr "Attack-tijd"
 
@@ -13562,49 +13547,46 @@ msgstr "Attack-tijd"
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "R&elease Time:"
-msgstr "Release-tijd"
+msgstr "Release-tijd:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Release Time"
 msgstr "Release-tijd"
 
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/LegacyCompressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr ""
+msgstr "Make-up gain voor 0 dB na compressie"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "C&ompress based on Peaks"
-msgstr "Vergelijkt een bereik op twee tracks."
+msgstr "Comprimeren op basis van pieken"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Threshold %d dB"
-msgstr "Drempelwaarde (dB)"
+msgstr "Drempelwaarde %d dB"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Noise Floor %d dB"
-msgstr "Ruisdrempel"
+msgstr "Ruisdrempel %d dB"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Attack Time %.2f secs"
-msgstr "Attack-tijd (seconden):"
+msgstr "Attack-tijd %.2f seconden"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release Time %.1f secs"
-msgstr "Release-tijd (seconden):"
+msgstr "Release-tijd %.1f seconden"
 
 #: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
@@ -15026,9 +15008,8 @@ msgid "Duplicate"
 msgstr "Dupliceren"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "Knippen naar klembord"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
@@ -15266,9 +15247,8 @@ msgid "&Raw Data..."
 msgstr "Raw data…"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "Project opslaan"
+msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15389,14 +15369,12 @@ msgid "Delete Labeled Audio"
 msgstr "Gelabelde audio verwijderen"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "Gelabelde audiogebieden geknipt naar klembord"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "Gelabelde audiogebieden geknipt naar klembord"
+msgstr ""
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15511,9 +15489,8 @@ msgid "Cut by label"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "Label verwijderen"
+msgstr ""
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
@@ -15529,9 +15506,8 @@ msgid "De&lete and leave gap"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "Gelabelde audiogebieden gewist"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16642,18 +16618,16 @@ msgid "Skip to Selection End"
 msgstr "Naar selectie-einde gaan"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "Extra menu's inschakelen"
+msgstr ""
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "Oversturing weergeven in golfvorm"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
-msgstr "RMS weergeven in golfvorm"
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -19281,33 +19255,28 @@ msgid "WaveColor Change"
 msgstr "Golfkleur-wijziging"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change Speed Limits"
-msgstr "Snelheid gewijzigd"
+msgstr "Snelheidsbegrenzing wijzigen"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change speed limit (%) to:"
-msgstr "Onderlimiet snelheidspercentage wijzigen naar:"
+msgstr "Snelheidsbegrenzing (%) wijzigen in:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Lower Speed Limit"
-msgstr "Onderlimiet snelheid"
+msgstr "Onderste snelheidsgrens"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Upper Speed Limit"
-msgstr "Bovenlimiet snelheid"
+msgstr "Bovenste snelheidsgrens"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
-msgstr ""
+msgstr "De bovenste snelheidsgrens moet groter zijn dan de onderste snelheidsgrens."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Invalid Limits"
-msgstr "Harde limiet"
+msgstr "Ongeldige grenzen"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -20682,9 +20651,8 @@ msgstr ""
 "                  Er is slechts een geluid gedetecteerd."
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Limiter"
-msgstr "VO Limiter"
+msgstr "Oude limiter"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -21566,121 +21534,5 @@ msgid "Spectral Tools"
 msgstr "Spectraal gereedschap"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy"
-msgstr "Juridisch"
-
-#~ msgid "Insane"
-#~ msgstr "Waanzinnig"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "Opslaan in de cloud vereist een gratis audio.com-account die is gekoppeld aan Audacity. Druk hierboven op \"account koppelen\" om verder te gaan."
-
-#~ msgid "Moved gain slider"
-#~ msgstr "Hoofdvolumeschuif verplaatst"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "Bekijk de [[%s|release-video]] of lees het [[https://support.audacityteam.org/additional-resources/changelog|wijzigingenlogboek]] voor meer informatie!</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "Gain:"
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "Toegepaste opdracht: %s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "Poging om het volgende effect te initialiseren is mislukt:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "Meer informatie kan beschikbaar zijn in 'Help > Diagnose > Log weergeven'"
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "Initialiseren van effect mislukt"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "Effect niet beschikbaar"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "Fout bij het laden van EQ-curves"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "Om deze filtercurve in een macro te gebruiken, kiest u er een nieuwe naam voor.\n"
-#~ "Kies de 'Curves opslaan/beheren...'-knop en wijzig de naam van de 'naamloze'-curve, en gebruik die dan."
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "Filtercurve EQ heeft een andere naam nodig"
-
-#~ msgid "Curve not found"
-#~ msgstr "Curve niet gevonden"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "Nyquist-fout"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "Fout in Nyquist code"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "Splitsen + knippen naar het klembord"
-
-#~ msgid "Split Cut"
-#~ msgstr "Splitsen + knippen"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "Splitsen + knippen"
-
-#~ msgid "Split D&elete"
-#~ msgstr "Splitsen + verwijderen"
-
-#~ msgid "E&xit"
-#~ msgstr "Afsluiten"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "Gelabelde audiogebieden gesplitst + geknipt naar klembord"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "Gelabelde audio splitsen + knippen"
-
-#~ msgid "Label Cut"
-#~ msgstr "Label knippen"
-
-#~ msgid "Label Delete"
-#~ msgstr "Label verwijderen"
-
-#~ msgid "&Split Cut"
-#~ msgstr "Splitsen + knippen"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "Label splitsen en knippen"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "Splitsen + verwijderen"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "Label splitsen en verwijderen"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s %i"
-#~ msgstr "%s %i"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s #%d"
-#~ msgstr "%s #%d"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Bovenlimiet snelheidspercentage wijzigen naar:"
-
-#~ msgid "This version of Audacity only allows one time track for each project window."
-#~ msgstr "Deze versie van Audacity staat slechts een tijd-track toe voor elk projectvenster."
+msgstr "Oud"
