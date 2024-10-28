@@ -206,206 +206,204 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
     return success;
 }
 
-void EffectsProvider::doEffectPreview(EffectBase& effect,
-                                      EffectSettingsAccess& access, std::function<void()> updateUI, bool dryOnly)
+namespace {
+void restoreEffectStateHack(EffectBase& effect)
 {
-    auto cleanup0 = effect.BeginPreview(access.Get());
+    if (auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance())) {
+        pInstance->Init();
+    }
+}
+}
 
-    // These are temporary state in the Effect object that are meant be moved to
-    // a new class EffectContext
-    const auto numTracks = effect.mNumTracks;
-    const auto rate = effect.mProjectRate;
-    const auto& factory = effect.mFactory;
-    auto& mT0 = effect.mT0;
-    auto& mT1 = effect.mT1;
-    auto& mTracks = effect.mTracks;
-    auto& mProgress = effect.mProgress;
-    auto& mIsPreview = effect.mIsPreview;
-
-    // Get certain immutable properties of the effect
-    const auto previewFullSelection = effect.PreviewsFullSelection();
-    const auto isLinearEffect = effect.IsLinearEffect();
-
-    if (numTracks == 0) { // nothing to preview
-        return;
+muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& settings)
+{
+    //! ============================================================================
+    //! NOTE Step 1 - check conditions
+    //! ============================================================================
+    if (effect.mNumTracks == 0) {     // nothing to preview
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
     auto player = playback()->player();
-    if (!player->isBusy()) {
+    if (player->isBusy()) {
         LOGW() << "can't play, maybe audio is busy";
-        return;
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    const auto FocusDialog = BasicUI::FindFocus();
-    assert(FocusDialog); // postcondition
+    //! ============================================================================
+    //! NOTE Step 2 - save origin context (state)
+    //! ============================================================================
+    struct EffectContxt {
+        double t0 = 0.0;
+        double t1 = 0.0;
+        std::shared_ptr<TrackList> tracks;
+        BasicUI::ProgressDialog* progress = nullptr;
+        bool isPreview = false;
+    };
 
-    double previewDuration;
-    bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
-    bool isGenerator = effect.GetType() == EffectTypeGenerate;
+    const EffectContxt originCtx = { effect.mT0, effect.mT1, effect.mTracks, effect.mProgress, effect.mIsPreview };
+    auto restoreCtx = finally([&] {
+        effect.mT0 = originCtx.t0;
+        effect.mT1 = originCtx.t1;
+        effect.mTracks = originCtx.tracks;
+        effect.mProgress = originCtx.progress;
+        effect.mIsPreview = originCtx.isPreview;
+    });
 
-    const double previewLen = effect.mT1 - effect.mT0;
+    // restore internal effect state on return (if needed)
+    auto cleanup0 = effect.BeginPreview(settings);
 
-    const auto& settings = access.Get();
+    // Effect is already inited; we will call Process and then Init
+    // again, so the state is exactly the way it was before Preview
+    // was called.
+    auto cleanup1 = finally([&] {
+        restoreEffectStateHack(effect);
+    });
+
+    //! ============================================================================
+    //! NOTE Step 3 - make new context (state)
+    //! ============================================================================
+
+    EffectContxt newCtx;
+
+    const bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
+    const bool isGenerator = effect.GetType() == EffectTypeGenerate;
+
+    //! Step 3.1 - prepare time
+
+    //const bool previewFullSelection = effect.PreviewsFullSelection(); not used at the moment
+    const double previewLen = originCtx.t1 - originCtx.t0;
+    double previewDuration = 0.0;
     if (isNyquist && isGenerator) {
         previewDuration = effect.CalcPreviewInputLength(settings, previewLen);
     } else {
-        previewDuration = std::min(settings.extra.GetDuration(),
-                                   effect.CalcPreviewInputLength(settings, previewLen));
+        previewDuration = std::min(settings.extra.GetDuration(), effect.CalcPreviewInputLength(settings, previewLen));
     }
 
-    double t1 = mT0 + previewDuration;
-
-    if ((t1 > mT1) && !isGenerator) {
-        t1 = mT1;
+    newCtx.t0 = originCtx.t0;
+    newCtx.t1 = originCtx.t0 + previewDuration;
+    if ((newCtx.t1 > originCtx.t1) && !isGenerator) {
+        newCtx.t1 = originCtx.t1;
     }
 
-    if (t1 <= mT0) {
-        return;
+    if (muse::RealIsEqualOrLess(newCtx.t1, newCtx.t0)) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    bool success = true;
+    //! Step 3.2 - make new tracks
+    {
+        // Build NEW tracklist from rendering tracks
+        // Set the same owning project, so FindProject() can see it within Process()
+        const auto pProject = effect.mTracks->GetOwner();
+        newCtx.tracks = au::au3::Au3TrackList::Create(pProject);
 
-    auto cleanup = finally([&] {
-        // Effect is already inited; we will call Process and then Init
-        // again, so the state is exactly the way it was before Preview
-        // was called.
-        if (!dryOnly) {
-            // TODO remove this reinitialization of state within the Effect object
-            // It is done indirectly via Effect::Instance
-            if (auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance())) {
-                pInstance->Init();
+        // Linear Effect preview optimised by pre-mixing to one track.
+        // Generators need to generate per track.
+        const bool isLinearEffect = effect.IsLinearEffect();
+        if (isLinearEffect && !isGenerator) {
+            auto newTrack = MixAndRender(
+                originCtx.tracks->Selected<const au::au3::Au3WaveTrack>(),
+                Mixer::WarpOptions { pProject },
+                wxString {}, // Don't care about the name of the temporary tracks
+                effect.mFactory, effect.mProjectRate, floatSample, newCtx.t0, newCtx.t1);
+
+            if (!newTrack) {
+                return muse::make_ret(muse::Ret::Code::InternalError);
             }
-        }
-    });
 
-    auto vr0 = valueRestorer(mT0);
-    auto vr1 = valueRestorer(mT1);
-    // Most effects should stop at t1.
-    if (!previewFullSelection) {
-        mT1 = t1;
-    }
+            newCtx.tracks->Add(newTrack);
 
-    // In case any dialog control depends on mT1 or mDuration:
-    if (updateUI) {
-        updateUI();
-    }
-
-    // Save the original track list
-    auto saveTracks = mTracks;
-
-    auto cleanup2 = finally([&] {
-        mTracks = saveTracks;
-        if (*FocusDialog) {
-            BasicUI::SetFocus(*FocusDialog);
-        }
-    });
-
-    // Build NEW tracklist from rendering tracks
-    // Set the same owning project, so FindProject() can see it within Process()
-    const auto pProject = saveTracks->GetOwner();
-    mTracks = au::au3::Au3TrackList::Create(pProject);
-
-    // Linear Effect preview optimised by pre-mixing to one track.
-    // Generators need to generate per track.
-    if (isLinearEffect && !isGenerator) {
-        auto newTrack = MixAndRender(
-            saveTracks->Selected<const au::au3::Au3WaveTrack>(),
-            Mixer::WarpOptions { saveTracks->GetOwner() },
-            wxString {}, // Don't care about the name of the temporary tracks
-            factory, rate, floatSample, mT0, t1);
-        if (!newTrack) {
-            return;
-        }
-        mTracks->Add(newTrack);
-
-        newTrack->MoveTo(0);
-        newTrack->SetSelected(true);
-    } else {
-        for (auto src : saveTracks->Selected<const au::au3::Au3WaveTrack>()) {
-            auto dest = src->Copy(mT0, t1);
-            dest->SetSelected(true);
-            mTracks->Add(dest);
+            newTrack->MoveTo(0);
+            newTrack->SetSelected(true);
+        } else {
+            for (auto src : originCtx.tracks->Selected<const au::au3::Au3WaveTrack>()) {
+                auto dest = src->Copy(newCtx.t0, newCtx.t1);
+                dest->SetSelected(true);
+                newCtx.tracks->Add(dest);
+            }
         }
     }
 
     // NEW tracks start at time zero.
-    // Adjust mT0 and mT1 to be the times to process, and to
+    // Adjust T0 and T1 to be the times to process, and to
     // play back in these tracks
-    double startOffset = mT0;
-    mT1 -= mT0;
-    mT0 = 0.0;
+    double startOffset = newCtx.t0;
+    newCtx.t1 -= newCtx.t0;
+    newCtx.t0 = 0.0;
 
-    // Update track/group counts
-    effect.CountWaveTracks();
-
-    // Apply effect
-    if (!dryOnly) {
+    //! ============================================================================
+    //! NOTE Step 4 - process
+    //! ============================================================================
+    {
         using namespace BasicUI;
         auto progress = MakeProgress(
             effect.GetName(),
             XO("Preparing preview"),
             ProgressShowStop
             ); // Have only "Stop" button.
-        auto vr = valueRestorer(mProgress, progress.get());
 
-        auto vr2 = valueRestorer(mIsPreview, true);
+        newCtx.progress = progress.get();
+        newCtx.isPreview = true;
 
-        access.ModifySettings([&](EffectSettings& settings){
-            // Preview of non-realtime effect
-            auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance());
-            success = pInstance && pInstance->Process(settings);
-            return nullptr;
-        });
+        // apply new context
+        {
+            effect.mT0 = newCtx.t0;
+            effect.mT1 = newCtx.t1;
+            effect.mTracks = newCtx.tracks;
+            effect.mProgress = newCtx.progress;
+            effect.mIsPreview = newCtx.isPreview;
+
+            // Update track/group counts
+            effect.CountWaveTracks();
+        }
+
+        // Apply effect to new tracks
+
+        auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance());
+        IF_ASSERT_FAILED(pInstance) {
+            return muse::make_ret(muse::Ret::Code::InternalError);
+        }
+
+        bool success = pInstance->Process(settings);
+        if (!success) {
+            return muse::make_ret(muse::Ret::Code::InternalError);
+        }
     }
 
-    if (success) {
-        // Some effects (Paulstretch) may need to generate more
-        // than previewLen, so take the min.
-        t1 = std::min(mT0 + previewLen, mT1);
-
-        // Start audio playing
+    //! ============================================================================
+    //! NOTE Step 4 - play new processed tracks
+    //! ============================================================================
+    {
         playback::PlayTracksOptions opt;
         opt.selectedOnly = true;
         opt.startOffset = startOffset;
-        muse::Ret ret = player->playTracks(*mTracks, mT0, t1, opt);
+        opt.isDefaultPolicy = false;
+        muse::Ret ret = player->playTracks(*newCtx.tracks, newCtx.t0, newCtx.t1, opt);
+        if (!ret) {
+            return ret;
+        }
 
-        if (ret) {
-            using namespace BasicUI;
-            auto previewing = BasicUI::ProgressResult::Success;
-            // The progress dialog must be deleted before stopping the stream
-            // to allow events to flow to the app during StopStream processing.
-            // The progress dialog blocks these events.
-            {
-                auto progress = MakeProgress(effect.GetName(), XO("Previewing"), ProgressShowStop);
-
-                while (player->isRunning() && previewing == BasicUI::ProgressResult::Success) {
-                    using namespace std::chrono;
-                    std::this_thread::sleep_for(100ms);
-                    previewing = progress->Poll(player->playbackPosition() - mT0 - startOffset, t1 - mT0);
-                }
-            }
-
-            player->stop();
-
-            while (!player->isBusy()) {
+        using namespace BasicUI;
+        auto previewing = BasicUI::ProgressResult::Success;
+        // The progress dialog must be deleted before stopping the stream
+        // to allow events to flow to the app during StopStream processing.
+        // The progress dialog blocks these events.
+        {
+            auto progress = MakeProgress(effect.GetName(), XO("Previewing"), ProgressShowStop);
+            while (player->isRunning() && previewing == BasicUI::ProgressResult::Success) {
                 using namespace std::chrono;
                 std::this_thread::sleep_for(100ms);
+                previewing = progress->Poll(player->playbackPosition() - newCtx.t0 - startOffset, newCtx.t1 - newCtx.t0);
             }
-        } else {
-            using namespace BasicUI;
-            ShowErrorDialog(
-                *FocusDialog, XO("Error"),
-                XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
-                wxT("Error_opening_sound_device"),
-                ErrorDialogOptions { ErrorDialogType::ModalErrorReport });
         }
     }
+
+    player->stop();
+
+    return muse::make_ok();
 }
 
 muse::Ret EffectsProvider::previewEffect(au3::Au3Project&, Effect* effect, EffectSettings& settings)
 {
-    std::shared_ptr<SimpleEffectSettingsAccess> pAccess = std::make_shared<SimpleEffectSettingsAccess>(settings);
-    doEffectPreview(*effect, *pAccess.get(), nullptr, false);
-
-    return muse::make_ok();
+    return doEffectPreview(*effect, settings);
 }

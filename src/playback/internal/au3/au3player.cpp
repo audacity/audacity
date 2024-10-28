@@ -40,7 +40,7 @@ Au3Player::Au3Player()
 
 bool Au3Player::isBusy() const
 {
-    return !audioEngine()->isBusy();
+    return audioEngine()->isBusy();
 }
 
 void Au3Player::play()
@@ -179,7 +179,7 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     m_startOffset = options.startOffset;
 
     AudacityProject& project = projectRef();
-    AudioIOStartStreamOptions sopts = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
+    AudioIOStartStreamOptions sopts = ProjectAudioIO::GetDefaultOptions(project, options.isDefaultPolicy);
 
     int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, sopts);
     bool success = token != 0;
@@ -246,6 +246,11 @@ void Au3Player::stop()
     meter = projectAudioIO.GetCaptureMeter();
     if (meter) {
         meter->Clear();
+    }
+
+    while (isBusy()) {
+        using namespace std::chrono;
+        std::this_thread::sleep_for(100ms);
     }
 }
 
@@ -338,7 +343,7 @@ void Au3Player::updatePlaybackPosition()
     bool isActive = AudioIO::Get()->IsStreamActive(token);
     double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
 
-    //LOGDA() << "token: " << token << ", isActive: " << isActive << ", time: " << time;
+    LOGDA() << "token: " << token << ", isActive: " << isActive << ", time: " << time;
 
     if (isActive) {
         m_playbackPosition.set(std::max(0.0, time));

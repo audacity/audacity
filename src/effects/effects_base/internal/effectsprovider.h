@@ -49,7 +49,7 @@ private:
     bool isVstSupported() const;
     bool isNyquistSupported() const;
 
-    void doEffectPreview(EffectBase& effect, EffectSettingsAccess& access, std::function<void()> updateUI, bool dryOnly);
+    muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);
 
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
