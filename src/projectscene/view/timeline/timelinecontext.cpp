@@ -215,7 +215,7 @@ void TimelineContext::shiftFrameTime(double shift)
 
     double minStartTime = 0.0;
     double totalTime = trackEditProject()->totalTime().to_double();
-    double maxEndTime = std::max(m_lastZoomEndTime, totalTime);
+    double maxEndTime = std::max(m_lastZoomEndTime, totalTime + (m_frameEndTime - m_frameStartTime) * 3 / 4);
 
     // do not shift to negative time values
     if (m_frameStartTime + timeShift < minStartTime) {
