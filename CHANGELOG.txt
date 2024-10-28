@@ -1,5 +1,24 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.7.0
+
+The 3.7.x series is primarily maintenance releases while we're working on Audacity 4.0. 3.7.0 fixes the following bugs:
+
+   * #6233, #7397, #6900 Improved Linux compatibility.
+   * #6702 Improved contrast in the light theme.
+   * #7008 MP3 exports: Renamed "Insane" to "Excessive".
+   * #7570, #7452 Improved non-standard character handling for cloud saving.
+   * #7486 Renamed "Split cut/delete" to "Cut/delete and leave gap".
+   * #7293 Pasting clips no longer moves clips on other tracks if "editing clips can move other clips" is enabled.
+   * #7312, #7382 Fixed database compacting not working properly sometimes. 
+   * #6851 Improved startup speed on systems with many audio devices.
+   * #7186 Multi view: Fixed the hitbox of the x being misaligned with the visuals. (Thanks, Kurtsley)
+   * #7468 macOS: Fixed VST presets path. 
+   * #7571 Adding, removing, replacing and reordering of effects now is undoable. 
+   * #7573 Closing a project upon turning a realtime effect stack on and off doesn't crash Audacity anymore.
+   * #7610 Canceling a stereo track mid-operation no longer crashes Audacity.
+   * #7385 Importing Opus files using libopus no longer shifts the audio data.
+
 Changes in version 3.6.4
 
 This is a patch release. It fixes the following bugs: 
