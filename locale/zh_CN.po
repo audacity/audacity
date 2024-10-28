@@ -4,32 +4,22 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Chris Ocelot, 2024
-# Siyuan <hsiyuano@gmail.com>, 2024
-# 同福客栈跑堂蘸糖, 2024
-# L-ING, 2024
-# WhiredPlanck <whiredplanck@outlook.com>, 2024
-# 复予, 2024
-# Sekatol Zhang, 2024
-# pluwen <pluwen@gmail.com>, 2024
-# Thomas De Rocker, 2024
-# 王晨旭 <wcxu21@126.com>, 2024
+# Link Winterberg, 2024
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-08-30 21:14+0200\n"
-"Last-Translator: 王晨旭 <wcxu21@126.com>, 2024\n"
-"Language-Team: Chinese (China) (https://app.transifex.com/klyok/teams/690/zh_CN/)\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Link Winterberg, 2024\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/audacity/teams/164520/zh_CN/)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.4\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -139,15 +129,13 @@ msgstr "高播放延迟：%g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "受支持的采样率：\n"
+msgstr ""
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "受支持的采样率：\n"
+msgstr ""
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -2988,12 +2976,11 @@ msgid ""
 msgstr "在应用“频谱”效果之前，请启用轨道频谱图视图。"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
-msgstr "要使用“光谱效应”，请在轨道光谱图设置中启用“光谱选择”，并选择要作用的效果器的频率范围。"
+msgstr ""
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -6046,9 +6033,8 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps （更小的文件）"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "发狂，320 kbps"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -7299,9 +7285,8 @@ msgid "&Unlink Account"
 msgstr "取消帐户链接(&U)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "线性出"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7472,9 +7457,8 @@ msgid "Create cloud account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "对齐终点至终点"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7489,14 +7473,12 @@ msgid ""
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "此项目不再保存到云端"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "此项目不再保存到云端"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
@@ -7523,14 +7505,12 @@ msgid "Already have an account? "
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "登录"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "关联账户"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -9929,9 +9909,8 @@ msgstr "Audacity 混音器 %s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "音量    "
+msgstr ""
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9972,9 +9951,8 @@ msgstr "信号电平指示"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "已移动速度滑杆"
+msgstr ""
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -11557,15 +11535,19 @@ msgstr ""
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr ""
 
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
-
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "欢迎使用 Audacity!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "观看视频"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "可用录制源：\n"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12192,9 +12174,8 @@ msgid "Set Track Audio"
 msgstr "设置轨道音频"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "音量    "
+msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -15020,9 +15001,8 @@ msgid "Duplicate"
 msgstr "创建副本"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "剪切到剪贴板"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
@@ -15260,9 +15240,8 @@ msgid "&Raw Data..."
 msgstr "原始数据(&R)..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "保存项目(&S)"
+msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15383,14 +15362,12 @@ msgid "Delete Labeled Audio"
 msgstr "删除标签的音频"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "将标签的音频区域剪切到剪贴板"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "将标签的音频区域剪切到剪贴板"
+msgstr ""
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15505,9 +15482,8 @@ msgid "Cut by label"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "删除标签(&D)"
+msgstr ""
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
@@ -15523,9 +15499,8 @@ msgid "De&lete and leave gap"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "已经删除标签的音频区域"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16636,18 +16611,16 @@ msgid "Skip to Selection End"
 msgstr "跳至选区终点"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "启用额外菜单(&X)"
+msgstr ""
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "在波形中显示片段(&S)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
-msgstr "以波形显示 ​​RMS(&R)"
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -21546,104 +21519,3 @@ msgstr "频谱工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "传统"
-
-#~ msgid "Insane"
-#~ msgstr "发狂"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "云端保存需要与 Audacity 关联的免费 audio.com 帐户。按上方的“关联帐户”继续。"
-
-#~ msgid "Moved gain slider"
-#~ msgstr "已移动音量增强滑杆"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "观看[[%s|发行视频]]或阅读[[https://support.audacityteam.org/additional-resources/changelog|更新日志]]了解更多信息！</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "增强："
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "已应用命令：%s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "尝试初始化下列效果器时失败：\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "更多信息有可能可在 帮助 > 诊断 > 显示日志 中获取到"
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "效果器初始化失败"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "效果器不可用"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "导入均衡器曲线出错"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "为了在宏中使用这个过滤曲线，请为其选择一个新名称。\n"
-#~ "点击“保存/管理曲线...”按钮并重命名“未命名”曲线，再使用它。"
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "过滤曲线 EQ 需要一个不同的名字"
-
-#~ msgid "Curve not found"
-#~ msgstr "曲线图没有找到"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "Nyquist 错误"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "Nyquist 代码错误"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "分离并剪切到剪贴板"
-
-#~ msgid "Split Cut"
-#~ msgstr "分离并剪切"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "分离并剪切(&I)"
-
-#~ msgid "Split D&elete"
-#~ msgstr "分离并删除(&E)"
-
-#~ msgid "E&xit"
-#~ msgstr "退出(&X)"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "分离并剪切已标签的音频到剪贴板"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "分离并剪切已标签的音频"
-
-#~ msgid "Label Cut"
-#~ msgstr "标签剪切"
-
-#~ msgid "Label Delete"
-#~ msgstr "标签删除"
-
-#~ msgid "&Split Cut"
-#~ msgstr "分离并剪切(&S)"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "分离并剪切标签"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "分离并删除(&L)"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "分离并删除标签"

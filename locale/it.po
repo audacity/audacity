@@ -4,11 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Saverio <saverio.brancaccio@gmail.com>, 2024
-# Matteo O., 2024
-# Cristina Mantione, 2024
-# Paval Shalamitski <yehekim@gmail.com>, 2024
-# Francesco Sercia, 2024
+# Link Winterberg, 2024
 # Michele Locati <michele@locati.it>, 2024
 #
 #, fuzzy
@@ -16,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-04-06 16:47+0000\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
-"Language-Team: Italian (https://app.transifex.com/klyok/teams/690/it/)\n"
+"Language-Team: Italian (https://app.transifex.com/audacity/teams/164520/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,15 +128,13 @@ msgstr "Latenza riproduzione superiore: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "Frequenze supportate:\n"
+msgstr "Velocità di riproduzione supportate:\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "Frequenze supportate:\n"
+msgstr "Velocità di acquisizione supportate:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -2523,7 +2517,7 @@ msgstr "&Secondi"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "&Beats"
-msgstr "&Battute"
+msgstr "&Battiti"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -2987,15 +2981,14 @@ msgstr ""
 "prima di applicare gli effetti \"Spettrale\"."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
 "Per usare 'Effetti spettrali', abilitare 'Selezione spettrale'\n"
-"nelle impostazioni traccia spettrogramma e seleziona\n"
-"l'intervallo frequenza per l'effetto ad agire."
+"nelle impostazioni dello spettrogramma della traccia e\n"
+"selezionare l'intervallo di frequenza su cui l'effetto deve agire."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -6058,9 +6051,8 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (file più piccoli)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "Senza senso, 320 kbps"
+msgstr "Eccessiva, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -6076,7 +6068,7 @@ msgstr "Medio, 145-185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr ""
+msgstr "Eccessiva"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -7302,7 +7294,7 @@ msgstr "Account non collegato"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "Anonymous"
-msgstr ""
+msgstr "Anonimo"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
@@ -7313,9 +7305,8 @@ msgid "&Unlink Account"
 msgstr "&Scollega account"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "Lineare in uscita"
+msgstr "Di&sconnettiti"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7483,68 +7474,67 @@ msgstr "C&ollega account audio.com..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "Crea account cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "Allinea fine a fine"
+msgstr "Accedi al cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
+"Ops! Sembra ci sia un problema con i dati inseriti.\n"
+"Assicurarsi che l'email sia corretta e che la password sia lunga almeno 8 caratteri"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
+"Sembra che l'email o la password inserite non siano corrette.\n"
+"Ricontrollare le credenziali e riprovare."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "Questo progetto non è più salvato nel cloud"
+msgstr "Crea un account per salvare sul cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "Questo progetto non è più salvato nel cloud"
+msgstr "Accedi per salvare sul cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "Continua con Google"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "Continua con Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "Password"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Password dimenticata?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "Hai già un account?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "Accedi"
+msgstr "Accedi qui"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "Collega account"
+msgstr "Hai bisogno di un account?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -9945,9 +9935,8 @@ msgstr "Mixer di Audacity %s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "Volume    "
+msgstr "Volume"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9988,9 +9977,8 @@ msgstr "Monitor livello segnale"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "Cursore velocità spostato"
+msgstr "Spostato il cursore del volume"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -11530,7 +11518,7 @@ msgstr "Novità di Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr ""
+msgstr "Per saperne di più sulle novità dell'ultima release è possibile guardare il [[%s|video della release]] o leggere l'[[%s|elenco delle modifiche]]!1"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11543,58 +11531,62 @@ msgstr "<p>Dai un'occhiata alla nostra [[%s|app Muse Hub]] per un'ampia gamma es
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
+msgstr "Un effetto di elaborazione vocale che migliora la chiarezza e la profondità della voce."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
+msgstr "Un'estensione per il riverbero multiuso per effetti spaziali e dal suono naturale."
 
 #: src/WhatsNewDialog.cpp
 msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr ""
+msgstr "Un'estensione per amplificatori per chitarra e modellazione di effetti, per toni realistici e suoni personalizzabili."
 
 #: src/WhatsNewDialog.cpp
 msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr ""
+msgstr "Un'estensione per riverbero reattivo che si adatta alla dinamica della traccia per creare paesaggi sonori immersivi."
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr ""
+msgstr "Un'estensione multieffetto vocale che migliora le tracce vocali ottenendo risultati professionali."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
+msgstr "Un'estensione per effetti sui bassi progettato per fornire un suono nitido e incisivo nelle basse frequenze."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
+msgstr "Un'estensione per la perfezione del suono acustico, esaltandone calore e chiarezza."
 
 #: src/WhatsNewDialog.cpp
 msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr ""
+msgstr "Una straordinaria estensione per il miglioramento della voce, con effetti vocali cristallini e professionali."
 
 #: src/WhatsNewDialog.cpp
 msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
+msgstr "Uno strumento di separazione delle tracce in tempo reale per isolare voci, batteria e strumenti."
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Scopri le molte estensioni di sviluppatori riconosciuti disponibili su [[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr ""
-
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Un compressore multibanda che offre un controllo preciso delle frequenze."
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Benvenuto in Audacity!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "Guarda video"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "Disponibile su [[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12219,9 +12211,8 @@ msgid "Set Track Audio"
 msgstr "Imposta traccia audio"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "Volume    "
+msgstr "Volume:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -12580,12 +12571,12 @@ msgstr "a"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
-msgstr "Battute per minuto"
+msgstr "Battiti al minuto"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, from"
-msgstr "Battute per minuto, da"
+msgstr "Battiti al minuto, da"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -12596,7 +12587,7 @@ msgstr "&da"
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, to"
-msgstr "Battute per minuto, a"
+msgstr "Battiti al minuto, fino a"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -15054,13 +15045,12 @@ msgid "Duplicate"
 msgstr "Duplica"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "Taglia negli appunti"
+msgstr "Taglia negli appunti e lascia un vuoto"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
-msgstr ""
+msgstr "Taglia e lascia vuoto"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15157,12 +15147,12 @@ msgstr "Rimuovi &speciale"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "&Cut and leave gap"
-msgstr ""
+msgstr "&Taglia e lascia vuoto"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "&Delete and leave gap"
-msgstr ""
+msgstr "&Elimina e lascia vuoto"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15294,9 +15284,8 @@ msgid "&Raw Data..."
 msgstr "&Dati raw..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "Sal&va progetto"
+msgstr "&Chiudi progetto"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15417,14 +15406,12 @@ msgid "Delete Labeled Audio"
 msgstr "Elimina regioni audio con etichette"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "Regioni audio con etichette tagliate negli appunti"
+msgstr "Taglia le regioni audio etichettate negli appunti e lascia vuoto"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "Regioni audio con etichette tagliate negli appunti"
+msgstr "Taglia audio etichettato e lascia vuoto"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15536,30 +15523,28 @@ msgstr "&Taglia"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr ""
+msgstr "Taglia per etichetta"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "&Elimina etichetta"
+msgstr "Elimina per etichetta"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "C&ut and leave gap"
-msgstr ""
+msgstr "Ta&glia e lascia vuoto"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by labels and leave gap"
-msgstr ""
+msgstr "Taglia per etichette e lascia vuoto"
 
 #: src/menus/LabelMenus.cpp
 msgid "De&lete and leave gap"
-msgstr ""
+msgstr "E&limina e lascia vuoto"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "Regioni audio con etichette eliminate"
+msgstr "Elimina per etichette e lascia vuoto"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16670,18 +16655,16 @@ msgid "Skip to Selection End"
 msgstr "Vai a fine selezione"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "Abilita &menu aggiuntivi"
+msgstr "Menu e&xtra"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "Mostra &ritaglio nella forma d'onda"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
-msgstr "Mostra &RMS nella forma d'onda"
+msgstr "Mostr&a RMS nella forma d'onda"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -20992,15 +20975,15 @@ msgstr "Tempo (bpm)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "30 - 300 beats/minute"
-msgstr "30 - 300 battute/minuto"
+msgstr "30 - 300 battiti/minuto"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beats per bar"
-msgstr "Battute per barra"
+msgstr "Battiti per battuta"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 20 beats/measure"
-msgstr "1 - 20 battute/misura"
+msgstr "1 - 20 battiti/misura"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Swing amount"
@@ -21012,15 +20995,15 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr "Impostare 'numero di barre' a zero per abilitare la 'durata traccia ritmo'."
+msgstr "Impostare 'numero di battute' a zero per abilitare la 'durata traccia ritmo'."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
-msgstr "Numero di barre"
+msgstr "Numero di battute"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 1000 bars"
-msgstr "1 - 1000 barre"
+msgstr "1 - 1000 battute"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Rhythm track duration"
@@ -21028,7 +21011,7 @@ msgstr "Durata traccia ritmo"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Used if 'Number of bars' = 0"
-msgstr "Usato se 'Numero barre' = 0"
+msgstr "Usato se 'Numero di battute' = 0"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
@@ -21040,7 +21023,7 @@ msgstr "Silenzio prima della prima battuta"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beat sound"
-msgstr "Suono battuta"
+msgstr "Suono metronomo"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Metronome Tick"
@@ -21076,7 +21059,7 @@ msgstr "Gocciolio (lungo)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of strong beat"
-msgstr "Intonazione MIDI di battuta forte"
+msgstr "Intonazione MIDI del battito forte"
 
 #: plug-ins/rhythmtrack.ny
 msgid "18 - 116"
@@ -21084,7 +21067,7 @@ msgstr "18 - 116"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of weak beat"
-msgstr "Intonazione MIDI di battuta debole"
+msgstr "Intonazione MIDI del battito debole"
 
 #: plug-ins/rhythmtrack.ny
 #, lisp-format
@@ -21587,105 +21570,3 @@ msgstr "Strumenti spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Precedente"
-
-#~ msgid "Insane"
-#~ msgstr "Insano"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "Il salvataggio nel cloud richiede un account audio.com gratuito collegato ad Audacity. Premere \"Collega account\" qui sopra per procedere."
-
-#~ msgid "Moved gain slider"
-#~ msgstr "Cursore guadagno spostato"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "Guardail [[%s|video sulla versione]] o leggi il [[https://support.audacityteam.org/additional-resources/changelog|registro delle modifiche]] per ulteriori informazioni!</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "Guadagno:"
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "Comando applicato: %s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "Il tentativo di inizializzare il seguente effetto è fallito:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "Potrebbero essere disponibili maggiori informazioni in\n"
-#~ "'Aiuto > Diagnostica > Mostra registro...'"
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "Impossibile inizializzare l'effetto"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "Effetto non disponibile"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "Errore durante il caricamento delle curve EQ"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "Per usare questa curva filtrante in una macro, selezionare un nuovo nome per essa.\n"
-#~ "Selezionare il pulsante 'Salva/gestisci curve...' e rinominare la curva 'senza nome', quindi usarla."
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "EQ curva del filtro richiede di un nome diverso"
-
-#~ msgid "Curve not found"
-#~ msgstr "Curva non trovata"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "Errore Nyquist"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "Errore nel codice Nyquist"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "Dividi e taglia negli appunti"
-
-#~ msgid "Split Cut"
-#~ msgstr "Dividi e taglia"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "Div&idi e taglia"
-
-#~ msgid "Split D&elete"
-#~ msgstr "Dividi ed &elimina"
-
-#~ msgid "E&xit"
-#~ msgstr "E&sci"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "Dividi e taglia regioni audio con etichette negli appunti"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "Dividi e taglia audio con etichette"
-
-#~ msgid "Label Cut"
-#~ msgstr "Etichetta Taglia"
-
-#~ msgid "Label Delete"
-#~ msgstr "Etichetta Elimina"
-
-#~ msgid "&Split Cut"
-#~ msgstr "&Dividi e taglia"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "Etichetta Dividi e taglia"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "Div&idi ed elimina"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "Etichetta Dividi ed elimina"

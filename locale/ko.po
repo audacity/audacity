@@ -4,27 +4,22 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Paval Shalamitski <yehekim@gmail.com>, 2023
-# alexhojinpark, 2024
-# Dongyun Kim <kenny122@ajou.ac.kr>, 2023
-# Seong-ho Cho <darkcircle.0426@gmail.com>, 2023
-# Potato <sheppaul@naver.com>, 2023
-# LEE Hwanyong <hwan@ajou.ac.kr>, 2023
+# Link Winterberg, 2024
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-07-03 19:24+0900\n"
-"Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
-"Language-Team: Korean (https://app.transifex.com/klyok/teams/690/ko/)\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Link Winterberg, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/audacity/teams/164520/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.2\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -132,15 +127,13 @@ msgstr "높은 재생 지연: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "지원되는 속도:\n"
+msgstr ""
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "지원되는 속도:\n"
+msgstr ""
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -822,9 +815,8 @@ msgstr "오디오 샘플의 극성을 반전하여 위아래로 뒤집습니다"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Compressor"
-msgstr "레거시 컴프레서"
+msgstr ""
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -2983,15 +2975,11 @@ msgstr ""
 "스펙트로그램 보기를 먼저 활성화하세요. "
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
-"'스펙트럼 이펙트'를 사용하려면, 트랙 스펙트로그램\n"
-"설정의 '스펙트럼 선택'을 활성화하고\n"
-"동작할 이펙트의 주파수 범위를 선택하세요."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -6048,9 +6036,8 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (최소 파일크기)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "미친품질, 320 kbps"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -7292,7 +7279,7 @@ msgstr "계정이 연결되지 않음"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "Anonymous"
-msgstr "익명"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
@@ -7303,9 +7290,8 @@ msgid "&Unlink Account"
 msgstr "계정 연결 해제 (&U)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "선형 페이드 아웃"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7476,9 +7462,8 @@ msgid "Create cloud account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "끝 위치를 끝 부분에 맞추기"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7493,14 +7478,12 @@ msgid ""
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "이 프로젝트는 더 이상 클라우드에 저장되지 않음"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "이 프로젝트는 더 이상 클라우드에 저장되지 않음"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
@@ -7527,14 +7510,12 @@ msgid "Already have an account? "
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "로그인"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "계정 연결"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -9927,9 +9908,8 @@ msgstr "오데시티 믹서 %s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "음량      "
+msgstr ""
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9970,9 +9950,8 @@ msgstr "신호 레벨 미터"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "속도 슬라이더를 이동했습니다"
+msgstr ""
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10108,10 +10087,10 @@ msgstr "선택된 트랙의 수가 너무 적음"
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr "%s.%i"
+msgstr ""
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -10790,9 +10769,8 @@ msgid "Master Effects"
 msgstr "Master Effects"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Applies to all tracks"
-msgstr "모든 트랙에 적용하기"
+msgstr ""
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -11562,15 +11540,19 @@ msgstr ""
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr ""
 
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
-
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "오데시티 사용을 환영합니다!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "비디오 보기"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "사용 가능한 녹음 소스:\n"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12195,9 +12177,8 @@ msgid "Set Track Audio"
 msgstr "트랙 오디오 설정"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "음량      "
+msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -15021,9 +15002,8 @@ msgid "Duplicate"
 msgstr "복제하기"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "클립보드로 잘라내기"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
@@ -15261,9 +15241,8 @@ msgid "&Raw Data..."
 msgstr "윈시 데이터(&R)..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "프로젝트 저장(&S)"
+msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15384,14 +15363,12 @@ msgid "Delete Labeled Audio"
 msgstr "레이블이 붙은 오디오 삭제"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "레이블이 달린 오디오 영역을 클립보드로 잘라냅니다"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "레이블이 달린 오디오 영역을 클립보드로 잘라냅니다"
+msgstr ""
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15506,9 +15483,8 @@ msgid "Cut by label"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "레이블 삭제(&D)"
+msgstr ""
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
@@ -15524,9 +15500,8 @@ msgid "De&lete and leave gap"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "레이블이 붙은 오디오 영역을 삭제했습니다"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16637,18 +16612,16 @@ msgid "Skip to Selection End"
 msgstr "끝 선택 생략"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "추가 메뉴 활성화(&X)"
+msgstr ""
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "웨이브폼에서 클리핑 보기(&S)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
-msgstr "웨이브폼에서 RMS 보기(&R)"
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -19276,33 +19249,28 @@ msgid "WaveColor Change"
 msgstr "파형색상 변경"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change Speed Limits"
-msgstr "속도 변경"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change speed limit (%) to:"
-msgstr "최저 속도 한계 변경 (%):"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Lower Speed Limit"
-msgstr "최저 속도 한계"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Upper Speed Limit"
-msgstr "최대 속도 한계"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
 msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Invalid Limits"
-msgstr "잘못된 리미트"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -20675,9 +20643,8 @@ msgstr ""
 "                 현재 하나의 소리만 검출되었습니다."
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Limiter"
-msgstr "VO Limiter"
+msgstr ""
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -21559,1012 +21526,5 @@ msgid "Spectral Tools"
 msgstr "특수 도구"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy"
-msgstr "레거시"
-
-#~ msgid "Insane"
-#~ msgstr "미친"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "클라우드 저장을 위해서는 무료 audio.com 계정에 오데시티를 연결하여야 합니다. 위 \"계정 연결\"을 누르세요."
-
-#~ msgid "Moved gain slider"
-#~ msgstr "게인 슬라이더를 이동했습니다"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "[[%s|배포된 동영상]] 또는  [[https://support.audacityteam.org/additional-resources/changelog|changelog]] 문서를 통해 상세 정보를 알아보세요!</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "게인:"
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "적용된 명령: %s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "다음 이펙트를 초기화하는데 실패함: \n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "상세한 정보를 보려면 '도움말 > 진단 > 로그 보기'"
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "이펙트 초기화에 실패했습니다"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "이펙트 사용 불가"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "EQ 곡선 불러오는 중 오류"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "매크로에서 이 필터곡선을 사용하려면, 새로운 이름을 선택하세요.\n"
-#~ "'곡선 저장/관리...'  버튼을 선택하고 '무제' 곡선의 이름을 바꾼 후 그것을 사용하세요."
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "필터 곡선 EQ는 다른 이름이 필요합니다"
-
-#~ msgid "Curve not found"
-#~ msgstr "곡선을 찾지 못했습니다"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "나이키스트 오류"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "나이키스트 코드에서 오류"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "클립보드로 분할 잘라내기"
-
-#~ msgid "Split Cut"
-#~ msgstr "분할 잘라내기"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "분할 잘라내기(&I)"
-
-#~ msgid "Split D&elete"
-#~ msgstr "분할 삭제(&E)"
-
-#~ msgid "E&xit"
-#~ msgstr "종료(&X)"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "레이블이 붙은 오디오 영역을 클립보드로 분할 잘라내기 했습니다"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "레이블이 붙은 오디오 분할 잘라내기"
-
-#~ msgid "Label Cut"
-#~ msgstr "레이블 자르기"
-
-#~ msgid "Label Delete"
-#~ msgstr "레이블 삭제"
-
-#~ msgid "&Split Cut"
-#~ msgstr "분할 잘라내기(&S)"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "레이블 분할 자르기"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "분할 삭제(&L)"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "레이블 분할 삭제"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s %i"
-#~ msgstr "%s %i"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s #%d"
-#~ msgstr "%s #%d"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "최대 속도 한계를 변경 (%):"
-
-#~ msgid "This version of Audacity only allows one time track for each project window."
-#~ msgstr "이 버전의 오데시티에서는 각 프로젝트 창에 한 개의 시간 트랙만 사용할 수 있습니다."
-
-#~ msgid "Master effects"
-#~ msgstr "마스터 이펙트"
-
-#~ msgid "Apply to all tracks"
-#~ msgstr "모든 트랙에 적용하기"
-
-#~ msgid "Input gain (dB)"
-#~ msgstr "입력 게인 (dB)"
-
-#~ msgid "Ceiling (dB)"
-#~ msgstr "실링 (dB)"
-
-#~ msgid "Attenuation"
-#~ msgstr "감쇄"
-
-#~ msgid "Limiter (beta)"
-#~ msgstr "리미터 (beta)"
-
-#~ msgid "Compressor (beta)"
-#~ msgstr "컴프레서 (beta)"
-
-#~ msgid "&Show graph (beta)"
-#~ msgstr "그래프 표시 (beta)(&S)"
-
-#~ msgid "Files are saved on your device."
-#~ msgstr "파일들이 당신의 컴퓨터에 저장되었습니다."
-
-#~ msgid "View online"
-#~ msgstr "온라인 표시"
-
-#~ msgid ""
-#~ "Your project is now empty.\n"
-#~ "If saved, the project will have no tracks.\n"
-#~ "\n"
-#~ "To save any previously open tracks:\n"
-#~ "Click 'No', Edit > Undo until all tracks\n"
-#~ "are open, then File > Save Project.\n"
-#~ "\n"
-#~ "Save anyway?"
-#~ msgstr ""
-#~ "당신의 프로젝트는 지금 비어 있습니다. \n"
-#~ "저장시 프로젝트에  아무런 트랙도 없을 것입니다.\n"
-#~ "\n"
-#~ "이전에 열어 놓은 트랙을 저장하시려면 '아니오'를 누르고\n"
-#~ "모든 트랙이 열릴 때까지 '실행 취소(Ctrl+Z)'를 한 다음에\n"
-#~ "'프로젝트를 저장(Ctrl+S)'하세요.\n"
-#~ "\n"
-#~ "저장할까요?"
-
-#~ msgid "Warning - Empty Project"
-#~ msgstr "경고 - 빈 프로젝트입니다"
-
-#~ msgid ""
-#~ "'Save Project' is for an Audacity project, not an audio file.\n"
-#~ "For an audio file that will open in other apps, use 'Export'.\n"
-#~ msgstr ""
-#~ "'프로젝트 저장'은 오디오 파일이 아니라 오데시티 프로젝트용입니다.\n"
-#~ "다른 앱에서 열려는 오디오 파일에 대해서는 '내보내기'를 사용하세요.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "If saved, the project will have no tracks.\n"
-#~ "\n"
-#~ "To save any previously open tracks:\n"
-#~ "Cancel, Edit > Undo until all tracks\n"
-#~ "are open, then File > Save Project."
-#~ msgstr ""
-#~ "\n"
-#~ "저장하면, 프로젝트에 아무 트랙도 없을 것입니다.\n"
-#~ "\n"
-#~ "이전에 열어 놓은 트랙을 저장하려면 '취소'하고,\n"
-#~ "모든 트랙이 열릴 때까지 '실행 취소(Ctrl+Z)'를 한\n"
-#~ "다음 '프로젝트를 저장(Ctrl+S)'하세요."
-
-#~ msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-#~ msgstr "<br><br>현재 사용 중인 오데시티는<b>알파 테스트 버전</b>입니다."
-
-#~ msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-#~ msgstr "<br><br>현재 사용 중인 오데시티는 <b>베타 테스트 버전</b>입니다."
-
-#~ msgid "Get the Official Released Version of Audacity"
-#~ msgstr "오데시티 공식 배포 버전 구하기"
-
-#~ msgid "Check Online"
-#~ msgstr "온라인으로 확인"
-
-#~ msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
-#~ msgstr "완전한 설명서와 지원이 있는 최신 안정화 버전을 사용할 것을 강력히 권합니다.<br><br>"
-
-#~ msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-#~ msgstr "커뮤니티 사이트에 가입하여 오데시티 배포에 도움을 주실 수 있습니다. [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-
-#~ msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-#~ msgstr "<p>이번 배포에는 비트 & 박자, 시간 늘림 등의 기능이 추가되었습니다.<br/>"
-
-#~ msgid "How to get help"
-#~ msgstr "도움 받기 방법"
-
-#~ msgid "These are our support methods:"
-#~ msgstr "이용 가능한 지원:"
-
-#~ msgid "[[help:Quick_Help|Quick Help]]"
-#~ msgstr "[[help:Quick_Help|빠른 도움말]]"
-
-#~ msgid " [[help:Main_Page|Manual]]"
-#~ msgstr " [[help:Main_Page|메뉴얼]]"
-
-#~ msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-#~ msgstr "[[https://support.audacityteam.org/|튜토리얼 & 사용방법]]"
-
-#~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-#~ msgstr " [[https://forum.audacityteam.org/|Forum]] - 질문을 온라인으로 직접 물어보세요."
-
-#~ msgid "Warnings"
-#~ msgstr "경고"
-
-#~ msgid "Preferences for Warnings"
-#~ msgstr "경고 환경설정"
-
-#~ msgid "Show Warnings/Prompts for"
-#~ msgstr "경고/프롬프트 보이기"
-
-#~ msgid "Saving &projects versus exporting audio"
-#~ msgstr "프로젝트 저장하기와 오디오 내보내기 비교(&P)"
-
-#~ msgid "Saving &empty project"
-#~ msgstr "빈 프로젝트를 저장(&E)"
-
-#~ msgid "Stereo, %dHz"
-#~ msgstr "스테레오, %dHz"
-
-#~ msgid "Mono, %dHz"
-#~ msgstr "모노, %dHz"
-
-#~ msgid "&Ok"
-#~ msgstr "확인(&O)"
-
-#~ msgid "Stereo, 999999Hz"
-#~ msgstr "스테레오, 999999Hz"
-
-#~ msgid "Noise Removal"
-#~ msgstr "노이즈 제거"
-
-#~ msgid "Removes constant background noise such as fans, tape noise, or hums"
-#~ msgstr "팬, 테잎 노이즈나 험같은 지속적인 배경 노이즈를 제거합니다"
-
-#~ msgid ""
-#~ "Select all of the audio you want filtered, choose how much noise you want\n"
-#~ "filtered out, and then click 'OK' to remove noise.\n"
-#~ msgstr ""
-#~ "필터링하려는 모든 오디오를 선택하고, 필터링할 노이즈의 양을 선택한 다음 \n"
-#~ "노이즈를 제거하려면 '확인'을 누르십시오.\n"
-
-#~ msgid "Noise re&duction (dB):"
-#~ msgstr "노이즈 리덕션 (dB)(&D):"
-
-#~ msgid "&Sensitivity (dB):"
-#~ msgstr "민감도 (dB)(&S):"
-
-#~ msgid "Fr&equency smoothing (Hz):"
-#~ msgstr "주파수 평활화 (Hz)(&E):"
-
-#~ msgid "Attac&k/decay time (secs):"
-#~ msgstr "어택/감쇠 시간 (초)(&K):"
-
-#~ msgid "Attack/decay time"
-#~ msgstr "어택/감쇠 시간"
-
-#~ msgid "Re&move"
-#~ msgstr "제거(&M)"
-
-#~ msgid "Show Track &Name as overlay"
-#~ msgstr "오버레이로 트랙 이름 보기(&N)"
-
-#~ msgid "B&lend system and Audacity theme"
-#~ msgstr "시스템과 오데시티 테마 조합하기(&L)"
-
-#~ msgid "Sho&w track name as overlay"
-#~ msgstr "오버레이로 트랙 이름 보기(&W)"
-
-#~ msgid "Command+Click to deselect"
-#~ msgstr "Command+클릭으로 선택해제"
-
-#~ msgid "Select track"
-#~ msgstr "트랙 선택"
-
-#~ msgid "Ctrl+Click to deselect"
-#~ msgstr "Ctrl+클릭으로 선택해제"
-
-#~ msgid "%.2fx"
-#~ msgstr "%.2fx"
-
-#~ msgid ""
-#~ "\"%s\" \n"
-#~ "is a MIDI file, not an audio file. \n"
-#~ "Audacity cannot open this type of file for playing, but you can\n"
-#~ "edit it by clicking File > Import > MIDI."
-#~ msgstr ""
-#~ "\"%s\" \n"
-#~ "는 오디오 파일이 아니라 MIDI 파일입니다. \n"
-#~ "오데시티에서 이 형식을 재생하기 위해 열 수 없지만,\n"
-#~ "파일 > 가져오기 > MIDI를 눌러 편집할 수 있습니다."
-
-#~ msgid "Rendering Time-Stretched Audio"
-#~ msgstr "오디오 시간 늘림 렌더링"
-
-#~ msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-#~ msgstr "매뉴얼이 설치되어 있지 않은 것 같습니다.[[*URL*|온라인으로 매뉴얼 보기]].<br><br>매뉴얼을 항상 온라인으로 보려면,인터페이스 환경 설정에서 \"매뉴얼 위치\"를 \"인터넷에서\"로 바꾸세요."
-
-#~ msgid "You've specified a file name without an extension. Are you sure?"
-#~ msgstr "확장자 없는 파일명을 지정하였습니다. 확인?"
-
-#~ msgid "Update display while playing"
-#~ msgstr "재생 중 화면 업데이트"
-
-#~ msgid "Pinned Play Head"
-#~ msgstr "핀으로 재생 위치 고정"
-
-#~ msgid "Enable pinned play &head"
-#~ msgstr "헤드 재생 고정 활성화(&H)"
-
-#~ msgid ""
-#~ "Reset Preferences?\n"
-#~ "\n"
-#~ "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-#~ msgstr ""
-#~ "환경설정을 초기화할까요?\n"
-#~ "\n"
-#~ "이 질문은 환경 설정을 초기화하도록 하는 '설치' 과정 이후 한 번만 묻습니다."
-
-#~ msgid "Reset Audacity Preferences"
-#~ msgstr "오데시티 환경 설정 초기화"
-
-#~ msgid ""
-#~ "You must first select some audio for '%s' to act on.\n"
-#~ "\n"
-#~ "Ctrl + A selects all audio."
-#~ msgstr ""
-#~ "먼저 %s를 수행할 일부 오디오를 선택해야 합니다.\n"
-#~ "\n"
-#~ "Ctrl + A는 전체 오디오를 선택합니다."
-
-#~ msgid "Audacity Karaoke%s"
-#~ msgstr "오데시티 노래방%s"
-
-#~ msgid "&Karaoke"
-#~ msgstr "노래방(&K)"
-
-#~ msgid "Select effects, click the Enable or Disable button, then click OK."
-#~ msgstr "이펙트를 선택하고 활성화나 비활성화 버튼을 누른 다음 확인을 누르세요."
-
-#~ msgid "Show all"
-#~ msgstr "전체 보이기"
-
-#~ msgid "Show disabled"
-#~ msgstr "비활성화 보이기"
-
-#~ msgid "D&isabled"
-#~ msgstr "비활성화(&I)"
-
-#~ msgid "Show enabled"
-#~ msgstr "활성화 보이기"
-
-#~ msgid "E&nabled"
-#~ msgstr "활성화(&N)"
-
-#~ msgid "Show new"
-#~ msgstr "새로 만들기 보이기"
-
-#~ msgid "Ne&w"
-#~ msgstr "새로 만들기(&W)"
-
-#~ msgid "State"
-#~ msgstr "상태"
-
-#~ msgid "&Select All"
-#~ msgstr "전체 선택(&S)"
-
-#~ msgid "C&lear All"
-#~ msgstr "모두 지우기(&L)"
-
-#~ msgid "&Disable"
-#~ msgstr "비활성화(&D)"
-
-#~ msgid ""
-#~ "Enabling effects or commands:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "이펙트 또는 명령 활성화:\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid ""
-#~ "Enabling effect or command:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "이펙트 또는 명령 활성화:\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "There was a problem printing."
-#~ msgstr "인쇄 중에 문제가 발생했습니다."
-
-#~ msgid "Print"
-#~ msgstr "인쇄"
-
-#~ msgid "Pa&ge Setup..."
-#~ msgstr "페이지 설정(&G)..."
-
-#~ msgid "&Print..."
-#~ msgstr "인쇄(&P)..."
-
-#~ msgid "Screen Capture Frame"
-#~ msgstr "스크린 캡처 프레임"
-
-#~ msgid "Choose location to save files"
-#~ msgstr "파일 저장 위치 선택"
-
-#~ msgid "Save images to:"
-#~ msgstr "이미지 저장:"
-
-#~ msgid "Choose..."
-#~ msgstr "선택..."
-
-#~ msgid "Capture entire window or screen"
-#~ msgstr "전체 창 또는 화면 캡처"
-
-#~ msgid "Resize Small"
-#~ msgstr "작게 크기조절"
-
-#~ msgid "Resize Large"
-#~ msgstr "크게 크기조절"
-
-#~ msgid "Blue Bkgnd"
-#~ msgstr "파란색 배경"
-
-#~ msgid "White Bkgnd"
-#~ msgstr "흰색 배경"
-
-#~ msgid "Capture Window Only"
-#~ msgstr "창만 캡처"
-
-#~ msgid "Capture Full Window"
-#~ msgstr "전체 창 캡처"
-
-#~ msgid "Capture Window Plus"
-#~ msgstr "전체 창+ 캡처"
-
-#~ msgid "Capture Full Screen"
-#~ msgstr "전체 화면 캡처"
-
-#~ msgid "Wait 5 seconds and capture frontmost window/dialog"
-#~ msgstr "5초 기다려서 맨 위의 창/대화상자 캡처하기"
-
-#~ msgid "Capture part of a project window"
-#~ msgstr "프로젝트 창 일부분 캡처"
-
-#~ msgid "All Toolbars"
-#~ msgstr "모든 도구모음"
-
-#~ msgid "All Effects"
-#~ msgstr "전체 이펙트"
-
-#~ msgid "All Scriptables"
-#~ msgstr "전체 스크립터블"
-
-#~ msgid "All Preferences"
-#~ msgstr "모든 환경설정"
-
-#~ msgid "Ruler"
-#~ msgstr "눈금자"
-
-#~ msgid "First Track"
-#~ msgstr "첫 번째 트랙"
-
-#~ msgid "Second Track"
-#~ msgstr "두 번째 트랙"
-
-#~ msgid "One Sec"
-#~ msgstr "1초"
-
-#~ msgid "Ten Sec"
-#~ msgstr "10초"
-
-#~ msgid "One Min"
-#~ msgstr "1분"
-
-#~ msgid "Five Min"
-#~ msgstr "5분"
-
-#~ msgid "One Hour"
-#~ msgstr "1시간"
-
-#~ msgid "Short Tracks"
-#~ msgstr "짧은 트랙"
-
-#~ msgid "Medium Tracks"
-#~ msgstr "중간 트랙"
-
-#~ msgid "Tall Tracks"
-#~ msgstr "키가 큰 트랙"
-
-#~ msgid "Choose a location to save screenshot images"
-#~ msgstr "스크린샷 이미지를 저장할 위치를 선택하세요"
-
-#~ msgid "Capture failed!"
-#~ msgstr "캡처에 실패했습니다!"
-
-#~ msgid "&Screenshot..."
-#~ msgstr "스크린샷(&S)"
-
-#~ msgid "Screenshot"
-#~ msgstr "스크린샷"
-
-#~ msgid "Window"
-#~ msgstr "창"
-
-#~ msgid "Full Window"
-#~ msgstr "전체화면"
-
-#~ msgid "Window Plus"
-#~ msgstr "윈도우 플러스"
-
-#~ msgid "Fullscreen"
-#~ msgstr "전체화면"
-
-#~ msgid "Toolbars"
-#~ msgstr "도구 모음"
-
-#~ msgid "Scriptables"
-#~ msgstr "스크립터블"
-
-#~ msgid "Trackpanel"
-#~ msgstr "트랙패널"
-
-#~ msgid "First Two Tracks"
-#~ msgstr "첫 번째 두 트랙"
-
-#~ msgid "First Three Tracks"
-#~ msgstr "첫 번째 세 트랙"
-
-#~ msgid "First Four Tracks"
-#~ msgstr "첫 번째 네 트랙"
-
-#~ msgid "Tracks Plus"
-#~ msgstr "트랙 플러스"
-
-#~ msgid "First Track Plus"
-#~ msgstr "첫 트랙 플러스"
-
-#~ msgid "All Tracks"
-#~ msgstr "전체 트랙"
-
-#~ msgid "All Tracks Plus"
-#~ msgstr "전체 트랙 플러스"
-
-#~ msgid "Blue"
-#~ msgstr "파랑"
-
-#~ msgctxt "color"
-#~ msgid "White"
-#~ msgstr "화이트"
-
-#~ msgid "Path:"
-#~ msgstr "경로:"
-
-#~ msgid "Capture What:"
-#~ msgstr "캡처 대상:"
-
-#~ msgid "Background:"
-#~ msgstr "배경:"
-
-#~ msgid "Bring To Top"
-#~ msgstr "맨 위로 가져오기"
-
-#~ msgid "Error trying to save file: %s"
-#~ msgstr "파일 저장 시도 중 오류: %s"
-
-#~ msgid "Screenshot (short format)..."
-#~ msgstr "스크린샷 (짧은 형식)..."
-
-#~ msgid "Takes screenshots."
-#~ msgstr "스크린샷을 찍습니다."
-
-#~ msgid "Stop &Preview"
-#~ msgstr "프리뷰 정지(&P)"
-
-#~ msgid "Hidden File Menu"
-#~ msgstr "숨겨진 파일 메뉴"
-
-#~ msgid "&Quick Fix..."
-#~ msgstr "빠른 수정...(&Q)"
-
-#~ msgid "&Getting Started"
-#~ msgstr "시작하기(&G)"
-
-#~ msgid "Audacity &Manual"
-#~ msgstr "오데시티 메뉴얼(&M)"
-
-#~ msgid "&Timeline"
-#~ msgstr "타임라인(&T)"
-
-#~ msgid "Advanced &Vertical Zooming"
-#~ msgstr "고급 수직방향 확대(&V)"
-
-#~ msgid "Show Timeline Tooltips"
-#~ msgstr "타임라인 툴 팁 보기"
-
-#~ msgid "Show Scrub Ruler"
-#~ msgstr "스크러빙 눈금자 보기"
-
-#~ msgid ""
-#~ "These are experimental modules. Enable them only if you've read the Audacity Manual\n"
-#~ "and know what you are doing."
-#~ msgstr ""
-#~ "이것은 실험적인 모듈입니다.\n"
-#~ "오데시티 매뉴얼을 읽고 무슨 내용인지 이해한 후에만 활성화하세요."
-
-#~ msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-#~ msgstr "  '확인하기'를 선택하면 오데시티가 시작할 때마다 모듈을 로딩할 것인지를 묻습니다."
-
-#~ msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-#~ msgstr "  '실패'를 선택하면, 오데시티는 모듈이 작동하지 않는 것으로 간주하고 실행하지 않습니다."
-
-#~ msgid "  'New' means no choice has been made yet."
-#~ msgstr "  '신규'는 아직 아무 선택도 하지 않았음을 의미."
-
-#~ msgid "Ask"
-#~ msgstr "확인하기"
-
-#~ msgid "No modules were found"
-#~ msgstr "모듈을 찾지 못했습니다"
-
-#~ msgid "Ctrl"
-#~ msgstr "Ctrl"
-
-#~ msgid "Mouse"
-#~ msgstr "마우스"
-
-#~ msgid "Mouse Bindings (default values, not configurable)"
-#~ msgstr "마우스 바인딩 (기본값, 설정할 수 없음)"
-
-#~ msgid "Command Action"
-#~ msgstr "명령 동작"
-
-#~ msgid "Buttons"
-#~ msgstr "버튼"
-
-#~ msgid "Left-Click"
-#~ msgstr "왼쪽 클릭"
-
-#~ msgid "Set Selection Point"
-#~ msgstr "선택 지점 설정"
-
-#~ msgid "Left-Drag"
-#~ msgstr "왼쪽 드래그"
-
-#~ msgid "Set Selection Range"
-#~ msgstr "선택 범위 설정"
-
-#~ msgid "Extend Selection Range"
-#~ msgstr "선택 범위 확장"
-
-#~ msgid "Left-Double-Click"
-#~ msgstr "왼쪽 두 번 클릭"
-
-#~ msgid "Select Clip or Entire Track"
-#~ msgstr "클립/전체 트랙 선택"
-
-#~ msgid "Wheel-Rotate"
-#~ msgstr "휠 회전"
-
-#~ msgid "Change scrub speed"
-#~ msgstr "스크러빙 속도 변경"
-
-#~ msgid "Zoom in on Point"
-#~ msgstr "지점 확대"
-
-#~ msgid "Zoom in on a Range"
-#~ msgstr "범위 확대"
-
-#~ msgid "same as right-drag"
-#~ msgstr "오른쪽 드래그와 동일"
-
-#~ msgid "Right-Click"
-#~ msgstr "오른쪽 클릭"
-
-#~ msgid "Zoom out one step"
-#~ msgstr "한 단계 축소"
-
-#~ msgid "Right-Drag"
-#~ msgstr "오른쪽 드래그"
-
-#~ msgid "same as left-drag"
-#~ msgstr "왼쪽 드래그와 동일"
-
-#~ msgid "Shift-Drag"
-#~ msgstr "Shift-드래그"
-
-#~ msgid "Zoom out on a Range"
-#~ msgstr "범위 축소"
-
-#~ msgid "Middle-Click"
-#~ msgstr "가운데 클릭"
-
-#~ msgid "Zoom default"
-#~ msgstr "확대/축소 기본값"
-
-#~ msgid "Change Amplification Envelope"
-#~ msgstr "증폭 포락스 변경"
-
-#~ msgid "Pencil"
-#~ msgstr "연필"
-
-#~ msgid "Change Sample"
-#~ msgstr "샘플 변경"
-
-#~ msgid "Alt-Left-Click"
-#~ msgstr "Alt-왼쪽 클릭"
-
-#~ msgid "Smooth at Sample"
-#~ msgstr "샘플에서 부드럽게"
-
-#~ msgid "Change Several Samples"
-#~ msgstr "몇몇 샘플 변경"
-
-#~ msgid "-Left-Drag"
-#~ msgstr "-왼쪽 드래그"
-
-#~ msgid "Change ONE Sample only"
-#~ msgstr "하나의 샘플만 변경"
-
-#~ msgid "Multi"
-#~ msgstr "다중"
-
-#~ msgid "same as select tool"
-#~ msgstr "선택 도구와 동일"
-
-#~ msgid "same as zoom tool"
-#~ msgstr "확대/축소 도구와 동일"
-
-#~ msgid "Any"
-#~ msgstr "아무"
-
-#~ msgid "Scroll tracks up or down"
-#~ msgstr "트랙을 위/아래로 스크롤"
-
-#~ msgid "Shift-Wheel-Rotate"
-#~ msgstr "Shift-휠 회전"
-
-#~ msgid "Scroll waveform"
-#~ msgstr "파형 스크롤"
-
-#~ msgid "-Wheel-Rotate"
-#~ msgstr "-마우스 휠"
-
-#~ msgid "Zoom waveform in or out"
-#~ msgstr "파형 확대/축소"
-
-#~ msgid "-Shift-Wheel-Rotate"
-#~ msgstr "-Shift-마우스 휠"
-
-#~ msgid "Vertical Scale Waveform (dB) range"
-#~ msgstr "수직 눈금 파형 (dB) 범위"
-
-#~ msgid "Shift-Left-Drag"
-#~ msgstr "Shift-왼쪽 드래그"
-
-#~ msgid "Move all clips in track left/right"
-#~ msgstr "트랙 좌/우의 모든 클립 이동"
-
-#~ msgid "using clip handles"
-#~ msgstr "클립 핸들 사용"
-
-#~ msgid "Move clip up/down between tracks"
-#~ msgstr "트랙 사이에서 클립을 위아래로 이동"
-
-#~ msgid "Move clip left/right or between tracks"
-#~ msgstr "클립을 좌/우나 트랙 사이로 이동"
-
-#~ msgid "Enable &dragging selection edges"
-#~ msgstr "선택 경계 끌기 활성화하기(&D)"
-
-#~ msgid "Enable scrolling left of &zero"
-#~ msgstr "0의 왼쪽으로 스크롤할 수 있도록 하기(&Z)"
-
-#~ msgid "Advanced &vertical zooming"
-#~ msgstr "고급 수직 배율 조정(&V)"
-
-#~ msgid "Mixing down to &mono during export"
-#~ msgstr "내보내기 중 모노로 다운믹싱할 때(&M)"
-
-#~ msgid "Mixing down to &stereo during export"
-#~ msgstr "내보내기 중 스테레오로 다운믹싱할 때(&S)"
-
-#~ msgid "Mixing down on export(&Custom FFmpeg or external program)"
-#~ msgstr "내보내기 중 다운믹싱할 때 (사용자 정의 FFmpeg이나 외부 프로그램)(&C)"
-
-#~ msgid "Missing file &name extension during export"
-#~ msgstr "내보내기 중 파일명 확장자 누락(&N)"
-
-#~ msgid "Scrub"
-#~ msgstr "스크러빙"
-
-#~ msgid "Seek"
-#~ msgstr "탐색"
-
-#~ msgid "Scrub Ruler"
-#~ msgstr "스크러빙 눈금자"
-
-#~ msgid "Stop Scrubbing"
-#~ msgstr "스크러빙 정지"
-
-#~ msgid "Start Scrubbing"
-#~ msgstr "스크러빙 시작"
-
-#~ msgid "Stop Seeking"
-#~ msgstr "탐색 정지"
-
-#~ msgid "Start Seeking"
-#~ msgstr "탐색 시작"
-
-#~ msgid "Hide Scrub Ruler"
-#~ msgstr "스크러빙 눈금자 감추기"
-
-#~ msgid "Scru&b Toolbar"
-#~ msgstr "스크러빙 도구모음(&B)"
-
-#~ msgid "Invalid clip speed"
-#~ msgstr "클립 속도가 유효하지 않음"
-
-#~ msgid "Clip speed must be a positive value"
-#~ msgstr "클립 속도는 양수이어야 합니다."
-
-#~ msgid "Change &Speed..."
-#~ msgstr "속도 변경...(&S)"
-
-#~ msgid "Render Clip S&tretching"
-#~ msgstr "클립 늘리기 렌더링(&T)"
-
-#~ msgid "Zoom x1/2"
-#~ msgstr "배율 x1/2"
-
-#~ msgid "Zoom x2"
-#~ msgstr "배율 x2"
-
-#~ msgid "&Name..."
-#~ msgstr "이름(&N)..."
-
-#~ msgid "EQ XML to TXT Converter"
-#~ msgstr "EQ XML 을 TXT 로 변환"
-
-#~ msgid "Select target EQ effect"
-#~ msgstr "목표 EQ 이펙트 선택"
-
-#~ msgid "Equalization XML file"
-#~ msgstr "이퀄라이저 XML 파일"
-
-#~ msgid "XML file"
-#~ msgstr "XML 파일"
-
-#~ msgid "If output text file exists"
-#~ msgstr "출력 파일이 존재하는 경우"
-
-#~ msgid "Append number"
-#~ msgstr "추가 개수"
-
-#~ msgid "Overwrite"
-#~ msgstr "덮어쓰기"
-
-#~ msgid "Error.~%Unable to open file~%~s"
-#~ msgstr "오류.~%파일을 열수 없음~%~s"
-
-#~ msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-#~ msgstr "오류.~% 파일 덮어쓰기 허용하지 않음:~%\"~a.txt\""
-
-#~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
-#~ msgstr "오류.~% 파일에 쓸 수 없습니다:~%\"~a.txt\""
-
-#~ msgid "Robert Haenggi"
-#~ msgstr "로버트 행기"
-
-#~ msgid "Remove Vocals: to mono"
-#~ msgstr "보컬 제거: 모노로 변경"
-
-#~ msgid "Isolate Vocals and Invert"
-#~ msgstr "보컬 분리 후 뒤집기"
-
-#~ msgid "Remove Center: to mono"
-#~ msgstr "가운데 제거: 모노로 변경"
-
-#~ msgid "Remove Center"
-#~ msgstr "가운데 제거"
-
-#~ msgid "Isolate Center"
-#~ msgstr "가운데 분리"
-
-#~ msgid "Isolate Center and Invert"
-#~ msgstr "가운데 분리 후 뒤집기"
-
-#~ msgid "Strength"
-#~ msgstr "강도"
-
-#~ msgid "Low Cut for Vocals (Hz)"
-#~ msgstr "보컬을 위한 저음 하한 (Hz)"
-
-#~ msgid "High Cut for Vocals (Hz)"
-#~ msgstr "보컬을 위한 고음 상한 (Hz)"
-
-#~ msgid ""
-#~ "Average x: ~a, y: ~a\n"
-#~ "                    Covariance x y: ~a\n"
-#~ "                    Average variance x: ~a, y: ~a\n"
-#~ "                    Standard deviation x: ~a, y: ~a\n"
-#~ "                    Coefficient of correlation: ~a\n"
-#~ "                    Coefficient of determination: ~a\n"
-#~ "                    Variation of residuals: ~a\n"
-#~ "                    y equals ~a plus ~a times x~%"
-#~ msgstr ""
-#~ "평균 x: ~a, y: ~a\n"
-#~ "                    공변성 x y: ~a\n"
-#~ "                    평균 분산 x: ~a, y: ~a\n"
-#~ "                    표준 편차 x: ~a, y: ~a\n"
-#~ "                    상관 계수: ~a\n"
-#~ "                    결정 계수: ~a\n"
-#~ "                    잔류의 변화: ~a\n"
-#~ "                    y는 ~a 플러스 ~a 곱하기 x~%"
-
-#~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-#~ msgstr "팬 위치: ~a~%왼쪽과 오른쪽 채널이 다음에 대해 연관됨  ~a %. 이는 :~%~a~% 의미함"
-
-#~ msgid ""
-#~ " - The two channels are identical, i.e. dual mono.\n"
-#~ "                The center can't be removed.\n"
-#~ "                Any remaining difference may be caused by lossy encoding."
-#~ msgstr ""
-#~ " - 두 채널은 동일, 즉 듀얼 모노.\n"
-#~ "             센터를 제거할 수 없습니다.\n"
-#~ "             남아 있는 차이는 손실 코덱으로 인해 발생한 것일 수 있습니다."
-
-#~ msgid ""
-#~ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
-#~ "                Most likely, the center extraction will be poor."
-#~ msgstr ""
-#~ " - 두 채널의 연관성이 너무 큼, 즉 거의 모노이거나 극단적으로 패닝된 상태.\n"
-#~ "               이 경우 대부분 센터 추출 결과가 불량할 수 있습니다."
-
-#~ msgid " - A fairly good value, at least stereo in average and not too wide spread."
-#~ msgstr " - 상당히 좋은 값, 평균적으로 최소 스테레오를 만들고, 너무 넓게 퍼지지 않음"
-
-#~ msgid ""
-#~ " - An ideal value for Stereo.\n"
-#~ "                However, the center extraction depends also on the used reverb."
-#~ msgstr ""
-#~ " - 스테레오를 위한 이상적인 값.\n"
-#~ "                하지만, 중심 추출은 사용된 리버브에 따라 달라질 수 있음."
-
-#~ msgid ""
-#~ " - The two channels are almost not related.\n"
-#~ "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
-#~ "                The center extraction can still be good though."
-#~ msgstr ""
-#~ " - 두 채널은 거의 연관이 없음.\n"
-#~ "              소음만 있거나 조각이 불균형한 방식으로 마스터됩니다.\n"
-#~ "              센터 추출은 여전히 좋을 수 있습니다."
-
-#~ msgid ""
-#~ " - Although the Track is stereo, the field is obviously extra wide.\n"
-#~ "                This can cause strange effects.\n"
-#~ "                Especially when played by only one speaker."
-#~ msgstr ""
-#~ " - 트랙은 스테레오 이지만, 필드가 지나치게 넓음.\n"
-#~ "             이는 이상한 이펙트를 만들 수 있음.\n"
-#~ "            특히 하나의 스피커에서 재생될때 문제가 발생함."
-
-#~ msgid ""
-#~ " - The two channels are nearly identical.\n"
-#~ "                  Obviously, a pseudo stereo effect has been used\n"
-#~ "                  to spread the signal over the physical distance between the speakers.\n"
-#~ "                  Don't expect good results from a center removal."
-#~ msgstr ""
-#~ " - 두 채널은 거의 동일합니다.\n"
-#~ "           분명, 두개 스피커 사이의 물리적 공간을 만들기 위해\n"
-#~ "           유사 스테레오 이펙트를 사용한 것으로 보입니다. \n"
-#~ "           센터 제거로 좋은 결과를 기대할 수 없습니다."
-
-#~ msgid "This plug-in works only with stereo tracks."
-#~ msgstr "이 플러그인은 스테레오 트랙에만 작동합니다."
+msgstr ""

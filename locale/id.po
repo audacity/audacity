@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
 # Catarina Anabela, 2024
+# Link Winterberg, 2024
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Catarina Anabela, 2024\n"
+"Last-Translator: Link Winterberg, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
 msgid "Plugin Error"
-msgstr "Plugin Kesalahan"
+msgstr "Kesalahan Plugin"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #, c-format
@@ -128,15 +128,13 @@ msgstr "Latensi Pemutaran Tinggi: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "Kecepatan yang didukung:\n"
+msgstr "Laju Pemutaran yang Didukung:\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "Kecepatan yang didukung:\n"
+msgstr "Laju Penangkapan yang Didukung:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -2981,7 +2979,6 @@ msgstr ""
 "menerapkan efek 'Spektral'."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
@@ -6047,9 +6044,8 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (Berkas yang lebih kecil)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "Edan, 320 kbps"
+msgstr "Berlebihan, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -6065,7 +6061,7 @@ msgstr "Sedang, 145-185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr ""
+msgstr "Berlebihan"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -7291,7 +7287,7 @@ msgstr "Akun tidak terhubung"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "Anonymous"
-msgstr ""
+msgstr "Anonim"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
@@ -7302,9 +7298,8 @@ msgid "&Unlink Account"
 msgstr "&Putuskan Hubungan Akun"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "Linier Luar"
+msgstr "&Keluar"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7472,68 +7467,67 @@ msgstr "H&ubungkan akun audio.com..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "Buat akun cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "Selaraskan Akhir ke Akhir"
+msgstr "Masuk ke cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
+"Ups! Sepertinya ada masalah dengan input Anda.\n"
+"Pastikan email Anda benar dan kata sandi Anda setidaknya terdiri dari 8 karakter"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
+"Maaf, tampaknya email atau kata sandi yang Anda masukkan salah.\n"
+"Silakan periksa kembali informasi akses Anda dan coba lagi!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "Proyek ini tidak lagi disimpan di Cloud"
+msgstr "Buat akun untuk menyimpan ke cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "Proyek ini tidak lagi disimpan di Cloud"
+msgstr "Masuk untuk menyimpan ke cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "Lanjutkan dengan Google"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "Lanjutkan dengan Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "Kata Sandi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Lupa kata sandi Anda?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "Sudah memiliki akun? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "Masuk"
+msgstr "Masuk di sini"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "Hubungkan akun"
+msgstr "Butuh akun? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -9923,9 +9917,8 @@ msgstr "Mixer Audacity%s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "Volume    "
+msgstr "Volume"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9966,9 +9959,8 @@ msgstr "Pengukur Level Signal"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "Slider velositas dipindahkan"
+msgstr "Slider volume dipindahkan"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -11503,7 +11495,7 @@ msgstr "Apa yang baru di Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr ""
+msgstr "Tonton [[%s|video rilisan]] atau baca [[%s|catatan perubahan]] untuk mengetahui lebih lanjut apa saja yang telah kami sertakan dalam rilisan terbaru!</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11516,58 +11508,62 @@ msgstr "<p>Cek [[%s|Aplikasi Muse Hub]] kami untuk berbagai macam plugin audio u
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
+msgstr "Efek pemrosesan vokal yang meningkatkan kejernihan dan kedalaman vokal."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
+msgstr "Plugin reverb serbaguna untuk efek suara yang terdengar luas dan alami."
 
 #: src/WhatsNewDialog.cpp
 msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr ""
+msgstr "Plugin pemodelan amp dan efek gitar untuk nada yang realistis dan suara yang dapat disesuaikan."
 
 #: src/WhatsNewDialog.cpp
 msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr ""
+msgstr "Plugin reverb responsif yang beradaptasi untuk melacak dinamika untuk lanskap suara yang imersif."
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr ""
+msgstr "Plugin multi-efek vokal yang menyempurnakan trek vokal untuk hasil yang profesional."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
+msgstr "Plugin efek bass yang didesain untuk menghasilkan suara low-end yang jernih dan tajam."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
+msgstr "Plugin untuk kesempurnaan suara akustik, meningkatkan kehangatan dan kejernihan."
 
 #: src/WhatsNewDialog.cpp
 msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr ""
+msgstr "Plugin penyempurnaan suara yang mengagumkan untuk efek vokal yang jernih dan profesional."
 
 #: src/WhatsNewDialog.cpp
 msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
+msgstr "Alat pemisah stem real-time untuk mengisolasi vokal, drum, dan instrumen."
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Lihat berbagai plugin dari pengembang terkenal yang tersedia di [[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr ""
-
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Kompresor multiband yang menawarkan kontrol yang tepat atas frekuensi."
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Selamat datang di Audacity!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "Tonton video"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "Tersedia di [[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12192,9 +12188,8 @@ msgid "Set Track Audio"
 msgstr "Mengatur Trek Audio"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "Volume    "
+msgstr "Volume:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -14151,7 +14146,7 @@ msgstr "Menghasilkan nada frekuensi konstan dari salah satu dari empat jenis"
 
 #: src/effects/ToneGen.cpp
 msgid "&Waveform:"
-msgstr "&Bentuk Gelombang:"
+msgstr "&Waveform:"
 
 #: src/effects/ToneGen.cpp
 msgid "&Frequency (Hz):"
@@ -15021,13 +15016,12 @@ msgid "Duplicate"
 msgstr "Duplikatkan"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "Potong ke Papan Klip"
+msgstr "Potong ke papan klip dan beri celah"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
-msgstr ""
+msgstr "Potong dan beri celah"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15124,12 +15118,12 @@ msgstr "Buang Spesial"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "&Cut and leave gap"
-msgstr ""
+msgstr "&Potong dan beri celah"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "&Delete and leave gap"
-msgstr ""
+msgstr "&Hapus dan beri celah"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15261,9 +15255,8 @@ msgid "&Raw Data..."
 msgstr "&Data Raw..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "&Simpan Proyek"
+msgstr "&Tutup Proyek"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15384,14 +15377,12 @@ msgid "Delete Labeled Audio"
 msgstr "Menghapus Audio Berlabel"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "Memotong wilayah audio berlabel ke papan klip"
+msgstr "Potong area audio berlabel ke clipboard dan beri celah"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "Memotong wilayah audio berlabel ke papan klip"
+msgstr "Potong audio berlabel dan beri celah"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15503,30 +15494,28 @@ msgstr "&Potong"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr ""
+msgstr "Potong berdasarkan label"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "&Hapus Label"
+msgstr "Hapus berdasarkan label"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "C&ut and leave gap"
-msgstr ""
+msgstr "P&otong dan beri celah"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by labels and leave gap"
-msgstr ""
+msgstr "Potong berdasarkan label dan beri celah"
 
 #: src/menus/LabelMenus.cpp
 msgid "De&lete and leave gap"
-msgstr ""
+msgstr "Ha&pus dan beri celah"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "Menghapus wilayah audio berlabel"
+msgstr "Hapus berdasarkan label dan beri celah"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16637,18 +16626,16 @@ msgid "Skip to Selection End"
 msgstr "Loncat ke Akhir Seleksi"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "Aktifkan Menu E&kstra"
+msgstr "Menu E&kstra"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
-msgstr "&Tampilkan Kliping dalam Bentuk Gelombang"
+msgstr "&Tampilkan Kliping dalam Waveform"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
-msgstr "Tampilkan &RMS dalam Bentuk Gelombang"
+msgstr "Tampilk&an RMS dalam Waveform"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -17305,7 +17292,7 @@ msgstr "Kesalahan Mengekspor Pintasan Papan Ketik"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You may not assign a key to this entry"
-msgstr "Anda tidak dapat menetapkan kunci untuk entri ini."
+msgstr "Anda tidak dapat menetapkan kunci untuk entri ini"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "You must select a binding before assigning a shortcut"
@@ -17909,7 +17896,7 @@ msgstr "Sisipkan audio dari proyek Audacity lain sebagai"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
-msgstr "Bentuk Gelombang"
+msgstr "Waveform"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Spectrogram"
@@ -18006,7 +17993,7 @@ msgstr "Mode &Tampilan Default:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default Waveform scale:"
-msgstr "Skala Bentuk Gelombang Default:"
+msgstr "Skala Waveform Default:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Display &samples:"
@@ -18031,15 +18018,15 @@ msgstr "Preset 2:"
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveforms"
-msgstr "Bentuk Gelombang (jamak)"
+msgstr "Waveform (jamak)"
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Preferences for Waveforms"
-msgstr "Preferensi untuk Bentuk Gelombang (jamak)"
+msgstr "Preferensi untuk Waveform (jamak)"
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range:"
-msgstr "&Rentang Bentuk Gelombang dB:"
+msgstr "&Rentang Waveform dB:"
 
 #. i18n-hint: Audio setup button text, keep as short as possible
 #: src/toolbars/AudioSetupToolBar.cpp
@@ -19263,7 +19250,7 @@ msgstr "Wa&veform"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
 msgid "&Wave Color"
-msgstr "&Warna Bentuk Gelombang"
+msgstr "&Warna Waveform"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
 #, c-format
@@ -21437,7 +21424,7 @@ msgstr "Tremolo"
 
 #: plug-ins/tremolo.ny
 msgid "Waveform type"
-msgstr "Tipe Bentuk Gelombang"
+msgstr "Tipe Waveform"
 
 #: plug-ins/tremolo.ny
 msgid "Triangle"
@@ -21554,104 +21541,3 @@ msgstr "Alat Spektral"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Terdahulu"
-
-#~ msgid "Insane"
-#~ msgstr "Edan"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "Penyimpanan Cloud memerlukan akun audio.com gratis terhubung ke Audacity. Klik \"Hubungkan akun\" di atas untuk melanjutkan."
-
-#~ msgid "Moved gain slider"
-#~ msgstr "Slider gain dipindahkan"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "Tonton [[%s|video rilisan]] atau baca [[https://support.audacityteam.org/additional-resources/changelog|log perubahan]] untuk mengetahui lebih lanjut!</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "Gain:"
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "Perintah yang diterapkan: %s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "Percobaan menginisialisasi efek berikut ini gagal:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "Informasi lebih lanjut mungkin tersedia di 'Bantuan > Diagnostik > Tampilkan Log'"
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "Efek gagal diinisialisasi"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "Efek Tidak Tersedia"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "Kesalahan Memuat Kurva EQ"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "Untuk menggunakan kurva filter ini dalam makro, berilah nama baru untuknya.\n"
-#~ "Pilih tombol 'Simpan/Atur Kurva...' dan namai ulang kurva 'tak bernama', kemudian gunakan kurva tersebut."
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "Filter Kurva EQ membutuhkan nama yang berbeda"
-
-#~ msgid "Curve not found"
-#~ msgstr "Kurva tidak ditemukan"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "Nyquist Kesalahan"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "Kesalahan dalam kode Nyquist"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "Pisah-potongkan ke papan klip"
-
-#~ msgid "Split Cut"
-#~ msgstr "Pisah Potongkan"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "Pi&sah Potongkan"
-
-#~ msgid "Split D&elete"
-#~ msgstr "Pisah H&apuskan"
-
-#~ msgid "E&xit"
-#~ msgstr "Ke&luar"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "Memisah Potongkan audio berlabel ke papan klip"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "Pisah Potongkan Audio Berlabel"
-
-#~ msgid "Label Cut"
-#~ msgstr "Label Potong"
-
-#~ msgid "Label Delete"
-#~ msgstr "Label Hapus"
-
-#~ msgid "&Split Cut"
-#~ msgstr "&Pisah Potongkan"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "Label Pisah-Hapuskan"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "Pi&sah Hapuskan"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "Label Pisah-Hapuskan"

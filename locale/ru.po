@@ -3,20 +3,24 @@
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Link Winterberg, 2024
+# Sergey Lapysh, 2024
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-08-03 09:44+0500\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Sergey Lapysh, 2024\n"
+"Language-Team: Russian (https://app.transifex.com/audacity/teams/164520/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 3.3.2\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -124,15 +128,13 @@ msgstr "Высокая латентность проигрывания: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "Поддерживаемые частоты:\n"
+msgstr ""
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "Поддерживаемые частоты:\n"
+msgstr ""
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -1410,9 +1412,8 @@ msgstr "Мягкий"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beat Booster"
-msgstr "Подъём НЧ"
+msgstr "Усилитель ритма"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -2475,6 +2476,7 @@ msgid_plural "Enable these plug-ins?\n"
 msgstr[0] "Включить этот плагин?\n"
 msgstr[1] "Включить эти плагины?\n"
 msgstr[2] "Включить эти плагины?\n"
+msgstr[3] "Включить эти плагины?\n"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Enable new plug-ins"
@@ -2982,15 +2984,11 @@ msgstr ""
 "перед применением эффектов.'Спектра'"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
-"Чтобы использовать 'Эффекты спектра', отметьте пункт\n"
-"'Включить выбор спектра' в окне спектрограммы трека и\n"
-"выберите диапазон частот, в котором будет работать эффект."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -4340,10 +4338,10 @@ msgstr "Волнотрек"
 #. i18n-hint Template for clip name generation on copy-paste
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
-msgstr "%s.%d"
+msgstr "%s.%i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -6049,9 +6047,8 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 кбит/c (файлы меньше)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "Чрезмерный, 320 кбит/с"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -7304,9 +7301,8 @@ msgid "&Unlink Account"
 msgstr "&Сбросить аккаунт"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "Линейный выход"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7477,9 +7473,8 @@ msgid "Create cloud account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "Выравнять конец к концу"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7494,14 +7489,12 @@ msgid ""
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "Данные этого проекта больше в облаке не хранятся"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "Данные этого проекта больше в облаке не хранятся"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
@@ -7528,14 +7521,12 @@ msgid "Already have an account? "
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "Войти"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "Привязать аккаунт"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -7636,6 +7627,7 @@ msgid_plural "%d minutes ago"
 msgstr[0] "%d минута назад"
 msgstr[1] "%d минуты назад"
 msgstr[2] "%d минуты назад"
+msgstr[3] "%d минуты назад"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
@@ -7644,6 +7636,7 @@ msgid_plural "%d hours ago"
 msgstr[0] "%d час назад"
 msgstr[1] "%d часа назад"
 msgstr[2] "%d часа назад"
+msgstr[3] "%d часа назад"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Modified"
@@ -9938,9 +9931,8 @@ msgstr "Микшер Audacity%s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "Громкость    "
+msgstr ""
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9981,9 +9973,8 @@ msgstr "Индикатор уровня сигнала"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "Слайдер силы нажатия смещён"
+msgstr ""
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10644,6 +10635,7 @@ msgid_plural "%d hours"
 msgstr[0] "%d час"
 msgstr[1] "%d часа"
 msgstr[2] "%d часа"
+msgstr[3] "%d часа"
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -10652,6 +10644,7 @@ msgid_plural "%d minutes"
 msgstr[0] "%d минута"
 msgstr[1] "%d минуты"
 msgstr[2] "%d минуты"
+msgstr[3] "%d минуты"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/ProjectManager.cpp
@@ -11578,15 +11571,19 @@ msgstr ""
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr ""
 
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
-
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Добро пожаловать в Audacity!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "Показать видео"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "Доступные источники записи:\n"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12211,9 +12208,8 @@ msgid "Set Track Audio"
 msgstr "Задать аудиотрек"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "Громкость    "
+msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -14887,6 +14883,7 @@ msgid_plural "%s %s, %d of %d clips %s"
 msgstr[0] "%s %s, %d из %d клипа %s"
 msgstr[1] "%s %s, %d из %d клипов %s"
 msgstr[2] "%s %s, %d из %d клипов %s"
+msgstr[3] "%s %s, %d из %d клипов %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
@@ -14913,6 +14910,7 @@ msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
 msgstr[0] "%s %s и %s %s, %d и %d из %d клипа %s"
 msgstr[1] "%s %s и %s %s, %d и %d из %d клипов %s"
 msgstr[2] "%s %s и %s %s, %d и %d из %d клипов %s"
+msgstr[3] "%s %s и %s %s, %d и %d из %d клипов %s"
 
 #. i18n-hint:
 #. first string is the name of a clip,
@@ -14927,6 +14925,7 @@ msgid_plural "%s, %d of %d clips %s"
 msgstr[0] "%s, %d из %d клипа %s"
 msgstr[1] "%s, %d из %d клипов %s"
 msgstr[2] "%s, %d из %d клипов %s"
+msgstr[3] "%s, %d из %d клипов %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "Moved clips to the right"
@@ -15046,9 +15045,8 @@ msgid "Duplicate"
 msgstr "Дублировать"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "Вырезать в буфер обмена"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
@@ -15286,9 +15284,8 @@ msgid "&Raw Data..."
 msgstr "Raw &данных..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "Со&хранить проект"
+msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15409,14 +15406,12 @@ msgid "Delete Labeled Audio"
 msgstr "Удалить аудиоданные с метками"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "Вырезать в буфер обмена области аудио с метками"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "Вырезать в буфер обмена области аудио с метками"
+msgstr ""
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15531,9 +15526,8 @@ msgid "Cut by label"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "&Удалить метку"
+msgstr ""
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
@@ -15549,9 +15543,8 @@ msgid "De&lete and leave gap"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "Удалённые области аудио с метками"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16662,18 +16655,16 @@ msgid "Skip to Selection End"
 msgstr "Перейти на конец выделения"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "&Экстра-меню"
+msgstr ""
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "&Показывать клиппинг волноформы"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
-msgstr "&Показывать  &RMS волноформы"
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -18956,6 +18947,7 @@ msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s, %d из %d клипа"
 msgstr[1] "%s, %d из %d клипов"
 msgstr[2] "%s, %d из %d клипов"
+msgstr[3] "%s, %d из %d клипов"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -21580,109 +21572,3 @@ msgstr "Инструменты спектра"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Устаревшие"
-
-#, c-format
-#~ msgctxt "clip name template"
-#~ msgid "%s %i"
-#~ msgstr "%s %i"
-
-#~ msgid "Insane"
-#~ msgstr "Ненормальный"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "Для хранения данных в облаке требуется бесплатная учётная запись на audio.com, которая привязана к Audacity. Длч продолжения нажмите 'Привязать аккаунт'."
-
-#~ msgid "Moved gain slider"
-#~ msgstr "Слайдер усиления перемещён"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "Посмотрите [[%s|видео о выпуске]] или прочитайте [[https://support.audacityteam.org/additional-resources/changelog|список изменений]], чтобы узнать больше!</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "Усиление:"
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "Применена команда: %s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "Не удалось выполнить инициализацию следующего эффекта:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "Больше информации доступно в меню Справка > Диагностика > Показать журнал"
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "Не удалось инициализировать эффект"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "Эффект недоступен"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "Ошибка загрузки кривых EQ"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "Чтобы использовать эту кривую эквалайзера в макросе, выберите для неё новое имя.\n"
-#~ "Выберите 'Сохранить/Менеджер кривых...', переименуйте кривую 'unnamed' и используйте её."
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "Кривой EQ фильтра нужно другое имя"
-
-#~ msgid "Curve not found"
-#~ msgstr "Кривая не найдена"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "Ошибка в коде Найквиста"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "Ошибка в коде Nyquist"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "Вырезать-разделить и поместить в буфер обмена"
-
-#~ msgid "Split Cut"
-#~ msgstr "Вырезать и разделить"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "В&ырезать и разделить"
-
-#~ msgid "Split D&elete"
-#~ msgstr "&Удалить и разделить"
-
-#~ msgid "E&xit"
-#~ msgstr "В&ыход"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "Вырезать помеченные области аудио в буфер обмена"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "Вырезать и разделить аудиоданные с метками"
-
-#~ msgid "Label Cut"
-#~ msgstr "Метка Вырезать"
-
-#~ msgid "Label Delete"
-#~ msgstr "Метка Удалить"
-
-#~ msgid "&Split Cut"
-#~ msgstr "&Вырезать и разделить"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "Разрезать по метке с разделением"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "&Удалить и разделить"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "Удалить по метке с разделением"

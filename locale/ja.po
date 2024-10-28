@@ -4,13 +4,7 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# ThemeBoy <transifex@themeboy.com>, 2024
-# hokorobi <hokorobi.hokorobi@gmail.com>, 2024
-# Nishikori Shinki, 2024
-# ABE Tsunehiko, 2024
-# Thomas De Rocker, 2024
-# Beluga, 2024
-# 森の子リスのミーコの大冒険 <phroneris@gmail.com>, 2024
+# Link Winterberg, 2024
 # Tadahisa Sugisaki, 2024
 #
 #, fuzzy
@@ -18,10 +12,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-04-06 16:47+0000\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Tadahisa Sugisaki, 2024\n"
-"Language-Team: Japanese (https://app.transifex.com/klyok/teams/690/ja/)\n"
+"Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,15 +128,13 @@ msgstr "再生レイテンシ大: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "対応サンプリング周波数:\n"
+msgstr "対応再生サンプリング周波数:\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "対応サンプリング周波数:\n"
+msgstr "対応キャプチャサンプリング周波数:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -2326,7 +2318,7 @@ msgid ""
 "* %s, because you have assigned the shortcut %s to %s"
 msgstr ""
 "\n"
-"   ・【%s】 … ショートカット「%s」は【%s】に割り当てられています"
+"   ・【%s】 ... ショートカット「%s」は【%s】に割り当てられています"
 
 #: libraries/lib-menus/CommandManager.cpp
 msgid ""
@@ -2987,7 +2979,6 @@ msgstr ""
 "まずトラックのスペクトログラム表示を有効にしてください。"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
@@ -6046,25 +6037,24 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45～85 kbps（ファイルサイズ小）"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "狂気: 320 kbps"
+msgstr "狂気、320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
-msgstr "極上: 220～260 kbps"
+msgstr "極上、220～260 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
-msgstr "標準: 170～210 kbps"
+msgstr "標準、170～210 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium, 145-185 kbps"
-msgstr "控えめ: 145～185 kbps"
+msgstr "控えめ、145～185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr ""
+msgstr "狂気"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -7290,7 +7280,7 @@ msgstr "リンクされていないアカウント"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "Anonymous"
-msgstr ""
+msgstr "匿名"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
@@ -7301,9 +7291,8 @@ msgid "&Unlink Account"
 msgstr "アカウントをリンク解除(&U)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "線型アウト"
+msgstr "サインアウト(&S)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7471,68 +7460,67 @@ msgstr "audio.com アカウントにリンク(&I)..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "クラウドアカウントを作成"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "数珠つなぎに整列"
+msgstr "クラウドにサインイン"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
+"おっと! 入力に問題があるようです。\n"
+"メールアドレスが正しいものか、パスワードが 8 文字以上あるかを確認してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
+"申し訳ありませんが、入力されたメールアドレスまたはパスワードが正しくありません。\n"
+"視覚情報を再度確認のうえ、もう一度行ってください!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "このプロジェクトはクラウドに保存されません"
+msgstr "アカウントを作成してクラウドに保存"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "このプロジェクトはクラウドに保存されません"
+msgstr "サインインしてクラウドに保存"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "Google で続ける"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "Facebook で続ける"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "電子メール"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "パスワード"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "パスワードを消去しますか?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "アカウントをお持ちですか?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "サインイン"
+msgstr "ここにサインイン"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "リンクアカウント"
+msgstr "アカウントを作成しますか?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -8046,10 +8034,10 @@ msgid "translator_credits"
 msgstr ""
 "日本語訳:<br>\n"
 "Atsushi Yoshida -2015<br>\n"
-"Phroneris<br> 2018-2022\n"
-"SakiPapa (tsugisaki.pub@gmail.com) 2022-<br>\n"
-"Akira Nishimura (akira@rsch.tuis.ac.jp) 2023-<br>\n"
-"Shinki Nishikori 2024-"
+"Phroneris 2018-2022<br>\n"
+"SakiPapa 2022-2024<br>\n"
+"Akira Nishimura 2023-2024<br>\n"
+"Shinki Nishikori 2024"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -9401,7 +9389,7 @@ msgstr "依存関係を削除中"
 
 #: src/Dependencies.cpp
 msgid "Copying audio data into project..."
-msgstr "オーディオデータをプロジェクトにコピー中…"
+msgstr "オーディオデータをプロジェクトにコピー中..."
 
 #: src/Dependencies.cpp
 msgid "Project Depends on Other Audio Files"
@@ -9938,9 +9926,8 @@ msgstr "Audacity ミキサー %s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "音量    "
+msgstr "音量"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9981,9 +9968,8 @@ msgstr "信号レベルメーター"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "移動されたベロシティスライダー"
+msgstr "移動された音量スライダー"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -11518,7 +11504,7 @@ msgstr "Audacity %s の更新内容"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr ""
+msgstr "[%s|リリースビデオ]]を見たり、[[%s|更新ログ]]を読んで、最新リリースに含まれる内容について詳しい情報を得てください!<p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11531,58 +11517,62 @@ msgstr "<p>Audascity ユーザーのためのさまざまなオーディオプ�
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
+msgstr "ボーカルの明瞭さと深みを高めるボーカル処理エフェクトです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
+msgstr "ゆったりした自然な響き効果をもたらす汎用のリバーブプラグインです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr ""
+msgstr "リアルなトーンとカスタマイズ可能なサウンドのための、ギターアンプとエフェクトモデリング用プラグインです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr ""
+msgstr "没入感あるサウンド風景のための、トラックの強弱変化への追従性の高いリバーブプラグインです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr ""
+msgstr "ボーカルトラックをプロフェッショナルに仕上げる、ボーカルマルチエフェクトプラグインです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
+msgstr "パンチの効いたクリアなローエンドサウンドを実現するベースエフェクトプラグインです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
+msgstr "暖かみと明瞭度を高め完璧なアコースティックサウンドを実現するプラグインです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr ""
+msgstr "宝石のように澄んだプロフェッショナルなボーカルエフェクトを実現する、驚異のボイス強調プラグインです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
+msgstr "ボーカル、ドラム、楽器を分離する、リアルタイムステム分離ツールです。"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "有名な開発者による[[%s|MuseHub]]のさまざまなプラグインをチェックしてください。"
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr ""
-
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "周波数を正確にコントロールできるマルチバンドコンプレッサーです。"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Audacity へようこそ!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "動画を視聴"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "[[%s|MuseHub]]から入手できます。"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12207,9 +12197,8 @@ msgid "Set Track Audio"
 msgstr "トラックオーディオ設定"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "音量    "
+msgstr "音量:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -15053,13 +15042,12 @@ msgid "Duplicate"
 msgstr "複製"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "切り取ってクリップボードへ"
+msgstr "切り取ってクリップボードへ（ギャップを残す）"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
-msgstr ""
+msgstr "切り取り（ギャップを残す）"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15156,12 +15144,12 @@ msgstr "特殊な消去(&E)"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "&Cut and leave gap"
-msgstr ""
+msgstr "切り取り（ギャップを残す）(&C)"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "&Delete and leave gap"
-msgstr ""
+msgstr "削除（ギャップを残す）(&D)"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15282,20 +15270,19 @@ msgstr "ラベルをエクスポート(&L)..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Audio..."
-msgstr "オーディオをインポート(&A)…"
+msgstr "オーディオをインポート(&A)..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Labels..."
-msgstr "ラベルをインポート(&L)…"
+msgstr "ラベルをインポート(&L)..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
-msgstr "Raw データをインポート(&R)…"
+msgstr "Raw データをインポート(&R)..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "プロジェクトを保存(&S)"
+msgstr "プロジェクトを閉じる(&C)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15416,14 +15403,12 @@ msgid "Delete Labeled Audio"
 msgstr "ラベル付きオーディオを削除"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "ラベル付きオーディオ領域をクリップボードに切り取りました"
+msgstr "ラベル付きオーディオ領域をギャップを残してクリップボードに切り取る"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "ラベル付きオーディオ領域をクリップボードに切り取りました"
+msgstr "ラベル付きオーディオ領域をギャップを残して切り取る"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15535,30 +15520,28 @@ msgstr "切り取り(&C)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr ""
+msgstr "切り取り（ラベル単位）"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "ラベルを消去(&D)"
+msgstr "削除（ラベル単位）"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "C&ut and leave gap"
-msgstr ""
+msgstr "切り取り（ギャップを残す）(&U)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by labels and leave gap"
-msgstr ""
+msgstr "切り取り（ラベル単位・ギャップを残す）"
 
 #: src/menus/LabelMenus.cpp
 msgid "De&lete and leave gap"
-msgstr ""
+msgstr "削除（ギャップを残す）(&L)"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "ラベル付きオーディオ領域を削除しました"
+msgstr "ギャップを残してラベル単位で削除"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16669,18 +16652,16 @@ msgid "Skip to Selection End"
 msgstr "選択範囲の最後へ移動"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "拡張メニューを有効化(&X)"
+msgstr "拡張メニュー(&X)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "波形にクリッピングを表示(&S)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
-msgstr "波形にRMSを表示(&R)"
+msgstr "波形にRMSを表示(&W)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -17293,7 +17274,7 @@ msgid ""
 "   *   \"%s\"  (because the shortcut '%s' is used by \"%s\")\n"
 msgstr ""
 "\n"
-"   ・【%s】 … ショートカット「%s」は【%s】に使われます\n"
+"   ・【%s】 ... ショートカット「%s」は【%s】に使われます\n"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
@@ -20867,7 +20848,7 @@ msgstr "Nyquist プラグインをインストール"
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Select file(s) to install"
-msgstr "インストールするファイルを選択（複数可）"
+msgstr "インストールするファイルを選択 (複数可)"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-in"
@@ -21588,104 +21569,3 @@ msgstr "スペクトルツール"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "レガシー"
-
-#~ msgid "Insane"
-#~ msgstr "狂気"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "クラウドに保存するには Audacity にリンクされた無料の audio.com アカウントが必要です。上の「アカウントをリンク」を押して続けます。"
-
-#~ msgid "Moved gain slider"
-#~ msgstr "移動されたゲインススライダー"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "詳細は、[[%s|リリースビデオ]]を視聴するか、[[https://support.audacityteam.org/additional-resources/changelog|変更履歴]] をお読みください!</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "ゲイン:"
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "コマンドの適用: %s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "次のエフェクトの初期化に失敗しました:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "詳細情報は、［ヘルプ］>［診断］>［ログを表示］をご覧ください。"
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "エフェクトの初期化に失敗しました"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "エフェクト利用不能"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "EQ 曲線の読み込みエラー"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "このフィルター曲線をマクロの中で使うには、新しい名前を選択してください。\n"
-#~ "「曲線を保存/管理...」を選択し、「無題」曲線の名前を変更してから使用してください。"
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "EQ フィルター曲線には別の名前が必要です"
-
-#~ msgid "Curve not found"
-#~ msgstr "曲線が見つかりません"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "Nyquist エラー"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "Nyquist コードエラー"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "クリップボードに分割切り取りしました"
-
-#~ msgid "Split Cut"
-#~ msgstr "分割切り取り"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "切り取って分割(&I)"
-
-#~ msgid "Split D&elete"
-#~ msgstr "削除して分割(&E)"
-
-#~ msgid "E&xit"
-#~ msgstr "終了(&X)"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "ラベル付きオーディオ領域をクリップボード切り取り分割しました"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "ラベル付きオーディオを切り取って分割"
-
-#~ msgid "Label Cut"
-#~ msgstr "ラベルで切り取り"
-
-#~ msgid "Label Delete"
-#~ msgstr "ラベルで削除"
-
-#~ msgid "&Split Cut"
-#~ msgstr "切り取って分割(&S)"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "ラベルで分割切り取り"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "削除して分割(&L)"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "ラベルで分割削除"

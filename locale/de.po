@@ -4,23 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Tobias Bannert <tobannert@gmail.com>, 2024
-# Paval Shalamitski <yehekim@gmail.com>, 2024
+# Joachim "Jojo" Schmitz <jojo@schmitz-digital.de>, 2024
 # Link Winterberg, 2024
-# Ettore Atalan <atalanttore@googlemail.com>, 2024
-# jhuffer <joachim.huffer@gmail.com>, 2024
-# Michał Trzebiatowski <michtrz@gmail.com>, 2024
-# Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-04-06 16:47+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
-"Language-Team: German (https://app.transifex.com/klyok/teams/690/de/)\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Link Winterberg, 2024\n"
+"Language-Team: German (https://app.transifex.com/audacity/teams/164520/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,15 +128,13 @@ msgstr "Hohe Wiedergabelatenz: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "Unterstützte Abtastraten:\n"
+msgstr "Unterstützte Abtastraten für Wiedergabe:\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "Unterstützte Abtastraten:\n"
+msgstr "Unterstützte Abtastraten für Aufnahme:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -256,7 +249,7 @@ msgstr "Fehler"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Out of memory!"
-msgstr "Kein Speicher mehr vorhanden!"
+msgstr "Kein Arbeitsspeicher mehr vorhanden!"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
@@ -1408,12 +1401,12 @@ msgstr "Die Antwort konnte nicht deserialisiert werden"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Glue Compressor"
-msgstr "Glue Compressor"
+msgstr "Klebekompressor"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Gentle"
-msgstr "Gentle"
+msgstr "Sanft"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1438,27 +1431,27 @@ msgstr "Make It Right Master"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Brick Wall Master"
-msgstr "Brick Wall Master"
+msgstr "Brickwall Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Lead Vocals"
-msgstr "Lead Vocals"
+msgstr "Leadstimme"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Fat Vocals"
-msgstr "Fat Vocals"
+msgstr "Fetter Gesang"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Power Vocals"
-msgstr "Power Vocals"
+msgstr "Kräftiger Gesang"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Vocal Control"
-msgstr "Vocal Control"
+msgstr "Gesangsbändiger"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1468,7 +1461,7 @@ msgstr "Vocal Touch-Up"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Voice Memos Balancer"
-msgstr "Voice Memos Balancer"
+msgstr "Sprachmemo-Ausgleich"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1483,17 +1476,17 @@ msgstr "Piano"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Acoustic Guitar"
-msgstr "Acoustic Guitar"
+msgstr "Akustische Gitarre"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Bass Guitar"
-msgstr "Bass Guitar"
+msgstr "Bassgitarre"
 
 #. i18n-hint: This is the name of an effect preset. Strings is violins, etc
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Strings"
-msgstr "Strings"
+msgstr "Streichinstrumente"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1503,7 +1496,7 @@ msgstr "Kick Drums"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Drums Control"
-msgstr "Drums Control"
+msgstr "Trommelbändiger"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1518,17 +1511,17 @@ msgstr "Engine Breathing SFX"
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Impact SFX"
-msgstr "Great Impact SFX"
+msgstr "Großer Einschlag SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Body SFX"
-msgstr "Great Body SFX"
+msgstr "Großer Körper SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Tail SFX"
-msgstr "Great Tail SFX"
+msgstr "Großer Abklang SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1538,17 +1531,17 @@ msgstr "Smack Explosion SFX"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Master Limiter"
-msgstr "Master Limiter"
+msgstr "Masterbegrenzung"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "SFX Limiter"
-msgstr "SFX Limiter"
+msgstr "SFX-Begrenzung"
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "VO Limiter"
-msgstr "VO Limiter"
+msgstr "Stimmenbegrenzung"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -2155,7 +2148,7 @@ msgstr "Stellt Unterstützung für LV2-Effekte für Audacity bereit"
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
-msgstr "Aus"
+msgstr "Keine"
 
 #: libraries/lib-math/Dither.cpp
 msgid "Rectangle"
@@ -2946,7 +2939,7 @@ msgstr "Hundertstel Cent"
 #. * in decades
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "decades"
-msgstr "Jahrzehnte"
+msgstr "Dekaden"
 
 #. i18n-hint: Format string for displaying log of frequency in decades.
 #. * Change the decimal points for your locale. Don't change the numbers.
@@ -2990,7 +2983,6 @@ msgstr ""
 "bevor Sie „Spektral“-Effekte anwenden."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
@@ -6055,9 +6047,8 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (Kleinere Dateien)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "Überragend, 320 kbps"
+msgstr "Exzessiv, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -6073,7 +6064,7 @@ msgstr "Mittel, 145-185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr ""
+msgstr "Exzessiv"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -7299,7 +7290,7 @@ msgstr "Konto nicht verknüpft"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "Anonymous"
-msgstr ""
+msgstr "Anonym"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
@@ -7310,9 +7301,8 @@ msgid "&Unlink Account"
 msgstr "Konto Entkn&üpfen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "Linear Aus"
+msgstr "Au&sloggen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7480,68 +7470,67 @@ msgstr "Aud&io.com-Konto verbinden..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "Cloud-Konto erstellen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "Ende auf Ende ausrichten"
+msgstr "In Cloud anmelden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
+"Ups! Sieht so aus, als ob die Eingabe einen Fehler hat.\n"
+"Bitte überprüfen Sie, dass die Email-Adresse korrekt ist und das Passwort mindestens 8 Zeichen lang ist."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
+"Tut uns Leid, aber es scheint als seien Email oder Passwort falsch. \n"
+"Bitte überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut. "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "Dieses Projekt wird nicht mehr in der Cloud gespeichert"
+msgstr "Accounterstellung um in die Cloud zu speichern"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "Dieses Projekt wird nicht mehr in der Cloud gespeichert"
+msgstr "Anmelden um in die Cloud zu speichern"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "Mit Google fortfahren"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "Mit Facebook fortfahren"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Passwort vergessen?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "Konto bereits vorhanden?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "Anmelden"
+msgstr "Hier anmelden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "Konto verknüpfen"
+msgstr "Noch kein Konto?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -9938,9 +9927,8 @@ msgstr "Audacity-Mixer %s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "Lautstärke    "
+msgstr "Lautstärke"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9981,9 +9969,8 @@ msgstr "Aussteuerungsanzeige"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "Geschwindigkeitsregler verschoben"
+msgstr "Verstärkungsregler verschoben"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -11520,7 +11507,7 @@ msgstr "Was ist neu in Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr ""
+msgstr "Schauen Sie das [[%s|Video zur Version]] oder lesen Sie den [[%s|Changelog]] um mehr darüber zu erfahren, was wir in diser Version hinzugefügt haben!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11533,58 +11520,62 @@ msgstr "<p>Schauen Sie sich unsere [[%s|Muse Hub Anwendung]] für eine breite Pa
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
+msgstr "Ein Effekt für Stimmen, der Klarheit und Tiefe bestimmt."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
+msgstr "Ein vielseitiger, großräumiger und natürlich klingender Hall-Effekt."
 
 #: src/WhatsNewDialog.cpp
 msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr ""
+msgstr "Eine Gitarrenamp- und -effektmodellierungserweiterung, die realistische und benutzerdefinierbare Klänge erzeugt."
 
 #: src/WhatsNewDialog.cpp
 msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr ""
+msgstr "Eine adaptive Halleffektserweiterung, die sich an die Dynamik der Audiospur anpasst, um immersive Geräuschkulissen zu ermöglichen."
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr ""
+msgstr "Eine Multi-Effekt-Erweiterung, die Gesangstracks professionell verbessert."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
+msgstr "Ein Basseffekt-Plugin, das für einen druckvollen, klaren Bass-Sound sorgt."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
+msgstr "Ein Plugin zur Perfektionierung akustischer Klänge, das Wärme und Klarheit verbessert."
 
 #: src/WhatsNewDialog.cpp
 msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr ""
+msgstr "Ein hervorragendes Stimmverbesserungs-Plugin für kristallklare, professionelle Gesangseffekte."
 
 #: src/WhatsNewDialog.cpp
 msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
+msgstr "Ein Echtzeit-Tool zur Trennung von Gesang, Schlagzeug und Instrumenten."
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Auf [[%s|MuseHub]] finden Sie eine Vielzahl von Plugins namhafter Entwickler."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr ""
-
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Ein Multiband-Kompressor, der eine präzise Steuerung der Frequenzen ermöglicht."
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Willkommen bei Audacity!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "Video ansehen"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "Im [[%s|MuseHub]] verfügbar."
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12209,9 +12200,8 @@ msgid "Set Track Audio"
 msgstr "Spuraudio einstellen"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "Lautstärke    "
+msgstr "Lautstärke:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -15041,13 +15031,12 @@ msgid "Duplicate"
 msgstr "Duplizieren"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "Zur Zwischenablage ausschneiden"
+msgstr "In Zwischenablage Ausschneiden und Lücke lassen"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
-msgstr ""
+msgstr "Ausschneiden und Lücke lassen"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15144,12 +15133,12 @@ msgstr "Spezial-&Entfernen"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "&Cut and leave gap"
-msgstr ""
+msgstr "Auss&chneiden und Lücke lassen"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "&Delete and leave gap"
-msgstr ""
+msgstr "L&öschen und Lücke lassen"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15281,9 +15270,8 @@ msgid "&Raw Data..."
 msgstr "&Rohdaten..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "Projekt &speichern"
+msgstr "Projekt s&chließen"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15404,14 +15392,12 @@ msgid "Delete Labeled Audio"
 msgstr "Markiertes Audio löschen"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "Markierte Audiobereiche zu Zwischenablage ausgeschnitten"
+msgstr "Mit Textmarken beschriftete Audioregionen in den Zwischenspeicher ausschneiden und Lücke lassen"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "Markierte Audiobereiche zu Zwischenablage ausgeschnitten"
+msgstr "Mit Textmarken beschriftetes Audio schneiden und Lücke lassen"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15523,30 +15509,28 @@ msgstr "&Ausschneiden"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr ""
+msgstr "Anhand Textmarken schneiden"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "Textmarke &löschen"
+msgstr "Anhand Textmarken löschen"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "C&ut and leave gap"
-msgstr ""
+msgstr "Schneiden &und Lücke lassen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by labels and leave gap"
-msgstr ""
+msgstr "Mit Textmarken schneiden und Lücke lassen"
 
 #: src/menus/LabelMenus.cpp
 msgid "De&lete and leave gap"
-msgstr ""
+msgstr "&Löschen und Lücke lassen"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "Markierte Audiobereiche gelöscht"
+msgstr "Mit Textmarken löschen und Lücke lassen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16657,16 +16641,14 @@ msgid "Skip to Selection End"
 msgstr "An Auswahlende springen"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "Zusätzliche Menüs a&ktivieren"
+msgstr "&Zusätzliche Menüs"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "Über&steuerungen in Wellenform anzeigen"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
 msgstr "&RMS in Wellenform anzeigen"
 
@@ -17103,7 +17085,7 @@ msgstr "Erw. Import"
 #: src/prefs/GUIPrefs.cpp
 msgctxt "GUI"
 msgid "Interface"
-msgstr "Schnittstelle"
+msgstr "Oberfläche"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Preferences for GUI"
@@ -21578,104 +21560,3 @@ msgstr "Spektralwerkzeuge"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Legacy"
-
-#~ msgid "Insane"
-#~ msgstr "Überragend"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "Zum Speichern in der Cloud ist ein kostenloses Audio.com-Konto erforderlich, das mit Audacity verknüpft ist. Klicken Sie oben auf „Konto verknüpfen“, um fortzufahren."
-
-#~ msgid "Moved gain slider"
-#~ msgstr "Verstärkungsregler verschoben"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "Sehen Sie sich das [[%s|Release-Video]] an oder lesen Sie das [[https://support.audacityteam.org/additional-resources/changelog|Changelog]], um mehr zu erfahren!</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "Verstärkung:"
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "Befehl angewendet: %s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "Folgender Effekt konnte nicht initialisiert werden:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "Weitere Informationen sind eventuell unter „Hilfe > Diagnose > Protokoll anzeigen“ verfügbar."
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "Initialisieren des Effekts schlug fehl"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "Effekt nicht verfügbar"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "Fehler beim Laden von EQ-Kurven"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "Um diese Filter-Kurve in einem Makro zu verwenden, geben Sie ihr bitte einen neuen Namen.\n"
-#~ "Wählen Sie den „Kurven speichern/verwalten...“ Button und benennen Sie die „unbenannte“ Kurve um. Danach verwenden Sie diese."
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "Filterkurve-EQ braucht einen anderen Namen"
-
-#~ msgid "Curve not found"
-#~ msgstr "Kurve nicht gefunden"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "Nyquist-Fehler"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "Fehler im Nyquist-Code"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "Trennen-Ausschneiden und in Zwischenablage"
-
-#~ msgid "Split Cut"
-#~ msgstr "Trennen Ausschneiden"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "A&usschneiden und trennen"
-
-#~ msgid "Split D&elete"
-#~ msgstr "L&öschen und trennen"
-
-#~ msgid "E&xit"
-#~ msgstr "&Beenden"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "Markierte Audiobereiche getrennt und zu Zwischenablage ausgeschnitten"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "Markiertes Audio trennen und ausschneiden"
-
-#~ msgid "Label Cut"
-#~ msgstr "Textmarke-Ausschneiden"
-
-#~ msgid "Label Delete"
-#~ msgstr "Textmarke-Löschen"
-
-#~ msgid "&Split Cut"
-#~ msgstr "A&usschneiden und trennen"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "Textmarke-Trennen-Ausschneiden"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "&Trennen und löschen"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "Textmarke-Trennen-Löschen"

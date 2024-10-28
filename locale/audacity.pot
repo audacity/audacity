@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10960,14 +10960,16 @@ msgstr ""
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr ""
 
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
 #: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
+msgid "Welcome to Audacity!"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Welcome to Audacity!"
+msgid "Watch the release video"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Available on MuseHub"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp

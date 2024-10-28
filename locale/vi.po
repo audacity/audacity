@@ -4,29 +4,22 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Việt anh Duong, 2024
-# Leo Hoàng Trịnh, 2024
-# Phi Sown Nguyen <mersoit792@gmail.com>, 2024
-# Nguyen Mien <Hamien0604@gmail.com>, 2024
-# hong cuong <hongcuongvn282@gmail.com>, 2024
-# Muon Viet, 2024
-# brad freedom <brad.freedom@gmail.com>, 2024
+# Link Winterberg, 2024
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-08-30 16:41+0200\n"
-"Last-Translator: brad freedom <brad.freedom@gmail.com>, 2024\n"
-"Language-Team: Vietnamese (https://app.transifex.com/klyok/teams/690/vi/)\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Link Winterberg, 2024\n"
+"Language-Team: Vietnamese (https://app.transifex.com/audacity/teams/164520/vi/)\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.4\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -134,15 +127,13 @@ msgstr "Độ trễ phát tiếng cao: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Playback Rates:\n"
-msgstr "Tỷ lệ được chấp nhận: \n"
+msgstr ""
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
-#, fuzzy
 msgid "Supported Capture Rates:\n"
-msgstr "Tỷ lệ được chấp nhận: \n"
+msgstr ""
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -2976,15 +2967,11 @@ msgstr ""
 "áp dụng hiệu ứng 'Âm phổ'."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-#, fuzzy
 msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
-"Để dùng \"hiệu ứng quang phổ\", bật \"Lựa chọn quang phổ\"\n"
-"trong cài đặt ảnh phổ và chọn\n"
-" vùng tần số cho hiệu ứng."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -6031,9 +6018,8 @@ msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (Tệp nhỏ hơn)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Excessive, 320 kbps"
-msgstr "Tối đa, 320 kbps"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -7286,9 +7272,8 @@ msgid "&Unlink Account"
 msgstr "&Hủy liên kết Tài khoản"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "&Sign Out"
-msgstr "Tuyến tính hướng ra phía ngoài"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
@@ -7459,9 +7444,8 @@ msgid "Create cloud account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to cloud"
-msgstr "Sắp xếp đến cuối vùng chọn"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7476,14 +7460,12 @@ msgid ""
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Create an account to save to the cloud"
-msgstr "Dự án này không còn được lưu trên đám mấy"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in to save to the cloud"
-msgstr "Dự án này không còn được lưu trên đám mấy"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
@@ -7510,14 +7492,12 @@ msgid "Already have an account? "
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Sign in here"
-msgstr "Đăng nhập"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
-#, fuzzy
 msgid "Need an account? "
-msgstr "Liên kết tài khoản"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -9905,9 +9885,8 @@ msgstr "Bộ trộn và xử lý âm thanh Audacity%s"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Volume"
-msgstr "Âm lượng"
+msgstr ""
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9948,9 +9927,8 @@ msgstr "Thước đo mức tín hiệu"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
-#, fuzzy
 msgid "Moved volume slider"
-msgstr "Đã di chuyển thanh trượt vận tốc "
+msgstr ""
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -11534,15 +11512,19 @@ msgstr ""
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr ""
 
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr ""
-
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Xin chào!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "Xem video"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "Các nguồn thu âm hợp lệ:\n"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12167,9 +12149,8 @@ msgid "Set Track Audio"
 msgstr "Đặt Audio track"
 
 #: src/commands/SetTrackInfoCommand.cpp
-#, fuzzy
 msgid "Volume:"
-msgstr "Âm lượng"
+msgstr ""
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -14996,9 +14977,8 @@ msgid "Duplicate"
 msgstr "Nhân đôi"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Cut to clipboard and leave gap"
-msgstr "Cắt vào bộ nhớ sao chép Clipboard"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
@@ -15236,9 +15216,8 @@ msgid "&Raw Data..."
 msgstr "&Dữ liệu thô..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "&Close Project"
-msgstr "&Lưu Dự án"
+msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15359,14 +15338,12 @@ msgid "Delete Labeled Audio"
 msgstr "Xoá audio được dán nhãn"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "Đã cắt các phần Audio có nhãn vào bộ nhớ sao chép Clipboard"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Cut labeled audio and leave gap"
-msgstr "Đã cắt các phần Audio có nhãn vào bộ nhớ sao chép Clipboard"
+msgstr ""
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15481,9 +15458,8 @@ msgid "Cut by label"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by label"
-msgstr "&Xoá Nhãn"
+msgstr ""
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
@@ -15499,9 +15475,8 @@ msgid "De&lete and leave gap"
 msgstr ""
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Delete by labels and leave gap"
-msgstr "Vùng Audio được dán nhãn đã bị xoá "
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16612,18 +16587,16 @@ msgid "Skip to Selection End"
 msgstr "Di chuyên đến kết thúc vùng chọn:"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "E&xtra Menus"
-msgstr "Kích hoạt menu b&ổ sung"
+msgstr ""
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "&Hiển thị Clipping theo dạng sóng"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Sho&w RMS in Waveform"
-msgstr "Hiển thị &RMS ở dạng sóng"
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -21520,104 +21493,3 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Phiên bản cũ"
-
-#~ msgid "Insane"
-#~ msgstr "Trên cả tuyệt"
-
-#~ msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-#~ msgstr "Việc lưu vào đám mây yêu cầu phải có tài khoản audio.com miễn phí được liên kết với Audacity. Nhấn vào \"Liên kết tài khoản\" ở trên để tiếp tục."
-
-#~ msgid "Moved gain slider"
-#~ msgstr "Đã di chuyển thanh trượt khuếch đại"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-#~ msgstr "Xem [[%s||release video]] hoặc đọc [[https://support.audacityteam.org/additional-resources/changelog|changelog]] để biết thêm thông tin!</p>"
-
-#~ msgid "Gain:"
-#~ msgstr "Gain - Độ khuếch đại:"
-
-#, c-format
-#~ msgid "Applied command: %s"
-#~ msgstr "Đã áp dụng lệnh: %s"
-
-#, c-format
-#~ msgid ""
-#~ "Attempting to initialize the following effect failed:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "More information may be available in 'Help > Diagnostics > Show Log'"
-#~ msgstr ""
-#~ "Khởi chạy hiệu ứng không thành công:\n"
-#~ "\n"
-#~ "%s\n"
-#~ "\n"
-#~ "vào \"trờ giúp>chẩn đoán>hiển thị bản ghi\" để có thêm thông tin chi tiết"
-
-#~ msgid "Effect failed to initialize"
-#~ msgstr "Không thể chạy hiệu ứng"
-
-#~ msgid "Effect Unavailable"
-#~ msgstr "Hiệu ứng không có sẵn"
-
-#~ msgid "Error Loading EQ Curves"
-#~ msgstr "Lỗi khi nhập EQ Curves"
-
-#~ msgid ""
-#~ "To use this filter curve in a macro, please choose a new name for it.\n"
-#~ "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
-#~ msgstr ""
-#~ "Để sử dụng biểu đồ bộ lọc này trong macro, vui lòng đặt tên mới cho nó.\n"
-#~ "Chọn vào \"lưu/quản lý biểu đồ...\" chọn và đặt lại tên cho \"biểu đồ chưa có tên\""
-
-#~ msgid "Filter Curve EQ needs a different name"
-#~ msgstr "Biểu đồ bộ lọc EQ cần một tên khác"
-
-#~ msgid "Curve not found"
-#~ msgstr "Không tìm cong được"
-
-#~ msgid "Nyquist Error"
-#~ msgstr "Lỗi Nyquist"
-
-#~ msgid "Error in Nyquist code"
-#~ msgstr "Lỗi trong mã Nyquist"
-
-#~ msgid "Split-cut to the clipboard"
-#~ msgstr "Chia rồi cắt vào bộ nhớ sao chép Clipboard"
-
-#~ msgid "Split Cut"
-#~ msgstr "Chia và Cắt"
-
-#~ msgid "Spl&it Cut"
-#~ msgstr "Ch&ia và Cắt"
-
-#~ msgid "Split D&elete"
-#~ msgstr "Chia &và Xoá"
-
-#~ msgid "E&xit"
-#~ msgstr "Th&oát"
-
-#~ msgid "Split Cut labeled audio regions to clipboard"
-#~ msgstr "Đã chia và cắt các phần Audio có nhãn vào bộ nhớ sao chép Clipboard"
-
-#~ msgid "Split Cut Labeled Audio"
-#~ msgstr "Chia và cắt audio được dán nhãn "
-
-#~ msgid "Label Cut"
-#~ msgstr "Dán nhãn tại điểm cắt"
-
-#~ msgid "Label Delete"
-#~ msgstr "Nhãn Xoa"
-
-#~ msgid "&Split Cut"
-#~ msgstr "Chi&a và cắt"
-
-#~ msgid "Label Split Cut"
-#~ msgstr "Dán nhãn tại điểm Chi&a và cắt"
-
-#~ msgid "Sp&lit Delete"
-#~ msgstr "Chia &và Xoá"
-
-#~ msgid "Label Split Delete"
-#~ msgstr "Dán nhãn tại điểm Chia và Xoa"

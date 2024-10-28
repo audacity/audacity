@@ -1,17 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2024 Audacity Team
+# Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
-# Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2013-2024
+# Link Winterberg, 2024
+# Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.0\n"
+"Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
-"PO-Revision-Date: 2024-10-13 00:00+0000\n"
+"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -7478,7 +7480,7 @@ msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
-"Ups! Wygląda na to, że wystąpił problem z Twoimi danymi wejściowymi."
+"Ups! Wygląda na to, że wystąpił problem z Twoimi danymi wejściowymi.\n"
 "Upewnij się, że Twój adres e-mail jest prawidłowy i że Twoje hasło ma co najmniej 8 znaków"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
@@ -7486,7 +7488,7 @@ msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
-"Wygląda na to, że podany adres e-mail lub hasło są nieprawidłowe."
+"Wygląda na to, że podany adres e-mail lub hasło są nieprawidłowe.\n"
 "Sprawdź ponownie swoje dane uwierzytelniające i spróbuj ponownie!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
@@ -11566,15 +11568,19 @@ msgstr "Sprawdź różnorodne wtyczki od znanych deweloperów dostępne na [[%s|
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr "Kompresor wielopasmowy zapewniający precyzyjną kontrolę częstotliwości."
 
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
-#: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr "Dostępne na [[%s|Muse Hubie]]."
-
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Witamy w Audacity!"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Watch the release video"
+msgstr "Obejrzyj wideo"
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Available on MuseHub"
+msgstr "Dostępne na [[%s|Muse Hubie]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
