@@ -32,8 +32,8 @@ inline muse::Ret make_ret(Err e)
     case Err::NotEnoughSpaceForPaste: return muse::Ret(retCode, muse::trc("trackedit", "Not enough space to paste clip into"));
     case Err::StereoClipIntoMonoTrack: return muse::Ret(retCode,
                          muse::trc("trackedit",
-                                   "The content you are trying to paste will span across more tracks than you"
-                                   " currently have available. Add more tracks and try again."));
+                                   "Stereo audio clips cannot be pasted onto mono tracks. "
+                                   "Please convert the stereo clip to mono before pasting."));
     }
 
     return muse::Ret(static_cast<int>(e));
