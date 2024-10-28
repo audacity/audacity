@@ -17,6 +17,10 @@ EffectBase {
     height: 400
     width: 400
 
+    function preview() {
+        reverb.preview()
+    }
+
     ReverbViewModel {
         id: reverb
     }
