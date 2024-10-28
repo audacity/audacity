@@ -141,7 +141,7 @@ DockPage {
 
             UndoRedoToolBar {
                 navigationPanel.section: root.topToolKeyNavSec
-                navigationPanel.order: 2
+                navigationPanel.order: 3
             }
         }
     ]

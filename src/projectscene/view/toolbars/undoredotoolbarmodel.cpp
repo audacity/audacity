@@ -9,7 +9,6 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
-
 void UndoRedoToolBarModel::load()
 {
     AbstractToolBarModel::load();
@@ -22,8 +21,7 @@ void UndoRedoToolBarModel::load()
     ToolBarItemList items;
     for (const ActionCode& code : itemsCodes) {
         ToolBarItem* item = makeItem(code);
-        item->setShowTitle(true);
-
+        item->setIsTransparent(true);
         items << item;
     }
 

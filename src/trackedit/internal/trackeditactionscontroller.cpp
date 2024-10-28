@@ -89,6 +89,30 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
+
+    projectHistory()->isUndoRedoAvailableChanged().onNotify(this, [this]() {
+        notifyActionEnabledChanged(UNDO);
+        notifyActionEnabledChanged(REDO);
+    });
+}
+
+bool TrackeditActionsController::actionEnabled(const muse::actions::ActionCode &actionCode) const
+{
+    if (!canReceiveAction(actionCode)) {
+        return false;
+    }
+
+    return true;
+}
+
+muse::async::Channel<muse::actions::ActionCode> TrackeditActionsController::actionEnabledChanged() const
+{
+    return m_actionEnabledChanged;
+}
+
+void TrackeditActionsController::notifyActionEnabledChanged(const ActionCode& actionCode)
+{
+    m_actionEnabledChanged.send(actionCode);
 }
 
 void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -653,7 +677,15 @@ Channel<ActionCode> TrackeditActionsController::actionCheckedChanged() const
     return m_actionCheckedChanged;
 }
 
-bool TrackeditActionsController::canReceiveAction(const ActionCode&) const
+bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) const
 {
-    return globalContext()->currentProject() != nullptr;
+    if (globalContext()->currentProject() == nullptr) {
+        return false;
+    } else if (actionCode == UNDO) {
+        return trackeditInteraction()->canUndo();
+    } else if (actionCode == REDO) {
+        return trackeditInteraction()->canRedo();
+    }
+
+    return true;
 }

@@ -916,8 +916,7 @@ void Au3Interaction::pushProjectHistoryJoinState(secs_t start, secs_t duration)
 
 void Au3Interaction::undo()
 {
-    if (!projectHistory()->undoAvailable()) {
-        interactive()->error(muse::trc("undo", "Undo"), std::string("Undo not available"));
+    if (!canUndo()) {
         return;
     }
 
@@ -949,10 +948,14 @@ void Au3Interaction::undo()
     }
 }
 
+bool Au3Interaction::canUndo()
+{
+    return projectHistory()->undoAvailable();
+}
+
 void Au3Interaction::redo()
 {
-    if (!projectHistory()->redoAvailable()) {
-        interactive()->error(muse::trc("redo", "Redo"), std::string("Redo not available"));
+    if (!canRedo()) {
         return;
     }
 
@@ -979,6 +982,11 @@ void Au3Interaction::redo()
     } else {
         selectionController()->resetSelectedTracks();
     }
+}
+
+bool Au3Interaction::canRedo()
+{
+    return projectHistory()->redoAvailable();
 }
 
 void Au3Interaction::pushProjectHistoryDuplicateState()

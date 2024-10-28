@@ -65,7 +65,9 @@ public:
     void duplicateTracks(const TrackIdList& trackIds) override;
 
     void undo() override;
+    bool canUndo() override;
     void redo() override;
+    bool canRedo() override;
 
 private:
     au3::Au3Project& projectRef() const;

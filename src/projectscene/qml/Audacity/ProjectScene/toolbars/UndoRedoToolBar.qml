@@ -12,8 +12,7 @@ StyledToolBarView {
     navigationPanel.accessible.name: qsTrc("projectscene", "Undo/redo toolbar")
 
     spacing: 0
-    //! TODO AU4: apply padding when StyledToolBarView will have padding property added
-    // padding: 6
+    rowHeight: 28
 
     model: UndoRedoToolBarModel { }
 

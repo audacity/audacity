@@ -27,8 +27,11 @@ public:
     void clearUnsaved() override;
     void pushHistoryState(
         const std::string& longDescription, const std::string& shortDescription) override;
+    muse::async::Notification isUndoRedoAvailableChanged() const override;
 
 private:
     au3::Au3Project& projectRef();
+
+    muse::async::Notification m_isUndoRedoAvailableChanged;
 };
 }
