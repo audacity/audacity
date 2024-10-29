@@ -364,7 +364,7 @@ auto EffectMenu()
          , Command(
             wxT("GetMoreEffects"), XXO("Get more effects..."),
             [](const CommandContext&) {
-               OpenInDefaultBrowser("https://www.musehub.com");
+               OpenInDefaultBrowser("https://www.audacityteam.org/mh-effectmenu");
             },
             AlwaysEnabledFlag)
 #endif

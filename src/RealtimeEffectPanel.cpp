@@ -138,7 +138,7 @@ namespace
             if(commandId == wxID_REMOVE)
                return wxString {};
             if(commandId == wxID_MORE)
-               OpenInDefaultBrowser("https://www.musehub.com");
+               OpenInDefaultBrowser("https://www.audacityteam.org/mh-rtepanel");
             else
                return visitor.GetPluginID(commandId).GET();
          }

@@ -46,7 +46,7 @@ enum {
 
 const char* WhatsNewURL = "https://audacityteam.org/3.7.0-video";
 const char* ChangeLogURL = "https://support.audacityteam.org/additional-resources/changelog";
-const char* MuseHubURL = "https://www.musehub.com";
+const char* MuseHubURL = "https://www.audacityteam.org/mh-whatsnew";
 const char* PromoURL = "https://audacityteam.org/audacitypromo";
 
 #if defined(SHOW_MUSEHUB)
