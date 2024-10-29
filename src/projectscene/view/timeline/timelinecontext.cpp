@@ -11,7 +11,7 @@
 
 static constexpr double ZOOM_MIN = 0.001;
 static constexpr double ZOOM_MAX = 6000000.0;
-static constexpr int PIXELSSTEPSFACTOR = 1;
+static constexpr int PIXELSSTEPSFACTOR = 5;
 
 using namespace au::projectscene;
 
