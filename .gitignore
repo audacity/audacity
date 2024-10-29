@@ -236,6 +236,7 @@ vtest/Thumbnails
 vtest/Pictures
 .vs
 dependencies
+.cache
 
 # Downloaded files during build process
 VERSION

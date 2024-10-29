@@ -142,21 +142,15 @@ void TracksListModel::addTrack(TrackTypes::Type type)
     }
 }
 
-void TracksListModel::duplicateTrack(int index)
+void TracksListModel::duplicateTrack(int row)
 {
-    UNUSED(index);
+    UNUSED(row);
     NOT_IMPLEMENTED;
 }
 
-void TracksListModel::deleteTrack(int index)
+void TracksListModel::openEffectsForTrack(int row)
 {
-    UNUSED(index);
-    NOT_IMPLEMENTED;
-}
-
-void TracksListModel::openEffectsForTrack(int index)
-{
-    UNUSED(index);
+    UNUSED(row);
     NOT_IMPLEMENTED;
 }
 

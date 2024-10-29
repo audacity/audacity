@@ -46,7 +46,7 @@ public:
     bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClipData(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
-    bool splitTracksAt(const TrackIdList &tracksIds, secs_t pivot) override;
+    bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateClip(const ClipKey& clipKey) override;
@@ -56,10 +56,13 @@ public:
     bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
+    muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+
     void newMonoTrack() override;
     void newStereoTrack() override;
     void newLabelTrack() override;
-    muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+    void deleteTracks(const TrackIdList& trackIds) override;
+
     void undo() override;
     void redo() override;
 
@@ -67,8 +70,7 @@ private:
     au3::Au3Project& projectRef() const;
     TrackIdList pasteIntoNewTracks();
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
-    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId,
-                                                       size_t tracksNum) const;
+    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId, size_t tracksNum) const;
     muse::Ret canPasteClips(const TrackIdList& tracksIds,  secs_t begin) const;
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
