@@ -15,6 +15,7 @@
 #include "internal/projectviewstatecreator.h"
 
 #include "view/common/tracksviewstatemodel.h"
+#include "view/common/customcursor.h"
 
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/toolbars/undoredotoolbarmodel.h"
@@ -92,6 +93,7 @@ void ProjectSceneModule::registerUiTypes()
 
     // common
     qmlRegisterType<TracksViewStateModel>("Audacity.ProjectScene", 1, 0, "TracksViewStateModel");
+    qmlRegisterType<CustomCursor>("Audacity.ProjectScene", 1, 0, "CustomCursor");
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");

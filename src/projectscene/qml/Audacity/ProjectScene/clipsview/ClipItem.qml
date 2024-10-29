@@ -53,6 +53,11 @@ Rectangle {
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
 
+    readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
+    readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
+    readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
+    readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
+
     function editTitle() {
         editLoader.edit(titleLabel.text)
     }
@@ -93,6 +98,111 @@ Rectangle {
 
         onPositionChanged: {
             clipItemMousePositionChanged(mouseX, mouseY)
+        }
+    }
+
+    CustomCursor {
+        id: customCursor
+        active: leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
+        source: leftTrimStretchEdgeHover.containsMouse ? leftTrimShape : rightTrimShape
+    }
+
+    MouseArea {
+        id: leftTrimStretchEdgeHover
+
+        x: root.x
+        z: headerDragArea.z + 1
+        width: 5
+        height: !root.collapsed ? root.height / 3 : root.height / 2
+
+        anchors.top: root.top
+
+        hoverEnabled: true
+        visible: !root.clipSelected
+
+        cursorShape: Qt.BlankCursor
+
+        onPressed: function(e) {
+            root.clipStartEditRequested()
+        }
+
+        onReleased: function(e) {
+            if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
+                //! TODO AU4: stretch request
+            } else {
+                root.clipLeftTrimRequested(true)
+            }
+
+            // this needs to be always at the very end
+            root.clipEndEditRequested()
+        }
+
+        onPositionChanged: function(e) {
+            clipItemMousePositionChanged(e.x, e.y)
+
+            if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
+                if (customCursor.source !== leftStretchShape) {
+                    customCursor.source = leftStretchShape
+                }
+                //! TODO AU4: stretch request
+            } else {
+                if (customCursor.source !== leftTrimShape) {
+                    customCursor.source = leftTrimShape
+                }
+                if (pressed) {
+                    root.clipLeftTrimRequested(false)
+                }
+            }
+        }
+    }
+
+    MouseArea {
+        id: rightTrimStretchEdgeHover
+
+        x: root.width - 5
+        z: headerDragArea.z + 1
+        width: 5
+        height: !root.collapsed ? root.height / 3 : root.height / 2
+
+        anchors.top: root.top
+
+        hoverEnabled: true
+        visible: !root.clipSelected
+
+        cursorShape: Qt.BlankCursor
+
+        onPressed: function(e) {
+            root.clipStartEditRequested()
+        }
+
+        onReleased: function(e) {
+            if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
+                //! TODO AU4: stretch request
+            } else {
+                root.clipRightTrimRequested(true)
+            }
+
+            // this needs to be always at the very end
+            root.clipEndEditRequested()
+        }
+
+        onPositionChanged: function(e) {
+            let mousePos = mapToItem(root, e.x, e.y)
+            clipItemMousePositionChanged(mousePos.x, mousePos.y)
+
+            if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
+                if (customCursor.source !== rightStretchShape) {
+                    customCursor.source = rightStretchShape
+                }
+                //! TODO AU4: stretch request
+            } else {
+                if (customCursor.source !== rightTrimShape) {
+                    customCursor.source = rightTrimShape
+                }
+                if (pressed) {
+                    root.clipRightTrimRequested(false)
+                }
+            }
         }
     }
 
