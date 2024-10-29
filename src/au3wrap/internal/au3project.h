@@ -16,8 +16,6 @@ public:
 
     Au3ProjectAccessor();
 
-    static std::shared_ptr<Au3ProjectAccessor> create();
-
     void open() override;
     bool load(const muse::io::path_t& filePath) override;
     bool save(const muse::io::path_t& fileName) override;
@@ -30,7 +28,7 @@ public:
 
 private:
 
-    std::shared_ptr<Au3ProjectData> m_data;
+    const std::shared_ptr<Au3ProjectData> m_data;
     Observer::Subscription mTrackListSubstription;
 };
 

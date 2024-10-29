@@ -28,7 +28,7 @@ using namespace au::au3;
 
 std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
 {
-    return Au3ProjectAccessor::create();
+    return std::make_shared<Au3ProjectAccessor>();
 }
 
 struct au::au3::Au3ProjectData
@@ -39,15 +39,18 @@ struct au::au3::Au3ProjectData
 };
 
 Au3ProjectAccessor::Au3ProjectAccessor()
+    : m_data(std::make_shared<Au3ProjectData>())
 {
-    m_data = std::make_shared<Au3ProjectData>();
-}
-
-std::shared_ptr<Au3ProjectAccessor> Au3ProjectAccessor::create()
-{
-    std::shared_ptr<Au3ProjectAccessor> p = std::make_shared<Au3ProjectAccessor>();
-    p->m_data->project = Au3Project::Create();
-    return p;
+    m_data->project = Au3Project::Create();
+    mTrackListSubstription = Au3TrackList::Get(m_data->projectRef()).Subscribe([this](const TrackListEvent& event)
+    {
+        if (event.mType == TrackListEvent::ADDITION) {
+            const auto tempo = ProjectTimeSignature::Get(m_data->projectRef()).GetTempo();
+            if (const auto track = event.mpTrack.lock()) {
+                DoProjectTempoChange(*track, tempo);
+            }
+        }
+    });
 }
 
 void Au3ProjectAccessor::open()
@@ -58,17 +61,6 @@ void Au3ProjectAccessor::open()
 
 bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
 {
-    Au3TrackList& tracks = Au3TrackList::Get(m_data->projectRef());
-    mTrackListSubstription = tracks.Subscribe([this](const TrackListEvent& event)
-    {
-        if (event.mType == TrackListEvent::ADDITION) {
-            const auto tempo = ProjectTimeSignature::Get(m_data->projectRef()).GetTempo();
-            if (const auto track = event.mpTrack.lock()) {
-                DoProjectTempoChange(*track, tempo);
-            }
-        }
-    });
-
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     std::string sstr = filePath.toStdString();
     FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
@@ -94,6 +86,7 @@ bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
 
     //! TODO Look like, need doing all from method  ProjectFileManager::FixTracks
     //! and maybe what is done before this method (ProjectFileManager::ReadProjectFile)
+    Au3TrackList& tracks = Au3TrackList::Get(m_data->projectRef());
     for (auto pTrack : tracks) {
         pTrack->LinkConsistencyFix();
     }
