@@ -344,7 +344,7 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
 
 void PluginRegistrationDialog::OnGetMoreEffects(wxCommandEvent& WXUNUSED(evt))
 {
-   OpenInDefaultBrowser("https://www.musehub.com");
+   OpenInDefaultBrowser("https://www.audacityteam.org/mh-pluginmanager");
 }
 
 void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
