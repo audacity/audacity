@@ -32,5 +32,14 @@
         <file>qml/Audacity/ProjectScene/clipsview/ClipItemSmall.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipHandles.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ChannelSplitter.qml</file>
+        <file>images/customCursorShapes/ClipStretchBoth.png</file>
+        <file>images/customCursorShapes/ClipStretchLeft.png</file>
+        <file>images/customCursorShapes/ClipStretchRight.png</file>
+        <file>images/customCursorShapes/ClipTrimBoth.png</file>
+        <file>images/customCursorShapes/ClipTrimLeft.png</file>
+        <file>images/customCursorShapes/ClipTrimRight.png</file>
+        <file>images/customCursorShapes/IBeamCursor.png</file>
+        <file>images/customCursorShapes/SelectionLeft.png</file>
+        <file>images/customCursorShapes/SelectionRight.png</file>
     </qresource>
 </RCC>
