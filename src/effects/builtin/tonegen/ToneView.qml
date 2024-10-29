@@ -21,6 +21,10 @@ EffectBase {
     width: 370
     height: 200
 
+    function preview() {
+        tone.preview()
+    }
+
     ToneViewModel {
         id: tone
     }
