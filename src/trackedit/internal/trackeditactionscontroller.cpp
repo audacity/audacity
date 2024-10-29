@@ -84,6 +84,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, NEW_MONO_TRACK, this, &TrackeditActionsController::newMonoTrack);
     dispatcher()->reg(this, NEW_STEREO_TRACK, this, &TrackeditActionsController::newStereoTrack);
     dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
+    dispatcher()->reg(this, "track-delete", this, &TrackeditActionsController::deleteTracks);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
@@ -141,7 +142,7 @@ void TrackeditActionsController::doGlobalSplitCut()
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(SPLIT_CUT_SELECTED,
-                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
         return;
     }
 
@@ -162,7 +163,7 @@ void TrackeditActionsController::doGlobalSplitDelete()
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(SPLIT_DELETE_SELECTED,
-                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
         return;
     }
 
@@ -354,7 +355,7 @@ void TrackeditActionsController::paste()
     }
 }
 
-void TrackeditActionsController::trackSplit(const ActionData &args)
+void TrackeditActionsController::trackSplit(const ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
@@ -386,7 +387,7 @@ void TrackeditActionsController::tracksSplitAt(const ActionData& args)
     trackeditInteraction()->splitTracksAt(tracksIds, playbackPosition);
 }
 
-void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::ActionData &args)
+void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
@@ -404,7 +405,7 @@ void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::Actio
     trackeditInteraction()->mergeSelectedOnTracks(tracksIds, begin, end);
 }
 
-void TrackeditActionsController::duplicateSelected(const muse::actions::ActionData &args)
+void TrackeditActionsController::duplicateSelected(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
@@ -421,7 +422,7 @@ void TrackeditActionsController::duplicateSelected(const muse::actions::ActionDa
     trackeditInteraction()->duplicateSelectedOnTracks(tracksIds, begin, end);
 }
 
-void TrackeditActionsController::duplicateClip(const muse::actions::ActionData &args)
+void TrackeditActionsController::duplicateClip(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
@@ -431,7 +432,7 @@ void TrackeditActionsController::duplicateClip(const muse::actions::ActionData &
     trackeditInteraction()->duplicateClip(clipKey);
 }
 
-void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData &args)
+void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
@@ -446,7 +447,7 @@ void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData &a
     trackeditInteraction()->clipSplitCut(clipKey);
 }
 
-void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData &args)
+void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
@@ -460,7 +461,7 @@ void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData
     trackeditInteraction()->clipSplitDelete(clipKey);
 }
 
-void TrackeditActionsController::splitCutSelected(const muse::actions::ActionData &args)
+void TrackeditActionsController::splitCutSelected(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
@@ -480,7 +481,7 @@ void TrackeditActionsController::splitCutSelected(const muse::actions::ActionDat
     selectionController()->resetDataSelection();
 }
 
-void TrackeditActionsController::splitDeleteSelected(const muse::actions::ActionData &args)
+void TrackeditActionsController::splitDeleteSelected(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
@@ -544,6 +545,17 @@ void TrackeditActionsController::newStereoTrack()
 void TrackeditActionsController::newLabelTrack()
 {
     trackeditInteraction()->newLabelTrack();
+}
+
+void TrackeditActionsController::deleteTracks(const muse::actions::ActionData& args)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->deleteTracks(trackIds);
 }
 
 void TrackeditActionsController::trimAudioOutsideSelection()

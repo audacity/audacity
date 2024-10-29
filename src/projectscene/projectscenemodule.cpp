@@ -19,6 +19,7 @@
 #include "view/toolbars/projecttoolbarmodel.h"
 
 #include "view/trackspanel/trackslistmodel.h"
+#include "view/trackspanel/trackcontextmenumodel.h"
 
 #include "view/clipsview/trackslistclipsmodel.h"
 #include "view/clipsview/clipslistmodel.h"
@@ -101,6 +102,7 @@ void ProjectSceneModule::registerUiTypes()
 
     // tracks panel
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
+    qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");
 
     // clips view
     qmlRegisterType<TracksListClipsModel>("Audacity.ProjectScene", 1, 0, "TracksListClipsModel");
