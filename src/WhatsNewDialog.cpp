@@ -320,5 +320,5 @@ void WhatsNewDialog::OnWatchReleaseVideo(wxCommandEvent& evt)
 
 void WhatsNewDialog::OnGoToMuseHub(wxCommandEvent& evt)
 {
-   OpenInDefaultBrowser(PromoURL);
+   OpenInDefaultBrowser(MuseHubURL);
 }
