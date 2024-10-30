@@ -124,6 +124,20 @@ Item {
                 collapsed: trackViewState.isTrackCollapsed
                 channelHeightRatio: root.channelHeightRatio
                 showChannelSplitter: isStereo
+                distanceToLeftNeighbor: {
+                    let leftNeighbor = clipsModel.prev(clipItem.key)
+                    if (!leftNeighbor) {
+                        return -1
+                    }
+                    return clipItem.x - (leftNeighbor.x + leftNeighbor.width)
+                }
+                distanceToRightNeighbor: {
+                    let rightNeighbor = clipsModel.next(clipItem.key)
+                    if (!rightNeighbor) {
+                        return -1
+                    }
+                    return rightNeighbor.x - (clipItem.x + clipItem.width)
+                }
 
                 onClipStartEditRequested: function() {
                     clipsModel.startEditClip(clipItem.key)

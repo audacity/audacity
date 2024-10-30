@@ -23,6 +23,9 @@ Rectangle {
     property int selectionStart: 0
     property int selectionWidth: 0
 
+    property real distanceToLeftNeighbor: -1
+    property real distanceToRightNeighbor: -1
+
     property real leftVisibleMargin: 0
     property real rightVisibleMargin: 0
 
@@ -110,9 +113,9 @@ Rectangle {
     MouseArea {
         id: leftTrimStretchEdgeHover
 
-        x: root.x
+        x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
+        width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
         z: headerDragArea.z + 1
-        width: 5
         height: !root.collapsed ? root.height / 3 : root.height / 2
 
         anchors.top: root.top
@@ -161,7 +164,7 @@ Rectangle {
 
         x: root.width - 5
         z: headerDragArea.z + 1
-        width: 5
+        width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5): 11
         height: !root.collapsed ? root.height / 3 : root.height / 2
 
         anchors.top: root.top

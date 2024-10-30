@@ -177,6 +177,10 @@ void ClipsListModel::update()
         isStereo |= c.stereo;
     }
 
+    std::sort(m_clipList.begin(), m_clipList.end(), [](ClipListItem* a, ClipListItem* b) {
+        return a->time().clipStartTime < b->time().clipStartTime;
+    });
+
     updateItemsMetrics();
 
     //! NOTE We need to update the selected item
@@ -299,6 +303,34 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
 {
     bool ok = trackeditInteraction()->changeClipTitle(key.key, newTitle);
     return ok;
+}
+
+QVariant ClipsListModel::next(const ClipKey &key) const
+{
+    return neighbor(key, 1);
+}
+
+QVariant ClipsListModel::prev(const ClipKey &key) const
+{
+    return neighbor(key, -1);
+}
+
+QVariant ClipsListModel::neighbor(const ClipKey& key, int offset) const
+{
+    auto it = std::find_if(m_clipList.begin(), m_clipList.end(), [key](ClipListItem* clip) {
+        return clip->key().key.clipId == key.key.clipId;
+    });
+
+    if (it == m_clipList.end()) {
+        return QVariant();
+    }
+
+    int sortedIndex = std::distance(m_clipList.begin(), it) + offset;
+    if (sortedIndex < 0 || sortedIndex >= m_clipList.size()) {
+        return QVariant();
+    }
+
+    return QVariant::fromValue(m_clipList[sortedIndex]);
 }
 
 void ClipsListModel::startEditClip(const ClipKey& key)

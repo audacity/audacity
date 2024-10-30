@@ -61,6 +61,9 @@ public:
     Q_INVOKABLE void resetSelectedClip();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
 
+    Q_INVOKABLE QVariant next(const ClipKey& key) const;
+    Q_INVOKABLE QVariant prev(const ClipKey& key) const;
+
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -95,6 +98,7 @@ private:
     void onClipRenameAction(const muse::actions::ActionData& args);
     ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
     int indexByKey(const trackedit::ClipKey& k) const;
+    QVariant neighbor(const ClipKey& key, int offset) const;
 
     double autoScrollView(double newTime);
 
