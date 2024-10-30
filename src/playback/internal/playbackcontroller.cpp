@@ -145,7 +145,7 @@ Channel<uint32_t> PlaybackController::midiTickPlayed() const
 
 float PlaybackController::playbackPositionInSeconds() const
 {
-    return secondsFromMilliseconds(m_currentPlaybackTimeMsecs);
+    return secondsFromMilliseconds(m_currentPlaybackTime);
 }
 
 muse::async::Channel<TrackId> PlaybackController::trackAdded() const
@@ -185,7 +185,7 @@ void PlaybackController::togglePlay()
     }
 
     if (isPlaying()) {
-        pause();
+        stop();
     } else if (isPaused()) {
         resume();
     } else {
@@ -232,7 +232,8 @@ void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
         return;
     }
 
-    double secs = args.arg<double>(0);
+    muse::secs_t secs = args.arg<double>(0);
+    m_lastPlaybackSeekTime = secs;
     player()->seek(secs);
 }
 
@@ -252,6 +253,8 @@ void PlaybackController::stop()
     }
 
     player()->stop();
+
+    seek(m_lastPlaybackSeekTime);
 }
 
 void PlaybackController::resume()
@@ -311,13 +314,13 @@ void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode
     m_actionCheckedChanged.send(actionCode);
 }
 
-void PlaybackController::setCurrentPlaybackTime(msecs_t msecs)
+void PlaybackController::setCurrentPlaybackTime(muse::secs_t msecs)
 {
-    if (m_currentPlaybackTimeMsecs == msecs) {
+    if (m_currentPlaybackTime == msecs) {
         return;
     }
 
-    m_currentPlaybackTimeMsecs = msecs;
+    m_currentPlaybackTime = msecs;
 
     m_playbackPositionChanged.notify();
 }

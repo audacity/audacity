@@ -26,7 +26,7 @@ Au3Player::Au3Player()
     : m_positionUpdateTimer(std::chrono::microseconds(1000))
 {
     m_positionUpdateTimer.onTimeout(this, [this]() {
-        updatePlaybackState();
+        updatePlaybackPosition();
     });
 
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
@@ -328,7 +328,7 @@ void Au3Player::resetLoop()
     NOT_IMPLEMENTED;
 }
 
-void Au3Player::updatePlaybackState()
+void Au3Player::updatePlaybackPosition()
 {
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isActive = AudioIO::Get()->IsStreamActive(token);
@@ -338,9 +338,6 @@ void Au3Player::updatePlaybackState()
 
     if (isActive) {
         m_playbackPosition.set(std::max(0.0, time));
-    } else {
-        m_playbackPosition.set(0.0);
-        stop();
     }
 }
 
