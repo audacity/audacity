@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-29 13:23+0100\n"
+"POT-Creation-Date: 2024-10-30 09:34+0100\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jean-Louis Waltener, 2024\n"
 "Language-Team: French (https://app.transifex.com/audacity/teams/164520/fr/)\n"
@@ -54,7 +54,7 @@ msgstr "Répéter %s"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "Le flux est actif … incapable de recueillir de l’information.\n"
+msgstr "Le flux est actif... impossible de recueillir des informations.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -77,7 +77,7 @@ msgstr "Aucun périphérique trouvé\n"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
-msgstr "Information de périphérique non disponible pour : %d\n"
+msgstr "Informations de périphérique non disponible pour : %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -176,7 +176,7 @@ msgstr "Impossible d’ouvrir Portmixer\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available mixers:\n"
-msgstr "Mixeurs disponibles : \n"
+msgstr "Mélangeurs disponibles :\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -688,7 +688,7 @@ msgstr "100Hz Grondement"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "AM Radio"
-msgstr "Radio grand-onde"
+msgstr "Radio AM"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Bass Boost"
@@ -700,7 +700,7 @@ msgstr "Coupure basse"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Low rolloff for speech"
-msgstr "Petit dérapage pour les discours"
+msgstr "Rolloff bas pour la parole"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "RIAA"
@@ -1402,7 +1402,7 @@ msgstr "Échec de la désérialisation de la réponse"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Glue Compressor"
-msgstr "Compresseur à colle"
+msgstr "Glue Compressor"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1848,7 +1848,7 @@ msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Importing files"
-msgstr "Importer des fichiers"
+msgstr "Importation des fichiers"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -2326,7 +2326,7 @@ msgid ""
 "this is a bug, please tell us exactly where it occurred."
 msgstr ""
 "Il y a eu un problème lors de votre dernière action. Si vous pensez\n"
-"que c’est un bogue, merci de de décrire ce qui l’a produit."
+"que c’est un bug, merci de décrire ce qui l’a produit."
 
 #: libraries/lib-menus/CommandManager.cpp
 msgid "Disallowed"
@@ -2764,7 +2764,7 @@ msgstr "01000,01000 images|24"
 #. * Japanese TV, and very odd)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hh:mm:ss + NTSC drop frames"
-msgstr "hh:mm:ss + images NTSC manquantes"
+msgstr "hh:mm:ss + images Drop NTSC"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -2781,7 +2781,7 @@ msgstr "0100 h 060 m 060 s+>30 images|N"
 #. * Japanese TV, and doesn't quite match wall time
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hh:mm:ss + NTSC non-drop frames"
-msgstr "hh:mm:ss + images NTSC non-drop "
+msgstr "hh:mm:ss + images Non-drop NTSC"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
@@ -2844,7 +2844,7 @@ msgstr "01000,01000 images|25"
 #. * seconds and frames at CD Audio frame rate (75 frames per second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hh:mm:ss + CDDA frames (75 fps)"
-msgstr "hh:mm:ss + échantillons CDDA (75 i/s)"
+msgstr "hh:mm:ss + images CDDA (75 i/s)"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
@@ -2854,14 +2854,14 @@ msgstr "hh:mm:ss + échantillons CDDA (75 i/s)"
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
-msgstr "0100 h 060 m 060 s+>75 échantillons"
+msgstr "0100 h 060 m 060 s+>75 images"
 
 #. i18n-hint: Name of time display format that shows time in frames at CD
 #. * Audio frame rate (75 frames per second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "CDDA frames (75 fps)"
-msgstr "échantillons CDDA (75 i/s)"
+msgstr "Images CDDA (75 i/s)"
 
 #. i18n-hint: Format string for displaying time in frames with CD Audio
 #. * frames. Change the comma
@@ -2869,7 +2869,7 @@ msgstr "échantillons CDDA (75 i/s)"
 #. * translate 'frames' and leave the rest alone
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000,01000 frames|75"
-msgstr "01000,01000 échantillons|75"
+msgstr "01000,01000 images|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
@@ -2984,7 +2984,7 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
-"Pour utiliser les 'Effets spectraux', activez la 'Sélection spectrale\n"
+"Pour utiliser les 'Effets spectraux', activez la 'Sélection spectrale'\n"
 "dans les paramètres du Spectrogramme de piste et sélectionnez la\n"
 "plage de fréquences sur laquelle l'effet doit agir."
 
@@ -3656,23 +3656,23 @@ msgstr "1/128 (triolets)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "Video frames"
-msgstr "Trames vidéo"
+msgstr "Images vidéo"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "Film frames (24 fps)"
-msgstr "Trames de film (24 i/s)"
+msgstr "Images film (24 i/s)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "NTSC frames (29.97 fps)"
-msgstr "Trames NTSC (29,97 i/s)"
+msgstr "Images NTSC (29,97 i/s)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "NTSC frames (30 fps)"
-msgstr "Trames NTSC (30 i/s)"
+msgstr "Images NTSC (30 i/s)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
 msgid "CD frames"
-msgstr "Trames CD"
+msgstr "Images CD"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 msgid "Seconds && samples"
@@ -3837,11 +3837,11 @@ msgstr "Erreur inconnue"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
-msgstr "Couper/copier/coller"
+msgstr "Couper / Copier / Coller"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr "Barre d'outils &Couper/copier/coller"
+msgstr "Barre d'outils &Couper / Copier / Coller"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -4049,7 +4049,7 @@ msgstr "Personnalisé"
 
 #: libraries/lib-time-frequency-selection/ViewInfo.cpp
 msgid "Enable &Looping"
-msgstr "Activation du bouc&lage"
+msgstr "Activer la lecture en bouc&le"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Time track.
@@ -4118,7 +4118,7 @@ msgstr "Erreur lors de la sauvegarde des préréglages de l’effet"
 #: libraries/lib-vst/VSTWrapper.cpp
 #, c-format
 msgid "This parameter file was saved from %s. Continue?"
-msgstr "Ce fichier de paramètre a été sauvegardé à partir de %s. Continuer ?"
+msgstr "Ce fichier de paramètre a été enregistré à partir de %s. Continuer ?"
 
 #: libraries/lib-vst/VSTWrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
@@ -4268,15 +4268,15 @@ msgstr "-48 dB (amplitude PCM en échantillonnage 8 bits)"
 
 #: libraries/lib-wave-track-settings/WaveformSettings.cpp
 msgid "-60 dB (PCM range of 10 bit samples)"
-msgstr "-60 dB (amplitude PCM d’échantillon 10 bits)"
+msgstr "-60 dB (amplitude PCM en échantillonnage 10 bits)"
 
 #: libraries/lib-wave-track-settings/WaveformSettings.cpp
 msgid "-72 dB (PCM range of 12 bit samples)"
-msgstr "-72 dB (amplitude PCM d’échantillon 12 bits)"
+msgstr "-72 dB (amplitude PCM en échantillonnage 12 bits)"
 
 #: libraries/lib-wave-track-settings/WaveformSettings.cpp
 msgid "-84 dB (PCM range of 14 bit samples)"
-msgstr "-84 dB (amplitude PCM d’échantillon 14 bits)"
+msgstr "-84 dB (amplitude PCM en échantillonnage 14 bits)"
 
 #: libraries/lib-wave-track-settings/WaveformSettings.cpp
 msgid "-96 dB (PCM range of 16 bit samples)"
@@ -4542,7 +4542,7 @@ msgstr "Afficher le journal pour les détails"
 #: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
-msgstr "Valider"
+msgstr "OK"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
@@ -4912,7 +4912,7 @@ msgstr "Sortie de la commande"
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
 #: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
-msgstr "Valider (&o)"
+msgstr "&OK"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -5133,7 +5133,7 @@ msgstr "FFmpeg : ERREUR - Ne peut allouer des octets pour le tampon d’échanti
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
-msgstr "FFmpeg : - ERREUR - Ne peut pas paramétrer la trame audio"
+msgstr "FFmpeg : - ERREUR - Impossible de configurer la trame audio"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - encoding frame failed"
@@ -7198,7 +7198,7 @@ msgstr "Toujours dem&ander"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always &save to cloud"
-msgstr "Toujours enregistrer dans le cloud"
+msgstr "Toujours enregi&strer dans le cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always save to the co&mputer"
@@ -7270,13 +7270,13 @@ msgstr "Une fois que vous avez rendu l'espace de stockage disponible sur audio.c
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
-msgstr "Partager l’audio"
+msgstr "Partager l’Audio"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 msgid "&Share Audio Toolbar"
-msgstr "&Partager la barre audio"
+msgstr "Barre d’outils &Partager l'audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "Account not linked"
@@ -7456,7 +7456,7 @@ msgstr "Jeton"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp
 msgid "C&ontinue"
-msgstr "C&ontinuez"
+msgstr "C&ontinuer"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
@@ -7475,8 +7475,8 @@ msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
-"Oups ! Il semble qu'il y ait eu un problème avec votre saisie.\n"
-"Veuillez vous assurer que votre adresse e-mail est correcte et que votre mot de passe comporte au moins 8 caractères"
+"Oups ! Il semble qu'il y ait eu un problème avec votre saisie.\n"
+"Veuillez vous assurer que votre adresse e-mail est correcte et que votre mot de passe comporte au moins 8 caractères"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7516,7 +7516,7 @@ msgstr "Mot de passe oublié ?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr "Vous avez déjà un compte ? "
+msgstr "Avez-vous déjà un compte ? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
@@ -7861,7 +7861,7 @@ msgid ""
 "Do you want to continue?"
 msgstr ""
 "Vous avez sélectionné un nom de fichier comportant une extension inconnue.\n"
-"Souhaitez-vous continuer ?"
+"Voulez-vous continuer ?"
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Export MIDI"
@@ -7959,13 +7959,13 @@ msgstr "%s, documentation et support"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s, testeur qualité, documentation et support"
+msgstr "%s, testeur assurance qualité, documentation et support"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
-msgstr "%s, documentation et support, français"
+msgstr "%s, documentation et support, Français"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -8019,7 +8019,7 @@ msgstr "%s, graphiques"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, effects presets"
-msgstr "%s, effets presets"
+msgstr "%s, presets effets"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -8040,9 +8040,8 @@ msgstr "À propos d’%s"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"Traduction française par Jean-Louis Waltener :\n"
-"https://app.transifex.com/user/profile/JLWaltener\n"
-"Précédents traducteurs en français : Christian Brochec, Olivier Humbert."
+"Traduction Française par Jean-Louis Waltener :\n"
+"https://app.transifex.com/user/profile/JLWaltener"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8052,7 +8051,7 @@ msgstr "<h3>"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s the free, open source, cross-platform software for recording and editing sounds."
-msgstr "%s est un logiciel libre, à source ouverte, multi-plateformes pour l’enregistrement et l’édition de sons."
+msgstr "%s est un logiciel gratuit, open source, multi-plateformes pour l’enregistrement et l’édition de sons."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -8066,13 +8065,13 @@ msgstr "Développeurs de l’équipe d’%s"
 
 #: src/AboutDialog.cpp
 msgid "Emeritus:"
-msgstr "Émérite :"
+msgstr "Émérites :"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr "Éminent membres de l’équipe d’%s, inactif actuellement"
+msgstr "Membres éminents de l'équipe d'%s, actuellement inactifs"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -8260,7 +8259,7 @@ msgstr "Support de greffon"
 
 #: src/AboutDialog.cpp
 msgid "Sound card mixer support"
-msgstr "Support du mixeur de carte-son"
+msgstr "Support du mélangeur de carte son"
 
 #: src/AboutDialog.cpp
 msgid "Pitch and Tempo Change support"
@@ -8298,7 +8297,7 @@ msgstr "Voir %s pour plus d'info."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to define a looping region."
-msgstr "Cliquer et glisser pour définit la région de boucle."
+msgstr "Cliquer et glisser pour définir la région de lecture en boucle."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
@@ -8316,7 +8315,7 @@ msgstr "Tête d'enregistrement / lecture"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
-msgstr "Ligne temporelle"
+msgstr "Timeline"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -8394,7 +8393,7 @@ msgstr "Battements et mesures"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Setting a loop region also makes an audio selection"
-msgstr "La définition d'une région de boucle effectue également une sélection audio"
+msgstr "Définir une région de lecture en boucle effectue également une sélection audio"
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
@@ -8403,7 +8402,7 @@ msgstr "Effacer la boucle"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Set Loop To Selection"
-msgstr "Régler la boucle sur la sélection"
+msgstr "Définir la lecture en boucle sur la sélection"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Scroll view to playhead"
@@ -8694,7 +8693,7 @@ msgstr ""
 "\n"
 "Vous pouvez essayer de corriger le problème et cliquer ensuite sur \"Réessayer\" pour continuer.\n"
 "\n"
-"Si vous choisissez de \"Quitter Audacity\", votre projet pourrait être laissé dans un état non sauvegardé qui sera récupéré la prochaine fois que vous l’ouvrirez."
+"Si vous choisissez de \"Quitter Audacity\", votre projet pourrait être laissé dans un état non enregistré qui sera récupéré la prochaine fois que vous l’ouvrirez."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
@@ -9920,7 +9919,7 @@ msgstr "Les raccourcis ont été supprimés"
 #: src/MixerBoard.cpp
 #, c-format
 msgid "Audacity Mixer%s"
-msgstr "Mixeur%s d’Audacity"
+msgstr "Mélangeur%s d’Audacity"
 
 #. i18n-hint: title of the Volume slider, used to adjust the volume
 #. i18n-hint: Title of the Volume slider, used to adjust the volume
@@ -9984,7 +9983,7 @@ msgstr "Curseur de panoramique déplacé"
 
 #: src/MixerBoard.cpp
 msgid "&Mixer"
-msgstr "&Mixeur"
+msgstr "&Mélangeur"
 
 #: src/PluginDataModel.cpp
 #, c-format
@@ -10134,7 +10133,7 @@ msgstr "Fermer immédiatement le projet sans modification"
 
 #: src/ProjectFSCK.cpp
 msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
-msgstr "Continuer avec les réparations rapportées dans le journal, et rechercher d’autres erreurs. Ceci sauvegardera le projet dans son état actuel, à moins de \"Fermer le projet immédiatement\" lors de prochaines alertes d’erreur."
+msgstr "Continuer avec les réparations rapportées dans le journal, et rechercher d’autres erreurs. Ceci enregistrera le projet dans son état actuel, à moins de \"Fermer le projet immédiatement\" lors de prochaines alertes d’erreur."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -10237,7 +10236,7 @@ msgid ""
 msgstr ""
 "La vérification du projet du dossier \"%s\" \n"
 "a détecté %lld fichier(s)-bloc (.au) de données audio manquantes. \n"
-"probablement à cause d’un bogue, d’un plantage du système, ou d’un \n"
+"probablement à cause d’un bug, d’un plantage du système, ou d’un \n"
 "effacement accidentel. Audacity ne peut pas récupérer \n"
 "ces fichiers manquants automatiquement. \n"
 "\n"
@@ -10847,7 +10846,7 @@ msgstr ""
 
 #: src/SpectralDataDialog.cpp
 msgid "Spectra&l Selection Panel"
-msgstr "Panneux de sélection spectra&le"
+msgstr "Panneau de sélection spectra&le"
 
 #: src/SpectralDataManager.cpp
 msgid "Applied effect to selection"
@@ -10927,11 +10926,11 @@ msgstr "Impossible de sauvegarder le fichier de genre."
 
 #: src/TagsEditor.cpp
 msgid "Reset Genres"
-msgstr "Rétablir les genres"
+msgstr "Réinitialiser les genres"
 
 #: src/TagsEditor.cpp
 msgid "Are you sure you want to reset the genre list to defaults?"
-msgstr "Voulez-vous vraiment réinitialiser la liste de genre ?"
+msgstr "Voulez-vous vraiment réinitialiser la liste de genre à la valeur par défaut ?"
 
 #: src/TagsEditor.cpp
 msgid "Unable to open genre file."
@@ -11325,7 +11324,7 @@ msgstr "Modifier les &métadonnées…"
 
 #: src/TimerRecordExportDialog.cpp
 msgid "O&K"
-msgstr "&Valider"
+msgstr "O&K"
 
 #: src/TimerRecordExportDialog.cpp src/export/ExportAudioDialog.cpp
 msgid "Exported Tags"
@@ -11509,7 +11508,7 @@ msgstr "Quoi de neuf dans Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "Regardez la [[%s|vidéo]] ou lisez le [[%s|journal des modifications]] pour en savoir plus sur ce que nous avons inclus dans la dernière version !</p>"
+msgstr "Regardez la [[%s|vidéo]] ou lisez le [[%s|journal des modifications]] pour savoir ce que nous avons inclus dans la dernière version !</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -13321,8 +13320,8 @@ msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
 msgstr ""
-"Renommer 'sans nom' pour sauvegarder une nouvelle entrée.\n"
-"'Valider' sauvegarde toutes les modifications, 'Annuler' aucune."
+"Renommer 'sans nom' pour enregistrer une nouvelle entrée.\n"
+"'OK' enregistre toutes les modifications, 'Annuler' ne les enregistre pas."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "'unnamed' always stays at the bottom of the list"
@@ -13737,7 +13736,7 @@ msgid ""
 "filtered out, and then click 'OK' to reduce noise.\n"
 msgstr ""
 "Sélectionnez toute l’audio devant être filtrée, choisissez la quantité de\n"
-"bruit que vous souhaitez retirer, et cliquez sur 'Valider' pour réduire le bruit.\n"
+"bruit que vous souhaitez retirer, et cliquez sur 'OK' pour réduire le bruit.\n"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Noise:"
@@ -13975,7 +13974,7 @@ msgstr "Wet &Gain (dB) :"
 
 #: src/effects/Reverb.cpp
 msgid "Dr&y Gain (dB):"
-msgstr "Gain Dr&y (dB) :"
+msgstr "Dr&y Gain (dB):"
 
 #: src/effects/Reverb.cpp
 msgid "Stereo Wid&th (%):"
@@ -14761,7 +14760,7 @@ msgstr "Canaux de sortie : %2d"
 
 #: src/export/ExportMixerDialog.cpp
 msgid "Mixer Panel"
-msgstr "Panneau de mixage"
+msgstr "Panneau du mélangeur"
 
 #: src/export/ExportMixerPanel.cpp
 #, c-format
@@ -15192,7 +15191,7 @@ msgstr "Ext&ra"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Enable &Full Screen"
-msgstr "Activer l'écran total"
+msgstr "Activer le Plein écran"
 
 #: src/menus/FileMenus.cpp
 msgid "Cannot proceed to export."
@@ -15602,19 +15601,19 @@ msgstr "Déplacement avant entre barre d’&outils et pistes"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Previous Track"
-msgstr "Déplacer la visée sur la piste &précédente"
+msgstr "Déplacer le focus vers la piste &précédente"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Next Track"
-msgstr "Déplacer la visée sur la piste suiva&nte"
+msgstr "Déplacer le focus vers la piste suiva&nte"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &First Track"
-msgstr "Déplacer la visée sur la première piste (&f)"
+msgstr "Déplacer le &focus vers la première piste"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to &Last Track"
-msgstr "Déplacer la visée sur &la dernière piste"
+msgstr "Déplacer le focus vers &la dernière piste"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to P&revious and Select"
@@ -15682,7 +15681,7 @@ msgstr "&Outils"
 
 #: src/menus/PluginMenus.cpp
 msgid "Reset &Configuration"
-msgstr "&Configuration de réinitialisation"
+msgstr "Réinitialiser la &configuration"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Run Benchmark..."
@@ -16372,19 +16371,19 @@ msgstr "Supprimer la piste qui a le fo&cus"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track U&p"
-msgstr "Déplacer la piste visée vers le ha&ut"
+msgstr "Déplacer la piste qui a le focus vers le ha&ut"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track Do&wn"
-msgstr "Déplacer la piste visée vers le bas (&w)"
+msgstr "Déplacer la piste qui à le focus vers le bas (&w)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track to T&op"
-msgstr "Déplacer la piste visée t&out en haut"
+msgstr "Déplacer la piste qui a le focus t&out en haut"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track to &Bottom"
-msgstr "Déplacer la piste visée tout en &bas"
+msgstr "Déplacer la piste qui a le focus tout en &bas"
 
 #: src/menus/TransportMenus.cpp
 msgid "no label track"
@@ -16412,12 +16411,12 @@ msgstr "pas de marqueur dans la piste de marqueurs"
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &In"
-msgstr "Paramétrer le zoom a&vant"
+msgstr "Définir le début de lecture en boucle"
 
 #. i18n-hint Sets an ending point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &Out"
-msgstr "Paramétrer le zoom a&rrière"
+msgstr "Définir la fin de lecture en boucle"
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
@@ -16486,15 +16485,15 @@ msgstr "Enregistrement punch & roll"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Looping"
-msgstr "Bouclage"
+msgstr "Lecture en bouc&le"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Clear Loop"
-msgstr "Effacer la bou&cle"
+msgstr "Effacer la bou&cle de lecture"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Set Loop to Selection"
-msgstr "Paramétrer la boucle sur la sélection"
+msgstr "Définir la lecture en boucle sur la &sélection"
 
 #: src/menus/TransportMenus.cpp src/toolbars/AudioSetupToolBar.cpp
 msgid "R&escan Audio Devices"
@@ -16743,7 +16742,7 @@ msgstr "Ca&naux :"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "&Project Sample Rate:"
-msgstr "Taux d’échantillonnage du &projet :"
+msgstr "Taux d’échantillonnage du &Projet :"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
@@ -16999,7 +16998,7 @@ msgstr "&Utiliser SSE/SSE2/…/AVX"
 #: src/prefs/EffectsPrefs.cpp
 #, c-format
 msgid "%s plugin locations"
-msgstr "Emplacement du greffon %s"
+msgstr "Emplacement des greffons %s"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Skip effects scanning at startup"
@@ -17111,7 +17110,7 @@ msgstr "Thèm&e :"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Meter dB &range:"
-msgstr "Plage en dB du mesu&reur :"
+msgstr "Plage en dB du VU-mèt&re :"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show 'How to Get &Help' at launch"
@@ -17351,11 +17350,12 @@ msgstr ""
 "\n"
 "\t%s\n"
 "\n"
-"Cliquez sur Valider pour plutôt assigner le raccourci à\n"
+"\n"
+"Cliquez sur OK pour assigner le raccourci à\n"
 "\n"
 "\t%s\n"
 "\n"
-"Sinon, cliquez sur Annuler."
+"à la place. Sinon, cliquez sur Annuler."
 
 #: src/prefs/KeyConfigPrefs.h
 msgid "Key Config"
@@ -17894,7 +17894,7 @@ msgstr "Toujours coller l'&audio en tant que nouveaux clips"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
-msgstr "Boucler \"Changer la &visée de piste\" "
+msgstr "\"Déplacer le focus de piste\" parcourt les pistes en boucle"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Type to create a label"
@@ -18053,7 +18053,7 @@ msgstr "Échelle de la fo&rme d’onde en dB :"
 #. i18n-hint: Audio setup button text, keep as short as possible
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "Audio Setup"
-msgstr "Paramètre audio"
+msgstr "Config. Audio"
 
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
@@ -18088,7 +18088,7 @@ msgstr "2 canaux d’enregistrement (stéréo)"
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Setup Toolbar"
-msgstr "Barre de paramètre &audio"
+msgstr "Barre d'outils de configuration &Audio"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
@@ -18153,7 +18153,7 @@ msgstr "%s."
 #. with the big buttons on it (play record etc)
 #: src/toolbars/ControlToolBar.cpp
 msgid "&Transport Toolbar"
-msgstr "Barre de &transport"
+msgstr "Barre d'outils de &Transport"
 
 #. i18n-hint: (noun) It's the device used for playback.
 #: src/toolbars/DeviceToolBar.cpp
@@ -18197,7 +18197,7 @@ msgstr "Information de périphérique non disponible."
 #. that manages devices
 #: src/toolbars/DeviceToolBar.cpp
 msgid "&Device Toolbar"
-msgstr "Barre de &périphériques"
+msgstr "Barre d'outils des &Périphériques"
 
 #: src/toolbars/DeviceToolBar.cpp
 msgid "De&vice"
@@ -18260,7 +18260,7 @@ msgstr "Édition"
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
 msgid "&Edit Toolbar"
-msgstr "Barr&e d’édition"
+msgstr "Barr&e d'outils d’Édition"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid " Monitoring "
@@ -18302,7 +18302,7 @@ msgstr "VU-mètre d’enregistrement"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Playback Meter"
-msgstr "Mesureur de lecture"
+msgstr "VU-mètre de lecture"
 
 #. i18n-hint: (noun) The meter that shows the loudness of the audio playing.
 #: src/toolbars/MeterToolBar.cpp
@@ -18318,23 +18318,23 @@ msgstr "VU-mètre de lecture"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Recording Meter"
-msgstr "Mesureur d’enregistrement"
+msgstr "VU-mètre d’enregistrement"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Combined Meter"
-msgstr "Mesureur combiné"
+msgstr "VU-mètre combiné"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Recording Meter Toolbar"
-msgstr "Barre de mesure d’enregist&rement"
+msgstr "Barre d'outils du VU-mètre d’enregist&rement"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "&Playback Meter Toolbar"
-msgstr "Barre de mesure de lecture (&p)"
+msgstr "Barre d'outils du VU-mètre de lecture (&p)"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Mi&xer"
-msgstr "Barre de mi&xeur"
+msgstr "Mélangeur"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Ad&just Playback Volume..."
@@ -18374,7 +18374,7 @@ msgstr "Centré"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Selection Toolbar Setup"
-msgstr "Paramétrage de la barre d'outil de sélection"
+msgstr "Configuration de la barre d'outils de Sélection"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and End of Selection"
@@ -18396,15 +18396,15 @@ msgstr "Durée et centre de la sélection"
 #. for selecting a time range of audio
 #: src/toolbars/SelectionBar.cpp
 msgid "&Selection Toolbar"
-msgstr "Barre de &sélection"
+msgstr "Barre d'outils de &Sélection"
 
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap"
-msgstr "Se coller à (magnétique)"
+msgstr "Ancrer"
 
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snapping"
-msgstr "Se coller à (magnétique)"
+msgstr "Ancrer à"
 
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
@@ -18415,7 +18415,7 @@ msgstr "Aligner sur la zone de liste déroulante"
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
 msgid "&Snapping Toolbar"
-msgstr "Barre d'outil magnétique"
+msgstr "Barre d'outil&s Ancrage"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18445,7 +18445,7 @@ msgstr "Bande passante"
 #. for selecting a frequency range of audio
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Barre de sélection spe&ctrale"
+msgstr "Barre d'outils de sélection Spe&ctrale"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Time Signature"
@@ -18479,7 +18479,7 @@ msgstr "Indication de mesure chiffre inférieur modifié"
 #. for selecting a time range of audio
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Time Signature Toolbar"
-msgstr "Barre d'outil d'Indication de mesure"
+msgstr "Barre d'outils d'Indication de mesure"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -18493,7 +18493,7 @@ msgstr "Position audio"
 #. for viewing actual time of the cursor
 #: src/toolbars/TimeToolBar.cpp
 msgid "&Time Toolbar"
-msgstr "Barre de &temps"
+msgstr "Barre d'outils de &Temps"
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -18534,7 +18534,7 @@ msgstr "Multi-outil"
 #. that has some tools in it
 #: src/toolbars/ToolsToolBar.cpp
 msgid "T&ools Toolbar"
-msgstr "Barre d’&outils"
+msgstr "Barre d'outils des &Outils"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "&Selection Tool"
@@ -18578,7 +18578,7 @@ msgstr "Lecture-à-la-vitesse une fois"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Pla&y-at-Speed Toolbar"
-msgstr "Outils de lecture-à-la-vitesse (&y)"
+msgstr "Barre d'outils de Lecture-à-la-vitesse (&y)"
 
 #. i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.
 #: src/toolbars/TranscriptionToolBar.cpp
@@ -19547,7 +19547,7 @@ msgstr "Cliquer et glisser pour sélectionner l’audio"
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
-msgstr "(magnétique)"
+msgstr "(ancrer à)"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
 msgid "Click and drag to move a track in time"
@@ -19823,11 +19823,11 @@ msgstr "Activer le monitoring silencieux"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Recording Meter Options"
-msgstr "Options des mesureurs d’enregistrement"
+msgstr "Options du VU-mètre d’enregistrement"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Playback Meter Options"
-msgstr "Options des mesureurs de lecture"
+msgstr "Options du VU-mètre de lecture"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Refresh Rate"
@@ -19839,29 +19839,29 @@ msgid ""
 "changes. A rate of 30 per second or less should prevent\n"
 "the meter affecting audio quality on slower machines."
 msgstr ""
-"Une fréquence de rafraîchissement élevée affiche des changements\n"
-"plus rapides. Une fréquence inférieure à 30 par seconde\n"
-"évite d’affecter la qualité audio des machines les plus lentes."
+"Une fréquence de rafraîchissement élevée du VU-mètre affiche\n"
+"des changements plus rapides. Une fréquence inférieure\n"
+"à 30 par seconde évite d’affecter la qualité audio des machines plus lentes."
 
 #: src/widgets/MeterPanel.cpp
 msgid "Meter refresh rate per second [1-100]"
-msgstr "Taux de rafraîchissement des mesureurs par seconde [1-100]"
+msgstr "Taux de rafraîchissement du VU-mètre par seconde [1-100]"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Meter refresh rate per second [1-100]: "
-msgstr "Fréquence de rafraîchissement des mesureurs par seconde [1-100] : "
+msgstr "Fréquence de rafraîchissement du VU-mètre par seconde [1-100] : "
 
 #: src/widgets/MeterPanel.cpp
 msgid "Meter Style"
-msgstr "Style des mesureurs"
+msgstr "Style du VU-mètre"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Gradient"
-msgstr "Pente"
+msgstr "Rampe"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Meter Type"
-msgstr "Type des mesureurs"
+msgstr "Type du VU-mètre"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Orientation"
@@ -21082,7 +21082,7 @@ msgstr "Steven Jones"
 
 #: plug-ins/rissetdrum.ny
 msgid "Decay (seconds)"
-msgstr "Délai (secondes)"
+msgstr "Déclin (secondes)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Center frequency of noise (Hz)"
