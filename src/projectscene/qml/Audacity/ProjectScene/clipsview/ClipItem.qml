@@ -125,6 +125,15 @@ Rectangle {
 
         cursorShape: Qt.BlankCursor
 
+        // make sure cursor is visible on top of nearby clips
+        onContainsMouseChanged: {
+            if (containsMouse) {
+                root.parent.z = 1
+            } else {
+                root.parent.z = 0
+            }
+        }
+
         onPressed: function(e) {
             root.clipStartEditRequested()
         }
@@ -173,6 +182,15 @@ Rectangle {
         visible: !root.clipSelected
 
         cursorShape: Qt.BlankCursor
+
+        // make sure cursor is visible on top of nearby clips
+        onContainsMouseChanged: {
+            if (containsMouse) {
+                root.parent.z = 1
+            } else {
+                root.parent.z = 0
+            }
+        }
 
         onPressed: function(e) {
             root.clipStartEditRequested()
