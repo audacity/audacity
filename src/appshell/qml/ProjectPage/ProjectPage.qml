@@ -193,10 +193,6 @@ DockPage {
                         tp.tracksModel.addTrack(type)
                     }
                 }
-
-                Component.onCompleted: {
-                    tracksPanel.contextMenuModel = contextMenuModel
-                }
             }
         }
     ]
