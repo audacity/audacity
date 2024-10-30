@@ -31,14 +31,12 @@
   <url type="help">https://support.audacityteam.org/</url>
   <url type="translate">https://support.audacityteam.org/community/contributing/translating</url>
   <releases>
-    <release version="3.6.4" date="2024-09-12">
+    <release version="3.7.0" date="2024-10-30">
      <description>
-        <p>New in Audacity 3.6: Master effects, and a new Limiter and Compressor!</p>
-        <p>Watch the release video or read the changelog to learn more.</p>
-        <p>The changelog also contains information about subsequent 3.6.x patches, should any be available.</p>
+        <p>The 3.7.x series of releases is primarily for maintenance while we work on Audacity 4.0.</p>
       </description>
-      <url>https://support.audacityteam.org/additional-resources/changelog/audacity-3.6</url>
-      <url>https://www.audacityteam.org/3.6.0-video</url>
+      <url>https://support.audacityteam.org/additional-resources/changelog/audacity-3.7</url>
+      <url>https://www.audacityteam.org/3.7.0-video</url>
     </release>
   </releases>
 </component>
