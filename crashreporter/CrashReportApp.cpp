@@ -33,7 +33,23 @@ namespace
         return std::wstring_convert<std::codecvt_utf8<std::wstring::traits_type::char_type>, std::wstring::traits_type::char_type>().from_bytes(utf8);
     }
 
-    bool SendMinidump(const std::string& url, const wxString& minidumpPath, const std::map<std::string, std::string>& arguments, const wxString& commentsFilePath)
+    wxString StringifyReportResult(google_breakpad::ReportResult result)
+    {
+       switch(result)
+       {
+       case google_breakpad::RESULT_FAILED:
+           return "RESULT_FAILED";
+       case google_breakpad::RESULT_REJECTED:
+           return "RESULT_REJECTED";
+       case google_breakpad::RESULT_SUCCEEDED:
+           return "RESULT_SUCCEEDED";
+       case google_breakpad::RESULT_THROTTLED:
+           return "RESULT_THROTTLED";
+       }
+       return "unknown result";
+    }
+
+    bool SendMinidump(const std::string& url, const wxString& minidumpPath, const std::map<std::string, std::string>& arguments, const wxString& commentsFilePath, wxString& errorString)
     {
         std::map<std::wstring, std::wstring> files;
         files[L"upload_file_minidump"] = minidumpPath.wc_str();
@@ -56,6 +72,10 @@ namespace
             files,
             nullptr
         );
+
+        if(result != google_breakpad::RESULT_SUCCEEDED)
+            errorString = wxString::Format("Failed to send crash report with error: %s", StringifyReportResult(result));
+        
         return result == google_breakpad::RESULT_SUCCEEDED;
     }
 }
@@ -65,7 +85,7 @@ namespace
 
 namespace
 {
-    bool SendMinidump(const std::string& url, const wxString& minidumpPath, const std::map<std::string, std::string>& arguments, const wxString& commentsFilePath)
+    bool SendMinidump(const std::string& url, const wxString& minidumpPath, const std::map<std::string, std::string>& arguments, const wxString& commentsFilePath, wxString& error)
     {
         std::map<std::string, std::string> files;
         files["upload_file_minidump"] = minidumpPath.ToStdString();
@@ -74,7 +94,7 @@ namespace
             files["comments.txt"] = commentsFilePath.ToStdString();
         }
 
-        std::string response, error;
+        std::string response, resultErr;
         bool success = google_breakpad::HTTPUpload::SendRequest(
             url,
             arguments,
@@ -84,7 +104,10 @@ namespace
             std::string(),
             &response,
             NULL,
-            &error);
+            &resultErr);
+
+        if(!success)
+            error = wxString::Format("Failed to send crash report with error: %s", resultErr.c_str());
             
         return success;
     }
@@ -395,7 +418,12 @@ bool CrashReportApp::OnInit()
     if (mSilent)
     {
         if (!mURL.empty())
-            SendMinidump(mURL, mMinidumpPath, mArguments, wxEmptyString);
+        {
+            wxString error;
+            auto result = SendMinidump(mURL, mMinidumpPath, mArguments, wxEmptyString, error);
+            if(!result)
+                wxMessageBox(error);
+        }
     }
     else
     {
@@ -501,13 +529,14 @@ void CrashReportApp::ShowCrashReport(const wxString& header, const wxString& tex
                     }
                 }
 
-                auto result = SendMinidump(mURL, mMinidumpPath, mArguments, commentsFilePath);
+                wxString error;
+                auto result = SendMinidump(mURL, mMinidumpPath, mArguments, commentsFilePath, error);
                 if (!commentsFilePath.empty())
                     wxRemoveFile(commentsFilePath);
 
                 if (!result)
                 {
-                    wxMessageBox(_("Failed to send crash report"));
+                    wxMessageBox(error);
                 }
                 return result;
             });
