@@ -431,6 +431,12 @@ void PopulatePreferences()
          gPrefs->DeleteGroup(wxT("/GUI/ToolBars"));
    }
 
+   if (std::pair { vMajor, vMinor } < std::pair { 3, 7 })
+   {
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
