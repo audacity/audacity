@@ -62,6 +62,7 @@ public:
     void newStereoTrack() override;
     void newLabelTrack() override;
     void deleteTracks(const TrackIdList& trackIds) override;
+    void duplicateTracks(const TrackIdList& trackIds) override;
 
     void undo() override;
     void redo() override;

@@ -85,6 +85,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, NEW_STEREO_TRACK, this, &TrackeditActionsController::newStereoTrack);
     dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
     dispatcher()->reg(this, "track-delete", this, &TrackeditActionsController::deleteTracks);
+    dispatcher()->reg(this, "track-duplicate", this, &TrackeditActionsController::duplicateTracks);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
@@ -547,7 +548,7 @@ void TrackeditActionsController::newLabelTrack()
     trackeditInteraction()->newLabelTrack();
 }
 
-void TrackeditActionsController::deleteTracks(const muse::actions::ActionData& args)
+void TrackeditActionsController::deleteTracks(const muse::actions::ActionData&)
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
@@ -556,6 +557,17 @@ void TrackeditActionsController::deleteTracks(const muse::actions::ActionData& a
     }
 
     trackeditInteraction()->deleteTracks(trackIds);
+}
+
+void TrackeditActionsController::duplicateTracks(const muse::actions::ActionData&)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->duplicateTracks(trackIds);
 }
 
 void TrackeditActionsController::trimAudioOutsideSelection()

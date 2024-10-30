@@ -12,7 +12,7 @@ using namespace au::projectscene;
 TracksListClipsModel::TracksListClipsModel(QObject* parent)
     : QAbstractListModel(parent)
 {
-    configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible){
+    configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible) {
         setIsVerticalRulersVisible(isVerticalRulersVisible);
     });
 }
@@ -55,13 +55,14 @@ void TracksListClipsModel::load()
         emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
     });
 
-    m_trackList.onChanged(this, [this]() {
+    prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
+        Q_UNUSED(tracks);
         muse::async::Async::call(this, [this]() {
             load();
         });
     });
 
-    m_trackList.onItemAdded(this, [this](const trackedit::Track& track) {
+    prj->trackAdded().onReceive(this, [this](const trackedit::Track& track) {
         beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
         m_trackList.push_back(track);
         endInsertRows();
@@ -70,7 +71,19 @@ void TracksListClipsModel::load()
         updateTotalTracksHeight();
     });
 
-    m_trackList.onItemRemoved(this, [this](const trackedit::Track& track) {
+    prj->trackInserted().onReceive(this, [this](const trackedit::Track& track, const int pos) {
+        int index = pos >= 0 && pos <= static_cast<int>(m_trackList.size()) ? pos : m_trackList.size();
+
+        beginInsertRows(QModelIndex(), index, index);
+        m_trackList.insert(m_trackList.begin() + index, track);
+
+        endInsertRows();
+
+        subscribeOnTrackHeightChanges(track.id);
+        updateTotalTracksHeight();
+    });
+
+    prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
         for (size_t i = 0; i < m_trackList.size(); ++i) {
             if (m_trackList.at(i).id == track.id) {
                 beginRemoveRows(QModelIndex(), i, i);
@@ -84,7 +97,7 @@ void TracksListClipsModel::load()
         updateTotalTracksHeight();
     });
 
-    m_trackList.onItemChanged(this, [this](const trackedit::Track& track) {
+    prj->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
         for (size_t i = 0; i < m_trackList.size(); ++i) {
             if (m_trackList.at(i).id == track.id) {
                 m_trackList[i] = track;
