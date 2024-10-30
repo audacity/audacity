@@ -160,6 +160,15 @@ DockPage {
     panels: [
         DockPanel {
             id: tracksPanel
+            readonly property int effectsSectionWidth: 240
+            property bool showEffectsSection: false
+
+            onShowEffectsSectionChanged: {
+                const newWidth = root.verticalPanelDefaultWidth + (tracksPanel.showEffectsSection ? tracksPanel.effectsSectionWidth : 0)
+                tracksPanel.width = newWidth
+                tracksPanel.minimumWidth = newWidth
+                tracksPanel.maximumWidth = newWidth
+            }
 
             signal add(type: int)
 
@@ -168,23 +177,38 @@ DockPage {
 
             navigationSection: root.navigationPanelSec(tracksPanel.location)
 
-            width: root.verticalPanelDefaultWidth
-            minimumWidth: root.verticalPanelDefaultWidth
-            maximumWidth: root.verticalPanelDefaultWidth
+            width: root.verticalPanelDefaultWidth + (showEffectsSection ? effectsSectionWidth : 0)
+            minimumWidth: width
+            maximumWidth: width
 
             groupName: root.verticalPanelsGroup
 
             dropDestinations: root.verticalPanelDropDestinations
 
             titleBar: TracksTitleBar {
+
+                id: titleBarItem
+                effectsSectionWidth: tracksPanel.effectsSectionWidth
+                showEffectsSection: tracksPanel.showEffectsSection
+
                 onAddRequested: function(type) {
                     tracksPanel.add(type)
+                }
+
+                onEffectsSectionCloseButtonClicked: {
+                    tracksPanel.showEffectsSection = false
                 }
             }
 
             TracksPanel {
                 id: tp
                 navigationSection: tracksPanel.navigationSection
+                effectsSectionWidth: tracksPanel.effectsSectionWidth
+                showEffectsSection: tracksPanel.showEffectsSection
+
+                onOpenEffectsRequested: {
+                    tracksPanel.showEffectsSection = true
+                }
 
                 Connections {
                     target: tracksPanel

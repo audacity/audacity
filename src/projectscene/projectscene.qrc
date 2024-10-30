@@ -12,6 +12,7 @@
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBarBackground.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/KnobControl.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/BalanceKnob.qml</file>

@@ -130,12 +130,6 @@ void TracksListModel::duplicateTrack(int row)
     NOT_IMPLEMENTED;
 }
 
-void TracksListModel::openEffectsForTrack(int row)
-{
-    UNUSED(row);
-    NOT_IMPLEMENTED;
-}
-
 QItemSelectionModel* TracksListModel::selectionModel() const
 {
     return m_selectionModel;
