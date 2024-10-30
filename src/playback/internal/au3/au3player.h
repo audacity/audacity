@@ -55,7 +55,7 @@ private:
 
     muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
 
-    void updatePlaybackState();
+    void updatePlaybackPosition();
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
 

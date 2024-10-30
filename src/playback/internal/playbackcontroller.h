@@ -110,7 +110,7 @@ private:
     void updateSoloMuteStates();
     void updateAuxMuteStates();
 
-    void setCurrentPlaybackTime(playback::msecs_t msecs);
+    void setCurrentPlaybackTime(muse::secs_t msecs);
 
     using TrackAddFinished = std::function<void ()>;
 
@@ -125,7 +125,8 @@ private:
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     muse::async::Notification m_currentSequenceIdChanged;
-    playback::msecs_t m_currentPlaybackTimeMsecs = 0;
+    muse::secs_t m_currentPlaybackTime = 0.0;
+    muse::secs_t m_lastPlaybackSeekTime = 0.0;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;
