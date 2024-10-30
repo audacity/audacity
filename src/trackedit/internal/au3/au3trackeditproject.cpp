@@ -53,16 +53,14 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
     return au4trackIds;
 }
 
-muse::async::NotifyList<au::trackedit::Track> Au3TrackeditProject::trackList() const
+std::vector<au::trackedit::Track> Au3TrackeditProject::trackList() const
 {
-    muse::async::NotifyList<Track> au4tracks;
+    std::vector<au::trackedit::Track> au4tracks;
 
     for (const Au3Track* t : *m_impl->trackList) {
         Track au4t = DomConverter::track(t);
         au4tracks.push_back(std::move(au4t));
     }
-
-    au4tracks.setNotify(m_tracksChanged.notify());
 
     return au4tracks;
 }
@@ -139,22 +137,27 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
 
 void Au3TrackeditProject::reload()
 {
-    m_tracksChanged.changed();
+    m_tracksChanged.send(trackList());
 }
 
-void Au3TrackeditProject::onTrackAdded(const Track& track)
+void Au3TrackeditProject::notifyAboutTrackAdded(const Track& track)
 {
-    m_tracksChanged.itemAdded(track);
+    m_trackAdded.send(track);
 }
 
-void Au3TrackeditProject::onTrackChanged(const Track& track)
+void Au3TrackeditProject::notifyAboutTrackChanged(const Track& track)
 {
-    m_tracksChanged.itemChanged(track);
+    m_trackChanged.send(track);
 }
 
-void Au3TrackeditProject::onTrackRemoved(const Track& track)
+void Au3TrackeditProject::notifyAboutTrackRemoved(const Track& track)
 {
-    m_tracksChanged.itemRemoved(track);
+    m_trackRemoved.send(track);
+}
+
+void Au3TrackeditProject::notifyAboutTrackInserted(const Track& track, int pos)
+{
+    m_trackInserted.send(track, pos);
 }
 
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
@@ -172,19 +175,19 @@ au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
     return DomConverter::clip(waveTrack, au3Clip.get());
 }
 
-void Au3TrackeditProject::onClipChanged(const Clip& clip)
+void Au3TrackeditProject::notifyAboutClipChanged(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
     notifier.itemChanged(clip);
 }
 
-void Au3TrackeditProject::onClipRemoved(const Clip& clip)
+void Au3TrackeditProject::notifyAboutClipRemoved(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
     notifier.itemRemoved(clip);
 }
 
-void Au3TrackeditProject::onClipAdded(const Clip& clip)
+void Au3TrackeditProject::notifyAboutClipAdded(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifer = m_clipsChanged[clip.key.trackId];
     notifer.itemAdded(clip);
@@ -215,6 +218,31 @@ void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeS
 muse::async::Channel<au::trackedit::TimeSignature> Au3TrackeditProject::timeSignatureChanged() const
 {
     return m_timeSignatureChanged;
+}
+
+muse::async::Channel<std::vector<au::trackedit::Track> > Au3TrackeditProject::tracksChanged() const
+{
+    return m_tracksChanged;
+}
+
+muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackAdded() const
+{
+    return m_trackAdded;
+}
+
+muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackChanged() const
+{
+    return m_trackChanged;
+}
+
+muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackRemoved() const
+{
+    return m_trackRemoved;
+}
+
+muse::async::Channel<au::trackedit::Track, int> Au3TrackeditProject::trackInserted() const
+{
+    return m_trackInserted;
 }
 
 secs_t Au3TrackeditProject::totalTime() const

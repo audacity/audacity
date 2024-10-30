@@ -39,7 +39,7 @@ TrackIdList Au3SelectionController::selectedTracks() const
     return m_selectedTracks.val;
 }
 
-void Au3SelectionController::setSelectedTracks(const TrackIdList &tracksIds, bool complete)
+void Au3SelectionController::setSelectedTracks(const TrackIdList& tracksIds, bool complete)
 {
     MYLOG() << "tracks: " << tracksIds;
 
@@ -157,7 +157,8 @@ void Au3SelectionController::resetDataSelection()
 
 bool Au3SelectionController::timeSelectionIsNotEmpty() const
 {
-    return muse::RealIsEqualOrMore(m_selectedStartTime.val, 0.0) && m_selectedEndTime.val > 0.0 && !muse::RealIsEqualOrLess(m_selectedEndTime.val, m_selectedStartTime.val);
+    return muse::RealIsEqualOrMore(m_selectedStartTime.val, 0.0) && m_selectedEndTime.val > 0.0 && !muse::RealIsEqualOrLess(
+        m_selectedEndTime.val, m_selectedStartTime.val);
 }
 
 bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const

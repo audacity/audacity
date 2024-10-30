@@ -63,7 +63,7 @@ private:
     void subscribeOnTrackHeightChanges(const trackedit::TrackId trackId);
     void unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId);
 
-    muse::async::NotifyList<au::trackedit::Track> m_trackList;
+    std::vector<trackedit::Track> m_trackList;
     bool m_isVerticalRulersVisible = false;
     int m_totalTracksHeight = 0;
 };
