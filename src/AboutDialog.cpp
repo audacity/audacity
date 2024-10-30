@@ -137,11 +137,11 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
    AddCredit(wxT("Yana Larina"), roleTeamMember);
+   AddCredit(wxT("Dmitry Makarenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
-   AddCredit(wxT("Anita Sudan"), roleTeamMember);
-   AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leo Wattenberg"), designerFormat, roleTeamMember);
    AddCredit(wxT("Jessica Williamson"), designerFormat, roleTeamMember);
+   AddCredit(wxT("Grzegorz Wojciechowski"), developerFormat, roleTeamMember);
    
    
    // Emeritus: people who were "lead developers" or made an
@@ -231,6 +231,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("David R. Sky"), NyquistPluginsFormat, roleContributor);
    AddCredit(wxT("Joe Souza"), developerFormat, roleContributor);
    AddCredit(wxT("K. Soze"), developerFormat, roleContributor);
+   AddCredit(wxT("Anita Sudan"), roleContributor);
+   AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleContributor);
    AddCredit(wxT("Rob Sykes"), developerFormat, roleContributor);
    AddCredit(wxT("Mike Underwood"), developerFormat, roleContributor);
    AddCredit(wxT("Philip Van Baren"), developerFormat, roleContributor);
