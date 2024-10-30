@@ -32,7 +32,7 @@ inline float secondsFromMilliseconds(msecs_t milliseconds)
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::play);
+    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
     dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pause);
     dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::stop);
     dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);

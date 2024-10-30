@@ -785,10 +785,6 @@
         <key>track-move-bottom</key>
     </SC>
     <SC>
-        <key>default-play-stop</key>
-        <seq>Space</seq>
-    </SC>
-    <SC>
         <key>play-stop-select</key>
         <seq>X</seq>
     </SC>
@@ -847,9 +843,7 @@
     </SC>
     <SC>
         <key>play</key>
-    </SC>
-    <SC>
-        <key>stop</key>
+        <seq>Space</seq>
     </SC>
     <SC>
         <key>play-one-sec</key>
