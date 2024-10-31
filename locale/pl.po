@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.0\n"
+"Project-Id-Version: audacity 3.7.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-10-28 11:47+0100\n"
-"PO-Revision-Date: 2024-10-30 00:00+0000\n"
+"PO-Revision-Date: 2024-10-31 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -9502,10 +9502,10 @@ msgid ""
 "is needed to keep their external dependencies in the right place.\n"
 "New projects will be self-contained and are less risky."
 msgstr ""
-"Twój projekt jest obecnie samowystarczalny; nie zależy on od żadnych zewnętrznych plików dźwiękowych. \n"
+"Twój projekt jest obecnie samodzielny; nie zależy on od żadnych zewnętrznych plików dźwiękowych. \n"
 "\n"
-"Niektóre starsze projekty Audacity mogą być niesamodzielne i należy zachować ostrożność, aby zachować ich zewnętrzne zależności we właściwym miejscu.\n"
-"Nowe projekty będą niezależne i mniej ryzykowne."
+"Niektóre starsze projekty Audacity mogą nie być samodzielne i należy zachować ostrożność, aby zachować ich zewnętrzne zależności we właściwym miejscu.\n"
+"Nowe projekty będą samodzielne i mniej ryzykowne."
 
 #: src/Dependencies.cpp
 msgid "Dependency Check"
@@ -14773,7 +14773,7 @@ msgstr "Brak konkretnych opcji formatowania"
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
 msgid "Import Raw"
-msgstr "Importuj dane surowe"
+msgstr "Importuj surowe"
 
 #: src/import/ImportRaw.cpp
 msgid "Import Raw Data"
