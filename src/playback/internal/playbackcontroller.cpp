@@ -235,6 +235,10 @@ void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
     muse::secs_t secs = args.arg<double>(0);
     m_lastPlaybackSeekTime = secs;
     player()->seek(secs);
+
+    if (isPaused()) {
+        player()->stop();
+    }
 }
 
 void PlaybackController::pause()
