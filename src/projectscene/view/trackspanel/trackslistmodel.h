@@ -45,7 +45,7 @@ public:
     Q_INVOKABLE void duplicateTrack(int row);
 
     Q_INVOKABLE QItemSelectionModel* selectionModel() const;
-    Q_INVOKABLE void selectRow(int rowIndex);
+    Q_INVOKABLE void selectRow(int row, bool exclusive = false);
     Q_INVOKABLE void clearSelection();
     Q_INVOKABLE void moveSelectedRowsUp();
     Q_INVOKABLE void moveSelectedRowsDown();

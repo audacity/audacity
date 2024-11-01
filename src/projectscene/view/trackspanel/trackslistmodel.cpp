@@ -22,6 +22,13 @@ TracksListModel::TracksListModel(QObject* parent)
         setItemsSelected(deselected.indexes(), false);
         setItemsSelected(selected.indexes(), true);
 
+        std::vector<TrackId> selectedTrackIds;
+        for (auto index : m_selectionModel->selectedIndexes()) {
+            selectedTrackIds.push_back(modelIndexToItem(index)->trackId());
+        }
+
+        selectionController()->setSelectedTracks(selectedTrackIds);
+
         updateRearrangementAvailability();
         updateRemovingAvailability();
     });
@@ -135,17 +142,24 @@ QItemSelectionModel* TracksListModel::selectionModel() const
     return m_selectionModel;
 }
 
-void TracksListModel::selectRow(int rowIndex)
+void TracksListModel::selectRow(int row, bool exclusive)
 {
+    if (row >= rowCount()) {
+        return;
+    }
+
     if (m_audioDataSelected) {
-        selectionController()->resetSelectedTracks();
-        clearSelection();
+        selectionController()->resetDataSelection();
         m_audioDataSelected = false;
     }
 
-    selectionController()->resetDataSelection();
-    QModelIndex modelIndex = index(rowIndex);
-    m_selectionModel->select(modelIndex);
+    if (exclusive) {
+        // Upcast to QItemSelectionModel to skip keyboard modifiers check
+        QItemSelectionModel* selectionModel = m_selectionModel;
+        selectionModel->select(index(row), QItemSelectionModel::ClearAndSelect);
+    } else {
+        m_selectionModel->select(index(row));
+    }
 }
 
 void TracksListModel::clearSelection()
@@ -528,11 +542,24 @@ TrackItem* TracksListModel::modelIndexToItem(const QModelIndex& index) const
     return m_trackList.at(index.row());
 }
 
-void TracksListModel::onSelectedTracks(const TrackIdList& tracksIds)
+void TracksListModel::onSelectedTracks(const TrackIdList& trackIds)
 {
-    for (TrackItem* item : m_trackList) {
-        item->setIsSelected(muse::contains(tracksIds, item->trackId()));
+    QItemSelection selection;
+    for (int i = 0; i < m_trackList.size(); i++) {
+        auto& track = m_trackList.at(i);
+        bool selected = muse::contains(trackIds, track->trackId());
+
+        track->setIsSelected(selected);
+
+        if (selected) {
+            selection.select(index(i), index(i));
+        }
     }
+
+    // Sync controller's selection with the model, ignoring keyboard modifiers
+    QSignalBlocker blocker(m_selectionModel);
+    QItemSelectionModel* selectionModel = m_selectionModel;
+    selectionModel->select(selection, QItemSelectionModel::ClearAndSelect);
 }
 
 void TracksListModel::onTracksChanged(const std::vector<au::trackedit::Track>& tracks)
