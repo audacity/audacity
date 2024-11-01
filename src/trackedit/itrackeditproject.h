@@ -34,6 +34,7 @@ public:
     virtual void notifyAboutTrackChanged(const Track& track) = 0;
     virtual void notifyAboutTrackRemoved(const Track& track) = 0;
     virtual void notifyAboutTrackInserted(const Track& track, int pos) = 0;
+    virtual void notifyAboutTrackMoved(const Track& track, int pos) = 0;
 
     virtual void notifyAboutClipChanged(const Clip& clip) = 0;
     virtual void notifyAboutClipAdded(const Clip& clip) = 0;
@@ -48,6 +49,7 @@ public:
     virtual muse::async::Channel<trackedit::Track> trackChanged() const = 0;
     virtual muse::async::Channel<trackedit::Track> trackRemoved() const = 0;
     virtual muse::async::Channel<trackedit::Track, int> trackInserted() const = 0;
+    virtual muse::async::Channel<trackedit::Track, int> trackMoved() const = 0;
 
     virtual secs_t totalTime() const = 0;
 };

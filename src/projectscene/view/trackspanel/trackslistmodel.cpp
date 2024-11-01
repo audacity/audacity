@@ -112,6 +112,10 @@ void TracksListModel::load()
         onTrackInserted(track, pos);
     });
 
+    prj->trackMoved().onReceive(this, [this](const Track& track, int pos) {
+        onTrackMoved(track, pos);
+    });
+
     endResetModel();
 
     listenTracksSelectionChanged();
@@ -225,6 +229,11 @@ void TracksListModel::removeSelectedRows()
     });
 
     removeRows(firstIndex.row(), selectedIndexList.size(), firstIndex.parent());
+}
+
+void TracksListModel::requestTrackMove(int from, int to)
+{
+    trackeditInteraction()->moveTracksTo({ m_trackList[from]->trackId() }, to);
 }
 
 bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
@@ -611,4 +620,23 @@ void TracksListModel::onTrackInserted(const trackedit::Track& track, int pos)
     onTrackChanged(track);
 
     endInsertRows();
+}
+
+void TracksListModel::onTrackMoved(const trackedit::Track& track, int pos)
+{
+    TrackItem* item = findTrackItem(track.id);
+
+    IF_ASSERT_FAILED(item) {
+        return;
+    }
+
+    int from = m_trackList.indexOf(item);
+    int to = std::clamp(pos, 0, static_cast<int>(m_trackList.size()));
+
+    beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to + 1 : to);
+    m_trackList.removeAt(from);
+    m_trackList.insert(to, item);
+    onTrackChanged(track);
+
+    endMoveRows();
 }

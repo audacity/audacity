@@ -17,10 +17,19 @@ void TrackContextMenuModel::load()
         return item;
     };
 
+    MenuItemList moveTrackItems {
+        makeItemWithArg("track-move-up"),
+        makeItemWithArg("track-move-down"),
+        makeItemWithArg("track-move-top"),
+        makeItemWithArg("track-move-bottom"),
+    };
+
     MenuItemList items {
         makeItemWithArg("track-rename"),
         makeItemWithArg("track-duplicate"),
         makeItemWithArg("track-delete"),
+        makeSeparator(),
+        makeMenu(muse::TranslatableString("track menu", "Move track"), moveTrackItems),
         makeSeparator(),
         makeItemWithArg("track-make-stereo"),
         makeItemWithArg("track-swap-stereo"),

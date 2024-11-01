@@ -81,6 +81,11 @@ private:
     void deleteTracks(const muse::actions::ActionData&);
     void duplicateTracks(const muse::actions::ActionData&);
 
+    void moveTracksUp(const muse::actions::ActionData& args);
+    void moveTracksDown(const muse::actions::ActionData& args);
+    void moveTracksToTop(const muse::actions::ActionData& args);
+    void moveTracksToBottom(const muse::actions::ActionData& args);
+
     void trimAudioOutsideSelection();
     void silenceAudioSelection();
 

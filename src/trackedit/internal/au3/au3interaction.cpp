@@ -673,6 +673,8 @@ bool Au3Interaction::duplicateClip(const ClipKey& clipKey)
     }
 
     pushProjectHistoryDuplicateState();
+
+    return true;
 }
 
 bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
@@ -891,6 +893,170 @@ void Au3Interaction::duplicateTracks(const TrackIdList& trackIds)
     projectHistory()->pushHistoryState("Duplicate track", "Duplicate track");
 }
 
+void Au3Interaction::moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction)
+{
+    if (trackIds.empty()) {
+        return;
+    }
+
+    TrackIdList sortedTrackIds = trackIds;
+    auto isAscending = (direction == TrackMoveDirection::Up || direction == TrackMoveDirection::Bottom);
+    std::sort(sortedTrackIds.begin(), sortedTrackIds.end(), [this, isAscending](const TrackId& a, const TrackId& b) {
+        return isAscending ? trackPosition(a) < trackPosition(b) : trackPosition(a) > trackPosition(b);
+    });
+
+    auto canMoveWithoutPushing = [this, direction, &sortedTrackIds](const TrackId trackId) {
+        int currentPos = trackPosition(trackId);
+        int targetPos = (direction == TrackMoveDirection::Up) ? currentPos - 1 : currentPos + 1;
+
+        for (const auto& id : sortedTrackIds) {
+            if (trackPosition(id) == targetPos) {
+                return false;
+            }
+        }
+        return canMoveTrack(trackId, direction);
+    };
+
+    for (const auto& trackId : sortedTrackIds) {
+        if (direction == TrackMoveDirection::Top || direction == TrackMoveDirection::Bottom || canMoveWithoutPushing(trackId)) {
+            moveTrack(trackId, direction);
+        }
+    }
+    projectHistory()->pushHistoryState("Move track", "Move track");
+}
+
+void Au3Interaction::moveTracksTo(const TrackIdList& trackIds, int to)
+{
+    for (const auto trackId : trackIds) {
+        moveTrackTo(trackId, to++);
+    }
+    projectHistory()->pushHistoryState("Move track", "Move track");
+}
+
+bool Au3Interaction::canMoveTrack(const TrackId trackId, const TrackMoveDirection direction)
+{
+    auto& project = projectRef();
+    auto& tracks = ::TrackList::Get(project);
+    Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
+
+    switch (direction) {
+    case TrackMoveDirection::Up:
+    case TrackMoveDirection::Top:
+        return tracks.CanMoveUp(*au3Track);
+    case TrackMoveDirection::Down:
+    case TrackMoveDirection::Bottom:
+        return tracks.CanMoveDown(*au3Track);
+    }
+}
+
+int Au3Interaction::trackPosition(const TrackId trackId)
+{
+    auto& project = projectRef();
+    auto& tracks = ::TrackList::Get(project);
+    Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
+
+    return std::distance(tracks.begin(), tracks.Find(au3Track));
+}
+
+void Au3Interaction::moveTrackTo(const TrackId trackId, int to)
+{
+    auto& project = projectRef();
+    auto& tracks = ::TrackList::Get(project);
+    Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
+
+    IF_ASSERT_FAILED(au3Track) {
+        return;
+    }
+
+    int from = std::distance(tracks.begin(), tracks.Find(au3Track));
+
+    if (to == from) {
+        return;
+    }
+
+    int pos = from;
+    if (pos < to) {
+        while (pos != to && tracks.CanMoveDown(*au3Track)) {
+            pos++;
+            tracks.MoveDown(*au3Track);
+        }
+    } else {
+        while (pos != to && tracks.CanMoveUp(*au3Track)) {
+            pos--;
+            tracks.MoveUp(*au3Track);
+        }
+    }
+
+    if (pos != to) {
+        LOGW("Can't move track from position %d to %d, track was moved to position %d", from, to, pos);
+    }
+
+    auto track = DomConverter::track(au3Track);
+
+    trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
+    trackEdit->notifyAboutTrackMoved(track, pos);
+}
+
+void Au3Interaction::moveTrack(const TrackId trackId, const TrackMoveDirection direction)
+{
+    auto& project = projectRef();
+    auto& tracks = Au3TrackList::Get(project);
+    Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
+
+    IF_ASSERT_FAILED(au3Track) {
+        return;
+    }
+
+    int initialPosition = std::distance(tracks.begin(), tracks.Find(au3Track));
+
+    IF_ASSERT_FAILED(initialPosition >= 0 && initialPosition < static_cast<int>(tracks.Size())) {
+        return;
+    }
+
+    int targetPosition = initialPosition;
+
+    switch (direction) {
+    case TrackMoveDirection::Up:
+        if (!tracks.CanMoveUp(*au3Track)) {
+            break;
+        }
+        targetPosition--;
+        tracks.MoveUp(*au3Track);
+        break;
+    case TrackMoveDirection::Down:
+        if (!tracks.CanMoveDown(*au3Track)) {
+            break;
+        }
+        targetPosition++;
+        tracks.MoveDown(*au3Track);
+        break;
+    case TrackMoveDirection::Top:
+        while (tracks.CanMoveUp(*au3Track)) {
+            targetPosition--;
+            tracks.MoveUp(*au3Track);
+        }
+        break;
+    case TrackMoveDirection::Bottom:
+        while (tracks.CanMoveDown(*au3Track)) {
+            targetPosition++;
+            tracks.MoveDown(*au3Track);
+        }
+        break;
+    default:
+        return;
+    }
+
+    if (initialPosition == targetPosition) {
+        LOGW() << "Can't move track to " << &direction;
+        return;
+    }
+
+    auto track = DomConverter::track(au3Track);
+
+    trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
+    trackEdit->notifyAboutTrackMoved(track, targetPosition);
+}
+
 muse::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
@@ -942,7 +1108,7 @@ void Au3Interaction::undo()
 
     // Update selected track id
     auto newTrackIdList = trackeditProject->trackIdList();
-    if (selectedIndex >= 0 && selectedIndex < newTrackIdList.size()) {
+    if (selectedIndex >= 0 && selectedIndex < static_cast<int>(newTrackIdList.size())) {
         selectionController()->setSelectedTracks(newTrackIdList);
     } else {
         selectionController()->resetSelectedTracks();
@@ -974,7 +1140,7 @@ void Au3Interaction::redo()
 
     // Update selected track id
     auto newTrackIdList = trackeditProject->trackIdList();
-    if (selectedIndex >= 0 && selectedIndex < newTrackIdList.size()) {
+    if (selectedIndex >= 0 && selectedIndex < static_cast<int>(newTrackIdList.size())) {
         selectionController()->setSelectedTracks(newTrackIdList);
     } else {
         selectionController()->resetSelectedTracks();
