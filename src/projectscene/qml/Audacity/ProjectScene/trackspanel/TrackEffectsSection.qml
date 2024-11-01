@@ -75,5 +75,14 @@ Rectangle {
         }
 
         // TODO: add StyledListView for effects of current track
+
+        FlatButton {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 24
+            Layout.margins: 12
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
+
+            text: qsTrc("projectscene", "Add effect")
+        }
     }
 }
