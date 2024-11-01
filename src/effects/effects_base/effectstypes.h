@@ -12,6 +12,8 @@ class Effect;
 class EffectInstanceEx;
 struct EffectSettings;
 namespace au::effects {
+using secs_t = muse::number_t<double>;
+using percent_t = muse::number_t<float>;
 using ratio_t = muse::ratio_t;
 using db_t = muse::db_t;
 using rms_t = float;
