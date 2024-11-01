@@ -125,7 +125,7 @@ Item {
                     }
 
                     onSelectionRequested: {
-                        tracksModel.selectRow(model.index)
+                        tracksModel.selectRow(model.index, true)
                     }
 
                     onOpenEffectsRequested: {
