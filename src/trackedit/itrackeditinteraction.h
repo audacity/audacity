@@ -10,6 +10,13 @@
 #include "types/ret.h"
 
 namespace au::trackedit {
+enum class TrackMoveDirection {
+    Up,
+    Down,
+    Top,
+    Bottom
+};
+
 //! NOTE Interface for interacting with the project
 //! When it gets big, maybe we’ll divide it into several
 //! Currently implemented in the au3wrap module
@@ -56,6 +63,8 @@ public:
     virtual void newLabelTrack() = 0;
     virtual void deleteTracks(const TrackIdList& trackIds) = 0;
     virtual void duplicateTracks(const TrackIdList& trackIds) = 0;
+    virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
+    virtual void moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
     virtual void undo() = 0;
     virtual void redo() = 0;

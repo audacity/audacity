@@ -134,6 +134,30 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Delete"),
              TranslatableString("action", "Delete track")
              ),
+    UiAction("track-move-up",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Move up"),
+             TranslatableString("action", "Move track up")
+             ),
+    UiAction("track-move-down",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Move down"),
+             TranslatableString("action", "Move track down")
+             ),
+    UiAction("track-move-top",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Move to top"),
+             TranslatableString("action", "Move track to top")
+             ),
+    UiAction("track-move-bottom",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Move to bottom"),
+             TranslatableString("action", "Move track to bottom")
+             ),
     UiAction("track-make-stereo",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

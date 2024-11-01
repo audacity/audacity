@@ -33,6 +33,7 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
     Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged)
 
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
@@ -51,6 +52,8 @@ public:
     Q_INVOKABLE void moveSelectedRowsUp();
     Q_INVOKABLE void moveSelectedRowsDown();
     Q_INVOKABLE void removeSelectedRows();
+
+    Q_INVOKABLE void requestTrackMove(int from, int to);
 
     Q_INVOKABLE bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
                               int destinationChild) override;
@@ -95,6 +98,7 @@ private:
     void onTrackRemoved(const trackedit::Track& track);
     void onTrackChanged(const trackedit::Track& track);
     void onTrackInserted(const trackedit::Track& track, int pos);
+    void onTrackMoved(const trackedit::Track& track, int pos);
 
     TrackItem* buildTrackItem(const trackedit::Track& track);
     TrackItem* findTrackItem(const trackedit::TrackId& trackId);

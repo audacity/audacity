@@ -86,6 +86,10 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
     dispatcher()->reg(this, "track-delete", this, &TrackeditActionsController::deleteTracks);
     dispatcher()->reg(this, "track-duplicate", this, &TrackeditActionsController::duplicateTracks);
+    dispatcher()->reg(this, "track-move-up", this, &TrackeditActionsController::moveTracksUp);
+    dispatcher()->reg(this, "track-move-down", this, &TrackeditActionsController::moveTracksDown);
+    dispatcher()->reg(this, "track-move-top", this, &TrackeditActionsController::moveTracksToTop);
+    dispatcher()->reg(this, "track-move-bottom", this, &TrackeditActionsController::moveTracksToBottom);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
@@ -568,6 +572,50 @@ void TrackeditActionsController::duplicateTracks(const muse::actions::ActionData
     }
 
     trackeditInteraction()->duplicateTracks(trackIds);
+}
+
+void TrackeditActionsController::moveTracksUp(const muse::actions::ActionData& args)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Up);
+}
+
+void TrackeditActionsController::moveTracksDown(const muse::actions::ActionData& args)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Down);
+}
+
+void TrackeditActionsController::moveTracksToTop(const muse::actions::ActionData& args)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Top);
+}
+
+void TrackeditActionsController::moveTracksToBottom(const muse::actions::ActionData& args)
+{
+    TrackIdList trackIds = selectionController()->selectedTracks();
+
+    if (trackIds.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Bottom);
 }
 
 void TrackeditActionsController::trimAudioOutsideSelection()

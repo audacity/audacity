@@ -63,6 +63,8 @@ public:
     void newLabelTrack() override;
     void deleteTracks(const TrackIdList& trackIds) override;
     void duplicateTracks(const TrackIdList& trackIds) override;
+    void moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction) override;
+    void moveTracksTo(const TrackIdList& trackIds, int to) override;
 
     void undo() override;
     void redo() override;
@@ -83,6 +85,11 @@ private:
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);
     void pushProjectHistorySplitDeleteState(secs_t start, secs_t duration);
     void pushProjectHistoryDuplicateState();
+
+    bool canMoveTrack(const TrackId trackId, const TrackMoveDirection direction);
+    int trackPosition(const TrackId trackId);
+    void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
+    void moveTrackTo(const TrackId trackId, int pos);
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 };

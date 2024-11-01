@@ -83,6 +83,25 @@ void TracksListClipsModel::load()
         updateTotalTracksHeight();
     });
 
+    prj->trackMoved().onReceive(this, [this](const trackedit::Track& track, const int pos) {
+        auto it = std::find_if(m_trackList.begin(), m_trackList.end(), [&track](const trackedit::Track& it) { return it.id == track.id; });
+
+        if (it == m_trackList.end()) {
+            return;
+        }
+
+        int from = std::distance(m_trackList.begin(), it);
+        int to = std::clamp(pos, 0, static_cast<int>(m_trackList.size()));
+
+        beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to + 1 : to);
+        m_trackList.erase(it);
+        m_trackList.insert(m_trackList.begin() + to, track);
+        endMoveRows();
+
+        subscribeOnTrackHeightChanges(track.id);
+        updateTotalTracksHeight();
+    });
+
     prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
         for (size_t i = 0; i < m_trackList.size(); ++i) {
             if (m_trackList.at(i).id == track.id) {

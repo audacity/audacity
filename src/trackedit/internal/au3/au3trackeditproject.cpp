@@ -160,6 +160,11 @@ void Au3TrackeditProject::notifyAboutTrackInserted(const Track& track, int pos)
     m_trackInserted.send(track, pos);
 }
 
+void Au3TrackeditProject::notifyAboutTrackMoved(const Track& track, int pos)
+{
+    return m_trackMoved.send(track, pos);
+}
+
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(key.trackId));
@@ -243,6 +248,11 @@ muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackRemoved() c
 muse::async::Channel<au::trackedit::Track, int> Au3TrackeditProject::trackInserted() const
 {
     return m_trackInserted;
+}
+
+muse::async::Channel<au::trackedit::Track, int> Au3TrackeditProject::trackMoved() const
+{
+    return m_trackMoved;
 }
 
 secs_t Au3TrackeditProject::totalTime() const

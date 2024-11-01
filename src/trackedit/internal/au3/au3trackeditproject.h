@@ -24,6 +24,7 @@ public:
     void notifyAboutTrackChanged(const Track& track) override;
     void notifyAboutTrackRemoved(const Track& track) override;
     void notifyAboutTrackInserted(const Track& track, int pos) override;
+    void notifyAboutTrackMoved(const Track& track, int pos) override;
 
     void notifyAboutClipChanged(const Clip& clip) override;
     void notifyAboutClipAdded(const Clip& clip) override;
@@ -38,6 +39,7 @@ public:
     muse::async::Channel<Track> trackChanged() const override;
     muse::async::Channel<Track> trackRemoved() const override;
     muse::async::Channel<Track, int> trackInserted() const override;
+    muse::async::Channel<Track, int> trackMoved() const override;
 
     secs_t totalTime() const override;
 
@@ -57,6 +59,7 @@ private:
     mutable muse::async::Channel<trackedit::Track> m_trackChanged;
     mutable muse::async::Channel<trackedit::Track> m_trackRemoved;
     mutable muse::async::Channel<trackedit::Track, int> m_trackInserted;
+    mutable muse::async::Channel<trackedit::Track, int> m_trackMoved;
 };
 
 class Au3TrackeditProjectCreator : public ITrackeditProjectCreator
