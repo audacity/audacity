@@ -22,8 +22,6 @@ class IEffectsProvider : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IEffectsProvider() = default;
 
-    virtual void reloadEffects() = 0;
-
     virtual EffectMetaList effectMetaList() const = 0;
     virtual muse::async::Notification effectMetaListChanged() const = 0;
 

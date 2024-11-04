@@ -20,13 +20,18 @@ class BuiltinEffectsRepository : public IBuiltinEffectsRepository
 public:
     BuiltinEffectsRepository() = default;
 
+    void preInit();
     void init();
 
+    muse::async::Notification effectMetaListUpdated() const override;
     EffectMetaList effectMetaList() const override;
 
     EffectMeta effectMeta(const ComponentInterfaceSymbol& symbol) const;
 
 private:
+    void updateEffectMetaList();
+
+    muse::async::Notification m_effectMetaListUpdated;
     std::map<ComponentInterfaceSymbol, EffectMeta> m_metas;
 };
 }

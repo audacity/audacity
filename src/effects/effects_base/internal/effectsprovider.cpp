@@ -30,6 +30,13 @@ using namespace au::effects;
 
 static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&instanceId=%2";
 
+void EffectsProvider::init()
+{
+    builtinEffectsRepository()->effectMetaListUpdated().onNotify(this, [this] {
+        reloadEffects();
+    });
+}
+
 bool EffectsProvider::isVstSupported() const
 {
     return vstEffectsRepository() ? true : false;

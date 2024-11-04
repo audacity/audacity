@@ -28,20 +28,43 @@
 #include "noisegen/noiseviewmodel.h"
 #include "log.h"
 
+#include <algorithm>
+
 using namespace au::effects;
+
+void BuiltinEffectsRepository::preInit()
+{
+    static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
+    static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
+    static BuiltinEffectsModule::Registration< ToneEffect > regTone;
+    static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
+    static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
+    static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
+}
 
 void BuiltinEffectsRepository::init()
 {
+    updateEffectMetaList();
+}
+
+void BuiltinEffectsRepository::updateEffectMetaList()
+{
+    // For now, this method is called only once, so there is yet no need to clear the list and unregister the views.
+    // It will have to be implemented when we provide the user the possibility of rescanning the effects, though.
+    assert(m_metas.empty());
+
     auto regView = [this](const ::ComponentInterfaceSymbol& symbol, const muse::String& url) {
         effectsViewRegister()->regUrl(au3::wxToString(symbol.Internal()), url);
     };
 
-    auto regMeta = [this](const ::ComponentInterfaceSymbol& symbol, const muse::String& title, const muse::String& description) {
+    auto regMeta = [this](const ::PluginDescriptor& desc, const muse::String& title, const muse::String& description) {
         EffectMeta meta;
+        meta.id = au3::wxToString(desc.GetID());
         meta.categoryId = BUILTIN_CATEGORY_ID;
         meta.title = title;
         meta.description = description;
-        m_metas.insert({ symbol, meta });
+        meta.isRealtimeCapable = desc.IsEffectRealtime();
+        m_metas.insert({ desc.GetSymbol(), meta });
     };
 
     // General
@@ -49,53 +72,60 @@ void BuiltinEffectsRepository::init()
     qmlRegisterType<GeneralViewModel>("Audacity.Effects", 1, 0, "GeneralViewModel");
     effectsViewRegister()->setDefaultUrl(u"qrc:/general/GeneralEffectView.qml");
 
-    // Specific
-    static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
-    qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "AmplifyViewModel");
-    regView(AmplifyEffect::Symbol, u"qrc:/amplify/AmplifyView.qml");
-    regMeta(AmplifyEffect::Symbol,
-            muse::mtrc("effects", "Amplify"),
-            muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected")
-            );
+    for (const PluginDescriptor& desc : PluginManager::Get().PluginsOfType(PluginTypeEffect)) {
+        const auto& symbol = desc.GetSymbol();
+        if (symbol == AmplifyEffect::Symbol) {
+            qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "AmplifyViewModel");
+            regView(AmplifyEffect::Symbol, u"qrc:/amplify/AmplifyView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Amplify"),
+                    muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected")
+                    );
+        } else if (symbol == ChirpEffect::Symbol) {
+            regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Chirp"),
+                    muse::mtrc("effects", "Generates an ascending or descending tone of one of four types")
+                    );
+        } else if (symbol == ToneEffect::Symbol) {
+            qmlRegisterType<ToneViewModel>("Audacity.Effects", 1, 0, "ToneViewModel");
+            regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Tone"),
+                    muse::mtrc("effects", "Generates a constant frequency tone of one of four types")
+                    );
+        } else if (symbol == ReverbEffect::Symbol) {
+            qmlRegisterType<ReverbViewModel>("Audacity.Effects", 1, 0, "ReverbViewModel");
+            regView(ReverbEffect::Symbol, u"qrc:/reverb/ReverbView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects", "Reverb"),
+                    muse::mtrc("effects", "Reverb effect")
+                    );
+        } else if (symbol == NoiseGenerator::Symbol) {
+            qmlRegisterType<NoiseViewModel>("Audacity.Effects", 1, 0, "NoiseViewModel");
+            regView(NoiseGenerator::Symbol, u"qrc:/noisegen/NoiseView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects/noise", "Noise"),
+                    muse::mtrc("effects/noise", "Generates noise")
+                    );
+        } else if (symbol == DtmfGenerator::Symbol) {
+            qmlRegisterType<DtmfViewModel>("Audacity.Effects", 1, 0, "DtmfViewModel");
+            regView(DtmfGenerator::Symbol, u"qrc:/dtmfgen/DtmfView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects/dtmf", "DTMF Tones"),
+                    muse::mtrc("effects/dtmf", "Generates DTMF signal")
+                    );
+        } else {
+            LOGW() << "effect not found for symbol: " << au3::wxToStdSting(symbol.Internal());
+        }
+    }
 
-    static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
-    regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");
-    regMeta(ChirpEffect::Symbol,
-            muse::mtrc("effects", "Chirp"),
-            muse::mtrc("effects", "Generates an ascending or descending tone of one of four types")
-            );
+    m_effectMetaListUpdated.notify();
+}
 
-    static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
-    qmlRegisterType<NoiseViewModel>("Audacity.Effects", 1, 0, "NoiseViewModel");
-    regView(NoiseGenerator::Symbol, u"qrc:/noisegen/NoiseView.qml");
-    regMeta(NoiseGenerator::Symbol,
-            muse::mtrc("effects/noise", "Noise"),
-            muse::mtrc("effects/noise", "Generates noise")
-            );
-
-    static BuiltinEffectsModule::Registration< ToneEffect > regTone;
-    qmlRegisterType<ToneViewModel>("Audacity.Effects", 1, 0, "ToneViewModel");
-    regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
-    regMeta(ToneEffect::Symbol,
-            muse::mtrc("effects", "Tone"),
-            muse::mtrc("effects", "Generates a constant frequency tone of one of four types")
-            );
-
-    static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
-    qmlRegisterType<ReverbViewModel>("Audacity.Effects", 1, 0, "ReverbViewModel");
-    regView(ReverbEffect::Symbol, u"qrc:/reverb/ReverbView.qml");
-    regMeta(ReverbEffect::Symbol,
-            muse::mtrc("effects", "Reverb"),
-            muse::mtrc("effects", "Reverb effect")
-            );
-
-    static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
-    qmlRegisterType<DtmfViewModel>("Audacity.Effects", 1, 0, "DtmfViewModel");
-    regView(DtmfGenerator::Symbol, u"qrc:/dtmfgen/DtmfView.qml");
-    regMeta(DtmfGenerator::Symbol,
-            muse::mtrc("effects/dtmf", "DTMF Tones"),
-            muse::mtrc("effects/dtmf", "Generates DTMF signal")
-            );
+muse::async::Notification BuiltinEffectsRepository::effectMetaListUpdated() const
+{
+    return m_effectMetaListUpdated;
 }
 
 EffectMeta BuiltinEffectsRepository::effectMeta(const ComponentInterfaceSymbol& symbol) const
@@ -110,17 +140,7 @@ EffectMeta BuiltinEffectsRepository::effectMeta(const ComponentInterfaceSymbol& 
 
 EffectMetaList BuiltinEffectsRepository::effectMetaList() const
 {
-    EffectMetaList list;
-
-    const auto range = PluginManager::Get().PluginsOfType(PluginTypeEffect);
-    for (const PluginDescriptor& desc : range) {
-        LOGD() << " ID: " << au3::wxToStdSting(desc.GetID())
-               << ", Symbol: " << au3::wxToStdSting(desc.GetSymbol().Internal());
-
-        EffectMeta meta = effectMeta(desc.GetSymbol());
-        meta.id = au3::wxToString(desc.GetID());
-        list.push_back(std::move(meta));
-    }
-
+    EffectMetaList list(m_metas.size());
+    std::transform(m_metas.begin(), m_metas.end(), list.begin(), [](const auto& pair) { return pair.second; });
     return list;
 }

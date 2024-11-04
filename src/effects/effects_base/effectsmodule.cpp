@@ -78,7 +78,7 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     m_configuration->init();
     m_actionsController->init();
     m_uiActions->init();
-    m_provider->reloadEffects();
+    m_provider->init();
 }
 
 void EffectsModule::onDelayedInit()

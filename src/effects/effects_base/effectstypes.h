@@ -33,6 +33,8 @@ struct EffectMeta {
 
     muse::String categoryId;
 
+    bool isRealtimeCapable = false;
+
     bool isValid() const { return !id.empty(); }
 };
 
