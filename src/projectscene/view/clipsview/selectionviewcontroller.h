@@ -61,6 +61,7 @@ private:
     trackedit::TrackIdList trackIdList() const;
 
     trackedit::TrackIdList determinateTracks(double y1, double y2) const;
+    Qt::KeyboardModifiers keyboardModifiers() const;
 
     TimelineContext* m_context = nullptr;
 

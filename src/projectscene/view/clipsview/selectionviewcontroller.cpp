@@ -18,13 +18,43 @@ SelectionViewController::SelectionViewController(QObject* parent)
 
 void SelectionViewController::onPressed(double x, double y)
 {
-    m_selectionStarted = true;
-    m_startPoint = QPointF(x, y);
-    emit selectionStarted();
+    Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
+    m_selectionStarted = true;
+    //! NOTE: do not update start point when user holds Shift or Ctrl
+    if (!(modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier))) {
+        m_startPoint = QPointF(x, y);
+    }
+    emit selectionStarted();
     resetDataSelection();
-    TrackIdList tracks = determinateTracks(y, y);
+
+    TrackIdList tracks;
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        tracks = selectionController()->selectedTracks();
+        TrackIdList newTracks = determinateTracks(y, y);
+        if (!newTracks.empty()) {
+            if (!muse::contains(tracks, newTracks.at(0))) {
+                tracks.push_back(newTracks.at(0));
+            }
+        }
+    } else {
+        tracks = determinateTracks(m_startPoint.y(), y);
+    }
+
     selectionController()->setSelectedTracks(tracks, true);
+
+    if (modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier)) {
+        double x1 = m_startPoint.x();
+        double x2 = x;
+        if (x1 > x2) {
+            std::swap(x1, x2);
+        }
+
+        setSelectionActive(true);
+
+        selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), false);
+        selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
+    }
 }
 
 void SelectionViewController::onPositionChanged(double x, double y)
@@ -33,11 +63,18 @@ void SelectionViewController::onPositionChanged(double x, double y)
         return;
     }
 
+    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+
     // point
     emit selectionChanged(m_startPoint, QPointF(x, y));
 
     // tracks
-    TrackIdList tracks = determinateTracks(m_startPoint.y(), y);
+    TrackIdList tracks;
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        tracks = selectionController()->selectedTracks();
+    } else {
+        tracks = determinateTracks(m_startPoint.y(), y);
+    }
     selectionController()->setSelectedTracks(tracks, true);
 
     // time
@@ -57,6 +94,8 @@ void SelectionViewController::onReleased(double x, double y)
         return;
     }
 
+    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+
     m_selectionStarted = false;
 
     // point
@@ -68,7 +107,12 @@ void SelectionViewController::onReleased(double x, double y)
         std::swap(x1, x2);
     }
 
-    const TrackIdList tracks = determinateTracks(m_startPoint.y(), y);
+    TrackIdList tracks;
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        tracks = selectionController()->selectedTracks();
+    } else {
+        tracks = determinateTracks(m_startPoint.y(), y);
+    }
 
     if ((x2 - x1) < MIN_SELECTION_PX) {
         // Click without drag
@@ -194,6 +238,18 @@ TrackIdList SelectionViewController::determinateTracks(double y1, double y2) con
     }
 
     return ret;
+}
+
+Qt::KeyboardModifiers SelectionViewController::keyboardModifiers() const
+{
+    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+
+    //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
+    if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {
+        modifiers = Qt::ControlModifier;
+    }
+
+    return modifiers;
 }
 
 TimelineContext* SelectionViewController::timelineContext() const

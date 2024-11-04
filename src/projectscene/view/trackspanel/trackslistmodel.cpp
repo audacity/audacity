@@ -39,22 +39,6 @@ TracksListModel::TracksListModel(QObject* parent)
         onSelectedTracks(tracksIds);
     });
 
-    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
-        // TODO AU4! remove it when ItemMultiSelectionModel is extended
-        Q_UNUSED(begin);
-        if (selectionController()->timeSelectionIsNotEmpty()) {
-            m_audioDataSelected = true;
-        }
-    });
-
-    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t end) {
-        // TODO AU4! remove it when ItemMultiSelectionModel is extended
-        Q_UNUSED(end);
-        if (selectionController()->timeSelectionIsNotEmpty()) {
-            m_audioDataSelected = true;
-        }
-    });
-
     connect(this, &TracksListModel::rowsInserted, this, [this]() {
         updateRemovingAvailability();
     });
@@ -146,11 +130,6 @@ void TracksListModel::selectRow(int row, bool exclusive)
 {
     if (row >= rowCount()) {
         return;
-    }
-
-    if (m_audioDataSelected) {
-        selectionController()->resetDataSelection();
-        m_audioDataSelected = false;
     }
 
     if (exclusive) {

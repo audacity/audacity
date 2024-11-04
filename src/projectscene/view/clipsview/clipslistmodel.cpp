@@ -44,6 +44,9 @@ void ClipsListModel::init()
         Q_UNUSED(time);
         updateItemsMetrics();
     });
+    selectionController()->tracksSelected().onReceive(this, [this](const TrackIdList&) {
+        updateItemsMetrics();
+    });
 
     reload();
 }
