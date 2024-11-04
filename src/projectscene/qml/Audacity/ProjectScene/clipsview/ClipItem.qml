@@ -45,7 +45,10 @@ Rectangle {
     signal ratioChanged(double val)
 
     signal pitchChangeRequested()
+    signal pitchResetRequested()
+
     signal speedChangeRequested()
+    signal speedResetRequested()
 
     signal titleEditStarted()
     signal titleEditAccepted(var newTitle)
@@ -391,8 +394,12 @@ Rectangle {
 
                     visible: root.pitch !== 0
 
-                    onClicked: {
-                        root.pitchChangeRequested()
+                    onClicked: function(mouse){
+                        if (mouse.modifiers & Qt.ControlModifier) {
+                            root.pitchResetRequested()
+                        } else {
+                            root.pitchChangeRequested()
+                        }
                     }
                 }
 
@@ -404,8 +411,12 @@ Rectangle {
 
                     visible: root.speedPercentage !== 100
 
-                    onClicked: {
-                        root.speedChangeRequested()
+                    onClicked: function(mouse){
+                        if (mouse.modifiers & Qt.ControlModifier) {
+                            root.speedResetRequested()
+                        } else {
+                            root.speedChangeRequested()
+                        }
                     }
                 }
 

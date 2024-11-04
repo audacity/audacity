@@ -343,6 +343,29 @@ bool Au3Interaction::changeClipPitch(const ClipKey& clipKey, int pitch)
     return true;
 }
 
+bool Au3Interaction::resetClipPitch(const ClipKey& clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    clip->SetCentShift(0);
+    LOGD() << "reseted pitch of clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    pushProjectHistoryResetClipPitchState();
+
+    return true;
+}
+
 bool Au3Interaction::changeClipSpeed(const ClipKey& clipKey, double speed)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
@@ -362,6 +385,29 @@ bool Au3Interaction::changeClipSpeed(const ClipKey& clipKey, double speed)
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
     pushProjectHistoryChangeClipSpeedState();
+
+    return true;
+}
+
+bool Au3Interaction::resetClipSpeed(const ClipKey& clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    TimeStretching::SetClipStretchRatio(*waveTrack, *clip, 1);
+    LOGD() << "reseted speed of clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    pushProjectHistoryResetClipSpeedState();
 
     return true;
 }
@@ -1325,9 +1371,19 @@ void Au3Interaction::pushProjectHistoryChangeClipPitchState()
     projectHistory()->pushHistoryState("Pitch Shift", "Changed Pitch Shift");
 }
 
+void Au3Interaction::pushProjectHistoryResetClipPitchState()
+{
+    projectHistory()->pushHistoryState("Reset Clip Pitch", "Reset Clip Pitch");
+}
+
 void Au3Interaction::pushProjectHistoryChangeClipSpeedState()
 {
     projectHistory()->pushHistoryState("Changed Speed", "Changed Speed");
+}
+
+void Au3Interaction::pushProjectHistoryResetClipSpeedState()
+{
+    projectHistory()->pushHistoryState("Reset Clip Speed", "Reset Clip Speed");
 }
 
 void Au3Interaction::pushProjectHistoryRenderClipStretchingState()

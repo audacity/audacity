@@ -192,8 +192,16 @@ Item {
                     Qt.callLater(clipsModel.openClipPitchEdit, clipItem.key)
                 }
 
+                onPitchResetRequested: {
+                    Qt.callLater(clipsModel.resetClipPitch, clipItem.key)
+                }
+
                 onSpeedChangeRequested: {
                     Qt.callLater(clipsModel.openClipSpeedEdit, clipItem.key)
+                }
+
+                onSpeedResetRequested: {
+                    Qt.callLater(clipsModel.resetClipSpeed, clipItem.key)
                 }
             }
         }
