@@ -14,6 +14,11 @@ KDDW.TitleBarBase {
     property var navigationOrder
     property var contextMenuModel
 
+    property int effectsSectionWidth: 0
+    property bool showEffectsSection: false
+ 
+    signal effectsSectionCloseButtonClicked()
+
     property int expectedHeight: 39
 
     signal addRequested(type: int)
@@ -22,10 +27,62 @@ KDDW.TitleBarBase {
     implicitHeight: gripButton.implicitHeight
     heightWhenVisible: expectedHeight
 
+    Component.onCompleted: {
+        if (effectsSectionWidth == 0) {
+            console.warn("effectsSectionWidth is not set ; doing some guesswork")
+            effectsSectionWidth = 240
+        }
+    }
+
+    onShowEffectsSectionChanged: {
+        rowLayout.effectsTitleBar.visible = showEffectsSection
+    }
+
     RowLayout {
         id: rowLayout
         anchors.fill: parent
         spacing: 0
+
+        property alias effectsTitleBar: effectsTitleBar
+
+        Rectangle {
+            id: effectsTitleBar
+            visible: false
+            color: ui.theme.backgroundPrimaryColor
+            property int padding: parent.height / 4
+            border.color: "transparent"
+            border.width: padding
+
+            Layout.preferredWidth: root.effectsSectionWidth
+            Layout.preferredHeight: root.expectedHeight
+
+            StyledTextLabel {
+                text: qsTr("Effects")
+                anchors.fill: parent
+                padding: effectsTitleBar.padding
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            Rectangle {
+                color: effectsTitleBar.color
+                width: root.expectedHeight
+                height: root.expectedHeight
+                anchors.right: parent.right
+                FlatButton {
+                    transparent: true
+                    width: parent.width - 2 * effectsTitleBar.padding
+                    height: parent.height - 2 * effectsTitleBar.padding
+                    anchors.centerIn: parent
+                    normalColor: ui.theme.backgroundPrimaryColor
+                    hoverHitColor: ui.theme.buttonColor
+                    icon: IconCode.CLOSE_X_ROUNDED
+                    onClicked: {
+                        root.effectsSectionCloseButtonClicked()
+                    }
+                }
+            }
+        }
 
         FlatButton {
             id: gripButton
