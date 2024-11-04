@@ -756,7 +756,7 @@ void LWSlider::OnPaint(wxDC &dc, bool highlight)
    }
    else
    {
-      // TODO: Don't use pixel-count hack in positioning.  
+      // TODO: Don't use pixel-count hack in positioning.
       dc.DrawBitmap(thumbBitmap, mLeft+thumbOrtho-5, mTop+thumbPos, true);
    }
 
@@ -960,7 +960,7 @@ void LWSlider::CreatePopWin()
 {
    if(mTipPanel || mAlwaysHideTip || mParent == nullptr)
       return;
-   
+
    mTipPanel = safenew TipWindow(mParent, GetWidestTips());
    mTipPanel->Hide();
 }
@@ -1145,7 +1145,8 @@ bool LWSlider::DoShowDialog(wxPoint pos)
                      mScrollPage,
                      this);
    if (pos == wxPoint(-1, -1)) {
-      dlg.Center();
+      dlg.CenterOnParent();
+      pos = dlg.GetPosition();
    }
    wxRect screenRect = wxDisplay(wxDisplay::GetFromPoint(pos)).GetClientArea();
    int screenOffset = 8;
@@ -1165,12 +1166,12 @@ bool LWSlider::DoShowDialog(wxPoint pos)
       pos.y = screenRect.GetTop() + screenOffset;
    }
    dlg.SetPosition(pos);
-   
+
    changed = (dlg.ShowModal() == wxID_OK);
    if( changed )
       value = dlg.Get();
 
-   // We now expect the pop up dialog to be 
+   // We now expect the pop up dialog to be
    // sending updates as we go.
    // So this code is needed to possibly restore the old
    // value, on a cancel.
@@ -1178,7 +1179,7 @@ bool LWSlider::DoShowDialog(wxPoint pos)
       mCurrentValue = value;
       SendUpdate(value);
    }
-   
+
    return changed;
 }
 
