@@ -735,9 +735,9 @@ auto TransportMenu()
          Menu( wxT("Play"), XXO("Pl&aying"),
             /* i18n-hint: (verb) Start or Stop audio playback*/
             Command( wxT("DefaultPlayStop"), XXO("Pl&ay/Stop"), OnPlayDefaultOrStop,
-               CanStopAudioStreamFlag(), wxT("Space") ),
+               CanStopAudioStreamFlag(), wxT("Ctrl+Space") ),
             Command( wxT("PlayStopSelect"), XXO("Play/Stop and &Set Cursor"),
-               OnPlayStopSelect, CanStopAudioStreamFlag(), wxT("X") ),
+               OnPlayStopSelect, CanStopAudioStreamFlag(), wxT("Space") ),
             Command( wxT("OncePlayStop"), XXO("Play &Once/Stop"), OnPlayOnceOrStop,
                CanStopAudioStreamFlag(), wxT("Shift+Space") ),
             Command( wxT("Pause"), XXO("&Pause"), OnPause,
