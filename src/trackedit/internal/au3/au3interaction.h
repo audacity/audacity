@@ -38,7 +38,9 @@ public:
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
     bool changeClipPitch(const ClipKey& clipKey, int pitch) override;
+    bool resetClipPitch(const ClipKey& clipKey) override;
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
+    bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
@@ -98,7 +100,9 @@ private:
     void pushProjectHistoryPasteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
     void pushProjectHistoryChangeClipPitchState();
+    void pushProjectHistoryResetClipPitchState();
     void pushProjectHistoryChangeClipSpeedState();
+    void pushProjectHistoryResetClipSpeedState();
     void pushProjectHistoryRenderClipStretchingState();
 
     bool canMoveTrack(const TrackId trackId, const TrackMoveDirection direction);

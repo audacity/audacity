@@ -68,7 +68,10 @@ public:
     Q_INVOKABLE QVariant prev(const ClipKey& key) const;
 
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
+    Q_INVOKABLE void resetClipPitch(const ClipKey& key);
+
     Q_INVOKABLE void openClipSpeedEdit(const ClipKey& key);
+    Q_INVOKABLE void resetClipSpeed(const ClipKey& key);
 
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;

@@ -351,6 +351,11 @@ void ClipsListModel::openClipPitchEdit(const ClipKey& key)
     interactive()->open(query);
 }
 
+void ClipsListModel::resetClipPitch(const ClipKey& key)
+{
+    trackeditInteraction()->resetClipPitch(key.key);
+}
+
 void ClipsListModel::openClipSpeedEdit(const ClipKey& key)
 {
     selectClip(key);
@@ -365,6 +370,11 @@ void ClipsListModel::openClipSpeedEdit(const ClipKey& key)
     query.addParam("focusItemName", muse::Val("speed"));
 
     interactive()->open(query);
+}
+
+void ClipsListModel::resetClipSpeed(const ClipKey& key)
+{
+    trackeditInteraction()->resetClipSpeed(key.key);
 }
 
 void ClipsListModel::startEditClip(const ClipKey& key)
