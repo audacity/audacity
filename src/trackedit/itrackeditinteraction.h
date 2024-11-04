@@ -5,6 +5,7 @@
 
 #include "global/types/string.h"
 #include "global/async/channel.h"
+#include "global/progress.h"
 
 #include "trackedittypes.h"
 #include "types/ret.h"
@@ -44,7 +45,7 @@ public:
     virtual bool changeClipSpeed(const ClipKey& clipKey, double speed) = 0;
     virtual bool resetClipSpeed(const ClipKey& clipKey) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
-    virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
+    virtual void renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual void clearClipboard() = 0;
     virtual muse::Ret pasteFromClipboard(secs_t begin, TrackId trackId) = 0;
     virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;
@@ -76,5 +77,7 @@ public:
     virtual bool canUndo() = 0;
     virtual void redo() = 0;
     virtual bool canRedo() = 0;
+
+    virtual muse::ProgressPtr progress() const = 0;
 };
 }

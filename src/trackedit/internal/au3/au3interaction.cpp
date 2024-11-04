@@ -5,7 +5,9 @@
 #include "ProjectRate.h"
 #include "TempoChange.h"
 #include "QualitySettings.h"
+
 #include "global/types/number.h"
+#include "global/concurrency/concurrent.h"
 
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
@@ -20,6 +22,7 @@
 
 #include "trackedit/dom/track.h"
 
+#include "defer.h"
 #include "log.h"
 #include "trackediterrors.h"
 #include "translation.h"
@@ -123,6 +126,11 @@ muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, secs_t 
     }
 
     return muse::make_ok();
+}
+
+Au3Interaction::Au3Interaction()
+{
+    m_progress = std::make_shared<muse::Progress>();
 }
 
 muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
@@ -433,27 +441,39 @@ bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool opt
     return true;
 }
 
-bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
+void Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
+    muse::Concurrent::run([this, clipKey](){
+        m_progress->started.notify();
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
+        muse::ProgressResult result;
 
-    waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, {});
-    LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
+        DEFER {
+            m_progress->finished.send(result);
+        };
 
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack)); //! todo: replase with onClipChanged
+        WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return;
+        }
 
-    pushProjectHistoryRenderClipStretchingState();
+        std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return;
+        }
 
-    return true;
+        auto progressCallBack = [this](double progressFraction) {
+            m_progress->progressChanged.send(progressFraction * 1000, 1000, "");
+        };
+
+        waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
+        LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack)); //! todo: replase with onClipChanged
+
+        pushProjectHistoryRenderClipStretchingState();
+    });
 }
 
 void Au3Interaction::clearClipboard()
@@ -1317,6 +1337,11 @@ void Au3Interaction::redo()
 bool Au3Interaction::canRedo()
 {
     return projectHistory()->redoAvailable();
+}
+
+muse::ProgressPtr Au3Interaction::progress() const
+{
+    return m_progress;
 }
 
 void Au3Interaction::pushProjectHistoryDuplicateState()

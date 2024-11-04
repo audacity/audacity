@@ -25,7 +25,7 @@ class Au3Interaction : public ITrackeditInteraction
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
 
 public:
-    Au3Interaction() = default;
+    Au3Interaction();
 
     muse::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
 
@@ -42,7 +42,7 @@ public:
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
-    bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
+    void renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
@@ -76,6 +76,8 @@ public:
     bool canUndo() override;
     void redo() override;
     bool canRedo() override;
+
+    muse::ProgressPtr progress() const override;
 
 private:
     au3::Au3Project& projectRef() const;
@@ -111,5 +113,7 @@ private:
     void moveTrackTo(const TrackId trackId, int pos);
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
+
+    muse::ProgressPtr m_progress;
 };
 }
