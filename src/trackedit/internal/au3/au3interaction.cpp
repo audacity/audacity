@@ -71,7 +71,9 @@ Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track
     auto& trackFactory = WaveTrackFactory::Get(projectRef());
     auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
 
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), track->GetId());
+    //! NOTE: using dynamic_cast directly because when using UndoManager
+    //! project may not contain track with given ID anymore
+    Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track.get());
     IF_ASSERT_FAILED(waveTrack) {
         return nullptr;
     }
