@@ -10,6 +10,8 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 
+#include "Track.h"
+
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
@@ -55,7 +57,10 @@ public:
     muse::async::Channel<trackedit::secs_t> dataSelectedEndTimeSelected() const override;
 
 private:
+    void updateSelectionController();
+
     au3::Au3Project& projectRef() const;
+    Observer::Subscription m_tracksSubc;
 
     template<typename T>
     struct Val {

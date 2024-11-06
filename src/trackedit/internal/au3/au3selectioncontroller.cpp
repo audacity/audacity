@@ -34,6 +34,20 @@ void Au3SelectionController::init()
         setDataSelectedStartTime(0, true);
         setDataSelectedEndTime(0, true);
     });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+        if (prj) {
+            //! NOTE: sync selectionControler with internal project state if trackList changed
+            auto trackList = &Au3TrackList::Get(projectRef());
+            m_tracksSubc = trackList->Subscribe([this](const TrackListEvent&) {
+                updateSelectionController();
+            });
+        } else {
+            m_tracksSubc.Reset();
+        }
+    });
 }
 
 void Au3SelectionController::resetSelectedTracks()
@@ -224,6 +238,17 @@ muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelected
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeSelected() const
 {
     return m_selectedEndTime.selected;
+}
+
+void Au3SelectionController::updateSelectionController()
+{
+    auto& tracks = Au3TrackList::Get(projectRef());
+    TrackIdList selectedTracks;
+    for (const auto& selectedTrack : tracks.Selected()) {
+        selectedTracks.push_back(DomConverter::trackId(selectedTrack->GetId()));
+    }
+
+    m_selectedTracks.set(selectedTracks, true);
 }
 
 Au3Project& Au3SelectionController::projectRef() const
