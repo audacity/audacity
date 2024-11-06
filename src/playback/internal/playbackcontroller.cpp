@@ -184,10 +184,20 @@ void PlaybackController::togglePlay()
         return;
     }
 
+    bool isShiftPressed =  QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
     if (isPlaying()) {
-        stop();
+        if (isShiftPressed) {
+            stop();
+        } else {
+            pause();
+        }
     } else if (isPaused()) {
-        resume();
+        if (isShiftPressed) {
+            rewindToStart();
+            play();
+        } else {
+            resume();
+        }
     } else {
         play();
     }
