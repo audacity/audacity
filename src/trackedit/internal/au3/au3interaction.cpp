@@ -1394,30 +1394,12 @@ void Au3Interaction::undo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    // Find the index of the currently selected track in the old list
-    auto trackIdList = trackeditProject->trackIdList();
-    auto selectedTracks = selectionController()->selectedTracks();
-    int selectedIndex = -1;
-    if (!selectedTracks.empty()) {
-        selectedIndex = std::distance(trackIdList.begin(),
-                                      std::find(trackIdList.begin(),
-                                                trackIdList.end(),
-                                                selectedTracks.at(0)));
-    }
     projectHistory()->undo();
 
     // Undo removes all tracks from current state and
     // inserts tracks from the previous state so we need
     // to reload whole model
     trackeditProject->reload();
-
-    // Update selected track id
-    auto newTrackIdList = trackeditProject->trackIdList();
-    if (selectedIndex >= 0 && selectedIndex < static_cast<int>(newTrackIdList.size())) {
-        selectionController()->setSelectedTracks(newTrackIdList);
-    } else {
-        selectionController()->resetSelectedTracks();
-    }
 }
 
 bool Au3Interaction::canUndo()
@@ -1433,27 +1415,12 @@ void Au3Interaction::redo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    // Find the index of the currently selected track in the old list
-    auto trackIdList = trackeditProject->trackIdList();
-    int selectedIndex = std::distance(trackIdList.begin(),
-                                      std::find(trackIdList.begin(),
-                                                trackIdList.end(),
-                                                selectionController()->selectedTracks().at(0)));
-
     projectHistory()->redo();
 
     // Redo removes all tracks from current state and
     // inserts tracks from the previous state so we need
     // to reload whole model
     trackeditProject->reload();
-
-    // Update selected track id
-    auto newTrackIdList = trackeditProject->trackIdList();
-    if (selectedIndex >= 0 && selectedIndex < static_cast<int>(newTrackIdList.size())) {
-        selectionController()->setSelectedTracks(newTrackIdList);
-    } else {
-        selectionController()->resetSelectedTracks();
-    }
 }
 
 bool Au3Interaction::canRedo()
