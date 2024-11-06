@@ -47,7 +47,9 @@ Item {
 
         onPositionChanged: function(mouse) {
             var newWidth = leftMa.startW + (mouse.x * -1)
-            if (newWidth > root.minSelection) {
+            if (newWidth < root.minSelection) {
+                root.selectionDraged(selRect.x + selRect.width - root.minSelection, selRect.x + selRect.width, false)
+            } else {
                 root.selectionDraged(leftMa.startX + mouse.x, leftMa.startX + mouse.x + newWidth, false)
             }
         }
@@ -82,9 +84,10 @@ Item {
 
         onPositionChanged: function(mouse) {
             var newWidth = rightMa.startW + mouse.x
-            if (newWidth > root.minSelection) {
-                root.selectionDraged(selRect.x, selRect.x + newWidth, false)
+            if (newWidth < root.minSelection) {
+                newWidth = root.minSelection
             }
+            root.selectionDraged(selRect.x, selRect.x + newWidth, false)
         }
 
         onReleased: {
