@@ -1675,6 +1675,11 @@ void AudioIO::StopStream()
    mPlaybackSchedule.ResetMode();
 }
 
+void AudioIO::SeekStream(double seconds)
+{
+    mSeek = seconds;
+}
+
 void AudioIO::SetPaused(bool state, bool publish)
 {
    if (state != IsPaused())
