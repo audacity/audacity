@@ -23,13 +23,6 @@ static const ActionCode LOOP_OUT_CODE("loop-out");
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
 
-static const QTime ZERO_TIME(0, 0, 0, 0);
-
-inline float secondsFromMilliseconds(msecs_t milliseconds)
-{
-    return milliseconds / 1000.f;
-}
-
 void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
@@ -48,19 +41,26 @@ void PlaybackController::init()
         onProjectChanged();
     });
 
-    m_playbackPositionChanged.onNotify(this, []() {
-        // msecs_t endMsecs = playbackEndMsecs();
-        // const LoopBoundaries& loop = playback()->loopBoundaries();
-        // if (m_currentPlaybackTimeMsecs == endMsecs && m_currentPlaybackTimeMsecs != loop.loopOutTick) {
-        //     stop();
-        // }
-    });
-
     m_player = playback()->player();
     globalContext()->setPlayer(m_player);
 
     m_player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
         m_isPlayingChanged.notify();
+    });
+
+    m_player->playbackPositionChanged().onReceive(this, [this](const muse::secs_t& position) {
+        project::IAudacityProjectPtr project = globalContext()->currentProject();
+        if (!project) {
+            return false;
+        }
+
+        if (totalPlayTime() == position) {
+            //! NOTE: just stop, without seek
+            player()->stop();
+        } else if (!isPlaying()) {
+            //! NOTE: reset play state after stop without seek
+            m_isPlayAllowedChanged.notify();
+        }
     });
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
@@ -133,19 +133,9 @@ void PlaybackController::reset()
     stop();
 }
 
-Notification PlaybackController::playbackPositionChanged() const
-{
-    return m_playbackPositionChanged;
-}
-
 Channel<uint32_t> PlaybackController::midiTickPlayed() const
 {
     return m_tickPlayed;
-}
-
-float PlaybackController::playbackPositionInSeconds() const
-{
-    return secondsFromMilliseconds(m_currentPlaybackTime);
 }
 
 muse::async::Channel<TrackId> PlaybackController::trackAdded() const
@@ -193,8 +183,7 @@ void PlaybackController::togglePlay()
         }
     } else if (isPaused()) {
         if (isShiftPressed) {
-            rewindToStart();
-            play();
+            stop();
         } else {
             resume();
         }
@@ -243,21 +232,21 @@ void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
     muse::secs_t secs = args.arg<double>(0);
     bool triggerPlay = args.count() > 1 ? args.arg<bool>(1) : false;
 
+    if (isPaused()) {
+        player()->stop();
+    }
+
     if (triggerPlay) {
         player()->seek(secs, true /* applyIfPlaying */);
 
         if (!isPlaying()) {
-            play();
+            player()->play();
         }
     } else {
         player()->seek(secs);
     }
 
     m_lastPlaybackSeekTime = secs;
-
-    if (isPaused()) {
-        player()->stop();
-    }
 }
 
 void PlaybackController::pause()
@@ -337,17 +326,6 @@ void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode
     m_actionCheckedChanged.send(actionCode);
 }
 
-void PlaybackController::setCurrentPlaybackTime(muse::secs_t msecs)
-{
-    if (m_currentPlaybackTime == msecs) {
-        return;
-    }
-
-    m_currentPlaybackTime = msecs;
-
-    m_playbackPositionChanged.notify();
-}
-
 void PlaybackController::subscribeOnAudioParamsChanges()
 {
     NOT_IMPLEMENTED;
@@ -379,13 +357,14 @@ Channel<ActionCode> PlaybackController::actionCheckedChanged() const
     return m_actionCheckedChanged;
 }
 
-QTime PlaybackController::totalPlayTime() const
+muse::secs_t PlaybackController::totalPlayTime() const
 {
-    QTime result = ZERO_TIME;
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return 0;
+    }
 
-    NOT_IMPLEMENTED;
-
-    return result;
+    return project->trackeditProject()->totalTime();
 }
 
 Notification PlaybackController::totalPlayTimeChanged() const
@@ -405,6 +384,10 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
     }
 
     if (code == PLAY_CODE || code == LOOP_CODE) {
+        if (totalPlayTime() == globalContext()->playbackState()->playbackPosition()) {
+            return false;
+        }
+
         return !recordController()->isRecording();
     }
 
