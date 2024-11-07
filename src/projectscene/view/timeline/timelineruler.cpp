@@ -31,6 +31,11 @@ TimelineRuler::TimelineRuler(QQuickItem* parent)
     });
 }
 
+bool TimelineRuler::isMajorSection(int y) const
+{
+    return y < (height() / 2);
+}
+
 IntervalInfo TimelineRuler::intervalInfo()
 {
     return m_formatter->intervalInfo(m_context);

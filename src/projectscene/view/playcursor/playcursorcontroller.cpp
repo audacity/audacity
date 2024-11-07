@@ -39,16 +39,16 @@ void PlayCursorController::init()
     });
 }
 
-void PlayCursorController::seekToX(double x)
+void PlayCursorController::seekToX(double x, bool triggerPlay)
 {
     IProjectViewStatePtr viewState = projectViewState();
     bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
 
     double secs = m_context->positionToTime(x, snapEnabled);
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
-        dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
+        dispatcher()->dispatch("playback_seek", ActionData::make_arg2<double, bool>(secs, triggerPlay));
     } else if (!muse::RealIsEqual(playbackState()->playbackPosition(), 0.0)) {
-        dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(0.0));
+        dispatcher()->dispatch("playback_seek", ActionData::make_arg2<double, bool>(0.0, triggerPlay));
     }
 }
 

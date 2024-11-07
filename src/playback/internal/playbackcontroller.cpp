@@ -240,14 +240,20 @@ void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
         return;
     }
 
-    if (isPlaying()) {
-        LOGD() << "Can't do seek while playing";
-        return;
+    muse::secs_t secs = args.arg<double>(0);
+    bool triggerPlay = args.count() > 1 ? args.arg<bool>(1) : false;
+
+    if (triggerPlay) {
+        player()->seek(secs, true /* applyIfPlaying */);
+
+        if (!isPlaying()) {
+            play();
+        }
+    } else {
+        player()->seek(secs);
     }
 
-    muse::secs_t secs = args.arg<double>(0);
     m_lastPlaybackSeekTime = secs;
-    player()->seek(secs);
 
     if (isPaused()) {
         player()->stop();

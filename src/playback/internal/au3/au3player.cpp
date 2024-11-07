@@ -220,7 +220,7 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     return success ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
 }
 
-void Au3Player::seek(const muse::secs_t newPosition)
+void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
 {
     LOGD() << "newPosition: " << newPosition;
 
@@ -231,6 +231,11 @@ void Au3Player::seek(const muse::secs_t newPosition)
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
     playRegion.SetStart(newPosition);
+
+    if (applyIfPlaying && m_playbackStatus.val == PlaybackStatus::Running) {
+        auto gAudioIO = AudioIO::Get();
+        gAudioIO->SeekStream(newPosition - gAudioIO->GetStreamTime());
+    }
 
     m_playbackPosition.set(newPosition);
 }

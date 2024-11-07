@@ -42,6 +42,8 @@ public:
     explicit TimelineRuler(QQuickItem* parent = nullptr);
     ~TimelineRuler() = default;
 
+    Q_INVOKABLE bool isMajorSection(int y) const;
+
     IntervalInfo intervalInfo();
 
     void setFormatter(const TimelineRulerMode mode);
