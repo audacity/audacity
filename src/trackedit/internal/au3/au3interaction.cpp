@@ -1189,7 +1189,7 @@ void Au3Interaction::duplicateTracks(const TrackIdList& trackIds)
         auto au3Clone = au3Track->Duplicate();
         Au3TrackList::AssignUniqueId(au3Clone);
 
-        tracks.Add(au3Clone, true);
+        tracks.Add(au3Clone, ::TrackList::DoAssignId::Yes);
 
         auto clone = DomConverter::track(au3Clone.get());
 

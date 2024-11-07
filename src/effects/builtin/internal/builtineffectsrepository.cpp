@@ -21,6 +21,7 @@
 #include "tonegen/toneeffect.h"
 #include "reverb/reverbeffect.h"
 #include "reverb/reverbviewmodel.h"
+#include "tonegen/toneviewmodel.h"
 
 #include "log.h"
 
@@ -61,6 +62,7 @@ void BuiltinEffectsRepository::init()
             );
 
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
+    qmlRegisterType<ToneViewModel>("Audacity.Effects", 1, 0, "ToneViewModel");
     regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
     regMeta(ToneEffect::Symbol,
             muse::mtrc("effects", "Tone"),

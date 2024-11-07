@@ -4,7 +4,7 @@
 declare_module(vst_sdk_3)
 
 if (NOT AU_MODULE_VST_VST3_SDK_PATH)
-    message(FATAL_ERROR "AU_MODULE_VST_VST3_SDK_PATH path is not setted")
+    message(FATAL_ERROR "AU_MODULE_VST_VST3_SDK_PATH path is not set")
 endif()
 
 set(VST3_SDK_PATH ${AU_MODULE_VST_VST3_SDK_PATH})

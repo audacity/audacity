@@ -439,9 +439,12 @@ void TrackList::DeletionEvent(std::weak_ptr<Track> node, bool duringReplace)
       { TrackListEvent::DELETION, std::move(node), duringReplace ? 1 : 0 });
 }
 
-void TrackList::AdditionEvent(TrackNodePointer node)
+void TrackList::AdditionEvent(TrackNodePointer node, EventPublicationSynchrony synchrony)
 {
-   QueueEvent({ TrackListEvent::ADDITION, *node });
+   if (synchrony == EventPublicationSynchrony::Synchronous)
+      Publish({TrackListEvent::ADDITION, *node});
+   else
+      QueueEvent({TrackListEvent::ADDITION, *node});
 }
 
 void TrackList::ResizingEvent(TrackNodePointer node)
@@ -482,7 +485,7 @@ void TrackList::Insert(const Track* before,
 
    if(before == nullptr)
    {
-      Add(pSrc, assignIds);
+      Add(pSrc, assignIds ? DoAssignId::Yes : DoAssignId::No);
       return;
    }
 
@@ -493,7 +496,7 @@ void TrackList::Insert(const Track* before,
          arr.push_back(pSrc.get());
       arr.push_back(track);
    }
-   Add(pSrc, assignIds);
+   Add(pSrc, assignIds ? DoAssignId::Yes : DoAssignId::No);
    Permute(arr);
 }
 
@@ -533,11 +536,13 @@ Track *TrackList::DoAddToHead(const std::shared_ptr<Track> &t)
    pTrack->SetOwner(shared_from_this(), n);
    pTrack->SetId( TrackId{ ++sCounter } );
    RecalcPositions(n);
-   AdditionEvent(n);
+   AdditionEvent(n, EventPublicationSynchrony::Asynchronous);
    return front().get();
 }
 
-Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
+Track* TrackList::DoAdd(
+   const std::shared_ptr<Track>& t, DoAssignId assignId,
+   EventPublicationSynchrony synchrony)
 {
    if (!ListOfTracks::empty()) {
       auto &pLast = *ListOfTracks::rbegin();
@@ -550,10 +555,10 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
    auto n = getPrev( getEnd() );
 
    t->SetOwner(shared_from_this(), n);
-   if (mAssignsIds && assignIds)
+   if (mAssignsIds && assignId == DoAssignId::Yes)
       t->SetId(TrackId{ ++sCounter });
    RecalcPositions(n);
-   AdditionEvent(n);
+   AdditionEvent(n, synchrony);
    return back().get();
 }
 
@@ -577,7 +582,7 @@ Track::Holder TrackList::ReplaceOne(Track &t, TrackList &&with)
    pTrack->SetId(save->GetId());
    RecalcPositions(node);
    DeletionEvent(save, true);
-   AdditionEvent(node);
+   AdditionEvent(node, EventPublicationSynchrony::Asynchronous);
    return save;
 }
 
@@ -879,7 +884,7 @@ void TrackList::Append(TrackList &&list, bool assignIds)
    while (iter != end) {
       auto pTrack = *iter;
       iter = list.erase(iter);
-      this->Add(pTrack, assignIds);
+      this->Add(pTrack, assignIds ? DoAssignId::Yes : DoAssignId::No);
    }
 }
 

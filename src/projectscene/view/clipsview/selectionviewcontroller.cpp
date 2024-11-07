@@ -47,8 +47,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
         std::swap(x1, x2);
     }
 
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), false);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
+    setSelection(x1, x2, false);
 }
 
 void SelectionViewController::onReleased(double x, double y)
@@ -77,6 +76,7 @@ void SelectionViewController::onReleased(double x, double y)
         } else {
             selectionController()->resetSelectedTracks();
         }
+        setSelection(x1, x1, true);
         return;
     }
 
@@ -88,8 +88,7 @@ void SelectionViewController::onReleased(double x, double y)
     selectionController()->setSelectedTracks(tracks, true);
 
     // time
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), true);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), true);
+    setSelection(x1, x2, true);
 }
 
 void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
@@ -99,8 +98,7 @@ void SelectionViewController::onSelectionDraged(double x1, double x2, bool compl
         std::swap(x1, x2);
     }
 
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), completed);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), completed);
+    setSelection(x1, x2, completed);
 }
 
 void SelectionViewController::selectTrackAudioData(double y)
@@ -222,4 +220,10 @@ void SelectionViewController::setSelectionActive(bool newSelectionActive)
     }
     m_selectionActive = newSelectionActive;
     emit selectionActiveChanged();
+}
+
+void SelectionViewController::setSelection(double x1, double x2, bool complete)
+{
+    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), complete);
+    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), complete);
 }

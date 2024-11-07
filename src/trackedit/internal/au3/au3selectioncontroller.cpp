@@ -27,6 +27,15 @@ using namespace au::au3;
 
 // clip selection
 
+void Au3SelectionController::init()
+{
+    playback()->player()->playbackRewound().onNotify(this, [this] {
+        MYLOG() << "playback rewound";
+        setDataSelectedStartTime(0, true);
+        setDataSelectedEndTime(0, true);
+    });
+}
+
 void Au3SelectionController::resetSelectedTracks()
 {
     MYLOG() << "resetSelectedTrack";
@@ -151,8 +160,9 @@ void Au3SelectionController::resetDataSelection()
 {
     MYLOG() << "resetDataSelection";
 
-    m_selectedStartTime.set(-1.0, true);
-    m_selectedEndTime.set(-1.0, true);
+    const auto playbackPosition = playback()->player()->playbackPosition();
+    m_selectedStartTime.set(playbackPosition, true);
+    m_selectedEndTime.set(playbackPosition, true);
 }
 
 bool Au3SelectionController::timeSelectionIsNotEmpty() const

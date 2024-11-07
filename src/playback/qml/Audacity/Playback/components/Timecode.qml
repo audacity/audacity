@@ -21,6 +21,7 @@ RowLayout {
     property alias lowerTimeSignature: timecodeModel.lowerTimeSignature
 
     property alias currentFormat: timecodeModel.currentFormat
+    property alias currentFormatStr: timecodeModel.currentFormatStr
 
     property bool showMenu: true
     property int backgroundLeftRadius: 3
