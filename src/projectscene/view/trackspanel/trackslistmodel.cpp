@@ -231,9 +231,14 @@ void TracksListModel::removeSelectedRows()
     removeRows(firstIndex.row(), selectedIndexList.size(), firstIndex.parent());
 }
 
-void TracksListModel::requestTrackMove(int from, int to)
+void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
 {
-    trackeditInteraction()->moveTracksTo({ m_trackList[from]->trackId() }, to);
+    std::vector<TrackId> tracksToMove;
+    for (auto index : trackIndexes) {
+        int row = index.toInt();
+        tracksToMove.push_back(m_trackList.at(row)->trackId());
+    }
+    trackeditInteraction()->moveTracksTo(tracksToMove, to);
 }
 
 bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,

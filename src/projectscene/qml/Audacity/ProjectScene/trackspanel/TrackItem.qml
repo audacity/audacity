@@ -16,10 +16,35 @@ ListItemBlank {
     id: root
 
     property var item: null
+    property bool dragged: false
 
     signal interactionStarted()
     signal interactionEnded()
-    signal selectionRequested()
+    signal selectionRequested(bool exclusive)
+
+    signal mousePressed(var item, double x, double y)
+    signal mouseReleased(var item, double x, double y)
+    signal mouseMoved(var item, double x, double y)
+
+    mouseArea.onPressed: {
+        root.mousePressed(this, mouseArea.mouseX, mouseArea.mouseY)
+    }
+
+    mouseArea.onReleased: {
+        root.mouseReleased(this, mouseArea.mouseX, mouseArea.mouseY)
+    }
+
+    mouseArea.onPositionChanged: {
+        root.mouseMoved(this, mouseArea.mouseX, mouseArea.mouseY)
+    }
+
+    mouseArea.onDoubleClicked: {
+        let titlePos = root.mapFromItem(title, 0, 0)
+        if (mouseArea.mouseX >= titlePos.x && mouseArea.mouseX <= titlePos.x + title.width &&
+            mouseArea.mouseY >= titlePos.y && mouseArea.mouseY <= titlePos.y + title.height) {
+            title.edit()
+        }
+    }
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "Track" + root.item.title + "Panel"
@@ -34,6 +59,12 @@ ListItemBlank {
 
     height: trackViewState.trackHeight
     clip: true
+    opacity: dragged ? 0.5 : 1
+
+    background.color: (root.isSelected || hoverHandler.hovered) ?
+                   ui.theme.backgroundPrimaryColor : ui.theme.backgroundSecondaryColor
+
+    background.opacity: (!root.isSelected || hoverHandler.hovered) ? 0.7 : 1
 
     signal renameTrackRequested()
     signal duplicateRequested()
@@ -50,12 +81,15 @@ ListItemBlank {
         id: contextMenuModel
         trackId: root.item ? root.item.trackId : -1
 
-        onTrackRenameRequested: titleEdit()
+        onTrackRenameRequested: title.edit()
     }
 
     Component.onCompleted: {
         trackViewState.init()
         contextMenuModel.load()
+        // Disable ancestor's states
+        // to provide custom styling
+        states = []
     }
 
     ContextMenuLoader {
@@ -66,17 +100,13 @@ ListItemBlank {
         }
     }
 
-    function titleEdit() {
-        title.edit()
-    }
-
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
 
         onClicked: function(e) {
             if (!isSelected) {
-                root.selectionRequested()
+                root.selectionRequested(true)
             }
 
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
@@ -92,6 +122,7 @@ ListItemBlank {
             id: selectionBar
 
             isSelected: root.isSelected
+            isHovered: hoverHandler.hovered
         }
 
         ColumnLayout {
@@ -112,8 +143,8 @@ ListItemBlank {
                 EditableLabel {
                     id: title
 
+                    Layout.preferredHeight: title.implicitHeight
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
 
                     text: root.item.title
 
@@ -126,7 +157,7 @@ ListItemBlank {
                     menuModel: contextMenuModel
 
                     onClicked: {
-                        root.selectionRequested()
+                        root.selectionRequested(true)
                     }
 
                     onHandleMenuItem: function(itemId) {
@@ -274,6 +305,25 @@ ListItemBlank {
 
         onReleased: {
             root.interactionEnded()
+        }
+    }
+
+    Item {
+        anchors.fill: parent
+        MouseArea {
+            anchors.fill: parent
+            onPressed: function(e) {
+                // Pass the event forward to allow
+                // child elements to handle the input
+                e.accepted = false
+                if(!root.isSelected) {
+                    root.selectionRequested(false)
+                }
+            }
+        }
+
+        HoverHandler {
+            id:hoverHandler
         }
     }
 

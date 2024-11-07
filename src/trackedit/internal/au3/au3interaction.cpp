@@ -1233,9 +1233,20 @@ void Au3Interaction::moveTracks(const TrackIdList& trackIds, const TrackMoveDire
 
 void Au3Interaction::moveTracksTo(const TrackIdList& trackIds, int to)
 {
-    for (const auto trackId : trackIds) {
-        moveTrackTo(trackId, to++);
+    if (trackIds.empty()) {
+        return;
     }
+
+    TrackIdList sortedTrackIds = trackIds;
+    auto isAscending = (to > trackPosition(trackIds.front()));
+    std::sort(sortedTrackIds.begin(), sortedTrackIds.end(), [this, isAscending](const TrackId& a, const TrackId& b) {
+        return isAscending ? trackPosition(a) < trackPosition(b) : trackPosition(a) > trackPosition(b);
+    });
+
+    for (const auto& trackId : sortedTrackIds) {
+        moveTrackTo(trackId, to);
+    }
+
     projectHistory()->pushHistoryState("Move track", "Move track");
 }
 
