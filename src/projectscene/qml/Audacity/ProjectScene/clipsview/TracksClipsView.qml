@@ -126,14 +126,12 @@ Rectangle {
 
             onPositionChanged: function(e) {
                 timeline.updateCursorPosition(e.x)
-
-                if (pressed) {
-                    playCursorController.seekToX(e.x)
-                }
             }
 
             onClicked: function (e) {
-                playCursorController.seekToX(e.x)
+                if (!timeline.isMajorSection(e.y)) {
+                    playCursorController.seekToX(e.x, true /* triggerPlay */)
+                }
             }
         }
 

@@ -51,7 +51,7 @@ public:
     double positionX() const;
 
     Q_INVOKABLE void init();
-    Q_INVOKABLE void seekToX(double x);
+    Q_INVOKABLE void seekToX(double x, bool triggerPlay = false);
 
 signals:
     void timelineContextChanged();

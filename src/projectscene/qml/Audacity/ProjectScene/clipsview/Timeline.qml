@@ -11,8 +11,6 @@ Rectangle {
     property alias context: timelineContext
     property alias ruler: timelineRuler
 
-    signal clicked(var mouse)
-
     color: ui.theme.backgroundSecondaryColor
 
     //! NOTE This element must be the same width as the track wave visible area.
@@ -37,6 +35,10 @@ Rectangle {
 
     function resetSelection() {
         timelineContext.resetSelection()
+    }
+
+    function isMajorSection(y) {
+        return timelineRuler.isMajorSection(y)
     }
 
     TimelineContextMenuModel {
@@ -64,15 +66,11 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onClicked: e => {
-                       if (e.button === Qt.LeftButton) {
-                           root.clicked(e)
-                       } else if (e.button === Qt.RightButton) {
-                           contextMenuModel.load()
-                           contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
-                       }
-                   }
+        acceptedButtons: Qt.RightButton
+        onClicked: function(e) {
+            contextMenuModel.load()
+            contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
+        }
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }
