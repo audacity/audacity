@@ -85,21 +85,15 @@ Item {
                     tracksViewState.changeTracksVericalY(view.contentY)
                 }
 
-                interactive: true
+                interactive: false
 
                 model: tracksModel
 
                 navigation.section: root.navigationSection
                 navigation.order: 1
-
                 delegate: TrackItem {
                     item: itemData
-
                     isSelected: Boolean(item) ? item.isSelected : false
-                    onIsSelectedChanged: {
-                        if (isSelected)
-                            root.selectedTrackIndex = index
-                    }
 
                     navigation.name: Boolean(item) ? item.title + item.index : ""
                     navigation.panel: view.navigation
@@ -112,28 +106,116 @@ Item {
                         }
                     }
 
-                    onClicked: {
-                        tracksModel.selectRow(model.index)
+                    onIsSelectedChanged: {
+                        if (isSelected)
+                            root.selectedTrackIndex = index
                     }
 
-                    onInteractionStarted: {
-                        view.interactive = false
-                    }
-
-                    onInteractionEnded: {
-                        view.interactive = true
-                    }
-
-                    onSelectionRequested: {
-                        tracksModel.selectRow(model.index, true)
+                    onSelectionRequested: function (exclusive) {
+                        tracksModel.selectRow(model.index, exclusive)
                     }
 
                     onOpenEffectsRequested: {
                         root.selectedTrackIndex = index
                         root.openEffectsRequested()
                     }
+
+                    Component.onCompleted: {
+                        mousePressed.connect(dragHandler.startDrag)
+                        mouseReleased.connect(dragHandler.endDrag)
+                        mouseMoved.connect(dragHandler.onMouseMove)
+                    }
                 }
             }
+        }
+    }
+
+    Item {
+        id: dragHandler
+
+        anchors.fill: parent
+
+        property bool dragging: false
+        property int dragFirstIndex: -1
+        property int dragLastIndex: -1
+        property int dropIndex: -1
+
+        Rectangle {
+            id: dropCursor
+            width: parent.width
+            height: 2
+            color: ui.theme.accentColor
+            visible: dragHandler.dropIndex >= 0
+            y: dragHandler.dropIndex >= 0 && dragHandler.dropIndex < view.count
+               ? view.itemAtIndex(dragHandler.dropIndex).y
+               : view.contentHeight
+        }
+
+        function startDrag(item, mouseX, mouseY) {
+            let selection = tracksModel.selectionModel().selectedIndexes
+            if (selection.length === 0) {
+                return
+            }
+
+            mouseY = view.mapFromItem(item, mouseX, mouseY).y
+
+            dragFirstIndex = selection[0].row
+            dragLastIndex = selection[selection.length - 1].row
+
+            dragging = true
+        }
+
+        function endDrag() {
+            dragging = false
+            setDraggedStateForTracks(false)
+
+            if (dragFirstIndex < dropIndex) {
+                dropIndex--
+            }
+
+            if (dragFirstIndex == dropIndex || dropIndex < 0) {
+                return
+            }
+
+            let selectedRows = tracksModel.selectionModel().selectedIndexes.map(index => index.row)
+
+            tracksModel.requestTracksMove(selectedRows, dropIndex)
+            dropIndex = -1
+        }
+
+        function onMouseMove(item, mouseX, mouseY) {
+            if (!dragging) {
+                return
+            }
+
+            mouseY = view.mapFromItem(item, mouseX, mouseY).y
+
+            let itemAtCursor = view.itemAt(0, mouseY)
+            let indexAtCursor = view.indexAt(0, mouseY)
+
+            if (itemAtCursor) {
+                if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY).y) {
+                    indexAtCursor++
+                }
+            }
+            else {
+                indexAtCursor = mouseY < 0 ? 0 : view.count
+            }
+
+            if (dragFirstIndex > indexAtCursor || (dragLastIndex + 1) < indexAtCursor ) {
+                dropIndex = indexAtCursor
+                setDraggedStateForTracks(true)
+            }
+            else {
+                dropIndex = -1
+                setDraggedStateForTracks(false)
+            }
+        }
+
+        function setDraggedStateForTracks(state) {
+            tracksModel.selectionModel().selectedIndexes.forEach(selectedIndex => {
+                view.itemAtIndex(selectedIndex.row).dragged = state
+            })
         }
     }
 }

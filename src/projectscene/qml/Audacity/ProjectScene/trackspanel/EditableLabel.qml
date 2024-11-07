@@ -10,18 +10,13 @@ Item {
 
     property string text
 
+    implicitHeight: loader.implicitHeight
+    implicitWidth: loader.implicitWidth
+
     signal textEdited(string text)
 
     function edit() {
         loader.edit(text)
-    }
-
-    MouseArea {
-        anchors.fill: parent
-
-        onDoubleClicked: {
-            loader.edit(text)
-        }
     }
 
     Loader {
