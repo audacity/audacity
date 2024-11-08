@@ -38,7 +38,7 @@ public:
     Q_INVOKABLE void onSelectionDraged(double x, double x2, bool completed);
 
     Q_INVOKABLE void selectTrackAudioData(double y);
-    Q_INVOKABLE void selectClipAudioData(const ClipKey &clipKey);
+    Q_INVOKABLE void selectClipAudioData(const ClipKey& clipKey);
 
     Q_INVOKABLE void resetSelectedClip();
     Q_INVOKABLE void resetDataSelection();
@@ -63,6 +63,8 @@ private:
 
     trackedit::TrackIdList determinateTracks(double y1, double y2) const;
     Qt::KeyboardModifiers keyboardModifiers() const;
+
+    bool isProjectOpened() const;
 
     TimelineContext* m_context = nullptr;
 
