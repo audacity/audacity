@@ -66,6 +66,8 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.speed = au3clip->GetStretchRatio();
     clip.optimizeForVoice = au3clip->GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
 
+    clip.stretchToMatchTempo = au3clip->GetStretchEnabled();
+
     return clip;
 }
 

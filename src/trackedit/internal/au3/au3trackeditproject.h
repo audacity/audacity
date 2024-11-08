@@ -47,6 +47,7 @@ private:
 
     void onTrackListEvent(const TrackListEvent& e);
     void onTrackDataChanged(const TrackId& trackId);
+    void onProjectTempoChange(double newTempo);
 
     struct Au3Impl;
     std::shared_ptr<Au3Impl> m_impl;

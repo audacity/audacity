@@ -1436,6 +1436,21 @@ bool Au3Interaction::canRedo()
     return projectHistory()->redoAvailable();
 }
 
+void Au3Interaction::toggleStretchEnabled(const ClipKey &clipKey)
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return;
+    }
+
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return;
+    }
+
+    clip->SetStretchEnabled(!clip->GetStretchEnabled());
+}
+
 muse::ProgressPtr Au3Interaction::progress() const
 {
     return m_progress;

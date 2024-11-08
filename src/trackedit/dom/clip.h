@@ -22,6 +22,8 @@ struct Clip {
     double speed = 0.0;
     bool optimizeForVoice = false;
 
+    bool stretchToMatchTempo = false;
+
     inline bool isValid() const { return key.isValid(); }
 };
 

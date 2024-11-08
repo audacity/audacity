@@ -284,11 +284,12 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Export clip"),
              TranslatableString("action", "Export clip")
              ),
-    UiAction("clip-enable-stretching",
+    UiAction("stretch-clip-to-match-tempo",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Enable clip stretching"),
-             TranslatableString("action", "Enable clip stretching")
+             TranslatableString("action", "Stretch clip to match tempo"),
+             TranslatableString("action", "Stretch clip to match tempo"),
+             Checkable::Yes
              ),
     UiAction("clip-render-pitch-speed",
              au::context::UiCtxAny,
