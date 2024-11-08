@@ -61,8 +61,8 @@ private slots:
     void onFrameTimeChanged();
 
 private:
-
     context::IPlaybackStatePtr playbackState() const;
+    projectscene::IProjectViewStatePtr projectViewState() const;
 
     void updatePositionX(muse::secs_t secs);
 
