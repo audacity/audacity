@@ -135,6 +135,9 @@ void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
 {
     auto& tracks = ::TrackList::Get(projectRef());
     ::Track* au3Track = tracks.FindById(::TrackId(trackId));
+    if (!au3Track) {
+        return;
+    }
 
     secs_t audioDataStartTime = au3Track->GetStartTime();
     secs_t audioDataEndTime = au3Track->GetEndTime();
@@ -146,6 +149,9 @@ void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
 void Au3SelectionController::setSelectedClipAudioData(trackedit::TrackId trackId, secs_t time)
 {
     const auto& clip = au3::DomAccessor::findWaveClip(projectRef(), trackId, time);
+    if (!clip) {
+        return;
+    }
 
     secs_t audioDataStartTime = clip->Start();
     secs_t audioDataEndTime = clip->End();
