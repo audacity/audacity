@@ -32,11 +32,6 @@ PlayCursorController::PlayCursorController(QObject* parent)
 {
 }
 
-au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
-{
-    return globalContext()->playbackState();
-}
-
 void PlayCursorController::init()
 {
     playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t secs) {
@@ -46,8 +41,8 @@ void PlayCursorController::init()
 
 void PlayCursorController::seekToX(double x)
 {
-    IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
-    bool snapEnabled = viewState->isSnapEnabled();
+    IProjectViewStatePtr viewState = projectViewState();
+    bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
 
     double secs = m_context->positionToTime(x, snapEnabled);
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
@@ -55,6 +50,17 @@ void PlayCursorController::seekToX(double x)
     } else if (!muse::RealIsEqual(playbackState()->playbackPosition(), 0.0)) {
         dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(0.0));
     }
+}
+
+au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
+{
+    return globalContext()->playbackState();
+}
+
+IProjectViewStatePtr PlayCursorController::projectViewState() const
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    return project ? project->viewState() : nullptr;
 }
 
 void PlayCursorController::updatePositionX(muse::secs_t secs)
