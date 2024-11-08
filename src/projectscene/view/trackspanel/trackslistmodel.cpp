@@ -19,6 +19,10 @@ TracksListModel::TracksListModel(QObject* parent)
 
     connect(m_selectionModel, &muse::uicomponents::ItemMultiSelectionModel::selectionChanged,
             [this](const QItemSelection& selected, const QItemSelection& deselected) {
+        if (!isProjectOpened()) {
+            return;
+        }
+
         setItemsSelected(deselected.indexes(), false);
         setItemsSelected(selected.indexes(), true);
 
@@ -443,6 +447,11 @@ void TracksListModel::updateRemovingAvailability()
 {
     QModelIndexList selectedIndexes = m_selectionModel->selectedIndexes();
     setIsRemovingAvailable(!selectedIndexes.empty());
+}
+
+bool TracksListModel::isProjectOpened() const
+{
+    return globalContext()->currentProject() != nullptr;
 }
 
 bool TracksListModel::removeRows(int row, int count, const QModelIndex& parent)

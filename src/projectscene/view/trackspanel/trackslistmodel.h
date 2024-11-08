@@ -88,6 +88,8 @@ private:
         rItemData = Qt::UserRole + 1
     };
 
+    bool isProjectOpened() const;
+
     bool removeRows(int row, int count, const QModelIndex& parent) override;
 
     void onProjectChanged();
