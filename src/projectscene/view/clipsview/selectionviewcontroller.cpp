@@ -18,6 +18,10 @@ SelectionViewController::SelectionViewController(QObject* parent)
 
 void SelectionViewController::onPressed(double x, double y)
 {
+    if (!isProjectOpened()) {
+        return;
+    }
+
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     m_selectionStarted = true;
@@ -59,6 +63,10 @@ void SelectionViewController::onPressed(double x, double y)
 
 void SelectionViewController::onPositionChanged(double x, double y)
 {
+    if (!isProjectOpened()) {
+        return;
+    }
+
     if (!m_selectionStarted) {
         return;
     }
@@ -89,6 +97,10 @@ void SelectionViewController::onPositionChanged(double x, double y)
 
 void SelectionViewController::onReleased(double x, double y)
 {
+    if (!isProjectOpened()) {
+        return;
+    }
+
     if (!m_selectionStarted) {
         return;
     }
@@ -137,6 +149,10 @@ void SelectionViewController::onReleased(double x, double y)
 
 void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
 {
+    if (!isProjectOpened()) {
+        return;
+    }
+
     // time
     if (x1 > x2) {
         std::swap(x1, x2);
@@ -147,28 +163,47 @@ void SelectionViewController::onSelectionDraged(double x1, double x2, bool compl
 
 void SelectionViewController::selectTrackAudioData(double y)
 {
+    if (!isProjectOpened()) {
+        return;
+    }
+
     const std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
     selectionController()->setSelectedTrackAudioData(tracks.at(0));
 }
 
-void SelectionViewController::selectClipAudioData(const ClipKey &clipKey)
+void SelectionViewController::selectClipAudioData(const ClipKey& clipKey)
 {
+    if (!isProjectOpened()) {
+        return;
+    }
+
     selectionController()->setSelectedClip(clipKey.key);
 }
 
 void SelectionViewController::resetSelectedClip()
 {
+    if (!isProjectOpened()) {
+        return;
+    }
+
     selectionController()->resetSelectedClip();
 }
 
 void SelectionViewController::resetDataSelection()
 {
+    if (!isProjectOpened()) {
+        return;
+    }
     setSelectionActive(false);
     selectionController()->resetDataSelection();
 }
 
 bool SelectionViewController::isLeftSelection(double x)
 {
+    if (!isProjectOpened()) {
+        return false;
+    }
+
     return m_startPoint.x() > x;
 }
 
@@ -248,6 +283,11 @@ Qt::KeyboardModifiers SelectionViewController::keyboardModifiers() const
     }
 
     return modifiers;
+}
+
+bool SelectionViewController::isProjectOpened() const
+{
+    return globalContext()->currentProject() != nullptr;
 }
 
 TimelineContext* SelectionViewController::timelineContext() const
