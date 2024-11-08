@@ -261,6 +261,7 @@ WaveClip::WaveClip(
    mTrimLeft = orig.mTrimLeft;
    mTrimRight = orig.mTrimRight;
    mRate = orig.mRate;
+   mStretchEnabled = orig.mStretchEnabled;
 
    // Deep copy of attachments
    Attachments &attachments = *this;
@@ -317,6 +318,7 @@ WaveClip::WaveClip(
       mTrimRight = orig.mTrimRight;
 
    mRate = orig.mRate;
+   mStretchEnabled = orig.mStretchEnabled;
 
    // Deep copy of attachments
    Attachments &attachments = *this;
@@ -560,6 +562,10 @@ size_t WaveClip::GreatestAppendBufferLen() const
 void WaveClip::OnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
+   if (!mStretchEnabled) {
+      return;
+   }
+
    if (!mRawAudioTempo.has_value())
       // When we have tempo detection ready (either by header-file
       // read-up or signal analysis) we can use something smarter than that. In
@@ -682,6 +688,19 @@ bool WaveClip::HasEqualPitchAndSpeed(const WaveClip& other) const
 bool WaveClip::HasPitchOrSpeed() const
 {
    return !StretchRatioEquals(1.0) || GetCentShift() != 0;
+}
+
+bool WaveClip::GetStretchEnabled() const
+{
+   return mStretchEnabled;
+}
+
+void WaveClip::SetStretchEnabled(bool enabled)
+{
+   if (mStretchEnabled == enabled) {
+      return;
+   }
+   mStretchEnabled = enabled;
 }
 
 bool WaveClip::StretchRatioEquals(double value) const
@@ -957,6 +976,7 @@ static constexpr auto CentShiftAttr = "centShift";
 static constexpr auto PitchAndSpeedPreset_attr = "pitchAndSpeedPreset";
 static constexpr auto RawAudioTempo_attr = "rawAudioTempo";
 static constexpr auto ClipStretchRatio_attr = "clipStretchRatio";
+static constexpr auto ClipStretchEnabled_attr = "clipStretchEnabled";
 static constexpr auto Name_attr = "name";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
@@ -1014,6 +1034,12 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             if (!value.TryGet(dblValue))
                return false;
             mClipStretchRatio = dblValue;
+         }
+         else if (attr == ClipStretchEnabled_attr)
+         {
+            if (!value.TryGet(dblValue))
+                return false;
+            mStretchEnabled = dblValue;
          }
          else if (attr == Name_attr)
          {
@@ -1095,6 +1121,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
       static_cast<long>(mPitchAndSpeedPreset));
    xmlFile.WriteAttr(RawAudioTempo_attr, mRawAudioTempo.value_or(0.), 8);
    xmlFile.WriteAttr(ClipStretchRatio_attr, mClipStretchRatio, 8);
+   xmlFile.WriteAttr(ClipStretchEnabled_attr, mStretchEnabled);
    xmlFile.WriteAttr(Name_attr, mName);
    Attachments::ForEach([&](const WaveClipListener &listener){
       listener.WriteXMLAttributes(xmlFile);

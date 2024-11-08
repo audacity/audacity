@@ -47,6 +47,8 @@ static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
 static const ActionCode UNDO("undo");
 static const ActionCode REDO("redo");
 
+static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
+
 void TrackeditActionsController::init()
 {
     dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
@@ -95,6 +97,8 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
+
+    dispatcher()->reg(this, STRETCH_ENABLED_CODE, this, &TrackeditActionsController::toggleStretchClipToMatchTempo);
 
     projectHistory()->isUndoRedoAvailableChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(UNDO);
@@ -686,6 +690,21 @@ void TrackeditActionsController::silenceAudioSelection()
     }
 
     trackeditInteraction()->silenceTracksData(tracksIdsToSilence, selectedStartTime, selectedEndTime);
+}
+
+void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData &args)
+{
+    IF_ASSERT_FAILED(args.count() == 1) {
+        return;
+    }
+
+    trackedit::ClipKey clipKey = args.arg<trackedit::ClipKey>(0);
+    if (!clipKey.isValid()) {
+        return;
+    }
+
+    trackeditInteraction()->toggleStretchEnabled(clipKey);
+    notifyActionCheckedChanged(STRETCH_ENABLED_CODE);
 }
 
 void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::ActionData& args)

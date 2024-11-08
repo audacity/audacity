@@ -25,6 +25,7 @@ struct Au3TrackeditProject::Au3Impl
     // events
     Observer::Subscription tracksSubc;
     bool trackReplacing = false;
+    Observer::Subscription projectTimeSignatureSubscription;
 };
 
 Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3project)
@@ -35,6 +36,10 @@ Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3
     m_impl->tracksSubc = m_impl->trackList->Subscribe([this](const TrackListEvent& e) {
         onTrackListEvent(e);
     });
+    m_impl->projectTimeSignatureSubscription = ProjectTimeSignature::Get(*m_impl->prj).Subscribe(
+        [this](const TimeSignatureChangedMessage& event) {
+            onProjectTempoChange(event.newTempo);
+        });
 }
 
 Au3TrackeditProject::~Au3TrackeditProject()
@@ -108,6 +113,16 @@ void Au3TrackeditProject::onTrackDataChanged(const TrackId& trackId)
     auto it = m_clipsChanged.find(trackId);
     if (it != m_clipsChanged.end()) {
         it->second.changed();
+    }
+}
+
+void Au3TrackeditProject::onProjectTempoChange(double newTempo)
+{
+    Au3TrackList& tracks = Au3TrackList::Get(*m_impl->prj);
+    for (auto track : tracks) {
+        DoProjectTempoChange(*track, newTempo);
+        TrackId trackId = DomConverter::trackId(track->GetId());
+        onTrackDataChanged(trackId);
     }
 }
 

@@ -93,6 +93,7 @@ private:
     void trimAudioOutsideSelection();
     void silenceAudioSelection();
 
+    void toggleStretchClipToMatchTempo(const muse::actions::ActionData& args);
     void renderClipPitchAndSpeed(const muse::actions::ActionData& args);
 
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;

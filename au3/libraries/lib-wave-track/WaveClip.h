@@ -414,6 +414,10 @@ public:
    bool HasPitchOrSpeed() const;
    //! @}
 
+   //! Enabling stretch to match tempo
+   bool GetStretchEnabled() const;
+   void SetStretchEnabled(bool enabled);
+
    /*
     * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
     * TimeAndPitchInterface::MaxCent`
@@ -1011,6 +1015,7 @@ private:
    double mClipStretchRatio = 1.;
    std::optional<double> mRawAudioTempo;
    std::optional<double> mProjectTempo;
+   bool mStretchEnabled = true;
 
    //! Sample rate of the raw audio, i.e., before stretching.
    int mRate;
