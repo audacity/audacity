@@ -16,6 +16,11 @@ set(MODULE_SRC
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/audioengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audioengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioiolistener.h
+
+    # AU3
+    ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.h
     )
 
 # AU3

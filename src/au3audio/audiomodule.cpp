@@ -36,6 +36,7 @@ void AudioModule::registerUiTypes()
 
 void AudioModule::onInit(const muse::IApplication::RunMode&)
 {
+    m_audioEngine->init();
 }
 
 void AudioModule::onDeinit()

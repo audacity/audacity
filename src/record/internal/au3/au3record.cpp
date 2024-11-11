@@ -4,15 +4,8 @@
 
 #include "au3record.h"
 
-#include "timer.h"
-
-#include "global/async/async.h"
-
-#include "playback/playbacktypes.h"
-
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
-#include "libraries/lib-audio-io/AudioIOListener.h"
 #include "libraries/lib-audio-devices/AudioIOBase.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-track-selection/TrackFocus.h"
@@ -43,54 +36,6 @@ using namespace au::au3;
 
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
-
-namespace au::record {
-class RecordingListener : public AudioIOListener, public async::Asyncable
-{
-public:
-    RecordingListener()
-        : m_timer(std::chrono::milliseconds(100))
-    {
-        m_timer.onTimeout(this, [this]() {
-            m_updateRequested.notify();
-        });
-    }
-
-    void OnAudioIORate(int /*rate*/) override { }
-    void OnAudioIOStartRecording() override { m_timer.start(); }
-    void OnAudioIONewBlocks() override { }
-    void OnCommitRecording() override { m_commitRequested.notify(); }
-    void OnSoundActivationThreshold() override { }
-    void OnAudioIOStopRecording() override
-    {
-        m_finished.notify();
-        m_timer.stop();
-    }
-
-    Notification updateRequested() { return m_updateRequested; }
-    Notification commitRequested() { return m_commitRequested; }
-    Notification finished() { return m_finished; }
-    async::Channel<trackedit::ClipKey> recordingClipChanged() { return m_recordingClipChanged; }
-
-private:
-    Notification m_updateRequested;
-    Notification m_commitRequested;
-    Notification m_finished;
-
-    async::Channel<trackedit::ClipKey> m_recordingClipChanged;
-
-    muse::Timer m_timer;
-};
-
-std::shared_ptr<RecordingListener> s_recordingListener;
-
-static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
-    [](Au3Project& project, bool newDefault) -> AudioIOStartStreamOptions {
-        auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
-        options.listener = s_recordingListener;
-        return options;
-    } };
-}
 
 struct PropertiesOfSelected
 {
@@ -234,15 +179,13 @@ void Au3Record::init()
 {
     m_audioInput = std::make_shared<Au3AudioInput>();
 
-    s_recordingListener = std::make_shared<RecordingListener>();
-
-    s_recordingListener->updateRequested().onNotify(this, [this]() {
+    audioEngine()->updateRequested().onNotify(this, [this]() {
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.UpdatePendingTracks();
     });
 
-    s_recordingListener->recordingClipChanged().onReceive(this, [this](const trackedit::ClipKey& clipKey) {
-        Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+    audioEngine()->recordingClipChanged().onReceive(this, [this](const au::au3::Au3TrackId& trackId, const au::au3::WaveClipID& clipId) {
+        Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), trackId);
 
         Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
                                  .SubstitutePendingChangedTrack(*origWaveTrack);
@@ -252,7 +195,7 @@ void Au3Record::init()
             return;
         }
 
-        auto pendingClipId = DomAccessor::findMatchedClip(pendingWaveTrack, origWaveTrack, clipKey.clipId);
+        auto pendingClipId = DomAccessor::findMatchedClip(pendingWaveTrack, origWaveTrack, clipId.id);
         if (pendingClipId == -1) {
             return;
         }
@@ -268,11 +211,11 @@ void Au3Record::init()
         // to make that possible we need to assign orignal clip's ID to the pending clip
         // so onClipChanged accepts it
         auto pendingClipWithFakeId = DomConverter::clip(pendingWaveTrack, pendingClip.get());
-        pendingClipWithFakeId.key.clipId = clipKey.clipId;
+        pendingClipWithFakeId.key.clipId = clipId.id;
         prj->notifyAboutClipChanged(pendingClipWithFakeId);
     });
 
-    s_recordingListener->commitRequested().onNotify(this, [this]() {
+    audioEngine()->commitRequested().onNotify(this, [this]() {
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.ApplyPendingTracks();
     });
@@ -368,8 +311,7 @@ muse::Ret Au3Record::start()
             auto it = std::find_if(
                 transportTracks.playbackSequences.begin(), end,
                 [&wt](const auto& playbackSequence) {
-                return playbackSequence->FindChannelGroup()
-                == wt->FindChannelGroup();
+                return playbackSequence->FindChannelGroup() == wt->FindChannelGroup();
             });
             if (it != end) {
                 transportTracks.playbackSequences.erase(it);
@@ -545,18 +487,16 @@ Ret Au3Record::doRecord(Au3Project& project,
                     newClip = insertEmptyInterval(*wt, t0, true);
                 }
 
-                trackedit::ClipKey newClipKey(DomConverter::trackId(wt->GetId()), au::au3::WaveClipID(newClip.get()).id);
-
                 // A function that copies all the non-sample data between
                 // wave tracks; in case the track recorded to changes scale
                 // type (for instance), during the recording.
-                auto updater = [newClipKey](Au3Track& d, const Au3Track& s){
+                auto updater = [this, trackId = wt->GetId(), clipId = au::au3::WaveClipID(newClip.get())](Au3Track& d, const Au3Track& s){
                     assert(d.NChannels() == s.NChannels());
                     auto& dst = static_cast<Au3WaveTrack&>(d);
                     auto& src = static_cast<const Au3WaveTrack&>(s);
                     dst.Init(src);
 
-                    s_recordingListener->recordingClipChanged().send(newClipKey);
+                    audioEngine()->recordingClipChanged().send(trackId, clipId);
                 };
 
                 // Get a copy of the track to be appended, to be pushed into
