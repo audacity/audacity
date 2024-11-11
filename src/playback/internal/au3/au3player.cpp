@@ -57,7 +57,8 @@ void Au3Player::play()
 
     Au3Project& project = projectRef();
 
-    auto options = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
+    const bool newDefault = true; //(mode == PlayMode::loopedPlay);
+    auto options = ProjectAudioIO::GetDefaultOptions(project, newDefault);
     bool backwards = false;
 
     auto& tracks = Au3TrackList::Get(project);
@@ -78,7 +79,6 @@ void Au3Player::play()
     double t1 = selectedRegion.t1();
     // SelectedRegion guarantees t0 <= t1, so we need another boolean argument
     // to indicate backwards play.
-    const bool newDefault = false; //(mode == PlayMode::loopedPlay);
 
     if (backwards) {
         std::swap(t0, t1);

@@ -8,12 +8,13 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "au3audio/iaudioengine.h"
 
 #include "au3wrap/au3types.h"
 
 #include "../../irecord.h"
 
-class TransportSequences;
+struct TransportSequences;
 struct AudioIOStartStreamOptions;
 
 namespace au::record {
@@ -21,6 +22,7 @@ class InOutMeter;
 class Au3Record : public IRecord, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::audio::IAudioEngine> audioEngine;
 
 public:
     void init();
