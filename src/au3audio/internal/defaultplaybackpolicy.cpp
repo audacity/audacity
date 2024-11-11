@@ -88,12 +88,7 @@ double DefaultPlaybackPolicy::OffsetSequenceTime(
             time = std::clamp(time + offset, schedule.mT0, schedule.mT1);
       }
       else {
-         // this includes the case where the start time is after the
-         // looped region, and mLoopEnabled is set to false
-         //
-         // Validate time range
-         if (schedule.mT1 > *mpStartTime)
-            time = std::clamp(time + offset, *mpStartTime, schedule.mT1);
+          time += offset;
       }
    }
 
