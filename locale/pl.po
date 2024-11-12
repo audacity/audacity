@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.7.1\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-10-28 11:47+0100\n"
-"PO-Revision-Date: 2024-10-31 00:00+0000\n"
+"PO-Revision-Date: 2024-11-12 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -11519,7 +11519,7 @@ msgstr "Uzyskaj darmowe wtyczki i dźwięki"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>Sprawdź naszą [[%s|aplikację Muse Hub]], w której znajdziesz szeroką gamę wtyczek dźwiękowych dla użytkowników Audacity</p>"
+msgstr "<p>Sprawdź naszą [[%s|aplikację MuseHub]], w której znajdziesz szeroką gamę wtyczek dźwiękowych dla użytkowników Audacity</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
@@ -11560,7 +11560,7 @@ msgstr "Narzędzie do separacji ścieżek w czasie rzeczywistym, umożliwiające
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "Sprawdź różnorodne wtyczki od znanych deweloperów dostępne na [[%s|Muse Hubie]]."
+msgstr "Sprawdź różnorodne wtyczki od znanych deweloperów dostępne na [[%s|MuseHubie]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
@@ -11576,7 +11576,7 @@ msgstr "Obejrzyj wideo o wydaniu"
 
 #: src/WhatsNewDialog.cpp
 msgid "Available on MuseHub"
-msgstr "Dostępne na Muse Hubie"
+msgstr "Dostępne na MuseHubie"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -13001,7 +13001,7 @@ msgstr "W&spółczynnik dźwięk/cisza:"
 
 #: src/effects/DtmfGen.cpp
 msgid "Duty cycle:"
-msgstr "Cykl:"
+msgstr "Cykl pracy:"
 
 #: src/effects/DtmfGen.cpp
 #, c-format
@@ -15035,7 +15035,7 @@ msgstr "Powielone"
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicate"
-msgstr "Duplikuj"
+msgstr "Powiel"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut to clipboard and leave gap"
