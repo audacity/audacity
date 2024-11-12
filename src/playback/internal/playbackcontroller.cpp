@@ -57,9 +57,6 @@ void PlaybackController::init()
         if (totalPlayTime() == position) {
             //! NOTE: just stop, without seek
             player()->stop();
-        } else if (!isPlaying()) {
-            //! NOTE: reset play state after stop without seek
-            m_isPlayAllowedChanged.notify();
         }
     });
 
@@ -386,10 +383,6 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
     }
 
     if (code == PLAY_CODE || code == LOOP_CODE) {
-        if (totalPlayTime() == globalContext()->playbackState()->playbackPosition()) {
-            return false;
-        }
-
         return !recordController()->isRecording();
     }
 
