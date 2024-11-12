@@ -183,7 +183,9 @@ void PlaybackController::togglePlay()
         }
     } else if (isPaused()) {
         if (isShiftPressed) {
-            stop();
+            //! NOTE: set the current position as start position
+            doSeek(m_player->playbackPosition());
+            play();
         } else {
             resume();
         }
@@ -236,16 +238,16 @@ void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
         player()->stop();
     }
 
-    if (triggerPlay) {
-        player()->seek(secs, true /* applyIfPlaying */);
+    doSeek(secs, triggerPlay);
 
-        if (!isPlaying()) {
-            player()->play();
-        }
-    } else {
-        player()->seek(secs);
+    if (triggerPlay && !isPlaying()) {
+        player()->play();
     }
+}
 
+void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
+{
+    player()->seek(secs, applyIfPlaying);
     m_lastPlaybackSeekTime = secs;
 }
 
