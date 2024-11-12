@@ -78,6 +78,7 @@ private:
     void rewindToStart();
     void rewindToEnd();
     void onSeekAction(const muse::actions::ActionData& args);
+    void doSeek(const muse::secs_t secs, bool applyIfPlaying = false);
     void play();
     void pause();
     void stop();
@@ -120,7 +121,6 @@ private:
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     muse::async::Notification m_currentSequenceIdChanged;
-    muse::secs_t m_currentPlaybackTime = 0.0;
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
