@@ -78,7 +78,7 @@ public:
     virtual void redo() = 0;
     virtual bool canRedo() = 0;
 
-    virtual void toggleStretchEnabled(const ClipKey& clipKey) = 0;
+    virtual void toggleStretchToMatchProjectTempo(const ClipKey& clipKey) = 0;
 
     virtual muse::ProgressPtr progress() const = 0;
 };

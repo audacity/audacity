@@ -1436,7 +1436,7 @@ bool Au3Interaction::canRedo()
     return projectHistory()->redoAvailable();
 }
 
-void Au3Interaction::toggleStretchEnabled(const ClipKey &clipKey)
+void Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey &clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -1448,7 +1448,7 @@ void Au3Interaction::toggleStretchEnabled(const ClipKey &clipKey)
         return;
     }
 
-    clip->SetStretchEnabled(!clip->GetStretchEnabled());
+    clip->SetStretchToMatchProjectTempo(!clip->GetStretchToMatchProjectTempo());
 }
 
 muse::ProgressPtr Au3Interaction::progress() const
