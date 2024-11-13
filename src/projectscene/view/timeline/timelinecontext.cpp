@@ -370,6 +370,18 @@ void TimelineContext::fitProjectToWidth()
     shiftFrameTime(0.0 - m_frameStartTime);
 }
 
+void TimelineContext::updateViewOnProjectTempoChange(double ratio)
+{
+    m_zoom *= ratio;
+    emit zoomChanged();
+
+    setFrameStartTime(m_frameStartTime / ratio);
+    setFrameEndTime(m_frameEndTime / ratio);
+
+    dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(
+                                                globalContext()->playbackState()->playbackPosition() / ratio));
+}
+
 void TimelineContext::shiftFrameTimeOnStep(int direction)
 {
     double step = 30.0 / m_zoom;
@@ -690,8 +702,13 @@ void TimelineContext::updateTimeSignature()
     m_timeSigLower = timeSignature.lower;
     emit timeSigLowerChanged();
 
-    m_BPM = timeSignature.tempo;
-    emit BPMChanged();
+    if (m_BPM != timeSignature.tempo) {
+        double ratio = timeSignature.tempo / m_BPM;
+        m_BPM = timeSignature.tempo;
+        updateViewOnProjectTempoChange(ratio);
+
+        emit BPMChanged();
+    }
 
     updateFrameTime();
 }
