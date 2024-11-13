@@ -162,6 +162,7 @@ private:
 
     void fitSelectionToWidth();
     void fitProjectToWidth();
+    void updateViewOnProjectTempoChange(double ratio);
 
     bool hasSelection() const;
 
