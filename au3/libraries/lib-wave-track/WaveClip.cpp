@@ -251,7 +251,7 @@ WaveClip::WaveClip(
    , mPitchAndSpeedPreset { orig.mPitchAndSpeedPreset }
    , mClipStretchRatio { orig.mClipStretchRatio }
    , mRawAudioTempo { orig.mRawAudioTempo }
-   , mProjectTempo { orig.mProjectTempo }
+   , mClipTempo { orig.mClipTempo }
 {
    // essentially a copy constructor - but you must pass in the
    // current sample block factory, because we might be copying
@@ -261,7 +261,7 @@ WaveClip::WaveClip(
    mTrimLeft = orig.mTrimLeft;
    mTrimRight = orig.mTrimRight;
    mRate = orig.mRate;
-   mStretchEnabled = orig.mStretchEnabled;
+   mStretchToMatchProjectTempo = orig.mStretchToMatchProjectTempo;
 
    // Deep copy of attachments
    Attachments &attachments = *this;
@@ -294,7 +294,7 @@ WaveClip::WaveClip(
    : mCentShift { orig.mCentShift }
    , mClipStretchRatio { orig.mClipStretchRatio }
    , mRawAudioTempo { orig.mRawAudioTempo }
-   , mProjectTempo { orig.mProjectTempo }
+   , mClipTempo { orig.mClipTempo }
 {
    assert(orig.CountSamples(t0, t1) > 0);
 
@@ -318,7 +318,7 @@ WaveClip::WaveClip(
       mTrimRight = orig.mTrimRight;
 
    mRate = orig.mRate;
-   mStretchEnabled = orig.mStretchEnabled;
+   mStretchToMatchProjectTempo = orig.mStretchToMatchProjectTempo;
 
    // Deep copy of attachments
    Attachments &attachments = *this;
@@ -562,10 +562,6 @@ size_t WaveClip::GreatestAppendBufferLen() const
 void WaveClip::OnProjectTempoChange(
    const std::optional<double>& oldTempo, double newTempo)
 {
-   if (!mStretchEnabled) {
-      return;
-   }
-
    if (!mRawAudioTempo.has_value())
       // When we have tempo detection ready (either by header-file
       // read-up or signal analysis) we can use something smarter than that. In
@@ -575,14 +571,21 @@ void WaveClip::OnProjectTempoChange(
 
    if (oldTempo.has_value())
    {
-      const auto ratioChange = *oldTempo / newTempo;
+      const auto ratioChange = oldTempo.value() / newTempo;
       mSequenceOffset *= ratioChange;
+      if (!mStretchToMatchProjectTempo) {
+         return;
+      }
       mTrimLeft *= ratioChange;
       mTrimRight *= ratioChange;
       StretchCutLines(ratioChange);
       mEnvelope->RescaleTimesBy(ratioChange);
    }
-   mProjectTempo = newTempo;
+
+   if (mStretchToMatchProjectTempo) {
+      mClipTempo = newTempo;
+   }
+
    Observer::Publisher<StretchRatioChange>::Publish(
       StretchRatioChange { GetStretchRatio() });
 }
@@ -646,8 +649,8 @@ void WaveClip::StretchCutLines(double ratioChange)
 double WaveClip::GetStretchRatio() const
 {
    const auto dstSrcRatio =
-      mProjectTempo.has_value() && mRawAudioTempo.has_value() ?
-         *mRawAudioTempo / *mProjectTempo :
+      mClipTempo.has_value() && mRawAudioTempo.has_value() ?
+         *mRawAudioTempo / *mClipTempo :
          1.0;
    return mClipStretchRatio * dstSrcRatio;
 }
@@ -690,17 +693,17 @@ bool WaveClip::HasPitchOrSpeed() const
    return !StretchRatioEquals(1.0) || GetCentShift() != 0;
 }
 
-bool WaveClip::GetStretchEnabled() const
+bool WaveClip::GetStretchToMatchProjectTempo() const
 {
-   return mStretchEnabled;
+   return mStretchToMatchProjectTempo;
 }
 
-void WaveClip::SetStretchEnabled(bool enabled)
+void WaveClip::SetStretchToMatchProjectTempo(bool enabled)
 {
-   if (mStretchEnabled == enabled) {
+   if (mStretchToMatchProjectTempo == enabled) {
       return;
    }
-   mStretchEnabled = enabled;
+   mStretchToMatchProjectTempo = enabled;
 }
 
 bool WaveClip::StretchRatioEquals(double value) const
@@ -976,7 +979,7 @@ static constexpr auto CentShiftAttr = "centShift";
 static constexpr auto PitchAndSpeedPreset_attr = "pitchAndSpeedPreset";
 static constexpr auto RawAudioTempo_attr = "rawAudioTempo";
 static constexpr auto ClipStretchRatio_attr = "clipStretchRatio";
-static constexpr auto ClipStretchEnabled_attr = "clipStretchEnabled";
+static constexpr auto ClipStretchToMatchTempo_attr = "clipStretchToMatchTempo";
 static constexpr auto Name_attr = "name";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
@@ -985,6 +988,7 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
    {
       double dblValue;
       long longValue;
+      bool boolValue;
       for (auto pair : attrs)
       {
          auto attr = pair.first;
@@ -1035,11 +1039,11 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
                return false;
             mClipStretchRatio = dblValue;
          }
-         else if (attr == ClipStretchEnabled_attr)
+         else if (attr == ClipStretchToMatchTempo_attr)
          {
-            if (!value.TryGet(dblValue))
+            if (!value.TryGet(boolValue))
                 return false;
-            mStretchEnabled = dblValue;
+            mStretchToMatchProjectTempo = boolValue;
          }
          else if (attr == Name_attr)
          {
@@ -1121,7 +1125,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
       static_cast<long>(mPitchAndSpeedPreset));
    xmlFile.WriteAttr(RawAudioTempo_attr, mRawAudioTempo.value_or(0.), 8);
    xmlFile.WriteAttr(ClipStretchRatio_attr, mClipStretchRatio, 8);
-   xmlFile.WriteAttr(ClipStretchEnabled_attr, mStretchEnabled);
+   xmlFile.WriteAttr(ClipStretchToMatchTempo_attr, mStretchToMatchProjectTempo);
    xmlFile.WriteAttr(Name_attr, mName);
    Attachments::ForEach([&](const WaveClipListener &listener){
       listener.WriteXMLAttributes(xmlFile);
@@ -1159,7 +1163,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
       // Empty clip: we're flexible and adopt the other's stretching.
       mRawAudioTempo = other.mRawAudioTempo;
       mClipStretchRatio = other.mClipStretchRatio;
-      mProjectTempo = other.mProjectTempo;
+      mClipTempo = other.mClipTempo;
    }
    else if (GetStretchRatio() != other.GetStretchRatio())
       // post is satisfied

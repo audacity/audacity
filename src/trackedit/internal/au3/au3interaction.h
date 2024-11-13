@@ -80,7 +80,7 @@ public:
     void redo() override;
     bool canRedo() override;
 
-    void toggleStretchEnabled(const ClipKey& clipKey) override;
+    void toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
     muse::ProgressPtr progress() const override;
 

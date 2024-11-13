@@ -415,8 +415,8 @@ public:
    //! @}
 
    //! Enabling stretch to match tempo
-   bool GetStretchEnabled() const;
-   void SetStretchEnabled(bool enabled);
+   bool GetStretchToMatchProjectTempo() const;
+   void SetStretchToMatchProjectTempo(bool enabled);
 
    /*
     * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
@@ -1014,8 +1014,8 @@ private:
    // interval is multiplied, to get a realtime duration.
    double mClipStretchRatio = 1.;
    std::optional<double> mRawAudioTempo;
-   std::optional<double> mProjectTempo;
-   bool mStretchEnabled = true;
+   std::optional<double> mClipTempo;
+   bool mStretchToMatchProjectTempo = true;
 
    //! Sample rate of the raw audio, i.e., before stretching.
    int mRate;

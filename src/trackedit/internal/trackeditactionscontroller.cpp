@@ -703,7 +703,7 @@ void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData 
         return;
     }
 
-    trackeditInteraction()->toggleStretchEnabled(clipKey);
+    trackeditInteraction()->toggleStretchToMatchProjectTempo(clipKey);
     notifyActionCheckedChanged(STRETCH_ENABLED_CODE);
 }
 
