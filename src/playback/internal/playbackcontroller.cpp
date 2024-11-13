@@ -187,6 +187,10 @@ void PlaybackController::togglePlay()
             resume();
         }
     } else {
+        if (m_player->playbackPosition() == totalPlayTime()) {
+            doSeek(0.0);
+        }
+
         play();
     }
 }
