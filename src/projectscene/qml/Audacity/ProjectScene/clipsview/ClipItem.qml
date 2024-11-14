@@ -23,6 +23,7 @@ Rectangle {
     property color clipColor: "#677CE4"
     property bool clipSelected: false
     property bool isDataSelected: false
+    property bool moveActive: false
     property int selectionStart: 0
     property int selectionWidth: 0
 
@@ -61,6 +62,7 @@ Rectangle {
     radius: 4
     color: clipSelected ? "white" : clipColor
     border.color: "#000000"
+    opacity: root.moveActive && clipSelected ? 0.5 : 1.0
 
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
@@ -283,8 +285,6 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.OpenHandCursor
 
-                property bool moveActive: false
-
                 onPositionChanged: function(e) {
                     root.clipItemMousePositionChanged(e.x, e.y)
 
@@ -476,24 +476,23 @@ Rectangle {
         }
     }
 
+    // make sure clip and its handles are visible on top of nearby clips
+    onClipSelectedChanged: {
+        if (clipSelected) {
+            root.parent.z = 1
+        } else {
+            root.parent.z = 0
+        }
+    }
+
     ClipHandles {
         id: clipHandles
 
         // +1 not to overlap with header
         y: header.height + 1
         width: root.width
-        handlesVisible: root.clipSelected
+        handlesVisible: root.clipSelected && !root.moveActive
         canvas: root.canvas
-
-
-        // make sure clip handles are visible on top of nearby clips
-        onHandlesVisibleChanged: {
-            if (handlesVisible) {
-                root.parent.z = 1
-            } else {
-                root.parent.z = 0
-            }
-        }
 
         onClipHandlesMousePositionChanged: function(xWithinClipHandles, yWithinClipHandles) {
             var xWithinClipItem = xWithinClipHandles

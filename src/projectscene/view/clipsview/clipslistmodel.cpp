@@ -33,9 +33,13 @@ void ClipsListModel::init()
 
     dispatcher()->reg(this, "clip-rename", this, &ClipsListModel::onClipRenameAction);
 
-    onSelectedClip(selectionController()->selectedClip());
-    selectionController()->clipSelected().onReceive(this, [this](const trackedit::ClipKey& k) {
-        onSelectedClip(k);
+    onSelectedClips(selectionController()->selectedClips());
+    selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList& keyList) {
+        if (keyList.empty()) {
+            resetSelectedClips();
+        }
+
+        onSelectedClips(keyList);
     });
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t time) {
@@ -165,6 +169,18 @@ double ClipsListModel::autoScrollView(double newTime)
     return frameStartAfterShift - frameStartBeforeShift;
 }
 
+Qt::KeyboardModifiers ClipsListModel::keyboardModifiers() const
+{
+    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+
+    //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
+    if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {
+        modifiers = Qt::ControlModifier;
+    }
+
+    return modifiers;
+}
+
 void ClipsListModel::update()
 {
     //! NOTE First we form a new list, and then we delete old objects,
@@ -188,10 +204,10 @@ void ClipsListModel::update()
 
     updateItemsMetrics();
 
-    //! NOTE We need to update the selected item
-    //! to take a pointer to the item from the new list
-    m_selectedItem = nullptr;
-    onSelectedClip(selectionController()->selectedClip());
+    //! NOTE We need to update the selected items
+    //! to take pointers to the items from the new list
+    m_selectedItems.clear();
+    onSelectedClips(selectionController()->selectedClips());
     m_context->updateSelectedClipTime();
 
     endResetModel();
@@ -287,6 +303,31 @@ void ClipsListModel::onTimelineZoomChanged()
 void ClipsListModel::onTimelineFrameTimeChanged()
 {
     updateItemsMetrics();
+}
+
+void ClipsListModel::setSelectedItems(const QList<ClipListItem *> &items)
+{
+    for (auto& selectedItem : m_selectedItems) {
+        selectedItem->setSelected(false);
+    }
+    m_selectedItems = items;
+    for (auto& selectedItem : m_selectedItems) {
+        selectedItem->setSelected(true);
+    }
+}
+
+void ClipsListModel::addSelectedItem(ClipListItem *item)
+{
+    item->setSelected(true);
+    m_selectedItems.append(item);
+}
+
+void ClipsListModel::clearSelectedItems()
+{
+    for (auto& selectedItem : m_selectedItems) {
+        selectedItem->setSelected(false);
+    }
+    m_selectedItems.clear();
 }
 
 void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
@@ -402,18 +443,21 @@ void ClipsListModel::endEditClip(const ClipKey& key)
     m_clipEditEndTimeOffset = -1.0;
 }
 
-bool ClipsListModel::moveClip(const ClipKey& key, bool completed)
+bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
 {
+    // calculate offset of clip that's being moved
+    // and apply it to all selected clips
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
 
     double newStartTime = m_context->mousePositionTime() - m_clipEditStartTimeOffset;
-
     newStartTime = m_context->applySnapToTime(newStartTime);
+    secs_t offset = newStartTime - item->time().clipStartTime;
 
-    bool ok = trackeditInteraction()->changeClipStartTime(key.key, newStartTime, completed);
+    bool ok = trackeditInteraction()->moveClips(offset, completed);
+
     m_context->updateSelectedClipTime();
 
     return ok;
@@ -479,40 +523,54 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
 
 void ClipsListModel::selectClip(const ClipKey& key)
 {
-    selectionController()->setSelectedClip(key.key);
-    selectionController()->setSelectedTracks(TrackIdList({ key.key.trackId }));
+    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        selectionController()->addSelectedClip(key.key);
+    } else {
+        if (muse::contains(selectionController()->selectedClips(), key.key)) {
+            return;
+        }
+        selectionController()->setSelectedClips(ClipKeyList({ key.key }));
+    }
 }
 
-void ClipsListModel::unselectClip(const ClipKey& key)
+void ClipsListModel::resetSelectedClips()
 {
-    //! TODO AU4: this will need to be improved when
-    //! having an option to select multiple clips
-    Q_UNUSED(key)
-    selectionController()->resetSelectedClip();
-}
-
-void ClipsListModel::resetSelectedClip()
-{
-    selectionController()->resetSelectedClip();
+    selectionController()->resetSelectedClips();
+    clearSelectedItems();
 }
 
 void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
 {
-    if (m_selectedItem && m_selectedItem->clip().key == k) {
-        return;
-    }
-
-    if (m_selectedItem) {
-        m_selectedItem->setSelected(false);
-    }
-
-    if (m_trackId != k.trackId) {
-        m_selectedItem = nullptr;
-    } else {
-        m_selectedItem = itemByKey(k);
-        if (m_selectedItem) {
-            m_selectedItem->setSelected(true);
+    // ignore if item already selected
+    for (const auto& selectedItem : m_selectedItems) {
+        if (selectedItem->clip().key == k) {
+            return;
         }
+    }
+
+    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        if (m_trackId != k.trackId) {
+            return;
+        } else {
+            addSelectedItem(itemByKey(k));
+        }
+    } else {
+        if (m_trackId != k.trackId) {
+            clearSelectedItems();
+        } else {
+            setSelectedItems(QList<ClipListItem*>({ itemByKey(k) }));
+        }
+    }
+}
+
+void ClipsListModel::onSelectedClips(const trackedit::ClipKeyList &keyList)
+{
+    for (const auto& clip : keyList) {
+        onSelectedClip(clip);
     }
 }
 

@@ -55,13 +55,12 @@ public:
     Q_INVOKABLE void startEditClip(const ClipKey& key);
     Q_INVOKABLE void endEditClip(const ClipKey& key);
 
-    Q_INVOKABLE bool moveClip(const ClipKey& key, bool completed);
+    Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed);
     Q_INVOKABLE bool trimRightClip(const ClipKey& key, bool completed);
 
     Q_INVOKABLE void selectClip(const ClipKey& key);
-    Q_INVOKABLE void unselectClip(const ClipKey& key);
-    Q_INVOKABLE void resetSelectedClip();
+    Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
 
     Q_INVOKABLE QVariant next(const ClipKey& key) const;
@@ -99,11 +98,16 @@ private:
         ClipItemRole = Qt::UserRole + 1,
     };
 
+    void setSelectedItems(const QList<ClipListItem*>& items);
+    void addSelectedItem(ClipListItem* item);
+    void clearSelectedItems();
+
     void update();
     void updateItemsMetrics();
     void updateItemsMetrics(ClipListItem* item);
     void positionViewAtClip(const trackedit::Clip& clip);
     void onSelectedClip(const trackedit::ClipKey& k);
+    void onSelectedClips(const trackedit::ClipKeyList& keyList);
     void onClipRenameAction(const muse::actions::ActionData& args);
     ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
     int indexByKey(const trackedit::ClipKey& k) const;
@@ -111,11 +115,13 @@ private:
 
     double autoScrollView(double newTime);
 
+    Qt::KeyboardModifiers keyboardModifiers() const;
+
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     QList<ClipListItem*> m_clipList;
-    ClipListItem* m_selectedItem = nullptr;
+    QList<ClipListItem*> m_selectedItems;
     bool m_isStereo = false;
 
     //! Offset between mouse click position on clip's header and clip's start and end time

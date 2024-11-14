@@ -176,8 +176,8 @@ Rectangle {
         Rectangle {
             id: timelineSelRect
 
-            x: timeline.context.clipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
-            width: timeline.context.clipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
+            x: timeline.context.singleClipSelected ? timeline.context.selectedClipStartPosition : timeline.context.selectionStartPosition
+            width: timeline.context.singleClipSelected ? timeline.context.selectedClipEndPosition - x : timeline.context.selectionEndPosition - x
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
@@ -303,6 +303,7 @@ Rectangle {
                 anchors.fill: parent
                 clip: true
 
+                property bool moveActive: false
                 property real visibleContentHeight: tracksModel.totalTracksHeight - tracksClipsView.contentY
 
                 ScrollBar.horizontal: null
@@ -347,6 +348,7 @@ Rectangle {
                     trackId: model.trackId
                     isDataSelected: model.isDataSelected
                     isTrackSelected: model.isTrackSelected
+                    moveActive: tracksClipsView.moveActive
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         timeline.updateCursorPosition(xWithinTrack)
@@ -360,6 +362,13 @@ Rectangle {
                     onClipSelectedRequested: {
                         selectionController.resetDataSelection()
                         clipsSelection.visible = false
+                    }
+
+                    onClipMoveRequested: function(completed) {
+                        if (tracksClipsView.moveActive !== completed) {
+                            return;
+                        }
+                        tracksClipsView.moveActive = !completed;
                     }
 
                     onRequestSelectionContextMenu: function(x, y) {

@@ -42,7 +42,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(double selectedClipEndTime READ selectedClipEndTime NOTIFY selectedClipEndTimeChanged FINAL)
     Q_PROPERTY(double selectedClipStartPosition READ selectedClipStartPosition NOTIFY selectedClipStartPositionChanged FINAL)
     Q_PROPERTY(double selectedClipEndPosition READ selectedClipEndPosition NOTIFY selectedClipEndPositionChanged FINAL)
-    Q_PROPERTY(bool clipSelected READ clipSelected NOTIFY clipSelectedChanged FINAL)
+    Q_PROPERTY(bool singleClipSelected READ singleClipSelected NOTIFY singleClipSelectedChanged FINAL)
 
     Q_PROPERTY(qreal startHorizontalScrollPosition READ startHorizontalScrollPosition NOTIFY horizontalScrollChanged)
     Q_PROPERTY(qreal horizontalScrollbarSize READ horizontalScrollbarSize NOTIFY horizontalScrollChanged)
@@ -84,7 +84,7 @@ public:
     double selectedClipEndTime() const;
     double selectedClipStartPosition() const;
     double selectedClipEndPosition() const;
-    bool clipSelected() const;
+    bool singleClipSelected() const;
 
     Q_INVOKABLE void init(double frameWidth);
 
@@ -141,7 +141,7 @@ signals:
     void selectedClipEndTimeChanged();
     void selectedClipStartPositionChanged();
     void selectedClipEndPositionChanged();
-    void clipSelectedChanged();
+    void singleClipSelectedChanged();
 
     void viewContentYChangeRequested(double contentY);
 
@@ -177,7 +177,7 @@ private:
 
     void setClipStartTime(double time);
     void setClipEndTime(double time);
-    void setClipSelected();
+    void updateSingleClipSelected();
 
     void updateTimeSignature();
 
@@ -207,7 +207,7 @@ private:
 
     trackedit::secs_t m_selectedClipStartTime = -1.0;
     trackedit::secs_t m_selectedClipEndTime = -1.0;
-    bool m_clipSelected = false;
+    bool m_singleClipSelected = false;
 
     std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
 

@@ -29,13 +29,15 @@ public:
     void resetSelectedTracks() override;
     trackedit::TrackIdList selectedTracks() const override;
     void setSelectedTracks(const trackedit::TrackIdList& trackIds, bool complete = true) override;
+    void addSelectedTrack(const trackedit::TrackId& trackId) override;
     muse::async::Channel<trackedit::TrackIdList> tracksSelected() const override;
 
     // clip selection
-    void resetSelectedClip() override;
-    trackedit::ClipKey selectedClip() const override;
-    void setSelectedClip(const trackedit::ClipKey& clipKey) override;
-    muse::async::Channel<trackedit::ClipKey> clipSelected() const override;
+    void resetSelectedClips() override;
+    ClipKeyList selectedClips() const override;
+    void setSelectedClips(const ClipKeyList& clipKeys) override;
+    void addSelectedClip(const ClipKey& clipKey) override;
+    muse::async::Channel<ClipKeyList> clipsSelected() const override;
     double selectedClipStartTime() const override;
     double selectedClipEndTime() const override;
 
@@ -85,7 +87,7 @@ private:
     Val<TrackIdList> m_selectedTracks;
 
     // clip selection
-    Val<trackedit::ClipKey> m_selectedClip;
+    Val<ClipKeyList> m_selectedClips;
 
     // data selection
     Val<trackedit::secs_t> m_selectedStartTime;

@@ -41,8 +41,14 @@ void PitchAndSpeedChangeModel::load(const QString& trackIdStr, const QString& cl
         emit closeDialogRequested();
     });
 
-    selectionController()->clipSelected().onReceive(this, [this](const trackedit::ClipKey& clipKey) {
-        if (!clipKey.isValid() || m_clip.key == clipKey) {
+    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeyList) {
+        if (clipKeyList.empty()) {
+            return;
+        }
+
+        trackedit::ClipKey clipKey = clipKeyList.at(0);
+
+        if (m_clip.key == clipKey) {
             return;
         }
 
