@@ -163,6 +163,8 @@ void PlaybackController::onProjectChanged()
         prj->aboutCloseBegin().onNotify(this, [this]() {
             stop();
         });
+
+        seek(0.0);
     }
 }
 
