@@ -1452,10 +1452,11 @@ void Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey &clipKey)
     clip->SetStretchToMatchProjectTempo(newValue);
 
     if (newValue) {
+        double currentRatio = clip->GetStretchRatio();
         auto prj = globalContext()->currentTrackeditProject();
         double projectTempo = prj->timeSignature().tempo;
-        DoProjectTempoChange(*waveTrack, projectTempo);
-        makeRoomForClip(clipKey);
+        clip->SetClipTempo(projectTempo);
+        TimeStretching::SetClipStretchRatio(*waveTrack, *clip, currentRatio);
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
 }

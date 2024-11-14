@@ -397,6 +397,7 @@ public:
    // Set rate without resampling. This will change the length of the clip
    void SetRate(int rate);
    void SetRawAudioTempo(double tempo);
+   void SetClipTempo(double tempo);
 
    PitchAndSpeedPreset GetPitchAndSpeedPreset() const;
 

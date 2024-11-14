@@ -1637,6 +1637,11 @@ void WaveClip::SetRawAudioTempo(double tempo)
    mRawAudioTempo = tempo;
 }
 
+void WaveClip::SetClipTempo(double tempo)
+{
+    mClipTempo = tempo;
+}
+
 bool WaveClip::SetCentShift(int cents)
 {
    if (
