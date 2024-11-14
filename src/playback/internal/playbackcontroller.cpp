@@ -23,6 +23,8 @@ static const ActionCode LOOP_OUT_CODE("loop-out");
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
 
+static const secs_t TIME_EPS = secs_t(1 / 1000.0);
+
 void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
@@ -182,7 +184,7 @@ void PlaybackController::togglePlay()
         if (isShiftPressed) {
             //! NOTE: set the current position as start position
             doSeek(m_player->playbackPosition());
-            play();
+            play(true /* ignoreSelection */);
         } else {
             resume();
         }
@@ -191,17 +193,17 @@ void PlaybackController::togglePlay()
             doSeek(0.0);
         }
 
-        play();
+        play(isShiftPressed /* ignoreSelection */);
     }
 }
 
-void PlaybackController::play()
+void PlaybackController::play(bool ignoreSelection)
 {
     IF_ASSERT_FAILED(player()) {
         return;
     }
 
-    if (isSelectionSet()) {
+    if (!ignoreSelection && isSelectionSet()) {
         secs_t start = selectionController()->dataSelectedStartTime();
         secs_t end = selectionController()->dataSelectedEndTime();
         player()->setPlaybackRegion({ start, end });
