@@ -32,3 +32,22 @@ void ProjectToolBarModel::load()
         load();
     });
 }
+
+bool ProjectToolBarModel::isCompactMode() const
+{
+    return m_isCompactMode;
+}
+
+void ProjectToolBarModel::setIsCompactMode(bool isCompactMode)
+{
+    if (m_isCompactMode == isCompactMode) {
+        return;
+    }
+
+    for (int i = 0; i < rowCount(); ++i) {
+        ToolBarItem& item = this->item(i);
+        item.setShowTitle(!isCompactMode);
+    }
+
+    m_isCompactMode = isCompactMode;
+}
