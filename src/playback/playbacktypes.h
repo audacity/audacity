@@ -20,6 +20,17 @@ enum class PlaybackStatus {
     Running
 };
 
+struct PlaybackRegion
+{
+    muse::secs_t start;
+    muse::secs_t end;
+
+    bool isValid() const
+    {
+        return start != end;
+    }
+};
+
 static constexpr audio::volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
 static constexpr audio::volume_dbfs_t MIN_DISPLAYED_DBFS = -60.f; // 0%
 
