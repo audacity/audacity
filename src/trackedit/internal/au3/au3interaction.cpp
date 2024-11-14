@@ -1448,7 +1448,16 @@ void Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey &clipKey)
         return;
     }
 
-    clip->SetStretchToMatchProjectTempo(!clip->GetStretchToMatchProjectTempo());
+    bool newValue = !clip->GetStretchToMatchProjectTempo();
+    clip->SetStretchToMatchProjectTempo(newValue);
+
+    if (newValue) {
+        auto prj = globalContext()->currentTrackeditProject();
+        double projectTempo = prj->timeSignature().tempo;
+        DoProjectTempoChange(*waveTrack, projectTempo);
+        makeRoomForClip(clipKey);
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
 }
 
 muse::ProgressPtr Au3Interaction::progress() const
