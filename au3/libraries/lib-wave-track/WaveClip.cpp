@@ -980,6 +980,7 @@ static constexpr auto PitchAndSpeedPreset_attr = "pitchAndSpeedPreset";
 static constexpr auto RawAudioTempo_attr = "rawAudioTempo";
 static constexpr auto ClipStretchRatio_attr = "clipStretchRatio";
 static constexpr auto ClipStretchToMatchTempo_attr = "clipStretchToMatchTempo";
+static constexpr auto ClipTempo_attr = "clipTempo";
 static constexpr auto Name_attr = "name";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
@@ -1044,6 +1045,12 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             if (!value.TryGet(boolValue))
                 return false;
             mStretchToMatchProjectTempo = boolValue;
+         }
+         else if (attr == ClipTempo_attr)
+         {
+             if (!value.TryGet(dblValue))
+                return false;
+             mClipTempo = dblValue;
          }
          else if (attr == Name_attr)
          {
@@ -1126,6 +1133,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
    xmlFile.WriteAttr(RawAudioTempo_attr, mRawAudioTempo.value_or(0.), 8);
    xmlFile.WriteAttr(ClipStretchRatio_attr, mClipStretchRatio, 8);
    xmlFile.WriteAttr(ClipStretchToMatchTempo_attr, mStretchToMatchProjectTempo);
+   xmlFile.WriteAttr(ClipTempo_attr, mClipTempo.value_or(0.), 8);
    xmlFile.WriteAttr(Name_attr, mName);
    Attachments::ForEach([&](const WaveClipListener &listener){
       listener.WriteXMLAttributes(xmlFile);
