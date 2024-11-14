@@ -85,14 +85,14 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Timecode"),
              TranslatableString("action", "Set playback time"),
-             IconCode::Code::SETTINGS_COG
+             IconCode::Code::CLOCK
              ),
     UiAction("playback-bpm",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "BPM"),
-             TranslatableString("action", "Set playback BPM"),
-             IconCode::Code::SETTINGS_COG
+             TranslatableString("action", "Tempo"),
+             TranslatableString("action", "Set playback tempo"),
+             IconCode::Code::BPM
              ),
     UiAction("playback-time-signature",
              au::context::UiCtxProjectOpened,
