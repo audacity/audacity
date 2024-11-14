@@ -84,7 +84,7 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Snapping"),
              TranslatableString("action", "Snapping"),
-             IconCode::Code::SETTINGS_COG
+             IconCode::Code::MAGNET
              ),
     UiAction("minutes-seconds-ruler",
              au::context::UiCtxAny,
