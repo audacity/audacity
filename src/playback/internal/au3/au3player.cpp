@@ -224,9 +224,6 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
 {
     LOGD() << "newPosition: " << newPosition;
 
-    //! TODO At the moment not work
-    //! there probably should be a different implementation
-
     Au3Project& project = projectRef();
 
     auto& playRegion = ViewInfo::Get(project).playRegion;

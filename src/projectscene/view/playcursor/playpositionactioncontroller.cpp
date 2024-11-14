@@ -78,7 +78,7 @@ void PlayPositionActionController::snapCurrentPosition()
     double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);
     muse::secs_t secs = m_context->positionToTime(currentXPosition, true);
     if (muse::RealIsEqualOrMore(secs, 0.0) || !muse::RealIsEqual(secs, currentPlaybackPosition)) {
-        dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
+        dispatcher()->dispatch("playback-seek", ActionData::make_arg1<double>(secs));
     }
 }
 
@@ -105,7 +105,7 @@ void PlayPositionActionController::applySingleStep(Direction direction)
     }
 
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
-        dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
+        dispatcher()->dispatch("playback-seek", ActionData::make_arg1<double>(secs));
     }
 }
 

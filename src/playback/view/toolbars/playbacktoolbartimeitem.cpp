@@ -58,7 +58,7 @@ void PlaybackToolBarTimeItem::setCurrentValue(double value)
         return;
     }
 
-    dispatcher()->dispatch("playback_seek", muse::actions::ActionData::make_arg1(value));
+    dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1(value));
 }
 
 au::context::IPlaybackStatePtr PlaybackToolBarTimeItem::playbackState() const
