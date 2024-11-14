@@ -83,7 +83,7 @@ private:
     void rewindToEnd();
     void onSeekAction(const muse::actions::ActionData& args);
     void doSeek(const muse::secs_t secs, bool applyIfPlaying = false);
-    void play();
+    void play(bool ignoreSelection = false);
     void pause();
     void stop();
     void resume();
