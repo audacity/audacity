@@ -37,6 +37,8 @@ struct ClipKey
     inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
 };
 
+using ClipKeyList = std::vector<ClipKey>;
+
 struct TimeSignature
 {
     double tempo = 0;

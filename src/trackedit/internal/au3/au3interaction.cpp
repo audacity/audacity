@@ -833,6 +833,25 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
     return true;
 }
 
+bool Au3Interaction::moveClips(secs_t offset, bool completed)
+{
+    for (const auto& selectedClip : selectionController()->selectedClips()) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            continue;
+        }
+
+        changeClipStartTime(selectedClip, clip->GetPlayStartTime() + offset, completed);
+    }
+
+    return true;
+}
+
 bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
 {
     for (const auto& trackId : tracksIds) {

@@ -137,7 +137,11 @@ void TrackeditActionsController::doGlobalCopy()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClip();
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
     if (selectedClipKey.isValid()) {
         dispatcher()->dispatch(CLIP_COPY_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
     }
@@ -150,7 +154,11 @@ void TrackeditActionsController::doGlobalCut()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClip();
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
     if (selectedClipKey.isValid()) {
         dispatcher()->dispatch(CLIP_CUT_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
     }
@@ -163,7 +171,11 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClip();
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
     if (selectedClipKey.isValid()) {
         dispatcher()->dispatch(CLIP_DELETE_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
     }
@@ -181,13 +193,16 @@ void TrackeditActionsController::doGlobalSplitCut()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClip();
+    if (selectionController()->selectedClips().empty()) {
+        interactive()->error(muse::trc("trackedit", "No audio selected"), muse::trc("trackedit", "Select the audio for Split Cut to use then try again."));
+        return;
+    }
+
+    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
     if (selectedClipKey.isValid()) {
         dispatcher()->dispatch(CLIP_SPLIT_CUT, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
         return;
     }
-
-    interactive()->error(muse::trc("no_audio", "No audio selected"), std::string("Select the audio for Split Cut to use then try again."));
 }
 
 void TrackeditActionsController::doGlobalSplitDelete()
@@ -202,13 +217,16 @@ void TrackeditActionsController::doGlobalSplitDelete()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClip();
+    if (selectionController()->selectedClips().empty()) {
+        interactive()->error(muse::trc("trackedit", "No audio selected"), muse::trc("trackedit", "Select the audio for Split Cut to use then try again."));
+        return;
+    }
+
+    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
     if (selectedClipKey.isValid()) {
         dispatcher()->dispatch(CLIP_SPLIT_DELETE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
         return;
     }
-
-    interactive()->error(muse::trc("no_audio", "No audio selected"), std::string("Select the audio for Split Cut to use then try again."));
 }
 
 void TrackeditActionsController::doGlobalSplit()
@@ -216,7 +234,10 @@ void TrackeditActionsController::doGlobalSplit()
     TrackIdList tracksIdsToSplit = selectionController()->selectedTracks();
 
     if (tracksIdsToSplit.empty()) {
-        tracksIdsToSplit.push_back(selectionController()->selectedClip().trackId);
+        if (selectionController()->selectedClips().empty()) {
+            return;
+        }
+        tracksIdsToSplit.push_back(selectionController()->selectedClips().at(0).trackId);
     }
 
     if (tracksIdsToSplit.empty()) {
@@ -259,7 +280,10 @@ void TrackeditActionsController::doGlobalDuplicate()
         dispatcher()->dispatch(DUPLICATE_SELECTED,
                                ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
     } else {
-        ClipKey selectedClipKey = selectionController()->selectedClip();
+        if (selectionController()->selectedClips().empty()) {
+            return;
+        }
+        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
         if (!selectedClipKey.isValid()) {
             return;
         }

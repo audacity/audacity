@@ -16,6 +16,7 @@ Item {
     property bool isTrackSelected: false
     property bool isStereo: clipsModel.isStereo
     property double channelHeightRatio: isStereo ? 0.5 : 1
+    property bool moveActive: false
 
     signal interactionStarted()
     signal interactionEnded()
@@ -23,6 +24,7 @@ Item {
     // so we are handling it manually
     signal trackItemMousePositionChanged(real x, real y, var clipKey)
     signal clipSelectedRequested()
+    signal clipMoveRequested(bool completed)
     signal requestSelectionContextMenu(real x, real y)
 
     signal selectionDraged(var x1, var x2, var completed)
@@ -119,6 +121,7 @@ Item {
                 speedPercentage: clipItem.speedPercentage
                 clipSelected: clipItem.selected
                 isDataSelected: root.isDataSelected
+                moveActive: root.moveActive
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : root.context.selectionStartPosition - clipItem.x
                 selectionWidth: root.context.selectionStartPosition < clipItem.x ?
                                     root.context.selectionEndPosition - clipItem.x : root.context.selectionEndPosition - root.context.selectionStartPosition
@@ -151,7 +154,11 @@ Item {
                 }
 
                 onClipMoveRequested: function(completed) {
-                    clipsModel.moveClip(clipItem.key, completed)
+                    // this one moves the clips
+                    clipsModel.moveSelectedClips(clipItem.key, completed)
+
+                    // this one notifies every ClipListModel about moveActive
+                    root.clipMoveRequested(completed)
                 }
 
                 onClipLeftTrimRequested: function(completed) {

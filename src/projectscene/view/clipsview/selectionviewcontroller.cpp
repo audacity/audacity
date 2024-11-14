@@ -177,7 +177,7 @@ void SelectionViewController::selectClipAudioData(const ClipKey& clipKey)
         return;
     }
 
-    selectionController()->setSelectedClip(clipKey.key);
+    selectionController()->setSelectedClips(ClipKeyList({ clipKey.key }));
 }
 
 void SelectionViewController::resetSelectedClip()
@@ -186,7 +186,7 @@ void SelectionViewController::resetSelectedClip()
         return;
     }
 
-    selectionController()->resetSelectedClip();
+    selectionController()->resetSelectedClips();
 }
 
 void SelectionViewController::resetDataSelection()

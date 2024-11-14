@@ -26,13 +26,18 @@ public:
     virtual void resetSelectedTracks() = 0;
     virtual TrackIdList selectedTracks() const = 0;
     virtual void setSelectedTracks(const TrackIdList &trackIds, bool complete = true) = 0;
+    virtual void addSelectedTrack(const trackedit::TrackId& trackId) = 0;
     virtual muse::async::Channel<TrackIdList> tracksSelected() const = 0;
 
     // clip selection
-    virtual void resetSelectedClip() = 0;
-    virtual ClipKey selectedClip() const = 0;
-    virtual void setSelectedClip(const ClipKey& clipKey) = 0;
-    virtual muse::async::Channel<ClipKey> clipSelected() const = 0;
+    virtual void resetSelectedClips() = 0;
+    virtual ClipKeyList selectedClips() const = 0;
+    virtual void setSelectedClips(const ClipKeyList& clipKeys) = 0;
+    virtual void addSelectedClip(const ClipKey& clipKey) = 0;
+    virtual muse::async::Channel<ClipKeyList> clipsSelected() const = 0;
+
+    //! NOTE: for now it's used only for ruler
+    //! hightlight when single clip is selected
     virtual double selectedClipStartTime() const = 0;
     virtual double selectedClipEndTime() const = 0;
 

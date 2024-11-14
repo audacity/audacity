@@ -78,48 +78,95 @@ void Au3SelectionController::setSelectedTracks(const TrackIdList& tracksIds, boo
     m_selectedTracks.set(tracksIds, complete);
 }
 
+void Au3SelectionController::addSelectedTrack(const TrackId &trackId)
+{
+    auto selectedTracks = m_selectedTracks.val;
+
+    if (!muse::contains(selectedTracks, trackId)) {
+        selectedTracks.push_back(trackId);
+
+        auto& tracks = Au3TrackList::Get(projectRef());
+        for (Au3Track* au3Track : tracks) {
+            if (muse::contains(selectedTracks, TrackId(au3Track->GetId()))) {
+                au3Track->SetSelected(true);
+            } else {
+                au3Track->SetSelected(false);
+            }
+        }
+
+        m_selectedTracks.set(selectedTracks, true);
+    }
+}
+
 muse::async::Channel<TrackIdList> Au3SelectionController::tracksSelected() const
 {
     return m_selectedTracks.selected;
 }
 
-void Au3SelectionController::resetSelectedClip()
+void Au3SelectionController::resetSelectedClips()
 {
     MYLOG() << "resetSelectedClip";
-    m_selectedClip.set(au::trackedit::ClipKey(), true);
+    m_selectedClips.set(au::trackedit::ClipKeyList(), true);
 }
 
-au::trackedit::ClipKey Au3SelectionController::selectedClip() const
+ClipKeyList Au3SelectionController::selectedClips() const
 {
-    return m_selectedClip.val;
+    return m_selectedClips.val;
 }
 
-void Au3SelectionController::setSelectedClip(const au::trackedit::ClipKey& clipKey)
+void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys)
 {
-    MYLOG() << clipKey;
-    m_selectedClip.set(clipKey, true);
+    m_selectedClips.set(clipKeys, true);
+
+    //! NOTE: when selecting a clip, we also need to select
+    //! the track on which the clip is located
+    TrackIdList selectedTracks;
+    for (const ClipKey& key : clipKeys) {
+        if (muse::contains(selectedTracks, key.trackId)) {
+            continue;
+        }
+        selectedTracks.push_back(key.trackId);
+    }
+    setSelectedTracks(selectedTracks, true);
 }
 
-muse::async::Channel<au::trackedit::ClipKey> Au3SelectionController::clipSelected() const
+void Au3SelectionController::addSelectedClip(const ClipKey &clipKey)
 {
-    return m_selectedClip.selected;
+    auto selectedClips = m_selectedClips.val;
+
+    if (!muse::contains(selectedClips, clipKey)) {
+        selectedClips.push_back(clipKey);
+
+        m_selectedClips.set(selectedClips, true);
+
+        //! NOTE: when selecting a clip, we also need to select
+        //! the track on which the clip is located
+        addSelectedTrack(clipKey.trackId);
+    }
+}
+
+muse::async::Channel<ClipKeyList> Au3SelectionController::clipsSelected() const
+{
+    return m_selectedClips.selected;
 }
 
 double Au3SelectionController::selectedClipStartTime() const
 {
-    auto clipKey = selectedClip();
-    if (!clipKey.isValid()) {
+    auto clipKeyList = selectedClips();
+    if (clipKeyList.empty()) {
         return -1.0;
     }
 
+    auto clipKey = clipKeyList.at(0);
+
     WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return -1.0;
     }
 
     std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
-        return false;
+        return -1.0;
     }
 
     return clip->Start();
@@ -127,19 +174,21 @@ double Au3SelectionController::selectedClipStartTime() const
 
 double Au3SelectionController::selectedClipEndTime() const
 {
-    auto clipKey = selectedClip();
-    if (!clipKey.isValid()) {
+    auto clipKeyList = selectedClips();
+    if (clipKeyList.empty()) {
         return -1.0;
     }
 
+    auto clipKey = clipKeyList.at(0);
+
     WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return -1.0;
     }
 
     std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
-        return false;
+        return -1.0;
     }
 
     return clip->End();
