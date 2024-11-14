@@ -49,12 +49,7 @@ void PlaybackController::init()
     });
 
     m_player->playbackPositionChanged().onReceive(this, [this](const muse::secs_t& position) {
-        project::IAudacityProjectPtr project = globalContext()->currentProject();
-        if (!project) {
-            return;
-        }
-
-        if (totalPlayTime() == position) {
+        if (isPlaybackPositionOnTheEndOfProject() || isPlaybackPositionOnTheEndOfPlaybackRegion()) {
             //! NOTE: just stop, without seek
             player()->stop();
         }
@@ -109,6 +104,11 @@ bool PlaybackController::loopBoundariesSet() const
 {
     NOT_IMPLEMENTED;
     return false;
+}
+
+bool PlaybackController::isSelectionSet() const
+{
+    return selectionController()->timeSelectionIsNotEmpty();
 }
 
 Notification PlaybackController::isPlayingChanged() const
@@ -187,7 +187,7 @@ void PlaybackController::togglePlay()
             resume();
         }
     } else {
-        if (m_player->playbackPosition() == totalPlayTime()) {
+        if (isPlaybackPositionOnTheEndOfProject()) {
             doSeek(0.0);
         }
 
@@ -199,6 +199,12 @@ void PlaybackController::play()
 {
     IF_ASSERT_FAILED(player()) {
         return;
+    }
+
+    if (isSelectionSet()) {
+        secs_t start = selectionController()->dataSelectedStartTime();
+        secs_t end = selectionController()->dataSelectedEndTime();
+        player()->setPlaybackRegion({ start, end });
     }
 
     if (isLoopEnabled()) {
@@ -269,7 +275,11 @@ void PlaybackController::stop()
 
     player()->stop();
 
-    seek(m_lastPlaybackSeekTime);
+    if (isSelectionSet()) {
+        seek(selectionController()->dataSelectedStartTime());
+    } else {
+        seek(m_lastPlaybackSeekTime);
+    }
 }
 
 void PlaybackController::resume()
@@ -342,6 +352,17 @@ void PlaybackController::initMuteStates()
 void PlaybackController::updateSoloMuteStates()
 {
     NOT_IMPLEMENTED;
+}
+
+bool PlaybackController::isPlaybackPositionOnTheEndOfProject() const
+{
+    return totalPlayTime() <= player()->playbackPosition() + TIME_EPS;
+}
+
+bool PlaybackController::isPlaybackPositionOnTheEndOfPlaybackRegion() const
+{
+    PlaybackRegion playbackRegion = player()->playbackRegion();
+    return playbackRegion.isValid() && playbackRegion.end <= (player()->playbackPosition() + TIME_EPS);
 }
 
 bool PlaybackController::actionChecked(const ActionCode& actionCode) const

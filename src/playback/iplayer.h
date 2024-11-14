@@ -29,6 +29,9 @@ public:
     virtual PlaybackStatus playbackStatus() const = 0;
     virtual muse::async::Channel<PlaybackStatus> playbackStatusChanged() const = 0;
 
+    virtual PlaybackRegion playbackRegion() const = 0;
+    virtual void setPlaybackRegion(const PlaybackRegion& region) = 0;
+
     virtual muse::async::Promise<bool> setLoop(const muse::secs_t from, const muse::secs_t to) = 0;
     virtual void resetLoop() = 0;
 

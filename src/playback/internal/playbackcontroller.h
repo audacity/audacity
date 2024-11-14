@@ -12,6 +12,7 @@
 #include "iinteractive.h"
 #include "../iplayback.h"
 #include "record/irecordcontroller.h"
+#include "trackedit/iselectioncontroller.h"
 
 #include "au3audio/audiotypes.h"
 #include "../iplayer.h"
@@ -25,6 +26,7 @@ class PlaybackController : public IPlaybackController, public muse::actions::Act
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<IPlayback> playback;
     muse::Inject<record::IRecordController> recordController;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
     void init();
@@ -68,6 +70,8 @@ private:
     bool isLoopEnabled() const;
     bool loopBoundariesSet() const;
 
+    bool isSelectionSet() const;
+
     void onProjectChanged();
 
     void onSelectionChanged();
@@ -108,6 +112,9 @@ private:
 
     void updateSoloMuteStates();
     void updateAuxMuteStates();
+
+    bool isPlaybackPositionOnTheEndOfProject() const;
+    bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
 
     using TrackAddFinished = std::function<void ()>;
 

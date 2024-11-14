@@ -39,6 +39,9 @@ public:
     PlaybackStatus playbackStatus() const override;
     muse::async::Channel<PlaybackStatus> playbackStatusChanged() const override;
 
+    PlaybackRegion playbackRegion() const override;
+    void setPlaybackRegion(const PlaybackRegion& region) override;
+
     muse::async::Promise<bool> setLoop(const muse::secs_t from, const muse::secs_t toM) override;
     void resetLoop() override;
 

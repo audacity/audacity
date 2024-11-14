@@ -77,8 +77,6 @@ void Au3Player::play()
 
     double t0 = selectedRegion.t0();
     double t1 = selectedRegion.t1();
-    // SelectedRegion guarantees t0 <= t1, so we need another boolean argument
-    // to indicate backwards play.
 
     if (backwards) {
         std::swap(t0, t1);
@@ -108,38 +106,15 @@ void Au3Player::play()
     if (!hasaudio) {
         return /*-1*/;  // No need to continue without audio tracks
     }
-    double loopOffset = 0.0;
 
     if (t1 == t0) {
-        if (newDefault) {
-            const auto& selectedRegion = ViewInfo::Get(project).selectedRegion;
-            // play selection if there is one, otherwise
-            // set start of play region to project start,
-            // and loop the project from current play position.
-
-            if ((t0 > selectedRegion.t0()) && (t0 < selectedRegion.t1())) {
-                t0 = selectedRegion.t0();
-                t1 = selectedRegion.t1();
-            } else {
-                // loop the entire project
-                // Bug2347, loop playback from cursor position instead of project start
-                loopOffset = t0 - tracks.GetStartTime();
-                if (!pStartTime) {
-                    // TODO move this reassignment elsewhere so we don't need an
-                    // ugly mutable member
-                    pStartTime.emplace(loopOffset);
-                }
-                t0 = tracks.GetStartTime();
-                t1 = tracks.GetEndTime();
-            }
-        } else {
-            // move t0 to valid range
-            if (t0 < 0) {
-                t0 = tracks.GetStartTime();
-            } else if (t0 > tracks.GetEndTime()) {
-                t0 = tracks.GetEndTime();
-            }
+        // move t0 to valid range
+        if (t0 < 0) {
+            t0 = tracks.GetStartTime();
+        } else if (t0 > tracks.GetEndTime()) {
+            t0 = tracks.GetEndTime();
         }
+
         t1 = tracks.GetEndTime();
     } else {
         // maybe t1 < t0, with backwards scrubbing for instance
@@ -227,6 +202,7 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     Au3Project& project = projectRef();
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
+    playRegion.Clear();
     playRegion.SetStart(newPosition);
 
     if (applyIfPlaying && m_playbackStatus.val == PlaybackStatus::Running) {
@@ -317,6 +293,31 @@ PlaybackStatus Au3Player::playbackStatus() const
 muse::async::Channel<PlaybackStatus> Au3Player::playbackStatusChanged() const
 {
     return m_playbackStatus.ch;
+}
+
+PlaybackRegion Au3Player::playbackRegion() const
+{
+    Au3Project& project = projectRef();
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    return { playRegion.GetStart(), playRegion.GetEnd() };
+}
+
+void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
+{
+    Au3Project& project = projectRef();
+
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+    playRegion.SetStart(region.start);
+
+    if (region.start == region.end) {
+        auto& tracks = Au3TrackList::Get(project);
+        playRegion.SetEnd(tracks.GetEndTime());
+    } else {
+        playRegion.SetEnd(region.end);
+    }
+
+    m_playbackPosition.set(region.start);
 }
 
 muse::async::Promise<bool> Au3Player::setLoop(const muse::secs_t from, const muse::secs_t to)
