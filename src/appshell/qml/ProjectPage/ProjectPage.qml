@@ -119,7 +119,11 @@ DockPage {
             alignment: DockToolBarAlignment.Center
             contentBottomPadding: 2
 
+            compactPriorityOrder: 1
+
             ProjectToolBar {
+                isCompactMode: projectToolBar.isCompact
+
                 navigationPanel.section: root.topToolKeyNavSec
                 navigationPanel.order: 2
             }

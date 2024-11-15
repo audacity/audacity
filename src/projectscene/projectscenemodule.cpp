@@ -8,6 +8,8 @@
 #include "types/projectscenetypes.h"
 
 #include "ui/iuiactionsregister.h"
+#include "ui/iinteractiveuriregister.h"
+#include "ui/uitypes.h"
 
 #include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
@@ -30,6 +32,7 @@
 #include "view/clipsview/au3/au3wavepainter.h"
 #include "view/clipsview/clipcontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
+#include "view/clipsview/pitchandspeedchangemodel.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -83,6 +86,11 @@ void ProjectSceneModule::resolveImports()
     if (ar) {
         ar->reg(m_uiActions);
     }
+    auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
+    if (ir) {
+        ir->registerQmlUri(muse::Uri("audacity://projectscene/editpitchandspeed"),
+                           "Audacity/ProjectScene/clipsview/pitchandspeed/PitchAndSpeedChangeDialog.qml");
+    }
 }
 
 void ProjectSceneModule::registerUiTypes()
@@ -115,6 +123,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
     qmlRegisterType<SelectionViewController>("Audacity.ProjectScene", 1, 0, "SelectionViewController");
+    qmlRegisterType<PitchAndSpeedChangeModel>("Audacity.ProjectScene", 1, 0, "PitchAndSpeedChangeModel");
 
     // timeline
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");

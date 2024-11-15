@@ -462,7 +462,7 @@ public:
    void StopStream() override;
    /** \brief Move the playback / recording position of the current stream
     * by the specified amount from where it is now */
-   void SeekStream(double seconds) { mSeek = seconds; }
+   void SeekStream(double seconds);
 
    using PostRecordingAction = std::function<void()>;
 

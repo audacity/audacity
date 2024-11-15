@@ -26,6 +26,7 @@ static const ActionCode CLIP_DELETE_CODE("clip-delete");
 static const ActionCode CLIP_CUT_SELECTED_CODE("clip-cut-selected");
 static const ActionCode CLIP_COPY_SELECTED_CODE("clip-copy-selected");
 static const ActionCode CLIP_DELETE_SELECTED_CODE("clip-delete-selected");
+static const ActionCode CLIP_RENDER_PITCH_AND_SPEED_CODE("clip-render-pitch-speed");
 static const ActionCode PASTE("paste");
 static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
@@ -63,6 +64,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CLIP_CUT_SELECTED_CODE, this, &TrackeditActionsController::clipCutSelected);
     dispatcher()->reg(this, CLIP_COPY_SELECTED_CODE, this, &TrackeditActionsController::clipCopySelected);
     dispatcher()->reg(this, CLIP_DELETE_SELECTED_CODE, this, &TrackeditActionsController::clipDeleteSelected);
+    dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
     dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
     dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::tracksSplitAt);
@@ -290,11 +292,7 @@ void TrackeditActionsController::clipDelete(const ActionData& args)
         return;
     }
 
-    secs_t duration = trackeditInteraction()->clipDuration(clipKey);
-    secs_t start = trackeditInteraction()->clipStartTime(clipKey);
     trackeditInteraction()->removeClip(clipKey);
-
-    pushProjectHistoryDeleteState(start, duration);
 }
 
 void TrackeditActionsController::clipCutSelected()
@@ -337,12 +335,10 @@ void TrackeditActionsController::clipDeleteSelected()
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
 
-    secs_t duration = selectedEndTime - selectedStartTime;
-    secs_t start = selectedStartTime;
-
     //! TODO AU4: improve for deleting multiple selected clips
 
     // remove multiple clips in selected region
+    std::vector<ClipKey> clipsKeysToRemove;
     for (const auto& track : tracks) {
         if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
             continue;
@@ -354,11 +350,16 @@ void TrackeditActionsController::clipDeleteSelected()
                 continue;
             }
 
-            trackeditInteraction()->removeClipData(clip.key, selectedStartTime, selectedEndTime);
+            clipsKeysToRemove.push_back(clip.key);
         }
     }
 
-    pushProjectHistoryDeleteState(start, duration);
+    if (clipsKeysToRemove.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->removeClipsData(clipsKeysToRemove, selectedStartTime, selectedEndTime);
+
     selectionController()->resetDataSelection();
 }
 
@@ -368,19 +369,18 @@ void TrackeditActionsController::paste()
     auto tracks = project->trackeditProject()->trackList();
     double selectedStartTime = globalContext()->playbackState()->playbackPosition();
 
+    TrackId selectedTrackId;
     if (selectionController()->selectedTracks().empty()) {
-        return;
+        selectedTrackId = -1;
+    } else {
+        selectedTrackId = selectionController()->selectedTracks().at(0);
     }
-
-    TrackId selectedTrackId = selectionController()->selectedTracks().at(0);
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, selectedTrackId);
         if (!ret) {
             interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
         }
-
-        pushProjectHistoryPasteState();
     }
 }
 
@@ -562,13 +562,11 @@ void TrackeditActionsController::setLoopRegionOut()
 void TrackeditActionsController::newMonoTrack()
 {
     trackeditInteraction()->newMonoTrack();
-    pushProjectHistoryTrackAddedState();
 }
 
 void TrackeditActionsController::newStereoTrack()
 {
     trackeditInteraction()->newStereoTrack();
-    pushProjectHistoryTrackAddedState();
 }
 
 void TrackeditActionsController::newLabelTrack()
@@ -650,15 +648,20 @@ void TrackeditActionsController::trimAudioOutsideSelection()
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
 
+    std::vector<TrackId> tracksIdsToTrim;
     for (const auto& track : tracks) {
         if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
             continue;
         }
 
-        trackeditInteraction()->trimTrackData(track.id, selectedStartTime, selectedEndTime);
+        tracksIdsToTrim.push_back(track.id);
     }
 
-    pushProjectHistoryTrackTrimState(selectedStartTime, selectedEndTime);
+    if (tracksIdsToTrim.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->trimTracksData(tracksIdsToTrim, selectedStartTime, selectedEndTime);
 }
 
 void TrackeditActionsController::silenceAudioSelection()
@@ -669,49 +672,36 @@ void TrackeditActionsController::silenceAudioSelection()
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->trackeditProject()->trackList();
 
+    std::vector<TrackId> tracksIdsToSilence;
     for (const auto& track : tracks) {
         if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
             continue;
         }
 
-        trackeditInteraction()->silenceTrackData(track.id, selectedStartTime, selectedEndTime);
+        tracksIdsToSilence.push_back(track.id);
     }
 
-    pushProjectHistoryTrackSilenceState(selectedStartTime, selectedEndTime);
+    if (tracksIdsToSilence.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->silenceTracksData(tracksIdsToSilence, selectedStartTime, selectedEndTime);
 }
 
-void TrackeditActionsController::pushProjectHistoryTrackAddedState()
+void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::ActionData& args)
 {
-    projectHistory()->pushHistoryState("Created new audio track", "New track");
-}
+    IF_ASSERT_FAILED(args.count() == 1) {
+        return;
+    }
 
-void TrackeditActionsController::pushProjectHistoryTrackTrimState(secs_t start, secs_t end)
-{
-    std::stringstream ss;
-    ss << "Trim selected audio tracks from " << start << " seconds to " << end << " seconds";
+    trackedit::ClipKey clipKey = args.arg<trackedit::ClipKey>(0);
+    if (!clipKey.isValid()) {
+        return;
+    }
 
-    projectHistory()->pushHistoryState(ss.str(), "Trim Audio");
-}
+    interactive()->showProgress(muse::trc("trackedit", "Applying"), trackeditInteraction()->progress().get());
 
-void TrackeditActionsController::pushProjectHistoryTrackSilenceState(secs_t start, secs_t end)
-{
-    std::stringstream ss;
-    ss << "Silenced selected tracks for " << start << " seconds at " << end << "";
-
-    projectHistory()->pushHistoryState(ss.str(), "Silence");
-}
-
-void TrackeditActionsController::pushProjectHistoryPasteState()
-{
-    projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
-}
-
-void TrackeditActionsController::pushProjectHistoryDeleteState(secs_t start, secs_t duration)
-{
-    std::stringstream ss;
-    ss << "Delete " << duration << " seconds at " << start;
-
-    projectHistory()->pushHistoryState(ss.str(), "Delete");
+    trackeditInteraction()->renderClipPitchAndSpeed(clipKey);
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode& actionCode) const

@@ -5,6 +5,7 @@
 
 #include "modularity/ioc.h"
 #include "global/iinteractive.h"
+#include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 #include "effects/builtin/ibuiltineffectsrepository.h"
 #include "effects/vst/ivsteffectsrepository.h"
@@ -18,6 +19,7 @@ class EffectSettingsAccess;
 namespace au::effects {
 class EffectsProvider : public IEffectsProvider
 {
+    muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IEffectsConfiguration> configuration;
     muse::Inject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::Inject<IVstEffectsRepository> vstEffectsRepository;

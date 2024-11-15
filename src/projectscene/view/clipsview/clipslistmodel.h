@@ -5,12 +5,14 @@
 
 #include <QAbstractListModel>
 
+#include "actions/actionable.h"
+
 #include "modularity/ioc.h"
+#include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
+#include "global/iinteractive.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
-#include "actions/iactionsdispatcher.h"
-#include "actions/actionable.h"
 
 #include "global/async/asyncable.h"
 #include "trackedit/trackedittypes.h"
@@ -30,10 +32,11 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
 
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<muse::IInteractive> interactive;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     ClipsListModel(QObject* parent = nullptr);
@@ -63,6 +66,12 @@ public:
 
     Q_INVOKABLE QVariant next(const ClipKey& key) const;
     Q_INVOKABLE QVariant prev(const ClipKey& key) const;
+
+    Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
+    Q_INVOKABLE void resetClipPitch(const ClipKey& key);
+
+    Q_INVOKABLE void openClipSpeedEdit(const ClipKey& key);
+    Q_INVOKABLE void resetClipSpeed(const ClipKey& key);
 
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;

@@ -29,6 +29,8 @@
 #include "TimeAndPitchInterface.h"
 #include "UserException.h"
 
+#include "global/realfn.h"
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -1930,7 +1932,7 @@ bool WaveClip::IntersectsPlayRegion(double t0, double t1) const
    assert(t0 <= t1);
    // t1 is the open end of the interval, so it must be excluded from the closed
    // begin of the play region.
-   return t0 < GetPlayEndTime() && GetPlayStartTime() < t1;
+   return !muse::RealIsEqualOrMore(t0, GetPlayEndTime()) && !muse::RealIsEqualOrMore(GetPlayStartTime(), t1);
 }
 
 bool WaveClip::CoversEntirePlayRegion(double t0, double t1) const

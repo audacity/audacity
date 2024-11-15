@@ -19,6 +19,10 @@ TracksListModel::TracksListModel(QObject* parent)
 
     connect(m_selectionModel, &muse::uicomponents::ItemMultiSelectionModel::selectionChanged,
             [this](const QItemSelection& selected, const QItemSelection& deselected) {
+        if (!isProjectOpened()) {
+            return;
+        }
+
         setItemsSelected(deselected.indexes(), false);
         setItemsSelected(selected.indexes(), true);
 
@@ -37,22 +41,6 @@ TracksListModel::TracksListModel(QObject* parent)
 
     selectionController()->tracksSelected().onReceive(this, [this](trackedit::TrackIdList tracksIds) {
         onSelectedTracks(tracksIds);
-    });
-
-    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
-        // TODO AU4! remove it when ItemMultiSelectionModel is extended
-        Q_UNUSED(begin);
-        if (selectionController()->timeSelectionIsNotEmpty()) {
-            m_audioDataSelected = true;
-        }
-    });
-
-    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t end) {
-        // TODO AU4! remove it when ItemMultiSelectionModel is extended
-        Q_UNUSED(end);
-        if (selectionController()->timeSelectionIsNotEmpty()) {
-            m_audioDataSelected = true;
-        }
     });
 
     connect(this, &TracksListModel::rowsInserted, this, [this]() {
@@ -91,6 +79,8 @@ void TracksListModel::load()
     for (const Track& track : tracks) {
         m_trackList.push_back(buildTrackItem(track));
     }
+
+    onSelectedTracks(selectionController()->selectedTracks());
 
     prj->tracksChanged().onReceive(this, [this](std::vector<au::trackedit::Track> tracks) {
         onTracksChanged(tracks);
@@ -150,11 +140,6 @@ void TracksListModel::selectRow(int row, bool exclusive)
 {
     if (row >= rowCount()) {
         return;
-    }
-
-    if (m_audioDataSelected) {
-        selectionController()->resetDataSelection();
-        m_audioDataSelected = false;
     }
 
     if (exclusive) {
@@ -231,9 +216,14 @@ void TracksListModel::removeSelectedRows()
     removeRows(firstIndex.row(), selectedIndexList.size(), firstIndex.parent());
 }
 
-void TracksListModel::requestTrackMove(int from, int to)
+void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
 {
-    trackeditInteraction()->moveTracksTo({ m_trackList[from]->trackId() }, to);
+    std::vector<TrackId> tracksToMove;
+    for (auto index : trackIndexes) {
+        int row = index.toInt();
+        tracksToMove.push_back(m_trackList.at(row)->trackId());
+    }
+    trackeditInteraction()->moveTracksTo(tracksToMove, to);
 }
 
 bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
@@ -464,6 +454,11 @@ void TracksListModel::updateRemovingAvailability()
 {
     QModelIndexList selectedIndexes = m_selectionModel->selectedIndexes();
     setIsRemovingAvailable(!selectedIndexes.empty());
+}
+
+bool TracksListModel::isProjectOpened() const
+{
+    return globalContext()->currentProject() != nullptr;
 }
 
 bool TracksListModel::removeRows(int row, int count, const QModelIndex& parent)

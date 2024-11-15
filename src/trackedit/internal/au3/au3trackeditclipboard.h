@@ -20,7 +20,6 @@ public:
     bool trackDataEmpty() const override;
     size_t trackDataSize() const override;
     void addTrackData(const TrackData& trackData) override;
-    void eraseTrackData(std::vector<TrackData>::iterator begin, std::vector<TrackData>::iterator end) override;
 
 private:
     std::vector<TrackData> m_tracksData;

@@ -32,11 +32,6 @@ PlayCursorController::PlayCursorController(QObject* parent)
 {
 }
 
-au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
-{
-    return globalContext()->playbackState();
-}
-
 void PlayCursorController::init()
 {
     playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t secs) {
@@ -44,17 +39,34 @@ void PlayCursorController::init()
     });
 }
 
-void PlayCursorController::seekToX(double x)
+void PlayCursorController::seekToX(double x, bool triggerPlay)
 {
-    IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
-    bool snapEnabled = viewState->isSnapEnabled();
+    bool isPlaying = playbackState()->playbackStatus() == playback::PlaybackStatus::Running;
+    if (isPlaying && !triggerPlay) {
+        //! NOTE: Ignore all seeks in play mode unless it is an activation of play or resume from a new position
+        return;
+    }
+
+    IProjectViewStatePtr viewState = projectViewState();
+    bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
 
     double secs = m_context->positionToTime(x, snapEnabled);
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
-        dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
+        dispatcher()->dispatch("playback-seek", ActionData::make_arg2<double, bool>(secs, triggerPlay));
     } else if (!muse::RealIsEqual(playbackState()->playbackPosition(), 0.0)) {
-        dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(0.0));
+        dispatcher()->dispatch("playback-seek", ActionData::make_arg2<double, bool>(0.0, triggerPlay));
     }
+}
+
+au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
+{
+    return globalContext()->playbackState();
+}
+
+IProjectViewStatePtr PlayCursorController::projectViewState() const
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    return project ? project->viewState() : nullptr;
 }
 
 void PlayCursorController::updatePositionX(muse::secs_t secs)

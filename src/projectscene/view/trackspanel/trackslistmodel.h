@@ -52,7 +52,7 @@ public:
     Q_INVOKABLE void moveSelectedRowsDown();
     Q_INVOKABLE void removeSelectedRows();
 
-    Q_INVOKABLE void requestTrackMove(int from, int to);
+    Q_INVOKABLE void requestTracksMove(QVariantList trackIndexes, int to);
 
     Q_INVOKABLE bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
                               int destinationChild) override;
@@ -87,6 +87,8 @@ private:
     enum RoleNames {
         rItemData = Qt::UserRole + 1
     };
+
+    bool isProjectOpened() const;
 
     bool removeRows(int row, int count, const QModelIndex& parent) override;
 

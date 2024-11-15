@@ -40,9 +40,7 @@ public:
 
     void reset() override;
 
-    muse::async::Notification playbackPositionChanged() const override;
     muse::async::Channel<uint32_t> midiTickPlayed() const override;
-    float playbackPositionInSeconds() const override;
 
     muse::async::Channel<playback::TrackId> trackAdded() const override;
     muse::async::Channel<playback::TrackId> trackRemoved() const override;
@@ -54,7 +52,7 @@ public:
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;
     muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const override;
 
-    QTime totalPlayTime() const override;
+    muse::secs_t totalPlayTime() const override;
     muse::async::Notification totalPlayTimeChanged() const override;
 
     muse::Progress loadingProgress() const override;
@@ -80,6 +78,7 @@ private:
     void rewindToStart();
     void rewindToEnd();
     void onSeekAction(const muse::actions::ActionData& args);
+    void doSeek(const muse::secs_t secs, bool applyIfPlaying = false);
     void play();
     void pause();
     void stop();
@@ -110,22 +109,18 @@ private:
     void updateSoloMuteStates();
     void updateAuxMuteStates();
 
-    void setCurrentPlaybackTime(muse::secs_t msecs);
-
     using TrackAddFinished = std::function<void ()>;
 
     playback::IPlayerPtr m_player;
 
     muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_isPlayingChanged;
-    muse::async::Notification m_playbackPositionChanged;
     muse::async::Notification m_totalPlayTimeChanged;
     muse::async::Notification m_currentTempoChanged;
     muse::async::Channel<uint32_t> m_tickPlayed;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     muse::async::Notification m_currentSequenceIdChanged;
-    muse::secs_t m_currentPlaybackTime = 0.0;
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;

@@ -126,14 +126,12 @@ Rectangle {
 
             onPositionChanged: function(e) {
                 timeline.updateCursorPosition(e.x)
-
-                if (pressed) {
-                    playCursorController.seekToX(e.x)
-                }
             }
 
             onClicked: function (e) {
-                playCursorController.seekToX(e.x)
+                if (!timeline.isMajorSection(e.y)) {
+                    playCursorController.seekToX(e.x, true /* triggerPlay */)
+                }
             }
         }
 
@@ -189,7 +187,9 @@ Rectangle {
             }
 
             onPressed: function(e) {
-                playCursorController.seekToX(e.x)
+                if (!(e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))) {
+                    playCursorController.seekToX(e.x)
+                }
                 selectionController.onPressed(e.x, e.y)
                 selectionController.resetSelectedClip()
                 clipsSelection.visible = true
@@ -208,6 +208,9 @@ Rectangle {
                     playCursorController.seekToX(e.x)
                 }
                 selectionController.onReleased(e.x, e.y)
+                if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
+                    playCursorController.seekToX(timeline.context.selectionStartPosition)
+                }
                 clipsSelection.visible = false
             }
 

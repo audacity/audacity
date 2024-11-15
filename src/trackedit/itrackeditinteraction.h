@@ -5,6 +5,7 @@
 
 #include "global/types/string.h"
 #include "global/async/channel.h"
+#include "global/progress.h"
 
 #include "trackedittypes.h"
 #include "types/ret.h"
@@ -34,11 +35,17 @@ public:
     virtual bool changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed) = 0;
     virtual muse::async::Channel<ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const = 0;
 
-    virtual bool trimTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) = 0;
-    virtual bool silenceTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) = 0;
+    virtual bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) = 0;
+    virtual bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) = 0;
 
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
+    virtual bool changeClipPitch(const ClipKey& clipKey, int pitch) = 0;
+    virtual bool resetClipPitch(const ClipKey& clipKey) = 0;
+    virtual bool changeClipSpeed(const ClipKey& clipKey, double speed) = 0;
+    virtual bool resetClipSpeed(const ClipKey& clipKey) = 0;
+    virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
+    virtual void renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual void clearClipboard() = 0;
     virtual muse::Ret pasteFromClipboard(secs_t begin, TrackId trackId) = 0;
     virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;
@@ -47,7 +54,7 @@ public:
     virtual bool copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t begin, secs_t end) = 0;
     virtual bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
-    virtual bool removeClipData(const ClipKey& clipKey, secs_t begin, secs_t end) = 0;
+    virtual bool removeClipsData(const std::vector<trackedit::ClipKey>& clipsKeys, secs_t begin, secs_t end) = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) = 0;
     virtual bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
@@ -70,5 +77,7 @@ public:
     virtual bool canUndo() = 0;
     virtual void redo() = 0;
     virtual bool canRedo() = 0;
+
+    virtual muse::ProgressPtr progress() const = 0;
 };
 }

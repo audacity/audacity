@@ -10,6 +10,7 @@
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
+#include "domconverter.h"
 #include "TempoChange.h"
 
 //! HACK
@@ -27,7 +28,7 @@ using namespace au::au3;
 
 std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
 {
-    return Au3ProjectAccessor::create();
+    return std::make_shared<Au3ProjectAccessor>();
 }
 
 struct au::au3::Au3ProjectData
@@ -38,15 +39,18 @@ struct au::au3::Au3ProjectData
 };
 
 Au3ProjectAccessor::Au3ProjectAccessor()
+    : m_data(std::make_shared<Au3ProjectData>())
 {
-    m_data = std::make_shared<Au3ProjectData>();
-}
-
-std::shared_ptr<Au3ProjectAccessor> Au3ProjectAccessor::create()
-{
-    std::shared_ptr<Au3ProjectAccessor> p = std::make_shared<Au3ProjectAccessor>();
-    p->m_data->project = Au3Project::Create();
-    return p;
+    m_data->project = Au3Project::Create();
+    mTrackListSubstription = Au3TrackList::Get(m_data->projectRef()).Subscribe([this](const TrackListEvent& event)
+    {
+        if (event.mType == TrackListEvent::ADDITION) {
+            const auto tempo = ProjectTimeSignature::Get(m_data->projectRef()).GetTempo();
+            if (const auto track = event.mpTrack.lock()) {
+                DoProjectTempoChange(*track, tempo);
+            }
+        }
+    });
 }
 
 void Au3ProjectAccessor::open()

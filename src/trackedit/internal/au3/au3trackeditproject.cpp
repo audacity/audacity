@@ -97,11 +97,6 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
             onTrackDataChanged(trackId);
             m_impl->trackReplacing = false;
         }
-
-        const auto tempo = ProjectTimeSignature::Get(*m_impl->prj).GetTempo();
-        if (const auto track = e.mpTrack.lock()) {
-            DoProjectTempoChange(*track, tempo);
-        }
     } break;
     default:
         break;

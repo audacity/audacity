@@ -290,21 +290,12 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Enable clip stretching"),
              TranslatableString("action", "Enable clip stretching")
              ),
-    //! NOTE It is not clear yet what this is, if it is a dialog show,
-    //! then it might be better to move it to the projectscene module
-    UiAction("clip-pitch-speed",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Pitch and speed"),
-             TranslatableString("action", "Pitch and speed")
-             ),
     UiAction("clip-render-pitch-speed",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Render pitch and speed"),
              TranslatableString("action", "Render pitch and speed")
              ),
-    //! ----------
     UiAction("new-mono-track",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

@@ -844,6 +844,7 @@
     <SC>
         <key>play</key>
         <seq>Space</seq>
+        <seq>Shift+Space</seq>
     </SC>
     <SC>
         <key>play-one-sec</key>

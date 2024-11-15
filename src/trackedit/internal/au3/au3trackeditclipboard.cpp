@@ -36,8 +36,3 @@ void Au3TrackeditClipboard::addTrackData(const TrackData& trackData)
 {
     m_tracksData.push_back(trackData);
 }
-
-void Au3TrackeditClipboard::eraseTrackData(std::vector<TrackData>::iterator begin, std::vector<TrackData>::iterator end)
-{
-    m_tracksData.erase(begin, end);
-}

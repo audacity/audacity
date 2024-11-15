@@ -16,19 +16,12 @@ static const ActionCode PAUSE_CODE("pause");
 static const ActionCode STOP_CODE("stop");
 static const ActionCode REWIND_START_CODE("rewind-start");
 static const ActionCode REWIND_END_CODE("rewind-end");
-static const ActionCode SEEK_CODE("playback_seek");
+static const ActionCode SEEK_CODE("playback-seek");
 static const ActionCode LOOP_CODE("loop");
 static const ActionCode LOOP_IN_CODE("loop-in");
 static const ActionCode LOOP_OUT_CODE("loop-out");
 static const ActionCode PAN_CODE("pan");
 static const ActionCode REPEAT_CODE("repeat");
-
-static const QTime ZERO_TIME(0, 0, 0, 0);
-
-inline float secondsFromMilliseconds(msecs_t milliseconds)
-{
-    return milliseconds / 1000.f;
-}
 
 void PlaybackController::init()
 {
@@ -48,19 +41,23 @@ void PlaybackController::init()
         onProjectChanged();
     });
 
-    m_playbackPositionChanged.onNotify(this, []() {
-        // msecs_t endMsecs = playbackEndMsecs();
-        // const LoopBoundaries& loop = playback()->loopBoundaries();
-        // if (m_currentPlaybackTimeMsecs == endMsecs && m_currentPlaybackTimeMsecs != loop.loopOutTick) {
-        //     stop();
-        // }
-    });
-
     m_player = playback()->player();
     globalContext()->setPlayer(m_player);
 
     m_player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
         m_isPlayingChanged.notify();
+    });
+
+    m_player->playbackPositionChanged().onReceive(this, [this](const muse::secs_t& position) {
+        project::IAudacityProjectPtr project = globalContext()->currentProject();
+        if (!project) {
+            return false;
+        }
+
+        if (totalPlayTime() == position) {
+            //! NOTE: just stop, without seek
+            player()->stop();
+        }
     });
 
     recordController()->isRecordingChanged().onNotify(this, [this]() {
@@ -133,19 +130,9 @@ void PlaybackController::reset()
     stop();
 }
 
-Notification PlaybackController::playbackPositionChanged() const
-{
-    return m_playbackPositionChanged;
-}
-
 Channel<uint32_t> PlaybackController::midiTickPlayed() const
 {
     return m_tickPlayed;
-}
-
-float PlaybackController::playbackPositionInSeconds() const
-{
-    return secondsFromMilliseconds(m_currentPlaybackTime);
 }
 
 muse::async::Channel<TrackId> PlaybackController::trackAdded() const
@@ -184,11 +171,26 @@ void PlaybackController::togglePlay()
         return;
     }
 
+    bool isShiftPressed =  QApplication::keyboardModifiers().testFlag(Qt::ShiftModifier);
     if (isPlaying()) {
-        stop();
+        if (isShiftPressed) {
+            stop();
+        } else {
+            pause();
+        }
     } else if (isPaused()) {
-        resume();
+        if (isShiftPressed) {
+            //! NOTE: set the current position as start position
+            doSeek(m_player->playbackPosition());
+            play();
+        } else {
+            resume();
+        }
     } else {
+        if (m_player->playbackPosition() == totalPlayTime()) {
+            doSeek(0.0);
+        }
+
         play();
     }
 }
@@ -211,7 +213,10 @@ void PlaybackController::rewindToStart()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
-    seek(0.0);
+    IF_ASSERT_FAILED(player()) {
+        return;
+    }
+    player()->rewind();
 }
 
 void PlaybackController::rewindToEnd()
@@ -227,18 +232,24 @@ void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
         return;
     }
 
-    if (isPlaying()) {
-        LOGD() << "Can't do seek while playing";
-        return;
-    }
-
     muse::secs_t secs = args.arg<double>(0);
-    m_lastPlaybackSeekTime = secs;
-    player()->seek(secs);
+    bool triggerPlay = args.count() > 1 ? args.arg<bool>(1) : false;
 
     if (isPaused()) {
         player()->stop();
     }
+
+    doSeek(secs, triggerPlay);
+
+    if (triggerPlay && !isPlaying()) {
+        player()->play();
+    }
+}
+
+void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
+{
+    player()->seek(secs, applyIfPlaying);
+    m_lastPlaybackSeekTime = secs;
 }
 
 void PlaybackController::pause()
@@ -318,17 +329,6 @@ void PlaybackController::notifyActionCheckedChanged(const ActionCode& actionCode
     m_actionCheckedChanged.send(actionCode);
 }
 
-void PlaybackController::setCurrentPlaybackTime(muse::secs_t msecs)
-{
-    if (m_currentPlaybackTime == msecs) {
-        return;
-    }
-
-    m_currentPlaybackTime = msecs;
-
-    m_playbackPositionChanged.notify();
-}
-
 void PlaybackController::subscribeOnAudioParamsChanges()
 {
     NOT_IMPLEMENTED;
@@ -360,13 +360,14 @@ Channel<ActionCode> PlaybackController::actionCheckedChanged() const
     return m_actionCheckedChanged;
 }
 
-QTime PlaybackController::totalPlayTime() const
+muse::secs_t PlaybackController::totalPlayTime() const
 {
-    QTime result = ZERO_TIME;
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return 0;
+    }
 
-    NOT_IMPLEMENTED;
-
-    return result;
+    return project->trackeditProject()->totalTime();
 }
 
 Notification PlaybackController::totalPlayTimeChanged() const

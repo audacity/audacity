@@ -5,6 +5,7 @@
 #include "global/types/ret.h"
 #include "global/async/channel.h"
 #include "global/async/promise.h"
+#include "global/async/notification.h"
 
 #include "playbacktypes.h"
 
@@ -18,7 +19,8 @@ public:
     virtual bool isBusy() const = 0;
 
     virtual void play() = 0;
-    virtual void seek(const muse::secs_t newPosition) = 0;
+    virtual void seek(const muse::secs_t newPosition, bool applyIfPlaying = false) = 0;
+    virtual void rewind() = 0;
     virtual void stop() = 0;
     virtual void pause() = 0;
     virtual void resume() = 0;
@@ -32,6 +34,7 @@ public:
 
     virtual muse::secs_t playbackPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
+    virtual muse::async::Notification playbackRewound() const = 0;
 
     // tracks
     virtual muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) = 0;

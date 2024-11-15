@@ -6,6 +6,9 @@
 #include "../../itrackeditinteraction.h"
 
 #include "Track.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
+
 #include "iinteractive.h"
 #include "iprojecthistory.h"
 #include "iselectioncontroller.h"
@@ -25,18 +28,24 @@ class Au3Interaction : public ITrackeditInteraction
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
 
 public:
-    Au3Interaction() = default;
+    Au3Interaction();
 
     muse::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
 
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
 
-    bool trimTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) override;
-    bool silenceTrackData(trackedit::TrackId trackId, secs_t begin, secs_t end) override;
+    bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
+    bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
 
     bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
+    bool changeClipPitch(const ClipKey& clipKey, int pitch) override;
+    bool resetClipPitch(const ClipKey& clipKey) override;
+    bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
+    bool resetClipSpeed(const ClipKey& clipKey) override;
+    bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
+    void renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
@@ -45,7 +54,7 @@ public:
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
     bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
-    bool removeClipData(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
+    bool removeClipsData(const std::vector<trackedit::ClipKey>& clipsKeys, secs_t begin, secs_t end) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
@@ -71,12 +80,18 @@ public:
     void redo() override;
     bool canRedo() override;
 
+    muse::ProgressPtr progress() const override;
+
 private:
     au3::Au3Project& projectRef() const;
-    TrackIdList pasteIntoNewTracks();
+    TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId, size_t tracksNum) const;
-    muse::Ret canPasteClips(const TrackIdList& tracksIds,  secs_t begin) const;
+    muse::Ret canPasteClips(const TrackIdList& tracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const;
+    muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
+    muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+    muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin);
+    void trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin, secs_t end, std::shared_ptr<WaveClip> otherClip);
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
@@ -88,11 +103,24 @@ private:
     void pushProjectHistorySplitDeleteState(secs_t start, secs_t duration);
     void pushProjectHistoryDuplicateState();
 
+    void pushProjectHistoryTrackAddedState();
+    void pushProjectHistoryTracksTrimState(secs_t start, secs_t end);
+    void pushProjectHistoryTrackSilenceState(secs_t start, secs_t end);
+    void pushProjectHistoryPasteState();
+    void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+    void pushProjectHistoryChangeClipPitchState();
+    void pushProjectHistoryResetClipPitchState();
+    void pushProjectHistoryChangeClipSpeedState();
+    void pushProjectHistoryResetClipSpeedState();
+    void pushProjectHistoryRenderClipStretchingState();
+
     bool canMoveTrack(const TrackId trackId, const TrackMoveDirection direction);
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
+
+    muse::ProgressPtr m_progress;
 };
 }

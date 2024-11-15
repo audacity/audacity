@@ -57,7 +57,8 @@ void Au3Player::play()
 
     Au3Project& project = projectRef();
 
-    auto options = ProjectAudioIO::GetDefaultOptions(project, true /*newDefault*/);
+    const bool newDefault = true; //(mode == PlayMode::loopedPlay);
+    auto options = ProjectAudioIO::GetDefaultOptions(project, newDefault);
     bool backwards = false;
 
     auto& tracks = Au3TrackList::Get(project);
@@ -78,7 +79,6 @@ void Au3Player::play()
     double t1 = selectedRegion.t1();
     // SelectedRegion guarantees t0 <= t1, so we need another boolean argument
     // to indicate backwards play.
-    const bool newDefault = false; //(mode == PlayMode::loopedPlay);
 
     if (backwards) {
         std::swap(t0, t1);
@@ -220,19 +220,27 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
     return success ? muse::make_ok() : muse::make_ret(muse::Ret::Code::InternalError);
 }
 
-void Au3Player::seek(const muse::secs_t newPosition)
+void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
 {
     LOGD() << "newPosition: " << newPosition;
-
-    //! TODO At the moment not work
-    //! there probably should be a different implementation
 
     Au3Project& project = projectRef();
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
     playRegion.SetStart(newPosition);
 
+    if (applyIfPlaying && m_playbackStatus.val == PlaybackStatus::Running) {
+        auto gAudioIO = AudioIO::Get();
+        gAudioIO->SeekStream(newPosition - gAudioIO->GetStreamTime());
+    }
+
     m_playbackPosition.set(newPosition);
+}
+
+void Au3Player::rewind()
+{
+    seek(0.0);
+    m_playbackRewound.notify();
 }
 
 void Au3Player::stop()
@@ -349,6 +357,11 @@ muse::secs_t Au3Player::playbackPosition() const
 muse::async::Channel<muse::secs_t> Au3Player::playbackPositionChanged() const
 {
     return m_playbackPosition.ch;
+}
+
+muse::async::Notification Au3Player::playbackRewound() const
+{
+    return m_playbackRewound;
 }
 
 Au3Project& Au3Player::projectRef() const

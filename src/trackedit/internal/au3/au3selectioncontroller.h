@@ -5,18 +5,25 @@
 
 #include "../../iselectioncontroller.h"
 
+#include "async/asyncable.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "playback/iplayback.h"
+
+#include "Track.h"
 
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
-class Au3SelectionController : public ISelectionController
+class Au3SelectionController : public ISelectionController, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     Au3SelectionController() = default;
+
+    void init();
 
     // track selection
     void resetSelectedTracks() override;
@@ -50,7 +57,10 @@ public:
     muse::async::Channel<trackedit::secs_t> dataSelectedEndTimeSelected() const override;
 
 private:
+    void updateSelectionController();
+
     au3::Au3Project& projectRef() const;
+    Observer::Subscription m_tracksSubc;
 
     template<typename T>
     struct Val {

@@ -1,14 +1,8 @@
-/**********************************************************************
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "defaultplaybackpolicy.h"
 
- Audacity: A Digital Audio Editor
-
- @file DefaultPlaybackPolicy.cpp
-
- Paul Licameli split from PlaybackSchedule.cpp
-
- **********************************************************************/
-
-#include "DefaultPlaybackPolicy.h"
 #include "ProjectAudioIO.h"
 #include "SampleCount.h"
 #include "ViewInfo.h"
@@ -31,6 +25,7 @@ void DefaultPlaybackPolicy::Initialize(
 {
    PlaybackPolicy::Initialize(schedule, rate);
    mLastPlaySpeed = GetPlaySpeed();
+   // mMessageChannel.Initialize()
    mMessageChannel.Write( { mLastPlaySpeed,
       schedule.mT0, mLoopEndTime, mLoopEnabled } );
 
@@ -93,9 +88,7 @@ double DefaultPlaybackPolicy::OffsetSequenceTime(
             time = std::clamp(time + offset, schedule.mT0, schedule.mT1);
       }
       else {
-         // this includes the case where the start time is after the
-         // looped region, and mLoopEnabled is set to false
-         time = std::clamp(time + offset, *mpStartTime, schedule.mT1);
+          time += offset;
       }
    }
 
@@ -207,7 +200,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
    // adjust the schedule...
    auto mine = std::tie(schedule.mT0, mLoopEndTime);
    auto theirs = std::tie(data.mT0, data.mT1);
-   if ((loopWasEnabled != mLoopEnabled) || (mLoopEnabled && mine != theirs))
+   if ((loopWasEnabled != mLoopEnabled) || (mine != theirs))
    {
       kicked = true;
       if (!empty) {

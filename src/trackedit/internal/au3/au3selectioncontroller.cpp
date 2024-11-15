@@ -27,6 +27,29 @@ using namespace au::au3;
 
 // clip selection
 
+void Au3SelectionController::init()
+{
+    playback()->player()->playbackRewound().onNotify(this, [this] {
+        MYLOG() << "playback rewound";
+        setDataSelectedStartTime(0, true);
+        setDataSelectedEndTime(0, true);
+    });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+        if (prj) {
+            //! NOTE: sync selectionControler with internal project state if trackList changed
+            auto trackList = &Au3TrackList::Get(projectRef());
+            m_tracksSubc = trackList->Subscribe([this](const TrackListEvent&) {
+                updateSelectionController();
+            });
+        } else {
+            m_tracksSubc.Reset();
+        }
+    });
+}
+
 void Au3SelectionController::resetSelectedTracks()
 {
     MYLOG() << "resetSelectedTrack";
@@ -126,6 +149,9 @@ void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
 {
     auto& tracks = ::TrackList::Get(projectRef());
     ::Track* au3Track = tracks.FindById(::TrackId(trackId));
+    if (!au3Track) {
+        return;
+    }
 
     secs_t audioDataStartTime = au3Track->GetStartTime();
     secs_t audioDataEndTime = au3Track->GetEndTime();
@@ -137,6 +163,9 @@ void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
 void Au3SelectionController::setSelectedClipAudioData(trackedit::TrackId trackId, secs_t time)
 {
     const auto& clip = au3::DomAccessor::findWaveClip(projectRef(), trackId, time);
+    if (!clip) {
+        return;
+    }
 
     secs_t audioDataStartTime = clip->Start();
     secs_t audioDataEndTime = clip->End();
@@ -151,13 +180,14 @@ void Au3SelectionController::resetDataSelection()
 {
     MYLOG() << "resetDataSelection";
 
-    m_selectedStartTime.set(-1.0, true);
-    m_selectedEndTime.set(-1.0, true);
+    const auto playbackPosition = playback()->player()->playbackPosition();
+    m_selectedStartTime.set(playbackPosition, true);
+    m_selectedEndTime.set(playbackPosition, true);
 }
 
 bool Au3SelectionController::timeSelectionIsNotEmpty() const
 {
-    return muse::RealIsEqualOrMore(m_selectedStartTime.val, 0.0) && m_selectedEndTime.val > 0.0 && !muse::RealIsEqualOrLess(
+    return muse::RealIsEqualOrMore(m_selectedEndTime.val, 0.0) && !muse::RealIsEqualOrLess(
         m_selectedEndTime.val, m_selectedStartTime.val);
 }
 
@@ -214,6 +244,17 @@ muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelected
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeSelected() const
 {
     return m_selectedEndTime.selected;
+}
+
+void Au3SelectionController::updateSelectionController()
+{
+    auto& tracks = Au3TrackList::Get(projectRef());
+    TrackIdList selectedTracks;
+    for (const auto& selectedTrack : tracks.Selected()) {
+        selectedTracks.push_back(DomConverter::trackId(selectedTrack->GetId()));
+    }
+
+    m_selectedTracks.set(selectedTracks, true);
 }
 
 Au3Project& Au3SelectionController::projectRef() const

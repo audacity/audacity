@@ -30,9 +30,7 @@ public:
 
     virtual void reset() = 0;
 
-    virtual muse::async::Notification playbackPositionChanged() const = 0;
     virtual muse::async::Channel<uint32_t> midiTickPlayed() const = 0;
-    virtual float playbackPositionInSeconds() const = 0;
 
     virtual muse::async::Channel<playback::TrackId> trackAdded() const = 0;
     virtual muse::async::Channel<playback::TrackId> trackRemoved() const = 0;
@@ -44,7 +42,7 @@ public:
     virtual bool actionChecked(const muse::actions::ActionCode& actionCode) const = 0;
     virtual muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const = 0;
 
-    virtual QTime totalPlayTime() const = 0;
+    virtual muse::secs_t totalPlayTime() const = 0;
     virtual muse::async::Notification totalPlayTimeChanged() const = 0;
 
     virtual muse::Progress loadingProgress() const = 0;
