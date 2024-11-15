@@ -25,10 +25,10 @@ struct PlaybackRegion
     muse::secs_t start;
     muse::secs_t end;
 
-    bool isValid() const
-    {
-        return start != end;
-    }
+    inline bool isValid() const { return start != end; }
+
+    inline bool operator==(const PlaybackRegion& other) const { return start == other.start && end == other.end; }
+    inline bool operator!=(const PlaybackRegion& other) const { return !this->operator==(other); }
 };
 
 static constexpr audio::volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%

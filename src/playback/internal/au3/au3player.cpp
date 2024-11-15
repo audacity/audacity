@@ -109,12 +109,7 @@ void Au3Player::play()
 
     if (t1 == t0) {
         // move t0 to valid range
-        if (t0 < 0) {
-            t0 = tracks.GetStartTime();
-        } else if (t0 > tracks.GetEndTime()) {
-            t0 = tracks.GetEndTime();
-        }
-
+        t0 = std::clamp(t0, tracks.GetStartTime(), tracks.GetEndTime());
         t1 = tracks.GetEndTime();
     } else {
         // maybe t1 < t0, with backwards scrubbing for instance

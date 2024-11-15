@@ -58,6 +58,24 @@ void PlayCursorController::seekToX(double x, bool triggerPlay)
     }
 }
 
+void PlayCursorController::setPlaybackRegion(double x1, double x2)
+{
+    if (muse::RealIsEqual(x1, x2)) {
+        return;
+    }
+
+    IProjectViewStatePtr viewState = projectViewState();
+    bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
+
+    double start = m_context->positionToTime(x1, snapEnabled);
+    start = std::max(0.0, start);
+
+    double end = m_context->positionToTime(x2, snapEnabled);
+    end = std::max(0.0, end);
+
+    dispatcher()->dispatch("playback-play-region-change", ActionData::make_arg2<double, double>(start, end));
+}
+
 au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
 {
     return globalContext()->playbackState();

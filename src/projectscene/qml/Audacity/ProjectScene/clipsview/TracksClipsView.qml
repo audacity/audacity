@@ -211,6 +211,9 @@ Rectangle {
                 if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
                     playCursorController.seekToX(timeline.context.selectionStartPosition)
                 }
+
+                playCursorController.setPlaybackRegion(timeline.context.selectionStartPosition, timeline.context.selectionEndPosition)
+
                 clipsSelection.visible = false
             }
 
@@ -223,10 +226,10 @@ Rectangle {
             onDoubleClicked: e => {
                 if (root.clipHovered) {
                     selectionController.selectClipAudioData(root.hoveredClipKey)
-                    playCursorController.seekToX(timeline.context.selectedClipStartPosition)
+                    playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
                 } else {
                     selectionController.selectTrackAudioData(e.y)
-                    playCursorController.seekToX(timeline.context.selectionStartPosition)
+                    playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
                 }
                 clipsSelection.visible = false
             }
