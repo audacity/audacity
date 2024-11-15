@@ -117,12 +117,14 @@ public:
                          const std::function<void(const TranslatableString&/*unlinkReason*/)>& onUnlink);
 
 private:
-   bool ImportAndRunTempoDetection(
+   bool ImportWithTempoDetection(
+      const std::vector<FilePath>& fileNames, bool addToHistory);
+   bool ImportWithoutTempoDetection(
       const std::vector<FilePath>& fileNames, bool addToHistory);
 
    bool DoImport(
       const FilePath& fileName, bool addToHistory,
-      std::shared_ptr<ClipMirAudioReader>& resultingReader);
+      std::shared_ptr<ClipMirAudioReader>* resultingReader);
 
    /*!
     @param fileName a path assumed to exist and contain an .aup3 project
