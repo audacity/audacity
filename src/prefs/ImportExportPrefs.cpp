@@ -114,12 +114,12 @@ EnumSetting<bool> ImportExportPrefs::MusicFileImportOnExistingProjectSetting {
    {
       EnumValueSymbol {
          wxT("Match"),
-         XXO("Always match the loop tempo to the project tempo") },
+         XXO("Always &match the loop tempo to the project tempo") },
       EnumValueSymbol {
          wxT("MatchIfBeatsAndMeasures"),
          XXO(
-            "Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\"") },
-      EnumValueSymbol { wxT("DoNothing"), XXO("Do &nothing") },
+            "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\"") },
+      EnumValueSymbol { wxT("DoNothing"), XXO("&Do nothing") },
    },
    1,
    { false, true, false },
