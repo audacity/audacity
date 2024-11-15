@@ -67,10 +67,13 @@ private:
 
     bool isLoaded() const;
 
+    bool isStoped() const;
+
     bool isLoopEnabled() const;
     bool loopBoundariesSet() const;
 
-    bool isSelectionSet() const;
+    PlaybackRegion selectionPlaybackRegion() const;
+    bool isSelectionPlaybackRegionChanged() const;
 
     void onProjectChanged();
 
@@ -83,6 +86,8 @@ private:
     void rewindToEnd();
     void onSeekAction(const muse::actions::ActionData& args);
     void doSeek(const muse::secs_t secs, bool applyIfPlaying = false);
+    void onChangePlaybackRegionAction(const muse::actions::ActionData& args);
+    void doChangePlaybackRegion(const PlaybackRegion& region);
     void play(bool ignoreSelection = false);
     void pause();
     void stop();
@@ -113,6 +118,7 @@ private:
     void updateSoloMuteStates();
     void updateAuxMuteStates();
 
+    bool isEqualToPlaybackPosition(muse::secs_t position) const;
     bool isPlaybackPositionOnTheEndOfProject() const;
     bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
 
@@ -129,6 +135,7 @@ private:
 
     muse::async::Notification m_currentSequenceIdChanged;
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
+    PlaybackRegion m_lastPlaybackRegion;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;

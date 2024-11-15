@@ -52,6 +52,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void seekToX(double x, bool triggerPlay = false);
+    Q_INVOKABLE void setPlaybackRegion(double x1, double x2);
 
 signals:
     void timelineContextChanged();
