@@ -138,6 +138,12 @@ jobs:
       uses: audacity/audacity-actions/dependencies@v2
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
+    - name: Install Additional Dependencies
+      shell: bash
+      run: |
+        sudo apt update
+        sudo apt install -y --no-install-recommends libgtk-3-dev
+        sudo apt remove -y ccache
     - name: Configure
       uses: audacity/audacity-actions/configure@v2
       with:
