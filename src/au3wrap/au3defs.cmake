@@ -181,7 +181,7 @@ elseif(OS_IS_MAC)
     set(WXBASE_DEFS ${WXBASE_DEFS} __WXMAC__)
     find_library(CoreAudio NAMES CoreAudio)
     find_library(CoreAudioKit NAMES CoreAudioKit)
-    set(AU3_LINK ${AU3_LINK} ${CoreAudio} ${CoreAudioKit})
+    set(AU3_LINK zlib::zlib libjpeg-turbo::libjpeg-turbo libpng::libpng ${AU3_LINK} ${CoreAudio} ${CoreAudioKit})
 
 elseif(OS_IS_WIN)
    set(WXBASE_DEFS ${WXBASE_DEFS} __WXMSW__ WXUSINGDLL)
