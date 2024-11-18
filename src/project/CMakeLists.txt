@@ -103,3 +103,6 @@ set(MODULE_LINK au3wrap)
 
 setup_module()
 
+if (AU_BUILD_PROJECT_TESTS)
+    add_subdirectory(tests)
+endif()

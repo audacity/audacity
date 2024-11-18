@@ -43,3 +43,7 @@ set(MODULE_DEF ${AU3_DEF})
 set(MODULE_LINK au3wrap)
 
 setup_module()
+
+if (AU_BUILD_RECORD_TESTS)
+    add_subdirectory(tests)
+endif()
