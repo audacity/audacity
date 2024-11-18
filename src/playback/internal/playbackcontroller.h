@@ -10,6 +10,7 @@
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
+#include "iapplication.h"
 #include "../iplayback.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
@@ -21,9 +22,11 @@
 namespace au::playback {
 class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable
 {
+public:
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::IApplication> application;
     muse::Inject<IPlayback> playback;
     muse::Inject<record::IRecordController> recordController;
     muse::Inject<trackedit::ISelectionController> selectionController;
@@ -62,6 +65,7 @@ public:
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 private:
+    friend class PlaybackControllerTests;
 
     IPlayerPtr player() const;
 

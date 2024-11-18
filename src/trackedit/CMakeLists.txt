@@ -53,3 +53,7 @@ set(MODULE_LINK
 )
 
 setup_module()
+
+if (AU_BUILD_TRACKEDIT_TESTS)
+    add_subdirectory(tests)
+endif()
