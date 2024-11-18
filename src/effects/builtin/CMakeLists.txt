@@ -42,6 +42,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbviewmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/silencegen/silenceeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/silencegen/silenceeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/silencegen/silenceviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/silencegen/silenceviewmodel.h
     )
 
 # AU3
@@ -50,8 +55,14 @@ include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3defs.cmake)
 set(AU3_SRC
     ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.cpp
     ${AU3_LIBRARIES}/lib-effects/StatefulPerTrackEffect.h
+    ${AU3_LIBRARIES}/lib-effects/StatefulEffect.cpp
+    ${AU3_LIBRARIES}/lib-effects/StatefulEffect.h
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/Generator.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
 )
 
 set(AU3_DEF ${AU3_DEF}

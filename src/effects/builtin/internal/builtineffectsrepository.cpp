@@ -22,6 +22,8 @@
 #include "reverb/reverbeffect.h"
 #include "reverb/reverbviewmodel.h"
 #include "tonegen/toneviewmodel.h"
+#include "silencegen/silenceeffect.h"
+#include "silencegen/silenceviewmodel.h"
 
 #include "log.h"
 
@@ -59,6 +61,14 @@ void BuiltinEffectsRepository::init()
     regMeta(ChirpEffect::Symbol,
             muse::mtrc("effects", "Chirp"),
             muse::mtrc("effects", "Generates an ascending or descending tone of one of four types")
+            );
+
+    static BuiltinEffectsModule::Registration< SilenceEffect > regSilence;
+    qmlRegisterType<SilenceViewModel>("Audacity.Effects", 1, 0, "SilenceViewModel");
+    regView(SilenceEffect::Symbol, u"qrc:/silencegen/SilenceView.qml");
+    regMeta(SilenceEffect::Symbol,
+            muse::mtrc("effects", "Silence"),
+            muse::mtrc("effects", "Generates silence")
             );
 
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;

@@ -6,5 +6,6 @@
         <file>tonegen/ToneView.qml</file>
         <file>general/GeneralEffectView.qml</file>
         <file>reverb/ReverbView.qml</file>
+        <file>silencegen/SilenceView.qml</file>
     </qresource>
 </RCC>
