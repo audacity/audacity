@@ -14,25 +14,23 @@ enum class Err {
     NoError = int(muse::Ret::Code::Ok),
     UnknownError = EFFECTS_FIRST,
 
+    EffectNoAudioSelected,
     EffectProcessFailed,
 };
 
-inline muse::Ret make_ret(Err e, std::string text = "", std::string caption = "")
+inline muse::Ret make_ret(Err e)
 {
     int retCode = static_cast<int>(e);
 
     switch (e) {
-    case Err::Undefined:
-        return muse::Ret(retCode);
-    case Err::NoError:
-        return muse::Ret(retCode);
+    case Err::Undefined: return muse::Ret(retCode);
+    case Err::NoError: return muse::Ret(retCode);
     case Err::UnknownError:
-        return muse::Ret(retCode);
-    case Err::EffectProcessFailed: {
-        return muse::Ret(
-            retCode,
-            text.empty() ? muse::trc("effects", "Applying effect failed") : text);
-    }
+        return muse::Ret(retCode, muse::trc("effects", "Unknown error"));
+    case Err::EffectNoAudioSelected:
+        return muse::Ret(retCode, muse::trc("effects", "No audio selected"));
+    case Err::EffectProcessFailed:
+        return muse::Ret(retCode, muse::trc("effects", "Applying effect failed"));
     }
 
     return muse::Ret(static_cast<int>(e));

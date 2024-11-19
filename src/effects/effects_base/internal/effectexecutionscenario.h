@@ -7,6 +7,7 @@
 
 #include "async/channel.h"
 #include "modularity/ioc.h"
+#include "global/iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
@@ -27,6 +28,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectInstancesRegister> effectInstancesRegister;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<muse::IInteractive> interactive;
 
 public:
     EffectExecutionScenario() = default;
@@ -41,6 +43,8 @@ public:
 
 private:
 
+    std::pair<std::string, std::string> makeErrorMsg(const muse::Ret& ret, const EffectId& effectId);
+    muse::Ret performEffectWithShowError(au3::Au3Project& project, const EffectId& effectId, unsigned int flags);
     muse::Ret doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned int flags);
     au3::Au3Project& projectRef();
 
