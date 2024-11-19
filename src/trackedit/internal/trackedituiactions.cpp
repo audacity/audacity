@@ -287,8 +287,8 @@ const UiActionList TrackeditUiActions::m_actions = {
     UiAction("stretch-clip-to-match-tempo",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Stretch clip to match tempo"),
-             TranslatableString("action", "Stretch clip to match tempo"),
+             TranslatableString("action", "Stretch with tempo changes"),
+             TranslatableString("action", "Stretch with tempo changes"),
              Checkable::Yes
              ),
     UiAction("clip-render-pitch-speed",
