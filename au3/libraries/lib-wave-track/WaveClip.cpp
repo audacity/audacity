@@ -224,12 +224,15 @@ double WaveClipChannel::GetStretchRatio() const
 
 
 static int64_t s_lastClipId = 0;
+int64_t WaveClip::NewID()
+{
+    return ++s_lastClipId;
+}
 
 WaveClip::WaveClip(size_t width,
    const SampleBlockFactoryPtr &factory,
    sampleFormat format, int rate)
 {
-   mId = ++s_lastClipId;
    assert(width > 0);
    mRate = rate;
    mSequences.resize(width);
@@ -254,7 +257,6 @@ WaveClip::WaveClip(
    // current sample block factory, because we might be copying
    // from one project to another
 
-   mId = orig.mId;
    mSequenceOffset = orig.mSequenceOffset;
    mTrimLeft = orig.mTrimLeft;
    mTrimRight = orig.mTrimRight;
@@ -295,7 +297,6 @@ WaveClip::WaveClip(
 {
    assert(orig.CountSamples(t0, t1) > 0);
 
-   mId = orig.mId;
    mSequenceOffset = orig.mSequenceOffset;
 
    //Adjust trim values to sample-boundary
@@ -330,10 +331,11 @@ WaveClip::WaveClip(
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
-   if (copyCutlines)
-      for (const auto &cutline : orig.mCutLines)
-         mCutLines.push_back(
-            std::make_shared<WaveClip>(*cutline, factory, true));
+   if (copyCutlines) {
+      for (const auto &cutline : orig.mCutLines) {
+          mCutLines.push_back(WaveClip::NewSharedFrom(*cutline, factory, true));
+      }
+   }
 
    assert(NChannels() == orig.NChannels());
    assert(CheckInvariants());
@@ -1064,12 +1066,10 @@ XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
       // The format is not stored in WaveClip itself but passed to
       // Sequence::Sequence; but then the Sequence will deserialize format
       // again
-      mCutLines.push_back(
-         std::make_shared<WaveClip>(
-            // Make only one channel now, but recursive deserialization
-            // increases the width later
-            1, pFirst->GetFactory(),
-            format, mRate));
+
+      // Make only one channel now, but recursive deserialization
+      // increases the width later
+      mCutLines.push_back(WaveClip::NewShared(1, pFirst->GetFactory(), format, mRate));
       return mCutLines.back().get();
    }
    else
@@ -1117,7 +1117,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    if (!o.StrongInvariant()) {
       assert(false); // precondition not honored
       // But try to repair it and continue in release
-      dup = std::make_shared<WaveClip>(o, o.GetFactory(), true);
+      dup = WaveClip::NewSharedFrom(o, o.GetFactory(), true);
       dup->RepairChannels();
       pOther = dup.get();
    }
@@ -1158,7 +1158,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
       finisher = ClearSequence(GetSequenceStartTime(), t0);
       SetTrimLeft(other.GetTrimLeft());
 
-      auto copy = std::make_shared<WaveClip>(other, factory, true);
+      auto copy = WaveClip::NewSharedFrom(other, factory, true);
       copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime())
          .Commit();
       newClip = std::move(copy);
@@ -1168,14 +1168,14 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
       finisher = ClearSequence(GetPlayEndTime(), GetSequenceEndTime());
       SetTrimRight(other.GetTrimRight());
 
-      auto copy = std::make_shared<WaveClip>(other, factory, true);
+      auto copy = WaveClip::NewSharedFrom(other, factory, true);
       copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime())
          .Commit();
       newClip = std::move(copy);
    }
    else
    {
-      newClip = std::make_shared<WaveClip>(other, factory, true);
+      newClip = WaveClip::NewSharedFrom(other, factory, true);
       newClip->ClearSequence(newClip->GetPlayEndTime(), newClip->GetSequenceEndTime())
          .Commit();
       newClip->ClearSequence(newClip->GetSequenceStartTime(), newClip->GetPlayStartTime())
@@ -1186,7 +1186,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
 
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
-      auto copy = std::make_shared<WaveClip>(*newClip.get(), factory, true);
+      auto copy = WaveClip::NewSharedFrom(*newClip.get(), factory, true);
 
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
@@ -1202,10 +1202,10 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    WaveClipHolders newCutlines;
    for (const auto &cutline: newClip->mCutLines)
    {
-      auto cutlineCopy = std::make_shared<WaveClip>(*cutline, factory,
-         // Recursively copy cutlines of cutlines.  They don't need
-         // their offsets adjusted.
-         true);
+      auto cutlineCopy = WaveClip::NewSharedFrom(*cutline, factory,
+                                                 // Recursively copy cutlines of cutlines.  They don't need
+                                                 // their offsets adjusted.
+                                                 true);
       cutlineCopy->ShiftBy(t0 - GetSequenceStartTime());
       newCutlines.push_back(std::move(cutlineCopy));
    }
@@ -1427,8 +1427,8 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    const double clip_t0 = std::max( t0, GetPlayStartTime() );
    const double clip_t1 = std::min( t1, GetPlayEndTime() );
 
-   auto newClip = std::make_shared<WaveClip>(
-      *this, GetFactory(), true, clip_t0, clip_t1);
+   auto newClip = WaveClip::NewSharedFromRange(*this, GetFactory(), true, clip_t0, clip_t1);
+
    if(t1 < GetPlayEndTime())
    {
       newClip->ClearSequence(t1, newClip->GetSequenceEndTime())

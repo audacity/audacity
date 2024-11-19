@@ -245,11 +245,6 @@ private:
    WaveClip(const WaveClip&) = delete;
    WaveClip& operator= (const WaveClip&) = delete;
 
-public:
-   static const char *WaveClip_tag;
-
-   using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
-
    //! typical constructor
    /*!
     @param width how many sequences
@@ -282,6 +277,64 @@ public:
             const SampleBlockFactoryPtr &factory,
             bool copyCutlines,
             double t0, double t1);
+
+   static int64_t NewID();
+
+public:
+   static const char *WaveClip_tag;
+
+   using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
+
+   //! Cteate a new clip
+   /*!
+    @param width how many sequences
+    @pre `width > 0`
+    @post `NChannels() == width`
+    */
+   static WaveClip* New(size_t width, const SampleBlockFactoryPtr &factory, sampleFormat format, int rate)
+   {
+      WaveClip* clip = new WaveClip(width, factory, format, rate);
+      clip->mId = NewID();
+      return clip;
+   }
+
+   static std::shared_ptr<WaveClip> NewShared(size_t width, const SampleBlockFactoryPtr &factory,
+                                              sampleFormat format, int rate)
+   {
+       return std::shared_ptr<WaveClip>(New(width, factory, format, rate));
+   }
+
+   //! Create a new clip as copy origin
+   /*!
+    @post `NChannels() == orig.NChannels()`
+    @post `!copyCutlines || NumCutLines() == orig.NumCutLines()`
+    */
+   static WaveClip* NewFrom(const WaveClip& orig, const SampleBlockFactoryPtr &factory, bool copyCutlines)
+   {
+       WaveClip* clip = new WaveClip(orig, factory, copyCutlines);
+       clip->mId = NewID();
+       return clip;
+   }
+
+   static std::shared_ptr<WaveClip> NewSharedFrom(const WaveClip& orig, const SampleBlockFactoryPtr &factory,
+                                                  bool copyCutlines)
+   {
+       return std::shared_ptr<WaveClip>(NewFrom(orig, factory, copyCutlines));
+   }
+
+   static WaveClip* NewFromRange(const WaveClip& orig, const SampleBlockFactoryPtr &factory, bool copyCutlines,
+                            double t0, double t1)
+   {
+       WaveClip* clip = new WaveClip(orig, factory, copyCutlines, t0, t1);
+       clip->mId = NewID();
+       return clip;
+   }
+
+   static std::shared_ptr<WaveClip> NewSharedFromRange(const WaveClip& orig, const SampleBlockFactoryPtr &factory,
+                                                       bool copyCutlines, double t0, double t1)
+   {
+       return std::shared_ptr<WaveClip>(NewFromRange(orig, factory, copyCutlines, t0, t1));
+   }
 
    virtual ~WaveClip();
 

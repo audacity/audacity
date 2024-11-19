@@ -83,8 +83,7 @@ WaveTrack::IntervalHolder GetRenderedCopy(
    if (!interval.HasPitchOrSpeed())
       return pInterval;
 
-   const auto dst = std::make_shared<Interval>(
-      interval.NChannels(), factory, format, interval.GetRate());
+   const auto dst = WaveClip::NewShared(interval.NChannels(), factory, format, interval.GetRate());
 
    const auto originalPlayStartTime = interval.GetPlayStartTime();
    const auto originalPlayEndTime = interval.GetPlayEndTime();
@@ -517,8 +516,7 @@ void WaveTrack::CopyClips(WaveClipHolders &clips,
    SampleBlockFactoryPtr pFactory, const WaveClipHolders &orig, bool backup)
 {
    for (const auto &clip : orig)
-      InsertClip(clips,
-         std::make_shared<WaveClip>(*clip, pFactory, true),
+      InsertClip(clips, WaveClip::NewSharedFrom(*clip, pFactory, true),
          false, backup, false);
 }
 
@@ -1122,8 +1120,7 @@ void WaveTrack::CopyWholeClip(const Interval &clip,
    double t0, bool forClipboard)
 {
    const auto &pFactory = GetSampleBlockFactory();
-   const auto newClip =
-      std::make_shared<Interval>(clip, pFactory, !forClipboard);
+   const auto newClip = WaveClip::NewSharedFrom(clip, pFactory, !forClipboard);
    InsertInterval(newClip, false, false);
    newClip->ShiftBy(-t0);
 }
@@ -1132,8 +1129,7 @@ void WaveTrack::CopyPartOfClip(const Interval &clip,
    double t0, double t1, bool forClipboard)
 {
    const auto &pFactory = GetSampleBlockFactory();
-   auto newClip = std::make_shared<Interval>(
-      clip, pFactory, !forClipboard, t0, t1);
+   auto newClip = WaveClip::NewSharedFromRange(clip, pFactory, !forClipboard, t0, t1);
    newClip->SetName(clip.GetName());
    newClip->ShiftBy(-t0);
    if (newClip->GetPlayStartTime() < 0)
@@ -2460,8 +2456,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
       // though the consistency check of channels with each other remains to do.
       // Not all `WaveTrackData` fields are properly initialized by now,
       // use deserialization helpers.
-      auto clip = std::make_shared<WaveClip>(1,
-         mpFactory, mLegacyFormat, mLegacyRate);
+      auto clip = WaveClip::NewShared(1, mpFactory, mLegacyFormat, mLegacyRate);
       const auto xmlHandler = clip.get();
       auto &clips = NarrowClips();
       clips.push_back(std::move(clip));
@@ -2962,8 +2957,7 @@ auto WaveTrack::CreateClip(double offset, const wxString& name,
    const Interval *pToCopy, bool copyCutlines) -> IntervalHolder
 {
    if (pToCopy) {
-      auto pNewClip =
-         std::make_shared<WaveClip>(*pToCopy, mpFactory, copyCutlines);
+      auto pNewClip = WaveClip::NewSharedFrom(*pToCopy, mpFactory, copyCutlines);
       pNewClip->SetName(name);
       pNewClip->SetSequenceStartTime(offset);
       return pNewClip;
@@ -2987,8 +2981,7 @@ void WaveTrack::CreateRight()
 auto WaveTrack::DoCreateClip(double offset, const wxString& name) const
    -> WaveClipHolder
 {
-   auto clip = std::make_shared<WaveClip>(NChannels(),
-      mpFactory, GetSampleFormat(), GetRate());
+   auto clip = WaveClip::NewShared(NChannels(), mpFactory, GetSampleFormat(), GetRate());
    clip->SetName(name);
    clip->SetSequenceStartTime(offset);
 
