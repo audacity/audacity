@@ -22,6 +22,8 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
+#include "../effecterrors.h"
+
 using namespace muse;
 using namespace au::effects;
 
@@ -30,7 +32,7 @@ static const int UNDEFINED_FREQUENCY = -1;
 muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
     au3::Au3Project& project = projectRef();
-    return doPerformEffect(project, effectId, 0);
+    return performEffectWithShowError(project, effectId, 0);
 }
 
 au::au3::Au3Project& EffectExecutionScenario::projectRef()
@@ -41,10 +43,43 @@ au::au3::Au3Project& EffectExecutionScenario::projectRef()
 muse::Ret EffectExecutionScenario::repeatLastProcessor()
 {
     IF_ASSERT_FAILED(m_lastProcessorId) {
-        return muse::make_ret(Ret::Code::UnknownError);
+        return make_ret(Err::UnknownError);
     }
     au3::Au3Project& project = projectRef();
-    return doPerformEffect(project, *m_lastProcessorId, EffectManager::kConfigured);
+    return performEffectWithShowError(project, *m_lastProcessorId, EffectManager::kConfigured);
+}
+
+std::pair<std::string, std::string> EffectExecutionScenario::makeErrorMsg(const muse::Ret& ret,
+                                                                          const EffectId& effectId)
+{
+    const muse::String& effect = effectsProvider()->meta(effectId).title;
+    switch (Err(ret.code())) {
+    case Err::UnknownError: return {
+            ret.text(),
+            muse::String("An unknown error occurred while executing %1").arg(effect).toStdString()
+        };
+    case Err::EffectNoAudioSelected: return {
+            ret.text(),
+            muse::String("Select the audio for %1 to use then try again.").arg(effect).toStdString()
+        };
+    case Err::EffectProcessFailed: return {
+            ret.text(),
+            muse::String("An unknown error occurred while executing %1").arg(effect).toStdString()
+        };
+    default:
+        return makeErrorMsg(make_ret(Err::UnknownError), effectId);
+    }
+}
+
+muse::Ret EffectExecutionScenario::performEffectWithShowError(au3::Au3Project& project,
+                                                              const EffectId& effectId, unsigned int flags)
+{
+    muse::Ret ret = doPerformEffect(project, effectId, flags);
+    if (!ret && muse::Ret::Code(ret.code()) != muse::Ret::Code::Cancel) {
+        const auto msg = makeErrorMsg(ret, effectId);
+        interactive()->error(msg.first, msg.second);
+    }
+    return ret;
 }
 
 muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned flags)
@@ -67,22 +102,25 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         //! NOTE Step 1.1 - check plugin
         const PluginDescriptor* plug = PluginManager::Get().GetPlugin(ID);
         if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
-            return muse::make_ret(Ret::Code::UnknownError);
+            return make_ret(Err::UnknownError);
         }
 
         //! NOTE Step 1.2 - get effect
         effect = dynamic_cast<Effect*>(em.GetEffect(ID));
         IF_ASSERT_FAILED(effect) {
-            return muse::make_ret(Ret::Code::InternalError);
+            return make_ret(Err::UnknownError);
         }
 
         //! NOTE Step 1.3 - check selection
 
         IF_ASSERT_FAILED(muse::RealIsEqualOrMore(t1 - t0, 0.0)) {
-            return muse::make_ret(Ret::Code::InternalError);
+            return make_ret(Err::UnknownError);
         }
 
         isSelection = t1 > t0;
+        if (!isSelection && effect->GetType() != EffectTypeGenerate) {
+            return make_ret(Err::EffectNoAudioSelected);
+        }
 
         //! TODO Should we do something if there is no selection and the effect is not a generator? Maybe add a check... or automatically select all...
 
@@ -108,7 +146,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         //! NOTE Step 2.1 - get effect settings
         settings = em.GetDefaultSettings(ID);
         IF_ASSERT_FAILED(settings) {
-            return muse::make_ret(Ret::Code::InternalError);
+            return make_ret(Err::UnknownError);
         }
 
         //! NOTE Step 2.2 - get oldDuration for EffectTypeGenerate
@@ -183,7 +221,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(effect->MakeInstance());
         if (!pInstanceEx || !pInstanceEx->Init()) {
-            return muse::make_ret(Ret::Code::InternalError);
+            return make_ret(Err::UnknownError);
         }
     }
 

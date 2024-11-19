@@ -200,7 +200,8 @@ void TrackeditActionsController::doGlobalSplitCut()
     }
 
     if (selectionController()->selectedClips().empty()) {
-        interactive()->error(muse::trc("trackedit", "No audio selected"), muse::trc("trackedit", "Select the audio for Split Cut to use then try again."));
+        interactive()->error(muse::trc("trackedit", "No audio selected"),
+                             muse::trc("trackedit", "Select the audio for Split Cut to use then try again."));
         return;
     }
 
@@ -226,7 +227,8 @@ void TrackeditActionsController::doGlobalSplitDelete()
     }
 
     if (selectionController()->selectedClips().empty()) {
-        interactive()->error(muse::trc("trackedit", "No audio selected"), muse::trc("trackedit", "Select the audio for Split Cut to use then try again."));
+        interactive()->error(muse::trc("trackedit", "No audio selected"),
+                             muse::trc("trackedit", "Select the audio for Split Cut to use then try again."));
         return;
     }
 

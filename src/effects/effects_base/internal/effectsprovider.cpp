@@ -19,8 +19,6 @@
 #include "libraries/lib-basic-ui/BasicUI.h"
 
 #include "libraries/lib-audio-io/AudioIO.h"
-#include "libraries/lib-stretching-sequence/StretchingSequence.h"
-#include "libraries/lib-audio-io/ProjectAudioIO.h"
 
 #include "au3wrap/au3types.h"
 #include "playback/iplayer.h"
@@ -31,8 +29,6 @@ using namespace muse;
 using namespace au::effects;
 
 static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&instanceId=%2";
-
-static const int UNDEFINED_FREQUENCY = -1;
 
 bool EffectsProvider::isVstSupported() const
 {
@@ -176,11 +172,13 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
                     success = make_ret(Err::EffectProcessFailed);
                 }
             } catch (::AudacityException& e) {
-                std::string message = "";
+                success = make_ret(Err::EffectProcessFailed);
                 if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
-                    message = box->ErrorMessage().Translation().ToStdString();
+                    std::string message = box->ErrorMessage().Translation().ToStdString();
+                    if (!message.empty()) {
+                        success.setText(message);
+                    }
                 }
-                success = make_ret(Err::EffectProcessFailed, message);
             }
         }
 

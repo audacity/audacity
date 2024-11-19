@@ -131,7 +131,6 @@ QVariantList ReverbViewModel::paramsList() const
 
 void ReverbViewModel::setParam(const QString& key, double val)
 {
-    LOGD() << "param: " << key << ", new value: " << val;
     Setter s = m_setters.value(key, nullptr);
     IF_ASSERT_FAILED(s) {
         return;
