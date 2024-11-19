@@ -121,7 +121,7 @@ void Au3TrackeditProject::onProjectTempoChange(double newTempo)
     Au3TrackList& tracks = Au3TrackList::Get(*m_impl->prj);
     for (auto track : tracks) {
         DoProjectTempoChange(*track, newTempo);
-        TrackId trackId = DomConverter::trackId(track->GetId());
+        TrackId trackId = track->GetId();
         onTrackDataChanged(trackId);
     }
 }
