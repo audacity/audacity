@@ -122,7 +122,7 @@ PlaybackRegion PlaybackController::selectionPlaybackRegion() const
                  selectionController()->dataSelectedEndTime() };
     }
 
-    if (selectionController()->selectedClip().isValid()) {
+    if (selectionController()->selectedClips().size() == 1) {
         secs_t clipStartTime = selectionController()->selectedClipStartTime();
         secs_t clipEndTime = selectionController()->selectedClipEndTime();
         return { clipStartTime, clipEndTime };
