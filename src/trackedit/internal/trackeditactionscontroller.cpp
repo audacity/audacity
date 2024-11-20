@@ -382,7 +382,7 @@ void TrackeditActionsController::paste()
 
     if (!tracks.empty() && selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, selectedTrackId);
-        if (!ret) {
+        if (!ret && !ret.text().empty()) {
             interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
         }
     }
