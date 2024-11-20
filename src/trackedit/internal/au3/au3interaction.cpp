@@ -835,6 +835,30 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
 
 bool Au3Interaction::moveClips(secs_t offset, bool completed)
 {
+    //! NOTE: check if offset is applicable to every clip and recalculate if needed
+    std::optional<secs_t> mostLeftClipStartTime;
+    for (const auto& selectedClip : selectionController()->selectedClips()) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            continue;
+        }
+
+        if (clip->GetPlayStartTime() < mostLeftClipStartTime || !mostLeftClipStartTime.has_value()) {
+            mostLeftClipStartTime = clip->GetPlayStartTime();
+        }
+    }
+
+    if (mostLeftClipStartTime.has_value()) {
+        if (muse::RealIsEqualOrLess(mostLeftClipStartTime.value() + offset, 0.0)) {
+            offset = -mostLeftClipStartTime.value();
+        }
+    }
+
     for (const auto& selectedClip : selectionController()->selectedClips()) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
