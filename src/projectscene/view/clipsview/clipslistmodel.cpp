@@ -436,6 +436,8 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
         newStartTime = item->clip().endTime - minClipTime;
     }
 
+    newStartTime = std::max(newStartTime, 0.0);
+
     if (muse::RealIsEqual(newStartTime, item->clip().startTime)) {
         return false;
     }
