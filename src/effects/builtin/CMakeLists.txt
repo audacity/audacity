@@ -43,6 +43,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/dtmfgen/dtmfgenerator.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dtmfgen/dtmfgenerator.h
+    ${CMAKE_CURRENT_LIST_DIR}/dtmfgen/dtmfviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dtmfgen/dtmfviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.h
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.cpp

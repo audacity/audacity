@@ -22,9 +22,10 @@
 #include "reverb/reverbeffect.h"
 #include "reverb/reverbviewmodel.h"
 #include "tonegen/toneviewmodel.h"
+#include "dtmfgen/dtmfgenerator.h"
+#include "dtmfgen/dtmfviewmodel.h"
 #include "noisegen/noisegenerator.h"
 #include "noisegen/noiseviewmodel.h"
-
 #include "log.h"
 
 using namespace au::effects;
@@ -86,6 +87,14 @@ void BuiltinEffectsRepository::init()
     regMeta(ReverbEffect::Symbol,
             muse::mtrc("effects", "Reverb"),
             muse::mtrc("effects", "Reverb effect")
+            );
+
+    static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
+    qmlRegisterType<DtmfViewModel>("Audacity.Effects", 1, 0, "DtmfViewModel");
+    regView(DtmfGenerator::Symbol, u"qrc:/dtmfgen/DtmfView.qml");
+    regMeta(DtmfGenerator::Symbol,
+            muse::mtrc("effects/dtmf", "DTMF Tones"),
+            muse::mtrc("effects/dtmf", "Generates DTMF signal")
             );
 }
 

@@ -47,6 +47,7 @@ void GeneratorEffectModel::setDuration(double newDuration)
         return;
     }
     e->setDuration(newDuration);
+    emit durationChanged();
 }
 
 QString GeneratorEffectModel::durationFormat() const
@@ -65,6 +66,7 @@ void GeneratorEffectModel::setDurationFormat(const QString& newDurationFormat)
         return;
     }
     e->setDurationFormat(newDurationFormat);
+    emit durationFormatChanged();
 }
 
 GeneratorEffect* GeneratorEffectModel::generatorEffect() const
