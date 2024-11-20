@@ -106,7 +106,7 @@ void TrackeditActionsController::init()
     });
 }
 
-bool TrackeditActionsController::actionEnabled(const muse::actions::ActionCode &actionCode) const
+bool TrackeditActionsController::actionEnabled(const muse::actions::ActionCode& actionCode) const
 {
     if (!canReceiveAction(actionCode)) {
         return false;
@@ -401,7 +401,7 @@ void TrackeditActionsController::trackSplit(const ActionData& args)
 
     secs_t playbackPosition = globalContext()->playbackState()->playbackPosition();
 
-    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<trackedit::TrackId, secs_t>(trackIdToSplit, playbackPosition));
+    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>({ trackIdToSplit }, playbackPosition));
 }
 
 void TrackeditActionsController::tracksSplitAt(const ActionData& args)
@@ -692,7 +692,7 @@ void TrackeditActionsController::silenceAudioSelection()
     trackeditInteraction()->silenceTracksData(tracksIdsToSilence, selectedStartTime, selectedEndTime);
 }
 
-void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData &args)
+void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
