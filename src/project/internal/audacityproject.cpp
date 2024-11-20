@@ -97,6 +97,7 @@ void Audacity4Project::close()
     history->undoUnsaved();
     history->clearUnsaved();
 
+    clipboard()->clearTrackData();
     m_au3Project->close();
 
     m_aboutCloseEnd.notify();

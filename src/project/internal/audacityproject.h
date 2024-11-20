@@ -8,6 +8,7 @@
 #include "io/ifilesystem.h"
 #include "projectscene/iprojectviewstatecreator.h"
 #include "trackedit/iprojecthistory.h"
+#include "trackedit/itrackeditclipboard.h"
 #include "trackedit/itrackeditproject.h"
 
 namespace au::au3 {
@@ -45,6 +46,7 @@ class Audacity4Project : public IAudacityProject
     muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
 
 public:
     Audacity4Project();
