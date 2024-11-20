@@ -525,7 +525,7 @@ void ClipsListModel::selectClip(const ClipKey& key)
 {
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
-    if (modifiers.testFlag(Qt::ControlModifier)) {
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
         selectionController()->addSelectedClip(key.key);
     } else {
         if (muse::contains(selectionController()->selectedClips(), key.key)) {
@@ -552,17 +552,22 @@ void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
 
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
-    if (modifiers.testFlag(Qt::ControlModifier)) {
+    auto item = itemByKey(k);
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
         if (m_trackId != k.trackId) {
             return;
         } else {
-            addSelectedItem(itemByKey(k));
+            if (item) {
+                addSelectedItem(item);
+            }
         }
     } else {
         if (m_trackId != k.trackId) {
             clearSelectedItems();
         } else {
-            setSelectedItems(QList<ClipListItem*>({ itemByKey(k) }));
+            if (item) {
+                setSelectedItems(QList<ClipListItem*>({ item }));
+            }
         }
     }
 }
