@@ -24,7 +24,7 @@ include(FetchContent)
 FetchContent_Declare(
   muse_framework
   GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u1115
+  GIT_TAG        u1121
 )
 
 FetchContent_GetProperties(muse_framework)
