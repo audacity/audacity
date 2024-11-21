@@ -373,15 +373,8 @@ void TrackeditActionsController::paste()
     auto tracks = project->trackeditProject()->trackList();
     double selectedStartTime = globalContext()->playbackState()->playbackPosition();
 
-    TrackId selectedTrackId;
-    if (selectionController()->selectedTracks().empty()) {
-        selectedTrackId = -1;
-    } else {
-        selectedTrackId = selectionController()->selectedTracks().at(0);
-    }
-
     if (!tracks.empty() && selectedStartTime >= 0) {
-        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, selectedTrackId);
+        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime);
         if (!ret && !ret.text().empty()) {
             interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
         }
