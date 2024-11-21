@@ -192,6 +192,7 @@ void ClipsListModel::update()
     //! to take a pointer to the item from the new list
     m_selectedItem = nullptr;
     onSelectedClip(selectionController()->selectedClip());
+    m_context->updateSelectedClipTime();
 
     endResetModel();
 
