@@ -574,6 +574,7 @@ void WaveClip::OnProjectTempoChange(
       const auto ratioChange = oldTempo.value() / newTempo;
       mSequenceOffset *= ratioChange;
       if (!mStretchToMatchProjectTempo) {
+         mSequenceOffset += ((mTrimLeft * ratioChange) - mTrimLeft);
          return;
       }
       mTrimLeft *= ratioChange;
