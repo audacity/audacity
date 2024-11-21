@@ -26,7 +26,7 @@ Au3Player::Au3Player()
     : m_positionUpdateTimer(std::chrono::microseconds(1000))
 {
     m_positionUpdateTimer.onTimeout(this, [this]() {
-        updatePlaybackPosition();
+        updatePlaybackState();
     });
 
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
@@ -295,6 +295,11 @@ muse::async::Channel<PlaybackStatus> Au3Player::playbackStatusChanged() const
     return m_playbackStatus.ch;
 }
 
+muse::ValNt<bool> Au3Player::reachedEnd() const
+{
+    return m_reachedEnd;
+}
+
 PlaybackRegion Au3Player::playbackRegion() const
 {
     Au3Project& project = projectRef();
@@ -337,16 +342,22 @@ void Au3Player::resetLoop()
     NOT_IMPLEMENTED;
 }
 
-void Au3Player::updatePlaybackPosition()
+void Au3Player::updatePlaybackState()
 {
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isActive = AudioIO::Get()->IsStreamActive(token);
     double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
 
-    LOGDA() << "token: " << token << ", isActive: " << isActive << ", time: " << time;
+    //LOGDA() << "token: " << token << ", isActive: " << isActive << ", time: " << time;
 
     if (isActive) {
+        m_reachedEnd.val = false;
         m_playbackPosition.set(std::max(0.0, time));
+    } else {
+        if (playbackStatus() == PlaybackStatus::Running && !m_reachedEnd.val) {
+            m_reachedEnd.val = true;
+            m_reachedEnd.notification.notify();
+        }
     }
 }
 

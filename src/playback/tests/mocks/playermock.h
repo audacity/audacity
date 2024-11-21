@@ -22,6 +22,7 @@ public:
     MOCK_METHOD(bool, isRunning, (), (const, override));
     MOCK_METHOD(PlaybackStatus, playbackStatus, (), (const, override));
     MOCK_METHOD(muse::async::Channel<PlaybackStatus>, playbackStatusChanged, (), (const, override));
+    MOCK_METHOD(muse::ValNt<bool>, reachedEnd, (), (const, override));
 
     MOCK_METHOD(PlaybackRegion, playbackRegion, (), (const, override));
     MOCK_METHOD(void, setPlaybackRegion, (const PlaybackRegion&), (override));

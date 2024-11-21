@@ -38,6 +38,7 @@ public:
     bool isRunning() const override;
     PlaybackStatus playbackStatus() const override;
     muse::async::Channel<PlaybackStatus> playbackStatusChanged() const override;
+    muse::ValNt<bool> reachedEnd() const override;
 
     PlaybackRegion playbackRegion() const override;
     void setPlaybackRegion(const PlaybackRegion& region) override;
@@ -60,9 +61,10 @@ private:
 
     muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
 
-    void updatePlaybackPosition();
+    void updatePlaybackState();
 
     muse::ValCh<PlaybackStatus> m_playbackStatus;
+    muse::ValNt<bool> m_reachedEnd;
 
     muse::Timer m_positionUpdateTimer;
     muse::ValCh<muse::secs_t> m_playbackPosition;
