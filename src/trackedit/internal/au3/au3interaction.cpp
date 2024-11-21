@@ -1452,12 +1452,12 @@ void Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey &clipKey)
     clip->SetStretchToMatchProjectTempo(newValue);
 
     if (newValue) {
-        double currentRatio = clip->GetStretchRatio();
+        double expectedEndTime = clip->End();
         auto prj = globalContext()->currentTrackeditProject();
         double projectTempo = prj->timeSignature().tempo;
         clip->SetClipTempo(projectTempo);
-        TimeStretching::SetClipStretchRatio(*waveTrack, *clip, currentRatio);
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        clip->StretchRightTo(expectedEndTime);
+        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
     }
 }
 
