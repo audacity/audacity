@@ -47,7 +47,7 @@ public:
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     void renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
-    muse::Ret pasteFromClipboard(secs_t begin, trackedit::TrackId trackId) override;
+    muse::Ret pasteFromClipboard(secs_t begin) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
     bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
@@ -88,7 +88,8 @@ private:
     au3::Au3Project& projectRef() const;
     TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
-    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, TrackId destinationTrackId, size_t tracksNum) const;
+    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const;
+    TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const;
     muse::Ret canPasteClips(const TrackIdList& tracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);

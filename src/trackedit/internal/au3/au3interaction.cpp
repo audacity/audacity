@@ -83,25 +83,43 @@ Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track
     return pFirstTrack->SharedPointer();
 }
 
-TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks,
-                                                          TrackId destinationTrackId, size_t tracksNum) const
+TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const
 {
-    TrackIdList tracksIds;
-    bool addingEnabled = false;
+    //! NOTE: determine tracks to which clipboard content will be pasted,
+    //! depending on clipboard size and currently selected tracks
+
+    if (destinationTrackIds.size() < clipboardTracksSize) {
+        //! NOTE: not enough tracks selected, add more consecutively
+        return expandDestinationTracks(tracks, destinationTrackIds, clipboardTracksSize);
+    } else if (destinationTrackIds.size() > clipboardTracksSize) {
+        //! NOTE: more tracks selected than needed, return sub-vector
+        return TrackIdList(destinationTrackIds.begin(), destinationTrackIds.begin() + clipboardTracksSize);
+    }
+
+    //! NOTE: selected tracks size matches clipboard size
+    return destinationTrackIds;
+}
+
+TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const
+{
+    TrackIdList result = destinationTrackIds;
+    bool collecting = false;
 
     for (const auto& track : tracks) {
-        if (track.id == destinationTrackId) {
-            addingEnabled = true;
+        if (!collecting && track.id == destinationTrackIds.back()) {
+            collecting = true;
+            continue;
         }
-        if (addingEnabled) {
-            tracksIds.push_back(track.id);
-            if (tracksIds.size() == tracksNum) {
+        if (collecting) {
+            result.push_back(track.id);
+            if (result.size() >= clipboardTracksSize) {
                 break;
             }
         }
     }
 
-    return tracksIds;
+    //! NOTE: if insufficient tracks are available in `tracks`, result may still be shorter than clipboard size
+    return result;
 }
 
 muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const
@@ -572,14 +590,15 @@ void Au3Interaction::clearClipboard()
     clipboard()->clearTrackData();
 }
 
-muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTrackId)
+muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
 {
     if (clipboard()->trackDataEmpty()) {
         return make_ret(trackedit::Err::TrackEmpty);
     }
 
     auto copiedData = clipboard()->trackData();
-    if (destinationTrackId == -1) {
+    TrackIdList selectedTracks = selectionController()->selectedTracks();
+    if (selectedTracks.empty()) {
         auto tracksIdsToSelect = pasteIntoNewTracks(copiedData);
         selectionController()->setSelectedTracks(tracksIdsToSelect);
         return muse::make_ok();
@@ -589,13 +608,12 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, TrackId destinationTr
     //! TODO: we need to make sure that we get a trackList with order
     //! the same as in the TrackPanel
     auto tracks = project->trackeditProject()->trackList();
-    size_t tracksNum = clipboard()->trackDataSize();
+    size_t clipboardTracksSize = clipboard()->trackDataSize();
 
-    // for multiple tracks copying
-    TrackIdList dstTracksIds = determineDestinationTracksIds(tracks, destinationTrackId, tracksNum);
+    TrackIdList dstTracksIds = determineDestinationTracksIds(tracks, selectedTracks, clipboardTracksSize);
 
     bool newTracksNeeded = false;
-    if (dstTracksIds.size() != tracksNum) {
+    if (dstTracksIds.size() != clipboardTracksSize) {
         newTracksNeeded = true;
     }
 
