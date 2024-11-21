@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "global/types/ret.h"
+#include "global/types/retval.h"
 #include "global/async/channel.h"
 #include "global/async/promise.h"
 #include "global/async/notification.h"
@@ -28,6 +29,7 @@ public:
     virtual bool isRunning() const = 0;
     virtual PlaybackStatus playbackStatus() const = 0;
     virtual muse::async::Channel<PlaybackStatus> playbackStatusChanged() const = 0;
+    virtual muse::ValNt<bool> reachedEnd() const = 0;
 
     virtual PlaybackRegion playbackRegion() const = 0;
     virtual void setPlaybackRegion(const PlaybackRegion& region) = 0;

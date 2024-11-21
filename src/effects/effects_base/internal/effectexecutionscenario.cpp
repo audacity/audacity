@@ -93,9 +93,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     EffectManager& em = EffectManager::Get();
     Effect* effect = nullptr;
 
-    auto selectionCtrl = selectionController();
-    const auto t0 = selectionCtrl->dataSelectedStartTime();
-    const auto t1 = selectionCtrl->dataSelectedEndTime();
+    secs_t t0;
+    secs_t t1;
     bool isSelection = false;
 
     {
@@ -112,6 +111,14 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         }
 
         //! NOTE Step 1.3 - check selection
+        trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
+        if (selectedClips.size() == 1) {
+            t0 = selectionController()->selectedClipStartTime();
+            t1 = selectionController()->selectedClipEndTime();
+        } else {
+            t0 = selectionController()->dataSelectedStartTime();
+            t1 = selectionController()->dataSelectedEndTime();
+        }
 
         IF_ASSERT_FAILED(muse::RealIsEqualOrMore(t1 - t0, 0.0)) {
             return make_ret(Err::UnknownError);
@@ -270,8 +277,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
         //! Generators, and even some processors (e.g. tempo change), need an update of the selection.
         if (success && (effect->mT1 >= effect->mT0)) {
-            selectionCtrl->setDataSelectedStartTime(effect->mT0, true);
-            selectionCtrl->setDataSelectedEndTime(effect->mT1, true);
+            selectionController()->setDataSelectedStartTime(effect->mT0, true);
+            selectionController()->setDataSelectedEndTime(effect->mT1, true);
         }
     }
 

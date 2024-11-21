@@ -233,7 +233,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     //! ============================================================================
     //! NOTE Step 2 - save origin context (state)
     //! ============================================================================
-    struct EffectContxt {
+    struct EffectContext {
         double t0 = 0.0;
         double t1 = 0.0;
         std::shared_ptr<TrackList> tracks;
@@ -241,7 +241,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
         bool isPreview = false;
     };
 
-    const EffectContxt originCtx = { effect.mT0, effect.mT1, effect.mTracks, effect.mProgress, effect.mIsPreview };
+    const EffectContext originCtx = { effect.mT0, effect.mT1, effect.mTracks, effect.mProgress, effect.mIsPreview };
     auto restoreCtx = finally([&] {
         effect.mT0 = originCtx.t0;
         effect.mT1 = originCtx.t1;
@@ -264,7 +264,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     //! NOTE Step 3 - make new context (state)
     //! ============================================================================
 
-    EffectContxt newCtx;
+    EffectContext newCtx;
 
     const bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
     const bool isGenerator = effect.GetType() == EffectTypeGenerate;
@@ -378,27 +378,33 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
         opt.selectedOnly = true;
         opt.startOffset = startOffset;
         opt.isDefaultPolicy = false;
+
         muse::Ret ret = player->playTracks(*newCtx.tracks, newCtx.t0, newCtx.t1, opt);
         if (!ret) {
             return ret;
         }
 
         using namespace BasicUI;
-        auto previewing = BasicUI::ProgressResult::Success;
+
         // The progress dialog must be deleted before stopping the stream
         // to allow events to flow to the app during StopStream processing.
         // The progress dialog blocks these events.
         {
             auto progress = MakeProgress(effect.GetName(), XO("Previewing"), ProgressShowStop);
-            while (player->isRunning() && previewing == BasicUI::ProgressResult::Success) {
+            while (player->isRunning()) {
                 using namespace std::chrono;
                 std::this_thread::sleep_for(100ms);
-                previewing = progress->Poll(player->playbackPosition() - newCtx.t0 - startOffset, newCtx.t1 - newCtx.t0);
+                muse::secs_t playPos = player->playbackPosition() - startOffset;
+                auto previewing = progress->Poll(playPos, newCtx.t1);
+
+                if (previewing != BasicUI::ProgressResult::Success || player->reachedEnd().val) {
+                    break;
+                }
             }
+
+            player->stop();
         }
     }
-
-    player->stop();
 
     return muse::make_ok();
 }
