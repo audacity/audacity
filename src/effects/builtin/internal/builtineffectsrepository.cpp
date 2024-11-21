@@ -22,6 +22,8 @@
 #include "reverb/reverbeffect.h"
 #include "reverb/reverbviewmodel.h"
 #include "tonegen/toneviewmodel.h"
+#include "noisegen/noisegenerator.h"
+#include "noisegen/noiseviewmodel.h"
 
 #include "log.h"
 
@@ -60,6 +62,14 @@ void BuiltinEffectsRepository::init()
     regMeta(ChirpEffect::Symbol,
             muse::mtrc("effects", "Chirp"),
             muse::mtrc("effects", "Generates an ascending or descending tone of one of four types")
+            );
+
+    static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
+    qmlRegisterType<NoiseViewModel>("Audacity.Effects", 1, 0, "NoiseViewModel");
+    regView(NoiseGenerator::Symbol, u"qrc:/noisegen/NoiseView.qml");
+    regMeta(NoiseGenerator::Symbol,
+            muse::mtrc("effects/noise", "Noise"),
+            muse::mtrc("effects/noise", "Generates noise")
             );
 
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
