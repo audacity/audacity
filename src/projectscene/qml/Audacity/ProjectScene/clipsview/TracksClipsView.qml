@@ -38,6 +38,18 @@ Rectangle {
         }
     }
 
+    SelectionContextMenuModel {
+        id: selectionContextMenuModel
+    }
+
+    ContextMenuLoader {
+        id: selectionContextMenuLoader
+
+        onHandleMenuItem: function(itemId) {
+            selectionContextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
     //! NOTE Sync with TracksPanel
     TracksViewStateModel {
         id: tracksViewState
@@ -64,6 +76,8 @@ Rectangle {
     Component.onCompleted: {
         //! NOTE Models depend on geometry, so let's create a page first and then initialize the models
         Qt.callLater(root.init)
+
+        selectionContextMenuModel.load()
     }
 
     function init() {
@@ -311,6 +325,10 @@ Rectangle {
                     onClipSelectedRequested: {
                         selectionController.resetDataSelection()
                         clipsSelection.visible = false
+                    }
+
+                    onRequestSelectionContextMenu: function(x, y) {
+                        selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timeline.height), selectionContextMenuModel.items)
                     }
 
                     onSelectionDraged: function(x1, x2, completed) {

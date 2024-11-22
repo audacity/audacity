@@ -23,6 +23,7 @@ Item {
     // so we are handling it manually
     signal trackItemMousePositionChanged(real x, real y, var clipKey)
     signal clipSelectedRequested()
+    signal requestSelectionContextMenu(real x, real y)
 
     signal selectionDraged(var x1, var x2, var completed)
     signal seekToX(var x)
@@ -223,6 +224,11 @@ Item {
             if (completed) {
                 root.seekToX(Math.min(x1, x2))
             }
+        }
+
+        onRequestSelectionContextMenu: function(x, y) {
+            let position = mapToItem(root.parent, Qt.point(x, y))
+            root.requestSelectionContextMenu(position.x, position.y)
         }
     }
 
