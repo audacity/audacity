@@ -76,6 +76,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectionviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/pitchandspeedchangemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/pitchandspeedchangemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectioncontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectioncontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/canvascontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/canvascontextmenumodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h
