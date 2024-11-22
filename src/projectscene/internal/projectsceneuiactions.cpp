@@ -107,6 +107,13 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              TranslatableString("action", "Show vertical rulers"),
              Checkable::Yes
              ),
+    UiAction("show-master-track",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Show master track"),
+             TranslatableString("action", "Show master track"),
+             Checkable::Yes
+             ),
     UiAction("update-display-while-playing",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
