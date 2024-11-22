@@ -60,7 +60,7 @@ std::pair<std::string, std::string> EffectExecutionScenario::makeErrorMsg(const 
         };
     case Err::EffectNoAudioSelected: return {
             ret.text(),
-            muse::String("Select the audio for %1 to use then try again.").arg(effect).toStdString()
+            muse::String("Select the audio you want the %1 to use and try again").arg(effect).toStdString()
         };
     case Err::EffectProcessFailed: return {
             ret.text(),

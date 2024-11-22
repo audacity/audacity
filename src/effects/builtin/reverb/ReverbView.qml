@@ -51,7 +51,7 @@ EffectBase {
             id: numField
             anchors.left: label.right
             anchors.verticalCenter: parent.verticalCenter
-            width: 60
+            width: 68
             maxValue: param.max
             minValue: param.min
             step: 1.0
