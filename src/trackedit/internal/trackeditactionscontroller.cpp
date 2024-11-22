@@ -337,32 +337,12 @@ void TrackeditActionsController::clipDeleteSelected()
     auto selectedTracks = selectionController()->selectedTracks();
     auto selectedStartTime = selectionController()->dataSelectedStartTime();
     auto selectedEndTime = selectionController()->dataSelectedEndTime();
-    auto tracks = project->trackeditProject()->trackList();
 
-    //! TODO AU4: improve for deleting multiple selected clips
-
-    // remove multiple clips in selected region
-    std::vector<ClipKey> clipsKeysToRemove;
-    for (const auto& track : tracks) {
-        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
-            continue;
-        }
-
-        auto clips = project->trackeditProject()->clipList(track.id);
-        for (const auto& clip: clips) {
-            if (selectedStartTime > clip.endTime || selectedEndTime < clip.startTime) {
-                continue;
-            }
-
-            clipsKeysToRemove.push_back(clip.key);
-        }
-    }
-
-    if (clipsKeysToRemove.empty()) {
+    if (selectedTracks.empty()) {
         return;
     }
 
-    trackeditInteraction()->removeClipsData(clipsKeysToRemove, selectedStartTime, selectedEndTime);
+    trackeditInteraction()->removeTracksData(selectedTracks, selectedStartTime, selectedEndTime);
 
     selectionController()->resetDataSelection();
 }

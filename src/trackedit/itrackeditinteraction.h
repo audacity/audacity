@@ -54,7 +54,7 @@ public:
     virtual bool copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t begin, secs_t end) = 0;
     virtual bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
-    virtual bool removeClipsData(const std::vector<trackedit::ClipKey>& clipsKeys, secs_t begin, secs_t end) = 0;
+    virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) = 0;
     virtual bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
