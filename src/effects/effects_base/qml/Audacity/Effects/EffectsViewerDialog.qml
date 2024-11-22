@@ -51,9 +51,18 @@ StyledDialogView {
         }
 
         FlatButton {
-            text: qsTrc("global", "Preview")
+            id: manageBtn
+            text: qsTrc("effects", "Manage")
             buttonRole: ButtonBoxModel.CustomRole
             buttonId: ButtonBoxModel.CustomButton + 1
+            isLeftSide: true
+            onClicked: viewer.manage(manageBtn)
+        }
+
+        FlatButton {
+            text: qsTrc("effects", "Preview")
+            buttonRole: ButtonBoxModel.CustomRole
+            buttonId: ButtonBoxModel.CustomButton + 2
             isLeftSide: true
             onClicked: viewer.preview()
         }

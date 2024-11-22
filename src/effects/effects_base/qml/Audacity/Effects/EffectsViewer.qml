@@ -29,13 +29,16 @@ Rectangle {
         builder.load(root.type, root.instanceId, root)
     }
 
-    function preview() {
-        console.debug("[qml] EffectsViewer preview ")
-        if (!builder.contentItem) {
-            return;
+    function manage(parent) {
+        if (builder.contentItem) {
+            builder.contentItem.manage(parent)
         }
+    }
 
-        builder.contentItem.preview()
+    function preview() {
+        if (builder.contentItem) {
+            builder.contentItem.preview()
+        }
     }
 
     EffectBuilder {
