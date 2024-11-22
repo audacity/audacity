@@ -74,8 +74,3 @@ muse::async::Notification AudioEngine::finished() const
 {
     return s_audioIOListener->finished();
 }
-
-muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> AudioEngine::recordingClipChanged() const
-{
-    return s_audioIOListener->recordingClipChanged();
-}

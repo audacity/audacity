@@ -1127,6 +1127,9 @@ public:
     */
    void Append(TrackList &&list, bool assignIds = true);
 
+   //! Put track at the end of `this`
+   void Append(std::shared_ptr<Track> track, bool assignIds = true);
+
    //! Remove first track (if any) from `list` and put it at the end of `this`
    void AppendOne(TrackList &&list);
 
