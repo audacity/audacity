@@ -209,8 +209,8 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
     PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
     EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
     .WillOnce(Return(false));
-    EXPECT_CALL(*m_selectionController, selectedClip())
-    .WillOnce(Return(trackedit::ClipKey { 1, 1 }));
+    EXPECT_CALL(*m_selectionController, selectedClips())
+    .WillOnce(Return(trackedit::ClipKeyList({trackedit::ClipKey { 1, 1 }})));
     EXPECT_CALL(*m_selectionController, selectedClipStartTime())
     .WillOnce(Return(selectionRegion.start));
     EXPECT_CALL(*m_selectionController, selectedClipEndTime())
