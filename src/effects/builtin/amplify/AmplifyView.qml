@@ -16,9 +16,7 @@ EffectBase {
     width: 300
     height: 200
 
-    function preview() {
-        amplify.preview()
-    }
+    model: amplify
 
     AmplifyViewModel {
         id: amplify
