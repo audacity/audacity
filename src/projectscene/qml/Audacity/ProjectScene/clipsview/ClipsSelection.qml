@@ -9,6 +9,7 @@ Item {
     property real minSelection: 12 // px  4left + 4 + 4right
 
     signal selectionDraged(var x1, var x2, var completed)
+    signal requestSelectionContextMenu(real x, real y)
 
     Rectangle {
         id: selRect
@@ -24,7 +25,27 @@ Item {
     }
 
     MouseArea {
+        id: centerMa
+
+        acceptedButtons: Qt.RightButton
+
+        anchors.left: leftMa.right
+        anchors.right: rightMa.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        visible: isDataSelected
+
+        onClicked: function(mouse) {
+            let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
+            root.requestSelectionContextMenu(position.x, position.y)
+        }
+    }
+
+    MouseArea {
         id: leftMa
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         x: selRect.x
 
@@ -39,6 +60,9 @@ Item {
         property real startW: 0
 
         onPressed: function(mouse) {
+            if (mouse.button === Qt.RightButton) {
+                return
+            }
             leftMa.cursorShape = Qt.ArrowCursor
             leftMa.startX = selRect.x
             leftMa.startW = selRect.width
@@ -46,6 +70,9 @@ Item {
         }
 
         onPositionChanged: function(mouse) {
+            if (mouse.button === Qt.RightButton) {
+                return
+            }
             var newWidth = leftMa.startW + (mouse.x * -1)
             if (newWidth < root.minSelection) {
                 root.selectionDraged(selRect.x + selRect.width - root.minSelection, selRect.x + selRect.width, false)
@@ -54,15 +81,27 @@ Item {
             }
         }
 
-        onReleased: {
+        onReleased: function(mouse) {
+            if (mouse.button === Qt.RightButton) {
+                return
+            }
             root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
             leftMa.x = Qt.binding(function() { return selRect.x })
             leftMa.cursorShape = Qt.SizeHorCursor
+        }
+
+        onClicked: function(mouse) {
+            if (mouse.button === Qt.RightButton) {
+                let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
+                root.requestSelectionContextMenu(position.x, position.y)
+            }
         }
     }
 
     MouseArea {
         id: rightMa
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         x: selRect.x + selRect.width - rightMa.width
 
@@ -77,12 +116,18 @@ Item {
         property real startW: 0
 
         onPressed: function(mouse) {
+            if (mouse.button === Qt.RightButton) {
+                return
+            }
             rightMa.cursorShape = Qt.ArrowCursor
             rightMa.startW = selRect.width
             rightMa.x = selRect.x + selRect.width - rightMa.width
         }
 
         onPositionChanged: function(mouse) {
+            if (mouse.button === Qt.RightButton) {
+                return
+            }
             var newWidth = rightMa.startW + mouse.x
             if (newWidth < root.minSelection) {
                 newWidth = root.minSelection
@@ -90,10 +135,20 @@ Item {
             root.selectionDraged(selRect.x, selRect.x + newWidth, false)
         }
 
-        onReleased: {
+        onReleased: function(mouse) {
+            if (mouse.button === Qt.RightButton) {
+                return
+            }
             root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
             rightMa.x = Qt.binding(function() {return selRect.x + selRect.width - rightMa.width })
             rightMa.cursorShape = Qt.SizeHorCursor
+        }
+
+        onClicked: function(mouse) {
+            if (mouse.button == Qt.RightButton) {
+                let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
+                root.requestSelectionContextMenu(position.x, position.y)
+            }
         }
     }
 }
