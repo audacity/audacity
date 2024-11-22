@@ -9,6 +9,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "au3audio/iaudioengine.h"
+#include "trackedit/iprojecthistory.h"
 
 #include "au3wrap/au3types.h"
 
@@ -23,6 +24,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::audio::IAudioEngine> audioEngine;
+    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
 
 public:
     void init();
@@ -34,15 +36,31 @@ public:
     IAudioInputPtr audioInput() const override;
 
 private:
+    struct RecordData {
+        std::vector<trackedit::TrackId> tracksIds;
+        std::vector<trackedit::ClipKey> clipsKeys;
+
+        void clear()
+        {
+            tracksIds.clear();
+            clipsKeys.clear();
+        }
+    };
+
     au3::Au3Project& projectRef() const;
+
+    bool canStopAudioStream() const;
 
     muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
                        const AudioIOStartStreamOptions& options);
     void cancelRecording();
-    bool canStopAudioStream() const;
+    void commitRecording();
+
+    void notifyAboutRecordClipsChanged();
 
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
 
     IAudioInputPtr m_audioInput;
+    RecordData m_recordData;
 };
 }

@@ -21,6 +21,5 @@ public:
     muse::async::Notification updateRequested() const override;
     muse::async::Notification commitRequested() const override;
     muse::async::Notification finished() const override;
-    muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const override;
 };
 }

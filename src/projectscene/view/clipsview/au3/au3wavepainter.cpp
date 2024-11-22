@@ -626,28 +626,17 @@ void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     //     return;
     // }
     // LOGD() << "trackId: " << clipKey.trackId << ", clip: " << clipKey.index;
-    Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-
-    //! Pending tracks are same as project tracks, but with new tracks when recording, so we need draw them
-    Au3Track* pendingTrack = &PendingTracks::Get(projectRef())
-                             .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId)));
-
-    Au3WaveTrack* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(pendingTrack);
-    IF_ASSERT_FAILED(pendingWaveTrack) {
+    WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(track) {
         return;
     }
 
-    auto pendingClipId = DomAccessor::findMatchedClip(pendingWaveTrack, origWaveTrack, clipKey.clipId);
-    if (pendingClipId == -1) {
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(track, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
         return;
     }
 
-    std::shared_ptr<Au3WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, pendingClipId);
-    IF_ASSERT_FAILED(pendingClip) {
-        return;
-    }
-
-    doPaint(painter, pendingWaveTrack, pendingClip.get(), params);
+    doPaint(painter, track, clip.get(), params);
 }
 
 void Au3WavePainter::doPaint(QPainter& painter, const Au3WaveTrack* _track, const Au3WaveClip* clip, const Params& params)

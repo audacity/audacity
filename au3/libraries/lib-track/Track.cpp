@@ -888,6 +888,11 @@ void TrackList::Append(TrackList &&list, bool assignIds)
    }
 }
 
+void TrackList::Append(std::shared_ptr<Track> track, bool assignIds)
+{
+    this->Add(track, assignIds ? DoAssignId::Yes : DoAssignId::No);
+}
+
 void TrackList::AppendOne(TrackList &&list)
 {
    const auto iter = list.ListOfTracks::begin(),
