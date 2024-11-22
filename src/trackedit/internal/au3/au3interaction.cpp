@@ -793,19 +793,14 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
     return true;
 }
 
-bool Au3Interaction::removeClipsData(const std::vector<trackedit::ClipKey>& clipsKeys, secs_t begin, secs_t end)
+bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
     secs_t duration = end - begin;
     secs_t start = begin;
 
-    for (const ClipKey& clipKey : clipsKeys) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+    for (const TrackId& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
-            continue;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-        IF_ASSERT_FAILED(clip) {
             continue;
         }
 

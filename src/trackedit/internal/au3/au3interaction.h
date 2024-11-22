@@ -54,7 +54,7 @@ public:
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
     bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
-    bool removeClipsData(const std::vector<trackedit::ClipKey>& clipsKeys, secs_t begin, secs_t end) override;
+    bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
