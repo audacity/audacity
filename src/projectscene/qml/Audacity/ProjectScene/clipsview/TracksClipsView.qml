@@ -12,6 +12,7 @@ Rectangle {
     id: root
 
     property bool clipHovered: false
+    property bool tracksHovered: false
     property var hoveredClipKey: null
     color: ui.theme.backgroundPrimaryColor
 
@@ -50,6 +51,18 @@ Rectangle {
         }
     }
 
+    CanvasContextMenuModel {
+        id: canvasContextMenuModel
+    }
+
+    ContextMenuLoader {
+        id: canvasContextMenuLoader
+
+        onHandleMenuItem: function(itemId) {
+            canvasContextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
     //! NOTE Sync with TracksPanel
     TracksViewStateModel {
         id: tracksViewState
@@ -78,6 +91,7 @@ Rectangle {
         Qt.callLater(root.init)
 
         selectionContextMenuModel.load()
+        canvasContextMenuModel.load()
     }
 
     function init() {
@@ -194,6 +208,8 @@ Rectangle {
             id: mainMouseArea
             anchors.fill: parent
 
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
             hoverEnabled: true
 
             onWheel: function(wheelEvent) {
@@ -201,12 +217,21 @@ Rectangle {
             }
 
             onPressed: function(e) {
-                if (!(e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))) {
-                    playCursorController.seekToX(e.x)
+                if (e.button === Qt.LeftButton) {
+                    if (!(e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))) {
+                        playCursorController.seekToX(e.x)
+                    }
+                    selectionController.onPressed(e.x, e.y)
+                    selectionController.resetSelectedClip()
+                    clipsSelection.visible = true
+                } else {
+                    if (tracksHovered) {
+                        //! TODO AU4: handle context menu over empty track area
+                    } else {
+                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timeline.height), canvasContextMenuModel.items)
+                    }
+
                 }
-                selectionController.onPressed(e.x, e.y)
-                selectionController.resetSelectedClip()
-                clipsSelection.visible = true
             }
             onPositionChanged: function(e) {
                 selectionController.onPositionChanged(e.x, e.y)
@@ -218,6 +243,9 @@ Rectangle {
                 }
             }
             onReleased: e => {
+                if (e.mouse === Qt.RightButton) {
+                    return
+                }
                 if (selectionController.isLeftSelection(e.x)) {
                     playCursorController.seekToX(e.x)
                 }
@@ -232,12 +260,19 @@ Rectangle {
             }
 
             onClicked: e => {
+                if (e.mouse === Qt.RightButton) {
+                    return
+                }
+
                 if (!root.clipHovered) {
                     selectionController.resetSelectedClip()
                 }
             }
 
             onDoubleClicked: e => {
+                if (e.mouse === Qt.RightButton) {
+                    return
+                }
                 if (root.clipHovered) {
                     selectionController.selectClipAudioData(root.hoveredClipKey)
                     playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
@@ -343,6 +378,10 @@ Rectangle {
                 HoverHandler {
                     property bool isNeedSelectionCursor: !selectionController.selectionActive
                     cursorShape: isNeedSelectionCursor ? Qt.IBeamCursor : Qt.ArrowCursor
+
+                    onHoveredChanged: {
+                        root.tracksHovered = hovered
+                    }
                 }
             }
 
