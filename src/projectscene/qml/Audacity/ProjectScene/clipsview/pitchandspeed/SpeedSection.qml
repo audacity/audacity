@@ -7,7 +7,7 @@ import Muse.UiComponents
 Column {
     id: root
 
-    property int speedPercentage: 0
+    property double speedPercentage: 0.0
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "SpeedSection"
@@ -42,14 +42,19 @@ Column {
     PropertyView {
         id: speedProperty
 
-        width: 72
+        width: 88
 
         title: qsTrc("projectscene", "Speed")
 
-        currentValue: root.speedPercentage
+        currentValue: {
+            var result = parseFloat(root.speedPercentage)
+            return Number(result.toFixed(speedProperty.decimals))
+        }
+
         minValue: 1.0
         maxValue: 1000.0
         measureUnitsSymbol: "%"
+        decimals: 3
 
         navigationName: title
         navigationPanel: root.navigationPanel

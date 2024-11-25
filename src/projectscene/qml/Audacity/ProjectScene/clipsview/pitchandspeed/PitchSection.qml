@@ -64,6 +64,12 @@ Column {
 
             minValue: -12
             maxValue: 12
+            decimals: 0
+
+            validator: IntInputValidator {
+                top: semitonesProperty.maxValue
+                bottom: semitonesProperty.minValue
+            }
 
             navigationName: title
             navigationPanel: root.navigationPanel
@@ -96,6 +102,8 @@ Column {
         }
 
         PropertyView {
+            id: centsProperty
+
             width: 72
 
             title: qsTrc("projectscene", "Cents")
@@ -103,6 +111,12 @@ Column {
             currentValue: root.pitch % 100
             minValue: 0
             maxValue: 100
+            decimals: 0
+
+            validator: IntInputValidator {
+                top: centsProperty.maxValue
+                bottom: centsProperty.minValue
+            }
 
             navigationName: title
             navigationPanel: root.navigationPanel

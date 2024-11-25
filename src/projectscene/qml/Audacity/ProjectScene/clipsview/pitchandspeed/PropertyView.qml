@@ -12,6 +12,8 @@ Column {
     property alias minValue: spinBoxItem.minValue
     property alias maxValue: spinBoxItem.maxValue
     property alias measureUnitsSymbol: spinBoxItem.measureUnitsSymbol
+    property alias decimals: spinBoxItem.decimals
+    property alias validator: spinBoxItem.validator
     property alias canIncrease: spinBoxItem.canIncrease
     property alias onIncrement: spinBoxItem.onIncrement
     property alias canDecrease: spinBoxItem.canDecrease
@@ -41,13 +43,7 @@ Column {
     IncrementalPropertyControl {
         id: spinBoxItem
 
-        decimals: 0
         step: 1
-
-        validator: IntInputValidator {
-            top: spinBoxItem.maxValue
-            bottom: spinBoxItem.minValue
-        }
 
         navigation.name: root.navigationName + " Spinbox"
         navigation.panel: root.navigationPanel

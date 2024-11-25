@@ -408,9 +408,9 @@ Rectangle {
                     id: speedBtn
 
                     icon: IconCode.CLOCK
-                    text: root.speedPercentage + "%"
+                    text: Math.floor(root.speedPercentage) + "%"
 
-                    visible: root.speedPercentage !== 100
+                    visible: root.speedPercentage !== 100.0
 
                     onClicked: function(mouse){
                         if (mouse.modifiers & Qt.ControlModifier) {

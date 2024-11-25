@@ -78,12 +78,12 @@ void PitchAndSpeedChangeModel::setPitch(int pitch)
     trackeditInteraction()->changeClipPitch(m_clip.key, pitch);
 }
 
-int PitchAndSpeedChangeModel::speedPercentage() const
+double PitchAndSpeedChangeModel::speedPercentage() const
 {
-    return std::round(100.0 / m_clip.speed);
+    return 100.0 / m_clip.speed;
 }
 
-void PitchAndSpeedChangeModel::setSpeedPercentage(int speedPercentage)
+void PitchAndSpeedChangeModel::setSpeedPercentage(double speedPercentage)
 {
     double speed = 100.0 / speedPercentage;
     if (!m_clip.isValid() || muse::RealIsEqual(m_clip.speed, speed)) {
