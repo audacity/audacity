@@ -22,7 +22,10 @@ class PitchAndSpeedChangeModel : public QObject, public muse::async::Asyncable
     muse::Inject<trackedit::ISelectionController> selectionController;
 
     Q_PROPERTY(int pitch READ pitch WRITE setPitch NOTIFY pitchChanged FINAL)
+
+    Q_PROPERTY(bool canChangeSpeed READ canChangeSpeed NOTIFY canChangeSpeedChanged FINAL)
     Q_PROPERTY(double speedPercentage READ speedPercentage WRITE setSpeedPercentage NOTIFY speedPercentageChanged FINAL)
+
     Q_PROPERTY(bool optimizeForVoice READ optimizeForVoice WRITE setOptimizeForVoice NOTIFY optimizeForVoiceChanged FINAL)
 
 public:
@@ -39,6 +42,8 @@ public:
     bool optimizeForVoice() const;
     void setOptimizeForVoice(bool optimize);
 
+    bool canChangeSpeed() const;
+
 signals:
     void pitchChanged();
     void speedPercentageChanged();
@@ -46,8 +51,11 @@ signals:
 
     void closeDialogRequested();
 
+    void canChangeSpeedChanged();
+
 private:
     trackedit::ITrackeditProjectPtr trackeditProject() const;
+    context::IPlaybackStatePtr playbackState() const;
 
     void setClip(const trackedit::Clip& clip);
 

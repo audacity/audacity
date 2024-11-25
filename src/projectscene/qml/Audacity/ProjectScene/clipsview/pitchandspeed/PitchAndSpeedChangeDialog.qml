@@ -75,6 +75,7 @@ StyledDialogView {
                 width: parent.width
 
                 speedPercentage: changeModel.speedPercentage
+                canChange: changeModel.canChangeSpeed
 
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: 2
