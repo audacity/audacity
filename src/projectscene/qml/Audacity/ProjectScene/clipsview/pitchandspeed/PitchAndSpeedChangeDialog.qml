@@ -14,7 +14,7 @@ StyledDialogView {
 
     property string focusItemName: "" // pitch, speed
 
-    title: qsTrc("projectscene", "Pitch and speed")
+    title: qsTrc("projectscene", "Pitch and speed") + " - " + changeModel.clipTitle
 
     contentWidth: 320
     contentHeight: 352

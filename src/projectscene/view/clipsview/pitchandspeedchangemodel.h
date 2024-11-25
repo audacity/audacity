@@ -21,6 +21,8 @@ class PitchAndSpeedChangeModel : public QObject, public muse::async::Asyncable
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::ISelectionController> selectionController;
 
+    Q_PROPERTY(QString clipTitle READ clipTitle NOTIFY clipTitleChanged FINAL)
+
     Q_PROPERTY(int pitch READ pitch WRITE setPitch NOTIFY pitchChanged FINAL)
 
     Q_PROPERTY(bool canChangeSpeed READ canChangeSpeed NOTIFY canChangeSpeedChanged FINAL)
@@ -44,14 +46,16 @@ public:
 
     bool canChangeSpeed() const;
 
+    QString clipTitle() const;
+
 signals:
+    void clipTitleChanged();
     void pitchChanged();
     void speedPercentageChanged();
+    void canChangeSpeedChanged();
     void optimizeForVoiceChanged();
 
     void closeDialogRequested();
-
-    void canChangeSpeedChanged();
 
 private:
     trackedit::ITrackeditProjectPtr trackeditProject() const;

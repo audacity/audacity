@@ -125,6 +125,7 @@ void PitchAndSpeedChangeModel::setClip(const trackedit::Clip& clip)
 {
     m_clip = clip;
 
+    emit clipTitleChanged();
     emit pitchChanged();
     emit speedPercentageChanged();
     emit optimizeForVoiceChanged();
@@ -138,4 +139,13 @@ bool PitchAndSpeedChangeModel::canChangeSpeed() const
     }
 
     return playbackState->playbackStatus() != playback::PlaybackStatus::Running;
+}
+
+QString PitchAndSpeedChangeModel::clipTitle() const
+{
+    if (!m_clip.isValid()) {
+        return QString();
+    }
+
+    return m_clip.title;
 }
