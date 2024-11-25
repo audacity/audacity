@@ -125,6 +125,7 @@ private:
     bool isEqualToPlaybackPosition(muse::secs_t position) const;
     bool isPlaybackPositionOnTheEndOfProject() const;
     bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
+    bool isPlaybackStartPositionValid() const;
 
     using TrackAddFinished = std::function<void ()>;
 
