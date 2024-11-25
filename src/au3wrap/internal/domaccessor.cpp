@@ -9,9 +9,14 @@ using namespace muse;
 
 Au3Track* DomAccessor::findTrack(Au3Project& prj, const Au3TrackId& au3trackId)
 {
-    Au3Track* track = nullptr;
-    Au3TrackList& tracks = Au3TrackList::Get(prj);
-    for (Au3Track* t : tracks) {
+    return const_cast<Au3Track*>(findTrack(const_cast<const Au3Project&>(prj), au3trackId));
+}
+
+const Au3Track* DomAccessor::findTrack(const Au3Project& prj, const Au3TrackId& au3trackId)
+{
+    const Au3Track* track = nullptr;
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
+    for (const Au3Track* t : tracks) {
         if (t->GetId() == au3trackId) {
             track = t;
             break;
@@ -23,7 +28,12 @@ Au3Track* DomAccessor::findTrack(Au3Project& prj, const Au3TrackId& au3trackId)
 
 Au3WaveTrack* DomAccessor::findWaveTrack(Au3Project& prj, const Au3TrackId& au3trackId)
 {
-    return dynamic_cast<Au3WaveTrack*>(findTrack(prj, au3trackId));
+    return const_cast<Au3WaveTrack*>(findWaveTrack(const_cast<const Au3Project&>(prj), au3trackId));
+}
+
+const Au3WaveTrack* DomAccessor::findWaveTrack(const Au3Project& prj, const Au3TrackId& au3trackId)
+{
+    return dynamic_cast<const Au3WaveTrack*>(findTrack(prj, au3trackId));
 }
 
 std::shared_ptr<Au3WaveClip> DomAccessor::findWaveClip(Au3WaveTrack* track, int64_t au3ClipId)
@@ -47,7 +57,7 @@ std::shared_ptr<Au3WaveClip> DomAccessor::findWaveClip(Au3Project& prj, const Au
     return findWaveClip(t, index);
 }
 
-std::shared_ptr<WaveClip> DomAccessor::findWaveClip(Au3Project& prj, const trackedit::TrackId &trackId, trackedit::secs_t time)
+std::shared_ptr<WaveClip> DomAccessor::findWaveClip(Au3Project& prj, const trackedit::TrackId& trackId, trackedit::secs_t time)
 {
     TrackList& tracks = TrackList::Get(prj);
     WaveTrack* au3Track = dynamic_cast<WaveTrack*>(tracks.FindById(::TrackId(trackId)));

@@ -17,6 +17,7 @@ public:
     std::vector<Track> trackList() const override;
     Clip clip(const ClipKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
+    std::string trackName(const TrackId& trackId) const override;
 
     void reload() override;
 
@@ -34,7 +35,7 @@ public:
     void setTimeSignature(const TimeSignature& timeSignature) override;
     muse::async::Channel<TimeSignature> timeSignatureChanged() const override;
 
-    muse::async::Channel<std::vector<au::trackedit::Track>> tracksChanged() const override;
+    muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const override;
     muse::async::Channel<Track> trackAdded() const override;
     muse::async::Channel<Track> trackChanged() const override;
     muse::async::Channel<Track> trackRemoved() const override;
@@ -52,10 +53,10 @@ private:
     struct Au3Impl;
     std::shared_ptr<Au3Impl> m_impl;
 
-    mutable std::map<TrackId, muse::async::ChangedNotifier<Clip>> m_clipsChanged;
+    mutable std::map<TrackId, muse::async::ChangedNotifier<Clip> > m_clipsChanged;
     mutable muse::async::Channel<au::trackedit::TimeSignature> m_timeSignatureChanged;
 
-    mutable muse::async::Channel<std::vector<trackedit::Track>> m_tracksChanged;
+    mutable muse::async::Channel<std::vector<trackedit::Track> > m_tracksChanged;
     mutable muse::async::Channel<trackedit::Track> m_trackAdded;
     mutable muse::async::Channel<trackedit::Track> m_trackChanged;
     mutable muse::async::Channel<trackedit::Track> m_trackRemoved;

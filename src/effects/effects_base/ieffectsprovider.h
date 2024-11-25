@@ -28,6 +28,7 @@ public:
     virtual EffectCategoryList effectsCategoryList() const = 0;
 
     virtual EffectMeta meta(const muse::String& effectId) const = 0;
+    virtual std::string effectName(const std::string& effectId) const = 0;
 
     // type - is Symbol of effect
     virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;

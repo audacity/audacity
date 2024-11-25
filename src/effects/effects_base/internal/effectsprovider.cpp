@@ -112,6 +112,15 @@ EffectMeta EffectsProvider::meta(const muse::String& effectId) const
     return EffectMeta();
 }
 
+std::string EffectsProvider::effectName(const std::string& effectId) const
+{
+    const auto desc = PluginManager::Get().GetPlugin(effectId);
+    if (!desc) {
+        return "";
+    }
+    return desc->GetSymbol().Msgid().Translation().ToStdString();
+}
+
 muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInstanceId& instanceId)
 {
     LOGD() << "try open effect: " << type << ", instanceId: " << instanceId;

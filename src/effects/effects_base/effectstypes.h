@@ -23,6 +23,9 @@ using Effect = ::Effect;                    // Effect from AU3
 using EffectInstanceId = uint64_t;
 using EffectInstance = ::EffectInstanceEx;  // EffectInstanceEx from AU3
 using EffectSettings = ::EffectSettings;
+using EffectStateId = uintptr_t;
+using TrackId = long;
+using EffectChainLinkIndex = int;
 
 struct EffectMeta {
     EffectId id;
@@ -59,4 +62,13 @@ struct EffectTimeParams {
     double f0 = 0.0;
     double f1 = 0.0;
 };
+
+struct EffectChainLink {
+    EffectChainLink(std::string effectName, EffectStateId effectStateId)
+        : effectName{std::move(effectName)}, effectStateId{effectStateId} {}
+    const std::string effectName;
+    const EffectStateId effectStateId;
+};
+
+using EffectChainLinkPtr = std::shared_ptr<EffectChainLink>;
 }
