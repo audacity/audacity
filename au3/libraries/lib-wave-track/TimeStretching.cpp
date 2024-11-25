@@ -82,9 +82,6 @@ bool TimeStretching::SetClipStretchRatio(
    const auto expectedEndTime =
       start + (end - start) * stretchRatio / interval.GetStretchRatio();
 
-   if (expectedEndTime > maxEndTime)
-      return false;
-
    interval.StretchRightTo(expectedEndTime);
    return true;
 }
