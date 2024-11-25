@@ -12,6 +12,8 @@
 #include "actions/iactionsdispatcher.h"
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
+#include "context/iglobalcontext.h"
 #include "iinteractive.h"
 
 namespace au::effects {
@@ -19,8 +21,10 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
+    muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
     void init();
@@ -30,6 +34,9 @@ public:
 private:
     void doEffect(const muse::actions::ActionData& args);
     void repeatLastEffect();
+    void addRealtimeEffect(const muse::actions::ActionData& args);
+    void removeRealtimeEffect(const muse::actions::ActionData& args);
+    void replaceRealtimeEffect(const muse::actions::ActionData& args);
 
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;
 };

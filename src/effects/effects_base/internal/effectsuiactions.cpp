@@ -28,6 +28,24 @@ UiActionList EffectsUiActions::m_actions = {
              REPEAT_LAST_EFFECT_DEF_TITLE,
              TranslatableString("action", "Repeat last effect")
              ),
+    UiAction("realtimeeffect-add",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Add realtime effect"),
+             TranslatableString("action", "Add realtime effect")
+             ),
+    UiAction("realtimeeffect-remove",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Remove realtime effect"),
+             TranslatableString("action", "Remove realtime effect")
+             ),
+    UiAction("realtimeeffect-replace",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Replace realtime effect"),
+             TranslatableString("action", "Replace realtime effect")
+             ),
 };
 
 EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> controller)
