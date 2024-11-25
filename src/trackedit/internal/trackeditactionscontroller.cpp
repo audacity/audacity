@@ -141,9 +141,11 @@ void TrackeditActionsController::doGlobalCopy()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-    if (selectedClipKey.isValid()) {
-        dispatcher()->dispatch(CLIP_COPY_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+    if (selectionController()->selectedClips().size() == 1) {
+        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
+        if (selectedClipKey.isValid()) {
+            dispatcher()->dispatch(CLIP_COPY_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+        }
     }
 }
 
@@ -158,9 +160,11 @@ void TrackeditActionsController::doGlobalCut()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-    if (selectedClipKey.isValid()) {
-        dispatcher()->dispatch(CLIP_CUT_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+    if (selectionController()->selectedClips().size() == 1) {
+        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
+        if (selectedClipKey.isValid()) {
+            dispatcher()->dispatch(CLIP_CUT_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+        }
     }
 }
 
@@ -175,9 +179,11 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-    if (selectedClipKey.isValid()) {
-        dispatcher()->dispatch(CLIP_DELETE_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+    if (selectionController()->selectedClips().size() == 1) {
+        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
+        if (selectedClipKey.isValid()) {
+            dispatcher()->dispatch(CLIP_DELETE_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+        }
     }
 }
 
@@ -198,10 +204,12 @@ void TrackeditActionsController::doGlobalSplitCut()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-    if (selectedClipKey.isValid()) {
-        dispatcher()->dispatch(CLIP_SPLIT_CUT, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
-        return;
+    if (selectionController()->selectedClips().size() == 1) {
+        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
+        if (selectedClipKey.isValid()) {
+            dispatcher()->dispatch(CLIP_SPLIT_CUT, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+            return;
+        }
     }
 }
 
@@ -222,10 +230,12 @@ void TrackeditActionsController::doGlobalSplitDelete()
         return;
     }
 
-    ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-    if (selectedClipKey.isValid()) {
-        dispatcher()->dispatch(CLIP_SPLIT_DELETE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
-        return;
+    if (selectionController()->selectedClips().size() == 1) {
+        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
+        if (selectedClipKey.isValid()) {
+            dispatcher()->dispatch(CLIP_SPLIT_DELETE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
+            return;
+        }
     }
 }
 
@@ -237,7 +247,9 @@ void TrackeditActionsController::doGlobalSplit()
         if (selectionController()->selectedClips().empty()) {
             return;
         }
-        tracksIdsToSplit.push_back(selectionController()->selectedClips().at(0).trackId);
+        if (selectionController()->selectedClips().size() == 1) {
+            tracksIdsToSplit.push_back(selectionController()->selectedClips().at(0).trackId);
+        }
     }
 
     if (tracksIdsToSplit.empty()) {
@@ -283,11 +295,13 @@ void TrackeditActionsController::doGlobalDuplicate()
         if (selectionController()->selectedClips().empty()) {
             return;
         }
-        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-        if (!selectedClipKey.isValid()) {
-            return;
+        if (selectionController()->selectedClips().size() == 1) {
+            ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
+            if (!selectedClipKey.isValid()) {
+                return;
+            }
+            dispatcher()->dispatch(DUPLICATE_CLIP, ActionData::make_arg1<ClipKey>(selectedClipKey));
         }
-        dispatcher()->dispatch(DUPLICATE_CLIP, ActionData::make_arg1<ClipKey>(selectedClipKey));
     }
 }
 
