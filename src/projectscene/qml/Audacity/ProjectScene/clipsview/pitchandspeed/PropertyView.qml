@@ -19,6 +19,8 @@ Column {
     property alias canDecrease: spinBoxItem.canDecrease
     property alias onDecrement: spinBoxItem.onDecrement
 
+    property alias canChange: spinBoxItem.enabled
+
     property string navigationName: "PropertyView"
     property NavigationPanel navigationPanel: null
     property int navigationRowStart: 0

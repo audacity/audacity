@@ -8,6 +8,7 @@ Column {
     id: root
 
     property double speedPercentage: 0.0
+    property alias canChange: speedProperty.canChange
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "SpeedSection"
@@ -42,13 +43,13 @@ Column {
     PropertyView {
         id: speedProperty
 
-        width: 88
+        width: 96
 
         title: qsTrc("projectscene", "Speed")
 
         currentValue: {
             var result = parseFloat(root.speedPercentage)
-            return Number(result.toFixed(speedProperty.decimals))
+            return +result.toFixed(speedProperty.decimals)
         }
 
         minValue: 1.0
