@@ -47,4 +47,18 @@ FlatButton {
             }
         ]
     }
+
+    mouseArea.onPressAndHold: { continuousTimer.running = true }
+    mouseArea.onReleased: { continuousTimer.running = false }
+
+    Timer {
+        id: continuousTimer
+
+        interval: 100
+        repeat: true
+
+        onTriggered: {
+            root.clicked(null)
+        }
+    }
 }
