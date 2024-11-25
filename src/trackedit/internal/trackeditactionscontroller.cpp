@@ -246,21 +246,20 @@ void TrackeditActionsController::doGlobalSplit()
     TrackIdList tracksIdsToSplit = selectionController()->selectedTracks();
 
     if (tracksIdsToSplit.empty()) {
-        if (selectionController()->selectedClips().empty()) {
-            return;
-        }
-        if (selectionController()->selectedClips().size() == 1) {
-            tracksIdsToSplit.push_back(selectionController()->selectedClips().at(0).trackId);
-        }
-    }
-
-    if (tracksIdsToSplit.empty()) {
         return;
     }
 
-    secs_t playbackPosition = globalContext()->playbackState()->playbackPosition();
+    std::vector<secs_t> pivots;
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        pivots.push_back(selectionController()->dataSelectedStartTime());
+        pivots.push_back(selectionController()->dataSelectedEndTime());
+    } else {
+        pivots.push_back(globalContext()->playbackState()->playbackPosition());
+    }
 
-    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>(tracksIdsToSplit, playbackPosition));
+    for (const auto& pivot : pivots) {
+        dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>(tracksIdsToSplit, pivot));
+    }
 }
 
 void TrackeditActionsController::doGlobalJoin()
