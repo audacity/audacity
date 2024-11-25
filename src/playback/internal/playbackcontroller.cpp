@@ -247,6 +247,10 @@ void PlaybackController::play(bool ignoreSelection)
         // seek(startMsecs);
     }
 
+    if (!isPlaybackStartPositionValid()) {
+        return;
+    }
+
     player()->play();
 }
 
@@ -282,7 +286,15 @@ void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
 
     doSeek(secs, triggerPlay);
 
-    if (triggerPlay && !isPlaying()) {
+    if (triggerPlay) {
+        if (isPlaying()) {
+            return;
+        }
+
+        if (!isPlaybackStartPositionValid()) {
+            return;
+        }
+
         player()->play();
     }
 }
@@ -431,6 +443,21 @@ bool PlaybackController::isPlaybackPositionOnTheEndOfPlaybackRegion() const
 {
     PlaybackRegion playbackRegion = player()->playbackRegion();
     return playbackRegion.isValid() && isEqualToPlaybackPosition(playbackRegion.end);
+}
+
+bool PlaybackController::isPlaybackStartPositionValid() const
+{
+    muse::secs_t totalPlayTime = this->totalPlayTime();
+
+    if (m_lastPlaybackSeekTime >= totalPlayTime) {
+        return false;
+    }
+
+    if (m_lastPlaybackRegion.start >= totalPlayTime) {
+        return false;
+    }
+
+    return true;
 }
 
 bool PlaybackController::actionChecked(const ActionCode& actionCode) const

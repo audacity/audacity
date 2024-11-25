@@ -93,6 +93,11 @@ public:
         m_controller->onChangePlaybackRegionAction(muse::actions::ActionData::make_arg2<double, double>(start, end));
     }
 
+    void seek(const secs_t time, bool triggerPlay = false)
+    {
+        m_controller->onSeekAction(muse::actions::ActionData::make_arg2<double, bool>(time, triggerPlay));
+    }
+
     PlaybackController* m_controller = nullptr;
 
     std::shared_ptr<ApplicationMock> m_application;
@@ -226,7 +231,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
 /**
  * @brief Toggle play with ignore selection
  * @details User clicked play with Shift modifier
- *          Playback should ignore selection
+ *          Playback should be started from previous seek position
  */
 TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
 {
@@ -363,7 +368,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
     .WillOnce(Return(Qt::ShiftModifier))
     .WillRepeatedly(Return(Qt::NoModifier));
 
-    //! [GIVEN] User started playback and paused it
+    //! [GIVEN] User started playback
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
     togglePlay();
@@ -398,10 +403,168 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
     EXPECT_CALL(*m_player, play())
     .Times(1);
 
-    //! [GIVEN] Fitst: user changed selection
+    //! [WHEN] Fitst: user changed selection
     changePlaybackRegion(selectionRegion.start, selectionRegion.end);
 
     //! [WHEN] Second: toggle play
     togglePlay();
+}
+
+/**
+ * @brief Toggle play when there is selection wich start time is more than total time
+ * @details User made a selection and clicked play
+ *          Playback shouldn't be started
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_StartTimeIsMoreThanTotalTime)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] There is selection from 10 to 20 secs
+    PlaybackRegion selectionRegion = { secs_t(1000.0), secs_t(2000.0) };
+    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
+    .WillOnce(Return(true));
+    EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
+    .WillOnce(Return(selectionRegion.start));
+    EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
+    .WillOnce(Return(selectionRegion.end));
+
+    //! [THEN] Expect that we will take into account the selection region
+    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
+    .Times(1);
+
+    //! [THEN] Player should start playing
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Toggle play
+    togglePlay();
+}
+
+/**
+ * @brief Seek playback position to a new time
+ * @details User clicked on the clips view
+ *          Player should only seek to new time
+ */
+TEST_F(PlaybackControllerTests, Seek_WhenNotPlaying)
+{
+    //! [GIVEN] New seek time
+    secs_t newSeekTime = 10.0;
+
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] Playback will be seek to the new seek position
+    EXPECT_CALL(*m_player, seek(newSeekTime, false /* applyIfPlaying */))
+    .Times(1);
+
+    //! [WHEN] Seek to the new time
+    seek(newSeekTime);
+}
+
+/**
+ * @brief Seek playback position to a new time when paused
+ * @details User clicked on the clips view
+ *          Player should stop and seek to new time
+ */
+TEST_F(PlaybackControllerTests, Seek_WhenPaused)
+{
+    //! [GIVEN] New seek time
+    secs_t newSeekTime = 10.0;
+
+    //! [GIVEN] Playback is paused
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+
+    //! [THEN] Playback will be seek to the new seek position
+    EXPECT_CALL(*m_player, seek(newSeekTime, false /* applyIfPlaying */))
+    .Times(1);
+
+    //! [THEN] Player should stop playing
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+
+    //! [WHEN] Seek to the new time
+    seek(newSeekTime);
+}
+
+/**
+ * @brief Seek playback position to a new time with triggering play
+ * @details User clicked on the bottom section of timeline
+ *          Player should seek to new time and start playing
+ */
+TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay)
+{
+    //! [GIVEN] New seek time
+    secs_t newSeekTime = 10.0;
+
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] Playback will be seek to the new seek position
+    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */))
+    .Times(1);
+
+    //! [THEN] Player should start playing
+    EXPECT_CALL(*m_player, play())
+    .Times(1);
+
+    //! [WHEN] Seek to the new time with triggering play
+    seek(newSeekTime, true);
+}
+
+/**
+ * @brief Seek playback position to a new time with triggering play and playback is already playing
+ * @details User clicked on the bottom section of timeline
+ *          Player should only seek to new time
+ */
+TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay_AlreadyPlaying)
+{
+    //! [GIVEN] New seek time
+    secs_t newSeekTime = 10.0;
+
+    //! [GIVEN] Playback is running
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    //! [THEN] Playback will be seek to the new seek position
+    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */))
+    .Times(1);
+
+    //! [THEN] Player shouldn't start playing again
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Seek to the new time with triggering play
+    seek(newSeekTime, true);
+}
+
+/**
+ * @brief Seek playback position to a new time that is more than total time with triggering play
+ * @details User clicked on the bottom section of timeline
+ *          Player should only seek to new time without play
+ */
+TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay_FromTimeThatIsMoreThanTotalTime)
+{
+    //! [GIVEN] New seek time more than total time
+    secs_t newSeekTime = 1000.0;
+
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [THEN] Playback will be seek to the new seek position
+    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */))
+    .Times(1);
+
+    //! [THEN] Player shouldn't start playing
+    EXPECT_CALL(*m_player, play())
+    .Times(0);
+
+    //! [WHEN] Seek to the new time with triggering play
+    seek(newSeekTime, true);
 }
 }
