@@ -224,7 +224,7 @@ Rectangle {
                     selectionController.onPressed(e.x, e.y)
                     selectionController.resetSelectedClip()
                     clipsSelection.visible = true
-                } else {
+                } else if (e.button === Qt.RightButton) {
                     if (tracksHovered) {
                         //! TODO AU4: handle context menu over empty track area
                     } else {
@@ -243,7 +243,7 @@ Rectangle {
                 }
             }
             onReleased: e => {
-                if (e.mouse === Qt.RightButton) {
+                if (e.button !== Qt.LeftButton) {
                     return
                 }
                 if (selectionController.isLeftSelection(e.x)) {
@@ -260,7 +260,7 @@ Rectangle {
             }
 
             onClicked: e => {
-                if (e.mouse === Qt.RightButton) {
+                if (e.button !== Qt.LeftButton) {
                     return
                 }
 
@@ -270,7 +270,7 @@ Rectangle {
             }
 
             onDoubleClicked: e => {
-                if (e.mouse === Qt.RightButton) {
+                if (e.button !== Qt.LeftButton) {
                     return
                 }
                 if (root.clipHovered) {

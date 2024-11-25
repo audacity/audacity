@@ -60,7 +60,7 @@ Item {
         property real startW: 0
 
         onPressed: function(mouse) {
-            if (mouse.button === Qt.RightButton) {
+            if (mouse.button !== Qt.LeftButton) {
                 return
             }
             leftMa.cursorShape = Qt.ArrowCursor
@@ -70,7 +70,7 @@ Item {
         }
 
         onPositionChanged: function(mouse) {
-            if (mouse.button === Qt.RightButton) {
+            if (!(leftMa.pressedButtons & Qt.LeftButton)) {
                 return
             }
             var newWidth = leftMa.startW + (mouse.x * -1)
@@ -82,7 +82,7 @@ Item {
         }
 
         onReleased: function(mouse) {
-            if (mouse.button === Qt.RightButton) {
+            if (mouse.button !== Qt.LeftButton) {
                 return
             }
             root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
@@ -116,7 +116,7 @@ Item {
         property real startW: 0
 
         onPressed: function(mouse) {
-            if (mouse.button === Qt.RightButton) {
+            if (mouse.button !== Qt.LeftButton) {
                 return
             }
             rightMa.cursorShape = Qt.ArrowCursor
@@ -125,7 +125,7 @@ Item {
         }
 
         onPositionChanged: function(mouse) {
-            if (mouse.button === Qt.RightButton) {
+            if (!(rightMa.pressedButtons & Qt.LeftButton)) {
                 return
             }
             var newWidth = rightMa.startW + mouse.x
@@ -136,7 +136,7 @@ Item {
         }
 
         onReleased: function(mouse) {
-            if (mouse.button === Qt.RightButton) {
+            if (mouse.button !== Qt.LeftButton) {
                 return
             }
             root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
@@ -145,7 +145,7 @@ Item {
         }
 
         onClicked: function(mouse) {
-            if (mouse.button == Qt.RightButton) {
+            if (mouse.button === Qt.RightButton) {
                 let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
                 root.requestSelectionContextMenu(position.x, position.y)
             }
