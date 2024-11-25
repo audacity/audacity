@@ -258,6 +258,9 @@ void PlaybackController::rewindToStart()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
+
+    seek(0.0);
+
     IF_ASSERT_FAILED(player()) {
         return;
     }
@@ -266,9 +269,10 @@ void PlaybackController::rewindToStart()
 
 void PlaybackController::rewindToEnd()
 {
-    NOT_IMPLEMENTED;
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
+
+    seek(totalPlayTime());
 }
 
 void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
