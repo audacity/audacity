@@ -16,6 +16,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/evtloop.h>
 #endif
 
+#include "AdornedRulerPanel.h"
 #include "AnalyzedWaveClip.h"
 #include "AudacityMessageBox.h"
 #include "AudacityMirProject.h"
@@ -1353,10 +1354,33 @@ bool ProjectFileManager::Import(const FilePath& fileName, bool addToHistory)
 bool ProjectFileManager::Import(wxArrayString fileNames, bool addToHistory)
 {
    fileNames.Sort(FileNames::CompareNoCase);
-   if (!ProjectFileManager::Get(mProject).ImportAndRunTempoDetection(
-          std::vector<wxString> { fileNames.begin(), fileNames.end() },
-          addToHistory))
+
+   const auto projectIsEmpty =
+      TrackList::Get(mProject).Any<WaveTrack>().empty();
+
+   const auto& existingProjectPrefs =
+      ImportExportPrefs::MusicFileImportOnExistingProjectSetting.Read();
+
+   const auto isBeatsAndMeasures = AdornedRulerPanel::Get(mProject).GetTimeDisplayMode() ==
+          TimeDisplayMode::BeatsAndMeasures;
+
+   const auto doTempoDetection =
+      projectIsEmpty ?
+         ImportExportPrefs::MusicFileImportSetting.Read() != wxString { "No" } :
+         existingProjectPrefs == wxString { "Match" } ||
+            (existingProjectPrefs == wxString { "MatchIfBeatsAndMeasures" } &&
+             isBeatsAndMeasures);
+
+   auto& pfm = ProjectFileManager::Get(mProject);
+   const std::vector<wxString> fNameVector { fileNames.begin(),
+                                             fileNames.end() };
+   const auto success =
+      doTempoDetection ?
+         pfm.ImportWithTempoDetection(fNameVector, addToHistory) :
+         pfm.ImportWithoutTempoDetection(fNameVector, addToHistory);
+   if (!success)
       return false;
+
    // Last track in the project is the one that was just added. Use it for
    // focus, etc.
    Track* lastTrack = nullptr;
@@ -1417,7 +1441,7 @@ std::vector<std::shared_ptr<MIR::AnalyzedAudioClip>> RunTempoDetection(
 }
 } // namespace
 
-bool ProjectFileManager::ImportAndRunTempoDetection(
+bool ProjectFileManager::ImportWithTempoDetection(
    const std::vector<FilePath>& fileNames, bool addToHistory)
 {
    const auto projectWasEmpty =
@@ -1426,7 +1450,7 @@ bool ProjectFileManager::ImportAndRunTempoDetection(
    const auto success = std::all_of(
       fileNames.begin(), fileNames.end(), [&](const FilePath& fileName) {
          std::shared_ptr<ClipMirAudioReader> resultingReader;
-         const auto success = DoImport(fileName, addToHistory, resultingReader);
+         const auto success = DoImport(fileName, addToHistory, &resultingReader);
          if (success && resultingReader)
             resultingReaders.push_back(std::move(resultingReader));
          return success;
@@ -1447,10 +1471,18 @@ bool ProjectFileManager::ImportAndRunTempoDetection(
    return success;
 }
 
+bool ProjectFileManager::ImportWithoutTempoDetection(
+   const std::vector<FilePath>& fileNames, bool addToHistory)
+{
+   return std::all_of(
+      fileNames.begin(), fileNames.end(), [&](const FilePath& fileName)
+      { return DoImport(fileName, addToHistory, nullptr); });
+}
+
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool ProjectFileManager::DoImport(
    const FilePath& fileName, bool addToHistory,
-   std::shared_ptr<ClipMirAudioReader>& resultingReader)
+   std::shared_ptr<ClipMirAudioReader>* resultingReader)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get(project);
@@ -1540,8 +1572,8 @@ bool ProjectFileManager::DoImport(
          const auto waveTrack = dynamic_cast<WaveTrack*>(newTracks[0].get());
          // Also check that the track has a clip, as protection against empty
          // file import.
-         if (waveTrack && !waveTrack->GetClipInterfaces().empty())
-            resultingReader.reset(new ClipMirAudioReader {
+         if (waveTrack && !waveTrack->GetClipInterfaces().empty() && resultingReader)
+            resultingReader->reset(new ClipMirAudioReader {
                std::move(acidTags), fileName.ToStdString(),
                *waveTrack });
       }

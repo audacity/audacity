@@ -109,6 +109,23 @@ EnumSetting<bool> ImportExportPrefs::MusicFileImportSetting {
    wxT("/FileFormats/MusicFileImportSetting"),
 };
 
+EnumSetting<bool> ImportExportPrefs::MusicFileImportOnExistingProjectSetting {
+   wxT("/FileFormats/MusicFileImportOnExistingProjectSettingChoice"),
+   {
+      EnumValueSymbol {
+         wxT("Match"),
+         XXO("Always &match the loop tempo to the project tempo") },
+      EnumValueSymbol {
+         wxT("MatchIfBeatsAndMeasures"),
+         XXO(
+            "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\"") },
+      EnumValueSymbol { wxT("DoNothing"), XXO("&Do nothing") },
+   },
+   1,
+   { false, true, false },
+   wxT("/FileFormats/MusicFileImportOnExistingProjectSetting"),
+};
+
 void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -129,22 +146,14 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
       &top, &PopulatorItem::Registry());
 
 
-   auto musicImportsBox = S.StartStatic(XO("Music Imports"));
+   S.StartStatic(XO("Music Imports"));
    {
-      const auto header = S.AddVariableText(
-         XO("When Audacity detects music in file imported on empty project"));
-#if wxUSE_ACCESSIBILITY
-      if (musicImportsBox != nullptr)
+      S.StartStatic(XO("When importing a music loop into an empty project, Audacity will:"));
       {
-         musicImportsBox->SetName(header->GetLabel());
-         safenew WindowAccessible(musicImportsBox);
-      }
-#endif
 #if defined(__WXMAC__)
-      // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2692
-      S.StartPanel();
+         // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2692
+         S.StartPanel();
 #endif
-      {
          S.StartRadioButtonGroup(ImportExportPrefs::MusicFileImportSetting);
          {
             S.TieRadioButton();
@@ -152,10 +161,30 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
             S.TieRadioButton();
          }
          S.EndRadioButtonGroup();
-      }
 #if defined(__WXMAC__)
-      S.EndPanel();
+         S.EndPanel();
 #endif
+      }
+      S.EndStatic();
+
+      S.StartStatic(XO("When importing a music loop into an existing (non-empty) project, Audacity will:"));
+      {
+#if defined(__WXMAC__)
+         // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2692
+         S.StartPanel();
+#endif
+         S.StartRadioButtonGroup(ImportExportPrefs::MusicFileImportOnExistingProjectSetting);
+         {
+            S.TieRadioButton();
+            S.TieRadioButton();
+            S.TieRadioButton();
+         }
+         S.EndRadioButtonGroup();
+#if defined(__WXMAC__)
+         S.EndPanel();
+#endif
+      }
+      S.EndStatic();
    }
    S.EndStatic();
 
