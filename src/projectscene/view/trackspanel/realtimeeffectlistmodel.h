@@ -5,7 +5,6 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "effects/effects_base/ieffectsprovider.h"
 #include "realtimeeffectmenumodelbase.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include <QObject>
@@ -31,7 +30,6 @@ class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
 
     Q_PROPERTY(QVariantList availableEffects READ availableEffects NOTIFY availableEffectsChanged)
 
-    muse::Inject<effects::IEffectsProvider> effectsProvider;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
 
@@ -39,7 +37,6 @@ public:
     explicit RealtimeEffectListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void handleMenuItemWithState(const QString& menuItemId, const ModelEffectItem*);
-    Q_INVOKABLE void load() override;
     QVariantList availableEffects();
 
 signals:
@@ -56,7 +53,9 @@ private:
         rItemData = Qt::UserRole + 1
     };
 
-    void populateMenu();
+    void doLoad() override;
+    void populateMenu() override;
+
     void setListenerOnCurrentTrackeditProject();
     void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectChainLink& item);
     void removeEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectChainLink& item);

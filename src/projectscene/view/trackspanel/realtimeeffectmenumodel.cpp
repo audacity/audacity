@@ -11,11 +11,14 @@ using namespace muse::uicomponents;
 RealtimeEffectMenuModel::RealtimeEffectMenuModel(QObject* parent)
     : RealtimeEffectMenuModelBase(parent) {}
 
-void RealtimeEffectMenuModel::load()
+void RealtimeEffectMenuModel::doLoad()
+{
+    populateMenu();
+}
+
+void RealtimeEffectMenuModel::populateMenu()
 {
     TRACEFUNC;
-
-    RealtimeEffectMenuModelBase::load();
 
     MenuItemList items;
 

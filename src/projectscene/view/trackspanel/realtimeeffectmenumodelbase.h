@@ -5,6 +5,7 @@
 
 #include "uicomponents/view/abstractmenumodel.h"
 #include "trackedit/trackedittypes.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include <QObject>
 
 namespace au::projectscene {
@@ -19,10 +20,17 @@ public:
     au::trackedit::TrackId trackId() const;
     void setTrackId(au::trackedit::TrackId trackId);
 
+    Q_INVOKABLE void load() final override;
+
 signals:
     void trackIdChanged();
 
 protected:
+    muse::Inject<effects::IEffectsProvider> effectsProvider;
     au::trackedit::TrackId m_trackId = -1;
+
+private:
+    virtual void doLoad() = 0;
+    virtual void populateMenu() = 0;
 };
 }

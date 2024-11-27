@@ -8,6 +8,16 @@ using namespace au::projectscene;
 RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
     : AbstractMenuModel(parent) {}
 
+void RealtimeEffectMenuModelBase::load()
+{
+    AbstractMenuModel::load();
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this]
+    { populateMenu(); });
+
+    doLoad();
+}
+
 au::trackedit::TrackId RealtimeEffectMenuModelBase::trackId() const
 {
     return m_trackId;

@@ -23,11 +23,8 @@ RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
 {
 }
 
-void RealtimeEffectListModel::load()
+void RealtimeEffectListModel::doLoad()
 {
-    RealtimeEffectMenuModelBase::load();
-
-    // TODO: listener on effectProvider when the plugins have changed should call `populateMenu()`
     populateMenu();
 
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
