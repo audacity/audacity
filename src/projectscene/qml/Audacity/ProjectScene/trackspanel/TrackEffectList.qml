@@ -21,7 +21,7 @@ Rectangle {
             trackEffectListModel.load()
         }
 
-    RtEffectListModel {
+    RealtimeEffectListModel {
         id: trackEffectListModel
         trackId: view.itemAtIndex(effectsPanel.selectedTrackIndex).item.trackId
     }

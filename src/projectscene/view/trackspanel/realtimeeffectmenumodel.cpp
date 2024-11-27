@@ -1,21 +1,21 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "rteffectmenumodel.h"
+#include "realtimeeffectmenumodel.h"
 #include "log.h"
 
 using namespace muse;
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 
-RtEffectMenuModel::RtEffectMenuModel(QObject* parent)
-    : RtEffectMenuModelBase(parent) {}
+RealtimeEffectMenuModel::RealtimeEffectMenuModel(QObject* parent)
+    : RealtimeEffectMenuModelBase(parent) {}
 
-void RtEffectMenuModel::load()
+void RealtimeEffectMenuModel::load()
 {
     TRACEFUNC;
 
-    RtEffectMenuModelBase::load();
+    RealtimeEffectMenuModelBase::load();
 
     MenuItemList items;
 

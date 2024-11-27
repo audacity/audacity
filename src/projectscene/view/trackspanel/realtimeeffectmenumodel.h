@@ -5,17 +5,17 @@
 
 #include "modularity/ioc.h"
 #include "effects/effects_base/ieffectsprovider.h"
-#include "rteffectmenumodelbase.h"
+#include "realtimeeffectmenumodelbase.h"
 
 namespace au::projectscene {
-class RtEffectMenuModel : public RtEffectMenuModelBase
+class RealtimeEffectMenuModel : public RealtimeEffectMenuModelBase
 {
     Q_OBJECT
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
 
 public:
-    explicit RtEffectMenuModel(QObject* parent = nullptr);
+    explicit RealtimeEffectMenuModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load() override;
 };

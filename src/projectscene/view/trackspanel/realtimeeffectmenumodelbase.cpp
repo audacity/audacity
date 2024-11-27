@@ -1,19 +1,19 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "rteffectmenumodelbase.h"
+#include "realtimeeffectmenumodelbase.h"
 
 using namespace au::projectscene;
 
-RtEffectMenuModelBase::RtEffectMenuModelBase(QObject* parent)
+RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
     : AbstractMenuModel(parent) {}
 
-au::trackedit::TrackId RtEffectMenuModelBase::trackId() const
+au::trackedit::TrackId RealtimeEffectMenuModelBase::trackId() const
 {
     return m_trackId;
 }
 
-void RtEffectMenuModelBase::setTrackId(au::trackedit::TrackId trackId)
+void RealtimeEffectMenuModelBase::setTrackId(au::trackedit::TrackId trackId)
 {
     if (trackId < 0 || m_trackId == trackId) {
         return;

@@ -8,13 +8,13 @@
 #include <QObject>
 
 namespace au::projectscene {
-class RtEffectMenuModelBase : public muse::uicomponents::AbstractMenuModel
+class RealtimeEffectMenuModelBase : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
     Q_PROPERTY(au::trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged)
 
 public:
-    explicit RtEffectMenuModelBase(QObject* parent = nullptr);
+    explicit RealtimeEffectMenuModelBase(QObject* parent = nullptr);
 
     au::trackedit::TrackId trackId() const;
     void setTrackId(au::trackedit::TrackId trackId);

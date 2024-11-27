@@ -6,8 +6,8 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "effects/effects_base/ieffectsprovider.h"
-#include "rteffectmenumodelbase.h"
-#include "au3audio/iaudioengine.h"
+#include "realtimeeffectmenumodelbase.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
 #include <QObject>
 #include <map>
 
@@ -16,16 +16,16 @@ class ModelEffectItem : public QObject
 {
     Q_OBJECT
 public:
-    ModelEffectItem(QObject* parent, std::string effectName, const void* effectState);
+    ModelEffectItem(QObject* parent, std::string effectName, effects::EffectStateId effectState);
 
-    const void* const effectState;
+    const effects::EffectStateId effectStateId;
     Q_INVOKABLE QString effectName() const;
 
 private:
     const std::string m_effectName;
 };
 
-class RtEffectListModel : public RtEffectMenuModelBase
+class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
 {
     Q_OBJECT
 
@@ -33,10 +33,10 @@ class RtEffectListModel : public RtEffectMenuModelBase
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<audio::IAudioEngine> audioEngine;
+    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
 
 public:
-    explicit RtEffectListModel(QObject* parent = nullptr);
+    explicit RealtimeEffectListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void handleMenuItemWithState(const QString& menuItemId, const ModelEffectItem*);
     Q_INVOKABLE void load() override;
@@ -58,10 +58,10 @@ private:
 
     void populateMenu();
     void setListenerOnCurrentTrackeditProject();
-    void insertEffect(audio::TrackId trackId, audio::EffectChainLinkIndex index, const audio::EffectChainLink& item);
-    void removeEffect(audio::TrackId trackId, audio::EffectChainLinkIndex index, const audio::EffectChainLink& item);
+    void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectChainLink& item);
+    void removeEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectChainLink& item);
 
     using EffectList = std::vector<ModelEffectItem*>;
-    std::map<audio::TrackId, EffectList> m_trackEffectLists;
+    std::map<effects::TrackId, EffectList> m_trackEffectLists;
 };
 }

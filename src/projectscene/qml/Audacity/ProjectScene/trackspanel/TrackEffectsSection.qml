@@ -106,7 +106,7 @@ Rectangle {
 
             text: qsTrc("projectscene", "Add effect")
 
-            RtEffectMenuModel {
+            RealtimeEffectMenuModel {
                 id: menuModel
                 trackId: view.itemAtIndex(effectsPanel.selectedTrackIndex).item.trackId
             }
