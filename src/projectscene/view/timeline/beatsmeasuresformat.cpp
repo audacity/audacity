@@ -37,27 +37,26 @@ IntervalInfo BeatsMeasuresFormat::intervalInfo(TimelineContext* context)
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower * 2));
         return timeInterval;
     }
-    if (zoom > (14 / ((4 / timeSigLower) * SPB / 4))) { // 1/16 beat ticks
+    if (zoom > (24 / ((4 / timeSigLower) * SPB / 4))) { // 1/16 beat ticks
         timeInterval.minor = 60 / (BPM * (timeSigLower / 4));
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 4));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower));
         return timeInterval;
     }
-    if (zoom > (14 / ((4 / timeSigLower) * SPB / 2))) {  // 1/8 beat ticks
+    if (zoom > (24 / ((4 / timeSigLower) * SPB / 2))) {  // 1/8 beat ticks
         timeInterval.minor = 60 / (BPM * (timeSigLower / 4));
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 4));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower / 2));
         return timeInterval;
     }
-
-    if (zoom > (6 / ((4 / timeSigLower) * SPB))) { // 1/4 beat ticks
+    if (zoom > (12 / ((4 / timeSigLower) * SPB))) { // 1/4 beat ticks
         timeInterval.minor = std::numeric_limits<int>::max(); // do not draw minor ticks
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 4));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower / 4));
 
         return timeInterval;
     }
-    if (zoom > (6 / ((4 / timeSigLower) * SPB * 2))) { // 4/1 beat ticks
+    if (zoom > (12 / ((4 / timeSigLower) * SPB * 2))) { // 4/1 beat ticks
         timeInterval.minor = 60 * 2 / (BPM * (timeSigLower / 8));
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 16));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower / 8));
@@ -70,7 +69,7 @@ IntervalInfo BeatsMeasuresFormat::intervalInfo(TimelineContext* context)
     int factor = 2;
     while (static_cast<double>(60) * factor / BPM <= MAX_BEATS_ZOOM_OUT)
     {
-        if (zoom > (6 / ((4 / timeSigLower) * ((static_cast<double>(60) * factor / BPM) / 2)))) {
+        if (zoom > (12 / ((4 / timeSigLower) * ((static_cast<double>(60) * factor / BPM) / 2)))) {
             timeInterval.minor = std::numeric_limits<int>::max(); // do not draw minor ticks
             timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / (4 * factor)));
             timeInterval.minorMinor = 60 / (BPM * (timeSigLower / (2 * factor)));
