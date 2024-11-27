@@ -7,11 +7,13 @@
         <file>qml/Audacity/ProjectScene/clipsview/Timeline.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipsSelection.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TrackItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TrackSelectionBar.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBarBackground.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/TrackEffectList.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/KnobControl.qml</file>

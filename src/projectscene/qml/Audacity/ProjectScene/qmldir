@@ -2,7 +2,9 @@ module Audacity.ProjectScene
 ProjectToolBar 1.0 toolbars/ProjectToolBar.qml
 UndoRedoToolBar 1.0 toolbars/UndoRedoToolBar.qml
 PlaybackToolBar 1.0 toolbars/PlaybackToolBar.qml
+RealtimeEffectListItem 1.0 trackspanel/RealtimeEffectListItem.qml
 TracksPanel 1.0 trackspanel/TracksPanel.qml
+TrackEffectList 1.0 trackspanel/TrackEffectList.qml
 TrackEffectsSection 1.0 trackspanel/TrackEffectsSection.qml
 TracksTitleBar 1.0 trackspanel/TracksTitleBar.qml
 TracksClipsView 1.0 clipsview/TracksClipsView.qml

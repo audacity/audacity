@@ -37,12 +37,18 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/rteffectlistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/rteffectlistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/rteffectmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/rteffectmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/rteffectmenumodelbase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/rteffectmenumodelbase.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.h
-    
+
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/undoredotoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/undoredotoolbarmodel.h
 
