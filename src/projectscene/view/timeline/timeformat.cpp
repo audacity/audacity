@@ -8,166 +8,57 @@
 
 using namespace au::projectscene;
 
+const std::vector<std::pair<double, IntervalInfo>> zoomToIntervalInfo = {
+    // { min pixel width per minorMinor tick, {major, minor, minorMinor, digits} }
+    { 32 / 0.000005, { 0.0001, 0.00002, 0.000005, 6 } },            // 0.000005s ticks
+    { 28 / 0.00001, { 0.0005, 0.00005, 0.00001, 6 } },              // 0.00001s ticks
+    { 32 / 0.00005, { 0.001, 0.0002, 0.00005, 5 } },                // 0.00005s ticks
+    { 28 / 0.0001, { 0.005, 0.0005, 0.0001, 4 } },                  // 0.0001s ticks
+    { 28 / 0.0005, { 0.005, 0.0025, 0.0005, 4 } },                  // 0.0005s ticks
+    { 32 / 0.001, { 0.05, 0.005, 0.001, 3 } },                      // 0.001s ticks
+    { 38 / 0.005, { 0.05, 0.01, 0.005, 3 } },                       // 0.005s ticks
+    { 28 / 0.005, { 0.05, 0.025, 0.005, 3 } },                      // 0.005s ticks
+    { 28 / 0.01, { 0.1, 0.05, 0.01, 2 } },                          // 0.01s ticks
+    { 36 / 0.05, { 0.5, 0.1, 0.05, 2 } },                           // 0.05s ticks
+    { 28 / 0.05, { 0.5, 0.25, 0.05, 2 } },                          // 0.05s ticks
+    { 24 / 0.1, { 1.0, 0.5, 0.1, 1 } },                             // 0.1s ticks
+    { 32 / 0.5, { 5.0, 1.0, 0.5, 0 } },                             // 0.5s ticks
+    { 28 / 0.5, { 5.0, 2.5, 0.5, 0 } },                             // 0.5s ticks
+    { 24 / 1.0, { 30.0, 5.0, 1.0, 0 } },                            // 1s ticks
+    { 24 / 5.0, { 60.0, 15.0, 5.0, 0 } },                           // 5s ticks
+    { 24 / 10.0, { 60.0, 30.0, 10.0, 0 } },                         // 10s ticks
+    { 24 / 15.0, { 300.0, 60.0, 15.0, 0 } },                        // 15s ticks
+    { 32 / 30.0, { 300.0, 60.0, 30.0, 0 } },                        // 30s ticks
+    { 28 / 30.0, { 300.0, 150.0, 30.0, 0 } },                       // 30s ticks
+    { 22 / 60.0, { 900.0, 300.0, 60.0, 0 } },                       // 1 min ticks
+    { 24 / 300.0, { 3600.0, 900.0, 5 * 60.0, 0 } },                 // 5 min ticks
+    { 24 / 600.0, { 3600.0, 1800.0, 10 * 60.0, 0 } },               // 10 min ticks
+    { 24 / 900.0, { 5 * 3600.0, 3600.0, 15 * 60.0, 0 } },           // 15 min ticks
+    { 32 / 1800.0, { 5 * 3600.0, 3600.0, 30 * 60.0, 0 } },          // 30 min ticks
+    { 24 / 1800.0, { 5 * 3600.0, 2.5 * 3600.0, 30 * 60.0, 0 } },    // 30 min ticks
+    { 24 / 3600.0, { 24 * 3600.0, 6 * 3600.0, 3600.0, 0 } },        // 1 h ticks
+    { 24 / (6 * 3600.0), { 168 * 3600.0, 24 * 3600.0, 6 * 3600.0, 0 } }, // 6 h ticks
+    { 0, { 24 * 3600 + 1, 7 * 24 * 3600.0, 24 * 3600.0, 0 } }       // fallback
+};
+
 IntervalInfo TimeFormat::intervalInfo(TimelineContext* context)
 {
-    IntervalInfo timeInterval;
     double zoom = context->zoom();
-    // NOTE: 24 is minimal px size between minorMinor ticks
-    // 0.000005 is distance [s] between minorMinor ticks
-    // same goes for other time intervals
-    if (zoom > (24 / 0.000005)) { // 0.000005s ticks
-        timeInterval.minor = 0.00002;
-        timeInterval.major = 0.0001;
-        timeInterval.minorMinor = 0.000005;
-        timeInterval.digits = 6;
-        return timeInterval;
-    }
-    if (zoom > (28 / 0.00001)) { // 0.00001s ticks
-        timeInterval.minor = 0.000005;
-        timeInterval.major = 0.0005;
-        timeInterval.minorMinor = 0.00001;
-        timeInterval.digits = 6;
-        return timeInterval;
-    }
-    if (zoom > (24 / 0.00005)) { // 0.00005s ticks
-        timeInterval.minor = 0.0002;
-        timeInterval.major = 0.001;
-        timeInterval.minorMinor = 0.00005;
-        timeInterval.digits = 5;
-        return timeInterval;
-    }
-    if (zoom > (24 / 0.0001)) { // 0.0001s ticks
-        timeInterval.minor = 0.0005;
-        timeInterval.major = 0.005;
-        timeInterval.minorMinor = 0.0001;
-        timeInterval.digits = 4;
-        return timeInterval;
-    }
-    if (zoom > (32 / 0.0005)) { // 0.0005s ticks
-        timeInterval.minor = 0.001;
-        timeInterval.major = 0.005;
-        timeInterval.minorMinor = 0.0005;
-        timeInterval.digits = 4;
-        return timeInterval;
-    }
-    if (zoom > (24 / 0.001)) { // 0.001s ticks
-        timeInterval.minor = 0.005;
-        timeInterval.major = 0.05;
-        timeInterval.minorMinor = 0.001;
-        timeInterval.digits = 3;
-        return timeInterval;
-    }
-    if (zoom > (24 / 0.005)) { // 0.005s ticks
-        timeInterval.minor = 0.01;
-        timeInterval.major = 0.05;
-        timeInterval.minorMinor = 0.005;
-        timeInterval.digits = 3;
-        return timeInterval;
-    }
-    if (zoom > (24 / 0.01)) { // 0.01s ticks
-        timeInterval.minor = 0.05;
-        timeInterval.major = 0.1;
-        timeInterval.minorMinor = 0.01;
-        timeInterval.digits = 2;
-        return timeInterval;
-    }
-    if (zoom > (24 / 0.05)) { // 0.05s ticks
-        timeInterval.minor = 0.1;
-        timeInterval.major = 0.5;
-        timeInterval.minorMinor = 0.05;
-        timeInterval.digits = 2;
-        return timeInterval;
-    }
-    if (zoom > (24 / 0.1)) { // 0.1s ticks
-        timeInterval.minor = 0.5;
-        timeInterval.major = 1.0;
-        timeInterval.minorMinor = 0.1;
-        timeInterval.digits = 1;
-        return timeInterval;
-    }
-    if (zoom > (28 / 0.5)) { // 0.5s ticks
-        timeInterval.minor = 1.0;
-        timeInterval.major = 5.0;
-        timeInterval.minorMinor = 0.5;
-        return timeInterval;
-    }
-    if (zoom > (24 / 1.0)) { // 1s ticks
-        timeInterval.minor = 5.0;
-        timeInterval.major = 30.0;
-        timeInterval.minorMinor = 1.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / 5.0)) { // 5s ticks
-        timeInterval.minor = 15;
-        timeInterval.major = 60;
-        timeInterval.minorMinor = 5.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / 10.0)) { // 10s ticks
-        timeInterval.minor = 30;
-        timeInterval.major = 60;
-        timeInterval.minorMinor = 10.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / 15.0)) { // 15s ticks
-        timeInterval.minor = 60;
-        timeInterval.major = 300;
-        timeInterval.minorMinor = 15.0;
-        return timeInterval;
-    }
-    if (zoom > (28 / 30.0)) { // 30s ticks
-        timeInterval.minor = 60.0;
-        timeInterval.major = 300;
-        timeInterval.minorMinor = 30.0;
-        return timeInterval;
-    }
-    if (zoom > (22 / 60.0)) { // 1 min ticks
-        timeInterval.minor = 300;
-        timeInterval.major = 900;
-        timeInterval.minorMinor = 60.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / 300.0)) { // 5 min ticks
-        timeInterval.minor = 900;
-        timeInterval.major = 3600;
-        timeInterval.minorMinor = 5 * 60.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / 600.0)) { // 10 min ticks
-        timeInterval.minor = 1800;
-        timeInterval.major = 3600;
-        timeInterval.minorMinor = 10 * 60.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / 900.0)) { // 15 min ticks
-        timeInterval.minor = 3600.0;
-        timeInterval.major = 5 * 3600.0;
-        timeInterval.minorMinor = 15 * 60.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / 1800.0)) { // 30 min ticks
-        timeInterval.minor = 3600.0;
-        timeInterval.major = 5 * 3600.0;
-        timeInterval.minorMinor = 30 * 60.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / 3600.0)) { // 1 h ticks
-        timeInterval.minor = 6 * 3600.0;
-        timeInterval.major = 24 * 3600.0;
-        timeInterval.minorMinor = 3600.0;
-        return timeInterval;
-    }
-    if (zoom > (24 / (6 * 3600.0))) { // 6 h ticks
-        timeInterval.minor = 24 * 3600.0;
-        timeInterval.major = 168 * 3600.0;
-        timeInterval.minorMinor = 6 * 3600.0;
-        return timeInterval;
+
+    auto it = std::lower_bound(
+        zoomToIntervalInfo.begin(),
+        zoomToIntervalInfo.end(),
+        zoom,
+        [](const std::pair<double, IntervalInfo>& interval, double zoomValue) {
+            return interval.first > zoomValue;
+        }
+        );
+
+    if (it != zoomToIntervalInfo.end()) {
+        return it->second;
     }
 
-    timeInterval.minor = 24 * 3600 + 1; // HACK to not to draw minor ticks labels
-    timeInterval.major = 7 * 24 * 3600.0;
-    timeInterval.minorMinor = 24 * 3600.0;
-    return timeInterval;
+    return zoomToIntervalInfo.end()->second;
 }
 
 QString TimeFormat::label(double d, const IntervalInfo& intervalInfo, TickType tickType, TimelineContext* context)
@@ -184,23 +75,31 @@ QString TimeFormat::label(double d, const IntervalInfo& intervalInfo, TickType t
         }
 
         if (intervalInfo.minor >= 3600.0) {
-            int hrs = (int)(d / 3600.0 + 0.5);
-            return QString("%1:00:00").arg(hrs);
+            int secs = (int)(d + 0.5);
+            return QString("%1:%2:00").arg(secs / 3600).arg((secs / 60) % 60, 2, 10, QChar('0'));
         } else if (intervalInfo.minor >= 60.0) {
             int minutes = (int)(d / 60.0 + 0.5);
             if (minutes >= 60) {
-                return QTime(minutes / 60, minutes % 60).toString("HH:mm:ss");
+                return QString("%1:%2:00").arg(minutes / 60).arg(minutes % 60, 2, 10, QChar('0'));
             } else {
-                return QTime(0, minutes).toString("mm:ss");
+                return QString("%1:%2").arg(minutes)
+                    .arg(0, 2, 10, QChar('0'));
             }
         } else if (intervalInfo.minor > 0.5) {
             int secs = (int)(d + 0.5);
             if (secs >= 3600) {
-                return QTime(secs / 3600, (secs / 60) % 60, secs % 60).toString("HH:mm:ss");
+                return QString("%1:%2:%3")
+                .arg(secs / 3600)
+                    .arg((secs / 60) % 60, 2, 10, QChar('0'))
+                    .arg(secs % 60, 2, 10, QChar('0'));
             } else if (secs >= 60) {
-                return QTime(0, secs / 60, secs % 60).toString("mm:ss");
+                return QString("%1:%2")
+                .arg(secs / 60)
+                    .arg(secs % 60, 2, 10, QChar('0'));
             } else {
-                return QTime(0, 0, secs).toString("m:ss");
+                return QString("%1:%2")
+                .arg(secs / 60)
+                    .arg(secs % 60, 2, 10, QChar('0'));
             }
         } else {
             if (intervalInfo.minor >= 1.0) {

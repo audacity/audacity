@@ -60,6 +60,7 @@ signals:
 
 private:
     Ticks prepareTickData(const IntervalInfo& timeInterval, double w, double h);
+    TickType determineTickType(double value, const IntervalInfo& timeInterval);
     void drawLabels(QPainter* painter, const Ticks& ticks, double w, double h);
     void drawTicks(QPainter* painter, const Ticks& ticks);
 

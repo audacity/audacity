@@ -14,7 +14,6 @@ constexpr double TICK_ALPHA_MINOR = 0.5;
 constexpr double LABEL_ALPHA_MAJOR = 1.0;
 constexpr double LABEL_ALPHA_MINOR = 0.75;
 constexpr int LABEL_OFFSET = 2;
-constexpr int LABEL_INTERVAL = 5;
 }
 
 using namespace au::projectscene;
@@ -73,25 +72,27 @@ void TimelineRuler::paint(QPainter* painter)
     // horizontal line in the middle
     painter->drawLine(QLineF(0, h / 2, w, h / 2));
 
-    drawLabels(painter, ticks, w, h);
     drawTicks(painter, ticks);
+    drawLabels(painter, ticks, w, h);
+
     emit ticksChanged(ticks);
 }
 
 Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w, double h)
 {
     Ticks ticks;
-    double value = m_context->frameStartTime();
-    double x = 0.0;
+
+    // start calculating 100px over left edge of the ruler
+    double leftBuffer = 100;
+    double value = m_context->frameStartTime() - leftBuffer / m_context->zoom();
+    double x = -leftBuffer;
 
     // find value and position of the first tick
     double remainder = std::remainder(value, timeInterval.minorMinor);
     if (remainder != 0) {
-        x = (timeInterval.minorMinor - remainder) * m_context->zoom();
+        x += (timeInterval.minorMinor - remainder) * m_context->zoom();
         value += (timeInterval.minorMinor - remainder);
     }
-    // determine which tick in a row is this
-    int tickNumber = static_cast<int>(value / timeInterval.minorMinor);
 
     auto tickHeight = [&](TickType tickType) {
         switch (tickType) {
@@ -105,41 +106,35 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
     while (x < w)
     {
         // determine tick type
-        TickType tickType;
-        double eps = 1.0e-5f;
-        if (std::abs(std::remainder(tickNumber, (timeInterval.major / timeInterval.minorMinor))) < eps) {
-            tickType = TickType::MAJOR;
-        } else if (std::abs(std::remainder(tickNumber, timeInterval.minor / timeInterval.minorMinor)) < eps) {
-            tickType = TickType::MINOR;
-        } else {
-            tickType = TickType::MINORMINOR;
-        }
-
+        TickType tickType = determineTickType(value, timeInterval);
         QString tickLabel = m_formatter->label(value, timeInterval, tickType, m_context);
-        int labelsCount = 0;
+        QLineF tick = QLineF(x, h - 2, x, h - 1 - tickHeight(tickType));
+        double labelPos = x + LABEL_OFFSET;
+
         if (tickType == TickType::MAJOR || tickType == TickType::MINOR) {
             // add tick with label
-            ticks.append(TickInfo { x + (labelsCount % LABEL_INTERVAL == 0 ? LABEL_OFFSET : 0),
-                                    tickLabel,
-                                    tickType,
-                                    QLineF(x, h - 2, x, h - 1 - tickHeight(tickType)),
-                                    value });
-            labelsCount++;
+            ticks.append(TickInfo { labelPos, tickLabel, tickType, tick, value });
         } else {
             // add tick without label
-            ticks.append(TickInfo { -1.0,
-                                    QString(),
-                                    tickType,
-                                    QLineF(x, h - 2, x, h - 1 - tickHeight(tickType)),
-                                    value });
+            ticks.append(TickInfo { -1.0, QString(), tickType, tick, value });
         }
 
         x += m_context->zoom() * timeInterval.minorMinor;
         value += timeInterval.minorMinor;
-        tickNumber++;
     }
 
     return ticks;
+}
+
+TickType TimelineRuler::determineTickType(double value, const IntervalInfo &timeInterval)
+{
+    if (muse::is_zero(std::abs(std::remainder(value, timeInterval.major)))) {
+        return TickType::MAJOR;
+    } else if (muse::is_zero(std::abs(std::remainder(value, timeInterval.minor)))) {
+        return TickType::MINOR;
+    } else {
+        return TickType::MINORMINOR;
+    }
 }
 
 void TimelineRuler::drawLabels(QPainter* painter, const Ticks& ticks, double w, double h)
