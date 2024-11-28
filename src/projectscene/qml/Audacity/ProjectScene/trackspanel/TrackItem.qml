@@ -16,6 +16,7 @@ ListItemBlank {
     id: root
 
     property var item: null
+    property var container: null
     property bool dragged: false
     property bool collapsed: height <= mapFromItem(trackControlsRow, 0, trackControlsRow.height + bottomSeparator.height).y
 
@@ -291,30 +292,6 @@ ListItemBlank {
         }
     }
 
-    MouseArea {
-        id: dragArea
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: 4
-
-        cursorShape: Qt.SizeVerCursor
-
-        onPressed: {
-            root.interactionStarted()
-        }
-
-        onPositionChanged: function(mouse) {
-            mouse.accepted = true
-            trackViewState.changeTrackHeight(mouse.y)
-        }
-
-        onReleased: {
-            root.interactionEnded()
-        }
-    }
-
     Item {
         anchors.fill: parent
         MouseArea {
@@ -331,6 +308,39 @@ ListItemBlank {
 
         HoverHandler {
             id:hoverHandler
+        }
+    }
+
+    MouseArea {
+        id: resizeArea
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 4
+
+        cursorShape: Qt.SizeVerCursor
+
+        onPressed: {
+            root.interactionStarted()
+        }
+
+        onPositionChanged: function(mouse) {
+            const resizeVerticalMargin = 10
+            mouse.accepted = true
+
+            const currentY = mapToItem(container, 0, 0).y - container.y
+
+            const maxPosition = container.height - resizeVerticalMargin - height
+            const minPosition = resizeVerticalMargin
+            const newPosition = Math.max(Math.min(currentY + mouse.y, maxPosition), minPosition)
+
+            const delta = newPosition - currentY
+            trackViewState.changeTrackHeight(delta)
+        }
+
+        onReleased: {
+            root.interactionEnded()
         }
     }
 
