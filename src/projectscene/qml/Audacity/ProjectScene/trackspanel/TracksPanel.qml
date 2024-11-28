@@ -131,6 +131,27 @@ Item {
     }
 
     Item {
+        id: wheelHandler
+
+        anchors.fill: parent
+
+        WheelHandler {
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+
+            onWheel: function(wheelEvent) {
+                let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
+                let offset  = view.contentY - delta
+
+                let maxContentY = view.contentHeight - view.height
+                maxContentY = Math.max(maxContentY, view.contentY)
+                offset = Math.max(Math.min(offset, maxContentY), 0)
+
+                view.contentY = offset
+            }
+        }
+    }
+
+    Item {
         id: dragHandler
 
         anchors.fill: parent
