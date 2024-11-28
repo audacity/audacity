@@ -335,6 +335,9 @@ void TrackeditActionsController::clipDelete(const ActionData& args)
         return;
     }
 
+    //! TODO AU4: improve for multiclip selection
+    selectionController()->resetSelectedClips();
+
     trackeditInteraction()->removeClip(clipKey);
 }
 
