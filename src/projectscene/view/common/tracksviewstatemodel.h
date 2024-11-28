@@ -20,6 +20,7 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
 
     // context of all tracks
     Q_PROPERTY(int tracksVericalY READ tracksVericalY NOTIFY tracksVericalYChanged FINAL)
+    Q_PROPERTY(bool tracksVerticalScrollLocked READ tracksVerticalScrollLocked NOTIFY tracksVerticalScrollLockedChanged FINAL)
 
     // context of track
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
@@ -37,17 +38,22 @@ public:
     int tracksVericalY() const;
     Q_INVOKABLE void changeTracksVericalY(int deltaY);
 
+    Q_INVOKABLE void requestVerticalScrollLock();
+    Q_INVOKABLE void requestVerticalScrollUnlock();
+
     // context of track
     QVariant trackId() const;
     void setTrackId(const QVariant& newTrackId);
     int trackHeight() const;
     bool isTrackCollapsed() const;
+    bool tracksVerticalScrollLocked() const;
 
     Q_INVOKABLE void changeTrackHeight(int deltaY);
 
 signals:
     // context of all tracks
     void tracksVericalYChanged();
+    void tracksVerticalScrollLockedChanged();
 
     // context of track
     void trackIdChanged();
@@ -60,6 +66,7 @@ private:
 
     // context of all tracks
     muse::ValCh<int> m_tracksVericalY;
+    muse::ValCh<bool> m_tracksVerticalScrollLocked;
 
     // context of track
     trackedit::TrackId m_trackId = -1;

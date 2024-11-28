@@ -196,9 +196,6 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        // anchors.leftMargin: 130
-        // anchors.rightMargin: 130
-
         GridLines {
             timelineRuler: timeline.ruler
             anchors.fill: parent
@@ -304,14 +301,25 @@ Rectangle {
                 clip: true
 
                 property bool moveActive: false
-                property real visibleContentHeight: tracksModel.totalTracksHeight - tracksClipsView.contentY
 
                 ScrollBar.horizontal: null
                 ScrollBar.vertical: null
 
+                property real lockedVerticalScrollPosition
+                property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
+
+                onVerticalScrollLockedChanged: {
+                    lockedVerticalScrollPosition = contentY
+                }
+
                 onContentYChanged: {
-                    tracksViewState.changeTracksVericalY(tracksClipsView.contentY)
-                    timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
+                    if (verticalScrollLocked) {
+                        contentY = lockedVerticalScrollPosition
+                    }
+                    else {
+                        tracksViewState.changeTracksVericalY(tracksClipsView.contentY)
+                        timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
+                    }
                 }
 
                 onHeightChanged: {
@@ -381,6 +389,14 @@ Rectangle {
 
                     onSeekToX: function(x) {
                         playCursorController.seekToX(x)
+                    }
+
+                    onInteractionStarted: {
+                        tracksViewState.requestVerticalScrollLock()
+                    }
+
+                    onInteractionEnded: {
+                        tracksViewState.requestVerticalScrollUnlock()
                     }
                 }
 

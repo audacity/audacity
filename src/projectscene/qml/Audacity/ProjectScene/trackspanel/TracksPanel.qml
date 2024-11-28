@@ -81,8 +81,21 @@ Item {
                 cacheBuffer: 3000
 
                 ScrollBar.vertical: null
+
+                property real lockedVerticalScrollPosition
+                property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
+
+                onVerticalScrollLockedChanged: {
+                    lockedVerticalScrollPosition = contentY
+                }
+
                 onContentYChanged: {
-                    tracksViewState.changeTracksVericalY(view.contentY)
+                    if (verticalScrollLocked) {
+                        view.contentY = lockedVerticalScrollPosition
+                    }
+                    else {
+                        tracksViewState.changeTracksVericalY(view.contentY)
+                    }
                 }
 
                 interactive: false
@@ -104,6 +117,14 @@ Item {
                             prv.currentItemNavigationName = navigation.name
                             view.positionViewAtIndex(index, ListView.Contain)
                         }
+                    }
+
+                    onInteractionStarted: {
+                        tracksViewState.requestVerticalScrollLock()
+                    }
+
+                    onInteractionEnded: {
+                        tracksViewState.requestVerticalScrollUnlock()
                     }
 
                     onIsSelectedChanged: {

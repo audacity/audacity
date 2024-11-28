@@ -15,6 +15,9 @@ public:
     muse::ValCh<int> tracksVericalY() const override;
     void changeTracksVericalY(int deltaY) override;
 
+    virtual muse::ValCh<bool> tracksVerticalScrollLocked() const override;
+    virtual void setTracksVerticalScrollLocked(bool lock) override;
+
     // context of track
     muse::ValCh<int> trackHeight(const trackedit::TrackId& trackId) const override;
     muse::ValCh<bool> isTrackCollapsed(const trackedit::TrackId& trackId) const override;
@@ -42,6 +45,8 @@ private:
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
 
     muse::ValCh<int> m_tracksVericalY;
+    muse::ValCh<bool> m_tracksVerticalScrollLocked;
+
     mutable std::map<trackedit::TrackId, TrackData> m_tracks;
     muse::ValCh<Snap> m_snap;
 };
