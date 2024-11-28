@@ -543,7 +543,7 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
     waveformPainter.Draw(channelIndex, painter, paintParameters, _metrics);
 }
 
-static bool showIndividualSamples(const Au3WaveClip& clip, bool zoom)
+static bool showIndividualSamples(const Au3WaveClip& clip, double zoom)
 {
     const double sampleRate = clip.GetRate();
     const double stretchRatio = clip.GetStretchRatio();
