@@ -161,7 +161,8 @@ Rectangle {
         }
 
         onPositionChanged: function(e) {
-            clipItemMousePositionChanged(e.x, e.y)
+            let mousePos = mapToItem(root, e.x, e.y)
+            clipItemMousePositionChanged(mousePos.x, mousePos.y)
 
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
                 if (customCursor.source !== leftStretchShape) {
