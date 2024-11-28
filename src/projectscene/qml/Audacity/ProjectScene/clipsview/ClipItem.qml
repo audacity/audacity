@@ -138,7 +138,7 @@ Rectangle {
 
         // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
-            if (containsMouse) {
+            if (containsMouse || pressedButtons) {
                 root.parent.z = 1
             } else {
                 root.parent.z = 0
@@ -197,7 +197,7 @@ Rectangle {
 
         // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
-            if (containsMouse) {
+            if (containsMouse || pressedButtons) {
                 root.parent.z = 1
             } else {
                 root.parent.z = 0
