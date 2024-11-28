@@ -308,6 +308,10 @@ Rectangle {
                 property real lockedVerticalScrollPosition
                 property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
 
+                footer: Item {
+                    height: tracksViewState.tracksVerticalScrollPadding
+                }
+
                 onVerticalScrollLockedChanged: {
                     lockedVerticalScrollPosition = contentY
                 }
@@ -329,19 +333,20 @@ Rectangle {
                 Connections {
                     target: timeline.context
 
-                    function onViewContentYChangeRequested(contentY) {
-                        let canMove = tracksModel.totalTracksHeight > tracksClipsView.height
+                    function onViewContentYChangeRequested(delta) {
+                        let totalContentHeight = tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding
+                        let canMove = totalContentHeight > tracksClipsView.height
                         if (!canMove) {
                             return
                         }
 
-                        if (tracksClipsView.contentY + contentY + tracksClipsView.height > tracksModel.totalTracksHeight) {
-                            tracksClipsView.contentY += tracksModel.totalTracksHeight - (tracksClipsView.contentY + tracksClipsView.height)
-                        } else if (tracksClipsView.contentY + contentY < 0) {
-                            tracksClipsView.contentY = 0
-                        } else {
-                            tracksClipsView.contentY += contentY
-                        }
+                        let contentYOffset = tracksClipsView.contentY + delta
+
+                        let maxContentY = totalContentHeight - tracksClipsView.height
+                        maxContentY = Math.max(maxContentY, tracksClipsView.contentY)
+                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), 0)
+
+                        tracksClipsView.contentY = contentYOffset
                     }
                 }
 
@@ -352,6 +357,7 @@ Rectangle {
                 delegate: TrackClipsItem {
                     width: tracksClipsView.width
                     context: timeline.context
+                    container: tracksClipsView
                     canvas: content
                     trackId: model.trackId
                     isDataSelected: model.isDataSelected

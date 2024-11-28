@@ -114,6 +114,11 @@ bool TracksViewStateModel::tracksVerticalScrollLocked() const
     return m_tracksVerticalScrollLocked.val;
 }
 
+int TracksViewStateModel::tracksVerticalScrollPadding() const
+{
+    return m_tracksVerticalScrollPadding;
+}
+
 int TracksViewStateModel::trackHeight() const
 {
     return m_trackHeight.val;

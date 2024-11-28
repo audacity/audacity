@@ -21,6 +21,7 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
     // context of all tracks
     Q_PROPERTY(int tracksVericalY READ tracksVericalY NOTIFY tracksVericalYChanged FINAL)
     Q_PROPERTY(bool tracksVerticalScrollLocked READ tracksVerticalScrollLocked NOTIFY tracksVerticalScrollLockedChanged FINAL)
+    Q_PROPERTY(int tracksVerticalScrollPadding READ tracksVerticalScrollPadding FINAL)
 
     // context of track
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
@@ -47,6 +48,7 @@ public:
     int trackHeight() const;
     bool isTrackCollapsed() const;
     bool tracksVerticalScrollLocked() const;
+    int tracksVerticalScrollPadding() const;
 
     Q_INVOKABLE void changeTrackHeight(int deltaY);
 
@@ -61,6 +63,7 @@ signals:
     void isTrackCollapsedChanged();
 
 private:
+    static constexpr int m_tracksVerticalScrollPadding = 228;
 
     IProjectViewStatePtr viewState() const;
 

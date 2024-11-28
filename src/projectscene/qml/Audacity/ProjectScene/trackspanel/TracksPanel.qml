@@ -102,11 +102,16 @@ Item {
 
                 model: tracksModel
 
+                footer: Item {
+                    height: tracksViewState.tracksVerticalScrollPadding
+                }
+
                 navigation.section: root.navigationSection
                 navigation.order: 1
                 delegate: TrackItem {
                     item: itemData
                     isSelected: Boolean(item) ? item.isSelected : false
+                    container: view
 
                     navigation.name: Boolean(item) ? item.title + item.index : ""
                     navigation.panel: view.navigation
@@ -189,7 +194,7 @@ Item {
             color: ui.theme.accentColor
             visible: dragHandler.dropIndex >= 0
             y: dragHandler.dropIndex >= 0 && dragHandler.dropIndex < view.count
-               ? view.itemAtIndex(dragHandler.dropIndex).y
+               ? view.itemAtIndex(dragHandler.dropIndex).y - view.contentY
                : view.contentHeight
         }
 
@@ -199,7 +204,7 @@ Item {
                 return
             }
 
-            mouseY = view.mapFromItem(item, mouseX, mouseY).y
+            mouseY = view.mapFromItem(item, mouseX, mouseY).y + view.contentY
 
             dragFirstIndex = selection[0].row
             dragLastIndex = selection[selection.length - 1].row
@@ -230,13 +235,13 @@ Item {
                 return
             }
 
-            mouseY = view.mapFromItem(item, mouseX, mouseY).y
+            mouseY = view.mapFromItem(item, mouseX, mouseY).y + view.contentY
 
             let itemAtCursor = view.itemAt(0, mouseY)
             let indexAtCursor = view.indexAt(0, mouseY)
 
             if (itemAtCursor) {
-                if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY).y) {
+                if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY - view.contentY).y) {
                     indexAtCursor++
                 }
             }
