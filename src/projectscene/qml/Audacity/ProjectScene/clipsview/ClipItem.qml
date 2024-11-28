@@ -117,8 +117,9 @@ Rectangle {
 
     CustomCursor {
         id: customCursor
-        active: leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
-        source: leftTrimStretchEdgeHover.containsMouse ? leftTrimShape : rightTrimShape
+        active: (leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
+            || leftTrimStretchEdgeHover.pressedButtons || rightTrimStretchEdgeHover.pressedButtons)
+        source: leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
     }
 
     MouseArea {
