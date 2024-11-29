@@ -81,19 +81,37 @@ Item {
                 cacheBuffer: 3000
 
                 ScrollBar.vertical: null
+
+                property real lockedVerticalScrollPosition
+                property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
+
+                onVerticalScrollLockedChanged: {
+                    lockedVerticalScrollPosition = contentY
+                }
+
                 onContentYChanged: {
-                    tracksViewState.changeTracksVericalY(view.contentY)
+                    if (verticalScrollLocked) {
+                        view.contentY = lockedVerticalScrollPosition
+                    }
+                    else {
+                        tracksViewState.changeTracksVericalY(view.contentY)
+                    }
                 }
 
                 interactive: false
 
                 model: tracksModel
 
+                footer: Item {
+                    height: tracksViewState.tracksVerticalScrollPadding
+                }
+
                 navigation.section: root.navigationSection
                 navigation.order: 1
                 delegate: TrackItem {
                     item: itemData
                     isSelected: Boolean(item) ? item.isSelected : false
+                    container: view
 
                     navigation.name: Boolean(item) ? item.title + item.index : ""
                     navigation.panel: view.navigation
@@ -104,6 +122,14 @@ Item {
                             prv.currentItemNavigationName = navigation.name
                             view.positionViewAtIndex(index, ListView.Contain)
                         }
+                    }
+
+                    onInteractionStarted: {
+                        tracksViewState.requestVerticalScrollLock()
+                    }
+
+                    onInteractionEnded: {
+                        tracksViewState.requestVerticalScrollUnlock()
                     }
 
                     onIsSelectedChanged: {
@@ -131,6 +157,27 @@ Item {
     }
 
     Item {
+        id: wheelHandler
+
+        anchors.fill: parent
+
+        WheelHandler {
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+
+            onWheel: function(wheelEvent) {
+                let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
+                let offset  = view.contentY - delta
+
+                let maxContentY = view.contentHeight - view.height
+                maxContentY = Math.max(maxContentY, view.contentY)
+                offset = Math.max(Math.min(offset, maxContentY), 0)
+
+                view.contentY = offset
+            }
+        }
+    }
+
+    Item {
         id: dragHandler
 
         anchors.fill: parent
@@ -147,7 +194,7 @@ Item {
             color: ui.theme.accentColor
             visible: dragHandler.dropIndex >= 0
             y: dragHandler.dropIndex >= 0 && dragHandler.dropIndex < view.count
-               ? view.itemAtIndex(dragHandler.dropIndex).y
+               ? view.itemAtIndex(dragHandler.dropIndex).y - view.contentY
                : view.contentHeight
         }
 
@@ -157,7 +204,7 @@ Item {
                 return
             }
 
-            mouseY = view.mapFromItem(item, mouseX, mouseY).y
+            mouseY = view.mapFromItem(item, mouseX, mouseY).y + view.contentY
 
             dragFirstIndex = selection[0].row
             dragLastIndex = selection[selection.length - 1].row
@@ -188,13 +235,13 @@ Item {
                 return
             }
 
-            mouseY = view.mapFromItem(item, mouseX, mouseY).y
+            mouseY = view.mapFromItem(item, mouseX, mouseY).y + view.contentY
 
             let itemAtCursor = view.itemAt(0, mouseY)
             let indexAtCursor = view.indexAt(0, mouseY)
 
             if (itemAtCursor) {
-                if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY).y) {
+                if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY - view.contentY).y) {
                     indexAtCursor++
                 }
             }

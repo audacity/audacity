@@ -56,7 +56,7 @@ void TimelineContext::init(double frameWidth)
         setSelectionEndTime(time);
     });
 
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
 
@@ -174,7 +174,7 @@ void TimelineContext::scrollVertical(qreal newPos)
     }
 
     static constexpr qreal correction = 100.0;
-    emit viewContentYChangeRequested(scrollStep* correction);
+    emit viewContentYChangeRequested(scrollStep * correction);
 }
 
 void TimelineContext::insureVisible(double posSec)

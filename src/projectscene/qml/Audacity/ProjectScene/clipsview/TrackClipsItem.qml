@@ -11,6 +11,7 @@ Item {
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
     property var canvas: null
+    property var container: null
 
     property bool isDataSelected: false
     property bool isTrackSelected: false
@@ -278,8 +279,17 @@ Item {
         }
 
         onPositionChanged: function(mouse) {
+            const resizeVerticalMargin = 10
             mouse.accepted = true
-            trackViewState.changeTrackHeight(mouse.y)
+
+            const currentY = mapToItem(container, 0, 0).y - container.y
+
+            const maxPosition = container.height - resizeVerticalMargin - height
+            const minPosition = resizeVerticalMargin
+            const newPosition = Math.max(Math.min(currentY + mouse.y, maxPosition), minPosition)
+
+            const delta = newPosition - currentY
+            trackViewState.changeTrackHeight(delta)
         }
 
         onReleased: {

@@ -196,9 +196,6 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        // anchors.leftMargin: 130
-        // anchors.rightMargin: 130
-
         GridLines {
             timelineRuler: timeline.ruler
             anchors.fill: parent
@@ -304,14 +301,29 @@ Rectangle {
                 clip: true
 
                 property bool moveActive: false
-                property real visibleContentHeight: tracksModel.totalTracksHeight - tracksClipsView.contentY
 
                 ScrollBar.horizontal: null
                 ScrollBar.vertical: null
 
+                property real lockedVerticalScrollPosition
+                property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
+
+                footer: Item {
+                    height: tracksViewState.tracksVerticalScrollPadding
+                }
+
+                onVerticalScrollLockedChanged: {
+                    lockedVerticalScrollPosition = contentY
+                }
+
                 onContentYChanged: {
-                    tracksViewState.changeTracksVericalY(tracksClipsView.contentY)
-                    timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
+                    if (verticalScrollLocked) {
+                        contentY = lockedVerticalScrollPosition
+                    }
+                    else {
+                        tracksViewState.changeTracksVericalY(tracksClipsView.contentY)
+                        timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
+                    }
                 }
 
                 onHeightChanged: {
@@ -321,19 +333,20 @@ Rectangle {
                 Connections {
                     target: timeline.context
 
-                    function onViewContentYChangeRequested(contentY) {
-                        let canMove = tracksModel.totalTracksHeight > tracksClipsView.height
+                    function onViewContentYChangeRequested(delta) {
+                        let totalContentHeight = tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding
+                        let canMove = totalContentHeight > tracksClipsView.height
                         if (!canMove) {
                             return
                         }
 
-                        if (tracksClipsView.contentY + contentY + tracksClipsView.height > tracksModel.totalTracksHeight) {
-                            tracksClipsView.contentY += tracksModel.totalTracksHeight - (tracksClipsView.contentY + tracksClipsView.height)
-                        } else if (tracksClipsView.contentY + contentY < 0) {
-                            tracksClipsView.contentY = 0
-                        } else {
-                            tracksClipsView.contentY += contentY
-                        }
+                        let contentYOffset = tracksClipsView.contentY + delta
+
+                        let maxContentY = totalContentHeight - tracksClipsView.height
+                        maxContentY = Math.max(maxContentY, tracksClipsView.contentY)
+                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), 0)
+
+                        tracksClipsView.contentY = contentYOffset
                     }
                 }
 
@@ -344,6 +357,7 @@ Rectangle {
                 delegate: TrackClipsItem {
                     width: tracksClipsView.width
                     context: timeline.context
+                    container: tracksClipsView
                     canvas: content
                     trackId: model.trackId
                     isDataSelected: model.isDataSelected
@@ -381,6 +395,14 @@ Rectangle {
 
                     onSeekToX: function(x) {
                         playCursorController.seekToX(x)
+                    }
+
+                    onInteractionStarted: {
+                        tracksViewState.requestVerticalScrollLock()
+                    }
+
+                    onInteractionEnded: {
+                        tracksViewState.requestVerticalScrollUnlock()
                     }
                 }
 

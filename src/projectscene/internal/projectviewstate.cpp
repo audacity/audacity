@@ -19,6 +19,16 @@ void ProjectViewState::changeTracksVericalY(int deltaY)
     m_tracksVericalY.set(deltaY);
 }
 
+muse::ValCh<bool> ProjectViewState::tracksVerticalScrollLocked() const
+{
+    return m_tracksVerticalScrollLocked;
+}
+
+void ProjectViewState::setTracksVerticalScrollLocked(bool lock)
+{
+    m_tracksVerticalScrollLocked.set(lock);
+}
+
 ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::TrackId& trackId) const
 {
     TrackData d;

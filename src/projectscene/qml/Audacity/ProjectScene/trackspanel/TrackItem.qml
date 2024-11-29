@@ -16,7 +16,9 @@ ListItemBlank {
     id: root
 
     property var item: null
+    property var container: null
     property bool dragged: false
+    property bool collapsed: height <= mapFromItem(trackControlsRow, 0, trackControlsRow.height + bottomSeparator.height).y
 
     signal interactionStarted()
     signal interactionEnded()
@@ -153,6 +155,18 @@ ListItemBlank {
                     }
                 }
 
+                Loader {
+                    sourceComponent: trackControlButtons
+                    opacity: root.collapsed ? 1 : 0
+                    visible: opacity !== 0
+
+                    Behavior on opacity {
+                        OpacityAnimator {
+                            duration: 100
+                        }
+                    }
+                }
+
                 MenuButton {
                     menuModel: contextMenuModel
 
@@ -167,9 +181,20 @@ ListItemBlank {
             }
 
             RowLayout {
+                id: trackControlsRow
+
                 Layout.fillWidth: true
 
                 spacing: 16
+
+                opacity: root.collapsed ? 0 : 1
+                visible: opacity !== 0
+
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 100
+                    }
+                }
 
                 BalanceKnob {
                     value: root.item.balance
@@ -187,34 +212,8 @@ ListItemBlank {
                     }
                 }
 
-                RowLayout {
-                    Layout.fillWidth: true
-
-                    spacing: 4
-
-                    FlatToggleButton {
-                        Layout.preferredWidth: 20
-                        Layout.preferredHeight: Layout.preferredWidth
-
-                        icon: IconCode.MUTE
-                        checked: root.item.muted
-
-                        onToggled: {
-                            root.item.muted = !checked
-                        }
-                    }
-
-                    FlatToggleButton {
-                        Layout.preferredWidth: 20
-                        Layout.preferredHeight: Layout.preferredWidth
-
-                        icon: IconCode.SOLO
-                        checked: root.item.solo
-
-                        onToggled: {
-                            root.item.solo = !checked
-                        }
-                    }
+                Loader {
+                    sourceComponent: trackControlButtons
                 }
             }
 
@@ -222,6 +221,15 @@ ListItemBlank {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
                 Layout.margins: 4
+
+                opacity: root.height > root.mapFromItem(this, 0, height + bottomSeparator.height).y ? 1 : 0
+                visible: opacity !== 0
+
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 100
+                    }
+                }
 
                 text: qsTrc("projectscene", "Effects")
 
@@ -284,30 +292,6 @@ ListItemBlank {
         }
     }
 
-    MouseArea {
-        id: dragArea
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: 4
-
-        cursorShape: Qt.SizeVerCursor
-
-        onPressed: {
-            root.interactionStarted()
-        }
-
-        onPositionChanged: function(mouse) {
-            mouse.accepted = true
-            trackViewState.changeTrackHeight(mouse.y)
-        }
-
-        onReleased: {
-            root.interactionEnded()
-        }
-    }
-
     Item {
         anchors.fill: parent
         MouseArea {
@@ -327,8 +311,75 @@ ListItemBlank {
         }
     }
 
-    SeparatorLine {
+    MouseArea {
+        id: resizeArea
+
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
+        height: 4
+
+        cursorShape: Qt.SizeVerCursor
+
+        onPressed: {
+            root.interactionStarted()
+        }
+
+        onPositionChanged: function(mouse) {
+            const resizeVerticalMargin = 10
+            mouse.accepted = true
+
+            const currentY = mapToItem(container, 0, 0).y - container.y
+
+            const maxPosition = container.height - resizeVerticalMargin - height
+            const minPosition = resizeVerticalMargin
+            const newPosition = Math.max(Math.min(currentY + mouse.y, maxPosition), minPosition)
+
+            const delta = newPosition - currentY
+            trackViewState.changeTrackHeight(delta)
+        }
+
+        onReleased: {
+            root.interactionEnded()
+        }
+    }
+
+    SeparatorLine {
+        id: bottomSeparator
+
+        anchors.bottom: parent.bottom
+
         thickness: 2
+    }
+
+    Component {
+        id: trackControlButtons
+
+        RowLayout {
+
+            FlatToggleButton {
+                Layout.preferredWidth: 20
+                Layout.preferredHeight: Layout.preferredWidth
+
+                icon: IconCode.MUTE
+                checked: root.item.muted
+
+                onToggled: {
+                    root.item.muted = !checked
+                }
+            }
+
+            FlatToggleButton {
+                Layout.preferredWidth: 20
+                Layout.preferredHeight: Layout.preferredWidth
+
+                icon: IconCode.SOLO
+                checked: root.item.solo
+
+                onToggled: {
+                    root.item.solo = !checked
+                }
+            }
+        }
     }
 }

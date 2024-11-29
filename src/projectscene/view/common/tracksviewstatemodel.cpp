@@ -34,6 +34,12 @@ void TracksViewStateModel::init()
         emit tracksVericalYChanged();
     });
 
+    m_tracksVerticalScrollLocked = vs->tracksVerticalScrollLocked();
+    m_tracksVerticalScrollLocked.ch.onReceive(this, [this](bool locked) {
+        m_tracksVerticalScrollLocked.val = locked;
+        emit tracksVerticalScrollLockedChanged();
+    });
+
     if (m_trackId != -1) {
         m_trackHeight = vs->trackHeight(m_trackId);
         m_trackHeight.ch.onReceive(this, [this](int h) {
@@ -65,6 +71,22 @@ void TracksViewStateModel::changeTracksVericalY(int deltaY)
     }
 }
 
+void TracksViewStateModel::requestVerticalScrollLock()
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        vs->setTracksVerticalScrollLocked(true);
+    }
+}
+
+void TracksViewStateModel::requestVerticalScrollUnlock()
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        vs->setTracksVerticalScrollLocked(false);
+    }
+}
+
 QVariant TracksViewStateModel::trackId() const
 {
     return QVariant::fromValue(m_trackId);
@@ -85,6 +107,16 @@ void TracksViewStateModel::setTrackId(const QVariant& _newTrackId)
 int TracksViewStateModel::tracksVericalY() const
 {
     return m_tracksVericalY.val;
+}
+
+bool TracksViewStateModel::tracksVerticalScrollLocked() const
+{
+    return m_tracksVerticalScrollLocked.val;
+}
+
+int TracksViewStateModel::tracksVerticalScrollPadding() const
+{
+    return m_tracksVerticalScrollPadding;
 }
 
 int TracksViewStateModel::trackHeight() const

@@ -22,6 +22,8 @@ public:
     // context of all tracks
     virtual muse::ValCh<int> tracksVericalY() const = 0;
     virtual void changeTracksVericalY(int deltaY) = 0;
+    virtual muse::ValCh<bool> tracksVerticalScrollLocked() const = 0;
+    virtual void setTracksVerticalScrollLocked(bool lock) = 0;
 
     // context of track
     virtual muse::ValCh<int> trackHeight(const trackedit::TrackId& trackId) const = 0;
