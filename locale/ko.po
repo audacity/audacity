@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2024-11-29 11:00+0100\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/audacity/teams/164520/ko/)\n"
@@ -17137,12 +17137,29 @@ msgid "Do &nothing"
 msgstr "아무 작업도 하지 않음(&N)"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "&Do nothing"
+msgstr "동작 없음"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "음악 가져오기"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "빈 프로젝트에 가져온 파일에서 오데시티가 음악을 감지한 경우"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -21528,3 +21545,6 @@ msgstr "특수 도구"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#~ msgid "When Audacity detects music in file imported on empty project"
+#~ msgstr "빈 프로젝트에 가져온 파일에서 오데시티가 음악을 감지한 경우"

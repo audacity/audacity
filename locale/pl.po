@@ -8,9 +8,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.1\n"
+"Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2024-11-29 11:00+0100\n"
 "PO-Revision-Date: 2024-11-12 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
@@ -17173,12 +17173,29 @@ msgid "Do &nothing"
 msgstr "&Nic nie rób"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "&Do nothing"
+msgstr "Nic nie rób"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "Importy muzyki"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Gdy Audacity wykryje muzykę w pliku zaimportowanym do pustego projektu"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -21566,3 +21583,6 @@ msgstr "Narzędzia widma"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Legacy"
+
+#~ msgid "When Audacity detects music in file imported on empty project"
+#~ msgstr "Gdy Audacity wykryje muzykę w pliku zaimportowanym do pustego projektu"

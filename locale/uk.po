@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2024-11-29 11:00+0100\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/audacity/teams/164520/uk/)\n"
@@ -17184,12 +17184,29 @@ msgid "Do &nothing"
 msgstr "&Нічого не робити"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "&Do nothing"
+msgstr "Нічого не робити"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "Імпортування музики"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Якщо Audacity виявляє музику у файлі, який імпортовано до порожнього проєкту"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -21576,3 +21593,6 @@ msgstr "Спектральні інструменти"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Застарілі"
+
+#~ msgid "When Audacity detects music in file imported on empty project"
+#~ msgstr "Якщо Audacity виявляє музику у файлі, який імпортовано до порожнього проєкту"
