@@ -179,17 +179,32 @@ void TimelineContext::scrollVertical(qreal newPos)
 
 void TimelineContext::insureVisible(double posSec)
 {
+    double newPosition = timeToContentPosition(posSec);
+    double frameStartPosition = timeToContentPosition(m_frameStartTime);
+    double frameEndPosition = timeToContentPosition(m_frameEndTime);
+
     constexpr double SCROLL_MARGIN_PX(16);
+
+    if (muse::RealIsEqualOrMore(newPosition, frameStartPosition)
+        && muse::RealIsEqualOrLess(newPosition, frameEndPosition - SCROLL_MARGIN_PX)) {
+        return;
+    }
+
     constexpr double AUTO_SHIFT_PERCENT(0.03);
 
-    if (posSec < frameStartTime()) {
+    if (newPosition < frameStartPosition) {
         moveToFrameTime(posSec);
     } else {
-        // auto shift
-        double endGapPx = zoom() * (frameEndTime() - posSec);
+        double frameTime = m_frameEndTime - m_frameStartTime;
+        double endGapPx = newPosition - frameEndPosition;
+
         if (endGapPx < SCROLL_MARGIN_PX) {
-            double frameTime = frameEndTime() - frameStartTime();
+            // auto shift
             shiftFrameTime(frameTime * AUTO_SHIFT_PERCENT);
+            moveToFrameTime(m_frameStartTime + (frameTime * AUTO_SHIFT_PERCENT));
+        } else {
+            double newFrameTime = m_frameStartTime + (posSec - m_frameEndTime) + (frameTime / 3.0);
+            moveToFrameTime(newFrameTime);
         }
     }
 }
