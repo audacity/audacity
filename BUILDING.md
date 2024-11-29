@@ -10,8 +10,8 @@
 * A CMake generator (tested: Ninja)
 * A C++ compiler (tested: MSVC on Windows, g++ on Linux)
 * Qt 6.2.4, with modules:
-  * Qt Network Authentification
-  * Qt 5 Compatibility
+  * Qt Network Authorization
+  * Qt 5 Compatibility Module
   * Qt State Machines
 
 ## Setup
