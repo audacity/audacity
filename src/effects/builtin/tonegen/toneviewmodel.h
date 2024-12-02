@@ -33,7 +33,6 @@ signals:
     void isApplyAllowedChanged();
 
 private:
-
     void doInit() override {}
 
     ToneEffect* effect() const;
