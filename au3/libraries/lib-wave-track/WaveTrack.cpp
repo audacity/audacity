@@ -2953,6 +2953,18 @@ auto WaveTrack::GetClipAtTime(double time) const -> IntervalConstHolder
    return p != clips.rend() ? *p : nullptr;
 }
 
+WaveTrack::IntervalConstHolders
+WaveTrack::GetSortedClipsIntersecting(double t0, double t1) const
+{
+   assert(t0 <= t1);
+   WaveTrack::IntervalConstHolders result;
+   const auto clips = SortedClipArray();
+   std::copy_if(
+      clips.begin(), clips.end(), back_inserter(result),
+      [&](const auto& pClip) { return pClip->IntersectsPlayRegion(t0, t1); });
+   return result;
+}
+
 auto WaveTrack::CreateClip(double offset, const wxString& name,
    const Interval *pToCopy, bool copyCutlines) -> IntervalHolder
 {

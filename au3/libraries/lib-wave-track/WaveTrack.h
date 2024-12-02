@@ -567,6 +567,11 @@ public:
     */
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
+   /*!
+   @pre t0 <= t1
+   */
+   IntervalConstHolders GetSortedClipsIntersecting(double t0, double t1) const;
+
 private:
    void CopyWholeClip(const Interval &clip, double t0, bool forClipboard);
    void CopyPartOfClip(const Interval &clip,
