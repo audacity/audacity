@@ -123,9 +123,12 @@ Item {
                 clipSelected: clipItem.selected
                 isDataSelected: root.isDataSelected
                 moveActive: root.moveActive
-                selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : root.context.selectionStartPosition - clipItem.x
+
+                //! NOTE: use the same integer rounding as in WaveBitmapCache
+                selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
                 selectionWidth: root.context.selectionStartPosition < clipItem.x ?
-                                    root.context.selectionEndPosition - clipItem.x : root.context.selectionEndPosition - root.context.selectionStartPosition
+                                    Math.round(root.context.selectionEndPosition - clipItem.x) : Math.floor(root.context.selectionEndPosition - clipItem.x + 0.5)  - Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
+
                 leftVisibleMargin: clipItem.leftVisibleMargin
                 rightVisibleMargin: clipItem.rightVisibleMargin
                 collapsed: trackViewState.isTrackCollapsed

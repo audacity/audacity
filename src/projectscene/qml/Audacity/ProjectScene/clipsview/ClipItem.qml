@@ -24,8 +24,8 @@ Rectangle {
     property bool clipSelected: false
     property bool isDataSelected: false
     property bool moveActive: false
-    property int selectionStart: 0
-    property int selectionWidth: 0
+    property real selectionStart: 0
+    property real selectionWidth: 0
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
