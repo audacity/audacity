@@ -1952,6 +1952,10 @@ void WaveTrack::ApplyPitchAndSpeed(
    if (GetNumClips() == 0)
       return;
 
+   if (interval)
+      interval.emplace(
+         SnapToSample(interval->first), SnapToSample(interval->second));
+
    // If there is no specified interval, we look at all clips in the track.
    const auto examinedClips =
       interval ? GetSortedClipsIntersecting(interval->first, interval->second) :
@@ -1959,8 +1963,14 @@ void WaveTrack::ApplyPitchAndSpeed(
    if (examinedClips.empty())
       return;
 
-   const auto startTime = examinedClips.front()->GetPlayStartTime();
-   const auto endTime = examinedClips.back()->GetPlayEndTime();
+   const auto startTime =
+      interval ?
+         std::max(examinedClips.front()->GetPlayStartTime(), interval->first) :
+         examinedClips.front()->GetPlayStartTime();
+   const auto endTime =
+      interval ?
+         std::min(examinedClips.back()->GetPlayEndTime(), interval->second) :
+         examinedClips.back()->GetPlayEndTime();
    if (startTime >= endTime)
    {
       assert(false);
