@@ -30,6 +30,13 @@ using namespace au::effects;
 
 static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&instanceId=%2";
 
+void EffectsProvider::init()
+{
+    builtinEffectsRepository()->effectMetaListUpdated().onNotify(this, [this] {
+        reloadEffects();
+    });
+}
+
 bool EffectsProvider::isVstSupported() const
 {
     return vstEffectsRepository() ? true : false;
@@ -103,6 +110,15 @@ EffectMeta EffectsProvider::meta(const muse::String& effectId) const
 
     LOGE() << "not found meta: " << effectId;
     return EffectMeta();
+}
+
+std::string EffectsProvider::effectName(const std::string& effectId) const
+{
+    const auto desc = PluginManager::Get().GetPlugin(effectId);
+    if (!desc) {
+        return "";
+    }
+    return desc->GetSymbol().Msgid().Translation().ToStdString();
 }
 
 muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInstanceId& instanceId)

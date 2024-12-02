@@ -64,6 +64,10 @@ KDDW.TitleBarBase {
                 verticalAlignment: Text.AlignVCenter
             }
 
+            MouseArea {
+                anchors.fill: parent
+            }
+
             Rectangle {
                 color: effectsTitleBar.color
                 width: root.expectedHeight

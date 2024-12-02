@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include "async/asyncable.h"
 #include "modularity/ioc.h"
 #include "global/iinteractive.h"
 #include "context/iglobalcontext.h"
@@ -17,7 +18,7 @@
 class EffectBase;
 class EffectSettingsAccess;
 namespace au::effects {
-class EffectsProvider : public IEffectsProvider
+class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IEffectsConfiguration> configuration;
@@ -28,7 +29,7 @@ class EffectsProvider : public IEffectsProvider
     muse::Inject<playback::IPlayback> playback;
 
 public:
-    void reloadEffects() override;
+    void init();
 
     EffectMetaList effectMetaList() const override;
     muse::async::Notification effectMetaListChanged() const override;
@@ -36,6 +37,7 @@ public:
     EffectCategoryList effectsCategoryList() const override;
 
     EffectMeta meta(const muse::String& effectId) const override;
+    std::string effectName(const std::string& effectId) const override;
 
     muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
 
@@ -45,6 +47,7 @@ public:
     muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) override;
 
 private:
+    void reloadEffects();
 
     bool isVstSupported() const;
     bool isNyquistSupported() const;

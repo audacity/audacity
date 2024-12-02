@@ -7,10 +7,11 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
-class IEffectsProvider;
+class EffectsProvider;
 class EffectsConfiguration;
 class EffectsActionsController;
 class EffectsUiActions;
+class RealtimeEffectService;
 class EffectsModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -23,9 +24,10 @@ public:
     void onDelayedInit() override;
 
 private:
-    std::shared_ptr<IEffectsProvider> m_provider;
+    std::shared_ptr<EffectsProvider> m_provider;
     std::shared_ptr<EffectsConfiguration> m_configuration;
     std::shared_ptr<EffectsActionsController> m_actionsController;
     std::shared_ptr<EffectsUiActions> m_uiActions;
+    std::shared_ptr<RealtimeEffectService> m_realtimeEffectService;
 };
 }

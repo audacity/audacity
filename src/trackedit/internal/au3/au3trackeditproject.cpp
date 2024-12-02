@@ -38,8 +38,8 @@ Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3
     });
     m_impl->projectTimeSignatureSubscription = ProjectTimeSignature::Get(*m_impl->prj).Subscribe(
         [this](const TimeSignatureChangedMessage& event) {
-            onProjectTempoChange(event.newTempo);
-        });
+        onProjectTempoChange(event.newTempo);
+    });
 }
 
 Au3TrackeditProject::~Au3TrackeditProject()
@@ -143,6 +143,11 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     clips.setNotify(notifier.notify());
 
     return clips;
+}
+
+std::string Au3TrackeditProject::trackName(const TrackId& trackId) const
+{
+    return au::au3::DomConverter::track(au::au3::DomAccessor::findTrack(*m_impl->prj, au::au3::Au3TrackId { trackId })).title.toStdString();
 }
 
 void Au3TrackeditProject::reload()

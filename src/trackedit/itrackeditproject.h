@@ -27,6 +27,7 @@ public:
     virtual std::vector<Track> trackList() const = 0;
     virtual Clip clip(const ClipKey& key) const = 0;
     virtual muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const = 0;
+    virtual std::string trackName(const TrackId& trackId) const = 0;
 
     virtual void reload() = 0;
 

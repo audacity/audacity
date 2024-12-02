@@ -15,6 +15,7 @@
 #include "internal/effectsuiactions.h"
 #include "internal/effectinstancesregister.h"
 #include "internal/effectexecutionscenario.h"
+#include "internal/realtimeeffectservice.h"
 
 #include "view/effectsviewregister.h"
 #include "view/effectbuilder.h"
@@ -38,6 +39,7 @@ void EffectsModule::registerExports()
     m_configuration = std::make_shared<EffectsConfiguration>();
     m_actionsController = std::make_shared<EffectsActionsController>();
     m_uiActions = std::make_shared<EffectsUiActions>(m_actionsController);
+    m_realtimeEffectService = std::make_shared<RealtimeEffectService>();
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
@@ -45,6 +47,7 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
     ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
     ioc()->registerExport<IEffectExecutionScenario>(moduleName(), new EffectExecutionScenario());
+    ioc()->registerExport<IRealtimeEffectService>(moduleName(), m_realtimeEffectService);
 }
 
 void EffectsModule::resolveImports()
@@ -78,7 +81,8 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     m_configuration->init();
     m_actionsController->init();
     m_uiActions->init();
-    m_provider->reloadEffects();
+    m_provider->init();
+    m_realtimeEffectService->init();
 }
 
 void EffectsModule::onDelayedInit()

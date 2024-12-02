@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include "async/notification.h"
 #include "modularity/imoduleinterface.h"
 
 #include "effects/effects_base/effectstypes.h"
@@ -14,6 +15,7 @@ class IBuiltinEffectsRepository : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IBuiltinEffectsRepository() = default;
 
+    virtual muse::async::Notification effectMetaListUpdated() const = 0;
     virtual EffectMetaList effectMetaList() const = 0;
 };
 }

@@ -17,7 +17,9 @@ class DomAccessor
 {
 public:
     static Au3Track* findTrack(Au3Project& prj, const Au3TrackId& au3trackId);
+    static const Au3Track* findTrack(const Au3Project& prj, const Au3TrackId& au3trackId);
     static Au3WaveTrack* findWaveTrack(Au3Project& prj, const Au3TrackId& au3trackId);
+    static const Au3WaveTrack* findWaveTrack(const Au3Project& prj, const Au3TrackId& au3trackId);
     static std::shared_ptr<Au3WaveClip> findWaveClip(Au3WaveTrack* track, int64_t au3ClipId);
     static std::shared_ptr<Au3WaveClip> findWaveClip(Au3Project& prj, const Au3TrackId& au3trackId, size_t index);
     static std::shared_ptr<Au3WaveClip> findWaveClip(Au3Project& prj, const trackedit::TrackId &trackId, trackedit::secs_t time);

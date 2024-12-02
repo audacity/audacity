@@ -31,7 +31,10 @@ void BuiltinEffectsModule::registerResources()
 
 void BuiltinEffectsModule::onPreInit(const muse::IApplication::RunMode&)
 {
-    //! NOTE Should be before PluginManager::Get().Initialize
-    //! So it call on pre init
+    m_builtinEffectsRepository->preInit();
+}
+
+void BuiltinEffectsModule::onInit(const muse::IApplication::RunMode&)
+{
     m_builtinEffectsRepository->init();
 }

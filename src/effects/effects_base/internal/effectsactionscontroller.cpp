@@ -2,6 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectsactionscontroller.h"
+#include "effects/effects_base/effectstypes.h"
 
 #include "log.h"
 
@@ -13,6 +14,10 @@ void EffectsActionsController::init()
 {
     dispatcher()->reg(this, EFFECT_OPEN_CODE, this, &EffectsActionsController::doEffect);
     dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
+    dispatcher()->reg(this, "realtimeeffect-add", this, &EffectsActionsController::addRealtimeEffect);
+    dispatcher()->reg(this, "realtimeeffect-remove", this, &EffectsActionsController::removeRealtimeEffect);
+    dispatcher()->reg(this, "realtimeeffect-replace", this, &EffectsActionsController::replaceRealtimeEffect);
+
     effectExecutionScenario()->lastProcessorIsNowAvailable().onNotify(this, [this] {
         m_canReceiveActionsChanged.send({ "repeat-last-effect" });
     });
@@ -31,6 +36,59 @@ void EffectsActionsController::doEffect(const muse::actions::ActionData& args)
 void EffectsActionsController::repeatLastEffect()
 {
     effectExecutionScenario()->repeatLastProcessor();
+}
+
+void EffectsActionsController::addRealtimeEffect(const muse::actions::ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() == 2) {
+        return;
+    }
+
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        // Command issued without an open project ?..
+        return;
+    }
+
+    const auto effectId = args.arg<EffectId>(0);
+    const auto trackId = args.arg<TrackId>(1);
+    realtimeEffectService()->addRealtimeEffect(*project, trackId, effectId);
+}
+
+void EffectsActionsController::removeRealtimeEffect(const muse::actions::ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() == 2) {
+        return;
+    }
+
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        // Command issued without an open project ?..
+        return;
+    }
+
+    const auto trackId = args.arg<TrackId>(0);
+    const auto effectStateId = args.arg<EffectStateId>(1);
+    realtimeEffectService()->removeRealtimeEffect(*project, trackId, effectStateId);
+}
+
+void EffectsActionsController::replaceRealtimeEffect(const muse::actions::ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() == 3) {
+        return;
+    }
+
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        // Command issued without an open project ?..
+        return;
+    }
+
+    const auto trackId = args.arg<TrackId>(0);
+    const auto srcIndex = args.arg<int>(1);
+    const auto dstEffectId = args.arg<EffectId>(2);
+
+    realtimeEffectService()->replaceRealtimeEffect(*project, trackId, srcIndex, dstEffectId);
 }
 
 bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
