@@ -36,8 +36,9 @@ public:
 
     EffectCategoryList effectsCategoryList() const override;
 
-    EffectMeta meta(const muse::String& effectId) const override;
+    EffectMeta meta(const EffectId& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
+    Effect* effect(const EffectId& effectId) const override;
 
     muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
 

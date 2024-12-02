@@ -11,6 +11,7 @@
 class Effect;
 class EffectInstanceEx;
 struct EffectSettings;
+class wxString;
 namespace au::effects {
 using secs_t = muse::number_t<double>;
 using percent_t = muse::number_t<float>;
@@ -71,4 +72,7 @@ struct EffectChainLink {
 };
 
 using EffectChainLinkPtr = std::shared_ptr<EffectChainLink>;
+
+using PresetId = wxString;
+using PresetIdList = std::vector<PresetId>;
 }

@@ -1,5 +1,8 @@
 #include "abstracteffectmodel.h"
 
+#include "libraries/lib-effects/Effect.h"
+#include "au3wrap/internal/wxtypes_convert.h"
+
 #include "log.h"
 
 using namespace au::effects;
@@ -7,6 +10,17 @@ using namespace au::effects;
 AbstractEffectModel::AbstractEffectModel(QObject* parent)
     : QObject(parent)
 {
+}
+
+void AbstractEffectModel::init()
+{
+    doInit();
+    m_inited = true;
+}
+
+bool AbstractEffectModel::inited() const
+{
+    return m_inited;
 }
 
 Effect* AbstractEffectModel::effect() const
@@ -51,4 +65,15 @@ void AbstractEffectModel::setInstanceId_prop(const QString& newInstanceId)
     }
     m_instanceId = newInstanceId;
     emit instanceIdChanged();
+    emit effectIdChanged();
+}
+
+QString AbstractEffectModel::effectId_prop() const
+{
+    EffectInstanceId id = this->instanceId();
+    if (id == 0) {
+        return QString();
+    }
+
+    return effectInstancesRegister()->effectIdByInstanceId(id);
 }

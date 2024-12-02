@@ -26,8 +26,6 @@ class AmplifyViewModel : public AbstractEffectModel
 public:
     AmplifyViewModel() = default;
 
-    Q_INVOKABLE void init();
-
     float amp() const;
     void setAmp(float newAmp);
     float ampMin() const;
@@ -51,6 +49,8 @@ signals:
     void isApplyAllowedChanged();
 
 private:
+    void doInit() override;
+
     AmplifyEffect* effect() const;
 
     void update();

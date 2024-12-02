@@ -4,7 +4,6 @@
 #pragma once
 
 #include "../common/generatoreffectmodel.h"
-#include "../common/params.h"
 #include "noisegenerator.h"
 
 namespace au::effects {
@@ -30,6 +29,9 @@ signals:
     void typeChanged();
 
 private:
+
+    void doInit() override {}
+
     NoiseSettings& mutSettings();
     const NoiseSettings& settings() const;
 };

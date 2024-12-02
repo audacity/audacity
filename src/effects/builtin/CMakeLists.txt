@@ -21,6 +21,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffect.h
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/effectmanagemenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/common/effectmanagemenu.h
 
     ${CMAKE_CURRENT_LIST_DIR}/general/generalviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/general/generalviewmodel.h

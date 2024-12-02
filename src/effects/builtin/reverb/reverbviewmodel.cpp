@@ -21,19 +21,9 @@ ReverbEffect* ReverbViewModel::effect() const
     return e;
 }
 
-const ReverbSettings& ReverbViewModel::settings() const
+void ReverbViewModel::doInit()
 {
-    return ReverbEffect::GetSettings(*AbstractEffectModel::settings());
-}
-
-ReverbSettings& ReverbViewModel::mutSettings()
-{
-    return ReverbEffect::GetSettings(*AbstractEffectModel::settings());
-}
-
-void ReverbViewModel::init()
-{
-    const ReverbSettings& rs = settings();
+    const ReverbSettings& rs = settings<ReverbSettings>();
 
     auto makeItem = [this](const QString& key, const QString& title, double value, double min, double max, const Setter& s) {
         QVariantMap item;
@@ -53,7 +43,7 @@ void ReverbViewModel::init()
                              rs.mRoomSize,
                              ReverbEffect::RoomSize.min,
                              ReverbEffect::RoomSize.max,
-                             [this](double v) { mutSettings().mRoomSize = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mRoomSize = v; }
                              );
 
     m_paramsList << makeItem("PreDelay",
@@ -61,7 +51,7 @@ void ReverbViewModel::init()
                              rs.mPreDelay,
                              ReverbEffect::PreDelay.min,
                              ReverbEffect::PreDelay.max,
-                             [this](double v) { mutSettings().mPreDelay = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mPreDelay = v; }
                              );
 
     m_paramsList << makeItem("Reverberance",
@@ -69,7 +59,7 @@ void ReverbViewModel::init()
                              rs.mReverberance,
                              ReverbEffect::Reverberance.min,
                              ReverbEffect::Reverberance.max,
-                             [this](double v) { mutSettings().mReverberance = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mReverberance = v; }
                              );
 
     m_paramsList << makeItem("HfDamping",
@@ -77,7 +67,7 @@ void ReverbViewModel::init()
                              rs.mHfDamping,
                              ReverbEffect::HfDamping.min,
                              ReverbEffect::HfDamping.max,
-                             [this](double v) { mutSettings().mHfDamping = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mHfDamping = v; }
                              );
 
     m_paramsList << makeItem("ToneLow",
@@ -85,7 +75,7 @@ void ReverbViewModel::init()
                              rs.mToneLow,
                              ReverbEffect::ToneLow.min,
                              ReverbEffect::ToneLow.max,
-                             [this](double v) { mutSettings().mToneLow = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mToneLow = v; }
                              );
 
     m_paramsList << makeItem("ToneHigh",
@@ -93,7 +83,7 @@ void ReverbViewModel::init()
                              rs.mToneHigh,
                              ReverbEffect::ToneHigh.min,
                              ReverbEffect::ToneHigh.max,
-                             [this](double v) { mutSettings().mToneHigh = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mToneHigh = v; }
                              );
 
     m_paramsList << makeItem("WetGain",
@@ -101,7 +91,7 @@ void ReverbViewModel::init()
                              rs.mWetGain,
                              ReverbEffect::WetGain.min,
                              ReverbEffect::WetGain.max,
-                             [this](double v) { mutSettings().mWetGain = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mWetGain = v; }
                              );
 
     m_paramsList << makeItem("DryGain",
@@ -109,7 +99,7 @@ void ReverbViewModel::init()
                              rs.mDryGain,
                              ReverbEffect::DryGain.min,
                              ReverbEffect::DryGain.max,
-                             [this](double v) { mutSettings().mDryGain = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mDryGain = v; }
                              );
 
     m_paramsList << makeItem("StereoWidth",
@@ -117,7 +107,7 @@ void ReverbViewModel::init()
                              rs.mStereoWidth,
                              ReverbEffect::StereoWidth.min,
                              ReverbEffect::StereoWidth.max,
-                             [this](double v) { mutSettings().mStereoWidth = v; }
+                             [this](double v) { mutSettings<ReverbSettings>().mStereoWidth = v; }
                              );
 
     emit paramsListChanged();
@@ -140,11 +130,11 @@ void ReverbViewModel::setParam(const QString& key, double val)
 
 bool ReverbViewModel::wetOnly() const
 {
-    return settings().mWetOnly;
+    return inited() ? settings<ReverbSettings>().mWetOnly : false;
 }
 
 void ReverbViewModel::setWetOnly(bool newWetOnly)
 {
-    mutSettings().mWetOnly = newWetOnly;
+    mutSettings<ReverbSettings>().mWetOnly = newWetOnly;
     emit wetOnlyChanged();
 }

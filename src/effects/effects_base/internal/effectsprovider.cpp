@@ -100,7 +100,7 @@ EffectCategoryList EffectsProvider::effectsCategoryList() const
     return list;
 }
 
-EffectMeta EffectsProvider::meta(const muse::String& effectId) const
+EffectMeta EffectsProvider::meta(const EffectId& effectId) const
 {
     for (const EffectMeta& meta : m_effects) {
         if (meta.id == effectId) {
@@ -119,6 +119,24 @@ std::string EffectsProvider::effectName(const std::string& effectId) const
         return "";
     }
     return desc->GetSymbol().Msgid().Translation().ToStdString();
+}
+
+Effect* EffectsProvider::effect(const EffectId& effectId) const
+{
+    PluginID pluginID = effectId.toStdString();
+    const PluginDescriptor* plug = PluginManager::Get().GetPlugin(pluginID);
+    if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
+        LOGE() << "plugin not available, effectId: " << effectId;
+        return nullptr;
+    }
+
+    Effect* effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(pluginID));
+    IF_ASSERT_FAILED(effect) {
+        LOGE() << "effect not available, effectId: " << effectId;
+        return nullptr;
+    }
+
+    return effect;
 }
 
 muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInstanceId& instanceId)

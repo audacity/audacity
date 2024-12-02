@@ -9,6 +9,8 @@ Rectangle {
 
     id: root
 
+    property var instanceId: null
+
     property AbstractEffectModel model: null
 
     color: ui.theme.backgroundPrimaryColor
@@ -18,19 +20,27 @@ Rectangle {
         var py = parent.y + parent.height
         var pos = mapFromItem(parent, px, py)
 
-        var items = [{"id": -1, "title": "Not implemented"}]
-        menuLoader.show(pos, items)
+        menuLoader.show(pos, manageMenuModel)
     }
 
     function preview() {
         root.model.preview()
     }
 
+    Component.onCompleted: {
+        Qt.callLater(manageMenuModel.load)
+    }
+
+    EffectManageMenu {
+        id: manageMenuModel
+        effectId: root.model ? root.model.effectId : undefined
+    }
+
     ContextMenuLoader {
         id: menuLoader
 
         onHandleMenuItem: function(itemId) {
-
+            manageMenuModel.handleMenuItem(itemId)
         }
     }
 }

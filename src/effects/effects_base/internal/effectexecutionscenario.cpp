@@ -98,17 +98,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     bool isSelection = false;
 
     {
-        //! NOTE Step 1.1 - check plugin
-        const PluginDescriptor* plug = PluginManager::Get().GetPlugin(ID);
-        if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
-            return make_ret(Err::UnknownError);
-        }
-
         //! NOTE Step 1.2 - get effect
-        effect = dynamic_cast<Effect*>(em.GetEffect(ID));
-        IF_ASSERT_FAILED(effect) {
-            return make_ret(Err::UnknownError);
-        }
+        effect = effectsProvider()->effect(effectId);
 
         //! NOTE Step 1.3 - check selection
         trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
@@ -238,7 +229,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             muse::String type = au3::wxToString(effect->GetSymbol().Internal());
-            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effect, settings);
+            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, effect, settings);
             muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
             effectInstancesRegister()->unregInstance(effect);
             if (ret) {

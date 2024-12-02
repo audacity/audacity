@@ -5,10 +5,10 @@
 
 using namespace au::effects;
 
-EffectInstanceId EffectInstancesRegister::regInstance(Effect* e, EffectSettings* s)
+EffectInstanceId EffectInstancesRegister::regInstance(const EffectId& effectId, Effect* e, EffectSettings* s)
 {
     EffectInstanceId id = reinterpret_cast<EffectInstanceId>(e);
-    m_data.insert({ id, { e, s } });
+    m_data.insert({ id, { effectId, e, s } });
     return id;
 }
 
@@ -42,6 +42,16 @@ Effect* EffectInstancesRegister::instanceById(const EffectInstanceId& instanceId
     }
 
     return nullptr;
+}
+
+EffectId EffectInstancesRegister::effectIdByInstanceId(const EffectInstanceId& instanceId) const
+{
+    auto it = m_data.find(instanceId);
+    if (it != m_data.end()) {
+        return it->second.effectId;
+    }
+
+    return EffectId();
 }
 
 EffectSettings* EffectInstancesRegister::settingsById(const EffectInstanceId& instanceId) const

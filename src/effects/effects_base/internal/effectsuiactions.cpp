@@ -28,6 +28,7 @@ UiActionList EffectsUiActions::m_actions = {
              REPEAT_LAST_EFFECT_DEF_TITLE,
              TranslatableString("action", "Repeat last effect")
              ),
+
     UiAction("realtimeeffect-add",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
@@ -46,6 +47,34 @@ UiActionList EffectsUiActions::m_actions = {
              TranslatableString("action", "Replace realtime effect"),
              TranslatableString("action", "Replace realtime effect")
              ),
+
+    UiAction("action://effects/presets/apply",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Apply Presets")
+             ),
+    UiAction("action://effects/presets/save",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Save Presets…")
+             ),
+    UiAction("action://effects/presets/delete",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Delete Preset")
+             ),
+    UiAction("action://effects/presets/import",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Import…"),
+             TranslatableString("action", "Import preset")
+             ),
+    UiAction("action://effects/presets/export",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Export…"),
+             TranslatableString("action", "Export preset")
+             )
 };
 
 EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> controller)

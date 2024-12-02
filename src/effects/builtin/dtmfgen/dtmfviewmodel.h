@@ -4,7 +4,6 @@
 #pragma once
 
 #include "../common/generatoreffectmodel.h"
-#include "../common/params.h"
 #include "dtmfgenerator.h"
 
 namespace au::effects {
@@ -44,6 +43,9 @@ signals:
     void silenceDurationChanged();
 
 private:
+
+    void doInit() override {}
+
     DtmfSettings& mutSettings();
     const DtmfSettings& settings() const;
 
