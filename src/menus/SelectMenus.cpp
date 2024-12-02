@@ -16,7 +16,6 @@
 #include "Viewport.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
 #include "LabelTrack.h"
 #include "CommandContext.h"
 #include "MenuRegistry.h"
@@ -643,13 +642,14 @@ void OnZeroCrossing(const CommandContext &context)
    const auto projectRate = ProjectRate(project).GetRate();
    const auto searchWindowDuration = GetWindowSize(projectRate) / projectRate;
    const auto wouldSearchClipWithPitchOrSpeed =
-      [searchWindowDuration](const WaveTrack& track, double t) {
-         const auto clips = WaveTrackUtilities::GetClipsIntersecting(track,
-            t - searchWindowDuration / 2, t + searchWindowDuration / 2);
-         return any_of(
-            clips.begin(), clips.end(),
-            [](const auto& clip) { return clip->HasPitchOrSpeed(); });
-      };
+      [searchWindowDuration](const WaveTrack& track, double t)
+   {
+      const auto clips = track.GetSortedClipsIntersecting(
+         t - searchWindowDuration / 2, t + searchWindowDuration / 2);
+      return any_of(
+         clips.begin(), clips.end(),
+         [](const auto& clip) { return clip->HasPitchOrSpeed(); });
+   };
    const auto selected = tracks.Selected<const WaveTrack>();
    if (std::any_of(
           selected.begin(), selected.end(), [&](const WaveTrack* track) {
