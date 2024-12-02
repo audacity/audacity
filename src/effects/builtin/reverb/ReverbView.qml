@@ -24,7 +24,6 @@ EffectBase {
     }
 
     Component.onCompleted: {
-        console.log("root.instanceId: " + root.instanceId)
         reverb.init()
     }
 
