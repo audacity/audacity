@@ -41,7 +41,7 @@ Rectangle {
         }
     }
 
-    EffectBuilder {
+    EffectViewLoader {
         id: builder
 
         onCloseRequested: root.closeRequested()

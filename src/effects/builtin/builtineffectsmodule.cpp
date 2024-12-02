@@ -5,6 +5,9 @@
 
 #include "internal/builtineffectsrepository.h"
 
+#include "common/abstracteffectmodel.h"
+#include "common/effectmanagemenu.h"
+
 using namespace au::effects;
 
 static void effects_builtin_init_qrc()
@@ -27,6 +30,12 @@ void BuiltinEffectsModule::registerExports()
 void BuiltinEffectsModule::registerResources()
 {
     effects_builtin_init_qrc();
+}
+
+void BuiltinEffectsModule::registerUiTypes()
+{
+    qmlRegisterUncreatableType<AbstractEffectModel>("Audacity.Effects", 1, 0, "AbstractEffectModel", "Not creatable abstract type");
+    qmlRegisterType<EffectManageMenu>("Audacity.Effects", 1, 0, "EffectManageMenu");
 }
 
 void BuiltinEffectsModule::onPreInit(const muse::IApplication::RunMode&)

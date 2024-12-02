@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "effectbuilder.h"
+#include "effectviewloader.h"
 
 #include <QQmlEngine>
 
@@ -29,11 +29,11 @@
 
 using namespace au::effects;
 
-EffectBuilder::EffectBuilder(QObject* parent)
+EffectViewLoader::EffectViewLoader(QObject* parent)
     : QObject(parent)
 {}
 
-void EffectBuilder::load(const QString& type, const QString& instanceId, QObject* itemParent)
+void EffectViewLoader::load(const QString& type, const QString& instanceId, QObject* itemParent)
 {
     LOGD() << "type: " << type << ", instanceId: " << instanceId;
 
@@ -85,7 +85,7 @@ void EffectBuilder::load(const QString& type, const QString& instanceId, QObject
     emit contentItemChanged();
 }
 
-QQuickItem* EffectBuilder::contentItem() const
+QQuickItem* EffectViewLoader::contentItem() const
 {
     return m_contentItem;
 }

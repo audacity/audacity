@@ -16,7 +16,6 @@ public:
 
     QVariantList paramsList() const;
 
-    Q_INVOKABLE void init();
     Q_INVOKABLE void setParam(const QString& key, double val);
 
     bool wetOnly() const;
@@ -28,9 +27,9 @@ signals:
 
 private:
 
+    void doInit() override;
+
     ReverbEffect* effect() const;
-    const ReverbSettings& settings() const;
-    ReverbSettings& mutSettings();
 
     using Setter = std::function<void (double)>;
 

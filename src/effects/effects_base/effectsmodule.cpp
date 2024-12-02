@@ -16,9 +16,10 @@
 #include "internal/effectinstancesregister.h"
 #include "internal/effectexecutionscenario.h"
 #include "internal/realtimeeffectservice.h"
+#include "internal/effectspresetscontroller.h"
 
 #include "view/effectsviewregister.h"
-#include "view/effectbuilder.h"
+#include "view/effectviewloader.h"
 #include "view/effectsuiengine.h"
 
 using namespace au::effects;
@@ -48,6 +49,7 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
     ioc()->registerExport<IEffectExecutionScenario>(moduleName(), new EffectExecutionScenario());
     ioc()->registerExport<IRealtimeEffectService>(moduleName(), m_realtimeEffectService);
+    ioc()->registerExport<IEffectsPresetsController>(moduleName(), new EffectsPresetsController());
 }
 
 void EffectsModule::resolveImports()
@@ -69,7 +71,7 @@ void EffectsModule::registerResources()
 
 void EffectsModule::registerUiTypes()
 {
-    qmlRegisterType<EffectBuilder>("Audacity.Effects", 1, 0, "EffectBuilder");
+    qmlRegisterType<EffectViewLoader>("Audacity.Effects", 1, 0, "EffectViewLoader");
 }
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)

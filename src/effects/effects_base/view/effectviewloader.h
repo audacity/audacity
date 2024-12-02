@@ -14,7 +14,7 @@
 #include "../ieffectsuiengine.h"
 
 namespace au::effects {
-class EffectBuilder : public QObject, public muse::async::Asyncable
+class EffectViewLoader : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -24,7 +24,7 @@ class EffectBuilder : public QObject, public muse::async::Asyncable
     muse::Inject<IEffectsUiEngine> engine;
 
 public:
-    EffectBuilder(QObject* parent = nullptr);
+    EffectViewLoader(QObject* parent = nullptr);
 
     QQuickItem* contentItem() const;
 

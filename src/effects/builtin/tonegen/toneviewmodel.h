@@ -4,7 +4,6 @@
 #pragma once
 
 #include "../common/generatoreffectmodel.h"
-#include "../common/params.h"
 
 namespace au::effects {
 class ToneEffect;
@@ -12,12 +11,9 @@ class ToneViewModel : public GeneratorEffectModel
 {
     Q_OBJECT
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged)
-    Q_PROPERTY(double amplitude READ amplitude WRITE setAmplitude NOTIFY
-               amplitudeChanged)
-    Q_PROPERTY(double frequency READ frequency WRITE setFrequency NOTIFY
-               frequencyChanged)
-    Q_PROPERTY(
-        int waveform READ waveform WRITE setWaveform NOTIFY waveformChanged)
+    Q_PROPERTY(double amplitude READ amplitude WRITE setAmplitude NOTIFY amplitudeChanged)
+    Q_PROPERTY(double frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
+    Q_PROPERTY(int waveform READ waveform WRITE setWaveform NOTIFY waveformChanged)
     Q_PROPERTY(QList<QString> waveforms READ waveforms CONSTANT)
 
 public:
@@ -37,6 +33,9 @@ signals:
     void isApplyAllowedChanged();
 
 private:
+
+    void doInit() override {}
+
     ToneEffect* effect() const;
 };
 }

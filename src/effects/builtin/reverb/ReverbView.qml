@@ -8,8 +8,7 @@ import "../common"
 
 EffectBase {
 
-
-    property alias instanceId: reverb.instanceId
+    id: root
 
     property string title: qsTrc("effects", "Reverb")
     property bool isApplyAllowed: true
@@ -17,15 +16,15 @@ EffectBase {
     height: 400
     width: 400
 
-    function preview() {
-        reverb.preview()
-    }
+    model: reverb
 
     ReverbViewModel {
         id: reverb
+        instanceId: root.instanceId
     }
 
     Component.onCompleted: {
+        console.log("root.instanceId: " + root.instanceId)
         reverb.init()
     }
 
