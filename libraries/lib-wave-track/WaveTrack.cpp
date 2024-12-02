@@ -1951,16 +1951,22 @@ void WaveTrack::ApplyPitchAndSpeed(
           interval->first <= interval->second);
    if (GetNumClips() == 0)
       return;
-   const auto startTime =
-      interval ? std::max(SnapToSample(interval->first), GetStartTime()) :
-                 GetStartTime();
-   const auto endTime =
-      interval ? std::min(SnapToSample(interval->second), GetEndTime()) :
-                 GetEndTime();
-   if (startTime >= endTime)
+
+   // If there is no specified interval, we look at all clips in the track.
+   const auto examinedClips =
+      interval ? GetSortedClipsIntersecting(interval->first, interval->second) :
+                 SortedClipArray();
+   if (examinedClips.empty())
       return;
 
-   // Here we assume that left- and right clips are aligned.
+   const auto startTime = examinedClips.front()->GetPlayStartTime();
+   const auto endTime = examinedClips.back()->GetPlayEndTime();
+   if (startTime >= endTime)
+   {
+      assert(false);
+      return;
+   }
+
    if (auto clipAtT0 = GetClipAtTime(startTime);
        clipAtT0 && clipAtT0->SplitsPlayRegion(startTime) &&
        clipAtT0->HasPitchOrSpeed())
