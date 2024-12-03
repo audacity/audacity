@@ -26,6 +26,9 @@ signals:
     void instanceIdChanged();
 
 private:
+
+    void reload(const EffectId& effectId, const EffectInstanceId& instanceId);
+
     QString m_instanceId;
 };
 }

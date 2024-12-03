@@ -15,6 +15,20 @@ void EffectManageMenu::load()
     const EffectInstanceId instanceId = m_instanceId.toULongLong();
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
 
+    // subscribe on user presets change
+    presetsController()->userPresetsChanged().onReceive(this, [this, effectId, instanceId](const EffectId& eid) {
+        if (effectId != eid) {
+            return;
+        }
+
+        reload(effectId, instanceId);
+    });
+
+    reload(effectId, instanceId);
+}
+
+void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
+{
     auto makeItemWithEffectArg = [this, effectId](const ActionCode& actionCode) {
         MenuItem* item = makeMenuItem(actionCode);
         item->setArgs(ActionData::make_arg1<EffectId>(effectId));

@@ -8,6 +8,8 @@
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-effects/EffectManager.h"
 
+#include "au3wrap/internal/wxtypes_convert.h"
+
 #include "log.h"
 
 using namespace muse;
@@ -36,13 +38,18 @@ PresetIdList EffectsPresetsController::userPresets(const EffectId& effectId) con
     return presets;
 }
 
-muse::Ret EffectsPresetsController::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
+muse::async::Channel<EffectId> EffectsPresetsController::userPresetsChanged() const
+{
+    return m_userPresetsChanged;
+}
+
+Ret EffectsPresetsController::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     const EffectSettingsManager& sm = settingsManager(effectId);
     EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
 
-    muse::Ret ret;
+    Ret ret;
 
     // try apply factory
     bool isFactory = false;
@@ -75,10 +82,29 @@ muse::Ret EffectsPresetsController::applyPreset(const EffectInstanceId& effectIn
     return ret;
 }
 
-void EffectsPresetsController::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId)
+Ret EffectsPresetsController::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId)
 {
-    UNUSED(effectInstanceId);
-    interactive()->warning("Save Current As Preset", std::string("Not implemented"));
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    const EffectSettingsManager& sm = settingsManager(effectId);
+    EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
+
+    RetVal<Val> rv = interactive()->open("audacity://effects/presets/input_name");
+    if (!rv.ret) {
+        return rv.ret;
+    }
+
+    std::string name = rv.val.toString();
+    if (name.empty()) {
+        return muse::make_ret(Ret::Code::Cancel);
+    }
+
+    bool ok = sm.SaveUserPreset(UserPresetsGroup(wxString(name)), *settings);
+
+    if (ok) {
+        m_userPresetsChanged.send(effectId);
+    }
+
+    return ok ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
 }
 
 void EffectsPresetsController::deletePreset(const EffectId& effectId, const PresetId& presetId)
