@@ -25,9 +25,10 @@ public:
 
     PresetIdList factoryPresets(const EffectId& effectId) const override;
     PresetIdList userPresets(const EffectId& effectId) const override;
+    muse::async::Channel<EffectId> userPresetsChanged() const override;
 
     muse::Ret applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
-    void saveCurrentAsPreset(const EffectInstanceId& effectInstanceId) override;
+    muse::Ret saveCurrentAsPreset(const EffectInstanceId& effectInstanceId) override;
     void deletePreset(const EffectId& effectId, const PresetId& presetId) override;
     void importPreset(const EffectId& effectId) override;
     void exportPreset(const EffectId& effectId) override;
@@ -35,5 +36,7 @@ public:
 private:
 
     const EffectSettingsManager& settingsManager(const EffectId& effectId) const;
+
+    muse::async::Channel<EffectId> m_userPresetsChanged;
 };
 }

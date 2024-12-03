@@ -1,0 +1,56 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+import QtQuick
+import QtQuick.Layouts
+
+import Muse.Ui
+import Muse.UiComponents
+
+StyledDialogView {
+    id: root
+
+    title: qsTrc("effects", "Save Preset")
+
+    contentWidth: 280
+    contentHeight: 80
+
+    margins: 16
+
+    TextInputField {
+        id: input
+        anchors.top: parent.top
+        anchors.bottom: bbox.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottomMargin: 16
+
+        hint: qsTrc("effects", "Preset name")
+
+        onTextChanged: t => input.currentText = t
+    }
+
+    ButtonBox {
+        id: bbox
+        width: parent.width
+        anchors.bottom: parent.bottom
+
+        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Apply]
+
+        onStandardButtonClicked: function(buttonId) {
+            switch (buttonId) {
+            case ButtonBoxModel.Cancel:
+                root.reject()
+                return
+            case ButtonBoxModel.Apply:
+                root.ret = {
+                    errcode: 0,
+                    value: input.currentText
+                }
+                root.hide()
+                return
+
+            }
+        }
+    }
+}
