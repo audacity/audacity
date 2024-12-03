@@ -33,7 +33,7 @@ Rectangle {
 
     EffectManageMenu {
         id: manageMenuModel
-        effectId: root.model ? root.model.effectId : undefined
+        instanceId: root.instanceId
     }
 
     ContextMenuLoader {

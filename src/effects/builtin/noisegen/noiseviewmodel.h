@@ -30,7 +30,7 @@ signals:
 
 private:
 
-    void doInit() override {}
+    void doReload() override {}
 
     NoiseSettings& mutSettings();
     const NoiseSettings& settings() const;

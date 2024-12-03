@@ -27,7 +27,7 @@ signals:
 
 private:
 
-    void doInit() override;
+    void doReload() override;
 
     ReverbEffect* effect() const;
 

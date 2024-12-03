@@ -18,7 +18,7 @@ AmplifyEffect* AmplifyViewModel::effect() const
     return e;
 }
 
-void AmplifyViewModel::doInit()
+void AmplifyViewModel::doReload()
 {
     AmplifyEffect* ae = effect();
     IF_ASSERT_FAILED(ae) {

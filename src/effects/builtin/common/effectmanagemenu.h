@@ -4,26 +4,28 @@
 
 #include "modularity/ioc.h"
 #include "effects/effects_base/ieffectspresetscontroller.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
 
 namespace au::effects {
 class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString effectId READ effectId_prop WRITE setEffectId_prop NOTIFY effectIdChanged FINAL)
+    Q_PROPERTY(QString instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
 
     muse::Inject<IEffectsPresetsController> presetsController;
+    muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:
 
-    QString effectId_prop() const;
-    void setEffectId_prop(const QString& newEffectId);
+    QString instanceId_prop() const;
+    void setInstanceId_prop(const QString& newInstanceId);
 
     Q_INVOKABLE void load() override;
 
 signals:
-    void effectIdChanged();
+    void instanceIdChanged();
 
 private:
-    QString m_effectId;
+    QString m_instanceId;
 };
 }

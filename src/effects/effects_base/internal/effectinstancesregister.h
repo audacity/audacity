@@ -20,7 +20,10 @@ public:
     EffectInstanceId instanceIdOf(const Effect* e) const override;
     Effect* instanceById(const EffectInstanceId& instanceId) const override;
     EffectId effectIdByInstanceId(const EffectInstanceId& instanceId) const override;
+
     EffectSettings* settingsById(const EffectInstanceId& instanceId) const override;
+    void notifyAboutSettingsChanged(const EffectInstanceId& instanceId) override;
+    muse::async::Notification settingsChanged(const EffectInstanceId& instanceId) const override;
 
 private:
 
@@ -28,6 +31,7 @@ private:
         EffectId effectId;
         Effect* effect = nullptr;
         EffectSettings* settings = nullptr;
+        muse::async::Notification settingsChanged;
     };
 
     std::map<EffectInstanceId, RegisteredEffectInstance> m_data;

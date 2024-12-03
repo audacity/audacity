@@ -1,7 +1,7 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "abstracteffectmodel.h"
-
-#include "libraries/lib-effects/Effect.h"
-#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "log.h"
 
@@ -14,7 +14,20 @@ AbstractEffectModel::AbstractEffectModel(QObject* parent)
 
 void AbstractEffectModel::init()
 {
-    doInit();
+    if (m_inited) {
+        return;
+    }
+
+    EffectInstanceId id = this->instanceId();
+    IF_ASSERT_FAILED(id != 0) {
+        return;
+    }
+
+    instancesRegister()->settingsChanged(id).onNotify(this, [this]() {
+        doReload();
+    });
+
+    doReload();
     m_inited = true;
 }
 
@@ -30,7 +43,7 @@ Effect* AbstractEffectModel::effect() const
         return nullptr;
     }
 
-    return effectInstancesRegister()->instanceById(id);
+    return instancesRegister()->instanceById(id);
 }
 
 EffectSettings* AbstractEffectModel::settings() const
@@ -40,7 +53,7 @@ EffectSettings* AbstractEffectModel::settings() const
         return nullptr;
     }
 
-    return effectInstancesRegister()->settingsById(id);
+    return instancesRegister()->settingsById(id);
 }
 
 EffectInstanceId AbstractEffectModel::instanceId() const
@@ -50,7 +63,7 @@ EffectInstanceId AbstractEffectModel::instanceId() const
 
 void AbstractEffectModel::preview()
 {
-    effectExecutionScenario()->previewEffect(this->instanceId(), *this->settings());
+    executionScenario()->previewEffect(this->instanceId(), *this->settings());
 }
 
 QString AbstractEffectModel::instanceId_prop() const
@@ -75,5 +88,5 @@ QString AbstractEffectModel::effectId_prop() const
         return QString();
     }
 
-    return effectInstancesRegister()->effectIdByInstanceId(id);
+    return instancesRegister()->effectIdByInstanceId(id);
 }

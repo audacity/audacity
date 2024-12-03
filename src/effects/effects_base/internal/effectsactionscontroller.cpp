@@ -96,9 +96,9 @@ void EffectsActionsController::applyPreset(const muse::actions::ActionData& args
         return;
     }
 
-    EffectId effectId = args.arg<EffectId>(0);
+    EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
     PresetId presetId = args.arg<PresetId>(1);
-    presetsController()->applyPreset(effectId, presetId);
+    presetsController()->applyPreset(effectInstanceId, presetId);
 }
 
 void EffectsActionsController::saveAsPreset(const muse::actions::ActionData& args)
@@ -107,8 +107,8 @@ void EffectsActionsController::saveAsPreset(const muse::actions::ActionData& arg
         return;
     }
 
-    EffectId effectId = args.arg<EffectId>(0);
-    presetsController()->saveCurrentAsPreset(effectId);
+    EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
+    presetsController()->saveCurrentAsPreset(effectInstanceId);
 }
 
 void EffectsActionsController::deletePreset(const muse::actions::ActionData& args)

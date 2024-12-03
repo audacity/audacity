@@ -63,3 +63,22 @@ EffectSettings* EffectInstancesRegister::settingsById(const EffectInstanceId& in
 
     return nullptr;
 }
+
+void EffectInstancesRegister::notifyAboutSettingsChanged(const EffectInstanceId& instanceId)
+{
+    auto it = m_data.find(instanceId);
+    if (it != m_data.end()) {
+        it->second.settingsChanged.notify();
+    }
+}
+
+muse::async::Notification EffectInstancesRegister::settingsChanged(const EffectInstanceId& instanceId) const
+{
+    auto it = m_data.find(instanceId);
+    if (it != m_data.end()) {
+        return it->second.settingsChanged;
+    }
+
+    static muse::async::Notification null;
+    return null;
+}

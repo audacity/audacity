@@ -49,7 +49,7 @@ signals:
     void isApplyAllowedChanged();
 
 private:
-    void doInit() override;
+    void doReload() override;
 
     AmplifyEffect* effect() const;
 
