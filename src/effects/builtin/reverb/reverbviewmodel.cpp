@@ -21,7 +21,7 @@ ReverbEffect* ReverbViewModel::effect() const
     return e;
 }
 
-void ReverbViewModel::doInit()
+void ReverbViewModel::doReload()
 {
     const ReverbSettings& rs = settings<ReverbSettings>();
 
@@ -37,6 +37,8 @@ void ReverbViewModel::doInit()
 
         return item;
     };
+
+    m_paramsList.clear();
 
     m_paramsList << makeItem("RoomSize",
                              muse::qtrc("effects", "Room Size (%)"),

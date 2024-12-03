@@ -11,9 +11,11 @@
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
 
+#include "global/async/asyncable.h"
+
 class Effect;
 namespace au::effects {
-class AbstractEffectModel : public QObject
+class AbstractEffectModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(QString instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
@@ -21,8 +23,8 @@ class AbstractEffectModel : public QObject
     Q_PROPERTY(QString effectId READ effectId_prop NOTIFY effectIdChanged FINAL)
 
 public:
-    muse::Inject<IEffectInstancesRegister> effectInstancesRegister;
-    muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
+    muse::Inject<IEffectInstancesRegister> instancesRegister;
+    muse::Inject<IEffectExecutionScenario> executionScenario;
 
 public:
     AbstractEffectModel(QObject* parent = nullptr);
@@ -43,7 +45,7 @@ signals:
 
 protected:
 
-    virtual void doInit() = 0;
+    virtual void doReload() = 0;
 
     Effect* effect() const;
     EffectSettings* settings() const;

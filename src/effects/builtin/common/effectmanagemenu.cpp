@@ -12,7 +12,8 @@ void EffectManageMenu::load()
 {
     AbstractMenuModel::load();
 
-    EffectId effectId = EffectId::fromQString(m_effectId);
+    const EffectInstanceId instanceId = m_instanceId.toULongLong();
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
 
     auto makeItemWithEffectArg = [this, effectId](const ActionCode& actionCode) {
         MenuItem* item = makeMenuItem(actionCode);
@@ -20,40 +21,73 @@ void EffectManageMenu::load()
         return item;
     };
 
-    auto makeMenuWithPresets = [this, effectId](const TranslatableString& title,
-                                                const PresetIdList& presets,
-                                                const ActionCode& actionCode)
-    {
-        MenuItem* menuItem = makeMenu(title, {});
-        if (presets.empty()) {
-            menuItem->setState(ui::UiActionState::make_disabled());
-        } else {
-            MenuItemList subitems;
-            for (const PresetId& p : presets) {
-                String name = au3::wxToString(p);
-                MenuItem* item = makeMenuItem(actionCode, TranslatableString::untranslatable(name));
-                item->setId(name);
-                item->setArgs(ActionData::make_arg2<EffectId, PresetId>(effectId, p));
-                subitems << item;
-            }
-            menuItem->setSubitems(subitems);
-        }
-        return menuItem;
-    };
-
     MenuItemList items;
 
     // user
     PresetIdList userPresets = presetsController()->userPresets(effectId);
-    items << makeMenuWithPresets(TranslatableString("effects", "User Presets"), userPresets, "action://effects/presets/apply");
-    items << makeItemWithEffectArg("action://effects/presets/save");
-    items << makeMenuWithPresets(TranslatableString("effects", "Delete Presets"), userPresets, "action://effects/presets/delete");
+    {
+        MenuItem* menuItem = makeMenu(TranslatableString("effects", "User Presets"), {});
+        if (userPresets.empty()) {
+            menuItem->setState(ui::UiActionState::make_disabled());
+        } else {
+            MenuItemList subitems;
+            for (const PresetId& p : userPresets) {
+                String name = au3::wxToString(p);
+                MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
+                item->setId(name);
+                item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p)); // apply for instance
+                subitems << item;
+            }
+            menuItem->setSubitems(subitems);
+        }
+        items << menuItem;
+    }
+
+    {
+        MenuItem* item = makeMenuItem("action://effects/presets/save");
+        item->setArgs(ActionData::make_arg1<EffectInstanceId>(instanceId));
+        items << item;  // apply from instance
+    }
+
+    {
+        MenuItem* menuItem = makeMenu(TranslatableString("effects", "Delete Presets"), {});
+        if (userPresets.empty()) {
+            menuItem->setState(ui::UiActionState::make_disabled());
+        } else {
+            MenuItemList subitems;
+            for (const PresetId& p : userPresets) {
+                String name = au3::wxToString(p);
+                MenuItem* item = makeMenuItem("action://effects/presets/delete", TranslatableString::untranslatable(name));
+                item->setId(name);
+                item->setArgs(ActionData::make_arg2<EffectId, PresetId>(effectId, p)); // delete for effect
+                subitems << item;
+            }
+            menuItem->setSubitems(subitems);
+        }
+        items << menuItem;
+    }
 
     items << makeSeparator();
 
     // factory
-    PresetIdList factoryPresets = presetsController()->factoryPresets(effectId);
-    items << makeMenuWithPresets(TranslatableString("effects", "Factory Presets"), factoryPresets, "action://effects/presets/apply");
+    {
+        PresetIdList factoryPresets = presetsController()->factoryPresets(effectId);
+        MenuItem* menuItem = makeMenu(TranslatableString("effects", "Factory Presets"), {});
+        if (factoryPresets.empty()) {
+            menuItem->setState(ui::UiActionState::make_disabled());
+        } else {
+            MenuItemList subitems;
+            for (const PresetId& p : factoryPresets) {
+                String name = au3::wxToString(p);
+                MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
+                item->setId(name);
+                item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p)); // apply for instance
+                subitems << item;
+            }
+            menuItem->setSubitems(subitems);
+        }
+        items << menuItem;
+    }
 
     items << makeSeparator();
 
@@ -64,16 +98,16 @@ void EffectManageMenu::load()
     setItems(items);
 }
 
-QString EffectManageMenu::effectId_prop() const
+QString EffectManageMenu::instanceId_prop() const
 {
-    return m_effectId;
+    return m_instanceId;
 }
 
-void EffectManageMenu::setEffectId_prop(const QString& newEffectId)
+void EffectManageMenu::setInstanceId_prop(const QString& newInstanceId)
 {
-    if (m_effectId == newEffectId) {
+    if (m_instanceId == newInstanceId) {
         return;
     }
-    m_effectId = newEffectId;
-    emit effectIdChanged();
+    m_instanceId = newInstanceId;
+    emit instanceIdChanged();
 }
