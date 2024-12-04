@@ -26,10 +26,11 @@ class TrackList;
 
 class WAVE_TRACK_API WaveTrackSink final : public AudioGraph::Sink {
 public:
-   WaveTrackSink(WaveChannel &left, WaveChannel *pRight,
-      WaveTrack *pGenerated, sampleCount start, bool isProcessor,
+   WaveTrackSink(
+      WaveChannel& left, WaveChannel* pRight, WaveTrack* pGenerated,
+      sampleCount start, bool isProcessor,
       //! This argument affects processors only, not generators
-      sampleFormat effectiveFormat);
+      sampleFormat effectiveFormat, const std::vector<int64_t>& whichClips);
    ~WaveTrackSink() override;
 
    //! Accepts buffers only if there is at least one channel
@@ -63,5 +64,6 @@ private:
 
    sampleCount mOutPos;
    bool mOk{ true };
+   const std::vector<int64_t> mWhichClips;
 };
 #endif

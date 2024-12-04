@@ -78,7 +78,7 @@ public:
       const float *const *inBlock, float *const *outBlock, size_t blockLen) = 0;
 
 private:
-   bool Process(EffectInstance &instance, EffectSettings &settings) final;
+   bool Process(EffectInstance &instance, EffectSettings &settings, std::vector<int64_t> whichClips) final;
 
    size_t mBlockSize{};
 };

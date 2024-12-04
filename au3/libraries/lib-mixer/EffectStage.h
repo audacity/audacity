@@ -44,13 +44,15 @@ public:
    EffectStage(
       CreateToken, int channel, int nInputChannels, Source& upstream,
       Buffers& inBuffers, const Factory& factory, EffectSettings& settings,
-      double sampleRate, std::optional<sampleCount> genLength);
+      double sampleRate, std::optional<sampleCount> genLength,
+      const std::vector<int64_t>& whichClips);
 
    //! Satisfies postcondition of constructor or returns null
    static std::unique_ptr<EffectStage> Create(
       int channel, int nInputChannels, Source& upstream, Buffers& inBuffers,
       const Factory& factory, EffectSettings& settings, double sampleRate,
-      std::optional<sampleCount> genLength);
+      std::optional<sampleCount> genLength,
+      std::vector<int64_t> whichClips = {});
 
    EffectStage(const EffectStage&) = delete;
    EffectStage &operator =(const EffectStage &) = delete;
@@ -98,6 +100,7 @@ private:
    size_t mLastZeroes{};
    bool mLatencyDone{ false };
    bool mCleared{ false };
+   const std::vector<int64_t> mWhichClips;
 };
 
 /*

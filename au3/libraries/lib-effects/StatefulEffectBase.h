@@ -32,7 +32,7 @@ public:
 
       size_t GetBlockSize() const override;
       size_t SetBlockSize(size_t maxBlockSize) override;
-   
+
       bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
          override;
       bool RealtimeAddProcessor(EffectSettings &settings,
@@ -51,7 +51,7 @@ public:
       unsigned GetAudioOutCount() const override;
 
       bool NeedsDither() const override;
-      
+
       bool ProcessInitialize(EffectSettings &settings,
          double sampleRate, ChannelNames chanMap) override;
 
@@ -71,7 +71,7 @@ public:
    /*!
     @copydoc EffectInstance::Process
     */
-   virtual bool Process(EffectInstance &instance, EffectSettings &settings) = 0;
+   virtual bool Process(EffectInstance &instance, EffectSettings &settings, std::vector<int64_t> whichClips) = 0;
 
    /*!
      @copydoc StatefulEffectBase::Instance::RealtimeInitialize()

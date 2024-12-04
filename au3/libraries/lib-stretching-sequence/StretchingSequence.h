@@ -47,7 +47,8 @@ public:
       bool backwards) const override;
    bool DoGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
-      sampleFormat format, sampleCount start, size_t len, bool backwards,
+      sampleFormat format, sampleCount start, size_t len,
+      const std::vector<int64_t>* whichClips, bool backwards,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       sampleCount* pNumWithinClips = nullptr) const override;
 

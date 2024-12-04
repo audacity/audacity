@@ -33,9 +33,9 @@
 
 PerTrackEffect::Instance::~Instance() = default;
 
-bool PerTrackEffect::Instance::Process(EffectSettings &settings)
+bool PerTrackEffect::Instance::Process(EffectSettings &settings, std::vector<int64_t> whichClips)
 {
-   return mProcessor.Process(*this, settings);
+   return mProcessor.Process(*this, settings, std::move(whichClips));
 }
 
 bool PerTrackEffect::Instance::ProcessInitialize(EffectSettings &,
@@ -62,7 +62,7 @@ bool PerTrackEffect::DoPass2() const
 }
 
 bool PerTrackEffect::Process(
-   EffectInstance &instance, EffectSettings &settings) const
+   EffectInstance &instance, EffectSettings &settings, std::vector<int64_t> whichClips) const
 {
    auto pThis = const_cast<PerTrackEffect *>(this);
 
@@ -71,17 +71,18 @@ bool PerTrackEffect::Process(
 
    std::optional<EffectOutputTracks> outputs;
    if (!pOutputs)
-      pOutputs = &outputs.emplace(*mTracks, GetType(),
-         EffectOutputTracks::TimeInterval{ mT0, mT1 }, true);
+      pOutputs = &outputs.emplace(
+         *mTracks, GetType(), EffectOutputTracks::TimeInterval { mT0, mT1 },
+         true, false, &whichClips);
 
    bool bGoodResult = true;
    // mPass = 1;
    if (DoPass1()) {
       auto &myInstance = dynamic_cast<Instance&>(instance);
-      bGoodResult = pThis->ProcessPass(pOutputs->Get(), myInstance, settings);
+      bGoodResult = pThis->ProcessPass(pOutputs->Get(), myInstance, settings, whichClips);
       // mPass = 2;
       if (bGoodResult && DoPass2())
-         bGoodResult = pThis->ProcessPass(pOutputs->Get(), myInstance, settings);
+         bGoodResult = pThis->ProcessPass(pOutputs->Get(), myInstance, settings, whichClips);
    }
    if (bGoodResult)
       pOutputs->Commit();
@@ -90,7 +91,7 @@ bool PerTrackEffect::Process(
 }
 
 bool PerTrackEffect::ProcessPass(TrackList &outputs,
-   Instance &instance, EffectSettings &settings)
+   Instance &instance, EffectSettings &settings, const std::vector<int64_t>& whichClips)
 {
    const auto duration = settings.extra.GetDuration();
    bool bGoodResult = true;
@@ -260,8 +261,9 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          WideSampleSequence *pSeq = &chan;
          if (pRight)
             pSeq = &wt;
-         WideSampleSource source{
-            *pSeq, size_t(pRight ? 2 : 1), start, len, pollUser };
+         WideSampleSource source { *pSeq,    size_t(pRight ? 2 : 1),
+                                   start,    len,
+                                   pollUser, whichClips };
          // Assert source is safe to Acquire inBuffers
          assert(source.AcceptsBuffers(inBuffers));
          assert(source.AcceptsBlockSize(inBuffers.BlockSize()));
@@ -277,9 +279,14 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             ? wideTrack
             : narrowTrack;
 
-         WaveTrackSink sink{ chan, pRight, pGenerated.get(), start, isProcessor,
-            instance.NeedsDither() ? widestSampleFormat : narrowestSampleFormat
-         };
+         WaveTrackSink sink { chan,
+                              pRight,
+                              pGenerated.get(),
+                              start,
+                              isProcessor,
+                              instance.NeedsDither() ? widestSampleFormat :
+                                                       narrowestSampleFormat,
+                              whichClips };
          assert(sink.AcceptsBuffers(outBuffers));
 
          // Go process the track(s)
@@ -292,7 +299,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
                return recycledInstances.emplace_back(MakeInstance());
          };
          bGoodResult = ProcessTrack(channel, factory, settings, source, sink,
-            genLength, sampleRate, wt, inBuffers, outBuffers);
+            genLength, sampleRate, wt, inBuffers, outBuffers, whichClips);
          if (bGoodResult) {
             sink.Flush(outBuffers);
             bGoodResult = sink.IsOk();
@@ -355,12 +362,12 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
    return bGoodResult;
 }
 
-bool PerTrackEffect::ProcessTrack(int channel, const Factory &factory,
-   EffectSettings &settings,
-   AudioGraph::Source &upstream, AudioGraph::Sink &sink,
-   std::optional<sampleCount> genLength,
-   const double sampleRate, const SampleTrack &wt,
-   Buffers &inBuffers, Buffers &outBuffers)
+bool PerTrackEffect::ProcessTrack(
+   int channel, const Factory& factory, EffectSettings& settings,
+   AudioGraph::Source& upstream, AudioGraph::Sink& sink,
+   std::optional<sampleCount> genLength, const double sampleRate,
+   const SampleTrack& wt, Buffers& inBuffers, Buffers& outBuffers,
+   const std::vector<int64_t>& whichClips)
 {
    assert(upstream.AcceptsBuffers(inBuffers));
    assert(sink.AcceptsBuffers(outBuffers));
@@ -371,7 +378,7 @@ bool PerTrackEffect::ProcessTrack(int channel, const Factory &factory,
 
    auto pSource = EffectStage::Create(
       channel, static_cast<const WideSampleSequence&>(wt).NChannels(), upstream,
-      inBuffers, factory, settings, sampleRate, genLength);
+      inBuffers, factory, settings, sampleRate, genLength, whichClips);
    if (!pSource)
       return false;
    assert(pSource->AcceptsBlockSize(blockSize)); // post of ctor

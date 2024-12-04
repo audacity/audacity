@@ -96,8 +96,11 @@ float StretchingSequence::GetChannelVolume(int channel) const
 
 bool StretchingSequence::DoGet(
    size_t iChannel, size_t nBuffers, const samplePtr buffers[],
-   sampleFormat format, sampleCount start, size_t len, bool backwards,
-   fillFormat fill, bool mayThrow, sampleCount* pNumWithinClips) const
+   sampleFormat format, sampleCount start, size_t len,
+   const std::vector<
+      int64_t>* /* whichClips not (yet) used for playback or rendering*/,
+   bool backwards, fillFormat fill, bool mayThrow,
+   sampleCount* pNumWithinClips) const
 {
    return const_cast<StretchingSequence&>(*this).MutableGet(
       iChannel, nBuffers, buffers, format, start, len, backwards);
@@ -165,7 +168,7 @@ bool StretchingSequence::GetFloats(
    constexpr auto iChannel = 0u;
    return DoGet(
       iChannel, nChannels, charBuffers.data(), sampleFormat::floatSample, start,
-      len, backwards);
+      len, nullptr, backwards);
 }
 
 bool StretchingSequence::MutableGet(

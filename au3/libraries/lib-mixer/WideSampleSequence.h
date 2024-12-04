@@ -43,6 +43,8 @@ public:
     @param buffers receive the samples
     @param start starting sample, relative to absolute time zero
     @param len how many samples to get.  buffers are assumed sufficiently large
+    @param whichClips if not null, clips whose IDs are in this vector shall be
+    omitted from the fetch
     @param fill how to assign values for sample positions between clips
     @param mayThrow if false, fill buffer with zeros when there is failure to
        retrieve samples; else throw
@@ -55,10 +57,12 @@ public:
        retrieved
     @post if return value is false, buffers are zero-filled
     */
-   bool GetFloats(size_t iChannel, size_t nBuffers,
-      float *const buffers[], sampleCount start, size_t len,
-      bool backwards = false, fillFormat fill = FillFormat::fillZero,
-      bool mayThrow = true, sampleCount* pNumWithinClips = nullptr) const;
+   bool GetFloats(
+      size_t iChannel, size_t nBuffers, float* const buffers[],
+      sampleCount start, size_t len,
+      const std::vector<int64_t>* whichClips = nullptr, bool backwards = false,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
+      sampleCount* pNumWithinClips = nullptr) const;
 
    //! Retrieve samples of one of the channels from a sequence in a specified
    //! format
@@ -70,7 +74,8 @@ public:
     */
    virtual bool DoGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
-      sampleFormat format, sampleCount start, size_t len, bool backward,
+      sampleFormat format, sampleCount start, size_t len,
+      const std::vector<int64_t>* whichClips, bool backward,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one

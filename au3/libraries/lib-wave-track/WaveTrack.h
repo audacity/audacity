@@ -99,7 +99,8 @@ public:
    //! This fails if any clip overlapping the range has non-unit stretch ratio!
    bool DoGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
-      sampleFormat format, sampleCount start, size_t len, bool backwards,
+      sampleFormat format, sampleCount start, size_t len,
+      const std::vector<int64_t>* whichClips, bool backwards,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
@@ -126,13 +127,16 @@ public:
    using WideSampleSequence::GetFloats;
 
    //! "narrow" overload fetches from the unique channel
-   bool GetFloats(float *buffer, sampleCount start, size_t len,
+   bool GetFloats(
+      float* buffer, sampleCount start, size_t len,
+      const std::vector<int64_t>* whichClips = nullptr,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
-      sampleCount * pNumWithinClips = nullptr) const
+      sampleCount* pNumWithinClips = nullptr) const
    {
       constexpr auto backwards = false;
       return GetFloats(
-         0, 1, &buffer, start, len, backwards, fill, mayThrow, pNumWithinClips);
+         0, 1, &buffer, start, len, whichClips, backwards, fill, mayThrow,
+         pNumWithinClips);
    }
 
    /*!
@@ -147,30 +151,30 @@ public:
     */
    ChannelSampleView GetSampleView(double t0, double t1, bool mayThrow) const;
 
-   //! Random-access assignment of a range of samples
-   [[nodiscard]] bool Set(constSamplePtr buffer, sampleFormat format,
-      sampleCount start, size_t len,
-      sampleFormat effectiveFormat = widestSampleFormat /*!<
-         Make the effective format of the data at least the minumum of this
-         value and `format`.  (Maybe wider, if merging with preexistent data.)
-         If the data are later narrowed from stored format, but not narrower
-         than the effective, then no dithering will occur.
-      */
-   );
+   /*!
+    * @brief Random-access assignment of a range of samples
+    *
+    * @param effectiveFormat Make the effective format of the data at least the
+    * minumum of this value and `format`.  (Maybe wider, if merging with
+    * preexistent data.s If the data are later narrowed from stored format, but
+    * not narrowes than the effective, then no dithering will occur.
+    * @param whichClips if not null, the `Set` operation is restricted to the
+    * clips with the given clip IDs.
+    */
+   [[nodiscard]] bool Set(
+      constSamplePtr buffer, sampleFormat format, sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat,
+      const std::vector<int64_t>* whichClips = nullptr);
 
-   //! Random-access assignment of a range of samples
-   [[nodiscard]] bool SetFloats(const float *buffer,
-      sampleCount start, size_t len,
-      sampleFormat effectiveFormat = widestSampleFormat /*!<
-         Make the effective format of the data at least the minumum of this
-         value and `format`.  (Maybe wider, if merging with preexistent data.)
-         If the data are later narrowed from stored format, but not narrower
-         than the effective, then no dithering will occur.
-      */
-   )
+   //! @copydoc Set
+   [[nodiscard]] bool SetFloats(
+      const float* buffer, sampleCount start, size_t len,
+      sampleFormat effectiveFormat = widestSampleFormat,
+      const std::vector<int64_t>* whichClips = nullptr)
    {
-      return Set(reinterpret_cast<constSamplePtr>(buffer), floatSample,
-         start, len, effectiveFormat);
+      return Set(
+         reinterpret_cast<constSamplePtr>(buffer), floatSample, start, len,
+         effectiveFormat, std::move(whichClips));
    }
 
    bool AppendBuffer(constSamplePtr buffer, sampleFormat format, size_t len, unsigned stride, sampleFormat effectiveFormat);
@@ -479,7 +483,8 @@ public:
    //! This fails if any clip overlapping the range has non-unit stretch ratio!
    bool DoGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
-      sampleFormat format, sampleCount start, size_t len, bool backwards,
+      sampleFormat format, sampleCount start, size_t len,
+      const std::vector<int64_t>* whichClips, bool backwards,
       fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
       // Report how many samples were copied from within clips, rather than
       // filled according to fillFormat; but these were not necessarily one
@@ -783,10 +788,11 @@ private:
    void DoSetRate(double newRate);
    [[nodiscard]] Holder DuplicateWithOtherTempo(double newTempo) const;
 
-   bool GetOne(const WaveClipHolders &clips, size_t iChannel,
-      samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
-      bool backwards, fillFormat fill, bool mayThrow,
-      sampleCount* pNumWithinClips) const;
+   bool GetOne(
+      const WaveClipHolders& clips, size_t iChannel, samplePtr buffer,
+      sampleFormat format, sampleCount start, size_t len,
+      const std::vector<int64_t>* whichClips, bool backwards, fillFormat fill,
+      bool mayThrow, sampleCount* pNumWithinClips) const;
 
    void DoSetPan(float value);
    void DoSetVolume(float value);

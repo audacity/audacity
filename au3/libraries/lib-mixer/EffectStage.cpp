@@ -59,7 +59,8 @@ std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
 EffectStage::EffectStage(
    CreateToken, int channel, int nInputChannels, Source& upstream,
    Buffers& inBuffers, const Factory& factory, EffectSettings& settings,
-   double sampleRate, std::optional<sampleCount> genLength)
+   double sampleRate, std::optional<sampleCount> genLength,
+   const std::vector<int64_t>& whichClips)
     : mUpstream { upstream }
     , mInBuffers { inBuffers }
     , mInstances { MakeInstances(
@@ -68,6 +69,7 @@ EffectStage::EffectStage(
     , mSampleRate { sampleRate }
     , mIsProcessor { !genLength.has_value() }
     , mDelayRemaining { genLength ? *genLength : sampleCount::max() }
+    , mWhichClips { whichClips }
 {
    assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
    assert(this->AcceptsBlockSize(inBuffers.BlockSize()));
@@ -79,12 +81,13 @@ EffectStage::EffectStage(
 auto EffectStage::Create(
    int channel, int nInputChannels, Source& upstream, Buffers& inBuffers,
    const Factory& factory, EffectSettings& settings, double sampleRate,
-   std::optional<sampleCount> genLength) -> std::unique_ptr<EffectStage>
+   std::optional<sampleCount> genLength, std::vector<int64_t> whichClips)
+   -> std::unique_ptr<EffectStage>
 {
    try {
       return std::make_unique<EffectStage>(
          CreateToken {}, channel, nInputChannels, upstream, inBuffers, factory,
-         settings, sampleRate, genLength);
+         settings, sampleRate, genLength, std::move(whichClips));
    }
    catch (const std::exception &) {
       return nullptr;

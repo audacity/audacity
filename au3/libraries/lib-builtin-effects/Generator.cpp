@@ -23,7 +23,7 @@
 
 #include "TimeWarper.h"
 
-bool Generator::Process(EffectInstance &, EffectSettings &settings)
+bool Generator::Process(EffectInstance &, EffectSettings &settings, std::vector<int64_t> /* whichClips */)
 {
    const auto duration = settings.extra.GetDuration();
 

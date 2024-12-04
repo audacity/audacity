@@ -30,8 +30,9 @@ public:
     @pre `nChannels <= sequence.NChannels()`
     @post `Remaining()` == len
     */
-   WideSampleSource(const WideSampleSequence &sequence, size_t nChannels,
-      sampleCount start, sampleCount len, Poller pollUser);
+   WideSampleSource(
+      const WideSampleSequence& sequence, size_t nChannels, sampleCount start,
+      sampleCount len, Poller pollUser, std::vector<int64_t> whichClips);
    ~WideSampleSource() override;
 
    //! If constructed with positive length, then accepts buffers only when
@@ -55,5 +56,6 @@ private:
    size_t mLastProduced{};
    size_t mFetched{};
    bool mInitialized{ false };
+   const std::vector<int64_t> mWhichClips;
 };
 #endif

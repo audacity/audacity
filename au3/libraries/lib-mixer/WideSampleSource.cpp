@@ -22,10 +22,15 @@
 #include "WideSampleSequence.h"
 #include <cassert>
 
-WideSampleSource::WideSampleSource(const WideSampleSequence &sequence,
-   size_t nChannels, sampleCount start, sampleCount len, Poller pollUser
-)  : mSequence{ sequence }, mnChannels{ nChannels }, mPollUser{ move(pollUser) }
-   , mPos{ start }, mOutputRemaining{ len  }
+WideSampleSource::WideSampleSource(
+   const WideSampleSequence& sequence, size_t nChannels, sampleCount start,
+   sampleCount len, Poller pollUser, std::vector<int64_t> whichClips)
+    : mSequence { sequence }
+    , mnChannels { nChannels }
+    , mPollUser { move(pollUser) }
+    , mPos { start }
+    , mOutputRemaining { len }
+    , mWhichClips { move(whichClips) }
 {
    assert(nChannels <= sequence.NChannels());
 }
@@ -69,7 +74,9 @@ std::optional<size_t> WideSampleSource::Acquire(Buffers &data, size_t bound)
          buffers[0] = &data.GetWritePosition(0) + mFetched;
       if (mnChannels > 1)
          buffers[1] = &data.GetWritePosition(1) + mFetched;
-      mSequence.GetFloats(0, mnChannels, buffers, mPos, fetch);
+      mSequence.GetFloats(
+         0, mnChannels, buffers, mPos, fetch,
+         mWhichClips.empty() ? nullptr : &mWhichClips);
       mPos += fetch;
       mFetched += fetch;
       mInitialized = true;

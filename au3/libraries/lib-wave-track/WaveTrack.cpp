@@ -2610,17 +2610,19 @@ double WaveTrack::GetEndTime() const
    return ChannelGroup::GetEndTime();
 }
 
-bool WaveChannel::DoGet(size_t iChannel, size_t nBuffers,
-   const samplePtr buffers[], sampleFormat format,
-   sampleCount start, size_t len, bool backwards, fillFormat fill,
+bool WaveChannel::DoGet(
+   size_t iChannel, size_t nBuffers, const samplePtr buffers[],
+   sampleFormat format, sampleCount start, size_t len,
+   const std::vector<int64_t>* whichClips, bool backwards, fillFormat fill,
    bool mayThrow, sampleCount* pNumWithinClips) const
 {
    // These two assertions still remain after the great wide wave track and clip
    // refactoring!
    assert(iChannel == 0);
    assert(nBuffers <= 1);
-   return GetTrack().DoGet(GetChannelIndex(), std::min<size_t>(nBuffers, 1),
-      buffers, format, start, len, backwards, fill, mayThrow, pNumWithinClips);
+   return GetTrack().DoGet(
+      GetChannelIndex(), std::min<size_t>(nBuffers, 1), buffers, format, start,
+      len, whichClips, backwards, fill, mayThrow, pNumWithinClips);
 }
 
 //
@@ -2628,25 +2630,40 @@ bool WaveChannel::DoGet(size_t iChannel, size_t nBuffers,
 // expressed relative to t=0.0 at the track's sample rate.
 //
 
-bool WaveTrack::DoGet(size_t iChannel, size_t nBuffers,
-   const samplePtr buffers[], sampleFormat format,
-   sampleCount start, size_t len, bool backwards, fillFormat fill,
+bool WaveTrack::DoGet(
+   size_t iChannel, size_t nBuffers, const samplePtr buffers[],
+   sampleFormat format, sampleCount start, size_t len,
+   const std::vector<int64_t>* whichClips, bool backwards, fillFormat fill,
    bool mayThrow, sampleCount* pNumWithinClips) const
 {
    const auto nChannels = NChannels();
    assert(iChannel + nBuffers <= nChannels); // precondition
-   return std::all_of(buffers, buffers + nBuffers, [&](samplePtr buffer) {
-      const auto result = GetOne(mClips, iChannel++,
-         buffer, format, start, len, backwards, fill, mayThrow,
-         pNumWithinClips);
-      return result;
-   });
+   return std::all_of(
+      buffers, buffers + nBuffers,
+      [&](samplePtr buffer)
+      {
+         const auto result = GetOne(
+            mClips, iChannel++, buffer, format, start, len, whichClips,
+            backwards, fill, mayThrow, pNumWithinClips);
+         return result;
+      });
 }
 
-bool WaveTrack::GetOne(const WaveClipHolders &clips, size_t iChannel,
-   samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
-   bool backwards, fillFormat fill, bool mayThrow,
-   sampleCount* pNumWithinClips) const
+namespace {
+bool SkipClip(const std::vector<int64_t>* whichClips, const WaveClip& clip)
+{
+   return whichClips &&
+          std::find_if(
+             whichClips->begin(), whichClips->end(), [&clip](int64_t clipID)
+             { return clip.GetId() == clipID; }) == whichClips->end();
+}
+} // namespace
+
+bool WaveTrack::GetOne(
+   const WaveClipHolders& clips, size_t iChannel, samplePtr buffer,
+   sampleFormat format, sampleCount start, size_t len,
+   const std::vector<int64_t>* whichClips, bool backwards, fillFormat fill,
+   bool mayThrow, sampleCount* pNumWithinClips) const
 {
    if (backwards)
       start -= len;
@@ -2686,6 +2703,9 @@ bool WaveTrack::GetOne(const WaveClipHolders &clips, size_t iChannel,
    // Iterate the clips.  They are not necessarily sorted by time.
    for (const auto &clip: clips)
    {
+      if (SkipClip(whichClips, *clip))
+         continue;
+
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
 
@@ -2788,11 +2808,15 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
 }
 
 /*! @excsafety{Weak} */
-bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
-   sampleCount start, size_t len, sampleFormat effectiveFormat)
+bool WaveChannel::Set(
+   constSamplePtr buffer, sampleFormat format, sampleCount start, size_t len,
+   sampleFormat effectiveFormat, const std::vector<int64_t>* whichClips)
 {
    for (const auto &clip: Intervals())
    {
+      if (SkipClip(whichClips, clip->GetClip()))
+         continue;
+
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
 

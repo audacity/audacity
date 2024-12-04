@@ -11,16 +11,43 @@
 #include "BasicUI.h"
 #include "SyncLock.h"
 #include "UserException.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "TimeStretching.h"
+#include "WaveTrackUtilities.h"
 
 // Effect application counter
 int EffectOutputTracks::nEffectsDone = 0;
 
+namespace
+{
+void UpdateClipIds(
+   std::vector<int64_t>& originClipIds, const WaveTrack& origin,
+   const WaveTrack& duplicate)
+{
+   const auto originClips = origin.Intervals();
+   const auto duplicateClips = duplicate.Intervals();
+   assert(originClips.size() == duplicateClips.size());
+   if (originClips.size() != duplicateClips.size())
+      return;
+   auto duplicateClipIt = duplicateClips.begin();
+   std::for_each(
+      originClips.begin(), originClips.end(),
+      [&](const WaveClipConstHolder& originClip)
+      {
+         const auto it = std::find(
+            originClipIds.begin(), originClipIds.end(), originClip->GetId());
+         if (it != originClipIds.end())
+            *it = (*duplicateClipIt)->GetId();
+         ++duplicateClipIt;
+      });
+}
+} // namespace
+
 EffectOutputTracks::EffectOutputTracks(
    TrackList& tracks, EffectType effectType,
    std::optional<TimeInterval> effectTimeInterval, bool allSyncLockSelected,
-   bool stretchSyncLocked)
+   bool stretchSyncLocked, std::vector<int64_t>* oldClipIds)
     : mTracks { tracks }
     , mEffectType { effectType }
 {
@@ -44,6 +71,12 @@ EffectOutputTracks::EffectOutputTracks(
       mIMap.push_back(aTrack);
       mOMap.push_back(pTrack.get());
       mOutputTracks->Add(pTrack);
+      if (const auto aWaveTrack = dynamic_cast<WaveTrack*>(aTrack);
+          oldClipIds && aWaveTrack)
+      {
+         UpdateClipIds(
+            *oldClipIds, *aWaveTrack, *dynamic_cast<WaveTrack*>(pTrack.get()));
+      }
    }
 
    if (

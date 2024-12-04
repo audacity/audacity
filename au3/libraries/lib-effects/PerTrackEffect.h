@@ -46,9 +46,9 @@ public:
          : mProcessor{ processor }
       {}
       ~Instance() override;
-   
+
       //! Uses the other virtual functions of this class
-      bool Process(EffectSettings &settings) final;
+      bool Process(EffectSettings &settings, std::vector<int64_t> whichClips) final;
 
       bool ProcessInitialize(EffectSettings &settings,
          double sampleRate, ChannelNames chanMap) override;
@@ -64,7 +64,7 @@ protected:
    /* virtual */ bool DoPass2() const;
 
    // non-virtual
-   bool Process(EffectInstance &instance, EffectSettings &settings) const;
+   bool Process(EffectInstance &instance, EffectSettings &settings, std::vector<int64_t> whichClips) const;
 
    sampleCount    mSampleCnt{};
 
@@ -78,7 +78,7 @@ private:
    using Buffers = AudioGraph::Buffers;
 
    bool ProcessPass(TrackList &outputs,
-      Instance &instance, EffectSettings &settings);
+      Instance &instance, EffectSettings &settings, const std::vector<int64_t>& whichClips);
    using Factory = std::function<std::shared_ptr<EffectInstance>()>;
    /*!
     Previous contents of inBuffers and outBuffers are ignored
@@ -91,12 +91,12 @@ private:
 
     @pre `channel < track.NChannels()`
     */
-   static bool ProcessTrack(int channel,
-      const Factory &factory, EffectSettings &settings,
-      AudioGraph::Source &source, AudioGraph::Sink &sink,
-      std::optional<sampleCount> genLength,
-      double sampleRate, const SampleTrack &wt,
-      Buffers &inBuffers, Buffers &outBuffers);
+   static bool ProcessTrack(
+      int channel, const Factory& factory, EffectSettings& settings,
+      AudioGraph::Source& source, AudioGraph::Sink& sink,
+      std::optional<sampleCount> genLength, double sampleRate,
+      const SampleTrack& wt, Buffers& inBuffers, Buffers& outBuffers,
+      const std::vector<int64_t>& whichClips);
 
    // TODO: put this in struct EffectContext? (Which doesn't exist yet)
    mutable std::shared_ptr<EffectOutputTracks> mpOutputTracks;

@@ -40,7 +40,9 @@ protected:
    // Postcondition:
    // If mDuration was valid (>= 0), then the tracks are replaced by the
    // generated results and true is returned. Otherwise, return false.
-   bool Process(EffectInstance &instance, EffectSettings &settings) override;
+   bool Process(
+      EffectInstance& instance, EffectSettings& settings,
+      std::vector<int64_t> whichClips) override;
 };
 
 #endif

@@ -14,9 +14,9 @@
 #include "StatefulEffect.h"
 #include "SampleCount.h"
 
-bool StatefulEffect::Instance::Process(EffectSettings &settings)
+bool StatefulEffect::Instance::Process(EffectSettings &settings, std::vector<int64_t> whichClips)
 {
-   return GetEffect().Process(*this, settings);
+   return GetEffect().Process(*this, settings, std::move(whichClips));
 }
 
 auto StatefulEffect::Instance::GetLatency(const EffectSettings &, double) const

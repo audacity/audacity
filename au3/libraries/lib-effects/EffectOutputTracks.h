@@ -49,7 +49,8 @@ public:
    EffectOutputTracks(
       TrackList& tracks, EffectType effectType,
       std::optional<TimeInterval> effectTimeInterval,
-      bool allSyncLockSelected = false, bool stretchSyncLocked = false);
+      bool allSyncLockSelected = false, bool stretchSyncLocked = false,
+      std::vector<int64_t>* oldClipIds = nullptr);
    EffectOutputTracks(const EffectOutputTracks&) = delete;
 
    ~EffectOutputTracks();

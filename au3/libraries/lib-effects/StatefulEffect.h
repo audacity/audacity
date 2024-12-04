@@ -25,7 +25,7 @@ public:
    class EFFECTS_API Instance : public StatefulEffectBase::Instance {
    public:
       using StatefulEffectBase::Instance::Instance;
-      bool Process(EffectSettings &settings) override;
+      bool Process(EffectSettings &settings, std::vector<int64_t> whichClips) override;
       SampleCount GetLatency(
          const EffectSettings &settings, double sampleRate) const override;
       //! Default implementation fails (returns 0 always)

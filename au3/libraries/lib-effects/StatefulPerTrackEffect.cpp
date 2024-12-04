@@ -51,10 +51,10 @@ std::shared_ptr<EffectInstance> StatefulPerTrackEffect::MakeInstance() const
 }
 
 bool StatefulPerTrackEffect::Process(
-   EffectInstance &instance, EffectSettings &settings)
+   EffectInstance &instance, EffectSettings &settings, std::vector<int64_t> whichClips)
 {
    // Call through to a non-virtual function
-   return PerTrackEffect::Process(instance, settings);
+   return PerTrackEffect::Process(instance, settings, std::move(whichClips));
 }
 
 size_t StatefulPerTrackEffect::SetBlockSize(size_t maxBlockSize)

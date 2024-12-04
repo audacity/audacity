@@ -27,17 +27,17 @@ double WideSampleSequence::SnapToSample(double t) const
    return LongSamplesToTime(TimeToLongSamples(t));
 }
 
-bool WideSampleSequence::GetFloats(size_t iChannel, size_t nBuffers,
-   float *const buffers[], sampleCount start, size_t len,
-   bool backwards, fillFormat fill,
-   bool mayThrow, sampleCount* pNumWithinClips) const
+bool WideSampleSequence::GetFloats(
+   size_t iChannel, size_t nBuffers, float* const buffers[], sampleCount start,
+   size_t len, const std::vector<int64_t>* whichClips, bool backwards,
+   fillFormat fill, bool mayThrow, sampleCount* pNumWithinClips) const
 {
    // Cast the pointers to pass them to DoGet() which handles multiple
    // destination formats
    const auto castBuffers = reinterpret_cast<const samplePtr*>(buffers);
    const auto result = DoGet(
-      iChannel, nBuffers, castBuffers,
-      floatSample, start, len, backwards, fill, mayThrow, pNumWithinClips);
+      iChannel, nBuffers, castBuffers, floatSample, start, len, whichClips,
+      backwards, fill, mayThrow, pNumWithinClips);
    if (!result)
       while (nBuffers--)
          ClearSamples(castBuffers[nBuffers], floatSample, 0, len);

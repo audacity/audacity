@@ -106,7 +106,7 @@ public:
    /*!
     @return success
     */
-   virtual bool Process(EffectSettings &settings) = 0;
+   virtual bool Process(EffectSettings &settings, std::vector<int64_t> whichClips = {}) = 0;
 
    ~EffectInstanceEx() override;
 };

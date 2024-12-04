@@ -129,8 +129,9 @@ size_t MixerSource::MixVariableRates(
                dst.push_back(queue.data() + queueLen);
             constexpr auto iChannel = 0u;
             if (!mpSeq->GetFloats(
-                   iChannel, nChannels, dst.data(), pos, getLen, backwards,
-                   FillFormat::fillZero, mMayThrow)) {
+                   iChannel, nChannels, dst.data(), pos, getLen, nullptr,
+                   backwards, FillFormat::fillZero, mMayThrow))
+            {
                // Now redundant in case of failure
                // for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
                   // memset(dst[i], 0, sizeof(float) * getLen);
@@ -251,13 +252,12 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
 
    constexpr auto iChannel = 0u;
    if (!mpSeq->GetFloats(
-      iChannel, nChannels, floatBuffers, pos, slen, backwards,
-      FillFormat::fillZero, mMayThrow)
-   ) {
+          iChannel, nChannels, floatBuffers, pos, slen, nullptr, backwards,
+          FillFormat::fillZero, mMayThrow))
+   {
       // Now redundant in case of failure
       // for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
          // memset(floatBuffers[iChannel], 0, sizeof(float) * slen);
-      
    }
 
    mpSeq->GetEnvelopeValues(mEnvValues.data(), slen, t, backwards);

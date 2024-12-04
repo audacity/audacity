@@ -17,18 +17,22 @@
 #include "WaveTrack.h"
 #include <cassert>
 
-WaveTrackSink::WaveTrackSink(WaveChannel &left, WaveChannel *pRight,
-   WaveTrack *pGenerated,
-   sampleCount start, bool isProcessor,
-   sampleFormat effectiveFormat
-)  : mLeft{ left }, mpRight{ pRight }
-   , mpGenerated{ pGenerated }
-   , mGenLeft{ pGenerated ? (*pGenerated->Channels().begin()).get() : nullptr }
-   , mGenRight{ pRight && pGenerated
-      ? (*pGenerated->Channels().rbegin()).get() : nullptr }
-   , mIsProcessor{ isProcessor }
-   , mEffectiveFormat{ effectiveFormat }
-   , mOutPos{ start }
+WaveTrackSink::WaveTrackSink(
+   WaveChannel& left, WaveChannel* pRight, WaveTrack* pGenerated,
+   sampleCount start, bool isProcessor, sampleFormat effectiveFormat,
+   const std::vector<int64_t>& whichClips)
+    : mLeft { left }
+    , mpRight { pRight }
+    , mpGenerated { pGenerated }
+    , mGenLeft { pGenerated ? (*pGenerated->Channels().begin()).get() :
+                              nullptr }
+    , mGenRight { pRight && pGenerated ?
+                     (*pGenerated->Channels().rbegin()).get() :
+                     nullptr }
+    , mIsProcessor { isProcessor }
+    , mEffectiveFormat { effectiveFormat }
+    , mOutPos { start }
+    , mWhichClips { whichClips }
 {
 }
 
@@ -66,13 +70,15 @@ void WaveTrackSink::DoConsume(Buffers &data)
    if (inputBufferCnt > 0) {
       // Some data still unwritten
       if (mIsProcessor) {
-         mOk = mOk &&
-            mLeft.Set(data.GetReadPosition(0),
-               floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
+         mOk = mOk && mLeft.Set(
+                         data.GetReadPosition(0), floatSample, mOutPos,
+                         inputBufferCnt, mEffectiveFormat,
+                         mWhichClips.empty() ? nullptr : &mWhichClips);
          if (mpRight)
-            mOk = mOk &&
-               mpRight->Set(data.GetReadPosition(1),
-                  floatSample, mOutPos, inputBufferCnt, mEffectiveFormat);
+            mOk = mOk && mpRight->Set(
+                            data.GetReadPosition(1), floatSample, mOutPos,
+                            inputBufferCnt, mEffectiveFormat,
+                            mWhichClips.empty() ? nullptr : &mWhichClips);
       }
       else if (mGenLeft) {
          mGenLeft->Append(data.GetReadPosition(0),
