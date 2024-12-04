@@ -136,10 +136,71 @@ muse::Ret EffectsPresetsController::deletePreset(const EffectId& effectId, const
     return ok ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
 }
 
-void EffectsPresetsController::importPreset(const EffectId& effectId)
+static std::vector<std::string> presetFilesFilter()
 {
-    UNUSED(effectId);
-    interactive()->warning("Import Preset", std::string("Not implemented"));
+    return { muse::trc("effects", "Presets") + " (*.txt)",
+             muse::trc("global", "All files") + " (*)" };
+}
+
+muse::Ret EffectsPresetsController::importPreset(const EffectInstanceId& effectInstanceId)
+{
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return muse::make_ret(Ret::Code::InternalError);
+    }
+
+    EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
+    IF_ASSERT_FAILED(settings) {
+        return muse::make_ret(Ret::Code::InternalError);
+    }
+
+    const std::string interactiveTitle = muse::trc("effects", "Import Effect Parameters");
+    io::path_t path = interactive()->selectOpeningFile(QString::fromStdString(interactiveTitle),
+                                                       globalConfiguration()->homePath(),
+                                                       presetFilesFilter());
+
+    if (path.empty()) {
+        return muse::make_ret(Ret::Code::Cancel);
+    }
+
+    ByteArray data;
+    Ret ret = io::File::readFile(path, data);
+    if (!ret) {
+        return ret;
+    }
+
+    wxString params(data.constChar());
+
+    wxString ident = params.BeforeFirst(':');
+    params = params.AfterFirst(':');
+
+    auto commandId = effect->GetSquashedName(effect->GetSymbol().Internal());
+
+    if (ident != commandId) {
+        // effect identifiers are a sensible length!
+        // must also have some params.
+        std::string msg;
+        if ((params.Length() < 2) || (ident.Length() < 2) || (ident.Length() > 30)) {
+            msg = muse::mtrc("effetcs", "%1: is not a valid presets file.").arg(path.toString()).toStdString();
+        } else {
+            msg = muse::mtrc("effetcs", "%1: is for a different Effect, Generator or Analyzer.").arg(path.toString()).toStdString();
+        }
+        interactive()->error(interactiveTitle, msg);
+        ret = muse::make_ret(Ret::Code::NotSupported);
+    }
+
+    if (ret) {
+        OptionalMessage res = effect->LoadSettingsFromString(params, *settings);
+        ret = res ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
+        if (ret) {
+            instancesRegister()->notifyAboutSettingsChanged(effectInstanceId);
+        } else {
+            LOGE() << "failed load settings from: " << data.constData();
+        }
+    }
+
+    return ret;
 }
 
 muse::Ret EffectsPresetsController::exportPreset(const EffectInstanceId& effectInstanceId)
@@ -155,11 +216,9 @@ muse::Ret EffectsPresetsController::exportPreset(const EffectInstanceId& effectI
         return muse::make_ret(Ret::Code::InternalError);
     }
 
-    std::vector<std::string> filter = { muse::trc("effects", "Presets") + " (*.txt)",
-                                        muse::trc("global", "All files") + " (*)" };
-
     io::path_t path = interactive()->selectSavingFile(muse::qtrc("effects", "Export Effect Parameters"),
-                                                      globalConfiguration()->homePath(), filter);
+                                                      globalConfiguration()->homePath(),
+                                                      presetFilesFilter());
 
     if (path.empty()) {
         return muse::make_ret(Ret::Code::Cancel);

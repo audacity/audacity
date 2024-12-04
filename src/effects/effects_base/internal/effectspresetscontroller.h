@@ -32,7 +32,7 @@ public:
     muse::Ret applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
     muse::Ret saveCurrentAsPreset(const EffectInstanceId& effectInstanceId) override;
     muse::Ret deletePreset(const EffectId& effectId, const PresetId& presetId) override;
-    void importPreset(const EffectId& effectId) override;
+    muse::Ret importPreset(const EffectInstanceId& effectInstanceId) override;
     muse::Ret exportPreset(const EffectInstanceId& effectInstanceId) override;
 
 private:
