@@ -29,12 +29,6 @@ void EffectManageMenu::load()
 
 void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
-    auto makeItemWithEffectArg = [this, effectId](const ActionCode& actionCode) {
-        MenuItem* item = makeMenuItem(actionCode);
-        item->setArgs(ActionData::make_arg1<EffectId>(effectId));
-        return item;
-    };
-
     MenuItemList items;
 
     // user
@@ -106,8 +100,17 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     items << makeSeparator();
 
     // import / export
-    items << makeItemWithEffectArg("action://effects/presets/import");
-    items << makeItemWithEffectArg("action://effects/presets/export");
+    {
+        MenuItem* item = makeMenuItem("action://effects/presets/import");
+        item->setArgs(ActionData::make_arg1<EffectInstanceId>(instanceId));
+        items << item;
+    }
+
+    {
+        MenuItem* item = makeMenuItem("action://effects/presets/export");
+        item->setArgs(ActionData::make_arg1<EffectInstanceId>(instanceId));
+        items << item;
+    }
 
     setItems(items);
 }

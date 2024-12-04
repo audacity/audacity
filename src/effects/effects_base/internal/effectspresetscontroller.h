@@ -7,6 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "global/iinteractive.h"
+#include "global/iglobalconfiguration.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
 
@@ -19,6 +20,7 @@ class EffectsPresetsController : public IEffectsPresetsController
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
 
 public:
     EffectsPresetsController() = default;
@@ -31,7 +33,7 @@ public:
     muse::Ret saveCurrentAsPreset(const EffectInstanceId& effectInstanceId) override;
     muse::Ret deletePreset(const EffectId& effectId, const PresetId& presetId) override;
     void importPreset(const EffectId& effectId) override;
-    void exportPreset(const EffectId& effectId) override;
+    muse::Ret exportPreset(const EffectInstanceId& effectInstanceId) override;
 
 private:
 
