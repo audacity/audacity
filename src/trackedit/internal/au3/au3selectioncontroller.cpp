@@ -15,6 +15,9 @@
 
 #include "log.h"
 
+#include <limits>
+#include <numeric>
+
 //#define DEBUG_SELECTION
 #ifdef DEBUG_SELECTION
 #define MYLOG LOGD
@@ -78,7 +81,7 @@ void Au3SelectionController::setSelectedTracks(const TrackIdList& tracksIds, boo
     m_selectedTracks.set(tracksIds, complete);
 }
 
-void Au3SelectionController::addSelectedTrack(const TrackId &trackId)
+void Au3SelectionController::addSelectedTrack(const TrackId& trackId)
 {
     auto selectedTracks = m_selectedTracks.val;
 
@@ -130,7 +133,7 @@ void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys)
     setSelectedTracks(selectedTracks, true);
 }
 
-void Au3SelectionController::addSelectedClip(const ClipKey &clipKey)
+void Au3SelectionController::addSelectedClip(const ClipKey& clipKey)
 {
     auto selectedClips = m_selectedClips.val;
 
@@ -152,46 +155,47 @@ muse::async::Channel<ClipKeyList> Au3SelectionController::clipsSelected() const
 
 double Au3SelectionController::selectedClipStartTime() const
 {
-    auto clipKeyList = selectedClips();
-    if (clipKeyList.empty()) {
+    const std::vector<std::shared_ptr<const WaveClip> > waveClips = selectedWaveClips();
+    if (waveClips.empty()) {
         return -1.0;
     }
 
-    auto clipKey = clipKeyList.at(0);
-
-    WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return -1.0;
-    }
-
-    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
-        return -1.0;
-    }
-
-    return clip->Start();
+    return std::accumulate(waveClips.begin(), waveClips.end(), std::numeric_limits<double>::max(), [&](double acc, const auto& clip) {
+        return std::min(acc, clip->Start());
+    });
 }
 
 double Au3SelectionController::selectedClipEndTime() const
 {
-    auto clipKeyList = selectedClips();
+    const std::vector<std::shared_ptr<const WaveClip> > waveClips = selectedWaveClips();
+    return std::accumulate(waveClips.begin(), waveClips.end(), -1.0, [&](double acc, const auto& clip) {
+        return std::max(acc, clip->End());
+    });
+}
+
+std::vector<std::shared_ptr<const WaveClip> > Au3SelectionController::selectedWaveClips() const
+{
+    const auto clipKeyList = selectedClips();
     if (clipKeyList.empty()) {
-        return -1.0;
+        return {};
     }
 
-    auto clipKey = clipKeyList.at(0);
+    std::vector<std::shared_ptr<const WaveClip> > waveClips;
+    std::for_each(clipKeyList.begin(), clipKeyList.end(), [&](const ClipKey& clipKey) {
+        WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return;
+        }
 
-    WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return -1.0;
-    }
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return;
+        }
 
-    std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
-        return -1.0;
-    }
+        waveClips.push_back(clip);
+    });
 
-    return clip->End();
+    return waveClips;
 }
 
 void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)

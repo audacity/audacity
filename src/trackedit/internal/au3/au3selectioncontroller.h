@@ -60,6 +60,7 @@ public:
 
 private:
     void updateSelectionController();
+    std::vector<std::shared_ptr<const WaveClip> > selectedWaveClips() const;
 
     au3::Au3Project& projectRef() const;
     Observer::Subscription m_tracksSubc;
