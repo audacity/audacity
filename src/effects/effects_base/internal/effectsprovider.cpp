@@ -133,7 +133,7 @@ muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInst
 }
 
 muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,
-                                         EffectSettings& settings)
+                                         EffectSettings& settings, const trackedit::ClipKeyList& selectedClips)
 {
     //! ============================================================================
     //! NOTE Step 1 - add new a track if need
@@ -183,7 +183,11 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
 
             assert(pInstanceEx); // null check above
             try {
-                if (pInstanceEx->Process(settings) == false) {
+                std::vector<int64_t> selectedClipIds(selectedClips.size());
+                std::transform(selectedClips.begin(), selectedClips.end(), selectedClipIds.begin(), [](const auto& clipKey) {
+                    return clipKey.clipId;
+                });
+                if (pInstanceEx->Process(settings, std::move(selectedClipIds)) == false) {
                     // It failed but we don't know why.
                     success = make_ret(Err::EffectProcessFailed);
                 }

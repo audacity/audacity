@@ -111,8 +111,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         }
 
         //! NOTE Step 1.3 - check selection
-        trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
-        if (selectedClips.size() == 1) {
+        if (!selectionController()->selectedClips().empty()) {
             t0 = selectionController()->selectedClipStartTime();
             t1 = selectionController()->selectedClipEndTime();
         } else {
@@ -259,7 +258,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     // common things used below
     Ret success;
     {
-        success = effectsProvider()->performEffect(project, effect, pInstanceEx, *settings);
+        success = effectsProvider()->performEffect(project, effect, pInstanceEx, *settings, selectionController()->selectedClips());
     }
 
     //! ============================================================================

@@ -12,6 +12,7 @@
 #include "au3wrap/au3types.h"
 
 #include "effectstypes.h"
+#include "trackedit/trackedittypes.h"
 
 struct EffectSettings;
 namespace au::effects {
@@ -34,7 +35,7 @@ public:
     virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;
 
     virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
-                                    EffectSettings& settings) = 0;
+                                    EffectSettings& settings, const trackedit::ClipKeyList& selectedClips) = 0;
 
     virtual muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) = 0;
 };

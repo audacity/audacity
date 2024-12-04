@@ -42,7 +42,7 @@ public:
     muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
 
     muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
-                            EffectSettings& settings) override;
+                            EffectSettings& settings, const trackedit::ClipKeyList& selectedClips) override;
 
     muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) override;
 
