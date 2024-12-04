@@ -4,9 +4,11 @@
 #include "effectspresetscontroller.h"
 
 #include "global/containers.h"
+#include "global/translation.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-effects/EffectManager.h"
+#include "libraries/lib-module-manager/PluginManager.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
@@ -107,11 +109,30 @@ Ret EffectsPresetsController::saveCurrentAsPreset(const EffectInstanceId& effect
     return ok ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
 }
 
-void EffectsPresetsController::deletePreset(const EffectId& effectId, const PresetId& presetId)
+muse::Ret EffectsPresetsController::deletePreset(const EffectId& effectId, const PresetId& presetId)
 {
-    UNUSED(effectId);
-    UNUSED(presetId);
-    interactive()->warning("Delete Preset", std::string("Not implemented"));
+    IInteractive::Result res = interactive()->question(
+        trc("effects", "Delete Preset"),
+        mtrc("effects", "Are you sure you want to delete \"%1\"?")
+        .arg(au3::wxToString(presetId)).toStdString(),
+        { IInteractive::Button::No, IInteractive::Button::Yes });
+
+    if (res.button() == static_cast<int>(muse::IInteractive::Button::No)) {
+        return muse::make_ret(Ret::Code::Cancel);
+    }
+
+    auto& pluginManager = PluginManager::Get();
+    bool ok = pluginManager.RemoveConfigSubgroup(
+        PluginSettings::Private,
+        au3::wxFromString(effectId),
+        UserPresetsGroup(presetId)
+        );
+
+    if (ok) {
+        m_userPresetsChanged.send(effectId);
+    }
+
+    return ok ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
 }
 
 void EffectsPresetsController::importPreset(const EffectId& effectId)

@@ -23,7 +23,7 @@ public:
 
     virtual muse::Ret applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) = 0;
     virtual muse::Ret saveCurrentAsPreset(const EffectInstanceId& effectId) = 0;
-    virtual void deletePreset(const EffectId& effectId, const PresetId& presetId) = 0;
+    virtual muse::Ret deletePreset(const EffectId& effectId, const PresetId& presetId) = 0;
     virtual void importPreset(const EffectId& effectId) = 0;
     virtual void exportPreset(const EffectId& effectId) = 0;
 };
