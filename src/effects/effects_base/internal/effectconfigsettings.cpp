@@ -5,6 +5,9 @@
 
 #include <algorithm>
 
+#include "log.h"
+#include "au3wrap/internal/wxtypes_convert.h"
+
 using namespace au::au3;
 
 namespace {
@@ -47,11 +50,13 @@ EffectConfigSettings::EffectConfigSettings(const std::string& filename)
 
 wxString EffectConfigSettings::GetGroup() const
 {
+    LOGDA() << "";
     return m_QSettings.group().toStdString();
 }
 
 wxArrayString EffectConfigSettings::GetChildGroups() const
 {
+    LOGDA() << "";
     const QStringList list = m_QSettings.childGroups();
     wxArrayString groups;
     std::transform(
@@ -62,6 +67,7 @@ wxArrayString EffectConfigSettings::GetChildGroups() const
 
 wxArrayString EffectConfigSettings::GetChildKeys() const
 {
+    LOGDA() << "";
     const QStringList list = m_QSettings.childKeys();
     wxArrayString keys;
     std::transform(
@@ -72,11 +78,13 @@ wxArrayString EffectConfigSettings::GetChildKeys() const
 
 bool EffectConfigSettings::HasEntry(const wxString& key) const
 {
+    LOGDA() << "key: " << au3::wxToStdSting(key);
     return m_QSettings.contains(ToQString(key));
 }
 
 bool EffectConfigSettings::HasGroup(const wxString& group) const
 {
+    LOGDA() << "group: " << au3::wxToStdSting(group);
     return m_QSettings.childGroups().contains(WoSlashes(group));
 }
 
@@ -132,36 +140,42 @@ bool EffectConfigSettings::Read(const wxString& key, wxString* value) const
 
 bool EffectConfigSettings::Write(const wxString& key, bool value)
 {
+    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
     m_QSettings.setValue(ToQString(key), value);
     return true;
 }
 
 bool EffectConfigSettings::Write(const wxString& key, int value)
 {
+    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
     m_QSettings.setValue(ToQString(key), value);
     return true;
 }
 
 bool EffectConfigSettings::Write(const wxString& key, long value)
 {
+    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
     m_QSettings.setValue(ToQString(key), QVariant::fromValue(value));
     return true;
 }
 
 bool EffectConfigSettings::Write(const wxString& key, long long value)
 {
+    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
     m_QSettings.setValue(ToQString(key), value);
     return true;
 }
 
 bool EffectConfigSettings::Write(const wxString& key, double value)
 {
+    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
     m_QSettings.setValue(ToQString(key), value);
     return true;
 }
 
 bool EffectConfigSettings::Write(const wxString& key, const wxString& value)
 {
+    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << au3::wxToStdSting(value);
     m_QSettings.setValue(ToQString(key), ToQString(value));
     return true;
 }
@@ -174,6 +188,7 @@ bool EffectConfigSettings::Flush() noexcept
 
 void EffectConfigSettings::DoBeginGroup(const wxString& prefix)
 {
+    LOGDA() << au3::wxToStdSting(prefix);
     m_QSettings.beginGroup(WoSlashes(prefix));
 }
 
