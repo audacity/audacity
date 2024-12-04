@@ -47,7 +47,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveChannelUtilities.h"
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackAffordanceHandle.h"
-#include "WaveTrackUtilities.h"
 #include "WaveClipAdjustBorderHandle.h"
 #include "WaveClipUIUtilities.h"
 
@@ -885,12 +884,13 @@ auto WaveChannelSubView::GetMenuItems(
       auto &track = pChannel->GetTrack();
       const auto &viewInfo = ViewInfo::Get(*pProject);
       const auto t = viewInfo.PositionToTime(pPosition->x, rect.x);
-      if ((track.IsSelected() &&
-         t > viewInfo.selectedRegion.t0() && t < viewInfo.selectedRegion.t1() &&
-         !WaveTrackUtilities::GetClipsIntersecting(track,
-            viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1())
-               .empty())
-         ||
+      if (
+         (track.IsSelected() && t > viewInfo.selectedRegion.t0() &&
+          t < viewInfo.selectedRegion.t1() &&
+          !track
+              .GetSortedClipsIntersecting(
+                 viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1())
+              .empty()) ||
          WaveChannelUtilities::GetClipAtTime(**track.Channels().begin(), t))
       {
          return WaveClipUIUtilities::GetWaveClipMenuItems();

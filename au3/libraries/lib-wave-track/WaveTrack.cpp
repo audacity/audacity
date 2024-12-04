@@ -1947,16 +1947,32 @@ void WaveTrack::ApplyPitchAndSpeed(
           interval->first <= interval->second);
    if (GetNumClips() == 0)
       return;
-   const auto startTime =
-      interval ? std::max(SnapToSample(interval->first), GetStartTime()) :
-                 GetStartTime();
-   const auto endTime =
-      interval ? std::min(SnapToSample(interval->second), GetEndTime()) :
-                 GetEndTime();
-   if (startTime >= endTime)
+
+   if (interval)
+      interval.emplace(
+         SnapToSample(interval->first), SnapToSample(interval->second));
+
+   // If there is no specified interval, we look at all clips in the track.
+   const auto examinedClips =
+      interval ? GetSortedClipsIntersecting(interval->first, interval->second) :
+                 SortedClipArray();
+   if (examinedClips.empty())
       return;
 
-   // Here we assume that left- and right clips are aligned.
+   const auto startTime =
+      interval ?
+         std::max(examinedClips.front()->GetPlayStartTime(), interval->first) :
+         examinedClips.front()->GetPlayStartTime();
+   const auto endTime =
+      interval ?
+         std::min(examinedClips.back()->GetPlayEndTime(), interval->second) :
+         examinedClips.back()->GetPlayEndTime();
+   if (startTime >= endTime)
+   {
+      assert(false);
+      return;
+   }
+
    if (auto clipAtT0 = GetClipAtTime(startTime);
        clipAtT0 && clipAtT0->SplitsPlayRegion(startTime) &&
        clipAtT0->HasPitchOrSpeed())
@@ -2951,6 +2967,18 @@ auto WaveTrack::GetClipAtTime(double time) const -> IntervalConstHolder
          return pClip->WithinPlayRegion(time);
       });
    return p != clips.rend() ? *p : nullptr;
+}
+
+WaveTrack::IntervalConstHolders
+WaveTrack::GetSortedClipsIntersecting(double t0, double t1) const
+{
+   assert(t0 <= t1);
+   WaveTrack::IntervalConstHolders result;
+   const auto clips = SortedClipArray();
+   std::copy_if(
+      clips.begin(), clips.end(), back_inserter(result),
+      [&](const auto& pClip) { return pClip->IntersectsPlayRegion(t0, t1); });
+   return result;
 }
 
 auto WaveTrack::CreateClip(double offset, const wxString& name,

@@ -181,12 +181,6 @@ WAVE_TRACK_API void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 WAVE_TRACK_API void InspectBlocks(const TrackList &tracks,
    BlockInspector inspector, SampleBlockIDSet *pIDs = nullptr);
 
-/*!
- @pre t0 <= t1
- */
-WAVE_TRACK_API WaveTrack::IntervalConstHolders
-GetClipsIntersecting(const WaveTrack &track, double t0, double t1);
-
 WAVE_TRACK_API void
 ExpandClipTillNextOne(const WaveTrack& track, WaveTrack::Interval& interval);
 } // namespace WaveTrackUtilities

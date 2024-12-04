@@ -704,7 +704,7 @@ void OnPaste(const CommandContext &context)
       if(!isSyncLocked && GetEditClipsCanMove())
       {
          //Special case when pasting without sync lock and
-         //"...move other clips" option is 
+         //"...move other clips" option is
          //Also shift all intervals in all other selected tracks that
          //starts after t0
          const auto offset = srcTracks->GetEndTime() - (t1 - t0);
@@ -1106,9 +1106,8 @@ const ReservedCommandFlag
       const auto selectedTracks = TrackList::Get(project).Selected<const WaveTrack>();
       for (const auto track : selectedTracks)
       {
-         const auto selectedClips =
-            WaveTrackUtilities::GetClipsIntersecting(*track,
-               viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1());
+         const auto selectedClips = track->GetSortedClipsIntersecting(
+            viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1());
          if(selectedClips.size() > 1)
             return true;
       }
