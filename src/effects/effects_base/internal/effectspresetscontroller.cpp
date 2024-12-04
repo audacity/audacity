@@ -5,6 +5,7 @@
 
 #include "global/containers.h"
 #include "global/translation.h"
+#include "global/io/file.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-effects/EffectManager.h"
@@ -112,8 +113,8 @@ Ret EffectsPresetsController::saveCurrentAsPreset(const EffectInstanceId& effect
 muse::Ret EffectsPresetsController::deletePreset(const EffectId& effectId, const PresetId& presetId)
 {
     IInteractive::Result res = interactive()->question(
-        trc("effects", "Delete Preset"),
-        mtrc("effects", "Are you sure you want to delete \"%1\"?")
+        muse::trc("effects", "Delete Preset"),
+        muse::mtrc("effects", "Are you sure you want to delete \"%1\"?")
         .arg(au3::wxToString(presetId)).toStdString(),
         { IInteractive::Button::No, IInteractive::Button::Yes });
 
@@ -141,8 +142,38 @@ void EffectsPresetsController::importPreset(const EffectId& effectId)
     interactive()->warning("Import Preset", std::string("Not implemented"));
 }
 
-void EffectsPresetsController::exportPreset(const EffectId& effectId)
+muse::Ret EffectsPresetsController::exportPreset(const EffectInstanceId& effectInstanceId)
 {
-    UNUSED(effectId);
-    interactive()->warning("Export Preset", std::string("Not implemented"));
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return muse::make_ret(Ret::Code::InternalError);
+    }
+
+    EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
+    IF_ASSERT_FAILED(settings) {
+        return muse::make_ret(Ret::Code::InternalError);
+    }
+
+    std::vector<std::string> filter = { muse::trc("effects", "Presets") + " (*.txt)",
+                                        muse::trc("global", "All files") + " (*)" };
+
+    io::path_t path = interactive()->selectSavingFile(muse::qtrc("effects", "Export Effect Parameters"),
+                                                      globalConfiguration()->homePath(), filter);
+
+    if (path.empty()) {
+        return muse::make_ret(Ret::Code::Cancel);
+    }
+
+    wxString params;
+    effect->SaveSettingsAsString(*settings, params);
+    auto commandId = effect->GetSquashedName(effect->GetSymbol().Internal());
+    params = commandId.GET() + ":" + params;
+
+    std::string str = au3::wxToStdSting(params);
+    ByteArray data = ByteArray::fromRawData(str.c_str(), str.size());
+
+    Ret ret = io::File::writeFile(path, data);
+
+    return ret;
 }

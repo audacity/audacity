@@ -138,8 +138,8 @@ void EffectsActionsController::exportPreset(const muse::actions::ActionData& arg
         return;
     }
 
-    EffectId effectId = args.arg<EffectId>(0);
-    presetsController()->exportPreset(effectId);
+    EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
+    presetsController()->exportPreset(effectInstanceId);
 }
 
 bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
