@@ -128,8 +128,8 @@ void EffectsActionsController::importPreset(const muse::actions::ActionData& arg
         return;
     }
 
-    EffectId effectId = args.arg<EffectId>(0);
-    presetsController()->importPreset(effectId);
+    EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
+    presetsController()->importPreset(effectInstanceId);
 }
 
 void EffectsActionsController::exportPreset(const muse::actions::ActionData& args)
