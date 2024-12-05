@@ -14,7 +14,7 @@
 #include "../ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "context/iglobalcontext.h"
-#include "../ieffectspresetsprovider.h"
+#include "../ieffectpresetsscenario.h"
 #include "iinteractive.h"
 
 namespace au::effects {
@@ -24,7 +24,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IEffectsPresetsProvider> presetsController;
+    muse::Inject<IEffectPresetsScenario> presetsScenario;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::context::IGlobalContext> globalContext;
 

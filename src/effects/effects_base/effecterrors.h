@@ -16,6 +16,10 @@ enum class Err {
 
     EffectNoAudioSelected,
     EffectProcessFailed,
+
+    // presets
+    PresetNotValid,
+    PresetMissMatch
 };
 
 inline muse::Ret make_ret(Err e)
@@ -31,6 +35,10 @@ inline muse::Ret make_ret(Err e)
         return muse::Ret(retCode, muse::trc("effects", "No audio selected"));
     case Err::EffectProcessFailed:
         return muse::Ret(retCode, muse::trc("effects", "Applying effect failed"));
+    case Err::PresetNotValid:
+        return muse::Ret(retCode, muse::trc("effects", "Not valid presets file"));
+    case Err::PresetMissMatch:
+        return muse::Ret(retCode, muse::trc("effects", "Preset miss match"));
     }
 
     return muse::Ret(static_cast<int>(e));

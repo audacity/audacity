@@ -3,7 +3,7 @@
 #include "uicomponents/view/abstractmenumodel.h"
 
 #include "modularity/ioc.h"
-#include "effects/effects_base/ieffectspresetsprovider.h"
+#include "effects/effects_base/ieffectpresetsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 
 namespace au::effects {
@@ -12,7 +12,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     Q_OBJECT
     Q_PROPERTY(QString instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
 
-    muse::Inject<IEffectsPresetsProvider> presetsController;
+    muse::Inject<IEffectPresetsProvider> presetsController;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:

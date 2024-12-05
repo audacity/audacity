@@ -98,7 +98,7 @@ void EffectsActionsController::applyPreset(const muse::actions::ActionData& args
 
     EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
     PresetId presetId = args.arg<PresetId>(1);
-    presetsController()->applyPreset(effectInstanceId, presetId);
+    presetsScenario()->applyPreset(effectInstanceId, presetId);
 }
 
 void EffectsActionsController::saveAsPreset(const muse::actions::ActionData& args)
@@ -108,7 +108,7 @@ void EffectsActionsController::saveAsPreset(const muse::actions::ActionData& arg
     }
 
     EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
-    presetsController()->saveCurrentAsPreset(effectInstanceId);
+    presetsScenario()->saveCurrentAsPreset(effectInstanceId);
 }
 
 void EffectsActionsController::deletePreset(const muse::actions::ActionData& args)
@@ -119,7 +119,7 @@ void EffectsActionsController::deletePreset(const muse::actions::ActionData& arg
 
     EffectId effectId = args.arg<EffectId>(0);
     PresetId presetId = args.arg<PresetId>(1);
-    presetsController()->deletePreset(effectId, presetId);
+    presetsScenario()->deletePreset(effectId, presetId);
 }
 
 void EffectsActionsController::importPreset(const muse::actions::ActionData& args)
@@ -129,7 +129,7 @@ void EffectsActionsController::importPreset(const muse::actions::ActionData& arg
     }
 
     EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
-    presetsController()->importPreset(effectInstanceId);
+    presetsScenario()->importPreset(effectInstanceId);
 }
 
 void EffectsActionsController::exportPreset(const muse::actions::ActionData& args)
@@ -139,7 +139,7 @@ void EffectsActionsController::exportPreset(const muse::actions::ActionData& arg
     }
 
     EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
-    presetsController()->exportPreset(effectInstanceId);
+    presetsScenario()->exportPreset(effectInstanceId);
 }
 
 bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
