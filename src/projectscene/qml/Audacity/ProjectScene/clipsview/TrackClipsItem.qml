@@ -15,6 +15,7 @@ Item {
 
     property bool isDataSelected: false
     property bool isTrackSelected: false
+    property bool isMultiSelectionActive: false
     property bool isStereo: clipsModel.isStereo
     property double channelHeightRatio: isStereo ? 0.5 : 1
     property bool moveActive: false
@@ -25,6 +26,7 @@ Item {
     // so we are handling it manually
     signal trackItemMousePositionChanged(real x, real y, var clipKey)
     signal clipSelectedRequested()
+    signal selectionResetRequested()
     signal clipMoveRequested(bool completed)
     signal requestSelectionContextMenu(real x, real y)
 
@@ -121,6 +123,7 @@ Item {
                 pitch: clipItem.pitch
                 speedPercentage: clipItem.speedPercentage
                 clipSelected: clipItem.selected
+                isMultiSelectionActive: root.isMultiSelectionActive
                 isDataSelected: root.isDataSelected
                 moveActive: root.moveActive
 
@@ -182,6 +185,11 @@ Item {
                 onRequestSelected: {
                     clipsModel.selectClip(clipItem.key)
                     root.clipSelectedRequested()
+                }
+
+                onRequestSelectionReset: {
+                    clipsModel.resetSelectedClips()
+                    root.selectionResetRequested()
                 }
 
                 onTitleEditStarted: {

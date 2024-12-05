@@ -39,6 +39,11 @@ void TracksListClipsModel::load()
         emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
     });
 
+    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeys) {
+        Q_UNUSED(clipKeys);
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsMultiSelectionActiveRole });
+    });
+
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
         Q_UNUSED(begin);
         if (m_trackList.empty()) {
@@ -157,6 +162,9 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     case IsTrackSelectedRole: {
         return muse::contains(selectionController()->selectedTracks(), track.id);
     }
+    case IsMultiSelectionActiveRole: {
+        return selectionController()->selectedClips().size() > 1;
+    }
     default:
         break;
     }
@@ -171,7 +179,8 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
         //{ TypeRole, "trackType" },
         { TrackIdRole, "trackId" },
         { IsDataSelectedRole, "isDataSelected" },
-        { IsTrackSelectedRole, "isTrackSelected" }
+        { IsTrackSelectedRole, "isTrackSelected" },
+        { IsMultiSelectionActiveRole, "isMultiSelectionActive" }
     };
     return roles;
 }

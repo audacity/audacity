@@ -54,6 +54,7 @@ private:
     void clipCut(const muse::actions::ActionData& args);
     void clipCopy(const muse::actions::ActionData& args);
     void clipDelete(const muse::actions::ActionData& args);
+    void multiClipDelete();
 
     void clipCutSelected();
     void clipCopySelected();

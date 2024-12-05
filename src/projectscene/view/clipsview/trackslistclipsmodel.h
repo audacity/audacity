@@ -56,7 +56,8 @@ private:
         TypeRole = Qt::UserRole + 1,
         TrackIdRole,
         IsDataSelectedRole,
-        IsTrackSelectedRole
+        IsTrackSelectedRole,
+        IsMultiSelectionActiveRole
     };
 
     void updateTotalTracksHeight();

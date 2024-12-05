@@ -788,6 +788,34 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
     return true;
 }
 
+bool Au3Interaction::removeClips(const ClipKeyList& clipKeyList)
+{
+    if (clipKeyList.empty()) {
+        return false;
+    }
+
+    for (const auto& clipKey : clipKeyList) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return false;
+        }
+
+        waveTrack->Clear(clip->Start(), clip->End());
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    pushProjectHistoryDeleteMultipleState();
+
+    return true;
+}
+
 bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
     secs_t duration = end - begin;
@@ -1544,6 +1572,11 @@ void Au3Interaction::pushProjectHistoryDeleteState(secs_t start, secs_t duration
     ss << "Delete " << duration << " seconds at " << start;
 
     projectHistory()->pushHistoryState(ss.str(), "Delete");
+}
+
+void Au3Interaction::pushProjectHistoryDeleteMultipleState()
+{
+    projectHistory()->pushHistoryState("Delete", "Deleted multiple clips");
 }
 
 void Au3Interaction::pushProjectHistoryChangeClipPitchState()
