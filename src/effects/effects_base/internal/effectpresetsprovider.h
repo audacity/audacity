@@ -3,12 +3,9 @@
 */
 #pragma once
 
-#include "../ieffectspresetsprovider.h"
+#include "../ieffectpresetsprovider.h"
 
 #include "modularity/ioc.h"
-#include "global/iinteractive.h"
-#include "global/iglobalconfiguration.h"
-#include "global/io/path.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
 
@@ -16,31 +13,28 @@
 
 class EffectSettingsManager;
 namespace au::effects {
-class EffectsPresetsProvider : public IEffectsPresetsProvider
+class EffectPresetsProvider : public IEffectPresetsProvider
 {
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
 
 public:
-    EffectsPresetsProvider() = default;
+    EffectPresetsProvider() = default;
 
     PresetIdList factoryPresets(const EffectId& effectId) const override;
     PresetIdList userPresets(const EffectId& effectId) const override;
     muse::async::Channel<EffectId> userPresetsChanged() const override;
 
     muse::Ret applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
-    muse::Ret saveCurrentAsPreset(const EffectInstanceId& effectInstanceId) override;
+    muse::Ret saveCurrentAsPreset(const EffectInstanceId& effectInstanceId, const std::string& presetName) override;
     muse::Ret deletePreset(const EffectId& effectId, const PresetId& presetId) override;
-    muse::Ret importPreset(const EffectInstanceId& effectInstanceId) override;
-    muse::Ret exportPreset(const EffectInstanceId& effectInstanceId) override;
+    muse::Ret importPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath) override;
+    muse::Ret exportPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath) override;
 
 private:
 
     const EffectSettingsManager& settingsManager(const EffectId& effectId) const;
 
     muse::async::Channel<EffectId> m_userPresetsChanged;
-    muse::io::path_t m_lastImportPath;
 };
 }
