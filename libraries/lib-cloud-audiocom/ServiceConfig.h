@@ -35,7 +35,7 @@ public:
    std::string GetOAuthClientSecret() const;
    //! OAuth2 redirect URL. Only used to satisfy the protocol
    std::string GetOAuthRedirectURL() const;
-   //! Audio.com authorization API to automatically login current user 
+   //! Audio.com authorization API to automatically login current user
    //  in the default browser when opening the project from audacity
    std::string GetAuthWithRedirectURL() const;
    //! Helper to construct the full URLs for the API
@@ -45,7 +45,7 @@ public:
       std::string_view audioID, std::string_view token,
       AudiocomTrace) const;
    //! Helper to construct the page URL for the authorised upload
-   std::string GetAudioURL(
+   std::string GetAudioPagePath(
       std::string_view userSlug, std::string_view audioSlug,
       AudiocomTrace) const;
    //! Timeout between progress callbacks

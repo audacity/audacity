@@ -72,15 +72,11 @@ private:
       wxWindow* root { nullptr };
 
       UserPanel* userPanel { nullptr };
-      wxPanel* anonInfoPanel { nullptr };
-      wxPanel* authorizedInfoPanel { nullptr };
       wxTextCtrl* trackTitle { nullptr };
 
       Observer::Subscription mUserDataChangedSubscription;
 
       void PopulateInitialStatePanel(ShuttleGui& s);
-
-      void UpdateUserData(bool authorized);
 
       wxString GetTrackTitle() const;
       bool HasValidTitle() const;
@@ -123,7 +119,6 @@ private:
 
    std::function<void()> mContinueAction;
 
-   bool mIsAuthorised { false };
    bool mInProgress { false };
 };
 } // namespace audacity::cloud::audiocom

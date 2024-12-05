@@ -23,9 +23,11 @@
 
 #include "dialogs/LinkWithTokenDialog.h"
 
+#include "AuthorizationHandler.h"
 #include "OAuthService.h"
 #include "ServiceConfig.h"
 #include "UserService.h"
+#include "ui/dialogs/LoginDialog.h"
 
 #include "CodeConversions.h"
 #include "ExportUtils.h"
@@ -45,13 +47,12 @@ namespace audacity::cloud::audiocom
 namespace
 {
 const wxSize avatarSize  = { 32, 32 };
-const auto notLinkedText = XO("Account not linked");
-const auto anonymousText = XO("Anonymous");
+const auto anonymousText = XO("You are not signed in");
 } // namespace
 
 UserPanel::UserPanel(
    const ServiceConfig& serviceConfig, OAuthService& authService,
-   UserService& userService, LinkMode linkMode, AudiocomTrace trace,
+   UserService& userService, bool linkButtonVisible, AudiocomTrace trace,
    wxWindow* parent, const wxPoint& pos, const wxSize& size)
     : wxPanelWrapper { parent, wxID_ANY, pos, size }
     , mServiceConfig { serviceConfig }
@@ -60,22 +61,21 @@ UserPanel::UserPanel(
     , mAudiocomTrace { trace }
     , mUserDataChangedSubscription { userService.Subscribe(
          [this](const auto&) { UpdateUserData(); }) }
-    , mLinkMode { linkMode }
+    , mLinkButtonVisible { linkButtonVisible }
 {
+   GetAuthorizationHandler().PushSuppressDialogs();
    mUserImage = safenew UserImage(this, avatarSize);
-   mUserImage->SetLabel( mLinkMode == LinkMode::Link ? 
-                         notLinkedText : anonymousText );      // for screen readers
+   mUserImage->SetLabel(anonymousText);      // for screen readers
    mUserName = safenew wxStaticText(
       this,
       wxID_ANY,
-      ( mLinkMode == LinkMode::Link ? 
-        notLinkedText : anonymousText).Translation() );
+      anonymousText.Translation() );
 
    mLinkButton =
-      safenew wxButton(this, wxID_ANY, XXO("&Link Account").Translation());
+      safenew wxButton(this, wxID_ANY, XXO("Sign in").Translation());
    mLinkButton->Bind(wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
-   
-   mLinkButton->Show(mLinkMode == LinkMode::Link);
+
+   mLinkButton->Show(mLinkButtonVisible);
 
    auto sizer = safenew wxBoxSizer { wxHORIZONTAL };
 
@@ -161,9 +161,7 @@ void UserPanel::UpdateUserData()
    else
       mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
 
-   mLinkButton->SetLabel(( mLinkMode == LinkMode::Link ? 
-     XXO("&Unlink Account") :
-     XXO("&Sign Out") ).Translation());
+   mLinkButton->SetLabel(XXO("&Sign Out").Translation());
    mLinkButton->Show();
 
    OnStateChanged(true);
@@ -174,19 +172,12 @@ void UserPanel::OnLinkButtonPressed()
    auto& oauthService = GetOAuthService();
 
    if (oauthService.HasAccessToken())
+   {
       oauthService.UnlinkAccount(mAudiocomTrace);
+   }
    else
    {
-      OpenInDefaultBrowser({ audacity::ToWXString(
-         mServiceConfig.GetOAuthLoginPage(mAudiocomTrace)) });
-
-#ifdef HAS_CUSTOM_URL_HANDLING
-      if (!URLSchemesRegistry::Get().IsURLHandlingSupported())
-#endif
-      {
-         LinkWithTokenDialog dlg(mAudiocomTrace, this);
-         dlg.ShowModal();
-      }
+      LoginDialog::SignIn(this, LoginDialog::Mode::Create);
    }
 }
 
@@ -195,8 +186,8 @@ void UserPanel::SetAnonymousState()
    mUserName->SetLabel(anonymousText.Translation());
    mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
    mUserImage->SetLabel(anonymousText);   // for screen readers
-   mLinkButton->SetLabel(XXO("&Link Account").Translation());
-   mLinkButton->Show(mLinkMode == LinkMode::Link);
+   mLinkButton->SetLabel(XXO("Sign in").Translation());
+   mLinkButton->Show(mLinkButtonVisible);
 
    OnStateChanged(false);
 }
