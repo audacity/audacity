@@ -44,7 +44,7 @@ signals:
 
 private:
 
-    void doReload() override {}
+    void doReload() override;
 
     DtmfSettings& mutSettings();
     const DtmfSettings& settings() const;

@@ -28,6 +28,12 @@ QVariantList NoiseViewModel::types() const
     return items;
 }
 
+void NoiseViewModel::doReload()
+{
+    emit amplitudeChanged();
+    emit typeChanged();
+}
+
 double NoiseViewModel::amplitude() const
 {
     return settings().amplitude;

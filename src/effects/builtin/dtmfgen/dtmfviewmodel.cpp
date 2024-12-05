@@ -14,6 +14,15 @@ DtmfViewModel::~DtmfViewModel()
 {
 }
 
+void DtmfViewModel::doReload()
+{
+    emit amplitudeChanged();
+    emit sequenceChanged();
+    emit dutyCycleChanged();
+    emit toneDurationChanged();
+    emit silenceDurationChanged();
+}
+
 QString DtmfViewModel::sequence() const
 {
     return QString::fromStdString(settings().dtmfSequence);
