@@ -33,6 +33,7 @@
 #include "view/clipsview/waveview.h"
 #include "view/clipsview/au3/au3wavepainter.h"
 #include "view/clipsview/clipcontextmenumodel.h"
+#include "view/clipsview/multiclipcontextmenumodel.h"
 #include "view/clipsview/canvascontextmenumodel.h"
 #include "view/clipsview/selectioncontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
@@ -128,6 +129,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterUncreatableType<ClipListItem>("Audacity.ProjectScene", 1, 0, "ClipListItem", "Not creatable from QML");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
+    qmlRegisterType<MultiClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "MultiClipContextMenuModel");
     qmlRegisterType<SelectionContextMenuModel>("Audacity.ProjectScene", 1, 0, "SelectionContextMenuModel");
     qmlRegisterType<CanvasContextMenuModel>("Audacity.ProjectScene", 1, 0, "CanvasContextMenuModel");
     qmlRegisterType<SelectionViewController>("Audacity.ProjectScene", 1, 0, "SelectionViewController");

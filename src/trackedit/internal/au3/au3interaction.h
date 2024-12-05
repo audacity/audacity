@@ -54,6 +54,7 @@ public:
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
     bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
+    bool removeClips(const trackedit::ClipKeyList& clipKeyList) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool moveClips(secs_t offset, bool completed) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
@@ -112,6 +113,7 @@ private:
     void pushProjectHistoryTrackSilenceState(secs_t start, secs_t end);
     void pushProjectHistoryPasteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+    void pushProjectHistoryDeleteMultipleState();
     void pushProjectHistoryChangeClipPitchState();
     void pushProjectHistoryResetClipPitchState();
     void pushProjectHistoryChangeClipSpeedState();

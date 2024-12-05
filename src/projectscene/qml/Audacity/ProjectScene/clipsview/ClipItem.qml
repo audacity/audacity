@@ -23,6 +23,7 @@ Rectangle {
     property color clipColor: "#677CE4"
     property bool clipSelected: false
     property bool isDataSelected: false
+    property bool isMultiSelectionActive: false
     property bool moveActive: false
     property real selectionStart: 0
     property real selectionWidth: 0
@@ -43,6 +44,7 @@ Rectangle {
     signal clipRightTrimRequested(bool completed)
 
     signal requestSelected()
+    signal requestSelectionReset()
     signal ratioChanged(double val)
 
     signal pitchChangeRequested()
@@ -81,20 +83,33 @@ Rectangle {
     }
 
     ClipContextMenuModel {
-        id: contextMenuModel
+        id: singleClipContextMenuModel
         clipKey: root.clipKey
     }
 
-    Component.onCompleted: {
-        contextMenuModel.load()
+    ContextMenuLoader {
+        id: singleClipContextMenuLoader
+
+        onHandleMenuItem: function(itemId) {
+            singleClipContextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
+    MultiClipContextMenuModel {
+        id: multiClipContextMenuModel
     }
 
     ContextMenuLoader {
-        id: contextMenuLoader
+        id: multiClipContextMenuLoader
 
         onHandleMenuItem: function(itemId) {
-            contextMenuModel.handleMenuItem(itemId)
+            multiClipContextMenuModel.handleMenuItem(itemId)
         }
+    }
+
+    Component.onCompleted: {
+        singleClipContextMenuModel.load()
+        multiClipContextMenuModel.load()
     }
 
     MouseArea {
@@ -106,7 +121,12 @@ Rectangle {
         acceptedButtons: Qt.RightButton
 
         onClicked: function(e) {
-            contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
+            if (root.isMultiSelectionActive && root.clipSelected) {
+                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
+            } else {
+                singleClipContextMenuLoader.show(Qt.point(e.x, e.y), singleClipContextMenuModel.items)
+            }
+
             root.requestSelected()
         }
 
@@ -427,13 +447,14 @@ Rectangle {
                     height: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    menuModel: contextMenuModel
+                    menuModel: singleClipContextMenuModel
 
                     onHandleMenuItem: function(itemId) {
-                        Qt.callLater(contextMenuModel.handleMenuItem, itemId)
+                        Qt.callLater(singleClipContextMenuModel.handleMenuItem, itemId)
                     }
 
                     onClicked: {
+                        root.requestSelectionReset()
                         root.requestSelected()
                     }
                 }

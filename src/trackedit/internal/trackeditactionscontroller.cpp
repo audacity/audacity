@@ -21,11 +21,17 @@ static const ActionCode JOIN_CODE("join");
 static const ActionCode DUPLICATE_CODE("duplicate");
 
 static const ActionCode CLIP_CUT_CODE("clip-cut");
+static const ActionCode MULTI_CLIP_CUT_CODE("multi-clip-cut");
+static const ActionCode RANGE_SELECTION_CUT_CODE("clip-cut-selected");
+
 static const ActionCode CLIP_COPY_CODE("clip-copy");
+static const ActionCode MULTI_CLIP_COPY_CODE("multi-clip-copy");
+static const ActionCode RANGE_SELECTION_COPY_CODE("clip-copy-selected");
+
 static const ActionCode CLIP_DELETE_CODE("clip-delete");
-static const ActionCode CLIP_CUT_SELECTED_CODE("clip-cut-selected");
-static const ActionCode CLIP_COPY_SELECTED_CODE("clip-copy-selected");
-static const ActionCode CLIP_DELETE_SELECTED_CODE("clip-delete-selected");
+static const ActionCode MULTI_CLIP_DELETE_CODE("multi-clip-delete");
+static const ActionCode RANGE_SELECTION_DELETE_CODE("clip-delete-selected");
+
 static const ActionCode CLIP_RENDER_PITCH_AND_SPEED_CODE("clip-render-pitch-speed");
 static const ActionCode PASTE("paste");
 static const ActionCode TRACK_SPLIT("track-split");
@@ -63,9 +69,10 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
     dispatcher()->reg(this, CLIP_COPY_CODE, this, &TrackeditActionsController::clipCopy);
     dispatcher()->reg(this, CLIP_DELETE_CODE, this, &TrackeditActionsController::clipDelete);
-    dispatcher()->reg(this, CLIP_CUT_SELECTED_CODE, this, &TrackeditActionsController::clipCutSelected);
-    dispatcher()->reg(this, CLIP_COPY_SELECTED_CODE, this, &TrackeditActionsController::clipCopySelected);
-    dispatcher()->reg(this, CLIP_DELETE_SELECTED_CODE, this, &TrackeditActionsController::clipDeleteSelected);
+    dispatcher()->reg(this, MULTI_CLIP_DELETE_CODE, this, &TrackeditActionsController::multiClipDelete);
+    dispatcher()->reg(this, RANGE_SELECTION_DELETE_CODE, this, &TrackeditActionsController::clipDeleteSelected);
+    dispatcher()->reg(this, RANGE_SELECTION_CUT_CODE, this, &TrackeditActionsController::clipCutSelected);
+    dispatcher()->reg(this, RANGE_SELECTION_COPY_CODE, this, &TrackeditActionsController::clipCopySelected);
     dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
     dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
@@ -133,7 +140,7 @@ void TrackeditActionsController::notifyActionCheckedChanged(const ActionCode& ac
 void TrackeditActionsController::doGlobalCopy()
 {
     if (selectionController()->timeSelectionIsNotEmpty()) {
-        dispatcher()->dispatch(CLIP_COPY_SELECTED_CODE);
+        dispatcher()->dispatch(RANGE_SELECTION_COPY_CODE);
         return;
     }
 
@@ -152,7 +159,7 @@ void TrackeditActionsController::doGlobalCopy()
 void TrackeditActionsController::doGlobalCut()
 {
     if (selectionController()->timeSelectionIsNotEmpty()) {
-        dispatcher()->dispatch(CLIP_CUT_SELECTED_CODE);
+        dispatcher()->dispatch(RANGE_SELECTION_CUT_CODE);
         return;
     }
 
@@ -171,7 +178,7 @@ void TrackeditActionsController::doGlobalCut()
 void TrackeditActionsController::doGlobalDelete()
 {
     if (selectionController()->timeSelectionIsNotEmpty()) {
-        dispatcher()->dispatch(CLIP_DELETE_SELECTED_CODE);
+        dispatcher()->dispatch(RANGE_SELECTION_DELETE_CODE);
         return;
     }
 
@@ -179,12 +186,7 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
-    if (selectionController()->selectedClips().size() == 1) {
-        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-        if (selectedClipKey.isValid()) {
-            dispatcher()->dispatch(CLIP_DELETE_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
-        }
-    }
+    dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, ActionData::make_arg1<trackedit::ClipKeyList>(selectionController()->selectedClips()));
 }
 
 void TrackeditActionsController::doGlobalSplitCut()
@@ -335,10 +337,21 @@ void TrackeditActionsController::clipDelete(const ActionData& args)
         return;
     }
 
-    //! TODO AU4: improve for multiclip selection
     selectionController()->resetSelectedClips();
 
     trackeditInteraction()->removeClip(clipKey);
+}
+
+void TrackeditActionsController::multiClipDelete()
+{
+    ClipKeyList selectedClipKeys = selectionController()->selectedClips();
+    if (selectedClipKeys.empty()) {
+        return;
+    }
+
+    selectionController()->resetSelectedClips();
+
+    trackeditInteraction()->removeClips(selectedClipKeys);
 }
 
 void TrackeditActionsController::clipCutSelected()

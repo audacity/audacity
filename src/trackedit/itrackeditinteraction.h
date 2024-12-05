@@ -54,6 +54,7 @@ public:
     virtual bool copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t begin, secs_t end) = 0;
     virtual bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
+    virtual bool removeClips(const ClipKeyList& clipKeyList) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool moveClips(secs_t offset, bool completed) = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) = 0;

@@ -277,7 +277,10 @@ int ClipsListModel::rowCount(const QModelIndex&) const
 
 QHash<int, QByteArray> ClipsListModel::roleNames() const
 {
-    static QHash<int, QByteArray> roles{ { ClipItemRole, "item" } };
+    static QHash<int, QByteArray> roles
+    {
+        { ClipItemRole, "item" }
+    };
     return roles;
 }
 
@@ -287,9 +290,13 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    if (role == ClipItemRole) {
+    switch (role) {
+    case ClipItemRole: {
         ClipListItem* item = m_clipList.at(index.row());
         return QVariant::fromValue(item);
+    }
+    default:
+        break;
     }
 
     return QVariant();

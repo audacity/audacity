@@ -362,6 +362,7 @@ Rectangle {
                     trackId: model.trackId
                     isDataSelected: model.isDataSelected
                     isTrackSelected: model.isTrackSelected
+                    isMultiSelectionActive: model.isMultiSelectionActive
                     moveActive: tracksClipsView.moveActive
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
@@ -376,6 +377,10 @@ Rectangle {
                     onClipSelectedRequested: {
                         selectionController.resetDataSelection()
                         clipsSelection.visible = false
+                    }
+
+                    onSelectionResetRequested: {
+                        selectionController.resetDataSelection()
                     }
 
                     onClipMoveRequested: function(completed) {
