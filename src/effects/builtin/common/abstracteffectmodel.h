@@ -53,17 +53,28 @@ protected:
     template<typename T>
     const T& settings() const
     {
-        auto pSettings = settings()->cast<T>();
-        assert(pSettings);
-        return *pSettings;
+        EffectSettings* s = this->settings();
+        if (!s) {
+            static T null;
+            return null;
+        }
+        T* st = s->cast<T>();
+        assert(st);
+        return *st;
     }
 
     template<typename T>
     T& mutSettings()
     {
-        auto pSettings = settings()->cast<T>();
-        assert(pSettings);
-        return *pSettings;
+        EffectSettings* s = this->settings();
+        assert(s);
+        if (!s) {
+            static T null;
+            return null;
+        }
+        T* st = s->cast<T>();
+        assert(st);
+        return *st;
     }
 
 private:

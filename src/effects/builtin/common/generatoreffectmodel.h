@@ -4,7 +4,6 @@
 #pragma once
 
 #include "../common/abstracteffectmodel.h"
-#include "../common/params.h"
 
 namespace au::effects {
 class GeneratorEffect;
@@ -13,14 +12,11 @@ class ToneEffect;
 class GeneratorEffectModel : public AbstractEffectModel
 {
     Q_OBJECT
-    Q_PROPERTY(
-        double duration READ duration WRITE setDuration NOTIFY durationChanged)
-    Q_PROPERTY(QString durationFormat READ durationFormat WRITE setDurationFormat
-               NOTIFY durationFormatChanged)
+    Q_PROPERTY(double duration READ duration WRITE setDuration NOTIFY durationChanged)
+    Q_PROPERTY(QString durationFormat READ durationFormat WRITE setDurationFormat NOTIFY durationFormatChanged)
     Q_PROPERTY(double sampleRate READ sampleRate NOTIFY sampleRateChanged)
 
 public:
-    Q_INVOKABLE void init();
 
     double duration() const;
     void setDuration(double newDuration);
@@ -34,6 +30,8 @@ signals:
     void durationFormatChanged();
 
 private:
+    void doReload() override;
+
     GeneratorEffect* generatorEffect() const;
 };
 } // namespace au::effects

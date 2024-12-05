@@ -25,62 +25,52 @@ void DtmfViewModel::doReload()
 
 QString DtmfViewModel::sequence() const
 {
-    return QString::fromStdString(settings().dtmfSequence);
+    return QString::fromStdString(settings<DtmfSettings>().dtmfSequence);
 }
 
 void DtmfViewModel::setSequence(const QString& newSequence)
 {
-    mutSettings().dtmfSequence = newSequence.toStdString();
+    mutSettings<DtmfSettings>().dtmfSequence = newSequence.toStdString();
     emit sequenceChanged();
     recalculateDurations();
 }
 
 double DtmfViewModel::amplitude() const
 {
-    return settings().dtmfAmplitude;
+    return settings<DtmfSettings>().dtmfAmplitude;
 }
 
 void DtmfViewModel::setAmplitude(double newAmplitude)
 {
-    mutSettings().dtmfAmplitude = newAmplitude;
+    mutSettings<DtmfSettings>().dtmfAmplitude = newAmplitude;
     emit amplitudeChanged();
 }
 
 double DtmfViewModel::dutyCycle() const
 {
-    return settings().dtmfDutyCycle;
+    return settings<DtmfSettings>().dtmfDutyCycle;
 }
 
 void DtmfViewModel::setDutyCycle(double newDutyCycle)
 {
-    mutSettings().dtmfDutyCycle = newDutyCycle;
+    mutSettings<DtmfSettings>().dtmfDutyCycle = newDutyCycle;
     emit dutyCycleChanged();
     recalculateDurations();
 }
 
 double DtmfViewModel::toneDuration() const
 {
-    return settings().dtmfTone;
+    return settings<DtmfSettings>().dtmfTone;
 }
 
 double DtmfViewModel::silenceDuration() const
 {
-    return settings().dtmfSilence;
-}
-
-DtmfSettings& DtmfViewModel::mutSettings()
-{
-    return DtmfGenerator::GetSettings(*AbstractEffectModel::settings());
-}
-
-const DtmfSettings& DtmfViewModel::settings() const
-{
-    return DtmfGenerator::GetSettings(*AbstractEffectModel::settings());
+    return settings<DtmfSettings>().dtmfSilence;
 }
 
 void DtmfViewModel::recalculateDurations()
 {
-    mutSettings().Recalculate(*AbstractEffectModel::settings());
+    mutSettings<DtmfSettings>().Recalculate(*AbstractEffectModel::settings());
     emit toneDurationChanged();
     emit silenceDurationChanged();
 }

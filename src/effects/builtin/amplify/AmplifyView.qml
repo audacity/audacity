@@ -8,9 +8,9 @@ import "../common"
 
 EffectBase {
 
-    property string title: "Amplify"
-    property alias instanceId: amplify.instanceId
+    id: root
 
+    property string title: "Amplify"
     property alias isApplyAllowed: amplify.isApplyAllowed
 
     width: 300
@@ -20,6 +20,7 @@ EffectBase {
 
     AmplifyViewModel {
         id: amplify
+        instanceId: root.instanceId
         onAmpChanged: slider.value = amp
     }
 

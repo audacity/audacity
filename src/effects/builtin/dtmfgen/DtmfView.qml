@@ -7,19 +7,20 @@ import Audacity.Playback
 import "../common"
 
 EffectBase {
+
+    id: root
+
     property string title: qsTrc("effects/dtmf", "DTMF Tones")
-    property alias instanceId: dtmf.instanceId
     property bool isApplyAllowed: true
 
     width: 300
     height: 350
 
-    function preview() {
-        dtmf.preview()
-    }
+    model: dtmf
 
     DtmfViewModel {
         id: dtmf
+        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

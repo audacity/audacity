@@ -39,7 +39,7 @@ bool AbstractEffectModel::inited() const
 Effect* AbstractEffectModel::effect() const
 {
     EffectInstanceId id = this->instanceId();
-    IF_ASSERT_FAILED(id != 0) {
+    if (id == 0) {
         return nullptr;
     }
 
@@ -49,7 +49,7 @@ Effect* AbstractEffectModel::effect() const
 EffectSettings* AbstractEffectModel::settings() const
 {
     EffectInstanceId id = this->instanceId();
-    IF_ASSERT_FAILED(id != 0) {
+    if (id == 0) {
         return nullptr;
     }
 

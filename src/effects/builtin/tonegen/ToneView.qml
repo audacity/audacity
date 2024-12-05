@@ -8,26 +8,30 @@ import "../common"
 
 EffectBase {
 
-    // Helper function to format number
-    function formatNumber(value, maxDecimals) {
-        // Convert number to fixed decimal string and remove trailing zeros
-        return parseFloat(value.toFixed(maxDecimals)).toString();
-    }
+    id: root
 
     property string title: qsTrc("effects", "Tone")
-    property alias instanceId: tone.instanceId
     property alias isApplyAllowed: tone.isApplyAllowed
 
     width: 370
     height: 200
 
+    model: tone
+
     ToneViewModel {
         id: tone
+        instanceId: root.instanceId
     }
 
     Component.onCompleted: {
         tone.init()
         timecode.currentFormatStr = tone.durationFormat
+    }
+
+    // Helper function to format number
+    function formatNumber(value, maxDecimals) {
+        // Convert number to fixed decimal string and remove trailing zeros
+        return parseFloat(value.toFixed(maxDecimals)).toString();
     }
 
     GridLayout {

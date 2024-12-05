@@ -154,7 +154,7 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
         if ((params.Length() < 2) || (ident.Length() < 2) || (ident.Length() > 30)) {
             ret = make_ret(Err::PresetNotValid);
         } else {
-            ret = make_ret(Err::PresetMissMatch);
+            ret = make_ret(Err::PresetMismatch);
         }
     }
 

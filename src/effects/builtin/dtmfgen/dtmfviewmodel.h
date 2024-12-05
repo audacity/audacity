@@ -46,9 +46,6 @@ private:
 
     void doReload() override;
 
-    DtmfSettings& mutSettings();
-    const DtmfSettings& settings() const;
-
     void recalculateDurations();
 };
 }

@@ -19,21 +19,14 @@ void ToneViewModel::doReload()
 
 ToneEffect* ToneViewModel::effect() const
 {
-    const auto instance = AbstractEffectModel::effect();
-    IF_ASSERT_FAILED(instance) {
-        return nullptr;
-    }
-    ToneEffect* const e = dynamic_cast<ToneEffect*>(instance);
-    IF_ASSERT_FAILED(e) {
-        return nullptr;
-    }
+    ToneEffect* const e = dynamic_cast<ToneEffect*>(AbstractEffectModel::effect());
     return e;
 }
 
 bool ToneViewModel::isApplyAllowed() const
 {
     const ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    if (!te) {
         return false;
     }
     return te->isApplyAllowed();
@@ -49,7 +42,7 @@ QList<QString> ToneViewModel::waveforms() const
 double ToneViewModel::amplitude() const
 {
     const ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    if (!te) {
         return 0.0;
     }
     return te->amplitude();
@@ -71,7 +64,7 @@ void ToneViewModel::setAmplitude(double newAmplitude)
 double ToneViewModel::frequency() const
 {
     const ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    if (!te) {
         return 0.0;
     }
     return te->frequency();
@@ -93,7 +86,7 @@ void ToneViewModel::setFrequency(double newFrequency)
 int ToneViewModel::waveform() const
 {
     const ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    if (!te) {
         return 0;
     }
     return static_cast<int>(te->waveform());

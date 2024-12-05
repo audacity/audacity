@@ -36,32 +36,22 @@ void NoiseViewModel::doReload()
 
 double NoiseViewModel::amplitude() const
 {
-    return settings().amplitude;
+    return settings<NoiseSettings>().amplitude;
 }
 
 void NoiseViewModel::setAmplitude(double newAmplitude)
 {
-    mutSettings().amplitude = newAmplitude;
+    mutSettings<NoiseSettings>().amplitude = newAmplitude;
     emit amplitudeChanged();
 }
 
 int NoiseViewModel::type() const
 {
-    return static_cast<int>(settings().type);
+    return static_cast<int>(settings<NoiseSettings>().type);
 }
 
 void NoiseViewModel::setType(int type)
 {
-    mutSettings().type = static_cast<NoiseSettings::Type>(type);
+    mutSettings<NoiseSettings>().type = static_cast<NoiseSettings::Type>(type);
     emit typeChanged();
-}
-
-NoiseSettings& NoiseViewModel::mutSettings()
-{
-    return NoiseGenerator::GetSettings(*AbstractEffectModel::settings());
-}
-
-const NoiseSettings& NoiseViewModel::settings() const
-{
-    return NoiseGenerator::GetSettings(*AbstractEffectModel::settings());
 }
