@@ -3,7 +3,9 @@
  */
 #pragma once
 
-#include <QSettings>
+#include <string>
+#include <map>
+#include <variant>
 
 #include "libraries/lib-preferences/BasicSettings.h"
 
@@ -12,6 +14,7 @@ class EffectConfigSettings final : public audacity::BasicSettings
 {
 public:
     EffectConfigSettings(const std::string& filename);
+    ~EffectConfigSettings();
 
     wxString GetGroup() const override;
     wxArrayString GetChildGroups() const override;
@@ -43,6 +46,36 @@ protected:
     void DoEndGroup() noexcept override;
 
 private:
-    QSettings m_QSettings;
+
+    using Val = std::variant<std::monostate, bool, int, long, long long, double, wxString>;
+
+    void Load();
+    bool Save();
+
+    std::string fullKey(const wxString& key) const;
+
+    template<typename T>
+    bool ReadValue(const wxString& key, T* value) const
+    {
+        std::string full = fullKey(key);
+        auto it = m_vals.find(full);
+        if (it == m_vals.end()) {
+            return false;
+        }
+        *value = std::get<T>(it->second);
+        return true;
+    }
+
+    template<typename T>
+    bool WriteValue(const wxString& key, T value)
+    {
+        std::string full = fullKey(key);
+        m_vals.insert({ full, value });
+        return true;
+    }
+
+    std::string m_filename;
+    std::string m_currentGroup;
+    std::map<std::string /* full key*/, Val> m_vals;
 };
 } // namespace au::au3

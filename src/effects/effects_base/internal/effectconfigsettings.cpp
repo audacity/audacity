@@ -3,196 +3,303 @@
  */
 #include "effectconfigsettings.h"
 
-#include <algorithm>
+#include "global/serialization/json.h"
+#include "global/io/file.h"
 
-#include "log.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "log.h"
 
+using namespace muse;
 using namespace au::au3;
 
-namespace {
-auto ToQString(const wxString& s)
-{
-    return QString::fromStdString(s.ToStdString());
-}
-
-template<typename T>
-bool ReadValue(
-    const QSettings& settings, const wxString& key, T* value,
-    std::function<T(const QVariant&)> converter)
-{
-    const QVariant val = settings.value(ToQString(key));
-    if (!val.isValid()) {
-        return false;
-    }
-    *value = converter(val);
-    return true;
-}
-
-auto WoSlashes(const wxString& s)
-{
-    std::string group = s.ToStdString();
-    if (group.front() == '/') {
-        group.erase(0, 1);
-    }
-    if (group.back() == '/') {
-        group.pop_back();
-    }
-    return QString::fromStdString(group);
-}
-} // namespace
+static const std::string GENERAL("General");
 
 EffectConfigSettings::EffectConfigSettings(const std::string& filename)
-    : m_QSettings{QString::fromStdString(filename),
-                  QSettings::defaultFormat()}
+    : m_filename(filename)
 {
+    Load();
+}
+
+EffectConfigSettings::~EffectConfigSettings()
+{
+    Save();
+}
+
+void EffectConfigSettings::Load()
+{
+    ByteArray json;
+    Ret ret = io::File::readFile(m_filename, json);
+    if (!ret) {
+        LOGE() << "failed read file: " << m_filename << ", err: " << ret.toString();
+        return;
+    }
+
+    m_vals.clear();
+
+    std::string err;
+    JsonArray arr = JsonDocument::fromJson(json, &err).rootArray();
+
+    if (!err.empty()) {
+        LOGE() << "failed parse json from file: " << m_filename << ", err: " << err;
+        return;
+    }
+
+    for (size_t i = 0; i < arr.size(); ++i) {
+        JsonObject obj = arr.at(i).toObject();
+        if (obj.empty()) {
+            continue;
+        }
+
+        std::string key = obj.value("key").toStdString();
+        std::string type = obj.value("type").toStdString();
+        JsonValue val = obj.value("val");
+        if (type == "bool") {
+            m_vals.insert({ key, val.toBool() });
+        } else if (type == "int") {
+            m_vals.insert({ key, val.toInt() });
+        } else if (type == "long") {
+            m_vals.insert({ key, std::stol(val.toStdString()) });
+        } else if (type == "long long") {
+            m_vals.insert({ key, std::stoll(val.toStdString()) });
+        } else if (type == "double") {
+            m_vals.insert({ key, val.toDouble() });
+        } else if (type == "string") {
+            m_vals.insert({ key, val.toStdString() });
+        }
+    }
+}
+
+bool EffectConfigSettings::Save()
+{
+    JsonArray arr;
+    for (const auto& p : m_vals) {
+        JsonObject obj;
+        const std::string& key = p.first;
+        std::visit([&key, &obj](auto&& v) {
+            using T = std::decay_t<decltype(v)>;
+            // std::monostate, bool, int, long, long long, double, wxString
+            if constexpr (std::is_same_v<T, std::monostate>) {
+                return;
+            } else if constexpr (std::is_same_v<T, bool>) {
+                obj["key"] = key;
+                obj["val"] = v;
+                obj["type"] = "bool";
+            } else if constexpr (std::is_same_v<T, int>) {
+                obj["key"] = key;
+                obj["val"] = v;
+                obj["type"] = "int";
+            } else if constexpr (std::is_same_v<T, long>) {
+                obj["key"] = key;
+                obj["val"] = std::to_string(v);
+                obj["type"] = "long";
+            } else if constexpr (std::is_same_v<T, long long>) {
+                obj["key"] = key;
+                obj["val"] = std::to_string(v);
+                obj["type"] = "long long";
+            } else if constexpr (std::is_same_v<T, double>) {
+                obj["key"] = key;
+                obj["val"] = v;
+                obj["type"] = "double";
+            } else if constexpr (std::is_same_v<T, wxString>) {
+                obj["key"] = key;
+                obj["val"] = au::au3::wxToStdSting(v);
+                obj["type"] = "string";
+            }
+        }, p.second);
+
+        arr.append(obj);
+    }
+
+    ByteArray json = JsonDocument(arr).toJson();
+
+    Ret ret = io::File::writeFile(m_filename, json);
+    if (!ret) {
+        LOGE() << "failed write to file: " << m_filename << ", err: " << ret.toString();
+    }
+
+    return ret;
+}
+
+std::string EffectConfigSettings::fullKey(const wxString& key) const
+{
+    std::string path = au3::wxToStdSting(key);
+    if (!m_currentGroup.empty()) {
+        return m_currentGroup + "/" + path;
+    }
+
+    if (path.find_first_of('/') != std::string::npos) {
+        return path;
+    }
+
+    return GENERAL + "/" + path;
 }
 
 wxString EffectConfigSettings::GetGroup() const
 {
-    LOGDA() << "";
-    return m_QSettings.group().toStdString();
+    if (m_currentGroup.empty()) {
+        return GENERAL;
+    } else {
+        return m_currentGroup;
+    }
 }
 
 wxArrayString EffectConfigSettings::GetChildGroups() const
 {
-    LOGDA() << "";
-    const QStringList list = m_QSettings.childGroups();
-    wxArrayString groups;
-    std::transform(
-        list.begin(), list.end(), std::back_inserter(groups),
-        [](const QString& s) { return s.toStdString(); });
-    return groups;
+    wxArrayString child;
+    std::string group = m_currentGroup;
+    for (const auto& p : m_vals) {
+        const std::string& fullKey = p.first;
+
+        std::string subgroup;
+        if (group.empty()) {
+            size_t sep = fullKey.find_last_of('/');
+            if (sep == std::string::npos) {
+                continue;
+            }
+
+            subgroup = fullKey.substr(0, sep);
+        } else {
+            if (fullKey.find(group) == std::string::npos) {
+                continue;
+            }
+
+            std::string fullSub = fullKey.substr(group.size() + 1);
+            size_t sep = fullSub.find_last_of('/');
+            if (sep == std::string::npos) {
+                continue;
+            }
+
+            subgroup = fullSub.substr(0, sep);
+        }
+
+        child.push_back(subgroup);
+    }
+
+    return child;
 }
 
 wxArrayString EffectConfigSettings::GetChildKeys() const
 {
-    LOGDA() << "";
-    const QStringList list = m_QSettings.childKeys();
-    wxArrayString keys;
-    std::transform(
-        list.begin(), list.end(), std::back_inserter(keys),
-        [](const QString& s) { return s.toStdString(); });
-    return keys;
+    wxArrayString child;
+    std::string group = au3::wxToStdSting(GetGroup());
+    for (const auto& p : m_vals) {
+        const std::string& fullKey = p.first;
+        if (fullKey.find(group) == std::string::npos) {
+            continue;
+        }
+
+        std::string fullSub = fullKey.substr(group.size() + 1);
+        size_t sep = fullSub.find_last_of('/');
+        if (sep != std::string::npos) {
+            continue;
+        }
+
+        child.push_back(fullSub);
+    }
+
+    return child;
 }
 
 bool EffectConfigSettings::HasEntry(const wxString& key) const
 {
-    LOGDA() << "key: " << au3::wxToStdSting(key);
-    return m_QSettings.contains(ToQString(key));
+    std::string full = fullKey(key);
+    return m_vals.find(full) != m_vals.end();
 }
 
 bool EffectConfigSettings::HasGroup(const wxString& group) const
 {
-    LOGDA() << "group: " << au3::wxToStdSting(group);
-    return m_QSettings.childGroups().contains(WoSlashes(group));
+    std::string full = fullKey(group);
+    for (const auto& p : m_vals) {
+        if (p.first.find(full) != std::string::npos) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool EffectConfigSettings::Remove(const wxString& key)
 {
-    m_QSettings.remove(ToQString(key));
-    return true;
+    std::string full = fullKey(key);
+    m_vals.erase(full);
+    return false;
 }
 
 void EffectConfigSettings::Clear()
 {
-    m_QSettings.clear();
+    m_vals.clear();
 }
 
 bool EffectConfigSettings::Read(const wxString& key, bool* value) const
 {
-    return ReadValue<bool>(
-        m_QSettings, key, value, [](const QVariant& v) { return v.toBool(); });
+    return ReadValue(key, value);
 }
 
 bool EffectConfigSettings::Read(const wxString& key, int* value) const
 {
-    return ReadValue<int>(
-        m_QSettings, key, value, [](const QVariant& v) { return v.toInt(); });
+    return ReadValue(key, value);
 }
 
 bool EffectConfigSettings::Read(const wxString& key, long* value) const
 {
-    return ReadValue<long>(m_QSettings, key, value, [](const QVariant& v) {
-        return v.toLongLong();
-    });
+    return ReadValue(key, value);
 }
 
 bool EffectConfigSettings::Read(const wxString& key, long long* value) const
 {
-    return ReadValue<long long>(m_QSettings, key, value, [](const QVariant& v) {
-        return v.toLongLong();
-    });
+    return ReadValue(key, value);
 }
 
 bool EffectConfigSettings::Read(const wxString& key, double* value) const
 {
-    return ReadValue<double>(
-        m_QSettings, key, value, [](const QVariant& v) { return v.toDouble(); });
+    return ReadValue(key, value);
 }
 
 bool EffectConfigSettings::Read(const wxString& key, wxString* value) const
 {
-    return ReadValue<wxString>(m_QSettings, key, value, [](const QVariant& v) {
-        return v.toString().toStdString();
-    });
+    return ReadValue(key, value);
 }
 
 bool EffectConfigSettings::Write(const wxString& key, bool value)
 {
-    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
-    m_QSettings.setValue(ToQString(key), value);
-    return true;
+    return WriteValue(key, value);
 }
 
 bool EffectConfigSettings::Write(const wxString& key, int value)
 {
-    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
-    m_QSettings.setValue(ToQString(key), value);
-    return true;
+    return WriteValue(key, value);
 }
 
 bool EffectConfigSettings::Write(const wxString& key, long value)
 {
-    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
-    m_QSettings.setValue(ToQString(key), QVariant::fromValue(value));
-    return true;
+    return WriteValue(key, value);
 }
 
 bool EffectConfigSettings::Write(const wxString& key, long long value)
 {
-    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
-    m_QSettings.setValue(ToQString(key), value);
-    return true;
+    return WriteValue(key, value);
 }
 
 bool EffectConfigSettings::Write(const wxString& key, double value)
 {
-    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << value;
-    m_QSettings.setValue(ToQString(key), value);
-    return true;
+    return WriteValue(key, value);
 }
 
 bool EffectConfigSettings::Write(const wxString& key, const wxString& value)
 {
-    LOGDA() << "key: " << au3::wxToStdSting(key) << ", val: " << au3::wxToStdSting(value);
-    m_QSettings.setValue(ToQString(key), ToQString(value));
-    return true;
+    return WriteValue(key, value);
 }
 
 bool EffectConfigSettings::Flush() noexcept
 {
-    m_QSettings.sync();
-    return true;
+    return Save();
 }
 
 void EffectConfigSettings::DoBeginGroup(const wxString& prefix)
 {
-    LOGDA() << au3::wxToStdSting(prefix);
-    m_QSettings.beginGroup(WoSlashes(prefix));
+    m_currentGroup = au3::wxToStdSting(prefix);
 }
 
 void EffectConfigSettings::DoEndGroup() noexcept
 {
-    m_QSettings.endGroup();
+    m_currentGroup.clear();
 }
