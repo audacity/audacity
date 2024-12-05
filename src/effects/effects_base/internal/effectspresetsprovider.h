@@ -3,11 +3,12 @@
 */
 #pragma once
 
-#include "../ieffectspresetscontroller.h"
+#include "../ieffectspresetsprovider.h"
 
 #include "modularity/ioc.h"
 #include "global/iinteractive.h"
 #include "global/iglobalconfiguration.h"
+#include "global/io/path.h"
 #include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
 
@@ -15,7 +16,7 @@
 
 class EffectSettingsManager;
 namespace au::effects {
-class EffectsPresetsController : public IEffectsPresetsController
+class EffectsPresetsProvider : public IEffectsPresetsProvider
 {
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
@@ -23,7 +24,7 @@ class EffectsPresetsController : public IEffectsPresetsController
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
 
 public:
-    EffectsPresetsController() = default;
+    EffectsPresetsProvider() = default;
 
     PresetIdList factoryPresets(const EffectId& effectId) const override;
     PresetIdList userPresets(const EffectId& effectId) const override;
@@ -40,5 +41,6 @@ private:
     const EffectSettingsManager& settingsManager(const EffectId& effectId) const;
 
     muse::async::Channel<EffectId> m_userPresetsChanged;
+    muse::io::path_t m_lastImportPath;
 };
 }

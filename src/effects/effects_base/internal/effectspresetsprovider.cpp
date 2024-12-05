@@ -1,11 +1,12 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "effectspresetscontroller.h"
+#include "effectspresetsprovider.h"
 
 #include "global/containers.h"
 #include "global/translation.h"
 #include "global/io/file.h"
+#include "global/io/fileinfo.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-effects/EffectManager.h"
@@ -18,20 +19,20 @@
 using namespace muse;
 using namespace au::effects;
 
-const EffectSettingsManager& EffectsPresetsController::settingsManager(const EffectId& effectId) const
+const EffectSettingsManager& EffectsPresetsProvider::settingsManager(const EffectId& effectId) const
 {
     Effect* effect = effectsProvider()->effect(effectId);
     DO_ASSERT(effect);
     return effect->GetDefinition();
 }
 
-PresetIdList EffectsPresetsController::factoryPresets(const EffectId& effectId) const
+PresetIdList EffectsPresetsProvider::factoryPresets(const EffectId& effectId) const
 {
     const EffectSettingsManager& sm = settingsManager(effectId);
     return sm.GetFactoryPresets();
 }
 
-PresetIdList EffectsPresetsController::userPresets(const EffectId& effectId) const
+PresetIdList EffectsPresetsProvider::userPresets(const EffectId& effectId) const
 {
     Effect* effect = effectsProvider()->effect(effectId);
     IF_ASSERT_FAILED(effect) {
@@ -41,12 +42,12 @@ PresetIdList EffectsPresetsController::userPresets(const EffectId& effectId) con
     return presets;
 }
 
-muse::async::Channel<EffectId> EffectsPresetsController::userPresetsChanged() const
+muse::async::Channel<EffectId> EffectsPresetsProvider::userPresetsChanged() const
 {
     return m_userPresetsChanged;
 }
 
-Ret EffectsPresetsController::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
+Ret EffectsPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     const EffectSettingsManager& sm = settingsManager(effectId);
@@ -85,7 +86,7 @@ Ret EffectsPresetsController::applyPreset(const EffectInstanceId& effectInstance
     return ret;
 }
 
-Ret EffectsPresetsController::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId)
+Ret EffectsPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId)
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     const EffectSettingsManager& sm = settingsManager(effectId);
@@ -110,7 +111,7 @@ Ret EffectsPresetsController::saveCurrentAsPreset(const EffectInstanceId& effect
     return ok ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
 }
 
-muse::Ret EffectsPresetsController::deletePreset(const EffectId& effectId, const PresetId& presetId)
+muse::Ret EffectsPresetsProvider::deletePreset(const EffectId& effectId, const PresetId& presetId)
 {
     IInteractive::Result res = interactive()->question(
         muse::trc("effects", "Delete Preset"),
@@ -142,7 +143,7 @@ static std::vector<std::string> presetFilesFilter()
              muse::trc("global", "All files") + " (*)" };
 }
 
-muse::Ret EffectsPresetsController::importPreset(const EffectInstanceId& effectInstanceId)
+muse::Ret EffectsPresetsProvider::importPreset(const EffectInstanceId& effectInstanceId)
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     Effect* effect = effectsProvider()->effect(effectId);
@@ -155,14 +156,20 @@ muse::Ret EffectsPresetsController::importPreset(const EffectInstanceId& effectI
         return muse::make_ret(Ret::Code::InternalError);
     }
 
+    if (m_lastImportPath.empty()) {
+        m_lastImportPath = globalConfiguration()->homePath();
+    }
+
     const std::string interactiveTitle = muse::trc("effects", "Import Effect Parameters");
     io::path_t path = interactive()->selectOpeningFile(QString::fromStdString(interactiveTitle),
-                                                       globalConfiguration()->homePath(),
+                                                       m_lastImportPath,
                                                        presetFilesFilter());
 
     if (path.empty()) {
         return muse::make_ret(Ret::Code::Cancel);
     }
+
+    m_lastImportPath = io::FileInfo(path).dirPath();
 
     ByteArray data;
     Ret ret = io::File::readFile(path, data);
@@ -182,9 +189,9 @@ muse::Ret EffectsPresetsController::importPreset(const EffectInstanceId& effectI
         // must also have some params.
         std::string msg;
         if ((params.Length() < 2) || (ident.Length() < 2) || (ident.Length() > 30)) {
-            msg = muse::mtrc("effetcs", "%1: is not a valid presets file.").arg(path.toString()).toStdString();
+            msg = muse::mtrc("effects", "%1: is not a valid presets file.").arg(path.toString()).toStdString();
         } else {
-            msg = muse::mtrc("effetcs", "%1: is for a different Effect, Generator or Analyzer.").arg(path.toString()).toStdString();
+            msg = muse::mtrc("effects", "%1: is for a different Effect, Generator or Analyzer.").arg(path.toString()).toStdString();
         }
         interactive()->error(interactiveTitle, msg);
         ret = muse::make_ret(Ret::Code::NotSupported);
@@ -203,7 +210,7 @@ muse::Ret EffectsPresetsController::importPreset(const EffectInstanceId& effectI
     return ret;
 }
 
-muse::Ret EffectsPresetsController::exportPreset(const EffectInstanceId& effectInstanceId)
+muse::Ret EffectsPresetsProvider::exportPreset(const EffectInstanceId& effectInstanceId)
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     Effect* effect = effectsProvider()->effect(effectId);
