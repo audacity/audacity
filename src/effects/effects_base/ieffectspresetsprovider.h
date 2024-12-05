@@ -9,13 +9,13 @@
 #include "effectstypes.h"
 
 namespace au::effects {
-class IEffectsPresetsController : MODULE_EXPORT_INTERFACE
+class IEffectsPresetsProvider : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(IEffectsPresetsController)
+    INTERFACE_ID(IEffectsPresetsProvider)
 
 public:
 
-    virtual ~IEffectsPresetsController() = default;
+    virtual ~IEffectsPresetsProvider() = default;
 
     virtual PresetIdList factoryPresets(const EffectId& effectId) const = 0;
     virtual PresetIdList userPresets(const EffectId& effectId) const = 0;
