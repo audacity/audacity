@@ -9,6 +9,14 @@
 
 using namespace au::effects;
 
+void ToneViewModel::doReload()
+{
+    emit amplitudeChanged();
+    emit frequencyChanged();
+    emit waveformChanged();
+    emit isApplyAllowedChanged();
+}
+
 ToneEffect* ToneViewModel::effect() const
 {
     const auto instance = AbstractEffectModel::effect();
