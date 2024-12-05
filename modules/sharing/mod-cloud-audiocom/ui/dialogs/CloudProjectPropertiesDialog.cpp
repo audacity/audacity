@@ -34,11 +34,9 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    AudiocomTrace trace)
     : wxDialogWrapper { parent, wxID_ANY, XO("Save to audio.com") }
 {
-   GetAuthorizationHandler().PushSuppressDialogs();
-
    mUserPanel =
       new UserPanel(serviceConfig, authService, userService,
-                    UserPanel::LinkMode::SignIn, trace, this);
+                    false, trace, this);
 
    mProjectName = new wxTextCtrl { this,          wxID_ANY,
                                    projectName,   wxDefaultPosition,

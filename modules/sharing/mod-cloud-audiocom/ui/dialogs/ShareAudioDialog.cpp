@@ -39,6 +39,7 @@
 
 #include "AuthorizationHandler.h"
 #include "../UserPanel.h"
+#include "LoginDialog.h"
 
 #include "CodeConversions.h"
 
@@ -175,8 +176,6 @@ ShareAudioDialog::ShareAudioDialog(
     , mServices(std::make_unique<Services>())
     , mAudiocomTrace(trace)
 {
-   GetAuthorizationHandler().PushSuppressDialogs();
-
    ShuttleGui s(this, eIsCreating);
 
    s.StartVerticalLay();
@@ -195,8 +194,18 @@ ShareAudioDialog::ShareAudioDialog(
    SetMaxSize({ size.x, -1 });
 
    mContinueAction = [this]() {
-      if (mInitialStatePanel.root->IsShown())
+      if (!mInitialStatePanel.root->IsShown())
+      {
+         return;
+      }
+      Disable();
+      if(!GetOAuthService().HasAccessToken()) {
+         LoginDialog::SignIn(this, LoginDialog::Mode::Create);
+      }
+      Enable();
+      if(GetOAuthService().HasAccessToken()) {
          StartUploadProcess();
+      }
    };
 
    Bind(
@@ -257,13 +266,13 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
       mInitialStatePanel.trackTitle->SetInsertionPoint(title.length());
    }
 
-   mContinueButton->Enable(mIsAuthorised && mInitialStatePanel.HasValidTitle());
+   mContinueButton->Enable(mInitialStatePanel.HasValidTitle());
 
    mInitialStatePanel.trackTitle->Bind(
       wxEVT_TEXT,
       [this](auto&) {
          mContinueButton->Enable(
-            mIsAuthorised && mInitialStatePanel.HasValidTitle());
+            mInitialStatePanel.HasValidTitle());
       });
 }
 
@@ -596,12 +605,9 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
    {
       s.SetBorder(16);
 
-      userPanel = safenew UserPanel { GetServiceConfig(),    GetOAuthService(),
-                                      GetUserService(),      UserPanel::LinkMode::Link,
+      userPanel = safenew UserPanel { GetServiceConfig(), GetOAuthService(),
+                                      GetUserService(), false,
                                       parent.mAudiocomTrace, s.GetParent() };
-
-      mUserDataChangedSubscription = userPanel->Subscribe(
-         [this](auto message) { UpdateUserData(message.IsAuthorized); });
 
       s.Prop(0).AddWindow(userPanel, wxEXPAND);
 
@@ -619,32 +625,6 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
             trackTitle->SetName(XO("Track Title").Translation());
             trackTitle->SetFocus();
             trackTitle->SetMaxLength(100);
-            s.AddSpace(16);
-
-            anonInfoPanel = s.StartInvisiblePanel();
-            {
-               AccessibleLinksFormatter privacyPolicy(XO(
-                  /*i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context. */
-                  "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."));
-
-               privacyPolicy.FormatLink(
-                  L"%s", XO("audio.com"), "https://audio.com");
-
-               privacyPolicy.FormatLink(
-                  L"%%", TranslatableString {},
-                  AccessibleLinksFormatter::LinkClickedHandler {});
-
-               privacyPolicy.Populate(s);
-            }
-            s.EndInvisiblePanel();
-
-            authorizedInfoPanel = s.StartInvisiblePanel();
-            s.StartHorizontalLay(wxEXPAND, 1);
-            {
-               s.AddFixedText(XO("Press \"Continue\" to upload to audio.com"));
-            }
-            s.EndHorizontalLay();
-            s.EndInvisiblePanel();
          }
          s.EndInvisiblePanel();
       }
@@ -652,23 +632,6 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
    }
    s.EndVerticalLay();
    s.EndInvisiblePanel();
-
-   UpdateUserData(
-      GetOAuthService().HasRefreshToken() &&
-      !GetUserService().GetUserSlug().empty());
-}
-
-void ShareAudioDialog::InitialStatePanel::UpdateUserData(bool authorized)
-{
-   parent.mIsAuthorised = authorized;
-
-   anonInfoPanel->Show(!authorized);
-   authorizedInfoPanel->Show(authorized);
-
-   if (parent.mContinueButton != nullptr)
-      parent.mContinueButton->Enable(authorized && !GetTrackTitle().empty());
-
-   root->GetParent()->Layout();
 }
 
 wxString ShareAudioDialog::InitialStatePanel::GetTrackTitle() const
@@ -716,8 +679,6 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
          s.EndWrapLay();
       }
       s.EndInvisiblePanel();
-
-      s.AddSpace(0, 16, 0);
 
       info = s.AddVariableText(publicDescriptionText);
    }
