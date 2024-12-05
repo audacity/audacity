@@ -12,9 +12,6 @@ using namespace au::effects;
 AmplifyEffect* AmplifyViewModel::effect() const
 {
     AmplifyEffect* e = dynamic_cast<AmplifyEffect*>(AbstractEffectModel::effect());
-    IF_ASSERT_FAILED(e) {
-        return nullptr;
-    }
     return e;
 }
 
@@ -117,7 +114,7 @@ void AmplifyViewModel::setNewPeak(float newNewPeak_)
 float AmplifyViewModel::newPeakMin() const
 {
     AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
+    if (!ae) {
         return 0.0;
     }
 
@@ -127,7 +124,7 @@ float AmplifyViewModel::newPeakMin() const
 float AmplifyViewModel::newPeakMax() const
 {
     AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
+    if (!ae) {
         return 0.0;
     }
 

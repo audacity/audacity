@@ -31,8 +31,5 @@ signals:
 private:
 
     void doReload() override;
-
-    NoiseSettings& mutSettings();
-    const NoiseSettings& settings() const;
 };
 }

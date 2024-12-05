@@ -7,19 +7,20 @@ import Audacity.Playback
 import "../common"
 
 EffectBase {
+
+    id: root
+
     property string title: qsTrc("effects", "Noise")
-    property alias instanceId: noise.instanceId
     property bool isApplyAllowed: true
 
     width: 300
     height: 150
 
-    function preview() {
-        noise.preview()
-    }
+    model: noise
 
     NoiseViewModel {
         id: noise
+        instanceId: root.instanceId
     }
 
     Component.onCompleted: {

@@ -132,7 +132,7 @@ void ReverbViewModel::setParam(const QString& key, double val)
 
 bool ReverbViewModel::wetOnly() const
 {
-    return inited() ? settings<ReverbSettings>().mWetOnly : false;
+    return settings<ReverbSettings>().mWetOnly;
 }
 
 void ReverbViewModel::setWetOnly(bool newWetOnly)

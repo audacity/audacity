@@ -10,7 +10,7 @@
 
 using namespace au::effects;
 
-void GeneratorEffectModel::init()
+void GeneratorEffectModel::doReload()
 {
     auto* const ge = dynamic_cast<GeneratorEffect*>(effect());
     IF_ASSERT_FAILED(ge) {
@@ -24,17 +24,17 @@ void GeneratorEffectModel::init()
 
 double GeneratorEffectModel::sampleRate() const
 {
-    const auto ge = generatorEffect();
-    IF_ASSERT_FAILED(ge) {
+    const auto e = generatorEffect();
+    if (!e) {
         return 1.0;
     }
-    return ge->sampleRate();
+    return e->sampleRate();
 }
 
 double GeneratorEffectModel::duration() const
 {
     const auto e = generatorEffect();
-    IF_ASSERT_FAILED(e) {
+    if (!e) {
         return 0.0;
     }
     return e->duration();
@@ -53,7 +53,7 @@ void GeneratorEffectModel::setDuration(double newDuration)
 QString GeneratorEffectModel::durationFormat() const
 {
     const auto e = generatorEffect();
-    IF_ASSERT_FAILED(e) {
+    if (!e) {
         return "";
     }
     return e->durationFormat();
