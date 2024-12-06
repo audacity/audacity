@@ -4,7 +4,6 @@
 #include "effectpresetsprovider.h"
 
 #include "global/containers.h"
-#include "global/translation.h"
 #include "global/io/file.h"
 
 #include "libraries/lib-effects/Effect.h"
@@ -19,6 +18,8 @@
 
 using namespace muse;
 using namespace au::effects;
+
+static const PresetId DEFAULT_PRESET("default");
 
 const EffectSettingsManager& EffectPresetsProvider::settingsManager(const EffectId& effectId) const
 {
@@ -56,25 +57,36 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
 
     Ret ret;
 
+    // try apply default
+    bool isApplied = false;
+    if (DEFAULT_PRESET == presetId) {
+        isApplied = true;
+        OptionalMessage msg = sm.LoadFactoryDefaults(*settings);
+        ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
+        if (!ret) {
+            LOGE() << "failed load factory defaults";
+        }
+    }
+
     // try apply factory
-    bool isFactory = false;
-    {
+    if (!isApplied) {
         PresetIdList presets = factoryPresets(effectId);
         int idx = muse::indexOf(presets, presetId);
-        isFactory = idx >= 0;
-        if (isFactory) {
+        if (idx >= 0) {
+            isApplied = true;
             OptionalMessage msg = sm.LoadFactoryPreset(idx, *settings);
-            ret = msg ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
+            ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
             if (!ret) {
                 LOGE() << "failed load factory preset";
             }
         }
     }
 
-    // try user
-    if (!isFactory) {
+    // try apply user
+    if (!isApplied) {
+        isApplied = true;
         OptionalMessage msg = sm.LoadUserPreset(UserPresetsGroup(wxString(presetId)), *settings);
-        ret = msg ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
+        ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
         if (!ret) {
             LOGE() << "failed load user preset";
         }
@@ -93,7 +105,7 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
     const EffectSettingsManager& sm = settingsManager(effectId);
     EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
     IF_ASSERT_FAILED(settings) {
-        return muse::make_ret(Ret::Code::InternalError);
+        return make_ret(Err::InternalError);
     }
 
     bool ok = sm.SaveUserPreset(UserPresetsGroup(wxString(presetName)), *settings);
@@ -102,7 +114,7 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
         m_userPresetsChanged.send(effectId);
     }
 
-    return ok ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
+    return ok ? muse::make_ok() : make_ret(Err::InternalError);
 }
 
 muse::Ret EffectPresetsProvider::deletePreset(const EffectId& effectId, const PresetId& presetId)
@@ -118,7 +130,7 @@ muse::Ret EffectPresetsProvider::deletePreset(const EffectId& effectId, const Pr
         m_userPresetsChanged.send(effectId);
     }
 
-    return ok ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
+    return ok ? muse::make_ok() : make_ret(Err::InternalError);
 }
 
 muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath)
@@ -126,12 +138,12 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     Effect* effect = effectsProvider()->effect(effectId);
     IF_ASSERT_FAILED(effect) {
-        return muse::make_ret(Ret::Code::InternalError);
+        return make_ret(Err::InternalError);
     }
 
     EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
     IF_ASSERT_FAILED(settings) {
-        return muse::make_ret(Ret::Code::InternalError);
+        return make_ret(Err::InternalError);
     }
 
     ByteArray data;
@@ -160,7 +172,7 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
 
     if (ret) {
         OptionalMessage res = effect->LoadSettingsFromString(params, *settings);
-        ret = res ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
+        ret = res ? muse::make_ok() : make_ret(Err::InternalError);
         if (ret) {
             instancesRegister()->notifyAboutSettingsChanged(effectInstanceId);
         } else {
@@ -176,12 +188,12 @@ muse::Ret EffectPresetsProvider::exportPreset(const EffectInstanceId& effectInst
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     Effect* effect = effectsProvider()->effect(effectId);
     IF_ASSERT_FAILED(effect) {
-        return muse::make_ret(Ret::Code::InternalError);
+        return make_ret(Err::InternalError);
     }
 
     EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
     IF_ASSERT_FAILED(settings) {
-        return muse::make_ret(Ret::Code::InternalError);
+        return make_ret(Err::InternalError);
     }
 
     wxString params;

@@ -81,19 +81,22 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     {
         PresetIdList factoryPresets = presetsController()->factoryPresets(effectId);
         MenuItem* menuItem = makeMenu(TranslatableString("effects", "Factory Presets"), {});
-        if (factoryPresets.empty()) {
-            menuItem->setState(ui::UiActionState::make_disabled());
-        } else {
-            MenuItemList subitems;
-            for (const PresetId& p : factoryPresets) {
-                String name = au3::wxToString(p);
-                MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
-                item->setId("factory_apply_" + name);
-                item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p)); // apply for instance
-                subitems << item;
-            }
-            menuItem->setSubitems(subitems);
+
+        MenuItemList subitems;
+        MenuItem* defItem = makeMenuItem("action://effects/presets/apply", TranslatableString("effects", "Defaults"));
+        defItem->setId("factory_apply_default");
+        defItem->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, "default"));
+        subitems << defItem;
+
+        for (const PresetId& p : factoryPresets) {
+            String name = au3::wxToString(p);
+            MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
+            item->setId("factory_apply_" + name);
+            item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p));     // apply for instance
+            subitems << item;
         }
+        menuItem->setSubitems(subitems);
+
         items << menuItem;
     }
 
