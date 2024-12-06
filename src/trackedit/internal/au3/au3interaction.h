@@ -52,7 +52,8 @@ public:
     bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
-    bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
+    bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
+    bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
@@ -68,6 +69,7 @@ public:
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+    std::optional<secs_t> getMostLeftClipStartTime(const ClipKeyList& clipKeys) const override;
 
     void newMonoTrack() override;
     void newStereoTrack() override;

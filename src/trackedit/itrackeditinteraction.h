@@ -52,7 +52,8 @@ public:
     virtual bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool copyClipIntoClipboard(const ClipKey& clipKey) = 0;
     virtual bool copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t begin, secs_t end) = 0;
-    virtual bool copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
+    virtual bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) = 0;
+    virtual bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
@@ -75,6 +76,7 @@ public:
     virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
     virtual void moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
+    virtual std::optional<secs_t> getMostLeftClipStartTime(const ClipKeyList& clipKeys) const = 0;
     virtual void undo() = 0;
     virtual bool canUndo() = 0;
     virtual void redo() = 0;
