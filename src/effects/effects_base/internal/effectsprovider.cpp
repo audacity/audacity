@@ -202,8 +202,7 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
             assert(pInstanceEx); // null check above
             try {
                 if (pInstanceEx->Process(settings) == false) {
-                    // It failed but we don't know why.
-                    success = make_ret(Err::EffectProcessFailed);
+                    success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
                 }
             } catch (::AudacityException& e) {
                 success = make_ret(Err::EffectProcessFailed);

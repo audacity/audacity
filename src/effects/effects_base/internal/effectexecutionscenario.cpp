@@ -53,22 +53,7 @@ std::pair<std::string, std::string> EffectExecutionScenario::makeErrorMsg(const 
                                                                           const EffectId& effectId)
 {
     const muse::String& effect = effectsProvider()->meta(effectId).title;
-    switch (Err(ret.code())) {
-    case Err::UnknownError: return {
-            ret.text(),
-            muse::String("An unknown error occurred while executing %1").arg(effect).toStdString()
-        };
-    case Err::EffectNoAudioSelected: return {
-            ret.text(),
-            muse::String("Select the audio you want the %1 to use and try again").arg(effect).toStdString()
-        };
-    case Err::EffectProcessFailed: return {
-            ret.text(),
-            muse::String("An unknown error occurred while executing %1").arg(effect).toStdString()
-        };
-    default:
-        return makeErrorMsg(make_ret(Err::UnknownError), effectId);
-    }
+    return { effect.toStdString(), ret.text() };
 }
 
 muse::Ret EffectExecutionScenario::performEffectWithShowError(au3::Au3Project& project,
