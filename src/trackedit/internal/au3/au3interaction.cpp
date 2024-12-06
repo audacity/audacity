@@ -123,7 +123,7 @@ TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tr
     return result;
 }
 
-muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const
+muse::Ret Au3Interaction::canPasteTrackData(const TrackIdList& dstTracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const
 {
     IF_ASSERT_FAILED(dstTracksIds.size() <= clipsToPaste.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
@@ -133,18 +133,6 @@ muse::Ret Au3Interaction::canPasteClips(const TrackIdList& dstTracksIds, const s
         Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
         IF_ASSERT_FAILED(dstWaveTrack) {
             return make_ret(trackedit::Err::WaveTrackNotFound);
-        }
-
-        //! NOTE need to snap begin just like Paste() function do
-        secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
-        secs_t insertDuration = clipsToPaste.at(i).track.get()->GetEndTime();
-
-        // throws incosistency exception if project tempo is not set, see:
-        // au4/src/au3wrap/internal/au3project.cpp: 92
-        // Paste func throws exception if there's not enough space to paste in (exception handler calls BasicUI logic)
-        if (!dstWaveTrack->IsEmpty(snappedBegin, snappedBegin + insertDuration)) {
-            LOGD() << "Not enough space to paste clip into";
-            return make_ret(trackedit::Err::NotEnoughSpaceForPaste);
         }
 
         if (dstWaveTrack->NChannels() == 1 && clipboard()->trackData(i).track.get()->NChannels() == 2) {
@@ -190,6 +178,33 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey& clipKey)
     }
 
     return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId> &tracksIds, const std::vector<TrackData> &trackData, secs_t begin)
+{
+    IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
+        return make_ret(trackedit::Err::NotEnoughDataInClipboard);
+    }
+
+    for (size_t i = 0; i < tracksIds.size(); ++i) {
+        WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
+        IF_ASSERT_FAILED(dstWaveTrack) {
+            return make_ret(trackedit::Err::WaveTrackNotFound);
+        }
+
+        //! NOTE need to snap begin just like Paste() function do
+        secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
+
+        const WaveTrack* wt = dynamic_cast<const Au3WaveTrack*>(trackData.at(i).track.get());
+        for (const auto& interval : wt->Intervals()) {
+            auto ok = makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin + interval->GetPlayStartTime(), snappedBegin + interval->GetPlayEndTime());
+            if (!ok) {
+                return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+            }
+        }
+    }
+
+    return muse::make_ok();
 }
 
 muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData,
@@ -573,7 +588,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
         return make_ret(trackedit::Err::TrackEmpty);
     }
 
-    auto copiedData = clipboard()->trackData();
+    auto copiedData = clipboard()->trackDataCopy();
     TrackIdList selectedTracks = selectionController()->selectedTracks();
     if (selectedTracks.empty()) {
         auto tracksIdsToSelect = pasteIntoNewTracks(copiedData);
@@ -594,23 +609,19 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
         newTracksNeeded = true;
     }
 
-    // check if copied data fits into selected area
-    auto ret = canPasteClips(dstTracksIds, copiedData, begin);
+    auto ret = canPasteTrackData(dstTracksIds, copiedData, begin);
     if (!ret) {
-        if (!ret.code() == static_cast<int>(trackedit::Err::NotEnoughSpaceForPaste)) {
-            return ret;
-        }
-
-        auto ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin);
-        if (!ok) {
-            make_ret(trackedit::Err::FailedToMakeRoomForClip);
-        }
+        return ret;
     }
 
-    //! NOTE This shouldn't happen, leaving this for now
-    //! for debugging purposes
-    if (!canPasteClips(dstTracksIds, copiedData, begin)) {
-        return ret;
+    muse::Ret ok;
+    if (clipboard()->isMultiSelectionCopy()) {
+        ok = makeRoomForClipsOnTracks(dstTracksIds, copiedData, begin);
+    } else {
+        ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin);
+    }
+    if (!ok) {
+        make_ret(trackedit::Err::FailedToMakeRoomForClip);
     }
 
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
@@ -626,14 +637,21 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
             clipIdsBefore.insert(clip.key.clipId);
         }
 
-        if (clipboard()->trackData(i).track.get()->NChannels() == 1 && dstWaveTrack->NChannels() == 2) {
-            // When the source is mono, may paste its only channel
-            // repeatedly into a stereo track
-            const auto pastedTrack = std::static_pointer_cast<Au3WaveTrack>(clipboard()->trackData(i).track);
-            pastedTrack->MonoToStereo();
-            dstWaveTrack->Paste(begin, *pastedTrack);
+        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(i).track);
+
+        // When the source is mono, may paste its only channel
+        // repeatedly into a stereo track
+        if (trackToPaste->NChannels() == 1 && dstWaveTrack->NChannels() == 2) {
+            trackToPaste->MonoToStereo();
+        }
+
+        if (clipboard()->isMultiSelectionCopy()) {
+            trackToPaste->MoveTo(begin + trackToPaste->GetStartTime());
+            for (const auto& interval : trackToPaste->Intervals()) {
+                dstWaveTrack->InsertInterval(interval, false);
+            }
         } else {
-            dstWaveTrack->Paste(begin, *clipboard()->trackData(i).track);
+            dstWaveTrack->Paste(begin, *trackToPaste);
         }
 
         // Check which clips were added and trigger the onClipAdded event
@@ -775,6 +793,7 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
 
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
     clipboard()->addTrackData(TrackData { clipboardTrack, dummyClipKey });
+    clipboard()->setMultiSelectionCopy(true);
 
     return true;
 }

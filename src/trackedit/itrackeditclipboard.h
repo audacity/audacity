@@ -24,11 +24,15 @@ class ITrackeditClipboard : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ITrackeditClipboard() = default;
 
-    virtual std::vector<TrackData> trackData() const = 0;
+    virtual std::vector<TrackData> trackDataSource() const = 0;
+    virtual std::vector<TrackData> trackDataCopy() const = 0;
     virtual TrackData trackData(size_t i) const = 0;
     virtual void clearTrackData() = 0;
     virtual bool trackDataEmpty() const = 0;
     virtual size_t trackDataSize() const = 0;
     virtual void addTrackData(const TrackData& trackData) = 0;
+
+    virtual void setMultiSelectionCopy(bool newValue) = 0;
+    virtual bool isMultiSelectionCopy() const = 0;
 };
 }
