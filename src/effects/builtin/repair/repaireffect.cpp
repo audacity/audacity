@@ -7,7 +7,7 @@
   Dominic Mazzoni
 
 **********************************************************************/
-#include "Repair.h"
+#include "repaireffect.h"
 #include "EffectOutputTracks.h"
 #include "InterpolateAudio.h"
 #include "TimeStretching.h"

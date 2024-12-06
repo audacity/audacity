@@ -9,7 +9,7 @@
 **********************************************************************/
 #pragma once
 
-#include "StatefulEffect.h"
+#include "libraries/lib-effects/StatefulEffect.h"
 
 class WaveChannel;
 

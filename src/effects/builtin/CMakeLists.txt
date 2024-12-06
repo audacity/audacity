@@ -63,6 +63,9 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/reverse/reverseeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/reverse/reverseeffect.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/repair/repaireffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/repair/repaireffect.h
     )
 
 # AU3
@@ -77,8 +80,6 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/Repair.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/Repair.h
 )
 
 set(AU3_DEF ${AU3_DEF}

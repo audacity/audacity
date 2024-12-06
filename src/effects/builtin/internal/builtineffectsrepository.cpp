@@ -15,8 +15,6 @@
 
 #include "general/generalviewmodel.h"
 
-#include "libraries/lib-builtin-effects/Repair.h"
-
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
 #include "tonegen/chirpeffect.h"
@@ -31,6 +29,7 @@
 #include "fade/fadeeffect.h"
 #include "invert/inverteffect.h"
 #include "reverse/reverseeffect.h"
+#include "repair/repaireffect.h"
 #include "log.h"
 
 #include <algorithm>
