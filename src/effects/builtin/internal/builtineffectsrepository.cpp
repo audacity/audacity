@@ -16,7 +16,6 @@
 #include "general/generalviewmodel.h"
 
 #include "libraries/lib-builtin-effects/Repair.h"
-#include "libraries/lib-builtin-effects/Reverse.h"
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
@@ -31,6 +30,7 @@
 #include "noisegen/noiseviewmodel.h"
 #include "fade/fadeeffect.h"
 #include "invert/inverteffect.h"
+#include "reverse/reverseeffect.h"
 #include "log.h"
 
 #include <algorithm>

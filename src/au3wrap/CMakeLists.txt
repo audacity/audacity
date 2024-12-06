@@ -440,6 +440,8 @@ set(AU3_SRC
     # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.cpp
     # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.h
 
+    ${AU3_LIBRARIES}/lib-effects/StatefulEffect.cpp
+    ${AU3_LIBRARIES}/lib-effects/StatefulEffect.h
     ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.cpp
     ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.h
     ${AU3_LIBRARIES}/lib-effects/PerTrackEffect.cpp

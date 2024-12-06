@@ -63,8 +63,6 @@ set( SOURCES
    RepeatBase.h
    ReverbBase.cpp
    ReverbBase.h
-   Reverse.cpp
-   Reverse.h
    SBSMSBase.cpp
    SBSMSBase.h
    ScienFilterBase.cpp

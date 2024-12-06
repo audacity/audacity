@@ -60,6 +60,9 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/invert/inverteffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/invert/inverteffect.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/reverse/reverseeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/reverse/reverseeffect.h
     )
 
 # AU3
@@ -76,8 +79,6 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Repair.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/Repair.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/Reverse.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/Reverse.h
 )
 
 set(AU3_DEF ${AU3_DEF}

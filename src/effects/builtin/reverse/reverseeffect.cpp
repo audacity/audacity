@@ -9,7 +9,7 @@
   This class reverses the selected audio.
 
 **********************************************************************/
-#include "Reverse.h"
+#include "reverseeffect.h"
 #include "EffectOutputTracks.h"
 #include "LabelTrack.h"
 #include "SyncLock.h"
