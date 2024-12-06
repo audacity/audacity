@@ -17,6 +17,10 @@ StyledDialogView {
 
     margins: 16
 
+    Component.onCompleted: {
+        Qt.callLater(input.forceActiveFocus)
+    }
+
     TextInputField {
         id: input
         anchors.top: parent.top
@@ -35,14 +39,14 @@ StyledDialogView {
         width: parent.width
         anchors.bottom: parent.bottom
 
-        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Apply]
+        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
 
         onStandardButtonClicked: function(buttonId) {
             switch (buttonId) {
             case ButtonBoxModel.Cancel:
                 root.reject()
                 return
-            case ButtonBoxModel.Apply:
+            case ButtonBoxModel.Ok:
                 root.ret = {
                     errcode: 0,
                     value: input.currentText

@@ -73,7 +73,7 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
 
     // try user
     if (!isFactory) {
-        OptionalMessage msg = sm.LoadUserPreset(presetId, *settings);
+        OptionalMessage msg = sm.LoadUserPreset(UserPresetsGroup(wxString(presetId)), *settings);
         ret = msg ? muse::make_ok() : muse::make_ret(Ret::Code::InternalError);
         if (!ret) {
             LOGE() << "failed load user preset";

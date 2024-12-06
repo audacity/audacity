@@ -12,6 +12,7 @@ static constexpr int EFFECTS_FIRST = 7000; // TODO This has to go in framework's
 enum class Err {
     Undefined = int(muse::Ret::Code::Undefined),
     NoError = int(muse::Ret::Code::Ok),
+    InternalError = int(muse::Ret::Code::InternalError),
     UnknownError = EFFECTS_FIRST,
 
     EffectNoAudioSelected,
@@ -29,6 +30,8 @@ inline muse::Ret make_ret(Err e)
     switch (e) {
     case Err::Undefined: return muse::Ret(retCode);
     case Err::NoError: return muse::Ret(retCode);
+    case Err::InternalError:
+        return muse::Ret(retCode, muse::trc("effects", "Internal error"));
     case Err::UnknownError:
         return muse::Ret(retCode, muse::trc("effects", "Unknown error"));
     case Err::EffectNoAudioSelected:

@@ -220,8 +220,18 @@ bool EffectConfigSettings::HasGroup(const wxString& group) const
 bool EffectConfigSettings::Remove(const wxString& key)
 {
     std::string full = fullKey(key);
-    m_vals.erase(full);
-    return false;
+    std::vector<std::string> toRemoveKeys;
+    for (const auto& p : m_vals) {
+        if (p.first.find(full) != std::string::npos) {
+            toRemoveKeys.push_back(p.first);
+        }
+    }
+
+    for (const std::string& k : toRemoveKeys) {
+        m_vals.erase(k);
+    }
+
+    return true;
 }
 
 void EffectConfigSettings::Clear()
@@ -297,6 +307,9 @@ bool EffectConfigSettings::Flush() noexcept
 void EffectConfigSettings::DoBeginGroup(const wxString& prefix)
 {
     m_currentGroup = au3::wxToStdSting(prefix);
+    if (!m_currentGroup.empty() && m_currentGroup.back() == '/') {
+        m_currentGroup.pop_back();
+    }
 }
 
 void EffectConfigSettings::DoEndGroup() noexcept
