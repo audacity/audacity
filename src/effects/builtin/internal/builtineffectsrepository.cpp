@@ -17,6 +17,7 @@
 
 #include "libraries/lib-builtin-effects/Fade.h"
 #include "libraries/lib-builtin-effects/Invert.h"
+#include "libraries/lib-builtin-effects/Reverse.h"
 
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
@@ -40,6 +41,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< FadeIn > regFadeIn;
     static BuiltinEffectsModule::Registration< FadeOut > regFadeOut;
     static BuiltinEffectsModule::Registration< Invert > regInvert;
+    static BuiltinEffectsModule::Registration< Reverse > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
@@ -100,6 +102,11 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             regMeta(desc,
                     muse::mtrc("effects", "Invert"),
                     muse::mtrc("effects", "Flips the audio samples upside-down, reversing their polarity")
+                    );
+        } else if (symbol == Reverse::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Reverse"),
+                    muse::mtrc("effects", "Reverses the selected audio")
                     );
         } else if (symbol == ChirpEffect::Symbol) {
             regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");

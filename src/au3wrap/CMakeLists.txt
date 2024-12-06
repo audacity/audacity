@@ -518,6 +518,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/LookAheadGainReduction.cpp
     ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/LookAheadGainReduction.h
 
+    ${AU3_LIBRARIES}/lib-label-track/LabelTrack.cpp
+    ${AU3_LIBRARIES}/lib-label-track/LabelTrack.h
 
 )
 

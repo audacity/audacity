@@ -49,6 +49,7 @@ set(AU3_DEF
     -DVIEWPORT_API=
     -DSNAPPING_API=
     -DNUMERIC_FORMATS_API=
+    -DLABEL_TRACK_API=
 
     -DTIME_FREQUENCY_SELECTION_API=
     -DSCREEN_GEOMETRY_API=
@@ -100,6 +101,7 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-stretching-sequence
     ${AU3_LIBRARIES}/lib-wave-track
     ${AU3_LIBRARIES}/lib-sample-track
+    ${AU3_LIBRARIES}/lib-label-track
     ${AU3_LIBRARIES}/lib-mixer
     ${AU3_LIBRARIES}/lib-audio-graph
     ${AU3_LIBRARIES}/lib-playable-track
