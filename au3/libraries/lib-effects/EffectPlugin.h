@@ -108,6 +108,8 @@ public:
     */
    virtual bool Process(EffectSettings &settings) = 0;
 
+   virtual std::string GetLastError() const { return ""; }
+
    ~EffectInstanceEx() override;
 };
 #endif
