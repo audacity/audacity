@@ -37,8 +37,6 @@ set( SOURCES
    EqualizationFilter.h
    EqualizationParameters.cpp
    EqualizationParameters.h
-   Fade.cpp
-   Fade.h
    FindClippingBase.cpp
    FindClippingBase.h
    Generator.cpp

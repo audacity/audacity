@@ -54,6 +54,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.h
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.h
     )
 
 # AU3
@@ -68,8 +71,6 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/Fade.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/Fade.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Invert.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/Invert.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Repair.cpp

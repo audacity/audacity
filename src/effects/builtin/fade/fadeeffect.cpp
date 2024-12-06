@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include "Fade.h"
+#include "fadeeffect.h"
 
 Fade::Fade(bool fadeIn)
 {
