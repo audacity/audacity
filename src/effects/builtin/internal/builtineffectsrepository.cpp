@@ -39,8 +39,8 @@ using namespace au::effects;
 
 void BuiltinEffectsRepository::preInit()
 {
-    static BuiltinEffectsModule::Registration< FadeIn > regFadeIn;
-    static BuiltinEffectsModule::Registration< FadeOut > regFadeOut;
+    static BuiltinEffectsModule::Registration< FadeInEffect > regFadeIn;
+    static BuiltinEffectsModule::Registration< FadeOutEffect > regFadeOut;
     static BuiltinEffectsModule::Registration< Invert > regInvert;
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< Reverse > regReverse;
@@ -90,12 +90,12 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects", "Amplify"),
                     muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected")
                     );
-        } else if (symbol == FadeIn::Symbol) {
+        } else if (symbol == FadeInEffect::Symbol) {
             regMeta(desc,
                     muse::mtrc("effects", "Fade In"),
                     muse::mtrc("effects", "Applies a linear fade-in to the selected audio")
                     );
-        } else if (symbol == FadeOut::Symbol) {
+        } else if (symbol == FadeOutEffect::Symbol) {
             regMeta(desc,
                     muse::mtrc("effects", "Fade Out"),
                     muse::mtrc("effects", "Applies a linear fade-out to the selected audio")

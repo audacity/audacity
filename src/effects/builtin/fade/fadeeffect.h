@@ -1,63 +1,54 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  Fade.h
-
-  Dominic Mazzoni
-
-**********************************************************************/
 #pragma once
 
 #include "StatefulPerTrackEffect.h"
 
-class BUILTIN_EFFECTS_API Fade : public StatefulPerTrackEffect
+namespace au::effects {
+class FadeEffectBase : public StatefulPerTrackEffect
 {
 public:
-   Fade(bool fadeIn = false);
-   virtual ~Fade() override;
+    FadeEffectBase(bool fadeIn = false);
+    virtual ~FadeEffectBase() override;
 
-   // EffectDefinitionInterface implementation
+    // EffectDefinitionInterface implementation
 
-   EffectType GetType() const override;
-   bool IsInteractive() const override;
+    EffectType GetType() const override;
+    bool IsInteractive() const override;
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-   bool ProcessInitialize(
-      EffectSettings& settings, double sampleRate,
-      ChannelNames chanMap) override;
-   size_t ProcessBlock(
-      EffectSettings& settings, const float* const* inBlock,
-      float* const* outBlock, size_t blockLen) override;
+    unsigned GetAudioInCount() const override;
+    unsigned GetAudioOutCount() const override;
+    bool ProcessInitialize(
+        EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
+    size_t ProcessBlock(
+        EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
 
 protected:
-   // EffectFade implementation
+    // EffectFade implementation
 
-   bool mFadeIn;
-   sampleCount mSample;
+    bool mFadeIn;
+    sampleCount mSample;
 };
 
-class BUILTIN_EFFECTS_API FadeIn final : public Fade
+class FadeInEffect final : public FadeEffectBase
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   FadeIn();
+    FadeInEffect();
 
-   // ComponentInterface implementation
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+    // ComponentInterface implementation
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 };
 
-class BUILTIN_EFFECTS_API FadeOut final : public Fade
+class FadeOutEffect final : public FadeEffectBase
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   FadeOut();
+    FadeOutEffect();
 
-   // ComponentInterface implementation
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+    // ComponentInterface implementation
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 };
+}

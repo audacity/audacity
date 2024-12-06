@@ -1,108 +1,95 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  Fade.cpp
-
-  Dominic Mazzoni
-
-**********************************************************************/
-
 #include "fadeeffect.h"
 
-Fade::Fade(bool fadeIn)
+namespace au::effects {
+FadeEffectBase::FadeEffectBase(bool fadeIn)
 {
-   mFadeIn = fadeIn;
+    mFadeIn = fadeIn;
 }
 
-Fade::~Fade()
+FadeEffectBase::~FadeEffectBase()
 {
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType Fade::GetType() const
+EffectType FadeEffectBase::GetType() const
 {
-   return EffectTypeProcess;
+    return EffectTypeProcess;
 }
 
-bool Fade::IsInteractive() const
+bool FadeEffectBase::IsInteractive() const
 {
-   return false;
+    return false;
 }
 
-unsigned Fade::GetAudioInCount() const
+unsigned FadeEffectBase::GetAudioInCount() const
 {
-   return 1;
+    return 1;
 }
 
-unsigned Fade::GetAudioOutCount() const
+unsigned FadeEffectBase::GetAudioOutCount() const
 {
-   return 1;
+    return 1;
 }
 
-bool Fade::ProcessInitialize(EffectSettings&, double, ChannelNames chanMap)
+bool FadeEffectBase::ProcessInitialize(EffectSettings&, double, ChannelNames)
 {
-   mSample = 0;
-   return true;
+    mSample = 0;
+    return true;
 }
 
-size_t Fade::ProcessBlock(
-   EffectSettings&, const float* const* inBlock, float* const* outBlock,
-   size_t blockLen)
+size_t FadeEffectBase::ProcessBlock(
+    EffectSettings&, const float* const* inBlock, float* const* outBlock,
+    size_t blockLen)
 {
-   const float* ibuf = inBlock[0];
-   float* obuf = outBlock[0];
+    const float* ibuf = inBlock[0];
+    float* obuf = outBlock[0];
 
-   if (mFadeIn)
-   {
-      for (decltype(blockLen) i = 0; i < blockLen; i++)
-      {
-         obuf[i] = (ibuf[i] * (mSample++).as_float()) / mSampleCnt.as_float();
-      }
-   }
-   else
-   {
-      for (decltype(blockLen) i = 0; i < blockLen; i++)
-      {
-         obuf[i] = (ibuf[i] * (mSampleCnt - 1 - mSample++).as_float()) /
-                   mSampleCnt.as_float();
-      }
-   }
+    if (mFadeIn) {
+        for (decltype(blockLen) i = 0; i < blockLen; i++) {
+            obuf[i] = (ibuf[i] * (mSample++).as_float()) / mSampleCnt.as_float();
+        }
+    } else {
+        for (decltype(blockLen) i = 0; i < blockLen; i++) {
+            obuf[i] = (ibuf[i] * (mSampleCnt - 1 - mSample++).as_float())
+                      / mSampleCnt.as_float();
+        }
+    }
 
-   return blockLen;
+    return blockLen;
 }
 
-const ComponentInterfaceSymbol FadeIn::Symbol { XO("Fade In") };
+const ComponentInterfaceSymbol FadeInEffect::Symbol { XO("Fade In") };
 
-FadeIn::FadeIn()
-    : Fade { true }
+FadeInEffect::FadeInEffect()
+    : FadeEffectBase{true}
 {
 }
 
-ComponentInterfaceSymbol FadeIn::GetSymbol() const
+ComponentInterfaceSymbol FadeInEffect::GetSymbol() const
 {
-   return Symbol;
+    return Symbol;
 }
 
-TranslatableString FadeIn::GetDescription() const
+TranslatableString FadeInEffect::GetDescription() const
 {
-   return XO("Applies a linear fade-in to the selected audio");
+    return XO("Applies a linear fade-in to the selected audio");
 }
 
-const ComponentInterfaceSymbol FadeOut::Symbol { XO("Fade Out") };
+const ComponentInterfaceSymbol FadeOutEffect::Symbol { XO("Fade Out") };
 
-FadeOut::FadeOut()
-    : Fade { false }
+FadeOutEffect::FadeOutEffect()
+    : FadeEffectBase{false}
 {
 }
 
-ComponentInterfaceSymbol FadeOut::GetSymbol() const
+ComponentInterfaceSymbol FadeOutEffect::GetSymbol() const
 {
-   return Symbol;
+    return Symbol;
 }
 
-TranslatableString FadeOut::GetDescription() const
+TranslatableString FadeOutEffect::GetDescription() const
 {
-   return XO("Applies a linear fade-out to the selected audio");
+    return XO("Applies a linear fade-out to the selected audio");
+}
 }
