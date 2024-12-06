@@ -208,7 +208,6 @@ void ClipsListModel::update()
     //! to take pointers to the items from the new list
     m_selectedItems.clear();
     onSelectedClips(selectionController()->selectedClips());
-    m_context->updateSelectedClipTime();
 
     endResetModel();
 
@@ -305,7 +304,7 @@ void ClipsListModel::onTimelineFrameTimeChanged()
     updateItemsMetrics();
 }
 
-void ClipsListModel::setSelectedItems(const QList<ClipListItem *> &items)
+void ClipsListModel::setSelectedItems(const QList<ClipListItem*>& items)
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -316,7 +315,7 @@ void ClipsListModel::setSelectedItems(const QList<ClipListItem *> &items)
     }
 }
 
-void ClipsListModel::addSelectedItem(ClipListItem *item)
+void ClipsListModel::addSelectedItem(ClipListItem* item)
 {
     item->setSelected(true);
     m_selectedItems.append(item);
@@ -352,12 +351,12 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
     return ok;
 }
 
-QVariant ClipsListModel::next(const ClipKey &key) const
+QVariant ClipsListModel::next(const ClipKey& key) const
 {
     return neighbor(key, 1);
 }
 
-QVariant ClipsListModel::prev(const ClipKey &key) const
+QVariant ClipsListModel::prev(const ClipKey& key) const
 {
     return neighbor(key, -1);
 }
@@ -488,7 +487,6 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
     }
 
     bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, completed);
-    m_context->updateSelectedClipTime();
 
     return ok;
 }
@@ -516,7 +514,6 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
     }
 
     bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, completed);
-    m_context->updateSelectedClipTime();
 
     return ok;
 }
@@ -572,7 +569,7 @@ void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
     }
 }
 
-void ClipsListModel::onSelectedClips(const trackedit::ClipKeyList &keyList)
+void ClipsListModel::onSelectedClips(const trackedit::ClipKeyList& keyList)
 {
     for (const auto& clip : keyList) {
         onSelectedClip(clip);

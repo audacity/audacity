@@ -89,8 +89,10 @@ private:
     au3::Au3Project& projectRef() const;
     TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
-    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const;
-    TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const;
+    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                              size_t clipboardTracksSize) const;
+    TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                        size_t clipboardTracksSize) const;
     muse::Ret canPasteClips(const TrackIdList& tracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);
@@ -122,6 +124,9 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
+
+    void selectClips(const ClipKeyList& clips);
+    void unselectClips(const ClipKeyList& clips);
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
