@@ -17,6 +17,7 @@
 
 #include "libraries/lib-builtin-effects/Fade.h"
 #include "libraries/lib-builtin-effects/Invert.h"
+#include "libraries/lib-builtin-effects/Repair.h"
 #include "libraries/lib-builtin-effects/Reverse.h"
 
 #include "amplify/amplifyeffect.h"
@@ -41,6 +42,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< FadeIn > regFadeIn;
     static BuiltinEffectsModule::Registration< FadeOut > regFadeOut;
     static BuiltinEffectsModule::Registration< Invert > regInvert;
+    static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< Reverse > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
@@ -102,6 +104,11 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             regMeta(desc,
                     muse::mtrc("effects", "Invert"),
                     muse::mtrc("effects", "Flips the audio samples upside-down, reversing their polarity")
+                    );
+        } else if (symbol == Repair::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Repair"),
+                    muse::mtrc("effects", "Sets the peak amplitude of a one or more tracks")
                     );
         } else if (symbol == Reverse::Symbol) {
             regMeta(desc,
