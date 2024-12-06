@@ -1,34 +1,25 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  Reverse.h
-
-  Mark Phillips
-
-  This class reverses the selected audio.
-
-**********************************************************************/
 #pragma once
 
-#include "StatefulEffect.h"
+#include "libraries/lib-effects/StatefulEffect.h"
 
-class BUILTIN_EFFECTS_API Reverse : public StatefulEffect
+namespace au::effects {
+class ReverseEffect : public StatefulEffect
 {
 public:
-   Reverse();
-   virtual ~Reverse();
+    ReverseEffect();
+    virtual ~ReverseEffect();
 
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   // ComponentInterface implementation
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+    // ComponentInterface implementation
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   // EffectDefinitionInterface implementation
-   EffectType GetType() const override;
-   bool IsInteractive() const override;
+    // EffectDefinitionInterface implementation
+    EffectType GetType() const override;
+    bool IsInteractive() const override;
 
-   // Effect implementation
-   bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    // Effect implementation
+    bool Process(::EffectInstance& instance, ::EffectSettings& settings) override;
 };
+}

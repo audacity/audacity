@@ -43,7 +43,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< FadeOutEffect > regFadeOut;
     static BuiltinEffectsModule::Registration< InvertEffect > regInvert;
     static BuiltinEffectsModule::Registration< Repair > regRepair;
-    static BuiltinEffectsModule::Registration< Reverse > regReverse;
+    static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
@@ -110,7 +110,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects", "Repair"),
                     muse::mtrc("effects", "Sets the peak amplitude of a one or more tracks")
                     );
-        } else if (symbol == Reverse::Symbol) {
+        } else if (symbol == ReverseEffect::Symbol) {
             regMeta(desc,
                     muse::mtrc("effects", "Reverse"),
                     muse::mtrc("effects", "Reverses the selected audio")

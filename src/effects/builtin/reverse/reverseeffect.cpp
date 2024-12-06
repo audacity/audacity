@@ -1,14 +1,3 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  Reverse.cpp
-
-  Mark Phillips
-
-  This class reverses the selected audio.
-
-**********************************************************************/
 #include "reverseeffect.h"
 #include "EffectOutputTracks.h"
 #include "LabelTrack.h"
@@ -18,75 +7,78 @@
 #include <algorithm>
 #include <cmath>
 
-Reverse::Reverse()
+namespace au::effects {
+ReverseEffect::ReverseEffect()
 {
 }
 
-Reverse::~Reverse()
+ReverseEffect::~ReverseEffect()
 {
 }
 
-const ComponentInterfaceSymbol Reverse::Symbol { XO("Reverse") };
+const ComponentInterfaceSymbol ReverseEffect::Symbol { XO("Reverse") };
 
-ComponentInterfaceSymbol Reverse::GetSymbol() const
+ComponentInterfaceSymbol ReverseEffect::GetSymbol() const
 {
-   return Symbol;
+    return Symbol;
 }
 
-TranslatableString Reverse::GetDescription() const
+TranslatableString ReverseEffect::GetDescription() const
 {
-   return XO("Reverses the selected audio");
+    return XO("Reverses the selected audio");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType Reverse::GetType() const
+EffectType ReverseEffect::GetType() const
 {
-   return EffectTypeProcess;
+    return EffectTypeProcess;
 }
 
-bool Reverse::IsInteractive() const
+bool ReverseEffect::IsInteractive() const
 {
-   return false;
+    return false;
 }
 
 // Effect implementation
 
-bool Reverse::Process(EffectInstance&, EffectSettings&)
+bool ReverseEffect::Process(EffectInstance&, EffectSettings&)
 {
-   // all needed because Reverse should move the labels too
-   EffectOutputTracks outputs {
-      *mTracks, GetType(), { { mT0, mT1 } }, true, true
-   };
-   bool bGoodResult = true;
-   int count = 0;
+    // all needed because ReverseEffect should move the labels too
+    EffectOutputTracks outputs {
+        *mTracks, GetType(), { { mT0, mT1 } }, true, true
+    };
+    bool bGoodResult = true;
+    int count = 0;
 
-   auto trackRange =
-      outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelectedP;
-   trackRange.VisitWhile(
-      bGoodResult,
-      [&](WaveTrack& track) {
-         const auto progress = [&](double fraction) {
+    auto trackRange
+        =outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelectedP;
+    trackRange.VisitWhile(
+        bGoodResult,
+        [&](WaveTrack& track) {
+        const auto progress = [&](double fraction) {
             return !TrackProgress(count, fraction);
-         };
-         if (mT1 > mT0)
-         {
+        };
+        if (mT1 > mT0) {
             auto start = track.TimeToLongSamples(mT0);
             auto end = track.TimeToLongSamples(mT1);
             auto len = end - start;
 
-            if (!WaveTrackUtilities::Reverse(track, start, len, progress))
-               bGoodResult = false;
-         }
-         count += track.NChannels();
-      },
-      [&](LabelTrack& track) {
-         track.ChangeLabelsOnReverse(mT0, mT1);
-         count++;
-      });
+            if (!WaveTrackUtilities::Reverse(track, start, len, progress)) {
+                bGoodResult = false;
+            }
+        }
+        count += track.NChannels();
+    },
+        [&](LabelTrack& track) {
+        track.ChangeLabelsOnReverse(mT0, mT1);
+        count++;
+    });
 
-   if (bGoodResult)
-      outputs.Commit();
+    if (bGoodResult) {
+        outputs.Commit();
+    }
 
-   return bGoodResult;
+    return bGoodResult;
+}
 }
