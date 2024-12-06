@@ -118,6 +118,8 @@ void EffectPresetsScenario::exportPreset(const EffectInstanceId& effectInstanceI
         return;
     }
 
+    m_lastExportPath = io::FileInfo(path).dirPath();
+
     Ret ret = presetsProvider()->exportPreset(effectInstanceId, path);
     if (!ret) {
         showError(ret);

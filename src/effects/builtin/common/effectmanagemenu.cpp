@@ -42,7 +42,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             for (const PresetId& p : userPresets) {
                 String name = au3::wxToString(p);
                 MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
-                item->setId(name);
+                item->setId("user_apply_" + name);
                 item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p)); // apply for instance
                 subitems << item;
             }
@@ -66,7 +66,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             for (const PresetId& p : userPresets) {
                 String name = au3::wxToString(p);
                 MenuItem* item = makeMenuItem("action://effects/presets/delete", TranslatableString::untranslatable(name));
-                item->setId(name);
+                item->setId("user_delete_" + name);
                 item->setArgs(ActionData::make_arg2<EffectId, PresetId>(effectId, p)); // delete for effect
                 subitems << item;
             }
@@ -88,7 +88,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             for (const PresetId& p : factoryPresets) {
                 String name = au3::wxToString(p);
                 MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
-                item->setId(name);
+                item->setId("factory_apply_" + name);
                 item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p)); // apply for instance
                 subitems << item;
             }

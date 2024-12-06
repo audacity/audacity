@@ -39,6 +39,7 @@ void ReverbViewModel::doReload()
     };
 
     m_paramsList.clear();
+    emit paramsListChanged();
 
     m_paramsList << makeItem("RoomSize",
                              muse::qtrc("effects", "Room Size (%)"),
