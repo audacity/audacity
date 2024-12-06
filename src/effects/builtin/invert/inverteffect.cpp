@@ -9,7 +9,7 @@
   This class inverts the selected audio.
 
 **********************************************************************/
-#include "Invert.h"
+#include "inverteffect.h"
 #include "LoadEffects.h"
 
 Invert::Invert()

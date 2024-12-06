@@ -57,6 +57,9 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/invert/inverteffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/invert/inverteffect.h
     )
 
 # AU3
@@ -71,8 +74,6 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
-    ${AU3_LIBRARIES}/lib-builtin-effects/Invert.cpp
-    ${AU3_LIBRARIES}/lib-builtin-effects/Invert.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Repair.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/Repair.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Reverse.cpp

@@ -15,7 +15,6 @@
 
 #include "general/generalviewmodel.h"
 
-#include "libraries/lib-builtin-effects/Invert.h"
 #include "libraries/lib-builtin-effects/Repair.h"
 #include "libraries/lib-builtin-effects/Reverse.h"
 
@@ -31,6 +30,7 @@
 #include "noisegen/noisegenerator.h"
 #include "noisegen/noiseviewmodel.h"
 #include "fade/fadeeffect.h"
+#include "invert/inverteffect.h"
 #include "log.h"
 
 #include <algorithm>

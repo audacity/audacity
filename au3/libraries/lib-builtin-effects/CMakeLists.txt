@@ -41,8 +41,6 @@ set( SOURCES
    FindClippingBase.h
    Generator.cpp
    Generator.h
-   Invert.cpp
-   Invert.h
    LegacyCompressorBase.cpp
    LegacyCompressorBase.h
    LoudnessBase.cpp
