@@ -41,7 +41,7 @@ void BuiltinEffectsRepository::preInit()
 {
     static BuiltinEffectsModule::Registration< FadeInEffect > regFadeIn;
     static BuiltinEffectsModule::Registration< FadeOutEffect > regFadeOut;
-    static BuiltinEffectsModule::Registration< Invert > regInvert;
+    static BuiltinEffectsModule::Registration< InvertEffect > regInvert;
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< Reverse > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
@@ -100,7 +100,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                     muse::mtrc("effects", "Fade Out"),
                     muse::mtrc("effects", "Applies a linear fade-out to the selected audio")
                     );
-        } else if (symbol == Invert::Symbol) {
+        } else if (symbol == InvertEffect::Symbol) {
             regMeta(desc,
                     muse::mtrc("effects", "Invert"),
                     muse::mtrc("effects", "Flips the audio samples upside-down, reversing their polarity")

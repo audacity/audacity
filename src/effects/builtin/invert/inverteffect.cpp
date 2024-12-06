@@ -1,77 +1,67 @@
-/**********************************************************************
-
-  Audacity: A Digital Audio Editor
-
-  Invert.cpp
-
-  Mark Phillips
-
-  This class inverts the selected audio.
-
-**********************************************************************/
 #include "inverteffect.h"
 #include "LoadEffects.h"
 
-Invert::Invert()
+namespace au::effects {
+InvertEffect::InvertEffect()
 {
 }
 
-Invert::~Invert()
+InvertEffect::~InvertEffect()
 {
 }
 
-const ComponentInterfaceSymbol Invert::Symbol { XO("Invert") };
+const ComponentInterfaceSymbol InvertEffect::Symbol { XO("Invert") };
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol Invert::GetSymbol() const
+ComponentInterfaceSymbol InvertEffect::GetSymbol() const
 {
-   return Symbol;
+    return Symbol;
 }
 
-TranslatableString Invert::GetDescription() const
+TranslatableString InvertEffect::GetDescription() const
 {
-   return XO("Flips the audio samples upside-down, reversing their polarity");
+    return XO("Flips the audio samples upside-down, reversing their polarity");
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType Invert::GetType() const
+EffectType InvertEffect::GetType() const
 {
-   return EffectTypeProcess;
+    return EffectTypeProcess;
 }
 
-bool Invert::IsInteractive() const
+bool InvertEffect::IsInteractive() const
 {
-   return false;
+    return false;
 }
 
-unsigned Invert::GetAudioInCount() const
+unsigned InvertEffect::GetAudioInCount() const
 {
-   return 1;
+    return 1;
 }
 
-unsigned Invert::GetAudioOutCount() const
+unsigned InvertEffect::GetAudioOutCount() const
 {
-   return 1;
+    return 1;
 }
 
-size_t Invert::ProcessBlock(
-   EffectSettings&, const float* const* inBlock, float* const* outBlock,
-   size_t blockLen)
+size_t InvertEffect::ProcessBlock(
+    EffectSettings&, const float* const* inBlock, float* const* outBlock,
+    size_t blockLen)
 {
-   const float* ibuf = inBlock[0];
-   float* obuf = outBlock[0];
+    const float* ibuf = inBlock[0];
+    float* obuf = outBlock[0];
 
-   for (decltype(blockLen) i = 0; i < blockLen; i++)
-   {
-      obuf[i] = -ibuf[i];
-   }
+    for (decltype(blockLen) i = 0; i < blockLen; i++) {
+        obuf[i] = -ibuf[i];
+    }
 
-   return blockLen;
+    return blockLen;
 }
 
-bool Invert::NeedsDither() const
+bool InvertEffect::NeedsDither() const
 {
-   return false;
+    return false;
+}
 }
