@@ -67,12 +67,17 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, DUPLICATE_CODE, this, &TrackeditActionsController::doGlobalDuplicate);
 
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
+    dispatcher()->reg(this, MULTI_CLIP_CUT_CODE, this, &TrackeditActionsController::multiClipCut);
+    dispatcher()->reg(this, RANGE_SELECTION_CUT_CODE, this, &TrackeditActionsController::rangeSelectionCut);
+
     dispatcher()->reg(this, CLIP_COPY_CODE, this, &TrackeditActionsController::clipCopy);
+    dispatcher()->reg(this, MULTI_CLIP_COPY_CODE, this, &TrackeditActionsController::multiClipCopy);
+    dispatcher()->reg(this, RANGE_SELECTION_COPY_CODE, this, &TrackeditActionsController::rangeSelectionCopy);
+
     dispatcher()->reg(this, CLIP_DELETE_CODE, this, &TrackeditActionsController::clipDelete);
     dispatcher()->reg(this, MULTI_CLIP_DELETE_CODE, this, &TrackeditActionsController::multiClipDelete);
-    dispatcher()->reg(this, RANGE_SELECTION_DELETE_CODE, this, &TrackeditActionsController::clipDeleteSelected);
-    dispatcher()->reg(this, RANGE_SELECTION_CUT_CODE, this, &TrackeditActionsController::clipCutSelected);
-    dispatcher()->reg(this, RANGE_SELECTION_COPY_CODE, this, &TrackeditActionsController::clipCopySelected);
+    dispatcher()->reg(this, RANGE_SELECTION_DELETE_CODE, this, &TrackeditActionsController::rangeSelectionDelete);
+
     dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
     dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
@@ -148,12 +153,7 @@ void TrackeditActionsController::doGlobalCopy()
         return;
     }
 
-    if (selectionController()->selectedClips().size() == 1) {
-        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-        if (selectedClipKey.isValid()) {
-            dispatcher()->dispatch(CLIP_COPY_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
-        }
-    }
+    dispatcher()->dispatch(MULTI_CLIP_COPY_CODE, ActionData::make_arg1<trackedit::ClipKeyList>(selectionController()->selectedClips()));
 }
 
 void TrackeditActionsController::doGlobalCut()
@@ -319,6 +319,11 @@ void TrackeditActionsController::clipCut(const ActionData& args)
     trackeditInteraction()->cutClipIntoClipboard(clipKey);
 }
 
+void TrackeditActionsController::multiClipCut()
+{
+
+}
+
 void TrackeditActionsController::clipCopy(const ActionData& args)
 {
     ClipKey clipKey = args.arg<ClipKey>(0);
@@ -354,7 +359,7 @@ void TrackeditActionsController::multiClipDelete()
     trackeditInteraction()->removeClips(selectedClipKeys);
 }
 
-void TrackeditActionsController::clipCutSelected()
+void TrackeditActionsController::rangeSelectionCut()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto selectedTracks = selectionController()->selectedTracks();
@@ -367,7 +372,38 @@ void TrackeditActionsController::clipCutSelected()
     selectionController()->resetDataSelection();
 }
 
-void TrackeditActionsController::clipCopySelected()
+void TrackeditActionsController::multiClipCopy()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto selectedTracks = selectionController()->selectedTracks();
+    auto selectedClips = selectionController()->selectedClips();
+    auto tracks = project->trackeditProject()->trackList();
+
+    trackeditInteraction()->clearClipboard();
+
+    secs_t offset = 0.0;
+    std::optional<secs_t> mostLeftClipStartTime = trackeditInteraction()->getMostLeftClipStartTime(selectionController()->selectedClips());
+    if (mostLeftClipStartTime.has_value()) {
+        offset = -mostLeftClipStartTime.value();
+    }
+
+    for (const auto& track : tracks) {
+        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
+            continue;
+        }
+
+        ClipKeyList selectedTrackClips;
+        for (const auto& clip : selectedClips) {
+            if (clip.trackId == track.id) {
+                selectedTrackClips.push_back(clip);
+            }
+        }
+
+        trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackClips, offset);
+    }
+}
+
+void TrackeditActionsController::rangeSelectionCopy()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto selectedTracks = selectionController()->selectedTracks();
@@ -382,11 +418,11 @@ void TrackeditActionsController::clipCopySelected()
             continue;
         }
 
-        trackeditInteraction()->copyTrackDataIntoClipboard(track.id, selectedStartTime, selectedEndTime);
+        trackeditInteraction()->copyContinuousTrackDataIntoClipboard(track.id, selectedStartTime, selectedEndTime);
     }
 }
 
-void TrackeditActionsController::clipDeleteSelected()
+void TrackeditActionsController::rangeSelectionDelete()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto selectedTracks = selectionController()->selectedTracks();

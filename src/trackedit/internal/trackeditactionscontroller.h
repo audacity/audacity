@@ -52,13 +52,16 @@ private:
     void doGlobalDuplicate();
 
     void clipCut(const muse::actions::ActionData& args);
+    void multiClipCut();
+    void rangeSelectionCut();
+
     void clipCopy(const muse::actions::ActionData& args);
+    void multiClipCopy();
+    void rangeSelectionCopy();
+
     void clipDelete(const muse::actions::ActionData& args);
     void multiClipDelete();
-
-    void clipCutSelected();
-    void clipCopySelected();
-    void clipDeleteSelected();
+    void rangeSelectionDelete();
 
     void paste();
 
