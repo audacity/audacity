@@ -15,6 +15,8 @@
 
 #include "general/generalviewmodel.h"
 
+#include "libraries/lib-builtin-effects/Fade.h"
+
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
 #include "tonegen/chirpeffect.h"
@@ -34,6 +36,8 @@ using namespace au::effects;
 
 void BuiltinEffectsRepository::preInit()
 {
+    static BuiltinEffectsModule::Registration< FadeIn > regFadeIn;
+    static BuiltinEffectsModule::Registration< FadeOut > regFadeOut;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
@@ -79,6 +83,16 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             regMeta(desc,
                     muse::mtrc("effects", "Amplify"),
                     muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected")
+                    );
+        } else if (symbol == FadeIn::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Fade In"),
+                    muse::mtrc("effects", "Applies a linear fade-in to the selected audio")
+                    );
+        } else if (symbol == FadeOut::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Fade Out"),
+                    muse::mtrc("effects", "Applies a linear fade-out to the selected audio")
                     );
         } else if (symbol == ChirpEffect::Symbol) {
             regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");

@@ -68,6 +68,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/Fade.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/Fade.h
 )
 
 set(AU3_DEF ${AU3_DEF}
