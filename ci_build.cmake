@@ -127,6 +127,12 @@ if(BUILD_TYPE STREQUAL "DEBUG")
 
     do_build(Debug build.debug)
 
+elseif(BUILD_TYPE STREQUAL "DEBUG_INSTALL")
+
+    set(BUILD_DIR build.debug)
+    do_build(Debug ${BUILD_DIR})
+    do_install(${BUILD_DIR})
+
 elseif(BUILD_TYPE STREQUAL "RELEASE_INSTALL")
 
     set(BUILD_DIR build.release)
