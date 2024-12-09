@@ -16,6 +16,7 @@
 #include "context/iglobalcontext.h"
 #include "../ieffectpresetsscenario.h"
 #include "iinteractive.h"
+#include "playback/iplayback.h"
 
 namespace au::effects {
 class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable
@@ -27,6 +28,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectPresetsScenario> presetsScenario;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     void init();
