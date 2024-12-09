@@ -1,0 +1,63 @@
+name: '[AU4] Check: Unit Tests (utest)'
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  CI_DIR: buildscripts/ci
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.12.1
+      with:
+        access_token: ${{ github.token }}
+
+    - name: Clone repository
+      uses: actions/checkout@v4
+
+    - name: "Configure workflow"
+      run: |
+        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
+
+        cmake -DEVENT=${{ github.event_name }} \
+              -DBUILD_MODE="devel_build" \
+              -P ${CI_DIR}/common/ci_configure.cmake
+
+    - name: Restore ccache files
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{github.workflow}}-ccache-${{ env.CCACHE_TIMESTAMP }}
+        restore-keys: ${{github.workflow}}-ccache-
+
+    - name: Setup ccache
+      run: |
+        sudo apt-get update && sudo apt-get install -y ccache
+        cmake -P ${CI_DIR}/tools/setup_ccache_config.cmake
+
+    - name: Free up disk space
+      run: |
+        sudo docker system prune -a -f
+        sudo rm -rf /usr/local/lib/android
+
+    - name: Setup environment
+      run: |
+        bash ./buildscripts/ci/linux/setup.sh
+
+    - name: Build
+      run: |
+        source $HOME/build_tools/environment.sh
+        cmake -P ${CI_DIR}/linux/ci_build_utests.cmake
+
+        echo "============== ccache ==============="
+        ccache -s
+
+    - name: Run tests
+      run: |
+        cmake -P ${CI_DIR}/linux/ci_run_utests.cmake
+      env:
+        ASAN_OPTIONS: "detect_leaks=0"

@@ -114,7 +114,7 @@ endif()
 if(BUILD_CONFIGURE MATCHES "UTEST")
     set(MUSE_ENABLE_UNIT_TESTS ON)
     set(MUSE_MODULE_GLOBAL_LOGGER_DEBUGLEVEL ON)
-    set(MUSE_MODULE_AUDIO ON)
+    set(MUSE_MODULE_AUDIO OFF)
     set(MUSE_COMPILE_ASAN ON)
 
     message(STATUS "If you added tests to a module that didn't have them yet, make sure that this module is enabled, see SetupConfigure.cmake")
