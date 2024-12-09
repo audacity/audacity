@@ -36,9 +36,9 @@ TEST_F(TimecodeModelTests, Parse_Numeric)
 
     std::vector < std::pair<double, QString> > expectedValues = {
         { 0.0, "00 h 00 m 00 s" },
-        { 0.6, "00 h 00 m 00 s" },
+        { 0.6, "00 h 00 m 01 s" },
         { 1.0, "00 h 00 m 01 s" },
-        { 1.6, "00 h 00 m 01 s" },
+        { 1.6, "00 h 00 m 02 s" },
         { 60.0, "00 h 01 m 00 s" },
         { 61.0, "00 h 01 m 01 s" },
         { 3600.0, "01 h 00 m 00 s" },
