@@ -357,6 +357,11 @@ int64_t WaveClip::GetId() const
     return mId;
 }
 
+void WaveClip::SetId(int64_t id)
+{
+   mId = id;
+}
+
 double WaveClip::Start() const
 {
    return GetPlayStartTime();

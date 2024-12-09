@@ -11,6 +11,7 @@
 #include "BasicUI.h"
 #include "SyncLock.h"
 #include "UserException.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "TimeStretching.h"
 
@@ -41,6 +42,19 @@ EffectOutputTracks::EffectOutputTracks(
 
    for (auto aTrack : trackRange) {
       auto pTrack = aTrack->Duplicate();
+      if (auto aWaveTrack = dynamic_cast<WaveTrack*>(aTrack))
+      {
+         auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack.get());
+         for (auto i = 0; i < aWaveTrack->GetNumClips(); ++i)
+         {
+            auto aClip = aWaveTrack->GetClip(i);
+            auto pClip = pWaveTrack->GetClip(i);
+            if (aClip && pClip)
+               pClip->SetId(aClip->GetId());
+            else
+               assert(false);
+         }
+      }
       mIMap.push_back(aTrack);
       mOMap.push_back(pTrack.get());
       mOutputTracks->Add(pTrack);

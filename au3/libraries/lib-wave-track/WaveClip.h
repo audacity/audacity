@@ -339,6 +339,7 @@ public:
    virtual ~WaveClip();
 
    int64_t GetId() const;
+   void SetId(int64_t id);
 
    // Satisfying WideChannelGroupInterval
    double Start() const override;
@@ -895,7 +896,7 @@ public:
     @pre `GetSampleFormats() == other.GetSampleFormats()`
     @pre `GetSampleBlockFactory() == other.GetSampleBlockFactory()`
     @pre `!mustAlign || GetNumSamples() == other.GetNumSamples()`
-    
+
     @post `!mustAlign || StrongInvariant()`
     */
    void MakeStereo(WaveClip &&other, bool mustAlign);
