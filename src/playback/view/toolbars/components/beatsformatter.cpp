@@ -139,6 +139,9 @@ std::optional<double> BeatsFormatter::stringToValue(const QString& value) const
         lastIndex = labelIndex + field.label.size();
     }
 
+    // Beats formatter does not support negative values
+    t = std::max(0.0, t);
+
     return t;
 }
 

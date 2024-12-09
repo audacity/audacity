@@ -113,8 +113,8 @@ Item {
 
                 sampleRate: Boolean(itemData) ? itemData.sampleRate : 0
                 tempo: Boolean(itemData) ? itemData.tempo : 0
-                upperTimeSignature: Boolean(itemData) ? itemData.upperTimeSignature : 0
-                lowerTimeSignature: Boolean(itemData) ? itemData.lowerTimeSignature : 0
+                upperTimeSignature: Boolean(itemData) ? itemData.upperTimeSignature : -1
+                lowerTimeSignature: Boolean(itemData) ? itemData.lowerTimeSignature : -1
 
                 currentFormat: Boolean(itemData) ? itemData.currentFormat : 0
 
