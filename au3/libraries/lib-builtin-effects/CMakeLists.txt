@@ -37,14 +37,10 @@ set( SOURCES
    EqualizationFilter.h
    EqualizationParameters.cpp
    EqualizationParameters.h
-   Fade.cpp
-   Fade.h
    FindClippingBase.cpp
    FindClippingBase.h
    Generator.cpp
    Generator.h
-   Invert.cpp
-   Invert.h
    LegacyCompressorBase.cpp
    LegacyCompressorBase.h
    LoudnessBase.cpp
@@ -67,8 +63,6 @@ set( SOURCES
    RepeatBase.h
    ReverbBase.cpp
    ReverbBase.h
-   Reverse.cpp
-   Reverse.h
    SBSMSBase.cpp
    SBSMSBase.h
    ScienFilterBase.cpp

@@ -2,38 +2,43 @@
 
   Audacity: A Digital Audio Editor
 
-  Invert.h
+  Repair.h
 
-  Mark Phillips
-
-  This class inverts the selected audio.
+  Dominic Mazzoni
 
 **********************************************************************/
 #pragma once
 
-#include "StatefulPerTrackEffect.h"
+#include "libraries/lib-effects/StatefulEffect.h"
 
-class BUILTIN_EFFECTS_API Invert : public StatefulPerTrackEffect
+class WaveChannel;
+
+class BUILTIN_EFFECTS_API Repair : public StatefulEffect
 {
 public:
-   Invert();
-   virtual ~Invert();
-
    static const ComponentInterfaceSymbol Symbol;
 
    // ComponentInterface implementation
+
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
 
    // EffectDefinitionInterface implementation
+
    EffectType GetType() const override;
    bool IsInteractive() const override;
 
-   unsigned GetAudioInCount() const override;
-   unsigned GetAudioOutCount() const override;
-   size_t ProcessBlock(
-      EffectSettings& settings, const float* const* inBlock,
-      float* const* outBlock, size_t blockLen) override;
+   // Effect implementation
+
+   bool Process(EffectInstance& instance, EffectSettings& settings) override;
 
    bool NeedsDither() const override;
+
+private:
+   // EffectRepair implementation
+
+   bool ProcessOne(
+      int count, WaveChannel& track, sampleCount start, size_t len,
+      size_t repairStart, // offset relative to start
+      size_t repairLen);
 };

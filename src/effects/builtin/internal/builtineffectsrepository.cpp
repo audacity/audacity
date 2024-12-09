@@ -26,6 +26,10 @@
 #include "dtmfgen/dtmfviewmodel.h"
 #include "noisegen/noisegenerator.h"
 #include "noisegen/noiseviewmodel.h"
+#include "fade/fadeeffect.h"
+#include "invert/inverteffect.h"
+#include "reverse/reverseeffect.h"
+#include "repair/repaireffect.h"
 #include "log.h"
 
 #include <algorithm>
@@ -34,6 +38,11 @@ using namespace au::effects;
 
 void BuiltinEffectsRepository::preInit()
 {
+    static BuiltinEffectsModule::Registration< FadeInEffect > regFadeIn;
+    static BuiltinEffectsModule::Registration< FadeOutEffect > regFadeOut;
+    static BuiltinEffectsModule::Registration< InvertEffect > regInvert;
+    static BuiltinEffectsModule::Registration< Repair > regRepair;
+    static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
@@ -79,6 +88,31 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             regMeta(desc,
                     muse::mtrc("effects", "Amplify"),
                     muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected")
+                    );
+        } else if (symbol == FadeInEffect::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Fade In"),
+                    muse::mtrc("effects", "Applies a linear fade-in to the selected audio")
+                    );
+        } else if (symbol == FadeOutEffect::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Fade Out"),
+                    muse::mtrc("effects", "Applies a linear fade-out to the selected audio")
+                    );
+        } else if (symbol == InvertEffect::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Invert"),
+                    muse::mtrc("effects", "Flips the audio samples upside-down, reversing their polarity")
+                    );
+        } else if (symbol == Repair::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Repair"),
+                    muse::mtrc("effects", "Sets the peak amplitude of a one or more tracks")
+                    );
+        } else if (symbol == ReverseEffect::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Reverse"),
+                    muse::mtrc("effects", "Reverses the selected audio")
                     );
         } else if (symbol == ChirpEffect::Symbol) {
             regView(ChirpEffect::Symbol, u"qrc:/tonegen/ChirpView.qml");

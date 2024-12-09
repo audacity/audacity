@@ -7,8 +7,7 @@
   Dominic Mazzoni
 
 **********************************************************************/
-#include "Repair.h"
-#include "BasicUI.h"
+#include "repaireffect.h"
 #include "EffectOutputTracks.h"
 #include "InterpolateAudio.h"
 #include "TimeStretching.h"
@@ -68,15 +67,15 @@ bool Repair::Process(EffectInstance&, EffectSettings&)
          const auto repairLen = repair1 - repair0;
          if (TimeStretching::HasPitchOrSpeed(*track, repair_t0, repair_t1))
          {
-            BasicUI::ShowMessageBox(XO(
-               "The Repair effect cannot be applied within stretched or shrunk clips"));
+            mLastError =
+               XO("The Repair effect cannot be applied within stretched or shrunk clips")
+                  .Translation();
             bGoodResult = false;
             break;
          }
          if (repairLen > 128)
          {
-            BasicUI::ShowMessageBox(XO(
-               "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair."));
+            mLastError = XO("The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair.").Translation();
             bGoodResult = false;
             break;
          }
@@ -94,11 +93,7 @@ bool Repair::Process(EffectInstance&, EffectSettings&)
 
          if (s0 == repair0 && s1 == repair1)
          {
-            BasicUI::ShowMessageBox(XO(
-               "Repair works by using audio data outside the selection region.\n\nPlease select a region that has audio touching at least one side of it.\n\nThe more surrounding audio, the better it performs."));
-            ///            The Repair effect needs some data to go on.\n\nPlease
-            ///            select an area to repair with some audio on at least
-            ///            one side (the more the better).") );
+            mLastError = XO("The Repair effect needs some data to go on.\n\nPlease select an area to repair with some audio on at least one side (the more the better).").Translation();
             bGoodResult = false;
             break;
          }

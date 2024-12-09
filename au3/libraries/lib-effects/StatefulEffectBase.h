@@ -32,7 +32,7 @@ public:
 
       size_t GetBlockSize() const override;
       size_t SetBlockSize(size_t maxBlockSize) override;
-   
+
       bool RealtimeInitialize(EffectSettings &settings, double sampleRate)
          override;
       bool RealtimeAddProcessor(EffectSettings &settings,
@@ -51,7 +51,7 @@ public:
       unsigned GetAudioOutCount() const override;
 
       bool NeedsDither() const override;
-      
+
       bool ProcessInitialize(EffectSettings &settings,
          double sampleRate, ChannelNames chanMap) override;
 
@@ -169,6 +169,11 @@ public:
     @copydoc StatefulEffectBase::Instance::ProcessFinalize()
     */
    virtual bool ProcessFinalize() noexcept;
+
+   std::string GetLastError() const { return mLastError; }
+
+protected:
+    std::string mLastError;
 
 private:
 

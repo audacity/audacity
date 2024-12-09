@@ -22,7 +22,7 @@ enum class Err {
     PresetMismatch
 };
 
-inline muse::Ret make_ret(Err e)
+inline muse::Ret make_ret(Err e, std::string text = "")
 {
     int retCode = static_cast<int>(e);
 
@@ -30,15 +30,15 @@ inline muse::Ret make_ret(Err e)
     case Err::Undefined: return muse::Ret(retCode);
     case Err::NoError: return muse::Ret(retCode);
     case Err::UnknownError:
-        return muse::Ret(retCode, muse::trc("effects", "Unknown error"));
+        return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Unknown error") : text);
     case Err::EffectNoAudioSelected:
-        return muse::Ret(retCode, muse::trc("effects", "No audio selected"));
+        return muse::Ret(retCode, text.empty() ? muse::trc("effects", "No audio selected") : text);
     case Err::EffectProcessFailed:
-        return muse::Ret(retCode, muse::trc("effects", "Applying effect failed"));
+        return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Applying effect failed") : text);
     case Err::PresetNotValid:
-        return muse::Ret(retCode, muse::trc("effects", "Not valid presets file"));
+        return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Not valid presets file") : text);
     case Err::PresetMismatch:
-        return muse::Ret(retCode, muse::trc("effects", "Preset mismatch"));
+        return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Preset mismatch") : text);
     }
 
     return muse::Ret(static_cast<int>(e));

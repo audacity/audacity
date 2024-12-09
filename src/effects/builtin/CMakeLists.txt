@@ -54,6 +54,18 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.h
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/fade/fadeeffect.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/invert/inverteffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/invert/inverteffect.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/reverse/reverseeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/reverse/reverseeffect.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/repair/repaireffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/repair/repaireffect.h
     )
 
 # AU3
