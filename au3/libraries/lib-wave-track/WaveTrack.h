@@ -573,9 +573,11 @@ public:
    IntervalConstHolders GetSortedClipsIntersecting(double t0, double t1) const;
 
 private:
-   void CopyWholeClip(const Interval &clip, double t0, bool forClipboard);
-   void CopyPartOfClip(const Interval &clip,
-      double t0, double t1, bool forClipboard);
+   void CopyWholeClip(
+      const Interval& clip, double t0, bool forClipboard, bool backup);
+   void CopyPartOfClip(
+      const Interval& clip, double t0, double t1, bool forClipboard,
+      bool backup);
    void FinishCopy(double t0, double t1, bool forClipboard);
 
    //! Return all WaveClips sorted by clip play start time.

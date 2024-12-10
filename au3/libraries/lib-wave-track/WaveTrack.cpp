@@ -515,9 +515,12 @@ auto WaveTrack::Create(
 void WaveTrack::CopyClips(WaveClipHolders &clips,
    SampleBlockFactoryPtr pFactory, const WaveClipHolders &orig, bool backup)
 {
-   for (const auto &clip : orig)
-      InsertClip(clips, WaveClip::NewSharedFrom(*clip, pFactory, true),
-         false, backup, false);
+   for (const auto& clip : orig)
+   {
+      InsertClip(
+         clips, WaveClip::NewSharedFrom(*clip, pFactory, true, backup), false,
+         backup, false);
+   }
 }
 
 size_t WaveChannel::NChannels() const
@@ -1097,6 +1100,9 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
+   // If for the clipboard, then this is definitely not a backup action.
+   // MH: And if it isn't ?..
+   const auto backup = !forClipboard;
    auto newTrack = EmptyCopy(NChannels());
    for (const auto pClip : Intervals()) {
       // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
@@ -1106,30 +1112,31 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          continue;
       else if (t0 <= pClip->GetPlayStartTime() && t1 >= pClip->GetPlayEndTime())
       {
-         newTrack->CopyWholeClip(*pClip, t0, forClipboard);
+         newTrack->CopyWholeClip(*pClip, t0, forClipboard, backup);
       }
       else if (pClip->CountSamples(t0, t1) >= 1) {
-         newTrack->CopyPartOfClip(*pClip, t0, t1, forClipboard);
+         newTrack->CopyPartOfClip(*pClip, t0, t1, forClipboard, backup);
       }
    }
    newTrack->FinishCopy(t0, t1, forClipboard);
    return newTrack;
 }
 
-void WaveTrack::CopyWholeClip(const Interval &clip,
-   double t0, bool forClipboard)
+void WaveTrack::CopyWholeClip(
+   const Interval& clip, double t0, bool forClipboard, bool backup)
 {
    const auto &pFactory = GetSampleBlockFactory();
-   const auto newClip = WaveClip::NewSharedFrom(clip, pFactory, !forClipboard);
+   const auto newClip = WaveClip::NewSharedFrom(clip, pFactory, !forClipboard, backup);
    InsertInterval(newClip, false, false);
    newClip->ShiftBy(-t0);
 }
 
-void WaveTrack::CopyPartOfClip(const Interval &clip,
-   double t0, double t1, bool forClipboard)
+void WaveTrack::CopyPartOfClip(
+   const Interval& clip, double t0, double t1, bool forClipboard, bool backup)
 {
    const auto &pFactory = GetSampleBlockFactory();
-   auto newClip = WaveClip::NewSharedFromRange(clip, pFactory, !forClipboard, t0, t1);
+   auto newClip = WaveClip::NewSharedFromRange(
+      clip, pFactory, !forClipboard, backup, t0, t1);
    newClip->SetName(clip.GetName());
    newClip->ShiftBy(-t0);
    if (newClip->GetPlayStartTime() < 0)
@@ -2984,8 +2991,11 @@ WaveTrack::GetSortedClipsIntersecting(double t0, double t1) const
 auto WaveTrack::CreateClip(double offset, const wxString& name,
    const Interval *pToCopy, bool copyCutlines) -> IntervalHolder
 {
-   if (pToCopy) {
-      auto pNewClip = WaveClip::NewSharedFrom(*pToCopy, mpFactory, copyCutlines);
+   if (pToCopy)
+   {
+      constexpr auto backup = false;
+      auto pNewClip =
+         WaveClip::NewSharedFrom(*pToCopy, mpFactory, copyCutlines, backup);
       pNewClip->SetName(name);
       pNewClip->SetSequenceStartTime(offset);
       return pNewClip;

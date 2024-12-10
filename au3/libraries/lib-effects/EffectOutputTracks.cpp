@@ -41,23 +41,10 @@ EffectOutputTracks::EffectOutputTracks(
       };
 
    for (auto aTrack : trackRange) {
-      auto pTrack = aTrack->Duplicate();
-      if (auto aWaveTrack = dynamic_cast<WaveTrack*>(aTrack))
-      {
-         auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack.get());
-         for (auto i = 0; i < aWaveTrack->GetNumClips(); ++i)
-         {
-            auto aClip = aWaveTrack->GetClip(i);
-            auto pClip = pWaveTrack->GetClip(i);
-            if (aClip && pClip)
-               pClip->SetId(aClip->GetId());
-            else
-               assert(false);
-         }
-      }
+      auto pTrack = aTrack->Duplicate(Track::DuplicateOptions{}.Backup());
       mIMap.push_back(aTrack);
       mOMap.push_back(pTrack.get());
-      mOutputTracks->Add(pTrack);
+      mOutputTracks->Add(pTrack, TrackList::DoAssignId::No);
    }
 
    if (
@@ -96,7 +83,7 @@ Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
 {
    mIMap.push_back(nullptr);
    mOMap.push_back(t.get());
-   auto result = mOutputTracks->Add(t);
+   auto result = mOutputTracks->Add(t, TrackList::DoAssignId::No);
    // Invariant is maintained
    assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());
