@@ -223,11 +223,11 @@ TrackIdList SelectionViewController::determinateTracks(double y1, double y2) con
 {
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
-        return { -1, -1 };
+        return {};
     }
 
     if (y1 < 0 && y2 < 0) {
-        return { -1, -1 };
+        return {};
     }
 
     if (y1 > y2) {
@@ -240,7 +240,7 @@ TrackIdList SelectionViewController::determinateTracks(double y1, double y2) con
 
     TrackIdList tracks = trackIdList();
     if (tracks.empty()) {
-        return { -1, -1 };
+        return {};
     }
 
     TrackIdList ret;
