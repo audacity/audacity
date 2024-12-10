@@ -31,6 +31,8 @@ public:
     virtual std::string effectName(const std::string& effectId) const = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
 
+    virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;
+
     // type - is Symbol of effect
     virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;
 

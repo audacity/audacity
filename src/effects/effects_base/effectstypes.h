@@ -38,6 +38,7 @@ struct EffectMeta {
     muse::String categoryId;
 
     bool isRealtimeCapable = false;
+    bool supportsMultipleClipSelection = true;
 
     bool isValid() const { return !id.empty(); }
 };
