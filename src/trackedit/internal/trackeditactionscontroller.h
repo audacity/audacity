@@ -12,6 +12,7 @@
 #include "actions/actionable.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
+#include "playback/iplayback.h"
 
 #include "../itrackeditactionscontroller.h"
 
@@ -24,6 +25,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     void init();
@@ -38,6 +40,24 @@ public:
 private:
     void notifyActionEnabledChanged(const muse::actions::ActionCode& actionCode);
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
+
+    template<typename T>
+    std::function<void(const muse::actions::ActionData& )> withPlaybackStop(void (T::*func)(const muse::actions::ActionData&))
+    {
+        return [this, func](const muse::actions::ActionData& args) {
+            playback()->player()->stop();
+            (this->*func)(args);
+        };
+    }
+
+    template<typename T>
+    std::function<void()> withPlaybackStop(void (T::*func)())
+    {
+        return [this, func] {
+            playback()->player()->stop();
+            (this->*func)();
+        };
+    }
 
     void undo();
     void redo();
