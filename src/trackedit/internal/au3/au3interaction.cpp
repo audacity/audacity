@@ -83,7 +83,8 @@ Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track
     return pFirstTrack->SharedPointer();
 }
 
-TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const
+TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                                          size_t clipboardTracksSize) const
 {
     //! NOTE: determine tracks to which clipboard content will be pasted,
     //! depending on clipboard size and currently selected tracks
@@ -100,7 +101,8 @@ TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Trac
     return destinationTrackIds;
 }
 
-TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const
+TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                                    size_t clipboardTracksSize) const
 {
     TrackIdList result = destinationTrackIds;
     bool collecting = false;
@@ -246,6 +248,9 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin,
     if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
         && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
         waveTrack->RemoveInterval(otherClip);
+
+        unselectClips({ ClipKey(TrackId(waveTrack->GetId()), ClipId(otherClip->GetId())) });
+
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
         return;
@@ -805,6 +810,8 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+
+    unselectClips({ clipKey });
 
     pushProjectHistoryDeleteState(start, duration);
 
@@ -1367,6 +1374,22 @@ void Au3Interaction::moveTrackTo(const TrackId trackId, int to)
     trackEdit->notifyAboutTrackMoved(track, pos);
 }
 
+void Au3Interaction::selectClips(const ClipKeyList& clips)
+{
+    selectionController()->setSelectedClips(clips);
+}
+
+void Au3Interaction::unselectClips(const ClipKeyList& clips)
+{
+    ClipKeyList selectedClips = selectionController()->selectedClips();
+
+    muse::remove_if(selectedClips, [&clips](const ClipKey& clipKey){
+        return muse::contains(clips, clipKey);
+    });
+
+    selectionController()->setSelectedClips(selectedClips);
+}
+
 void Au3Interaction::moveTrack(const TrackId trackId, const TrackMoveDirection direction)
 {
     auto& project = projectRef();
@@ -1492,7 +1515,7 @@ bool Au3Interaction::canRedo()
     return projectHistory()->redoAvailable();
 }
 
-void Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey &clipKey)
+void Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
