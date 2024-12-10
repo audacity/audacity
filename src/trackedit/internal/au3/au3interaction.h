@@ -15,6 +15,7 @@
 #include "itrackeditclipboard.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "playback/iplayback.h"
 
 #include "au3wrap/au3types.h"
 
@@ -26,6 +27,7 @@ class Au3Interaction : public ITrackeditInteraction
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
+    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     Au3Interaction();

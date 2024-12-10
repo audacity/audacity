@@ -83,7 +83,8 @@ Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track
     return pFirstTrack->SharedPointer();
 }
 
-TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const
+TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                                          size_t clipboardTracksSize) const
 {
     //! NOTE: determine tracks to which clipboard content will be pasted,
     //! depending on clipboard size and currently selected tracks
@@ -100,7 +101,8 @@ TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Trac
     return destinationTrackIds;
 }
 
-TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const
+TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                                    size_t clipboardTracksSize) const
 {
     TrackIdList result = destinationTrackIds;
     bool collecting = false;
@@ -336,6 +338,8 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
         newStartTime = 0.0;
     }
 
+    playback()->player()->stop();
+
     //! TODO Not sure what this method needs to be called to change the position, will need to clarify
     clip->SetPlayStartTime(newStartTime);
     // LOGD() << "changed PlayStartTime of track: " << clipKey.trackId
@@ -495,6 +499,8 @@ bool Au3Interaction::changeClipSpeed(const ClipKey& clipKey, double speed)
         return false;
     }
 
+    playback()->player()->stop();
+
     TimeStretching::SetClipStretchRatio(*waveTrack, *clip, speed);
     LOGD() << "changed speed of clip: " << clipKey.clipId << ", track: " << clipKey.trackId << ", speed: " << speed;
 
@@ -517,6 +523,8 @@ bool Au3Interaction::resetClipSpeed(const ClipKey& clipKey)
     IF_ASSERT_FAILED(clip) {
         return false;
     }
+
+    playback()->player()->stop();
 
     TimeStretching::SetClipStretchRatio(*waveTrack, *clip, 1);
     LOGD() << "reseted speed of clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
@@ -574,6 +582,8 @@ void Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
         auto progressCallBack = [this](double progressFraction) {
             m_progress->progressChanged.send(progressFraction * 1000, 1000, "");
         };
+
+        playback()->player()->stop();
 
         waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
         LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
@@ -693,6 +703,8 @@ bool Au3Interaction::cutClipIntoClipboard(const ClipKey& clipKey)
         return false;
     }
 
+    playback()->player()->stop();
+
     auto track = waveTrack->Cut(clip->Start(), clip->End());
     clipboard()->addTrackData(TrackData { track, clipKey });
 
@@ -797,6 +809,8 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
         return false;
     }
 
+    playback()->player()->stop();
+
     secs_t start = clip->Start();
     secs_t end = clip->End();
     secs_t duration = end - start;
@@ -815,6 +829,8 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
 {
     secs_t duration = end - begin;
     secs_t start = begin;
+
+    playback()->player()->stop();
 
     for (const TrackId& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
@@ -878,6 +894,8 @@ bool Au3Interaction::moveClips(secs_t offset, bool completed)
 
 bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
 {
+    playback()->player()->stop();
+
     for (const auto& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -902,6 +920,8 @@ bool Au3Interaction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, s
         return false;
     }
 
+    playback()->player()->stop();
+
     //! TODO fix this so it displays progress if there's
     //! a need to change pitch/speed
     ProgressReporter dummyProgressReporter;
@@ -921,6 +941,8 @@ bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begi
         return false;
     }
 
+    playback()->player()->stop();
+
     auto dest = waveTrack->Copy(begin, end, false);
     dest->MoveTo(std::max(static_cast<double>(begin), waveTrack->GetStartTime()));
     tracks.Add(dest);
@@ -938,6 +960,8 @@ bool Au3Interaction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin
         return false;
     }
 
+    playback()->player()->stop();
+
     auto track = waveTrack->SplitCut(begin, end);
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
     clipboard()->addTrackData(TrackData { track, dummyClipKey });
@@ -954,6 +978,8 @@ bool Au3Interaction::splitDeleteSelectedOnTrack(const TrackId trackId, secs_t be
     IF_ASSERT_FAILED(waveTrack) {
         return false;
     }
+
+    playback()->player()->stop();
 
     waveTrack->SplitDelete(begin, end);
 
@@ -1030,6 +1056,8 @@ bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
         return false;
     }
 
+    playback()->player()->stop();
+
     auto track = waveTrack->SplitCut(clip->Start(), clip->End());
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
     clipboard()->addTrackData(TrackData { track, dummyClipKey });
@@ -1053,6 +1081,8 @@ bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)
     IF_ASSERT_FAILED(clip) {
         return false;
     }
+
+    playback()->player()->stop();
 
     waveTrack->SplitDelete(clip->Start(), clip->End());
 
@@ -1107,6 +1137,8 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool 
         return false;
     }
 
+    playback()->player()->stop();
+
     if (completed) {
         auto ok = makeRoomForClip(clipKey);
         if (!ok) {
@@ -1138,6 +1170,8 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool
         return false;
     }
 
+    playback()->player()->stop();
+
     if (completed) {
         auto ok = makeRoomForClip(clipKey);
         if (!ok) {
@@ -1166,6 +1200,8 @@ void Au3Interaction::newMonoTrack()
     sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();
     auto rate = ::ProjectRate::Get(project).GetRate();
 
+    playback()->player()->stop();
+
     auto track = trackFactory.Create(defaultFormat, rate);
     track->SetName(tracks.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
 
@@ -1187,6 +1223,8 @@ void Au3Interaction::newStereoTrack()
 
     sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();
     auto rate = ::ProjectRate::Get(project).GetRate();
+
+    playback()->player()->stop();
 
     tracks.Add(trackFactory.Create(2, defaultFormat, rate));
     auto& newTrack = **tracks.rbegin();
@@ -1211,6 +1249,8 @@ void Au3Interaction::deleteTracks(const TrackIdList& trackIds)
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
 
+    playback()->player()->stop();
+
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
         IF_ASSERT_FAILED(au3Track) {
@@ -1231,6 +1271,8 @@ void Au3Interaction::duplicateTracks(const TrackIdList& trackIds)
 {
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
+
+    playback()->player()->stop();
 
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
@@ -1492,7 +1534,7 @@ bool Au3Interaction::canRedo()
     return projectHistory()->redoAvailable();
 }
 
-void Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey &clipKey)
+void Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
