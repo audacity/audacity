@@ -16,6 +16,7 @@ enum class Err {
     UnknownError = EFFECTS_FIRST,
 
     EffectNoAudioSelected,
+    EffectMultipleClipSelectionNotSupported,
     EffectProcessFailed,
 
     // presets
@@ -36,6 +37,8 @@ inline muse::Ret make_ret(Err e, std::string text = "")
         return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Unknown error") : text);
     case Err::EffectNoAudioSelected:
         return muse::Ret(retCode, text.empty() ? muse::trc("effects", "No audio selected") : text);
+    case Err::EffectMultipleClipSelectionNotSupported:
+        return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Multiple-clip selection not supported") : text);
     case Err::EffectProcessFailed:
         return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Applying effect failed") : text);
     case Err::PresetNotValid:

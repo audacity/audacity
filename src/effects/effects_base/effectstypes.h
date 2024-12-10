@@ -57,14 +57,6 @@ using EffectCategoryList = std::vector<EffectCategory>;
 constexpr const char16_t* VST_CATEGORY_ID = u"vst";
 constexpr const char16_t* BUILTIN_CATEGORY_ID = u"builtin";
 
-struct EffectTimeParams {
-    double projectRate = 0.0;
-    double t0 = 0.0;
-    double t1 = 0.0;
-    double f0 = 0.0;
-    double f1 = 0.0;
-};
-
 struct EffectChainLink {
     EffectChainLink(std::string effectName, EffectStateId effectStateId)
         : effectName{std::move(effectName)}, effectStateId{effectStateId} {}

@@ -46,6 +46,7 @@ private:
     std::pair<std::string, std::string> makeErrorMsg(const muse::Ret& ret, const EffectId& effectId);
     muse::Ret performEffectWithShowError(au3::Au3Project& project, const EffectId& effectId, unsigned int flags);
     muse::Ret doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned int flags);
+    muse::Ret performEffectOnEachSelectedClip(au3::Au3Project& project, Effect&, const std::shared_ptr<EffectInstanceEx>&, EffectSettings&);
     au3::Au3Project& projectRef();
 
     using ShowEffectHostInterfaceCb = std::function<bool (Effect&, std::shared_ptr<EffectInstance>&, SimpleEffectSettingsAccess&)>;
