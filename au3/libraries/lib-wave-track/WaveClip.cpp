@@ -336,11 +336,15 @@ WaveClip::WaveClip(
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
-   if (copyCutlines) {
-      for (const auto &cutline : orig.mCutLines) {
-          mCutLines.push_back(WaveClip::NewSharedFrom(*cutline, factory, true));
+   if (copyCutlines)
+      for (const auto& cutline : orig.mCutLines)
+      {
+         // IDs of cutline placeholder clips are unimportant - let's not
+         // increment the ID counter for that.
+         constexpr auto backup = true;
+         mCutLines.push_back(
+            WaveClip::NewSharedFrom(*cutline, factory, true, backup));
       }
-   }
 
    assert(NChannels() == orig.NChannels());
    assert(CheckInvariants());
@@ -1162,10 +1166,16 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
 {
    const WaveClip *pOther = &o;
    WaveClipHolder dup;
+
+   // None of the clips created here will survive, they are just temporary
+   // placeholders. Whether we set backup to true or false doesn't matter much,
+   // but setting it to `false` would increase the ID counter unnecessarily.
+   constexpr auto backup = true;
+
    if (!o.StrongInvariant()) {
       assert(false); // precondition not honored
       // But try to repair it and continue in release
-      dup = WaveClip::NewSharedFrom(o, o.GetFactory(), true);
+      dup = WaveClip::NewSharedFrom(o, o.GetFactory(), true, backup);
       dup->RepairChannels();
       pOther = dup.get();
    }
@@ -1206,7 +1216,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
       finisher = ClearSequence(GetSequenceStartTime(), t0);
       SetTrimLeft(other.GetTrimLeft());
 
-      auto copy = WaveClip::NewSharedFrom(other, factory, true);
+      auto copy = WaveClip::NewSharedFrom(other, factory, true, backup);
       copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime())
          .Commit();
       newClip = std::move(copy);
@@ -1216,14 +1226,14 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
       finisher = ClearSequence(GetPlayEndTime(), GetSequenceEndTime());
       SetTrimRight(other.GetTrimRight());
 
-      auto copy = WaveClip::NewSharedFrom(other, factory, true);
+      auto copy = WaveClip::NewSharedFrom(other, factory, true, backup);
       copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime())
          .Commit();
       newClip = std::move(copy);
    }
    else
    {
-      newClip = WaveClip::NewSharedFrom(other, factory, true);
+      newClip = WaveClip::NewSharedFrom(other, factory, true, backup);
       newClip->ClearSequence(newClip->GetPlayEndTime(), newClip->GetSequenceEndTime())
          .Commit();
       newClip->ClearSequence(newClip->GetSequenceStartTime(), newClip->GetPlayStartTime())
@@ -1234,7 +1244,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
 
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
-      auto copy = WaveClip::NewSharedFrom(*newClip.get(), factory, true);
+      auto copy = WaveClip::NewSharedFrom(*newClip.get(), factory, true, backup);
 
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
@@ -1253,7 +1263,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
       auto cutlineCopy = WaveClip::NewSharedFrom(*cutline, factory,
                                                  // Recursively copy cutlines of cutlines.  They don't need
                                                  // their offsets adjusted.
-                                                 true);
+                                                 true, backup);
       cutlineCopy->ShiftBy(t0 - GetSequenceStartTime());
       newCutlines.push_back(std::move(cutlineCopy));
    }
@@ -1475,7 +1485,11 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
    const double clip_t0 = std::max( t0, GetPlayStartTime() );
    const double clip_t1 = std::min( t1, GetPlayEndTime() );
 
-   auto newClip = WaveClip::NewSharedFromRange(*this, GetFactory(), true, clip_t0, clip_t1);
+   // We don't care about new IDs for cutline clips: when the cutline gets
+   // expanded, the placeholder clip gets merged anyway.
+   constexpr auto backup = true;
+   auto newClip = WaveClip::NewSharedFromRange(
+      *this, GetFactory(), true, backup, clip_t0, clip_t1);
 
    if(t1 < GetPlayEndTime())
    {

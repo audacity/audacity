@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file UndoTracks.cpp
- 
+
  Paul Licameli
- 
+
  **********************************************************************/
 #include "UndoTracks.h"
 #include "PendingTracks.h"
@@ -22,18 +22,25 @@ struct TrackListRestorer final : UndoStateExtension {
          if (pTrack->GetId() == TrackId{})
             // Don't copy a pending added track
             continue;
-         mpTracks->Add(pTrack->Duplicate());
+         mpTracks->Add(
+            pTrack->Duplicate(Track::DuplicateOptions {}.Backup()),
+            TrackList::DoAssignId::No);
       }
    }
+
    void RestoreUndoRedoState(AudacityProject &project) override {
       auto &dstTracks = TrackList::Get(project);
       dstTracks.Clear();
       for (auto pTrack : *mpTracks)
-         dstTracks.Add(pTrack->Duplicate());
+         dstTracks.Add(
+            pTrack->Duplicate(Track::DuplicateOptions {}.Backup()),
+            TrackList::DoAssignId::No);
    }
+
    bool CanUndoOrRedo(const AudacityProject &project) override {
       return !PendingTracks::Get(project).HasPendingTracks();
    }
+
    const std::shared_ptr<TrackList> mpTracks;
 };
 
