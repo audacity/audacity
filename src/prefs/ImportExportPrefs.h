@@ -46,7 +46,6 @@ class AUDACITY_DLL_API ImportExportPrefs final : public PrefsPanel
    };
 
    static EnumSetting<bool> MusicFileImportSetting;
-   static EnumSetting<bool> MusicFileImportOnExistingProjectSetting;
 
    ImportExportPrefs(wxWindow * parent, wxWindowID winid);
    ~ImportExportPrefs();
