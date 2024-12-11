@@ -851,6 +851,11 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
 
 bool Au3Interaction::moveClips(secs_t offset, bool completed)
 {
+    constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
+    if (std::abs(offset) < limit) {
+        return true;
+    }
+
     //! NOTE: check if offset is applicable to every clip and recalculate if needed
     std::optional<secs_t> mostLeftClipStartTime;
     for (const auto& selectedClip : selectionController()->selectedClips()) {
