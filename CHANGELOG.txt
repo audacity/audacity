@@ -1,5 +1,13 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.7.1
+
+This is a patch release. It fixes the following bugs:
+
+   * #7797 Effects can be applied to time-stretched clips.
+   * #7620 Moving or renaming installation directory no longer re-enables disabled modules.
+   * #7652 Opening the "Adjust Playback Speed" dialog doesn't crash Audacity anymore.
+
 Changes in version 3.7.0
 
 The 3.7.x series is primarily maintenance releases while we're working on Audacity 4.0. 3.7.0 fixes the following bugs:
