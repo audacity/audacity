@@ -51,7 +51,7 @@ static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
 void TrackeditActionsController::init()
 {
-    dispatcher()->reg(this, COPY_CODE, withPlaybackStop(&TrackeditActionsController::doGlobalCopy));
+    dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
     dispatcher()->reg(this, CUT_CODE, withPlaybackStop(&TrackeditActionsController::doGlobalCut));
     dispatcher()->reg(this, DELETE_CODE, withPlaybackStop(&TrackeditActionsController::doGlobalDelete));
     dispatcher()->reg(this, SPLIT_CUT_CODE, withPlaybackStop(&TrackeditActionsController::doGlobalSplitCut));
@@ -61,10 +61,10 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, DUPLICATE_CODE, withPlaybackStop(&TrackeditActionsController::doGlobalDuplicate));
 
     dispatcher()->reg(this, CLIP_CUT_CODE, withPlaybackStop(&TrackeditActionsController::clipCut));
-    dispatcher()->reg(this, CLIP_COPY_CODE, withPlaybackStop(&TrackeditActionsController::clipCopy));
+    dispatcher()->reg(this, CLIP_COPY_CODE, this, &TrackeditActionsController::clipCopy);
     dispatcher()->reg(this, CLIP_DELETE_CODE, withPlaybackStop(&TrackeditActionsController::clipDelete));
     dispatcher()->reg(this, CLIP_CUT_SELECTED_CODE, withPlaybackStop(&TrackeditActionsController::clipCutSelected));
-    dispatcher()->reg(this, CLIP_COPY_SELECTED_CODE, withPlaybackStop(&TrackeditActionsController::clipCopySelected));
+    dispatcher()->reg(this, CLIP_COPY_SELECTED_CODE, this, &TrackeditActionsController::clipCopySelected);
     dispatcher()->reg(this, CLIP_DELETE_SELECTED_CODE, withPlaybackStop(&TrackeditActionsController::clipDeleteSelected));
     dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, withPlaybackStop(&TrackeditActionsController::renderClipPitchAndSpeed));
     dispatcher()->reg(this, PASTE, withPlaybackStop(&TrackeditActionsController::paste));
@@ -79,21 +79,21 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, CLIP_SPLIT_DELETE, withPlaybackStop(&TrackeditActionsController::clipSplitDelete));
     dispatcher()->reg(this, SPLIT_CUT_SELECTED, withPlaybackStop(&TrackeditActionsController::splitCutSelected));
     dispatcher()->reg(this, SPLIT_DELETE_SELECTED, withPlaybackStop(&TrackeditActionsController::splitDeleteSelected));
-    dispatcher()->reg(this, "toggle-loop-region", withPlaybackStop(&TrackeditActionsController::toggleLoopRegion));
-    dispatcher()->reg(this, "clear-loop-region", withPlaybackStop(&TrackeditActionsController::clearLoopRegion));
-    dispatcher()->reg(this, "set-loop-region-to-selection", withPlaybackStop(&TrackeditActionsController::setLoopRegionToSelection));
-    dispatcher()->reg(this, "set-selection-to-loop", withPlaybackStop(&TrackeditActionsController::setSelectionToLoop));
-    dispatcher()->reg(this, "set-loop-region-in", withPlaybackStop(&TrackeditActionsController::setLoopRegionIn));
-    dispatcher()->reg(this, "set-loop-region-out", withPlaybackStop(&TrackeditActionsController::setLoopRegionOut));
+    dispatcher()->reg(this, "toggle-loop-region", this, &TrackeditActionsController::toggleLoopRegion);
+    dispatcher()->reg(this, "clear-loop-region", this, &TrackeditActionsController::clearLoopRegion);
+    dispatcher()->reg(this, "set-loop-region-to-selection", this, &TrackeditActionsController::setLoopRegionToSelection);
+    dispatcher()->reg(this, "set-selection-to-loop", this, &TrackeditActionsController::setSelectionToLoop);
+    dispatcher()->reg(this, "set-loop-region-in", this, &TrackeditActionsController::setLoopRegionIn);
+    dispatcher()->reg(this, "set-loop-region-out", this, &TrackeditActionsController::setLoopRegionOut);
     dispatcher()->reg(this, NEW_MONO_TRACK, withPlaybackStop(&TrackeditActionsController::newMonoTrack));
     dispatcher()->reg(this, NEW_STEREO_TRACK, withPlaybackStop(&TrackeditActionsController::newStereoTrack));
     dispatcher()->reg(this, NEW_LABEL_TRACK, withPlaybackStop(&TrackeditActionsController::newLabelTrack));
     dispatcher()->reg(this, "track-delete", withPlaybackStop(&TrackeditActionsController::deleteTracks));
     dispatcher()->reg(this, "track-duplicate", withPlaybackStop(&TrackeditActionsController::duplicateTracks));
-    dispatcher()->reg(this, "track-move-up", withPlaybackStop(&TrackeditActionsController::moveTracksUp));
-    dispatcher()->reg(this, "track-move-down", withPlaybackStop(&TrackeditActionsController::moveTracksDown));
-    dispatcher()->reg(this, "track-move-top", withPlaybackStop(&TrackeditActionsController::moveTracksToTop));
-    dispatcher()->reg(this, "track-move-bottom", withPlaybackStop(&TrackeditActionsController::moveTracksToBottom));
+    dispatcher()->reg(this, "track-move-up", this, &TrackeditActionsController::moveTracksUp);
+    dispatcher()->reg(this, "track-move-down", this, &TrackeditActionsController::moveTracksDown);
+    dispatcher()->reg(this, "track-move-top", this, &TrackeditActionsController::moveTracksToTop);
+    dispatcher()->reg(this, "track-move-bottom", this, &TrackeditActionsController::moveTracksToBottom);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, withPlaybackStop(&TrackeditActionsController::trimAudioOutsideSelection));
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, withPlaybackStop(&TrackeditActionsController::silenceAudioSelection));
