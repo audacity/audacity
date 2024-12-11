@@ -121,6 +121,18 @@ std::string EffectsProvider::effectName(const std::string& effectId) const
     return desc->GetSymbol().Msgid().Translation().ToStdString();
 }
 
+bool EffectsProvider::supportsMultipleClipSelection(const EffectId& effectId) const
+{
+    for (const EffectMeta& meta : m_effects) {
+        if (meta.id == effectId) {
+            return meta.supportsMultipleClipSelection;
+        }
+    }
+
+    LOGE() << "not found meta: " << effectId;
+    return false;
+}
+
 Effect* EffectsProvider::effect(const EffectId& effectId) const
 {
     PluginID pluginID = effectId.toStdString();

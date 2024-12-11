@@ -109,14 +109,19 @@ void Au3SelectionController::resetSelectedClips()
     m_selectedClips.set(au::trackedit::ClipKeyList(), true);
 }
 
+bool Au3SelectionController::hasSelectedClips() const
+{
+    return !m_selectedClips.val.empty();
+}
+
 ClipKeyList Au3SelectionController::selectedClips() const
 {
     return m_selectedClips.val;
 }
 
-void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys)
+void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)
 {
-    m_selectedClips.set(clipKeys, true);
+    m_selectedClips.set(clipKeys, complete);
 
     //! NOTE: when selecting a clip, we also need to select
     //! the track on which the clip is located
@@ -127,7 +132,7 @@ void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys)
         }
         selectedTracks.push_back(key.trackId);
     }
-    setSelectedTracks(selectedTracks, true);
+    setSelectedTracks(selectedTracks, complete);
 }
 
 void Au3SelectionController::addSelectedClip(const ClipKey &clipKey)

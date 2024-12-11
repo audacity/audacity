@@ -3,6 +3,7 @@
 */
 #include "effectexecutionscenario.h"
 
+#include "global/defer.h"
 #include "global/realfn.h"
 
 #include "libraries/lib-project/Project.h"
@@ -21,6 +22,7 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/domaccessor.h"
 
 #include "../effecterrors.h"
 
@@ -82,22 +84,24 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     secs_t t1;
     bool isSelection = false;
 
+    const auto numSelectedClips = selectionController()->selectedClips().size();
+
     {
         //! NOTE Step 1.2 - get effect
         effect = effectsProvider()->effect(effectId);
 
-        //! NOTE Step 1.3 - check selection
-        trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
-        if (selectedClips.size() == 1) {
+        if (numSelectedClips > 1 && !effectsProvider()->supportsMultipleClipSelection(effectId)) {
+            return make_ret(Err::EffectMultipleClipSelectionNotSupported);
+        }
+
+        if (selectionController()->hasSelectedClips()) {
+            // If multiple clips are selected, we have checked that the effect supports it, in which case these global time boundaries shouldn't be relevant.
+            // If this is just a single-clip selection, though, that will just be start and end times of the selected clip.
             t0 = selectionController()->selectedClipStartTime();
             t1 = selectionController()->selectedClipEndTime();
         } else {
             t0 = selectionController()->dataSelectedStartTime();
             t1 = selectionController()->dataSelectedEndTime();
-        }
-
-        IF_ASSERT_FAILED(muse::RealIsEqualOrMore(t1 - t0, 0.0)) {
-            return make_ret(Err::UnknownError);
         }
 
         isSelection = t1 > t0;
@@ -122,7 +126,14 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
     // common things used below
     EffectSettings* settings = nullptr;
-    EffectTimeParams tp;
+    struct EffectTimeParams {
+        double projectRate = 0.0;
+        double t0 = 0.0;
+        double t1 = 0.0;
+        double f0 = 0.0;
+        double f1 = 0.0;
+    } tp;
+
     tp.projectRate = ProjectRate::Get(project).GetRate();
 
     {
@@ -233,10 +244,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! NOTE Step 6 - perform effect
     //! ============================================================================
     // common things used below
-    Ret success;
-    {
-        success = effectsProvider()->performEffect(project, effect, pInstanceEx, *settings);
-    }
+    const Ret success = numSelectedClips > 1
+                        ? performEffectOnEachSelectedClip(project, *effect, pInstanceEx, *settings)
+                        : effectsProvider()->performEffect(project, effect, pInstanceEx, *settings);
 
     //! ============================================================================
     //! NOTE Step 7 - cleanup
@@ -252,7 +262,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         //! NOTE Step 7.2 - update selected region after process
 
         //! Generators, and even some processors (e.g. tempo change), need an update of the selection.
-        if (success && (effect->mT1 >= effect->mT0)) {
+        if (success && numSelectedClips < 2 && (effect->mT1 >= effect->mT0)) {
             selectionController()->setDataSelectedStartTime(effect->mT0, true);
             selectionController()->setDataSelectedEndTime(effect->mT1, true);
         }
@@ -300,6 +310,50 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     }
 
     return true;
+}
+
+muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Project& project, Effect& effect,
+                                                                   const std::shared_ptr<EffectInstanceEx>& instance,
+                                                                   EffectSettings& settings)
+{
+    // We are going to set the time and track selection to one clip at a time and apply the effect.
+
+    // Make a copy of the selection state and restore it when leaving this scope.
+    const trackedit::ClipKeyList clipsToProcess = selectionController()->selectedClips();
+    const trackedit::TrackIdList tracksToProcess = selectionController()->selectedTracks();
+
+    constexpr bool complete = true;
+
+    Defer restoreTrackSelection([&] {
+        selectionController()->setSelectedClips(clipsToProcess, complete);
+    });
+
+    // Perform the effect on each selected clip
+    Ret success = true;
+    for (const auto& clip : clipsToProcess) {
+        selectionController()->setSelectedClips({ clip }, complete);
+        selectionController()->setSelectedTracks({ clip.trackId }, complete);
+
+        WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(project, ::TrackId(clip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        const std::shared_ptr<WaveClip> waveClip = au3::DomAccessor::findWaveClip(waveTrack, clip.clipId);
+        IF_ASSERT_FAILED(waveClip) {
+            continue;
+        }
+
+        effect.mT0 = waveClip->GetPlayStartTime();
+        effect.mT1 = waveClip->GetPlayEndTime();
+
+        // Keep the error message from the first failure, that should do.
+        const auto thisSuccess = effectsProvider()->performEffect(project, &effect, instance, settings);
+        if (success && !thisSuccess) {
+            success = thisSuccess;
+        }
+    }
+    return success;
 }
 
 bool EffectExecutionScenario::lastProcessorIsAvailable() const

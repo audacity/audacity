@@ -34,8 +34,9 @@ public:
 
     // clip selection
     void resetSelectedClips() override;
+    bool hasSelectedClips() const override;
     ClipKeyList selectedClips() const override;
-    void setSelectedClips(const ClipKeyList& clipKeys) override;
+    void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true) override;
     void addSelectedClip(const ClipKey& clipKey) override;
     muse::async::Channel<ClipKeyList> clipsSelected() const override;
     double selectedClipStartTime() const override;
