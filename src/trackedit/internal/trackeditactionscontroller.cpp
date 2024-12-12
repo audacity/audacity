@@ -153,7 +153,7 @@ void TrackeditActionsController::doGlobalCopy()
         return;
     }
 
-    dispatcher()->dispatch(MULTI_CLIP_COPY_CODE, ActionData::make_arg1<trackedit::ClipKeyList>(selectionController()->selectedClips()));
+    dispatcher()->dispatch(MULTI_CLIP_COPY_CODE);
 }
 
 void TrackeditActionsController::doGlobalCut()
@@ -167,12 +167,7 @@ void TrackeditActionsController::doGlobalCut()
         return;
     }
 
-    if (selectionController()->selectedClips().size() == 1) {
-        ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-        if (selectedClipKey.isValid()) {
-            dispatcher()->dispatch(CLIP_CUT_CODE, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
-        }
-    }
+    dispatcher()->dispatch(MULTI_CLIP_CUT_CODE);
 }
 
 void TrackeditActionsController::doGlobalDelete()
@@ -186,7 +181,7 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
-    dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, ActionData::make_arg1<trackedit::ClipKeyList>(selectionController()->selectedClips()));
+    dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE);
 }
 
 void TrackeditActionsController::doGlobalSplitCut()
@@ -319,11 +314,6 @@ void TrackeditActionsController::clipCut(const ActionData& args)
     trackeditInteraction()->cutClipIntoClipboard(clipKey);
 }
 
-void TrackeditActionsController::multiClipCut()
-{
-
-}
-
 void TrackeditActionsController::clipCopy(const ActionData& args)
 {
     ClipKey clipKey = args.arg<ClipKey>(0);
@@ -357,6 +347,19 @@ void TrackeditActionsController::multiClipDelete()
     selectionController()->resetSelectedClips();
 
     trackeditInteraction()->removeClips(selectedClipKeys);
+}
+
+void TrackeditActionsController::multiClipCut()
+{
+    auto selectedClips = selectionController()->selectedClips();
+    if (selectedClips.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->clearClipboard();
+    multiClipCopy();
+    selectionController()->resetSelectedClips();
+    trackeditInteraction()->removeClips(selectedClips);
 }
 
 void TrackeditActionsController::rangeSelectionCut()
