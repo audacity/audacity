@@ -30,6 +30,6 @@ signals:
 
 private:
 
-    void doReload() override;
+    void doEmitSignals() override;
 };
 }

@@ -33,7 +33,7 @@ signals:
     void isApplyAllowedChanged();
 
 private:
-    void doReload() override;
+    void doEmitSignals() override;
 
     ToneEffect* effect() const;
 };

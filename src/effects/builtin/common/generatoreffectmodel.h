@@ -30,7 +30,8 @@ signals:
     void durationFormatChanged();
 
 private:
-    void doReload() override;
+    void doReload() final override;
+    virtual void doEmitSignals() = 0;
 
     GeneratorEffect* generatorEffect() const;
 };

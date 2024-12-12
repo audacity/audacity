@@ -20,6 +20,7 @@ void GeneratorEffectModel::doReload()
     emit sampleRateChanged();
     emit durationChanged();
     emit durationFormatChanged();
+    doEmitSignals();
 }
 
 double GeneratorEffectModel::sampleRate() const
