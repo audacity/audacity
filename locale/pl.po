@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.1\n"
+"Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-10-28 11:47+0100\n"
-"PO-Revision-Date: 2024-11-12 00:00+0000\n"
+"PO-Revision-Date: 2024-12-12 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -7607,7 +7607,7 @@ msgstr "Próbujesz otworzyć nową aktywną wersję tego projektu, podczas gdy j
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
-msgstr "Zachowaj aktualnie otwartą wersję"
+msgstr "Zachowaj obecnie otwartą wersję"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open new version"
@@ -17194,7 +17194,7 @@ msgstr "Ustawienia KeyConfig"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
-msgstr "Ustawienia klawiatury chwilowo niedostępne."
+msgstr "Ustawienia klawiatury obecnie niedostępne."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
