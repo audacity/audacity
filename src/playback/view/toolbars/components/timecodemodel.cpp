@@ -238,20 +238,9 @@ void TimecodeModel::updateValueString()
     constexpr auto toNearest = true;
     QString newValueString = m_formatter->valueToString(m_value, toNearest).valueString;
 
-    if (newValueString.size() != m_valueString.size()) {
-        beginResetModel();
-        m_valueString = newValueString;
-        endResetModel();
-    } else {
-        for (int i = 0; i < newValueString.size(); ++i) {
-            if (newValueString[i] != m_valueString[i]) {
-                m_valueString[i] = newValueString[i];
-
-                QModelIndex index = createIndex(i, 0);
-                emit dataChanged(index, index, { rSymbol });
-            }
-        }
-    }
+    beginResetModel();
+    m_valueString = newValueString;
+    endResetModel();
 
     m_fieldsInteractionController->setValueString(m_valueString);
 }
