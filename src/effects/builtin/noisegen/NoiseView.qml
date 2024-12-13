@@ -72,6 +72,9 @@ EffectBase {
             value: noise.duration
             currentFormatStr: noise.durationFormat
             sampleRate: noise.sampleRate
+            tempo: noise.tempo
+            upperTimeSignature: noise.upperTimeSignature
+            lowerTimeSignature: noise.lowerTimeSignature
 
             onValueChanged: {
                 noise.duration = timecode.value

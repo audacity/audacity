@@ -9,7 +9,7 @@ static const double kFadeInOut = 250.0;
 const ComponentInterfaceSymbol DtmfGenerator::Symbol { XO("DTMF Tones") };
 
 DtmfGenerator::DtmfGenerator()
-    : GeneratorEffect(mProjectRate, mT0, mT1)
+    : GeneratorEffect(mT0, mT1)
 {
 }
 

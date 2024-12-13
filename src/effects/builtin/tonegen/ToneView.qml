@@ -107,6 +107,9 @@ EffectBase {
             value: tone.duration
             currentFormatStr: tone.durationFormat
             sampleRate: tone.sampleRate
+            tempo: tone.tempo
+            upperTimeSignature: tone.upperTimeSignature
+            lowerTimeSignature: tone.lowerTimeSignature
             enabled: true
 
             onValueChanged: {

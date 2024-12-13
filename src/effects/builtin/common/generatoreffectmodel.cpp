@@ -18,6 +18,9 @@ void GeneratorEffectModel::doReload()
     }
     ge->init(settings());
     emit sampleRateChanged();
+    emit tempoChanged();
+    emit upperTimeSignatureChanged();
+    emit lowerTimeSignatureChanged();
     emit durationChanged();
     emit durationFormatChanged();
     doEmitSignals();
@@ -30,6 +33,33 @@ double GeneratorEffectModel::sampleRate() const
         return 1.0;
     }
     return e->sampleRate();
+}
+
+double GeneratorEffectModel::tempo() const
+{
+    const auto e = generatorEffect();
+    if (!e) {
+        return 120.0;
+    }
+    return e->tempo();
+}
+
+int GeneratorEffectModel::upperTimeSignature() const
+{
+    const auto e = generatorEffect();
+    if (!e) {
+        return 4;
+    }
+    return e->upperTimeSignature();
+}
+
+int GeneratorEffectModel::lowerTimeSignature() const
+{
+    const auto e = generatorEffect();
+    if (!e) {
+        return 4;
+    }
+    return e->lowerTimeSignature();
 }
 
 double GeneratorEffectModel::duration() const

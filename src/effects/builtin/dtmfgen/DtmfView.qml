@@ -91,6 +91,9 @@ EffectBase {
             value: dtmf.duration
             currentFormatStr: dtmf.durationFormat
             sampleRate: dtmf.sampleRate
+            tempo: dtmf.tempo
+            upperTimeSignature: dtmf.upperTimeSignature
+            lowerTimeSignature: dtmf.lowerTimeSignature
 
             onValueChanged: {
                 dtmf.duration = timecode.value
