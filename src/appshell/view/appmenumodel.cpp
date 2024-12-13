@@ -127,6 +127,11 @@ void AppMenuModel::setupConnections()
         MenuItem& effectsItem = findMenu("menu-effect");
         effectsItem.setSubitems(makeEffectsItems());
     });
+
+    uiContextResolver()->currentUiContextChanged().onNotify(this, [this]() {
+        MenuItem& effectsItem = findMenu("menu-effect");
+        effectsItem.setSubitems(makeEffectsItems());
+    });
 }
 
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)
@@ -740,10 +745,16 @@ MenuItemList AppMenuModel::makeEffectsItems()
 
     effects::EffectMetaList metaList = effectsProvider()->effectMetaList();
 
+    const auto context = uiContextResolver()->currentUiContext();
+    const auto effectsEnabled = context == au::context::UiCtxProjectOpened || context == au::context::UiCtxProjectFocused;
+
     for (const effects::EffectMeta& meta : metaList) {
         MenuItem* item = makeMenuItem("effect-open", TranslatableString::untranslatable(meta.title));
         item->setId(meta.id);
         item->setArgs(ActionData::make_arg1<muse::String>(meta.id));
+        ui::UiActionState state = item->state();
+        state.enabled = effectsEnabled;
+        item->setState(state);
 
         effectsToCategoryMap[meta.categoryId].push_back(item);
     }
