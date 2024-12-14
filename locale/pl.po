@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-10-28 11:47+0100\n"
-"PO-Revision-Date: 2024-12-12 00:00+0000\n"
+"PO-Revision-Date: 2024-12-15 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -967,7 +967,7 @@ msgstr "Analizowanie drugiej ścieżki z pary stereo: %s"
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr "Przetwarzanie ścieżki stereo niezależnie: %s"
+msgstr "Przetwarzanie kanałów stereo niezależnie: %s"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
@@ -4436,7 +4436,7 @@ msgstr "Z Internetu"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Welcome!"
-msgstr "Witamy!"
+msgstr "Witaj!"
 
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
@@ -4894,15 +4894,15 @@ msgstr "(program zewnętrzny)"
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Cannot export audio to %s"
-msgstr "Nie można eksportować dźwięku do %s"
+msgstr "Nie można eksportować nagrania do %s"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
-msgstr "Eksportowanie zaznaczonego dźwięku za pomocą kodera wiersza poleceń"
+msgstr "Eksportowanie zaznaczonego nagrania za pomocą kodera wiersza poleceń"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
-msgstr "Eksportowanie dźwięku za pomocą kodera wiersza poleceń"
+msgstr "Eksportowanie nagrania za pomocą kodera wiersza poleceń"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Command Output"
@@ -5164,13 +5164,13 @@ msgstr "Usiłowano eksportować %d kanałów, ale maksymalna liczba kanałów dl
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Exporting selected audio as %s"
-msgstr "Eksportowanie zaznaczonego dźwięku jako %s"
+msgstr "Eksportowanie zaznaczonego nagrania jako %s"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the audio as %s"
-msgstr "Eksportowanie dźwięku jako %s"
+msgstr "Eksportowanie nagrania jako %s"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -5932,11 +5932,11 @@ msgstr ""
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
-msgstr "Eksportowanie zaznaczonego dźwięku jako FLAC"
+msgstr "Eksportowanie zaznaczonego nagrania jako FLAC"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the audio as FLAC"
-msgstr "Eksportowanie dźwięku jako FLAC"
+msgstr "Eksportowanie nagrania jako FLAC"
 
 #: modules/import-export/mod-flac/ImportFLAC.cpp
 msgid "FLAC files"
@@ -5996,12 +5996,12 @@ msgstr "Nie można otworzyć pliku do zapisu"
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting selected audio at %ld kbps"
-msgstr "Eksportowanie zaznaczonego dźwięku z jakością %ld kbps"
+msgstr "Eksportowanie zaznaczonego nagrania z jakością %ld kbps"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting the audio at %ld kbps"
-msgstr "Eksportowanie dźwięku jako %ld kbps"
+msgstr "Eksportowanie nagrania z jakością %ld kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "220-260 kbps (Best Quality)"
@@ -6200,32 +6200,32 @@ msgstr "Nie można zainicjować strumienia MP3"
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with %s preset"
-msgstr "Eksportowanie zaznaczonego dźwięku z presetem %s"
+msgstr "Eksportowanie zaznaczonego nagrania z presetem %s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with %s preset"
-msgstr "Eksportowanie dźwięku z presetem %s"
+msgstr "Eksportowanie nagrania z presetem %s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
-msgstr "Eksportowanie zaznaczonego dźwięku z jakością VBR %s"
+msgstr "Eksportowanie zaznaczonego nagrania z jakością VBR %s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with VBR quality %s"
-msgstr "Eksportowanie dźwięku z jakością VBR %s"
+msgstr "Eksportowanie nagrania z jakością VBR %s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
-msgstr "Eksportowanie zaznaczonego dźwięku z jakością %d Kbps"
+msgstr "Eksportowanie zaznaczonego nagrania z jakością %d Kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio at %d Kbps"
-msgstr "Eksportowanie dźwięku jako %d Kbps"
+msgstr "Eksportowanie nagrania z jakością %d Kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
@@ -6296,11 +6296,11 @@ msgstr "Nie można eksportować - problem z plikiem"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
-msgstr "Eksportowanie zaznaczonego dźwięku jako Ogg Vorbis"
+msgstr "Eksportowanie zaznaczonego nagrania jako Ogg Vorbis"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the audio as Ogg Vorbis"
-msgstr "Eksportowanie dźwięku jako Ogg Vorbis"
+msgstr "Eksportowanie nagrania jako Ogg Vorbis"
 
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -6409,11 +6409,11 @@ msgstr "Nieobsługiwana częstotliwość próbkowania"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting selected audio as Opus"
-msgstr "Eksportowanie zaznaczonego dźwięku jako Opus"
+msgstr "Eksportowanie zaznaczonego nagrania jako Opus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting the audio as Opus"
-msgstr "Eksportowanie dźwięku jako Opus"
+msgstr "Eksportowanie nagrania jako Opus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to create Opus encoder"
@@ -6524,7 +6524,7 @@ msgstr "Formaty WAVEX i GSM 6.10 są niekompatybilne"
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Cannot export audio in this format."
-msgstr "Nie można eksportować danych w tym formacie."
+msgstr "Nie można eksportować nagrania w tym formacie."
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid ""
@@ -6537,7 +6537,7 @@ msgstr ""
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the selected audio as %s"
-msgstr "Eksportowanie zaznaczonego dźwięku jako %s"
+msgstr "Eksportowanie zaznaczonego nagrania jako %s"
 
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
@@ -6773,11 +6773,11 @@ msgstr "Nie można utworzyć pliku do zapisu"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
-msgstr "Eksportowanie zaznaczonego dźwięku jako WavPack"
+msgstr "Eksportowanie zaznaczonego nagrania jako WavPack"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting the audio as WavPack"
-msgstr "Eksportowanie dźwięku jako WavPack"
+msgstr "Eksportowanie nagrania jako WavPack"
 
 #: modules/import-export/mod-wavpack/ImportWavPack.cpp
 msgid "WavPack files"
@@ -7337,7 +7337,7 @@ msgid ""
 "Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
 "Pliki są zapisywane na Twoim urządzeniu.\n"
-"Uwaga: Aby eksportować pliki MP3 i WAV, użyj „Plik > Eksportuj dźwięk”."
+"Uwaga: Aby eksportować pliki MP3 i WAV, użyj „Plik > Eksportuj nagranie”."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
@@ -8696,13 +8696,13 @@ msgstr ""
 "\n"
 "Możesz spróbować rozwiązać problem, a następnie kliknąć „Ponów”, aby kontynuować.\n"
 "\n"
-"Jeśli wybierzesz opcję „Opuść Audacity”, Twój projekt może pozostać w stanie niezapisanym, który zostanie odzyskany przy następnym otwarciu."
+"Jeśli wybierzesz opcję „Zakończ Audacity”, Twój projekt może pozostać w stanie niezapisanym, który zostanie odzyskany przy następnym otwarciu."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Quit Audacity"
-msgstr "&Opuść Audacity"
+msgstr "Za&kończ Audacity"
 
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
@@ -10549,7 +10549,7 @@ msgstr "Pobieranie informacji o muzyce"
 
 #: src/ProjectFileManager.cpp
 msgid "Analyzing imported audio"
-msgstr "Analizowanie zaimportowanego dźwięku"
+msgstr "Analizowanie zaimportowanego nagrania"
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -10602,7 +10602,7 @@ msgstr "[Projekt %02i] "
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
-msgstr "Witamy w wersji %s Audacity"
+msgstr "Witaj w wersji %s Audacity"
 
 #. i18n-hint: The first %s numbers the project, the second %s is the project name.
 #: src/ProjectManager.cpp
@@ -11318,7 +11318,7 @@ msgstr "Nagrywaj cza&sowo..."
 
 #: src/TimerRecordExportDialog.cpp src/export/ExportAudioDialog.cpp
 msgid "Export Audio"
-msgstr "Eksportuj dźwięk"
+msgstr "Eksportuj nagranie"
 
 #: src/TimerRecordExportDialog.cpp src/export/ExportAudioDialog.cpp
 msgid "Edit &Metadata..."
@@ -11568,7 +11568,7 @@ msgstr "Kompresor wielopasmowy zapewniający precyzyjną kontrolę częstotliwo�
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
-msgstr "Witamy w Audacity!"
+msgstr "Witaj w Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -15254,7 +15254,7 @@ msgstr "&Projekt kopii zapasowej..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export Audio..."
-msgstr "&Eksportuj dźwięk..."
+msgstr "&Eksportuj nagranie..."
 
 #: src/menus/FileMenus.cpp
 msgid "Expo&rt Other"
@@ -15298,7 +15298,7 @@ msgstr "Eksportuj jako FLAC"
 
 #: src/menus/FileMenus.cpp
 msgid "Expo&rt Selected Audio..."
-msgstr "Ekspo&rtuj zaznaczony dźwięk..."
+msgstr "Ekspo&rtuj zaznaczone nagranie..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -16906,7 +16906,7 @@ msgstr "Katalog %s nie jest przeznaczony do zapisu"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
-msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do zrestartowania programu Audacity"
+msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do ponownego uruchomienia Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -17251,7 +17251,7 @@ msgstr "U&staw"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr "Uwaga: Naciśnięcie Cmd+Q spowoduje wyjście. Pozostałe klawisze są prawidłowe."
+msgstr "Uwaga: Naciśnięcie Cmd+Q spowoduje zakończenie. Pozostałe klawisze są prawidłowe."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -17583,7 +17583,7 @@ msgstr "Niestandardowa nazwa tekstu"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Recorded_Audio"
-msgstr "Nagrany_dźwięk"
+msgstr "Nagranie"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Track Number"
@@ -17999,15 +17999,15 @@ msgstr "Użyj wyświetlacza &półfalowego, gdy jest zwinięty"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
-msgstr "&Podpięty do głowicy nagrywania/odtwarzania"
+msgstr "&Podpięty do wskaźnika nagrywania/odtwarzania"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "A&uto-scroll if head unpinned"
-msgstr "A&utoprzewijanie, jeśli głowica jest odpięta"
+msgstr "A&utoprzewijanie, jeśli wskaźnik jest odpięty"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Pinned &head position"
-msgstr "Pozycja podpiętej &głowicy"
+msgstr "Pozycja podpięte&go wskaźnika"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
@@ -19391,7 +19391,7 @@ msgstr "Dodaj etykietę ścieżki"
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Export Audio..."
-msgstr "Eksportuj dźwięk..."
+msgstr "Eksportuj nagranie..."
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Erased selected area"
@@ -21104,7 +21104,7 @@ msgstr "Amplituda (0-1)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
-msgstr "Eksportuj przykładowe dane"
+msgstr "Eksportuj dane przykładowe"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -21285,7 +21285,7 @@ msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a liniowy, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
 msgid "sample data"
-msgstr "przykładowe dane"
+msgstr "dane przykładowe"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample #"
@@ -21327,7 +21327,7 @@ msgid ""
 "Daulton"
 msgstr ""
 "Stworzone przez Steve’a Daultona\n"
-"z <span>Eksportu przykładowych danych</span> dla\n"
+"z <span>Eksportu danych przykładowych</span> dla\n"
 "<a href=\"~a\">Audacity</a>"
 
 #: plug-ins/sample-data-export.ny
@@ -21378,7 +21378,7 @@ msgstr "Błąd.~%\"~a\" nie może zostać zapisany."
 
 #: plug-ins/sample-data-import.ny
 msgid "Sample Data Import"
-msgstr "Importuj przykładowe dane"
+msgstr "Importuj dane przykładowe"
 
 #: plug-ins/sample-data-import.ny
 msgid "Select file"
