@@ -5,9 +5,9 @@
 
 #include "global/defer.h"
 #include "global/realfn.h"
+#include "global/translation.h"
 
 #include "libraries/lib-project/Project.h"
-//#include "libraries/lib-audacity-application-logic/AudacityApplicationLogic.h"
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-module-manager/PluginManager.h"
 
@@ -16,7 +16,6 @@
 #include "libraries/lib-project-rate/ProjectRate.h"
 #include "libraries/lib-menus/CommandManager.h"
 #include "libraries/lib-effects/EffectManager.h"
-#include "libraries/lib-project-history/ProjectHistory.h"
 #include "libraries/lib-module-manager/ConfigInterface.h"
 #include "libraries/lib-numeric-formats/NumericConverterFormats.h"
 
@@ -284,9 +283,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         }
 
         if (!(flags & EffectManager::kSkipState)) {
-            auto shortDesc = PluginManager::Get().GetName(ID);
-            const auto longDesc = XO("Applied effect: %s").Format(shortDesc);
-            ProjectHistory::Get(project).PushState(longDesc, shortDesc);
+            const auto shortDesc = PluginManager::Get().GetName(ID).Translation().ToStdString();
+            const auto longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String { shortDesc.c_str() }).toStdString();
+            projectHistory()->pushHistoryState(longDesc, shortDesc);
         }
 
         //! NOTE Step 8.2 - remember a successful effect

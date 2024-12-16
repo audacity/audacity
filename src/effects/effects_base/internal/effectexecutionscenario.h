@@ -12,6 +12,7 @@
 #include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
 
 #include "au3wrap/au3types.h"
 
@@ -29,6 +30,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario
     muse::Inject<IEffectInstancesRegister> effectInstancesRegister;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     EffectExecutionScenario() = default;
