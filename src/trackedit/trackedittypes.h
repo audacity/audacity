@@ -46,6 +46,12 @@ struct TimeSignature
     int upper = 0;
     int lower = 0;
 };
+
+enum class UndoPushType : unsigned char {
+    NONE = 0,
+    CONSOLIDATE = 1 << 0,
+    NOAUTOSAVE = 1 << 1
+};
 }
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)
