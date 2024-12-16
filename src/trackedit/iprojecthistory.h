@@ -5,6 +5,7 @@
 
 #include "async/notification.h"
 #include "modularity/imoduleinterface.h"
+#include "trackedittypes.h"
 
 namespace au::trackedit {
 class IProjectHistory : MODULE_EXPORT_INTERFACE
@@ -23,6 +24,7 @@ public:
     virtual void undoUnsaved() = 0;
     virtual void clearUnsaved() = 0;
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
+    virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription, trackedit::UndoPushType flags) = 0;
     virtual muse::async::Notification isUndoRedoAvailableChanged() const = 0;
 };
 

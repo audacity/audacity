@@ -5,10 +5,18 @@
 
 #include "../../itrackeditproject.h"
 
+#include "UndoManager.h"
+#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
+
+#include "iprojecthistory.h"
+#include "modularity/ioc.h"
+
 struct TrackListEvent;
 namespace au::trackedit {
 class Au3TrackeditProject : public ITrackeditProject
 {
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
+
 public:
     Au3TrackeditProject(const std::shared_ptr<au::au3::IAu3Project>& au3project);
     ~Au3TrackeditProject();
@@ -73,3 +81,14 @@ public:
     ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const override;
 };
 }
+
+struct TimeSignatureRestorer final : UndoStateExtension
+{
+   explicit TimeSignatureRestorer(AudacityProject& project);
+   void RestoreUndoRedoState(AudacityProject& project) override;
+   static void reg();
+
+   double mTempo;
+   int mUpper;
+   int mLower;
+};

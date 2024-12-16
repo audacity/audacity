@@ -82,6 +82,15 @@ void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longD
     m_isUndoRedoAvailableChanged.notify();
 }
 
+void Au3ProjectHistory::pushHistoryState(const std::string &longDescription, const std::string &shortDescription, UndoPushType flags)
+{
+    auto& project = projectRef();
+    UndoPush undoFlags = static_cast<UndoPush>(flags);
+    ::ProjectHistory::Get(project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} }, undoFlags);
+
+    m_isUndoRedoAvailableChanged.notify();
+}
+
 muse::async::Notification Au3ProjectHistory::isUndoRedoAvailableChanged() const
 {
     return m_isUndoRedoAvailableChanged;

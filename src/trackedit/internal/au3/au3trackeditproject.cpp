@@ -39,6 +39,9 @@ Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3
     m_impl->projectTimeSignatureSubscription = ProjectTimeSignature::Get(*m_impl->prj).Subscribe(
         [this](const TimeSignatureChangedMessage& event) {
         onProjectTempoChange(event.newTempo);
+
+        au::trackedit::TimeSignature trackeditTimeSignature = au::trackedit::TimeSignature{event.newTempo, event.newUpperTimeSignature, event.newLowerTimeSignature};
+        m_timeSignatureChanged.send(trackeditTimeSignature);
     });
 }
 
@@ -228,11 +231,24 @@ au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
 void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeSignature)
 {
     ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(*m_impl->prj);
+
+    std::string historyStateMessage;
+    if (!muse::is_equal(timeSig.GetTempo(), timeSignature.tempo)) {
+        historyStateMessage = "Tempo changed";
+    }
     timeSig.SetTempo(timeSignature.tempo);
+
+    if (!muse::is_equal(timeSig.GetUpperTimeSignature(), timeSignature.upper)) {
+        historyStateMessage = "Upper time signature changed";
+    }
     timeSig.SetUpperTimeSignature(timeSignature.upper);
+
+    if (!muse::is_equal(timeSig.GetLowerTimeSignature(), timeSignature.lower)) {
+        historyStateMessage = "Lower time signature changed";
+    }
     timeSig.SetLowerTimeSignature(timeSignature.lower);
 
-    m_timeSignatureChanged.send(timeSignature);
+    projectHistory()->pushHistoryState(historyStateMessage, historyStateMessage, trackedit::UndoPushType::CONSOLIDATE);
 }
 
 muse::async::Channel<au::trackedit::TimeSignature> Au3TrackeditProject::timeSignatureChanged() const
@@ -278,4 +294,28 @@ secs_t Au3TrackeditProject::totalTime() const
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
 {
     return std::make_shared<Au3TrackeditProject>(au3project);
+}
+
+TimeSignatureRestorer::TimeSignatureRestorer(AudacityProject& project)
+   : mTempo { ProjectTimeSignature::Get(project).GetTempo() }
+   , mUpper { ProjectTimeSignature::Get(project).GetUpperTimeSignature() }
+   , mLower { ProjectTimeSignature::Get(project).GetLowerTimeSignature() }
+{
+}
+
+void TimeSignatureRestorer::RestoreUndoRedoState(AudacityProject& project)
+{
+  auto& timeSignature = ProjectTimeSignature::Get(project);
+
+  timeSignature.SetTempo(mTempo);
+  timeSignature.SetUpperTimeSignature(mUpper);
+  timeSignature.SetLowerTimeSignature(mLower);
+}
+
+void TimeSignatureRestorer::reg()
+{
+   static UndoRedoExtensionRegistry::Entry sEntry {
+       [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
+       { return std::make_shared<TimeSignatureRestorer>(project); }
+   };
 }

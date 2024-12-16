@@ -72,6 +72,8 @@ void TrackeditModule::onInit(const muse::IApplication::RunMode&)
     m_trackeditController->init();
     m_trackeditUiActions->init();
     m_selectionController->init();
+
+    TimeSignatureRestorer::reg();
 }
 
 void TrackeditModule::onDeinit()
