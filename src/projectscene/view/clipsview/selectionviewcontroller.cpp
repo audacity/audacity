@@ -9,7 +9,8 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::trackedit;
 
-constexpr double MIN_SELECTION_PX = 12.0;
+//! NOTE: sync with ClipsSelection.qml minSelection
+constexpr double MIN_SELECTION_PX = 1.0;
 
 SelectionViewController::SelectionViewController(QObject* parent)
     : QObject(parent)

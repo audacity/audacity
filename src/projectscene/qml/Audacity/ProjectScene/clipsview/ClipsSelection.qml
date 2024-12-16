@@ -6,7 +6,8 @@ Item {
     property bool isDataSelected: false
     property alias active: selRect.visible
     property var context: null
-    property real minSelection: 12 // px  4left + 4 + 4right
+    //! NOTE: sync with SelectionViewController's MIN_SELECTION_PX
+    property real minSelection: 1
 
     signal selectionDraged(var x1, var x2, var completed)
     signal requestSelectionContextMenu(real x, real y)
@@ -53,7 +54,7 @@ Item {
         anchors.bottom: parent.bottom
 
         visible: isDataSelected
-        width: 8
+        width: selRect.width >= 16 ? 8 : (selRect.width / 2)
         cursorShape: Qt.SizeHorCursor
 
         property real startX: 0
@@ -109,7 +110,7 @@ Item {
         anchors.bottom: parent.bottom
 
         visible: isDataSelected
-        width: 8
+        width: selRect.width >= 16 ? 8 : (selRect.width / 2)
         cursorShape: Qt.SizeHorCursor
 
         property real startX: 0
