@@ -24,6 +24,8 @@ void GeneratorEffectModel::doReload()
     emit durationChanged();
     emit durationFormatChanged();
     doEmitSignals();
+
+    update();
 }
 
 double GeneratorEffectModel::sampleRate() const
@@ -79,6 +81,8 @@ void GeneratorEffectModel::setDuration(double newDuration)
     }
     e->setDuration(newDuration);
     emit durationChanged();
+
+    update();
 }
 
 QString GeneratorEffectModel::durationFormat() const
@@ -98,6 +102,22 @@ void GeneratorEffectModel::setDurationFormat(const QString& newDurationFormat)
     }
     e->setDurationFormat(newDurationFormat);
     emit durationFormatChanged();
+
+    update();
+}
+
+bool GeneratorEffectModel::isApplyAllowed() const
+{
+    return generatorEffect()->isApplyAllowed();
+}
+
+void GeneratorEffectModel::update()
+{
+    const auto wasAllowed = m_isApplyAllowed;
+    m_isApplyAllowed = isApplyAllowed();
+    if (m_isApplyAllowed != wasAllowed) {
+        emit isApplyAllowedChanged();
+    }
 }
 
 GeneratorEffect* GeneratorEffectModel::generatorEffect() const

@@ -28,6 +28,7 @@ public:
     void setDuration(double newDuration);
     QString durationFormat() const;
     void setDurationFormat(const QString& newDurationFormat);
+    bool isApplyAllowed() const;
 
 private:
     virtual void doInit() {}
