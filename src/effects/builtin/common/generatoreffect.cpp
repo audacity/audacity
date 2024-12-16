@@ -59,6 +59,11 @@ void GeneratorEffect::setDuration(double newDuration)
     }
 }
 
+bool GeneratorEffect::isApplyAllowed() const
+{
+    return m_settings ? m_settings->extra.GetDuration() > 0 : false;
+}
+
 QString GeneratorEffect::durationFormat() const
 {
     if (m_settings) {

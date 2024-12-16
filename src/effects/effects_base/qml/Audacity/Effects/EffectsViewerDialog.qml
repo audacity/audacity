@@ -26,6 +26,7 @@ StyledDialogView {
 
         onIsApplyAllowedChanged: {
             bbox.buttonById(ButtonBoxModel.Apply).enabled = isApplyAllowed
+            bbox.buttonById(previewBtn.buttonId).enabled = isApplyAllowed
         }
     }
 
@@ -60,6 +61,7 @@ StyledDialogView {
         }
 
         FlatButton {
+            id: previewBtn
             text: qsTrc("effects", "Preview")
             buttonRole: ButtonBoxModel.CustomRole
             buttonId: ButtonBoxModel.CustomButton + 2
