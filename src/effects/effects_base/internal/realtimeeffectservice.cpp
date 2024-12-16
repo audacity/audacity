@@ -57,17 +57,22 @@ void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
 
 void RealtimeEffectService::onWaveTrackAdded(WaveTrack& track)
 {
+    const auto isNewTrack = m_rtEffectSubscriptions.count(track.GetId()) == 0;
+
+    // Renew the subscription: `track` may have a registered ID, it may yet be a new object.
     auto& list = RealtimeEffectList::Get(track);
     m_rtEffectSubscriptions[track.GetId()] = subscribeToRealtimeEffectList(track, list);
 
-    // We have subscribed for future realtime-effect events, but we need to send the initial state.
-    for (auto i = 0u; i < list.GetStatesCount(); ++i) {
-        const auto state = list.GetStateAt(i);
-        IF_ASSERT_FAILED(state) {
-            break;
+    if (isNewTrack) {
+        // We have subscribed for future realtime-effect events, but we need to send the initial state.
+        for (auto i = 0u; i < list.GetStatesCount(); ++i) {
+            const auto state = list.GetStateAt(i);
+            IF_ASSERT_FAILED(state) {
+                break;
+            }
+            auto newEffect = std::make_shared<EffectChainLink>(getEffectName(*state), reinterpret_cast<EffectStateId>(state.get()));
+            m_realtimeEffectAdded.send(track.GetId(), i, std::move(newEffect));
         }
-        auto newEffect = std::make_shared<EffectChainLink>(getEffectName(*state), reinterpret_cast<EffectStateId>(state.get()));
-        m_realtimeEffectAdded.send(track.GetId(), i, std::move(newEffect));
     }
 }
 
