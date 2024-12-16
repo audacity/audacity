@@ -38,12 +38,19 @@ void Au3SelectionController::init()
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
+        resetDataSelection();
+
         if (prj) {
             //! NOTE: sync selectionControler with internal project state if trackList changed
             auto trackList = &Au3TrackList::Get(projectRef());
             m_tracksSubc = trackList->Subscribe([this](const TrackListEvent&) {
                 updateSelectionController();
             });
+
+            //! NOTE: load project's last saved selection state
+            auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
+            m_selectedStartTime.set(selectedRegion.t0(), true);
+            m_selectedEndTime.set(selectedRegion.t1(), true);
         } else {
             m_tracksSubc.Reset();
         }
