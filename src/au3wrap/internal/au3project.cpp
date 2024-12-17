@@ -91,6 +91,8 @@ bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
         pTrack->LinkConsistencyFix();
     }
 
+    m_hasSavedVersion = true;
+
     return true;
 }
 
@@ -101,6 +103,8 @@ bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
     auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), &tracks);
     if (result) {
         UndoManager::Get(m_data->projectRef()).StateSaved();
+        // Project is now saved on disk - this isn't a new project anymore.
+        m_hasSavedVersion = true;
     }
     return result;
 }
@@ -109,6 +113,7 @@ void Au3ProjectAccessor::close()
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     projectFileIO.CloseProject();
+    m_hasSavedVersion = false;
 }
 
 std::string Au3ProjectAccessor::title() const
@@ -118,6 +123,11 @@ std::string Au3ProjectAccessor::title() const
     }
 
     return wxToStdSting(m_data->project->GetProjectName());
+}
+
+bool Au3ProjectAccessor::hasSavedVersion() const
+{
+    return m_hasSavedVersion;
 }
 
 uintptr_t Au3ProjectAccessor::au3ProjectPtr() const
