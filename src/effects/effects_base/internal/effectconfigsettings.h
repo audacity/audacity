@@ -70,7 +70,7 @@ private:
     bool WriteValue(const wxString& key, T value)
     {
         std::string full = fullKey(key);
-        m_vals.insert({ full, value });
+        m_vals[full] = value;
         return true;
     }
 
