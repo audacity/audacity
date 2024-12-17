@@ -311,6 +311,16 @@ muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelected
     return m_selectedEndTime.selected;
 }
 
+secs_t Au3SelectionController::selectionStartTime() const
+{
+    return m_selectionStartTime.val;
+}
+
+void Au3SelectionController::setSelectionStartTime(secs_t time)
+{
+    m_selectionStartTime.set(time, true);
+}
+
 void Au3SelectionController::updateSelectionController()
 {
     auto& tracks = Au3TrackList::Get(projectRef());

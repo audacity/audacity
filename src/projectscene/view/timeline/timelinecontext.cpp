@@ -185,15 +185,17 @@ void TimelineContext::insureVisible(double posSec)
 
     constexpr double SCROLL_MARGIN_PX(16);
 
-    if (muse::RealIsEqualOrMore(newPosition, frameStartPosition)
+    if (muse::RealIsEqualOrMore(newPosition, frameStartPosition + SCROLL_MARGIN_PX)
         && muse::RealIsEqualOrLess(newPosition, frameEndPosition - SCROLL_MARGIN_PX)) {
         return;
     }
 
     constexpr double AUTO_SHIFT_PERCENT(0.03);
 
-    if (newPosition < frameStartPosition) {
-        moveToFrameTime(posSec);
+    if (newPosition < frameStartPosition + SCROLL_MARGIN_PX) {
+        double frameTime = m_frameEndTime - m_frameStartTime;
+        shiftFrameTime(-frameTime * AUTO_SHIFT_PERCENT);
+        moveToFrameTime(m_frameStartTime - (frameTime * AUTO_SHIFT_PERCENT));
     } else {
         double frameTime = m_frameEndTime - m_frameStartTime;
         double endGapPx = newPosition - frameEndPosition;
@@ -229,7 +231,7 @@ void TimelineContext::onResizeFrameContentHeight(double frameHeight)
 
 void TimelineContext::moveToFrameTime(double startTime)
 {
-    setFrameStartTime(startTime);
+    setFrameStartTime(std::max(startTime, 0.0));
     updateFrameTime();
 }
 
