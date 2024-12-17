@@ -13,16 +13,16 @@ class NoiseViewModel : public GeneratorEffectModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(double amplitude READ amplitude WRITE setAmplitude NOTIFY amplitudeChanged)
-    Q_PROPERTY(int type READ type WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(double amplitude READ amplitude WRITE prop_setAmplitude NOTIFY amplitudeChanged)
+    Q_PROPERTY(int type READ type WRITE prop_setType NOTIFY typeChanged)
     Q_PROPERTY(QVariantList types READ types CONSTANT)
 
 public:
     QVariantList types() const;
     double amplitude() const;
-    void setAmplitude(double newAmplitude);
+    void prop_setAmplitude(double newAmplitude);
     int type() const;
-    void setType(int type);
+    void prop_setType(int type);
 
 signals:
     void amplitudeChanged();

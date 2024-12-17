@@ -73,8 +73,12 @@ double GeneratorEffectModel::duration() const
     return e->duration();
 }
 
-void GeneratorEffectModel::setDuration(double newDuration)
+void GeneratorEffectModel::prop_setDuration(double newDuration)
 {
+    if (!m_inited) {
+        return;
+    }
+
     auto e = generatorEffect();
     IF_ASSERT_FAILED(e) {
         return;
@@ -94,8 +98,12 @@ QString GeneratorEffectModel::durationFormat() const
     return e->durationFormat();
 }
 
-void GeneratorEffectModel::setDurationFormat(const QString& newDurationFormat)
+void GeneratorEffectModel::prop_setDurationFormat(const QString& newDurationFormat)
 {
+    if (!m_inited) {
+        return;
+    }
+
     auto e = generatorEffect();
     IF_ASSERT_FAILED(e) {
         return;

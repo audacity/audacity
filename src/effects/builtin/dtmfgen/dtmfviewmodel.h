@@ -13,9 +13,9 @@ class DtmfViewModel : public GeneratorEffectModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString sequence READ sequence WRITE setSequence NOTIFY sequenceChanged)
-    Q_PROPERTY(double amplitude READ amplitude WRITE setAmplitude NOTIFY amplitudeChanged)
-    Q_PROPERTY(double dutyCycle READ dutyCycle WRITE setDutyCycle NOTIFY dutyCycleChanged)
+    Q_PROPERTY(QString sequence READ sequence WRITE prop_setSequence NOTIFY sequenceChanged)
+    Q_PROPERTY(double amplitude READ amplitude WRITE prop_setAmplitude NOTIFY amplitudeChanged)
+    Q_PROPERTY(double dutyCycle READ dutyCycle WRITE prop_setDutyCycle NOTIFY dutyCycleChanged)
     Q_PROPERTY(double toneDuration READ toneDuration NOTIFY toneDurationChanged)
     Q_PROPERTY(double silenceDuration READ silenceDuration NOTIFY silenceDurationChanged)
 
@@ -24,13 +24,13 @@ public:
     virtual ~DtmfViewModel();
 
     QString sequence() const;
-    void setSequence(const QString& newSequence);
+    void prop_setSequence(const QString& newSequence);
 
     double amplitude() const;
-    void setAmplitude(double newAmplitude);
+    void prop_setAmplitude(double newAmplitude);
 
     double dutyCycle() const;
-    void setDutyCycle(double newDutyCycle);
+    void prop_setDutyCycle(double newDutyCycle);
 
     double toneDuration() const;
     double silenceDuration() const;
