@@ -74,6 +74,8 @@ void SelectionViewController::onPositionChanged(double x, double y)
 
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
+    x = std::max(x, 0.0);
+
     // point
     emit selectionChanged(m_startPoint, QPointF(x, y));
 
@@ -109,6 +111,8 @@ void SelectionViewController::onReleased(double x, double y)
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     m_selectionStarted = false;
+
+    x = std::max(x, 0.0);
 
     // point
     emit selectionEnded(m_startPoint, QPointF(x, y));
