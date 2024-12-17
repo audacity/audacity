@@ -28,8 +28,11 @@ QString DtmfViewModel::sequence() const
     return QString::fromStdString(settings<DtmfSettings>().dtmfSequence);
 }
 
-void DtmfViewModel::setSequence(const QString& newSequence)
+void DtmfViewModel::prop_setSequence(const QString& newSequence)
 {
+    if (!m_inited) {
+        return;
+    }
     mutSettings<DtmfSettings>().dtmfSequence = newSequence.toStdString();
     emit sequenceChanged();
     recalculateDurations();
@@ -40,8 +43,11 @@ double DtmfViewModel::amplitude() const
     return settings<DtmfSettings>().dtmfAmplitude;
 }
 
-void DtmfViewModel::setAmplitude(double newAmplitude)
+void DtmfViewModel::prop_setAmplitude(double newAmplitude)
 {
+    if (!m_inited) {
+        return;
+    }
     mutSettings<DtmfSettings>().dtmfAmplitude = newAmplitude;
     emit amplitudeChanged();
 }
@@ -51,8 +57,11 @@ double DtmfViewModel::dutyCycle() const
     return settings<DtmfSettings>().dtmfDutyCycle;
 }
 
-void DtmfViewModel::setDutyCycle(double newDutyCycle)
+void DtmfViewModel::prop_setDutyCycle(double newDutyCycle)
 {
+    if (!m_inited) {
+        return;
+    }
     mutSettings<DtmfSettings>().dtmfDutyCycle = newDutyCycle;
     emit dutyCycleChanged();
     recalculateDurations();

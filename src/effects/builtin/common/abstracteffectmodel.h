@@ -77,8 +77,10 @@ protected:
         return *st;
     }
 
+protected:
+    bool m_inited = false;
+
 private:
     QString m_instanceId;
-    bool m_inited = false;
 };
 }

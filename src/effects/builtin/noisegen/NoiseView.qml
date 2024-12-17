@@ -25,7 +25,6 @@ EffectBase {
 
     Component.onCompleted: {
         noise.init()
-        timecode.currentFormatStr = noise.durationFormat
     }
 
     GridLayout {
@@ -78,10 +77,6 @@ EffectBase {
 
             onValueChanged: {
                 noise.duration = timecode.value
-            }
-
-            onCurrentFormatChanged: {
-                noise.durationFormat = timecode.currentFormatStr
             }
         }
 

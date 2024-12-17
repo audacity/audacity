@@ -48,8 +48,12 @@ double ToneViewModel::amplitude() const
     return te->amplitude();
 }
 
-void ToneViewModel::setAmplitude(double newAmplitude)
+void ToneViewModel::prop_setAmplitude(double newAmplitude)
 {
+    if (!m_inited) {
+        return;
+    }
+
     const auto wasAllowed = isApplyAllowed();
     ToneEffect* const te = effect();
     IF_ASSERT_FAILED(te) {
@@ -70,8 +74,12 @@ double ToneViewModel::frequency() const
     return te->frequency();
 }
 
-void ToneViewModel::setFrequency(double newFrequency)
+void ToneViewModel::prop_setFrequency(double newFrequency)
 {
+    if (!m_inited) {
+        return;
+    }
+
     const auto wasAllowed = isApplyAllowed();
     ToneEffect* const te = effect();
     IF_ASSERT_FAILED(te) {
@@ -92,8 +100,12 @@ int ToneViewModel::waveform() const
     return static_cast<int>(te->waveform());
 }
 
-void ToneViewModel::setWaveform(int newWaveform)
+void ToneViewModel::prop_setWaveform(int newWaveform)
 {
+    if (!m_inited) {
+        return;
+    }
+
     ToneEffect* const te = effect();
     IF_ASSERT_FAILED(te) {
         return;

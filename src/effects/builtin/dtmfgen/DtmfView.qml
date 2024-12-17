@@ -25,7 +25,6 @@ EffectBase {
 
     Component.onCompleted: {
         dtmf.init()
-        timecode.currentFormatStr = dtmf.durationFormat
     }
 
     GridLayout {
@@ -97,10 +96,6 @@ EffectBase {
 
             onValueChanged: {
                 dtmf.duration = timecode.value
-            }
-
-            onCurrentFormatChanged: {
-                dtmf.durationFormat = timecode.currentFormatStr
             }
         }
 

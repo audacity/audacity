@@ -25,7 +25,6 @@ EffectBase {
 
     Component.onCompleted: {
         tone.init()
-        timecode.currentFormatStr = tone.durationFormat
     }
 
     // Helper function to format number
@@ -114,10 +113,6 @@ EffectBase {
 
             onValueChanged: {
                 tone.duration = timecode.value
-            }
-
-            onCurrentFormatChanged: {
-                tone.durationFormat = timecode.currentFormatStr
             }
         }
     }

@@ -39,8 +39,11 @@ double NoiseViewModel::amplitude() const
     return settings<NoiseSettings>().amplitude;
 }
 
-void NoiseViewModel::setAmplitude(double newAmplitude)
+void NoiseViewModel::prop_setAmplitude(double newAmplitude)
 {
+    if (!m_inited) {
+        return;
+    }
     mutSettings<NoiseSettings>().amplitude = newAmplitude;
     emit amplitudeChanged();
 }
@@ -50,8 +53,11 @@ int NoiseViewModel::type() const
     return static_cast<int>(settings<NoiseSettings>().type);
 }
 
-void NoiseViewModel::setType(int type)
+void NoiseViewModel::prop_setType(int type)
 {
+    if (!m_inited) {
+        return;
+    }
     mutSettings<NoiseSettings>().type = static_cast<NoiseSettings::Type>(type);
     emit typeChanged();
 }

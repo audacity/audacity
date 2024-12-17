@@ -12,8 +12,8 @@ class ToneEffect;
 class GeneratorEffectModel : public AbstractEffectModel
 {
     Q_OBJECT
-    Q_PROPERTY(double duration READ duration WRITE setDuration NOTIFY durationChanged)
-    Q_PROPERTY(QString durationFormat READ durationFormat WRITE setDurationFormat NOTIFY durationFormatChanged)
+    Q_PROPERTY(double duration READ duration WRITE prop_setDuration NOTIFY durationChanged)
+    Q_PROPERTY(QString durationFormat READ durationFormat WRITE prop_setDurationFormat NOTIFY durationFormatChanged)
     Q_PROPERTY(double sampleRate READ sampleRate NOTIFY sampleRateChanged FINAL)
     Q_PROPERTY(double tempo READ tempo NOTIFY tempoChanged FINAL)
     Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY upperTimeSignatureChanged FINAL)
@@ -23,13 +23,13 @@ class GeneratorEffectModel : public AbstractEffectModel
 public:
 
     double duration() const;
-    void setDuration(double newDuration);
+    void prop_setDuration(double newDuration);
     double sampleRate() const;
     double tempo() const;
     int upperTimeSignature() const;
     int lowerTimeSignature() const;
     QString durationFormat() const;
-    void setDurationFormat(const QString& newDurationFormat);
+    void prop_setDurationFormat(const QString& newDurationFormat);
     bool isApplyAllowed() const;
 
 signals:
