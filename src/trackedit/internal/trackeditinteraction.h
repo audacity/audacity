@@ -1,15 +1,18 @@
 #pragma once
 
 #include "itrackeditinteraction.h"
+#include "trackedit/trackediterrors.h"
 #include "playback/iplayback.h"
 #include "playback/iplayer.h"
 #include "global/types/secs.h"
 #include "modularity/ioc.h"
+#include "record/irecordcontroller.h"
 
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
 {
-    muse::Inject<au::playback::IPlayback> m_playback;
+    muse::Inject<au::record::IRecordController> recordController;
+    muse::Inject<au::playback::IPlayback> playback;
 
 public:
     TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction);
@@ -27,7 +30,7 @@ private:
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
-    void renderClipPitchAndSpeed(const ClipKey& clipKey) override;
+    bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
@@ -52,29 +55,32 @@ private:
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
     std::optional<secs_t> getMostLeftClipStartTime(const ClipKeyList& clipKeys) const override;
-    void newMonoTrack() override;
-    void newStereoTrack() override;
-    void newLabelTrack() override;
-    void deleteTracks(const TrackIdList& trackIds) override;
-    void duplicateTracks(const TrackIdList& trackIds) override;
+    bool newMonoTrack() override;
+    bool newStereoTrack() override;
+    bool newLabelTrack() override;
+    bool deleteTracks(const TrackIdList& trackIds) override;
+    bool duplicateTracks(const TrackIdList& trackIds) override;
     void moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction) override;
     void moveTracksTo(const TrackIdList& trackIds, int to) override;
-    void undo() override;
+    bool undo() override;
     bool canUndo() override;
-    void redo() override;
+    bool redo() override;
     bool canRedo() override;
 
-    void insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
+    bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 
-    void toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
+    bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
     muse::ProgressPtr progress() const override;
 
 private:
     template<typename Func, typename ... Args>
-    auto withPlaybackStop(Func method, Args&&... args)
+    muse::Ret withPlaybackStop(Func method, Args&&... args)
     {
-        m_playback()->player()->stop();
+        if (recordController()->isRecording()) {
+            return make_ret(trackedit::Err::DisallowedDuringRecording);
+        }
+        playback()->player()->stop();
         return (m_interaction.get()->*method)(std::forward<Args>(args)...);
     }
 
