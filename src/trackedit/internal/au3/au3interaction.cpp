@@ -895,11 +895,11 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
 bool Au3Interaction::moveClips(secs_t offset, bool completed)
 {
     //! NOTE: check if offset is applicable to every clip and recalculate if needed
-    std::optional<secs_t> mostLeftClipStartTime = getMostLeftClipStartTime(selectionController()->selectedClips());
+    std::optional<secs_t> leftmostClipStartTime = getLeftmostClipStartTime(selectionController()->selectedClips());
 
-    if (mostLeftClipStartTime.has_value()) {
-        if (muse::RealIsEqualOrLess(mostLeftClipStartTime.value() + offset, 0.0)) {
-            offset = -mostLeftClipStartTime.value();
+    if (leftmostClipStartTime.has_value()) {
+        if (muse::RealIsEqualOrLess(leftmostClipStartTime.value() + offset, 0.0)) {
+            offset = -leftmostClipStartTime.value();
         }
     }
 
@@ -1477,9 +1477,9 @@ void Au3Interaction::moveTrackTo(const TrackId trackId, int to)
     trackEdit->notifyAboutTrackMoved(track, pos);
 }
 
-std::optional<secs_t> Au3Interaction::getMostLeftClipStartTime(const ClipKeyList& clipKeys) const
+std::optional<secs_t> Au3Interaction::getLeftmostClipStartTime(const ClipKeyList& clipKeys) const
 {
-    std::optional<secs_t> mostLeftClipStartTime;
+    std::optional<secs_t> leftmostClipStartTime;
     for (const auto& selectedClip : clipKeys) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1491,12 +1491,12 @@ std::optional<secs_t> Au3Interaction::getMostLeftClipStartTime(const ClipKeyList
             continue;
         }
 
-        if (clip->GetPlayStartTime() < mostLeftClipStartTime || !mostLeftClipStartTime.has_value()) {
-            mostLeftClipStartTime = clip->GetPlayStartTime();
+        if (clip->GetPlayStartTime() < leftmostClipStartTime || !leftmostClipStartTime.has_value()) {
+            leftmostClipStartTime = clip->GetPlayStartTime();
         }
     }
 
-    return mostLeftClipStartTime;
+    return leftmostClipStartTime;
 }
 
 void Au3Interaction::moveTrack(const TrackId trackId, const TrackMoveDirection direction)
