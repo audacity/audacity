@@ -653,7 +653,7 @@ void Au3WavePainter::doPaint(QPainter& painter, const Au3WaveTrack* _track, cons
     wm.toTime = params.toTime;
 
     // calculate selection area relative to the clip itself
-    if (!muse::RealIsEqual(params.selectionStartTime, 0.0) && !muse::RealIsEqual(params.selectionEndTime, 0.0)) {
+    if (!muse::RealIsEqual(params.selectionStartTime, params.selectionEndTime)) {
         wm.selectionStartTime = params.selectionStartTime - clip->Start() + clip->GetTrimLeft();
         wm.selectionEndTime = params.selectionEndTime - clip->Start() + clip->GetTrimLeft();
     }
