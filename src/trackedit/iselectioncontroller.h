@@ -61,5 +61,8 @@ public:
     virtual void setDataSelectedEndTime(secs_t time, bool complete) = 0;
     virtual muse::async::Channel<secs_t> dataSelectedEndTimeChanged() const = 0;
     virtual muse::async::Channel<secs_t> dataSelectedEndTimeSelected() const = 0;
+
+    virtual trackedit::secs_t selectionStartTime() const = 0;
+    virtual void setSelectionStartTime(trackedit::secs_t time) = 0;
 };
 }

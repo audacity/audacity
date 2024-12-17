@@ -42,5 +42,8 @@ public:
     MOCK_METHOD(void, setDataSelectedEndTime, (secs_t, bool), (override));
     MOCK_METHOD(muse::async::Channel<secs_t>, dataSelectedEndTimeChanged, (), (const, override));
     MOCK_METHOD(muse::async::Channel<secs_t>, dataSelectedEndTimeSelected, (), (const, override));
+
+    MOCK_METHOD(trackedit::secs_t, selectionStartTime, (), (const override));
+    MOCK_METHOD(void, setSelectionStartTime, (trackedit::secs_t), (override));
 };
 }

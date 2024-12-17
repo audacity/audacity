@@ -60,6 +60,9 @@ public:
     muse::async::Channel<trackedit::secs_t> dataSelectedEndTimeChanged() const override;
     muse::async::Channel<trackedit::secs_t> dataSelectedEndTimeSelected() const override;
 
+    trackedit::secs_t selectionStartTime() const override;
+    void setSelectionStartTime(trackedit::secs_t time) override;
+
 private:
     void updateSelectionController();
 
@@ -94,5 +97,7 @@ private:
     // data selection
     Val<trackedit::secs_t> m_selectedStartTime;
     Val<trackedit::secs_t> m_selectedEndTime;
+
+    Val<trackedit::secs_t> m_selectionStartTime; // indicates where user started selection
 };
 }

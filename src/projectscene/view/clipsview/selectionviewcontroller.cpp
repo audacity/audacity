@@ -29,6 +29,7 @@ void SelectionViewController::onPressed(double x, double y)
     //! NOTE: do not update start point when user holds Shift or Ctrl
     if (!(modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier))) {
         m_startPoint = QPointF(x, y);
+        selectionController()->setSelectionStartTime(m_context->positionToTime(m_startPoint.x()));
     }
     emit selectionStarted();
     resetDataSelection();
@@ -75,6 +76,9 @@ void SelectionViewController::onPositionChanged(double x, double y)
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     x = std::max(x, 0.0);
+    m_context->insureVisible(m_context->positionToTime(x));
+    //! NOTE: update m_startPoint in case frameTime changed
+    m_startPoint.setX(m_context->timeToPosition(selectionController()->selectionStartTime()));
 
     // point
     emit selectionChanged(m_startPoint, QPointF(x, y));
