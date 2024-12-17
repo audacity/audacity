@@ -96,6 +96,10 @@ void Audacity4Project::close()
     const auto history = projectHistory();
     history->undoUnsaved();
     history->clearUnsaved();
+    // Do not save a project that has never explicitly been saved.
+    if (m_au3Project->hasSavedVersion()) {
+        save();
+    }
 
     clipboard()->clearTrackData();
     m_au3Project->close();
