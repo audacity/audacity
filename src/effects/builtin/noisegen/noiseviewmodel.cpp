@@ -28,7 +28,7 @@ QVariantList NoiseViewModel::types() const
     return items;
 }
 
-void NoiseViewModel::doReload()
+void NoiseViewModel::doEmitSignals()
 {
     emit amplitudeChanged();
     emit typeChanged();

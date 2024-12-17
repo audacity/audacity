@@ -214,7 +214,7 @@ void TimecodeModel::reloadFormatter()
 
 void TimecodeModel::initFormatter()
 {
-    m_formatter->setSampleRate(sampleRate());
+    m_formatter->setSampleRate(m_sampleRate);
     m_formatter->setTempo(m_tempo);
     m_formatter->setUpperTimeSignature(m_upperTimeSignature);
     m_formatter->setLowerTimeSignature(m_lowerTimeSignature);
@@ -238,20 +238,9 @@ void TimecodeModel::updateValueString()
     constexpr auto toNearest = true;
     QString newValueString = m_formatter->valueToString(m_value, toNearest).valueString;
 
-    if (newValueString.size() != m_valueString.size()) {
-        beginResetModel();
-        m_valueString = newValueString;
-        endResetModel();
-    } else {
-        for (int i = 0; i < newValueString.size(); ++i) {
-            if (newValueString[i] != m_valueString[i]) {
-                m_valueString[i] = newValueString[i];
-
-                QModelIndex index = createIndex(i, 0);
-                emit dataChanged(index, index, { rSymbol });
-            }
-        }
-    }
+    beginResetModel();
+    m_valueString = newValueString;
+    endResetModel();
 
     m_fieldsInteractionController->setValueString(m_valueString);
 }
@@ -272,7 +261,6 @@ void TimecodeModel::setSampleRate(double sampleRate)
     initFormatter();
     updateValueString();
 
-    emit sampleRateChanged();
     emit currentFormatChanged();
 }
 
@@ -291,8 +279,6 @@ void TimecodeModel::setTempo(double tempo)
 
     initFormatter();
     updateValueString();
-
-    emit tempoChanged();
 }
 
 int TimecodeModel::upperTimeSignature() const
@@ -310,8 +296,6 @@ void TimecodeModel::setUpperTimeSignature(int timeSignature)
 
     initFormatter();
     updateValueString();
-
-    emit upperTimeSignatureChanged();
 }
 
 int TimecodeModel::lowerTimeSignature() const
@@ -329,6 +313,4 @@ void TimecodeModel::setLowerTimeSignature(int timeSignature)
 
     initFormatter();
     updateValueString();
-
-    emit lowerTimeSignatureChanged();
 }

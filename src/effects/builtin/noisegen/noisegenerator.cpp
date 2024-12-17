@@ -8,7 +8,7 @@ using namespace au::effects;
 const ComponentInterfaceSymbol NoiseGenerator::Symbol { XO("Noise") };
 
 NoiseGenerator::NoiseGenerator()
-    : GeneratorEffect(mProjectRate, mT0, mT1)
+    : GeneratorEffect(mT0, mT1)
 {
     SetLinearEffectFlag(true);
 }

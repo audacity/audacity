@@ -16,10 +16,10 @@ class TimecodeModel : public QAbstractListModel
 
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
 
-    Q_PROPERTY(double sampleRate READ sampleRate WRITE setSampleRate NOTIFY sampleRateChanged FINAL)
-    Q_PROPERTY(double tempo READ tempo WRITE setTempo NOTIFY tempoChanged FINAL)
-    Q_PROPERTY(int upperTimeSignature READ upperTimeSignature WRITE setUpperTimeSignature NOTIFY upperTimeSignatureChanged FINAL)
-    Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature WRITE setLowerTimeSignature NOTIFY lowerTimeSignatureChanged FINAL)
+    Q_PROPERTY(double sampleRate READ sampleRate WRITE setSampleRate FINAL)
+    Q_PROPERTY(double tempo READ tempo WRITE setTempo FINAL)
+    Q_PROPERTY(int upperTimeSignature READ upperTimeSignature WRITE setUpperTimeSignature FINAL)
+    Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature WRITE setLowerTimeSignature FINAL)
 
     Q_PROPERTY(QVariantList availableFormats READ availableFormats NOTIFY availableFormatsChanged)
     Q_PROPERTY(int currentFormat READ currentFormat WRITE setCurrentFormat NOTIFY currentFormatChanged FINAL)
@@ -97,11 +97,6 @@ public:
 
 signals:
     void valueChanged();
-
-    void sampleRateChanged();
-    void tempoChanged();
-    void upperTimeSignatureChanged();
-    void lowerTimeSignatureChanged();
 
     void availableFormatsChanged();
     void currentFormatChanged();

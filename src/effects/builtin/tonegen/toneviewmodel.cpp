@@ -9,7 +9,7 @@
 
 using namespace au::effects;
 
-void ToneViewModel::doReload()
+void ToneViewModel::doEmitSignals()
 {
     emit amplitudeChanged();
     emit frequencyChanged();

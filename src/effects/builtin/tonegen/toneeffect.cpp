@@ -9,7 +9,7 @@ using namespace au::effects;
 const ComponentInterfaceSymbol ToneEffect::Symbol{ XO("Tone") };
 
 ToneEffect::ToneEffect()
-    : ToneGenBase(false), GeneratorEffect(mProjectRate, mT0, mT1)
+    : ToneGenBase(false), GeneratorEffect(mT0, mT1)
 {}
 
 ComponentInterfaceSymbol ToneEffect::GetSymbol() const

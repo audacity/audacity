@@ -14,7 +14,7 @@ DtmfViewModel::~DtmfViewModel()
 {
 }
 
-void DtmfViewModel::doReload()
+void DtmfViewModel::doEmitSignals()
 {
     emit amplitudeChanged();
     emit sequenceChanged();
