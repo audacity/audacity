@@ -6,15 +6,17 @@
 
 #include "iprojecthistory.h"
 
+#include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
-class Au3ProjectHistory : public IProjectHistory
+class Au3ProjectHistory : public IProjectHistory, public muse::async::Asyncable
 {
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     void init() override;

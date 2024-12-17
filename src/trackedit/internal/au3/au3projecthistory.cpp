@@ -12,10 +12,16 @@
 using namespace au::trackedit;
 using namespace au::au3;
 
+static const muse::actions::ActionCode PLAYBACK_STOP("stop");
+
 void au::trackedit::Au3ProjectHistory::init()
 {
     auto& project = projectRef();
     ::ProjectHistory::Get(project).InitialState();
+
+    globalContext()->playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus){
+        m_isUndoRedoAvailableChanged.notify();
+    });
 }
 
 bool au::trackedit::Au3ProjectHistory::undoAvailable()
@@ -26,6 +32,9 @@ bool au::trackedit::Au3ProjectHistory::undoAvailable()
 
 void au::trackedit::Au3ProjectHistory::undo()
 {
+    //! NOTE: playback has to be stopped before undoing
+    dispatcher()->dispatch(PLAYBACK_STOP);
+
     auto& project = projectRef();
     auto& undoManager = UndoManager::Get(project);
     undoManager.Undo(
@@ -44,6 +53,9 @@ bool au::trackedit::Au3ProjectHistory::redoAvailable()
 
 void au::trackedit::Au3ProjectHistory::redo()
 {
+    //! NOTE: playback has to be stopped before redoing
+    dispatcher()->dispatch(PLAYBACK_STOP);
+
     auto& project = projectRef();
     auto& undoManager = UndoManager::Get(project);
     undoManager.Redo(

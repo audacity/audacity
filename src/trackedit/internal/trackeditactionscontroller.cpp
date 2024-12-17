@@ -803,12 +803,13 @@ Channel<ActionCode> TrackeditActionsController::actionCheckedChanged() const
 
 bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) const
 {
+    bool isPlaybackRunning = globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running;
     if (globalContext()->currentProject() == nullptr) {
         return false;
     } else if (actionCode == UNDO) {
-        return trackeditInteraction()->canUndo();
+        return trackeditInteraction()->canUndo() && !isPlaybackRunning;
     } else if (actionCode == REDO) {
-        return trackeditInteraction()->canRedo();
+        return trackeditInteraction()->canRedo() && !isPlaybackRunning;
     }
 
     return true;
