@@ -3,24 +3,45 @@
 */
 #include "effectsactionscontroller.h"
 #include "effects/effects_base/effectstypes.h"
+#include "effectsuiactions.h"
 
 #include "wx/string.h"
 
 #include "log.h"
 
+using namespace muse::actions;
 using namespace au::effects;
 
 void EffectsActionsController::init()
 {
-    dispatcher()->reg(this, "effect-open", this, &EffectsActionsController::doEffect);
-    dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
-    dispatcher()->reg(this, "realtimeeffect-add", this, &EffectsActionsController::addRealtimeEffect);
-    dispatcher()->reg(this, "realtimeeffect-remove", this, &EffectsActionsController::removeRealtimeEffect);
-    dispatcher()->reg(this, "realtimeeffect-replace", this, &EffectsActionsController::replaceRealtimeEffect);
+    m_uiActions = std::make_shared<EffectsUiActions>(shared_from_this());
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this](){
+        registerActions();
+    });
+
+    registerActions();
 
     effectExecutionScenario()->lastProcessorIsNowAvailable().onNotify(this, [this] {
         m_canReceiveActionsChanged.send({ "repeat-last-effect" });
     });
+}
+
+void EffectsActionsController::registerActions()
+{
+    dispatcher()->unReg(this);
+
+    EffectMetaList effects = effectsProvider()->effectMetaList();
+    for (const EffectMeta& e : effects) {
+        dispatcher()->reg(this, makeEffectOpenAction(e.id), [this](const ActionQuery& q) {
+            onEffectTriggered(q);
+        });
+    }
+
+    dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
+    dispatcher()->reg(this, "realtimeeffect-add", this, &EffectsActionsController::addRealtimeEffect);
+    dispatcher()->reg(this, "realtimeeffect-remove", this, &EffectsActionsController::removeRealtimeEffect);
+    dispatcher()->reg(this, "realtimeeffect-replace", this, &EffectsActionsController::replaceRealtimeEffect);
 
     // presets
     dispatcher()->reg(this, "action://effects/presets/apply", this, &EffectsActionsController::applyPreset);
@@ -28,17 +49,20 @@ void EffectsActionsController::init()
     dispatcher()->reg(this, "action://effects/presets/delete", this, &EffectsActionsController::deletePreset);
     dispatcher()->reg(this, "action://effects/presets/import", this, &EffectsActionsController::importPreset);
     dispatcher()->reg(this, "action://effects/presets/export", this, &EffectsActionsController::exportPreset);
+
+    m_uiActions->reload();
+    uiActionsRegister()->reg(m_uiActions);
 }
 
-void EffectsActionsController::doEffect(const muse::actions::ActionData& args)
+void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(args.count() > 0) {
+    muse::String effectId = muse::String::fromStdString(q.param("effectId").toString());
+    IF_ASSERT_FAILED(!effectId.empty()) {
         return;
     }
 
     playback()->player()->stop();
 
-    muse::String effectId = args.arg<muse::String>(0);
     effectExecutionScenario()->performEffect(effectId);
 }
 

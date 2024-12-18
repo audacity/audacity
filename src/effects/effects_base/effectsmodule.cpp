@@ -40,7 +40,6 @@ void EffectsModule::registerExports()
     m_provider = std::make_shared<EffectsProvider>();
     m_configuration = std::make_shared<EffectsConfiguration>();
     m_actionsController = std::make_shared<EffectsActionsController>();
-    m_uiActions = std::make_shared<EffectsUiActions>(m_actionsController);
     m_realtimeEffectService = std::make_shared<RealtimeEffectService>();
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
@@ -56,10 +55,6 @@ void EffectsModule::registerExports()
 
 void EffectsModule::resolveImports()
 {
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://effects/viewer"), "Audacity/Effects/EffectsViewerDialog.qml");
@@ -85,7 +80,6 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
 
     m_configuration->init();
     m_actionsController->init();
-    m_uiActions->init();
     m_provider->init();
     m_realtimeEffectService->init();
 }

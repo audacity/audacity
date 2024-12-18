@@ -27,7 +27,6 @@ private:
     std::shared_ptr<EffectsProvider> m_provider;
     std::shared_ptr<EffectsConfiguration> m_configuration;
     std::shared_ptr<EffectsActionsController> m_actionsController;
-    std::shared_ptr<EffectsUiActions> m_uiActions;
     std::shared_ptr<RealtimeEffectService> m_realtimeEffectService;
 };
 }

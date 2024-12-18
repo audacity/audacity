@@ -7,6 +7,7 @@
 
 #include "global/types/string.h"
 #include "global/types/ratio.h"
+#include "actions/actiontypes.h"
 
 class Effect;
 class EffectInstanceEx;
@@ -44,6 +45,12 @@ struct EffectMeta {
 };
 
 using EffectMetaList = std::vector<EffectMeta>;
+
+constexpr const char16_t* EFFECT_OPEN_ACTION = u"action://effects/open?effectId=%1";
+inline muse::actions::ActionQuery makeEffectOpenAction(const EffectId& id)
+{
+    return muse::actions::ActionQuery(muse::String(EFFECT_OPEN_ACTION).arg(id));
+}
 
 struct EffectCategory {
     muse::String id;
