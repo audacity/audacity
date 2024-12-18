@@ -22,7 +22,7 @@ class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::
 public:
     EffectsUiActions(std::shared_ptr<EffectsActionsController> controller);
 
-    void init();
+    void reload();
 
     const muse::ui::UiActionList& actionsList() const override;
 
@@ -35,7 +35,7 @@ public:
     muse::async::Channel<muse::ui::UiActionList> actionsChanged() const override;
 
 private:
-    static muse::ui::UiActionList m_actions;
+    muse::ui::UiActionList m_actions;
     const std::shared_ptr<EffectsActionsController> m_controller;
     muse::async::Channel<muse::ui::UiActionList> m_actionsChanged;
 };

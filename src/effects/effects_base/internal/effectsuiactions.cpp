@@ -3,7 +3,6 @@
  */
 #include "effectsuiactions.h"
 
-#include "ui/view/iconcodes.h"
 #include "context/uicontext.h"
 #include "context/shortcutcontext.h"
 #include "types/translatablestring.h"
@@ -17,11 +16,7 @@ using namespace muse::actions;
 static const TranslatableString REPEAT_LAST_EFFECT_DEF_TITLE("action", "Repeat last effect");
 static const TranslatableString REPEAT_LAST_EFFECT_TITLE("action", "Repeat %1");
 
-UiActionList EffectsUiActions::m_actions = {
-    UiAction("effect-open",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY
-             ),
+static UiActionList STATIC_ACTIONS = {
     UiAction("repeat-last-effect",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -82,7 +77,7 @@ EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> con
 {
 }
 
-void EffectsUiActions::init()
+void EffectsUiActions::reload()
 {
     effectExecutionScenario()->lastProcessorIdChanged().onReceive(this, [this](const EffectId& effectId) {
         const auto it = std::find_if(m_actions.begin(), m_actions.end(), [](const UiAction& action) {
@@ -94,6 +89,32 @@ void EffectsUiActions::init()
         const auto effectTitle = effectsProvider()->meta(effectId).title;
         it->title = REPEAT_LAST_EFFECT_TITLE.arg(effectTitle);
         m_actionsChanged.send({ *it });
+    });
+
+    auto makeActions = [this](const EffectMetaList& effects) {
+        m_actions.clear();
+        m_actions.reserve(effects.size() + STATIC_ACTIONS.size());
+
+        for (const EffectMeta& e : effects) {
+            UiAction action;
+            action.code = makeEffectOpenAction(e.id).toString();
+            action.uiCtx = context::UiCtxProjectOpened;
+            action.scCtx = context::CTX_PROJECT_FOCUSED;
+            action.description = TranslatableString::untranslatable(e.description);
+            action.title = TranslatableString::untranslatable(e.title);
+
+            m_actions.push_back(std::move(action));
+        }
+
+        m_actions.insert(m_actions.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());
+    };
+
+    EffectMetaList metaList = effectsProvider()->effectMetaList();
+    makeActions(metaList);
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this, makeActions]() {
+        EffectMetaList metaList = effectsProvider()->effectMetaList();
+        makeActions(metaList);
     });
 }
 

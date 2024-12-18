@@ -10,6 +10,7 @@
 
 #include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
+#include "ui/iuiactionsregister.h"
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
@@ -19,9 +20,12 @@
 #include "playback/iplayback.h"
 
 namespace au::effects {
-class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable
+class EffectsUiActions;
+class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable,
+    public std::enable_shared_from_this<EffectsActionsController>
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
     muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<IEffectsProvider> effectsProvider;
@@ -36,7 +40,9 @@ public:
     muse::async::Channel<muse::actions::ActionCodeList> canReceiveActionsChanged() const;
 
 private:
-    void doEffect(const muse::actions::ActionData& args);
+    void registerActions();
+
+    void onEffectTriggered(const muse::actions::ActionQuery& q);
     void repeatLastEffect();
     void addRealtimeEffect(const muse::actions::ActionData& args);
     void removeRealtimeEffect(const muse::actions::ActionData& args);
@@ -48,6 +54,7 @@ private:
     void importPreset(const muse::actions::ActionData& args);
     void exportPreset(const muse::actions::ActionData& args);
 
+    std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;
 };
 }
