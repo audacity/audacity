@@ -2054,6 +2054,7 @@ void WaveTrack::InsertSilence(double t, double len)
       auto clip = CreateClip(0);
       clip->InsertSilence(0, len);
       // use No-fail-guarantee
+      clip->SetPlayStartTime(t);
       InsertInterval(move(clip), true);
    }
    else

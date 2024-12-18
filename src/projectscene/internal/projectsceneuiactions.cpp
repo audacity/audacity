@@ -128,6 +128,12 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              TranslatableString("action", "Pinned play head"),
              Checkable::Yes
              ),
+    UiAction("insert-silence",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Insert Silence"),
+             TranslatableString("action", "Insert Silence")
+             ),
     // clip
     UiAction("clip-properties",
              au::context::UiCtxAny,

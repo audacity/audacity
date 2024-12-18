@@ -30,6 +30,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/insertsilencemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/insertsilencemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/common/customcursor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/customcursor.h
 

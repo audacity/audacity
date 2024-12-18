@@ -79,6 +79,8 @@ public:
     void moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction) override;
     void moveTracksTo(const TrackIdList& trackIds, int to) override;
 
+    void insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
+
     void undo() override;
     bool canUndo() override;
     void redo() override;
@@ -103,6 +105,7 @@ private:
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+    void doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
 
     bool splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);

@@ -4,6 +4,7 @@
 
 #include "ProjectRate.h"
 #include "TempoChange.h"
+#include "TimeWarper.h"
 #include "QualitySettings.h"
 
 #include "global/types/number.h"
@@ -84,7 +85,8 @@ Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track
     return pFirstTrack->SharedPointer();
 }
 
-TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const
+TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                                          size_t clipboardTracksSize) const
 {
     //! NOTE: determine tracks to which clipboard content will be pasted,
     //! depending on clipboard size and currently selected tracks
@@ -101,7 +103,8 @@ TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Trac
     return destinationTrackIds;
 }
 
-TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const
+TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                                    size_t clipboardTracksSize) const
 {
     TrackIdList result = destinationTrackIds;
     bool collecting = false;
@@ -404,7 +407,6 @@ bool Au3Interaction::silenceTracksData(const std::vector<trackedit::TrackId>& tr
         IF_ASSERT_FAILED(waveTrack) {
             return false;
         }
-
         waveTrack->Silence(begin, end, {});
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -544,7 +546,7 @@ bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool opt
 
 void Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
-    muse::Concurrent::run([this, clipKey](){
+    muse::Concurrent::run([this, clipKey]() {
         m_progress->started.notify();
 
         muse::ProgressResult result;
@@ -1341,6 +1343,61 @@ void Au3Interaction::moveTracksTo(const TrackIdList& trackIds, int to)
     }
 
     projectHistory()->pushHistoryState("Move track", "Move track");
+}
+
+void Au3Interaction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
+{
+    if (trackIds.empty()) {
+        const auto prj = globalContext()->currentTrackeditProject();
+        auto& tracks = Au3TrackList::Get(projectRef());
+        auto& trackFactory = ::WaveTrackFactory::Get(projectRef());
+
+        sampleFormat defaultFormat = QualitySettings::SampleFormatChoice();
+        auto rate = ::ProjectRate::Get(projectRef()).GetRate();
+
+        auto track = trackFactory.Create(defaultFormat, rate);
+        track->SetName(tracks.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
+        tracks.Add(track, ::TrackList::DoAssignId::Yes,
+                   ::TrackList::EventPublicationSynchrony::Synchronous);
+        prj->notifyAboutTrackAdded(DomConverter::track(track.get()));
+        doInsertSilence({ track->GetId() }, begin, end, duration);
+    } else {
+        doInsertSilence(trackIds, begin, end, duration);
+    }
+
+    projectHistory()->pushHistoryState(muse::trc("trackedit", "Insert silence"), muse::trc("trackedit", "Insert silence"));
+}
+
+void Au3Interaction::doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
+{
+    const auto prj = globalContext()->currentTrackeditProject();
+
+    for (const auto& trackId : trackIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        if (!muse::is_zero(duration)) {
+            PasteTimeWarper warper{ end, begin + duration };
+
+            auto copy = waveTrack->EmptyCopy();
+
+            copy->InsertSilence(0.0, duration);
+            copy->Flush();
+            bool preserveSplits = true;
+            bool mergeExtraSplits = true;
+            waveTrack->ClearAndPaste(begin, end, *copy, preserveSplits, mergeExtraSplits, &warper);
+            waveTrack->Flush();
+        } else {
+            // If the duration is zero, there's no need to actually
+            // generate anything
+            waveTrack->Clear(begin, end);
+        }
+
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
 }
 
 bool Au3Interaction::canMoveTrack(const TrackId trackId, const TrackMoveDirection direction)

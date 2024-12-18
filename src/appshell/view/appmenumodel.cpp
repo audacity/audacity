@@ -733,6 +733,7 @@ MenuItemList AppMenuModel::makeEffectsItems()
         makeMenuItem("favourite-effect-1"),
         makeMenuItem("favourite-effect-2"),
         makeMenuItem("favourite-effect-3"),
+        makeMenuItem("insert-silence"),
         makeSeparator(),
     };
 

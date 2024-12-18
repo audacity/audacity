@@ -18,6 +18,7 @@
 
 #include "view/common/tracksviewstatemodel.h"
 #include "view/common/customcursor.h"
+#include "view/common/insertsilencemodel.h"
 
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/toolbars/undoredotoolbarmodel.h"
@@ -95,6 +96,8 @@ void ProjectSceneModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://projectscene/editpitchandspeed"),
                            "Audacity/ProjectScene/clipsview/pitchandspeed/PitchAndSpeedChangeDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://projectscene/insertsilence"),
+                           "Audacity/ProjectScene/common/InsertSilence.qml");
     }
 }
 
@@ -107,6 +110,7 @@ void ProjectSceneModule::registerUiTypes()
     // common
     qmlRegisterType<TracksViewStateModel>("Audacity.ProjectScene", 1, 0, "TracksViewStateModel");
     qmlRegisterType<CustomCursor>("Audacity.ProjectScene", 1, 0, "CustomCursor");
+    qmlRegisterType<InsertSilenceModel>("Audacity.ProjectScene", 1, 0, "InsertSilenceModel");
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
