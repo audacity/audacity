@@ -97,7 +97,6 @@ private:
                      bool createThumbnail = true);
 
     void markAsSaved(const muse::io::path_t& path);
-    void unmarkAsSaved(const muse::io::path_t& path);
     void setNeedSave(bool needSave);
 
     muse::async::Notification m_aboutCloseBegin;

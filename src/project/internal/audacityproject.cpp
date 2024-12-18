@@ -215,6 +215,7 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     case SaveMode::SaveCopy: {
         muse::io::path_t savePath = path;
         muse::io::path_t previousPath = m_path;
+        bool previousIsNewlyCreated = m_isNewlyCreated;
         if (savePath.empty()) {
             IF_ASSERT_FAILED(!m_path.empty()) {
                 return false;
@@ -225,15 +226,18 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
 
         std::string suffix = io::suffix(savePath);
 
-        markAsSaved(savePath);
+        setPath(savePath);
         Ret ret = saveProject(savePath, suffix);
         if (ret) {
             if (saveMode == SaveMode::SaveCopy) {
-                unmarkAsSaved(previousPath);
+                setPath(previousPath);
+            }
+            else {
+                markAsSaved(savePath);
             }
         }
         else {
-            unmarkAsSaved(previousPath);
+            setPath(previousPath);
         }
 
         return ret;
@@ -407,14 +411,6 @@ void Audacity4Project::markAsSaved(const muse::io::path_t& path)
     setPath(path);
 
     // m_masterNotation->notation()->undoStack()->stackChanged().notify();
-}
-
-void Audacity4Project::unmarkAsSaved(const muse::io::path_t& path)
-{
-    TRACEFUNC;
-
-    m_isNewlyCreated = true;
-    setPath(path);
 }
 
 void Audacity4Project::setNeedSave(bool needSave)
