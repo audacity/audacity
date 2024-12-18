@@ -44,6 +44,7 @@ public:
     explicit ProjectPropertiesModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
+    Q_INVOKABLE void onThumbnailCreated(bool success);
 
     QVariant data(const QModelIndex& index, int role) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;

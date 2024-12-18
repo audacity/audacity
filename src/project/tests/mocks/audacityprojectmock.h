@@ -34,6 +34,7 @@ public:
     MOCK_METHOD(muse::async::Notification, needSaveChanged, (), (const, override));
     MOCK_METHOD(muse::Ret, save, (const muse::io::path_t& path, SaveMode saveMode), (override));
     MOCK_METHOD(muse::async::Notification, captureThumbnailRequested, (), (const, override));
+    MOCK_METHOD(void, onThumbnailCreated, (bool success), (override));
 
     MOCK_METHOD(const au::trackedit::ITrackeditProjectPtr, trackeditProject, (), (const, override));
 

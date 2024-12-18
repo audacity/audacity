@@ -56,6 +56,11 @@ void ProjectPropertiesModel::init()
     load();
 }
 
+void ProjectPropertiesModel::onThumbnailCreated(bool success)
+{
+   m_project->onThumbnailCreated(success);
+}
+
 void ProjectPropertiesModel::load()
 {
     beginResetModel();
