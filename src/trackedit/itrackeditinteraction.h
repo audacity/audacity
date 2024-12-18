@@ -68,6 +68,9 @@ public:
     virtual bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool completed) = 0;
     virtual bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool completed) = 0;
+    virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
+    virtual std::optional<secs_t> getMostLeftClipStartTime(const ClipKeyList& clipKeys) const = 0;
+
     virtual void newMonoTrack() = 0;
     virtual void newStereoTrack() = 0;
     virtual void newLabelTrack() = 0;
@@ -75,12 +78,13 @@ public:
     virtual void duplicateTracks(const TrackIdList& trackIds) = 0;
     virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
     virtual void moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
-    virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
-    virtual std::optional<secs_t> getMostLeftClipStartTime(const ClipKeyList& clipKeys) const = 0;
+
     virtual void undo() = 0;
     virtual bool canUndo() = 0;
     virtual void redo() = 0;
     virtual bool canRedo() = 0;
+
+    virtual void insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) = 0;
 
     virtual void toggleStretchToMatchProjectTempo(const ClipKey& clipKey) = 0;
 

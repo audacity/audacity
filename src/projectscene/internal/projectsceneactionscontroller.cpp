@@ -22,6 +22,7 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, "update-display-while-playing", this, &ProjectSceneActionsController::updateDisplayWhilePlaying);
     dispatcher()->reg(this, "pinned-play-head", this, &ProjectSceneActionsController::pinnedPlayHead);
     dispatcher()->reg(this, CLIP_PITCH_AND_SPEED_CODE, this, &ProjectSceneActionsController::openClipPitchAndSpeedEdit);
+    dispatcher()->reg(this, "insert-silence", this, &ProjectSceneActionsController::insertSilence);
 }
 
 void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -85,6 +86,13 @@ void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& 
     query.addParam("focusItemName", muse::Val("pitch"));
 
     interactive()->open(query);
+}
+
+void ProjectSceneActionsController::insertSilence(const muse::actions::ActionData& args)
+{
+    muse::UriQuery query("audacity://projectscene/insertsilence");
+
+    auto rv = interactive()->open(query);
 }
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const

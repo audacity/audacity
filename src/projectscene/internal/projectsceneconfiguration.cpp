@@ -2,6 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 #include "projectsceneconfiguration.h"
+#include "NumericConverterFormats.h"
 #include "types/projectscenetypes.h"
 
 #include "settings.h"
@@ -13,6 +14,8 @@ static const std::string moduleName("projectscene");
 static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
 static const muse::Settings::Key TIMELINE_RULER_MODE(moduleName, "projectscene/timelineRulerMode");
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
+static const muse::Settings::Key INSERT_SILENCE_DURATION(moduleName, "projectscene/insertSilenceDuration");
+static const muse::Settings::Key INSERT_SILENCE_DURATION_FORMAT(moduleName, "projectscene/insertSilenceDurationFormat");
 
 void ProjectSceneConfiguration::init()
 {
@@ -22,6 +25,10 @@ void ProjectSceneConfiguration::init()
     });
 
     muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(6));
+
+    muse::settings()->setDefaultValue(INSERT_SILENCE_DURATION, muse::Val(30));
+    muse::settings()->setDefaultValue(INSERT_SILENCE_DURATION_FORMAT,
+                                      muse::Val(NumericConverterFormats::DefaultSelectionFormat().Translation().ToStdString()));
 
     muse::settings()->setDefaultValue(TIMELINE_RULER_MODE, muse::Val(TimelineRulerMode::MINUTES_AND_SECONDS));
     muse::settings()->valueChanged(TIMELINE_RULER_MODE).onReceive(nullptr, [this](const muse::Val& val) {
@@ -42,6 +49,26 @@ void ProjectSceneConfiguration::setVerticalRulersVisible(bool visible)
 muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleChanged() const
 {
     return m_isVerticalRulersVisibleChanged;
+}
+
+au::trackedit::secs_t ProjectSceneConfiguration::insertSilenceDuration() const
+{
+    return muse::settings()->value(INSERT_SILENCE_DURATION).toDouble();
+}
+
+void ProjectSceneConfiguration::setInsertSilenceDuration(const trackedit::secs_t duration)
+{
+    muse::settings()->setSharedValue(INSERT_SILENCE_DURATION, muse::Val(duration));
+}
+
+std::string ProjectSceneConfiguration::insertSilenceDurationFormat() const
+{
+    return muse::settings()->value(INSERT_SILENCE_DURATION_FORMAT).toString();
+}
+
+void ProjectSceneConfiguration::setInsertSilenceDurationFormat(const std::string& format)
+{
+    muse::settings()->setSharedValue(INSERT_SILENCE_DURATION_FORMAT, muse::Val(format));
 }
 
 double ProjectSceneConfiguration::zoom() const
