@@ -51,14 +51,14 @@ const EffectParameterMethods& ToneGenBase::Parameters() const
    static CapturedParameters<
       ToneGenBase, Frequency, Amplitude, Waveform, Interp>
       toneParameters { postSet };
-   if (mChirp)
+   if (mType == Type::Chirp)
       return chirpParameters;
    else
       return toneParameters;
 }
 
-ToneGenBase::ToneGenBase(bool isChirp)
-    : mChirp { isChirp }
+ToneGenBase::ToneGenBase(Type type)
+    : mType { type }
 {
    Parameters().Reset(*this);
 
@@ -67,7 +67,7 @@ ToneGenBase::ToneGenBase(bool isChirp)
 
    // Chirp varies over time so must use selected duration.
    // TODO: When previewing, calculate only the first 'preview length'.
-   if (isChirp)
+   if (type == Type::Chirp)
       SetLinearEffectFlag(false);
    else
       SetLinearEffectFlag(true);
@@ -212,7 +212,7 @@ size_t ToneGenBase::ProcessBlock(
 
 void ToneGenBase::PostSet()
 {
-   if (!mChirp)
+   if (mType == Type::Tone)
    {
       mFrequency1 = mFrequency0;
       mAmplitude1 = mAmplitude0;

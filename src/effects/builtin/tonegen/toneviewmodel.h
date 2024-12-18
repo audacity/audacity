@@ -11,25 +11,39 @@ class ToneViewModel : public GeneratorEffectModel
 {
     Q_OBJECT
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged)
-    Q_PROPERTY(double amplitude READ amplitude WRITE prop_setAmplitude NOTIFY amplitudeChanged)
-    Q_PROPERTY(double frequency READ frequency WRITE prop_setFrequency NOTIFY frequencyChanged)
+    Q_PROPERTY(double amplitudeStart READ amplitudeStart WRITE prop_setAmplitudeStart NOTIFY amplitudeStartChanged)
+    Q_PROPERTY(double amplitudeEnd READ amplitudeEnd WRITE prop_setAmplitudeEnd NOTIFY amplitudeEndChanged)
+    Q_PROPERTY(double frequencyStart READ frequencyStart WRITE prop_setFrequencyStart NOTIFY frequencyStartChanged)
+    Q_PROPERTY(double frequencyEnd READ frequencyEnd WRITE prop_setFrequencyEnd NOTIFY frequencyEndChanged)
     Q_PROPERTY(int waveform READ waveform WRITE prop_setWaveform NOTIFY waveformChanged)
+    Q_PROPERTY(int interpolation READ interpolation WRITE prop_setInterpolation NOTIFY interpolationChanged)
     Q_PROPERTY(QList<QString> waveforms READ waveforms CONSTANT)
+    Q_PROPERTY(QList<QString> interpolationTypes READ interpolationTypes CONSTANT)
 
 public:
     bool isApplyAllowed() const;
     QList<QString> waveforms() const;
-    double amplitude() const;
-    void prop_setAmplitude(double newAmplitude);
-    double frequency() const;
-    void prop_setFrequency(double newFrequency);
+    QList<QString> interpolationTypes() const;
+    double amplitudeStart() const;
+    void prop_setAmplitudeStart(double newAmplitude);
+    double amplitudeEnd() const;
+    void prop_setAmplitudeEnd(double newAmplitude);
+    double frequencyStart() const;
+    void prop_setFrequencyStart(double newFrequency);
+    double frequencyEnd() const;
+    void prop_setFrequencyEnd(double newFrequency);
     int waveform() const;
     void prop_setWaveform(int newWaveform);
+    int interpolation() const;
+    void prop_setInterpolation(int newInterpolation);
 
 signals:
-    void amplitudeChanged();
-    void frequencyChanged();
+    void amplitudeStartChanged();
+    void amplitudeEndChanged();
+    void frequencyStartChanged();
+    void frequencyEndChanged();
     void waveformChanged();
+    void interpolationChanged();
     void isApplyAllowedChanged();
 
 private:

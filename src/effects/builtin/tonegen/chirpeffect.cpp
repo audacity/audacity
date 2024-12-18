@@ -8,7 +8,7 @@ using namespace au::effects;
 const ComponentInterfaceSymbol ChirpEffect::Symbol{ XO("Chirp") };
 
 ChirpEffect::ChirpEffect()
-    : ToneGenBase(true)
+    : ToneEffect(Type::Chirp)
 {}
 
 ComponentInterfaceSymbol ChirpEffect::GetSymbol() const

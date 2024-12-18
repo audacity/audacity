@@ -23,17 +23,32 @@ public:
         Triangle,
     };
 
+    enum class Interpolation
+    {
+        Linear,
+        Logarithmic,
+    };
+
     static const ComponentInterfaceSymbol Symbol;
 
     ComponentInterfaceSymbol GetSymbol() const override;
 
     Waveform waveform() const;
     void setWaveform(Waveform waveform);
-    double amplitude() const;
-    void setAmplitude(double amplitude);
-    double frequency() const;
-    void setFrequency(double frequency);
+    Interpolation interpolation() const;
+    void setInterpolation(Interpolation interpolation);
+    double amplitudeStart() const;
+    void setAmplitudeStart(double amplitude);
+    double amplitudeEnd() const;
+    void setAmplitudeEnd(double amplitude);
+    double frequencyStart() const;
+    void setFrequencyStart(double frequency);
+    double frequencyEnd() const;
+    void setFrequencyEnd(double frequency);
     bool isApplyAllowed() const;
+
+protected:
+    ToneEffect(Type type);
 
 private:
     void doInit() override;

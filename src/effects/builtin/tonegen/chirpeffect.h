@@ -4,9 +4,11 @@
 #pragma once
 
 #include "libraries/lib-builtin-effects/ToneGenBase.h"
+#include "../common/generatoreffect.h"
+#include "toneeffect.h"
 
 namespace au::effects {
-class ChirpEffect : public ::ToneGenBase
+class ChirpEffect : public ToneEffect
 {
 public:
     ChirpEffect();

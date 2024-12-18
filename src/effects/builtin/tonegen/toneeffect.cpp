@@ -9,7 +9,11 @@ using namespace au::effects;
 const ComponentInterfaceSymbol ToneEffect::Symbol{ XO("Tone") };
 
 ToneEffect::ToneEffect()
-    : ToneGenBase(false), GeneratorEffect(mT0, mT1)
+    : ToneGenBase(Type::Tone), GeneratorEffect(mT0, mT1)
+{}
+
+ToneEffect::ToneEffect(Type type)
+    : ToneGenBase(type), GeneratorEffect(mT0, mT1)
 {}
 
 ComponentInterfaceSymbol ToneEffect::GetSymbol() const
@@ -20,8 +24,10 @@ ComponentInterfaceSymbol ToneEffect::GetSymbol() const
 void ToneEffect::doInit()
 {
     // The tone generator is a chirp with constant amplitude and frequency.
-    mAmplitude1 = mAmplitude0;
-    mFrequency1 = mFrequency0;
+    if (mType == Type::Tone) {
+        mAmplitude1 = mAmplitude0;
+        mFrequency1 = mFrequency0;
+    }
 }
 
 ToneEffect::Waveform ToneEffect::waveform() const
@@ -65,24 +71,79 @@ void ToneEffect::setWaveform(Waveform waveform)
     }
 }
 
-double ToneEffect::amplitude() const
+ToneEffect::Interpolation ToneEffect::interpolation() const
+{
+    switch (mInterpolation) {
+    case kLinear:
+        return Interpolation::Linear;
+    case kLogarithmic:
+        return Interpolation::Logarithmic;
+    default:
+        DO_ASSERT(false);
+    }
+    return Interpolation::Linear;
+}
+
+void ToneEffect::setInterpolation(Interpolation interpolation)
+{
+    switch (interpolation) {
+    case Interpolation::Linear:
+        mInterpolation = kLinear;
+        break;
+    case Interpolation::Logarithmic:
+        mInterpolation = kLogarithmic;
+        break;
+    default:
+        DO_ASSERT(false);
+    }
+}
+
+double ToneEffect::amplitudeStart() const
 {
     return mAmplitude0;
 }
 
-void ToneEffect::setAmplitude(double amplitude)
+void ToneEffect::setAmplitudeStart(double amplitude)
 {
-    mAmplitude0 = mAmplitude1 = amplitude;
+    mAmplitude0 = amplitude;
+    if (mType == Type::Tone) {
+        mAmplitude1 = amplitude;
+    }
 }
 
-double ToneEffect::frequency() const
+double ToneEffect::amplitudeEnd() const
+{
+    return mAmplitude1;
+}
+
+void ToneEffect::setAmplitudeEnd(double amplitude)
+{
+    DO_ASSERT(mType == Type::Chirp);
+    mAmplitude1 = amplitude;
+}
+
+double ToneEffect::frequencyStart() const
 {
     return mFrequency0;
 }
 
-void ToneEffect::setFrequency(double frequency)
+void ToneEffect::setFrequencyStart(double frequency)
 {
-    mFrequency0 = mFrequency1 = frequency;
+    mFrequency0 = frequency;
+    if (mType == Type::Tone) {
+        mFrequency1 = frequency;
+    }
+}
+
+double ToneEffect::frequencyEnd() const
+{
+    return mFrequency1;
+}
+
+void ToneEffect::setFrequencyEnd(double frequency)
+{
+    DO_ASSERT(mType == Type::Chirp);
+    mFrequency1 = frequency;
 }
 
 bool ToneEffect::isApplyAllowed() const
@@ -93,9 +154,11 @@ bool ToneEffect::isApplyAllowed() const
     static_assert(StartAmp.min == EndAmp.min);
     static_assert(StartAmp.max == EndAmp.max);
     constexpr auto frequencyMin = StartFreq.min;
-    constexpr auto frequencyMax = StartFreq.max;
     constexpr auto amplitudeMin = StartAmp.min;
     constexpr auto amplitudeMax = StartAmp.max;
-    return frequencyMin <= frequency() && frequency() <= frequencyMax
-           && amplitudeMin <= amplitude() && amplitude() <= amplitudeMax;
+    const auto frequencyMax = mProjectRate / 2;
+    return frequencyMin <= frequencyStart() && frequencyStart() <= frequencyMax
+           && frequencyMin <= frequencyEnd() && frequencyEnd() <= frequencyMax
+           && amplitudeMin <= amplitudeStart() && amplitudeStart() <= amplitudeMax
+           && amplitudeMin <= amplitudeEnd() && amplitudeEnd() <= amplitudeMax;
 }
