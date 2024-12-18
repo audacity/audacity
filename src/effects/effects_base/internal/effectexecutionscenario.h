@@ -48,6 +48,9 @@ private:
     std::pair<std::string, std::string> makeErrorMsg(const muse::Ret& ret, const EffectId& effectId);
     muse::Ret performEffectWithShowError(au3::Au3Project& project, const EffectId& effectId, unsigned int flags);
     muse::Ret doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned int flags);
+    muse::Ret performEffectOnTimeSelection(au3::Au3Project& project, Effect&, const std::shared_ptr<EffectInstanceEx>&, EffectSettings&);
+    std::optional<trackedit::ClipId> performEffectOnSingleClip(au3::Au3Project&, Effect&, const std::shared_ptr<EffectInstanceEx>&,
+                                                               EffectSettings&, trackedit::TrackId trackId, muse::Ret&);
     muse::Ret performEffectOnEachSelectedClip(au3::Au3Project& project, Effect&, const std::shared_ptr<EffectInstanceEx>&, EffectSettings&);
     au3::Au3Project& projectRef();
 

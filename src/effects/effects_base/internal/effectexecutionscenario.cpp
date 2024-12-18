@@ -83,7 +83,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     secs_t t1;
     bool isSelection = false;
 
-    const auto numSelectedClips = selectionController()->selectedClips().size();
+    const trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
+    const auto numSelectedClips = selectedClips.size();
 
     {
         //! NOTE Step 1.2 - get effect
@@ -93,7 +94,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             return make_ret(Err::EffectMultipleClipSelectionNotSupported);
         }
 
-        if (selectionController()->hasSelectedClips()) {
+        if (numSelectedClips != 0) {
             // If multiple clips are selected, we have checked that the effect supports it, in which case these global time boundaries shouldn't be relevant.
             // If this is just a single-clip selection, though, that will just be start and end times of the selected clip.
             t0 = selectionController()->selectedClipStartTime();
@@ -243,9 +244,14 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! NOTE Step 6 - perform effect
     //! ============================================================================
     // common things used below
-    const Ret success = numSelectedClips > 1
-                        ? performEffectOnEachSelectedClip(project, *effect, pInstanceEx, *settings)
-                        : effectsProvider()->performEffect(project, effect, pInstanceEx, *settings);
+    Ret success;
+    if (numSelectedClips == 0) {
+        success = performEffectOnTimeSelection(project, *effect, pInstanceEx, *settings);
+    } else if (numSelectedClips == 1) {
+        performEffectOnSingleClip(project, *effect, pInstanceEx, *settings, selectedClips.front().trackId, success);
+    } else {
+        success = performEffectOnEachSelectedClip(project, *effect, pInstanceEx, *settings);
+    }
 
     //! ============================================================================
     //! NOTE Step 7 - cleanup
@@ -311,6 +317,29 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     return true;
 }
 
+muse::Ret EffectExecutionScenario::performEffectOnTimeSelection(au3::Au3Project& project, Effect& effect,
+                                                                const std::shared_ptr<EffectInstanceEx>& instance,
+                                                                EffectSettings& settings)
+{
+    return effectsProvider()->performEffect(project, &effect, instance, settings);
+}
+
+std::optional<au::trackedit::ClipId> EffectExecutionScenario::performEffectOnSingleClip(au3::Au3Project& project, Effect& effect,
+                                                                                        const std::shared_ptr<EffectInstanceEx>& instance,
+                                                                                        EffectSettings& settings,
+                                                                                        trackedit::TrackId trackId,
+                                                                                        muse::Ret& success)
+{
+    success = effectsProvider()->performEffect(project, &effect, instance, settings);
+    if (!success) {
+        return std::nullopt;
+    }
+    // It is possible that the backend decides to replace the processed clip with a new one.
+    // Since the selection spans only one clip, we want the originally selected clip to remain selected in appearance.
+    // Look for the clip on that track at that time - we should find the new one.
+    return selectionController()->setSelectedClip(trackId, effect.mT0);
+}
+
 muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Project& project, Effect& effect,
                                                                    const std::shared_ptr<EffectInstanceEx>& instance,
                                                                    EffectSettings& settings)
@@ -320,11 +349,13 @@ muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Proje
     // Make a copy of the selection state and restore it when leaving this scope.
     const trackedit::ClipKeyList clipsToProcess = selectionController()->selectedClips();
     const trackedit::TrackIdList tracksToProcess = selectionController()->selectedTracks();
+    trackedit::ClipKeyList clipsToReselect;
+    clipsToReselect.reserve(clipsToProcess.size());
 
     constexpr bool complete = true;
 
     Defer restoreTrackSelection([&] {
-        selectionController()->setSelectedClips(clipsToProcess, complete);
+        selectionController()->setSelectedClips(clipsToReselect, complete);
     });
 
     // Perform the effect on each selected clip
@@ -346,10 +377,16 @@ muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Proje
         effect.mT0 = waveClip->GetPlayStartTime();
         effect.mT1 = waveClip->GetPlayEndTime();
 
+        muse::Ret thisSuccess;
+        const auto newClipId = performEffectOnSingleClip(project, effect, instance, settings, clip.trackId, thisSuccess);
+
         // Keep the error message from the first failure, that should do.
-        const auto thisSuccess = effectsProvider()->performEffect(project, &effect, instance, settings);
         if (success && !thisSuccess) {
             success = thisSuccess;
+        }
+
+        if (newClipId) {
+            clipsToReselect.emplace_back(clip.trackId, *newClipId);
         }
     }
     return success;

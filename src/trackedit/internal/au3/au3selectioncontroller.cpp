@@ -135,7 +135,18 @@ void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool 
     setSelectedTracks(selectedTracks, complete);
 }
 
-void Au3SelectionController::addSelectedClip(const ClipKey &clipKey)
+std::optional<au::trackedit::ClipId> Au3SelectionController::setSelectedClip(trackedit::TrackId trackId, secs_t time)
+{
+    const auto& clip = au3::DomAccessor::findWaveClip(projectRef(), trackId, time);
+    if (!clip) {
+        return std::nullopt;
+    }
+
+    setSelectedClips({ { trackId, clip->GetId() } }, true);
+    return clip->GetId();
+}
+
+void Au3SelectionController::addSelectedClip(const ClipKey& clipKey)
 {
     auto selectedClips = m_selectedClips.val;
 
