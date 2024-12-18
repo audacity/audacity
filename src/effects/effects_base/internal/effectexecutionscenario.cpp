@@ -267,7 +267,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         //! NOTE Step 7.2 - update selected region after process
 
         //! Generators, and even some processors (e.g. tempo change), need an update of the selection.
-        if (success && numSelectedClips < 2 && (effect->mT1 >= effect->mT0)) {
+        if (success && numSelectedClips == 0 && (effect->mT1 >= effect->mT0)) {
             selectionController()->setDataSelectedStartTime(effect->mT0, true);
             selectionController()->setDataSelectedEndTime(effect->mT1, true);
         }
