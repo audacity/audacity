@@ -34,7 +34,10 @@ Rectangle {
             playCursor.visible = false
             content.grabToImage(function(result) {
                 playCursor.visible = true
-                result.saveToFile(project.thumbnailUrl)
+                console.log("Grabbed image: " + result)
+                console.log("Thumbnail url" + project.thumbnailUrl)
+                var success = result.saveToFile(project.thumbnailUrl)
+                project.onThumbnailCreated(success)
             })
         }
     }

@@ -43,9 +43,10 @@ public:
     muse::Ret openProject(const ProjectFile& file) override;
     bool isUrlSupported(const QUrl& url) const override;
     bool isFileSupported(const muse::io::path_t& path) const override;
-    bool closeOpenedProject(bool quitApp = false) override;
-    bool saveProject(const muse::io::path_t& path = muse::io::path_t()) override;
-    bool saveProjectLocally(const muse::io::path_t& filePath = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
+    muse::async::Promise<muse::Ret> closeOpenedProject() override;
+    
+    muse::async::Promise<muse::Ret> saveProject(SaveMode saveMode, SaveLocationType saveLocationType = SaveLocationType::Undefined, bool force = false);
+    muse::async::Promise<muse::Ret> saveProjectLocally(const muse::io::path_t& filePath = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
 
     const ProjectBeingDownloaded& projectBeingDownloaded() const override;
     muse::async::Notification projectBeingDownloadedChanged() const override;
@@ -60,6 +61,8 @@ private:
     void importProject();
     muse::Ret openProject(const muse::io::path_t& givenPath, const muse::String& displayNameOverride = muse::String());
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
+    void closeCurrentProject();
+
     //! TODO AU4
     // muse::Ret openAudacityUrl(const QUrl& url);
     muse::RetVal<IAudacityProjectPtr> loadProject(const muse::io::path_t& filePath);
@@ -68,8 +71,7 @@ private:
     muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);
 
     muse::Ret canSaveProject() const;
-    bool saveProject(SaveMode saveMode, SaveLocationType saveLocationType = SaveLocationType::Undefined, bool force = false);
-    bool saveProjectAt(const SaveLocation& saveLocation, SaveMode saveMode = SaveMode::Save, bool force = false);
+    muse::async::Promise<muse::Ret> saveProjectAt(const SaveLocation& saveLocation, SaveMode saveMode = SaveMode::Save, bool force = false);
 
     RecentFile makeRecentFile(IAudacityProjectPtr project);
     void clearRecentProjects();

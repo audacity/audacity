@@ -199,7 +199,7 @@ void Audacity4Project::setNeedAutoSave(bool val)
     m_needAutoSave = val;
 }
 
-Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
+async::Promise<Ret> Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
 {
     TRACEFUNC;
 
@@ -211,23 +211,12 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     case SaveMode::SaveCopy: {
         muse::io::path_t savePath = path;
         if (savePath.empty()) {
-            IF_ASSERT_FAILED(!m_path.empty()) {
-                return false;
-            }
-
             savePath = m_path;
         }
 
         std::string suffix = io::suffix(savePath);
 
-        Ret ret = saveProject(savePath, suffix);
-        if (ret) {
-            if (saveMode != SaveMode::SaveCopy) {
-                markAsSaved(savePath);
-            }
-        }
-
-        return ret;
+        return saveProject(savePath, suffix);
     }
     case SaveMode::AutoSave:
         std::string suffix = io::suffix(path);
@@ -243,39 +232,57 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
         return saveProject(path, suffix, false /*generateBackup*/, false /*createThumbnail*/);
     }
 
-    return make_ret(Err::UnknownError);
+    //return make_ret(Err::UnknownError);
 }
 
-async::Notification Audacity4Project::captureThumbnailRequested() const
-{
-    return m_captureThumbnailRequested;
-}
-
-Ret Audacity4Project::saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup, bool createThumbnail)
+async::Promise<Ret> Audacity4Project::saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup, bool createThumbnail)
 {
     return doSave(path, generateBackup, createThumbnail);
 }
 
-Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBackup, bool createThumbnail)
+async::Notification Audacity4Project::captureThumbnailRequested() const
+{
+    return thumbnailCreator()->captureThumbnailRequested();
+}
+
+void Audacity4Project::onThumbnailCreated(bool success)
+{
+    thumbnailCreator()->onThumbnailCreated(success);
+}
+
+async::Promise<Ret> Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBackup, bool createThumbnail)
 {
     TRACEFUNC;
 
     UNUSED(generateBackup);
 
-    if (createThumbnail) {
-        m_captureThumbnailRequested.notify();
-    }
+    return async::Promise<Ret>([this, savePath, createThumbnail](auto resolve, auto reject) {
+        if ((fileSystem()->exists(savePath) && !fileSystem()->isWritable(savePath))) {
+            LOGE() << "failed save, not writable path: " << savePath;
+            (void)resolve(make_ret(io::Err::FSWriteError));
+            return async::Promise<Ret>::Result::unchecked();
+        }
 
-    if ((fileSystem()->exists(savePath) && !fileSystem()->isWritable(savePath))) {
-        LOGE() << "failed save, not writable path: " << savePath;
-        return make_ret(io::Err::FSWriteError);
-    }
+        auto ret = m_au3Project->save(savePath);
+        if (!ret) {
+            (void)resolve(make_ret(Ret::Code::UnknownError));
+            return async::Promise<Ret>::Result::unchecked();
+        }
 
-    auto ret = m_au3Project->save(savePath);
-    if (ret) {
-        return make_ret(Ret::Code::Ok);
-    }
-    return muse::make_ret(muse::Ret::Code::UnknownError);
+        markAsSaved(savePath);
+
+        if (createThumbnail) {
+            thumbnailCreator()->createThumbnail()
+            .onResolve(this, [resolve](const Ret ret) {
+                (void)resolve(ret);
+            })
+            .onReject(this, [reject](int errCode, std::string text) {
+                (void)reject(errCode, text);
+            });
+        }
+
+        return async::Promise<Ret>::Result::unchecked();
+    }, async::Promise<Ret>::AsynchronyType::ProvidedByBody);
 
     //! TODO AU4
     // QString targetContainerPath = engraving::containerPath(path).toQString();

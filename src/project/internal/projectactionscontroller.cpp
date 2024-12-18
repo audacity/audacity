@@ -14,6 +14,7 @@
 #include "log.h"
 
 using namespace muse;
+using namespace muse::async;
 using namespace au::project;
 
 static const muse::Uri PROJECT_PAGE_URI("audacity://project");
@@ -43,8 +44,8 @@ void ProjectActionsController::init()
 
     dispatcher()->reg(this, "file-close", [this]() {
         //! TODO AU4
-        bool quitApp = false; //multiInstancesProvider()->instances().size() > 1;
-        closeOpenedProject(quitApp);
+        //multiInstancesProvider()->instances().size() > 1;
+        closeOpenedProject();
     });
 }
 
@@ -166,87 +167,68 @@ bool ProjectActionsController::isFileSupported(const muse::io::path_t& path) con
     return false;
 }
 
-bool ProjectActionsController::closeOpenedProject(bool quitApp)
+Promise<Ret> ProjectActionsController::closeOpenedProject()
 {
-    if (m_isProjectClosing) {
-        return false;
-    }
-
-    m_isProjectClosing = true;
-    DEFER {
-        m_isProjectClosing = false;
-    };
-
-    IAudacityProjectPtr project = globalContext()->currentProject();
-    if (!project) {
-        return true;
-    }
-
-    bool result = true;
-
-    au3::Au3Project* internalAu3Project = reinterpret_cast<au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-
-    if (UndoManager::Get(*internalAu3Project).UnsavedChanges()) {
-        IInteractive::Button btn = askAboutSavingProject(project);
-
-        if (btn == IInteractive::Button::Cancel) {
-            result = false;
-        } else if (btn == IInteractive::Button::Save) {
-            result = saveProject();
-        } else if (btn == IInteractive::Button::DontSave) {
-            result = true;
+    return Promise<Ret>([this](auto resolve, auto reject) {
+        if (m_isProjectClosing) {
+            (void) resolve(make_ret(Err::NoError));
+            return Promise<Ret>::Result::unchecked();
         }
-    }
 
-    if (result) {
-        interactive()->closeAllDialogs();
+        if (!currentProject()) {
+            LOGW() << "no current project";
+            (void)resolve(make_ret(Err::NoProjectError));
+            return Promise<Ret>::Result::unchecked();
+        }
 
-        project->close();
+        m_isProjectClosing = true;
 
-        globalContext()->setCurrentProject(nullptr);
+        au3::Au3Project* internalAu3Project = reinterpret_cast<au3::Au3Project*>(currentProject()->au3ProjectPtr());
+        if (UndoManager::Get(*internalAu3Project).UnsavedChanges()) {
+            IInteractive::Button btn = askAboutSavingProject(currentProject());
 
-        if (quitApp) {
-            //! NOTE: we need to call `quit` in the next event loop due to controlling the lifecycle of this method
-            muse::async::Async::call(this, [this](){
-                dispatcher()->dispatch("quit", actions::ActionData::make_arg1<bool>(false));
-            });
-        } else {
-            Ret ret = openPageIfNeed(HOME_PAGE_URI);
-            if (!ret) {
-                LOGE() << ret.toString();
+            if (btn == IInteractive::Button::Cancel) {
+                m_isProjectClosing = false;
+                (void)resolve(make_ret(Err::NoError));
+            } else if (btn == IInteractive::Button::Save) {
+                saveProject(SaveMode::Save)
+                .onResolve(this, [this, resolve](const Ret& ret) {
+                    closeCurrentProject();
+                    m_isProjectClosing = false;
+                    (void)resolve(ret);
+                })
+                .onReject(this, [this, reject](int errCode, std::string text) {
+                    m_isProjectClosing = false;
+                    (void)reject(errCode, text);
+                });
+            } else if (btn == IInteractive::Button::DontSave) {
+                closeCurrentProject();
+                m_isProjectClosing = false;
+                (void)resolve(make_ret(Err::NoError));
             }
         }
-    }
 
-    return result;
+        return Promise<Ret>::Result::unchecked();
+    }, Promise<Ret>::AsynchronyType::ProvidedByBody);
 }
 
-bool ProjectActionsController::saveProject(const muse::io::path_t& path)
+void ProjectActionsController::closeCurrentProject()
 {
-    if (!path.empty()) {
-        return saveProjectLocally(path);
-    }
+    interactive()->closeAllDialogs();
 
-    return saveProject(SaveMode::Save);
+    globalContext()->currentProject()->close();
+    globalContext()->setCurrentProject(nullptr);
+
+    Ret ret = openPageIfNeed(HOME_PAGE_URI);
+    if (!ret) {
+        LOGE() << ret.toString();
+    } 
 }
 
-bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)
+Promise<Ret> ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)
 {
     IAudacityProjectPtr project = currentProject();
-    if (!project) {
-        return false;
-    }
-
-    Ret ret = project->save(filePath, saveMode);
-    //! TODO AU4
-    // if (!ret) {
-    //     LOGE() << ret.toString();
-    //     warnScoreCouldnotBeSaved(ret);
-    //     return false;
-    // }
-
-    recentFilesController()->prependRecentFile(makeRecentFile(project));
-    return true;
+    return project->save(filePath, saveMode);
 }
 
 const ProjectBeingDownloaded& ProjectActionsController::projectBeingDownloaded() const
@@ -327,38 +309,52 @@ Ret ProjectActionsController::canSaveProject() const
     return project->canSave();
 }
 
-bool ProjectActionsController::saveProject(SaveMode saveMode, SaveLocationType saveLocationType, bool force)
+Promise<Ret> ProjectActionsController::saveProject(SaveMode saveMode, SaveLocationType saveLocationType, bool force)
 {
-    if (m_isProjectSaving) {
-        return false;
-    }
+    return Promise<Ret>([this, saveMode, saveLocationType, force](auto resolve, auto reject) {
+        if (m_isProjectSaving)
+        {
+            (void)reject(42, "Project is already saving");
+            return Promise<Ret>::Result::unchecked();
+        }
+        
+        IAudacityProjectPtr project = currentProject();
+        if (!project) {
+            (void)resolve(make_ret(Err::NoProjectError));
+            return Promise<Ret>::Result::unchecked();
+        }
 
-    m_isProjectSaving = true;
-    DEFER {
-        m_isProjectSaving = false;
-    };
+        m_isProjectSaving = true;
 
-    IAudacityProjectPtr project = currentProject();
+        SaveLocation saveLocation; 
+        if (saveMode != SaveMode::Save || project->isNewlyCreated()) {
+            RetVal<SaveLocation> response = openSaveProjectScenario()->askSaveLocation(project, saveMode, saveLocationType);
+            if (!response.ret) {
+                m_isProjectSaving = false;
+                (void)resolve(response.ret);
+                return Promise<Ret>::Result::unchecked();
+            }
+            saveLocation = response.val;
+        }
+        else
+        {
+            saveLocation = SaveLocation(SaveLocationType::Local);
+        }
 
-    if (saveMode == SaveMode::Save && !project->isNewlyCreated()) {
-        // if (project->isCloudProject()) {
-        //     return saveProjectAt(SaveLocation(SaveLocationType::Cloud, project->cloudInfo()));
-        // }
+        saveProjectAt(saveLocation, saveMode, force)
+        .onResolve(this, [this, resolve, reject](const Ret& ret) {
+            m_isProjectSaving = false;
+            (void)resolve(ret);
+        })
+        .onReject(this, [this, reject](int errCode, std::string text) {
+            (void)reject(errCode, text);
+        });
 
-        return saveProjectAt(SaveLocation(SaveLocationType::Local));
-    }
-
-    //! TODO AU4
-    RetVal<SaveLocation> response = openSaveProjectScenario()->askSaveLocation(project, saveMode, saveLocationType);
-    if (!response.ret) {
-        LOGE() << response.ret.toString();
-        return false;
-    }
-
-    return saveProjectAt(response.val, saveMode, force);
+        return Promise<Ret>::Result::unchecked();
+    }, Promise<Ret>::AsynchronyType::ProvidedByBody);
 }
 
-bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveMode saveMode, bool force)
+Promise<Ret> ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveMode saveMode, bool force)
 {
     //! TODO AU4
     // if (!force) {
@@ -369,17 +365,32 @@ bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveM
     //             return ret;
     //         }
     //     }
-    // }
+    // }i
 
-    if (location.isLocal()) {
-        return saveProjectLocally(location.localPath(), saveMode);
-    }
+    return Promise<Ret>([this, location, saveMode](auto resolve, auto reject) {
+        if (location.isLocal()) {
+            saveProjectLocally(location.localPath(), saveMode)
+            .onResolve(this, [this, resolve, reject](const Ret& ret) {
+                recentFilesController()->prependRecentFile(makeRecentFile(currentProject()));
+                (void)resolve(ret);
+            })
+            .onReject(this, [this, reject](int errCode, std::string text) {
+                (void)reject(errCode, text);
+            });
+        }
+        else
+        {
+            // if (location.isCloud()) {
+            //     saveProjectToCloud(location.cloudInfo(), saveMode).onResolve(this, [resolve](const Ret& ret) {
+            //         resolve(ret);
+            //     });
+            // }
+            (void)reject(42, "Not implemented");
+        }
 
-    // if (location.isCloud()) {
-    //     return saveProjectToCloud(location.cloudInfo(), saveMode);
-    // }
+        return Promise<Ret>::Result::unchecked();
 
-    return false;
+    }, Promise<Ret>::AsynchronyType::ProvidedByBody);
 }
 
 muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPath, const String& displayNameOverride)

@@ -23,6 +23,7 @@
 #define AU_PROJECT_IPROJECTFILESCONTROLLER_H
 
 #include "modularity/imoduleinterface.h"
+#include "global/async/promise.h"
 #include "types/ret.h"
 #include "io/path.h"
 
@@ -41,9 +42,9 @@ public:
     virtual bool isUrlSupported(const QUrl& url) const = 0;
     virtual bool isFileSupported(const muse::io::path_t& path) const = 0;
     virtual muse::Ret openProject(const ProjectFile& file) = 0;
-    virtual bool closeOpenedProject(bool quitApp = false) = 0;
-    virtual bool saveProject(const muse::io::path_t& path = muse::io::path_t()) = 0;
-    virtual bool saveProjectLocally(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;
+    virtual muse::async::Promise<muse::Ret> closeOpenedProject() = 0;
+    virtual muse::async::Promise<muse::Ret> saveProject(SaveMode saveMode, SaveLocationType saveLocationType = SaveLocationType::Undefined, bool force = false) = 0;
+    virtual muse::async::Promise<muse::Ret> saveProjectLocally(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;
 
     virtual const ProjectBeingDownloaded& projectBeingDownloaded() const = 0;
     virtual muse::async::Notification projectBeingDownloadedChanged() const = 0;

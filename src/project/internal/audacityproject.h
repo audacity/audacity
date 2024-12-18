@@ -2,6 +2,7 @@
 #define AU_PROJECT_AUDACITYPROJECT_H
 
 #include "../iaudacityproject.h"
+#include "../ithumbnailcreator.h"
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 #include "au3wrap/iau3project.h"
@@ -38,7 +39,7 @@ namespace au::project {
 //! it cannot be used in parts, therefore, to avoid duplication of symbols,
 //! we can add (as source) it only to one library
 //! * Thanks to this wrapper we will see exactly what we are using from AU3
-class Audacity4Project : public IAudacityProject
+class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
 {
     muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
     muse::Inject<trackedit::ITrackeditProjectCreator> trackeditProjectCreator;
@@ -47,6 +48,7 @@ class Audacity4Project : public IAudacityProject
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
+    muse::Inject<IThumbnailCreator> thumbnailCreator;
 
 public:
     Audacity4Project();
@@ -73,9 +75,9 @@ public:
     bool needAutoSave() const override;
     void setNeedAutoSave(bool val) override;
 
-    muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
-
+    muse::async::Promise<muse::Ret> save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
     muse::async::Notification captureThumbnailRequested() const override;
+    void onThumbnailCreated(bool success) override;
 
     const au::trackedit::ITrackeditProjectPtr trackeditProject() const override;
 
@@ -88,9 +90,9 @@ private:
 
     muse::Ret doLoad(const muse::io::path_t& path, bool forceMode, const std::string& format);
 
-    muse::Ret saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup = true,
+    muse::async::Promise<muse::Ret> saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup = true,
                           bool createThumbnail = true);
-    muse::Ret doSave(const muse::io::path_t& path, /*engraving::MscIoMode ioMode,*/ bool generateBackup = true,
+    muse::async::Promise<muse::Ret> doSave(const muse::io::path_t& path, /*engraving::MscIoMode ioMode,*/ bool generateBackup = true,
                      bool createThumbnail = true);
 
     void markAsSaved(const muse::io::path_t& path);
@@ -102,7 +104,6 @@ private:
     muse::io::path_t m_path;
     muse::async::Notification m_pathChanged;
     muse::async::Notification m_displayNameChanged;
-    muse::async::Notification m_captureThumbnailRequested;
 
     bool m_isNewlyCreated = false; /// true if the file has never been saved yet
     bool m_isImported = false;

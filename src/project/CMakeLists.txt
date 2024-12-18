@@ -57,6 +57,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/irecentfilescontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/imscmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectautosaver.h
+    ${CMAKE_CURRENT_LIST_DIR}/ithumbnailcreator.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projecttypes.h
     ${CMAKE_CURRENT_LIST_DIR}/types/projectmeta.h
@@ -76,6 +77,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/iopensaveprojectscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/opensaveprojectscenario.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/opensaveprojectscenario.h
+#include "global/async/channel.h"
+    ${CMAKE_CURRENT_LIST_DIR}/internal/thumbnailcreator.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/thumbnailcreator.h
 
     ${PLATFORM_SRC}
 

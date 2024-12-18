@@ -157,32 +157,28 @@ bool ApplicationActionController::quit()
     if (m_quiting) {
         return false;
     }
-
     m_quiting = true;
-    DEFER {
+
+    projectFilesController()->closeOpenedProject().onResolve(this, [this](bool) {
         m_quiting = false;
-    };
+        QCoreApplication::exit();
+    });
 
-    constexpr auto quit = true;
-    if (!projectFilesController()->closeOpenedProject(quit)) {
-        return false;
-    }
-
-    QCoreApplication::exit();
     return true;
 }
 
 void ApplicationActionController::restart()
 {
-    if (projectFilesController()->closeOpenedProject()) {
-        // if (multiInstancesProvider()->instances().size() == 1) {
+    projectFilesController()->closeOpenedProject().onResolve(this, [this](bool) {
         application()->restart();
+        // if (multiInstancesProvider()->instances().size() == 1) {
+        //application()->restart();
         // } else {
         // multiInstancesProvider()->quitAllAndRestartLast();
 
         // QCoreApplication::exit();
         // }
-    }
+    });
 }
 
 void ApplicationActionController::toggleFullScreen()
