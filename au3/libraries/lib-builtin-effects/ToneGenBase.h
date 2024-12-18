@@ -21,11 +21,17 @@ class ShuttleGui;
 class BUILTIN_EFFECTS_API ToneGenBase : public StatefulPerTrackEffect
 {
 public:
+
+   enum class Type {
+      Tone,
+      Chirp
+   };
+
    static inline ToneGenBase* FetchParameters(ToneGenBase& e, EffectSettings&)
    {
       return &e;
    }
-   ToneGenBase(bool isChirp);
+   ToneGenBase(Type type);
    virtual ~ToneGenBase();
 
    // EffectDefinitionInterface implementation
@@ -42,7 +48,7 @@ public:
 
 protected:
    double mSampleRate {};
-   const bool mChirp;
+   const Type mType;
 
 private:
    // mSample is an external placeholder to remember the last "buffer"

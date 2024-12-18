@@ -11,9 +11,12 @@ using namespace au::effects;
 
 void ToneViewModel::doEmitSignals()
 {
-    emit amplitudeChanged();
-    emit frequencyChanged();
+    emit amplitudeStartChanged();
+    emit amplitudeEndChanged();
+    emit frequencyStartChanged();
+    emit frequencyEndChanged();
     emit waveformChanged();
+    emit interpolationChanged();
     emit isApplyAllowedChanged();
 }
 
@@ -39,53 +42,108 @@ QList<QString> ToneViewModel::waveforms() const
     };
 }
 
-double ToneViewModel::amplitude() const
+QList<QString> ToneViewModel::interpolationTypes() const
+{
+    return {
+        tr("Linear"), tr("Logarithmic")
+    };
+}
+
+double ToneViewModel::amplitudeStart() const
 {
     const ToneEffect* const te = effect();
     if (!te) {
         return 0.0;
     }
-    return te->amplitude();
+    return te->amplitudeStart();
 }
 
-void ToneViewModel::prop_setAmplitude(double newAmplitude)
+void ToneViewModel::prop_setAmplitudeStart(double newAmplitude)
 {
     if (!m_inited) {
         return;
     }
-
     const auto wasAllowed = isApplyAllowed();
     ToneEffect* const te = effect();
     IF_ASSERT_FAILED(te) {
         return;
     }
-    te->setAmplitude(newAmplitude);
+    te->setAmplitudeStart(newAmplitude);
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
     }
 }
 
-double ToneViewModel::frequency() const
+double ToneViewModel::amplitudeEnd() const
 {
     const ToneEffect* const te = effect();
     if (!te) {
         return 0.0;
     }
-    return te->frequency();
+    return te->amplitudeEnd();
 }
 
-void ToneViewModel::prop_setFrequency(double newFrequency)
+void ToneViewModel::prop_setAmplitudeEnd(double newAmplitude)
 {
     if (!m_inited) {
         return;
     }
-
     const auto wasAllowed = isApplyAllowed();
     ToneEffect* const te = effect();
     IF_ASSERT_FAILED(te) {
         return;
     }
-    te->setFrequency(newFrequency);
+    te->setAmplitudeEnd(newAmplitude);
+    if (wasAllowed != isApplyAllowed()) {
+        emit isApplyAllowedChanged();
+    }
+}
+
+double ToneViewModel::frequencyStart() const
+{
+    const ToneEffect* const te = effect();
+    if (!te) {
+        return 0.0;
+    }
+    return te->frequencyStart();
+}
+
+void ToneViewModel::prop_setFrequencyStart(double newFrequency)
+{
+    if (!m_inited) {
+        return;
+    }
+    const auto wasAllowed = isApplyAllowed();
+    ToneEffect* const te = effect();
+    IF_ASSERT_FAILED(te) {
+        return;
+    }
+    te->setFrequencyStart(newFrequency);
+    if (wasAllowed != isApplyAllowed()) {
+        emit isApplyAllowedChanged();
+    }
+}
+
+double ToneViewModel::frequencyEnd() const
+{
+    const ToneEffect* const te = effect();
+    if (!te) {
+        return 0.0;
+    }
+    return te->frequencyEnd();
+}
+
+void ToneViewModel::prop_setFrequencyEnd(double newFrequency)
+{
+    if (!m_inited) {
+        return;
+    }
+    const auto wasAllowed = isApplyAllowed();
+    ToneEffect* const te = effect();
+    IF_ASSERT_FAILED(te) {
+        return;
+    }
+    te->setFrequencyEnd(newFrequency);
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
     }
@@ -105,10 +163,30 @@ void ToneViewModel::prop_setWaveform(int newWaveform)
     if (!m_inited) {
         return;
     }
-
     ToneEffect* const te = effect();
     IF_ASSERT_FAILED(te) {
         return;
     }
     te->setWaveform(static_cast<ToneEffect::Waveform>(newWaveform));
+}
+
+int ToneViewModel::interpolation() const
+{
+    const ToneEffect* const te = effect();
+    if (!te) {
+        return 0;
+    }
+    return static_cast<int>(te->interpolation());
+}
+
+void ToneViewModel::prop_setInterpolation(int newInterpolation)
+{
+    if (!m_inited) {
+        return;
+    }
+    ToneEffect* const te = effect();
+    IF_ASSERT_FAILED(te) {
+        return;
+    }
+    te->setInterpolation(static_cast<ToneEffect::Interpolation>(newInterpolation));
 }
