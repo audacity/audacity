@@ -156,19 +156,6 @@ int ClipsListModel::indexByKey(const trackedit::ClipKey& k) const
     return -1;
 }
 
-double ClipsListModel::autoScrollView(double newTime)
-{
-    if (!muse::RealIsEqualOrMore(newTime, 0.0)) {
-        newTime = 0.0;
-    }
-
-    secs_t frameStartBeforeShift = m_context->frameStartTime();
-    m_context->insureVisible(newTime);
-    secs_t frameStartAfterShift = m_context->frameStartTime();
-
-    return frameStartAfterShift - frameStartBeforeShift;
-}
-
 Qt::KeyboardModifiers ClipsListModel::keyboardModifiers() const
 {
     Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
@@ -465,12 +452,21 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
 
     constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
     if (std::abs(offset) < limit) {
+        if ((completed && m_autoScrollConnection)) {
+            disconnect(m_autoScrollConnection);
+        }
         return false;
     }
 
     bool ok = trackeditInteraction()->moveClips(offset, completed);
 
     m_context->updateSelectedClipTime();
+
+    if ((completed && m_autoScrollConnection)) {
+        disconnect(m_autoScrollConnection);
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });;
+    }
 
     return ok;
 }
@@ -484,7 +480,6 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
 
     double newStartTime = m_context->mousePositionTime() - m_clipEditStartTimeOffset;
 
-    newStartTime += autoScrollView(newStartTime);
     newStartTime = m_context->applySnapToTime(newStartTime);
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
@@ -502,6 +497,19 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
     bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, completed);
     m_context->updateSelectedClipTime();
 
+    // handle auto-scroll over the edge
+    if (!ok) {
+        m_context->stopAutoScroll();
+    } else {
+        m_context->startAutoScroll(m_context->mousePositionTime());
+    }
+
+    if ((completed && m_autoScrollConnection) || !ok) {
+        disconnect(m_autoScrollConnection);
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ trimLeftClip(key, false); });;
+    }
+
     return ok;
 }
 
@@ -514,7 +522,6 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
 
     double newEndTime = m_context->mousePositionTime() + m_clipEditEndTimeOffset;
 
-    newEndTime -= autoScrollView(newEndTime);
     newEndTime = m_context->applySnapToTime(newEndTime);
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
@@ -529,6 +536,19 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
 
     bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, completed);
     m_context->updateSelectedClipTime();
+
+    // handle auto-scroll over the edge
+    if (!ok) {
+        m_context->stopAutoScroll();
+    } else {
+        m_context->startAutoScroll(m_context->mousePositionTime());
+    }
+
+    if ((completed && m_autoScrollConnection) || !ok) {
+        disconnect(m_autoScrollConnection);
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ trimRightClip(key, false); });;
+    }
 
     return ok;
 }

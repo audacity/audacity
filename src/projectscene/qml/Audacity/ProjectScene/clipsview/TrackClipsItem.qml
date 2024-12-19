@@ -176,6 +176,14 @@ Item {
                     clipsModel.trimRightClip(clipItem.key, completed)
                 }
 
+                onStartAutoScroll: {
+                    root.context.startAutoScroll(root.context.mousePositionTime())
+                }
+
+                onStopAutoScroll: {
+                    root.context.stopAutoScroll()
+                }
+
                 onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
                     var yWithinTrack = yWithinClip
                     var xWithinTrack = xWithinClip + clipItem.x

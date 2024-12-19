@@ -11,14 +11,40 @@
 
 static constexpr double ZOOM_MIN = 0.001;
 static constexpr double ZOOM_MAX = 6000000.0;
+
+// on wheel event factor
 static constexpr int PIXELSSTEPSFACTOR = 5;
 
+// horizontal auto-scroll setup
+static constexpr double SCROLL_MARGIN_PX = 40.0;
+static constexpr double SCROLL_MIN_SPEED = 0.00001;
+static constexpr double SCROLL_MAX_SPEED = 0.025;
+
 using namespace au::projectscene;
+
+namespace {
+// calculate auto-scroll speed based on where the mouse cursor is
+// it's non linear range mapping:
+// from (0px, SCROLL_MARGIN_PX) to (SCROLL_MIN_SPEED, SCROLL_MAX_SPEED)
+double calculateScrollSpeed(double value, double inMin, double inMax, double outMin, double outMax) {
+    double sign = (muse::RealIsEqualOrMore(value, 0.0)) ? 1.0 : -1.0;
+    double absValue = std::abs(value);
+    double normalized = std::clamp((absValue - inMin) / (inMax - inMin), 0.0, 1.0);
+
+    double scaled = std::pow(normalized, 4);
+    double result = scaled * (outMax - outMin) + outMin;
+
+    return sign * result;
+}
+}
 
 TimelineContext::TimelineContext(QObject* parent)
     : QObject(parent)
 {
     m_snapTimeFormatter = std::make_shared<SnapTimeFormatter>();
+
+    m_scrollTimer.setInterval(16); // scroll at ~60 FPS
+    connect(&m_scrollTimer, &QTimer::timeout, [this](){ autoScrollView(m_autoScrollStep); });
 }
 
 void TimelineContext::init(double frameWidth)
@@ -183,14 +209,12 @@ void TimelineContext::insureVisible(double posSec)
     double frameStartPosition = timeToContentPosition(m_frameStartTime);
     double frameEndPosition = timeToContentPosition(m_frameEndTime);
 
-    constexpr double SCROLL_MARGIN_PX(16);
-
     if (muse::RealIsEqualOrMore(newPosition, frameStartPosition + SCROLL_MARGIN_PX)
         && muse::RealIsEqualOrLess(newPosition, frameEndPosition - SCROLL_MARGIN_PX)) {
         return;
     }
 
-    constexpr double AUTO_SHIFT_PERCENT(0.03);
+    constexpr double AUTO_SHIFT_PERCENT(0.01);
 
     if (newPosition < frameStartPosition + SCROLL_MARGIN_PX) {
         double frameTime = m_frameEndTime - m_frameStartTime;
@@ -208,6 +232,62 @@ void TimelineContext::insureVisible(double posSec)
             double newFrameTime = m_frameStartTime + (posSec - m_frameEndTime) + (frameTime / 3.0);
             moveToFrameTime(newFrameTime);
         }
+    }
+}
+
+void TimelineContext::autoScrollView(double scrollStep)
+{
+    if (!muse::RealIsEqualOrMore(scrollStep, 0.0)) {
+        scrollStep = 0.0;
+    }
+
+    trackedit::secs_t frameStartBeforeShift = frameStartTime();
+
+    double frameTime = m_frameEndTime - m_frameStartTime;
+    double scrollFactor = calculateScrollSpeed(m_autoScrollStep, 0, SCROLL_MARGIN_PX, SCROLL_MIN_SPEED, SCROLL_MAX_SPEED);
+    moveToFrameTime(m_frameStartTime + (frameTime * scrollFactor));
+
+    trackedit::secs_t frameStartAfterShift = frameStartTime();
+
+    updateMousePositionTime(timeToPosition(m_mousePositionTime + (frameStartAfterShift - frameStartBeforeShift)));
+    emit frameTimeChanged();
+}
+
+void TimelineContext::startAutoScroll(double posSec)
+{
+    double newPosition = timeToContentPosition(posSec);
+    double frameStartPosition = timeToContentPosition(m_frameStartTime);
+    double frameEndPosition = timeToContentPosition(m_frameEndTime);
+
+    if (muse::RealIsEqualOrMore(newPosition, frameStartPosition + SCROLL_MARGIN_PX)
+        && muse::RealIsEqualOrLess(newPosition, frameEndPosition - SCROLL_MARGIN_PX)) {
+        stopAutoScroll();
+        return;
+    }
+
+    // update scroll step
+    if (muse::RealIsEqualOrLess(newPosition, frameStartPosition + SCROLL_MARGIN_PX)) {
+        if (muse::RealIsEqualOrLess(frameStartPosition, 0.0)) {
+            stopAutoScroll();
+            return;
+        }
+
+        // left view edge, m_autoScrollStep should be negative number
+        m_autoScrollStep = newPosition - (frameStartPosition + SCROLL_MARGIN_PX);
+    } else {
+        // right view edge, m_autoScrollStep should be positive number
+        m_autoScrollStep = newPosition - (frameEndPosition - SCROLL_MARGIN_PX);
+    }
+
+    if (!m_scrollTimer.isActive()) {
+        m_scrollTimer.start();
+    }
+}
+
+void TimelineContext::stopAutoScroll()
+{
+    if (m_scrollTimer.isActive()) {
+        m_scrollTimer.stop();
     }
 }
 

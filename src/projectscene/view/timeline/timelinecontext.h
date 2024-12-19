@@ -97,7 +97,9 @@ public:
     Q_INVOKABLE void scrollHorizontal(qreal newPos);
     Q_INVOKABLE void scrollVertical(qreal newPos);
 
-    Q_INVOKABLE void insureVisible(double pos);
+    Q_INVOKABLE void insureVisible(double posSec);
+    Q_INVOKABLE void startAutoScroll(double posSec);
+    Q_INVOKABLE void stopAutoScroll();
 
     Q_INVOKABLE double timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
@@ -105,7 +107,7 @@ public:
     double applySnapToTime(double time) const;
 
     Q_INVOKABLE void updateMousePositionTime(double mouseX);
-    double mousePositionTime() const;
+    Q_INVOKABLE double mousePositionTime() const;
 
     void moveToFrameTime(double startTime);
     void shiftFrameTime(double secs);
@@ -170,6 +172,7 @@ private:
     void setFrameStartTime(double newFrameStartTime);
     void setFrameEndTime(double newFrameEndTime);
     void updateFrameTime();
+    void autoScrollView(double scrollStep);
 
     void setSelectionStartTime(double time);
     void setSelectionEndTime(double time);
@@ -217,5 +220,8 @@ private:
     qreal m_startVerticalScrollPosition = 0.0;
 
     double m_mousePositionTime = 0.0;
+
+    QTimer m_scrollTimer;
+    double m_autoScrollStep = 0.0;
 };
 }

@@ -1151,6 +1151,11 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool 
         return false;
     }
 
+    if (muse::RealIsEqualOrLess(deltaSec, 0.0) && muse::is_equal(clip->GetTrimLeft(), 0.0)) {
+        //! NOTE: clip is fully untrimmed
+        return false;
+    }
+
     if (completed) {
         auto ok = makeRoomForClip(clipKey);
         if (!ok) {
@@ -1179,6 +1184,11 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    if (muse::RealIsEqualOrLess(deltaSec, 0.0) && muse::is_equal(clip->GetTrimRight(), 0.0)) {
+        //! NOTE: clip is fully untrimmed
         return false;
     }
 

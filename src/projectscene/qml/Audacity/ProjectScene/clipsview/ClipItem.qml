@@ -57,6 +57,9 @@ Rectangle {
     signal titleEditAccepted(var newTitle)
     signal titleEditCanceled()
 
+    signal startAutoScroll()
+    signal stopAutoScroll()
+
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
     signal clipItemMousePositionChanged(real x, real y)
@@ -177,6 +180,7 @@ Rectangle {
                 root.clipLeftTrimRequested(true)
             }
 
+            root.stopAutoScroll()
             // this needs to be always at the very end
             root.clipEndEditRequested()
         }
@@ -236,6 +240,7 @@ Rectangle {
                 root.clipRightTrimRequested(true)
             }
 
+            root.stopAutoScroll()
             // this needs to be always at the very end
             root.clipEndEditRequested()
         }
@@ -303,6 +308,7 @@ Rectangle {
                 id: headerDragArea
                 anchors.fill: parent
 
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
                 hoverEnabled: true
                 cursorShape: Qt.OpenHandCursor
 
@@ -311,6 +317,7 @@ Rectangle {
 
                     if (pressed) {
                         root.clipMoveRequested(false)
+                        root.startAutoScroll()
                     }
                 }
 
@@ -324,6 +331,7 @@ Rectangle {
                     root.clipMoveRequested(true)
 
                     root.clipEndEditRequested()
+                    root.stopAutoScroll()
                 }
 
                 onDoubleClicked: root.editTitle()
@@ -536,6 +544,10 @@ Rectangle {
 
         onTrimRightRequested: function(completed) {
             root.clipRightTrimRequested(completed)
+        }
+
+        onStopAutoScroll: {
+            root.stopAutoScroll()
         }
     }
 
