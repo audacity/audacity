@@ -250,16 +250,6 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     return make_ret(Err::UnknownError);
 }
 
-async::Channel<std::string> Audacity4Project::captureThumbnailRequested() const
-{
-    return thumbnailCreator()->captureThumbnailRequested();
-}
-
-void Audacity4Project::onThumbnailCreated(bool success)
-{
-    thumbnailCreator()->onThumbnailCreated(success);
-}
-
 Ret Audacity4Project::saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup, bool createThumbnail)
 {
     Q_UNUSED(fileSuffix);

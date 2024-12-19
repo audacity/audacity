@@ -49,7 +49,7 @@ void ProjectPropertiesModel::init()
     //     m_projectMetaInfo = project->metaInfo();
     // }
 
-    m_project->captureThumbnailRequested().onReceive(this, [this](const std::string response) {
+    thumbnailCreator()->captureThumbnailRequested().onReceive(this, [this](const std::string response) {
         Q_UNUSED(response);
         captureThumbnail(QString::fromStdString(response));
     });
@@ -59,7 +59,7 @@ void ProjectPropertiesModel::init()
 
 void ProjectPropertiesModel::onThumbnailCreated(bool success)
 {
-   m_project->onThumbnailCreated(success);
+   thumbnailCreator()->onThumbnailCreated(success);
 }
 
 void ProjectPropertiesModel::load()
