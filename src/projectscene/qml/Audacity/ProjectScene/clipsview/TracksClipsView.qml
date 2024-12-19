@@ -29,12 +29,12 @@ Rectangle {
     ProjectPropertiesModel {
         id: project
 
-        onCaptureThumbnail: function captureThumbnail() {
+        onCaptureThumbnail: function captureThumbnail(thumbnailUrl) {
             // hide playCursor for the time grabbing image
             playCursor.visible = false
             content.grabToImage(function(result) {
                 playCursor.visible = true
-                var success = result.saveToFile(project.thumbnailUrl)
+                var success = result.saveToFile(thumbnailUrl)
                 project.onThumbnailCreated(success)
             })
         }

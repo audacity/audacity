@@ -65,7 +65,7 @@ public:
 
 signals:
     void propertyAdded(int index);
-    void captureThumbnail();
+    void captureThumbnail(QString path);
 
 private:
     enum Roles {

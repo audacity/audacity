@@ -97,9 +97,9 @@ void Audacity4Project::close()
     history->undoUnsaved();
     history->clearUnsaved();
     // Do not save a project that has never explicitly been saved.
-    if (m_au3Project->hasSavedVersion()) {
-        save();
-    }
+    //if (m_au3Project->hasSavedVersion()) {
+    //    save();
+    //}
 
     clipboard()->clearTrackData();
     m_au3Project->close();
@@ -214,8 +214,6 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     case SaveMode::SaveAs:
     case SaveMode::SaveCopy: {
         muse::io::path_t savePath = path;
-        muse::io::path_t previousPath = m_path;
-        bool previousIsNewlyCreated = m_isNewlyCreated;
         if (savePath.empty()) {
             IF_ASSERT_FAILED(!m_path.empty()) {
                 return false;
@@ -226,18 +224,11 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
 
         std::string suffix = io::suffix(savePath);
 
-        setPath(savePath);
         Ret ret = saveProject(savePath, suffix);
         if (ret) {
-            if (saveMode == SaveMode::SaveCopy) {
-                setPath(previousPath);
-            }
-            else {
+            if (saveMode != SaveMode::SaveCopy) {
                 markAsSaved(savePath);
             }
-        }
-        else {
-            setPath(previousPath);
         }
 
         return ret;
@@ -259,7 +250,7 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     return make_ret(Err::UnknownError);
 }
 
-async::Notification Audacity4Project::captureThumbnailRequested() const
+async::Channel<std::string> Audacity4Project::captureThumbnailRequested() const
 {
     return thumbnailCreator()->captureThumbnailRequested();
 }
@@ -281,24 +272,28 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
 
     UNUSED(generateBackup);
 
-    if (createThumbnail) {
-        Ret ret = thumbnailCreator()->createThumbnail();
-        if (!ret) {
-            LOGE() << "Failed create thumbnail: " << ret.toString();
-            return ret;
-        }
-    }
-
     if ((fileSystem()->exists(savePath) && !fileSystem()->isWritable(savePath))) {
         LOGE() << "failed save, not writable path: " << savePath;
         return make_ret(io::Err::FSWriteError);
     }
 
     auto ret = m_au3Project->save(savePath);
-    if (ret) {
-        return make_ret(Ret::Code::Ok);
+    if (!ret) {
+        return make_ret(Ret::Code::UnknownError);
     }
-    return muse::make_ret(muse::Ret::Code::UnknownError);
+
+    if (createThumbnail) {
+        std::string thumbnailPath = savePath.toStdString();
+        thumbnailPath.replace(thumbnailPath.size() - 4, 4, "png");
+
+        Ret ret = thumbnailCreator()->createThumbnail(thumbnailPath);
+        if (!ret) {
+            LOGE() << "Failed create thumbnail: " << ret.toString();
+            return ret;
+        }
+    }
+
+    return muse::make_ok();
 
     //! TODO AU4
     // QString targetContainerPath = engraving::containerPath(path).toQString();

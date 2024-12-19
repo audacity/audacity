@@ -77,7 +77,7 @@ public:
 
     muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
 
-    muse::async::Notification captureThumbnailRequested() const override;
+    muse::async::Channel<std::string> captureThumbnailRequested() const override;
     void onThumbnailCreated(bool success) override;
 
     const au::trackedit::ITrackeditProjectPtr trackeditProject() const override;

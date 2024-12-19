@@ -49,8 +49,9 @@ void ProjectPropertiesModel::init()
     //     m_projectMetaInfo = project->metaInfo();
     // }
 
-    m_project->captureThumbnailRequested().onNotify(this, [this]() {
-        captureThumbnail();
+    m_project->captureThumbnailRequested().onReceive(this, [this](const std::string response) {
+        Q_UNUSED(response);
+        captureThumbnail(QString::fromStdString(response));
     });
 
     load();
