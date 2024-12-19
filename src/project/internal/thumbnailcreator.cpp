@@ -32,7 +32,7 @@ muse::Ret ThumbnailCreator::createThumbnail(const muse::io::path_t& path)
     return ret;
 }
 
-muse::io::path_t ThumbnailCreator::thumbnailPath(const muse::io::path_t& path)
+muse::io::path_t ThumbnailCreator::thumbnailPath(const muse::io::path_t& path) const
 {
     muse::io::FileInfo fileInfo(path);
     muse::io::path_t completePath = fileInfo.dirPath()

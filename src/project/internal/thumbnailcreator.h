@@ -16,7 +16,7 @@ public:
     muse::async::Channel<muse::io::path_t> captureThumbnailRequested() const override;
 
 private:
-    muse::io::path_t thumbnailPath(const muse::io::path_t& path);
+    muse::io::path_t thumbnailPath(const muse::io::path_t& path) const;
 
     muse::async::Channel<muse::io::path_t> m_createThumbnailRequested;
     muse::async::Channel<bool> m_thumbnailCreated;

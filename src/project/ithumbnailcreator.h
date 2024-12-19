@@ -13,9 +13,11 @@ class IThumbnailCreator : MODULE_EXPORT_INTERFACE
 
 public:
     virtual ~IThumbnailCreator() = default;
-    virtual void onThumbnailCreated(bool success) = 0;
     virtual muse::Ret createThumbnail(const muse::io::path_t& path) = 0;
+
+    //for internal use
     virtual muse::async::Channel<muse::io::path_t> captureThumbnailRequested() const = 0;
+    virtual void onThumbnailCreated(bool success) = 0;
 };
 
 }
