@@ -43,12 +43,12 @@ bool TrackeditInteraction::changeClipTitle(const trackedit::ClipKey& clipKey, co
 
 bool TrackeditInteraction::changeClipPitch(const ClipKey& clipKey, int pitch)
 {
-    return withPlaybackStop(&ITrackeditInteraction::changeClipPitch, clipKey, pitch);
+    return m_interaction->changeClipPitch(clipKey, pitch);
 }
 
 bool TrackeditInteraction::resetClipPitch(const ClipKey& clipKey)
 {
-    return withPlaybackStop(&ITrackeditInteraction::resetClipPitch, clipKey);
+    return m_interaction->resetClipPitch(clipKey);
 }
 
 bool TrackeditInteraction::changeClipSpeed(const ClipKey& clipKey, double speed)
