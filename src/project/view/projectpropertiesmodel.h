@@ -37,7 +37,6 @@ class ProjectPropertiesModel : public QAbstractListModel, public muse::async::As
     muse::Inject<IThumbnailCreator> thumbnailCreator;
 
     Q_PROPERTY(QString filePath READ filePath CONSTANT)
-    Q_PROPERTY(QString thumbnailUrl READ thumbnailUrl CONSTANT)
     Q_PROPERTY(QString version READ version CONSTANT)
     Q_PROPERTY(QString revision READ revision CONSTANT)
     Q_PROPERTY(QString apiLevel READ apiLevel CONSTANT)
@@ -54,7 +53,6 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     QString filePath() const;
-    QString thumbnailUrl() const;
     QString version() const;
     QString revision() const;
     QString apiLevel() const;

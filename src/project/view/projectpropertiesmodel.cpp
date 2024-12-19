@@ -153,19 +153,6 @@ QString ProjectPropertiesModel::filePath() const
     return m_project->path().toQString();
 }
 
-QString ProjectPropertiesModel::thumbnailUrl() const
-{
-    QString filePath = m_project->path().toQString();
-    int lastDotIndex = filePath.lastIndexOf('.');
-    if (lastDotIndex != -1 && lastDotIndex != 0) {
-        // Remove the current suffix
-        filePath = filePath.left(lastDotIndex);
-    }
-    filePath.append(".png");
-
-    return filePath;
-}
-
 QString ProjectPropertiesModel::version() const
 {
     NOT_IMPLEMENTED;
