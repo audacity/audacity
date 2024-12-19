@@ -9,7 +9,7 @@ namespace au::project {
 class IThumbnailCreator : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(au::project::ithumbnailcreator)
-    
+
 public:
     virtual ~IThumbnailCreator() = default;
     virtual void onThumbnailCreated(bool success) = 0;

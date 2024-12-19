@@ -77,7 +77,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/iopensaveprojectscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/opensaveprojectscenario.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/opensaveprojectscenario.h
-#include "global/async/channel.h"
     ${CMAKE_CURRENT_LIST_DIR}/internal/thumbnailcreator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/thumbnailcreator.h
 

@@ -23,7 +23,7 @@ muse::Ret ThumbnailCreator::createThumbnail(const std::string& path)
     });
 
     m_createThumbnailRequested.send(path);
-    loop.exec(); 
+    loop.exec();
 
     return ret;
 }
