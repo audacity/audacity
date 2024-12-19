@@ -49,9 +49,8 @@ void ProjectPropertiesModel::init()
     //     m_projectMetaInfo = project->metaInfo();
     // }
 
-    thumbnailCreator()->captureThumbnailRequested().onReceive(this, [this](const std::string response) {
-        Q_UNUSED(response);
-        captureThumbnail(QString::fromStdString(response));
+    thumbnailCreator()->captureThumbnailRequested().onReceive(this, [this](const muse::io::path_t& response) {
+        captureThumbnail(response.toQString());
     });
 
     load();

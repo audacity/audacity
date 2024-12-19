@@ -12,11 +12,13 @@ class ThumbnailCreator : public IThumbnailCreator, public muse::async::Asyncable
 public:
     ThumbnailCreator() = default;
     void onThumbnailCreated(bool success) override;
-    muse::Ret createThumbnail(const std::string& path) override;
-    muse::async::Channel<std::string> captureThumbnailRequested() const override;
+    muse::Ret createThumbnail(const muse::io::path_t& path) override;
+    muse::async::Channel<muse::io::path_t> captureThumbnailRequested() const override;
 
 private:
-    muse::async::Channel<std::string> m_createThumbnailRequested;
+    muse::io::path_t thumbnailPath(const muse::io::path_t& path);
+
+    muse::async::Channel<muse::io::path_t> m_createThumbnailRequested;
     muse::async::Channel<bool> m_thumbnailCreated;
 };
 

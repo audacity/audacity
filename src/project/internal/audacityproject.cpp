@@ -273,10 +273,7 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
     }
 
     if (createThumbnail) {
-        std::string thumbnailPath = savePath.toStdString();
-        thumbnailPath.replace(thumbnailPath.size() - 4, 4, "png");
-
-        Ret ret = thumbnailCreator()->createThumbnail(thumbnailPath);
+        Ret ret = thumbnailCreator()->createThumbnail(savePath);
         if (!ret) {
             LOGE() << "Failed create thumbnail: " << ret.toString();
             return ret;
