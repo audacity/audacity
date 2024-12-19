@@ -63,7 +63,11 @@ private:
     bool canUndo() override;
     void redo() override;
     bool canRedo() override;
+
+    void insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
+
     void toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
+
     muse::ProgressPtr progress() const override;
 
 private:

@@ -101,7 +101,7 @@ bool TrackeditInteraction::copyClipDataIntoClipboard(const trackedit::ClipKey& c
     return m_interaction->copyClipDataIntoClipboard(clipKey, begin, end);
 }
 
-bool TrackeditInteraction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList &clipKeys, secs_t offset)
+bool TrackeditInteraction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
 {
     return m_interaction->copyNonContinuousTrackDataIntoClipboard(trackId, clipKeys, offset);
 }
@@ -186,7 +186,7 @@ muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKe
     return m_interaction->clipDuration(clipKey);
 }
 
-std::optional<secs_t> TrackeditInteraction::getMostLeftClipStartTime(const ClipKeyList &clipKeys) const
+std::optional<secs_t> TrackeditInteraction::getMostLeftClipStartTime(const ClipKeyList& clipKeys) const
 {
     return m_interaction->getMostLeftClipStartTime(clipKeys);
 }
@@ -244,6 +244,11 @@ void TrackeditInteraction::redo()
 bool TrackeditInteraction::canRedo()
 {
     return m_interaction->canRedo();
+}
+
+void TrackeditInteraction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
+{
+    withPlaybackStop(&ITrackeditInteraction::insertSilence, trackIds, begin, end, duration);
 }
 
 void TrackeditInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
