@@ -584,11 +584,24 @@ void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
     }
 }
 
-void ClipsListModel::onSelectedClips(const trackedit::ClipKeyList &keyList)
+void ClipsListModel::onSelectedClips(const trackedit::ClipKeyList& keyList)
 {
-    for (const auto& clip : keyList) {
-        onSelectedClip(clip);
+    if (keyList.size() == 1) {
+        onSelectedClip(keyList.front());
+        return;
     }
+
+    // Multiple-clip selection can only be done programmatically, hence there is no need to check for the Shift key ;
+    // we can begin by clearing everything.
+    clearSelectedItems();
+
+    QList<ClipListItem*> items;
+    for (const auto& k : keyList) {
+        if (const auto item = itemByKey(k)) {
+            items.append(item);
+        }
+    }
+    setSelectedItems(items);
 }
 
 QVariant ClipsListModel::trackId() const

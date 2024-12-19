@@ -632,7 +632,8 @@ void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(track, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    if (!clip) {
+        // A clip-replacement operation may be ongoing, it's okay to return ; a new paint event will be triggered when it's done.
         return;
     }
 

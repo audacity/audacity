@@ -6,6 +6,8 @@
 
 #include "trackedit/trackedittypes.h"
 
+#include <optional>
+
 namespace au::trackedit {
 //! NOTE Currently implemented in the au3wrap module
 class ISelectionController : MODULE_EXPORT_INTERFACE
@@ -34,6 +36,7 @@ public:
     virtual bool hasSelectedClips() const = 0;
     virtual ClipKeyList selectedClips() const = 0;
     virtual void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true) = 0;
+    virtual std::optional<ClipId> setSelectedClip(trackedit::TrackId trackId, secs_t time) = 0;
     virtual void addSelectedClip(const ClipKey& clipKey) = 0;
     virtual muse::async::Channel<ClipKeyList> clipsSelected() const = 0;
 

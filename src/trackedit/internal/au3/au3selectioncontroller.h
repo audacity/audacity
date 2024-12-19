@@ -37,6 +37,7 @@ public:
     bool hasSelectedClips() const override;
     ClipKeyList selectedClips() const override;
     void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true) override;
+    std::optional<trackedit::ClipId> setSelectedClip(trackedit::TrackId trackId, secs_t time) override;
     void addSelectedClip(const ClipKey& clipKey) override;
     muse::async::Channel<ClipKeyList> clipsSelected() const override;
     double selectedClipStartTime() const override;
