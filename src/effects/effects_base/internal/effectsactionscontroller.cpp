@@ -36,12 +36,15 @@ void EffectsActionsController::doEffect(const muse::actions::ActionData& args)
         return;
     }
 
+    playback()->player()->stop();
+
     muse::String effectId = args.arg<muse::String>(0);
     effectExecutionScenario()->performEffect(effectId);
 }
 
 void EffectsActionsController::repeatLastEffect()
 {
+    playback()->player()->stop();
     effectExecutionScenario()->repeatLastProcessor();
 }
 

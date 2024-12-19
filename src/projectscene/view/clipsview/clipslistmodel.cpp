@@ -463,6 +463,11 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     newStartTime = m_context->applySnapToTime(newStartTime);
     secs_t offset = newStartTime - item->time().clipStartTime;
 
+    constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
+    if (std::abs(offset) < limit) {
+        return false;
+    }
+
     bool ok = trackeditInteraction()->moveClips(offset, completed);
 
     m_context->updateSelectedClipTime();
