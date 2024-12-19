@@ -67,9 +67,11 @@ private:
     bool isProjectOpened() const;
 
     TimelineContext* m_context = nullptr;
+    QMetaObject::Connection m_autoScrollConnection;
 
     bool m_selectionStarted = false;
     bool m_selectionActive = false;
     QPointF m_startPoint;
+    QPointF m_lastPoint;
 };
 }

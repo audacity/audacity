@@ -113,8 +113,6 @@ private:
     int indexByKey(const trackedit::ClipKey& k) const;
     QVariant neighbor(const ClipKey& key, int offset) const;
 
-    double autoScrollView(double newTime);
-
     Qt::KeyboardModifiers keyboardModifiers() const;
 
     TimelineContext* m_context = nullptr;
@@ -127,5 +125,7 @@ private:
     //! Offset between mouse click position on clip's header and clip's start and end time
     double m_clipEditStartTimeOffset = -1.0;
     double m_clipEditEndTimeOffset = -1.0;
+
+    QMetaObject::Connection m_autoScrollConnection;
 };
 }

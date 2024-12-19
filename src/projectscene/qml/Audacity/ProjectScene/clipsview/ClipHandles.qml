@@ -26,6 +26,9 @@ Item {
     signal trimLeftRequested(bool completed)
     signal trimRightRequested(bool completed)
 
+    //! NOTE: auto-scroll for trimming is triggered from clipslistmodel
+    signal stopAutoScroll()
+
     Item {
         id: leftTrimHandle
 
@@ -85,6 +88,7 @@ Item {
 
             onReleased: function(e) {
                 root.trimLeftRequested(true)
+                root.stopAutoScroll()
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()
@@ -168,6 +172,7 @@ Item {
 
             onReleased: function(e) {
                 root.trimRightRequested(true)
+                root.stopAutoScroll()
 
                 // this needs to be always at the very end
                 root.clipEndEditRequested()

@@ -89,8 +89,6 @@ IProjectViewStatePtr PlayCursorController::projectViewState() const
 
 void PlayCursorController::updatePositionX(muse::secs_t secs)
 {
-    m_context->insureVisible(secs);
-
     m_positionX = m_context->timeToPosition(secs);
     emit positionXChanged();
 }
