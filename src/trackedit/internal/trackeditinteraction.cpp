@@ -33,12 +33,12 @@ bool TrackeditInteraction::silenceTracksData(const std::vector<trackedit::TrackI
 
 bool TrackeditInteraction::changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title)
 {
-    return withPlaybackStop(&ITrackeditInteraction::changeTrackTitle, trackId, title);
+    return m_interaction->changeTrackTitle(trackId, title);
 }
 
 bool TrackeditInteraction::changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle)
 {
-    return withPlaybackStop(&ITrackeditInteraction::changeClipTitle, clipKey, newTitle);
+    return m_interaction->changeClipTitle(clipKey, newTitle);
 }
 
 bool TrackeditInteraction::changeClipPitch(const ClipKey& clipKey, int pitch)
