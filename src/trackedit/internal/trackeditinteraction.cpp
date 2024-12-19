@@ -186,9 +186,9 @@ muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKe
     return m_interaction->clipDuration(clipKey);
 }
 
-std::optional<secs_t> TrackeditInteraction::getMostLeftClipStartTime(const ClipKeyList& clipKeys) const
+std::optional<secs_t> TrackeditInteraction::getLeftmostClipStartTime(const ClipKeyList& clipKeys) const
 {
-    return m_interaction->getMostLeftClipStartTime(clipKeys);
+    return m_interaction->getLeftmostClipStartTime(clipKeys);
 }
 
 bool TrackeditInteraction::newMonoTrack()

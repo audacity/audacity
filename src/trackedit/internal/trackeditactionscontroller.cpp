@@ -435,9 +435,9 @@ void TrackeditActionsController::multiClipCopy()
     trackeditInteraction()->clearClipboard();
 
     secs_t offset = 0.0;
-    std::optional<secs_t> mostLeftClipStartTime = trackeditInteraction()->getMostLeftClipStartTime(selectionController()->selectedClips());
-    if (mostLeftClipStartTime.has_value()) {
-        offset = -mostLeftClipStartTime.value();
+    std::optional<secs_t> leftmostClipStartTime = trackeditInteraction()->getLeftmostClipStartTime(selectionController()->selectedClips());
+    if (leftmostClipStartTime.has_value()) {
+        offset = -leftmostClipStartTime.value();
     }
 
     for (const auto& track : tracks) {

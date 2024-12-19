@@ -54,7 +54,7 @@ private:
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
-    std::optional<secs_t> getMostLeftClipStartTime(const ClipKeyList& clipKeys) const override;
+    std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList &clipKeys) const override;
     bool newMonoTrack() override;
     bool newStereoTrack() override;
     bool newLabelTrack() override;
