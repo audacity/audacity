@@ -101,14 +101,24 @@ bool TrackeditInteraction::copyClipDataIntoClipboard(const trackedit::ClipKey& c
     return m_interaction->copyClipDataIntoClipboard(clipKey, begin, end);
 }
 
-bool TrackeditInteraction::copyTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
+bool TrackeditInteraction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList &clipKeys, secs_t offset)
 {
-    return m_interaction->copyTrackDataIntoClipboard(trackId, begin, end);
+    return m_interaction->copyNonContinuousTrackDataIntoClipboard(trackId, clipKeys, offset);
+}
+
+bool TrackeditInteraction::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
+{
+    return m_interaction->copyContinuousTrackDataIntoClipboard(trackId, begin, end);
 }
 
 bool TrackeditInteraction::removeClip(const trackedit::ClipKey& clipKey)
 {
     return withPlaybackStop(&ITrackeditInteraction::removeClip, clipKey);
+}
+
+bool TrackeditInteraction::removeClips(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeClips, clipKeyList);
 }
 
 bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end)
@@ -174,6 +184,11 @@ bool TrackeditInteraction::trimClipRight(const trackedit::ClipKey& clipKey, secs
 muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
     return m_interaction->clipDuration(clipKey);
+}
+
+std::optional<secs_t> TrackeditInteraction::getMostLeftClipStartTime(const ClipKeyList &clipKeys) const
+{
+    return m_interaction->getMostLeftClipStartTime(clipKeys);
 }
 
 void TrackeditInteraction::newMonoTrack()
