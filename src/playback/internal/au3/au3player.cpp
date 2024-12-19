@@ -23,7 +23,7 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3Player::Au3Player()
-    : m_positionUpdateTimer(std::chrono::microseconds(1000))
+    : m_positionUpdateTimer(std::chrono::milliseconds(16))
 {
     m_positionUpdateTimer.onTimeout(this, [this]() {
         updatePlaybackState();
@@ -344,6 +344,14 @@ void Au3Player::resetLoop()
 
 void Au3Player::updatePlaybackState()
 {
+    if (m_playbackStatus.val != PlaybackStatus::Running) {
+        return;
+    }
+
+    IF_ASSERT_FAILED(globalContext()->currentProject()) {
+        return;
+    }
+
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isActive = AudioIO::Get()->IsStreamActive(token);
     double time = AudioIO::Get()->GetStreamTime() + m_startOffset;
