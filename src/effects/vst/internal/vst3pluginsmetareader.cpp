@@ -62,7 +62,7 @@ RetVal<AudioResourceMetaList> Vst3PluginsMetaReader::readMeta(const io::path_t& 
         });
         if (!errorMessage.empty()) {
             error = true;
-            errorStr = au3::wxToSting(errorMessage.Debug());
+            errorStr = au3::wxToString(errorMessage.Debug());
         } else if (numPlugins == 0) {
             error = true;
             errorStr = "no plugins found";
