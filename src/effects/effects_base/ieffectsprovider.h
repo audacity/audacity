@@ -35,8 +35,7 @@ public:
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;
 
-    // type - is Symbol of effect
-    virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;
+    virtual muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) = 0;
     virtual muse::Ret showEffect(effects::RealtimeEffectState* state) const = 0;
 
     virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,

@@ -82,7 +82,7 @@ RetVal<AudioResourceMetaList> Vst3PluginsMetaReader::readMeta(const io::path_t& 
     AudioResourceMetaList metaList;
     for (const PluginDescriptor& descriptor : descriptors) {
         muse::audio::AudioResourceMeta meta;
-        meta.id = io::completeBasename(pluginPath).toStdString();
+        meta.id = descriptor.GetID();
         meta.type = muse::audio::AudioResourceType::VstPlugin;
         // meta.attributes.emplace(muse::audio::CATEGORIES_ATTRIBUTE, String::fromStdString(descriptor.));
         meta.vendor = descriptor.GetVendor();

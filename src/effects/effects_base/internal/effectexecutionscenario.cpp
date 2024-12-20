@@ -89,6 +89,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         //! NOTE Step 1.2 - get effect
         effect = effectsProvider()->effect(effectId);
+        if (!effect) {
+            return make_ret(Err::EffectNotFound);
+        }
 
         if (numSelectedClips > 1 && !effectsProvider()->supportsMultipleClipSelection(effectId)) {
             return make_ret(Err::EffectMultipleClipSelectionNotSupported);
@@ -224,15 +227,14 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! ============================================================================
     {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
-            muse::String type = au3::wxToString(effect->GetSymbol().Internal());
             const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
             EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, pInstanceEx, access);
-            muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
+            muse::Ret ret = effectsProvider()->showEffect(effectId, instanceId);
             effectInstancesRegister()->unregInstance(instanceId);
             if (ret) {
                 effect->SaveUserPreset(CurrentSettingsGroup(), *settings);
             } else {
-                LOGE() << "failed show effect: " << type << ", ret: " << ret.toString();
+                LOGE() << "failed show effect: " << effectId << ", ret: " << ret.toString();
                 return ret;
             }
         }
