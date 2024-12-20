@@ -58,7 +58,7 @@ void EffectsModule::resolveImports()
 {
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerQmlUri(muse::Uri("audacity://effects/viewer"), "Audacity/Effects/EffectsViewerDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://effects/builtin_viewer"), "Audacity/Effects/EffectsViewerDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://effects/realtime_viewer"), "Audacity/Effects/RealtimeEffectViewerDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://effects/presets/input_name"), "Audacity/Effects/PresetNameDialog.qml");
     }
@@ -83,11 +83,12 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
 
     m_configuration->init();
     m_actionsController->init();
-    m_provider->init();
     m_realtimeEffectService->init();
 }
 
 void EffectsModule::onDelayedInit()
 {
-    // m_provider->reloadEffects();
+    //! NOTE On init, built-in, vst and other plugins are initialized.
+    //! After all, the provider can load effects of different types.
+    m_provider->reloadEffects();
 }

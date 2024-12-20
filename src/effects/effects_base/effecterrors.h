@@ -15,6 +15,7 @@ enum class Err {
     InternalError = int(muse::Ret::Code::InternalError),
     UnknownError = EFFECTS_FIRST,
 
+    EffectNotFound,
     EffectNoAudioSelected,
     EffectMultipleClipSelectionNotSupported,
     EffectProcessFailed,
@@ -35,6 +36,8 @@ inline muse::Ret make_ret(Err e, std::string text = "")
         return muse::Ret(retCode, muse::trc("effects", "Internal error"));
     case Err::UnknownError:
         return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Unknown error") : text);
+    case Err::EffectNotFound:
+        return muse::Ret(retCode, text.empty() ? muse::trc("effects", "Effect not found") : text);
     case Err::EffectNoAudioSelected:
         return muse::Ret(retCode, text.empty() ? muse::trc("effects", "No audio selected") : text);
     case Err::EffectMultipleClipSelectionNotSupported:

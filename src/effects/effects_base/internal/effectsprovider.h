@@ -29,7 +29,7 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
     muse::Inject<playback::IPlayback> playback;
 
 public:
-    void init();
+    void reloadEffects();
 
     EffectMetaList effectMetaList() const override;
     muse::async::Notification effectMetaListChanged() const override;
@@ -44,7 +44,7 @@ public:
 
     bool supportsMultipleClipSelection(const EffectId& effectId) const override;
 
-    muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
+    muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) override;
     muse::Ret showEffect(effects::RealtimeEffectState* state) const override;
 
     muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
@@ -53,7 +53,6 @@ public:
     muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) override;
 
 private:
-    void reloadEffects();
 
     bool isVstSupported() const;
     bool isNyquistSupported() const;

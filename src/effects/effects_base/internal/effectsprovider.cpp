@@ -6,6 +6,7 @@
 
 #include "global/translation.h"
 #include "au3wrap/internal/domconverter.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
@@ -29,16 +30,11 @@
 using namespace muse;
 using namespace au::effects;
 
-static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&instanceId=%2";
+static const char16_t* BUILTIN_VIEWER_URI = u"audacity://effects/builtin_viewer?type=%1&instanceId=%2";
+static const char16_t* VST_VIEWER_URI = u"audacity://effects/vst_viewer?type=%1&instanceId=%2";
+
 // For now modal is true because otherwise we get a crash when changing track selection with a dialog open. Will fix this in another PR.
 static const char16_t* REALTIME_VIEWER_URI = u"audacity://effects/realtime_viewer?type=%1&instanceId=%2&effectState=%3&modal=true";
-
-void EffectsProvider::init()
-{
-    builtinEffectsRepository()->effectMetaListUpdated().onNotify(this, [this] {
-        reloadEffects();
-    });
-}
 
 bool EffectsProvider::isVstSupported() const
 {
@@ -168,14 +164,43 @@ Effect* EffectsProvider::effect(const EffectId& effectId) const
     return effect;
 }
 
-muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInstanceId& instanceId)
+muse::Ret EffectsProvider::showEffect(const EffectId &effectId, const EffectInstanceId& instanceId)
 {
-    LOGD() << "try open effect: " << type << ", instanceId: " << instanceId;
+    LOGD() << "try open effect: " << effectId << ", instanceId: " << instanceId;
 
-    RetVal<Val> rv = interactive()->open(String(VIEWER_URI).arg(type).arg(size_t(instanceId)).toStdString());
+    PluginID pluginID = effectId.toStdString();
+    const PluginDescriptor* plug = PluginManager::Get().GetPlugin(pluginID);
+    if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
+        LOGE() << "plugin not available, effectId: " << effectId;
+        return muse::make_ret(muse::Ret::Code::UnknownError);
+    }
 
-    LOGD() << "open ret: " << rv.ret.toString();
-    return rv.ret;
+    std::string family = au3::wxToStdSting(plug->GetEffectFamily());
+
+    LOGD() << "effect family: " << family;
+
+    // built-in
+    Ret ret;
+    if ("Audacity" == family) {
+        Effect* effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(pluginID));
+        IF_ASSERT_FAILED(effect) {
+            LOGE() << "effect not available, effectId: " << effectId;
+            return muse::make_ret(muse::Ret::Code::InternalError);
+        }
+
+        muse::String type = au3::wxToString(effect->GetSymbol().Internal());
+        ret = interactive()->open(String(BUILTIN_VIEWER_URI)
+                                                 .arg(type)
+                                                 .arg(size_t(instanceId)).toStdString()
+                                             ).ret;
+    } else if ("VST3" == family) {
+        ret = muse::make_ret(muse::Ret::Code::NotImplemented);
+    } else {
+        ret = muse::make_ret(muse::Ret::Code::NotSupported);
+    }
+
+    LOGD() << "open ret: " << ret.toString();
+    return ret;
 }
 
 muse::Ret EffectsProvider::showEffect(effects::RealtimeEffectState* state) const
