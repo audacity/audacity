@@ -97,9 +97,9 @@ void Audacity4Project::close()
     history->undoUnsaved();
     history->clearUnsaved();
     // Do not save a project that has never explicitly been saved.
-    if (m_au3Project->hasSavedVersion()) {
-        save();
-    }
+    //if (m_au3Project->hasSavedVersion()) {
+    //    save();
+    //}
 
     clipboard()->clearTrackData();
     m_au3Project->close();
@@ -250,13 +250,9 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     return make_ret(Err::UnknownError);
 }
 
-async::Notification Audacity4Project::captureThumbnailRequested() const
-{
-    return m_captureThumbnailRequested;
-}
-
 Ret Audacity4Project::saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup, bool createThumbnail)
 {
+    Q_UNUSED(fileSuffix);
     return doSave(path, generateBackup, createThumbnail);
 }
 
@@ -266,20 +262,25 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
 
     UNUSED(generateBackup);
 
-    if (createThumbnail) {
-        m_captureThumbnailRequested.notify();
-    }
-
     if ((fileSystem()->exists(savePath) && !fileSystem()->isWritable(savePath))) {
         LOGE() << "failed save, not writable path: " << savePath;
         return make_ret(io::Err::FSWriteError);
     }
 
     auto ret = m_au3Project->save(savePath);
-    if (ret) {
-        return make_ret(Ret::Code::Ok);
+    if (!ret) {
+        return make_ret(Ret::Code::UnknownError);
     }
-    return muse::make_ret(muse::Ret::Code::UnknownError);
+
+    if (createThumbnail) {
+        Ret ret = thumbnailCreator()->createThumbnail(savePath);
+        if (!ret) {
+            LOGE() << "Failed create thumbnail: " << ret.toString();
+            return ret;
+        }
+    }
+
+    return muse::make_ok();
 
     //! TODO AU4
     // QString targetContainerPath = engraving::containerPath(path).toQString();
@@ -396,6 +397,7 @@ void Audacity4Project::markAsSaved(const muse::io::path_t& path)
 
 void Audacity4Project::setNeedSave(bool needSave)
 {
+    Q_UNUSED(needSave);
     //! TODO AU4
     // mu::engraving::MasterScore* score = m_masterNotation->masterScore();
     // if (!score) {

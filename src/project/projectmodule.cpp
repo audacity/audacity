@@ -25,6 +25,7 @@
 
 #include "internal/projectconfiguration.h"
 #include "internal/projectuiactions.h"
+#include "internal/thumbnailcreator.h"
 
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
@@ -67,6 +68,7 @@ void ProjectModule::registerExports()
 {
     m_configuration = std::make_shared<ProjectConfiguration>();
     m_actionsController = std::make_shared<ProjectActionsController>();
+    m_thumbnailCreator = std::make_shared<ThumbnailCreator>();
 
 #ifdef Q_OS_MAC
     m_recentFilesController = std::make_shared<MacOSRecentFilesController>();
@@ -80,6 +82,7 @@ void ProjectModule::registerExports()
     ioc()->registerExport<IRecentFilesController>(moduleName(), m_recentFilesController);
     ioc()->registerExport<IOpenSaveProjectScenario>(moduleName(), new OpenSaveProjectScenario());
     ioc()->registerExport<IProjectFilesController>(moduleName(), m_actionsController);
+    ioc()->registerExport<IThumbnailCreator>(moduleName(), m_thumbnailCreator);
 }
 
 void ProjectModule::resolveImports()

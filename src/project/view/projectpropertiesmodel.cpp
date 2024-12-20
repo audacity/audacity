@@ -49,11 +49,16 @@ void ProjectPropertiesModel::init()
     //     m_projectMetaInfo = project->metaInfo();
     // }
 
-    m_project->captureThumbnailRequested().onNotify(this, [this]() {
-        captureThumbnail();
+    thumbnailCreator()->captureThumbnailRequested().onReceive(this, [this](const muse::io::path_t& response) {
+        captureThumbnail(response.toQString());
     });
 
     load();
+}
+
+void ProjectPropertiesModel::onThumbnailCreated(bool success)
+{
+   thumbnailCreator()->onThumbnailCreated(success);
 }
 
 void ProjectPropertiesModel::load()
@@ -146,19 +151,6 @@ QHash<int, QByteArray> ProjectPropertiesModel::roleNames() const
 QString ProjectPropertiesModel::filePath() const
 {
     return m_project->path().toQString();
-}
-
-QString ProjectPropertiesModel::thumbnailUrl() const
-{
-    QString filePath = m_project->path().toQString();
-    int lastDotIndex = filePath.lastIndexOf('.');
-    if (lastDotIndex != -1 && lastDotIndex != 0) {
-        // Remove the current suffix
-        filePath = filePath.left(lastDotIndex);
-    }
-    filePath.append(".png");
-
-    return filePath;
 }
 
 QString ProjectPropertiesModel::version() const

@@ -23,6 +23,7 @@
 #pragma once
 
 #include "iinteractive.h"
+#include "ithumbnailcreator.h"
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 
@@ -33,9 +34,9 @@ class ProjectPropertiesModel : public QAbstractListModel, public muse::async::As
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<IThumbnailCreator> thumbnailCreator;
 
     Q_PROPERTY(QString filePath READ filePath CONSTANT)
-    Q_PROPERTY(QString thumbnailUrl READ thumbnailUrl CONSTANT)
     Q_PROPERTY(QString version READ version CONSTANT)
     Q_PROPERTY(QString revision READ revision CONSTANT)
     Q_PROPERTY(QString apiLevel READ apiLevel CONSTANT)
@@ -44,6 +45,7 @@ public:
     explicit ProjectPropertiesModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
+    Q_INVOKABLE void onThumbnailCreated(bool success);
 
     QVariant data(const QModelIndex& index, int role) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
@@ -51,7 +53,6 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     QString filePath() const;
-    QString thumbnailUrl() const;
     QString version() const;
     QString revision() const;
     QString apiLevel() const;
@@ -64,7 +65,7 @@ public:
 
 signals:
     void propertyAdded(int index);
-    void captureThumbnail();
+    void captureThumbnail(QString path);
 
 private:
     enum Roles {
