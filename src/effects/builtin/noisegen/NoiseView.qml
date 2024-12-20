@@ -11,7 +11,7 @@ EffectBase {
     id: root
 
     property string title: qsTrc("effects", "Noise")
-    property bool isApplyAllowed: true
+    property alias isApplyAllowed: noise.isApplyAllowed
 
     width: 300
     height: 150
@@ -90,12 +90,13 @@ EffectBase {
 
             currentText: noise.amplitude
 
-            validator: DoubleInputValidator {
-                decimal: 6
+            validator: DoubleValidator {
+                bottom: 0
+                top: 1
             }
 
-            onTextEdited: function (newTextValue) {
-                noise.amplitude = parseFloat(newTextValue)
+            inputField.onDisplayTextChanged: function () {
+                noise.amplitude = parseFloat(inputField.displayText)
             }
         }
     }

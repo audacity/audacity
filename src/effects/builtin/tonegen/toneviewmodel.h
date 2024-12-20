@@ -10,7 +10,7 @@ class ToneEffect;
 class ToneViewModel : public GeneratorEffectModel
 {
     Q_OBJECT
-    Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged)
+
     Q_PROPERTY(double amplitudeStart READ amplitudeStart WRITE prop_setAmplitudeStart NOTIFY amplitudeStartChanged)
     Q_PROPERTY(double amplitudeEnd READ amplitudeEnd WRITE prop_setAmplitudeEnd NOTIFY amplitudeEndChanged)
     Q_PROPERTY(double frequencyStart READ frequencyStart WRITE prop_setFrequencyStart NOTIFY frequencyStartChanged)
@@ -21,7 +21,7 @@ class ToneViewModel : public GeneratorEffectModel
     Q_PROPERTY(QList<QString> interpolationTypes READ interpolationTypes CONSTANT)
 
 public:
-    bool isApplyAllowed() const;
+    bool isApplyAllowed() const override;
     QList<QString> waveforms() const;
     QList<QString> interpolationTypes() const;
     double amplitudeStart() const;
@@ -44,7 +44,6 @@ signals:
     void frequencyEndChanged();
     void waveformChanged();
     void interpolationChanged();
-    void isApplyAllowedChanged();
 
 private:
     void doEmitSignals() override;

@@ -10,6 +10,10 @@ struct DtmfSettings
     static constexpr char DefaultSequence[] = "audacity";
     static constexpr double DefaultDutyCycle = 55.0;
     static constexpr double DefaultAmplitude = 0.8;
+    static constexpr double AmplitudeMin = 0.0;
+    static constexpr double AmplitudeMax = 1.0;
+    static constexpr double DutyCycleMin = 0.0;
+    static constexpr double DutyCycleMax = 100.0;
 
     std::string dtmfSequence { DefaultSequence }; // dtmf tone string
     size_t dtmfNTones = dtmfSequence.length(); // total number of tones to generate
@@ -23,6 +27,7 @@ struct DtmfSettings
     }; // amplitude of dtmf tone sequence, restricted to (0-1)
 
     void Recalculate(EffectSettings& settings);
+    bool isApplyAllowed() const;
 };
 
 class DtmfGenerator : public GeneratorEffect, public EffectWithSettings<DtmfSettings, PerTrackEffect>

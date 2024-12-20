@@ -2,10 +2,16 @@
  * Audacity: A Digital Audio Editor
  */
 #include "noiseviewmodel.h"
+#include "noisegenerator.h"
 
 #include "global/translation.h"
 
 using namespace au::effects;
+
+bool NoiseViewModel::isApplyAllowed() const
+{
+    return settings<NoiseSettings>().isApplyAllowed() && GeneratorEffectModel::isApplyAllowed();
+}
 
 QVariantList NoiseViewModel::types() const
 {
@@ -32,6 +38,7 @@ void NoiseViewModel::doEmitSignals()
 {
     emit amplitudeChanged();
     emit typeChanged();
+    emit isApplyAllowedChanged();
 }
 
 double NoiseViewModel::amplitude() const
@@ -44,8 +51,14 @@ void NoiseViewModel::prop_setAmplitude(double newAmplitude)
     if (!m_inited) {
         return;
     }
+
+    bool wasAllowed = isApplyAllowed();
+
     mutSettings<NoiseSettings>().amplitude = newAmplitude;
-    emit amplitudeChanged();
+
+    if (wasAllowed != isApplyAllowed()) {
+        emit isApplyAllowedChanged();
+    }
 }
 
 int NoiseViewModel::type() const
@@ -58,6 +71,17 @@ void NoiseViewModel::prop_setType(int type)
     if (!m_inited) {
         return;
     }
-    mutSettings<NoiseSettings>().type = static_cast<NoiseSettings::Type>(type);
+
+    bool wasAllowed = isApplyAllowed();
+
+    NoiseSettings::Type noiseType = static_cast<NoiseSettings::Type>(type);
+
+    DO_ASSERT(noiseType < NoiseSettings::Type::Count);
+
+    mutSettings<NoiseSettings>().type = noiseType;
     emit typeChanged();
+
+    if (wasAllowed != isApplyAllowed()) {
+        emit isApplyAllowedChanged();
+    }
 }

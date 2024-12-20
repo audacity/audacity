@@ -17,9 +17,13 @@ struct NoiseSettings
 
     static constexpr Type typeDefault = Type::White;
     static constexpr double amplitudeDefault = 0.8;
+    static constexpr double amplitudeMax = 1.0;
+    static constexpr double amplitudeMin = 0.0;
 
     Type type { typeDefault };
     double amplitude { amplitudeDefault };
+
+    bool isApplyAllowed() const;
 };
 
 class NoiseGenerator : public GeneratorEffect, public EffectWithSettings <NoiseSettings, PerTrackEffect>

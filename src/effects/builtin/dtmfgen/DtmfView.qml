@@ -11,7 +11,7 @@ EffectBase {
     id: root
 
     property string title: qsTrc("effects/dtmf", "DTMF Tones")
-    property bool isApplyAllowed: true
+    property alias isApplyAllowed: dtmf.isApplyAllowed
 
     width: 300
     height: 350
@@ -68,12 +68,13 @@ EffectBase {
 
             currentText: dtmf.amplitude
 
-            validator: DoubleInputValidator {
-                decimal: 6
+            validator: DoubleValidator {
+                top: 1
+                bottom: 0
             }
 
-            onTextEdited: function (newTextValue) {
-                dtmf.amplitude = parseFloat(newTextValue)
+            inputField.onDisplayTextChanged: function () {
+                dtmf.amplitude = parseFloat(inputField.displayText)
             }
         }
 
