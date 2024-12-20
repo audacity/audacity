@@ -4,7 +4,6 @@
 #pragma once
 
 #include "../common/generatoreffectmodel.h"
-#include "dtmfgenerator.h"
 
 namespace au::effects {
 class DtmfGenerator;
@@ -22,6 +21,8 @@ class DtmfViewModel : public GeneratorEffectModel
 public:
     DtmfViewModel();
     virtual ~DtmfViewModel();
+
+    bool isApplyAllowed() const override;
 
     QString sequence() const;
     void prop_setSequence(const QString& newSequence);

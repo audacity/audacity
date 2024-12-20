@@ -30,7 +30,7 @@ public:
     int lowerTimeSignature() const;
     QString durationFormat() const;
     void prop_setDurationFormat(const QString& newDurationFormat);
-    bool isApplyAllowed() const;
+    virtual bool isApplyAllowed() const;
 
 signals:
     void sampleRateChanged();

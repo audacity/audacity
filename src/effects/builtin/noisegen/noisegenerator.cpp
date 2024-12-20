@@ -149,3 +149,8 @@ size_t NoiseGenerator::Instance::InstanceProcess(
 
     return size;
 }
+
+bool NoiseSettings::isApplyAllowed() const
+{
+    return type < Type::Count && amplitude >= amplitudeMin && amplitude <= amplitudeMax;
+}

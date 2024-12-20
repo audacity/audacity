@@ -67,8 +67,8 @@ EffectBase {
                 bottom: 1
             }
 
-            onTextEdited: function (newTextValue) {
-                tone.frequencyStart = parseFloat(newTextValue)
+            inputField.onDisplayTextChanged: function () {
+                tone.frequencyStart = parseFloat(inputField.displayText)
             }
         }
 
@@ -87,8 +87,8 @@ EffectBase {
                 bottom: 0
             }
 
-            onTextEdited: function (newTextValue) {
-                tone.amplitudeStart = parseFloat(newTextValue)
+            inputField.onDisplayTextChanged: function () {
+                tone.amplitudeStart = parseFloat(inputField.displayText)
             }
         }
 

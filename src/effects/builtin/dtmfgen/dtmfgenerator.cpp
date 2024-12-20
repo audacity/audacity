@@ -187,7 +187,6 @@ void DtmfSettings::Recalculate(EffectSettings& settings)
         // no tones, all zero: don't do anything
         // this should take care of the case where user got an empty
         // dtmf sequence into the generator: track won't be generated
-        extra.SetDuration(0.0);
         dtmfTone = 0;
         dtmfSilence = 0;
     } else {
@@ -223,6 +222,12 @@ void DtmfSettings::Recalculate(EffectSettings& settings)
     // `this` is the settings copy in the validator
     // Update the EffectSettings held by the dialog
     DtmfGenerator::GetSettings(settings) = *this;
+}
+
+bool DtmfSettings::isApplyAllowed() const
+{
+    return dtmfNTones > 0 && dtmfAmplitude >= AmplitudeMin && dtmfAmplitude <= AmplitudeMax && dtmfDutyCycle >= DutyCycleMin
+           && dtmfDutyCycle <= DutyCycleMax;
 }
 
 bool DtmfGenerator::MakeDtmfTone(

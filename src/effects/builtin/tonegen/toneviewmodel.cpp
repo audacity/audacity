@@ -32,7 +32,7 @@ bool ToneViewModel::isApplyAllowed() const
     if (!te) {
         return false;
     }
-    return te->isApplyAllowed();
+    return te->isApplyAllowed() && GeneratorEffectModel::isApplyAllowed();
 }
 
 QList<QString> ToneViewModel::waveforms() const

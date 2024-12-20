@@ -4,7 +4,6 @@
 #pragma once
 
 #include "../common/generatoreffectmodel.h"
-#include "noisegenerator.h"
 
 namespace au::effects {
 class NoiseGenerator;
@@ -18,9 +17,13 @@ class NoiseViewModel : public GeneratorEffectModel
     Q_PROPERTY(QVariantList types READ types CONSTANT)
 
 public:
+    bool isApplyAllowed() const override;
+
     QVariantList types() const;
+
     double amplitude() const;
     void prop_setAmplitude(double newAmplitude);
+
     int type() const;
     void prop_setType(int type);
 

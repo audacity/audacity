@@ -67,8 +67,8 @@ EffectBase {
                 bottom: 1
             }
 
-            onTextEdited: function (newTextValue) {
-                chirp.frequencyStart = parseFloat(newTextValue)
+            inputField.onDisplayTextChanged: function () {
+                chirp.frequencyStart = parseFloat(inputField.displayText)
             }
         }
 
@@ -80,8 +80,8 @@ EffectBase {
                 bottom: 1
             }
 
-            onTextEdited: function (newTextValue) {
-                chirp.frequencyEnd = parseFloat(newTextValue)
+            inputField.onDisplayTextChanged: function () {
+                chirp.frequencyEnd = parseFloat(inputField.displayText)
             }
         }
 
@@ -100,8 +100,8 @@ EffectBase {
                 bottom: 0
             }
 
-            onTextEdited: function (newTextValue) {
-                chirp.amplitudeStart = parseFloat(newTextValue)
+            inputField.onDisplayTextChanged: function () {
+                chirp.amplitudeStart = parseFloat(inputField.displayText)
             }
         }
 
@@ -115,8 +115,8 @@ EffectBase {
                 bottom: 0
             }
 
-            onTextEdited: function (newTextValue) {
-                chirp.amplitudeEnd = parseFloat(newTextValue)
+            inputField.onDisplayTextChanged: function () {
+                chirp.amplitudeEnd = parseFloat(inputField.displayText)
             }
         }
 
