@@ -3,12 +3,16 @@
 */
 #pragma once
 
+#include "modularity/ioc.h"
 #include "../iglobalcontext.h"
 #include "playbackstate.h"
+#include "record/irecordcontroller.h"
 
 namespace au::context {
-class GlobalContext : public au::context::IGlobalContext
+class GlobalContext : public au::context::IGlobalContext, public muse::Injectable
 {
+    muse::Inject<au::record::IRecordController> recordController;
+
 public:
 
     GlobalContext();
@@ -22,6 +26,9 @@ public:
 
     void setPlayer(const au::playback::IPlayerPtr& player) override;
     IPlaybackStatePtr playbackState() const override;
+
+    bool isRecording() const override;
+    muse::async::Notification isRecordingChanged() const override;
 
 private:
     au::project::IAudacityProjectPtr m_currentProject;

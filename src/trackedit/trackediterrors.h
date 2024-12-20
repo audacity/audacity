@@ -21,7 +21,8 @@ enum class Err {
     NotEnoughSpaceForPaste,
     StereoClipIntoMonoTrack,
     FailedToMakeRoomForClip,
-    NotEnoughDataInClipboard
+    NotEnoughDataInClipboard,
+    DisallowedDuringRecording,
 };
 
 inline muse::Ret make_ret(Err e)

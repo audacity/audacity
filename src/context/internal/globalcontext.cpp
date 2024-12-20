@@ -69,3 +69,13 @@ IPlaybackStatePtr GlobalContext::playbackState() const
 {
     return m_playbackState;
 }
+
+bool GlobalContext::isRecording() const
+{
+    return recordController()->isRecording();
+}
+
+muse::async::Notification GlobalContext::isRecordingChanged() const
+{
+    return recordController()->isRecordingChanged();
+}

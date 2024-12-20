@@ -33,22 +33,22 @@ bool TrackeditInteraction::silenceTracksData(const std::vector<trackedit::TrackI
 
 bool TrackeditInteraction::changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title)
 {
-    return withPlaybackStop(&ITrackeditInteraction::changeTrackTitle, trackId, title);
+    return m_interaction->changeTrackTitle(trackId, title);
 }
 
 bool TrackeditInteraction::changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle)
 {
-    return withPlaybackStop(&ITrackeditInteraction::changeClipTitle, clipKey, newTitle);
+    return m_interaction->changeClipTitle(clipKey, newTitle);
 }
 
 bool TrackeditInteraction::changeClipPitch(const ClipKey& clipKey, int pitch)
 {
-    return withPlaybackStop(&ITrackeditInteraction::changeClipPitch, clipKey, pitch);
+    return m_interaction->changeClipPitch(clipKey, pitch);
 }
 
 bool TrackeditInteraction::resetClipPitch(const ClipKey& clipKey)
 {
-    return withPlaybackStop(&ITrackeditInteraction::resetClipPitch, clipKey);
+    return m_interaction->resetClipPitch(clipKey);
 }
 
 bool TrackeditInteraction::changeClipSpeed(const ClipKey& clipKey, double speed)
@@ -66,7 +66,7 @@ bool TrackeditInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bo
     return withPlaybackStop(&ITrackeditInteraction::changeClipOptimizeForVoice, clipKey, optimize);
 }
 
-void TrackeditInteraction::renderClipPitchAndSpeed(const ClipKey& clipKey)
+bool TrackeditInteraction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
     return withPlaybackStop(&ITrackeditInteraction::renderClipPitchAndSpeed, clipKey);
 }
@@ -186,32 +186,32 @@ muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKe
     return m_interaction->clipDuration(clipKey);
 }
 
-std::optional<secs_t> TrackeditInteraction::getMostLeftClipStartTime(const ClipKeyList& clipKeys) const
+std::optional<secs_t> TrackeditInteraction::getLeftmostClipStartTime(const ClipKeyList& clipKeys) const
 {
-    return m_interaction->getMostLeftClipStartTime(clipKeys);
+    return m_interaction->getLeftmostClipStartTime(clipKeys);
 }
 
-void TrackeditInteraction::newMonoTrack()
+bool TrackeditInteraction::newMonoTrack()
 {
     return withPlaybackStop(&ITrackeditInteraction::newMonoTrack);
 }
 
-void TrackeditInteraction::newStereoTrack()
+bool TrackeditInteraction::newStereoTrack()
 {
     return withPlaybackStop(&ITrackeditInteraction::newStereoTrack);
 }
 
-void TrackeditInteraction::newLabelTrack()
+bool TrackeditInteraction::newLabelTrack()
 {
     return withPlaybackStop(&ITrackeditInteraction::newLabelTrack);
 }
 
-void TrackeditInteraction::deleteTracks(const TrackIdList& trackIds)
+bool TrackeditInteraction::deleteTracks(const TrackIdList& trackIds)
 {
     return withPlaybackStop(&ITrackeditInteraction::deleteTracks, trackIds);
 }
 
-void TrackeditInteraction::duplicateTracks(const TrackIdList& trackIds)
+bool TrackeditInteraction::duplicateTracks(const TrackIdList& trackIds)
 {
     return withPlaybackStop(&ITrackeditInteraction::duplicateTracks, trackIds);
 }
@@ -226,7 +226,7 @@ void TrackeditInteraction::moveTracksTo(const TrackIdList& trackIds, int to)
     return m_interaction->moveTracksTo(trackIds, to);
 }
 
-void TrackeditInteraction::undo()
+bool TrackeditInteraction::undo()
 {
     return withPlaybackStop(&ITrackeditInteraction::undo);
 }
@@ -236,7 +236,7 @@ bool TrackeditInteraction::canUndo()
     return m_interaction->canUndo();
 }
 
-void TrackeditInteraction::redo()
+bool TrackeditInteraction::redo()
 {
     return withPlaybackStop(&ITrackeditInteraction::redo);
 }
@@ -246,12 +246,12 @@ bool TrackeditInteraction::canRedo()
     return m_interaction->canRedo();
 }
 
-void TrackeditInteraction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
+bool TrackeditInteraction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
 {
-    withPlaybackStop(&ITrackeditInteraction::insertSilence, trackIds, begin, end, duration);
+    return withPlaybackStop(&ITrackeditInteraction::insertSilence, trackIds, begin, end, duration);
 }
 
-void TrackeditInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
+bool TrackeditInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
 {
     return withPlaybackStop(&ITrackeditInteraction::toggleStretchToMatchProjectTempo, clipKey);
 }

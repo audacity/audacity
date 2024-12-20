@@ -45,7 +45,7 @@ public:
     virtual bool changeClipSpeed(const ClipKey& clipKey, double speed) = 0;
     virtual bool resetClipSpeed(const ClipKey& clipKey) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
-    virtual void renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
+    virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual void clearClipboard() = 0;
     virtual muse::Ret pasteFromClipboard(secs_t begin) = 0;
     virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;
@@ -69,24 +69,23 @@ public:
     virtual bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool completed) = 0;
     virtual bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool completed) = 0;
     virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
-    virtual std::optional<secs_t> getMostLeftClipStartTime(const ClipKeyList& clipKeys) const = 0;
+    virtual std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const = 0;
 
-    virtual void newMonoTrack() = 0;
-    virtual void newStereoTrack() = 0;
-    virtual void newLabelTrack() = 0;
-    virtual void deleteTracks(const TrackIdList& trackIds) = 0;
-    virtual void duplicateTracks(const TrackIdList& trackIds) = 0;
+    virtual bool newMonoTrack() = 0;
+    virtual bool newStereoTrack() = 0;
+    virtual bool newLabelTrack() = 0;
+    virtual bool deleteTracks(const TrackIdList& trackIds) = 0;
+    virtual bool duplicateTracks(const TrackIdList& trackIds) = 0;
     virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
     virtual void moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
-
-    virtual void undo() = 0;
+    virtual bool undo() = 0;
     virtual bool canUndo() = 0;
-    virtual void redo() = 0;
+    virtual bool redo() = 0;
     virtual bool canRedo() = 0;
 
-    virtual void insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) = 0;
+    virtual bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) = 0;
 
-    virtual void toggleStretchToMatchProjectTempo(const ClipKey& clipKey) = 0;
+    virtual bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) = 0;
 
     virtual muse::ProgressPtr progress() const = 0;
 };

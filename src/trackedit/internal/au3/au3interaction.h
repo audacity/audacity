@@ -45,7 +45,7 @@ public:
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
-    void renderClipPitchAndSpeed(const ClipKey& clipKey) override;
+    bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
@@ -69,24 +69,24 @@ public:
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
-    std::optional<secs_t> getMostLeftClipStartTime(const ClipKeyList& clipKeys) const override;
+    std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
 
-    void newMonoTrack() override;
-    void newStereoTrack() override;
-    void newLabelTrack() override;
-    void deleteTracks(const TrackIdList& trackIds) override;
-    void duplicateTracks(const TrackIdList& trackIds) override;
+    bool newMonoTrack() override;
+    bool newStereoTrack() override;
+    bool newLabelTrack() override;
+    bool deleteTracks(const TrackIdList& trackIds) override;
+    bool duplicateTracks(const TrackIdList& trackIds) override;
     void moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction) override;
     void moveTracksTo(const TrackIdList& trackIds, int to) override;
 
-    void insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
+    bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 
-    void undo() override;
+    bool undo() override;
     bool canUndo() override;
-    void redo() override;
+    bool redo() override;
     bool canRedo() override;
 
-    void toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
+    bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
     muse::ProgressPtr progress() const override;
 

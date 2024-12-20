@@ -46,6 +46,12 @@ static const ActionCode SPLIT_DELETE_SELECTED("split-delete-selected");
 static const ActionCode NEW_MONO_TRACK("new-mono-track");
 static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
 static const ActionCode NEW_LABEL_TRACK("new-label-track");
+static const ActionCode TRACK_DELETE("track-delete");
+static const ActionCode TRACK_DUPLICATE("track-duplicate");
+static const ActionCode TRACK_MOVE_UP("track-move-up");
+static const ActionCode TRACK_MOVE_DOWN("track-move-down");
+static const ActionCode TRACK_MOVE_TOP("track-move-top");
+static const ActionCode TRACK_MOVE_BOTTOM("track-move-bottom");
 
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
@@ -54,6 +60,44 @@ static const ActionCode UNDO("undo");
 static const ActionCode REDO("redo");
 
 static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
+
+// In principle, disabled are actions that modify the data involved in playback.
+static const std::vector<ActionCode> actionsDisabledDuringRecording {
+    CUT_CODE,
+    DELETE_CODE,
+    SPLIT_CUT_CODE,
+    SPLIT_DELETE_CODE,
+    SPLIT_CODE,
+    JOIN_CODE,
+    DUPLICATE_CODE,
+    CLIP_CUT_CODE,
+    MULTI_CLIP_CUT_CODE,
+    RANGE_SELECTION_CUT_CODE,
+    CLIP_DELETE_CODE,
+    MULTI_CLIP_DELETE_CODE,
+    RANGE_SELECTION_DELETE_CODE,
+    CLIP_RENDER_PITCH_AND_SPEED_CODE,
+    PASTE,
+    TRACK_SPLIT,
+    TRACK_SPLIT_AT,
+    MERGE_SELECTED_ON_TRACK,
+    DUPLICATE_SELECTED,
+    DUPLICATE_CLIP,
+    CLIP_SPLIT_CUT,
+    CLIP_SPLIT_DELETE,
+    SPLIT_CUT_SELECTED,
+    SPLIT_DELETE_SELECTED,
+    NEW_MONO_TRACK,
+    NEW_STEREO_TRACK,
+    NEW_LABEL_TRACK,
+    TRIM_AUDIO_OUTSIDE_SELECTION,
+    SILENCE_AUDIO_SELECTION,
+    UNDO,
+    REDO,
+    STRETCH_ENABLED_CODE,
+    TRACK_DELETE,
+    TRACK_DUPLICATE
+};
 
 void TrackeditActionsController::init()
 {
@@ -100,12 +144,12 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, NEW_MONO_TRACK, this, &TrackeditActionsController::newMonoTrack);
     dispatcher()->reg(this, NEW_STEREO_TRACK, this, &TrackeditActionsController::newStereoTrack);
     dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
-    dispatcher()->reg(this, "track-delete", this, &TrackeditActionsController::deleteTracks);
-    dispatcher()->reg(this, "track-duplicate", this, &TrackeditActionsController::duplicateTracks);
-    dispatcher()->reg(this, "track-move-up", this, &TrackeditActionsController::moveTracksUp);
-    dispatcher()->reg(this, "track-move-down", this, &TrackeditActionsController::moveTracksDown);
-    dispatcher()->reg(this, "track-move-top", this, &TrackeditActionsController::moveTracksToTop);
-    dispatcher()->reg(this, "track-move-bottom", this, &TrackeditActionsController::moveTracksToBottom);
+    dispatcher()->reg(this, TRACK_DELETE, this, &TrackeditActionsController::deleteTracks);
+    dispatcher()->reg(this, TRACK_DUPLICATE, this, &TrackeditActionsController::duplicateTracks);
+    dispatcher()->reg(this, TRACK_MOVE_UP, this, &TrackeditActionsController::moveTracksUp);
+    dispatcher()->reg(this, TRACK_MOVE_DOWN, this, &TrackeditActionsController::moveTracksDown);
+    dispatcher()->reg(this, TRACK_MOVE_TOP, this, &TrackeditActionsController::moveTracksToTop);
+    dispatcher()->reg(this, TRACK_MOVE_BOTTOM, this, &TrackeditActionsController::moveTracksToBottom);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
     dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
@@ -115,6 +159,12 @@ void TrackeditActionsController::init()
     projectHistory()->isUndoRedoAvailableChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(UNDO);
         notifyActionEnabledChanged(REDO);
+    });
+
+    globalContext()->isRecordingChanged().onNotify(this, [this]() {
+        for (const auto& actionCode : actionsDisabledDuringRecording) {
+            notifyActionEnabledChanged(actionCode);
+        }
     });
 }
 
@@ -385,9 +435,9 @@ void TrackeditActionsController::multiClipCopy()
     trackeditInteraction()->clearClipboard();
 
     secs_t offset = 0.0;
-    std::optional<secs_t> mostLeftClipStartTime = trackeditInteraction()->getMostLeftClipStartTime(selectionController()->selectedClips());
-    if (mostLeftClipStartTime.has_value()) {
-        offset = -mostLeftClipStartTime.value();
+    std::optional<secs_t> leftmostClipStartTime = trackeditInteraction()->getLeftmostClipStartTime(selectionController()->selectedClips());
+    if (leftmostClipStartTime.has_value()) {
+        offset = -leftmostClipStartTime.value();
     }
 
     for (const auto& track : tracks) {
@@ -804,6 +854,8 @@ Channel<ActionCode> TrackeditActionsController::actionCheckedChanged() const
 bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) const
 {
     if (globalContext()->currentProject() == nullptr) {
+        return false;
+    } else if (globalContext()->isRecording() && muse::contains(actionsDisabledDuringRecording, actionCode)) {
         return false;
     } else if (actionCode == UNDO) {
         return trackeditInteraction()->canUndo();

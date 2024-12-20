@@ -20,5 +20,8 @@ public:
 
     MOCK_METHOD(void, setPlayer, (const playback::IPlayerPtr&), (override));
     MOCK_METHOD(IPlaybackStatePtr, playbackState, (), (const, override));
+
+    MOCK_METHOD(bool, isRecording, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, isRecordingChanged, (), (const, override));
 };
 }
