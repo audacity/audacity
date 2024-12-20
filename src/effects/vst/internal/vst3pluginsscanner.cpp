@@ -4,6 +4,8 @@
 
 #include "vst3pluginsscanner.h"
 
+#include "global/io/dir.h"
+
 #include "libraries/lib-module-manager/PluginManager.h"
 #include "libraries/lib-vst3/VST3EffectsModule.cpp"
 
@@ -25,7 +27,7 @@ io::paths_t Vst3PluginsScanner::scanPlugins() const
 
     for (const auto& path : paths) {
         const auto modulePath = path.BeforeFirst(';');
-        result.emplace_back(au3::wxToSting(modulePath));
+        result.emplace_back(muse::io::Dir::fromNativeSeparators(au3::wxToString(modulePath)));
     }
 
     return result;
