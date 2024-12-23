@@ -49,6 +49,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3commonsettings.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3basicui.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3basicui.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackcolor.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackcolor.h
     )
 
 

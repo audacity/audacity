@@ -1,6 +1,7 @@
 #include "domconverter.h"
 
 #include "au3types.h"
+#include "trackcolor.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
@@ -27,28 +28,6 @@ static au::trackedit::TrackType trackType(const Au3Track* track)
 
     return au::trackedit::TrackType::Undefined;
 }
-
-static muse::draw::Color trackColor(const au::trackedit::TrackId& trackId)
-{
-    //! TODO AU4 Just for tests
-    static std::vector<muse::draw::Color> colors = {
-        muse::draw::Color::fromString("#66A3FF"),
-        muse::draw::Color::fromString("#9996FC"),
-        muse::draw::Color::fromString("#DA8CCC"),
-        muse::draw::Color::fromString("#F08080"),
-        muse::draw::Color::fromString("#FF9E65"),
-        muse::draw::Color::fromString("#E8C050"),
-        muse::draw::Color::fromString("#74BE59"),
-        muse::draw::Color::fromString("#34B494"),
-        muse::draw::Color::fromString("#48BECF")
-    };
-    size_t colorIdx = std::llabs(trackId);
-    if (colorIdx >= colors.size()) {
-        colorIdx = colorIdx % colors.size();
-    }
-
-    return colors.at(colorIdx);
-}
 }
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
@@ -59,7 +38,7 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.title = wxToString(au3clip->GetName());
     clip.startTime = au3clip->GetPlayStartTime();
     clip.endTime = au3clip->GetPlayEndTime();
-    clip.color = trackColor(clip.key.trackId);
+    clip.color = TrackColor::Get(waveTrack).GetColor();
     clip.stereo = au3clip->NChannels() > 1;
 
     clip.pitch = au3clip->GetCentShift();
@@ -77,7 +56,7 @@ au::trackedit::Track DomConverter::track(const Au3Track* waveTrack)
     au4t.id = waveTrack->GetId();
     au4t.title = wxToString(waveTrack->GetName());
     au4t.type = trackType(waveTrack);
-    au4t.color = trackColor(au4t.id);
+    au4t.color = TrackColor::Get(waveTrack).GetColor();
 
     return au4t;
 }
