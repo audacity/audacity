@@ -19,6 +19,8 @@ static const AttachedTrackObjects::RegisteredFactory keyTrackColor{
     [](Track &track) -> std::shared_ptr<TrackColor>{ return std::make_shared<TrackColor>(track); }
 };
 
+static constexpr auto ColorAttr = "color";
+
 TrackColor &TrackColor::Get(Track *track)
 {
     return track->AttachedTrackObjects::Get<TrackColor>(keyTrackColor);
@@ -46,12 +48,12 @@ void TrackColor::Reparent(const std::shared_ptr<Track> &parent)
 
 void TrackColor::WriteXMLAttributes(XMLWriter &writer) const
 {
-    writer.WriteAttr("color", mColor.toString());
+    writer.WriteAttr(ColorAttr, mColor.toString());
 }
 
 bool TrackColor::HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &valueView)
 {
-    if (attr == "color") {
+    if (attr == ColorAttr) {
         mColor = muse::draw::Color::fromString(valueView.ToWString());
         return true;
     }
