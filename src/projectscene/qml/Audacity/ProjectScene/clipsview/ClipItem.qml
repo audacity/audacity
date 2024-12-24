@@ -16,7 +16,7 @@ Rectangle {
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
     property int pitch: 0
-    property int speedPercentage: 0.0
+    property int speedPercentage: 0
     property alias showChannelSplitter: channelSplitter.visible
     property alias channelHeightRatio: channelSplitter.channelHeightRatio
     property var canvas: null
@@ -428,7 +428,7 @@ Rectangle {
                     id: speedBtn
 
                     icon: IconCode.CLOCK
-                    text: Math.floor(root.speedPercentage) + "%"
+                    text: root.speedPercentage + "%"
 
                     visible: root.speedPercentage !== 100.0
 
