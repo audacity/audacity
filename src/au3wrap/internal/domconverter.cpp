@@ -5,6 +5,7 @@
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
+#include "libraries/lib-label-track/LabelTrack.h"
 
 #include "wxtypes_convert.h"
 
@@ -15,9 +16,11 @@ using namespace au::au3;
 namespace {
 static au::trackedit::TrackType trackType(const Au3Track* track)
 {
-    switch (track->NChannels()) {
-    case 0:
+    if (dynamic_cast<const LabelTrack*>(track)) {
         return au::trackedit::TrackType::Label;
+    }
+
+    switch (track->NChannels()) {
     case 1:
         return au::trackedit::TrackType::Mono;
     case 2:
