@@ -134,7 +134,7 @@ int ClipListItem::pitch() const
     return m_clip.pitch;
 }
 
-double ClipListItem::speedPercentage() const
+int ClipListItem::speedPercentage() const
 {
-    return 100.0 / m_clip.speed;
+    return qRound(100.0 / m_clip.speed);
 }
