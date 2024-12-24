@@ -72,7 +72,11 @@ std::vector<au::trackedit::Track> Au3TrackeditProject::trackList() const
 
     //TODO AU4: For now we filter out label tracks
     au4tracks.erase(std::remove_if(au4tracks.begin(), au4tracks.end(), [](const Track& t) {
-        return t.type == au::trackedit::TrackType::Label;
+        if (t.type == au::trackedit::TrackType::Label) {
+            LOGW() << "Label tracks not implemented, so it will be filtered out.";
+            return true;
+        }
+        return false;
     }), au4tracks.end());
 
     return au4tracks;
