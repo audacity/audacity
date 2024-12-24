@@ -70,6 +70,11 @@ std::vector<au::trackedit::Track> Au3TrackeditProject::trackList() const
         au4tracks.push_back(std::move(au4t));
     }
 
+    //TODO AU4: For now we filter out label tracks
+    au4tracks.erase(std::remove_if(au4tracks.begin(), au4tracks.end(), [](const Track& t) {
+        return t.type == au::trackedit::TrackType::Label;
+    }), au4tracks.end());
+
     return au4tracks;
 }
 

@@ -42,8 +42,10 @@ void TrackItem::init(const trackedit::Track& track)
     m_trackId = track.id;
     m_trackType = track.type;
     m_title = track.title;
-    m_outParams.volume = trackPlaybackControl()->volume(m_trackId);
-    m_outParams.balance = trackPlaybackControl()->balance(m_trackId);
+    if (m_trackType != trackedit::TrackType::Label) {
+        m_outParams.volume = trackPlaybackControl()->volume(m_trackId);
+        m_outParams.balance = trackPlaybackControl()->balance(m_trackId);
+    }
 }
 
 au::trackedit::TrackId TrackItem::trackId() const
