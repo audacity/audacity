@@ -12,7 +12,7 @@ using namespace au::effects;
 
 void GeneratorEffectModel::doReload()
 {
-    auto* const ge = dynamic_cast<GeneratorEffect*>(effect());
+    GeneratorEffect* const ge = generatorEffect();
     IF_ASSERT_FAILED(ge) {
         return;
     }
@@ -130,5 +130,7 @@ void GeneratorEffectModel::update()
 
 GeneratorEffect* GeneratorEffectModel::generatorEffect() const
 {
-    return dynamic_cast<GeneratorEffect*>(effect());
+    EffectId effectId = this->effectId();
+    Effect* e = effectsProvider()->effect(effectId);
+    return dynamic_cast<GeneratorEffect*>(e);
 }

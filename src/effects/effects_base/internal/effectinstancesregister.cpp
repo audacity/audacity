@@ -5,16 +5,16 @@
 
 using namespace au::effects;
 
-EffectInstanceId EffectInstancesRegister::regInstance(const EffectId& effectId, Effect* e, EffectSettings* s)
+EffectInstanceId EffectInstancesRegister::regInstance(const EffectId& effectId, const std::shared_ptr<EffectInstance>& i, EffectSettings* s)
 {
-    EffectInstanceId id = reinterpret_cast<EffectInstanceId>(e);
-    m_data.insert({ id, { effectId, e, s } });
+    EffectInstanceId id = reinterpret_cast<EffectInstanceId>(i.get());
+    m_data.insert({ id, { effectId, i, s, muse::async::Notification() } });
     return id;
 }
 
-void EffectInstancesRegister::unregInstance(const Effect* e)
+void EffectInstancesRegister::unregInstance(const std::shared_ptr<EffectInstance>& i)
 {
-    EffectInstanceId id = instanceIdOf(e);
+    EffectInstanceId id = instanceIdOf(i);
     unregInstance(id);
 }
 
@@ -23,10 +23,10 @@ void EffectInstancesRegister::unregInstance(const EffectInstanceId& instanceId)
     m_data.erase(instanceId);
 }
 
-EffectInstanceId EffectInstancesRegister::instanceIdOf(const Effect* e) const
+EffectInstanceId EffectInstancesRegister::instanceIdOf(const std::shared_ptr<EffectInstance>& i) const
 {
     for (const auto& p : m_data) {
-        if (p.second.effect == e) {
+        if (p.second.instance == i) {
             return p.first;
         }
     }
@@ -34,11 +34,11 @@ EffectInstanceId EffectInstancesRegister::instanceIdOf(const Effect* e) const
     return EffectInstanceId();
 }
 
-Effect* EffectInstancesRegister::instanceById(const EffectInstanceId& instanceId) const
+std::shared_ptr<EffectInstance> EffectInstancesRegister::instanceById(const EffectInstanceId& instanceId) const
 {
     auto it = m_data.find(instanceId);
     if (it != m_data.end()) {
-        return it->second.effect;
+        return it->second.instance;
     }
 
     return nullptr;

@@ -22,8 +22,10 @@ void ToneViewModel::doEmitSignals()
 
 ToneEffect* ToneViewModel::effect() const
 {
-    ToneEffect* const e = dynamic_cast<ToneEffect*>(AbstractEffectModel::effect());
-    return e;
+    EffectId effectId = this->effectId();
+    Effect* e = effectsProvider()->effect(effectId);
+    ToneEffect* te = dynamic_cast<ToneEffect*>(e);
+    return te;
 }
 
 bool ToneViewModel::isApplyAllowed() const

@@ -225,9 +225,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             muse::String type = au3::wxToString(effect->GetSymbol().Internal());
-            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, effect, settings);
+            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, pInstanceEx, settings);
             muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
-            effectInstancesRegister()->unregInstance(effect);
+            effectInstancesRegister()->unregInstance(instanceId);
             if (ret) {
                 effect->SaveUserPreset(CurrentSettingsGroup(), *settings);
             } else {
@@ -410,6 +410,7 @@ muse::async::Channel<EffectId> EffectExecutionScenario::lastProcessorIdChanged()
 muse::Ret EffectExecutionScenario::previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings)
 {
     au3::Au3Project& project = projectRef();
-    Effect* effect = effectInstancesRegister()->instanceById(effectInstanceId);
+    EffectId effectId = effectInstancesRegister()->effectIdByInstanceId(effectInstanceId);
+    Effect* effect = effectsProvider()->effect(effectId);
     return effectsProvider()->previewEffect(project, effect, settings);
 }

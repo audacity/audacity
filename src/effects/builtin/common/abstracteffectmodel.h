@@ -13,7 +13,6 @@
 
 #include "global/async/asyncable.h"
 
-class Effect;
 namespace au::effects {
 class AbstractEffectModel : public QObject, public muse::async::Asyncable
 {
@@ -37,6 +36,7 @@ public:
     Q_INVOKABLE void preview();
 
     EffectInstanceId instanceId() const;
+    EffectId effectId() const;
     bool inited() const;
 
 signals:
@@ -47,7 +47,7 @@ protected:
 
     virtual void doReload() = 0;
 
-    Effect* effect() const;
+    std::shared_ptr<effects::EffectInstance> instance() const;
     EffectSettings* settings() const;
 
     template<typename T>
