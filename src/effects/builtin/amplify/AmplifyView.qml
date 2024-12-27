@@ -49,7 +49,7 @@ EffectBase {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 80
 
-                currentText: amplify.amp.toFixed(4)
+                currentText: amplify.ampText
 
                 validator: DoubleInputValidator {
                     top: amplify.ampMax
@@ -58,7 +58,7 @@ EffectBase {
                 }
 
                 onTextEdited: function(newTextValue) {
-                    amplify.amp = parseFloat(newTextValue)
+                    amplify.ampText = newTextValue
                 }
             }
         }

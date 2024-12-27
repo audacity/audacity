@@ -11,6 +11,7 @@ class AmplifyEffect;
 class AmplifyViewModel : public AbstractEffectModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString ampText READ ampText WRITE setAmpText NOTIFY ampTextChanged FINAL)
     Q_PROPERTY(float amp READ amp WRITE setAmp NOTIFY ampChanged FINAL)
     Q_PROPERTY(float ampMin READ ampMin NOTIFY ampChanged FINAL)
     Q_PROPERTY(float ampMax READ ampMax NOTIFY ampChanged FINAL)
@@ -26,6 +27,8 @@ class AmplifyViewModel : public AbstractEffectModel
 public:
     AmplifyViewModel() = default;
 
+    QString ampText() const;
+    void setAmpText(const QString& newAmpText);
     float amp() const;
     void setAmp(float newAmp);
     float ampMin() const;
@@ -43,6 +46,7 @@ public:
     void setIsApplyAllowed(bool isApplyAllowed);
 
 signals:
+    void ampTextChanged();
     void ampChanged();
     void newPeakChanged();
     void canClipChanged();
@@ -55,6 +59,7 @@ private:
 
     void update();
 
+    QString m_ampText;
     Param<db_t> m_amp;
     db_t m_newPeak = 0.0;
     bool m_canClip = false;

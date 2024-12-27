@@ -30,6 +30,9 @@ void AmplifyViewModel::doReload()
     emit canClipChanged();
 
     update();
+
+    m_ampText = QString::number(m_amp.val, 'f', 4);
+    emit ampTextChanged();
 }
 
 void AmplifyViewModel::update()
@@ -85,6 +88,23 @@ float AmplifyViewModel::ampMin() const
 float AmplifyViewModel::ampMax() const
 {
     return m_amp.max;
+}
+
+QString AmplifyViewModel::ampText() const
+{
+    return m_ampText;
+}
+
+void AmplifyViewModel::setAmpText(const QString& newAmpText)
+{
+    if (m_ampText == newAmpText) {
+        return;
+    }
+
+    m_ampText = newAmpText;
+    emit ampTextChanged();
+
+    setAmp(m_ampText.toFloat());
 }
 
 float AmplifyViewModel::newPeak() const
