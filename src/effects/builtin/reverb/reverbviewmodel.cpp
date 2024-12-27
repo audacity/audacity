@@ -12,15 +12,6 @@ ReverbViewModel::ReverbViewModel()
 {
 }
 
-ReverbEffect* ReverbViewModel::effect() const
-{
-    ReverbEffect* e = dynamic_cast<ReverbEffect*>(AbstractEffectModel::effect());
-    IF_ASSERT_FAILED(e) {
-        return nullptr;
-    }
-    return e;
-}
-
 void ReverbViewModel::doReload()
 {
     const ReverbSettings& rs = settings<ReverbSettings>();

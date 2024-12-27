@@ -11,8 +11,10 @@ using namespace au::effects;
 
 AmplifyEffect* AmplifyViewModel::effect() const
 {
-    AmplifyEffect* e = dynamic_cast<AmplifyEffect*>(AbstractEffectModel::effect());
-    return e;
+    EffectId effectId = this->effectId();
+    Effect* e = effectsProvider()->effect(effectId);
+    AmplifyEffect* ae = dynamic_cast<AmplifyEffect*>(e);
+    return ae;
 }
 
 void AmplifyViewModel::doReload()

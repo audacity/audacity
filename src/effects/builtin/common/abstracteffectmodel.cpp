@@ -36,7 +36,7 @@ bool AbstractEffectModel::inited() const
     return m_inited;
 }
 
-Effect* AbstractEffectModel::effect() const
+std::shared_ptr<au::effects::EffectInstance> AbstractEffectModel::instance() const
 {
     EffectInstanceId id = this->instanceId();
     if (id == 0) {
@@ -59,6 +59,11 @@ EffectSettings* AbstractEffectModel::settings() const
 EffectInstanceId AbstractEffectModel::instanceId() const
 {
     return m_instanceId.toULongLong();
+}
+
+EffectId AbstractEffectModel::effectId() const
+{
+    return instancesRegister()->effectIdByInstanceId(this->instanceId());
 }
 
 void AbstractEffectModel::preview()

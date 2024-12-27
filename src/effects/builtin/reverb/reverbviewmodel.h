@@ -29,8 +29,6 @@ private:
 
     void doReload() override;
 
-    ReverbEffect* effect() const;
-
     using Setter = std::function<void (double)>;
 
     QVariantList m_paramsList;
