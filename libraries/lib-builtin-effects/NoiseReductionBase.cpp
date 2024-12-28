@@ -50,19 +50,6 @@
 
 typedef std::vector<float> FloatVector;
 
-// Define both of these to make the radio button three-way
-#define RESIDUE_CHOICE
-//#define ISOLATE_CHOICE
-
-// Define for Attack and release controls.
-// #define ATTACK_AND_RELEASE
-
-// Define to expose other advanced, experimental dialog controls
-//#define ADVANCED_SETTINGS
-
-// Define to make the old statistical methods an available choice
-//#define OLD_METHOD_AVAILABLE
-
 namespace
 {
 
