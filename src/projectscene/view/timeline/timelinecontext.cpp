@@ -209,30 +209,14 @@ void TimelineContext::insureVisible(double posSec)
     double frameStartPosition = timeToContentPosition(m_frameStartTime);
     double frameEndPosition = timeToContentPosition(m_frameEndTime);
 
-    if (muse::RealIsEqualOrMore(newPosition, frameStartPosition + SCROLL_MARGIN_PX)
-        && muse::RealIsEqualOrLess(newPosition, frameEndPosition - SCROLL_MARGIN_PX)) {
+    if (muse::RealIsEqualOrMore(newPosition, frameStartPosition)
+        && muse::RealIsEqualOrLess(newPosition, frameEndPosition)) {
         return;
     }
 
-    constexpr double AUTO_SHIFT_PERCENT(0.01);
-
-    if (newPosition < frameStartPosition + SCROLL_MARGIN_PX) {
-        double frameTime = m_frameEndTime - m_frameStartTime;
-        shiftFrameTime(-frameTime * AUTO_SHIFT_PERCENT);
-        moveToFrameTime(m_frameStartTime - (frameTime * AUTO_SHIFT_PERCENT));
-    } else {
-        double frameTime = m_frameEndTime - m_frameStartTime;
-        double endGapPx = newPosition - frameEndPosition;
-
-        if (endGapPx < SCROLL_MARGIN_PX) {
-            // auto shift
-            shiftFrameTime(frameTime * AUTO_SHIFT_PERCENT);
-            moveToFrameTime(m_frameStartTime + (frameTime * AUTO_SHIFT_PERCENT));
-        } else {
-            double newFrameTime = m_frameStartTime + (posSec - m_frameEndTime) + (frameTime / 3.0);
-            moveToFrameTime(newFrameTime);
-        }
-    }
+    double frameTime = m_frameEndTime - m_frameStartTime;
+    double newFrameTime = m_frameStartTime + (posSec - m_frameEndTime) + (frameTime / 3.0);
+    moveToFrameTime(newFrameTime);
 }
 
 void TimelineContext::autoScrollView(double scrollStep)
