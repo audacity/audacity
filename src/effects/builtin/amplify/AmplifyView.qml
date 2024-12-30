@@ -45,11 +45,19 @@ EffectBase {
                 text: qsTrc("effects/amplify", "Amplification (dB):")
             }
 
+            Binding {
+                target: ampInput
+                property: "currentText"
+                value: +amplify.amp.toFixed(4)
+                when: !ampInput.focus
+                restoreMode: Binding.RestoreNone
+            }
+
             TextInputField {
+                id: ampInput
+
                 anchors.verticalCenter: parent.verticalCenter
                 width: 80
-
-                currentText: amplify.amp.toFixed(4)
 
                 validator: DoubleInputValidator {
                     top: amplify.ampMax
@@ -87,11 +95,19 @@ EffectBase {
                 text: qsTrc("effects/amplify", "New Peak Amplitude (dB):")
             }
 
+            Binding {
+                target: newPeakInput
+                property: "currentText"
+                value: +amplify.newPeak.toFixed(4)
+                when: !newPeakInput.focus
+                restoreMode: Binding.RestoreNone
+            }
+
             TextInputField {
+                id: newPeakInput
+
                 anchors.verticalCenter: parent.verticalCenter
                 width: 80
-
-                currentText: amplify.newPeak.toFixed(4)
 
                 validator: DoubleInputValidator {
                     top: amplify.newPeakMax
