@@ -494,22 +494,22 @@ Ret Au3Record::doRecord(Au3Project& project,
 
         wxString baseTrackName = recordingNameCustom ? defaultRecordingTrackName : defaultTrackName;
 
-        auto newTracks = WaveTrackFactory::Get(*p).CreateMany(recordingChannels);
-        const auto first = *newTracks->begin();
+        const auto tmpTracks = WaveTrackFactory::Get(*p).CreateMany(recordingChannels);
+        const auto first = *tmpTracks->begin();
         int trackCounter = 0;
         const auto minimizeChannelView = false;    //recordingChannels > 2 && !TracksPrefs::TracksFitVerticallyZoomed.Read();
-        for (auto newTrack : newTracks->Any<Au3WaveTrack>()) {
+        for (auto tmpTrack : tmpTracks->Any<Au3WaveTrack>()) {
             // Quantize bounds to the rate of the new track.
-            if (newTrack == first) {
+            if (tmpTrack == first) {
                 if (t0 < DBL_MAX) {
-                    t0 = newTrack->SnapToSample(t0);
+                    t0 = tmpTrack->SnapToSample(t0);
                 }
                 if (t1 < DBL_MAX) {
-                    t1 = newTrack->SnapToSample(t1);
+                    t1 = tmpTrack->SnapToSample(t1);
                 }
             }
 
-            newTrack->MoveTo(t0);
+            tmpTrack->MoveTo(t0);
             wxString nameSuffix = wxString(wxT(""));
 
             if (useTrackNumber) {
@@ -534,27 +534,27 @@ Ret Au3Record::doRecord(Au3Project& project,
             nameSuffix.Replace(wxT(":"), wxT("-"));
 
             if (baseTrackName.empty()) {
-                newTrack->SetName(nameSuffix);
+                tmpTrack->SetName(nameSuffix);
             } else if (nameSuffix.empty()) {
-                newTrack->SetName(baseTrackName);
+                tmpTrack->SetName(baseTrackName);
             } else {
-                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
+                tmpTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
             }
+
+            // Duplicate the track so two TrackLists do not point to the same track
+            const auto newTrack = std::static_pointer_cast<Au3WaveTrack>(tmpTrack->Duplicate());
 
             //create a new clip with a proper name before recording is started
             Au3WaveTrack::IntervalHolder newClip = insertEmptyInterval(*newTrack, t0, false);
 
-            transportSequences.captureSequences.push_back(
-                std::static_pointer_cast<Au3WaveTrack>(newTrack->shared_from_this())
-                );
-
-            trackList.Append(std::static_pointer_cast<Au3WaveTrack>(newTrack->shared_from_this()));
+            transportSequences.captureSequences.push_back(newTrack);
+            trackList.Append(newTrack);
 
             m_recordData.tracksIds.push_back(newTrack->GetId());
             m_recordData.clipsKeys.push_back({ newTrack->GetId(), newClip->GetId() });
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-            prj->notifyAboutTrackAdded(DomConverter::track(newTrack));
+            prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
         }
     }
 
