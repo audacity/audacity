@@ -49,6 +49,7 @@ EffectBase {
                 target: ampInput
                 property: "currentText"
                 value: +amplify.amp.toFixed(4)
+                // Remove binding while editing the text to avoid toFixed to override the input
                 when: !ampInput.focus
                 restoreMode: Binding.RestoreNone
             }
@@ -99,6 +100,7 @@ EffectBase {
                 target: newPeakInput
                 property: "currentText"
                 value: +amplify.newPeak.toFixed(4)
+                // Remove binding while editing the text to avoid toFixed to override the input
                 when: !newPeakInput.focus
                 restoreMode: Binding.RestoreNone
             }
