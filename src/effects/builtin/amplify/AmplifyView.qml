@@ -49,7 +49,7 @@ EffectBase {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 80
 
-                currentText: amplify.amp.toFixed(4)
+                currentText: amplify.amp
 
                 validator: DoubleInputValidator {
                     top: amplify.ampMax

@@ -55,9 +55,9 @@ void AmplifyViewModel::update()
     setIsApplyAllowed(isApplyAllowed);
 }
 
-float AmplifyViewModel::amp() const
+double AmplifyViewModel::amp() const
 {
-    return m_amp.val;
+    return std::round(m_amp.val.to_double() * 10000.0) / 10000.0;
 }
 
 void AmplifyViewModel::setAmp(float newAmp_)

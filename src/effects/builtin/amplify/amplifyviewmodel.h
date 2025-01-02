@@ -11,7 +11,7 @@ class AmplifyEffect;
 class AmplifyViewModel : public AbstractEffectModel
 {
     Q_OBJECT
-    Q_PROPERTY(float amp READ amp WRITE setAmp NOTIFY ampChanged FINAL)
+    Q_PROPERTY(double amp READ amp WRITE setAmp NOTIFY ampChanged FINAL)
     Q_PROPERTY(float ampMin READ ampMin NOTIFY ampChanged FINAL)
     Q_PROPERTY(float ampMax READ ampMax NOTIFY ampChanged FINAL)
 
@@ -26,7 +26,7 @@ class AmplifyViewModel : public AbstractEffectModel
 public:
     AmplifyViewModel() = default;
 
-    float amp() const;
+    double amp() const;
     void setAmp(float newAmp);
     float ampMin() const;
     float ampMax() const;
