@@ -6,14 +6,13 @@ on:
     - master
 
 jobs:
-  au4_codestyle:    
-    runs-on: ubuntu-20.04
+  au4_codestyle:
+    runs-on: ubuntu-24.04
     steps:
     - name: Clone repository
-      uses: actions/checkout@v4  
-    - name: Fetch Muse CI scripts
+      uses: actions/checkout@v4
+    - name: Install clang-format
+      run: sudo apt-get update && sudo apt-get install -y clang-format-19
+    - name: Check code style
       run: |
-        cmake -P ./buildscripts/ci/checkcodestyle/ci_fetch.cmake
-    - name: Test coding style
-      run: |
-        cmake -P ./buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./
+        ./buildscripts/ci/checkcodestyle/run_scan.sh
