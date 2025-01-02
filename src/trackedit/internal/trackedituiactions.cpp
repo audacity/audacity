@@ -359,6 +359,18 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Silence"),
              IconCode::Code::SILENCE_AUDIO_SELECTION
              ),
+    UiAction("group-clips",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Group clips"),
+             TranslatableString("action", "Group clips")
+             ),
+    UiAction("ungroup-clips",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Ungroup clips"),
+             TranslatableString("action", "Ungroup clips")
+             ),
 };
 
 TrackeditUiActions::TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller)

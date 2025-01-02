@@ -24,7 +24,10 @@ MenuItemList MultiClipContextMenuModel::makeItems()
     MenuItemList items {
         makeMenuItem("multi-clip-cut"),
         makeMenuItem("multi-clip-copy"),
-        makeMenuItem("multi-clip-delete")
+        makeMenuItem("multi-clip-delete"),
+        makeSeparator(),
+        makeMenuItem("group-clips"),
+        makeMenuItem("ungroup-clips")
     };
 
     return items;

@@ -61,6 +61,9 @@ static const ActionCode REDO("redo");
 
 static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
+static const ActionCode GROUP_CLIPS_CODE("group-clips");
+static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
+
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
     CUT_CODE,
@@ -96,7 +99,9 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     REDO,
     STRETCH_ENABLED_CODE,
     TRACK_DELETE,
-    TRACK_DUPLICATE
+    TRACK_DUPLICATE,
+    GROUP_CLIPS_CODE,
+    UNGROUP_CLIPS_CODE
 };
 
 void TrackeditActionsController::init()
@@ -165,6 +170,11 @@ void TrackeditActionsController::init()
         for (const auto& actionCode : actionsDisabledDuringRecording) {
             notifyActionEnabledChanged(actionCode);
         }
+    });
+
+    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList&) {
+        notifyActionEnabledChanged(GROUP_CLIPS_CODE);
+        notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
     });
 }
 
@@ -861,6 +871,10 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
         return trackeditInteraction()->canUndo();
     } else if (actionCode == REDO) {
         return trackeditInteraction()->canRedo();
+    } else if (actionCode == GROUP_CLIPS_CODE) {
+        return (selectionController()->selectedClips().size() > 1);
+    } else if (actionCode == UNGROUP_CLIPS_CODE) {
+        return (selectionController()->selectedClips().size() > 1 && selectionController()->selectionContainsGroup());
     }
 
     return true;
