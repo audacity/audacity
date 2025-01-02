@@ -845,6 +845,9 @@ public:
    void SetName(const wxString& name);
    const wxString& GetName() const;
 
+   int64_t GetGroupId() const;
+   void SetGroupId(int64_t id);
+
    // TimeToSamples and SamplesToTime take clip stretch ratio into account.
    // Use them to convert time / sample offsets.
    sampleCount TimeToSamples(double time) const override;
@@ -1049,6 +1052,8 @@ private:
    bool mIsPlaceholder { false };
 
    wxString mName;
+
+   int64_t mGroupId = -1;
 };
 
 #endif

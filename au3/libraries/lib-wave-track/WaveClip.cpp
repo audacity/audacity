@@ -1808,6 +1808,16 @@ const wxString& WaveClip::GetName() const
    return mName;
 }
 
+int64_t WaveClip::GetGroupId() const
+{
+   return mGroupId;
+}
+
+void WaveClip::SetGroupId(int64_t id)
+{
+   mGroupId = id;
+}
+
 sampleCount WaveClip::TimeToSamples(double time) const
 {
    return sampleCount(floor(time * mRate / GetStretchRatio() + 0.5));
