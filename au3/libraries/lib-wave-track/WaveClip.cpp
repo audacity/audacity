@@ -995,6 +995,7 @@ static constexpr auto ClipStretchRatio_attr = "clipStretchRatio";
 static constexpr auto ClipStretchToMatchTempo_attr = "clipStretchToMatchTempo";
 static constexpr auto ClipTempo_attr = "clipTempo";
 static constexpr auto Name_attr = "name";
+static constexpr auto GroupId_attr = "groupId";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
@@ -1069,6 +1070,12 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
          {
             if(value.IsStringView())
                SetName(value.ToWString());
+         }
+         else if (attr == GroupId_attr)
+         {
+             if (!value.TryGet(longValue))
+                 return false;
+             mGroupId = longValue;
          }
          else if (Attachments::FindIf(
             [&](WaveClipListener &listener){
@@ -1148,6 +1155,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
    xmlFile.WriteAttr(ClipStretchToMatchTempo_attr, mStretchToMatchProjectTempo);
    xmlFile.WriteAttr(ClipTempo_attr, mClipTempo.value_or(0.), 8);
    xmlFile.WriteAttr(Name_attr, mName);
+   xmlFile.WriteAttr(GroupId_attr, static_cast<long>(mGroupId));
    Attachments::ForEach([&](const WaveClipListener &listener){
       listener.WriteXMLAttributes(xmlFile);
    });
