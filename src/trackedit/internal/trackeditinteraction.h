@@ -71,6 +71,11 @@ private:
 
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
+    int64_t clipGroupId(const trackedit::ClipKey& clipKey) const override;
+    void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) override;
+    int64_t determineGroupId(const ClipKeyList& clipKeyList) const override;
+    ClipKeyList clipsInGroup(int64_t id) const;
+
     muse::ProgressPtr progress() const override;
 
 private:

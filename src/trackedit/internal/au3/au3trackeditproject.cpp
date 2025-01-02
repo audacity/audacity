@@ -50,6 +50,32 @@ Au3TrackeditProject::~Au3TrackeditProject()
     m_impl->tracksSubc.Reset();
 }
 
+std::vector<int64_t> Au3TrackeditProject::groupsIdsList() const
+{
+    std::vector<int64_t> groupsList;
+
+    for (const auto& trackId : trackIdList()) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return {};
+        }
+
+        for (const auto& key : clipList(trackId)) {
+            std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.key.clipId);
+            IF_ASSERT_FAILED(au3Clip) {
+                return {};
+            }
+
+            int64_t groupId = au3Clip->GetGroupId();
+            if (!muse::contains(groupsList, groupId)) {
+                groupsList.push_back(groupId);
+            }
+        }
+    }
+
+    return groupsList;
+}
+
 std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
 {
     std::vector<au::trackedit::TrackId> au4trackIds;

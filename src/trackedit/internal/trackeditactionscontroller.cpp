@@ -161,6 +161,9 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, STRETCH_ENABLED_CODE, this, &TrackeditActionsController::toggleStretchClipToMatchTempo);
 
+    dispatcher()->reg(this, GROUP_CLIPS_CODE, this, &TrackeditActionsController::groupClips);
+    dispatcher()->reg(this, UNGROUP_CLIPS_CODE, this, &TrackeditActionsController::ungroupClips);
+
     projectHistory()->isUndoRedoAvailableChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(UNDO);
         notifyActionEnabledChanged(REDO);
@@ -848,6 +851,29 @@ void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::Ac
     interactive()->showProgress(muse::trc("trackedit", "Applying"), trackeditInteraction()->progress().get());
 
     trackeditInteraction()->renderClipPitchAndSpeed(clipKey);
+}
+
+void TrackeditActionsController::groupClips()
+{
+    const auto selectedClips = selectionController()->selectedClips();
+    const auto newGroupId = trackeditInteraction()->determineGroupId(selectedClips);
+
+    for (const auto& selectedClip : selectedClips) {
+        trackeditInteraction()->setClipGroupId(selectedClip, newGroupId);
+    }
+
+    notifyActionEnabledChanged(GROUP_CLIPS_CODE);
+    notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+}
+
+void TrackeditActionsController::ungroupClips()
+{
+    for (const auto& selectedClip : selectionController()->selectedClips()) {
+        trackeditInteraction()->setClipGroupId(selectedClip, -1);
+    }
+
+    notifyActionEnabledChanged(GROUP_CLIPS_CODE);
+    notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode& actionCode) const

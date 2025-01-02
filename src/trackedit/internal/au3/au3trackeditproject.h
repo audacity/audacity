@@ -25,6 +25,7 @@ public:
     std::vector<Track> trackList() const override;
     Clip clip(const ClipKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
+    std::vector<int64_t> groupsIdsList() const override;
     std::string trackName(const TrackId& trackId) const override;
 
     void reload() override;

@@ -100,6 +100,9 @@ private:
     void toggleStretchClipToMatchTempo(const muse::actions::ActionData& args);
     void renderClipPitchAndSpeed(const muse::actions::ActionData& args);
 
+    void groupClips();
+    void ungroupClips();
+
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
