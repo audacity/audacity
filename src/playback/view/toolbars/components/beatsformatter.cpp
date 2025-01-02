@@ -19,6 +19,21 @@ static constexpr size_t pow10(int power)
     return result;
 }
 
+static int beatsFormatterModeToOffset(BeatsFormatterMode mode)
+{
+    // The beat formatter can be 1 or 0 based depending on whether it is used
+    // to describe a point in time or the difference between two points.
+    switch (mode) {
+    case BeatsFormatterMode::TimePoint:
+        return 1;
+    case BeatsFormatterMode::Duration:
+        return 0;
+    default:
+        return 0;
+    }
+}
+
+
 static constexpr std::array<size_t, 3> MIN_DIGITS { 3, 2, 2 };
 static constexpr std::array<size_t, 3> UPPER_BOUNDS {
     pow10(MIN_DIGITS[0] - 1) + 1, pow10(MIN_DIGITS[1] - 1) + 1,
@@ -35,8 +50,8 @@ static QString beatString()
     return muse::qtrc("playback", "beat");
 }
 
-BeatsFormatter::BeatsFormatter(const QString& formatStr, int fracPart)
-    : TimecodeFormatter(formatStr), m_fracPart(fracPart)
+BeatsFormatter::BeatsFormatter(const QString& formatStr, int fracPart, BeatsFormatterMode mode)
+    : TimecodeFormatter(formatStr), m_fracPart(fracPart), m_mode(mode)
 {
 }
 
@@ -97,7 +112,8 @@ BeatsFormatter::ConversionResult BeatsFormatter::valueToString(double value, boo
             0, static_cast<int>(std::floor(value * eps / fieldLength)));
 
         char field[10];
-        snprintf(field, sizeof(field), m_fields[fieldIndex].formatStr.toStdString().c_str(), (int)(fieldValue + m_fieldValueOffset));
+        int offset = beatsFormatterModeToOffset(m_mode);
+        snprintf(field, sizeof(field), m_fields[fieldIndex].formatStr.toStdString().c_str(), (int)(fieldValue + offset));
 
         result.fieldValueStrings[fieldIndex] = field;
 
@@ -134,7 +150,8 @@ std::optional<double> BeatsFormatter::stringToValue(const QString& value) const
             return std::nullopt;
         }
 
-        t += (val - m_fieldValueOffset) * m_fieldLengths[i];
+        int offset = beatsFormatterModeToOffset(m_mode);
+        t += (val - offset) * m_fieldLengths[i];
 
         lastIndex = labelIndex + field.label.size();
     }
@@ -204,12 +221,8 @@ void BeatsFormatter::updateFields(size_t barsDigits)
 
     barsField.label = " " + barString() + " ";
 
-    // Beats format is 1 based. For the time point "0" the expected output is
-    // "1 bar 1 beat [1]" For this reason we use (uts + 1) as the "range". On
-    // top of that, we want at least two digits to be shown. NumericField
-    // accepts range as in [0, range), so add 1.
-
-    auto& beatsField = m_fields.emplace_back(NumericField::range(std::max<size_t>(UPPER_BOUNDS[1], m_upperTimeSignature + 1)));
+    int offset = beatsFormatterModeToOffset(m_mode);
+    auto& beatsField = m_fields.emplace_back(NumericField::range(std::max<size_t>(UPPER_BOUNDS[1], m_upperTimeSignature + offset)));
 
     beatsField.label = " " + beatString();
 
@@ -218,7 +231,7 @@ void BeatsFormatter::updateFields(size_t barsDigits)
     if (hasFracPart) {
         beatsField.label += " ";
         // See the reasoning above about the range
-        m_fields.emplace_back(NumericField::range(std::max(11, m_fracPart / m_lowerTimeSignature + 1)));
+        m_fields.emplace_back(NumericField::range(std::max(11, m_fracPart / m_lowerTimeSignature + offset)));
     }
 
     // Fill the aux m_digits structure

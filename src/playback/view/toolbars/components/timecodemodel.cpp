@@ -202,7 +202,7 @@ void TimecodeModel::reloadFormatter()
     ViewFormatType format = static_cast<ViewFormatType>(m_currentFormat);
     if (format == ViewFormatType::BarBeat || format == ViewFormatType::BarBeatTick) {
         int fracPart = format == ViewFormatType::BarBeat ? 0 : 16;
-        m_formatter = std::make_shared<BeatsFormatter>(m_availableViewFormats[m_currentFormat].formatStr, fracPart);
+        m_formatter = std::make_shared<BeatsFormatter>(m_availableViewFormats[m_currentFormat].formatStr, fracPart, BeatsFormatterMode::Duration);
     } else {
         m_formatter = std::make_shared<NumericFormatter>(m_availableViewFormats[m_currentFormat].formatStr);
     }

@@ -82,10 +82,10 @@ TEST_F(TimecodeModelTests, Parse_Beats)
     m_model->setLowerTimeSignature(4);
 
     std::vector < std::pair<double, QString> > expectedValues = {
-        { 0.0, "001 bar 01 beat" },
-        { 0.6, "001 bar 02 beat" },
-        { 1.0, "001 bar 03 beat" },
-        { 1.6, "002 bar 01 beat" },
+        { 0.0, "000 bar 00 beat" },
+        { 0.6, "000 bar 01 beat" },
+        { 1.0, "000 bar 02 beat" },
+        { 1.6, "001 bar 00 beat" },
     };
 
     for (const auto& [value, expected] : expectedValues) {
@@ -101,10 +101,10 @@ TEST_F(TimecodeModelTests, Parse_Beats)
 
     expectedValues = {
         { -1.0, "--- bar -- beat --" },
-        { 0.0, "001 bar 01 beat 01" },
-        { 0.6, "001 bar 02 beat 01" },
-        { 1.0, "001 bar 03 beat 01" },
-        { 1.9, "002 bar 01 beat 04" },
+        { 0.0, "000 bar 00 beat 00" },
+        { 0.6, "000 bar 01 beat 00" },
+        { 1.0, "000 bar 02 beat 00" },
+        { 1.9, "001 bar 00 beat 03" },
     };
 
     for (const auto& [value, expected] : expectedValues) {
