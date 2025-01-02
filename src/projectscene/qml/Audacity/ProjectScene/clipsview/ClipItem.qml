@@ -128,9 +128,8 @@ Rectangle {
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
             } else {
                 singleClipContextMenuLoader.show(Qt.point(e.x, e.y), singleClipContextMenuModel.items)
+                root.requestSelected()
             }
-
-            root.requestSelected()
         }
 
         onPositionChanged: {

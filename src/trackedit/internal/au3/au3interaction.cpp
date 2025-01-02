@@ -1665,6 +1665,77 @@ bool Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
     return true;
 }
 
+int64_t Au3Interaction::clipGroupId(const ClipKey &clipKey) const
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return -1.0;
+    }
+
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return -1.0;
+    }
+
+    return clip->GetGroupId();
+}
+
+void Au3Interaction::setClipGroupId(const ClipKey &clipKey, int64_t id)
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return;
+    }
+
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return;
+    }
+
+    clip->SetGroupId(id);
+}
+
+int64_t Au3Interaction::determineGroupId(const ClipKeyList &clipKeyList) const
+{
+    //! NOTE: check if any clip already belongs to a group
+    for (const auto& selectedClip : clipKeyList) {
+        if (clipGroupId(selectedClip) != -1) {
+            return clipGroupId(selectedClip);
+        }
+    }
+
+    //! NOTE: none of the clips is grouped, find unique id for them
+    auto prj = globalContext()->currentTrackeditProject();
+    auto groupsList = prj->groupsIdsList();
+
+    int64_t newGroupId = 0;
+    while (muse::contains(groupsList, newGroupId)) {
+        newGroupId++;
+    }
+
+    return newGroupId;
+}
+
+ClipKeyList Au3Interaction::clipsInGroup(int64_t id) const
+{
+    if (id == -1) {
+        return ClipKeyList();
+    }
+
+    ClipKeyList groupedClips;
+
+    auto prj = globalContext()->currentTrackeditProject();
+    for (const auto& trackId : prj->trackIdList()) {
+        for (const auto& clipKey : prj->clipList(trackId)) {
+            if (clipGroupId(clipKey.key) == id) {
+                groupedClips.push_back(clipKey.key);
+            }
+        }
+    }
+
+    return groupedClips;
+}
+
 muse::ProgressPtr Au3Interaction::progress() const
 {
     return m_progress;

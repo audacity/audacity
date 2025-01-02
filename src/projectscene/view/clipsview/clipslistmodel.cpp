@@ -557,13 +557,25 @@ void ClipsListModel::selectClip(const ClipKey& key)
 {
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
-    if (modifiers.testFlag(Qt::ShiftModifier)) {
-        selectionController()->addSelectedClip(key.key);
-    } else {
-        if (muse::contains(selectionController()->selectedClips(), key.key)) {
-            return;
+    const auto clipGroupId = trackeditInteraction()->clipGroupId(key.key);
+    if (clipGroupId != -1) {
+        //! NOTE: clip belongs to a group, select the whole group
+        if (modifiers.testFlag(Qt::ShiftModifier)) {
+            for (const auto& key : trackeditInteraction()->clipsInGroup(clipGroupId)) {
+                selectionController()->addSelectedClip(key);
+            }
+        } else {
+            selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId));
         }
-        selectionController()->setSelectedClips(ClipKeyList({ key.key }));
+    } else {
+        if (modifiers.testFlag(Qt::ShiftModifier)) {
+            selectionController()->addSelectedClip(key.key);
+        } else {
+            if (muse::contains(selectionController()->selectedClips(), key.key)) {
+                return;
+            }
+            selectionController()->setSelectedClips(ClipKeyList({ key.key }));
+        }
     }
 }
 
