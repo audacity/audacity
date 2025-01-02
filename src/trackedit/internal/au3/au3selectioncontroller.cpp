@@ -308,6 +308,32 @@ void Au3SelectionController::setDataSelectedEndTime(au::trackedit::secs_t time, 
     m_selectedEndTime.set(time, complete);
 }
 
+bool Au3SelectionController::selectionContainsGroup() const
+{
+    const auto clipKeyList = selectedClips();
+    if (clipKeyList.empty()) {
+        return false;
+    }
+
+    for (const auto& clipKey : clipKeyList) {
+        WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return false;
+        }
+
+        if (clip->GetGroupId() != -1) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
 {
     return m_selectedEndTime.changed;

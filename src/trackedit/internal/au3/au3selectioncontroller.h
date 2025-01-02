@@ -63,6 +63,9 @@ public:
     trackedit::secs_t selectionStartTime() const override;
     void setSelectionStartTime(trackedit::secs_t time) override;
 
+    // grouping
+    bool selectionContainsGroup() const override;
+
 private:
     void updateSelectionController();
 

@@ -45,5 +45,7 @@ public:
 
     MOCK_METHOD(trackedit::secs_t, selectionStartTime, (), (const override));
     MOCK_METHOD(void, setSelectionStartTime, (trackedit::secs_t), (override));
+
+    MOCK_METHOD(bool, selectionContainsGroup, (), (const, override));
 };
 }
