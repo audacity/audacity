@@ -7,8 +7,7 @@
 
 using namespace au::effects;
 
-AbstractEffectModel::AbstractEffectModel(QObject* parent)
-    : QObject(parent)
+AbstractEffectModel::AbstractEffectModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -19,7 +18,7 @@ void AbstractEffectModel::init()
     }
 
     EffectInstanceId id = this->instanceId();
-    IF_ASSERT_FAILED(id != 0) {
+    IF_ASSERT_FAILED (id != 0) {
         return;
     }
 

@@ -1,7 +1,7 @@
 #include "effectmanagemenu.h"
 
-#include "effects/effects_base/effectstypes.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "effects/effects_base/effectstypes.h"
 
 using namespace muse;
 using namespace muse::uicomponents;
@@ -43,7 +43,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
                 String name = au3::wxToString(p);
                 MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
                 item->setId("user_apply_" + name);
-                item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p)); // apply for instance
+                item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p));  // apply for instance
                 subitems << item;
             }
             menuItem->setSubitems(subitems);
@@ -67,7 +67,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
                 String name = au3::wxToString(p);
                 MenuItem* item = makeMenuItem("action://effects/presets/delete", TranslatableString::untranslatable(name));
                 item->setId("user_delete_" + name);
-                item->setArgs(ActionData::make_arg2<EffectId, PresetId>(effectId, p)); // delete for effect
+                item->setArgs(ActionData::make_arg2<EffectId, PresetId>(effectId, p));  // delete for effect
                 subitems << item;
             }
             menuItem->setSubitems(subitems);
@@ -92,7 +92,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             String name = au3::wxToString(p);
             MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
             item->setId("factory_apply_" + name);
-            item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p));     // apply for instance
+            item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p));  // apply for instance
             subitems << item;
         }
         menuItem->setSubitems(subitems);

@@ -5,8 +5,8 @@
 
 #include "../ieffectsconfiguration.h"
 
-#include "modularity/ioc.h"
 #include "global/iglobalconfiguration.h"
+#include "modularity/ioc.h"
 
 namespace au::effects {
 class EffectsConfiguration : public IEffectsConfiguration
@@ -18,4 +18,4 @@ public:
 
     void init();
 };
-}
+}  // namespace au::effects

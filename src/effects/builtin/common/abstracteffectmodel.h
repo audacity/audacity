@@ -7,9 +7,9 @@
 
 #include "libraries/lib-components/EffectInterface.h"
 
-#include "modularity/ioc.h"
-#include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
+#include "modularity/ioc.h"
 
 #include "global/async/asyncable.h"
 
@@ -44,13 +44,12 @@ signals:
     void effectIdChanged();
 
 protected:
-
     virtual void doReload() = 0;
 
     Effect* effect() const;
     EffectSettings* settings() const;
 
-    template<typename T>
+    template <typename T>
     const T& settings() const
     {
         EffectSettings* s = this->settings();
@@ -63,7 +62,7 @@ protected:
         return *st;
     }
 
-    template<typename T>
+    template <typename T>
     T& mutSettings()
     {
         EffectSettings* s = this->settings();
@@ -83,4 +82,4 @@ protected:
 private:
     QString m_instanceId;
 };
-}
+}  // namespace au::effects

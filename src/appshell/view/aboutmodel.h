@@ -24,10 +24,10 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
-#include "iappshellconfiguration.h"
-#include "global/iglobalconfiguration.h"
 #include "global/iapplication.h"
+#include "global/iglobalconfiguration.h"
+#include "iappshellconfiguration.h"
+#include "modularity/ioc.h"
 
 //! TODO AU4
 //#include "update/iupdateconfiguration.h"
@@ -43,8 +43,8 @@ class AboutModel : public QObject
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
     muse::Inject<muse::IApplication> application;
 
-//! TODO AU4
-//     muse::Inject<update::IUpdateConfiguration> updateConfiguration;
+    //! TODO AU4
+    //     muse::Inject<update::IUpdateConfiguration> updateConfiguration;
 
 public:
     explicit AboutModel(QObject* parent = nullptr);
@@ -66,6 +66,6 @@ public:
 private:
     QVariantMap makeUrl(const QUrl& url, bool showPath = true) const;
 };
-}
+}  // namespace au::appshell
 
-#endif // MU_APPSHELL_ABOUTMODEL_H
+#endif  // MU_APPSHELL_ABOUTMODEL_H

@@ -30,17 +30,14 @@
 using namespace muse;
 using namespace au::appshell;
 
-AboutModel::AboutModel(QObject* parent)
-    : QObject(parent)
+AboutModel::AboutModel(QObject* parent) : QObject(parent)
 {
 }
 
 QString AboutModel::museScoreVersion() const
 {
     QString version = QString::fromStdString(configuration()->museScoreVersion());
-    return application()->unstable()
-           ? qtrc("appshell/about", "Unstable prerelease for %1").arg(version)
-           : version;
+    return application()->unstable() ? qtrc("appshell/about", "Unstable prerelease for %1").arg(version) : version;
 }
 
 QString AboutModel::museScoreRevision() const
@@ -68,7 +65,7 @@ QVariantMap AboutModel::museScoreContributionUrl() const
 
 QVariantMap AboutModel::museScorePrivacyPolicyUrl() const
 {
-//! TODO AU4
+    //! TODO AU4
     // QUrl museScorePrivacyPolicyUrl(QString::fromStdString(updateConfiguration()->museScorePrivacyPolicyUrl()));
     // return makeUrl(museScorePrivacyPolicyUrl);
     return QVariantMap();
@@ -90,14 +87,18 @@ void AboutModel::copyRevisionToClipboard() const
 {
     QApplication::clipboard()->setText(
         QString("OS: %1, Arch.: %2, MuseScore version (%3-bit): %4-%5, revision: github-musescore-musescore-%6")
-        .arg(QSysInfo::prettyProductName()
-             + ((QSysInfo::productType() == "windows" && (QSysInfo::productVersion() == "10" || QSysInfo::productVersion() == "11"))
-                ? " or later" : ""))
-        .arg(QSysInfo::currentCpuArchitecture())
-        .arg(QSysInfo::WordSize)
-        .arg(application()->version().toString())
-        .arg(application()->build())
-        .arg(application()->revision()));
+            .arg(
+                QSysInfo::prettyProductName() +
+                ((QSysInfo::productType() == "windows" && (QSysInfo::productVersion() == "10" || QSysInfo::productVersion() == "11"))
+                     ? " or later"
+                     : "")
+            )
+            .arg(QSysInfo::currentCpuArchitecture())
+            .arg(QSysInfo::WordSize)
+            .arg(application()->version().toString())
+            .arg(application()->build())
+            .arg(application()->revision())
+    );
 }
 
 void AboutModel::toggleDevMode()

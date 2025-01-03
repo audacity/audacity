@@ -26,9 +26,9 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "iprojectconfiguration.h"
 #include "cloud/musescorecom/imusescorecomservice.h"
+#include "iprojectconfiguration.h"
+#include "modularity/ioc.h"
 
 namespace au::project {
 class CloudProjectsModel : public AbstractProjectsModel, public muse::async::Asyncable
@@ -83,6 +83,6 @@ private:
 
     int m_desiredRowCount = 0;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_CLOUDPROJECTSMODEL_H
+#endif  // AU_PROJECT_CLOUDPROJECTSMODEL_H

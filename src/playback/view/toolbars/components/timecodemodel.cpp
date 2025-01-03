@@ -3,14 +3,14 @@
 */
 #include "timecodemodel.h"
 
-#include "uicomponents/view/menuitem.h"
 #include "ui/uiaction.h"
+#include "uicomponents/view/menuitem.h"
 
-#include "numericformatter.h"
 #include "beatsformatter.h"
+#include "numericformatter.h"
 
-#include "translation.h"
 #include "log.h"
+#include "translation.h"
 
 using namespace au::playback;
 using namespace muse::uicomponents;
@@ -21,38 +21,38 @@ static bool isFieldEditable(const QChar& fieldSymbol)
     return fieldSymbol.isDigit();
 }
 
-TimecodeModel::TimecodeModel(QObject* parent)
-    : QAbstractListModel(parent)
+TimecodeModel::TimecodeModel(QObject* parent) : QAbstractListModel(parent)
 {
     // translate all
     m_availableViewFormats = {
-        { ViewFormatType::Seconds, muse::qtrc("playback", "seconds"), "01000,01000s" },
-        { ViewFormatType::SecondsMilliseconds, muse::qtrc("playback", "seconds + milliseconds"), "01000,01000>01000 s" },
-        { ViewFormatType::HHMMSS, muse::qtrc("playback", "hh:mm:ss"), "0100 h 060 m 060 s" },
-        { ViewFormatType::DDHHMMSS, muse::qtrc("playback", "dd:hh:mm:ss"), "0100 d 024 h 060 m 060 s" },
+        {ViewFormatType::Seconds, muse::qtrc("playback", "seconds"), "01000,01000s"},
+        {ViewFormatType::SecondsMilliseconds, muse::qtrc("playback", "seconds + milliseconds"), "01000,01000>01000 s"},
+        {ViewFormatType::HHMMSS, muse::qtrc("playback", "hh:mm:ss"), "0100 h 060 m 060 s"},
+        {ViewFormatType::DDHHMMSS, muse::qtrc("playback", "dd:hh:mm:ss"), "0100 d 024 h 060 m 060 s"},
 
-        { ViewFormatType::HHMMSSHundredths, muse::qtrc("playback", "hh:mm:ss + hundredths"), "0100 h 060 m 060>0100 s" },
-        { ViewFormatType::HHMMSSMilliseconds, muse::qtrc("playback", "hh:mm:ss + milliseconds"), "0100 h 060 m 060>01000 s" },
+        {ViewFormatType::HHMMSSHundredths, muse::qtrc("playback", "hh:mm:ss + hundredths"), "0100 h 060 m 060>0100 s"},
+        {ViewFormatType::HHMMSSMilliseconds, muse::qtrc("playback", "hh:mm:ss + milliseconds"), "0100 h 060 m 060>01000 s"},
 
-        { ViewFormatType::HHMMSSSamples, muse::qtrc("playback", "hh:mm:ss + samples"), "0100 h 060 m 060 s+># samples" },
-        { ViewFormatType::Samples, muse::qtrc("playback", "samples"), "01000,01000,01000 samples|#" },
+        {ViewFormatType::HHMMSSSamples, muse::qtrc("playback", "hh:mm:ss + samples"), "0100 h 060 m 060 s+># samples"},
+        {ViewFormatType::Samples, muse::qtrc("playback", "samples"), "01000,01000,01000 samples|#"},
 
-        { ViewFormatType::HHMMSSFilmFrames, muse::qtrc("playback", "hh:mm:ss + film frames (24 fps)"), "0100 h 060 m 060 s+>24 frames" },
-        { ViewFormatType::FilmFrames, muse::qtrc("playback", "Film frames (24 fps)"), "01000,01000 frames|24" },
+        {ViewFormatType::HHMMSSFilmFrames, muse::qtrc("playback", "hh:mm:ss + film frames (24 fps)"), "0100 h 060 m 060 s+>24 frames"},
+        {ViewFormatType::FilmFrames, muse::qtrc("playback", "Film frames (24 fps)"), "01000,01000 frames|24"},
 
-        { ViewFormatType::HHMMSSNTSCDropFrames, muse::qtrc("playback", "hh:mm:ss + NTSC drop frames"), "0100 h 060 m 060 s+>30 frames|N" },
-        { ViewFormatType::HHMMSSNTSCNonDropFrames, muse::qtrc("playback", "hh:mm:ss + NTSC non-drop frames"),
-          "0100 h 060 m 060 s+>030 frames| .999000999" },
-        { ViewFormatType::NTSCFrames, muse::qtrc("playback", "NTSC frames"), "01000,01000 frames|29.97002997" },
+        {ViewFormatType::HHMMSSNTSCDropFrames, muse::qtrc("playback", "hh:mm:ss + NTSC drop frames"), "0100 h 060 m 060 s+>30 frames|N"},
+        {ViewFormatType::HHMMSSNTSCNonDropFrames,
+         muse::qtrc("playback", "hh:mm:ss + NTSC non-drop frames"),
+         "0100 h 060 m 060 s+>030 frames| .999000999"},
+        {ViewFormatType::NTSCFrames, muse::qtrc("playback", "NTSC frames"), "01000,01000 frames|29.97002997"},
 
-        { ViewFormatType::HHMMSSPALFrames, muse::qtrc("playback", "hh:mm:ss + PAL frames (25 fps)"), "0100 h 060 m 060 s+>25 frames" },
-        { ViewFormatType::PALFrames, muse::qtrc("playback", "PAL frames (25 fps)"), "01000,01000 frames|25" },
+        {ViewFormatType::HHMMSSPALFrames, muse::qtrc("playback", "hh:mm:ss + PAL frames (25 fps)"), "0100 h 060 m 060 s+>25 frames"},
+        {ViewFormatType::PALFrames, muse::qtrc("playback", "PAL frames (25 fps)"), "01000,01000 frames|25"},
 
-        { ViewFormatType::HHMMSSCDDAFrames, muse::qtrc("playback", "hh:mm:ss + CDDA frames (25 fps)"), "0100 h 060 m 060 s+>75 frames" },
-        { ViewFormatType::CDDAFrames, muse::qtrc("playback", "CDDA frames (75 fps)"), "01000,01000 frames|75" },
+        {ViewFormatType::HHMMSSCDDAFrames, muse::qtrc("playback", "hh:mm:ss + CDDA frames (25 fps)"), "0100 h 060 m 060 s+>75 frames"},
+        {ViewFormatType::CDDAFrames, muse::qtrc("playback", "CDDA frames (75 fps)"), "01000,01000 frames|75"},
 
-        { ViewFormatType::BarBeat, muse::qtrc("playback", "bar:beat"), "bar:beat" },
-        { ViewFormatType::BarBeatTick, muse::qtrc("playback", "bar:beat:tick"), "bar:beat:tick" },
+        {ViewFormatType::BarBeat, muse::qtrc("playback", "bar:beat"), "bar:beat"},
+        {ViewFormatType::BarBeatTick, muse::qtrc("playback", "bar:beat:tick"), "bar:beat:tick"},
     };
 
     initFieldInteractionController();
@@ -105,8 +105,10 @@ QVariant TimecodeModel::data(const QModelIndex& index, int role) const
     QChar ch = m_valueString[index.row()];
 
     switch (role) {
-    case rSymbol: return QVariant::fromValue(ch);
-    case rIsEditable: return isFieldEditable(ch);
+    case rSymbol:
+        return QVariant::fromValue(ch);
+    case rIsEditable:
+        return isFieldEditable(ch);
     }
 
     return QVariant();
@@ -114,10 +116,7 @@ QVariant TimecodeModel::data(const QModelIndex& index, int role) const
 
 QHash<int, QByteArray> TimecodeModel::roleNames() const
 {
-    static const QHash<int, QByteArray> roles = {
-        { rSymbol, "symbol" },
-        { rIsEditable, "editable" }
-    };
+    static const QHash<int, QByteArray> roles = {{rSymbol, "symbol"}, {rIsEditable, "editable"}};
 
     return roles;
 }
@@ -226,11 +225,14 @@ void TimecodeModel::initFieldInteractionController()
 {
     m_fieldsInteractionController = std::make_shared<FieldsInteractionController>(this);
 
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::currentEditedFieldIndexChanged,
-            this, &TimecodeModel::currentEditedFieldIndexChanged);
+    connect(
+        m_fieldsInteractionController.get(),
+        &FieldsInteractionController::currentEditedFieldIndexChanged,
+        this,
+        &TimecodeModel::currentEditedFieldIndexChanged
+    );
 
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged,
-            this, &TimecodeModel::setValue);
+    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged, this, &TimecodeModel::setValue);
 }
 
 void TimecodeModel::updateValueString()

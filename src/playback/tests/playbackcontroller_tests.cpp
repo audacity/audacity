@@ -1,18 +1,18 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
+#include "actions/tests/mocks/actionsdispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "global/tests/mocks/applicationmock.h"
-#include "actions/tests/mocks/actionsdispatchermock.h"
+#include "mocks/playbackmock.h"
+#include "mocks/playermock.h"
+#include "project/tests/mocks/audacityprojectmock.h"
 #include "record/tests/mocks/recordcontrollermock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
-#include "project/tests/mocks/audacityprojectmock.h"
-#include "mocks/playermock.h"
-#include "mocks/playbackmock.h"
 
 #include "../internal/playbackcontroller.h"
 
@@ -57,23 +57,17 @@ public:
 
         m_player = std::make_shared<PlayerMock>();
 
-        EXPECT_CALL(*m_playback, player(_))
-        .WillOnce(Return(m_player));
+        EXPECT_CALL(*m_playback, player(_)).WillOnce(Return(m_player));
 
-        EXPECT_CALL(*m_globalContext, setPlayer(_))
-        .Times(1);
+        EXPECT_CALL(*m_globalContext, setPlayer(_)).Times(1);
 
-        ON_CALL(*m_globalContext, currentProject())
-        .WillByDefault(Return(m_currentProject));
+        ON_CALL(*m_globalContext, currentProject()).WillByDefault(Return(m_currentProject));
 
-        ON_CALL(*m_currentProject, trackeditProject())
-        .WillByDefault(Return(m_trackeditProject));
+        ON_CALL(*m_currentProject, trackeditProject()).WillByDefault(Return(m_trackeditProject));
 
-        ON_CALL(*m_trackeditProject, totalTime())
-        .WillByDefault(Return(100));
+        ON_CALL(*m_trackeditProject, totalTime()).WillByDefault(Return(100));
 
-        EXPECT_CALL(*m_recordController, isRecording())
-        .WillRepeatedly(Return(false));
+        EXPECT_CALL(*m_recordController, isRecording()).WillRepeatedly(Return(false));
 
         m_controller->init();
     }
@@ -120,16 +114,13 @@ public:
 TEST_F(PlaybackControllerTests, TogglePlay)
 {
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [THEN] No seek position
-    EXPECT_CALL(*m_player, seek(_, _))
-    .Times(0);
+    EXPECT_CALL(*m_player, seek(_, _)).Times(0);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -143,20 +134,16 @@ TEST_F(PlaybackControllerTests, TogglePlay)
 TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfProject)
 {
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [GIVEN] Was stoped on the end of project
-    EXPECT_CALL(*m_player, playbackPosition())
-    .WillOnce(Return(secs_t(100.0)));
+    EXPECT_CALL(*m_player, playbackPosition()).WillOnce(Return(secs_t(100.0)));
 
     //! [THEN] Seek position to start
-    EXPECT_CALL(*m_player, seek(secs_t(0.0), false))
-    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), false)).Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -170,25 +157,19 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfProject)
 TEST_F(PlaybackControllerTests, TogglePlay_WithSelection)
 {
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [GIVEN] There is selection from 10 to 20 secs
-    PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(true));
-    EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
-    .WillOnce(Return(selectionRegion.start));
-    EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
-    .WillOnce(Return(selectionRegion.end));
+    PlaybackRegion selectionRegion = {secs_t(10.0), secs_t(20.0)};
+    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty()).WillOnce(Return(true));
+    EXPECT_CALL(*m_selectionController, dataSelectedStartTime()).WillOnce(Return(selectionRegion.start));
+    EXPECT_CALL(*m_selectionController, dataSelectedEndTime()).WillOnce(Return(selectionRegion.end));
 
     //! [THEN] Expect that we will take into account the selection region
-    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
-    .Times(1);
+    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion)).Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -202,27 +183,20 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection)
 TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
 {
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [GIVEN] There is clip's selection from 10 to 20 secs
-    PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(false));
-    EXPECT_CALL(*m_selectionController, selectedClips())
-    .WillOnce(Return(trackedit::ClipKeyList({trackedit::ClipKey { 1, 1 }})));
-    EXPECT_CALL(*m_selectionController, selectedClipStartTime())
-    .WillOnce(Return(selectionRegion.start));
-    EXPECT_CALL(*m_selectionController, selectedClipEndTime())
-    .WillOnce(Return(selectionRegion.end));
+    PlaybackRegion selectionRegion = {secs_t(10.0), secs_t(20.0)};
+    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty()).WillOnce(Return(false));
+    EXPECT_CALL(*m_selectionController, selectedClips()).WillOnce(Return(trackedit::ClipKeyList({trackedit::ClipKey{1, 1}})));
+    EXPECT_CALL(*m_selectionController, selectedClipStartTime()).WillOnce(Return(selectionRegion.start));
+    EXPECT_CALL(*m_selectionController, selectedClipEndTime()).WillOnce(Return(selectionRegion.end));
 
     //! [THEN] Expect that we will take into account the selection region
-    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
-    .Times(1);
+    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion)).Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -236,26 +210,20 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_Clip)
 TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
 {
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
+    ON_CALL(*m_application, keyboardModifiers()).WillByDefault(Return(Qt::ShiftModifier));
 
     //! [THEN] No checking selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .Times(0);
+    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty()).Times(0);
 
     //! [THEN] Expect that playback region will be reseted and playback will be seek to previous seek position
-    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion()))
-    .Times(1);
-    EXPECT_CALL(*m_player, seek(_, _))
-    .Times(1);
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion())).Times(1);
+    EXPECT_CALL(*m_player, seek(_, _)).Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -269,12 +237,10 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
 TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying)
 {
     //! [GIVEN] Playback is running
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Running));
 
     //! [THEN] Player should pause playing
-    EXPECT_CALL(*m_player, pause())
-    .Times(1);
+    EXPECT_CALL(*m_player, pause()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -288,16 +254,13 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying)
 TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying_PlayAgain)
 {
     //! [GIVEN] Playback is running
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Running));
 
     //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
+    ON_CALL(*m_application, keyboardModifiers()).WillByDefault(Return(Qt::ShiftModifier));
 
     //! [THEN] Player should stop playing
-    EXPECT_CALL(*m_player, stop())
-    .Times(1);
+    EXPECT_CALL(*m_player, stop()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -311,12 +274,10 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying_PlayAgain)
 TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused)
 {
     //! [GIVEN] Playback is paused
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Paused));
 
     //! [THEN] Player should resume playing
-    EXPECT_CALL(*m_player, resume())
-    .Times(1);
+    EXPECT_CALL(*m_player, resume()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -330,27 +291,21 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused)
 TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
 {
     //! [GIVEN] Playback is paused
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Paused));
 
     //! [GIVEN] Play with Shift modifier
-    ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::ShiftModifier));
+    ON_CALL(*m_application, keyboardModifiers()).WillByDefault(Return(Qt::ShiftModifier));
 
     //! [THEN] Expect that playbeck should run from current position
     secs_t currentPosition = 10.0;
-    EXPECT_CALL(*m_player, playbackPosition())
-    .WillRepeatedly(Return(currentPosition));
-    EXPECT_CALL(*m_player, seek(currentPosition, false))
-    .WillRepeatedly(Return());
+    EXPECT_CALL(*m_player, playbackPosition()).WillRepeatedly(Return(currentPosition));
+    EXPECT_CALL(*m_player, seek(currentPosition, false)).WillRepeatedly(Return());
 
     //! [THEN] No checking selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .Times(0);
+    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty()).Times(0);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -364,44 +319,33 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
 TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
 {
     //! [GIVEN] Play with Shift modifier
-    EXPECT_CALL(*m_application, keyboardModifiers())
-    .WillOnce(Return(Qt::ShiftModifier))
-    .WillRepeatedly(Return(Qt::NoModifier));
+    EXPECT_CALL(*m_application, keyboardModifiers()).WillOnce(Return(Qt::ShiftModifier)).WillRepeatedly(Return(Qt::NoModifier));
 
     //! [GIVEN] User started playback
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
     togglePlay();
 
     //! [GIVEN] And paused it
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Running));
     togglePlay();
 
     //! [GIVEN] In paused state
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Paused));
 
     //! [THEN] Expect that playbeck should run from selection start position
-    PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(true));
-    EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
-    .WillOnce(Return(selectionRegion.start));
-    EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
-    .WillOnce(Return(selectionRegion.end));
+    PlaybackRegion selectionRegion = {secs_t(10.0), secs_t(20.0)};
+    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty()).WillOnce(Return(true));
+    EXPECT_CALL(*m_selectionController, dataSelectedStartTime()).WillOnce(Return(selectionRegion.start));
+    EXPECT_CALL(*m_selectionController, dataSelectedEndTime()).WillOnce(Return(selectionRegion.end));
 
     //! [THEN] Expect that we will take into account the selection region
-    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
-    .WillRepeatedly(Return());
+    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion)).WillRepeatedly(Return());
 
     //! [THEN] Player should stop playing
-    EXPECT_CALL(*m_player, stop())
-    .Times(1);
+    EXPECT_CALL(*m_player, stop()).Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
 
     //! [WHEN] Fitst: user changed selection
     changePlaybackRegion(selectionRegion.start, selectionRegion.end);
@@ -418,25 +362,19 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
 TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_StartTimeIsMoreThanTotalTime)
 {
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [GIVEN] There is selection from 10 to 20 secs
-    PlaybackRegion selectionRegion = { secs_t(1000.0), secs_t(2000.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(true));
-    EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
-    .WillOnce(Return(selectionRegion.start));
-    EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
-    .WillOnce(Return(selectionRegion.end));
+    PlaybackRegion selectionRegion = {secs_t(1000.0), secs_t(2000.0)};
+    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty()).WillOnce(Return(true));
+    EXPECT_CALL(*m_selectionController, dataSelectedStartTime()).WillOnce(Return(selectionRegion.start));
+    EXPECT_CALL(*m_selectionController, dataSelectedEndTime()).WillOnce(Return(selectionRegion.end));
 
     //! [THEN] Expect that we will take into account the selection region
-    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion))
-    .Times(1);
+    EXPECT_CALL(*m_player, setPlaybackRegion(selectionRegion)).Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(0);
+    EXPECT_CALL(*m_player, play()).Times(0);
 
     //! [WHEN] Toggle play
     togglePlay();
@@ -453,12 +391,10 @@ TEST_F(PlaybackControllerTests, Seek_WhenNotPlaying)
     secs_t newSeekTime = 10.0;
 
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [THEN] Playback will be seek to the new seek position
-    EXPECT_CALL(*m_player, seek(newSeekTime, false /* applyIfPlaying */))
-    .Times(1);
+    EXPECT_CALL(*m_player, seek(newSeekTime, false /* applyIfPlaying */)).Times(1);
 
     //! [WHEN] Seek to the new time
     seek(newSeekTime);
@@ -475,16 +411,13 @@ TEST_F(PlaybackControllerTests, Seek_WhenPaused)
     secs_t newSeekTime = 10.0;
 
     //! [GIVEN] Playback is paused
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Paused));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Paused));
 
     //! [THEN] Playback will be seek to the new seek position
-    EXPECT_CALL(*m_player, seek(newSeekTime, false /* applyIfPlaying */))
-    .Times(1);
+    EXPECT_CALL(*m_player, seek(newSeekTime, false /* applyIfPlaying */)).Times(1);
 
     //! [THEN] Player should stop playing
-    EXPECT_CALL(*m_player, stop())
-    .Times(1);
+    EXPECT_CALL(*m_player, stop()).Times(1);
 
     //! [WHEN] Seek to the new time
     seek(newSeekTime);
@@ -501,16 +434,13 @@ TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay)
     secs_t newSeekTime = 10.0;
 
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [THEN] Playback will be seek to the new seek position
-    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */))
-    .Times(1);
+    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */)).Times(1);
 
     //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(1);
+    EXPECT_CALL(*m_player, play()).Times(1);
 
     //! [WHEN] Seek to the new time with triggering play
     seek(newSeekTime, true);
@@ -527,16 +457,13 @@ TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay_AlreadyPlaying)
     secs_t newSeekTime = 10.0;
 
     //! [GIVEN] Playback is running
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Running));
 
     //! [THEN] Playback will be seek to the new seek position
-    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */))
-    .Times(1);
+    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */)).Times(1);
 
     //! [THEN] Player shouldn't start playing again
-    EXPECT_CALL(*m_player, play())
-    .Times(0);
+    EXPECT_CALL(*m_player, play()).Times(0);
 
     //! [WHEN] Seek to the new time with triggering play
     seek(newSeekTime, true);
@@ -553,18 +480,15 @@ TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay_FromTimeThatIsMoreThanTo
     secs_t newSeekTime = 1000.0;
 
     //! [GIVEN] Playback is stopped
-    ON_CALL(*m_player, playbackStatus())
-    .WillByDefault(Return(PlaybackStatus::Stopped));
+    ON_CALL(*m_player, playbackStatus()).WillByDefault(Return(PlaybackStatus::Stopped));
 
     //! [THEN] Playback will be seek to the new seek position
-    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */))
-    .Times(1);
+    EXPECT_CALL(*m_player, seek(newSeekTime, true /* applyIfPlaying */)).Times(1);
 
     //! [THEN] Player shouldn't start playing
-    EXPECT_CALL(*m_player, play())
-    .Times(0);
+    EXPECT_CALL(*m_player, play()).Times(0);
 
     //! [WHEN] Seek to the new time with triggering play
     seek(newSeekTime, true);
 }
-}
+}  // namespace au::playback

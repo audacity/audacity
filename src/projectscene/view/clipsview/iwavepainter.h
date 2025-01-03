@@ -44,4 +44,4 @@ public:
 
     virtual void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params) = 0;
 };
-}
+}  // namespace au::projectscene

@@ -76,6 +76,6 @@ signals:
     void bufferSizeChanged();
     void bufferSizeListChanged();
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_COMMONAUDIOAPICONFIGURATIONMODEL_H
+#endif  // AU_APPSHELL_COMMONAUDIOAPICONFIGURATIONMODEL_H

@@ -12,7 +12,7 @@ void EffectsViewRegister::setDefaultUrl(const muse::String& viewUrl)
 
 void EffectsViewRegister::regUrl(const muse::String& effectName, const muse::String& viewUrl)
 {
-    m_data.insert({ effectName, viewUrl });
+    m_data.insert({effectName, viewUrl});
 }
 
 const muse::String& EffectsViewRegister::viewUrl(const muse::String& effectName) const

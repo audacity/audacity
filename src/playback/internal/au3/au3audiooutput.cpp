@@ -26,7 +26,7 @@ Au3AudioOutput::Au3AudioOutput()
 {
     m_outputMeter = std::make_shared<InOutMeter>();
 
-    globalContext()->currentProjectChanged().onNotify(this, [this](){
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
         auto currentProject = globalContext()->currentProject();
         if (!currentProject) {
             return;

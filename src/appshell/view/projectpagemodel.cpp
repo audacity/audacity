@@ -3,16 +3,15 @@
 */
 #include "projectpagemodel.h"
 
-#include "internal/applicationuiactions.h"
 #include "dockwindow/idockwindow.h"
+#include "internal/applicationuiactions.h"
 
 #include "log.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
 
-ProjectPageModel::ProjectPageModel(QObject* parent)
-    : QObject(parent)
+ProjectPageModel::ProjectPageModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -33,7 +32,9 @@ void ProjectPageModel::init()
 
     for (const ActionCode& actionCode : ApplicationUiActions::toggleDockActions().keys()) {
         DockName dockName = ApplicationUiActions::toggleDockActions()[actionCode];
-        dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
+        dispatcher()->reg(this, actionCode, [=]() {
+            toggleDock(dockName);
+        });
     }
 
     // globalContext()->currentNotationChanged().onNotify(this, [this]() {

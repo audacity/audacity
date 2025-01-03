@@ -6,16 +6,16 @@
 #include "actions/actionable.h"
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "iinteractive.h"
+#include "../iprojectconfiguration.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "global/iinteractive.h"
 #include "global/io/ifilesystem.h"
-#include "../iprojectconfiguration.h"
-#include "irecentfilescontroller.h"
-#include "iprojectautosaver.h"
+#include "iinteractive.h"
 #include "iopensaveprojectscenario.h"
+#include "iprojectautosaver.h"
+#include "irecentfilescontroller.h"
+#include "modularity/ioc.h"
 
 #include "../iaudacityproject.h"
 #include "trackedit/iprojecthistory.h"
@@ -90,6 +90,6 @@ private:
     ProjectBeingDownloaded m_projectBeingDownloaded;
     muse::async::Notification m_projectBeingDownloadedChanged;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PROJECTACTIONSCONTROLLER_H
+#endif  // AU_PROJECT_PROJECTACTIONSCONTROLLER_H

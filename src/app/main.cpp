@@ -30,34 +30,34 @@
 
 // Framework
 #include "diagnostics/diagnosticsmodule.h"
-#include "framework/draw/drawmodule.h"
+#include "framework/accessibility/accessibilitymodule.h"
 #include "framework/actions/actionsmodule.h"
 #include "framework/audioplugins/audiopluginsmodule.h"
-#include "framework/ui/uimodule.h"
-#include "framework/shortcuts/shortcutsmodule.h"
-#include "framework/accessibility/accessibilitymodule.h"
-#include "framework/uicomponents/uicomponentsmodule.h"
-#include "framework/dockwindow/dockmodule.h"
 #include "framework/cloud/cloudmodule.h"
-#include "framework/network/networkmodule.h"
-#include "framework/learn/learnmodule.h"
+#include "framework/dockwindow/dockmodule.h"
+#include "framework/draw/drawmodule.h"
 #include "framework/languages/languagesmodule.h"
+#include "framework/learn/learnmodule.h"
+#include "framework/network/networkmodule.h"
+#include "framework/shortcuts/shortcutsmodule.h"
+#include "framework/ui/uimodule.h"
+#include "framework/uicomponents/uicomponentsmodule.h"
 
 // need stubs
-#include "framework/stubs/workspace/workspacestubmodule.h"
 #include "framework/stubs/multiinstances/multiinstancesstubmodule.h"
+#include "framework/stubs/workspace/workspacestubmodule.h"
 
 // -----
 #include "appshell/appshellmodule.h"
+#include "au3audio/audiomodule.h"
 #include "context/contextmodule.h"
+#include "effects/builtin/builtineffectsmodule.h"
+#include "effects/effects_base/effectsmodule.h"
+#include "playback/playbackmodule.h"
 #include "project/projectmodule.h"
 #include "projectscene/projectscenemodule.h"
-#include "au3audio/audiomodule.h"
-#include "playback/playbackmodule.h"
-#include "trackedit/trackeditmodule.h"
 #include "record/recordmodule.h"
-#include "effects/effects_base/effectsmodule.h"
-#include "effects/builtin/builtineffectsmodule.h"
+#include "trackedit/trackeditmodule.h"
 #ifdef AU_MODULE_EFFECTS_VST
 #include "effects/vst/vsteffectsmodule.h"
 #endif
@@ -65,11 +65,11 @@
 
 #include "au3wrap/au3wrapmodule.h"
 
-#if (defined (_MSCVER) || defined (_MSC_VER))
-#include <vector>
-#include <algorithm>
-#include <windows.h>
+#if (defined(_MSCVER) || defined(_MSC_VER))
 #include <shellapi.h>
+#include <windows.h>
+#include <algorithm>
+#include <vector>
 #endif
 
 #ifndef MU_BUILD_CRASHPAD_CLIENT
@@ -84,7 +84,7 @@ static void crashCallback(int signum)
         break;
     case SIGSEGV:
         signame = "SIGSEGV";
-        sigdescript =  "Invalid memory reference";
+        sigdescript = "Invalid memory reference";
         break;
     }
     LOGE() << "Oops! Application crashed with signal: [" << signum << "] " << signame << "-" << sigdescript;
@@ -94,7 +94,7 @@ static void crashCallback(int signum)
 #endif
 
 #ifdef Q_OS_WIN
-#include <crtdbg.h> // _CrtSetDbgFlag
+#include <crtdbg.h>  // _CrtSetDbgFlag
 #endif
 
 int main(int argc, char** argv)
@@ -119,11 +119,11 @@ int main(int argc, char** argv)
 
     au::app::App app;
 
-//! NOTE `diagnostics` must be first, because it installs the crash handler.
-//! For other modules, the order is (an should be) unimportant.
+    //! NOTE `diagnostics` must be first, because it installs the crash handler.
+    //! For other modules, the order is (an should be) unimportant.
     app.addModule(new muse::diagnostics::DiagnosticsModule());
 
-// framework
+    // framework
     app.addModule(new muse::draw::DrawModule());
     app.addModule(new muse::actions::ActionsModule());
     app.addModule(new muse::audioplugins::AudioPluginsModule());
@@ -156,7 +156,7 @@ int main(int argc, char** argv)
 #endif
     app.addModule(new au::effects::NyquistEffectsModule());
 
-#if (defined (_MSCVER) || defined (_MSC_VER))
+#if (defined(_MSCVER) || defined(_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.
     // This prevents data loss if there are any characters that wouldn't fit in the local ANSI code page.
     int argcUTF16 = 0;

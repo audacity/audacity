@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -18,8 +18,11 @@ class PlaybackToolBarBPMItem : public muse::uicomponents::ToolBarItem
     muse::Inject<context::IGlobalContext> globalContext;
 
 public:
-    explicit PlaybackToolBarBPMItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                    QObject* parent = nullptr);
+    explicit PlaybackToolBarBPMItem(
+        const muse::ui::UiAction& action,
+        muse::uicomponents::ToolBarItemType::Type type,
+        QObject* parent = nullptr
+    );
 
     double currentValue() const;
     void setCurrentValue(double value);
@@ -34,4 +37,4 @@ private:
 
     double m_currentValue = 0.0;
 };
-}
+}  // namespace au::playback

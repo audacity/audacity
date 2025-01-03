@@ -6,9 +6,9 @@
 
 using namespace au::projectscene;
 
-CustomCursor::CustomCursor(QQuickItem *parent)
+CustomCursor::CustomCursor(QQuickItem* parent)
 {
-    auto changeCursor = [this](){
+    auto changeCursor = [this]() {
         if (m_active) {
             QGuiApplication::restoreOverrideCursor();
 

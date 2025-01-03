@@ -1,9 +1,9 @@
 #pragma once
 
-#include "modularity/imoduleinterface.h"
 #include "global/async/channel.h"
-#include "global/types/ret.h"
 #include "global/io/path.h"
+#include "global/types/ret.h"
+#include "modularity/imoduleinterface.h"
 
 namespace au::project {
 
@@ -20,4 +20,4 @@ public:
     virtual void onThumbnailCreated(bool success) = 0;
 };
 
-}
+}  // namespace au::project

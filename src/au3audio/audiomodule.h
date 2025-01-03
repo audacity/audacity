@@ -12,7 +12,6 @@ class AudioEngine;
 class AudioModule : public muse::modularity::IModuleSetup
 {
 public:
-
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
@@ -22,7 +21,6 @@ public:
     void onDeinit() override;
 
 private:
-
     std::shared_ptr<AudioEngine> m_audioEngine;
 };
-}
+}  // namespace au::audio

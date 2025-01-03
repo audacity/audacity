@@ -5,9 +5,9 @@
 
 #include <QString>
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
+#include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 #include "playback/iplayback.h"
 
 #include "uicomponents/view/toolbaritem.h"
@@ -31,8 +31,11 @@ class PlaybackToolBarTimeItem : public muse::uicomponents::ToolBarItem
     muse::Inject<playback::IPlayback> playback;
 
 public:
-    explicit PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                     QObject* parent = nullptr);
+    explicit PlaybackToolBarTimeItem(
+        const muse::ui::UiAction& action,
+        muse::uicomponents::ToolBarItemType::Type type,
+        QObject* parent = nullptr
+    );
 
     int currentFormat() const;
     void setCurrentFormat(int format);
@@ -57,4 +60,4 @@ private:
 
     int m_currentFormat = 0;
 };
-}
+}  // namespace au::playback

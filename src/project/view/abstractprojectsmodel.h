@@ -68,6 +68,6 @@ protected:
 
     std::vector<QVariantMap> m_items;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_ABSTRACTPROJECTSMODEL_H
+#endif  // AU_PROJECT_ABSTRACTPROJECTSMODEL_H

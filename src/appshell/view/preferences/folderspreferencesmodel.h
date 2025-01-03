@@ -24,14 +24,14 @@
 
 #include <QAbstractListModel>
 
-#include "modularity/ioc.h"
 #include "async/asyncable.h"
-#include "project/iprojectconfiguration.h"
-#include "notation/inotationconfiguration.h"
-#include "extensions/iextensionsconfiguration.h"
 #include "audio/iaudioconfiguration.h"
-#include "vst/ivstconfiguration.h"
+#include "extensions/iextensionsconfiguration.h"
 #include "iappshellconfiguration.h"
+#include "modularity/ioc.h"
+#include "notation/inotationconfiguration.h"
+#include "project/iprojectconfiguration.h"
+#include "vst/ivstconfiguration.h"
 
 namespace au::appshell {
 class FoldersPreferencesModel : public QAbstractListModel, public async::Asyncable
@@ -98,6 +98,6 @@ private:
 
     QList<FolderInfo> m_folders;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_FOLDERSPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_FOLDERSPREFERENCESMODEL_H

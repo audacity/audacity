@@ -16,10 +16,11 @@ const EffectParameterMethods& AmplifyEffect::Parameters() const
     static CapturedParameters<
         AmplifyEffect,
         // Interactive case
-        Ratio, Clipping>
-    parameters;
+        Ratio,
+        Clipping>
+        parameters;
 
-    static CapturedParameters<AmplifyEffect, Ratio> batchParameters {
+    static CapturedParameters<AmplifyEffect, Ratio> batchParameters{
         // If invoking Amplify from a macro, mCanClip is not a parameter
         // but is always true
         [](AmplifyEffect&, EffectSettings&, AmplifyEffect& e, bool) {
@@ -41,7 +42,7 @@ const EffectParameterMethods& AmplifyEffect::Parameters() const
 // AmplifyEffect
 //
 
-const ComponentInterfaceSymbol AmplifyEffect::Symbol { XO("Amplify") };
+const ComponentInterfaceSymbol AmplifyEffect::Symbol{XO("Amplify")};
 
 AmplifyEffect::Instance::~Instance()
 {
@@ -142,9 +143,7 @@ unsigned AmplifyEffect::GetAudioOutCount() const
     return 1;
 }
 
-size_t AmplifyEffect::ProcessBlock(
-    EffectSettings&, const float* const* inBlock, float* const* outBlock,
-    size_t blockLen)
+size_t AmplifyEffect::ProcessBlock(EffectSettings&, const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
     for (decltype(blockLen) i = 0; i < blockLen; i++) {
         outBlock[0][i] = inBlock[0][i] * mRatio;
@@ -173,7 +172,7 @@ OptionalMessage AmplifyEffect::DoLoadFactoryDefaults(EffectSettings& /*settings*
     mCanClip = false;
 
     ClampRatio();
-    return { nullptr };
+    return {nullptr};
 }
 
 // Effect implementation
@@ -190,7 +189,7 @@ bool AmplifyEffect::Init()
     mPeak = 0.0;
     for (auto t : range) {
         for (const auto& pChannel : t->Channels()) {
-            auto pair = WaveChannelUtilities::GetMinMax(*pChannel, mT0, mT1); // may throw
+            auto pair = WaveChannelUtilities::GetMinMax(*pChannel, mT0, mT1);  // may throw
             const float min = pair.first, max = pair.second;
             const float newpeak = std::max(fabs(min), fabs(max));
             mPeak = std::max<double>(mPeak, newpeak);
@@ -201,8 +200,7 @@ bool AmplifyEffect::Init()
 
 std::any AmplifyEffect::BeginPreview(const EffectSettings& /*settings*/)
 {
-    return { std::pair { CopyableValueRestorer(mRatio),
-                         CopyableValueRestorer(mPeak) } };
+    return {std::pair{CopyableValueRestorer(mRatio), CopyableValueRestorer(mPeak)}};
 }
 
 void AmplifyEffect::ClampRatio()

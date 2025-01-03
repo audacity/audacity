@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 #include "ui/iuiactionsregister.h"
 
 #include "uicomponents/view/toolbaritem.h"
@@ -44,8 +44,8 @@ private:
 
     void onProjectChanged();
 
-    muse::uicomponents::MenuItem* makeMenu(const muse::TranslatableString& title, const muse::uicomponents::MenuItemList& items,
-                                           const QString& menuId);
+    muse::uicomponents::MenuItem*
+    makeMenu(const muse::TranslatableString& title, const muse::uicomponents::MenuItemList& items, const QString& menuId);
     muse::uicomponents::MenuItem* makeMenuItem(const QString& id, const muse::TranslatableString& title);
     muse::uicomponents::MenuItem* makeSeparator();
 
@@ -64,4 +64,4 @@ private:
     bool m_isTripletsEnabled = false;
     muse::uicomponents::MenuItemList m_availableSnapTypes;
 };
-}
+}  // namespace au::projectscene

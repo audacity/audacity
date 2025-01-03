@@ -24,8 +24,8 @@
 
 #include "iaudacityproject.h"
 
-#include "modularity/imoduleinterface.h"
 #include "iaudacityproject.h"
+#include "modularity/imoduleinterface.h"
 
 namespace au::project {
 class IProjectCreator : MODULE_EXPORT_INTERFACE
@@ -37,6 +37,6 @@ public:
 
     virtual IAudacityProjectPtr newProject() const = 0;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_IPROJECTCREATOR_H
+#endif  // AU_PROJECT_IPROJECTCREATOR_H

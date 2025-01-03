@@ -4,13 +4,13 @@
 #ifndef AU_RECORD_RECORDCONTROLLER_H
 #define AU_RECORD_RECORDCONTROLLER_H
 
-#include "async/asyncable.h"
 #include "actions/actionable.h"
+#include "async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
+#include "modularity/ioc.h"
 #include "playback/iplaybackcontroller.h"
 
 #include "../irecord.h"
@@ -58,6 +58,6 @@ private:
 
     RecordStatus m_currentRecordStatus = RecordStatus::Stopped;
 };
-}
+}  // namespace au::record
 
-#endif // AU_RECORD_RECORDCONTROLLER_H
+#endif  // AU_RECORD_RECORDCONTROLLER_H

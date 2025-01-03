@@ -11,4 +11,4 @@ class Vst3PluginsScanner : public muse::audioplugins::IAudioPluginsScanner
 public:
     muse::io::paths_t scanPlugins() const override;
 };
-}
+}  // namespace au::effects

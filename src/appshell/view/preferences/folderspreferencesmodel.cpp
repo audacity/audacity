@@ -25,8 +25,7 @@
 
 using namespace au::appshell;
 
-FoldersPreferencesModel::FoldersPreferencesModel(QObject* parent)
-    : QAbstractListModel(parent)
+FoldersPreferencesModel::FoldersPreferencesModel(QObject* parent) : QAbstractListModel(parent)
 {
 }
 
@@ -39,10 +38,14 @@ QVariant FoldersPreferencesModel::data(const QModelIndex& index, int role) const
 {
     const FolderInfo& folder = m_folders.at(index.row());
     switch (role) {
-    case TitleRole: return folder.title;
-    case PathRole: return folder.value;
-    case DirRole: return folder.dir;
-    case IsMultiDirectoriesRole: return folder.valueType == FolderValueType::MultiDirectories;
+    case TitleRole:
+        return folder.title;
+    case PathRole:
+        return folder.value;
+    case DirRole:
+        return folder.dir;
+    case IsMultiDirectoriesRole:
+        return folder.valueType == FolderValueType::MultiDirectories;
     }
 
     return QVariant();
@@ -69,12 +72,8 @@ bool FoldersPreferencesModel::setData(const QModelIndex& index, const QVariant& 
 
 QHash<int, QByteArray> FoldersPreferencesModel::roleNames() const
 {
-    static const QHash<int, QByteArray> roles = {
-        { TitleRole, "title" },
-        { PathRole, "path" },
-        { DirRole, "dir" },
-        { IsMultiDirectoriesRole, "isMultiDirectories" }
-    };
+    static const QHash<int, QByteArray> roles =
+        {{TitleRole, "title"}, {PathRole, "path"}, {DirRole, "dir"}, {IsMultiDirectoriesRole, "isMultiDirectories"}};
 
     return roles;
 }
@@ -84,32 +83,33 @@ void FoldersPreferencesModel::load()
     beginResetModel();
 
     m_folders = {
-        {
-            FolderType::Scores, qtrc("appshell/preferences", "Scores"), projectConfiguration()->userProjectsPath().toQString(),
-            projectConfiguration()->userProjectsPath().toQString()
-        },
-        {
-            FolderType::Styles, qtrc("appshell/preferences", "Styles"), notationConfiguration()->userStylesPath().toQString(),
-            notationConfiguration()->userStylesPath().toQString()
-        },
-        {
-            FolderType::Templates, qtrc("appshell/preferences", "Templates"), projectConfiguration()->userTemplatesPath().toQString(),
-            projectConfiguration()->userTemplatesPath().toQString()
-        },
-        {
-            FolderType::Plugins, qtrc("appshell/preferences", "Plugins"), extensionsConfiguration()->pluginsUserPath().toQString(),
-            extensionsConfiguration()->pluginsUserPath().toQString()
-        },
-        {
-            FolderType::SoundFonts, qtrc("appshell/preferences", "SoundFonts"), pathsToString(
-                audioConfiguration()->userSoundFontDirectories()),
-            configuration()->userDataPath().toQString(), FolderValueType::MultiDirectories
-        },
+        {FolderType::Scores,
+         qtrc("appshell/preferences", "Scores"),
+         projectConfiguration()->userProjectsPath().toQString(),
+         projectConfiguration()->userProjectsPath().toQString()},
+        {FolderType::Styles,
+         qtrc("appshell/preferences", "Styles"),
+         notationConfiguration()->userStylesPath().toQString(),
+         notationConfiguration()->userStylesPath().toQString()},
+        {FolderType::Templates,
+         qtrc("appshell/preferences", "Templates"),
+         projectConfiguration()->userTemplatesPath().toQString(),
+         projectConfiguration()->userTemplatesPath().toQString()},
+        {FolderType::Plugins,
+         qtrc("appshell/preferences", "Plugins"),
+         extensionsConfiguration()->pluginsUserPath().toQString(),
+         extensionsConfiguration()->pluginsUserPath().toQString()},
+        {FolderType::SoundFonts,
+         qtrc("appshell/preferences", "SoundFonts"),
+         pathsToString(audioConfiguration()->userSoundFontDirectories()),
+         configuration()->userDataPath().toQString(),
+         FolderValueType::MultiDirectories},
 #ifdef MUE_BUILD_VST_MODULE
-        {
-            FolderType::VST3, qtrc("appshell/preferences", "VST3"), pathsToString(vstConfiguration()->userVstDirectories()),
-            configuration()->userDataPath().toQString(), FolderValueType::MultiDirectories
-        }
+        {FolderType::VST3,
+         qtrc("appshell/preferences", "VST3"),
+         pathsToString(vstConfiguration()->userVstDirectories()),
+         configuration()->userDataPath().toQString(),
+         FolderValueType::MultiDirectories}
 #endif
     };
 
@@ -190,7 +190,7 @@ void FoldersPreferencesModel::setFolderPaths(FoldersPreferencesModel::FolderType
     }
 
     m_folders[index.row()].value = paths;
-    emit dataChanged(index, index, { PathRole });
+    emit dataChanged(index, index, {PathRole});
 }
 
 QModelIndex FoldersPreferencesModel::folderIndex(FoldersPreferencesModel::FolderType folderType)

@@ -21,7 +21,7 @@ void CanvasContextMenuModel::load()
 
 MenuItemList CanvasContextMenuModel::makeItems()
 {
-    MenuItemList items {
+    MenuItemList items{
         makeMenuItem("new-mono-track"),
         makeMenuItem("new-stereo-track"),
         makeMenuItem("new-label-track"),

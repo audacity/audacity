@@ -27,8 +27,8 @@
 #include <QScreen>
 #include <QSvgRenderer>
 
-#include "translation.h"
 #include "muversion.h"
+#include "translation.h"
 
 using namespace au::appshell;
 
@@ -45,9 +45,7 @@ static constexpr QRectF websiteRect(loadingScreenSize.width() - 48, loadingScree
 static const QColor versionNumberColor("#22A0F4");
 static constexpr qreal versionNumberSpacing = 5.0;
 
-LoadingScreenView::LoadingScreenView(QWidget* parent)
-    : QWidget(parent),
-    m_backgroundRenderer(new QSvgRenderer(imagePath, this))
+LoadingScreenView::LoadingScreenView(QWidget* parent) : QWidget(parent), m_backgroundRenderer(new QSvgRenderer(imagePath, this))
 {
     setAttribute(Qt::WA_TranslucentBackground);
     resize(loadingScreenSize);
@@ -97,7 +95,9 @@ void LoadingScreenView::draw(QPainter* painter)
     pen.setColor(versionNumberColor);
     painter->setPen(pen);
 
-    painter->drawText(websiteRect.translated(0.0, -websiteBoundingRect.height() - versionNumberSpacing),
-                      Qt::AlignBottom | alignment | Qt::TextDontClip,
-                      qtrc("appshell", "Version %1").arg(QString::fromStdString(MUVersion::fullVersion().toStdString())));
+    painter->drawText(
+        websiteRect.translated(0.0, -websiteBoundingRect.height() - versionNumberSpacing),
+        Qt::AlignBottom | alignment | Qt::TextDontClip,
+        qtrc("appshell", "Version %1").arg(QString::fromStdString(MUVersion::fullVersion().toStdString()))
+    );
 }

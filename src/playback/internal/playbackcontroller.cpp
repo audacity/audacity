@@ -118,14 +118,13 @@ bool PlaybackController::loopBoundariesSet() const
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
 {
     if (selectionController()->timeSelectionIsNotEmpty()) {
-        return { selectionController()->dataSelectedStartTime(),
-                 selectionController()->dataSelectedEndTime() };
+        return {selectionController()->dataSelectedStartTime(), selectionController()->dataSelectedEndTime()};
     }
 
     if (selectionController()->selectedClips().size() == 1) {
         secs_t clipStartTime = selectionController()->selectedClipStartTime();
         secs_t clipEndTime = selectionController()->selectedClipEndTime();
-        return { clipStartTime, clipEndTime };
+        return {clipStartTime, clipEndTime};
     }
 
     return PlaybackRegion();
@@ -143,7 +142,7 @@ Notification PlaybackController::isPlayingChanged() const
 
 void PlaybackController::seek(const muse::secs_t secs)
 {
-    IF_ASSERT_FAILED(player()) {
+    IF_ASSERT_FAILED (player()) {
         return;
     }
 
@@ -228,7 +227,7 @@ void PlaybackController::togglePlay()
 
 void PlaybackController::play(bool ignoreSelection)
 {
-    IF_ASSERT_FAILED(player()) {
+    IF_ASSERT_FAILED (player()) {
         return;
     }
 
@@ -261,7 +260,7 @@ void PlaybackController::rewindToStart()
 
     seek(0.0);
 
-    IF_ASSERT_FAILED(player()) {
+    IF_ASSERT_FAILED (player()) {
         return;
     }
     player()->rewind();
@@ -277,7 +276,7 @@ void PlaybackController::rewindToEnd()
 
 void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() > 0) {
+    IF_ASSERT_FAILED (args.count() > 0) {
         return;
     }
 
@@ -312,14 +311,14 @@ void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
 
 void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() > 1) {
+    IF_ASSERT_FAILED (args.count() > 1) {
         return;
     }
 
     muse::secs_t start = args.arg<double>(0);
     muse::secs_t end = args.arg<double>(1);
 
-    doChangePlaybackRegion({ start, end });
+    doChangePlaybackRegion({start, end});
 }
 
 void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
@@ -337,7 +336,7 @@ void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
 
 void PlaybackController::pause()
 {
-    IF_ASSERT_FAILED(player()) {
+    IF_ASSERT_FAILED (player()) {
         return;
     }
 
@@ -346,7 +345,7 @@ void PlaybackController::pause()
 
 void PlaybackController::stop()
 {
-    IF_ASSERT_FAILED(player()) {
+    IF_ASSERT_FAILED (player()) {
         return;
     }
 
@@ -362,7 +361,7 @@ void PlaybackController::stop()
 
 void PlaybackController::resume()
 {
-    IF_ASSERT_FAILED(player()) {
+    IF_ASSERT_FAILED (player()) {
         return;
     }
 
@@ -466,8 +465,8 @@ bool PlaybackController::isPlaybackStartPositionValid() const
 
 bool PlaybackController::actionChecked(const ActionCode& actionCode) const
 {
-    QMap<std::string, bool> isChecked {
-        { LOOP_CODE, isLoopEnabled() },
+    QMap<std::string, bool> isChecked{
+        {LOOP_CODE, isLoopEnabled()},
         // { REPEAT_CODE, configuration()->isPlayRepeatsEnabled() },
         // { PAN_CODE, configuration()->isAutomaticallyPanEnabled() },
     };

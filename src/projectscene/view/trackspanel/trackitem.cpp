@@ -21,9 +21,7 @@ static const std::string RESOURCE_ID_KEY("resourceId");
 static const std::string CHAIN_ORDER_KEY("chainOrder");
 
 TrackItem::TrackItem(QObject* parent)
-    : QObject(parent),
-    m_leftChannelPressure(playback::MIN_DISPLAYED_DBFS),
-    m_rightChannelPressure(playback::MIN_DISPLAYED_DBFS)
+    : QObject(parent), m_leftChannelPressure(playback::MIN_DISPLAYED_DBFS), m_rightChannelPressure(playback::MIN_DISPLAYED_DBFS)
 {
     connect(this, &TrackItem::mutedChanged, this, [this]() {
         if (muted()) {

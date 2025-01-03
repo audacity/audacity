@@ -13,4 +13,4 @@ public:
 
     EffectMetaList effectMetaList() const override;
 };
-}
+}  // namespace au::effects

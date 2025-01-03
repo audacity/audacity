@@ -6,17 +6,17 @@
 #include <wx/log.h>
 
 #include "FileNames.h"
-#include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-audio-io/AudioIO.h"
+#include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 
 #include "modularity/ioc.h"
 
-#include "internal/wxlogwrap.h"
-#include "internal/au3project.h"
 #include "internal/au3audiodevicesprovider.h"
-#include "internal/au3commonsettings.h"
 #include "internal/au3basicui.h"
+#include "internal/au3commonsettings.h"
+#include "internal/au3project.h"
+#include "internal/wxlogwrap.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 

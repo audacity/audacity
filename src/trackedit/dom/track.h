@@ -6,10 +6,10 @@
 #include <vector>
 
 #include "../trackedittypes.h"
-#include "global/types/string.h"
 #include "draw/types/color.h"
+#include "global/types/string.h"
 
-#include "clip.h" // IWYU pragma: export
+#include "clip.h"  // IWYU pragma: export
 
 namespace au::trackedit {
 enum class TrackType {
@@ -27,4 +27,4 @@ struct Track {
 };
 
 using TrackList = std::vector<Track>;
-}
+}  // namespace au::trackedit

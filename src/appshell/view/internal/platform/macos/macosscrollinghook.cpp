@@ -22,8 +22,8 @@
 
 #include "macosscrollinghook.h"
 
-#include <QWheelEvent>
 #include <QApplication>
+#include <QWheelEvent>
 
 using namespace au::appshell;
 

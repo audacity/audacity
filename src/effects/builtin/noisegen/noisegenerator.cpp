@@ -5,10 +5,9 @@
 
 using namespace au::effects;
 
-const ComponentInterfaceSymbol NoiseGenerator::Symbol { XO("Noise") };
+const ComponentInterfaceSymbol NoiseGenerator::Symbol{XO("Noise")};
 
-NoiseGenerator::NoiseGenerator()
-    : GeneratorEffect(mT0, mT1)
+NoiseGenerator::NoiseGenerator() : GeneratorEffect(mT0, mT1)
 {
     SetLinearEffectFlag(true);
 }
@@ -19,7 +18,7 @@ NoiseGenerator::~NoiseGenerator()
 
 std::shared_ptr<EffectInstance> NoiseGenerator::MakeInstance() const
 {
-    return std::make_shared <Instance>(*this);
+    return std::make_shared<Instance>(*this);
 }
 
 // ComponentInterface implementation
@@ -55,8 +54,7 @@ OptionalMessage NoiseGenerator::LoadFactoryPreset(int id, EffectSettings& settin
     return {};
 }
 
-NoiseGenerator::Instance::Instance(const PerTrackEffect& effect)
-    : PerTrackEffect::Instance{effect}
+NoiseGenerator::Instance::Instance(const PerTrackEffect& effect) : PerTrackEffect::Instance{effect}
 {
 }
 
@@ -75,8 +73,8 @@ bool NoiseGenerator::Instance::ProcessInitialize(EffectSettings& settings, doubl
     return InstanceInit(settings, sampleRate, chanMap);
 }
 
-size_t NoiseGenerator::Instance::ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock,
-                                              size_t blockLen)
+size_t
+NoiseGenerator::Instance::ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
     return InstanceProcess(settings, inBlock, outBlock, blockLen);
 }
@@ -89,15 +87,14 @@ bool NoiseGenerator::Instance::InstanceInit(EffectSettings& settings, double sam
     return true;
 }
 
-size_t NoiseGenerator::Instance::InstanceProcess(
-    EffectSettings& settings, const float* const*, float* const* outbuf, size_t size)
+size_t NoiseGenerator::Instance::InstanceProcess(EffectSettings& settings, const float* const*, float* const* outbuf, size_t size)
 {
     auto& ns = GetSettings(settings);
 
     float* buffer = outbuf[0];
 
-    float white { 0 };
-    float amplitude { 0 };
+    float white{0};
+    float amplitude{0};
     float div = ((float)RAND_MAX) / 2.0f;
 
     switch (ns.type) {
@@ -121,8 +118,7 @@ size_t NoiseGenerator::Instance::InstanceProcess(
             buf3 = 0.86650f * buf3 + 0.3104856f * white;
             buf4 = 0.55000f * buf4 + 0.5329522f * white;
             buf5 = -0.7616f * buf5 - 0.0168980f * white;
-            buffer[i] = amplitude * (buf0 + buf1 + buf2 + buf3 + buf4 + buf5
-                                     + buf6 + white * 0.5362);
+            buffer[i] = amplitude * (buf0 + buf1 + buf2 + buf3 + buf4 + buf5 + buf6 + white * 0.5362);
             buf6 = white * 0.115926;
         }
         break;
@@ -131,12 +127,9 @@ size_t NoiseGenerator::Instance::InstanceProcess(
         // float leakage=0.997; // experimental value at 44.1kHz
         // double scaling = 0.05; // experimental value at 44.1kHz
         // min and max protect against instability at extreme sample rates.
-        float leakage = ((mSampleRate - 144.0) / mSampleRate < 0.9999)
-                        ? (mSampleRate - 144.0) / mSampleRate
-                        : 0.9999f;
+        float leakage = ((mSampleRate - 144.0) / mSampleRate < 0.9999) ? (mSampleRate - 144.0) / mSampleRate : 0.9999f;
 
-        float scaling
-            =(9.0 / sqrt(mSampleRate) > 0.01) ? 9.0 / sqrt(mSampleRate) : 0.01f;
+        float scaling = (9.0 / sqrt(mSampleRate) > 0.01) ? 9.0 / sqrt(mSampleRate) : 0.01f;
 
         for (decltype(size) i = 0; i < size; i++) {
             white = (rand() / div) - 1.0f;

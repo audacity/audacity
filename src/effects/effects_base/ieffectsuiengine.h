@@ -16,4 +16,4 @@ public:
 
     virtual QQmlEngine* qmlEngine() const = 0;
 };
-}
+}  // namespace au::effects

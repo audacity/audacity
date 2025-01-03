@@ -3,8 +3,8 @@
 */
 #include "clipslistmodel.h"
 
-#include "global/realfn.h"
 #include "global/async/async.h"
+#include "global/realfn.h"
 
 #include "types/projectscenetypes.h"
 
@@ -20,14 +20,13 @@ constexpr double MIN_CLIP_WIDTH = 3.0;
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
-ClipsListModel::ClipsListModel(QObject* parent)
-    : QAbstractListModel(parent)
+ClipsListModel::ClipsListModel(QObject* parent) : QAbstractListModel(parent)
 {
 }
 
 void ClipsListModel::init()
 {
-    IF_ASSERT_FAILED(m_trackId >= 0) {
+    IF_ASSERT_FAILED (m_trackId >= 0) {
         return;
     }
 
@@ -277,10 +276,7 @@ int ClipsListModel::rowCount(const QModelIndex&) const
 
 QHash<int, QByteArray> ClipsListModel::roleNames() const
 {
-    static QHash<int, QByteArray> roles
-    {
-        { ClipItemRole, "item" }
-    };
+    static QHash<int, QByteArray> roles{{ClipItemRole, "item"}};
     return roles;
 }
 
@@ -312,7 +308,7 @@ void ClipsListModel::onTimelineFrameTimeChanged()
     updateItemsMetrics();
 }
 
-void ClipsListModel::setSelectedItems(const QList<ClipListItem *> &items)
+void ClipsListModel::setSelectedItems(const QList<ClipListItem*>& items)
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -323,7 +319,7 @@ void ClipsListModel::setSelectedItems(const QList<ClipListItem *> &items)
     }
 }
 
-void ClipsListModel::addSelectedItem(ClipListItem *item)
+void ClipsListModel::addSelectedItem(ClipListItem* item)
 {
     item->setSelected(true);
     m_selectedItems.append(item);
@@ -339,14 +335,14 @@ void ClipsListModel::clearSelectedItems()
 
 void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() > 0) {
+    IF_ASSERT_FAILED (args.count() > 0) {
         return;
     }
 
     trackedit::ClipKey key = args.arg<trackedit::ClipKey>(0);
     int idx = indexByKey(key);
 
-    IF_ASSERT_FAILED(idx != -1) {
+    IF_ASSERT_FAILED (idx != -1) {
         return;
     }
 
@@ -359,12 +355,12 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
     return ok;
 }
 
-QVariant ClipsListModel::next(const ClipKey &key) const
+QVariant ClipsListModel::next(const ClipKey& key) const
 {
     return neighbor(key, 1);
 }
 
-QVariant ClipsListModel::prev(const ClipKey &key) const
+QVariant ClipsListModel::prev(const ClipKey& key) const
 {
     return neighbor(key, -1);
 }
@@ -432,7 +428,7 @@ void ClipsListModel::resetClipSpeed(const ClipKey& key)
 void ClipsListModel::startEditClip(const ClipKey& key)
 {
     ClipListItem* item = itemByKey(key.key);
-    IF_ASSERT_FAILED(item) {
+    IF_ASSERT_FAILED (item) {
         return;
     }
 
@@ -455,7 +451,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     // calculate offset of clip that's being moved
     // and apply it to all selected clips
     ClipListItem* item = itemByKey(key.key);
-    IF_ASSERT_FAILED(item) {
+    IF_ASSERT_FAILED (item) {
         return false;
     }
 
@@ -463,7 +459,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     newStartTime = m_context->applySnapToTime(newStartTime);
     secs_t offset = newStartTime - item->time().clipStartTime;
 
-    constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
+    constexpr auto limit = 1. / 192000.;  // 1 sample at 192 kHz
     if (std::abs(offset) < limit) {
         return false;
     }
@@ -478,7 +474,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
 bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
 {
     ClipListItem* item = itemByKey(key.key);
-    IF_ASSERT_FAILED(item) {
+    IF_ASSERT_FAILED (item) {
         return false;
     }
 
@@ -508,7 +504,7 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
 bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
 {
     ClipListItem* item = itemByKey(key.key);
-    IF_ASSERT_FAILED(item) {
+    IF_ASSERT_FAILED (item) {
         return false;
     }
 
@@ -543,7 +539,7 @@ void ClipsListModel::selectClip(const ClipKey& key)
         if (muse::contains(selectionController()->selectedClips(), key.key)) {
             return;
         }
-        selectionController()->setSelectedClips(ClipKeyList({ key.key }));
+        selectionController()->setSelectedClips(ClipKeyList({key.key}));
     }
 }
 
@@ -578,7 +574,7 @@ void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
             clearSelectedItems();
         } else {
             if (item) {
-                setSelectedItems(QList<ClipListItem*>({ item }));
+                setSelectedItems(QList<ClipListItem*>({item}));
             }
         }
     }

@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "libraries/lib-builtin-effects/ToneGenBase.h"
 #include "../common/generatoreffect.h"
+#include "libraries/lib-builtin-effects/ToneGenBase.h"
 
 struct EffectSettings;
 
@@ -14,8 +14,7 @@ class ToneEffect : public ::ToneGenBase, public GeneratorEffect
 public:
     ToneEffect();
 
-    enum class Waveform
-    {
+    enum class Waveform {
         Sine,
         Square,
         Sawtooth,
@@ -23,8 +22,7 @@ public:
         Triangle,
     };
 
-    enum class Interpolation
-    {
+    enum class Interpolation {
         Linear,
         Logarithmic,
     };
@@ -53,4 +51,4 @@ protected:
 private:
     void doInit() override;
 };
-}
+}  // namespace au::effects

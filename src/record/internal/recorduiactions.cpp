@@ -3,10 +3,10 @@
 */
 #include "recorduiactions.h"
 
-#include "ui/view/iconcodes.h"
-#include "context/uicontext.h"
 #include "context/shortcutcontext.h"
+#include "context/uicontext.h"
 #include "types/translatablestring.h"
+#include "ui/view/iconcodes.h"
 
 using namespace au::record;
 using namespace muse;
@@ -18,38 +18,41 @@ static const ActionCode PAUSE_ACTION_CODE("pause-record");
 static const ActionCode STOP_ACTION_CODE("stop-record");
 
 const UiActionList RecordUiActions::m_mainActions = {
-    UiAction(RECORD_ACTION_CODE,
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Record"),
-             TranslatableString("action", "Record"),
-             IconCode::Code::RECORD_FILL
-             ),
-    UiAction(PAUSE_ACTION_CODE,
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Pause"),
-             TranslatableString("action", "Pause"),
-             IconCode::Code::PAUSE_FILL
-             ),
-    UiAction(STOP_ACTION_CODE,
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Stop"),
-             TranslatableString("action", "Stop record"),
-             IconCode::Code::STOP_FILL
-             ),
-    UiAction("record-level",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Record level"),
-             TranslatableString("action", "Set record level"),
-             IconCode::Code::MICROPHONE
-             ),
+    UiAction(
+        RECORD_ACTION_CODE,
+        au::context::UiCtxProjectOpened,
+        au::context::CTX_PROJECT_FOCUSED,
+        TranslatableString("action", "Record"),
+        TranslatableString("action", "Record"),
+        IconCode::Code::RECORD_FILL
+    ),
+    UiAction(
+        PAUSE_ACTION_CODE,
+        au::context::UiCtxProjectOpened,
+        au::context::CTX_PROJECT_FOCUSED,
+        TranslatableString("action", "Pause"),
+        TranslatableString("action", "Pause"),
+        IconCode::Code::PAUSE_FILL
+    ),
+    UiAction(
+        STOP_ACTION_CODE,
+        au::context::UiCtxProjectOpened,
+        au::context::CTX_PROJECT_OPENED,
+        TranslatableString("action", "Stop"),
+        TranslatableString("action", "Stop record"),
+        IconCode::Code::STOP_FILL
+    ),
+    UiAction(
+        "record-level",
+        au::context::UiCtxProjectOpened,
+        au::context::CTX_PROJECT_FOCUSED,
+        TranslatableString("action", "Record level"),
+        TranslatableString("action", "Set record level"),
+        IconCode::Code::MICROPHONE
+    ),
 };
 
-RecordUiActions::RecordUiActions(std::shared_ptr<RecordController> controller)
-    : m_controller(controller)
+RecordUiActions::RecordUiActions(std::shared_ptr<RecordController> controller) : m_controller(controller)
 {
 }
 
@@ -66,11 +69,7 @@ void RecordUiActions::init()
     });
 
     m_controller->isRecordingChanged().onNotify(this, [this]() {
-        ActionCodeList codes= {
-            RECORD_ACTION_CODE,
-            PAUSE_ACTION_CODE,
-            STOP_ACTION_CODE
-        };
+        ActionCodeList codes = {RECORD_ACTION_CODE, PAUSE_ACTION_CODE, STOP_ACTION_CODE};
 
         m_actionEnabledChanged.send(codes);
     });

@@ -19,8 +19,8 @@
 
 #include "view/common/playbackstatemodel.h"
 
-#include "view/toolbars/components/timecodemodel.h"
 #include "view/toolbars/components/bpmmodel.h"
+#include "view/toolbars/components/timecodemodel.h"
 
 using namespace au::playback;
 using namespace muse;

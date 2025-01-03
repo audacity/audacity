@@ -53,7 +53,6 @@ signals:
     void iconColorChanged();
 
 private:
-
     QString m_id;
     ItemType m_type = ItemType::UNDEFINED;
     QString m_title;
@@ -61,4 +60,4 @@ private:
     QColor m_iconColor;
     bool m_checked = false;
 };
-}
+}  // namespace au::projectscene

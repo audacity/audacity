@@ -25,8 +25,7 @@
 
 using namespace au::appshell;
 
-PreferencePageItem::PreferencePageItem(QObject* parent)
-    : QObject(parent)
+PreferencePageItem::PreferencePageItem(QObject* parent) : QObject(parent)
 {
 }
 

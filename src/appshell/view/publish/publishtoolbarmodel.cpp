@@ -25,8 +25,7 @@
 using namespace au::appshell;
 using namespace muse::uicomponents;
 
-PublishToolBarModel::PublishToolBarModel(QObject* parent)
-    : AbstractMenuModel(parent)
+PublishToolBarModel::PublishToolBarModel(QObject* parent) : AbstractMenuModel(parent)
 {
 }
 
@@ -34,12 +33,7 @@ void PublishToolBarModel::load()
 {
     AbstractMenuModel::load();
 
-    MenuItemList items {
-        makeMenuItem("print"),
-        makeMenuItem("file-publish"),
-        makeMenuItem("file-share-audio"),
-        makeMenuItem("file-export")
-    };
+    MenuItemList items{makeMenuItem("print"), makeMenuItem("file-publish"), makeMenuItem("file-share-audio"), makeMenuItem("file-export")};
 
     setItems(items);
 }

@@ -11,4 +11,4 @@ class RecordConfiguration : public IRecordConfiguration
 public:
     muse::draw::Color recordColor() const override;
 };
-}
+}  // namespace au::record

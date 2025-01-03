@@ -21,9 +21,9 @@
  */
 #include "contextmodule.h"
 
-#include "modularity/ioc.h"
 #include "internal/globalcontext.h"
 #include "internal/uicontextresolver.h"
+#include "modularity/ioc.h"
 #include "shortcutcontext.h"
 
 using namespace au::context;

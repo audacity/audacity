@@ -8,12 +8,11 @@
 #include "types.h"
 
 namespace au::playback {
-struct FieldConfig final
-{
-    bool frac = false; // is it a fractional field
-    int base = 0;  // divide by this (multiply, after decimal point)
+struct FieldConfig final {
+    bool frac = false;  // is it a fractional field
+    int base = 0;       // divide by this (multiply, after decimal point)
     // Code in the parser converts range to `long`
-    long range = 0; // then take modulo this
+    long range = 0;  // then take modulo this
 };
 
 class TimecodeFormatter
@@ -22,8 +21,7 @@ public:
     TimecodeFormatter(const QString& formatStr);
     virtual ~TimecodeFormatter() = default;
 
-    struct ConversionResult
-    {
+    struct ConversionResult {
         QString valueString;
         std::vector<QString> fieldValueStrings;
     };
@@ -57,4 +55,4 @@ protected:
 
     QString m_format;
 };
-}
+}  // namespace au::playback

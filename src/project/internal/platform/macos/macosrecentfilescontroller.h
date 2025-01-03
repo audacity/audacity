@@ -31,6 +31,6 @@ public:
     void prependPlatformRecentFile(const muse::io::path_t& path) override;
     void clearPlatformRecentFiles() override;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_MACOSRECENTFILESCONTROLLER_H
+#endif  // AU_PROJECT_MACOSRECENTFILESCONTROLLER_H

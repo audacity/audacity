@@ -5,8 +5,8 @@
 #include "au3audiodevicesprovider.h"
 
 #include "internal/wxtypes_convert.h"
-#include "libraries/lib-audio-devices/DeviceManager.h"
 #include "libraries/lib-audio-devices/AudioIOBase.h"
+#include "libraries/lib-audio-devices/DeviceManager.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-utility/IteratorX.h"
 
@@ -303,10 +303,8 @@ void Au3AudioDevicesProvider::initInputChannels()
     auto oldChannels = AudioIORecordChannels.Read();
 
     wxArrayStringEx names;
-    for (auto& dev: inMaps) {
-        if (source == dev.sourceString
-            && device == dev.deviceString
-            && host == dev.hostString) {
+    for (auto& dev : inMaps) {
+        if (source == dev.sourceString && device == dev.deviceString && host == dev.hostString) {
             // add one selection for each channel of this source
             for (size_t j = 0; j < (unsigned int)dev.numChannels; j++) {
                 wxString name;

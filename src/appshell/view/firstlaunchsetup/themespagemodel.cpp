@@ -26,8 +26,7 @@
 using namespace au::appshell;
 using namespace muse::ui;
 
-ThemesPageModel::ThemesPageModel(QObject* parent)
-    : QObject(parent)
+ThemesPageModel::ThemesPageModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -70,7 +69,7 @@ QVariantList ThemesPageModel::generalThemes() const
 {
     QVariantList result;
 
-    for (const ThemeInfo& theme: allThemes()) {
+    for (const ThemeInfo& theme : allThemes()) {
         if (theme.codeKey == LIGHT_THEME_CODE || theme.codeKey == DARK_THEME_CODE) {
             result << ThemeConverter::toMap(theme);
         }

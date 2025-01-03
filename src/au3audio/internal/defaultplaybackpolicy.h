@@ -13,8 +13,14 @@
 class DefaultPlaybackPolicy final : public PlaybackPolicy, public NonInterferingBase
 {
 public:
-    DefaultPlaybackPolicy(AudacityProject& project, double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
-                          bool loopEnabled, bool variableSpeed);
+    DefaultPlaybackPolicy(
+        AudacityProject& project,
+        double trackEndTime,
+        double loopEndTime,
+        std::optional<double> pStartTime,
+        bool loopEnabled,
+        bool variableSpeed
+    );
     ~DefaultPlaybackPolicy() override;
 
     void Initialize(PlaybackSchedule& schedule, double rate) override;
@@ -27,14 +33,11 @@ public:
 
     double OffsetSequenceTime(PlaybackSchedule& schedule, double offset) override;
 
-    PlaybackSlice GetPlaybackSlice(
-        PlaybackSchedule& schedule, size_t available) override;
+    PlaybackSlice GetPlaybackSlice(PlaybackSchedule& schedule, size_t available) override;
 
-    std::pair<double, double>
-    AdvancedTrackTime(PlaybackSchedule& schedule, double trackTime, size_t nSamples) override;
+    std::pair<double, double> AdvancedTrackTime(PlaybackSchedule& schedule, double trackTime, size_t nSamples) override;
 
-    bool RepositionPlayback(
-        PlaybackSchedule& schedule, const Mixers& playbackMixers, size_t frames, size_t available) override;
+    bool RepositionPlayback(PlaybackSchedule& schedule, const Mixers& playbackMixers, size_t frames, size_t available) override;
 
     bool Looping(const PlaybackSchedule&) const override;
 
@@ -55,15 +58,14 @@ private:
     };
     MessageBuffer<SlotData> mMessageChannel;
 
-    Observer::Subscription mRegionSubscription,
-                           mSpeedSubscription;
+    Observer::Subscription mRegionSubscription, mSpeedSubscription;
 
-    double mLastPlaySpeed{ 1.0 };
+    double mLastPlaySpeed{1.0};
     const double mTrackEndTime;
     double mLoopEndTime;
     std::optional<double> mpStartTime;
-    size_t mRemaining{ 0 };
-    bool mProgress{ true };
-    bool mLoopEnabled{ true };
-    bool mVariableSpeed{ false };
+    size_t mRemaining{0};
+    bool mProgress{true};
+    bool mLoopEnabled{true};
+    bool mVariableSpeed{false};
 };

@@ -4,10 +4,5 @@
 
 #include "testing/environment.h"
 
-static muse::testing::SuiteEnvironment effects_base_se(
-{
-},
-    nullptr,
-    []() {
-}
-    );
+static muse::testing::SuiteEnvironment effects_base_se({}, nullptr, []() {
+});

@@ -5,9 +5,9 @@
 
 #include "../ieffectpresetsprovider.h"
 
-#include "modularity/ioc.h"
-#include "../ieffectsprovider.h"
 #include "../ieffectinstancesregister.h"
+#include "../ieffectsprovider.h"
+#include "modularity/ioc.h"
 
 #include "../effectstypes.h"
 
@@ -32,9 +32,8 @@ public:
     muse::Ret exportPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath) override;
 
 private:
-
     const EffectSettingsManager& settingsManager(const EffectId& effectId) const;
 
     muse::async::Channel<EffectId> m_userPresetsChanged;
 };
-}
+}  // namespace au::effects

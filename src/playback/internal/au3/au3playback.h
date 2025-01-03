@@ -21,4 +21,4 @@ private:
     mutable std::shared_ptr<Au3Player> m_player;
     mutable std::shared_ptr<Au3AudioOutput> m_audioOutput;
 };
-}
+}  // namespace au::playback

@@ -26,12 +26,12 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "iappshellconfiguration.h"
-#include "multiinstances/imultiinstancesprovider.h"
 #include "isessionsmanager.h"
+#include "modularity/ioc.h"
+#include "multiinstances/imultiinstancesprovider.h"
 
 #include "project/iprojectconfiguration.h"
 
@@ -60,6 +60,6 @@ private:
 
     muse::io::path_t m_lastOpenedProjectPath;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_SESSIONSMANAGER_H
+#endif  // AU_APPSHELL_SESSIONSMANAGER_H

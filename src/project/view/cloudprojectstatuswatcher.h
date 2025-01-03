@@ -26,8 +26,8 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "iprojectfilescontroller.h"
+#include "modularity/ioc.h"
 
 namespace au::project {
 class CloudScoreStatusWatcher : public QObject, muse::async::Asyncable
@@ -67,6 +67,6 @@ private:
     int m_progressTotal = 0;
     int m_progressCurrent = 0;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_CLOUDSCORESTATUSWATCHER_H
+#endif  // AU_PROJECT_CLOUDSCORESTATUSWATCHER_H

@@ -5,8 +5,8 @@
 
 #include "uicomponents/view/abstracttoolbarmodel.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 namespace au::projectscene {
 class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel
@@ -26,4 +26,4 @@ public:
 private:
     bool m_isCompactMode = false;
 };
-}
+}  // namespace au::projectscene

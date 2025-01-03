@@ -3,11 +3,11 @@
 */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
-#include "global/types/ret.h"
-#include "global/io/path.h"
-#include "global/async/channel.h"
 #include "effectstypes.h"
+#include "global/async/channel.h"
+#include "global/io/path.h"
+#include "global/types/ret.h"
+#include "modularity/imoduleinterface.h"
 
 namespace au::effects {
 class IEffectPresetsProvider : MODULE_EXPORT_INTERFACE
@@ -15,7 +15,6 @@ class IEffectPresetsProvider : MODULE_EXPORT_INTERFACE
     INTERFACE_ID(IEffectsPresetsProvider)
 
 public:
-
     virtual ~IEffectPresetsProvider() = default;
 
     virtual PresetIdList factoryPresets(const EffectId& effectId) const = 0;
@@ -28,4 +27,4 @@ public:
     virtual muse::Ret importPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath) = 0;
     virtual muse::Ret exportPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath) = 0;
 };
-}
+}  // namespace au::effects

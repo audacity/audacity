@@ -19,8 +19,7 @@ public:
     const muse::String& viewUrl(const muse::String& effectName) const override;
 
 private:
-
     muse::String m_defaultUrl;
     std::map<muse::String, muse::String> m_data;
 };
-}
+}  // namespace au::effects

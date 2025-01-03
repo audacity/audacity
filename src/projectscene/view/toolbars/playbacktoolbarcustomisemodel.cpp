@@ -9,8 +9,8 @@
 
 #include "playbacktoolbarcustomiseitem.h"
 
-#include "translation.h"
 #include "log.h"
+#include "translation.h"
 
 using namespace au::projectscene;
 using namespace muse;
@@ -23,8 +23,7 @@ static const QString TOOLBAR_NAME("playbackToolBar");
 static const ActionCode PLAY_ACTION_CODE("play");
 static const ActionCode RECORD_ACTION_CODE("record");
 
-PlaybackToolBarCustomiseModel::PlaybackToolBarCustomiseModel(QObject* parent)
-    : SelectableItemListModel(parent)
+PlaybackToolBarCustomiseModel::PlaybackToolBarCustomiseModel(QObject* parent) : SelectableItemListModel(parent)
 {
 }
 
@@ -34,8 +33,8 @@ void PlaybackToolBarCustomiseModel::load()
 
     QList<Item*> items;
 
-    ToolConfig noteInputConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME,
-                                                               projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    ToolConfig noteInputConfig =
+        uiConfiguration()->toolConfig(TOOLBAR_NAME, projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
     for (const ToolConfig::Item& configItem : noteInputConfig.items) {
         UiAction action = actionsRegister()->action(configItem.action);
@@ -55,8 +54,10 @@ QVariant PlaybackToolBarCustomiseModel::data(const QModelIndex& index, int role)
     }
 
     switch (role) {
-    case ItemRole: return QVariant::fromValue(item);
-    default: break;
+    case ItemRole:
+        return QVariant::fromValue(item);
+    default:
+        break;
     }
 
     return SelectableItemListModel::data(index, role);
@@ -222,7 +223,7 @@ PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeSeparatorItem()
 {
     PlaybackToolBarCustomiseItem* item = new PlaybackToolBarCustomiseItem(PlaybackToolBarCustomiseItem::ItemType::SEPARATOR, this);
     item->setTitle(QString("-------  %1  -------").arg(muse::qtrc("projectscene", "Separator line")));
-    item->setChecked(true); //! NOTE Can't be unchecked
+    item->setChecked(true);  //! NOTE Can't be unchecked
     return item;
 }
 

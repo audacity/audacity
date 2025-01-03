@@ -3,10 +3,10 @@
  */
 #pragma once
 
-#include "uicomponents/view/abstractmenumodel.h"
-#include "trackedit/trackedittypes.h"
-#include "effects/effects_base/ieffectsprovider.h"
 #include <QObject>
+#include "effects/effects_base/ieffectsprovider.h"
+#include "trackedit/trackedittypes.h"
+#include "uicomponents/view/abstractmenumodel.h"
 
 namespace au::projectscene {
 class RealtimeEffectMenuModelBase : public muse::uicomponents::AbstractMenuModel
@@ -33,4 +33,4 @@ private:
     virtual void doLoad() = 0;
     virtual void populateMenu() = 0;
 };
-}
+}  // namespace au::projectscene

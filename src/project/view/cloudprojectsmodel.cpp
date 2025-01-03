@@ -30,8 +30,7 @@ using namespace au::project;
 
 static const int BATCH_SIZE = 20;
 
-CloudProjectsModel::CloudProjectsModel(QObject* parent)
-    : AbstractProjectsModel(parent)
+CloudProjectsModel::CloudProjectsModel(QObject* parent) : AbstractProjectsModel(parent)
 {
 }
 

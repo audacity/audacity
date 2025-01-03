@@ -10,8 +10,11 @@
 using namespace au::playback;
 using namespace au::audio;
 
-PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                                 QObject* parent)
+PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(
+    const muse::ui::UiAction& action,
+    muse::uicomponents::ToolBarItemType::Type type,
+    QObject* parent
+)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
     playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t) {
@@ -22,7 +25,7 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
         emit sampleRateChanged();
     });
 
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         auto project = globalContext()->currentTrackeditProject();
         if (!project) {
             return;
@@ -34,7 +37,7 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
 
 int PlaybackToolBarTimeItem::currentFormat() const
 {
-    return m_currentFormat; // from settings
+    return m_currentFormat;  // from settings
 }
 
 void PlaybackToolBarTimeItem::setCurrentFormat(int format)

@@ -26,13 +26,12 @@
 using namespace muse;
 using namespace au::appshell;
 
-FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent)
-    : QObject(parent)
+FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent) : QObject(parent)
 {
     m_pages = {
-        Page { "ThemesPage.qml", "audacity://project" },
-        Page { "PlaybackPage.qml", "audacity://project" },
-        Page { "TutorialsPage.qml", "musescore://home?section=learn" }
+        Page{"ThemesPage.qml", "audacity://project"},
+        Page{"PlaybackPage.qml", "audacity://project"},
+        Page{"TutorialsPage.qml", "musescore://home?section=learn"}
     };
 }
 
@@ -54,7 +53,7 @@ int FirstLaunchSetupModel::currentPageIndex() const
 QVariantMap FirstLaunchSetupModel::Page::toMap() const
 {
     return {
-        { "url", url },
+        {"url", url},
     };
 }
 
@@ -96,17 +95,19 @@ void FirstLaunchSetupModel::setCurrentPageIndex(int index)
 
 bool FirstLaunchSetupModel::askAboutClosingEarly()
 {
-    IInteractive::ButtonDatas buttons {
+    IInteractive::ButtonDatas buttons{
         IInteractive::ButtonData(IInteractive::Button::Cancel, trc("global", "Cancel")),
         IInteractive::ButtonData(IInteractive::Button::Continue, trc("appshell/gettingstarted", "Keep going"), /*accentButton*/ true)
     };
 
-    IInteractive::Result result
-        = interactive()->warning(trc("appshell/gettingstarted", "Are you sure you want to cancel?"),
-                                 trc("appshell/gettingstarted", "If you choose to cancel, then be sure to check out "
-                                                                "our free Muse Sounds playback library on musescore.org."),
-                                 buttons,
-                                 int(IInteractive::Button::Cancel));
+    IInteractive::Result result = interactive()->warning(
+        trc("appshell/gettingstarted", "Are you sure you want to cancel?"),
+        trc("appshell/gettingstarted",
+            "If you choose to cancel, then be sure to check out "
+            "our free Muse Sounds playback library on musescore.org."),
+        buttons,
+        int(IInteractive::Button::Cancel)
+    );
 
     return result.standardButton() == IInteractive::Button::Cancel;
 }

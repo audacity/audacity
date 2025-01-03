@@ -3,10 +3,10 @@
  */
 #include "effectsuiactions.h"
 
-#include "context/uicontext.h"
 #include "context/shortcutcontext.h"
-#include "types/translatablestring.h"
+#include "context/uicontext.h"
 #include "log.h"
+#include "types/translatablestring.h"
 
 using namespace au::effects;
 using namespace muse;
@@ -17,63 +17,61 @@ static const TranslatableString REPEAT_LAST_EFFECT_DEF_TITLE("action", "Repeat l
 static const TranslatableString REPEAT_LAST_EFFECT_TITLE("action", "Repeat %1");
 
 static UiActionList STATIC_ACTIONS = {
-    UiAction("repeat-last-effect",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             REPEAT_LAST_EFFECT_DEF_TITLE,
-             TranslatableString("action", "Repeat last effect")
-             ),
+    UiAction(
+        "repeat-last-effect",
+        au::context::UiCtxAny,
+        au::context::CTX_ANY,
+        REPEAT_LAST_EFFECT_DEF_TITLE,
+        TranslatableString("action", "Repeat last effect")
+    ),
 
-    UiAction("realtimeeffect-add",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Add realtime effect"),
-             TranslatableString("action", "Add realtime effect")
-             ),
-    UiAction("realtimeeffect-remove",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Remove realtime effect"),
-             TranslatableString("action", "Remove realtime effect")
-             ),
-    UiAction("realtimeeffect-replace",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Replace realtime effect"),
-             TranslatableString("action", "Replace realtime effect")
-             ),
+    UiAction(
+        "realtimeeffect-add",
+        au::context::UiCtxProjectOpened,
+        au::context::CTX_PROJECT_OPENED,
+        TranslatableString("action", "Add realtime effect"),
+        TranslatableString("action", "Add realtime effect")
+    ),
+    UiAction(
+        "realtimeeffect-remove",
+        au::context::UiCtxProjectOpened,
+        au::context::CTX_PROJECT_OPENED,
+        TranslatableString("action", "Remove realtime effect"),
+        TranslatableString("action", "Remove realtime effect")
+    ),
+    UiAction(
+        "realtimeeffect-replace",
+        au::context::UiCtxProjectOpened,
+        au::context::CTX_PROJECT_OPENED,
+        TranslatableString("action", "Replace realtime effect"),
+        TranslatableString("action", "Replace realtime effect")
+    ),
 
-    UiAction("action://effects/presets/apply",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Apply Presets")
-             ),
-    UiAction("action://effects/presets/save",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Save Presets…")
-             ),
-    UiAction("action://effects/presets/delete",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Delete Preset")
-             ),
-    UiAction("action://effects/presets/import",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Import…"),
-             TranslatableString("action", "Import preset")
-             ),
-    UiAction("action://effects/presets/export",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Export…"),
-             TranslatableString("action", "Export preset")
-             )
+    UiAction("action://effects/presets/apply", au::context::UiCtxAny, au::context::CTX_ANY, TranslatableString("action", "&Apply Presets")),
+    UiAction("action://effects/presets/save", au::context::UiCtxAny, au::context::CTX_ANY, TranslatableString("action", "&Save Presets…")),
+    UiAction(
+        "action://effects/presets/delete",
+        au::context::UiCtxAny,
+        au::context::CTX_ANY,
+        TranslatableString("action", "&Delete Preset")
+    ),
+    UiAction(
+        "action://effects/presets/import",
+        au::context::UiCtxAny,
+        au::context::CTX_ANY,
+        TranslatableString("action", "&Import…"),
+        TranslatableString("action", "Import preset")
+    ),
+    UiAction(
+        "action://effects/presets/export",
+        au::context::UiCtxAny,
+        au::context::CTX_ANY,
+        TranslatableString("action", "&Export…"),
+        TranslatableString("action", "Export preset")
+    )
 };
 
-EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> controller)
-    : m_controller{controller}
+EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> controller) : m_controller{controller}
 {
 }
 
@@ -83,12 +81,12 @@ void EffectsUiActions::reload()
         const auto it = std::find_if(m_actions.begin(), m_actions.end(), [](const UiAction& action) {
             return action.code == "repeat-last-effect";
         });
-        IF_ASSERT_FAILED(it != m_actions.end()) {
+        IF_ASSERT_FAILED (it != m_actions.end()) {
             return;
         }
         const auto effectTitle = effectsProvider()->meta(effectId).title;
         it->title = REPEAT_LAST_EFFECT_TITLE.arg(effectTitle);
-        m_actionsChanged.send({ *it });
+        m_actionsChanged.send({*it});
     });
 
     auto makeActions = [this](const EffectMetaList& effects) {

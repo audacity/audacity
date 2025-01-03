@@ -19,35 +19,35 @@
 
 std::string PlatformCompatibility::GetUserDataDir()
 {
-  return "";
+    return "";
 }
 
 std::string PlatformCompatibility::GetUserLocalDataDir()
 {
-  return "";
+    return "";
 }
 
 std::string PlatformCompatibility::GetDataDir()
 {
-  return "";
+    return "";
 }
 
 std::string PlatformCompatibility::GetPluginsDir()
 {
-  return "";
+    return "";
 }
 
 std::string PlatformCompatibility::GetDocumentsDir()
 {
-  return "";
+    return "";
 }
 
 std::string PlatformCompatibility::GetResourcesDir()
 {
-  return "";
+    return "";
 }
 
 std::string PlatformCompatibility::GetExecutablePath()
 {
-  return "";
+    return "";
 }

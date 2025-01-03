@@ -27,8 +27,7 @@
 
 using namespace au::appshell;
 
-UpdatePreferencesModel::UpdatePreferencesModel(QObject* parent)
-    : QObject(parent)
+UpdatePreferencesModel::UpdatePreferencesModel(QObject* parent) : QObject(parent)
 {
 }
 

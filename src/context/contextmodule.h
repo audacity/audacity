@@ -32,7 +32,6 @@ class UiContextResolver;
 class ContextModule : public muse::modularity::IModuleSetup
 {
 public:
-
     std::string moduleName() const override;
     void registerExports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
@@ -42,6 +41,6 @@ private:
     std::shared_ptr<GlobalContext> m_globalContext;
     std::shared_ptr<UiContextResolver> m_uicontextResolver;
 };
-}
+}  // namespace au::context
 
-#endif // AU_CONTEXT_CONTEXTMODULE_H
+#endif  // AU_CONTEXT_CONTEXTMODULE_H

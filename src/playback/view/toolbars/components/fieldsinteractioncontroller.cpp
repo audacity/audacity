@@ -14,8 +14,7 @@ static bool isFieldEditable(const QChar& fieldSymbol)
     return fieldSymbol.isDigit();
 }
 
-FieldsInteractionController::FieldsInteractionController(QObject* parent)
-    : QObject(parent)
+FieldsInteractionController::FieldsInteractionController(QObject* parent) : QObject(parent)
 {
 }
 
@@ -132,7 +131,7 @@ bool FieldsInteractionController::needOverrideShortcut(QEvent* event) const
         return true;
     }
 
-    static const std::set<int> navigationKeys {
+    static const std::set<int> navigationKeys{
         Qt::Key_Left,
         Qt::Key_Right,
         Qt::Key_Up,

@@ -11,4 +11,4 @@ class PlaybackConfiguration : public IPlaybackConfiguration
 public:
     muse::draw::Color playColor() const override;
 };
-}
+}  // namespace au::playback

@@ -5,8 +5,7 @@
 
 using namespace au::playback;
 
-TimecodeFormatter::TimecodeFormatter(const QString& formatStr)
-    : m_format(formatStr)
+TimecodeFormatter::TimecodeFormatter(const QString& formatStr) : m_format(formatStr)
 {
 }
 

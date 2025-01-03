@@ -20,15 +20,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "newprojectmodel.h"
-#include "ui/view/musicalsymbolcodes.h"
 #include "log.h"
+#include "ui/view/musicalsymbolcodes.h"
 
 using namespace au::project;
 using namespace muse;
 using namespace muse::ui;
 
-NewProjectModel::NewProjectModel(QObject* parent)
-    : QObject(parent)
+NewProjectModel::NewProjectModel(QObject* parent) : QObject(parent)
 {
 }
 

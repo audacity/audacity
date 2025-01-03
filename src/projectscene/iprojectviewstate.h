@@ -4,8 +4,8 @@
 
 #include "global/types/retval.h"
 
-#include "types/projectscenetypes.h"
 #include "trackedit/trackedittypes.h"
+#include "types/projectscenetypes.h"
 
 namespace au::projectscene {
 struct Snap {
@@ -45,4 +45,4 @@ public:
 };
 
 using IProjectViewStatePtr = std::shared_ptr<IProjectViewState>;
-}
+}  // namespace au::projectscene

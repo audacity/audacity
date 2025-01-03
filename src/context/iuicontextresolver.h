@@ -23,11 +23,11 @@
 #define AU_CONTEXT_IUICONTEXTRESOLVER_H
 
 #include "ui/iuicontextresolver.h"
-#include "uicontext.h" // IWYU pragma: export
+#include "uicontext.h"  // IWYU pragma: export
 
 namespace au::context {
 //! NOTE only for convenience
 using IUiContextResolver = muse::ui::IUiContextResolver;
-}
+}  // namespace au::context
 
-#endif // AU_CONTEXT_IUICONTEXTRESOLVER_H
+#endif  // AU_CONTEXT_IUICONTEXTRESOLVER_H

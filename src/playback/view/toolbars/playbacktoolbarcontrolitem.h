@@ -21,8 +21,11 @@ class PlaybackToolBarControlItem : public muse::uicomponents::ToolBarItem
     muse::Inject<IPlayback> playback;
 
 public:
-    explicit PlaybackToolBarControlItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                        QObject* parent = nullptr);
+    explicit PlaybackToolBarControlItem(
+        const muse::ui::UiAction& action,
+        muse::uicomponents::ToolBarItemType::Type type,
+        QObject* parent = nullptr
+    );
 
     QColor iconColor() const;
     void setIconColor(const QColor& color);
@@ -39,4 +42,4 @@ private:
     QColor m_iconColor;
     QColor m_backgroundColor;
 };
-}
+}  // namespace au::playback

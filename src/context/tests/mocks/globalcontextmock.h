@@ -24,4 +24,4 @@ public:
     MOCK_METHOD(bool, isRecording, (), (const, override));
     MOCK_METHOD(muse::async::Notification, isRecordingChanged, (), (const, override));
 };
-}
+}  // namespace au::context

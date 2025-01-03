@@ -60,4 +60,4 @@ private:
     bool m_canClip = false;
     bool m_isApplyAllowed = false;
 };
-}
+}  // namespace au::effects

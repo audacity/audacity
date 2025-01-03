@@ -45,8 +45,7 @@ inline QVariantMap buildItem(const QString& title, const QString& uri)
     return item;
 }
 
-MainToolBarModel::MainToolBarModel(QObject* parent)
-    : QAbstractListModel(parent)
+MainToolBarModel::MainToolBarModel(QObject* parent) : QAbstractListModel(parent)
 {
 }
 
@@ -58,9 +57,12 @@ QVariant MainToolBarModel::data(const QModelIndex& index, int role) const
 
     const QVariantMap& item = m_items.at(index.row());
     switch (role) {
-    case TitleRole: return item[TITLE_KEY];
-    case UriRole: return item[URI_KEY];
-    case IsTitleBoldRole: return item[IS_TITLE_BOLD_KEY];
+    case TitleRole:
+        return item[TITLE_KEY];
+    case UriRole:
+        return item[URI_KEY];
+    case IsTitleBoldRole:
+        return item[IS_TITLE_BOLD_KEY];
     }
 
     return QVariant();
@@ -74,9 +76,9 @@ int MainToolBarModel::rowCount(const QModelIndex&) const
 QHash<int, QByteArray> MainToolBarModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles = {
-        { TitleRole, TITLE_KEY.toUtf8() },
-        { UriRole, URI_KEY.toUtf8() },
-        { IsTitleBoldRole, IS_TITLE_BOLD_KEY.toUtf8() },
+        {TitleRole, TITLE_KEY.toUtf8()},
+        {UriRole, URI_KEY.toUtf8()},
+        {IsTitleBoldRole, IS_TITLE_BOLD_KEY.toUtf8()},
     };
 
     return roles;
@@ -112,7 +114,7 @@ void MainToolBarModel::updateNotationPageItem()
             item[IS_TITLE_BOLD_KEY] = context()->currentProject() != nullptr;
 
             QModelIndex modelIndex = index(i);
-            emit dataChanged(modelIndex, modelIndex, { IsTitleBoldRole });
+            emit dataChanged(modelIndex, modelIndex, {IsTitleBoldRole});
 
             break;
         }

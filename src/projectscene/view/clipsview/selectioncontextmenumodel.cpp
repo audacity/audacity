@@ -21,7 +21,7 @@ void SelectionContextMenuModel::load()
 
 MenuItemList SelectionContextMenuModel::makeItems()
 {
-    MenuItemList items {
+    MenuItemList items{
         makeMenuItem("clip-cut-selected"),
         makeMenuItem("clip-copy-selected"),
         makeMenuItem("paste"),

@@ -6,12 +6,12 @@
 #include "global/containers.h"
 #include "global/realfn.h"
 
-#include "libraries/lib-track/Track.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
+#include "libraries/lib-track/Track.h"
 
-#include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
 
 #include "log.h"
 
@@ -78,7 +78,7 @@ void Au3SelectionController::setSelectedTracks(const TrackIdList& tracksIds, boo
     m_selectedTracks.set(tracksIds, complete);
 }
 
-void Au3SelectionController::addSelectedTrack(const TrackId &trackId)
+void Au3SelectionController::addSelectedTrack(const TrackId& trackId)
 {
     auto selectedTracks = m_selectedTracks.val;
 
@@ -142,7 +142,7 @@ std::optional<au::trackedit::ClipId> Au3SelectionController::setSelectedClip(tra
         return std::nullopt;
     }
 
-    setSelectedClips({ { trackId, clip->GetId() } }, true);
+    setSelectedClips({{trackId, clip->GetId()}}, true);
     return clip->GetId();
 }
 
@@ -176,12 +176,12 @@ double Au3SelectionController::selectedClipStartTime() const
     auto clipKey = clipKeyList.at(0);
 
     WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return -1.0;
     }
 
     std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return -1.0;
     }
 
@@ -198,12 +198,12 @@ double Au3SelectionController::selectedClipEndTime() const
     auto clipKey = clipKeyList.at(0);
 
     WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return -1.0;
     }
 
     std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return -1.0;
     }
 
@@ -252,8 +252,7 @@ void Au3SelectionController::resetDataSelection()
 
 bool Au3SelectionController::timeSelectionIsNotEmpty() const
 {
-    return muse::RealIsEqualOrMore(m_selectedEndTime.val, 0.0) && !muse::RealIsEqualOrLess(
-        m_selectedEndTime.val, m_selectedStartTime.val);
+    return muse::RealIsEqualOrMore(m_selectedEndTime.val, 0.0) && !muse::RealIsEqualOrLess(m_selectedEndTime.val, m_selectedStartTime.val);
 }
 
 bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const

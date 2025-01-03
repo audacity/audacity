@@ -15,7 +15,6 @@ class ProjectSceneConfiguration;
 class ProjectSceneModule : public muse::modularity::IModuleSetup
 {
 public:
-
     std::string moduleName() const override;
     void registerResources() override;
     void registerExports() override;
@@ -28,6 +27,6 @@ private:
     std::shared_ptr<ProjectSceneActionsController> m_projectSceneActionsController;
     std::shared_ptr<ProjectSceneConfiguration> m_configuration;
 };
-}
+}  // namespace au::projectscene
 
-#endif // AU_PROJECTSCENE_PROJECTSCENEMODULE_H
+#endif  // AU_PROJECTSCENE_PROJECTSCENEMODULE_H

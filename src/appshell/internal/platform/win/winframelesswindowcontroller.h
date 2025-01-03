@@ -28,8 +28,8 @@
 #include "internal/framelesswindowcontroller.h"
 
 #include "modularity/ioc.h"
-#include "ui/iuiconfiguration.h"
 #include "ui/imainwindow.h"
+#include "ui/iuiconfiguration.h"
 
 #include "windows.h"
 
@@ -76,6 +76,6 @@ private:
 
     MONITORINFO m_monitorInfo;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_WINFRAMELESSWINDOWCONTROLLER_H
+#endif  // AU_APPSHELL_WINFRAMELESSWINDOWCONTROLLER_H

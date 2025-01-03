@@ -26,16 +26,21 @@
 
 using namespace au::appshell;
 
-CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* parent)
-    : QObject(parent)
+CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* parent) : QObject(parent)
 {
 }
 
 void CommonAudioApiConfigurationModel::load()
 {
-    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentOutputDeviceIdChanged(); });
-    audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
-    audioDevicesProvider()->audioApiChanged().onNotify(this, [this](){ emit outputDeviceListChanged(); });
+    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() {
+        emit currentOutputDeviceIdChanged();
+    });
+    audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() {
+        emit currentInputDeviceIdChanged();
+    });
+    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() {
+        emit outputDeviceListChanged();
+    });
 }
 
 QString CommonAudioApiConfigurationModel::currentOutputDeviceId() const
@@ -86,20 +91,20 @@ void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device
 
 unsigned int CommonAudioApiConfigurationModel::bufferSize() const
 {
-//     // return audioDriver()->outputDeviceBufferSize();
+    //     // return audioDriver()->outputDeviceBufferSize();
     return 1024;
 }
 
 QList<unsigned int> CommonAudioApiConfigurationModel::bufferSizeList() const
 {
     QList<unsigned int> result;
-//     std::vector<unsigned int> bufferSizes = audioDriver()->availableOutputDeviceBufferSizes();
+    //     std::vector<unsigned int> bufferSizes = audioDriver()->availableOutputDeviceBufferSizes();
 
-//     for (unsigned int bufferSize : bufferSizes) {
-//         result << bufferSize;
-//     }
+    //     for (unsigned int bufferSize : bufferSizes) {
+    //         result << bufferSize;
+    //     }
 
-//     std::sort(result.begin(), result.end());
+    //     std::sort(result.begin(), result.end());
 
     return result;
 }
@@ -107,5 +112,5 @@ QList<unsigned int> CommonAudioApiConfigurationModel::bufferSizeList() const
 void CommonAudioApiConfigurationModel::bufferSizeSelected(const QString& bufferSizeStr)
 {
     UNUSED(bufferSizeStr);
-// audioConfiguration()->setDriverBufferSize(bufferSizeStr.toInt());
+    // audioConfiguration()->setDriverBufferSize(bufferSizeStr.toInt());
 }

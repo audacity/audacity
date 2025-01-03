@@ -26,12 +26,12 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "iinteractive.h"
 #include "actions/iactionsdispatcher.h"
-#include "iappshellconfiguration.h"
-#include "isessionsmanager.h"
 #include "audioplugins/iregisteraudiopluginsscenario.h"
+#include "iappshellconfiguration.h"
+#include "iinteractive.h"
+#include "isessionsmanager.h"
+#include "modularity/ioc.h"
 
 //! TODO AU4
 // #include "multiinstances/imultiinstancesprovider.h"
@@ -46,11 +46,10 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
     muse::Inject<ISessionsManager> sessionsManager;
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
 
-//! TODO AU4
+    //! TODO AU4
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
     // INJECT(project::IProjectAutoSaver, projectAutoSaver)
 public:
-
     void setStartupType(const std::optional<std::string>& type) override;
 
     bool isStartWithNewFileAsSecondaryInstance() const override;
@@ -77,6 +76,6 @@ private:
     au::project::ProjectFile m_startupScoreFile;
     bool m_startupCompleted = false;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_STARTUPSCENARIO_H
+#endif  // AU_APPSHELL_STARTUPSCENARIO_H

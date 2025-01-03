@@ -9,8 +9,7 @@
 
 using namespace au::projectscene;
 
-TracksListClipsModel::TracksListClipsModel(QObject* parent)
-    : QAbstractListModel(parent)
+TracksListClipsModel::TracksListClipsModel(QObject* parent) : QAbstractListModel(parent)
 {
     configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible) {
         setIsVerticalRulersVisible(isVerticalRulersVisible);
@@ -35,13 +34,13 @@ void TracksListClipsModel::load()
         if (m_trackList.empty()) {
             return;
         }
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackSelectedRole });
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+        emit dataChanged(index(0), index(m_trackList.size() - 1), {IsTrackSelectedRole});
+        emit dataChanged(index(0), index(m_trackList.size() - 1), {IsDataSelectedRole});
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeys) {
         Q_UNUSED(clipKeys);
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsMultiSelectionActiveRole });
+        emit dataChanged(index(0), index(m_trackList.size() - 1), {IsMultiSelectionActiveRole});
     });
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
@@ -49,7 +48,7 @@ void TracksListClipsModel::load()
         if (m_trackList.empty()) {
             return;
         }
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+        emit dataChanged(index(0), index(m_trackList.size() - 1), {IsDataSelectedRole});
     });
 
     selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t end) {
@@ -57,7 +56,7 @@ void TracksListClipsModel::load()
         if (m_trackList.empty()) {
             return;
         }
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+        emit dataChanged(index(0), index(m_trackList.size() - 1), {IsDataSelectedRole});
     });
 
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
@@ -89,7 +88,9 @@ void TracksListClipsModel::load()
     });
 
     prj->trackMoved().onReceive(this, [this](const trackedit::Track& track, const int pos) {
-        auto it = std::find_if(m_trackList.begin(), m_trackList.end(), [&track](const trackedit::Track& it) { return it.id == track.id; });
+        auto it = std::find_if(m_trackList.begin(), m_trackList.end(), [&track](const trackedit::Track& it) {
+            return it.id == track.id;
+        });
 
         if (it == m_trackList.end()) {
             return;
@@ -174,13 +175,11 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
 
 QHash<int, QByteArray> TracksListClipsModel::roleNames() const
 {
-    static QHash<int, QByteArray> roles
-    {
-        //{ TypeRole, "trackType" },
-        { TrackIdRole, "trackId" },
-        { IsDataSelectedRole, "isDataSelected" },
-        { IsTrackSelectedRole, "isTrackSelected" },
-        { IsMultiSelectionActiveRole, "isMultiSelectionActive" }
+    static QHash<int, QByteArray> roles{//{ TypeRole, "trackType" },
+                                        {TrackIdRole, "trackId"},
+                                        {IsDataSelectedRole, "isDataSelected"},
+                                        {IsTrackSelectedRole, "isTrackSelected"},
+                                        {IsMultiSelectionActiveRole, "isMultiSelectionActive"}
     };
     return roles;
 }

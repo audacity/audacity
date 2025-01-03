@@ -6,15 +6,15 @@
 
 using namespace au::effects;
 
-const ComponentInterfaceSymbol ToneEffect::Symbol{ XO("Tone") };
+const ComponentInterfaceSymbol ToneEffect::Symbol{XO("Tone")};
 
-ToneEffect::ToneEffect()
-    : ToneGenBase(Type::Tone), GeneratorEffect(mT0, mT1)
-{}
+ToneEffect::ToneEffect() : ToneGenBase(Type::Tone), GeneratorEffect(mT0, mT1)
+{
+}
 
-ToneEffect::ToneEffect(Type type)
-    : ToneGenBase(type), GeneratorEffect(mT0, mT1)
-{}
+ToneEffect::ToneEffect(Type type) : ToneGenBase(type), GeneratorEffect(mT0, mT1)
+{
+}
 
 ComponentInterfaceSymbol ToneEffect::GetSymbol() const
 {
@@ -157,8 +157,7 @@ bool ToneEffect::isApplyAllowed() const
     constexpr auto amplitudeMin = StartAmp.min;
     constexpr auto amplitudeMax = StartAmp.max;
     const auto frequencyMax = mProjectRate / 2;
-    return frequencyMin <= frequencyStart() && frequencyStart() <= frequencyMax
-           && frequencyMin <= frequencyEnd() && frequencyEnd() <= frequencyMax
-           && amplitudeMin <= amplitudeStart() && amplitudeStart() <= amplitudeMax
-           && amplitudeMin <= amplitudeEnd() && amplitudeEnd() <= amplitudeMax;
+    return frequencyMin <= frequencyStart() && frequencyStart() <= frequencyMax && frequencyMin <= frequencyEnd() &&
+           frequencyEnd() <= frequencyMax && amplitudeMin <= amplitudeStart() && amplitudeStart() <= amplitudeMax &&
+           amplitudeMin <= amplitudeEnd() && amplitudeEnd() <= amplitudeMax;
 }

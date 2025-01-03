@@ -62,7 +62,7 @@ static const ActionCode REDO("redo");
 static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 
 // In principle, disabled are actions that modify the data involved in playback.
-static const std::vector<ActionCode> actionsDisabledDuringRecording {
+static const std::vector<ActionCode> actionsDisabledDuringRecording{
     CUT_CODE,
     DELETE_CODE,
     SPLIT_CUT_CODE,
@@ -241,14 +241,18 @@ void TrackeditActionsController::doGlobalSplitCut()
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-        dispatcher()->dispatch(SPLIT_CUT_SELECTED,
-                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+        dispatcher()->dispatch(
+            SPLIT_CUT_SELECTED,
+            ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime)
+        );
         return;
     }
 
     if (selectionController()->selectedClips().empty()) {
-        interactive()->error(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Split Cut to use then try again."));
+        interactive()->error(
+            muse::trc("trackedit", "No audio selected"),
+            muse::trc("trackedit", "Select the audio for Split Cut to use then try again.")
+        );
         return;
     }
 
@@ -268,14 +272,18 @@ void TrackeditActionsController::doGlobalSplitDelete()
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-        dispatcher()->dispatch(SPLIT_DELETE_SELECTED,
-                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+        dispatcher()->dispatch(
+            SPLIT_DELETE_SELECTED,
+            ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime)
+        );
         return;
     }
 
     if (selectionController()->selectedClips().empty()) {
-        interactive()->error(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Split Cut to use then try again."));
+        interactive()->error(
+            muse::trc("trackedit", "No audio selected"),
+            muse::trc("trackedit", "Select the audio for Split Cut to use then try again.")
+        );
         return;
     }
 
@@ -315,8 +323,10 @@ void TrackeditActionsController::doGlobalJoin()
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-    dispatcher()->dispatch(MERGE_SELECTED_ON_TRACK,
-                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+    dispatcher()->dispatch(
+        MERGE_SELECTED_ON_TRACK,
+        ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime)
+    );
 }
 
 void TrackeditActionsController::undo()
@@ -337,8 +347,10 @@ void TrackeditActionsController::doGlobalDuplicate()
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-        dispatcher()->dispatch(DUPLICATE_SELECTED,
-                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+        dispatcher()->dispatch(
+            DUPLICATE_SELECTED,
+            ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime)
+        );
     } else {
         if (selectionController()->selectedClips().empty()) {
             return;
@@ -507,7 +519,7 @@ void TrackeditActionsController::paste()
 
 void TrackeditActionsController::trackSplit(const ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 
@@ -518,12 +530,12 @@ void TrackeditActionsController::trackSplit(const ActionData& args)
 
     secs_t playbackPosition = globalContext()->playbackState()->playbackPosition();
 
-    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>({ trackIdToSplit }, playbackPosition));
+    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>({trackIdToSplit}, playbackPosition));
 }
 
 void TrackeditActionsController::tracksSplitAt(const ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 2) {
+    IF_ASSERT_FAILED (args.count() == 2) {
         return;
     }
 
@@ -539,7 +551,7 @@ void TrackeditActionsController::tracksSplitAt(const ActionData& args)
 
 void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 3) {
+    IF_ASSERT_FAILED (args.count() == 3) {
         return;
     }
 
@@ -557,7 +569,7 @@ void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::Actio
 
 void TrackeditActionsController::duplicateSelected(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 3) {
+    IF_ASSERT_FAILED (args.count() == 3) {
         return;
     }
 
@@ -574,7 +586,7 @@ void TrackeditActionsController::duplicateSelected(const muse::actions::ActionDa
 
 void TrackeditActionsController::duplicateClip(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 
@@ -584,7 +596,7 @@ void TrackeditActionsController::duplicateClip(const muse::actions::ActionData& 
 
 void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 
@@ -599,7 +611,7 @@ void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData& a
 
 void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 
@@ -613,7 +625,7 @@ void TrackeditActionsController::clipSplitDelete(const muse::actions::ActionData
 
 void TrackeditActionsController::splitCutSelected(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 3) {
+    IF_ASSERT_FAILED (args.count() == 3) {
         return;
     }
 
@@ -633,7 +645,7 @@ void TrackeditActionsController::splitCutSelected(const muse::actions::ActionDat
 
 void TrackeditActionsController::splitDeleteSelected(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 3) {
+    IF_ASSERT_FAILED (args.count() == 3) {
         return;
     }
 
@@ -811,7 +823,7 @@ void TrackeditActionsController::silenceAudioSelection()
 
 void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 
@@ -826,7 +838,7 @@ void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData&
 
 void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 

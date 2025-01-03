@@ -31,8 +31,7 @@
 using namespace au::project;
 using namespace muse::actions;
 
-ProjectsPageModel::ProjectsPageModel(QObject* parent)
-    : QObject(parent)
+ProjectsPageModel::ProjectsPageModel(QObject* parent) : QObject(parent)
 {
 }
 

@@ -1,11 +1,11 @@
 #include "domconverter.h"
 
 #include "au3types.h"
-#include "trackcolor.h"
+#include "libraries/lib-label-track/LabelTrack.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-label-track/LabelTrack.h"
+#include "trackcolor.h"
 
 #include "wxtypes_convert.h"
 
@@ -31,7 +31,7 @@ static au::trackedit::TrackType trackType(const Au3Track* track)
 
     return au::trackedit::TrackType::Undefined;
 }
-}
+}  // namespace
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
 {

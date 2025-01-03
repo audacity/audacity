@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "uicomponents/view/abstractmenumodel.h"
 
@@ -22,4 +22,4 @@ public:
 private:
     muse::uicomponents::MenuItemList makeItems();
 };
-}
+}  // namespace au::projectscene

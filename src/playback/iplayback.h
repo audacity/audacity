@@ -2,7 +2,7 @@
 
 #include "modularity/imoduleinterface.h"
 
-#include "au3audio/audiotypes.h" // IWYU pragma: export
+#include "au3audio/audiotypes.h"  // IWYU pragma: export
 #include "playbacktypes.h"
 
 namespace au::playback {
@@ -20,4 +20,4 @@ public:
 
     virtual std::shared_ptr<IAudioOutput> audioOutput() const = 0;
 };
-}
+}  // namespace au::playback

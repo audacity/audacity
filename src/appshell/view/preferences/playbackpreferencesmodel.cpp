@@ -28,8 +28,7 @@ using namespace au::appshell;
 using namespace muse::audio;
 // using namespace mu::midi;
 
-PlaybackPreferencesModel::PlaybackPreferencesModel(QObject* parent)
-    : QObject(parent)
+PlaybackPreferencesModel::PlaybackPreferencesModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -99,7 +98,7 @@ void PlaybackPreferencesModel::init()
 QStringList PlaybackPreferencesModel::audioApiList() const
 {
     QStringList result;
-    for (const std::string& api: audioDevicesProvider()->audioApiList()) {
+    for (const std::string& api : audioDevicesProvider()->audioApiList()) {
         result.push_back(QString::fromStdString(api));
     }
 

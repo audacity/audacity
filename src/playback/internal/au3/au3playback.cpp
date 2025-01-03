@@ -1,7 +1,7 @@
 #include "au3playback.h"
 
-#include "au3player.h"
 #include "au3audiooutput.h"
+#include "au3player.h"
 
 using namespace au::playback;
 

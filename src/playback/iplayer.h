@@ -2,11 +2,11 @@
 
 #include <memory>
 
+#include "global/async/channel.h"
+#include "global/async/notification.h"
+#include "global/async/promise.h"
 #include "global/types/ret.h"
 #include "global/types/retval.h"
-#include "global/async/channel.h"
-#include "global/async/promise.h"
-#include "global/async/notification.h"
 
 #include "playbacktypes.h"
 
@@ -46,4 +46,4 @@ public:
 };
 
 using IPlayerPtr = std::shared_ptr<IPlayer>;
-}
+}  // namespace au::playback

@@ -32,8 +32,7 @@ using namespace muse::ui;
 
 static constexpr int INVALID_INDEX = -1;
 
-AppearancePreferencesModel::AppearancePreferencesModel(QObject* parent)
-    : QObject(parent)
+AppearancePreferencesModel::AppearancePreferencesModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -81,7 +80,7 @@ QVariantList AppearancePreferencesModel::generalThemes() const
 {
     QVariantList result;
 
-    for (const ThemeInfo& theme: allThemes()) {
+    for (const ThemeInfo& theme : allThemes()) {
         if (theme.codeKey == LIGHT_THEME_CODE || theme.codeKey == DARK_THEME_CODE) {
             result << ThemeConverter::toMap(theme);
         }

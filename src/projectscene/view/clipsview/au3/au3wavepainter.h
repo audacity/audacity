@@ -5,8 +5,8 @@
 
 #include "../iwavepainter.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
 
@@ -24,4 +24,4 @@ private:
     au3::Au3Project& projectRef() const;
     void doPaint(QPainter& painter, const au3::Au3WaveTrack* track, const au3::Au3WaveClip* clip, const Params& params);
 };
-}
+}  // namespace au::projectscene

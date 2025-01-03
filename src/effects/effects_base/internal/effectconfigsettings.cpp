@@ -3,8 +3,8 @@
  */
 #include "effectconfigsettings.h"
 
-#include "global/serialization/json.h"
 #include "global/io/file.h"
+#include "global/serialization/json.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "log.h"
@@ -14,8 +14,7 @@ using namespace au::au3;
 
 static const std::string GENERAL("General");
 
-EffectConfigSettings::EffectConfigSettings(const std::string& filename)
-    : m_filename(filename)
+EffectConfigSettings::EffectConfigSettings(const std::string& filename) : m_filename(filename)
 {
     Load();
 }
@@ -54,17 +53,17 @@ void EffectConfigSettings::Load()
         std::string type = obj.value("type").toStdString();
         JsonValue val = obj.value("val");
         if (type == "bool") {
-            m_vals.insert({ key, val.toBool() });
+            m_vals.insert({key, val.toBool()});
         } else if (type == "int") {
-            m_vals.insert({ key, val.toInt() });
+            m_vals.insert({key, val.toInt()});
         } else if (type == "long") {
-            m_vals.insert({ key, std::stol(val.toStdString()) });
+            m_vals.insert({key, std::stol(val.toStdString())});
         } else if (type == "long long") {
-            m_vals.insert({ key, std::stoll(val.toStdString()) });
+            m_vals.insert({key, std::stoll(val.toStdString())});
         } else if (type == "double") {
-            m_vals.insert({ key, val.toDouble() });
+            m_vals.insert({key, val.toDouble()});
         } else if (type == "string") {
-            m_vals.insert({ key, val.toStdString() });
+            m_vals.insert({key, val.toStdString()});
         }
     }
 }
@@ -75,37 +74,40 @@ bool EffectConfigSettings::Save()
     for (const auto& p : m_vals) {
         JsonObject obj;
         const std::string& key = p.first;
-        std::visit([&key, &obj](auto&& v) {
-            using T = std::decay_t<decltype(v)>;
-            // std::monostate, bool, int, long, long long, double, wxString
-            if constexpr (std::is_same_v<T, std::monostate>) {
-                return;
-            } else if constexpr (std::is_same_v<T, bool>) {
-                obj["key"] = key;
-                obj["val"] = v;
-                obj["type"] = "bool";
-            } else if constexpr (std::is_same_v<T, int>) {
-                obj["key"] = key;
-                obj["val"] = v;
-                obj["type"] = "int";
-            } else if constexpr (std::is_same_v<T, long>) {
-                obj["key"] = key;
-                obj["val"] = std::to_string(v);
-                obj["type"] = "long";
-            } else if constexpr (std::is_same_v<T, long long>) {
-                obj["key"] = key;
-                obj["val"] = std::to_string(v);
-                obj["type"] = "long long";
-            } else if constexpr (std::is_same_v<T, double>) {
-                obj["key"] = key;
-                obj["val"] = v;
-                obj["type"] = "double";
-            } else if constexpr (std::is_same_v<T, wxString>) {
-                obj["key"] = key;
-                obj["val"] = au::au3::wxToStdSting(v);
-                obj["type"] = "string";
-            }
-        }, p.second);
+        std::visit(
+            [&key, &obj](auto&& v) {
+                using T = std::decay_t<decltype(v)>;
+                // std::monostate, bool, int, long, long long, double, wxString
+                if constexpr (std::is_same_v<T, std::monostate>) {
+                    return;
+                } else if constexpr (std::is_same_v<T, bool>) {
+                    obj["key"] = key;
+                    obj["val"] = v;
+                    obj["type"] = "bool";
+                } else if constexpr (std::is_same_v<T, int>) {
+                    obj["key"] = key;
+                    obj["val"] = v;
+                    obj["type"] = "int";
+                } else if constexpr (std::is_same_v<T, long>) {
+                    obj["key"] = key;
+                    obj["val"] = std::to_string(v);
+                    obj["type"] = "long";
+                } else if constexpr (std::is_same_v<T, long long>) {
+                    obj["key"] = key;
+                    obj["val"] = std::to_string(v);
+                    obj["type"] = "long long";
+                } else if constexpr (std::is_same_v<T, double>) {
+                    obj["key"] = key;
+                    obj["val"] = v;
+                    obj["type"] = "double";
+                } else if constexpr (std::is_same_v<T, wxString>) {
+                    obj["key"] = key;
+                    obj["val"] = au::au3::wxToStdSting(v);
+                    obj["type"] = "string";
+                }
+            },
+            p.second
+        );
 
         arr.append(obj);
     }

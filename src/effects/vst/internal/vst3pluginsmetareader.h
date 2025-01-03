@@ -12,4 +12,4 @@ public:
     bool canReadMeta(const muse::io::path_t& pluginPath) const override;
     muse::RetVal<muse::audio::AudioResourceMetaList> readMeta(const muse::io::path_t& pluginPath) const override;
 };
-}
+}  // namespace au::effects

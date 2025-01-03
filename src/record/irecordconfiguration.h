@@ -17,4 +17,4 @@ public:
 
     virtual muse::draw::Color recordColor() const = 0;
 };
-}
+}  // namespace au::record

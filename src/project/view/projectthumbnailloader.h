@@ -61,6 +61,6 @@ private:
     QPixmap m_thumbnail;
     QString m_projectPath;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PROJECTTHUMBNAILLOADER_H
+#endif  // AU_PROJECT_PROJECTTHUMBNAILLOADER_H

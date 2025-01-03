@@ -3,24 +3,24 @@
 #include <algorithm>
 
 #include "ProjectRate.h"
+#include "QualitySettings.h"
 #include "TempoChange.h"
 #include "TimeWarper.h"
-#include "QualitySettings.h"
 
-#include "global/types/number.h"
 #include "global/concurrency/concurrent.h"
+#include "global/types/number.h"
 
 #include "libraries/lib-project/Project.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-track/Track.h"
-#include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/TimeStretching.h"
+#include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveTrackUtilities.h"
 
+#include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "au3wrap/au3types.h"
 
 #include "trackedit/dom/track.h"
 
@@ -76,7 +76,7 @@ Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track
     //! NOTE: using dynamic_cast directly because when using UndoManager
     //! project may not contain track with given ID anymore
     Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track.get());
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return nullptr;
     }
     auto pFirstTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
@@ -85,8 +85,11 @@ Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track
     return pFirstTrack->SharedPointer();
 }
 
-TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
-                                                          size_t clipboardTracksSize) const
+TrackIdList Au3Interaction::determineDestinationTracksIds(
+    const std::vector<Track>& tracks,
+    const TrackIdList& destinationTrackIds,
+    size_t clipboardTracksSize
+) const
 {
     //! NOTE: determine tracks to which clipboard content will be pasted,
     //! depending on clipboard size and currently selected tracks
@@ -103,8 +106,11 @@ TrackIdList Au3Interaction::determineDestinationTracksIds(const std::vector<Trac
     return destinationTrackIds;
 }
 
-TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
-                                                    size_t clipboardTracksSize) const
+TrackIdList Au3Interaction::expandDestinationTracks(
+    const std::vector<Track>& tracks,
+    const TrackIdList& destinationTrackIds,
+    size_t clipboardTracksSize
+) const
 {
     TrackIdList result = destinationTrackIds;
     bool collecting = false;
@@ -128,13 +134,13 @@ TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tr
 
 muse::Ret Au3Interaction::canPasteTrackData(const TrackIdList& dstTracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const
 {
-    IF_ASSERT_FAILED(dstTracksIds.size() <= clipsToPaste.size()) {
+    IF_ASSERT_FAILED (dstTracksIds.size() <= clipsToPaste.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
     }
 
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
-        IF_ASSERT_FAILED(dstWaveTrack) {
+        IF_ASSERT_FAILED (dstWaveTrack) {
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
 
@@ -156,16 +162,16 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey& clipKey)
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return make_ret(trackedit::Err::WaveTrackNotFound);
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return make_ret(trackedit::Err::ClipNotFound);
     }
 
-    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+    std::list<std::shared_ptr<WaveClip>> clips = DomAccessor::waveClipsAsList(waveTrack);
 
     clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
         return c1->GetPlayStartTime() < c2->GetPlayStartTime();
@@ -183,15 +189,16 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey& clipKey)
     return muse::make_ret(muse::Ret::Code::Ok);
 }
 
-muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId> &tracksIds, const std::vector<TrackData> &trackData, secs_t begin)
+muse::Ret
+Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin)
 {
-    IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
+    IF_ASSERT_FAILED (tracksIds.size() <= trackData.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
     }
 
     for (size_t i = 0; i < tracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
-        IF_ASSERT_FAILED(dstWaveTrack) {
+        IF_ASSERT_FAILED (dstWaveTrack) {
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
 
@@ -200,7 +207,11 @@ muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId> &t
 
         const WaveTrack* wt = dynamic_cast<const Au3WaveTrack*>(trackData.at(i).track.get());
         for (const auto& interval : wt->Intervals()) {
-            auto ok = makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin + interval->GetPlayStartTime(), snappedBegin + interval->GetPlayEndTime());
+            auto ok = makeRoomForDataOnTrack(
+                tracksIds.at(i),
+                snappedBegin + interval->GetPlayStartTime(),
+                snappedBegin + interval->GetPlayEndTime()
+            );
             if (!ok) {
                 return make_ret(trackedit::Err::FailedToMakeRoomForClip);
             }
@@ -210,16 +221,16 @@ muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId> &t
     return muse::make_ok();
 }
 
-muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData,
-                                                  secs_t begin)
+muse::Ret
+Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin)
 {
-    IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
+    IF_ASSERT_FAILED (tracksIds.size() <= trackData.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
     }
 
     for (size_t i = 0; i < tracksIds.size(); ++i) {
         WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(tracksIds.at(i)));
-        IF_ASSERT_FAILED(dstWaveTrack) {
+        IF_ASSERT_FAILED (dstWaveTrack) {
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
 
@@ -241,11 +252,11 @@ muse::Ret Au3Interaction::makeRoomForDataOnTrack(const TrackId trackId, secs_t b
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return make_ret(trackedit::Err::WaveTrackNotFound);
     }
 
-    std::list<std::shared_ptr<WaveClip> > clips = DomAccessor::waveClipsAsList(waveTrack);
+    std::list<std::shared_ptr<WaveClip>> clips = DomAccessor::waveClipsAsList(waveTrack);
 
     clips.sort([](const std::shared_ptr<WaveClip>& c1, const std::shared_ptr<WaveClip>& c2) {
         return c1->GetPlayStartTime() < c2->GetPlayStartTime();
@@ -262,8 +273,7 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin,
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
-    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
-        && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime()) && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
         waveTrack->RemoveInterval(otherClip);
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
@@ -271,8 +281,7 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin,
     }
 
     //! NOTE check if clip boundaries are within other clip
-    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
-        && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime()) && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
         secs_t otherClipStartTime = otherClip->GetPlayStartTime();
         secs_t otherClipEndTime = otherClip->GetPlayEndTime();
 
@@ -295,9 +304,8 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin,
     }
 
     //! NOTE check if clip hovers left side of the clip
-    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
-        && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())
-        && muse::RealIsEqualOrMore(end, otherClip->GetPlayStartTime())) {
+    if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime()) && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime()) &&
+        muse::RealIsEqualOrMore(end, otherClip->GetPlayStartTime())) {
         secs_t overlap = (end - otherClip->GetPlayStartTime());
         otherClip->TrimLeft(overlap);
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
@@ -306,9 +314,8 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin,
     }
 
     //! NOTE check if clip hovers right side of the clip
-    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
-        && muse::RealIsEqualOrLess(begin, otherClip->GetPlayEndTime())
-        && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
+    if (!muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime()) && muse::RealIsEqualOrLess(begin, otherClip->GetPlayEndTime()) &&
+        muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
         secs_t overlap = (otherClip->GetPlayEndTime() - begin);
         otherClip->TrimRight(overlap);
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, otherClip.get()));
@@ -320,12 +327,12 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin,
 muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return -1.0;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return -1.0;
     }
 
@@ -335,12 +342,12 @@ muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) co
 bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -375,8 +382,7 @@ bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs
     return true;
 }
 
-muse::async::Channel<au::trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/>
-Au3Interaction::clipStartTimeChanged() const
+muse::async::Channel<au::trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> Au3Interaction::clipStartTimeChanged() const
 {
     return m_clipStartTimeChanged;
 }
@@ -385,7 +391,7 @@ bool Au3Interaction::trimTracksData(const std::vector<TrackId>& tracksIds, secs_
 {
     for (TrackId trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             continue;
         }
 
@@ -404,7 +410,7 @@ bool Au3Interaction::silenceTracksData(const std::vector<trackedit::TrackId>& tr
 {
     for (TrackId trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             return false;
         }
         waveTrack->Silence(begin, end, {});
@@ -421,7 +427,7 @@ bool Au3Interaction::silenceTracksData(const std::vector<trackedit::TrackId>& tr
 bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String& title)
 {
     Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
+    IF_ASSERT_FAILED (track) {
         return false;
     }
 
@@ -437,12 +443,12 @@ bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String&
 bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -458,12 +464,12 @@ bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const mu
 bool Au3Interaction::changeClipPitch(const ClipKey& clipKey, int pitch)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -481,12 +487,12 @@ bool Au3Interaction::changeClipPitch(const ClipKey& clipKey, int pitch)
 bool Au3Interaction::resetClipPitch(const ClipKey& clipKey)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -526,12 +532,12 @@ bool Au3Interaction::resetClipSpeed(const ClipKey& clipKey)
 bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -551,17 +557,18 @@ bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 
         muse::ProgressResult result;
 
-        DEFER {
+        DEFER
+        {
             m_progress->finished.send(result);
         };
 
         WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             return;
         }
 
         std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-        IF_ASSERT_FAILED(clip) {
+        IF_ASSERT_FAILED (clip) {
             return;
         }
 
@@ -569,11 +576,11 @@ bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
             m_progress->progressChanged.send(progressFraction * 1000, 1000, "");
         };
 
-        waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
+        waveTrack->ApplyPitchAndSpeed({{clip->GetPlayStartTime(), clip->GetPlayEndTime()}}, progressCallBack);
         LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack)); //! todo: replase with onClipChanged
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));  //! todo: replase with onClipChanged
 
         pushProjectHistoryRenderClipStretchingState();
     });
@@ -630,7 +637,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
 
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
-        IF_ASSERT_FAILED(dstWaveTrack) {
+        IF_ASSERT_FAILED (dstWaveTrack) {
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
         auto prj = globalContext()->currentTrackeditProject();
@@ -683,17 +690,17 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
 bool Au3Interaction::cutClipIntoClipboard(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
     auto track = waveTrack->Cut(clip->Start(), clip->End());
-    clipboard()->addTrackData(TrackData { track, clipKey });
+    clipboard()->addTrackData(TrackData{track, clipKey});
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipRemoved(DomConverter::clip(waveTrack, clip.get()));
@@ -720,13 +727,13 @@ bool Au3Interaction::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs
 bool Au3Interaction::cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     auto track = waveTrack->Cut(begin, end);
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(TrackData{track, dummyClipKey});
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
@@ -737,17 +744,17 @@ bool Au3Interaction::cutTrackDataIntoClipboard(const TrackId trackId, secs_t beg
 bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
     auto track = waveTrack->Copy(clip->Start(), clip->End());
-    clipboard()->addTrackData(TrackData { track, clipKey });
+    clipboard()->addTrackData(TrackData{track, clipKey});
 
     return true;
 }
@@ -755,17 +762,17 @@ bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
 bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
     auto track = waveTrack->Copy(begin, end);
-    clipboard()->addTrackData(TrackData { track, clipKey });
+    clipboard()->addTrackData(TrackData{track, clipKey});
 
     return true;
 }
@@ -773,7 +780,7 @@ bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t be
 bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
@@ -784,7 +791,7 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
     std::vector<std::shared_ptr<Au3WaveClip>> intervals;
     for (const auto& clipKey : clipKeys) {
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-        IF_ASSERT_FAILED(clip) {
+        IF_ASSERT_FAILED (clip) {
             return false;
         }
 
@@ -796,7 +803,7 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
     }
 
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { clipboardTrack, dummyClipKey });
+    clipboard()->addTrackData(TrackData{clipboardTrack, dummyClipKey});
     clipboard()->setMultiSelectionCopy(true);
 
     return true;
@@ -805,13 +812,13 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
 bool Au3Interaction::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     auto track = waveTrack->Copy(begin, end);
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(TrackData{track, dummyClipKey});
 
     return true;
 }
@@ -819,12 +826,12 @@ bool Au3Interaction::copyContinuousTrackDataIntoClipboard(const TrackId trackId,
 bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -850,12 +857,12 @@ bool Au3Interaction::removeClips(const ClipKeyList& clipKeyList)
 
     for (const auto& clipKey : clipKeyList) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             return false;
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-        IF_ASSERT_FAILED(clip) {
+        IF_ASSERT_FAILED (clip) {
             return false;
         }
 
@@ -877,7 +884,7 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
 
     for (const TrackId& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             continue;
         }
 
@@ -905,12 +912,12 @@ bool Au3Interaction::moveClips(secs_t offset, bool completed)
 
     for (const auto& selectedClip : selectionController()->selectedClips()) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             continue;
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
-        IF_ASSERT_FAILED(clip) {
+        IF_ASSERT_FAILED (clip) {
             continue;
         }
 
@@ -924,7 +931,7 @@ bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
 {
     for (const auto& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             return false;
         }
 
@@ -942,7 +949,7 @@ bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
 bool Au3Interaction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
@@ -961,7 +968,7 @@ bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begi
 {
     auto& tracks = Au3TrackList::Get(projectRef());
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
@@ -978,13 +985,13 @@ bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begi
 bool Au3Interaction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     auto track = waveTrack->SplitCut(begin, end);
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(TrackData{track, dummyClipKey});
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
@@ -995,7 +1002,7 @@ bool Au3Interaction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin
 bool Au3Interaction::splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
@@ -1040,12 +1047,12 @@ bool Au3Interaction::duplicateSelectedOnTracks(const TrackIdList& tracksIds, sec
 bool Au3Interaction::duplicateClip(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -1065,18 +1072,18 @@ bool Au3Interaction::duplicateClip(const ClipKey& clipKey)
 bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
     auto track = waveTrack->SplitCut(clip->Start(), clip->End());
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(TrackData{track, dummyClipKey});
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
@@ -1089,12 +1096,12 @@ bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
 bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -1142,12 +1149,12 @@ bool Au3Interaction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, se
 bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool completed)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -1173,12 +1180,12 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool 
 bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool completed)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -1262,7 +1269,7 @@ bool Au3Interaction::deleteTracks(const TrackIdList& trackIds)
 
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
-        IF_ASSERT_FAILED(au3Track) {
+        IF_ASSERT_FAILED (au3Track) {
             continue;
         }
         auto track = DomConverter::track(au3Track);
@@ -1286,7 +1293,7 @@ bool Au3Interaction::duplicateTracks(const TrackIdList& trackIds)
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
 
-        IF_ASSERT_FAILED(au3Track) {
+        IF_ASSERT_FAILED (au3Track) {
             continue;
         }
 
@@ -1368,10 +1375,9 @@ bool Au3Interaction::insertSilence(const TrackIdList& trackIds, secs_t begin, se
 
         auto track = trackFactory.Create(defaultFormat, rate);
         track->SetName(tracks.MakeUniqueTrackName(Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
-        tracks.Add(track, ::TrackList::DoAssignId::Yes,
-                   ::TrackList::EventPublicationSynchrony::Synchronous);
+        tracks.Add(track, ::TrackList::DoAssignId::Yes, ::TrackList::EventPublicationSynchrony::Synchronous);
         prj->notifyAboutTrackAdded(DomConverter::track(track.get()));
-        doInsertSilence({ track->GetId() }, begin, end, duration);
+        doInsertSilence({track->GetId()}, begin, end, duration);
     } else {
         doInsertSilence(trackIds, begin, end, duration);
     }
@@ -1388,12 +1394,12 @@ void Au3Interaction::doInsertSilence(const TrackIdList& trackIds, secs_t begin, 
     for (const auto& trackId : trackIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
 
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             continue;
         }
 
         if (!muse::is_zero(duration)) {
-            PasteTimeWarper warper{ end, begin + duration };
+            PasteTimeWarper warper{end, begin + duration};
 
             auto copy = waveTrack->EmptyCopy();
 
@@ -1444,7 +1450,7 @@ void Au3Interaction::moveTrackTo(const TrackId trackId, int to)
     auto& tracks = ::TrackList::Get(project);
     Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
 
-    IF_ASSERT_FAILED(au3Track) {
+    IF_ASSERT_FAILED (au3Track) {
         return;
     }
 
@@ -1482,12 +1488,12 @@ std::optional<secs_t> Au3Interaction::getLeftmostClipStartTime(const ClipKeyList
     std::optional<secs_t> leftmostClipStartTime;
     for (const auto& selectedClip : clipKeys) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             continue;
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
-        IF_ASSERT_FAILED(clip) {
+        IF_ASSERT_FAILED (clip) {
             continue;
         }
 
@@ -1505,13 +1511,13 @@ void Au3Interaction::moveTrack(const TrackId trackId, const TrackMoveDirection d
     auto& tracks = Au3TrackList::Get(project);
     Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
 
-    IF_ASSERT_FAILED(au3Track) {
+    IF_ASSERT_FAILED (au3Track) {
         return;
     }
 
     int initialPosition = std::distance(tracks.begin(), tracks.Find(au3Track));
 
-    IF_ASSERT_FAILED(initialPosition >= 0 && initialPosition < static_cast<int>(tracks.Size())) {
+    IF_ASSERT_FAILED (initialPosition >= 0 && initialPosition < static_cast<int>(tracks.Size())) {
         return;
     }
 
@@ -1562,12 +1568,12 @@ void Au3Interaction::moveTrack(const TrackId trackId, const TrackMoveDirection d
 muse::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return -1.0;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return -1.0;
     }
 
@@ -1631,12 +1637,12 @@ bool Au3Interaction::canRedo()
 bool Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 
@@ -1740,12 +1746,12 @@ void Au3Interaction::pushProjectHistoryRenderClipStretchingState()
 bool Au3Interaction::doChangeClipSpeed(const ClipKey& clipKey, double speed)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return false;
     }
 
     std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    IF_ASSERT_FAILED (clip) {
         return false;
     }
 

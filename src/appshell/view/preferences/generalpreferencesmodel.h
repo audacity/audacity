@@ -26,15 +26,15 @@
 
 #include "progress.h"
 
-#include "modularity/ioc.h"
-#include "iappshellconfiguration.h"
 #include "async/asyncable.h"
+#include "iappshellconfiguration.h"
+#include "modularity/ioc.h"
 
 #include "global/iinteractive.h"
 #include "languages/ilanguagesconfiguration.h"
 #include "languages/ilanguagesservice.h"
-#include "shortcuts/ishortcutsconfiguration.h"
 #include "project/iprojectconfiguration.h"
+#include "shortcuts/ishortcutsconfiguration.h"
 
 namespace au::appshell {
 class GeneralPreferencesModel : public QObject, public async::Asyncable
@@ -107,8 +107,7 @@ private:
 
     bool m_isNeedRestart = false;
 
-    struct StartMode
-    {
+    struct StartMode {
         StartupModeType type = StartupModeType::StartWithNewScore;
         QString title;
         bool checked = false;
@@ -120,6 +119,6 @@ private:
 
     StartModeList allStartupModes() const;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_GENERALPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_GENERALPREFERENCESMODEL_H

@@ -6,8 +6,8 @@
 #include <QAbstractListModel>
 #include <QQuickItem>
 
-#include "timecodeformatter.h"
 #include "fieldsinteractioncontroller.h"
+#include "timecodeformatter.h"
 
 namespace au::playback {
 class BPMModel : public QAbstractListModel
@@ -16,10 +16,10 @@ class BPMModel : public QAbstractListModel
 
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
 
-    Q_PROPERTY(int currentEditedFieldIndex READ currentEditedFieldIndex
-               WRITE setCurrentEditedFieldIndex NOTIFY currentEditedFieldIndexChanged FINAL)
+    Q_PROPERTY(int currentEditedFieldIndex READ currentEditedFieldIndex WRITE setCurrentEditedFieldIndex NOTIFY
+                   currentEditedFieldIndexChanged FINAL)
 
-    Q_PROPERTY(QQuickItem * visualItem READ visualItem WRITE setVisualItem CONSTANT)
+    Q_PROPERTY(QQuickItem* visualItem READ visualItem WRITE setVisualItem CONSTANT)
 
 public:
     explicit BPMModel(QObject* parent = nullptr);
@@ -64,4 +64,4 @@ private:
     std::shared_ptr<TimecodeFormatter> m_formatter;
     std::shared_ptr<FieldsInteractionController> m_fieldsInteractionController;
 };
-}
+}  // namespace au::playback

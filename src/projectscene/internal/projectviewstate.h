@@ -36,7 +36,6 @@ public:
     muse::ValCh<Snap> snap() const override;
 
 private:
-
     struct TrackData {
         muse::ValCh<int> height;
         muse::ValCh<bool> collapsed;
@@ -50,4 +49,4 @@ private:
     mutable std::map<trackedit::TrackId, TrackData> m_tracks;
     muse::ValCh<Snap> m_snap;
 };
-}
+}  // namespace au::projectscene

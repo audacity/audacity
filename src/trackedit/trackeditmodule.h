@@ -12,7 +12,6 @@ class Au3SelectionController;
 class TrackeditModule : public muse::modularity::IModuleSetup
 {
 public:
-
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
@@ -24,4 +23,4 @@ private:
     std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
     std::shared_ptr<Au3SelectionController> m_selectionController;
 };
-}
+}  // namespace au::trackedit

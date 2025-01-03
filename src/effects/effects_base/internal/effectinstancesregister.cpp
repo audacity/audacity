@@ -8,7 +8,7 @@ using namespace au::effects;
 EffectInstanceId EffectInstancesRegister::regInstance(const EffectId& effectId, Effect* e, EffectSettings* s)
 {
     EffectInstanceId id = reinterpret_cast<EffectInstanceId>(e);
-    m_data.insert({ id, { effectId, e, s } });
+    m_data.insert({id, {effectId, e, s}});
     return id;
 }
 

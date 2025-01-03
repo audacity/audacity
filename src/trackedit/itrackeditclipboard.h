@@ -9,12 +9,14 @@
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
-struct TrackData
-{
+struct TrackData {
     std::shared_ptr<au3::Au3Track> track;
     au::trackedit::ClipKey clipKey;
 
-    inline bool isValid() const { return clipKey.isValid() && track != nullptr; }
+    inline bool isValid() const
+    {
+        return clipKey.isValid() && track != nullptr;
+    }
 };
 
 class ITrackeditClipboard : MODULE_EXPORT_INTERFACE
@@ -35,4 +37,4 @@ public:
     virtual void setMultiSelectionCopy(bool newValue) = 0;
     virtual bool isMultiSelectionCopy() const = 0;
 };
-}
+}  // namespace au::trackedit

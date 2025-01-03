@@ -10,7 +10,7 @@ InvertEffect::~InvertEffect()
 {
 }
 
-const ComponentInterfaceSymbol InvertEffect::Symbol { XO("Invert") };
+const ComponentInterfaceSymbol InvertEffect::Symbol{XO("Invert")};
 
 // ComponentInterface implementation
 
@@ -46,9 +46,7 @@ unsigned InvertEffect::GetAudioOutCount() const
     return 1;
 }
 
-size_t InvertEffect::ProcessBlock(
-    EffectSettings&, const float* const* inBlock, float* const* outBlock,
-    size_t blockLen)
+size_t InvertEffect::ProcessBlock(EffectSettings&, const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
     const float* ibuf = inBlock[0];
     float* obuf = outBlock[0];
@@ -64,4 +62,4 @@ bool InvertEffect::NeedsDither() const
 {
     return false;
 }
-}
+}  // namespace au::effects

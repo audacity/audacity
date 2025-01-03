@@ -26,9 +26,9 @@
 
 namespace au::project {
 enum class Err {
-    Undefined       = int(muse::Ret::Code::Undefined),
-    NoError         = int(muse::Ret::Code::Ok),
-    UnknownError    = int(muse::Ret::Code::ProjectFirst),
+    Undefined = int(muse::Ret::Code::Undefined),
+    NoError = int(muse::Ret::Code::Ok),
+    UnknownError = int(muse::Ret::Code::ProjectFirst),
 
     NoProjectError,
     NoPartsError,
@@ -46,6 +46,6 @@ inline muse::Ret make_ret(Err e)
 {
     return muse::Ret(static_cast<int>(e));
 }
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PROJECTERRORS_H
+#endif  // AU_PROJECT_PROJECTERRORS_H

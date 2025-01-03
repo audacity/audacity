@@ -12,7 +12,7 @@ class GridLines : public QQuickPaintedItem
 {
     Q_OBJECT
 
-    Q_PROPERTY(TimelineRuler * timelineRuler READ timelineRuler WRITE setTimelineRuler NOTIFY timelineRulerChanged FINAL)
+    Q_PROPERTY(TimelineRuler* timelineRuler READ timelineRuler WRITE setTimelineRuler NOTIFY timelineRulerChanged FINAL)
 
     muse::Inject<muse::ui::IUiConfiguration> uiconfiguration;
     muse::Inject<IProjectSceneConfiguration> configuration;
@@ -32,10 +32,17 @@ signals:
 private:
     void drawGridLines(QPainter* painter);
     void drawZebraHighlighting(QPainter* painter);
-    void highlightHalfSection(QPainter* painter, qreal h, qreal w, const QColor& color, bool firstHalf, double nextTick,
-                              const IntervalInfo& intervalInfo);
+    void highlightHalfSection(
+        QPainter* painter,
+        qreal h,
+        qreal w,
+        const QColor& color,
+        bool firstHalf,
+        double nextTick,
+        const IntervalInfo& intervalInfo
+    );
 
     TimelineRuler* m_timelineRuler = nullptr;
     Ticks m_ticks = {};
 };
-}
+}  // namespace au::projectscene

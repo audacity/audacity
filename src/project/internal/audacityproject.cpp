@@ -1,9 +1,9 @@
 #include "audacityproject.h"
 
 #include "au3wrap/iau3project.h"
+#include "global/io/ioretcodes.h"
 #include "iprojectautosaver.h"
 #include "projecterrors.h"
-#include "global/io/ioretcodes.h"
 
 #include "log.h"
 
@@ -215,7 +215,7 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     case SaveMode::SaveCopy: {
         muse::io::path_t savePath = path;
         if (savePath.empty()) {
-            IF_ASSERT_FAILED(!m_path.empty()) {
+            IF_ASSERT_FAILED (!m_path.empty()) {
                 return false;
             }
 

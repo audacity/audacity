@@ -18,7 +18,7 @@ AmplifyEffect* AmplifyViewModel::effect() const
 void AmplifyViewModel::doReload()
 {
     AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
+    IF_ASSERT_FAILED (ae) {
         return;
     }
 
@@ -35,7 +35,7 @@ void AmplifyViewModel::doReload()
 void AmplifyViewModel::update()
 {
     AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
+    IF_ASSERT_FAILED (ae) {
         return;
     }
 
@@ -68,7 +68,7 @@ void AmplifyViewModel::setAmp(float newAmp_)
     }
 
     AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
+    IF_ASSERT_FAILED (ae) {
         return;
     }
 
@@ -100,7 +100,7 @@ void AmplifyViewModel::setNewPeak(float newNewPeak_)
     }
 
     AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
+    IF_ASSERT_FAILED (ae) {
         return;
     }
 
@@ -143,7 +143,7 @@ void AmplifyViewModel::setCanClip(bool newCliping)
     }
 
     AmplifyEffect* ae = effect();
-    IF_ASSERT_FAILED(ae) {
+    IF_ASSERT_FAILED (ae) {
         return;
     }
 

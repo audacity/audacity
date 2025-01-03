@@ -81,9 +81,9 @@ int App::run(int argc, char** argv)
 
     const char* appName;
     if (true /*MUVersion::unstable()*/) {
-        appName  = "Audacity4Development";
+        appName = "Audacity4Development";
     } else {
-        appName  = "Audacity4";
+        appName = "Audacity4";
     }
 
 #ifdef Q_OS_WIN
@@ -134,10 +134,10 @@ int App::run(int argc, char** argv)
     QCoreApplication::setOrganizationDomain("audacityteam.org");
     // QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
 
-// #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
-//     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
-//     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
-// #endif
+    // #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
+    //     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
+    //     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
+    // #endif
 
     commandLineParser.processBuiltinArgs(*app);
 
@@ -227,12 +227,16 @@ int App::run(int argc, char** argv)
     // ====================================================
     // Setup modules: onStartApp (on next event loop)
     // ====================================================
-    QMetaObject::invokeMethod(qApp, [this]() {
-        globalModule.onStartApp();
-        for (modularity::IModuleSetup* m : m_modules) {
-            m->onStartApp();
-        }
-    }, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(
+        qApp,
+        [this]() {
+            globalModule.onStartApp();
+            for (modularity::IModuleSetup* m : m_modules) {
+                m->onStartApp();
+            }
+        },
+        Qt::QueuedConnection
+    );
 
     // ====================================================
     // Run
@@ -289,8 +293,11 @@ int App::run(int argc, char** argv)
 
         const QUrl url(QStringLiteral("qrc:/qml") + mainQmlFile);
 
-        QObject::connect(engine, &QQmlApplicationEngine::objectCreated,
-                         app, [this, url, splashScreen](QObject* obj, const QUrl& objUrl) {
+        QObject::connect(
+            engine,
+            &QQmlApplicationEngine::objectCreated,
+            app,
+            [this, url, splashScreen](QObject* obj, const QUrl& objUrl) {
                 if (!obj && url == objUrl) {
                     LOGE() << "failed Qml load\n";
                     QCoreApplication::exit(-1);
@@ -316,13 +323,15 @@ int App::run(int argc, char** argv)
 
                     startupScenario()->runAfterSplashScreen();
                 }
-            }, Qt::QueuedConnection);
+            },
+            Qt::QueuedConnection
+        );
 
         QObject::connect(engine, &QQmlEngine::warnings, [](const QList<QQmlError>& warnings) {
-                for (const QQmlError& e : warnings) {
-                    LOGE() << "error: " << e.toString().toStdString() << "\n";
-                }
-            });
+            for (const QQmlError& e : warnings) {
+                LOGE() << "error: " << e.toString().toStdString() << "\n";
+            }
+        });
 
         // ====================================================
         // Load Main qml
@@ -333,15 +342,19 @@ int App::run(int argc, char** argv)
         QQuickWindow::setDefaultAlphaBuffer(true);
 
         engine->load(url);
-#endif // MUE_BUILD_APPSHELL_MODULE
+#endif  // MUE_BUILD_APPSHELL_MODULE
     } break;
     case IApplication::RunMode::AudioPluginRegistration: {
         CommandLineParser::AudioPluginRegistration pluginRegistration = commandLineParser.audioPluginRegistration();
 
-        QMetaObject::invokeMethod(qApp, [this, pluginRegistration]() {
+        QMetaObject::invokeMethod(
+            qApp,
+            [this, pluginRegistration]() {
                 int code = processAudioPluginRegistration(pluginRegistration);
                 qApp->exit(code);
-            }, Qt::QueuedConnection);
+            },
+            Qt::QueuedConnection
+        );
     } break;
     }
 
@@ -405,7 +418,7 @@ void App::applyCommandLineOptions(const CommandLineParser::Options& options)
     startupScenario()->setStartupType(options.startup.type);
 
     if (options.startup.scoreUrl.has_value()) {
-        project::ProjectFile file { options.startup.scoreUrl.value() };
+        project::ProjectFile file{options.startup.scoreUrl.value()};
 
         if (options.startup.scoreDisplayNameOverride.has_value()) {
             file.displayNameOverride = options.startup.scoreDisplayNameOverride.value();

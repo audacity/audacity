@@ -6,7 +6,6 @@
 
 using namespace au::trackedit;
 
-
 std::vector<au::trackedit::TrackData> Au3TrackeditClipboard::trackDataSource() const
 {
     return m_tracksData;
@@ -17,7 +16,7 @@ std::vector<TrackData> Au3TrackeditClipboard::trackDataCopy() const
     std::vector<TrackData> deepCopiedTracksData;
 
     for (int i = 0; i < m_tracksData.size(); ++i) {
-        deepCopiedTracksData.push_back(TrackData { m_tracksData.at(i).track->Duplicate(), m_tracksData.at(i).clipKey});
+        deepCopiedTracksData.push_back(TrackData{m_tracksData.at(i).track->Duplicate(), m_tracksData.at(i).clipKey});
     }
 
     return deepCopiedTracksData;

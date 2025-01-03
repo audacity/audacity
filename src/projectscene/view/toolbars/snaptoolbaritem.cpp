@@ -38,11 +38,10 @@ static bool isEnableTripletsAvailable(const SnapType& type)
     return muse::contains(types, type);
 }
 
-SnapToolBarItem::SnapToolBarItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                 QObject* parent)
+SnapToolBarItem::SnapToolBarItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type, QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    globalContext()->currentProjectChanged().onNotify(this, [this](){
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
 
@@ -115,7 +114,7 @@ void SnapToolBarItem::onProjectChanged()
         return;
     }
 
-    projectViewState->snap().ch.onReceive(this, [this](const Snap& snap){
+    projectViewState->snap().ch.onReceive(this, [this](const Snap& snap) {
         if (m_isSnapEnabled != snap.enabled) {
             m_isSnapEnabled = snap.enabled;
             emit isSnapEnabledChanged();
@@ -163,8 +162,7 @@ QVariantList SnapToolBarItem::availableSnapTypes() const
     return menuItemListToVariantList(m_availableSnapTypes);
 }
 
-MenuItem* SnapToolBarItem::makeMenu(const muse::TranslatableString& title, const MenuItemList& items,
-                                    const QString& menuId)
+MenuItem* SnapToolBarItem::makeMenu(const muse::TranslatableString& title, const MenuItemList& items, const QString& menuId)
 {
     MenuItem* item = new MenuItem(this);
     item->setId(menuId);
@@ -237,8 +235,7 @@ MenuItem* SnapToolBarItem::makeVideoFramesMenu()
 
 MenuItem* SnapToolBarItem::makeCDFramesMenu()
 {
-    MenuItemList items = {
-        makeMenuItem(snapTypeToId(SnapType::CDDAFrames), muse::TranslatableString("projectscene", "CDDA Frames (75 fps)"))
+    MenuItemList items = {makeMenuItem(snapTypeToId(SnapType::CDDAFrames), muse::TranslatableString("projectscene", "CDDA Frames (75 fps)"))
     };
 
     return makeMenu(muse::TranslatableString("projectscene", "CD frames"), items, "cd-frames");

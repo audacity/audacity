@@ -3,8 +3,8 @@
  */
 #pragma once
 
-#include <string>
 #include <map>
+#include <string>
 #include <variant>
 
 #include "libraries/lib-preferences/BasicSettings.h"
@@ -46,7 +46,6 @@ protected:
     void DoEndGroup() noexcept override;
 
 private:
-
     using Val = std::variant<std::monostate, bool, int, long, long long, double, wxString>;
 
     void Load();
@@ -54,7 +53,7 @@ private:
 
     std::string fullKey(const wxString& key) const;
 
-    template<typename T>
+    template <typename T>
     bool ReadValue(const wxString& key, T* value) const
     {
         std::string full = fullKey(key);
@@ -66,7 +65,7 @@ private:
         return true;
     }
 
-    template<typename T>
+    template <typename T>
     bool WriteValue(const wxString& key, T value)
     {
         std::string full = fullKey(key);
@@ -78,4 +77,4 @@ private:
     std::string m_currentGroup;
     std::map<std::string /* full key*/, Val> m_vals;
 };
-} // namespace au::au3
+}  // namespace au::au3

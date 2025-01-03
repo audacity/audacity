@@ -132,8 +132,7 @@ in the selection bar of Audacity.
   - The special character 'N' after '|' is only used for NTSC drop-frame.
 
 *******************************************************************/
-NumericFormatter::NumericFormatter(const QString& formatStr)
-    : TimecodeFormatter(formatStr)
+NumericFormatter::NumericFormatter(const QString& formatStr) : TimecodeFormatter(formatStr)
 {
 }
 
@@ -178,16 +177,14 @@ void NumericFormatter::init()
                 // translation, so we work based on '.' for decimal point.
                 m_scalingFactor = remainder.toDouble();
             }
-            i = m_format.length() - 1; // force break out of loop
+            i = m_format.length() - 1;  // force break out of loop
             if (!delimStr.isEmpty()) {
                 handleDelim = true;
             }
             if (!numStr.isEmpty()) {
                 handleNum = true;
             }
-        } else if (
-            (m_format[i] >= '0' && m_format[i] <= '9')
-            || m_format[i] == '*' || m_format[i] == '#') {
+        } else if ((m_format[i] >= '0' && m_format[i] <= '9') || m_format[i] == '*' || m_format[i] == '#') {
             numStr += m_format[i];
             if (!delimStr.isEmpty()) {
                 handleDelim = true;
@@ -226,7 +223,7 @@ void NumericFormatter::init()
 
             if (inFrac) {
                 int base = fracMult * range;
-                m_fieldConfigs.push_back({ inFrac, base, range });
+                m_fieldConfigs.push_back({inFrac, base, range});
                 m_fields.push_back(NumericField::range(range, zeropad));
                 fracMult *= range;
                 numFracFields++;
@@ -235,7 +232,7 @@ void NumericFormatter::init()
                 for (j = 0; j < m_fields.size(); j++) {
                     m_fieldConfigs[j].base *= range;
                 }
-                m_fieldConfigs.push_back({ inFrac, 1, range });
+                m_fieldConfigs.push_back({inFrac, 1, range});
                 m_fields.push_back(NumericField::range(range, zeropad));
                 numWholeFields++;
             }
@@ -290,7 +287,7 @@ void NumericFormatter::init()
         m_fields[i].pos = pos;
 
         for (size_t j = 0; j < m_fields[i].digits; j++) {
-            m_digits.push_back(DigitInfo { i, j, pos });
+            m_digits.push_back(DigitInfo{i, j, pos});
             pos++;
         }
 
@@ -301,14 +298,13 @@ void NumericFormatter::init()
 NumericFormatter::ConversionResult NumericFormatter::valueToString(double value, bool nearest) const
 {
     ConversionResult result;
-    double rawValue = floor(value * m_sampleRate + (nearest ? 0.5f : 0.0f))
-                      / m_sampleRate; // put on a sample
+    double rawValue = floor(value * m_sampleRate + (nearest ? 0.5f : 0.0f)) / m_sampleRate;  // put on a sample
     double theValue = rawValue * m_scalingFactor
-                      // PRL:  what WAS this .000001 for?  Nobody could explain.
-                      // + .000001
-    ;
+        // PRL:  what WAS this .000001 for?  Nobody could explain.
+        // + .000001
+        ;
 
-    int t_int; // todo
+    int t_int;  // todo
     bool round = true;
     // We round on the last field.  If we have a fractional field we round
     // using it. Otherwise we round to nearest integer.
@@ -430,8 +426,7 @@ std::optional<double> NumericFormatter::stringToValue(const QString& value) cons
 
         long val;
 
-        const auto fieldStringValue
-            =value.mid(m_fields[i].pos, m_fields[i].digits);
+        const auto fieldStringValue = value.mid(m_fields[i].pos, m_fields[i].digits);
 
         bool ok = false;
         val = fieldStringValue.toLong(&ok);
@@ -462,9 +457,9 @@ std::optional<double> NumericFormatter::stringToValue(const QString& value) cons
         }
         frames += addMins * 1798;
         t_int -= mins * 60;
-        if (mins == 0) { // first min of a block of 10, don't drop frames 0 and 1
+        if (mins == 0) {  // first min of a block of 10, don't drop frames 0 and 1
             frames += t_int * 30 + t_frac * 30.;
-        } else { // drop frames 0 and 1 of first seconds of these minutes
+        } else {  // drop frames 0 and 1 of first seconds of these minutes
             if (t_int > 0) {
                 frames += 28 + (t_int - 1) * 30 + t_frac * 30.;
             } else {
@@ -481,18 +476,15 @@ double NumericFormatter::singleStep(double value, int digitIndex, bool upwards)
 {
     const auto dir = upwards ? 1 : -1;
     for (size_t i = 0; i < m_fields.size(); i++) {
-        if (
-            (m_digits[digitIndex].pos >= m_fields[i].pos)
-            && (m_digits[digitIndex].pos < m_fields[i].pos + m_fields[i].digits)) { // it's this field
+        if ((m_digits[digitIndex].pos >= m_fields[i].pos) &&
+            (m_digits[digitIndex].pos < m_fields[i].pos + m_fields[i].digits)) {  // it's this field
             if (value < 0) {
                 value = 0;
             }
 
             value *= m_scalingFactor;
 
-            const double mult = pow(
-                10., m_fields[i].digits
-                - (m_digits[digitIndex].pos - m_fields[i].pos) - 1);
+            const double mult = pow(10., m_fields[i].digits - (m_digits[digitIndex].pos - m_fields[i].pos) - 1);
 
             if (m_fieldConfigs[i].frac) {
                 value += ((mult / (double)m_fieldConfigs[i].base) * dir);

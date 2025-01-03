@@ -13,7 +13,7 @@ using namespace au::effects;
 void GeneratorEffectModel::doReload()
 {
     auto* const ge = dynamic_cast<GeneratorEffect*>(effect());
-    IF_ASSERT_FAILED(ge) {
+    IF_ASSERT_FAILED (ge) {
         return;
     }
     ge->init(settings());
@@ -80,7 +80,7 @@ void GeneratorEffectModel::prop_setDuration(double newDuration)
     }
 
     auto e = generatorEffect();
-    IF_ASSERT_FAILED(e) {
+    IF_ASSERT_FAILED (e) {
         return;
     }
     e->setDuration(newDuration);
@@ -105,7 +105,7 @@ void GeneratorEffectModel::prop_setDurationFormat(const QString& newDurationForm
     }
 
     auto e = generatorEffect();
-    IF_ASSERT_FAILED(e) {
+    IF_ASSERT_FAILED (e) {
         return;
     }
     e->setDurationFormat(newDurationFormat);

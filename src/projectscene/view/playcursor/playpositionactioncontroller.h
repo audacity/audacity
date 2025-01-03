@@ -24,9 +24,9 @@
 #include <QObject>
 
 #include "actions/actionable.h"
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
+#include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -35,7 +35,7 @@ class PlayPositionActionController : public QObject, public muse::actions::Actio
 {
     Q_OBJECT
 
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(TimelineContext* context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
@@ -62,4 +62,4 @@ private:
 
     TimelineContext* m_context = nullptr;
 };
-}
+}  // namespace au::projectscene

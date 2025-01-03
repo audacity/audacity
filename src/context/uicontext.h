@@ -37,6 +37,6 @@ static constexpr muse::ui::UiContext UiCtxHomeOpened = "UiCtxHomeOpened";
 
 // project detail
 static constexpr muse::ui::UiContext UiCtxProjectFocused = "UiCtxProjectFocused";
-}
+}  // namespace au::context
 
-#endif // AU_CONTEXT_UICONTEXT_H
+#endif  // AU_CONTEXT_UICONTEXT_H

@@ -22,6 +22,6 @@ public:
     virtual bool isRecording() const = 0;
     virtual muse::async::Notification isRecordingChanged() const = 0;
 };
-}
+}  // namespace au::record
 
-#endif // AU_RECORD_IRECORDONTROLLER_H
+#endif  // AU_RECORD_IRECORDONTROLLER_H

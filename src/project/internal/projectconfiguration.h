@@ -3,8 +3,8 @@
 
 #include "types/val.h"
 
-#include "modularity/ioc.h"
 #include "global/iglobalconfiguration.h"
+#include "modularity/ioc.h"
 
 #include "../iprojectconfiguration.h"
 
@@ -32,8 +32,11 @@ public:
     muse::io::path_t lastSavedProjectsPath() const override;
     void setLastSavedProjectsPath(const muse::io::path_t& path) override;
 
-    muse::io::path_t defaultSavingFilePath(IAudacityProjectPtr project, const std::string& filenameAddition = "",
-                                           const std::string& suffix = "") const override;
+    muse::io::path_t defaultSavingFilePath(
+        IAudacityProjectPtr project,
+        const std::string& filenameAddition = "",
+        const std::string& suffix = ""
+    ) const override;
 
     SaveLocationType lastUsedSaveLocationType() const override;
     void setLastUsedSaveLocationType(SaveLocationType type) override;
@@ -66,6 +69,6 @@ private:
     muse::async::Channel<bool> m_autoSaveEnabledChanged;
     muse::async::Channel<int> m_autoSaveIntervalChanged;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PROJECTCONFIGURATION_H
+#endif  // AU_PROJECT_PROJECTCONFIGURATION_H

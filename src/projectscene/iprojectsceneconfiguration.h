@@ -21,7 +21,7 @@ public:
     virtual void setInsertSilenceDuration(const trackedit::secs_t duration) = 0;
 
     virtual std::string insertSilenceDurationFormat() const = 0;
-    virtual void setInsertSilenceDurationFormat(const std::string &format) = 0;
+    virtual void setInsertSilenceDurationFormat(const std::string& format) = 0;
 
     virtual int mouseZoomPrecision() const = 0;
     virtual void setMouseZoomPrecision(int precision) = 0;
@@ -29,4 +29,4 @@ public:
     virtual void setTimelineRulerMode(const TimelineRulerMode mode) = 0;
     virtual muse::async::Channel<TimelineRulerMode> timelineRulerModeChanged() const = 0;
 };
-}
+}  // namespace au::projectscene

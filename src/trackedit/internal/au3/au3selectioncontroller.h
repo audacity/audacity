@@ -6,8 +6,8 @@
 #include "../../iselectioncontroller.h"
 
 #include "async/asyncable.h"
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 #include "playback/iplayback.h"
 
 #include "Track.h"
@@ -66,7 +66,7 @@ private:
     au3::Au3Project& projectRef() const;
     Observer::Subscription m_tracksSubc;
 
-    template<typename T>
+    template <typename T>
     struct Val {
         T val = T();
         muse::async::Channel<T> changed;
@@ -95,4 +95,4 @@ private:
     Val<trackedit::secs_t> m_selectedStartTime;
     Val<trackedit::secs_t> m_selectedEndTime;
 };
-}
+}  // namespace au::trackedit

@@ -3,12 +3,12 @@
 */
 #include "vsteffectsmodule.h"
 
-#include "internal/vsteffectsrepository.h"
-#include "internal/vst3pluginsscanner.h"
 #include "internal/vst3pluginsmetareader.h"
+#include "internal/vst3pluginsscanner.h"
+#include "internal/vsteffectsrepository.h"
 
-#include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
+#include "audioplugins/iaudiopluginsscannerregister.h"
 
 using namespace au::effects;
 

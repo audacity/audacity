@@ -21,8 +21,8 @@
  */
 #include "windowsrecentfilescontroller.h"
 
-#include <Windows.h>
 #include <shlobj.h>
+#include <Windows.h>
 
 using namespace au::project;
 

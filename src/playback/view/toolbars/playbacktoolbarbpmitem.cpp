@@ -5,12 +5,14 @@
 
 using namespace au::playback;
 
-PlaybackToolBarBPMItem::PlaybackToolBarBPMItem(const muse::ui::UiAction& action,
-                                               muse::uicomponents::ToolBarItemType::Type type,
-                                               QObject* parent)
+PlaybackToolBarBPMItem::PlaybackToolBarBPMItem(
+    const muse::ui::UiAction& action,
+    muse::uicomponents::ToolBarItemType::Type type,
+    QObject* parent
+)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
 
@@ -35,7 +37,7 @@ void PlaybackToolBarBPMItem::setCurrentValue(double value)
     if (qFuzzyCompare(m_currentValue, value)) {
         return;
     }
-    
+
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;

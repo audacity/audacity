@@ -5,8 +5,7 @@
 
 using namespace au::projectscene;
 
-ClipListItem::ClipListItem(QObject* parent)
-    : QObject(parent)
+ClipListItem::ClipListItem(QObject* parent) : QObject(parent)
 {
 }
 

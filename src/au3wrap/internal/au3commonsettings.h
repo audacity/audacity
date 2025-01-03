@@ -37,8 +37,7 @@ public:
     bool Flush() noexcept override;
 
 protected:
-
     void DoBeginGroup(const wxString& /*prefix*/) override;
     void DoEndGroup() noexcept override;
 };
-}
+}  // namespace au::au3

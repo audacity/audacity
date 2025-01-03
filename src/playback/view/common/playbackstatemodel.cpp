@@ -6,8 +6,7 @@
 
 using namespace au::playback;
 
-PlaybackStateModel::PlaybackStateModel(QObject* parent)
-    : QObject(parent)
+PlaybackStateModel::PlaybackStateModel(QObject* parent) : QObject(parent)
 {
 }
 

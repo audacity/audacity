@@ -7,7 +7,7 @@ Wave::Wave(const int16_t* data, size_t size)
 {
     m_data = std::make_shared<Data>();
     m_data->resize(size + 1);
-    m_data->operator [](size) = 0;
+    m_data->operator[](size) = 0;
     std::memcpy(m_data->data(), data, size);
 }
 
@@ -37,7 +37,7 @@ const int16_t* Wave::constData() const
 int16_t Wave::operator[](size_t pos) const
 {
     if (pos < size()) {
-        return m_data->operator [](pos);
+        return m_data->operator[](pos);
     }
     return 0;
 }
@@ -47,7 +47,7 @@ int16_t& Wave::operator[](size_t pos)
     detach();
 
     if (pos < size()) {
-        return m_data->operator [](pos);
+        return m_data->operator[](pos);
     }
 
     static int16_t _dummy;

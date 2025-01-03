@@ -3,9 +3,9 @@
 */
 #pragma once
 
+#include <optional>
 #include <QCommandLineParser>
 #include <QStringList>
-#include <optional>
 
 #include "logger.h"
 
@@ -161,4 +161,4 @@ private:
     Autobot m_autobot;
     AudioPluginRegistration m_audioPluginRegistration;
 };
-}
+}  // namespace au::app

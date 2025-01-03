@@ -5,8 +5,8 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 #include "trackedit/iselectioncontroller.h"
 
 #include "../timeline/timelinecontext.h"
@@ -15,7 +15,7 @@ namespace au::projectscene {
 class SelectionViewController : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(TimelineContext* context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
@@ -56,7 +56,6 @@ signals:
     void selectionEnded(QPointF p1, QPointF p2);
 
 private:
-
     IProjectViewStatePtr viewState() const;
     trackedit::TrackIdList trackIdList() const;
     void setSelection(double x1, double x2, bool complete);
@@ -72,4 +71,4 @@ private:
     bool m_selectionActive = false;
     QPointF m_startPoint;
 };
-}
+}  // namespace au::projectscene

@@ -27,8 +27,7 @@
 using namespace au::appshell;
 using namespace mu::notation;
 
-CanvasPreferencesModel::CanvasPreferencesModel(QObject* parent)
-    : QObject(parent)
+CanvasPreferencesModel::CanvasPreferencesModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -40,10 +39,10 @@ void CanvasPreferencesModel::load()
 QVariantList CanvasPreferencesModel::zoomTypes() const
 {
     QVariantList types = {
-        QVariantMap { { "title", zoomTypeTitle(ZoomType::Percentage).qTranslated() }, { "value", static_cast<int>(ZoomType::Percentage) } },
-        QVariantMap { { "title", zoomTypeTitle(ZoomType::PageWidth).qTranslated() }, { "value", static_cast<int>(ZoomType::PageWidth) } },
-        QVariantMap { { "title", zoomTypeTitle(ZoomType::WholePage).qTranslated() }, { "value", static_cast<int>(ZoomType::WholePage) } },
-        QVariantMap { { "title", zoomTypeTitle(ZoomType::TwoPages).qTranslated() }, { "value", static_cast<int>(ZoomType::TwoPages) } }
+        QVariantMap{{"title", zoomTypeTitle(ZoomType::Percentage).qTranslated()}, {"value", static_cast<int>(ZoomType::Percentage)}},
+        QVariantMap{{"title", zoomTypeTitle(ZoomType::PageWidth).qTranslated()}, {"value", static_cast<int>(ZoomType::PageWidth)}},
+        QVariantMap{{"title", zoomTypeTitle(ZoomType::WholePage).qTranslated()}, {"value", static_cast<int>(ZoomType::WholePage)}},
+        QVariantMap{{"title", zoomTypeTitle(ZoomType::TwoPages).qTranslated()}, {"value", static_cast<int>(ZoomType::TwoPages)}}
     };
 
     return types;

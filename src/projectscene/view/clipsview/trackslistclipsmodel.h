@@ -7,9 +7,9 @@
 
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
+#include "modularity/ioc.h"
 #include "trackedit/iselectioncontroller.h"
 
 #include "trackedit/dom/track.h"
@@ -28,7 +28,6 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
-
     TracksListClipsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
@@ -68,4 +67,4 @@ private:
     bool m_isVerticalRulersVisible = false;
     int m_totalTracksHeight = 0;
 };
-}
+}  // namespace au::projectscene

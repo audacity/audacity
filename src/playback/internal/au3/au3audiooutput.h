@@ -8,8 +8,8 @@
 
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
 
@@ -43,4 +43,4 @@ private:
 
     std::shared_ptr<InOutMeter> m_outputMeter;
 };
-}
+}  // namespace au::playback

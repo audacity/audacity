@@ -22,8 +22,8 @@
 #include "navigableappmenumodel.h"
 
 #include <QApplication>
-#include <QWindow>
 #include <QKeyEvent>
+#include <QWindow>
 
 #include <private/qkeymapper_p.h>
 
@@ -52,8 +52,7 @@ QSet<int> possibleKeys(const QChar& keySymbol)
     return QSet<int>(keys.cbegin(), keys.cend());
 }
 
-NavigableAppMenuModel::NavigableAppMenuModel(QObject* parent)
-    : AppMenuModel(parent)
+NavigableAppMenuModel::NavigableAppMenuModel(QObject* parent) : AppMenuModel(parent)
 {
 }
 
@@ -61,13 +60,13 @@ void NavigableAppMenuModel::load()
 {
     AppMenuModel::load();
 
-    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state) {
         if (state != Qt::ApplicationActive) {
             resetNavigation();
         }
     });
 
-    navigationController()->navigationChanged().onNotify(this, [this](){
+    navigationController()->navigationChanged().onNotify(this, [this]() {
         if (navigationController()->isHighlight() && !isMenuOpened()) {
             resetNavigation();
         }
@@ -219,8 +218,7 @@ bool NavigableAppMenuModel::processEventForOpenedMenu(QEvent* event)
 
     QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event);
 
-    bool isNavigationWithSymbol = !keyEvent->modifiers()
-                                  && keyEvent->text().length() == 1;
+    bool isNavigationWithSymbol = !keyEvent->modifiers() && keyEvent->text().length() == 1;
 
     if (!isNavigationWithSymbol) {
         return false;
@@ -248,16 +246,10 @@ bool NavigableAppMenuModel::processEventForAppMenu(QEvent* event)
     bool isSingleSymbol = keyEvent->text().length() == 1;
 
     bool isNavigationStarted = this->isNavigationStarted();
-    bool isNavigationWithSymbol = !modifiers
-                                  && isSingleSymbol
-                                  && isNavigationStarted;
-    bool isNavigationWithAlt = (modifiers & Qt::AltModifier)
-                               && !(modifiers & Qt::ShiftModifier)
-                               && isSingleSymbol;
+    bool isNavigationWithSymbol = !modifiers && isSingleSymbol && isNavigationStarted;
+    bool isNavigationWithAlt = (modifiers & Qt::AltModifier) && !(modifiers & Qt::ShiftModifier) && isSingleSymbol;
 
-    bool isAltKey = key == Qt::Key_Alt
-                    && key != Qt::Key_Shift
-                    && !(modifiers & Qt::ShiftModifier);
+    bool isAltKey = key == Qt::Key_Alt && key != Qt::Key_Shift && !(modifiers & Qt::ShiftModifier);
 
     switch (event->type()) {
     case QEvent::ShortcutOverride: {
@@ -336,14 +328,7 @@ bool NavigableAppMenuModel::processEventForAppMenu(QEvent* event)
 
 bool NavigableAppMenuModel::isNavigateKey(int key) const
 {
-    static QList<Qt::Key> keys {
-        Qt::Key_Left,
-        Qt::Key_Right,
-        Qt::Key_Down,
-        Qt::Key_Space,
-        Qt::Key_Escape,
-        Qt::Key_Return
-    };
+    static QList<Qt::Key> keys{Qt::Key_Left, Qt::Key_Right, Qt::Key_Down, Qt::Key_Space, Qt::Key_Escape, Qt::Key_Return};
 
     return keys.contains(static_cast<Qt::Key>(key));
 }
@@ -422,9 +407,7 @@ void NavigableAppMenuModel::navigateToSubItem(const QString& menuId, const QSet<
         return;
     }
 
-    navigationController()->requestActivateByName(section->name().toStdString(),
-                                                  panel->name().toStdString(),
-                                                  subItem.id().toStdString());
+    navigationController()->requestActivateByName(section->name().toStdString(), panel->name().toStdString(), subItem.id().toStdString());
 
     INavigationControl* control = navigationController()->activeControl();
     if (!control) {

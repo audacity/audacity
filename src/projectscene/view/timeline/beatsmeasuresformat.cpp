@@ -18,26 +18,26 @@ IntervalInfo BeatsMeasuresFormat::intervalInfo(TimelineContext* context)
     double timeSigUpper = context->timeSigUpper();
     double timeSigLower = static_cast<double>(context->timeSigLower());
 
-    if (zoom > (28 / ((4 / timeSigLower) * SPB / 32))) { // 1/128 ticks
+    if (zoom > (28 / ((4 / timeSigLower) * SPB / 32))) {  // 1/128 ticks
         timeInterval.minor = 60 / (BPM * (timeSigLower * 2));
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 4));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower * 8));
 
         return timeInterval;
     }
-    if (zoom > (32 / ((4 / timeSigLower) * SPB / 16))) { // 1/64 ticks
+    if (zoom > (32 / ((4 / timeSigLower) * SPB / 16))) {  // 1/64 ticks
         timeInterval.minor = 60 / (BPM * (timeSigLower));
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 4));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower * 4));
         return timeInterval;
     }
-    if (zoom > (32 / ((4 / timeSigLower) * SPB / 8))) { // 1/32 beat ticks
+    if (zoom > (32 / ((4 / timeSigLower) * SPB / 8))) {  // 1/32 beat ticks
         timeInterval.minor = 60 / (BPM * (timeSigLower / 2));
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 4));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower * 2));
         return timeInterval;
     }
-    if (zoom > (24 / ((4 / timeSigLower) * SPB / 4))) { // 1/16 beat ticks
+    if (zoom > (24 / ((4 / timeSigLower) * SPB / 4))) {  // 1/16 beat ticks
         timeInterval.minor = 60 / (BPM * (timeSigLower / 4));
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 4));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower));
@@ -49,28 +49,27 @@ IntervalInfo BeatsMeasuresFormat::intervalInfo(TimelineContext* context)
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower / 2));
         return timeInterval;
     }
-    if (zoom > (12 / ((4 / timeSigLower) * SPB))) { // 1/4 beat ticks
-        timeInterval.minor = std::numeric_limits<int>::max(); // do not draw minor ticks
+    if (zoom > (12 / ((4 / timeSigLower) * SPB))) {            // 1/4 beat ticks
+        timeInterval.minor = std::numeric_limits<int>::max();  // do not draw minor ticks
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 4));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower / 4));
 
         return timeInterval;
     }
-    if (zoom > (12 / ((4 / timeSigLower) * SPB * 2))) { // 4/1 beat ticks
+    if (zoom > (12 / ((4 / timeSigLower) * SPB * 2))) {  // 4/1 beat ticks
         timeInterval.minor = 60 * 2 / (BPM * (timeSigLower / 8));
         timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / 16));
         timeInterval.minorMinor = 60 / (BPM * (timeSigLower / 8));
-        timeInterval.digits = -1; // do not draw labels for minor ticks
+        timeInterval.digits = -1;  // do not draw labels for minor ticks
 
         return timeInterval;
     }
 
     int MAX_BEATS_ZOOM_OUT = (4 / timeSigLower) * SPB * 8 * 32769;
     int factor = 2;
-    while (static_cast<double>(60) * factor / BPM <= MAX_BEATS_ZOOM_OUT)
-    {
+    while (static_cast<double>(60) * factor / BPM <= MAX_BEATS_ZOOM_OUT) {
         if (zoom > (12 / ((4 / timeSigLower) * ((static_cast<double>(60) * factor / BPM) / 2)))) {
-            timeInterval.minor = std::numeric_limits<int>::max(); // do not draw minor ticks
+            timeInterval.minor = std::numeric_limits<int>::max();  // do not draw minor ticks
             timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / (4 * factor)));
             timeInterval.minorMinor = 60 / (BPM * (timeSigLower / (2 * factor)));
 
@@ -79,7 +78,7 @@ IntervalInfo BeatsMeasuresFormat::intervalInfo(TimelineContext* context)
         factor *= 2;
     }
 
-    timeInterval.minor = std::numeric_limits<int>::max(); // do not draw minor ticks
+    timeInterval.minor = std::numeric_limits<int>::max();  // do not draw minor ticks
     timeInterval.major = (60 * timeSigUpper) / (BPM * (timeSigLower / (4 * factor)));
     timeInterval.minorMinor = 60 / (BPM * (timeSigLower / (2 * factor)));
 
@@ -111,9 +110,7 @@ QString BeatsMeasuresFormat::label(double d, const IntervalInfo& interval, TickT
         if (interval.digits == -1 && tickType == TickType::MINOR) {
             return QString();
         } else if (tickType == TickType::MINOR && beat != 1 && abs(beat - beatApprox) <= 1.0e-5f) {
-            return QString("%1.%2")
-                   .arg(QString::number(static_cast<int>(floor(val + 1))))
-                   .arg(QString::number(static_cast<int>(beat)));
+            return QString("%1.%2").arg(QString::number(static_cast<int>(floor(val + 1)))).arg(QString::number(static_cast<int>(beat)));
         } else if (abs(beat - beatApprox) > 1.0e-5f) {
             return QString();
         }
@@ -122,9 +119,7 @@ QString BeatsMeasuresFormat::label(double d, const IntervalInfo& interval, TickT
         if (tickType == TickType::MAJOR) {
             return QString::number(static_cast<int>(round(val + 1)));
         }
-        return QString("%1.%2")
-               .arg(QString::number(static_cast<int>(floor(val + 1))))
-               .arg(QString::number(static_cast<int>(beat)));
+        return QString("%1.%2").arg(QString::number(static_cast<int>(floor(val + 1)))).arg(QString::number(static_cast<int>(beat)));
     } else {
         if (tickType == TickType::MINOR) {
             if (abs(beat - beatApprox) > 1.0e-5f) {
@@ -134,9 +129,7 @@ QString BeatsMeasuresFormat::label(double d, const IntervalInfo& interval, TickT
         if (tickType == TickType::MAJOR) {
             return QString::number(static_cast<int>(round(val + 1)));
         }
-        return QString("%1.%2")
-               .arg(QString::number(static_cast<int>(floor(val + 1))))
-               .arg(QString::number(static_cast<int>(beat)));
+        return QString("%1.%2").arg(QString::number(static_cast<int>(floor(val + 1)))).arg(QString::number(static_cast<int>(beat)));
     }
 
     return QString();

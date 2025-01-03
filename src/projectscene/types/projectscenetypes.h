@@ -30,10 +30,10 @@ class ClipKey
     Q_GADGET
 
 public:
-
     ClipKey() = default;
-    ClipKey(const trackedit::ClipKey& k)
-        : key(k) {}
+    ClipKey(const trackedit::ClipKey& k) : key(k)
+    {
+    }
 
     trackedit::ClipKey key;
 };
@@ -43,7 +43,6 @@ class ClipTime
     Q_GADGET
 
 public:
-
     double clipStartTime = 0.0;
     double clipEndTime = 0.0;
 
@@ -55,15 +54,15 @@ public:
 
     inline bool operator==(const ClipTime& other) const
     {
-        return muse::is_equal(clipStartTime, other.clipStartTime)
-               && muse::is_equal(clipEndTime, other.clipEndTime)
-               && muse::is_equal(itemStartTime, other.itemStartTime)
-               && muse::is_equal(itemEndTime, other.itemEndTime)
-               && muse::is_equal(selectionStartTime, other.selectionStartTime)
-               && muse::is_equal(selectionEndTime, other.selectionEndTime);
+        return muse::is_equal(clipStartTime, other.clipStartTime) && muse::is_equal(clipEndTime, other.clipEndTime) &&
+               muse::is_equal(itemStartTime, other.itemStartTime) && muse::is_equal(itemEndTime, other.itemEndTime) &&
+               muse::is_equal(selectionStartTime, other.selectionStartTime) && muse::is_equal(selectionEndTime, other.selectionEndTime);
     }
 
-    inline bool operator!=(const ClipTime& other) const { return !this->operator==(other); }
+    inline bool operator!=(const ClipTime& other) const
+    {
+        return !this->operator==(other);
+    }
 };
 
 class VerticalRulerTypes
@@ -112,6 +111,6 @@ enum class Direction {
     Left = 0,
     Right
 };
-}
+}  // namespace au::projectscene
 
-#endif // AU_PROJECTSCENE_TRACKTYPES_H
+#endif  // AU_PROJECTSCENE_TRACKTYPES_H

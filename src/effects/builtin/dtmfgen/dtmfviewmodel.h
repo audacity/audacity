@@ -43,9 +43,8 @@ signals:
     void silenceDurationChanged();
 
 private:
-
     void doEmitSignals() override;
 
     void recalculateDurations();
 };
-}
+}  // namespace au::effects

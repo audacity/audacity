@@ -3,12 +3,12 @@
  */
 #pragma once
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
-#include "realtimeeffectmenumodelbase.h"
-#include "effects/effects_base/irealtimeeffectservice.h"
-#include <QObject>
 #include <map>
+#include <QObject>
+#include "context/iglobalcontext.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
+#include "modularity/ioc.h"
+#include "realtimeeffectmenumodelbase.h"
 
 namespace au::projectscene {
 class ModelEffectItem : public QObject
@@ -48,8 +48,7 @@ private:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
 private:
-    enum RoleNames
-    {
+    enum RoleNames {
         rItemData = Qt::UserRole + 1
     };
 
@@ -63,4 +62,4 @@ private:
     using EffectList = std::vector<ModelEffectItem*>;
     std::map<effects::TrackId, EffectList> m_trackEffectLists;
 };
-}
+}  // namespace au::projectscene

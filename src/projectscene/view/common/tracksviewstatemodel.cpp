@@ -6,8 +6,7 @@
 using namespace au::projectscene;
 using namespace au::project;
 
-TracksViewStateModel::TracksViewStateModel(QObject* parent)
-    : QObject(parent)
+TracksViewStateModel::TracksViewStateModel(QObject* parent) : QObject(parent)
 {
 }
 

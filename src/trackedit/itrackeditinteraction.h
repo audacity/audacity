@@ -3,9 +3,9 @@
 #include "dom/track.h"
 #include "modularity/imoduleinterface.h"
 
-#include "global/types/string.h"
 #include "global/async/channel.h"
 #include "global/progress.h"
+#include "global/types/string.h"
 
 #include "trackedittypes.h"
 #include "types/ret.h"
@@ -89,4 +89,4 @@ public:
 
     virtual muse::ProgressPtr progress() const = 0;
 };
-}
+}  // namespace au::trackedit

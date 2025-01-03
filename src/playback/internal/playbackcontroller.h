@@ -3,21 +3,21 @@
 */
 #pragma once
 
-#include "async/asyncable.h"
 #include "actions/actionable.h"
+#include "async/asyncable.h"
 
-#include "modularity/ioc.h"
+#include "../iplayback.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
-#include "iinteractive.h"
 #include "iapplication.h"
-#include "../iplayback.h"
+#include "iinteractive.h"
+#include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 
-#include "au3audio/audiotypes.h"
-#include "../iplayer.h"
 #include "../iplaybackcontroller.h"
+#include "../iplayer.h"
+#include "au3audio/audiotypes.h"
 
 namespace au::playback {
 class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable
@@ -127,7 +127,7 @@ private:
     bool isPlaybackPositionOnTheEndOfPlaybackRegion() const;
     bool isPlaybackStartPositionValid() const;
 
-    using TrackAddFinished = std::function<void ()>;
+    using TrackAddFinished = std::function<void()>;
 
     playback::IPlayerPtr m_player;
 
@@ -153,4 +153,4 @@ private:
     bool m_isExportingAudio = false;
     bool m_isRangeSelection = false;
 };
-}
+}  // namespace au::playback

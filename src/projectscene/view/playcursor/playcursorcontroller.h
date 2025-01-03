@@ -25,9 +25,9 @@
 
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
+#include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -36,7 +36,7 @@ class PlayCursorController : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(TimelineContext* context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
     Q_PROPERTY(double positionX READ positionX NOTIFY positionXChanged FINAL)
 
@@ -70,4 +70,4 @@ private:
     TimelineContext* m_context = nullptr;
     double m_positionX = 0.0;
 };
-}
+}  // namespace au::projectscene

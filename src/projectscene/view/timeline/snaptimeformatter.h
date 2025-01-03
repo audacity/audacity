@@ -6,8 +6,8 @@
 #include "modularity/ioc.h"
 #include "playback/iplayback.h"
 
-#include "projectscene/iprojectviewstate.h"
 #include "../../types/projectscenetypes.h"
+#include "projectscene/iprojectviewstate.h"
 
 namespace au::projectscene {
 class SnapTimeFormatter
@@ -26,4 +26,4 @@ private:
 
     double determineStep(double multiplier, Direction direction) const;
 };
-}
+}  // namespace au::projectscene

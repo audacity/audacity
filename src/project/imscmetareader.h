@@ -24,8 +24,8 @@
 
 #include <QString>
 
-#include "modularity/imoduleinterface.h"
 #include "io/path.h"
+#include "modularity/imoduleinterface.h"
 #include "types/retval.h"
 
 #include "types/projectmeta.h"
@@ -40,6 +40,6 @@ public:
 
     virtual muse::RetVal<ProjectMeta> readMeta(const muse::io::path_t& filePath) const = 0;
 };
-}
+}  // namespace au::project
 
-#endif // MU_PROJECT_IMSCMETAREADER_H
+#endif  // MU_PROJECT_IMSCMETAREADER_H

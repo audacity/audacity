@@ -34,6 +34,6 @@ public:
 
     Q_INVOKABLE void load() override;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_PUBLISHTOOLBARMODEL_H
+#endif  // AU_APPSHELL_PUBLISHTOOLBARMODEL_H

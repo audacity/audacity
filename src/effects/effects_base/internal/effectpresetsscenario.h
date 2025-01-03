@@ -7,10 +7,10 @@
 
 #include "global/io/path.h"
 
-#include "modularity/ioc.h"
-#include "global/iinteractive.h"
-#include "global/iglobalconfiguration.h"
 #include "../ieffectpresetsprovider.h"
+#include "global/iglobalconfiguration.h"
+#include "global/iinteractive.h"
+#include "modularity/ioc.h"
 
 namespace au::effects {
 class EffectPresetsScenario : public IEffectPresetsScenario
@@ -29,10 +29,9 @@ public:
     void exportPreset(const EffectInstanceId& effectInstanceId) override;
 
 private:
-
     void showError(const muse::Ret& ret, const std::string& text = std::string());
 
     muse::io::path_t m_lastImportPath;
     muse::io::path_t m_lastExportPath;
 };
-}
+}  // namespace au::effects

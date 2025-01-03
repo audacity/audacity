@@ -40,10 +40,9 @@ static const std::string CTX_NOT_PROJECT_FOCUSED = muse::shortcuts::CTX_NOT_PROJ
 class ShortcutContextPriority : public muse::shortcuts::IShortcutContextPriority
 {
 public:
-
     bool hasLowerPriorityThan(const std::string& ctx1, const std::string& ctx2) const override
     {
-        static const std::array<std::string, 7> CONTEXTS_BY_INCREASING_PRIORITY {
+        static const std::array<std::string, 7> CONTEXTS_BY_INCREASING_PRIORITY{
             CTX_ANY,
 
             CTX_PROJECT_OPENED,
@@ -57,4 +56,4 @@ public:
         return index1 < index2;
     }
 };
-}
+}  // namespace au::context

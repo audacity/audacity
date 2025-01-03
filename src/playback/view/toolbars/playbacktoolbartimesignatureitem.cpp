@@ -5,12 +5,14 @@
 
 using namespace au::playback;
 
-PlaybackToolBarTimeSignatureItem::PlaybackToolBarTimeSignatureItem(const muse::ui::UiAction& action,
-                                                                   muse::uicomponents::ToolBarItemType::Type type,
-                                                                   QObject* parent)
+PlaybackToolBarTimeSignatureItem::PlaybackToolBarTimeSignatureItem(
+    const muse::ui::UiAction& action,
+    muse::uicomponents::ToolBarItemType::Type type,
+    QObject* parent
+)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
 
@@ -27,7 +29,7 @@ void PlaybackToolBarTimeSignatureItem::setUpper(int newUpper)
     if (m_upper == newUpper) {
         return;
     }
-    
+
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
@@ -48,7 +50,7 @@ void PlaybackToolBarTimeSignatureItem::setLower(int newLower)
     if (m_lower == newLower) {
         return;
     }
-    
+
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;

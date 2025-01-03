@@ -24,8 +24,8 @@
 
 #include <QAbstractItemModel>
 
-#include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
+#include "modularity/ioc.h"
 #include "ui/iuiactionsregister.h"
 #include "ui/view/iconcodes.h"
 
@@ -71,19 +71,23 @@ signals:
     void currentPageIdChanged(QString currentPageId);
 
 private:
-
     enum RoleNames {
         ItemRole = Qt::UserRole + 1
     };
 
-    PreferencePageItem* makeItem(const QString& id, const QString& title, muse::ui::IconCode::Code icon = muse::ui::IconCode::Code::NONE,
-                                 const QString& path = "", const QList<PreferencePageItem*>& children = {}) const;
+    PreferencePageItem* makeItem(
+        const QString& id,
+        const QString& title,
+        muse::ui::IconCode::Code icon = muse::ui::IconCode::Code::NONE,
+        const QString& path = "",
+        const QList<PreferencePageItem*>& children = {}
+    ) const;
 
     PreferencePageItem* modelIndexToItem(const QModelIndex& index) const;
 
     PreferencePageItem* m_rootItem = nullptr;
     QString m_currentPageId;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_PREFERENCESMODEL_H
+#endif  // AU_APPSHELL_PREFERENCESMODEL_H

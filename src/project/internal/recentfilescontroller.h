@@ -24,16 +24,16 @@
 
 #include "irecentfilescontroller.h"
 
-#include <mutex>
 #include <map>
+#include <mutex>
 
 #include "async/asyncable.h"
 #include "async/promise.h"
 
-#include "modularity/ioc.h"
-#include "iprojectconfiguration.h"
 #include "imscmetareader.h"
 #include "io/ifilesystem.h"
+#include "iprojectconfiguration.h"
+#include "modularity/ioc.h"
 #include "multiinstances/imultiinstancesprovider.h"
 
 namespace au::project {
@@ -81,6 +81,6 @@ private:
     mutable std::mutex m_thumbnailCacheMutex;
     mutable std::map<muse::io::path_t, CachedThumbnail> m_thumbnailCache;
 };
-}
+}  // namespace au::project
 
-#endif // MU_PROJECT_RECENTFILESCONTROLLER_H
+#endif  // MU_PROJECT_RECENTFILESCONTROLLER_H

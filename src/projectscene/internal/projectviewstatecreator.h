@@ -13,4 +13,4 @@ public:
 
     std::shared_ptr<IProjectViewState> createViewState() const override;
 };
-}
+}  // namespace au::projectscene

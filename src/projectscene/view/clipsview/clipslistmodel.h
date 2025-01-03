@@ -7,12 +7,12 @@
 
 #include "actions/actionable.h"
 
-#include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "global/iinteractive.h"
-#include "trackedit/itrackeditinteraction.h"
+#include "modularity/ioc.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditinteraction.h"
 
 #include "global/async/asyncable.h"
 #include "trackedit/trackedittypes.h"
@@ -26,7 +26,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
 {
     Q_OBJECT
 
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(TimelineContext* context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(bool isStereo READ isStereo NOTIFY isStereoChanged FINAL)
 
@@ -93,7 +93,6 @@ private slots:
     void onTimelineFrameTimeChanged();
 
 private:
-
     enum RoleNames {
         ClipItemRole = Qt::UserRole + 1,
     };
@@ -128,4 +127,4 @@ private:
     double m_clipEditStartTimeOffset = -1.0;
     double m_clipEditEndTimeOffset = -1.0;
 };
-}
+}  // namespace au::projectscene

@@ -16,7 +16,6 @@ class Au3Record;
 class RecordModule : public muse::modularity::IModuleSetup
 {
 public:
-
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
@@ -30,6 +29,6 @@ private:
     std::shared_ptr<RecordUiActions> m_uiActions;
     std::shared_ptr<Au3Record> m_record;
 };
-}
+}  // namespace au::record
 
-#endif // AU_RECORD_RECORDMODULE_H
+#endif  // AU_RECORD_RECORDMODULE_H

@@ -14,17 +14,16 @@ class Au3AudioDevicesProvider;
 class Au3WrapModule : public muse::modularity::IModuleSetup
 {
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
-public:
 
+public:
     std::string moduleName() const override;
     void registerExports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:
-
     WxLogWrap* m_wxLog = nullptr;
 
     std::shared_ptr<Au3AudioDevicesProvider> m_audioDevicesProvider;
 };
-}
+}  // namespace au::au3

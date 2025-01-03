@@ -8,8 +8,9 @@ using namespace muse;
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 
-RealtimeEffectMenuModel::RealtimeEffectMenuModel(QObject* parent)
-    : RealtimeEffectMenuModelBase(parent) {}
+RealtimeEffectMenuModel::RealtimeEffectMenuModel(QObject* parent) : RealtimeEffectMenuModelBase(parent)
+{
+}
 
 void RealtimeEffectMenuModel::doLoad()
 {

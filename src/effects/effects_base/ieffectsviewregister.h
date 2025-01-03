@@ -20,4 +20,4 @@ public:
 
     virtual const muse::String& viewUrl(const muse::String& effectName) const = 0;
 };
-}
+}  // namespace au::effects

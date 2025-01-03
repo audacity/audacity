@@ -30,12 +30,18 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
     dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importProject);
 
-    dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
+    dispatcher()->reg(this, "file-save", [this]() {
+        saveProject(SaveMode::Save);
+    });
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
-    dispatcher()->reg(this, "file-save-as", [this]() { saveProject(SaveMode::SaveAs); });
-    dispatcher()->reg(this, "file-save-backup", [this]() { saveProject(SaveMode::SaveCopy); });
+    dispatcher()->reg(this, "file-save-as", [this]() {
+        saveProject(SaveMode::SaveAs);
+    });
+    dispatcher()->reg(this, "file-save-backup", [this]() {
+        saveProject(SaveMode::SaveCopy);
+    });
 
     dispatcher()->reg(this, "export-audio", this, &ProjectActionsController::exportAudio);
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
@@ -43,7 +49,7 @@ void ProjectActionsController::init()
 
     dispatcher()->reg(this, "file-close", [this]() {
         //! TODO AU4
-        bool quitApp = false; //multiInstancesProvider()->instances().size() > 1;
+        bool quitApp = false;  //multiInstancesProvider()->instances().size() > 1;
         closeOpenedProject(quitApp);
     });
 }
@@ -51,7 +57,7 @@ void ProjectActionsController::init()
 bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
 {
     if (!currentProject()) {
-        static const std::unordered_set<actions::ActionCode> DONT_REQUIRE_OPEN_PROJECT {
+        static const std::unordered_set<actions::ActionCode> DONT_REQUIRE_OPEN_PROJECT{
             "file-new",
             "file-open",
             "continue-last-session",
@@ -107,7 +113,8 @@ void ProjectActionsController::newProject()
     }
     m_isProjectProcessing = true;
 
-    DEFER {
+    DEFER
+    {
         m_isProjectProcessing = false;
     };
 
@@ -173,7 +180,8 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
     }
 
     m_isProjectClosing = true;
-    DEFER {
+    DEFER
+    {
         m_isProjectClosing = false;
     };
 
@@ -207,7 +215,7 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
 
         if (quitApp) {
             //! NOTE: we need to call `quit` in the next event loop due to controlling the lifecycle of this method
-            muse::async::Async::call(this, [this](){
+            muse::async::Async::call(this, [this]() {
                 dispatcher()->dispatch("quit", actions::ActionData::make_arg1<bool>(false));
             });
         } else {
@@ -262,24 +270,27 @@ async::Notification ProjectActionsController::projectBeingDownloadedChanged() co
 muse::io::path_t ProjectActionsController::selectOpeningFile()
 {
     //! TODO AU4
-    std::string allExt = "*.aup3 *.mxl *.musicxml *.xml *.mid *.midi *.kar *.md *.mgu *.sgu *.cap *.capx "
-                         "*.ove *.scw *.bmw *.bww *.gtp *.gp3 *.gp4 *.gp5 *.gpx *.gp *.ptb *.mei *.mscx *.mscs *.mscz~";
+    std::string allExt =
+        "*.aup3 *.mxl *.musicxml *.xml *.mid *.midi *.kar *.md *.mgu *.sgu *.cap *.capx "
+        "*.ove *.scw *.bmw *.bww *.gtp *.gp3 *.gp4 *.gp5 *.gpx *.gp *.ptb *.mei *.mscx *.mscs *.mscz~";
 
-    std::vector<std::string> filter { trc("project", "All supported files") + " (" + allExt + ")",
-                                      trc("project", "Audacity files") + " (*.aup3)",
-                                      trc("project", "MusicXML files") + " (*.mxl *.musicxml *.xml)",
-                                      trc("project", "MIDI files") + " (*.mid *.midi *.kar)",
-                                      trc("project", "MuseData files") + " (*.md)",
-                                      trc("project", "Capella files") + " (*.cap *.capx)",
-                                      trc("project", "BB files (experimental)") + " (*.mgu *.sgu)",
-                                      trc("project", "Overture / Score Writer files (experimental)") + " (*.ove *.scw)",
-                                      trc("project", "Bagpipe Music Writer files (experimental)") + " (*.bmw *.bww)",
-                                      trc("project", "Guitar Pro files") + " (*.gtp *.gp3 *.gp4 *.gp5 *.gpx *.gp)",
-                                      trc("project", "Power Tab Editor files (experimental)") + " (*.ptb)",
-                                      trc("project", "MEI files") + " (*.mei)",
-                                      trc("project", "Uncompressed MuseScore folders (experimental)") + " (*.mscx)",
-                                      trc("project", "MuseScore developer files") + " (*.mscs)",
-                                      trc("project", "MuseScore backup files") + " (*.mscz~)" };
+    std::vector<std::string> filter{
+        trc("project", "All supported files") + " (" + allExt + ")",
+        trc("project", "Audacity files") + " (*.aup3)",
+        trc("project", "MusicXML files") + " (*.mxl *.musicxml *.xml)",
+        trc("project", "MIDI files") + " (*.mid *.midi *.kar)",
+        trc("project", "MuseData files") + " (*.md)",
+        trc("project", "Capella files") + " (*.cap *.capx)",
+        trc("project", "BB files (experimental)") + " (*.mgu *.sgu)",
+        trc("project", "Overture / Score Writer files (experimental)") + " (*.ove *.scw)",
+        trc("project", "Bagpipe Music Writer files (experimental)") + " (*.bmw *.bww)",
+        trc("project", "Guitar Pro files") + " (*.gtp *.gp3 *.gp4 *.gp5 *.gpx *.gp)",
+        trc("project", "Power Tab Editor files (experimental)") + " (*.ptb)",
+        trc("project", "MEI files") + " (*.mei)",
+        trc("project", "Uncompressed MuseScore folders (experimental)") + " (*.mscx)",
+        trc("project", "MuseScore developer files") + " (*.mscs)",
+        trc("project", "MuseScore backup files") + " (*.mscz~)"
+    };
 
     io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
 
@@ -302,16 +313,17 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
 
 IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityProjectPtr project)
 {
-    std::string title = muse::qtrc("project", "Do you want to save changes to the score “%1” before closing?")
-                        .arg(project->displayName()).toStdString();
+    std::string title =
+        muse::qtrc("project", "Do you want to save changes to the score “%1” before closing?").arg(project->displayName()).toStdString();
 
     std::string body = muse::trc("project", "Your changes will be lost if you don’t save them.");
 
-    IInteractive::Result result = interactive()->warning(title, body, {
-        IInteractive::Button::DontSave,
-        IInteractive::Button::Cancel,
+    IInteractive::Result result = interactive()->warning(
+        title,
+        body,
+        {IInteractive::Button::DontSave, IInteractive::Button::Cancel, IInteractive::Button::Save},
         IInteractive::Button::Save
-    }, IInteractive::Button::Save);
+    );
 
     return result.standardButton();
 }
@@ -334,7 +346,8 @@ bool ProjectActionsController::saveProject(SaveMode saveMode, SaveLocationType s
     }
 
     m_isProjectSaving = true;
-    DEFER {
+    DEFER
+    {
         m_isProjectSaving = false;
     };
 
@@ -395,7 +408,8 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPat
     }
     m_isProjectProcessing = true;
 
-    DEFER {
+    DEFER
+    {
         m_isProjectProcessing = false;
     };
 

@@ -96,8 +96,11 @@ muse::io::path_t ProjectConfiguration::newProjectTemporaryPath() const
     return globalConfiguration()->userAppDataPath() + "/new_project" + DEFAULT_FILE_SUFFIX;
 }
 
-muse::io::path_t ProjectConfiguration::defaultSavingFilePath(IAudacityProjectPtr project, const std::string& filenameAddition,
-                                                             const std::string& suffix) const
+muse::io::path_t ProjectConfiguration::defaultSavingFilePath(
+    IAudacityProjectPtr project,
+    const std::string& filenameAddition,
+    const std::string& suffix
+) const
 {
     muse::io::path_t folderPath;
     muse::io::path_t filename;
@@ -152,9 +155,7 @@ muse::io::path_t ProjectConfiguration::defaultSavingFilePath(IAudacityProjectPtr
         theSuffix = DEFAULT_FILE_SUFFIX;
     }
 
-    return folderPath
-           .appendingComponent(filename + filenameAddition)
-           .appendingSuffix(theSuffix);
+    return folderPath.appendingComponent(filename + filenameAddition).appendingSuffix(theSuffix);
 }
 
 SaveLocationType ProjectConfiguration::lastUsedSaveLocationType() const

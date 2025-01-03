@@ -6,12 +6,12 @@
 #include "../../iplayer.h"
 
 #include "global/async/asyncable.h"
-#include "global/types/retval.h"
 #include "global/timer.h"
+#include "global/types/retval.h"
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "au3audio/iaudioengine.h"
+#include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
 
@@ -23,7 +23,6 @@ class Au3Player : public IPlayer, public muse::async::Asyncable
     muse::Inject<au::audio::IAudioEngine> audioEngine;
 
 public:
-
     Au3Player();
 
     bool isBusy() const override;
@@ -71,4 +70,4 @@ private:
     muse::async::Notification m_playbackRewound;
     double m_startOffset = 0.0;
 };
-}
+}  // namespace au::playback

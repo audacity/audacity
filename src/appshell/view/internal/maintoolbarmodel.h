@@ -27,9 +27,9 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "iglobalconfiguration.h"
 #include "context/iglobalcontext.h"
+#include "iglobalconfiguration.h"
+#include "modularity/ioc.h"
 
 namespace au::appshell {
 class MainToolBarModel : public QAbstractListModel, public muse::async::Asyncable
@@ -59,6 +59,6 @@ private:
 
     QList<QVariantMap> m_items;
 };
-}
+}  // namespace au::appshell
 
-#endif // MU_NOTATION_MAINTOOLBARMODEL_H
+#endif  // MU_NOTATION_MAINTOOLBARMODEL_H

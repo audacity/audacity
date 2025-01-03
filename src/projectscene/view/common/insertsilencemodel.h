@@ -5,12 +5,12 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
 #include "iinteractive.h"
 #include "iprojectsceneconfiguration.h"
+#include "modularity/ioc.h"
 #include "playback/iplayback.h"
-#include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditinteraction.h"
 
 namespace au::projectscene {
 class InsertSilenceModel : public QObject
@@ -47,4 +47,4 @@ private:
     double m_duration = 0.0;
     QString m_durationFormat = "";
 };
-}
+}  // namespace au::projectscene

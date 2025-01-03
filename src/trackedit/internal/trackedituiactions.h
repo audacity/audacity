@@ -3,11 +3,11 @@
 */
 #pragma once
 
-#include "ui/iuiactionsmodule.h"
-#include "trackeditactionscontroller.h"
-#include "modularity/ioc.h"
-#include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
+#include "context/iuicontextresolver.h"
+#include "modularity/ioc.h"
+#include "trackeditactionscontroller.h"
+#include "ui/iuiactionsmodule.h"
 
 namespace au::trackedit {
 class TrackeditUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
@@ -34,4 +34,4 @@ private:
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };
-}
+}  // namespace au::trackedit

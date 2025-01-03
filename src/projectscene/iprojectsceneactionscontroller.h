@@ -3,10 +3,10 @@
 */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
+#include "actions/actiontypes.h"
 #include "async/channel.h"
 #include "global/progress.h"
-#include "actions/actiontypes.h"
+#include "modularity/imoduleinterface.h"
 
 namespace au::projectscene {
 class IProjectSceneActionsController : MODULE_EXPORT_INTERFACE
@@ -19,4 +19,4 @@ public:
     virtual bool actionChecked(const muse::actions::ActionCode& actionCode) const = 0;
     virtual muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const = 0;
 };
-}
+}  // namespace au::projectscene

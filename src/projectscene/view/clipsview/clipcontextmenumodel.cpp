@@ -22,7 +22,7 @@ void ClipContextMenuModel::load()
     auto enableStretchItem = makeItemWithArg(ENABLE_STRETCH_CODE);
     updateStretchEnabledState(*enableStretchItem);
 
-    MenuItemList items {
+    MenuItemList items{
         makeItemWithArg("clip-properties"),
         makeItemWithArg("clip-rename"),
         makeSeparator(),
@@ -57,7 +57,7 @@ void ClipContextMenuModel::setClipKey(const ClipKey& newClipKey)
     emit clipKeyChanged();
 }
 
-void ClipContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList &codes)
+void ClipContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
     AbstractMenuModel::onActionsStateChanges(codes);
 

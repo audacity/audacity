@@ -44,6 +44,6 @@ public:
 
     static inline const std::string AUTOSAVE_SUFFIX = "autosave";
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_IPROJECTAUTOSAVER_H
+#endif  // AU_PROJECT_IPROJECTAUTOSAVER_H

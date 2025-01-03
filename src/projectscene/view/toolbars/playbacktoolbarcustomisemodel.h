@@ -5,20 +5,20 @@
 
 #include <QHash>
 
-#include "uicomponents/view/selectableitemlistmodel.h"
 #include "async/asyncable.h"
+#include "uicomponents/view/selectableitemlistmodel.h"
 
 #include "modularity/ioc.h"
-#include "ui/iuiconfiguration.h"
-#include "ui/iuiactionsregister.h"
 #include "playback/iplaybackconfiguration.h"
 #include "record/irecordconfiguration.h"
+#include "ui/iuiactionsregister.h"
+#include "ui/iuiconfiguration.h"
 
 class QItemSelectionModel;
 
 #if (defined(_MSCVER) || defined(_MSC_VER))
 // unreferenced function with internal linkage has been removed
-#pragma warning(disable: 4505)
+#pragma warning(disable : 4505)
 #endif
 
 namespace au::projectscene {
@@ -32,7 +32,7 @@ class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemL
     muse::Inject<au::playback::IPlaybackConfiguration> configuration;
     muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
 
-    Q_PROPERTY(QItemSelectionModel * selectionModel READ selectionModel NOTIFY selectionChanged)
+    Q_PROPERTY(QItemSelectionModel* selectionModel READ selectionModel NOTIFY selectionChanged)
     Q_PROPERTY(bool isAddSeparatorAvailable READ isAddSeparatorAvailable NOTIFY isAddSeparatorAvailableChanged)
 
 public:
@@ -74,4 +74,4 @@ private:
 
     bool m_isAddSeparatorAvailable = false;
 };
-}
+}  // namespace au::projectscene

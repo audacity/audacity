@@ -5,25 +5,24 @@
 
 #include "global/types/number.h"
 
+#include "libraries/lib-audio-devices/Meter.h"
+#include "libraries/lib-audio-io/AudioIO.h"
+#include "libraries/lib-audio-io/ProjectAudioIO.h"
+#include "libraries/lib-stretching-sequence/StretchingSequence.h"
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
+#include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-stretching-sequence/StretchingSequence.h"
-#include "libraries/lib-audio-io/ProjectAudioIO.h"
-#include "libraries/lib-time-frequency-selection/ViewInfo.h"
-#include "libraries/lib-audio-io/AudioIO.h"
-#include "libraries/lib-audio-devices/Meter.h"
 
-#include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "log.h"
 
 using namespace au::playback;
 using namespace au::au3;
 
-Au3Player::Au3Player()
-    : m_positionUpdateTimer(std::chrono::milliseconds(16))
+Au3Player::Au3Player() : m_positionUpdateTimer(std::chrono::milliseconds(16))
 {
     m_positionUpdateTimer.onTimeout(this, [this]() {
         updatePlaybackState();
@@ -57,7 +56,7 @@ void Au3Player::play()
 
     Au3Project& project = projectRef();
 
-    const bool newDefault = true; //(mode == PlayMode::loopedPlay);
+    const bool newDefault = true;  //(mode == PlayMode::loopedPlay);
     auto options = ProjectAudioIO::GetDefaultOptions(project, newDefault);
     bool backwards = false;
 
@@ -87,7 +86,7 @@ void Au3Player::play()
         return /*-1*/;
     }
 
-    const bool cutpreview = false;//mode == PlayMode::cutPreviewPlay;
+    const bool cutpreview = false;  //mode == PlayMode::cutPreviewPlay;
     if (cutpreview && t0 == t1) {
         return /*-1*/; /* msmeyer: makes no sense */
     }
@@ -305,7 +304,7 @@ PlaybackRegion Au3Player::playbackRegion() const
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
-    return { playRegion.GetStart(), playRegion.GetEnd() };
+    return {playRegion.GetStart(), playRegion.GetEnd()};
 }
 
 void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
@@ -348,7 +347,7 @@ void Au3Player::updatePlaybackState()
         return;
     }
 
-    IF_ASSERT_FAILED(globalContext()->currentProject()) {
+    IF_ASSERT_FAILED (globalContext()->currentProject()) {
         return;
     }
 
@@ -394,20 +393,16 @@ bool Au3Player::canStopAudioStream() const
 {
     auto gAudioIO = AudioIO::Get();
     Au3Project& project = projectRef();
-    return !gAudioIO->IsStreamActive()
-           || gAudioIO->IsMonitoring()
-           || gAudioIO->GetOwningProject().get() == &project;
+    return !gAudioIO->IsStreamActive() || gAudioIO->IsMonitoring() || gAudioIO->GetOwningProject().get() == &project;
 }
 
 TransportSequences Au3Player::makeTransportTracks(Au3TrackList& trackList, bool selectedOnly)
 {
     TransportSequences result;
     {
-        const auto range = trackList.Any<Au3WaveTrack>()
-                           + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
+        const auto range = trackList.Any<Au3WaveTrack>() + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
-            result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+            result.playbackSequences.push_back(StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     return result;

@@ -22,9 +22,9 @@
 #ifndef AU_PROJECT_IPROJECTFILESCONTROLLER_H
 #define AU_PROJECT_IPROJECTFILESCONTROLLER_H
 
+#include "io/path.h"
 #include "modularity/imoduleinterface.h"
 #include "types/ret.h"
-#include "io/path.h"
 
 #include "types/projecttypes.h"
 
@@ -48,6 +48,6 @@ public:
     virtual const ProjectBeingDownloaded& projectBeingDownloaded() const = 0;
     virtual muse::async::Notification projectBeingDownloadedChanged() const = 0;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_IPROJECTFILESCONTROLLER_H
+#endif  // AU_PROJECT_IPROJECTFILESCONTROLLER_H

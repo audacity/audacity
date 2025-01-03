@@ -13,4 +13,4 @@ public:
 
     virtual IProjectViewStatePtr createViewState() const = 0;
 };
-}
+}  // namespace au::projectscene

@@ -23,8 +23,8 @@
 #define AU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H
 
 #include <QDragEnterEvent>
-#include <QDropEvent>
 #include <QDragMoveEvent>
+#include <QDropEvent>
 #include <QEvent>
 
 #include "modularity/imoduleinterface.h"
@@ -41,6 +41,6 @@ public:
     virtual void onDragMoveEvent(QDragMoveEvent* event) = 0;
     virtual void onDropEvent(QDropEvent* event) = 0;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H
+#endif  // AU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H

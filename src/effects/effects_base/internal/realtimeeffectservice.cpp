@@ -3,11 +3,11 @@
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-effects/EffectManager.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectList.h"
+#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
+#include "libraries/lib-time-frequency-selection/ViewInfo.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -67,7 +67,7 @@ void RealtimeEffectService::onWaveTrackAdded(WaveTrack& track)
         // We have subscribed for future realtime-effect events, but we need to send the initial state.
         for (auto i = 0u; i < list.GetStatesCount(); ++i) {
             const auto state = list.GetStateAt(i);
-            IF_ASSERT_FAILED(state) {
+            IF_ASSERT_FAILED (state) {
                 break;
             }
             auto newEffect = std::make_shared<EffectChainLink>(getEffectName(*state), reinterpret_cast<EffectStateId>(state.get()));
@@ -78,8 +78,7 @@ void RealtimeEffectService::onWaveTrackAdded(WaveTrack& track)
 
 Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(WaveTrack& track, RealtimeEffectList& list)
 {
-    return list.Subscribe([&, weakThis = weak_from_this(), weakTrack = track.weak_from_this()](const RealtimeEffectListMessage& msg)
-    {
+    return list.Subscribe([&, weakThis = weak_from_this(), weakTrack = track.weak_from_this()](const RealtimeEffectListMessage& msg) {
         const auto lifeguard = weakThis.lock();
         if (!lifeguard) {
             return;
@@ -92,29 +91,23 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
         auto& list = RealtimeEffectList::Get(*waveTrack);
         const auto effectStateId = reinterpret_cast<EffectStateId>(msg.affectedState.get());
         switch (msg.type) {
-        case RealtimeEffectListMessage::Type::Insert:
-        {
+        case RealtimeEffectListMessage::Type::Insert: {
             auto newEffect = std::make_shared<EffectChainLink>(getEffectName(*msg.affectedState), effectStateId);
             m_realtimeEffectAdded.send(trackId, msg.srcIndex, std::move(newEffect));
-        }
-        break;
-        case RealtimeEffectListMessage::Type::Remove:
-        {
+        } break;
+        case RealtimeEffectListMessage::Type::Remove: {
             auto oldEffect = std::make_shared<EffectChainLink>(getEffectName(*msg.affectedState), effectStateId);
             m_realtimeEffectRemoved.send(trackId, msg.srcIndex, std::move(oldEffect));
-        }
-        break;
-        case RealtimeEffectListMessage::Type::DidReplace:
-        {
+        } break;
+        case RealtimeEffectListMessage::Type::DidReplace: {
             const std::shared_ptr<RealtimeEffectState> newState = list.GetStateAt(msg.dstIndex);
-            IF_ASSERT_FAILED(newState) {
+            IF_ASSERT_FAILED (newState) {
                 return;
             }
             auto oldEffect = std::make_shared<EffectChainLink>(getEffectName(*msg.affectedState), effectStateId);
             auto newEffect = std::make_shared<EffectChainLink>(getEffectName(*newState), reinterpret_cast<EffectStateId>(newState.get()));
             m_realtimeEffectReplaced.send(trackId, msg.srcIndex, std::move(oldEffect), std::move(newEffect));
-        }
-        break;
+        } break;
         }
     });
 }
@@ -129,8 +122,8 @@ muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkPtr> Realtime
     return m_realtimeEffectRemoved;
 }
 
-muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkPtr,
-                     EffectChainLinkPtr> RealtimeEffectService::realtimeEffectReplaced() const
+muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkPtr, EffectChainLinkPtr> RealtimeEffectService::realtimeEffectReplaced(
+) const
 {
     return m_realtimeEffectReplaced;
 }
@@ -140,20 +133,20 @@ std::pair<au::au3::Au3Project*, au::au3::Au3Track*> au3ProjectAndTrack(au::proje
 {
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project.au3ProjectPtr());
     auto au3Track = dynamic_cast<au::au3::Au3Track*>(au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId)));
-    return { au3Project, au3Track };
+    return {au3Project, au3Track};
 }
-}
+}  // namespace
 
 void RealtimeEffectService::addRealtimeEffect(au::project::IAudacityProject& project, TrackId trackId, const muse::String& effectId)
 {
     const auto [au3Project, au3Track] = au3ProjectAndTrack(project, trackId);
-    IF_ASSERT_FAILED(au3Project && au3Track) {
+    IF_ASSERT_FAILED (au3Project && au3Track) {
         return;
     }
 
     if (const auto state = AudioIO::Get()->AddState(*au3Project, au3Track, effectId.toStdString())) {
         const auto effectName = getEffectName(*state);
-        const auto trackName =  project.trackeditProject()->trackName(trackId);
+        const auto trackName = project.trackeditProject()->trackName(trackId);
         projectHistory()->pushHistoryState("Added " + effectName + " to " + trackName, "Add " + effectName);
     }
 }
@@ -170,17 +163,17 @@ std::shared_ptr<RealtimeEffectState> findEffectState(au::au3::Au3Track& au3Track
     }
     return nullptr;
 }
-}
+}  // namespace
 
 void RealtimeEffectService::removeRealtimeEffect(au::project::IAudacityProject& project, TrackId trackId, EffectStateId effectStateId)
 {
     const auto [au3Project, au3Track] = au3ProjectAndTrack(project, trackId);
-    IF_ASSERT_FAILED(au3Project && au3Track) {
+    IF_ASSERT_FAILED (au3Project && au3Track) {
         return;
     }
 
     const auto state = findEffectState(*au3Track, effectStateId);
-    IF_ASSERT_FAILED(state) {
+    IF_ASSERT_FAILED (state) {
         return;
     }
 
@@ -190,11 +183,15 @@ void RealtimeEffectService::removeRealtimeEffect(au::project::IAudacityProject& 
     projectHistory()->pushHistoryState("Removed " + effectName + " from " + trackName, "Remove " + effectName);
 }
 
-void RealtimeEffectService::replaceRealtimeEffect(au::project::IAudacityProject& project, TrackId trackId, int effectListIndex,
-                                                  const muse::String& newEffectId)
+void RealtimeEffectService::replaceRealtimeEffect(
+    au::project::IAudacityProject& project,
+    TrackId trackId,
+    int effectListIndex,
+    const muse::String& newEffectId
+)
 {
     const auto [au3Project, au3Track] = au3ProjectAndTrack(project, trackId);
-    IF_ASSERT_FAILED(au3Project && au3Track) {
+    IF_ASSERT_FAILED (au3Project && au3Track) {
         return;
     }
 
@@ -206,7 +203,7 @@ void RealtimeEffectService::replaceRealtimeEffect(au::project::IAudacityProject&
         projectHistory()->pushHistoryState("Replaced " + oldEffectName + " with " + newEffectName, "Replace " + oldEffectName);
     }
 }
-}
+}  // namespace au::effects
 
 // Inject a factory for realtime effects
-static RealtimeEffectState::EffectFactory::Scope scope{ &EffectManager::GetInstanceFactory };
+static RealtimeEffectState::EffectFactory::Scope scope{&EffectManager::GetInstanceFactory};

@@ -5,9 +5,9 @@
 
 #include <vector>
 
-#include "global/types/string.h"
-#include "draw/types/color.h"
 #include "../trackedittypes.h"
+#include "draw/types/color.h"
+#include "global/types/string.h"
 
 namespace au::trackedit {
 struct Clip {
@@ -24,8 +24,11 @@ struct Clip {
 
     bool stretchToMatchTempo = false;
 
-    inline bool isValid() const { return key.isValid(); }
+    inline bool isValid() const
+    {
+        return key.isValid();
+    }
 };
 
 using Clips = std::vector<Clip>;
-}
+}  // namespace au::trackedit

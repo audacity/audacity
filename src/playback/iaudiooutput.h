@@ -1,7 +1,7 @@
 #pragma once
 
-#include "global/async/promise.h"
 #include "global/async/channel.h"
+#include "global/async/promise.h"
 
 #include "au3audio/audiotypes.h"
 
@@ -19,7 +19,6 @@ public:
     virtual audio::sample_rate_t sampleRate() const = 0;
     virtual muse::async::Channel<audio::sample_rate_t> sampleRateChanged() const = 0;
 
-    virtual muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal>>
-    playbackSignalChanges() const = 0;
+    virtual muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal>> playbackSignalChanges() const = 0;
 };
-}
+}  // namespace au::playback

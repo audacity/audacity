@@ -20,10 +20,9 @@ public:
     int16_t& operator[](size_t pos);
 
 private:
-
     void detach();
 
     using Data = std::vector<int16_t>;
     std::shared_ptr<Data> m_data;
 };
-}
+}  // namespace au::trackedit

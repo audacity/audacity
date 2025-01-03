@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "libraries/lib-builtin-effects/ToneGenBase.h"
 #include "../common/generatoreffect.h"
+#include "libraries/lib-builtin-effects/ToneGenBase.h"
 #include "toneeffect.h"
 
 namespace au::effects {
@@ -17,4 +17,4 @@ public:
 
     ComponentInterfaceSymbol GetSymbol() const override;
 };
-}
+}  // namespace au::effects

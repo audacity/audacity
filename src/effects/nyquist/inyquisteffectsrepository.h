@@ -16,4 +16,4 @@ public:
 
     virtual EffectMetaList effectMetaList() const = 0;
 };
-}
+}  // namespace au::effects

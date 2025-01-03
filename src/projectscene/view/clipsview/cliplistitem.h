@@ -3,12 +3,12 @@
 */
 #pragma once
 
+#include <QColor>
 #include <QObject>
 #include <QString>
-#include <QColor>
 
-#include "trackedit/dom/clip.h"
 #include "../../types/projectscenetypes.h"
+#include "trackedit/dom/clip.h"
 
 namespace au::projectscene {
 class ClipListItem : public QObject
@@ -85,4 +85,4 @@ private:
     double m_leftVisibleMargin = 0.0;
     double m_rightVisibleMargin = 0.0;
 };
-}
+}  // namespace au::projectscene

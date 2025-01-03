@@ -6,10 +6,10 @@
 #include "actions/iactionsdispatcher.h"
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "types/projectscenetypes.h"
+#include "modularity/ioc.h"
 #include "trackedit/iselectioncontroller.h"
+#include "types/projectscenetypes.h"
 
 #include "trackitem.h"
 
@@ -54,8 +54,13 @@ public:
 
     Q_INVOKABLE void requestTracksMove(QVariantList trackIndexes, int to);
 
-    Q_INVOKABLE bool moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
-                              int destinationChild) override;
+    Q_INVOKABLE bool moveRows(
+        const QModelIndex& sourceParent,
+        int sourceRow,
+        int count,
+        const QModelIndex& destinationParent,
+        int destinationChild
+    ) override;
 
     Q_INVOKABLE void startActiveDrag();
     Q_INVOKABLE void endActiveDrag();
@@ -132,6 +137,6 @@ private:
     QList<TrackItem*> m_trackList;
     muse::uicomponents::ItemMultiSelectionModel* m_selectionModel = nullptr;
 };
-}
+}  // namespace au::projectscene
 
-#endif // AU_PROJECTSCENE_TRACKSLISTMODEL_H
+#endif  // AU_PROJECTSCENE_TRACKSLISTMODEL_H

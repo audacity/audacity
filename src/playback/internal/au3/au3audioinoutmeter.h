@@ -5,8 +5,8 @@
 #pragma once
 
 #include "global/async/asyncable.h"
-#include "global/async/promise.h"
 #include "global/async/channel.h"
+#include "global/async/promise.h"
 
 #include "au3audio/audiotypes.h"
 
@@ -29,4 +29,4 @@ public:
 private:
     muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> m_audioSignalChanges;
 };
-}
+}  // namespace au::playback

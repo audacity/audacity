@@ -56,4 +56,4 @@ private:
 
     int m_scrolled = 0;
 };
-}
+}  // namespace au::playback

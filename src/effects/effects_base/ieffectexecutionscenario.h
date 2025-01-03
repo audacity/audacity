@@ -5,8 +5,8 @@
 
 #include "global/types/ret.h"
 
-#include "async/notification.h"
 #include "async/channel.h"
+#include "async/notification.h"
 #include "modularity/imoduleinterface.h"
 
 #include "effectstypes.h"
@@ -27,4 +27,4 @@ public:
 
     virtual muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) = 0;
 };
-}
+}  // namespace au::effects

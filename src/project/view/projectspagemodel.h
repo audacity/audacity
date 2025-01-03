@@ -24,12 +24,12 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
-#include "iprojectconfiguration.h"
 #include "actions/iactionsdispatcher.h"
-#include "iinteractive.h"
-#include "cloud/musescorecom/imusescorecomservice.h"
 #include "cloud/audiocom/iaudiocomservice.h"
+#include "cloud/musescorecom/imusescorecomservice.h"
+#include "iinteractive.h"
+#include "iprojectconfiguration.h"
+#include "modularity/ioc.h"
 
 class QString;
 
@@ -70,6 +70,6 @@ signals:
     void tabIndexChanged();
     void viewTypeChanged();
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PROJECTSPAGEMODEL_H
+#endif  // AU_PROJECT_PROJECTSPAGEMODEL_H

@@ -3,11 +3,11 @@
 */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
 #include "global/async/notification.h"
-#include "project/iaudacityproject.h"
-#include "playback/iplayer.h"
 #include "iplaybackstate.h"
+#include "modularity/imoduleinterface.h"
+#include "playback/iplayer.h"
+#include "project/iaudacityproject.h"
 
 namespace au::context {
 class IGlobalContext : MODULE_EXPORT_INTERFACE
@@ -30,4 +30,4 @@ public:
     virtual bool isRecording() const = 0;
     virtual muse::async::Notification isRecordingChanged() const = 0;
 };
-}
+}  // namespace au::context

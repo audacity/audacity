@@ -30,8 +30,7 @@
 #include "io/path.h"
 
 namespace au::project {
-struct ProjectMeta
-{
+struct ProjectMeta {
     muse::io::path_t filePath;
 
     QString title;
@@ -108,7 +107,7 @@ inline const QString AUDIO_COM_URL_TAG("audioComUrl");
 
 inline bool isStandardTag(const QString& tag)
 {
-    static const QSet<QString> standardTags {
+    static const QSet<QString> standardTags{
         WORK_TITLE_TAG,
         WORK_NUMBER_TAG,
         SUBTITLE_TAG,
@@ -143,6 +142,6 @@ inline bool isRepresentedInProjectMeta(const QString& tag)
 
     return projectMetaTags.contains(tag);
 }
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PROJECTMETA_H
+#endif  // AU_PROJECT_PROJECTMETA_H

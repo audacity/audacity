@@ -3,10 +3,10 @@
 
 #include "../iaudacityproject.h"
 #include "../ithumbnailcreator.h"
-#include "context/iglobalcontext.h"
-#include "modularity/ioc.h"
 #include "au3wrap/iau3project.h"
+#include "context/iglobalcontext.h"
 #include "io/ifilesystem.h"
+#include "modularity/ioc.h"
 #include "projectscene/iprojectviewstatecreator.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditclipboard.h"
@@ -63,8 +63,14 @@ public:
     QString displayName() const override;
     muse::async::Notification displayNameChanged() const override;
 
-    muse::io::path_t path() const override { return m_path; }
-    muse::async::Notification pathChanged() const override { return m_pathChanged; }
+    muse::io::path_t path() const override
+    {
+        return m_path;
+    }
+    muse::async::Notification pathChanged() const override
+    {
+        return m_pathChanged;
+    }
 
     bool isNewlyCreated() const override;
     bool isImported() const override;
@@ -88,10 +94,10 @@ private:
 
     muse::Ret doLoad(const muse::io::path_t& path, bool forceMode, const std::string& format);
 
-    muse::Ret saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup = true,
-                          bool createThumbnail = true);
-    muse::Ret doSave(const muse::io::path_t& path, /*engraving::MscIoMode ioMode,*/ bool generateBackup = true,
-                     bool createThumbnail = true);
+    muse::Ret
+    saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup = true, bool createThumbnail = true);
+    muse::Ret
+    doSave(const muse::io::path_t& path, /*engraving::MscIoMode ioMode,*/ bool generateBackup = true, bool createThumbnail = true);
 
     void markAsSaved(const muse::io::path_t& path);
     void setNeedSave(bool needSave);
@@ -103,7 +109,7 @@ private:
     muse::async::Notification m_pathChanged;
     muse::async::Notification m_displayNameChanged;
 
-    bool m_isNewlyCreated = false; /// true if the file has never been saved yet
+    bool m_isNewlyCreated = false;  /// true if the file has never been saved yet
     bool m_isImported = false;
     bool m_needAutoSave = false;
 
@@ -113,6 +119,6 @@ private:
 
     projectscene::IProjectViewStatePtr m_viewState;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_AUDACITYPROJECT_H
+#endif  // AU_PROJECT_AUDACITYPROJECT_H

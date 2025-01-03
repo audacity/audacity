@@ -23,8 +23,8 @@
 #ifndef AU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
 #define AU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
 
-#include "modularity/imoduleinterface.h"
 #include "iaudacityproject.h"
+#include "modularity/imoduleinterface.h"
 
 #include "types/retval.h"
 
@@ -34,8 +34,8 @@ class IOpenSaveProjectScenario : MODULE_EXPORT_INTERFACE
     INTERFACE_ID(IOpenSaveProjectScenario)
 
 public:
-    virtual muse::RetVal<SaveLocation> askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
-                                                       SaveLocationType preselectedType = SaveLocationType::Undefined) const = 0;
+    virtual muse::RetVal<SaveLocation>
+    askSaveLocation(IAudacityProjectPtr project, SaveMode mode, SaveLocationType preselectedType = SaveLocationType::Undefined) const = 0;
 
     virtual muse::RetVal<muse::io::path_t> askLocalPath(IAudacityProjectPtr project, SaveMode mode) const = 0;
     virtual muse::RetVal<CloudProjectInfo> askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const = 0;
@@ -49,10 +49,10 @@ public:
     static constexpr int RET_CODE_CONFLICT_RESPONSE_REPLACE = 1237;
 
     virtual void showCloudOpenError(const muse::Ret& ret) const = 0;
-    virtual muse::Ret showCloudSaveError(const muse::Ret& ret, const CloudProjectInfo& info, bool publishMode,
-                                         bool alreadyAttempted) const = 0;
+    virtual muse::Ret showCloudSaveError(const muse::Ret& ret, const CloudProjectInfo& info, bool publishMode, bool alreadyAttempted)
+        const = 0;
     virtual muse::Ret showAudioCloudShareError(const muse::Ret& ret) const = 0;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
+#endif  // AU_PROJECT_IOPENSAVEPROJECTSCENARIO_H

@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "uicomponents/view/abstractmenumodel.h"
 
@@ -22,7 +22,6 @@ public:
     Q_INVOKABLE void load() override;
 
 private:
-
     muse::uicomponents::MenuItemList makeRulerItems();
 };
-}
+}  // namespace au::projectscene

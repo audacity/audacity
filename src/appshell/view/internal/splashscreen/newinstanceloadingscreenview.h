@@ -46,6 +46,6 @@ private:
 
     QSize m_dialogSize;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
+#endif  // AU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H

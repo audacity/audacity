@@ -7,21 +7,21 @@
 #include "global/realfn.h"
 #include "global/translation.h"
 
-#include "libraries/lib-project/Project.h"
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-module-manager/PluginManager.h"
+#include "libraries/lib-project/Project.h"
 
-#include "libraries/lib-track/Track.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-project-rate/ProjectRate.h"
-#include "libraries/lib-menus/CommandManager.h"
 #include "libraries/lib-effects/EffectManager.h"
+#include "libraries/lib-menus/CommandManager.h"
 #include "libraries/lib-module-manager/ConfigInterface.h"
 #include "libraries/lib-numeric-formats/NumericConverterFormats.h"
+#include "libraries/lib-project-rate/ProjectRate.h"
+#include "libraries/lib-track/Track.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 
-#include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "../effecterrors.h"
 
@@ -43,22 +43,20 @@ au::au3::Au3Project& EffectExecutionScenario::projectRef()
 
 muse::Ret EffectExecutionScenario::repeatLastProcessor()
 {
-    IF_ASSERT_FAILED(m_lastProcessorId) {
+    IF_ASSERT_FAILED (m_lastProcessorId) {
         return make_ret(Err::UnknownError);
     }
     au3::Au3Project& project = projectRef();
     return performEffectWithShowError(project, *m_lastProcessorId, EffectManager::kConfigured);
 }
 
-std::pair<std::string, std::string> EffectExecutionScenario::makeErrorMsg(const muse::Ret& ret,
-                                                                          const EffectId& effectId)
+std::pair<std::string, std::string> EffectExecutionScenario::makeErrorMsg(const muse::Ret& ret, const EffectId& effectId)
 {
     const muse::String& effect = effectsProvider()->meta(effectId).title;
-    return { effect.toStdString(), ret.text() };
+    return {effect.toStdString(), ret.text()};
 }
 
-muse::Ret EffectExecutionScenario::performEffectWithShowError(au3::Au3Project& project,
-                                                              const EffectId& effectId, unsigned int flags)
+muse::Ret EffectExecutionScenario::performEffectWithShowError(au3::Au3Project& project, const EffectId& effectId, unsigned int flags)
 {
     muse::Ret ret = doPerformEffect(project, effectId, flags);
     if (!ret && muse::Ret::Code(ret.code()) != muse::Ret::Code::Cancel) {
@@ -139,16 +137,21 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         //! NOTE Step 2.1 - get effect settings
         settings = em.GetDefaultSettings(ID);
-        IF_ASSERT_FAILED(settings) {
+        IF_ASSERT_FAILED (settings) {
             return make_ret(Err::UnknownError);
         }
 
         //! NOTE Step 2.2 - get oldDuration for EffectTypeGenerate
         double duration = 0.0;
         if (effect->GetType() == EffectTypeGenerate) {
-            GetConfig(effect->GetDefinition(), PluginSettings::Private,
-                      CurrentSettingsGroup(),
-                      EffectSettingsExtra::DurationKey(), duration, effect->GetDefaultDuration());
+            GetConfig(
+                effect->GetDefinition(),
+                PluginSettings::Private,
+                CurrentSettingsGroup(),
+                EffectSettingsExtra::DurationKey(),
+                duration,
+                effect->GetDefaultDuration()
+            );
         }
 
         //! NOTE Step 2.3 - check selected time
@@ -170,10 +173,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         //   tp.f1 = f1;
 
         //! NOTE Step 2.4 - update settings
-        wxString newFormat = (isSelection
-                              ? NumericConverterFormats::TimeAndSampleFormat()
-                              : NumericConverterFormats::DefaultSelectionFormat()
-                              ).Internal();
+        wxString newFormat =
+            (isSelection ? NumericConverterFormats::TimeAndSampleFormat() : NumericConverterFormats::DefaultSelectionFormat()).Internal();
 
         settings->extra.SetDuration(quantizedDuration);
         settings->extra.SetDurationFormat(newFormat);
@@ -223,7 +224,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! NOTE Step 5 - modify settings by user
     //! ============================================================================
     {
-        if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
+        if (effect->IsInteractive() && (flags & EffectManager::kConfigured) == 0) {
             muse::String type = au3::wxToString(effect->GetSymbol().Internal());
             EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, effect, settings);
             muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
@@ -290,7 +291,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
         if (!(flags & EffectManager::kSkipState)) {
             const auto shortDesc = PluginManager::Get().GetName(ID).Translation().ToStdString();
-            const auto longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String { shortDesc.c_str() }).toStdString();
+            const auto longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String{shortDesc.c_str()}).toStdString();
             projectHistory()->pushHistoryState(longDesc, shortDesc);
         }
 
@@ -308,27 +309,37 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
         //! NOTE Step 8.3 - update plugin registry for next use
         if (effect->GetType() == EffectTypeGenerate) {
-            SetConfig(effect->GetDefinition(), PluginSettings::Private,
-                      CurrentSettingsGroup(),
-                      EffectSettingsExtra::DurationKey(), effect->mT1 - effect->mT0);
+            SetConfig(
+                effect->GetDefinition(),
+                PluginSettings::Private,
+                CurrentSettingsGroup(),
+                EffectSettingsExtra::DurationKey(),
+                effect->mT1 - effect->mT0
+            );
         }
     }
 
     return true;
 }
 
-muse::Ret EffectExecutionScenario::performEffectOnTimeSelection(au3::Au3Project& project, Effect& effect,
-                                                                const std::shared_ptr<EffectInstanceEx>& instance,
-                                                                EffectSettings& settings)
+muse::Ret EffectExecutionScenario::performEffectOnTimeSelection(
+    au3::Au3Project& project,
+    Effect& effect,
+    const std::shared_ptr<EffectInstanceEx>& instance,
+    EffectSettings& settings
+)
 {
     return effectsProvider()->performEffect(project, &effect, instance, settings);
 }
 
-std::optional<au::trackedit::ClipId> EffectExecutionScenario::performEffectOnSingleClip(au3::Au3Project& project, Effect& effect,
-                                                                                        const std::shared_ptr<EffectInstanceEx>& instance,
-                                                                                        EffectSettings& settings,
-                                                                                        trackedit::TrackId trackId,
-                                                                                        muse::Ret& success)
+std::optional<au::trackedit::ClipId> EffectExecutionScenario::performEffectOnSingleClip(
+    au3::Au3Project& project,
+    Effect& effect,
+    const std::shared_ptr<EffectInstanceEx>& instance,
+    EffectSettings& settings,
+    trackedit::TrackId trackId,
+    muse::Ret& success
+)
 {
     success = effectsProvider()->performEffect(project, &effect, instance, settings);
     if (!success) {
@@ -340,9 +351,12 @@ std::optional<au::trackedit::ClipId> EffectExecutionScenario::performEffectOnSin
     return selectionController()->setSelectedClip(trackId, effect.mT0);
 }
 
-muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Project& project, Effect& effect,
-                                                                   const std::shared_ptr<EffectInstanceEx>& instance,
-                                                                   EffectSettings& settings)
+muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(
+    au3::Au3Project& project,
+    Effect& effect,
+    const std::shared_ptr<EffectInstanceEx>& instance,
+    EffectSettings& settings
+)
 {
     // We are going to set the time and track selection to one clip at a time and apply the effect.
 
@@ -361,16 +375,16 @@ muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Proje
     // Perform the effect on each selected clip
     Ret success = true;
     for (const auto& clip : clipsToProcess) {
-        selectionController()->setSelectedClips({ clip }, complete);
-        selectionController()->setSelectedTracks({ clip.trackId }, complete);
+        selectionController()->setSelectedClips({clip}, complete);
+        selectionController()->setSelectedTracks({clip.trackId}, complete);
 
         WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(project, ::TrackId(clip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        IF_ASSERT_FAILED (waveTrack) {
             continue;
         }
 
         const std::shared_ptr<WaveClip> waveClip = au3::DomAccessor::findWaveClip(waveTrack, clip.clipId);
-        IF_ASSERT_FAILED(waveClip) {
+        IF_ASSERT_FAILED (waveClip) {
             continue;
         }
 

@@ -3,14 +3,14 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "ui/iuiactionsregister.h"
-#include "ui/iuiconfiguration.h"
+#include "modularity/ioc.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
-#include "record/irecordcontroller.h"
 #include "record/irecordconfiguration.h"
+#include "record/irecordcontroller.h"
+#include "ui/iuiactionsregister.h"
+#include "ui/iuiconfiguration.h"
 
 #include "uicomponents/view/abstracttoolbarmodel.h"
 
@@ -32,8 +32,7 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
 public:
     explicit PlaybackToolBarModel(QObject* parent = nullptr);
 
-    enum ItemType
-    {
+    enum ItemType {
         UNDEFINED,
         PLAYBACK_LEVEL = muse::uicomponents::ToolBarItemType::USER_TYPE + 1,
         RECORD_LEVEL,
@@ -70,4 +69,4 @@ private:
 
     muse::uicomponents::ToolBarItem* makeLocalItem(const muse::actions::ActionCode& actionCode);
 };
-}
+}  // namespace au::projectscene

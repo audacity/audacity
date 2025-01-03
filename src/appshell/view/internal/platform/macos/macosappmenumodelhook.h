@@ -30,6 +30,6 @@ class MacOSAppMenuModelHook : public IAppMenuModelHook
 public:
     void onAppMenuInited() override;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_MACOSAPPMENUMODELHOOK_H
+#endif  // AU_APPSHELL_MACOSAPPMENUMODELHOOK_H

@@ -30,4 +30,4 @@ public:
 private:
     void createAu3Project();
 };
-}
+}  // namespace au::projectscene

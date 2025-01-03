@@ -1,14 +1,12 @@
 #pragma once
 
+#include "common/generatoreffect.h"
 #include "PerTrackEffect.h"
 #include "SettingsVisitor.h"
-#include "common/generatoreffect.h"
 
 namespace au::effects {
-struct NoiseSettings
-{
-    enum Type
-    {
+struct NoiseSettings {
+    enum Type {
         White,
         Pink,
         Brownian,
@@ -18,11 +16,11 @@ struct NoiseSettings
     static constexpr Type typeDefault = Type::White;
     static constexpr double amplitudeDefault = 0.8;
 
-    Type type { typeDefault };
-    double amplitude { amplitudeDefault };
+    Type type{typeDefault};
+    double amplitude{amplitudeDefault};
 };
 
-class NoiseGenerator : public GeneratorEffect, public EffectWithSettings <NoiseSettings, PerTrackEffect>
+class NoiseGenerator : public GeneratorEffect, public EffectWithSettings<NoiseSettings, PerTrackEffect>
 {
 public:
     static const ComponentInterfaceSymbol Symbol;
@@ -47,19 +45,15 @@ public:
         unsigned GetAudioOutCount() const override;
         unsigned GetAudioInCount() const override;
 
-        bool ProcessInitialize(
-            EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
-        size_t ProcessBlock(
-            EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
+        bool ProcessInitialize(EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
+        size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
 
-        bool InstanceInit(
-            EffectSettings& settings, double sampleRate, ChannelNames chanMap);
+        bool InstanceInit(EffectSettings& settings, double sampleRate, ChannelNames chanMap);
 
-        size_t InstanceProcess(
-            EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen);
+        size_t InstanceProcess(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
-        double mSampleRate {};
+        double mSampleRate{};
         float y, z, buf0, buf1, buf2, buf3, buf4, buf5, buf6;
     };
 };
-}
+}  // namespace au::effects

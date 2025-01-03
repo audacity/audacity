@@ -78,6 +78,6 @@ private:
     muse::ui::ThemeInfo currentTheme() const;
     muse::ui::ThemeList allThemes() const;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_THEMESPAGEMODEL_H
+#endif  // AU_APPSHELL_THEMESPAGEMODEL_H

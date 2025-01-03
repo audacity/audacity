@@ -1,13 +1,13 @@
 #include "au3trackeditproject.h"
 
-#include "libraries/lib-track/Track.h"
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 #include "libraries/lib-project-history/ProjectHistory.h"
 #include "libraries/lib-stretching-sequence/TempoChange.h"
+#include "libraries/lib-track/Track.h"
 
 #include "au3wrap/iau3project.h"
-#include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
 #include "log.h"
@@ -17,8 +17,7 @@ using namespace muse;
 using namespace au::trackedit;
 using namespace au::au3;
 
-struct Au3TrackeditProject::Au3Impl
-{
+struct Au3TrackeditProject::Au3Impl {
     Au3Project* prj = nullptr;
     Au3TrackList* trackList = nullptr;
 
@@ -36,13 +35,14 @@ Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3
     m_impl->tracksSubc = m_impl->trackList->Subscribe([this](const TrackListEvent& e) {
         onTrackListEvent(e);
     });
-    m_impl->projectTimeSignatureSubscription = ProjectTimeSignature::Get(*m_impl->prj).Subscribe(
-        [this](const TimeSignatureChangedMessage& event) {
-        onProjectTempoChange(event.newTempo);
+    m_impl->projectTimeSignatureSubscription =
+        ProjectTimeSignature::Get(*m_impl->prj).Subscribe([this](const TimeSignatureChangedMessage& event) {
+            onProjectTempoChange(event.newTempo);
 
-        au::trackedit::TimeSignature trackeditTimeSignature = au::trackedit::TimeSignature{event.newTempo, event.newUpperTimeSignature, event.newLowerTimeSignature};
-        m_timeSignatureChanged.send(trackeditTimeSignature);
-    });
+            au::trackedit::TimeSignature trackeditTimeSignature =
+                au::trackedit::TimeSignature{event.newTempo, event.newUpperTimeSignature, event.newLowerTimeSignature};
+            m_timeSignatureChanged.send(trackeditTimeSignature);
+        });
 }
 
 Au3TrackeditProject::~Au3TrackeditProject()
@@ -71,13 +71,20 @@ std::vector<au::trackedit::Track> Au3TrackeditProject::trackList() const
     }
 
     //TODO AU4: For now we filter out label tracks
-    au4tracks.erase(std::remove_if(au4tracks.begin(), au4tracks.end(), [](const Track& t) {
-        if (t.type == au::trackedit::TrackType::Label) {
-            LOGW() << "Label tracks not implemented, so it will be filtered out.";
-            return true;
-        }
-        return false;
-    }), au4tracks.end());
+    au4tracks.erase(
+        std::remove_if(
+            au4tracks.begin(),
+            au4tracks.end(),
+            [](const Track& t) {
+                if (t.type == au::trackedit::TrackType::Label) {
+                    LOGW() << "Label tracks not implemented, so it will be filtered out.";
+                    return true;
+                }
+                return false;
+            }
+        ),
+        au4tracks.end()
+    );
 
     return au4tracks;
 }
@@ -85,12 +92,18 @@ std::vector<au::trackedit::Track> Au3TrackeditProject::trackList() const
 static std::string eventTypeToString(const TrackListEvent& e)
 {
     switch (e.mType) {
-    case TrackListEvent::SELECTION_CHANGE: return "SELECTION_CHANGE";
-    case TrackListEvent::TRACK_DATA_CHANGE: return "TRACK_DATA_CHANGE";
-    case TrackListEvent::PERMUTED: return "PERMUTED";
-    case TrackListEvent::RESIZING: return "RESIZING";
-    case TrackListEvent::ADDITION: return "ADDITION";
-    case TrackListEvent::DELETION: return e.mExtra ? "REPLACING" : "DELETION";
+    case TrackListEvent::SELECTION_CHANGE:
+        return "SELECTION_CHANGE";
+    case TrackListEvent::TRACK_DATA_CHANGE:
+        return "TRACK_DATA_CHANGE";
+    case TrackListEvent::PERMUTED:
+        return "PERMUTED";
+    case TrackListEvent::RESIZING:
+        return "RESIZING";
+    case TrackListEvent::ADDITION:
+        return "ADDITION";
+    case TrackListEvent::DELETION:
+        return e.mExtra ? "REPLACING" : "DELETION";
     }
 }
 
@@ -141,7 +154,7 @@ void Au3TrackeditProject::onProjectTempoChange(double newTempo)
 muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
 {
     const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return muse::async::NotifyList<au::trackedit::Clip>();
     }
 
@@ -159,7 +172,7 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
 
 std::string Au3TrackeditProject::trackName(const TrackId& trackId) const
 {
-    return au::au3::DomConverter::track(au::au3::DomAccessor::findTrack(*m_impl->prj, au::au3::Au3TrackId { trackId })).title.toStdString();
+    return au::au3::DomConverter::track(au::au3::DomAccessor::findTrack(*m_impl->prj, au::au3::Au3TrackId{trackId})).title.toStdString();
 }
 
 void Au3TrackeditProject::reload()
@@ -195,12 +208,12 @@ void Au3TrackeditProject::notifyAboutTrackMoved(const Track& track, int pos)
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(key.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    IF_ASSERT_FAILED (waveTrack) {
         return Clip();
     }
 
     std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.clipId);
-    IF_ASSERT_FAILED(au3Clip) {
+    IF_ASSERT_FAILED (au3Clip) {
         return Clip();
     }
 
@@ -306,25 +319,24 @@ ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IA
 }
 
 TimeSignatureRestorer::TimeSignatureRestorer(AudacityProject& project)
-   : mTempo { ProjectTimeSignature::Get(project).GetTempo() }
-   , mUpper { ProjectTimeSignature::Get(project).GetUpperTimeSignature() }
-   , mLower { ProjectTimeSignature::Get(project).GetLowerTimeSignature() }
+    : mTempo{ProjectTimeSignature::Get(project).GetTempo()},
+      mUpper{ProjectTimeSignature::Get(project).GetUpperTimeSignature()},
+      mLower{ProjectTimeSignature::Get(project).GetLowerTimeSignature()}
 {
 }
 
 void TimeSignatureRestorer::RestoreUndoRedoState(AudacityProject& project)
 {
-  auto& timeSignature = ProjectTimeSignature::Get(project);
+    auto& timeSignature = ProjectTimeSignature::Get(project);
 
-  timeSignature.SetTempo(mTempo);
-  timeSignature.SetUpperTimeSignature(mUpper);
-  timeSignature.SetLowerTimeSignature(mLower);
+    timeSignature.SetTempo(mTempo);
+    timeSignature.SetUpperTimeSignature(mUpper);
+    timeSignature.SetLowerTimeSignature(mLower);
 }
 
 void TimeSignatureRestorer::reg()
 {
-   static UndoRedoExtensionRegistry::Entry sEntry {
-       [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
-       { return std::make_shared<TimeSignatureRestorer>(project); }
-   };
+    static UndoRedoExtensionRegistry::Entry sEntry{[](AudacityProject& project) -> std::shared_ptr<UndoStateExtension> {
+        return std::make_shared<TimeSignatureRestorer>(project);
+    }};
 }

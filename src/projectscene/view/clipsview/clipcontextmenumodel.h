@@ -4,8 +4,8 @@
 #pragma once
 
 #include "context/iglobalcontext.h"
-#include "uicomponents/view/abstractmenumodel.h"
 #include "types/projectscenetypes.h"
+#include "uicomponents/view/abstractmenumodel.h"
 
 namespace au::projectscene {
 class ClipContextMenuModel : public muse::uicomponents::AbstractMenuModel
@@ -29,8 +29,8 @@ signals:
 
 private:
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
-    void updateStretchEnabledState(muse::uicomponents::MenuItem &item);
+    void updateStretchEnabledState(muse::uicomponents::MenuItem& item);
 
     ClipKey m_clipKey;
 };
-}
+}  // namespace au::projectscene

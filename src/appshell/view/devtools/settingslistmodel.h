@@ -42,7 +42,6 @@ public:
     Q_INVOKABLE void changeVal(int index, QVariant newVal);
 
 private:
-
     enum Roles {
         SectionRole = Qt::UserRole + 1,
         KeyRole,
@@ -56,6 +55,6 @@ private:
 
     QList<muse::Settings::Item> m_items;
 };
-}
+}  // namespace mu
 
-#endif // MU_SETTINGLISTMODEL_H
+#endif  // MU_SETTINGLISTMODEL_H

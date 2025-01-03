@@ -38,8 +38,10 @@ public:
 class AppMenuModelHookStub : public IAppMenuModelHook
 {
 public:
-    void onAppMenuInited() override {}
+    void onAppMenuInited() override
+    {
+    }
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_IAPPMENUMODELHOOK_H
+#endif  // AU_APPSHELL_IAPPMENUMODELHOOK_H

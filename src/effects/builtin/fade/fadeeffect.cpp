@@ -38,9 +38,7 @@ bool FadeEffectBase::ProcessInitialize(EffectSettings&, double, ChannelNames)
     return true;
 }
 
-size_t FadeEffectBase::ProcessBlock(
-    EffectSettings&, const float* const* inBlock, float* const* outBlock,
-    size_t blockLen)
+size_t FadeEffectBase::ProcessBlock(EffectSettings&, const float* const* inBlock, float* const* outBlock, size_t blockLen)
 {
     const float* ibuf = inBlock[0];
     float* obuf = outBlock[0];
@@ -51,18 +49,16 @@ size_t FadeEffectBase::ProcessBlock(
         }
     } else {
         for (decltype(blockLen) i = 0; i < blockLen; i++) {
-            obuf[i] = (ibuf[i] * (mSampleCnt - 1 - mSample++).as_float())
-                      / mSampleCnt.as_float();
+            obuf[i] = (ibuf[i] * (mSampleCnt - 1 - mSample++).as_float()) / mSampleCnt.as_float();
         }
     }
 
     return blockLen;
 }
 
-const ComponentInterfaceSymbol FadeInEffect::Symbol { XO("Fade In") };
+const ComponentInterfaceSymbol FadeInEffect::Symbol{XO("Fade In")};
 
-FadeInEffect::FadeInEffect()
-    : FadeEffectBase{true}
+FadeInEffect::FadeInEffect() : FadeEffectBase{true}
 {
 }
 
@@ -76,10 +72,9 @@ TranslatableString FadeInEffect::GetDescription() const
     return XO("Applies a linear fade-in to the selected audio");
 }
 
-const ComponentInterfaceSymbol FadeOutEffect::Symbol { XO("Fade Out") };
+const ComponentInterfaceSymbol FadeOutEffect::Symbol{XO("Fade Out")};
 
-FadeOutEffect::FadeOutEffect()
-    : FadeEffectBase{false}
+FadeOutEffect::FadeOutEffect() : FadeEffectBase{false}
 {
 }
 
@@ -92,4 +87,4 @@ TranslatableString FadeOutEffect::GetDescription() const
 {
     return XO("Applies a linear fade-out to the selected audio");
 }
-}
+}  // namespace au::effects

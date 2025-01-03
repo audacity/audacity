@@ -30,4 +30,4 @@ private:
     int m_fieldValueOffset = 1;
     int m_fracPart = 0;
 };
-}
+}  // namespace au::playback

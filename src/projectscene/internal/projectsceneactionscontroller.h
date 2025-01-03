@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
-#include "actions/iactionsdispatcher.h"
 #include "actions/actionable.h"
+#include "actions/iactionsdispatcher.h"
+#include "async/asyncable.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
+#include "modularity/ioc.h"
 
 #include "../iprojectsceneactionscontroller.h"
 #include "../iprojectsceneconfiguration.h"
@@ -44,4 +44,4 @@ private:
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
-}
+}  // namespace au::projectscene

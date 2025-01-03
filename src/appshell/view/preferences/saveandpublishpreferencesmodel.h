@@ -24,8 +24,8 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
 #include "async/asyncable.h"
+#include "modularity/ioc.h"
 
 #include "project/iprojectconfiguration.h"
 
@@ -59,6 +59,6 @@ signals:
     void autoSaveIntervalChanged(int minutes);
     void alsoShareAudioComChanged(int prompt);
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_SAVEANDPUBLISHPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_SAVEANDPUBLISHPREFERENCESMODEL_H

@@ -7,10 +7,10 @@
 
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "trackedit/itrackeditinteraction.h"
+#include "modularity/ioc.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditinteraction.h"
 
 namespace au::projectscene {
 class PitchAndSpeedChangeModel : public QObject, public muse::async::Asyncable
@@ -65,4 +65,4 @@ private:
 
     trackedit::Clip m_clip;
 };
-}
+}  // namespace au::projectscene

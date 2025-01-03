@@ -20,9 +20,13 @@ void Au3BasicUI::DoYield()
 {
 }
 
-void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, const TranslatableString& dlogTitle,
-                                   const TranslatableString& message, const ManualPageID& helpPage,
-                                   const BasicUI::ErrorDialogOptions& options)
+void Au3BasicUI::DoShowErrorDialog(
+    const BasicUI::WindowPlacement& placement,
+    const TranslatableString& dlogTitle,
+    const TranslatableString& message,
+    const ManualPageID& helpPage,
+    const BasicUI::ErrorDialogOptions& options
+)
 {
     Q_UNUSED(placement);
     Q_UNUSED(dlogTitle);
@@ -38,8 +42,12 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& mes
     return BasicUI::MessageBoxResult::None;
 }
 
-std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const TranslatableString& title, const TranslatableString& message,
-                                                                    unsigned int flags, const TranslatableString& remainingLabelText)
+std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(
+    const TranslatableString& title,
+    const TranslatableString& message,
+    unsigned int flags,
+    const TranslatableString& remainingLabelText
+)
 {
     Q_UNUSED(title);
     Q_UNUSED(message);
@@ -51,18 +59,22 @@ std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const Transl
 namespace {
 struct MyGenericProgress : BasicUI::GenericProgressDialog {
     MyGenericProgress()
-    {}
+    {
+    }
     ~MyGenericProgress() override = default;
     BasicUI::ProgressResult Pulse() override
     {
         return BasicUI::ProgressResult::Stopped;
     }
 };
-}
+}  // namespace
 
-std::unique_ptr<BasicUI::GenericProgressDialog> Au3BasicUI::DoMakeGenericProgress(const BasicUI::WindowPlacement& placement,
-                                                                                  const TranslatableString& title,
-                                                                                  const TranslatableString& message, int style)
+std::unique_ptr<BasicUI::GenericProgressDialog> Au3BasicUI::DoMakeGenericProgress(
+    const BasicUI::WindowPlacement& placement,
+    const TranslatableString& title,
+    const TranslatableString& message,
+    int style
+)
 {
     Q_UNUSED(placement);
     Q_UNUSED(title);
@@ -71,8 +83,14 @@ std::unique_ptr<BasicUI::GenericProgressDialog> Au3BasicUI::DoMakeGenericProgres
     return std::make_unique<MyGenericProgress>();
 }
 
-int Au3BasicUI::DoMultiDialog(const TranslatableString& message, const TranslatableString& title, const TranslatableStrings& buttons,
-                              const ManualPageID& helpPage, const TranslatableString& boxMsg, bool log)
+int Au3BasicUI::DoMultiDialog(
+    const TranslatableString& message,
+    const TranslatableString& title,
+    const TranslatableStrings& buttons,
+    const ManualPageID& helpPage,
+    const TranslatableString& boxMsg,
+    bool log
+)
 {
     Q_UNUSED(message);
     Q_UNUSED(buttons);

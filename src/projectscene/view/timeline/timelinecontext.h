@@ -2,14 +2,14 @@
 
 #include <QObject>
 
-#include "global/async/asyncable.h"
 #include "actions/actionable.h"
+#include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
-#include "trackedit/iselectioncontroller.h"
+#include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
+#include "modularity/ioc.h"
+#include "trackedit/iselectioncontroller.h"
 
 //! NOTE This class does two things:
 //! 1. This is a context that is passed to other classes
@@ -46,8 +46,8 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 
     Q_PROPERTY(qreal startHorizontalScrollPosition READ startHorizontalScrollPosition NOTIFY horizontalScrollChanged)
     Q_PROPERTY(qreal horizontalScrollbarSize READ horizontalScrollbarSize NOTIFY horizontalScrollChanged)
-    Q_PROPERTY(
-        qreal startVerticalScrollPosition READ startVerticalScrollPosition WRITE setStartVerticalScrollPosition NOTIFY verticalScrollChanged)
+    Q_PROPERTY(qreal startVerticalScrollPosition READ startVerticalScrollPosition WRITE setStartVerticalScrollPosition NOTIFY
+                   verticalScrollChanged)
     Q_PROPERTY(qreal verticalScrollbarSize READ verticalScrollbarSize NOTIFY verticalScrollChanged)
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
@@ -56,7 +56,6 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
-
     TimelineContext(QObject* parent = nullptr);
 
     double frameStartTime() const;
@@ -124,7 +123,7 @@ signals:
 
     void frameStartTimeChanged();
     void frameEndTimeChanged();
-    void frameTimeChanged(); // any or both together
+    void frameTimeChanged();  // any or both together
 
     void zoomChanged();
     void BPMChanged();
@@ -195,7 +194,7 @@ private:
 
     double m_lastZoomEndTime = 0.0;
 
-    double m_zoom = 1.0; // see init
+    double m_zoom = 1.0;  // see init
     int m_BPM = 120;
     // time signature
     int m_timeSigUpper = 4;
@@ -218,4 +217,4 @@ private:
 
     double m_mousePositionTime = 0.0;
 };
-}
+}  // namespace au::projectscene

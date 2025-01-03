@@ -1,12 +1,12 @@
 #pragma once
 
+#include "global/types/secs.h"
 #include "itrackeditinteraction.h"
-#include "trackedit/trackediterrors.h"
+#include "modularity/ioc.h"
 #include "playback/iplayback.h"
 #include "playback/iplayer.h"
-#include "global/types/secs.h"
-#include "modularity/ioc.h"
 #include "record/irecordcontroller.h"
+#include "trackedit/trackediterrors.h"
 
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
@@ -54,7 +54,7 @@ private:
     bool trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     bool trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
-    std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList &clipKeys) const override;
+    std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
     bool newMonoTrack() override;
     bool newStereoTrack() override;
     bool newLabelTrack() override;
@@ -74,7 +74,7 @@ private:
     muse::ProgressPtr progress() const override;
 
 private:
-    template<typename Func, typename ... Args>
+    template <typename Func, typename... Args>
     muse::Ret withPlaybackStop(Func method, Args&&... args)
     {
         if (recordController()->isRecording()) {
@@ -86,4 +86,4 @@ private:
 
     const std::unique_ptr<ITrackeditInteraction> m_interaction;
 };
-} // namespace au::trackedit
+}  // namespace au::trackedit

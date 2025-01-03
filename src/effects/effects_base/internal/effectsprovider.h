@@ -3,15 +3,15 @@
 */
 #pragma once
 
-#include "async/asyncable.h"
-#include "modularity/ioc.h"
-#include "global/iinteractive.h"
-#include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
-#include "effects/builtin/ibuiltineffectsrepository.h"
-#include "effects/vst/ivsteffectsrepository.h"
-#include "effects/nyquist/inyquisteffectsrepository.h"
 #include "../ieffectsconfiguration.h"
+#include "async/asyncable.h"
+#include "context/iglobalcontext.h"
+#include "effects/builtin/ibuiltineffectsrepository.h"
+#include "effects/nyquist/inyquisteffectsrepository.h"
+#include "effects/vst/ivsteffectsrepository.h"
+#include "global/iinteractive.h"
+#include "modularity/ioc.h"
+#include "playback/iplayback.h"
 
 #include "../ieffectsprovider.h"
 
@@ -44,8 +44,12 @@ public:
 
     muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
 
-    muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
-                            EffectSettings& settings) override;
+    muse::Ret performEffect(
+        au3::Au3Project& project,
+        Effect* effect,
+        std::shared_ptr<EffectInstance> effectInstance,
+        EffectSettings& settings
+    ) override;
 
     muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) override;
 
@@ -62,4 +66,4 @@ private:
 
     mutable EffectCategoryList m_effectsCategories;
 };
-}
+}  // namespace au::effects

@@ -15,7 +15,6 @@ public:
     Q_INVOKABLE void init();
 
 private:
-
     Effect* m_effect = nullptr;
 };
-}
+}  // namespace au::effects

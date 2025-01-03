@@ -37,7 +37,7 @@ PresetIdList EffectPresetsProvider::factoryPresets(const EffectId& effectId) con
 PresetIdList EffectPresetsProvider::userPresets(const EffectId& effectId) const
 {
     Effect* effect = effectsProvider()->effect(effectId);
-    IF_ASSERT_FAILED(effect) {
+    IF_ASSERT_FAILED (effect) {
         return {};
     }
     PresetIdList presets = GetUserPresets(*effect);
@@ -104,7 +104,7 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     const EffectSettingsManager& sm = settingsManager(effectId);
     EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
-    IF_ASSERT_FAILED(settings) {
+    IF_ASSERT_FAILED (settings) {
         return make_ret(Err::InternalError);
     }
 
@@ -120,11 +120,7 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
 muse::Ret EffectPresetsProvider::deletePreset(const EffectId& effectId, const PresetId& presetId)
 {
     auto& pluginManager = PluginManager::Get();
-    bool ok = pluginManager.RemoveConfigSubgroup(
-        PluginSettings::Private,
-        au3::wxFromString(effectId),
-        UserPresetsGroup(presetId)
-        );
+    bool ok = pluginManager.RemoveConfigSubgroup(PluginSettings::Private, au3::wxFromString(effectId), UserPresetsGroup(presetId));
 
     if (ok) {
         m_userPresetsChanged.send(effectId);
@@ -137,12 +133,12 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     Effect* effect = effectsProvider()->effect(effectId);
-    IF_ASSERT_FAILED(effect) {
+    IF_ASSERT_FAILED (effect) {
         return make_ret(Err::InternalError);
     }
 
     EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
-    IF_ASSERT_FAILED(settings) {
+    IF_ASSERT_FAILED (settings) {
         return make_ret(Err::InternalError);
     }
 
@@ -187,12 +183,12 @@ muse::Ret EffectPresetsProvider::exportPreset(const EffectInstanceId& effectInst
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     Effect* effect = effectsProvider()->effect(effectId);
-    IF_ASSERT_FAILED(effect) {
+    IF_ASSERT_FAILED (effect) {
         return make_ret(Err::InternalError);
     }
 
     EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
-    IF_ASSERT_FAILED(settings) {
+    IF_ASSERT_FAILED (settings) {
         return make_ret(Err::InternalError);
     }
 

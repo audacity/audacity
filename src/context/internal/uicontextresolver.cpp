@@ -21,8 +21,8 @@
  */
 #include "uicontextresolver.h"
 
-#include "shortcutcontext.h"
 #include "log.h"
+#include "shortcutcontext.h"
 
 using namespace au::context;
 using namespace muse;
@@ -171,7 +171,7 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
         return !matchWithCurrent(context::UiCtxProjectFocused);
     }
 
-    IF_ASSERT_FAILED(CTX_ANY == scContext) {
+    IF_ASSERT_FAILED (CTX_ANY == scContext) {
         return true;
     }
     return true;

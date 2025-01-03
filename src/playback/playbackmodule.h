@@ -16,7 +16,6 @@ class Au3Playback;
 class PlaybackModule : public muse::modularity::IModuleSetup
 {
 public:
-
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
@@ -31,6 +30,6 @@ private:
     std::shared_ptr<PlaybackUiActions> m_uiActions;
     std::shared_ptr<Au3Playback> m_playback;
 };
-}
+}  // namespace au::playback
 
-#endif // AU_PLAYBACK_PLAYBACKMODULE_H
+#endif  // AU_PLAYBACK_PLAYBACKMODULE_H

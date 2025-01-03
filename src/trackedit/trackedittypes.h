@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "global/types/number.h"
 #include "global/logstream.h"
+#include "global/types/number.h"
 
 namespace au::trackedit {
 using msecs_t = int64_t;
@@ -22,25 +22,33 @@ using ClipId = int64_t;
 
 using TrackIdList = std::vector<TrackId>;
 
-struct ClipKey
-{
+struct ClipKey {
     TrackId trackId = -1;
     ClipId clipId = -1;
 
     ClipKey() = default;
-    ClipKey(const TrackId t, const ClipId c)
-        : trackId(t), clipId(c) {}
+    ClipKey(const TrackId t, const ClipId c) : trackId(t), clipId(c)
+    {
+    }
 
-    inline bool isValid() const { return trackId != -1 && clipId != static_cast<ClipId>(-1); }
+    inline bool isValid() const
+    {
+        return trackId != -1 && clipId != static_cast<ClipId>(-1);
+    }
 
-    inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && clipId == k.clipId; }
-    inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
+    inline bool operator==(const ClipKey& k) const
+    {
+        return trackId == k.trackId && clipId == k.clipId;
+    }
+    inline bool operator!=(const ClipKey& k) const
+    {
+        return !this->operator==(k);
+    }
 };
 
 using ClipKeyList = std::vector<ClipKey>;
 
-struct TimeSignature
-{
+struct TimeSignature {
     double tempo = 0;
 
     int upper = 0;
@@ -52,7 +60,7 @@ enum class UndoPushType : unsigned char {
     CONSOLIDATE = 1 << 0,
     NOAUTOSAVE = 1 << 1
 };
-}
+}  // namespace au::trackedit
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)
 {

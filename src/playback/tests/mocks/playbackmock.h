@@ -14,4 +14,4 @@ public:
     MOCK_METHOD(std::shared_ptr<IPlayer>, player, (TrackSequenceId), (const, override));
     MOCK_METHOD(std::shared_ptr<IAudioOutput>, audioOutput, (), (const, override));
 };
-}
+}  // namespace au::playback

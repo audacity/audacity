@@ -7,8 +7,8 @@
 
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 namespace au::projectscene {
 //! NOTE This is model need for synchronization of view (scroll, height and so on)
@@ -76,4 +76,4 @@ private:
     muse::ValCh<int> m_trackHeight;
     muse::ValCh<bool> m_isTrackCollapsed;
 };
-}
+}  // namespace au::projectscene

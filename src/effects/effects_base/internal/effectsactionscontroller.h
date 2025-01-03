@@ -4,25 +4,26 @@
 
 #pragma once
 
+#include "actions/actionable.h"
 #include "async/asyncable.h"
 #include "async/channel.h"
-#include "actions/actionable.h"
 
-#include "modularity/ioc.h"
-#include "actions/iactionsdispatcher.h"
-#include "ui/iuiactionsregister.h"
 #include "../ieffectexecutionscenario.h"
-#include "../ieffectsprovider.h"
-#include "effects/effects_base/irealtimeeffectservice.h"
-#include "context/iglobalcontext.h"
 #include "../ieffectpresetsscenario.h"
+#include "../ieffectsprovider.h"
+#include "actions/iactionsdispatcher.h"
+#include "context/iglobalcontext.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
 #include "iinteractive.h"
+#include "modularity/ioc.h"
 #include "playback/iplayback.h"
+#include "ui/iuiactionsregister.h"
 
 namespace au::effects {
 class EffectsUiActions;
-class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable,
-    public std::enable_shared_from_this<EffectsActionsController>
+class EffectsActionsController : public muse::actions::Actionable,
+                                 public muse::async::Asyncable,
+                                 public std::enable_shared_from_this<EffectsActionsController>
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
@@ -57,4 +58,4 @@ private:
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;
 };
-}
+}  // namespace au::effects

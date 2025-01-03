@@ -12,8 +12,8 @@
 
 #include "async/asyncable.h"
 
-#include "trackedit/trackedittypes.h"
 #include "trackedit/dom/track.h"
+#include "trackedit/trackedittypes.h"
 
 namespace au::projectscene {
 class TrackItem : public QObject, public muse::async::Asyncable
@@ -131,6 +131,6 @@ protected:
 
     bool m_isSelected = false;
 };
-}
+}  // namespace au::projectscene
 
-#endif // AU_PROJECTSCENE_TRACKITEM_H
+#endif  // AU_PROJECTSCENE_TRACKITEM_H

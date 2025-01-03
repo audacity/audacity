@@ -11,31 +11,33 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::trackedit;
 
-TracksListModel::TracksListModel(QObject* parent)
-    : QAbstractListModel(parent)
+TracksListModel::TracksListModel(QObject* parent) : QAbstractListModel(parent)
 {
     m_selectionModel = new muse::uicomponents::ItemMultiSelectionModel(this);
     m_selectionModel->setAllowedModifiers(Qt::ShiftModifier | Qt::ControlModifier);
 
-    connect(m_selectionModel, &muse::uicomponents::ItemMultiSelectionModel::selectionChanged,
-            [this](const QItemSelection& selected, const QItemSelection& deselected) {
-        if (!isProjectOpened()) {
-            return;
+    connect(
+        m_selectionModel,
+        &muse::uicomponents::ItemMultiSelectionModel::selectionChanged,
+        [this](const QItemSelection& selected, const QItemSelection& deselected) {
+            if (!isProjectOpened()) {
+                return;
+            }
+
+            setItemsSelected(deselected.indexes(), false);
+            setItemsSelected(selected.indexes(), true);
+
+            std::vector<TrackId> selectedTrackIds;
+            for (auto index : m_selectionModel->selectedIndexes()) {
+                selectedTrackIds.push_back(modelIndexToItem(index)->trackId());
+            }
+
+            selectionController()->setSelectedTracks(selectedTrackIds);
+
+            updateRearrangementAvailability();
+            updateRemovingAvailability();
         }
-
-        setItemsSelected(deselected.indexes(), false);
-        setItemsSelected(selected.indexes(), true);
-
-        std::vector<TrackId> selectedTrackIds;
-        for (auto index : m_selectionModel->selectedIndexes()) {
-            selectedTrackIds.push_back(modelIndexToItem(index)->trackId());
-        }
-
-        selectionController()->setSelectedTracks(selectedTrackIds);
-
-        updateRearrangementAvailability();
-        updateRemovingAvailability();
-    });
+    );
 
     onSelectedTracks(selectionController()->selectedTracks());
 
@@ -208,10 +210,10 @@ void TracksListModel::removeSelectedRows()
         return;
     }
 
-    QModelIndex firstIndex = *std::min_element(selectedIndexList.cbegin(), selectedIndexList.cend(),
-                                               [](const QModelIndex& f, const QModelIndex& s) {
-        return f.row() < s.row();
-    });
+    QModelIndex firstIndex =
+        *std::min_element(selectedIndexList.cbegin(), selectedIndexList.cend(), [](const QModelIndex& f, const QModelIndex& s) {
+            return f.row() < s.row();
+        });
 
     removeRows(firstIndex.row(), selectedIndexList.size(), firstIndex.parent());
 }
@@ -226,8 +228,13 @@ void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
     trackeditInteraction()->moveTracksTo(tracksToMove, to);
 }
 
-bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
-                               int destinationChild)
+bool TracksListModel::moveRows(
+    const QModelIndex& sourceParent,
+    int sourceRow,
+    int count,
+    const QModelIndex& destinationParent,
+    int destinationChild
+)
 {
     setLoadingBlocked(true);
 
@@ -342,20 +349,22 @@ void TracksListModel::setItemsSelected(const QModelIndexList& indexes, bool sele
     } else {
         // if deselecting tracks, remove them from the existing selection
         alreadySelectedTracksIds.erase(
-            std::remove_if(alreadySelectedTracksIds.begin(), alreadySelectedTracksIds.end(),
-                           [&idsToModify](const TrackId& trackId) {
-            return muse::contains(idsToModify, trackId);
-        }),
-            alreadySelectedTracksIds.end());
+            std::remove_if(
+                alreadySelectedTracksIds.begin(),
+                alreadySelectedTracksIds.end(),
+                [&idsToModify](const TrackId& trackId) {
+                    return muse::contains(idsToModify, trackId);
+                }
+            ),
+            alreadySelectedTracksIds.end()
+        );
     }
     selectionController()->setSelectedTracks(alreadySelectedTracksIds);
 }
 
 QHash<int, QByteArray> TracksListModel::roleNames() const
 {
-    static const QHash<int, QByteArray> roles = {
-        { rItemData, "itemData" }
-    };
+    static const QHash<int, QByteArray> roles = {{rItemData, "itemData"}};
 
     return roles;
 }
@@ -509,7 +518,7 @@ TrackItem* TracksListModel::buildTrackItem(const Track& track)
 
 TrackItem* TracksListModel::findTrackItem(const trackedit::TrackId& trackId)
 {
-    for (TrackItem* track: m_trackList) {
+    for (TrackItem* track : m_trackList) {
         if (track->trackId() == trackId) {
             return track;
         }
@@ -621,7 +630,7 @@ void TracksListModel::onTrackMoved(const trackedit::Track& track, int pos)
 {
     TrackItem* item = findTrackItem(track.id);
 
-    IF_ASSERT_FAILED(item) {
+    IF_ASSERT_FAILED (item) {
         return;
     }
 

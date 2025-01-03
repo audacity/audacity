@@ -6,8 +6,8 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"
+#include "modularity/ioc.h"
 
 #include "ui/iuiactionsmodule.h"
 
@@ -37,6 +37,6 @@ private:
     std::shared_ptr<RecordController> m_controller;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
 };
-}
+}  // namespace au::record
 
-#endif // AU_RECORD_RECORDUIACTIONS_H
+#endif  // AU_RECORD_RECORDUIACTIONS_H

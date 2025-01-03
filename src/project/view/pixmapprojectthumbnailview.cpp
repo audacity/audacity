@@ -23,8 +23,7 @@
 
 using namespace au::project;
 
-PixmapProjectThumbnailView::PixmapProjectThumbnailView(QQuickItem* parent)
-    : muse::uicomponents::QuickPaintedView(parent)
+PixmapProjectThumbnailView::PixmapProjectThumbnailView(QQuickItem* parent) : muse::uicomponents::QuickPaintedView(parent)
 {
 }
 

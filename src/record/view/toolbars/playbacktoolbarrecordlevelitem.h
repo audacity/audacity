@@ -31,8 +31,11 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     muse::Inject<record::IRecordController> recordController;
 
 public:
-    explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                            QObject* parent = nullptr);
+    explicit PlaybackToolBarRecordLevelItem(
+        const muse::ui::UiAction& action,
+        muse::uicomponents::ToolBarItemType::Type type,
+        QObject* parent = nullptr
+    );
 
     int level() const;
     void setLevel(int newLevel);
@@ -81,6 +84,6 @@ private:
     float m_rightRecentPeak = 0.0;
     float m_rightMaxPeak = 0.0;
 };
-}
+}  // namespace au::record
 
-#endif // AU_RECORD_PLAYBACKTOOLBARRECORDLEVELITEM_H
+#endif  // AU_RECORD_PLAYBACKTOOLBARRECORDLEVELITEM_H

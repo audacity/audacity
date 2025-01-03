@@ -24,9 +24,9 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "iglobalconfiguration.h"
 #include "io/ifilesystem.h"
+#include "modularity/ioc.h"
 // #include "multiinstances/imultiinstancesprovider.h"
 #include "ui/iuiconfiguration.h"
 // #include "project/iprojectconfiguration.h"
@@ -101,6 +101,6 @@ private:
 
     muse::io::paths_t parseSessionProjectsPaths(const QByteArray& json) const;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_APPSHELLCONFIGURATION_H
+#endif  // AU_APPSHELL_APPSHELLCONFIGURATION_H

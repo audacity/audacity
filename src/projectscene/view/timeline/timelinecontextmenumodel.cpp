@@ -21,7 +21,7 @@ void TimelineContextMenuModel::load()
 
 MenuItemList TimelineContextMenuModel::makeRulerItems()
 {
-    MenuItemList items {
+    MenuItemList items{
         makeMenuItem("minutes-seconds-ruler"),
         makeMenuItem("beats-measures-ruler"),
         makeSeparator(),

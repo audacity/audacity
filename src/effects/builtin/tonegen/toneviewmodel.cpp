@@ -2,8 +2,8 @@
  * Audacity: A Digital Audio Editor
  */
 #include "toneviewmodel.h"
-#include "toneeffect.h"
 #include "log.h"
+#include "toneeffect.h"
 
 #include "libraries/lib-components/EffectInterface.h"
 
@@ -37,16 +37,12 @@ bool ToneViewModel::isApplyAllowed() const
 
 QList<QString> ToneViewModel::waveforms() const
 {
-    return {
-        tr("Sine"), tr("Square"), tr("Sawtooth"), tr("Square, not alias"), tr("Triangle")
-    };
+    return {tr("Sine"), tr("Square"), tr("Sawtooth"), tr("Square, not alias"), tr("Triangle")};
 }
 
 QList<QString> ToneViewModel::interpolationTypes() const
 {
-    return {
-        tr("Linear"), tr("Logarithmic")
-    };
+    return {tr("Linear"), tr("Logarithmic")};
 }
 
 double ToneViewModel::amplitudeStart() const
@@ -65,7 +61,7 @@ void ToneViewModel::prop_setAmplitudeStart(double newAmplitude)
     }
     const auto wasAllowed = isApplyAllowed();
     ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    IF_ASSERT_FAILED (te) {
         return;
     }
     te->setAmplitudeStart(newAmplitude);
@@ -90,7 +86,7 @@ void ToneViewModel::prop_setAmplitudeEnd(double newAmplitude)
     }
     const auto wasAllowed = isApplyAllowed();
     ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    IF_ASSERT_FAILED (te) {
         return;
     }
     te->setAmplitudeEnd(newAmplitude);
@@ -115,7 +111,7 @@ void ToneViewModel::prop_setFrequencyStart(double newFrequency)
     }
     const auto wasAllowed = isApplyAllowed();
     ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    IF_ASSERT_FAILED (te) {
         return;
     }
     te->setFrequencyStart(newFrequency);
@@ -140,7 +136,7 @@ void ToneViewModel::prop_setFrequencyEnd(double newFrequency)
     }
     const auto wasAllowed = isApplyAllowed();
     ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    IF_ASSERT_FAILED (te) {
         return;
     }
     te->setFrequencyEnd(newFrequency);
@@ -164,7 +160,7 @@ void ToneViewModel::prop_setWaveform(int newWaveform)
         return;
     }
     ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    IF_ASSERT_FAILED (te) {
         return;
     }
     te->setWaveform(static_cast<ToneEffect::Waveform>(newWaveform));
@@ -185,7 +181,7 @@ void ToneViewModel::prop_setInterpolation(int newInterpolation)
         return;
     }
     ToneEffect* const te = effect();
-    IF_ASSERT_FAILED(te) {
+    IF_ASSERT_FAILED (te) {
         return;
     }
     te->setInterpolation(static_cast<ToneEffect::Interpolation>(newInterpolation));

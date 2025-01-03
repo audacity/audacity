@@ -54,7 +54,7 @@ void GridLines::setTimelineRuler(TimelineRuler* newTimelineRuler)
     m_timelineRuler = newTimelineRuler;
 
     if (m_timelineRuler) {
-        auto updateView = [this] (Ticks ticks) {
+        auto updateView = [this](Ticks ticks) {
             m_ticks = ticks;
             update();
         };
@@ -110,7 +110,7 @@ void GridLines::drawZebraHighlighting(QPainter* painter)
     int highlightStart = 0;
     int highlightEnd = 0;
     bool pendingDraw = false;
-    const double tolerance = 0.01; // Tolerance for floating-point comparison
+    const double tolerance = 0.01;  // Tolerance for floating-point comparison
 
     for (auto i = 0; i < m_ticks.size(); ++i) {
         auto tick = m_ticks.at(i);

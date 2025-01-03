@@ -2,11 +2,11 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include "insertsilencemodel.h"
 #include "AudacityException.h"
 #include "NumericConverterFormats.h"
 #include "playback/iaudiooutput.h"
 #include "translation.h"
-#include "insertsilencemodel.h"
 
 using namespace au::projectscene;
 
@@ -74,8 +74,7 @@ void InsertSilenceModel::apply()
 
         configuration()->setInsertSilenceDuration(m_duration);
         configuration()->setInsertSilenceDurationFormat(m_durationFormat.toStdString());
-    }
-    catch (::AudacityException& e) {
+    } catch (::AudacityException& e) {
         if (const auto msg = dynamic_cast<MessageBoxException*>(&e)) {
             std::string title = muse::trc("projectscene/silence", "Action cannot be completed");
             interactive()->warning(title, msg->ErrorMessage().Translation().ToStdString());

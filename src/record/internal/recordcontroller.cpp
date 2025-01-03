@@ -66,7 +66,7 @@ void RecordController::toggleRecord()
 
 void RecordController::start()
 {
-    IF_ASSERT_FAILED(record()) {
+    IF_ASSERT_FAILED (record()) {
         return;
     }
 
@@ -81,7 +81,7 @@ void RecordController::start()
 
 void RecordController::pause()
 {
-    IF_ASSERT_FAILED(record()) {
+    IF_ASSERT_FAILED (record()) {
         return;
     }
 
@@ -96,7 +96,7 @@ void RecordController::pause()
 
 void RecordController::stop()
 {
-    IF_ASSERT_FAILED(record()) {
+    IF_ASSERT_FAILED (record()) {
         return;
     }
 

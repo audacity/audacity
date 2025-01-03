@@ -9,16 +9,16 @@
 
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "../ieffectsviewregister.h"
 #include "../ieffectsuiengine.h"
+#include "../ieffectsviewregister.h"
+#include "modularity/ioc.h"
 
 namespace au::effects {
 class EffectViewLoader : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    Q_PROPERTY(QQuickItem * contentItem READ contentItem NOTIFY contentItemChanged FINAL)
+    Q_PROPERTY(QQuickItem* contentItem READ contentItem NOTIFY contentItemChanged FINAL)
 
     muse::Inject<IEffectsViewRegister> viewRegister;
     muse::Inject<IEffectsUiEngine> engine;
@@ -39,4 +39,4 @@ signals:
 private:
     QQuickItem* m_contentItem = nullptr;
 };
-}
+}  // namespace au::effects

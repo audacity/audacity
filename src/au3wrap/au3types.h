@@ -52,4 +52,4 @@ inline float localVolumeToAu3(int volume)
 
     return (((volume - old_min) * new_range) / old_range) + new_min;
 }
-}
+}  // namespace au::au3

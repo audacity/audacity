@@ -34,8 +34,8 @@ class UpdatePreferencesModel : public QObject
 
     INJECT(update::IUpdateConfiguration, updateConfiguration)
 
-    Q_PROPERTY(
-        bool needCheckForNewAppVersion READ needCheckForNewAppVersion WRITE setNeedCheckForNewAppVersion NOTIFY needCheckForNewAppVersionChanged)
+    Q_PROPERTY(bool needCheckForNewAppVersion READ needCheckForNewAppVersion WRITE setNeedCheckForNewAppVersion NOTIFY
+                   needCheckForNewAppVersionChanged)
 
 public:
     explicit UpdatePreferencesModel(QObject* parent = nullptr);
@@ -51,6 +51,6 @@ public slots:
 signals:
     void needCheckForNewAppVersionChanged(bool value);
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_UPDATEPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_UPDATEPREFERENCESMODEL_H

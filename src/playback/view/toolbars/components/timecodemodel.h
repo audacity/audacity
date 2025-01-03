@@ -6,8 +6,8 @@
 #include <QAbstractListModel>
 #include <QQuickItem>
 
-#include "timecodeformatter.h"
 #include "fieldsinteractioncontroller.h"
+#include "timecodeformatter.h"
 
 namespace au::playback {
 class TimecodeModel : public QAbstractListModel
@@ -25,10 +25,10 @@ class TimecodeModel : public QAbstractListModel
     Q_PROPERTY(int currentFormat READ currentFormat WRITE setCurrentFormat NOTIFY currentFormatChanged FINAL)
     Q_PROPERTY(QString currentFormatStr READ currentFormatStr WRITE setCurrentFormatStr NOTIFY currentFormatChanged FINAL)
 
-    Q_PROPERTY(int currentEditedFieldIndex READ currentEditedFieldIndex
-               WRITE setCurrentEditedFieldIndex NOTIFY currentEditedFieldIndexChanged FINAL)
+    Q_PROPERTY(int currentEditedFieldIndex READ currentEditedFieldIndex WRITE setCurrentEditedFieldIndex NOTIFY
+                   currentEditedFieldIndexChanged FINAL)
 
-    Q_PROPERTY(QQuickItem * visualItem READ visualItem WRITE setVisualItem CONSTANT)
+    Q_PROPERTY(QQuickItem* visualItem READ visualItem WRITE setVisualItem CONSTANT)
 
 public:
     explicit TimecodeModel(QObject* parent = nullptr);
@@ -132,4 +132,4 @@ private:
     QList<ViewFormat> m_availableViewFormats;
     int m_currentFormat = int(ViewFormatType::HHMMSS);
 };
-}
+}  // namespace au::playback

@@ -26,7 +26,6 @@ public:
     muse::async::Notification settingsChanged(const EffectInstanceId& instanceId) const override;
 
 private:
-
     struct RegisteredEffectInstance {
         EffectId effectId;
         Effect* effect = nullptr;
@@ -36,4 +35,4 @@ private:
 
     std::map<EffectInstanceId, RegisteredEffectInstance> m_data;
 };
-}
+}  // namespace au::effects

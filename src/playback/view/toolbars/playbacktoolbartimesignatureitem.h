@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -19,8 +19,11 @@ class PlaybackToolBarTimeSignatureItem : public muse::uicomponents::ToolBarItem
     muse::Inject<context::IGlobalContext> globalContext;
 
 public:
-    explicit PlaybackToolBarTimeSignatureItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                              QObject* parent = nullptr);
+    explicit PlaybackToolBarTimeSignatureItem(
+        const muse::ui::UiAction& action,
+        muse::uicomponents::ToolBarItemType::Type type,
+        QObject* parent = nullptr
+    );
 
     int upper() const;
     void setUpper(int newUpper);
@@ -40,4 +43,4 @@ private:
     int m_upper = 0;
     int m_lower = 0;
 };
-}
+}  // namespace au::playback

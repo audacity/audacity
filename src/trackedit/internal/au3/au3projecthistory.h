@@ -25,10 +25,8 @@ public:
     void redo() override;
     void undoUnsaved() override;
     void clearUnsaved() override;
-    void pushHistoryState(
-        const std::string& longDescription, const std::string& shortDescription) override;
-    void pushHistoryState(
-        const std::string& longDescription, const std::string& shortDescription, UndoPushType flags) override;
+    void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) override;
+    void pushHistoryState(const std::string& longDescription, const std::string& shortDescription, UndoPushType flags) override;
     muse::async::Notification isUndoRedoAvailableChanged() const override;
 
 private:
@@ -36,4 +34,4 @@ private:
 
     muse::async::Notification m_isUndoRedoAvailableChanged;
 };
-}
+}  // namespace au::trackedit

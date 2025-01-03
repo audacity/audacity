@@ -22,12 +22,12 @@
 #ifndef AU_APPSHELL_APPLICATIONUIACTIONS_H
 #define AU_APPSHELL_APPLICATIONUIACTIONS_H
 
-#include "ui/iuiactionsmodule.h"
 #include "applicationactioncontroller.h"
-#include "modularity/ioc.h"
-#include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
+#include "context/iuicontextresolver.h"
+#include "modularity/ioc.h"
 #include "ui/imainwindow.h"
+#include "ui/iuiactionsmodule.h"
 
 //! TODO AU4
 // #include "view/preferences/braillepreferencesmodel.h"
@@ -40,8 +40,8 @@ class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::asy
     INJECT(muse::ui::IMainWindow, mainWindow)
     INJECT(muse::dock::IDockWindowProvider, dockWindowProvider)
     INJECT(IAppShellConfiguration, configuration)
-//! TODO AU4
-//    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
+    //! TODO AU4
+    //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
 
 public:
     ApplicationUiActions(std::shared_ptr<ApplicationActionController> controller);
@@ -67,6 +67,6 @@ private:
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_APPLICATIONUIACTIONS_H
+#endif  // AU_APPSHELL_APPLICATIONUIACTIONS_H

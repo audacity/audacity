@@ -25,14 +25,14 @@
 
 #include "iopensaveprojectscenario.h"
 
-#include "modularity/ioc.h"
+#include "global/iinteractive.h"
 #include "iprojectconfiguration.h"
 #include "iprojectfilescontroller.h"
-#include "global/iinteractive.h"
+#include "modularity/ioc.h"
 
-#include "cloud/musescorecom/imusescorecomservice.h"
 #include "cloud/audiocom/iaudiocomservice.h"
 #include "cloud/cloudqmltypes.h"
+#include "cloud/musescorecom/imusescorecomservice.h"
 
 namespace au::project {
 class OpenSaveProjectScenario : public IOpenSaveProjectScenario
@@ -46,8 +46,11 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario
 public:
     OpenSaveProjectScenario() = default;
 
-    muse::RetVal<SaveLocation> askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
-                                               SaveLocationType preselectedType = SaveLocationType::Undefined) const override;
+    muse::RetVal<SaveLocation> askSaveLocation(
+        IAudacityProjectPtr project,
+        SaveMode mode,
+        SaveLocationType preselectedType = SaveLocationType::Undefined
+    ) const override;
 
     muse::RetVal<muse::io::path_t> askLocalPath(IAudacityProjectPtr project, SaveMode mode) const override;
     muse::RetVal<CloudProjectInfo> askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const override;
@@ -57,8 +60,8 @@ public:
     bool warnBeforeSavingToExistingPubliclyVisibleCloudProject() const override;
 
     void showCloudOpenError(const muse::Ret& ret) const override;
-    muse::Ret showCloudSaveError(const muse::Ret& ret, const CloudProjectInfo& info, bool isPublishShare,
-                                 bool alreadyAttempted) const override;
+    muse::Ret showCloudSaveError(const muse::Ret& ret, const CloudProjectInfo& info, bool isPublishShare, bool alreadyAttempted)
+        const override;
     muse::Ret showAudioCloudShareError(const muse::Ret& ret) const override;
 
 private:
@@ -88,6 +91,6 @@ public:
     };
     Q_ENUM(SaveLocationType);
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_OPENSAVEPROJECTSCENARIO_H
+#endif  // AU_PROJECT_OPENSAVEPROJECTSCENARIO_H

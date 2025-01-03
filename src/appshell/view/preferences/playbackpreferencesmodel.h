@@ -24,9 +24,9 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
 #include "async/asyncable.h"
 #include "audio/iaudioconfiguration.h"
+#include "modularity/ioc.h"
 // #include "midi/imidiconfiguration.h"
 // #include "midi/imidioutport.h"
 // #include "midi/imidiinport.h"
@@ -102,12 +102,12 @@ signals:
 
     // void muteHiddenInstrumentsChanged(bool mute);
 
-// private:
+    // private:
     // midi::MidiDeviceID midiInputDeviceId(int index) const;
     // midi::MidiDeviceID midiOutputDeviceId(int index) const;
 
     // void showMidiError(const midi::MidiDeviceID& deviceId, const std::string& text) const;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_PLAYBACKPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_PLAYBACKPREFERENCESMODEL_H

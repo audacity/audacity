@@ -5,13 +5,13 @@
 
 #include "internal/projectsceneuiactions.h"
 
-#include "playback/view/toolbars/playbacktoolbarlevelitem.h"
-#include "playback/view/toolbars/playbacktoolbarcontrolitem.h"
-#include "playback/view/toolbars/playbacktoolbartimeitem.h"
 #include "playback/view/toolbars/playbacktoolbarbpmitem.h"
+#include "playback/view/toolbars/playbacktoolbarcontrolitem.h"
+#include "playback/view/toolbars/playbacktoolbarlevelitem.h"
+#include "playback/view/toolbars/playbacktoolbartimeitem.h"
 #include "playback/view/toolbars/playbacktoolbartimesignatureitem.h"
-#include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
 #include "projectscene/view/toolbars/snaptoolbaritem.h"
+#include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
 
 #include "containers.h"
 
@@ -49,25 +49,24 @@ static const ActionCode SNAP_ACTION_CODE("snap");
 static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
 {
     std::map<ActionCode, PlaybackToolBarModel::ItemType> types = {
-        { PLAYBACK_LEVEL, PlaybackToolBarModel::PLAYBACK_LEVEL },
-        { PLAYBACK_TIME, PlaybackToolBarModel::PLAYBACK_TIME },
-        { PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM },
-        { PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE },
-        { RECORD_LEVEL, PlaybackToolBarModel::RECORD_LEVEL },
-        { PLAY_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { STOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { RECORD_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { REWIND_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { REWIND_END_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
+        {PLAYBACK_LEVEL, PlaybackToolBarModel::PLAYBACK_LEVEL},
+        {PLAYBACK_TIME, PlaybackToolBarModel::PLAYBACK_TIME},
+        {PLAYBACK_BPM, PlaybackToolBarModel::PLAYBACK_BPM},
+        {PLAYBACK_TIME_SIGNATURE, PlaybackToolBarModel::PLAYBACK_TIME_SIGNATURE},
+        {RECORD_LEVEL, PlaybackToolBarModel::RECORD_LEVEL},
+        {PLAY_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL},
+        {STOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL},
+        {RECORD_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL},
+        {REWIND_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL},
+        {REWIND_END_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL},
+        {LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL},
+        {SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP}
     };
 
     return muse::value(types, actionCode, PlaybackToolBarModel::PROJECT_CONTROL);
 }
 
-PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
-    : AbstractToolBarModel(parent)
+PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent) : AbstractToolBarModel(parent)
 {
 }
 
@@ -100,8 +99,8 @@ void PlaybackToolBarModel::reload()
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
-    if (containsAction(codes, PLAY_ACTION_CODE) || containsAction(codes, PAUSE_ACTION_CODE)
-        || containsAction(codes, PAUSE_RECORD_ACTION_CODE)) {
+    if (containsAction(codes, PLAY_ACTION_CODE) || containsAction(codes, PAUSE_ACTION_CODE) ||
+        containsAction(codes, PAUSE_RECORD_ACTION_CODE)) {
         updatePlayState();
     }
 
@@ -215,7 +214,7 @@ void PlaybackToolBarModel::updateLoopState()
         return;
     }
 
-    bool isLooping = false; // todo: from controller
+    bool isLooping = false;  // todo: from controller
     item->setSelected(isLooping);
 
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
@@ -235,8 +234,8 @@ void PlaybackToolBarModel::updateActions()
 
     beginResetModel();
 
-    muse::ui::ToolConfig playbackConfig
-        = uiConfiguration()->toolConfig(TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    muse::ui::ToolConfig playbackConfig =
+        uiConfiguration()->toolConfig(TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
     for (const muse::ui::ToolConfig::Item& citem : playbackConfig.items) {
         if (!citem.show) {
@@ -254,11 +253,11 @@ void PlaybackToolBarModel::updateActions()
         }
 
         if (citem.action == PLAY_ACTION_CODE) {
-            item->setId(PLAY_PAUSE_ITEM_ID); // for quick finding
+            item->setId(PLAY_PAUSE_ITEM_ID);  // for quick finding
         }
 
         if (citem.action == STOP_ACTION_CODE) {
-            item->setId(STOP_ITEM_ID); // for quick finding
+            item->setId(STOP_ITEM_ID);  // for quick finding
         }
 
         item->setIsTransparent(false);

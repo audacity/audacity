@@ -5,8 +5,8 @@
 
 #include "../../itrackeditproject.h"
 
-#include "UndoManager.h"
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
+#include "UndoManager.h"
 
 #include "iprojecthistory.h"
 #include "modularity/ioc.h"
@@ -53,7 +53,6 @@ public:
     secs_t totalTime() const override;
 
 private:
-
     void onTrackListEvent(const TrackListEvent& e);
     void onTrackDataChanged(const TrackId& trackId);
     void onProjectTempoChange(double newTempo);
@@ -75,20 +74,18 @@ private:
 class Au3TrackeditProjectCreator : public ITrackeditProjectCreator
 {
 public:
-
     Au3TrackeditProjectCreator() = default;
 
     ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const override;
 };
-}
+}  // namespace au::trackedit
 
-struct TimeSignatureRestorer final : UndoStateExtension
-{
-   explicit TimeSignatureRestorer(AudacityProject& project);
-   void RestoreUndoRedoState(AudacityProject& project) override;
-   static void reg();
+struct TimeSignatureRestorer final : UndoStateExtension {
+    explicit TimeSignatureRestorer(AudacityProject& project);
+    void RestoreUndoRedoState(AudacityProject& project) override;
+    static void reg();
 
-   double mTempo;
-   int mUpper;
-   int mLower;
+    double mTempo;
+    int mUpper;
+    int mLower;
 };

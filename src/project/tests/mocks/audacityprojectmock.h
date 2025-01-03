@@ -40,4 +40,4 @@ public:
 
     MOCK_METHOD(uintptr_t, au3ProjectPtr, (), (const, override));
 };
-}
+}  // namespace au::project

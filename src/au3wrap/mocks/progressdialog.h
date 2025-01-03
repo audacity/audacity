@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include "BasicUI.h" // For ProgressResult
+#include "BasicUI.h"  // For ProgressResult
 
+#include "async/asyncable.h"
 #include "iinteractive.h"
 #include "modularity/ioc.h"
-#include "async/asyncable.h"
 
 using ProgressResult = BasicUI::ProgressResult;
 
@@ -27,8 +27,7 @@ public:
     void SetDialogTitle(const TranslatableString& title) override;
 
 public:
-    ProgressResult Poll(
-        unsigned long long numerator, unsigned long long denominator, const TranslatableString& message = {}) override;
+    ProgressResult Poll(unsigned long long numerator, unsigned long long denominator, const TranslatableString& message = {}) override;
 
     void SetMessage(const TranslatableString& message) override;
 

@@ -28,8 +28,11 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     muse::Inject<IPlayback> playback;
 
 public:
-    explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                      QObject* parent = nullptr);
+    explicit PlaybackToolBarLevelItem(
+        const muse::ui::UiAction& action,
+        muse::uicomponents::ToolBarItemType::Type type,
+        QObject* parent = nullptr
+    );
 
     int level() const;
     void setLevel(int newLevel);
@@ -76,4 +79,4 @@ private:
     float m_rightRecentPeak = 0.0;
     float m_rightMaxPeak = 0.0;
 };
-}
+}  // namespace au::playback

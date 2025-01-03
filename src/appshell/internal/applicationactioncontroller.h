@@ -26,16 +26,16 @@
 
 #include "../iapplicationactioncontroller.h"
 
-#include "modularity/ioc.h"
 #include "actions/actionable.h"
 #include "actions/iactionsdispatcher.h"
-#include "ui/iuiactionsregister.h"
 #include "async/asyncable.h"
-#include "ui/imainwindow.h"
-#include "iinteractive.h"
-#include "iappshellconfiguration.h"
 #include "iapplication.h"
+#include "iappshellconfiguration.h"
+#include "iinteractive.h"
+#include "modularity/ioc.h"
 #include "project/iprojectfilescontroller.h"
+#include "ui/imainwindow.h"
+#include "ui/iuiactionsregister.h"
 
 //! TODO AU4
 // #include "languages/ilanguagesservice.h"
@@ -44,8 +44,10 @@
 // #include "istartupscenario.h"
 
 namespace au::appshell {
-class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
-    public muse::async::Asyncable
+class ApplicationActionController : public QObject,
+                                    public IApplicationActionController,
+                                    public muse::actions::Actionable,
+                                    public muse::async::Asyncable
 {
     INJECT(muse::actions::IActionsDispatcher, dispatcher)
     INJECT(muse::ui::IUiActionsRegister, actionsRegister)
@@ -55,7 +57,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     INJECT(muse::IApplication, application)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(project::IProjectFilesController, projectFilesController)
-//! TODO AU4
+    //! TODO AU4
     // INJECT(languages::ILanguagesService, languagesService)
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
     // INJECT(audio::ISoundFontRepository, soundFontRepository)
@@ -92,6 +94,6 @@ private:
 
     muse::async::Channel<muse::actions::ActionCodeList> m_actionsReceiveAvailableChanged;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_APPLICATIONCONTROLLER_H
+#endif  // AU_APPSHELL_APPLICATIONCONTROLLER_H

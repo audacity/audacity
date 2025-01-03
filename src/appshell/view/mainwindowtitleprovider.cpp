@@ -25,8 +25,7 @@
 using namespace au::appshell;
 using namespace au::project;
 
-MainWindowTitleProvider::MainWindowTitleProvider(QObject* parent)
-    : QObject(parent)
+MainWindowTitleProvider::MainWindowTitleProvider(QObject* parent) : QObject(parent)
 {
 }
 

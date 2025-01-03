@@ -24,11 +24,11 @@
 
 #include <QAbstractListModel>
 
-#include "modularity/ioc.h"
 #include "async/asyncable.h"
+#include "modularity/ioc.h"
 
-#include "notation/inotationconfiguration.h"
 #include "audio/iaudioconfiguration.h"
+#include "notation/inotationconfiguration.h"
 
 namespace au::appshell {
 class ScorePreferencesModel : public QAbstractListModel, public async::Asyncable
@@ -98,6 +98,6 @@ private:
 
     QList<DefaultFileInfo> m_defaultFiles;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_SCOREPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_SCOREPREFERENCESMODEL_H

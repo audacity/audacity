@@ -21,4 +21,4 @@ public:
     Q_INVOKABLE bool isPlaying();
     Q_INVOKABLE bool isPaused();
 };
-}
+}  // namespace au::playback

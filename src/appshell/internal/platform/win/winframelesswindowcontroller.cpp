@@ -23,15 +23,15 @@
 #include "winframelesswindowcontroller.h"
 
 #if defined(_WIN32_WINNT) && (_WIN32_WINNT < 0x600)
-#undef _WIN32_WINNT // like defined to `0x502` in _mingw.h for Qt 5.15
-#define _WIN32_WINNT 0x0600 // Vista or later, needed for `iPaddedBorderWidth`
+#undef _WIN32_WINNT          // like defined to `0x502` in _mingw.h for Qt 5.15
+#define _WIN32_WINNT 0x0600  // Vista or later, needed for `iPaddedBorderWidth`
 #endif
+#include <dwmapi.h>
 #include <Windows.h>
 #include <windowsx.h>
-#include <dwmapi.h>
 
-#include <QScreen>
 #include <QApplication>
+#include <QScreen>
 
 #include "log.h"
 
@@ -44,8 +44,7 @@ static void updateWindowPosition()
     SetWindowPos(s_hwnd, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
 }
 
-WinFramelessWindowController::WinFramelessWindowController()
-    : FramelessWindowController()
+WinFramelessWindowController::WinFramelessWindowController() : FramelessWindowController()
 {
     memset(&m_monitorInfo, 0, sizeof(MONITORINFO));
     m_monitorInfo.cbSize = sizeof(MONITORINFO);
@@ -57,17 +56,19 @@ WinFramelessWindowController::WinFramelessWindowController()
 void WinFramelessWindowController::init()
 {
     QWindow* window = mainWindow()->qWindow();
-    IF_ASSERT_FAILED(window) {
+    IF_ASSERT_FAILED (window) {
         return;
     }
 
     s_hwnd = (HWND)window->winId();
 
-    SetWindowLongPtr(s_hwnd, GWL_STYLE,
-                     static_cast<LONG>(WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME
-                                       | WS_CLIPCHILDREN));
+    SetWindowLongPtr(
+        s_hwnd,
+        GWL_STYLE,
+        static_cast<LONG>(WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME | WS_CLIPCHILDREN)
+    );
 
-    const MARGINS shadow_on = { 1, 1, 1, 1 };
+    const MARGINS shadow_on = {1, 1, 1, 1};
     DwmExtendFrameIntoClientArea(s_hwnd, &shadow_on);
 
     updateWindowPosition();
@@ -205,11 +206,11 @@ bool WinFramelessWindowController::calculateWindowSize(MSG* message, qintptr* re
     auto minMaxInfo = reinterpret_cast<MINMAXINFO*>(message->lParam);
 
     minMaxInfo->ptMaxSize.x = monitorWorkAreaRect.right - monitorWorkAreaRect.left;
-    minMaxInfo->ptMaxSize.y =  monitorWorkAreaRect.bottom - monitorWorkAreaRect.top;
+    minMaxInfo->ptMaxSize.y = monitorWorkAreaRect.bottom - monitorWorkAreaRect.top;
     minMaxInfo->ptMaxPosition.x = std::abs(windowRect.left - monitorRect.left);
     minMaxInfo->ptMaxPosition.y = std::abs(windowRect.top - monitorRect.top);
-    minMaxInfo->ptMinTrackSize.x =  minMaxInfo->ptMaxSize.x;
-    minMaxInfo->ptMinTrackSize.y =  minMaxInfo->ptMaxSize.y;
+    minMaxInfo->ptMinTrackSize.x = minMaxInfo->ptMaxSize.x;
+    minMaxInfo->ptMinTrackSize.y = minMaxInfo->ptMaxSize.y;
 
     *result = 0;
     return true;
@@ -238,36 +239,31 @@ bool WinFramelessWindowController::processMouseMove(MSG* message, qintptr* resul
     int moveAreaY = windowRect.top + borderWidth + static_cast<int>(moveAreaRect.y() * scaleFactor);
 
     /// NOTE: titlebar`s move area
-    if (x >= moveAreaX && x < moveAreaX + moveAreaWidth
-        && y > moveAreaY && y < moveAreaY + moveAreaHeight) {
+    if (x >= moveAreaX && x < moveAreaX + moveAreaWidth && y > moveAreaY && y < moveAreaY + moveAreaHeight) {
         *result = HTCAPTION;
         return true;
     }
 
     /// NOTE: bottom left corner
-    if (x >= windowRect.left && x < windowRect.left + borderWidth
-        && y < windowRect.bottom && y >= windowRect.bottom - borderWidth) {
+    if (x >= windowRect.left && x < windowRect.left + borderWidth && y < windowRect.bottom && y >= windowRect.bottom - borderWidth) {
         *result = HTBOTTOMLEFT;
         return true;
     }
 
     /// NOTE: bottom right corner
-    if (x < windowRect.right && x >= windowRect.right - borderWidth
-        && y < windowRect.bottom && y >= windowRect.bottom - borderWidth) {
+    if (x < windowRect.right && x >= windowRect.right - borderWidth && y < windowRect.bottom && y >= windowRect.bottom - borderWidth) {
         *result = HTBOTTOMRIGHT;
         return true;
     }
 
     /// NOTE: top left corner
-    if (x >= windowRect.left && x < windowRect.left + borderWidth
-        && y >= windowRect.top && y < windowRect.top + borderWidth) {
+    if (x >= windowRect.left && x < windowRect.left + borderWidth && y >= windowRect.top && y < windowRect.top + borderWidth) {
         *result = HTTOPLEFT;
         return true;
     }
 
     /// NOTE: top right corner
-    if (x < windowRect.right && x >= windowRect.right - borderWidth
-        && y >= windowRect.top && y < windowRect.top + borderWidth) {
+    if (x < windowRect.right && x >= windowRect.right - borderWidth && y >= windowRect.top && y < windowRect.top + borderWidth) {
         *result = HTTOPRIGHT;
         return true;
     }

@@ -4,10 +4,10 @@
 #ifndef AU_PROJECTSCENE_PROJECTSCENEUIACTIONS_H
 #define AU_PROJECTSCENE_PROJECTSCENEUIACTIONS_H
 
-#include "ui/iuiactionsmodule.h"
-#include "modularity/ioc.h"
-#include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
+#include "context/iuicontextresolver.h"
+#include "modularity/ioc.h"
+#include "ui/iuiactionsmodule.h"
 
 #include "projectsceneactionscontroller.h"
 
@@ -38,6 +38,6 @@ private:
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };
-}
+}  // namespace au::projectscene
 
-#endif // AU_PROJECTSCENE_PROJECTSCENEUIACTIONS_H
+#endif  // AU_PROJECTSCENE_PROJECTSCENEUIACTIONS_H

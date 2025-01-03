@@ -29,9 +29,9 @@
 
 using namespace au::effects;
 
-EffectViewLoader::EffectViewLoader(QObject* parent)
-    : QObject(parent)
-{}
+EffectViewLoader::EffectViewLoader(QObject* parent) : QObject(parent)
+{
+}
 
 void EffectViewLoader::load(const QString& type, const QString& instanceId, QObject* itemParent)
 {
@@ -55,11 +55,9 @@ void EffectViewLoader::load(const QString& type, const QString& instanceId, QObj
         return;
     }
 
-    QObject* obj = component.createWithInitialProperties(
-    {
-        { "parent", QVariant::fromValue(itemParent) },
-        { "instanceId", QVariant::fromValue(instanceId) }
-    });
+    QObject* obj =
+        component.createWithInitialProperties({{"parent", QVariant::fromValue(itemParent)}, {"instanceId", QVariant::fromValue(instanceId)}}
+        );
 
     m_contentItem = qobject_cast<QQuickItem*>(obj);
     if (!m_contentItem) {

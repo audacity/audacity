@@ -26,8 +26,7 @@
 using namespace mu;
 using namespace au::appshell;
 
-AdvancedPreferencesModel::AdvancedPreferencesModel(QObject* parent)
-    : QAbstractListModel(parent)
+AdvancedPreferencesModel::AdvancedPreferencesModel(QObject* parent) : QAbstractListModel(parent)
 {
 }
 
@@ -39,12 +38,18 @@ QVariant AdvancedPreferencesModel::data(const QModelIndex& index, int role) cons
 
     const Settings::Item& item = m_items.at(index.row());
     switch (role) {
-    case KeyRole: return QString::fromStdString(item.key.key);
-    case DescriptionRole: return QString::fromStdString(item.description);
-    case TypeRole: return typeToString(item.value.type());
-    case ValueRole: return item.value.toQVariant();
-    case MinValueRole: return !item.minValue.isNull() ? item.minValue.toQVariant() : -1000;
-    case MaxValueRole: return !item.maxValue.isNull() ? item.maxValue.toQVariant() : 1000;
+    case KeyRole:
+        return QString::fromStdString(item.key.key);
+    case DescriptionRole:
+        return QString::fromStdString(item.description);
+    case TypeRole:
+        return typeToString(item.value.type());
+    case ValueRole:
+        return item.value.toQVariant();
+    case MinValueRole:
+        return !item.minValue.isNull() ? item.minValue.toQVariant() : -1000;
+    case MaxValueRole:
+        return !item.maxValue.isNull() ? item.maxValue.toQVariant() : 1000;
     }
     return QVariant();
 }
@@ -58,7 +63,7 @@ bool AdvancedPreferencesModel::setData(const QModelIndex& index, const QVariant&
     switch (role) {
     case ValueRole:
         changeVal(index.row(), value);
-        emit dataChanged(index, index, { ValueRole });
+        emit dataChanged(index, index, {ValueRole});
         return true;
     default:
         return false;
@@ -73,12 +78,12 @@ int AdvancedPreferencesModel::rowCount(const QModelIndex&) const
 QHash<int, QByteArray> AdvancedPreferencesModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles = {
-        { KeyRole, "keyRole" },
-        { DescriptionRole, "descriptionRole" },
-        { TypeRole, "typeRole" },
-        { ValueRole, "valueRole" },
-        { MinValueRole, "minValueRole" },
-        { MaxValueRole, "maxValueRole" }
+        {KeyRole, "keyRole"},
+        {DescriptionRole, "descriptionRole"},
+        {TypeRole, "typeRole"},
+        {ValueRole, "valueRole"},
+        {MinValueRole, "minValueRole"},
+        {MaxValueRole, "maxValueRole"}
     };
 
     return roles;
@@ -125,15 +130,24 @@ void AdvancedPreferencesModel::resetToDefault()
 QString AdvancedPreferencesModel::typeToString(Val::Type type) const
 {
     switch (type) {
-    case Val::Type::Undefined: return "Undefined";
-    case Val::Type::Bool: return "Bool";
-    case Val::Type::Int: return "Int";
-    case Val::Type::Int64: return "Int";
-    case Val::Type::Double: return "Double";
-    case Val::Type::String: return "String";
-    case Val::Type::Color: return "Color";
-    case Val::Type::List: return "List";
-    case Val::Type::Map: return "Map";
+    case Val::Type::Undefined:
+        return "Undefined";
+    case Val::Type::Bool:
+        return "Bool";
+    case Val::Type::Int:
+        return "Int";
+    case Val::Type::Int64:
+        return "Int";
+    case Val::Type::Double:
+        return "Double";
+    case Val::Type::String:
+        return "String";
+    case Val::Type::Color:
+        return "Color";
+    case Val::Type::List:
+        return "List";
+    case Val::Type::Map:
+        return "Map";
     }
     return "Undefined";
 }

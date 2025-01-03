@@ -26,8 +26,7 @@
 
 using namespace au::appshell;
 
-ScorePreferencesModel::ScorePreferencesModel(QObject* parent)
-    : QAbstractListModel(parent)
+ScorePreferencesModel::ScorePreferencesModel(QObject* parent) : QAbstractListModel(parent)
 {
 }
 
@@ -40,11 +39,16 @@ QVariant ScorePreferencesModel::data(const QModelIndex& index, int role) const
 {
     const DefaultFileInfo& file = m_defaultFiles.at(index.row());
     switch (role) {
-    case TitleRole: return file.title;
-    case PathRole: return file.path;
-    case PathFilterRole: return file.pathFilter;
-    case ChooseTitleRole: return file.chooseTitle;
-    case DirectoryRole: return fileDirectory(file.path);
+    case TitleRole:
+        return file.title;
+    case PathRole:
+        return file.path;
+    case PathFilterRole:
+        return file.pathFilter;
+    case ChooseTitleRole:
+        return file.chooseTitle;
+    case DirectoryRole:
+        return fileDirectory(file.path);
     }
 
     return QVariant();
@@ -61,7 +65,7 @@ bool ScorePreferencesModel::setData(const QModelIndex& index, const QVariant& va
         }
 
         savePath(file.type, value.toString());
-        emit dataChanged(index, index, { PathRole });
+        emit dataChanged(index, index, {PathRole});
         return true;
     default:
         break;
@@ -73,11 +77,11 @@ bool ScorePreferencesModel::setData(const QModelIndex& index, const QVariant& va
 QHash<int, QByteArray> ScorePreferencesModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles = {
-        { TitleRole, "title" },
-        { PathRole, "path" },
-        { PathFilterRole, "pathFilter" },
-        { ChooseTitleRole, "chooseTitle" },
-        { DirectoryRole, "directory" }
+        {TitleRole, "title"},
+        {PathRole, "path"},
+        {PathFilterRole, "pathFilter"},
+        {ChooseTitleRole, "chooseTitle"},
+        {DirectoryRole, "directory"}
     };
 
     return roles;
@@ -88,14 +92,22 @@ void ScorePreferencesModel::load()
     beginResetModel();
 
     m_defaultFiles = {
-        { DefaultFileType::FirstScoreOrderList, qtrc("appshell/preferences", "Score order list 1"), firstScoreOrderListPath(),
-          scoreOrderPathFilter(), scoreOrderChooseTitle() },
-        { DefaultFileType::SecondScoreOrderList, qtrc("appshell/preferences", "Score order list 2"), secondScoreOrderListPath(),
-          scoreOrderPathFilter(), scoreOrderChooseTitle() },
-        { DefaultFileType::Style, qtrc("appshell/preferences", "Style"), stylePath(),
-          stylePathFilter(), styleChooseTitle() },
-        { DefaultFileType::PartStyle, qtrc("appshell/preferences", "Style for part"), partStylePath(),
-          stylePathFilter(), partStyleChooseTitle() },
+        {DefaultFileType::FirstScoreOrderList,
+         qtrc("appshell/preferences", "Score order list 1"),
+         firstScoreOrderListPath(),
+         scoreOrderPathFilter(),
+         scoreOrderChooseTitle()},
+        {DefaultFileType::SecondScoreOrderList,
+         qtrc("appshell/preferences", "Score order list 2"),
+         secondScoreOrderListPath(),
+         scoreOrderPathFilter(),
+         scoreOrderChooseTitle()},
+        {DefaultFileType::Style, qtrc("appshell/preferences", "Style"), stylePath(), stylePathFilter(), styleChooseTitle()},
+        {DefaultFileType::PartStyle,
+         qtrc("appshell/preferences", "Style for part"),
+         partStylePath(),
+         stylePathFilter(),
+         partStyleChooseTitle()},
     };
 
     endResetModel();
@@ -177,12 +189,12 @@ QString ScorePreferencesModel::partStylePath() const
 
 QStringList ScorePreferencesModel::scoreOrderPathFilter() const
 {
-    return { qtrc("appshell/preferences", "Score order list") + " (*.xml)" };
+    return {qtrc("appshell/preferences", "Score order list") + " (*.xml)"};
 }
 
 QStringList ScorePreferencesModel::stylePathFilter() const
 {
-    return { qtrc("appshell/preferences", "MuseScore style file") + " (*.mss)" };
+    return {qtrc("appshell/preferences", "MuseScore style file") + " (*.mss)"};
 }
 
 QString ScorePreferencesModel::scoreOrderChooseTitle() const
@@ -208,7 +220,7 @@ void ScorePreferencesModel::setPath(ScorePreferencesModel::DefaultFileType fileT
     }
 
     m_defaultFiles[index.row()].path = path;
-    emit dataChanged(index, index, { PathRole, DirectoryRole });
+    emit dataChanged(index, index, {PathRole, DirectoryRole});
 }
 
 QModelIndex ScorePreferencesModel::fileIndex(ScorePreferencesModel::DefaultFileType fileType)

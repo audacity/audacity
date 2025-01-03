@@ -4,29 +4,29 @@
 
 #include "au3record.h"
 
+#include "libraries/lib-audio-devices/AudioIOBase.h"
+#include "libraries/lib-audio-devices/Meter.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
-#include "libraries/lib-audio-devices/AudioIOBase.h"
+#include "libraries/lib-stretching-sequence/StretchingSequence.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-track-selection/TrackFocus.h"
 #include "libraries/lib-track/Track.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-wave-track/WaveClip.h"
-#include "libraries/lib-stretching-sequence/StretchingSequence.h"
 #include "libraries/lib-viewport/Viewport.h"
-#include "libraries/lib-audio-devices/Meter.h"
+#include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 
 #include "au3audioinput.h"
 
-#include "au3wrap/internal/domconverter.h"
-#include "au3wrap/internal/domaccessor.h"
-#include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "recorderrors.h"
 
-#include "translation.h"
 #include "log.h"
+#include "translation.h"
 
 using namespace muse;
 using namespace muse::async;
@@ -34,10 +34,9 @@ using namespace au::record;
 using namespace au::au3;
 
 constexpr int RATE_NOT_SELECTED = -1;
-using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
+using WritableSampleTrackArray = std::vector<std::shared_ptr<WritableSampleTrack> >;
 
-struct PropertiesOfSelected
-{
+struct PropertiesOfSelected {
     bool allSameRate = false;
     int rateOfSelected = RATE_NOT_SELECTED;
     bool anySelected = false;
@@ -52,12 +51,10 @@ PropertiesOfSelected GetPropertiesOfSelected(const Au3Project& proj)
     PropertiesOfSelected result;
     result.allSameRate = true;
 
-    const auto selectedTracks{
-        Au3TrackList::Get(proj).Selected<const Au3WaveTrack>() };
+    const auto selectedTracks{Au3TrackList::Get(proj).Selected<const Au3WaveTrack>()};
 
     for (const auto& track : selectedTracks) {
-        if (rateOfSelection != RATE_NOT_SELECTED
-            && track->GetRate() != rateOfSelection) {
+        if (rateOfSelection != RATE_NOT_SELECTED && track->GetRate() != rateOfSelection) {
             result.allSameRate = false;
         } else if (rateOfSelection == RATE_NOT_SELECTED) {
             rateOfSelection = track->GetRate();
@@ -119,8 +116,7 @@ WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, bool se
             continue;
         } else {
             // Might use this but may have to discard some of the accumulated
-            while (strictRules
-                   && nChannels + totalChannels > recordingChannels) {
+            while (strictRules && nChannels + totalChannels > recordingChannels) {
                 candidates.erase(candidates.begin());
                 auto nOldChannels = channelCounts[0];
                 assert(nOldChannels > 0);
@@ -150,22 +146,16 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
 {
     TransportSequences result;
     {
-        const auto range = trackList.Any<Au3WaveTrack>()
-                           + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
+        const auto range = trackList.Any<Au3WaveTrack>() + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
-            result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+            result.playbackSequences.push_back(StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     if (nonWaveToo) {
-        const auto range = trackList.Any<const PlayableTrack>()
-                           + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
+        const auto range = trackList.Any<const PlayableTrack>() + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             if (!track_cast<const SampleTrack*>(pTrack)) {
-                if (auto pSequence
-                        =std::dynamic_pointer_cast<const OtherPlayableSequence>(
-                              pTrack->shared_from_this())
-                        ) {
+                if (auto pSequence = std::dynamic_pointer_cast<const OtherPlayableSequence>(pTrack->shared_from_this())) {
                     result.otherPlayableSequences.push_back(pSequence);
                 }
             }
@@ -206,7 +196,7 @@ muse::Ret Au3Record::start()
 
     bool bPreferNewTrack = false;
     // gPrefs->Read("/GUI/PreferNewTrackRecord", &bPreferNewTrack, false);
-    const bool appendRecord = true;//(altAppearance == bPreferNewTrack);
+    const bool appendRecord = true;  //(altAppearance == bPreferNewTrack);
 
     Au3Project& project = projectRef();
 
@@ -223,10 +213,10 @@ muse::Ret Au3Record::start()
 
     // Checking the selected tracks: counting them and
     // making sure they all have the same rate
-    const auto selectedTracks{ GetPropertiesOfSelected(project) };
-    const int rateOfSelected{ selectedTracks.rateOfSelected };
-    const bool anySelected{ selectedTracks.anySelected };
-    const bool allSameRate{ selectedTracks.allSameRate };
+    const auto selectedTracks{GetPropertiesOfSelected(project)};
+    const int rateOfSelected{selectedTracks.rateOfSelected};
+    const bool anySelected{selectedTracks.anySelected};
+    const bool allSameRate{selectedTracks.allSameRate};
 
     if (!allSameRate) {
         return make_ret(Err::MismatchedSamplingRatesError);
@@ -237,9 +227,7 @@ muse::Ret Au3Record::start()
         // try to choose only from them; else if wave tracks exist, may record into any.)
         existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
         if (!existingTracks.empty()) {
-            t0 = std::max(t0,
-                          Au3TrackList::Get(project).Selected<const Au3WaveTrack>()
-                          .max(&Au3Track::GetEndTime));
+            t0 = std::max(t0, Au3TrackList::Get(project).Selected<const Au3WaveTrack>().max(&Au3Track::GetEndTime));
             options.rate = rateOfSelected;
         } else {
             if (anySelected && rateOfSelected != options.rate) {
@@ -249,12 +237,13 @@ muse::Ret Au3Record::start()
             existingTracks = ChooseExistingRecordingTracks(project, false, options.rate);
             if (!existingTracks.empty()) {
                 const auto endTime = accumulate(
-                    existingTracks.begin(), existingTracks.end(),
+                    existingTracks.begin(),
+                    existingTracks.end(),
                     std::numeric_limits<double>::lowest(),
                     [](double acc, auto& pTrack) {
-                    return std::max(acc, pTrack->GetEndTime());
-                }
-                    );
+                        return std::max(acc, pTrack->GetEndTime());
+                    }
+                );
 
                 //If there is a suitable track, then adjust t0 so
                 //that recording not starts before the end of that track
@@ -266,9 +255,9 @@ muse::Ret Au3Record::start()
 
         // Whether we decided on NEW tracks or not:
         if (t1 <= selectedRegion.t0() && selectedRegion.t1() > selectedRegion.t0()) {
-            t1 = selectedRegion.t1();   // record within the selection
+            t1 = selectedRegion.t1();  // record within the selection
         } else {
-            t1 = DBL_MAX;        // record for a long, long time
+            t1 = DBL_MAX;  // record for a long, long time
         }
     }
 
@@ -284,9 +273,7 @@ muse::Ret Au3Record::start()
         transportTracks = MakeTransportTracks(Au3TrackList::Get(project), false, true);
         for (const auto& wt : existingTracks) {
             auto end = transportTracks.playbackSequences.end();
-            auto it = std::find_if(
-                transportTracks.playbackSequences.begin(), end,
-                [&wt](const auto& playbackSequence) {
+            auto it = std::find_if(transportTracks.playbackSequences.begin(), end, [&wt](const auto& playbackSequence) {
                 return playbackSequence->FindChannelGroup() == wt->FindChannelGroup();
             });
             if (it != end) {
@@ -295,8 +282,7 @@ muse::Ret Au3Record::start()
         }
     }
 
-    std::copy(existingTracks.begin(), existingTracks.end(),
-              back_inserter(transportTracks.captureSequences));
+    std::copy(existingTracks.begin(), existingTracks.end(), back_inserter(transportTracks.captureSequences));
 
     return doRecord(project, transportTracks, t0, t1, altAppearance, options);
 }
@@ -360,11 +346,14 @@ Au3Project& Au3Record::projectRef() const
     return *project;
 }
 
-Ret Au3Record::doRecord(Au3Project& project,
-                        const TransportSequences& sequences,
-                        double t0, double t1,
-                        bool altAppearance,
-                        const AudioIOStartStreamOptions& options)
+Ret Au3Record::doRecord(
+    Au3Project& project,
+    const TransportSequences& sequences,
+    double t0,
+    double t1,
+    bool altAppearance,
+    const AudioIOStartStreamOptions& options
+)
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
 
@@ -388,13 +377,11 @@ Ret Au3Record::doRecord(Au3Project& project,
 
     bool appendRecord = !sequences.captureSequences.empty();
 
-    auto insertEmptyInterval
-        =[&](Au3WaveTrack& track, double t0, bool placeholder) {
+    auto insertEmptyInterval = [&](Au3WaveTrack& track, double t0, bool placeholder) {
         wxString name;
         for (auto i = 1;; ++i) {
             //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
-            name = XC("%s #%d", "clip name template")
-                   .Format(track.GetName(), i).Translation();
+            name = XC("%s #%d", "clip name template").Format(track.GetName(), i).Translation();
             if (!track.HasClipNamed(name)) {
                 break;
             }
@@ -427,8 +414,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             const auto shared = wt->SharedPointer<Au3WaveTrack>();
             // prerollSequences should be a subset of playbackSequences.
             const auto& range = transportSequences.playbackSequences;
-            bool prerollTrack = any_of(range.begin(), range.end(),
-                                       [&](const auto& pSequence) {
+            bool prerollTrack = any_of(range.begin(), range.end(), [&](const auto& pSequence) {
                 return shared.get() == pSequence->FindChannelGroup();
             });
             if (prerollTrack) {
@@ -452,8 +438,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             assert(!recordingStartsBeforeTrackEnd || lastClip->WithinPlayRegion(recordingStart));
 
             Au3WaveTrack::IntervalHolder newClip{};
-            if (!recordingStartsBeforeTrackEnd
-                || lastClip->HasPitchOrSpeed()) {
+            if (!recordingStartsBeforeTrackEnd || lastClip->HasPitchOrSpeed()) {
                 newClip = insertEmptyInterval(*wt, t0, true);
             }
 
@@ -467,7 +452,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
             transportSequences.captureSequences.push_back(sequence);
 
-            m_recordData.clipsKeys.push_back({ wt->GetId(), newClip->GetId() });
+            m_recordData.clipsKeys.push_back({wt->GetId(), newClip->GetId()});
 
             trackedit::Clip _newClip = DomConverter::clip(wt, newClip.get());
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -497,7 +482,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         auto newTracks = WaveTrackFactory::Get(*p).CreateMany(recordingChannels);
         const auto first = *newTracks->begin();
         int trackCounter = 0;
-        const auto minimizeChannelView = false;    //recordingChannels > 2 && !TracksPrefs::TracksFitVerticallyZoomed.Read();
+        const auto minimizeChannelView = false;  //recordingChannels > 2 && !TracksPrefs::TracksFitVerticallyZoomed.Read();
         for (auto newTrack : newTracks->Any<Au3WaveTrack>()) {
             // Quantize bounds to the rate of the new track.
             if (newTrack == first) {
@@ -544,14 +529,12 @@ Ret Au3Record::doRecord(Au3Project& project,
             //create a new clip with a proper name before recording is started
             Au3WaveTrack::IntervalHolder newClip = insertEmptyInterval(*newTrack, t0, false);
 
-            transportSequences.captureSequences.push_back(
-                std::static_pointer_cast<Au3WaveTrack>(newTrack->shared_from_this())
-                );
+            transportSequences.captureSequences.push_back(std::static_pointer_cast<Au3WaveTrack>(newTrack->shared_from_this()));
 
             trackList.Append(std::static_pointer_cast<Au3WaveTrack>(newTrack->shared_from_this()));
 
             m_recordData.tracksIds.push_back(newTrack->GetId());
-            m_recordData.clipsKeys.push_back({ newTrack->GetId(), newClip->GetId() });
+            m_recordData.clipsKeys.push_back({newTrack->GetId(), newClip->GetId()});
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutTrackAdded(DomConverter::track(newTrack));
@@ -582,12 +565,12 @@ void Au3Record::cancelRecording()
 
     for (const trackedit::ClipKey& clipKey : m_recordData.clipsKeys) {
         Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(track) {
+        IF_ASSERT_FAILED (track) {
             return;
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(track, Au3ClipId(clipKey.clipId));
-        IF_ASSERT_FAILED(clip) {
+        IF_ASSERT_FAILED (clip) {
             return;
         }
 
@@ -598,7 +581,7 @@ void Au3Record::cancelRecording()
 
     for (const trackedit::TrackId& trackId : m_recordData.tracksIds) {
         Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(trackId));
-        IF_ASSERT_FAILED(track) {
+        IF_ASSERT_FAILED (track) {
             return;
         }
 
@@ -615,9 +598,7 @@ bool Au3Record::canStopAudioStream() const
 {
     auto gAudioIO = AudioIO::Get();
     Au3Project& project = projectRef();
-    return !gAudioIO->IsStreamActive()
-           || gAudioIO->IsMonitoring()
-           || gAudioIO->GetOwningProject().get() == &project;
+    return !gAudioIO->IsStreamActive() || gAudioIO->IsMonitoring() || gAudioIO->GetOwningProject().get() == &project;
 }
 
 void Au3Record::notifyAboutRecordClipsChanged()
@@ -626,12 +607,12 @@ void Au3Record::notifyAboutRecordClipsChanged()
 
     for (const trackedit::ClipKey& clipKey : m_recordData.clipsKeys) {
         Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(track) {
+        IF_ASSERT_FAILED (track) {
             return;
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(track, Au3ClipId(clipKey.clipId));
-        IF_ASSERT_FAILED(clip) {
+        IF_ASSERT_FAILED (clip) {
             return;
         }
 

@@ -15,4 +15,4 @@ public:
     IntervalInfo intervalInfo(TimelineContext* context) override;
     QString label(double d, const IntervalInfo& intervalInfo, TickType tickType, TimelineContext* context = nullptr) override;
 };
-}
+}  // namespace au::projectscene

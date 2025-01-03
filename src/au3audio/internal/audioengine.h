@@ -15,11 +15,16 @@ public:
 
     bool isBusy() const override;
 
-    int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
-                    const AudioIOStartStreamOptions& options) override;
+    int startStream(
+        const TransportSequences& sequences,
+        double startTime,
+        double endTime,
+        double mixerEndTime,
+        const AudioIOStartStreamOptions& options
+    ) override;
 
     muse::async::Notification updateRequested() const override;
     muse::async::Notification commitRequested() const override;
     muse::async::Notification finished() const override;
 };
-}
+}  // namespace au::audio

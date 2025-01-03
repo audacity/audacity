@@ -4,8 +4,8 @@
 #pragma once
 
 #include "context/iglobalcontext.h"
-#include "playback/iplayback.h"
 #include "modularity/ioc.h"
+#include "playback/iplayback.h"
 
 struct EffectSettings;
 
@@ -31,10 +31,12 @@ public:
     bool isApplyAllowed() const;
 
 private:
-    virtual void doInit() {}
+    virtual void doInit()
+    {
+    }
 
     const double& m_t0;
     double& m_t1;
     EffectSettings* m_settings = nullptr;
 };
-}
+}  // namespace au::effects

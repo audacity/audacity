@@ -6,11 +6,11 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "ui/iuiactionsmodule.h"
 #include "context/iuicontextresolver.h"
 #include "effectsactionscontroller.h"
 #include "ieffectsprovider.h"
+#include "modularity/ioc.h"
+#include "ui/iuiactionsmodule.h"
 
 namespace au::effects {
 class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
@@ -39,4 +39,4 @@ private:
     const std::shared_ptr<EffectsActionsController> m_controller;
     muse::async::Channel<muse::ui::UiActionList> m_actionsChanged;
 };
-}
+}  // namespace au::effects

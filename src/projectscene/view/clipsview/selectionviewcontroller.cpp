@@ -12,8 +12,7 @@ using namespace au::trackedit;
 //! NOTE: sync with ClipsSelection.qml minSelection
 constexpr double MIN_SELECTION_PX = 1.0;
 
-SelectionViewController::SelectionViewController(QObject* parent)
-    : QObject(parent)
+SelectionViewController::SelectionViewController(QObject* parent) : QObject(parent)
 {
 }
 
@@ -182,7 +181,7 @@ void SelectionViewController::selectClipAudioData(const ClipKey& clipKey)
         return;
     }
 
-    selectionController()->setSelectedClips(ClipKeyList({ clipKey.key }));
+    selectionController()->setSelectedClips(ClipKeyList({clipKey.key}));
 }
 
 void SelectionViewController::resetSelectedClip()

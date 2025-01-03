@@ -5,15 +5,17 @@
 
 using namespace au::projectscene;
 
-RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
-    : AbstractMenuModel(parent) {}
+RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent) : AbstractMenuModel(parent)
+{
+}
 
 void RealtimeEffectMenuModelBase::load()
 {
     AbstractMenuModel::load();
 
-    effectsProvider()->effectMetaListChanged().onNotify(this, [this]
-    { populateMenu(); });
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this] {
+        populateMenu();
+    });
 
     doLoad();
 }

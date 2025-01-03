@@ -27,8 +27,8 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 
 namespace au::appshell {
 class MainWindowTitleProvider : public QObject, public muse::async::Asyncable
@@ -66,6 +66,6 @@ private:
     QString m_filePath;
     bool m_fileModified;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_MAINWINDOWTITLEPROVIDER_H
+#endif  // AU_APPSHELL_MAINWINDOWTITLEPROVIDER_H

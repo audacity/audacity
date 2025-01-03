@@ -24,9 +24,9 @@
 
 #include <QObject>
 
+#include "async/asyncable.h"
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
-#include "async/asyncable.h"
 
 namespace au::appshell {
 class AppearancePreferencesModel : public QObject, public muse::async::Asyncable
@@ -99,6 +99,6 @@ private:
     muse::ui::ThemeInfo currentTheme() const;
     muse::ui::ThemeList allThemes() const;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_APPEARANCEPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_APPEARANCEPREFERENCESMODEL_H

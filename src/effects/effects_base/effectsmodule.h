@@ -29,4 +29,4 @@ private:
     std::shared_ptr<EffectsActionsController> m_actionsController;
     std::shared_ptr<RealtimeEffectService> m_realtimeEffectService;
 };
-}
+}  // namespace au::effects

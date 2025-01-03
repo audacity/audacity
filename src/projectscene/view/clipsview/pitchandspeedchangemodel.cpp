@@ -5,8 +5,7 @@
 
 using namespace au::projectscene;
 
-PitchAndSpeedChangeModel::PitchAndSpeedChangeModel(QObject* parent)
-    : QObject(parent)
+PitchAndSpeedChangeModel::PitchAndSpeedChangeModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -20,7 +19,7 @@ void PitchAndSpeedChangeModel::load(const QString& trackIdStr, const QString& cl
     trackedit::TrackId trackId = trackIdStr.toLong();
     trackedit::ClipId clipId = clipIdStr.toULongLong();
 
-    trackedit::Clip clip = prj->clip({ trackId, clipId });
+    trackedit::Clip clip = prj->clip({trackId, clipId});
     if (!clip.isValid()) {
         return;
     }
@@ -57,11 +56,11 @@ void PitchAndSpeedChangeModel::load(const QString& trackIdStr, const QString& cl
             return;
         }
 
-        trackedit::Clip clip = clipKey.isValid() ? prj->clip({ clipKey.trackId, clipKey.clipId }) : trackedit::Clip();
+        trackedit::Clip clip = clipKey.isValid() ? prj->clip({clipKey.trackId, clipKey.clipId}) : trackedit::Clip();
         setClip(clip);
     });
 
-    playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus){
+    playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus) {
         emit canChangeSpeedChanged();
     });
 

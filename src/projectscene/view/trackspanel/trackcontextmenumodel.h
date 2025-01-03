@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "uicomponents/view/abstractmenumodel.h"
 #include "types/projectscenetypes.h"
+#include "uicomponents/view/abstractmenumodel.h"
 
 namespace au::projectscene {
 class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
@@ -28,4 +28,4 @@ signals:
 private:
     trackedit::TrackId m_trackId;
 };
-}
+}  // namespace au::projectscene

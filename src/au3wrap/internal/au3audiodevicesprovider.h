@@ -8,8 +8,8 @@
 #include <wx/arrstr.h>
 #include "global/types/string.h"
 
-#include "libraries/lib-utility/IteratorX.h"
 #include "libraries/lib-strings/wxArrayStringEx.h"
+#include "libraries/lib-utility/IteratorX.h"
 #include "playback/iaudiodevicesprovider.h"
 
 namespace au::au3 {
@@ -43,14 +43,21 @@ private:
     class Choices
     {
     public:
-        void Clear() { mStrings.Clear(); mIndex = -1; }
-        [[nodiscard]] bool Empty() const { return mStrings.empty(); }
+        void Clear()
+        {
+            mStrings.Clear();
+            mIndex = -1;
+        }
+        [[nodiscard]] bool Empty() const
+        {
+            return mStrings.empty();
+        }
         std::optional<wxString> Get() const
         {
             if (mIndex < 0 || mIndex >= mStrings.size()) {
                 return {};
             }
-            return { mStrings[mIndex] };
+            return {mStrings[mIndex]};
         }
 
         wxString GetFirst() const
@@ -92,7 +99,7 @@ private:
         bool Set(int id)
         {
             if (id < 0 || id >= mStrings.size()) {
-                return false; // no change of state then
+                return false;  // no change of state then
             }
             mIndex = id;
             return true;
@@ -100,7 +107,7 @@ private:
 
     private:
         wxArrayStringEx mStrings;
-        int mIndex{ -1 };
+        int mIndex{-1};
     };
 
     Choices mInput;
@@ -112,6 +119,6 @@ private:
     muse::async::Notification m_audioInputDeviceChanged;
     muse::async::Notification m_audioApiChanged;
 };
-}
+}  // namespace au::au3
 
-#endif // AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
+#endif  // AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H

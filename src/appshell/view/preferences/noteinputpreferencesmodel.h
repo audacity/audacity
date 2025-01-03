@@ -25,9 +25,9 @@
 #include <QObject>
 
 #include "modularity/ioc.h"
-#include "shortcuts/ishortcutsconfiguration.h"
 #include "notation/inotationconfiguration.h"
 #include "playback/iplaybackconfiguration.h"
+#include "shortcuts/ishortcutsconfiguration.h"
 
 namespace au::appshell {
 class NoteInputPreferencesModel : public QObject
@@ -38,21 +38,20 @@ class NoteInputPreferencesModel : public QObject
     INJECT(notation::INotationConfiguration, notationConfiguration)
     INJECT(playback::IPlaybackConfiguration, playbackConfiguration)
 
-    Q_PROPERTY(
-        bool advanceToNextNoteOnKeyRelease READ advanceToNextNoteOnKeyRelease WRITE setAdvanceToNextNoteOnKeyRelease NOTIFY advanceToNextNoteOnKeyReleaseChanged)
-    Q_PROPERTY(
-        bool colorNotesOutsideOfUsablePitchRange READ colorNotesOutsideOfUsablePitchRange WRITE setColorNotesOutsideOfUsablePitchRange NOTIFY colorNotesOutsideOfUsablePitchRangeChanged)
-    Q_PROPERTY(
-        bool warnGuitarBends READ warnGuitarBends WRITE setWarnGuitarBends NOTIFY warnGuitarBendsChanged)
-    Q_PROPERTY(
-        int delayBetweenNotesInRealTimeModeMilliseconds READ delayBetweenNotesInRealTimeModeMilliseconds WRITE setDelayBetweenNotesInRealTimeModeMilliseconds NOTIFY delayBetweenNotesInRealTimeModeMillisecondsChanged)
+    Q_PROPERTY(bool advanceToNextNoteOnKeyRelease READ advanceToNextNoteOnKeyRelease WRITE setAdvanceToNextNoteOnKeyRelease NOTIFY
+                   advanceToNextNoteOnKeyReleaseChanged)
+    Q_PROPERTY(bool colorNotesOutsideOfUsablePitchRange READ colorNotesOutsideOfUsablePitchRange WRITE
+                   setColorNotesOutsideOfUsablePitchRange NOTIFY colorNotesOutsideOfUsablePitchRangeChanged)
+    Q_PROPERTY(bool warnGuitarBends READ warnGuitarBends WRITE setWarnGuitarBends NOTIFY warnGuitarBendsChanged)
+    Q_PROPERTY(int delayBetweenNotesInRealTimeModeMilliseconds READ delayBetweenNotesInRealTimeModeMilliseconds WRITE
+                   setDelayBetweenNotesInRealTimeModeMilliseconds NOTIFY delayBetweenNotesInRealTimeModeMillisecondsChanged)
 
     Q_PROPERTY(bool playNotesWhenEditing READ playNotesWhenEditing WRITE setPlayNotesWhenEditing NOTIFY playNotesWhenEditingChanged)
-    Q_PROPERTY(
-        int notePlayDurationMilliseconds READ notePlayDurationMilliseconds WRITE setNotePlayDurationMilliseconds NOTIFY notePlayDurationMillisecondsChanged)
+    Q_PROPERTY(int notePlayDurationMilliseconds READ notePlayDurationMilliseconds WRITE setNotePlayDurationMilliseconds NOTIFY
+                   notePlayDurationMillisecondsChanged)
     Q_PROPERTY(bool playChordWhenEditing READ playChordWhenEditing WRITE setPlayChordWhenEditing NOTIFY playChordWhenEditingChanged)
-    Q_PROPERTY(
-        bool playChordSymbolWhenEditing READ playChordSymbolWhenEditing WRITE setPlayChordSymbolWhenEditing NOTIFY playChordSymbolWhenEditingChanged)
+    Q_PROPERTY(bool playChordSymbolWhenEditing READ playChordSymbolWhenEditing WRITE setPlayChordSymbolWhenEditing NOTIFY
+                   playChordSymbolWhenEditingChanged)
 
 public:
     explicit NoteInputPreferencesModel(QObject* parent = nullptr);
@@ -87,6 +86,6 @@ signals:
     void playChordWhenEditingChanged(bool value);
     void playChordSymbolWhenEditingChanged(bool value);
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_NOTEINPUTPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_NOTEINPUTPREFERENCESMODEL_H

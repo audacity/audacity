@@ -9,8 +9,8 @@
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
-#include "playback/internal/au3/au3audioinoutmeter.h"
 #include "au3wrap/au3types.h"
+#include "playback/internal/au3/au3audioinoutmeter.h"
 
 #include "au3audio/audiotypes.h"
 
@@ -26,7 +26,7 @@ Au3AudioInput::Au3AudioInput()
 {
     m_inputMeter = std::make_shared<InOutMeter>();
 
-    globalContext()->currentProjectChanged().onNotify(this, [this](){
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
         auto currentProject = globalContext()->currentProject();
         if (!currentProject) {
             return;

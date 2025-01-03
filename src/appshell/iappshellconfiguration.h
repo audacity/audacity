@@ -25,9 +25,9 @@
 #include "modularity/imoduleinterface.h"
 #include "types/ret.h"
 
-#include "io/path.h"
 #include "appshelltypes.h"
 #include "async/notification.h"
+#include "io/path.h"
 
 namespace au::appshell {
 class IAppShellConfiguration : MODULE_EXPORT_INTERFACE
@@ -75,6 +75,6 @@ public:
     virtual muse::io::paths_t sessionProjectsPaths() const = 0;
     virtual muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) = 0;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_IAPPSHELLCONFIGURATION_H
+#endif  // AU_APPSHELL_IAPPSHELLCONFIGURATION_H

@@ -19,8 +19,7 @@ static bool isFieldEditable(const QChar& fieldSymbol)
     return fieldSymbol.isDigit();
 }
 
-BPMModel::BPMModel(QObject* parent)
-    : QAbstractListModel(parent)
+BPMModel::BPMModel(QObject* parent) : QAbstractListModel(parent)
 {
     initFieldInteractionController();
 
@@ -54,8 +53,10 @@ QVariant BPMModel::data(const QModelIndex& index, int role) const
     QChar ch = m_valueString[index.row()];
 
     switch (role) {
-    case rSymbol: return QVariant::fromValue(ch);
-    case rIsEditable: return isFieldEditable(ch);
+    case rSymbol:
+        return QVariant::fromValue(ch);
+    case rIsEditable:
+        return isFieldEditable(ch);
     }
 
     return QVariant();
@@ -63,10 +64,7 @@ QVariant BPMModel::data(const QModelIndex& index, int role) const
 
 QHash<int, QByteArray> BPMModel::roleNames() const
 {
-    static const QHash<int, QByteArray> roles = {
-        { rSymbol, "symbol" },
-        { rIsEditable, "editable" }
-    };
+    static const QHash<int, QByteArray> roles = {{rSymbol, "symbol"}, {rIsEditable, "editable"}};
 
     return roles;
 }
@@ -115,7 +113,7 @@ void BPMModel::setVisualItem(QQuickItem* item)
 
 void BPMModel::reloadFormatter()
 {
-    static const QString FORMAT = "1000bpm"; // translate
+    static const QString FORMAT = "1000bpm";  // translate
 
     m_formatter = std::make_shared<NumericFormatter>(FORMAT);
 
@@ -133,11 +131,14 @@ void BPMModel::initFieldInteractionController()
 {
     m_fieldsInteractionController = std::make_shared<FieldsInteractionController>(this);
 
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::currentEditedFieldIndexChanged,
-            this, &BPMModel::currentEditedFieldIndexChanged);
+    connect(
+        m_fieldsInteractionController.get(),
+        &FieldsInteractionController::currentEditedFieldIndexChanged,
+        this,
+        &BPMModel::currentEditedFieldIndexChanged
+    );
 
-    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged,
-            this, &BPMModel::setValue);
+    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged, this, &BPMModel::setValue);
 }
 
 void BPMModel::updateValueString()
@@ -154,7 +155,7 @@ void BPMModel::updateValueString()
                 m_valueString[i] = newValueString[i];
 
                 QModelIndex index = createIndex(i, 0);
-                emit dataChanged(index, index, { rSymbol });
+                emit dataChanged(index, index, {rSymbol});
             }
         }
     }

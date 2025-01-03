@@ -24,15 +24,15 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QFileOpenEvent>
-#include <QWindow>
 #include <QMimeData>
+#include <QWindow>
 
 #include "async/async.h"
 #include "audio/soundfonttypes.h"
 
 #include "defer.h"
-#include "translation.h"
 #include "log.h"
+#include "translation.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
@@ -127,8 +127,7 @@ void ApplicationActionController::onDropEvent(QDropEvent*)
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 {
     //! TODO AU4
-    if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow())
-        || event->type() == QEvent::Quit) {
+    if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow()) || event->type() == QEvent::Quit) {
         const bool accepted = quit();
         event->setAccepted(accepted);
         return true;
@@ -159,7 +158,8 @@ bool ApplicationActionController::quit()
     }
 
     m_quiting = true;
-    DEFER {
+    DEFER
+    {
         m_quiting = false;
     };
 
@@ -226,17 +226,21 @@ void ApplicationActionController::openPreferencesDialog()
 void ApplicationActionController::revertToFactorySettings()
 {
     std::string title = muse::trc("appshell", "Are you sure you want to revert to factory settings?");
-    std::string question = muse::trc("appshell",
-                                     "This action will reset all your app preferences and delete all custom palettes and custom shortcuts. "
-                                     "The list of recent scores will also be cleared.\n\n"
-                                     "This action will not delete any of your scores.");
+    std::string question = muse::trc(
+        "appshell",
+        "This action will reset all your app preferences and delete all custom palettes and custom shortcuts. "
+        "The list of recent scores will also be cleared.\n\n"
+        "This action will not delete any of your scores."
+    );
 
     int revertBtn = int(muse::IInteractive::Button::Apply);
-    muse::IInteractive::Result result = interactive()->warning(title, question,
-                                                               { interactive()->buttonData(muse::IInteractive::Button::Cancel),
-                                                                 muse::IInteractive::ButtonData(revertBtn, muse::trc("appshell", "Revert"),
-                                                                                                true) },
-                                                               revertBtn);
+    muse::IInteractive::Result result = interactive()->warning(
+        title,
+        question,
+        {interactive()->buttonData(muse::IInteractive::Button::Cancel),
+         muse::IInteractive::ButtonData(revertBtn, muse::trc("appshell", "Revert"), true)},
+        revertBtn
+    );
 
     if (result.standardButton() == muse::IInteractive::Button::Cancel) {
         return;
@@ -250,10 +254,13 @@ void ApplicationActionController::revertToFactorySettings()
     question = muse::trc("appshell", "Audacity needs to be restarted for these changes to take effect.");
 
     int restartBtn = int(muse::IInteractive::Button::Apply);
-    result = interactive()->question(title, question,
-                                     { interactive()->buttonData(muse::IInteractive::Button::Cancel),
-                                       muse::IInteractive::ButtonData(restartBtn, muse::trc("appshell", "Restart"), true) },
-                                     restartBtn);
+    result = interactive()->question(
+        title,
+        question,
+        {interactive()->buttonData(muse::IInteractive::Button::Cancel),
+         muse::IInteractive::ButtonData(restartBtn, muse::trc("appshell", "Restart"), true)},
+        restartBtn
+    );
 
     if (result.standardButton() == muse::IInteractive::Button::Cancel) {
         return;

@@ -27,4 +27,4 @@ public:
 };
 
 using IAudioRecordPtr = std::shared_ptr<IRecord>;
-}
+}  // namespace au::record

@@ -43,7 +43,6 @@ public:
     Q_INVOKABLE void resetToDefault();
 
 private:
-
     enum Roles {
         KeyRole = Qt::UserRole + 1,
         DescriptionRole,
@@ -58,6 +57,6 @@ private:
 
     QList<Settings::Item> m_items;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_ADVANCEDPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_ADVANCEDPREFERENCESMODEL_H

@@ -10,10 +10,10 @@
 
 #include "ui/iuiactionsregister.h"
 
+#include "internal/au3/au3record.h"
 #include "internal/recordconfiguration.h"
 #include "internal/recordcontroller.h"
 #include "internal/recorduiactions.h"
-#include "internal/au3/au3record.h"
 
 using namespace au::record;
 using namespace muse;

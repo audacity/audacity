@@ -3,15 +3,15 @@
 */
 #pragma once
 
-#include "iprojecthistory.h"
-#include "itrackeditinteraction.h"
-#include "iselectioncontroller.h"
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
-#include "actions/iactionsdispatcher.h"
 #include "actions/actionable.h"
+#include "actions/iactionsdispatcher.h"
+#include "async/asyncable.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
+#include "iprojecthistory.h"
+#include "iselectioncontroller.h"
+#include "itrackeditinteraction.h"
+#include "modularity/ioc.h"
 
 #include "../itrackeditactionscontroller.h"
 
@@ -103,4 +103,4 @@ private:
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
-}
+}  // namespace au::trackedit

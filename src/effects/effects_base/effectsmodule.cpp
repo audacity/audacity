@@ -5,23 +5,23 @@
 
 #include "libraries/lib-module-manager/PluginManager.h"
 
-#include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
+#include "ui/iuiactionsregister.h"
 
 #include "internal/effectconfigsettings.h"
-#include "internal/effectsprovider.h"
-#include "internal/effectsconfiguration.h"
-#include "internal/effectsactionscontroller.h"
-#include "internal/effectsuiactions.h"
-#include "internal/effectinstancesregister.h"
 #include "internal/effectexecutionscenario.h"
-#include "internal/realtimeeffectservice.h"
+#include "internal/effectinstancesregister.h"
 #include "internal/effectpresetsprovider.h"
 #include "internal/effectpresetsscenario.h"
+#include "internal/effectsactionscontroller.h"
+#include "internal/effectsconfiguration.h"
+#include "internal/effectsprovider.h"
+#include "internal/effectsuiactions.h"
+#include "internal/realtimeeffectservice.h"
 
+#include "view/effectsuiengine.h"
 #include "view/effectsviewregister.h"
 #include "view/effectviewloader.h"
-#include "view/effectsuiengine.h"
 
 using namespace au::effects;
 

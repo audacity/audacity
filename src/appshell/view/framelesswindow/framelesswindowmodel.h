@@ -52,6 +52,6 @@ signals:
 private:
     FramelessWindowController* m_controller = nullptr;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_FREMELESSWINDOWMODEL_H
+#endif  // AU_APPSHELL_FREMELESSWINDOWMODEL_H

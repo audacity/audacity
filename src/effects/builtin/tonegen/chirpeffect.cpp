@@ -5,11 +5,11 @@
 
 using namespace au::effects;
 
-const ComponentInterfaceSymbol ChirpEffect::Symbol{ XO("Chirp") };
+const ComponentInterfaceSymbol ChirpEffect::Symbol{XO("Chirp")};
 
-ChirpEffect::ChirpEffect()
-    : ToneEffect(Type::Chirp)
-{}
+ChirpEffect::ChirpEffect() : ToneEffect(Type::Chirp)
+{
+}
 
 ComponentInterfaceSymbol ChirpEffect::GetSymbol() const
 {

@@ -27,8 +27,7 @@
 using namespace au::projectscene;
 using namespace muse::actions;
 
-PlayCursorController::PlayCursorController(QObject* parent)
-    : QObject(parent)
+PlayCursorController::PlayCursorController(QObject* parent) : QObject(parent)
 {
 }
 

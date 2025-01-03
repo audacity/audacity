@@ -18,7 +18,6 @@ public:
     void resolveImports() override;
 
 private:
-
     std::shared_ptr<NyquistEffectsRepository> m_nyquistEffectsRepository;
 };
-}
+}  // namespace au::effects

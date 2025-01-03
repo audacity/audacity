@@ -46,6 +46,6 @@ private:
 
     QWidget* m_view = nullptr;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_SPLASHSCREEN_H
+#endif  // AU_APPSHELL_SPLASHSCREEN_H

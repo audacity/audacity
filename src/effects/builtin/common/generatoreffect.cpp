@@ -3,21 +3,19 @@
  */
 #include "generatoreffect.h"
 #include "libraries/lib-components/EffectInterface.h"
+#include "log.h"
 #include "playback/iaudiooutput.h"
 #include "trackedit/itrackeditproject.h"
-#include "log.h"
 
 using namespace au::effects;
 
-GeneratorEffect::GeneratorEffect(const double& t0, double& t1)
-    : m_t0{t0}
-    , m_t1{t1}
+GeneratorEffect::GeneratorEffect(const double& t0, double& t1) : m_t0{t0}, m_t1{t1}
 {
 }
 
 void GeneratorEffect::init(EffectSettings* settings)
 {
-    IF_ASSERT_FAILED(settings) {
+    IF_ASSERT_FAILED (settings) {
         return;
     }
     m_settings = settings;
@@ -67,8 +65,7 @@ bool GeneratorEffect::isApplyAllowed() const
 QString GeneratorEffect::durationFormat() const
 {
     if (m_settings) {
-        return QString::fromStdString(
-            m_settings->extra.GetDurationFormat().GET().ToStdString());
+        return QString::fromStdString(m_settings->extra.GetDurationFormat().GET().ToStdString());
     }
     return "";
 }
@@ -76,6 +73,6 @@ QString GeneratorEffect::durationFormat() const
 void GeneratorEffect::setDurationFormat(const QString& newDurationFormat)
 {
     if (m_settings) {
-        m_settings->extra.SetDurationFormat(NumericFormatID { newDurationFormat.toStdString() });
+        m_settings->extra.SetDurationFormat(NumericFormatID{newDurationFormat.toStdString()});
     }
 }

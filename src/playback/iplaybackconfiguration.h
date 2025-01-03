@@ -17,4 +17,4 @@ public:
 
     virtual muse::draw::Color playColor() const = 0;
 };
-}
+}  // namespace au::playback

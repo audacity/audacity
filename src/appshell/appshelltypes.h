@@ -51,14 +51,13 @@ static const DockName PLAYBACK_TOOLBAR_NAME("playbackToolBar");
 // Other:
 static const DockName PROJECT_STATUSBAR_NAME("projectStatusBar");
 
-enum class StartupModeType
-{
+enum class StartupModeType {
     StartEmpty,
     ContinueLastSession,
     StartWithNewScore,
     StartWithScore,
     Recovery
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_APPSHELLTYPES_H
+#endif  // AU_APPSHELL_APPSHELLTYPES_H

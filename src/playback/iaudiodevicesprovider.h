@@ -32,4 +32,4 @@ public:
 
     virtual void handleDeviceChange() = 0;
 };
-}
+}  // namespace au::playback

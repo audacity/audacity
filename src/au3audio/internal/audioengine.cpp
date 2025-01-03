@@ -3,13 +3,13 @@
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
-#include "libraries/lib-track/Track.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
+#include "libraries/lib-track/Track.h"
 
 #include "au3wrap/au3types.h"
 
-#include "defaultplaybackpolicy.h"
 #include "au3audioiolistener.h"
+#include "defaultplaybackpolicy.h"
 
 #include "realfn.h"
 
@@ -17,7 +17,7 @@ using namespace au::audio;
 
 std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
 
-static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
+static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope{
     [](au::au3::Au3Project& project, bool newDefault) -> AudioIOStartStreamOptions {
         auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
         options.listener = s_audioIOListener;
@@ -29,12 +29,16 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
         if (newDefault) {
             const double trackEndTime = TrackList::Get(project).GetEndTime();
             const double loopEndTime = playRegion.GetEnd();
-            options.policyFactory = [&project, trackEndTime, loopEndTime](
-                const AudioIOStartStreamOptions& options) -> std::unique_ptr<PlaybackPolicy>
-            {
-                return std::make_unique<DefaultPlaybackPolicy>(project,
-                                                               trackEndTime, loopEndTime, options.pStartTime,
-                                                               options.loopEnabled, options.variableSpeed);
+            options.policyFactory = [&project, trackEndTime, loopEndTime](const AudioIOStartStreamOptions& options
+                                    ) -> std::unique_ptr<PlaybackPolicy> {
+                return std::make_unique<DefaultPlaybackPolicy>(
+                    project,
+                    trackEndTime,
+                    loopEndTime,
+                    options.pStartTime,
+                    options.loopEnabled,
+                    options.variableSpeed
+                );
             };
 
             double startTime = playRegion.GetStart();
@@ -42,7 +46,8 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
         }
 
         return options;
-    } };
+    }
+};
 
 void AudioEngine::init()
 {
@@ -54,8 +59,13 @@ bool AudioEngine::isBusy() const
     return AudioIO::Get()->IsBusy();
 }
 
-int AudioEngine::startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime,
-                             const AudioIOStartStreamOptions& options)
+int AudioEngine::startStream(
+    const TransportSequences& sequences,
+    double startTime,
+    double endTime,
+    double mixerEndTime,
+    const AudioIOStartStreamOptions& options
+)
 {
     return AudioIO::Get()->StartStream(sequences, startTime, endTime, mixerEndTime, options);
 }

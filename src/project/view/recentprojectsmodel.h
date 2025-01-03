@@ -26,10 +26,10 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
+#include "io/ifilesystem.h"
 #include "iprojectconfiguration.h"
 #include "irecentfilescontroller.h"
-#include "io/ifilesystem.h"
+#include "modularity/ioc.h"
 
 namespace au::project {
 class RecentProjectsModel : public AbstractProjectsModel, public muse::async::Asyncable
@@ -51,6 +51,6 @@ private:
     void updateRecentProjects();
     void setRecentProjects(const std::vector<QVariantMap>& items);
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_RECENTPROJECTSMODEL_H
+#endif  // AU_PROJECT_RECENTPROJECTSMODEL_H

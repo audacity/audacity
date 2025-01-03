@@ -36,4 +36,4 @@ public:
 
     MOCK_METHOD(muse::Ret, playTracks, (TrackList&, double, double, const PlayTracksOptions&), (override));
 };
-}
+}  // namespace au::playback

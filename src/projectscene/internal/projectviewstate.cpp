@@ -34,7 +34,7 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     TrackData d;
     d.height.val = DEFAULT_HEIGHT;
     d.collapsed.val = false;
-    return m_tracks.insert({ trackId, d }).first->second;
+    return m_tracks.insert({trackId, d}).first->second;
 }
 
 muse::ValCh<int> ProjectViewState::trackHeight(const trackedit::TrackId& trackId) const

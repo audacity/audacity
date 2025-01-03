@@ -62,4 +62,4 @@ public:
     virtual muse::async::Channel<secs_t> dataSelectedEndTimeChanged() const = 0;
     virtual muse::async::Channel<secs_t> dataSelectedEndTimeSelected() const = 0;
 };
-}
+}  // namespace au::trackedit

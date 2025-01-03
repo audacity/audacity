@@ -4,11 +4,11 @@
 #ifndef AU_PLAYBACK_IPLAYBACKCONTROLLER_H
 #define AU_PLAYBACK_IPLAYBACKCONTROLLER_H
 
-#include "modularity/imoduleinterface.h"
-#include "async/notification.h"
-#include "async/channel.h"
-#include "global/progress.h"
 #include "actions/actiontypes.h"
+#include "async/channel.h"
+#include "async/notification.h"
+#include "global/progress.h"
+#include "modularity/imoduleinterface.h"
 
 #include "playbacktypes.h"
 
@@ -47,6 +47,6 @@ public:
 
     virtual muse::Progress loadingProgress() const = 0;
 };
-}
+}  // namespace au::playback
 
-#endif // AU_PLAYBACK_IPLAYBACKCONTROLLER_H
+#endif  // AU_PLAYBACK_IPLAYBACKCONTROLLER_H

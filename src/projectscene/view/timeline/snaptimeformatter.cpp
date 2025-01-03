@@ -32,13 +32,13 @@ static bool isBeatsSnap(SnapType type)
 static int timeDivisor(SnapType type)
 {
     static const std::map<SnapType, int> divisors = {
-        { SnapType::Half, 2 },
-        { SnapType::Quarter, 4 },
-        { SnapType::Eighth, 8 },
-        { SnapType::Sixteenth, 16 },
-        { SnapType::ThirtySecond, 32 },
-        { SnapType::SixtyFourth, 64 },
-        { SnapType::HundredTwentyEighth, 128 }
+        {SnapType::Half, 2},
+        {SnapType::Quarter, 4},
+        {SnapType::Eighth, 8},
+        {SnapType::Sixteenth, 16},
+        {SnapType::ThirtySecond, 32},
+        {SnapType::SixtyFourth, 64},
+        {SnapType::HundredTwentyEighth, 128}
     };
 
     return muse::value(divisors, type, 1);
@@ -58,12 +58,8 @@ static bool isTimeSnap(SnapType type)
 
 static double timeMultiplier(SnapType type)
 {
-    static const std::map<SnapType, int> multipliers = {
-        { SnapType::Seconds, 1.0 },
-        { SnapType::Deciseconds, 10.0 },
-        { SnapType::Centiseconds, 100.0 },
-        { SnapType::Milliseconds, 1000.0 }
-    };
+    static const std::map<SnapType, int> multipliers =
+        {{SnapType::Seconds, 1.0}, {SnapType::Deciseconds, 10.0}, {SnapType::Centiseconds, 100.0}, {SnapType::Milliseconds, 1000.0}};
 
     return muse::value(multipliers, type, 1.0);
 }
@@ -75,13 +71,8 @@ static bool isSamplesSnap(SnapType type)
 
 static bool isFrameSnap(SnapType type)
 {
-    static const std::vector<SnapType> types = {
-        SnapType::FilmFrames,
-        SnapType::NTSCFrames,
-        SnapType::NTSCFramesDrop,
-        SnapType::PALFrames,
-        SnapType::CDDAFrames
-    };
+    static const std::vector<SnapType> types =
+        {SnapType::FilmFrames, SnapType::NTSCFrames, SnapType::NTSCFramesDrop, SnapType::PALFrames, SnapType::CDDAFrames};
 
     return muse::contains(types, type);
 }
@@ -89,11 +80,11 @@ static bool isFrameSnap(SnapType type)
 static double frameMultiplier(SnapType type)
 {
     static const std::map<SnapType, int> rates = {
-        { SnapType::FilmFrames, 24.0 },
-        { SnapType::NTSCFrames, 30.0 / 1.001 },
-        { SnapType::NTSCFramesDrop, 30.0 / 1.001 },
-        { SnapType::PALFrames, 25.0 },
-        { SnapType::CDDAFrames, 75.0 }
+        {SnapType::FilmFrames, 24.0},
+        {SnapType::NTSCFrames, 30.0 / 1.001},
+        {SnapType::NTSCFramesDrop, 30.0 / 1.001},
+        {SnapType::PALFrames, 25.0},
+        {SnapType::CDDAFrames, 75.0}
     };
 
     return muse::value(rates, type, 1);
@@ -109,8 +100,7 @@ muse::secs_t SnapTimeFormatter::snapTime(muse::secs_t time, const Snap& snap, tr
     return 0.0;
 }
 
-muse::secs_t SnapTimeFormatter::singleStep(muse::secs_t time, const Snap& snap, Direction direction,
-                                           trackedit::TimeSignature timeSig) const
+muse::secs_t SnapTimeFormatter::singleStep(muse::secs_t time, const Snap& snap, Direction direction, trackedit::TimeSignature timeSig) const
 {
     double multiplier = snapTypeMultiplier(snap.type, snap.isSnapTriplets, timeSig);
 

@@ -3,15 +3,15 @@
 */
 #pragma once
 
+#include "context/iglobalcontext.h"
 #include "itrackplaybackcontrol.h"
 #include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 
 #include "au3wrap/au3types.h"
 
 namespace au::playback {
-using au::audio::volume_dbfs_t;
 using au::audio::balance_t;
+using au::audio::volume_dbfs_t;
 
 class Au3TrackPlaybackControl : public ITrackPlaybackControl
 {
@@ -28,4 +28,4 @@ public:
 private:
     au3::Au3Project& projectRef() const;
 };
-}
+}  // namespace au::playback

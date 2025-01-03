@@ -5,18 +5,18 @@
 
 #include <QQuickPaintedItem>
 
-#include "modularity/ioc.h"
 #include "iwavepainter.h"
+#include "modularity/ioc.h"
 
-#include "types/projectscenetypes.h"
 #include "../timeline/timelinecontext.h"
+#include "types/projectscenetypes.h"
 
 class WaveClipItem;
 namespace au::projectscene {
 class WaveView : public QQuickPaintedItem
 {
     Q_OBJECT
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(TimelineContext* context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
     Q_PROPERTY(QColor clipColor READ clipColor WRITE setClipColor NOTIFY clipColorChanged FINAL)
     Q_PROPERTY(bool clipSelected READ clipSelected WRITE setClipSelected NOTIFY clipSelectedChanged FINAL)
@@ -56,7 +56,6 @@ signals:
     void channelHeightRatioChanged();
 
 private:
-
     void updateView();
 
     TimelineContext* m_context = nullptr;
@@ -67,4 +66,4 @@ private:
     bool m_clipSelected = false;
     ClipTime m_clipTime;
 };
-}
+}  // namespace au::projectscene

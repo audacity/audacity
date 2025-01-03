@@ -25,11 +25,11 @@
 
 #include <QList>
 
-#include "modularity/imodulesetup.h"
-#include "modularity/ioc.h"
+#include "appshell/iappshellconfiguration.h"
 #include "appshell/istartupscenario.h"
 #include "audioplugins/iregisteraudiopluginsscenario.h"
-#include "appshell/iappshellconfiguration.h"
+#include "modularity/imodulesetup.h"
+#include "modularity/ioc.h"
 
 #include "commandlineparser.h"
 
@@ -54,6 +54,6 @@ private:
 
     QList<muse::modularity::IModuleSetup*> m_modules;
 };
-}
+}  // namespace au::app
 
-#endif // MU_APP_APP_H
+#endif  // MU_APP_APP_H

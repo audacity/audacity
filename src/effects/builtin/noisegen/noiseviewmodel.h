@@ -29,7 +29,6 @@ signals:
     void typeChanged();
 
 private:
-
     void doEmitSignals() override;
 };
-}
+}  // namespace au::effects

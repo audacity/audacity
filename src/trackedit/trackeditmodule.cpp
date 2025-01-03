@@ -23,15 +23,15 @@
 
 #include "modularity/ioc.h"
 
-#include "internal/trackedituiactions.h"
 #include "internal/trackeditactionscontroller.h"
 #include "internal/trackeditinteraction.h"
+#include "internal/trackedituiactions.h"
 
-#include "internal/au3/au3trackeditproject.h"
 #include "internal/au3/au3interaction.h"
-#include "internal/au3/au3selectioncontroller.h"
 #include "internal/au3/au3projecthistory.h"
+#include "internal/au3/au3selectioncontroller.h"
 #include "internal/au3/au3trackeditclipboard.h"
+#include "internal/au3/au3trackeditproject.h"
 
 #include "ui/iuiactionsregister.h"
 

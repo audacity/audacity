@@ -25,16 +25,16 @@
 
 #include <QObject>
 
-#include "async/asyncable.h"
 #include "actions/actionable.h"
+#include "async/asyncable.h"
 #include "uicomponents/view/menuitem.h"
 
-#include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
+#include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
+#include "notation/inotationconfiguration.h"
 #include "ui/iuiactionsregister.h"
 #include "workspace/iworkspaceconfiguration.h"
-#include "notation/inotationconfiguration.h"
-#include "context/iglobalcontext.h"
 
 #include "notation/notationtypes.h"
 
@@ -121,6 +121,6 @@ private:
 
     QVariantList menuItemListToVariantList(const uicomponents::MenuItemList& list) const;
 };
-}
+}  // namespace au::appshell
 
-#endif // MU_NOTATION_NOTATIONSTATUSBARMODEL_H
+#endif  // MU_NOTATION_NOTATIONSTATUSBARMODEL_H

@@ -6,10 +6,9 @@ using namespace au::effects;
 // used for fadein/out needed to remove clicking noise
 static const double kFadeInOut = 250.0;
 
-const ComponentInterfaceSymbol DtmfGenerator::Symbol { XO("DTMF Tones") };
+const ComponentInterfaceSymbol DtmfGenerator::Symbol{XO("DTMF Tones")};
 
-DtmfGenerator::DtmfGenerator()
-    : GeneratorEffect(mT0, mT1)
+DtmfGenerator::DtmfGenerator() : GeneratorEffect(mT0, mT1)
 {
 }
 
@@ -41,13 +40,12 @@ EffectType DtmfGenerator::GetType() const
     return EffectTypeGenerate;
 }
 
-bool DtmfGenerator::Instance::ProcessInitialize(
-    EffectSettings& settings, double sampleRate, ChannelNames)
+bool DtmfGenerator::Instance::ProcessInitialize(EffectSettings& settings, double sampleRate, ChannelNames)
 {
     mSampleRate = sampleRate;
 
     auto& dtmfSettings = GetSettings(settings);
-    if (dtmfSettings.dtmfNTones == 0) { // Bail if no DTFM sequence.
+    if (dtmfSettings.dtmfNTones == 0) {  // Bail if no DTFM sequence.
         return false;
     }
 
@@ -62,27 +60,23 @@ bool DtmfGenerator::Instance::ProcessInitialize(
 
     auto nT0 = (sampleCount)floor(mT0 * mSampleRate + 0.5);
     auto nT1 = (sampleCount)floor((mT0 + duration) * mSampleRate + 0.5);
-    numSamplesSequence
-        =nT1 - nT0; // needs to be exact number of samples selected
+    numSamplesSequence = nT1 - nT0;  // needs to be exact number of samples selected
 
     // make under-estimates if anything, and then redistribute the few remaining
     // samples
     numSamplesTone = sampleCount(floor(dtmfSettings.dtmfTone * mSampleRate));
-    numSamplesSilence
-        =sampleCount(floor(dtmfSettings.dtmfSilence * mSampleRate));
+    numSamplesSilence = sampleCount(floor(dtmfSettings.dtmfSilence * mSampleRate));
 
     // recalculate the sum, and spread the difference - due to approximations.
     // Since diff should be in the order of "some" samples, a division (resulting
     // in zero) is not sufficient, so we add the additional remaining samples in
     // each tone/silence block, at least until available.
-    diff = numSamplesSequence - (dtmfSettings.dtmfNTones * numSamplesTone)
-           - (dtmfSettings.dtmfNTones - 1) * numSamplesSilence;
-    while (diff > 2 * dtmfSettings.dtmfNTones - 1)
-    { // more than one per thingToBeGenerated
-      // in this case, both numSamplesTone and numSamplesSilence would change,
-      // so it makes sense
-      //  to recalculate diff here, otherwise just keep the value we already
-      //  have
+    diff = numSamplesSequence - (dtmfSettings.dtmfNTones * numSamplesTone) - (dtmfSettings.dtmfNTones - 1) * numSamplesSilence;
+    while (diff > 2 * dtmfSettings.dtmfNTones - 1) {  // more than one per thingToBeGenerated
+                                                      // in this case, both numSamplesTone and numSamplesSilence would change,
+                                                      // so it makes sense
+                                                      //  to recalculate diff here, otherwise just keep the value we already
+                                                      //  have
 
         // should always be the case that dtmfNTones>1, as if 0, we don't even
         // start processing, and with 1 there is no difference to spread (no
@@ -90,21 +84,18 @@ bool DtmfGenerator::Instance::ProcessInitialize(
         wxASSERT(dtmfSettings.dtmfNTones > 1);
         numSamplesTone += (diff / (dtmfSettings.dtmfNTones));
         numSamplesSilence += (diff / (dtmfSettings.dtmfNTones - 1));
-        diff = numSamplesSequence - (dtmfSettings.dtmfNTones * numSamplesTone)
-               - (dtmfSettings.dtmfNTones - 1) * numSamplesSilence;
+        diff = numSamplesSequence - (dtmfSettings.dtmfNTones * numSamplesTone) - (dtmfSettings.dtmfNTones - 1) * numSamplesSilence;
     }
-    wxASSERT(diff >= 0); // should never be negative
+    wxASSERT(diff >= 0);  // should never be negative
 
-    curSeqPos = -1; // pointer to string in dtmfSequence
+    curSeqPos = -1;  // pointer to string in dtmfSequence
     isTone = false;
     numRemaining = 0;
 
     return true;
 }
 
-size_t DtmfGenerator::Instance::ProcessBlock(
-    EffectSettings& settings, const float* const*, float* const* outbuf,
-    size_t size)
+size_t DtmfGenerator::Instance::ProcessBlock(EffectSettings& settings, const float* const*, float* const* outbuf, size_t size)
 {
     auto& dtmfSettings = GetSettings(settings);
     float* buffer = outbuf[0];
@@ -131,8 +122,7 @@ size_t DtmfGenerator::Instance::ProcessBlock(
     // generation you ended up with 3.999s or in other units: 3 seconds and 44097
     // samples.
     //
-    while (size)
-    {
+    while (size) {
         if (numRemaining == 0) {
             isTone = !isTone;
 
@@ -155,8 +145,14 @@ size_t DtmfGenerator::Instance::ProcessBlock(
             // generate the tone and append
             assert(curSeqPos < dtmfSettings.dtmfNTones);
             MakeDtmfTone(
-                buffer, len, mSampleRate, dtmfSettings.dtmfSequence[curSeqPos],
-                curTonePos, numSamplesTone, dtmfSettings.dtmfAmplitude);
+                buffer,
+                len,
+                mSampleRate,
+                dtmfSettings.dtmfSequence[curSeqPos],
+                curTonePos,
+                numSamplesTone,
+                dtmfSettings.dtmfAmplitude
+            );
             curTonePos += len;
         } else {
             memset(buffer, 0, sizeof(float) * len);
@@ -205,10 +201,9 @@ void DtmfSettings::Recalculate(EffectSettings& settings)
             // which can be simplified in the one below.
             // Then just take the part that belongs to tone or silence.
             //
-            double slot = extra.GetDuration()
-                          / ((double)dtmfNTones + (dtmfDutyCycle / 100.0) - 1);
-            dtmfTone = slot * (dtmfDutyCycle / 100.0);         // seconds
-            dtmfSilence = slot * (1.0 - (dtmfDutyCycle / 100.0)); // seconds
+            double slot = extra.GetDuration() / ((double)dtmfNTones + (dtmfDutyCycle / 100.0) - 1);
+            dtmfTone = slot * (dtmfDutyCycle / 100.0);             // seconds
+            dtmfSilence = slot * (1.0 - (dtmfDutyCycle / 100.0));  // seconds
 
             // Note that in the extremes we have:
             // - dutyCycle=100%, this means no silence, so each tone will measure
@@ -225,9 +220,7 @@ void DtmfSettings::Recalculate(EffectSettings& settings)
     DtmfGenerator::GetSettings(settings) = *this;
 }
 
-bool DtmfGenerator::MakeDtmfTone(
-    float* buffer, size_t len, float fs, char tone, sampleCount last,
-    sampleCount total, float amplitude)
+bool DtmfGenerator::MakeDtmfTone(float* buffer, size_t len, float fs, char tone, sampleCount last, sampleCount total, float amplitude)
 {
     /*
       --------------------------------------------
@@ -386,9 +379,7 @@ bool DtmfGenerator::MakeDtmfTone(
     // now generate the wave: 'last' is used to avoid phase errors
     // when inside the inner for loop of the Process() function.
     for (decltype(len) i = 0; i < len; i++) {
-        buffer[i]
-            =amplitude * 0.5
-              * (sin(A * (i + last).as_double()) + sin(B * (i + last).as_double()));
+        buffer[i] = amplitude * 0.5 * (sin(A * (i + last).as_double()) + sin(B * (i + last).as_double()));
     }
 
     // generate a fade-in of duration 1/250th of second

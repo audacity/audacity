@@ -16,10 +16,8 @@ public:
 
     unsigned GetAudioInCount() const override;
     unsigned GetAudioOutCount() const override;
-    bool ProcessInitialize(
-        EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
-    size_t ProcessBlock(
-        EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
+    bool ProcessInitialize(EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
+    size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
 
 protected:
     // EffectFade implementation
@@ -51,4 +49,4 @@ public:
     ComponentInterfaceSymbol GetSymbol() const override;
     TranslatableString GetDescription() const override;
 };
-}
+}  // namespace au::effects

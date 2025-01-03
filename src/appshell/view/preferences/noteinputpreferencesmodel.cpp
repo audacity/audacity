@@ -26,8 +26,7 @@
 
 using namespace au::appshell;
 
-NoteInputPreferencesModel::NoteInputPreferencesModel(QObject* parent)
-    : QObject(parent)
+NoteInputPreferencesModel::NoteInputPreferencesModel(QObject* parent) : QObject(parent)
 {
 }
 

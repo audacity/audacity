@@ -16,14 +16,14 @@ void EffectsActionsController::init()
 {
     m_uiActions = std::make_shared<EffectsUiActions>(shared_from_this());
 
-    effectsProvider()->effectMetaListChanged().onNotify(this, [this](){
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
         registerActions();
     });
 
     registerActions();
 
     effectExecutionScenario()->lastProcessorIsNowAvailable().onNotify(this, [this] {
-        m_canReceiveActionsChanged.send({ "repeat-last-effect" });
+        m_canReceiveActionsChanged.send({"repeat-last-effect"});
     });
 }
 
@@ -57,7 +57,7 @@ void EffectsActionsController::registerActions()
 void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuery& q)
 {
     muse::String effectId = muse::String::fromStdString(q.param("effectId").toString());
-    IF_ASSERT_FAILED(!effectId.empty()) {
+    IF_ASSERT_FAILED (!effectId.empty()) {
         return;
     }
 
@@ -75,7 +75,7 @@ void EffectsActionsController::repeatLastEffect()
 void EffectsActionsController::addRealtimeEffect(const muse::actions::ActionData& args)
 {
     const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
+    IF_ASSERT_FAILED (project) {
         // Command issued without an open project ?..
         return;
     }
@@ -88,7 +88,7 @@ void EffectsActionsController::addRealtimeEffect(const muse::actions::ActionData
 void EffectsActionsController::removeRealtimeEffect(const muse::actions::ActionData& args)
 {
     const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
+    IF_ASSERT_FAILED (project) {
         // Command issued without an open project ?..
         return;
     }
@@ -100,12 +100,12 @@ void EffectsActionsController::removeRealtimeEffect(const muse::actions::ActionD
 
 void EffectsActionsController::replaceRealtimeEffect(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 3) {
+    IF_ASSERT_FAILED (args.count() == 3) {
         return;
     }
 
     const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
+    IF_ASSERT_FAILED (project) {
         // Command issued without an open project ?..
         return;
     }
@@ -119,7 +119,7 @@ void EffectsActionsController::replaceRealtimeEffect(const muse::actions::Action
 
 void EffectsActionsController::applyPreset(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 2) {
+    IF_ASSERT_FAILED (args.count() == 2) {
         return;
     }
 
@@ -130,7 +130,7 @@ void EffectsActionsController::applyPreset(const muse::actions::ActionData& args
 
 void EffectsActionsController::saveAsPreset(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 
@@ -140,7 +140,7 @@ void EffectsActionsController::saveAsPreset(const muse::actions::ActionData& arg
 
 void EffectsActionsController::deletePreset(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 2) {
+    IF_ASSERT_FAILED (args.count() == 2) {
         return;
     }
 
@@ -151,7 +151,7 @@ void EffectsActionsController::deletePreset(const muse::actions::ActionData& arg
 
 void EffectsActionsController::importPreset(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 
@@ -161,7 +161,7 @@ void EffectsActionsController::importPreset(const muse::actions::ActionData& arg
 
 void EffectsActionsController::exportPreset(const muse::actions::ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 

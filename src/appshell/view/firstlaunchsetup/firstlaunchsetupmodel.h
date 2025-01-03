@@ -24,9 +24,9 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
 #include "iappshellconfiguration.h"
 #include "iinteractive.h"
+#include "modularity/ioc.h"
 
 namespace au::appshell {
 class FirstLaunchSetupModel : public QObject
@@ -78,6 +78,6 @@ private:
     QList<Page> m_pages;
     int m_currentPageIndex = -1;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_FIRSTLAUNCHSETUPMODEL_H
+#endif  // AU_APPSHELL_FIRSTLAUNCHSETUPMODEL_H

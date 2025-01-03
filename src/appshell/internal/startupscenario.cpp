@@ -23,8 +23,8 @@
 #include "startupscenario.h"
 
 #include "async/async.h"
-#include "translation.h"
 #include "log.h"
+#include "translation.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
@@ -108,7 +108,7 @@ void StartupScenario::runAfterSplashScreen()
     }
 
     StartupModeType modeType = resolveStartupModeType();
-//! TODO AU4
+    //! TODO AU4
     // bool isMainInstance = multiInstancesProvider()->isMainInstance();
     if (/*isMainInstance && */ sessionsManager()->hasProjectsForRestore()) {
         modeType = StartupModeType::Recovery;
@@ -171,9 +171,7 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
         restoreLastSession();
         break;
     case StartupModeType::StartWithScore: {
-        ProjectFile file = m_startupScoreFile.isValid()
-                           ? m_startupScoreFile
-                           : ProjectFile(configuration()->startupScorePath());
+        ProjectFile file = m_startupScoreFile.isValid() ? m_startupScoreFile : ProjectFile(configuration()->startupScorePath());
         openScore(file);
     } break;
     }
@@ -205,9 +203,11 @@ void StartupScenario::openScore(const ProjectFile& file)
 
 void StartupScenario::restoreLastSession()
 {
-    muse::IInteractive::Result result = interactive()->question(muse::trc("appshell", "The previous session quit unexpectedly."),
-                                                                muse::trc("appshell", "Do you want to restore the session?"),
-                                                                { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes });
+    muse::IInteractive::Result result = interactive()->question(
+        muse::trc("appshell", "The previous session quit unexpectedly."),
+        muse::trc("appshell", "Do you want to restore the session?"),
+        {muse::IInteractive::Button::No, muse::IInteractive::Button::Yes}
+    );
 
     if (result.button() == static_cast<int>(muse::IInteractive::Button::Yes)) {
         sessionsManager()->restore();

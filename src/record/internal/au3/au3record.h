@@ -6,9 +6,9 @@
 
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "au3audio/iaudioengine.h"
+#include "context/iglobalcontext.h"
+#include "modularity/ioc.h"
 #include "trackedit/iprojecthistory.h"
 
 #include "au3wrap/au3types.h"
@@ -51,8 +51,14 @@ private:
 
     bool canStopAudioStream() const;
 
-    muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
-                       const AudioIOStartStreamOptions& options);
+    muse::Ret doRecord(
+        au3::Au3Project& project,
+        const TransportSequences& sequences,
+        double t0,
+        double t1,
+        bool altAppearance,
+        const AudioIOStartStreamOptions& options
+    );
     void cancelRecording();
     void commitRecording();
 
@@ -63,4 +69,4 @@ private:
     IAudioInputPtr m_audioInput;
     RecordData m_recordData;
 };
-}
+}  // namespace au::record

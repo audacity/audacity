@@ -5,8 +5,8 @@
 
 #include <QString>
 
-#include "types.h"
 #include "timecodeformatter.h"
+#include "types.h"
 
 namespace au::playback {
 class NumericFormatter : public TimecodeFormatter
@@ -30,4 +30,4 @@ protected:
 
     NumericType m_type = NumericType::Time;
 };
-}
+}  // namespace au::playback

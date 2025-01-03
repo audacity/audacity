@@ -3,16 +3,16 @@
  */
 #pragma once
 
-#include "modularity/ioc.h"
+#include <memory>
+#include <unordered_map>
 #include "async/asyncable.h"
-#include "irealtimeeffectservice.h"
+#include "context/iglobalcontext.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effectstypes.h"
-#include "context/iglobalcontext.h"
-#include "trackedit/iprojecthistory.h"
+#include "irealtimeeffectservice.h"
 #include "libraries/lib-utility/Observer.h"
-#include <unordered_map>
-#include <memory>
+#include "modularity/ioc.h"
+#include "trackedit/iprojecthistory.h"
 
 struct TrackListEvent;
 
@@ -27,8 +27,9 @@ using Au3Project = ::AudacityProject;
 }
 
 namespace au::effects {
-class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asyncable,
-    public std::enable_shared_from_this<RealtimeEffectService>
+class RealtimeEffectService : public IRealtimeEffectService,
+                              muse::async::Asyncable,
+                              public std::enable_shared_from_this<RealtimeEffectService>
 {
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
@@ -60,4 +61,4 @@ private:
     Observer::Subscription m_tracklistSubscription;
     std::unordered_map<TrackId, Observer::Subscription> m_rtEffectSubscriptions;
 };
-}
+}  // namespace au::effects

@@ -2,9 +2,9 @@
 
 #include "uicomponents/view/abstractmenumodel.h"
 
-#include "modularity/ioc.h"
-#include "effects/effects_base/ieffectpresetsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
+#include "effects/effects_base/ieffectpresetsprovider.h"
+#include "modularity/ioc.h"
 
 namespace au::effects {
 class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
@@ -16,7 +16,6 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:
-
     QString instanceId_prop() const;
     void setInstanceId_prop(const QString& newInstanceId);
 
@@ -26,9 +25,8 @@ signals:
     void instanceIdChanged();
 
 private:
-
     void reload(const EffectId& effectId, const EffectInstanceId& instanceId);
 
     QString m_instanceId;
 };
-}
+}  // namespace au::effects

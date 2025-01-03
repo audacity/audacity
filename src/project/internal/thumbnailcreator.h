@@ -22,4 +22,4 @@ private:
     muse::async::Channel<bool> m_thumbnailCreated;
 };
 
-}
+}  // namespace au::project

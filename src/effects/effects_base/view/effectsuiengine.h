@@ -29,4 +29,4 @@ private:
 
     QQmlEngine* m_engine = nullptr;
 };
-}
+}  // namespace au::effects

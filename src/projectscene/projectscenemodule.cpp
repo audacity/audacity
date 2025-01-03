@@ -7,42 +7,42 @@
 
 #include "types/projectscenetypes.h"
 
-#include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
+#include "ui/iuiactionsregister.h"
 #include "ui/uitypes.h"
 
-#include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
 #include "internal/projectsceneconfiguration.h"
+#include "internal/projectsceneuiactions.h"
 #include "internal/projectviewstatecreator.h"
 
-#include "view/common/tracksviewstatemodel.h"
 #include "view/common/customcursor.h"
 #include "view/common/insertsilencemodel.h"
+#include "view/common/tracksviewstatemodel.h"
 
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/toolbars/undoredotoolbarmodel.h"
 
-#include "view/trackspanel/realtimeeffectmenumodel.h"
 #include "view/trackspanel/realtimeeffectlistmodel.h"
-#include "view/trackspanel/trackslistmodel.h"
+#include "view/trackspanel/realtimeeffectmenumodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
+#include "view/trackspanel/trackslistmodel.h"
 
-#include "view/clipsview/trackslistclipsmodel.h"
-#include "view/clipsview/clipslistmodel.h"
-#include "view/clipsview/cliplistitem.h"
-#include "view/clipsview/waveview.h"
 #include "view/clipsview/au3/au3wavepainter.h"
-#include "view/clipsview/clipcontextmenumodel.h"
-#include "view/clipsview/multiclipcontextmenumodel.h"
 #include "view/clipsview/canvascontextmenumodel.h"
+#include "view/clipsview/clipcontextmenumodel.h"
+#include "view/clipsview/cliplistitem.h"
+#include "view/clipsview/clipslistmodel.h"
+#include "view/clipsview/multiclipcontextmenumodel.h"
+#include "view/clipsview/pitchandspeedchangemodel.h"
 #include "view/clipsview/selectioncontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
-#include "view/clipsview/pitchandspeedchangemodel.h"
+#include "view/clipsview/trackslistclipsmodel.h"
+#include "view/clipsview/waveview.h"
 
 #include "view/timeline/timelinecontext.h"
-#include "view/timeline/timelineruler.h"
 #include "view/timeline/timelinecontextmenumodel.h"
+#include "view/timeline/timelineruler.h"
 
 #include "view/timeline/gridlines.h"
 
@@ -51,9 +51,9 @@
 
 #include "view/statusbar/selectionstatusmodel.h"
 
-#include "view/toolbars/playbacktoolbarmodel.h"
-#include "view/toolbars/playbacktoolbarcustomisemodel.h"
 #include "view/toolbars/playbacktoolbarcustomiseitem.h"
+#include "view/toolbars/playbacktoolbarcustomisemodel.h"
+#include "view/toolbars/playbacktoolbarmodel.h"
 
 using namespace au::projectscene;
 using namespace muse::modularity;
@@ -94,10 +94,11 @@ void ProjectSceneModule::resolveImports()
     }
     auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerQmlUri(muse::Uri("audacity://projectscene/editpitchandspeed"),
-                           "Audacity/ProjectScene/clipsview/pitchandspeed/PitchAndSpeedChangeDialog.qml");
-        ir->registerQmlUri(muse::Uri("audacity://projectscene/insertsilence"),
-                           "Audacity/ProjectScene/common/InsertSilence.qml");
+        ir->registerQmlUri(
+            muse::Uri("audacity://projectscene/editpitchandspeed"),
+            "Audacity/ProjectScene/clipsview/pitchandspeed/PitchAndSpeedChangeDialog.qml"
+        );
+        ir->registerQmlUri(muse::Uri("audacity://projectscene/insertsilence"), "Audacity/ProjectScene/common/InsertSilence.qml");
     }
 }
 
@@ -118,8 +119,13 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<UndoRedoToolBarModel>("Audacity.ProjectScene", 1, 0, "UndoRedoToolBarModel");
     qmlRegisterType<PlaybackToolBarModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarModel");
     qmlRegisterType<PlaybackToolBarCustomiseModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseModel");
-    qmlRegisterUncreatableType<PlaybackToolBarCustomiseItem>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseItem",
-                                                             "Cannot create");
+    qmlRegisterUncreatableType<PlaybackToolBarCustomiseItem>(
+        "Audacity.ProjectScene",
+        1,
+        0,
+        "PlaybackToolBarCustomiseItem",
+        "Cannot create"
+    );
 
     // tracks panel
     qmlRegisterType<RealtimeEffectMenuModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectMenuModel");

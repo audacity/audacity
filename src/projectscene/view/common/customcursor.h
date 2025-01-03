@@ -2,7 +2,6 @@
 * Audacity: A Digital Audio Editor
 */
 
-
 namespace au::projectscene {
 class CustomCursor : public QObject
 {
@@ -30,4 +29,4 @@ private:
     QString m_source;
     QCursor m_cursor;
 };
-}
+}  // namespace au::projectscene

@@ -21,17 +21,16 @@
  */
 #include "recentprojectsmodel.h"
 
-#include "translation.h"
 #include "dataformatter.h"
 #include "io/fileinfo.h"
+#include "translation.h"
 
 #include "log.h"
 
 using namespace muse;
 using namespace au::project;
 
-RecentProjectsModel::RecentProjectsModel(QObject* parent)
-    : AbstractProjectsModel(parent)
+RecentProjectsModel::RecentProjectsModel(QObject* parent) : AbstractProjectsModel(parent)
 {
 }
 
@@ -103,5 +102,5 @@ void RecentProjectsModel::updateRecentProjects()
 
 QList<int> RecentProjectsModel::nonProjectItemIndices() const
 {
-    return { 0, rowCount() - 1 };
+    return {0, rowCount() - 1};
 }

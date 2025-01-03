@@ -31,4 +31,4 @@ private:
     bool m_isMultiSelectionCopy = false;
 };
 
-}
+}  // namespace au::trackedit

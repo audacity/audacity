@@ -9,9 +9,8 @@ namespace au::au3 {
 class DomConverter
 {
 public:
-
     static trackedit::Clip clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip);
 
     static trackedit::Track track(const Au3Track* waveTrack);
 };
-}
+}  // namespace au::au3

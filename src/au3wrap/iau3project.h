@@ -3,18 +3,17 @@
 */
 #pragma once
 
-#include <string>
 #include <memory>
+#include <string>
 
-#include "modularity/imoduleinterface.h"
 #include "global/io/path.h"
+#include "modularity/imoduleinterface.h"
 
 namespace au::au3 {
 //! NOTE It's exactly IAu3Project, not just IProject
 class IAu3Project
 {
 public:
-
     virtual ~IAu3Project() = default;
 
     virtual void open() = 0;
@@ -37,4 +36,4 @@ public:
 
     virtual std::shared_ptr<IAu3Project> create() const = 0;
 };
-}
+}  // namespace au::au3

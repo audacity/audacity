@@ -44,27 +44,30 @@ static const ActionCode SELECT_WORKSPACE_CODE("configure-workspaces");
 
 static constexpr int MIN_DISPLAYED_ZOOM_PERCENTAGE = 25;
 
-static const QMap<ViewMode, ActionCode> ALL_MODE_MAP {
-    { ViewMode::PAGE, "view-mode-page" },
-    { ViewMode::LINE, "view-mode-continuous" },
-    { ViewMode::SYSTEM, "view-mode-single" },
-    { ViewMode::FLOAT, "view-mode-float" },
+static const QMap<ViewMode, ActionCode> ALL_MODE_MAP{
+    {ViewMode::PAGE, "view-mode-page"},
+    {ViewMode::LINE, "view-mode-continuous"},
+    {ViewMode::SYSTEM, "view-mode-single"},
+    {ViewMode::FLOAT, "view-mode-float"},
 };
 
 static ActionCode zoomTypeToActionCode(ZoomType type)
 {
     switch (type) {
-    case ZoomType::Percentage: return "zoom-x-percent";
-    case ZoomType::PageWidth: return "zoom-page-width";
-    case ZoomType::WholePage: return "zoom-whole-page";
-    case ZoomType::TwoPages: return "zoom-two-pages";
+    case ZoomType::Percentage:
+        return "zoom-x-percent";
+    case ZoomType::PageWidth:
+        return "zoom-page-width";
+    case ZoomType::WholePage:
+        return "zoom-whole-page";
+    case ZoomType::TwoPages:
+        return "zoom-two-pages";
     }
 
     return "";
 }
 
-NotationStatusBarModel::NotationStatusBarModel(QObject* parent)
-    : QObject(parent)
+NotationStatusBarModel::NotationStatusBarModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -89,9 +92,10 @@ QVariant NotationStatusBarModel::currentWorkspaceItem()
     item->setId(QString::fromStdString(item->action().code));
 
     UiAction action;
-    action.title
-        = TranslatableString::untranslatable("%1 %2").arg(TranslatableString("workspace", "Workspace:"),
-                                                          String::fromStdString(workspaceConfiguration()->currentWorkspaceName()));
+    action.title = TranslatableString::untranslatable("%1 %2").arg(
+        TranslatableString("workspace", "Workspace:"),
+        String::fromStdString(workspaceConfiguration()->currentWorkspaceName())
+    );
     item->setAction(action);
 
     return QVariant::fromValue(item);
@@ -134,7 +138,7 @@ MenuItemList NotationStatusBarModel::makeAvailableViewModeList()
 
     ViewMode currentViewMode = notation()->viewMode();
 
-    for (const ViewMode& viewMode: ALL_MODE_MAP.keys()) {
+    for (const ViewMode& viewMode : ALL_MODE_MAP.keys()) {
         ActionCode code = ALL_MODE_MAP[viewMode];
         if (viewMode == ViewMode::FLOAT && !globalConfiguration()->devModeEnabled()) {
             continue;
@@ -423,7 +427,7 @@ QVariantList NotationStatusBarModel::availableZoomList_property()
 QVariantList NotationStatusBarModel::menuItemListToVariantList(const MenuItemList& list) const
 {
     QVariantList result;
-    for (MenuItem* item: list) {
+    for (MenuItem* item : list) {
         result << QVariant::fromValue(item);
     }
 

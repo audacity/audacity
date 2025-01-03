@@ -21,8 +21,8 @@
  */
 #include "recentfilescontroller.h"
 
-#include "global/concurrency/concurrent.h"
 #include "global/async/async.h"
+#include "global/concurrency/concurrent.h"
 #include "global/defer.h"
 #include "global/serialization/json.h"
 
@@ -117,15 +117,20 @@ void RecentFilesController::clearRecentFiles()
     clearPlatformRecentFiles();
 }
 
-void RecentFilesController::prependPlatformRecentFile(const muse::io::path_t&) {}
+void RecentFilesController::prependPlatformRecentFile(const muse::io::path_t&)
+{
+}
 
-void RecentFilesController::clearPlatformRecentFiles() {}
+void RecentFilesController::clearPlatformRecentFiles()
+{
+}
 
 void RecentFilesController::loadRecentFilesList()
 {
     RecentFilesList newList;
 
-    DEFER {
+    DEFER
+    {
         setRecentFilesList(newList, false);
     };
 
@@ -221,7 +226,8 @@ void RecentFilesController::saveRecentFilesList()
 
     m_isSaving = true;
 
-    DEFER {
+    DEFER
+    {
         m_isSaving = false;
     };
 
@@ -248,36 +254,39 @@ void RecentFilesController::saveRecentFilesList()
 
 Promise<QPixmap> RecentFilesController::thumbnail(const muse::io::path_t& filePath) const
 {
-    return Promise<QPixmap>([this, filePath](auto resolve, auto reject) {
-        if (filePath.empty()) {
-            return reject(int(Ret::Code::UnknownError), "Invalid file specified");
-        }
+    return Promise<QPixmap>(
+        [this, filePath](auto resolve, auto reject) {
+            if (filePath.empty()) {
+                return reject(int(Ret::Code::UnknownError), "Invalid file specified");
+            }
 
-        Concurrent::run([this, filePath, resolve, reject]() {
-            std::lock_guard lock(m_thumbnailCacheMutex);
+            Concurrent::run([this, filePath, resolve, reject]() {
+                std::lock_guard lock(m_thumbnailCacheMutex);
 
-            DateTime lastModified = fileSystem()->lastModified(filePath);
+                DateTime lastModified = fileSystem()->lastModified(filePath);
 
-            auto it = m_thumbnailCache.find(filePath);
-            if (it != m_thumbnailCache.cend()) {
-                if (lastModified == it->second.lastModified) {
-                    (void)resolve(it->second.thumbnail);
-                    return;
+                auto it = m_thumbnailCache.find(filePath);
+                if (it != m_thumbnailCache.cend()) {
+                    if (lastModified == it->second.lastModified) {
+                        (void)resolve(it->second.thumbnail);
+                        return;
+                    }
                 }
-            }
 
-            RetVal<ProjectMeta> rv = mscMetaReader()->readMeta(filePath);
-            if (!rv.ret) {
-                m_thumbnailCache[filePath] = CachedThumbnail();
-                (void)reject(rv.ret.code(), rv.ret.toString());
-            } else {
-                m_thumbnailCache[filePath] = CachedThumbnail { rv.val.thumbnail, lastModified };
-                (void)resolve(rv.val.thumbnail);
-            }
-        });
+                RetVal<ProjectMeta> rv = mscMetaReader()->readMeta(filePath);
+                if (!rv.ret) {
+                    m_thumbnailCache[filePath] = CachedThumbnail();
+                    (void)reject(rv.ret.code(), rv.ret.toString());
+                } else {
+                    m_thumbnailCache[filePath] = CachedThumbnail{rv.val.thumbnail, lastModified};
+                    (void)resolve(rv.val.thumbnail);
+                }
+            });
 
-        return Promise<QPixmap>::Result::unchecked();
-    }, Promise<QPixmap>::AsynchronyType::ProvidedByBody);
+            return Promise<QPixmap>::Result::unchecked();
+        },
+        Promise<QPixmap>::AsynchronyType::ProvidedByBody
+    );
 }
 
 void RecentFilesController::cleanUpThumbnailCache(const RecentFilesList& files)

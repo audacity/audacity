@@ -35,7 +35,9 @@ void ProjectAutoSaver::init()
     m_timer.setTimerType(Qt::VeryCoarseTimer);
     m_timer.setInterval(configuration()->autoSaveIntervalMinutes() * 60000);
 
-    QObject::connect(&m_timer, &QTimer::timeout, [this]() { onTrySave(); });
+    QObject::connect(&m_timer, &QTimer::timeout, [this]() {
+        onTrySave();
+    });
 
     if (configuration()->isAutoSaveEnabled()) {
         m_timer.start();
@@ -105,13 +107,13 @@ bool ProjectAutoSaver::isAutosaveOfNewlyCreatedProject(const muse::io::path_t& p
 
 muse::io::path_t ProjectAutoSaver::projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const
 {
-//     IF_ASSERT_FAILED(io::suffix(projectAutoSavePath) == AUTOSAVE_SUFFIX) {
-//         return engraving::mainFilePath(projectAutoSavePath);
-//     }
+    //     IF_ASSERT_FAILED(io::suffix(projectAutoSavePath) == AUTOSAVE_SUFFIX) {
+    //         return engraving::mainFilePath(projectAutoSavePath);
+    //     }
 
-//     muse::io::path_t withoutAutosaveSuffix = io::filename(projectAutoSavePath, false);
+    //     muse::io::path_t withoutAutosaveSuffix = io::filename(projectAutoSavePath, false);
 
-//     return engraving::mainFilePath(io::absoluteDirpath(projectAutoSavePath).appendingComponent(withoutAutosaveSuffix));
+    //     return engraving::mainFilePath(io::absoluteDirpath(projectAutoSavePath).appendingComponent(withoutAutosaveSuffix));
     return muse::io::path_t();
 }
 
@@ -137,8 +139,7 @@ void ProjectAutoSaver::update()
         newProjectPath = projectPath(project);
     }
 
-    if (!m_lastProjectPathNeedingAutosave.empty()
-        && m_lastProjectPathNeedingAutosave != newProjectPath) {
+    if (!m_lastProjectPathNeedingAutosave.empty() && m_lastProjectPathNeedingAutosave != newProjectPath) {
         removeProjectUnsavedChanges(m_lastProjectPathNeedingAutosave);
     }
 
@@ -149,7 +150,8 @@ void ProjectAutoSaver::onTrySave()
 {
     TRACEFUNC;
 
-    DEFER {
+    DEFER
+    {
         if (configuration()->isAutoSaveEnabled()) {
             m_timer.start();
         }

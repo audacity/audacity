@@ -33,6 +33,6 @@ public:
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_MACOSSCROLLINGHOOK_H
+#endif  // AU_APPSHELL_MACOSSCROLLINGHOOK_H

@@ -4,11 +4,11 @@
 #ifndef AU_PLAYBACK_PLAYBACKUIACTIONS_H
 #define AU_PLAYBACK_PLAYBACKUIACTIONS_H
 
-#include "ui/iuiactionsmodule.h"
-#include "playbackcontroller.h"
-#include "modularity/ioc.h"
-#include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
+#include "context/iuicontextresolver.h"
+#include "modularity/ioc.h"
+#include "playbackcontroller.h"
+#include "ui/iuiactionsmodule.h"
 
 namespace au::playback {
 class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
@@ -40,6 +40,6 @@ private:
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };
-}
+}  // namespace au::playback
 
-#endif // AU_PLAYBACK_PLAYBACKUIACTIONS_H
+#endif  // AU_PLAYBACK_PLAYBACKUIACTIONS_H

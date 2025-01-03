@@ -37,6 +37,6 @@ public:
     virtual void restore() = 0;
     virtual void reset() = 0;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_ISESSIONSMANAGER_H
+#endif  // AU_APPSHELL_ISESSIONSMANAGER_H

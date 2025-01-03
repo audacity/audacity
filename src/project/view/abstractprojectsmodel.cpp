@@ -38,8 +38,7 @@ const QString AbstractProjectsModel::CLOUD_PROJECT_ID_KEY("projectId");
 const QString AbstractProjectsModel::CLOUD_VISIBILITY_KEY("cloudVisibility");
 const QString AbstractProjectsModel::CLOUD_VIEW_COUNT_KEY("cloudViewCount");
 
-AbstractProjectsModel::AbstractProjectsModel(QObject* parent)
-    : QAbstractListModel(parent)
+AbstractProjectsModel::AbstractProjectsModel(QObject* parent) : QAbstractListModel(parent)
 {
     muse::uicomponents::ModelUtils::connectRowCountChangedSignal(this, &AbstractProjectsModel::rowCountChanged);
 }
@@ -53,9 +52,12 @@ QVariant AbstractProjectsModel::data(const QModelIndex& index, int role) const
     QVariantMap item = m_items[index.row()];
 
     switch (role) {
-    case NameRole: return item[NAME_KEY];
-    case IsNoResultsFoundRole: return item[IS_NO_RESULTS_FOUND_KEY];
-    case ProjectRole: return item;
+    case NameRole:
+        return item[NAME_KEY];
+    case IsNoResultsFoundRole:
+        return item[IS_NO_RESULTS_FOUND_KEY];
+    case ProjectRole:
+        return item;
     }
 
     return QVariant();
@@ -68,10 +70,10 @@ int AbstractProjectsModel::rowCount(const QModelIndex&) const
 
 QHash<int, QByteArray> AbstractProjectsModel::roleNames() const
 {
-    static const QHash<int, QByteArray> ROLE_NAMES {
-        { NameRole, NAME_KEY.toUtf8() },
-        { IsNoResultsFoundRole, IS_NO_RESULTS_FOUND_KEY.toUtf8() },
-        { ProjectRole, "project" }
+    static const QHash<int, QByteArray> ROLE_NAMES{
+        {NameRole, NAME_KEY.toUtf8()},
+        {IsNoResultsFoundRole, IS_NO_RESULTS_FOUND_KEY.toUtf8()},
+        {ProjectRole, "project"}
     };
 
     return ROLE_NAMES;

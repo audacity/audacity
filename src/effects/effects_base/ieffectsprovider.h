@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "global/types/ret.h"
 #include "global/async/notification.h"
+#include "global/types/ret.h"
 
 #include "modularity/imoduleinterface.h"
 
@@ -36,9 +36,9 @@ public:
     // type - is Symbol of effect
     virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;
 
-    virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
-                                    EffectSettings& settings) = 0;
+    virtual muse::Ret
+    performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance, EffectSettings& settings) = 0;
 
     virtual muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) = 0;
 };
-}
+}  // namespace au::effects

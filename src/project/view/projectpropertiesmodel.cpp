@@ -21,15 +21,14 @@
  */
 #include "projectpropertiesmodel.h"
 
-#include "translation.h"
 #include "log.h"
+#include "translation.h"
 
 using namespace muse;
 using namespace muse::modularity;
 using namespace au::project;
 
-ProjectPropertiesModel::ProjectPropertiesModel(QObject* parent)
-    : QAbstractListModel(parent)
+ProjectPropertiesModel::ProjectPropertiesModel(QObject* parent) : QAbstractListModel(parent)
 {
 }
 
@@ -58,7 +57,7 @@ void ProjectPropertiesModel::init()
 
 void ProjectPropertiesModel::onThumbnailCreated(bool success)
 {
-   thumbnailCreator()->onThumbnailCreated(success);
+    thumbnailCreator()->onThumbnailCreated(success);
 }
 
 void ProjectPropertiesModel::load()
@@ -76,7 +75,7 @@ void ProjectPropertiesModel::load()
 
     for (const QString& propertyName : additionalProperties.keys()) {
         if (!isStandardTag(propertyName)) {
-            m_properties.append({ "", propertyName, additionalProperties[propertyName].toString() });
+            m_properties.append({"", propertyName, additionalProperties[propertyName].toString()});
         }
     }
 
@@ -138,11 +137,11 @@ int ProjectPropertiesModel::rowCount(const QModelIndex&) const
 
 QHash<int, QByteArray> ProjectPropertiesModel::roleNames() const
 {
-    static const QHash<int, QByteArray> roles {
-        { PropertyName, "propertyName" },
-        { PropertyValue, "propertyValue" },
-        { IsStandardProperty, "isStandardProperty" },
-        { IsMultiLineEdit, "isMultiLineEdit" }
+    static const QHash<int, QByteArray> roles{
+        {PropertyName, "propertyName"},
+        {PropertyValue, "propertyValue"},
+        {IsStandardProperty, "isStandardProperty"},
+        {IsMultiLineEdit, "isMultiLineEdit"}
     };
 
     return roles;
@@ -176,7 +175,7 @@ void ProjectPropertiesModel::newProperty()
     int destinationIndex = m_properties.size();
     beginInsertRows(QModelIndex(), destinationIndex, destinationIndex);
 
-    Property property = { "", "", "" };
+    Property property = {"", "", ""};
     m_properties.append(property);
 
     endInsertRows();

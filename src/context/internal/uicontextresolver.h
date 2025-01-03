@@ -22,11 +22,11 @@
 #ifndef AU_CONTEXT_UICONTEXTRESOLVER_H
 #define AU_CONTEXT_UICONTEXTRESOLVER_H
 
+#include "../iglobalcontext.h"
 #include "../iuicontextresolver.h"
 #include "async/asyncable.h"
-#include "modularity/ioc.h"
 #include "iinteractive.h"
-#include "../iglobalcontext.h"
+#include "modularity/ioc.h"
 #include "ui/inavigationcontroller.h"
 
 #ifdef AU_BUILD_PLAYBACK_MODULE
@@ -61,6 +61,6 @@ private:
 
     muse::async::Notification m_currentUiContextChanged;
 };
-}
+}  // namespace au::context
 
-#endif // AU_CONTEXT_UICONTEXTRESOLVER_H
+#endif  // AU_CONTEXT_UICONTEXTRESOLVER_H

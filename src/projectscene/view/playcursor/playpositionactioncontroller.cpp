@@ -30,8 +30,7 @@ using namespace muse::actions;
 static const ActionCode PLAY_POSITION_DECREASE("play-position-decrease");
 static const ActionCode PLAY_POSITION_INCREASE("play-position-increase");
 
-au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent)
-    : QObject(parent)
+au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent) : QObject(parent)
 {
 }
 
@@ -40,7 +39,7 @@ void PlayPositionActionController::init()
     dispatcher()->reg(this, PLAY_POSITION_DECREASE, this, &PlayPositionActionController::playPositionDecrease);
     dispatcher()->reg(this, PLAY_POSITION_INCREASE, this, &PlayPositionActionController::playPositionIncrease);
 
-    globalContext()->currentProjectChanged().onNotify(this, [this](){
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
 
@@ -118,7 +117,7 @@ void PlayPositionActionController::onProjectChanged()
 
     IProjectViewStatePtr viewState = currentProject->viewState();
 
-    viewState->snap().ch.onReceive(this, [this](const Snap& snap){
+    viewState->snap().ch.onReceive(this, [this](const Snap& snap) {
         if (snap.enabled) {
             snapCurrentPosition();
         }

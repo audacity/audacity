@@ -30,6 +30,6 @@ class WindowsRecentFilesController : public RecentFilesController
 public:
     void prependPlatformRecentFile(const muse::io::path_t& path) override;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_WINDOWSRECENTFILESCONTROLLER_H
+#endif  // AU_PROJECT_WINDOWSRECENTFILESCONTROLLER_H

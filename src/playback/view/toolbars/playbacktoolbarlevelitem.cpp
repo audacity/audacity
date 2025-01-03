@@ -28,27 +28,32 @@
 using namespace au::playback;
 using namespace au::audio;
 
-PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
-                                                   QObject* parent)
+PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(
+    const muse::ui::UiAction& action,
+    muse::uicomponents::ToolBarItemType::Type type,
+    QObject* parent
+)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
+    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume) {
         m_level = volume;
         emit levelChanged();
     });
 
-    playback()->audioOutput()->playbackSignalChanges()
-    .onResolve(this, [this](muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> signalVal) {
-        signalVal.onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
-            if (newValue.pressure < MIN_DISPLAYED_DBFS) {
-                setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
-            } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
-                setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
-            } else {
-                setAudioChannelVolumePressure(audioChNum, newValue.pressure);
-            }
-        });
-    });
+    playback()->audioOutput()->playbackSignalChanges().onResolve(
+        this,
+        [this](muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> signalVal) {
+            signalVal.onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
+                if (newValue.pressure < MIN_DISPLAYED_DBFS) {
+                    setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
+                } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
+                    setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
+                } else {
+                    setAudioChannelVolumePressure(audioChNum, newValue.pressure);
+                }
+            });
+        }
+    );
 
     resetAudioChannelsVolumePressure();
 }

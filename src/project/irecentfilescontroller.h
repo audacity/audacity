@@ -48,6 +48,6 @@ public:
 
     virtual muse::async::Promise<QPixmap> thumbnail(const muse::io::path_t& filePath) const = 0;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_IRECENTFILESCONTROLLER_H
+#endif  // AU_PROJECT_IRECENTFILESCONTROLLER_H

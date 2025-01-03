@@ -24,14 +24,14 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
 #include "async/asyncable.h"
+#include "modularity/ioc.h"
 
-#include "importexport/musicxml/imusicxmlconfiguration.h"
 #include "importexport/guitarpro/iguitarproconfiguration.h"
-#include "importexport/ove/ioveconfiguration.h"
-#include "importexport/midi/imidiconfiguration.h"
 #include "importexport/mei/imeiconfiguration.h"
+#include "importexport/midi/imidiconfiguration.h"
+#include "importexport/musicxml/imusicxmlconfiguration.h"
+#include "importexport/ove/ioveconfiguration.h"
 #include "notation/inotationconfiguration.h"
 
 namespace au::appshell {
@@ -48,8 +48,8 @@ class ImportPreferencesModel : public QObject, public async::Asyncable
 
     Q_PROPERTY(QString styleFileImportPath READ styleFileImportPath WRITE setStyleFileImportPath NOTIFY styleFileImportPathChanged)
 
-    Q_PROPERTY(
-        QString currentOvertureCharset READ currentOvertureCharset WRITE setCurrentOvertureCharset NOTIFY currentOvertureCharsetChanged)
+    Q_PROPERTY(QString currentOvertureCharset READ currentOvertureCharset WRITE setCurrentOvertureCharset NOTIFY
+                   currentOvertureCharsetChanged)
 
     Q_PROPERTY(bool importLayout READ importLayout WRITE setImportLayout NOTIFY importLayoutChanged)
     Q_PROPERTY(bool importBreaks READ importBreaks WRITE setImportBreaks NOTIFY importBreaksChanged)
@@ -59,8 +59,8 @@ class ImportPreferencesModel : public QObject, public async::Asyncable
 
     Q_PROPERTY(int currentShortestNote READ currentShortestNote WRITE setCurrentShortestNote NOTIFY currentShortestNoteChanged)
 
-    Q_PROPERTY(
-        bool needAskAboutApplyingNewStyle READ needAskAboutApplyingNewStyle WRITE setNeedAskAboutApplyingNewStyle NOTIFY needAskAboutApplyingNewStyleChanged)
+    Q_PROPERTY(bool needAskAboutApplyingNewStyle READ needAskAboutApplyingNewStyle WRITE setNeedAskAboutApplyingNewStyle NOTIFY
+                   needAskAboutApplyingNewStyleChanged)
 
 public:
     explicit ImportPreferencesModel(QObject* parent = nullptr);
@@ -110,6 +110,6 @@ signals:
     void needAskAboutApplyingNewStyleChanged(bool needAskAboutApplyingNewStyle);
     void meiImportLayoutChanged(bool importLayout);
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_IMPORTPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_IMPORTPREFERENCESMODEL_H

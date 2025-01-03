@@ -6,13 +6,13 @@
 
 #include <QQuickItem>
 
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
 #include "actions/actionable.h"
 #include "actions/iactionsdispatcher.h"
+#include "async/asyncable.h"
 #include "context/iglobalcontext.h"
-#include "iappshellconfiguration.h"
 #include "dockwindow/idockwindowprovider.h"
+#include "iappshellconfiguration.h"
+#include "modularity/ioc.h"
 
 //! TODO AU4
 // #include "braille/ibrailleconfiguration.h"
@@ -27,8 +27,8 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider;
     muse::Inject<IAppShellConfiguration> configuration;
 
-//! TODO AU4
-//    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
+    //! TODO AU4
+    //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
 
     Q_PROPERTY(bool isNavigatorVisible READ isNavigatorVisible NOTIFY isNavigatorVisibleChanged)
     Q_PROPERTY(bool isBraillePanelVisible READ isBraillePanelVisible NOTIFY isBraillePanelVisibleChanged)
@@ -70,6 +70,6 @@ private:
 
     void updateDrumsetPanelVisibility();
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_PROJECTPAGEMODEL_H
+#endif  // AU_APPSHELL_PROJECTPAGEMODEL_H

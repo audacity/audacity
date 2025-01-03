@@ -25,21 +25,21 @@
 #include <QWindow>
 
 #ifndef MU_QT5_COMPAT
-Q_MOC_INCLUDE(< QWindow >)
+Q_MOC_INCLUDE(<QWindow>)
 #endif
 
 #include "uicomponents/view/abstractmenumodel.h"
 
-#include "modularity/ioc.h"
-#include "ui/imainwindow.h"
-#include "ui/iuiactionsregister.h"
-#include "ui/inavigationcontroller.h"
-#include "ui/iuiconfiguration.h"
 #include "actions/iactionsdispatcher.h"
+#include "effects/effects_base/ieffectsprovider.h"
+#include "global/iglobalconfiguration.h"
 #include "iappshellconfiguration.h"
 #include "internal/iappmenumodelhook.h"
-#include "global/iglobalconfiguration.h"
-#include "effects/effects_base/ieffectsprovider.h"
+#include "modularity/ioc.h"
+#include "ui/imainwindow.h"
+#include "ui/inavigationcontroller.h"
+#include "ui/iuiactionsregister.h"
+#include "ui/iuiconfiguration.h"
 
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
@@ -63,7 +63,7 @@ public:
     INJECT(IAppMenuModelHook, appMenuModelHook)
     INJECT(effects::IEffectsProvider, effectsProvider);
 
-//! TODO AU4
+    //! TODO AU4
     // INJECT(workspace::IWorkspaceManager, workspacesManager)
     INJECT(au::project::IRecentFilesController, recentFilesController)
     // INJECT(extensions::IExtensionsProvider, extensionsProvider)
@@ -114,6 +114,6 @@ private:
     muse::uicomponents::MenuItemList makeShowItems();
     muse::uicomponents::MenuItemList makeEffectsItems();
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_APPMENUMODEL_H
+#endif  // AU_APPSHELL_APPMENUMODEL_H

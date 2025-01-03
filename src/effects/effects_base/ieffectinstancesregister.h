@@ -32,4 +32,4 @@ public:
     virtual void notifyAboutSettingsChanged(const EffectInstanceId& instanceId) = 0;
     virtual muse::async::Notification settingsChanged(const EffectInstanceId& instanceId) const = 0;
 };
-}
+}  // namespace au::effects

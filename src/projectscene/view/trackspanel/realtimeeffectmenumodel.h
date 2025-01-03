@@ -18,4 +18,4 @@ private:
     void doLoad() override;
     void populateMenu() override;
 };
-}
+}  // namespace au::projectscene

@@ -25,7 +25,7 @@ void SelectionStatusModel::init()
         emit sampleRateChanged();
     });
 
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         emit timeSignatureChanged();
         emit isEnabledChanged();
     });
@@ -61,7 +61,7 @@ void SelectionStatusModel::setEndTime(double time)
 
 int SelectionStatusModel::currentFormat() const
 {
-    return m_currentFormat; // from settings
+    return m_currentFormat;  // from settings
 }
 
 void SelectionStatusModel::setCurrentFormat(int format)

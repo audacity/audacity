@@ -26,4 +26,4 @@ public:
 };
 
 using IPlaybackStatePtr = std::shared_ptr<IPlaybackState>;
-}
+}  // namespace au::context

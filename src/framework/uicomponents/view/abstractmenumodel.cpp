@@ -31,8 +31,7 @@ using namespace mu::actions;
 
 const int AbstractMenuModel::INVALID_ITEM_INDEX = -1;
 
-AbstractMenuModel::AbstractMenuModel(QObject* parent)
-    : QAbstractListModel(parent)
+AbstractMenuModel::AbstractMenuModel(QObject* parent) : QAbstractListModel(parent)
 {
 }
 
@@ -47,8 +46,10 @@ QVariant AbstractMenuModel::data(const QModelIndex& index, int role) const
     MenuItem* item = m_items.at(row);
 
     switch (role) {
-    case ItemRole: return QVariant::fromValue(item);
-    case UserRole: return QVariant();
+    case ItemRole:
+        return QVariant::fromValue(item);
+    case UserRole:
+        return QVariant();
     }
 
     return QVariant();
@@ -66,9 +67,7 @@ int AbstractMenuModel::rowCount(const QModelIndex&) const
 
 QHash<int, QByteArray> AbstractMenuModel::roleNames() const
 {
-    static const QHash<int, QByteArray> roles {
-        { ItemRole, "itemRole" }
-    };
+    static const QHash<int, QByteArray> roles{{ItemRole, "itemRole"}};
 
     return roles;
 }
@@ -112,7 +111,7 @@ QVariantList AbstractMenuModel::itemsProperty() const
 {
     QVariantList items;
 
-    for (MenuItem* item: m_items) {
+    for (MenuItem* item : m_items) {
         items << QVariant::fromValue(item);
     }
 
@@ -177,8 +176,7 @@ MenuItem& AbstractMenuModel::findMenu(const QString& menuId)
     return menu(m_items, menuId);
 }
 
-MenuItem* AbstractMenuModel::makeMenu(const TranslatableString& title, const MenuItemList& items,
-                                      const QString& menuId, bool enabled)
+MenuItem* AbstractMenuModel::makeMenu(const TranslatableString& title, const MenuItemList& items, const QString& menuId, bool enabled)
 {
     MenuItem* item = new MenuItem(this);
     item->setId(menuId);

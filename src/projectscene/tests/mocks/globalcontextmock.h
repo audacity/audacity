@@ -1,7 +1,7 @@
 #pragma once
 
-#include "context/iglobalcontext.h"
 #include <gmock/gmock.h>
+#include "context/iglobalcontext.h"
 
 namespace au::projectscene {
 class GlobalContextMock : public context::IGlobalContext
@@ -15,4 +15,4 @@ public:
     MOCK_METHOD(void, setPlayer, (const au::playback::IPlayerPtr&), (override));
     MOCK_METHOD(context::IPlaybackStatePtr, playbackState, (), (const, override));
 };
-}
+}  // namespace au::projectscene

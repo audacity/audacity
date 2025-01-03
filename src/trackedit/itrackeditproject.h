@@ -7,11 +7,11 @@
 
 #include "modularity/imoduleinterface.h"
 
-#include "global/async/notifylist.h"
 #include "global/async/channel.h"
+#include "global/async/notifylist.h"
 
-#include "trackedittypes.h"
 #include "dom/track.h"
+#include "trackedittypes.h"
 
 namespace au::au3 {
 class IAu3Project;
@@ -65,4 +65,4 @@ public:
 
     virtual ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const = 0;
 };
-}
+}  // namespace au::trackedit

@@ -14,17 +14,18 @@ constexpr double TICK_ALPHA_MINOR = 0.5;
 constexpr double LABEL_ALPHA_MAJOR = 1.0;
 constexpr double LABEL_ALPHA_MINOR = 0.75;
 constexpr int LABEL_OFFSET = 2;
-}
+}  // namespace
 
 using namespace au::projectscene;
 
-TimelineRuler::TimelineRuler(QQuickItem* parent)
-    : QQuickPaintedItem(parent)
+TimelineRuler::TimelineRuler(QQuickItem* parent) : QQuickPaintedItem(parent)
 {
     setFormatter(configuration()->timelineRulerMode());
 
-    uiconfiguration()->currentThemeChanged().onNotify(this, [this]() { update(); });
-    configuration()->timelineRulerModeChanged().onReceive(this, [this](const TimelineRulerMode mode){
+    uiconfiguration()->currentThemeChanged().onNotify(this, [this]() {
+        update();
+    });
+    configuration()->timelineRulerModeChanged().onReceive(this, [this](const TimelineRulerMode mode) {
         setFormatter(mode);
         update();
     });
@@ -96,15 +97,17 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
 
     auto tickHeight = [&](TickType tickType) {
         switch (tickType) {
-        case TickType::MAJOR: return h;
-        case TickType::MINOR: return h / MINOR_TICK_HEIGHT_RATIO;
-        case TickType::MINORMINOR: return h / MINORMINOR_TICK_HEIGHT_RATIO;
+        case TickType::MAJOR:
+            return h;
+        case TickType::MINOR:
+            return h / MINOR_TICK_HEIGHT_RATIO;
+        case TickType::MINORMINOR:
+            return h / MINORMINOR_TICK_HEIGHT_RATIO;
         }
         return 0.0;
     };
 
-    while (x < w)
-    {
+    while (x < w) {
         // determine tick type
         TickType tickType = determineTickType(value, timeInterval);
         QString tickLabel = m_formatter->label(value, timeInterval, tickType, m_context);
@@ -113,10 +116,10 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
 
         if (tickType == TickType::MAJOR || tickType == TickType::MINOR) {
             // add tick with label
-            ticks.append(TickInfo { labelPos, tickLabel, tickType, tick, value });
+            ticks.append(TickInfo{labelPos, tickLabel, tickType, tick, value});
         } else {
             // add tick without label
-            ticks.append(TickInfo { -1.0, QString(), tickType, tick, value });
+            ticks.append(TickInfo{-1.0, QString(), tickType, tick, value});
         }
 
         x += m_context->zoom() * timeInterval.minorMinor;
@@ -126,7 +129,7 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
     return ticks;
 }
 
-TickType TimelineRuler::determineTickType(double value, const IntervalInfo &timeInterval)
+TickType TimelineRuler::determineTickType(double value, const IntervalInfo& timeInterval)
 {
     if (muse::is_zero(std::abs(std::remainder(value, timeInterval.major)))) {
         return TickType::MAJOR;
@@ -192,7 +195,9 @@ void TimelineRuler::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        auto updateView = [this] () { update(); };
+        auto updateView = [this]() {
+            update();
+        };
 
         connect(m_context, &TimelineContext::frameTimeChanged, this, updateView);
 

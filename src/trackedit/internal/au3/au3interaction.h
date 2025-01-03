@@ -9,12 +9,12 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 
+#include "context/iglobalcontext.h"
 #include "iinteractive.h"
 #include "iprojecthistory.h"
 #include "iselectioncontroller.h"
 #include "itrackeditclipboard.h"
 #include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 
 #include "au3wrap/au3types.h"
 
@@ -94,8 +94,13 @@ private:
     au3::Au3Project& projectRef() const;
     TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
     au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
-    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const;
-    TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const;
+    TrackIdList determineDestinationTracksIds(
+        const std::vector<Track>& tracks,
+        const TrackIdList& destinationTrackIds,
+        size_t clipboardTracksSize
+    ) const;
+    TrackIdList
+    expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds, size_t clipboardTracksSize) const;
     muse::Ret canPasteTrackData(const TrackIdList& tracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin);
@@ -137,4 +142,4 @@ private:
 
     muse::ProgressPtr m_progress;
 };
-}
+}  // namespace au::trackedit

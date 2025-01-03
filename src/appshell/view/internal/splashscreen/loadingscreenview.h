@@ -39,8 +39,8 @@ class LoadingScreenView : public QWidget
     Q_OBJECT
 
     INJECT(ui::IUiConfiguration, uiConfiguration)
-//! TODO AU4
-//    INJECT(languages::ILanguagesService, languagesService)
+    //! TODO AU4
+    //    INJECT(languages::ILanguagesService, languagesService)
 
 public:
     explicit LoadingScreenView(QWidget* parent = nullptr);
@@ -52,6 +52,6 @@ private:
     QString m_message;
     QSvgRenderer* m_backgroundRenderer = nullptr;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_LOADINGSCREENVIEW_H
+#endif  // AU_APPSHELL_LOADINGSCREENVIEW_H

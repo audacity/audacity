@@ -23,8 +23,7 @@
 
 using namespace au::appshell;
 
-SaveAndPublishPreferencesModel::SaveAndPublishPreferencesModel(QObject* parent)
-    : QObject(parent)
+SaveAndPublishPreferencesModel::SaveAndPublishPreferencesModel(QObject* parent) : QObject(parent)
 {
 }
 

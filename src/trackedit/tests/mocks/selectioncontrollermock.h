@@ -43,4 +43,4 @@ public:
     MOCK_METHOD(muse::async::Channel<secs_t>, dataSelectedEndTimeChanged, (), (const, override));
     MOCK_METHOD(muse::async::Channel<secs_t>, dataSelectedEndTimeSelected, (), (const, override));
 };
-}
+}  // namespace au::trackedit

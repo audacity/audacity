@@ -28,4 +28,4 @@ private:
     muse::async::Channel<playback::PlaybackStatus> m_playbackStatusChanged;
     muse::async::Channel<muse::secs_t> m_playbackPositionChanged;
 };
-}
+}  // namespace au::context

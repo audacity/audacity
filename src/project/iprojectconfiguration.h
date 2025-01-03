@@ -3,9 +3,9 @@
 
 #include "modularity/imoduleinterface.h"
 
-#include "global/io/path.h"
-#include "global/async/channel.h"
 #include "async/notification.h"
+#include "global/async/channel.h"
+#include "global/io/path.h"
 
 #include "iaudacityproject.h"
 
@@ -15,7 +15,6 @@ class IProjectConfiguration : MODULE_EXPORT_INTERFACE
     INTERFACE_ID(IProjectConfiguration)
 
 public:
-
     virtual ~IProjectConfiguration() = default;
 
     virtual muse::io::path_t recentFilesJsonPath() const = 0;
@@ -32,8 +31,8 @@ public:
     virtual muse::io::path_t lastSavedProjectsPath() const = 0;
     virtual void setLastSavedProjectsPath(const muse::io::path_t& path) = 0;
 
-    virtual muse::io::path_t defaultSavingFilePath(IAudacityProjectPtr project, const std::string& filenameAddition = "",
-                                                   const std::string& suffix = "") const = 0;
+    virtual muse::io::path_t
+    defaultSavingFilePath(IAudacityProjectPtr project, const std::string& filenameAddition = "", const std::string& suffix = "") const = 0;
 
     virtual SaveLocationType lastUsedSaveLocationType() const = 0;
     virtual void setLastUsedSaveLocationType(SaveLocationType type) = 0;
@@ -62,6 +61,6 @@ public:
     virtual void setAutoSaveInterval(int minutes) = 0;
     virtual muse::async::Channel<int> autoSaveIntervalChanged() const = 0;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_IPROJECTCONFIGURATION_H
+#endif  // AU_PROJECT_IPROJECTCONFIGURATION_H

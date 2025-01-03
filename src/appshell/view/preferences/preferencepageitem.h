@@ -85,6 +85,6 @@ private:
     QString m_path;
     bool m_expanded = false;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_PREFERENCEPAGEITEM_H
+#endif  // AU_APPSHELL_PREFERENCEPAGEITEM_H

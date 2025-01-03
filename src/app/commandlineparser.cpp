@@ -49,8 +49,8 @@ static QStringList prepareArguments(int argc, char** argv)
     return args;
 }
 
-template<typename ... Args>
-QCommandLineOption internalCommandLineOption(Args&& ... args)
+template <typename... Args>
+QCommandLineOption internalCommandLineOption(Args&&... args)
 {
     QCommandLineOption option(std::forward<Args>(args)...);
     option.setFlags(QCommandLineOption::HiddenFromHelp);
@@ -60,65 +60,77 @@ QCommandLineOption internalCommandLineOption(Args&& ... args)
 void CommandLineParser::init()
 {
     // Common
-    m_parser.addHelpOption(); // -?, -h, --help
-    m_parser.addVersionOption(); // -v, --version
+    m_parser.addHelpOption();     // -?, -h, --help
+    m_parser.addVersionOption();  // -v, --version
 
     m_parser.addPositionalArgument("scorefiles", "The files to open", "[scorefile...]");
 
     m_parser.addOption(QCommandLineOption("long-version", "Print detailed version information"));
-    m_parser.addOption(QCommandLineOption({ "d", "debug" }, "Debug mode"));
+    m_parser.addOption(QCommandLineOption({"d", "debug"}, "Debug mode"));
 
-    m_parser.addOption(QCommandLineOption({ "D", "monitor-resolution" }, "Specify monitor resolution", "DPI"));
-    m_parser.addOption(QCommandLineOption({ "T", "trim-image" },
-                                          "Use with '-o <file>.png' and '-o <file.svg>'. Trim exported image with specified margin (in pixels)",
-                                          "margin"));
+    m_parser.addOption(QCommandLineOption({"D", "monitor-resolution"}, "Specify monitor resolution", "DPI"));
+    m_parser.addOption(QCommandLineOption(
+        {"T", "trim-image"},
+        "Use with '-o <file>.png' and '-o <file.svg>'. Trim exported image with specified margin (in pixels)",
+        "margin"
+    ));
 
-    m_parser.addOption(QCommandLineOption({ "b", "bitrate" }, "Use with '-o <file>.mp3', sets bitrate, in kbps", "bitrate"));
+    m_parser.addOption(QCommandLineOption({"b", "bitrate"}, "Use with '-o <file>.mp3', sets bitrate, in kbps", "bitrate"));
 
-    m_parser.addOption(QCommandLineOption("template-mode", "Save template mode, no page size")); // and no platform and creationDate tags
-    m_parser.addOption(QCommandLineOption({ "t", "test-mode" }, "Set test mode flag for all files")); // this includes --template-mode
+    m_parser.addOption(QCommandLineOption("template-mode", "Save template mode, no page size"));  // and no platform and creationDate tags
+    m_parser.addOption(QCommandLineOption({"t", "test-mode"}, "Set test mode flag for all files"));  // this includes --template-mode
 
-    m_parser.addOption(QCommandLineOption("session-type", "Startup with given session type", "type")); // see StartupScenario::sessionTypeTromString
+    m_parser.addOption(QCommandLineOption("session-type", "Startup with given session type", "type")
+    );  // see StartupScenario::sessionTypeTromString
 
     // Converter mode
-    m_parser.addOption(QCommandLineOption({ "r", "image-resolution" }, "Set output resolution for image export", "DPI"));
-    m_parser.addOption(QCommandLineOption({ "j", "job" }, "Process a conversion job", "file"));
-    m_parser.addOption(QCommandLineOption({ "o", "export-to" }, "Export to 'file'. Format depends on file's extension", "file"));
-    m_parser.addOption(QCommandLineOption({ "F", "factory-settings" }, "Use factory settings"));
-    m_parser.addOption(QCommandLineOption({ "R", "revert-settings" }, "Revert to factory settings, but keep default preferences"));
-    m_parser.addOption(QCommandLineOption({ "M", "midi-operations" }, "Specify MIDI import operations file", "file"));
-    m_parser.addOption(QCommandLineOption({ "P", "export-score-parts" }, "Use with '-o <file>.pdf', export score and parts"));
-    m_parser.addOption(QCommandLineOption({ "f", "force" },
-                                          "Use with '-o <file>', ignore warnings reg. score being corrupted or from wrong version"));
+    m_parser.addOption(QCommandLineOption({"r", "image-resolution"}, "Set output resolution for image export", "DPI"));
+    m_parser.addOption(QCommandLineOption({"j", "job"}, "Process a conversion job", "file"));
+    m_parser.addOption(QCommandLineOption({"o", "export-to"}, "Export to 'file'. Format depends on file's extension", "file"));
+    m_parser.addOption(QCommandLineOption({"F", "factory-settings"}, "Use factory settings"));
+    m_parser.addOption(QCommandLineOption({"R", "revert-settings"}, "Revert to factory settings, but keep default preferences"));
+    m_parser.addOption(QCommandLineOption({"M", "midi-operations"}, "Specify MIDI import operations file", "file"));
+    m_parser.addOption(QCommandLineOption({"P", "export-score-parts"}, "Use with '-o <file>.pdf', export score and parts"));
+    m_parser.addOption(
+        QCommandLineOption({"f", "force"}, "Use with '-o <file>', ignore warnings reg. score being corrupted or from wrong version")
+    );
 
-    m_parser.addOption(QCommandLineOption("score-media",
-                                          "Export all media (excepting mp3) for a given score in a single JSON file and print it to stdout"));
+    m_parser.addOption(
+        QCommandLineOption("score-media", "Export all media (excepting mp3) for a given score in a single JSON file and print it to stdout")
+    );
     m_parser.addOption(QCommandLineOption("highlight-config", "Set highlight to svg, generated from a given score", "highlight-config"));
     m_parser.addOption(QCommandLineOption("score-meta", "Export score metadata to JSON document and print it to stdout"));
     m_parser.addOption(QCommandLineOption("score-parts", "Generate parts data for the given score and save them to separate mscz files"));
-    m_parser.addOption(QCommandLineOption("score-parts-pdf",
-                                          "Generate parts data for the given score and export the data to a single JSON file, print it to stdout"));
-    m_parser.addOption(QCommandLineOption("score-transpose",
-                                          "Transpose the given score and export the data to a single JSON file, print it to stdout",
-                                          "options"));
+    m_parser.addOption(QCommandLineOption(
+        "score-parts-pdf",
+        "Generate parts data for the given score and export the data to a single JSON file, print it to stdout"
+    ));
+    m_parser.addOption(QCommandLineOption(
+        "score-transpose",
+        "Transpose the given score and export the data to a single JSON file, print it to stdout",
+        "options"
+    ));
     m_parser.addOption(QCommandLineOption("source-update", "Update the source in the given score"));
 
-    m_parser.addOption(QCommandLineOption({ "S", "style" }, "Load style file", "style"));
+    m_parser.addOption(QCommandLineOption({"S", "style"}, "Load style file", "style"));
 
-    m_parser.addOption(QCommandLineOption("sound-profile",
-                                          "Use with '-o <file>.mp3' or with '-j <file>', override the sound profile in the given score(s). "
-                                          "Possible values: \"MuseScore Basic\", \"Muse Sounds\"", "sound-profile"));
+    m_parser.addOption(QCommandLineOption(
+        "sound-profile",
+        "Use with '-o <file>.mp3' or with '-j <file>', override the sound profile in the given score(s). "
+        "Possible values: \"MuseScore Basic\", \"Muse Sounds\"",
+        "sound-profile"
+    ));
 
     // Video export
 #ifdef MUE_BUILD_VIDEOEXPORT_MODULE
     m_parser.addOption(QCommandLineOption("score-video", "Generate video for the given score and export it to file"));
-// not implemented
-//    m_parser.addOption(QCommandLineOption("view-mode",
-//                                          "View mode [paged-float, paged-original, paged-float-height, pano, auto]. Auto (default) will choose the best mode according to number of instruments etc... Will show piano for piano score only",
-//                                          "auto"));
-// not implemented
-//    m_parser.addOption(QCommandLineOption("piano", "Show Piano, works only if one part and not auto or float modes"));
-//    m_parser.addOption(QCommandLineOption("piano-position", "Show Piano top or bottom. Default bottom", "bottom"));
+    // not implemented
+    //    m_parser.addOption(QCommandLineOption("view-mode",
+    //                                          "View mode [paged-float, paged-original, paged-float-height, pano, auto]. Auto (default) will choose the best mode according to number of instruments etc... Will show piano for piano score only",
+    //                                          "auto"));
+    // not implemented
+    //    m_parser.addOption(QCommandLineOption("piano", "Show Piano, works only if one part and not auto or float modes"));
+    //    m_parser.addOption(QCommandLineOption("piano-position", "Show Piano top or bottom. Default bottom", "bottom"));
     m_parser.addOption(QCommandLineOption("resolution", "Resolution [2160p, 1440p, 1080p, 720p, 480p, 360p]", "1080p"));
     m_parser.addOption(QCommandLineOption("fps", "Frame per second [60, 30, 24]", "24"));
     m_parser.addOption(QCommandLineOption("ls", "Pause before playback in seconds (3.0)", "3.0"));
@@ -146,13 +158,17 @@ void CommandLineParser::init()
     m_parser.addOption(QCommandLineOption("test-case-func-args", "Call test case function args", "args"));
 
     // Audio plugins
-    m_parser.addOption(QCommandLineOption("register-audio-plugin",
-                                          "Check an audio plugin for compatibility with the application and register it", "path"));
+    m_parser.addOption(
+        QCommandLineOption("register-audio-plugin", "Check an audio plugin for compatibility with the application and register it", "path")
+    );
     m_parser.addOption(QCommandLineOption("register-failed-audio-plugin", "Register an incompatible audio plugin", "path"));
 
     // Internal
-    m_parser.addOption(internalCommandLineOption("score-display-name-override",
-                                                 "Display name to be shown in splash screen for the score that is being opened", "name"));
+    m_parser.addOption(internalCommandLineOption(
+        "score-display-name-override",
+        "Display name to be shown in splash screen for the score that is being opened",
+        "name"
+    ));
 }
 
 void CommandLineParser::parse(int argc, char** argv)
@@ -305,8 +321,8 @@ void CommandLineParser::parse(int argc, char** argv)
         m_converterTask.type = ConvertType::ExportScoreMedia;
         m_converterTask.inputFile = scorefiles[0];
         if (m_parser.isSet("highlight-config")) {
-            m_converterTask.params[CommandLineParser::ParamKey::HighlightConfigPath]
-                = fromUserInputPath(m_parser.value("highlight-config"));
+            m_converterTask.params[CommandLineParser::ParamKey::HighlightConfigPath] =
+                fromUserInputPath(m_parser.value("highlight-config"));
         }
     }
 

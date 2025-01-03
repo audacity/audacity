@@ -45,6 +45,6 @@ protected:
 private:
     QRect m_windowTitleBarMoveArea;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_FRAMELESSWINDOWCONTROLLER_H
+#endif  // AU_APPSHELL_FRAMELESSWINDOWCONTROLLER_H

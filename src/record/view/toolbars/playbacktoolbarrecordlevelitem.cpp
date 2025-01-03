@@ -11,35 +11,40 @@ using namespace au::record;
 using namespace au::audio;
 using namespace au::playback;
 
-PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action,
-                                                               muse::uicomponents::ToolBarItemType::Type type, QObject* parent)
+PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(
+    const muse::ui::UiAction& action,
+    muse::uicomponents::ToolBarItemType::Type type,
+    QObject* parent
+)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_active = recordController()->isRecording();
     });
 
-    record()->audioInput()->recordVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
+    record()->audioInput()->recordVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume) {
         m_level = volume;
         emit levelChanged();
     });
 
-    record()->audioInput()->recordSignalChanges()
-    .onResolve(this, [this](muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> signalVal) {
-        signalVal.onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
-            if (!m_active) {
-                return;
-            }
+    record()->audioInput()->recordSignalChanges().onResolve(
+        this,
+        [this](muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> signalVal) {
+            signalVal.onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
+                if (!m_active) {
+                    return;
+                }
 
-            if (newValue.pressure < MIN_DISPLAYED_DBFS) {
-                setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
-            } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
-                setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
-            } else {
-                setAudioChannelVolumePressure(audioChNum, newValue.pressure);
-            }
-        });
-    });
+                if (newValue.pressure < MIN_DISPLAYED_DBFS) {
+                    setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
+                } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
+                    setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
+                } else {
+                    setAudioChannelVolumePressure(audioChNum, newValue.pressure);
+                }
+            });
+        }
+    );
 
     resetAudioChannelsVolumePressure();
 }

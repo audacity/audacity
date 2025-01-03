@@ -5,8 +5,8 @@
 
 #include <map>
 
-#include "modularity/ioc.h"
 #include "effects/effects_base/ieffectsviewregister.h"
+#include "modularity/ioc.h"
 
 #include "../ibuiltineffectsrepository.h"
 
@@ -34,4 +34,4 @@ private:
     muse::async::Notification m_effectMetaListUpdated;
     std::map<ComponentInterfaceSymbol, EffectMeta> m_metas;
 };
-}
+}  // namespace au::effects

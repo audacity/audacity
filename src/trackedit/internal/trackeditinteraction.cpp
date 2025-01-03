@@ -1,8 +1,7 @@
 #include "trackeditinteraction.h"
 
 namespace au::trackedit {
-TrackeditInteraction::TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction)
-    : m_interaction(std::move(interaction))
+TrackeditInteraction::TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction) : m_interaction(std::move(interaction))
 {
 }
 
@@ -260,4 +259,4 @@ muse::ProgressPtr TrackeditInteraction::progress() const
 {
     return m_interaction->progress();
 }
-}
+}  // namespace au::trackedit

@@ -23,8 +23,7 @@
 
 using namespace au::project;
 
-ProjectThumbnailLoader::ProjectThumbnailLoader(QObject* parent)
-    : QObject(parent)
+ProjectThumbnailLoader::ProjectThumbnailLoader(QObject* parent) : QObject(parent)
 {
 }
 

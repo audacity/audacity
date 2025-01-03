@@ -42,4 +42,4 @@ public:
 
     MOCK_METHOD(secs_t, totalTime, (), (const, override));
 };
-}
+}  // namespace au::trackedit

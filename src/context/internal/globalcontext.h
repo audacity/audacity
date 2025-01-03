@@ -3,8 +3,8 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
 #include "../iglobalcontext.h"
+#include "modularity/ioc.h"
 #include "playbackstate.h"
 #include "record/irecordcontroller.h"
 
@@ -14,7 +14,6 @@ class GlobalContext : public au::context::IGlobalContext, public muse::Injectabl
     muse::Inject<au::record::IRecordController> recordController;
 
 public:
-
     GlobalContext();
 
     void setCurrentProject(const au::project::IAudacityProjectPtr& project) override;
@@ -36,4 +35,4 @@ private:
 
     std::shared_ptr<PlaybackState> m_playbackState;
 };
-}
+}  // namespace au::context

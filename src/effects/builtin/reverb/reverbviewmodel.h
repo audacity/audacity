@@ -26,14 +26,13 @@ signals:
     void wetOnlyChanged();
 
 private:
-
     void doReload() override;
 
     ReverbEffect* effect() const;
 
-    using Setter = std::function<void (double)>;
+    using Setter = std::function<void(double)>;
 
     QVariantList m_paramsList;
     QMap<QString, Setter> m_setters;
 };
-}
+}  // namespace au::effects

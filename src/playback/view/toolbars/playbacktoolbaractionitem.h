@@ -48,13 +48,12 @@ signals:
     void checkedChanged(bool checked);
 
 private:
-
     QString m_id;
     ItemType m_type = ItemType::UNDEFINED;
     QString m_title;
     muse::ui::IconCode::Code m_icon = muse::ui::IconCode::Code::NONE;
     bool m_checked = false;
 };
-}
+}  // namespace au::playback
 
-#endif // AU_PROJECTSCENE_PLAYBACKTOOLBARCUSTOMISEITEM_H
+#endif  // AU_PROJECTSCENE_PLAYBACKTOOLBARCUSTOMISEITEM_H

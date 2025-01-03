@@ -34,7 +34,6 @@ class ThumbnailCreator;
 class ProjectModule : public muse::modularity::IModuleSetup
 {
 public:
-
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
@@ -49,6 +48,6 @@ private:
     std::shared_ptr<RecentFilesController> m_recentFilesController;
     std::shared_ptr<ThumbnailCreator> m_thumbnailCreator;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PROJECTMODULE_H
+#endif  // AU_PROJECT_PROJECTMODULE_H

@@ -30,8 +30,7 @@
 using namespace au::appshell;
 using namespace muse::ui;
 
-PreferencesModel::PreferencesModel(QObject* parent)
-    : QAbstractItemModel(parent)
+PreferencesModel::PreferencesModel(QObject* parent) : QAbstractItemModel(parent)
 {
 }
 
@@ -125,7 +124,7 @@ QVariant PreferencesModel::data(const QModelIndex& index, int role) const
 
 QHash<int, QByteArray> PreferencesModel::roleNames() const
 {
-    return { { ItemRole, "itemRole" } };
+    return {{ItemRole, "itemRole"}};
 }
 
 QString PreferencesModel::currentPageId() const
@@ -148,14 +147,22 @@ void PreferencesModel::load(const QString& currentPageId)
     m_rootItem = new PreferencePageItem();
 
     //! TODO AU4
-    QList<PreferencePageItem*> items {
+    QList<PreferencePageItem*> items{
         makeItem("general", QT_TRANSLATE_NOOP("appshell/preferences", "General"), IconCode::Code::SETTINGS_COG, ""),
 
-        makeItem("appearance", QT_TRANSLATE_NOOP("appshell/preferences", "Interface"), IconCode::Code::BRUSH,
-                 "Preferences/AppearancePreferencesPage.qml"),
+        makeItem(
+            "appearance",
+            QT_TRANSLATE_NOOP("appshell/preferences", "Interface"),
+            IconCode::Code::BRUSH,
+            "Preferences/AppearancePreferencesPage.qml"
+        ),
 
-        makeItem("audio-settings", QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"), IconCode::Code::AUDIO,
-                 "Preferences/PlaybackPreferencesPage.qml"),
+        makeItem(
+            "audio-settings",
+            QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"),
+            IconCode::Code::AUDIO,
+            "Preferences/PlaybackPreferencesPage.qml"
+        ),
 
         makeItem("playback-recording", QT_TRANSLATE_NOOP("appshell/preferences", "Playback/Recording"), IconCode::Code::MICROPHONE, ""),
 
@@ -167,13 +174,17 @@ void PreferencesModel::load(const QString& currentPageId)
 
         makeItem("cloud", QT_TRANSLATE_NOOP("appshell/preferences", "Cloud"), IconCode::Code::CLOUD, ""),
 
-        makeItem("shortcuts", QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
-                 "Preferences/ShortcutsPreferencesPage.qml"),
+        makeItem(
+            "shortcuts",
+            QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"),
+            IconCode::Code::SHORTCUTS,
+            "Preferences/ShortcutsPreferencesPage.qml"
+        ),
 
         makeItem("plugin", QT_TRANSLATE_NOOP("appshell/preferences", "Plugin manager"), IconCode::Code::PLUGIN, "")
     };
 
-    for (PreferencePageItem* item: items) {
+    for (PreferencePageItem* item : items) {
         m_rootItem->appendChild(item);
     }
 
@@ -211,7 +222,7 @@ void PreferencesModel::selectRow(const QModelIndex& rowIndex)
     }
 
     QList<PreferencePageItem*> children = parentItem->childrenItems();
-    for (PreferencePageItem* child: children) {
+    for (PreferencePageItem* child : children) {
         child->setExpanded(false);
     }
 
@@ -238,7 +249,7 @@ QVariantList PreferencesModel::availablePages() const
             result << childObj;
 
             QVariantList pages = childPages(child);
-            for (const QVariant& page: pages) {
+            for (const QVariant& page : pages) {
                 result << page;
             }
         }
@@ -259,9 +270,13 @@ void PreferencesModel::setCurrentPageId(QString currentPageId)
     emit currentPageIdChanged(m_currentPageId);
 }
 
-PreferencePageItem* PreferencesModel::makeItem(const QString& id, const QString& title, muse::ui::IconCode::Code icon,
-                                               const QString& path,
-                                               const QList<PreferencePageItem*>& children) const
+PreferencePageItem* PreferencesModel::makeItem(
+    const QString& id,
+    const QString& title,
+    muse::ui::IconCode::Code icon,
+    const QString& path,
+    const QList<PreferencePageItem*>& children
+) const
 {
     PreferencePageItem* item = new PreferencePageItem();
     item->setId(id);
@@ -270,7 +285,7 @@ PreferencePageItem* PreferencesModel::makeItem(const QString& id, const QString&
     item->setPath(path);
     item->setExpanded(id == currentPageId());
 
-    for (PreferencePageItem* child: children) {
+    for (PreferencePageItem* child : children) {
         item->appendChild(child);
 
         if (child->id() == currentPageId()) {

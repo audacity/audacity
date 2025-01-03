@@ -3,8 +3,8 @@
 */
 #include "waveview.h"
 
-#include <QPainter>
 #include <QElapsedTimer>
+#include <QPainter>
 
 #include "draw/types/color.h"
 
@@ -19,8 +19,7 @@ static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLES_HIGHLIGHT_COLOR = QColor(255, 255, 255);
 static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
 
-WaveView::WaveView(QQuickItem* parent)
-    : QQuickPaintedItem(parent)
+WaveView::WaveView(QQuickItem* parent) : QQuickPaintedItem(parent)
 {
 }
 
@@ -177,7 +176,7 @@ void WaveView::setChannelHeightRatio(double channelHeightRatio)
     update();
 }
 
-QColor WaveView::transformColor(const QColor &originalColor) const
+QColor WaveView::transformColor(const QColor& originalColor) const
 {
     int r = originalColor.red();
     int g = originalColor.green();

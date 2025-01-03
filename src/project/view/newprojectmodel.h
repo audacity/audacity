@@ -26,9 +26,9 @@
 
 #include "modularity/ioc.h"
 
+#include "context/iglobalcontext.h"
 #include "project/iprojectconfiguration.h"
 #include "project/iprojectcreator.h"
-#include "context/iglobalcontext.h"
 #include "types/projecttypes.h"
 
 namespace au::project {
@@ -48,6 +48,6 @@ private:
     project::ProjectCreateOptions parseOptions(const QVariantMap& info) const;
     void updatePreferredProjectCreationMode(bool isProjectCreatedFromInstruments);
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_NEWPROJECTMODEL_H
+#endif  // AU_PROJECT_NEWPROJECTMODEL_H

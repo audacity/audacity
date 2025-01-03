@@ -24,8 +24,8 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
 #include "async/asyncable.h"
+#include "modularity/ioc.h"
 
 #include "notation/inotationconfiguration.h"
 
@@ -82,6 +82,6 @@ private:
     notation::ZoomType defaultZoomType() const;
     int defaultZoomLevel() const;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_CANVASPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_CANVASPREFERENCESMODEL_H

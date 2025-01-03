@@ -40,7 +40,7 @@ class NavigableAppMenuModel : public AppMenuModel
     Q_PROPERTY(QRect appMenuAreaRect READ appMenuAreaRect WRITE setAppMenuAreaRect NOTIFY appMenuAreaRectChanged)
     Q_PROPERTY(QRect openedMenuAreaRect READ openedMenuAreaRect WRITE setOpenedMenuAreaRect NOTIFY openedMenuAreaRectChanged)
 
-    Q_PROPERTY(QWindow * appWindow READ appWindow WRITE setAppWindow)
+    Q_PROPERTY(QWindow* appWindow READ appWindow WRITE setAppWindow)
 
 public:
     explicit NavigableAppMenuModel(QObject* parent = nullptr);
@@ -115,6 +115,6 @@ private:
     QRect m_appMenuAreaRect;
     QRect m_openedMenuAreaRect;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_NAVIGABLEAPPMENUMODEL_H
+#endif  // AU_APPSHELL_NAVIGABLEAPPMENUMODEL_H

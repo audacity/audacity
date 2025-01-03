@@ -47,6 +47,6 @@ public:
     virtual void runAfterSplashScreen() = 0;
     virtual bool startupCompleted() const = 0;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_ISTARTUPSCENARIO_H
+#endif  // AU_APPSHELL_ISTARTUPSCENARIO_H

@@ -3,8 +3,8 @@
 */
 #include "effectpresetsscenario.h"
 
-#include "global/translation.h"
 #include "global/io/fileinfo.h"
+#include "global/translation.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
@@ -51,9 +51,9 @@ void EffectPresetsScenario::deletePreset(const EffectId& effectId, const PresetI
 {
     IInteractive::Result res = interactive()->question(
         muse::trc("effects", "Delete Preset"),
-        muse::mtrc("effects", "Are you sure you want to delete \"%1\"?")
-        .arg(au3::wxToString(presetId)).toStdString(),
-        { IInteractive::Button::No, IInteractive::Button::Yes });
+        muse::mtrc("effects", "Are you sure you want to delete \"%1\"?").arg(au3::wxToString(presetId)).toStdString(),
+        {IInteractive::Button::No, IInteractive::Button::Yes}
+    );
 
     if (res.button() == (int)muse::IInteractive::Button::No) {
         LOGD() << "delete preset is canceled";
@@ -68,8 +68,7 @@ void EffectPresetsScenario::deletePreset(const EffectId& effectId, const PresetI
 
 static std::vector<std::string> presetFilesFilter()
 {
-    return { muse::trc("effects", "Presets") + " (*.txt)",
-             muse::trc("global", "All files") + " (*)" };
+    return {muse::trc("effects", "Presets") + " (*.txt)", muse::trc("global", "All files") + " (*)"};
 }
 
 void EffectPresetsScenario::importPreset(const EffectInstanceId& effectInstanceId)
@@ -79,9 +78,7 @@ void EffectPresetsScenario::importPreset(const EffectInstanceId& effectInstanceI
     }
 
     const std::string interactiveTitle = muse::trc("effects", "Import Effect Parameters");
-    io::path_t path = interactive()->selectOpeningFile(QString::fromStdString(interactiveTitle),
-                                                       m_lastImportPath,
-                                                       presetFilesFilter());
+    io::path_t path = interactive()->selectOpeningFile(QString::fromStdString(interactiveTitle), m_lastImportPath, presetFilesFilter());
 
     if (path.empty()) {
         LOGD() << "select file to import is canceled";
@@ -109,9 +106,8 @@ void EffectPresetsScenario::exportPreset(const EffectInstanceId& effectInstanceI
         m_lastExportPath = globalConfiguration()->homePath();
     }
 
-    io::path_t path = interactive()->selectSavingFile(muse::qtrc("effects", "Export Effect Parameters"),
-                                                      m_lastExportPath,
-                                                      presetFilesFilter());
+    io::path_t path =
+        interactive()->selectSavingFile(muse::qtrc("effects", "Export Effect Parameters"), m_lastExportPath, presetFilesFilter());
 
     if (path.empty()) {
         LOGD() << "select file to export is canceled";

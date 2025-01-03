@@ -4,19 +4,19 @@
 #include "effectsprovider.h"
 #include "effecterrors.h"
 
-#include "global/translation.h"
 #include "au3wrap/internal/domconverter.h"
+#include "global/translation.h"
 
-#include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
+#include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-effects/MixAndRender.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-transactions/TransactionScope.h"
 #include "libraries/lib-exceptions/AudacityException.h"
+#include "libraries/lib-transactions/TransactionScope.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 
-#include "libraries/lib-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
 #include "libraries/lib-basic-ui/BasicUI.h"
+#include "libraries/lib-module-manager/PluginManager.h"  // for NYQUIST_PROMPT_ID
 
 #include "libraries/lib-audio-io/AudioIO.h"
 
@@ -92,9 +92,9 @@ muse::async::Notification EffectsProvider::effectMetaListChanged() const
 EffectCategoryList EffectsProvider::effectsCategoryList() const
 {
     EffectCategoryList list;
-    list.push_back({ BUILTIN_CATEGORY_ID, muse::mtrc("effects", "Built-in") });
+    list.push_back({BUILTIN_CATEGORY_ID, muse::mtrc("effects", "Built-in")});
     if (isVstSupported()) {
-        list.push_back({ VST_CATEGORY_ID, muse::mtrc("effects", "VST") });
+        list.push_back({VST_CATEGORY_ID, muse::mtrc("effects", "VST")});
     }
 
     return list;
@@ -143,7 +143,7 @@ Effect* EffectsProvider::effect(const EffectId& effectId) const
     }
 
     Effect* effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(pluginID));
-    IF_ASSERT_FAILED(effect) {
+    IF_ASSERT_FAILED (effect) {
         LOGE() << "effect not available, effectId: " << effectId;
         return nullptr;
     }
@@ -162,8 +162,12 @@ muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInst
     return rv.ret;
 }
 
-muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,
-                                         EffectSettings& settings)
+muse::Ret EffectsProvider::performEffect(
+    au3::Au3Project& project,
+    Effect* effect,
+    std::shared_ptr<EffectInstance> pInstanceEx,
+    EffectSettings& settings
+)
 {
     //! ============================================================================
     //! NOTE Step 1 - add new a track if need
@@ -178,9 +182,7 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
             auto track = effect->mFactory->Create();
             track->SetName(effect->mTracks->MakeUniqueTrackName(au3::Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
             // The track-added event should be issued synchronously.
-            newTrack = effect->mTracks->Add(
-                track, TrackList::DoAssignId::Yes,
-                TrackList::EventPublicationSynchrony::Synchronous);
+            newTrack = effect->mTracks->Add(track, TrackList::DoAssignId::Yes, TrackList::EventPublicationSynchrony::Synchronous);
             newTrack->SetSelected(true);
         }
     }
@@ -204,14 +206,10 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
         if (skipFlag == false) {
             using namespace BasicUI;
             auto name = effect->GetName();
-            auto progress = MakeProgress(
-                name,
-                XO("Applying %s...").Format(name),
-                ProgressShowCancel
-                );
+            auto progress = MakeProgress(name, XO("Applying %s...").Format(name), ProgressShowCancel);
             auto vr = valueRestorer(effect->mProgress, progress.get());
 
-            assert(pInstanceEx); // null check above
+            assert(pInstanceEx);  // null check above
             try {
                 if (pInstanceEx->Process(settings) == false) {
                     success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
@@ -258,14 +256,14 @@ void restoreEffectStateHack(EffectBase& effect)
         pInstance->Init();
     }
 }
-}
+}  // namespace
 
 muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& settings)
 {
     //! ============================================================================
     //! NOTE Step 1 - check conditions
     //! ============================================================================
-    if (effect.mNumTracks == 0) {     // nothing to preview
+    if (effect.mNumTracks == 0) {  // nothing to preview
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
@@ -286,7 +284,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
         bool isPreview = false;
     };
 
-    const EffectContext originCtx = { effect.mT0, effect.mT1, effect.mTracks, effect.mProgress, effect.mIsPreview };
+    const EffectContext originCtx = {effect.mT0, effect.mT1, effect.mTracks, effect.mProgress, effect.mIsPreview};
     auto restoreCtx = finally([&] {
         effect.mT0 = originCtx.t0;
         effect.mT1 = originCtx.t1;
@@ -348,9 +346,14 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
         if (isLinearEffect && !isGenerator) {
             auto newTrack = MixAndRender(
                 originCtx.tracks->Selected<const au::au3::Au3WaveTrack>(),
-                Mixer::WarpOptions { pProject },
-                wxString {}, // Don't care about the name of the temporary tracks
-                effect.mFactory, effect.mProjectRate, floatSample, newCtx.t0, newCtx.t1);
+                Mixer::WarpOptions{pProject},
+                wxString{},  // Don't care about the name of the temporary tracks
+                effect.mFactory,
+                effect.mProjectRate,
+                floatSample,
+                newCtx.t0,
+                newCtx.t1
+            );
 
             if (!newTrack) {
                 return muse::make_ret(muse::Ret::Code::InternalError);
@@ -381,11 +384,8 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     //! ============================================================================
     {
         using namespace BasicUI;
-        auto progress = MakeProgress(
-            effect.GetName(),
-            XO("Preparing preview"),
-            ProgressShowStop
-            ); // Have only "Stop" button.
+        auto progress = MakeProgress(effect.GetName(), XO("Preparing preview"),
+                                     ProgressShowStop);  // Have only "Stop" button.
 
         newCtx.progress = progress.get();
         newCtx.isPreview = true;
@@ -405,7 +405,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
         // Apply effect to new tracks
 
         auto pInstance = std::dynamic_pointer_cast<EffectInstanceEx>(effect.MakeInstance());
-        IF_ASSERT_FAILED(pInstance) {
+        IF_ASSERT_FAILED (pInstance) {
             return muse::make_ret(muse::Ret::Code::InternalError);
         }
 

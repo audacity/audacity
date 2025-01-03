@@ -15,8 +15,7 @@ static constexpr int PIXELSSTEPSFACTOR = 5;
 
 using namespace au::projectscene;
 
-TimelineContext::TimelineContext(QObject* parent)
-    : QObject(parent)
+TimelineContext::TimelineContext(QObject* parent) : QObject(parent)
 {
     m_snapTimeFormatter = std::make_shared<SnapTimeFormatter>();
 }
@@ -185,8 +184,8 @@ void TimelineContext::insureVisible(double posSec)
 
     constexpr double SCROLL_MARGIN_PX(16);
 
-    if (muse::RealIsEqualOrMore(newPosition, frameStartPosition)
-        && muse::RealIsEqualOrLess(newPosition, frameEndPosition - SCROLL_MARGIN_PX)) {
+    if (muse::RealIsEqualOrMore(newPosition, frameStartPosition) &&
+        muse::RealIsEqualOrLess(newPosition, frameEndPosition - SCROLL_MARGIN_PX)) {
         return;
     }
 
@@ -393,8 +392,10 @@ void TimelineContext::updateViewOnProjectTempoChange(double ratio)
     setFrameStartTime(m_frameStartTime / ratio);
     setFrameEndTime(m_frameEndTime / ratio);
 
-    dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(
-                               globalContext()->playbackState()->playbackPosition() / ratio));
+    dispatcher()->dispatch(
+        "playback-seek",
+        muse::actions::ActionData::make_arg1<double>(globalContext()->playbackState()->playbackPosition() / ratio)
+    );
 }
 
 void TimelineContext::shiftFrameTimeOnStep(int direction)
@@ -654,9 +655,7 @@ bool TimelineContext::singleClipSelected() const
 
 void TimelineContext::updateSelectionActive()
 {
-    bool isActive = m_selectionStartTime >= 0.0
-                    && m_selectionEndTime > 0.0
-                    && m_selectionEndTime > m_selectionStartTime;
+    bool isActive = m_selectionStartTime >= 0.0 && m_selectionEndTime > 0.0 && m_selectionEndTime > m_selectionStartTime;
 
     if (m_selectionActive == isActive) {
         return;

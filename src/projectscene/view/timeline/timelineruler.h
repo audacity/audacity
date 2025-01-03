@@ -4,12 +4,12 @@
 #include <QtGui/QFont>
 #include <QtQuick/QQuickPaintedItem>
 
+#include "async/asyncable.h"
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
-#include "async/asyncable.h"
 
-#include "timeformat.h"
 #include "beatsmeasuresformat.h"
+#include "timeformat.h"
 #include "timelinecontext.h"
 
 class QPainter;
@@ -29,7 +29,7 @@ class TimelineRuler : public QQuickPaintedItem, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(TimelineContext* context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
     muse::Inject<muse::ui::IUiConfiguration> uiconfiguration;
     muse::Inject<IProjectSceneConfiguration> configuration;
@@ -67,4 +67,4 @@ private:
     TimelineContext* m_context = nullptr;
     std::unique_ptr<IRulerFormat> m_formatter;
 };
-}
+}  // namespace au::projectscene

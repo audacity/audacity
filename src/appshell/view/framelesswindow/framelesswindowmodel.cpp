@@ -32,8 +32,7 @@
 
 using namespace au::appshell;
 
-FramelessWindowModel::FramelessWindowModel(QObject* parent)
-    : QObject(parent)
+FramelessWindowModel::FramelessWindowModel(QObject* parent) : QObject(parent)
 {
 #ifdef Q_OS_WIN
     m_controller = new WinFramelessWindowController();

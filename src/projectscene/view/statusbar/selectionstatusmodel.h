@@ -7,10 +7,10 @@
 
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "trackedit/iselectioncontroller.h"
+#include "modularity/ioc.h"
 #include "playback/iplayback.h"
+#include "trackedit/iselectioncontroller.h"
 
 namespace au::projectscene {
 class SelectionStatusModel : public QObject, public muse::async::Asyncable
@@ -64,10 +64,9 @@ signals:
     void isEnabledChanged();
 
 private:
-
     double m_startTime = 0.0;
     double m_endTime = 0.0;
 
     int m_currentFormat = 0;
 };
-}
+}  // namespace au::projectscene

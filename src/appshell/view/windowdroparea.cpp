@@ -26,8 +26,7 @@
 
 using namespace au::appshell;
 
-WindowDropArea::WindowDropArea(QQuickItem* parent)
-    : QQuickItem(parent)
+WindowDropArea::WindowDropArea(QQuickItem* parent) : QQuickItem(parent)
 {
     setFlag(ItemAcceptsDrops, true);
 }

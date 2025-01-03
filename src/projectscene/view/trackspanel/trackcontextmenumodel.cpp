@@ -17,14 +17,14 @@ void TrackContextMenuModel::load()
         return item;
     };
 
-    MenuItemList moveTrackItems {
+    MenuItemList moveTrackItems{
         makeItemWithArg("track-move-up"),
         makeItemWithArg("track-move-down"),
         makeItemWithArg("track-move-top"),
         makeItemWithArg("track-move-bottom"),
     };
 
-    MenuItemList items {
+    MenuItemList items{
         makeItemWithArg("track-rename"),
         makeItemWithArg("track-duplicate"),
         makeItemWithArg("track-delete"),

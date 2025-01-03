@@ -22,9 +22,9 @@
 
 #pragma once
 
+#include "context/iglobalcontext.h"
 #include "iinteractive.h"
 #include "ithumbnailcreator.h"
-#include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 
 namespace au::project {
@@ -85,4 +85,4 @@ private:
     QList<Property> m_properties;
     IAudacityProjectPtr m_project;
 };
-}
+}  // namespace au::project

@@ -12,6 +12,6 @@ public:
 private:
     void DoLogRecord(wxLogLevel level, const wxString& msg, const wxLogRecordInfo& info) override;
 };
-}
+}  // namespace au::au3
 
-#endif // AU_AU3WRAP_WXLOGWRAP_H
+#endif  // AU_AU3WRAP_WXLOGWRAP_H

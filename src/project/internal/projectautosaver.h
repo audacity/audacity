@@ -26,10 +26,10 @@
 
 #include "async/asyncable.h"
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "io/ifilesystem.h"
 #include "iprojectconfiguration.h"
+#include "modularity/ioc.h"
 
 #include "../iprojectautosaver.h"
 
@@ -65,6 +65,6 @@ private:
     QTimer m_timer;
     muse::io::path_t m_lastProjectPathNeedingAutosave;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PROJECTAUTOSAVER_H
+#endif  // AU_PROJECT_PROJECTAUTOSAVER_H

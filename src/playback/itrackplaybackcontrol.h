@@ -21,4 +21,4 @@ public:
     virtual void setBalance(long trackId, au::audio::balance_t balance) = 0;
     virtual au::audio::balance_t balance(long trackId) = 0;
 };
-}
+}  // namespace au::playback

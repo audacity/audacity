@@ -25,8 +25,8 @@
 
 #include <QQuickItem>
 
-#include "modularity/ioc.h"
 #include "iapplicationactioncontroller.h"
+#include "modularity/ioc.h"
 
 namespace au::appshell {
 class WindowDropArea : public QQuickItem
@@ -40,6 +40,6 @@ protected:
     void dragMoveEvent(QDragMoveEvent* event) override;
     void dropEvent(QDropEvent*) override;
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_WINDOWDROPAREA_H
+#endif  // AU_APPSHELL_WINDOWDROPAREA_H

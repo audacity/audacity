@@ -27,8 +27,7 @@
 using namespace au::appshell;
 using namespace mu::braille;
 
-BraillePreferencesModel::BraillePreferencesModel(QObject* parent)
-    : QObject(parent)
+BraillePreferencesModel::BraillePreferencesModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -54,21 +53,21 @@ QStringList BraillePreferencesModel::brailleTables() const
 
 QVariantList BraillePreferencesModel::intervalDirections() const
 {
-    return QVariantList {
-        QVariantMap {
+    return QVariantList{
+        QVariantMap{
             //: Braille chord interval direction: automatic (based on clef)
-            { "text", qtrc("appshell/preferences", "Auto") },
-            { "value", static_cast<int>(BrailleIntervalDirection::Auto) },
+            {"text", qtrc("appshell/preferences", "Auto")},
+            {"value", static_cast<int>(BrailleIntervalDirection::Auto)},
         },
-        QVariantMap {
+        QVariantMap{
             //: Braille chord interval direction: up (ascending)
-            { "text", qtrc("appshell/preferences", "Up") },
-            { "value", static_cast<int>(BrailleIntervalDirection::Up) },
+            {"text", qtrc("appshell/preferences", "Up")},
+            {"value", static_cast<int>(BrailleIntervalDirection::Up)},
         },
-        QVariantMap {
+        QVariantMap{
             //: Braille chord interval direction: down (descending)
-            { "text", qtrc("appshell/preferences", "Down") },
-            { "value", static_cast<int>(BrailleIntervalDirection::Down) },
+            {"text", qtrc("appshell/preferences", "Down")},
+            {"value", static_cast<int>(BrailleIntervalDirection::Down)},
         },
     };
 }

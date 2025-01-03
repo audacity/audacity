@@ -21,7 +21,6 @@ class GeneratorEffectModel : public AbstractEffectModel
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
 
 public:
-
     double duration() const;
     void prop_setDuration(double newDuration);
     double sampleRate() const;
@@ -50,4 +49,4 @@ private:
 
     bool m_isApplyAllowed = false;
 };
-} // namespace au::effects
+}  // namespace au::effects

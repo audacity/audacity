@@ -27,8 +27,10 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(6));
 
     muse::settings()->setDefaultValue(INSERT_SILENCE_DURATION, muse::Val(30));
-    muse::settings()->setDefaultValue(INSERT_SILENCE_DURATION_FORMAT,
-                                      muse::Val(NumericConverterFormats::DefaultSelectionFormat().Translation().ToStdString()));
+    muse::settings()->setDefaultValue(
+        INSERT_SILENCE_DURATION_FORMAT,
+        muse::Val(NumericConverterFormats::DefaultSelectionFormat().Translation().ToStdString())
+    );
 
     muse::settings()->setDefaultValue(TIMELINE_RULER_MODE, muse::Val(TimelineRulerMode::MINUTES_AND_SECONDS));
     muse::settings()->valueChanged(TIMELINE_RULER_MODE).onReceive(nullptr, [this](const muse::Val& val) {

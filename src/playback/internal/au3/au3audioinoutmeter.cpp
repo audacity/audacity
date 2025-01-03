@@ -25,8 +25,8 @@ void au::playback::InOutMeter::Reset(double sampleRate, bool resetClipping)
 
     au::audio::volume_dbfs_t zero = static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(0));
 
-    m_audioSignalChanges.send(0, au::audio::AudioSignalVal { 0, zero });
-    m_audioSignalChanges.send(1, au::audio::AudioSignalVal { 0, zero });
+    m_audioSignalChanges.send(0, au::audio::AudioSignalVal{0, zero});
+    m_audioSignalChanges.send(1, au::audio::AudioSignalVal{0, zero});
 }
 
 void au::playback::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned long numFrames, const float* sampleData)
@@ -69,8 +69,8 @@ void au::playback::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned 
         rms[j] = sqrt(rms[j] / numFrames);
     }
 
-    m_audioSignalChanges.send(0, au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak[0])) });
-    m_audioSignalChanges.send(1, au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak[1])) });
+    m_audioSignalChanges.send(0, au::audio::AudioSignalVal{0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak[0]))});
+    m_audioSignalChanges.send(1, au::audio::AudioSignalVal{0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak[1]))});
     // LOGD() << "=============== change " << LINEAR_TO_DB(peak[0]) << " - " << LINEAR_TO_DB(peak[1]);
 }
 
@@ -98,11 +98,11 @@ int au::playback::InOutMeter::GetDBRange() const
     return 0;
 }
 
-muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >
-au::playback::InOutMeter::signalChanges() const
+muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > au::playback::InOutMeter::signalChanges() const
 {
-    return muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >([this](auto resolve, auto /*reject*/) {
-        return resolve(
-            m_audioSignalChanges);
-    });
+    return muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >(
+        [this](auto resolve, auto /*reject*/) {
+            return resolve(m_audioSignalChanges);
+        }
+    );
 }

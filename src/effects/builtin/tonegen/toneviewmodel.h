@@ -51,4 +51,4 @@ private:
 
     ToneEffect* effect() const;
 };
-}
+}  // namespace au::effects

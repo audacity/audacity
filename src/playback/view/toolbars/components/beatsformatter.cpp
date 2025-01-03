@@ -5,8 +5,8 @@
 
 #include <cstdio>
 
-#include "translation.h"
 #include "log.h"
+#include "translation.h"
 
 using namespace au::playback;
 
@@ -19,9 +19,10 @@ static constexpr size_t pow10(int power)
     return result;
 }
 
-static constexpr std::array<size_t, 3> MIN_DIGITS { 3, 2, 2 };
-static constexpr std::array<size_t, 3> UPPER_BOUNDS {
-    pow10(MIN_DIGITS[0] - 1) + 1, pow10(MIN_DIGITS[1] - 1) + 1,
+static constexpr std::array<size_t, 3> MIN_DIGITS{3, 2, 2};
+static constexpr std::array<size_t, 3> UPPER_BOUNDS{
+    pow10(MIN_DIGITS[0] - 1) + 1,
+    pow10(MIN_DIGITS[1] - 1) + 1,
     pow10(MIN_DIGITS[2] - 1) + 1
 };
 
@@ -35,8 +36,7 @@ static QString beatString()
     return muse::qtrc("playback", "beat");
 }
 
-BeatsFormatter::BeatsFormatter(const QString& formatStr, int fracPart)
-    : TimecodeFormatter(formatStr), m_fracPart(fracPart)
+BeatsFormatter::BeatsFormatter(const QString& formatStr, int fracPart) : TimecodeFormatter(formatStr), m_fracPart(fracPart)
 {
 }
 
@@ -93,8 +93,7 @@ BeatsFormatter::ConversionResult BeatsFormatter::valueToString(double value, boo
 
     for (size_t fieldIndex = 0; fieldIndex < m_fields.size(); ++fieldIndex) {
         const auto fieldLength = m_fieldLengths[fieldIndex];
-        const auto fieldValue = std::max(
-            0, static_cast<int>(std::floor(value * eps / fieldLength)));
+        const auto fieldValue = std::max(0, static_cast<int>(std::floor(value * eps / fieldLength)));
 
         char field[10];
         snprintf(field, sizeof(field), m_fields[fieldIndex].formatStr.toStdString().c_str(), (int)(fieldValue + m_fieldValueOffset));
@@ -110,8 +109,7 @@ BeatsFormatter::ConversionResult BeatsFormatter::valueToString(double value, boo
 
 std::optional<double> BeatsFormatter::stringToValue(const QString& value) const
 {
-    if (m_fields.size() > 0
-        && value.mid(m_fields[0].pos, 1) == '-') {
+    if (m_fields.size() > 0 && value.mid(m_fields[0].pos, 1) == '-') {
         return std::nullopt;
     }
 
@@ -121,9 +119,7 @@ std::optional<double> BeatsFormatter::stringToValue(const QString& value) const
     for (size_t i = 0; i < m_fields.size(); i++) {
         const auto& field = m_fields[i];
 
-        const size_t labelIndex = field.label.isEmpty()
-                                  ? muse::nidx
-                                  : value.indexOf(field.label, lastIndex);
+        const size_t labelIndex = field.label.isEmpty() ? muse::nidx : value.indexOf(field.label, lastIndex);
 
         const auto fieldStringValue = value.mid(lastIndex, labelIndex == muse::nidx ? labelIndex : labelIndex - lastIndex);
 
@@ -155,8 +151,7 @@ double BeatsFormatter::singleStep(double value, int digitIndex, bool upwards)
     const auto& fieldIndex = digit.field;
     const auto& field = m_fields[fieldIndex];
 
-    const auto stepSize = m_fieldLengths[fieldIndex]
-                          * std::pow(10, field.digits - digit.index - 1);
+    const auto stepSize = m_fieldLengths[fieldIndex] * std::pow(10, field.digits - digit.index - 1);
 
     return upwards ? value + stepSize : value - stepSize;
 }
@@ -227,7 +222,7 @@ void BeatsFormatter::updateFields(size_t barsDigits)
         m_fields[i].pos = pos;
 
         for (size_t j = 0; j < m_fields[i].digits; j++) {
-            m_digits.push_back(DigitInfo { i, j, pos });
+            m_digits.push_back(DigitInfo{i, j, pos});
             pos++;
         }
 

@@ -11,18 +11,18 @@ QVariantList NoiseViewModel::types() const
 {
     static QVariantList items;
     if (items.empty()) {
-        items.append(QVariantMap {
-            { "text", muse::qtrc("effects/noise", "White", "not a color, but 'white noise' having a uniform spectrum") },
-            { "value", (int)NoiseSettings::Type::White }
+        items.append(QVariantMap{
+            {"text", muse::qtrc("effects/noise", "White", "not a color, but 'white noise' having a uniform spectrum")},
+            {"value", (int)NoiseSettings::Type::White}
         });
-        items.append(QVariantMap {
-            { "text",
-              muse::qtrc("effects/noise", "Pink", "not a color, but 'pink noise' having a spectrum with more power in low frequencies") },
-            { "value", (int)NoiseSettings::Type::Pink }
+        items.append(QVariantMap{
+            {"text",
+             muse::qtrc("effects/noise", "Pink", "not a color, but 'pink noise' having a spectrum with more power in low frequencies")},
+            {"value", (int)NoiseSettings::Type::Pink}
         });
-        items.append(QVariantMap {
-            { "text", muse::qtrc("effects/noise", "Brownian", "a kind of noise spectrum also known as 'red' or 'brown'") },
-            { "value", (int)NoiseSettings::Type::Brownian }
+        items.append(QVariantMap{
+            {"text", muse::qtrc("effects/noise", "Brownian", "a kind of noise spectrum also known as 'red' or 'brown'")},
+            {"value", (int)NoiseSettings::Type::Brownian}
         });
     }
     return items;

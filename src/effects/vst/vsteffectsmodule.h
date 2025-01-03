@@ -18,7 +18,6 @@ public:
     void resolveImports() override;
 
 private:
-
     std::shared_ptr<VstEffectsRepository> m_vstEffectsRepository;
 };
-}
+}  // namespace au::effects

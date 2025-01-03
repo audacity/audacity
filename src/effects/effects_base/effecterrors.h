@@ -8,7 +8,7 @@
 #include "types/ret.h"
 
 namespace au::effects {
-static constexpr int EFFECTS_FIRST = 7000; // TODO This has to go in framework's ret.h
+static constexpr int EFFECTS_FIRST = 7000;  // TODO This has to go in framework's ret.h
 enum class Err {
     Undefined = int(muse::Ret::Code::Undefined),
     NoError = int(muse::Ret::Code::Ok),
@@ -29,8 +29,10 @@ inline muse::Ret make_ret(Err e, std::string text = "")
     int retCode = static_cast<int>(e);
 
     switch (e) {
-    case Err::Undefined: return muse::Ret(retCode);
-    case Err::NoError: return muse::Ret(retCode);
+    case Err::Undefined:
+        return muse::Ret(retCode);
+    case Err::NoError:
+        return muse::Ret(retCode);
     case Err::InternalError:
         return muse::Ret(retCode, muse::trc("effects", "Internal error"));
     case Err::UnknownError:
@@ -49,4 +51,4 @@ inline muse::Ret make_ret(Err e, std::string text = "")
 
     return muse::Ret(static_cast<int>(e));
 }
-} // namespace au::effects
+}  // namespace au::effects

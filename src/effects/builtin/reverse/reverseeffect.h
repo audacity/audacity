@@ -22,4 +22,4 @@ public:
     // Effect implementation
     bool Process(::EffectInstance& instance, ::EffectSettings& settings) override;
 };
-}
+}  // namespace au::effects

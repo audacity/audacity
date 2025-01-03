@@ -71,7 +71,7 @@ void ProjectSceneActionsController::pinnedPlayHead()
 
 void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& args)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED (args.count() == 1) {
         return;
     }
 
@@ -97,10 +97,10 @@ void ProjectSceneActionsController::insertSilence(const muse::actions::ActionDat
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const
 {
-    QMap<std::string, bool> isChecked {
-        { VERTICAL_RULERS_CODE, configuration()->isVerticalRulersVisible() },
-        { MINUTES_SECONDS_RULER, configuration()->timelineRulerMode() == TimelineRulerMode::MINUTES_AND_SECONDS },
-        { BEATS_MEASURES_RULER, configuration()->timelineRulerMode() == TimelineRulerMode::BEATS_AND_MEASURES }
+    QMap<std::string, bool> isChecked{
+        {VERTICAL_RULERS_CODE, configuration()->isVerticalRulersVisible()},
+        {MINUTES_SECONDS_RULER, configuration()->timelineRulerMode() == TimelineRulerMode::MINUTES_AND_SECONDS},
+        {BEATS_MEASURES_RULER, configuration()->timelineRulerMode() == TimelineRulerMode::BEATS_AND_MEASURES}
     };
 
     return isChecked[actionCode];

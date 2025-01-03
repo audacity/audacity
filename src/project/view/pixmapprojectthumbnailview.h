@@ -48,6 +48,6 @@ protected:
 private:
     QPixmap m_thumbnail;
 };
-}
+}  // namespace au::project
 
-#endif // AU_PROJECT_PIXMAPPROJECTTHUMBNAILVIEW_H
+#endif  // AU_PROJECT_PIXMAPPROJECTTHUMBNAILVIEW_H

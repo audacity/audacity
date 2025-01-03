@@ -29,8 +29,7 @@
 
 using namespace au::appshell;
 
-ImportPreferencesModel::ImportPreferencesModel(QObject* parent)
-    : QObject(parent)
+ImportPreferencesModel::ImportPreferencesModel(QObject* parent) : QObject(parent)
 {
 }
 
@@ -44,7 +43,7 @@ QVariantList ImportPreferencesModel::charsets() const
     std::sort(charsets.begin(), charsets.end());
 
     QVariantList result;
-    for (QByteArray charset: charsets) {
+    for (QByteArray charset : charsets) {
         result << QString(charset);
     }
 
@@ -53,18 +52,18 @@ QVariantList ImportPreferencesModel::charsets() const
 
 QVariantList ImportPreferencesModel::shortestNotes() const
 {
-    constexpr int division =  engraving::Constants::DIVISION;
+    constexpr int division = engraving::Constants::DIVISION;
 
     QVariantList result = {
-        QVariantMap { { "title", qtrc("appshell/preferences", "Quarter") }, { "value", division } },
-        QVariantMap { { "title", qtrc("appshell/preferences", "Eighth") }, { "value", division / 2 } },
-        QVariantMap { { "title", qtrc("appshell/preferences", "16th") }, { "value", division / 4 } },
-        QVariantMap { { "title", qtrc("appshell/preferences", "32nd") }, { "value", division / 8 } },
-        QVariantMap { { "title", qtrc("appshell/preferences", "64th") }, { "value", division / 16 } },
-        QVariantMap { { "title", qtrc("appshell/preferences", "128th") }, { "value", division / 32 } },
-        QVariantMap { { "title", qtrc("appshell/preferences", "256th") }, { "value", division / 64 } },
-        QVariantMap { { "title", qtrc("appshell/preferences", "512th") }, { "value", division / 128 } },
-        QVariantMap { { "title", qtrc("appshell/preferences", "1024th") }, { "value", division / 256 } }
+        QVariantMap{{"title", qtrc("appshell/preferences", "Quarter")}, {"value", division}},
+        QVariantMap{{"title", qtrc("appshell/preferences", "Eighth")}, {"value", division / 2}},
+        QVariantMap{{"title", qtrc("appshell/preferences", "16th")}, {"value", division / 4}},
+        QVariantMap{{"title", qtrc("appshell/preferences", "32nd")}, {"value", division / 8}},
+        QVariantMap{{"title", qtrc("appshell/preferences", "64th")}, {"value", division / 16}},
+        QVariantMap{{"title", qtrc("appshell/preferences", "128th")}, {"value", division / 32}},
+        QVariantMap{{"title", qtrc("appshell/preferences", "256th")}, {"value", division / 64}},
+        QVariantMap{{"title", qtrc("appshell/preferences", "512th")}, {"value", division / 128}},
+        QVariantMap{{"title", qtrc("appshell/preferences", "1024th")}, {"value", division / 256}}
     };
 
     return result;
@@ -72,7 +71,7 @@ QVariantList ImportPreferencesModel::shortestNotes() const
 
 QStringList ImportPreferencesModel::stylePathFilter() const
 {
-    return { qtrc("appshell/preferences", "MuseScore style file") + " (*.mss)" };
+    return {qtrc("appshell/preferences", "MuseScore style file") + " (*.mss)"};
 }
 
 QString ImportPreferencesModel::styleChooseTitle() const

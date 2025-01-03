@@ -5,12 +5,12 @@
 
 #include "global/defer.h"
 
-#include "libraries/lib-project/Project.h"
-#include "libraries/lib-project-file-io/ProjectFileIO.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-wave-track/WaveClip.h"
-#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 #include "domconverter.h"
+#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
+#include "libraries/lib-project-file-io/ProjectFileIO.h"
+#include "libraries/lib-project/Project.h"
+#include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 #include "TempoChange.h"
 
 //! HACK
@@ -19,8 +19,8 @@
 //! so, to fix it, included this file here
 #include "libraries/lib-project-file-io/SqliteSampleBlock.cpp"
 
-#include "wxtypes_convert.h"
 #include "../au3types.h"
+#include "wxtypes_convert.h"
 
 #include "log.h"
 
@@ -31,19 +31,19 @@ std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
     return std::make_shared<Au3ProjectAccessor>();
 }
 
-struct au::au3::Au3ProjectData
-{
+struct au::au3::Au3ProjectData {
     std::shared_ptr<Au3Project> project;
 
-    Au3Project& projectRef() { return *project.get(); }
+    Au3Project& projectRef()
+    {
+        return *project.get();
+    }
 };
 
-Au3ProjectAccessor::Au3ProjectAccessor()
-    : m_data(std::make_shared<Au3ProjectData>())
+Au3ProjectAccessor::Au3ProjectAccessor() : m_data(std::make_shared<Au3ProjectData>())
 {
     m_data->project = Au3Project::Create();
-    mTrackListSubstription = Au3TrackList::Get(m_data->projectRef()).Subscribe([this](const TrackListEvent& event)
-    {
+    mTrackListSubstription = Au3TrackList::Get(m_data->projectRef()).Subscribe([this](const TrackListEvent& event) {
         if (event.mType == TrackListEvent::ADDITION) {
             const auto tempo = ProjectTimeSignature::Get(m_data->projectRef()).GetTempo();
             if (const auto track = event.mpTrack.lock()) {

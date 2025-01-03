@@ -26,14 +26,14 @@
 
 #include "modularity/ioc.h"
 
-#include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
+#include "ui/iuiactionsregister.h"
 
-#include "internal/applicationuiactions.h"
 #include "internal/applicationactioncontroller.h"
+#include "internal/applicationuiactions.h"
 #include "internal/appshellconfiguration.h"
-#include "internal/startupscenario.h"
 #include "internal/sessionsmanager.h"
+#include "internal/startupscenario.h"
 
 #include "view/devtools/settingslistmodel.h"
 #include "view/mainwindowtitleprovider.h"
@@ -53,13 +53,13 @@
 // #include "view/preferences/saveandpublishpreferencesmodel.h"
 // #include "view/preferences/scorepreferencesmodel.h"
 // #include "view/preferences/importpreferencesmodel.h"
-#include "view/preferences/playbackpreferencesmodel.h"
 #include "view/preferences/commonaudioapiconfigurationmodel.h"
+#include "view/preferences/playbackpreferencesmodel.h"
 // #include "view/preferences/braillepreferencesmodel.h"
 #include "view/framelesswindow/framelesswindowmodel.h"
+#include "view/internal/maintoolbarmodel.h"
 #include "view/publish/publishtoolbarmodel.h"
 #include "view/windowdroparea.h"
-#include "view/internal/maintoolbarmodel.h"
 
 #ifdef Q_OS_MAC
 #include "view/appmenumodel.h"
@@ -97,9 +97,9 @@ void AppShellModule::registerExports()
     m_appShellConfiguration = std::make_shared<AppShellConfiguration>();
     m_sessionsManager = std::make_shared<SessionsManager>();
 
-    #ifdef Q_OS_MAC
+#ifdef Q_OS_MAC
     m_scrollingHook = std::make_shared<MacOSScrollingHook>();
-    #endif
+#endif
 
     ioc()->registerExport<IAppShellConfiguration>(moduleName(), m_appShellConfiguration);
     ioc()->registerExport<IApplicationActionController>(moduleName(), m_applicationActionController);
@@ -129,8 +129,10 @@ void AppShellModule::resolveImports()
         ir->registerUri(Uri("musescore://devtools"), ContainerMeta(ContainerType::PrimaryPage));
         ir->registerUri(Uri("musescore://about/musescore"), ContainerMeta(ContainerType::QmlDialog, "AboutDialog.qml"));
         ir->registerUri(Uri("musescore://about/musicxml"), ContainerMeta(ContainerType::QmlDialog, "AboutMusicXMLDialog.qml"));
-        ir->registerUri(Uri("musescore://firstLaunchSetup"),
-                        ContainerMeta(ContainerType::QmlDialog, "FirstLaunchSetup/FirstLaunchSetupDialog.qml"));
+        ir->registerUri(
+            Uri("musescore://firstLaunchSetup"),
+            ContainerMeta(ContainerType::QmlDialog, "FirstLaunchSetup/FirstLaunchSetupDialog.qml")
+        );
         ir->registerUri(Uri("audacity://preferences"), ContainerMeta(ContainerType::QmlDialog, "Preferences/PreferencesDialog.qml"));
     }
 }
@@ -169,7 +171,7 @@ void AppShellModule::registerUiTypes()
 
     qmlRegisterType<MainWindowTitleProvider>("Audacity.AppShell", 1, 0, "MainWindowTitleProvider");
     qmlRegisterType<ProjectPageModel>("Audacity.AppShell", 1, 0, "ProjectPageModel");
-//    qmlRegisterType<NotationStatusBarModel>("Audacity.AppShell", 1, 0, "NotationStatusBarModel");
+    //    qmlRegisterType<NotationStatusBarModel>("Audacity.AppShell", 1, 0, "NotationStatusBarModel");
     qmlRegisterType<AboutModel>("Audacity.AppShell", 1, 0, "AboutModel");
     qmlRegisterType<FirstLaunchSetupModel>("Audacity.AppShell", 1, 0, "FirstLaunchSetupModel");
     qmlRegisterType<ThemesPageModel>("Audacity.AppShell", 1, 0, "ThemesPageModel");

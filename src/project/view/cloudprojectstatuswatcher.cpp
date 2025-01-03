@@ -26,8 +26,7 @@
 
 using namespace au::project;
 
-CloudScoreStatusWatcher::CloudScoreStatusWatcher(QObject* parent)
-    : QObject(parent)
+CloudScoreStatusWatcher::CloudScoreStatusWatcher(QObject* parent) : QObject(parent)
 {
 }
 

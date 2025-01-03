@@ -107,11 +107,7 @@ std::string AppShellConfiguration::handbookUrl() const
     std::string utm = utmParameters(UTM_MEDIUM_MENU);
     std::string languageCode = currentLanguageCode();
 
-    QStringList params = {
-        "tag=handbook",
-        "locale=" + QString::fromStdString(languageCode),
-        QString::fromStdString(utm)
-    };
+    QStringList params = {"tag=handbook", "locale=" + QString::fromStdString(languageCode), QString::fromStdString(utm)};
 
     return museScoreUrl() + MUSESCORE_ONLINE_HANDBOOK_URL_PATH + "?" + params.join("&").toStdString();
 }
@@ -120,9 +116,7 @@ std::string AppShellConfiguration::askForHelpUrl() const
 {
     std::string languageCode = currentLanguageCode();
 
-    QStringList params = {
-        "locale=" + QString::fromStdString(languageCode)
-    };
+    QStringList params = {"locale=" + QString::fromStdString(languageCode)};
 
     return museScoreUrl() + MUSESCORE_ASK_FOR_HELP_URL_PATH + "?" + params.join("&").toStdString();
 }

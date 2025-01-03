@@ -25,8 +25,8 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
 #include "braille/ibrailleconfiguration.h"
+#include "modularity/ioc.h"
 
 namespace au::appshell {
 class BraillePreferencesModel : public QObject
@@ -59,6 +59,6 @@ signals:
     void brailleTableChanged(QString value);
     void intervalDirectionChanged(int value);
 };
-}
+}  // namespace au::appshell
 
-#endif // AU_APPSHELL_BRAILLEPREFERENCESMODEL_H
+#endif  // AU_APPSHELL_BRAILLEPREFERENCESMODEL_H
