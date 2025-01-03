@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <array>
+
 #include "timecodeformatter.h"
 
 enum class BeatsFormatterMode {
