@@ -6,113 +6,100 @@
 #include "../view/toolbars/components/timecodemodel.h"
 
 namespace au::playback {
-class TimecodeModelTests : public ::testing::Test
-{
-public:
-    void SetUp() override
-    {
-        m_model = new TimecodeModel(nullptr);
-    }
 
-    QString currentValueString() const
-    {
-        return m_model->m_valueString;
-    }
-
-    void TearDown() override
-    {
-        delete m_model;
-    }
-
-protected:
-
-    TimecodeModel* m_model = nullptr;
+struct TimecodeModelTestParam {
+    TimecodeModel::ViewFormatType format;
+    TimecodeMode mode;
+    double inputValue;
+    QString expectedOutput;
 };
 
-TEST_F(TimecodeModelTests, Parse_Numeric)
-{
-    //! [GIVEN] Sample rate is 44100.0
-    m_model->setSampleRate(44100.0);
-
-    std::vector < std::pair<double, QString> > expectedValues = {
-        { 0.0, "00 h 00 m 00 s" },
-        { 0.6, "00 h 00 m 01 s" },
-        { 1.0, "00 h 00 m 01 s" },
-        { 1.6, "00 h 00 m 02 s" },
-        { 60.0, "00 h 01 m 00 s" },
-        { 61.0, "00 h 01 m 01 s" },
-        { 3600.0, "01 h 00 m 00 s" },
-        { 3601.0, "01 h 00 m 01 s" },
-    };
-
-    for (const auto& [value, expected] : expectedValues) {
-        //! [WHEN] Set value
-        m_model->setValue(value);
-
-        //! [THEN] Check value
-        EXPECT_EQ(currentValueString(), expected);
+class TimecodeModelParameterizedTests : public ::testing::TestWithParam<TimecodeModelTestParam> {
+protected:
+    void SetUp() override
+    {
+        setupModel();
     }
 
-    //! [GIVEN] Current value is 59.0
-    m_model->setValue(59.0);
-    EXPECT_EQ(currentValueString(), "00 h 00 m 59 s");
+    void setupModel()
+    {
+        m_model.setSampleRate(44100.0);
+        m_model.setTempo(120);
+        m_model.setUpperTimeSignature(3);
+        m_model.setLowerTimeSignature(4);
+    }
 
-    //! [GIEN] Current edited field is 9 in 59 sec
-    m_model->setCurrentEditedFieldIndex(11);
+    TimecodeModel m_model;
+};
+
+TEST_P(TimecodeModelParameterizedTests, ParseValueToString) {
+    const auto& param = GetParam();
+    m_model.setCurrentFormat(static_cast<int>(param.format));
+    m_model.setMode(param.mode);
+    m_model.setValue(param.inputValue);
+    EXPECT_EQ(param.expectedOutput, m_model.valueString());
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    AllTimecodeModelTests,
+    TimecodeModelParameterizedTests,
+    ::testing::Values(
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 0.0, "00 h 00 m 00 s" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 0.6, "00 h 00 m 01 s" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 1.0, "00 h 00 m 01 s" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 1.6, "00 h 00 m 02 s" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 60.0, "00 h 01 m 00 s" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 61.0, "00 h 01 m 01 s" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 3600.0, "01 h 00 m 00 s" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 3601.0, "01 h 00 m 01 s" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::TimePoint, 0.0, "001 bar 01 beat" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::TimePoint, 0.6, "001 bar 02 beat" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::TimePoint, 1.0, "001 bar 03 beat" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::TimePoint, 1.6, "002 bar 01 beat" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::Duration, 0.0, "000 bar 00 beat" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::Duration, 0.6, "000 bar 01 beat" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::Duration, 1.0, "000 bar 02 beat" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::Duration, 1.6, "001 bar 00 beat" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint, -1.0, "--- bar -- beat --" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint, 0.0, "001 bar 01 beat 01" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint, 0.6, "001 bar 02 beat 01" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint, 1.0, "001 bar 03 beat 01" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint, 1.9, "002 bar 01 beat 04" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration, -1.0, "--- bar -- beat --" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration, 0.0, "000 bar 00 beat 00" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration, 0.6, "000 bar 01 beat 00" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration, 1.0, "000 bar 02 beat 00" },
+        TimecodeModelTestParam{ TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration, 1.9, "001 bar 00 beat 03" }
+    )
+);
+
+class TimecodeModelEditTests : public ::testing::Test {
+protected:
+    void SetUp() override
+    {
+        m_model.setCurrentFormat(static_cast<int>(TimecodeModel::ViewFormatType::HHMMSS));
+        m_model.setSampleRate(44100.0);
+    }
+
+    TimecodeModel m_model = TimecodeModel();
+};
+
+
+TEST_F(TimecodeModelEditTests, ValueIsModifiedWhenUpKeyIsPressed)
+{
+    //! [GIVEN] Current value is 59.0
+    m_model.setValue(59.0);
+    EXPECT_EQ(m_model.valueString(), "00 h 00 m 59 s");
+
+    //! [GIVEN] Current edited field is 9 in 59 sec
+    m_model.setCurrentEditedFieldIndex(11);
 
     //! [WHEN] Press up key
     QKeyEvent keyEvent(QEvent::KeyPress, Qt::Key_Up, Qt::NoModifier);
     qApp->sendEvent(qApp, &keyEvent);
 
     //! [THEN] Check value
-    EXPECT_EQ(currentValueString(), "00 h 01 m 00 s");
+    EXPECT_EQ(m_model.valueString(), "00 h 01 m 00 s");
 }
 
-TEST_F(TimecodeModelTests, Parse_Beats)
-{
-    //! [GIVEN] Sample rate is 44100.0
-    m_model->setSampleRate(44100.0);
-
-    //! [GIVEN] Current format is BarBeat
-    m_model->setCurrentFormat(static_cast<int>(TimecodeModel::ViewFormatType::BarBeat));
-
-    //! [GIVEN] Tempo is 120.0, upper time signature is 3, lower time signature is 4
-    m_model->setTempo(120.0);
-    m_model->setUpperTimeSignature(3);
-    m_model->setLowerTimeSignature(4);
-
-    std::vector < std::pair<double, QString> > expectedValues = {
-        { 0.0, "000 bar 00 beat" },
-        { 0.6, "000 bar 01 beat" },
-        { 1.0, "000 bar 02 beat" },
-        { 1.6, "001 bar 00 beat" },
-    };
-
-    for (const auto& [value, expected] : expectedValues) {
-        //! [WHEN] Set value
-        m_model->setValue(value);
-
-        //! [THEN] Check value
-        EXPECT_EQ(currentValueString(), expected);
-    }
-
-    //! [GIVEN] Current format is BarBeatTick
-    m_model->setCurrentFormat(static_cast<int>(TimecodeModel::ViewFormatType::BarBeatTick));
-
-    expectedValues = {
-        { -1.0, "--- bar -- beat --" },
-        { 0.0, "000 bar 00 beat 00" },
-        { 0.6, "000 bar 01 beat 00" },
-        { 1.0, "000 bar 02 beat 00" },
-        { 1.9, "001 bar 00 beat 03" },
-    };
-
-    for (const auto& [value, expected] : expectedValues) {
-        //! [WHEN] Set value
-        m_model->setValue(value);
-
-        //! [THEN] Check value
-        EXPECT_EQ(currentValueString(), expected);
-    }
-}
 }
