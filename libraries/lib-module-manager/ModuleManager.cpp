@@ -11,7 +11,7 @@
 *******************************************************************//*!
 
 \file ModuleManager.cpp
-\brief Based on LoadLadspa, this code loads pluggable Audacity 
+\brief Based on LoadLadspa, this code loads pluggable Audacity
 extension modules.  It also has the code to
 invoke a function returning a replacement window,
 i.e. an alternative to the usual interface, for Audacity.
@@ -26,6 +26,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include <wx/dynlib.h>
 #include <wx/log.h>
 #include <wx/filename.h>
+#include <wx/tokenzr.h>
 
 #include "FileNames.h"
 #include "MemoryX.h"
@@ -67,6 +68,22 @@ static BasicUI::MessageBoxResult DoMessageBox(const TranslatableString &msg)
       MessageBoxOptions{}.Caption(XO("Module Unsuitable")));
 }
 
+// Module's Major.Minor version should match the current Audacity build
+static bool IsVersionCompatible(const wxString &moduleVersion)
+{
+   wxArrayString parts1 = wxStringTokenize(AUDACITY_VERSION_STRING, ".");
+   wxArrayString parts2 = wxStringTokenize(moduleVersion, ".");
+
+   if (parts1.size() < 2 || parts2.size() < 2) {
+      wxLogError("Invalid version format. Audacity version: %s, module version: %s", AUDACITY_VERSION_STRING, moduleVersion);
+      assert(false);
+      return false;
+   }
+
+   // Check only Major and Minor parts
+   return (parts1[0] == parts2[0] && parts1[1] == parts2[1]);
+}
+
 void Module::ShowLoadFailureError(const wxString &Error)
 {
    auto ShortName = wxFileName(mName).GetName();
@@ -99,7 +116,7 @@ bool Module::Load(wxString &deferredErrorMessage)
       return false;
    }
 
-   // Check version string matches.  (For now, they must match exactly)
+   // Check if the version matches
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
    if (versionFn == NULL){
       DoMessageBox(
@@ -111,7 +128,7 @@ bool Module::Load(wxString &deferredErrorMessage)
    }
 
    wxString moduleVersion = versionFn();
-   if( moduleVersion != AUDACITY_VERSION_STRING) {
+   if (!IsVersionCompatible(moduleVersion)) {
       DoMessageBox(
          XO("The module \"%s\" is matched with Audacity version \"%s\".\n\nIt will not be loaded.")
             .Format(ShortName, moduleVersion));
@@ -126,7 +143,7 @@ bool Module::Load(wxString &deferredErrorMessage)
       return true;
    }
 
-   // However if we do have it and it does not work, 
+   // However if we do have it and it does not work,
    // then the module is bad.
    bool res = ((mDispatch(ModuleInitialize))!=0);
    if (res) {
@@ -439,7 +456,7 @@ bool ModuleManager::DiscoverProviders()
    InitializeBuiltins();
 
 // The commented out code loads modules whether or not they are enabled.
-// none of our modules is a 'provider' of effects, so this code commented out. 
+// none of our modules is a 'provider' of effects, so this code commented out.
 #if 0
    FilePaths provList;
    FilePaths pathList;
@@ -476,13 +493,13 @@ void ModuleManager::InitializeBuiltins()
    for (const auto& pluginProviderFactory : builtinProviderList())
    {
       auto pluginProvider = pluginProviderFactory();
-      
+
       if (pluginProvider && pluginProvider->Initialize()) {
          PluginProviderUniqueHandle handle { std::move(pluginProvider) };
-         
+
          auto id = GetID(handle.get());
 
-         // Need to remember it 
+         // Need to remember it
          mProviders[id] = std::move(handle);
       }
    }
@@ -536,7 +553,7 @@ bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
    // Builtin modules do not have a path
    if (path.empty())
    {
-      return true;  
+      return true;
    }
 
    wxFileName lib(path);
