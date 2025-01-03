@@ -103,6 +103,7 @@ EffectBase {
             id: timecode
 
             value: tone.duration
+            mode: TimecodeModeSelector.Duration
             currentFormatStr: tone.durationFormat
             sampleRate: tone.sampleRate
             tempo: tone.tempo

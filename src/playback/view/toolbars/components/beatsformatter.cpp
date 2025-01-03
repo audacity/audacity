@@ -19,14 +19,14 @@ static constexpr size_t pow10(int power)
     return result;
 }
 
-static int beatsFormatterModeToOffset(BeatsFormatterMode mode)
+static int timecodeModeToOffset(TimecodeMode mode)
 {
     // The beat formatter can be 1 or 0 based depending on whether it is used
     // to describe a point in time or the difference between two points.
     switch (mode) {
-    case BeatsFormatterMode::TimePoint:
+    case TimecodeMode::TimePoint:
         return 1;
-    case BeatsFormatterMode::Duration:
+    case TimecodeMode::Duration:
         return 0;
     default:
         return 0;
@@ -50,7 +50,7 @@ static QString beatString()
     return muse::qtrc("playback", "beat");
 }
 
-BeatsFormatter::BeatsFormatter(const QString& formatStr, int fracPart, BeatsFormatterMode mode)
+BeatsFormatter::BeatsFormatter(const QString& formatStr, int fracPart, TimecodeMode mode)
     : TimecodeFormatter(formatStr), m_fracPart(fracPart), m_mode(mode)
 {
 }
@@ -112,7 +112,7 @@ BeatsFormatter::ConversionResult BeatsFormatter::valueToString(double value, boo
             0, static_cast<int>(std::floor(value * eps / fieldLength)));
 
         char field[10];
-        int offset = beatsFormatterModeToOffset(m_mode);
+        int offset = timecodeModeToOffset(m_mode);
         snprintf(field, sizeof(field), m_fields[fieldIndex].formatStr.toStdString().c_str(), (int)(fieldValue + offset));
 
         result.fieldValueStrings[fieldIndex] = field;
@@ -150,7 +150,7 @@ std::optional<double> BeatsFormatter::stringToValue(const QString& value) const
             return std::nullopt;
         }
 
-        int offset = beatsFormatterModeToOffset(m_mode);
+        int offset = timecodeModeToOffset(m_mode);
         t += (val - offset) * m_fieldLengths[i];
 
         lastIndex = labelIndex + field.label.size();
@@ -221,7 +221,7 @@ void BeatsFormatter::updateFields(size_t barsDigits)
 
     barsField.label = " " + barString() + " ";
 
-    int offset = beatsFormatterModeToOffset(m_mode);
+    int offset = timecodeModeToOffset(m_mode);
     auto& beatsField = m_fields.emplace_back(NumericField::range(std::max<size_t>(UPPER_BOUNDS[1], m_upperTimeSignature + offset)));
 
     beatsField.label = " " + beatString();

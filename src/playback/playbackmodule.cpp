@@ -19,6 +19,7 @@
 
 #include "view/common/playbackstatemodel.h"
 
+#include "view/toolbars/components/timecodemodeselector.h"
 #include "view/toolbars/components/timecodemodel.h"
 #include "view/toolbars/components/bpmmodel.h"
 
@@ -67,6 +68,7 @@ void PlaybackModule::registerResources()
 
 void PlaybackModule::registerUiTypes()
 {
+    qmlRegisterUncreatableType<TimecodeModeSelector>("Audacity.Playback", 1, 0, "TimecodeModeSelector", "TimecodeModeSelector is an simple enum");
     qmlRegisterType<TimecodeModel>("Audacity.Playback", 1, 0, "TimecodeModel");
     qmlRegisterType<PlaybackStateModel>("Audacity.Playback", 1, 0, "PlaybackStateModel");
     qmlRegisterType<BPMModel>("Audacity.Playback", 1, 0, "BPMModel");

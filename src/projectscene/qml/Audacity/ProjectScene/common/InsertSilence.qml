@@ -42,6 +42,7 @@ StyledDialogView {
             Layout.fillHeight: false
 
             value: silence.duration
+            mode: TimecodeMode.Duration
             currentFormatStr: silence.durationFormat
             sampleRate: silence.sampleRate
 

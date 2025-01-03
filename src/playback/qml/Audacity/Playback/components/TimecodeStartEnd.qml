@@ -32,6 +32,7 @@ RowLayout {
     Timecode {
         id: startTimecode
 
+        mode: TimecodeModeSelector.TimePoint
         sampleRate: root.sampleRate
         tempo: root.tempo
         upperTimeSignature: root.upperTimeSignature
@@ -49,6 +50,7 @@ RowLayout {
     Timecode {
         id: endTimecode
 
+        mode: TimecodeModeSelector.TimePoint
         sampleRate: root.sampleRate
         tempo: root.tempo
         upperTimeSignature: root.upperTimeSignature

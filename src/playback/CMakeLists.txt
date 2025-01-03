@@ -51,6 +51,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimeitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimeitem.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/timecodemodeselector.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/timecodemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/timecodemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/timecodeformatter.cpp

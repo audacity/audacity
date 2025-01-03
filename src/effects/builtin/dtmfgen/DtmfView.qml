@@ -89,6 +89,7 @@ EffectBase {
             Layout.fillHeight: false
 
             value: dtmf.duration
+            mode: TimecodeModeSelector.Duration
             currentFormatStr: dtmf.durationFormat
             sampleRate: dtmf.sampleRate
             tempo: dtmf.tempo

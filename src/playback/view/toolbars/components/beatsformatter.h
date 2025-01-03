@@ -5,18 +5,14 @@
 
 #include <array>
 
+#include "timecodemodeselector.h"
 #include "timecodeformatter.h"
-
-enum class BeatsFormatterMode {
-    TimePoint,  // 1-base indexing 00:00:00s -> 1 bar 1 beat 1
-    Duration    // 0-base indexing 00:00:00s -> 0 bar 0 beat 0
-};
 
 namespace au::playback {
 class BeatsFormatter : public TimecodeFormatter
 {
 public:
-    BeatsFormatter(const QString& formatStr, int fracPart, BeatsFormatterMode mode = BeatsFormatterMode::TimePoint);
+    BeatsFormatter(const QString& formatStr, int fracPart, TimecodeMode mode);
 
     void init() override;
 
@@ -35,6 +31,6 @@ private:
 
     std::array<double, 3> m_fieldLengths;
     int m_fracPart = 0;
-    BeatsFormatterMode m_mode;
+    TimecodeMode m_mode;
 };
 }

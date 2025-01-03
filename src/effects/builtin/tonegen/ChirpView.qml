@@ -147,6 +147,7 @@ EffectBase {
             id: timecode
 
             value: chirp.duration
+            mode: TimecodeModeSelector.Duration
             currentFormatStr: chirp.durationFormat
             sampleRate: chirp.sampleRate
             tempo: chirp.tempo
