@@ -733,6 +733,14 @@
         <key>sync-lock</key>
     </SC>
     <SC>
+        <key>group-clips</key>
+        <seq>Ctrl+G</seq>
+    </SC>
+    <SC>
+        <key>ungroup-clips</key>
+        <seq>Ctrl+Shift+G</seq>
+    </SC>
+    <SC>
         <key>track-pan</key>
         <seq>Shift+P</seq>
     </SC>
