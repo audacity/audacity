@@ -29,12 +29,15 @@ public:
 
     virtual EffectMeta meta(const EffectId& effectId) const = 0;
     virtual std::string effectName(const std::string& effectId) const = 0;
+    virtual std::string effectName(const effects::RealtimeEffectState& state) const = 0;
+    virtual std::string effectSymbol(const std::string& effectId) const = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;
 
     // type - is Symbol of effect
     virtual muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) = 0;
+    virtual muse::Ret showEffect(effects::RealtimeEffectState* state) const = 0;
 
     virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                                     EffectSettings& settings) = 0;

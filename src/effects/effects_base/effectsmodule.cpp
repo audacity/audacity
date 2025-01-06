@@ -22,6 +22,7 @@
 #include "view/effectsviewregister.h"
 #include "view/effectviewloader.h"
 #include "view/effectsuiengine.h"
+#include "view/realtimeeffectviewerdialogmodel.h"
 
 using namespace au::effects;
 
@@ -58,6 +59,7 @@ void EffectsModule::resolveImports()
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://effects/viewer"), "Audacity/Effects/EffectsViewerDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://effects/realtime_viewer"), "Audacity/Effects/RealtimeEffectViewerDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://effects/presets/input_name"), "Audacity/Effects/PresetNameDialog.qml");
     }
 }
@@ -70,6 +72,7 @@ void EffectsModule::registerResources()
 void EffectsModule::registerUiTypes()
 {
     qmlRegisterType<EffectViewLoader>("Audacity.Effects", 1, 0, "EffectViewLoader");
+    qmlRegisterType<RealtimeEffectViewerDialogModel>("Audacity.Effects", 1, 0, "RealtimeEffectViewerDialogModel");
 }
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)

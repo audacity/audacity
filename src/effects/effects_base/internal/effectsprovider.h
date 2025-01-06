@@ -38,11 +38,14 @@ public:
 
     EffectMeta meta(const EffectId& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
+    std::string effectName(const effects::RealtimeEffectState& state) const override;
+    std::string effectSymbol(const std::string& effectId) const override;
     Effect* effect(const EffectId& effectId) const override;
 
     bool supportsMultipleClipSelection(const EffectId& effectId) const override;
 
     muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
+    muse::Ret showEffect(effects::RealtimeEffectState* state) const override;
 
     muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                             EffectSettings& settings) override;

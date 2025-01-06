@@ -11,6 +11,7 @@
 #include "libraries/lib-components/EffectInterface.h"
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-effects/MixAndRender.h"
+#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-transactions/TransactionScope.h"
 #include "libraries/lib-exceptions/AudacityException.h"
@@ -29,6 +30,8 @@ using namespace muse;
 using namespace au::effects;
 
 static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&instanceId=%2";
+// For now modal is true because otherwise we get a crash when changing track selection with a dialog open. Will fix this in another PR.
+static const char16_t* REALTIME_VIEWER_URI = u"audacity://effects/realtime_viewer?type=%1&instanceId=%2&effectState=%3&modal=true";
 
 void EffectsProvider::init()
 {
@@ -121,6 +124,20 @@ std::string EffectsProvider::effectName(const std::string& effectId) const
     return desc->GetSymbol().Msgid().Translation().ToStdString();
 }
 
+std::string EffectsProvider::effectName(const effects::RealtimeEffectState& state) const
+{
+    return effectName(state.GetID().ToStdString());
+}
+
+std::string EffectsProvider::effectSymbol(const std::string& effectId) const
+{
+    const auto desc = PluginManager::Get().GetPlugin(effectId);
+    if (!desc) {
+        return "";
+    }
+    return desc->GetSymbol().Internal().ToStdString();
+}
+
 bool EffectsProvider::supportsMultipleClipSelection(const EffectId& effectId) const
 {
     for (const EffectMeta& meta : m_effects) {
@@ -158,7 +175,23 @@ muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInst
     RetVal<Val> rv = interactive()->open(String(VIEWER_URI).arg(type).arg(size_t(instanceId)).toStdString());
 
     LOGD() << "open ret: " << rv.ret.toString();
+    return rv.ret;
+}
 
+muse::Ret EffectsProvider::showEffect(effects::RealtimeEffectState* state) const
+{
+    const auto effectId = state->GetID().ToStdString();
+    const auto type = muse::String::fromStdString(effectSymbol(effectId));
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
+    const auto effectState = reinterpret_cast<EffectStateId>(state);
+
+    LOGD() << "try open realtime effect: " << type << ", instanceId: " << instanceId << ", effectState: " << effectState;
+
+    RetVal<Val> rv
+        = interactive()->open(String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(effectState)).toStdString());
+
+    LOGD() << "open ret: " << rv.ret.toString();
     return rv.ret;
 }
 
