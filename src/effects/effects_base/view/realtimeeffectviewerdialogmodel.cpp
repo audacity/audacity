@@ -40,9 +40,7 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
     const auto effectId = m_effectState->GetID().ToStdString();
     const auto type = effectsProvider()->effectSymbol(effectId);
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
-    instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance,
-                                     // TODO solve this const_cast
-                                     const_cast<EffectSettings*>(&m_effectState->GetSettings()));
+    instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, m_effectState->GetAccess());
 }
 
 void RealtimeEffectViewerDialogModel::unregisterState()

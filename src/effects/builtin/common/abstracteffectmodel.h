@@ -48,31 +48,18 @@ protected:
     virtual void doReload() = 0;
 
     std::shared_ptr<effects::EffectInstance> instance() const;
-    EffectSettings* settings() const;
+    const EffectSettings* settings() const;
+    EffectSettingsAccess* settingsAccess() const;
 
     template<typename T>
     const T& settings() const
     {
-        EffectSettings* s = this->settings();
+        const EffectSettings* s = this->settings();
         if (!s) {
             static T null;
             return null;
         }
-        T* st = s->cast<T>();
-        assert(st);
-        return *st;
-    }
-
-    template<typename T>
-    T& mutSettings()
-    {
-        EffectSettings* s = this->settings();
-        assert(s);
-        if (!s) {
-            static T null;
-            return null;
-        }
-        T* st = s->cast<T>();
+        const T* st = s->cast<T>();
         assert(st);
         return *st;
     }

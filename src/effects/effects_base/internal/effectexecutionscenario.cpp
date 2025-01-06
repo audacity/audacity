@@ -225,7 +225,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
             muse::String type = au3::wxToString(effect->GetSymbol().Internal());
-            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, pInstanceEx, settings);
+            const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
+            EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, pInstanceEx, access);
             muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
             effectInstancesRegister()->unregInstance(instanceId);
             if (ret) {

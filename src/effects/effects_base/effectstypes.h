@@ -12,6 +12,7 @@
 class Effect;
 class EffectInstanceEx;
 class RealtimeEffectState;
+class EffectSettingsAccess;
 struct EffectSettings;
 class wxString;
 namespace au::effects {
@@ -26,6 +27,8 @@ using Effect = ::Effect;                    // Effect from AU3
 using EffectInstanceId = uint64_t;
 using EffectInstance = ::EffectInstanceEx;  // EffectInstanceEx from AU3
 using EffectSettings = ::EffectSettings;
+using EffectSettingsAccess = ::EffectSettingsAccess;
+using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
 using RealtimeEffectState = ::RealtimeEffectState;
 using RealtimeEffectStatePtr = std::shared_ptr<RealtimeEffectState>;
 using EffectStateId = uintptr_t;

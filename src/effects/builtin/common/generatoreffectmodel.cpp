@@ -16,7 +16,7 @@ void GeneratorEffectModel::doReload()
     IF_ASSERT_FAILED(ge) {
         return;
     }
-    ge->init(settings());
+    ge->init(&mutSettings());
     emit sampleRateChanged();
     emit tempoChanged();
     emit upperTimeSignatureChanged();

@@ -45,6 +45,27 @@ signals:
     void durationFormatChanged();
     void isApplyAllowedChanged();
 
+protected:
+    template<typename T>
+    T& mutSettings()
+    {
+        // Generators have singleton usage ; no risk of concurrency, settings may be returned without protection.
+        EffectSettings* s = const_cast<EffectSettings*>(this->settings());
+        assert(s);
+        if (!s) {
+            static T null;
+            return null;
+        }
+        T* st = s->cast<T>();
+        assert(st);
+        return *st;
+    }
+
+    EffectSettings& mutSettings()
+    {
+        return *const_cast<EffectSettings*>(this->settings());
+    }
+
 private:
     void doReload() final override;
     virtual void doEmitSignals() = 0;

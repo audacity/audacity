@@ -37,7 +37,7 @@ void ReverbViewModel::doReload()
                              rs.mRoomSize,
                              ReverbEffect::RoomSize.min,
                              ReverbEffect::RoomSize.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mRoomSize = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mRoomSize = v; }
                              );
 
     m_paramsList << makeItem("PreDelay",
@@ -45,7 +45,7 @@ void ReverbViewModel::doReload()
                              rs.mPreDelay,
                              ReverbEffect::PreDelay.min,
                              ReverbEffect::PreDelay.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mPreDelay = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mPreDelay = v; }
                              );
 
     m_paramsList << makeItem("Reverberance",
@@ -53,7 +53,7 @@ void ReverbViewModel::doReload()
                              rs.mReverberance,
                              ReverbEffect::Reverberance.min,
                              ReverbEffect::Reverberance.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mReverberance = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mReverberance = v; }
                              );
 
     m_paramsList << makeItem("HfDamping",
@@ -61,7 +61,7 @@ void ReverbViewModel::doReload()
                              rs.mHfDamping,
                              ReverbEffect::HfDamping.min,
                              ReverbEffect::HfDamping.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mHfDamping = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mHfDamping = v; }
                              );
 
     m_paramsList << makeItem("ToneLow",
@@ -69,7 +69,7 @@ void ReverbViewModel::doReload()
                              rs.mToneLow,
                              ReverbEffect::ToneLow.min,
                              ReverbEffect::ToneLow.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mToneLow = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mToneLow = v; }
                              );
 
     m_paramsList << makeItem("ToneHigh",
@@ -77,7 +77,7 @@ void ReverbViewModel::doReload()
                              rs.mToneHigh,
                              ReverbEffect::ToneHigh.min,
                              ReverbEffect::ToneHigh.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mToneHigh = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mToneHigh = v; }
                              );
 
     m_paramsList << makeItem("WetGain",
@@ -85,7 +85,7 @@ void ReverbViewModel::doReload()
                              rs.mWetGain,
                              ReverbEffect::WetGain.min,
                              ReverbEffect::WetGain.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mWetGain = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mWetGain = v; }
                              );
 
     m_paramsList << makeItem("DryGain",
@@ -93,7 +93,7 @@ void ReverbViewModel::doReload()
                              rs.mDryGain,
                              ReverbEffect::DryGain.min,
                              ReverbEffect::DryGain.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mDryGain = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mDryGain = v; }
                              );
 
     m_paramsList << makeItem("StereoWidth",
@@ -101,7 +101,7 @@ void ReverbViewModel::doReload()
                              rs.mStereoWidth,
                              ReverbEffect::StereoWidth.min,
                              ReverbEffect::StereoWidth.max,
-                             [this](double v) { mutSettings<ReverbSettings>().mStereoWidth = v; }
+                             [this](ReverbSettings& settings, double v) { settings.mStereoWidth = v; }
                              );
 
     emit paramsListChanged();
@@ -119,7 +119,13 @@ void ReverbViewModel::setParam(const QString& key, double val)
     IF_ASSERT_FAILED(s) {
         return;
     }
-    s(val);
+    settingsAccess()->ModifySettings([s, val](EffectSettings& settings)
+    {
+        s(*settings.cast<ReverbSettings>(), val);
+        // saintmatthieu: Looks like non-null Message returns are only necessary for VST2 and AU effects but I haven't figured out why.
+        // In any case, changing the settings during playback gets reflected in the audio output.
+        return nullptr;
+    });
 }
 
 bool ReverbViewModel::wetOnly() const
@@ -129,6 +135,10 @@ bool ReverbViewModel::wetOnly() const
 
 void ReverbViewModel::setWetOnly(bool newWetOnly)
 {
-    mutSettings<ReverbSettings>().mWetOnly = newWetOnly;
+    settingsAccess()->ModifySettings([newWetOnly](EffectSettings& settings)
+    {
+        settings.cast<ReverbSettings>()->mWetOnly = newWetOnly;
+        return nullptr;
+    });
     emit wetOnlyChanged();
 }
