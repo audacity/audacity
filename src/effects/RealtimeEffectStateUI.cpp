@@ -186,11 +186,11 @@ void RealtimeEffectStateUI::AutoSave(AudacityProject &project)
       /*! i18n-hint: undo history record
       first parameter - realtime effect name
       */
-      XO("Change settings for effect %s").Format(mEffectName),
+      XO("Change settings for realtime effect %s on %s").Format(mEffectName, mTargetName),
       /*! i18n-hint: undo history record
       first parameter - realtime effect name
       */
-      XO("Change effect %s").Format(mEffectName),
+      XO("Change realtime effect %s on %s").Format(mEffectName, mTargetName),
       UndoPush::CONSOLIDATE);
    ProjectHistory::AutoSave::Call(project);
 }

@@ -500,11 +500,11 @@ namespace
                      /*! i18n-hint: undo history record
                      first parameter - realtime effect name
                      */
-                     XO("Change settings for effect %s").Format(effectName),
+                     XO("Change settings for realtime effect %s on %s").Format(effectName, mDelegate->GetSourceName()),
                      /*! i18n-hint: undo history record
                      first parameter - realtime effect name
                      */
-                     XO("Change effect %s").Format(effectName),
+                     XO("Change realtime effect %s on %s").Format(effectName, mDelegate->GetSourceName()),
                      UndoPush::CONSOLIDATE);
                }
             }
