@@ -105,6 +105,99 @@ void Au3SelectionController::addSelectedTrack(const TrackId& trackId)
     }
 }
 
+TrackIdList Au3SelectionController::determinateTracks(double y1, double y2) const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return {};
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return {};
+    }
+
+    if (y1 < 0 && y2 < 0) {
+        return {};
+    }
+
+    if (y1 > y2) {
+        std::swap(y1, y2);
+    }
+
+    if (y1 < 1) {
+        y1 = 1;
+    }
+
+    trackedit::TrackIdList tracks = prj->trackIdList();
+    trackedit::TrackIdList result;
+
+    int tracksVericalY = vs->tracksVericalY().val;
+    int trackTop = -tracksVericalY;
+    int trackBottom = trackTop;
+
+    for (trackedit::TrackId trackId : tracks) {
+        trackTop = trackBottom;
+        trackBottom = trackTop + vs->trackHeight(trackId).val;
+
+        if (muse::RealIsEqualOrMore(y1, trackTop) && !muse::RealIsEqualOrMore(y1, trackBottom)) {
+            result.push_back(trackId);
+        }
+
+        if (muse::RealIsEqualOrMore(y2, trackTop) && !muse::RealIsEqualOrMore(y2, trackBottom)) {
+            if (!result.empty() && result.back() != trackId) {
+                result.push_back(trackId);
+            }
+            break;
+        }
+
+        if (!result.empty() && result.back() != trackId) {
+            result.push_back(trackId);
+            continue;
+        }
+    }
+
+    return result;
+}
+
+std::optional<au::trackedit::TrackId> Au3SelectionController::determinePointedTrack(double y) const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return {};
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return {};
+    }
+
+    if (y < 1) {
+        y = 1;
+    }
+
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    int tracksVericalY = vs->tracksVericalY().val;
+    int trackTop = -tracksVericalY;
+    int trackBottom = trackTop;
+
+    for (trackedit::TrackId trackId : tracks) {
+        trackTop = trackBottom;
+        trackBottom = trackTop + vs->trackHeight(trackId).val;
+
+        if (muse::RealIsEqualOrMore(y, trackTop) && muse::RealIsEqualOrLess(y, trackBottom)) {
+            return trackId;
+        }
+    }
+
+    if (muse::RealIsEqualOrLess(y, trackBottom)) {
+        return {};
+    }
+
+    return INVALID_TRACK;
+}
+
 muse::async::Channel<TrackIdList> Au3SelectionController::tracksSelected() const
 {
     return m_selectedTracks.selected;
@@ -124,6 +217,21 @@ bool Au3SelectionController::hasSelectedClips() const
 ClipKeyList Au3SelectionController::selectedClips() const
 {
     return m_selectedClips.val;
+}
+
+ClipKeyList Au3SelectionController::selectedClipsInTrackOrder() const
+{
+    ClipKeyList sortedSelectedClips;
+    auto& tracks = ::TrackList::Get(projectRef());
+    for (const auto& track : tracks) {
+        for (const auto& selectedClip : m_selectedClips.val) {
+            if (TrackId(track->GetId()) == selectedClip.trackId) {
+                sortedSelectedClips.push_back(selectedClip);
+            }
+        }
+    }
+
+    return sortedSelectedClips;
 }
 
 void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)
@@ -168,6 +276,32 @@ void Au3SelectionController::addSelectedClip(const ClipKey& clipKey)
     }
 }
 
+void Au3SelectionController::removeClipSelection(const ClipKey& clipKey)
+{
+    auto selectedClips = m_selectedClips.val;
+
+    if (!muse::contains(selectedClips, clipKey)) {
+        return;
+    }
+
+    selectedClips.erase(
+        std::remove(selectedClips.begin(), selectedClips.end(), clipKey),
+        selectedClips.end()
+        );
+
+    m_selectedClips.set(selectedClips, true);
+
+    //! NOTE: update selected tracks
+    TrackIdList selectedTracks;
+    for (const ClipKey& key : selectedClips) {
+        if (muse::contains(selectedTracks, key.trackId)) {
+            continue;
+        }
+        selectedTracks.push_back(key.trackId);
+    }
+    setSelectedTracks(selectedTracks, true);
+}
+
 muse::async::Channel<ClipKeyList> Au3SelectionController::clipsSelected() const
 {
     return m_selectedClips.selected;
@@ -188,7 +322,7 @@ double Au3SelectionController::selectedClipStartTime() const
     }
 
     std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    if (!clip) {
         return -1.0;
     }
 
@@ -210,7 +344,7 @@ double Au3SelectionController::selectedClipEndTime() const
     }
 
     std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    if (!clip) {
         return -1.0;
     }
 

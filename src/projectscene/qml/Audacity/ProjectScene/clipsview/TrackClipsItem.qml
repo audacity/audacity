@@ -25,13 +25,16 @@ Item {
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
     signal trackItemMousePositionChanged(real x, real y, var clipKey)
+    signal setHoveredClipKey(var clipKey)
     signal clipSelectedRequested()
     signal selectionResetRequested()
-    signal clipMoveRequested(bool completed)
+    signal updateMoveActive(bool completed)
     signal requestSelectionContextMenu(real x, real y)
 
     signal selectionDraged(var x1, var x2, var completed)
     signal seekToX(var x)
+
+    signal clipHeaderHoveredChanged(bool val)
 
     height: trackViewState.trackHeight
 
@@ -152,20 +155,16 @@ Item {
                     return rightNeighbor.x - (clipItem.x + clipItem.width)
                 }
 
+                onClipHeaderHoveredChanged: function(headerHovered) {
+                    root.clipHeaderHoveredChanged(headerHovered)
+                }
+
                 onClipStartEditRequested: function() {
                     clipsModel.startEditClip(clipItem.key)
                 }
 
                 onClipEndEditRequested: function() {
                     clipsModel.endEditClip(clipItem.key)
-                }
-
-                onClipMoveRequested: function(completed) {
-                    // this one moves the clips
-                    clipsModel.moveSelectedClips(clipItem.key, completed)
-
-                    // this one notifies every ClipListModel about moveActive
-                    root.clipMoveRequested(completed)
                 }
 
                 onClipLeftTrimRequested: function(completed) {
@@ -339,5 +338,34 @@ Item {
         opacity: 0.1
         anchors.bottom: parent.bottom
         thickness: 2
+    }
+
+    Connections {
+        target: root.container
+
+        function onClipMoveRequested(clipKey, completed) {
+            // this one notifies every ClipListModel about moveActive
+            root.updateMoveActive(completed)
+
+            // this one moves the clips
+            let clipMovedToOtherTrack = clipsModel.moveSelectedClips(clipKey, completed)
+
+            // clip might change its' track, we need to update grabbed clipKey
+            if (clipMovedToOtherTrack) {
+                setHoveredClipKey(clipsModel.updateClipTrack(clipKey));
+            }
+        }
+
+        function onClipStartEditRequested(clipKey) {
+            clipsModel.startEditClip(clipKey)
+        }
+
+        function onStartAutoScroll() {
+            root.context.startAutoScroll(root.context.mousePositionTime())
+        }
+
+        function onStopAutoScroll() {
+            root.context.stopAutoScroll()
+        }
     }
 }

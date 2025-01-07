@@ -74,6 +74,9 @@ void ClipContextMenuModel::updateStretchEnabledState(MenuItem& item)
         return;
     }
     auto clip = project->trackeditProject()->clip(m_clipKey.key);
+    if (!clip.isValid()) {
+        return;
+    }
     auto state = item.state();
     state.checked = clip.stretchToMatchTempo;
     item.setState(state);

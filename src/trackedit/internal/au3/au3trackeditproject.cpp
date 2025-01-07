@@ -227,7 +227,7 @@ au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
     }
 
     std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.clipId);
-    IF_ASSERT_FAILED(au3Clip) {
+    if (!au3Clip) {
         return Clip();
     }
 

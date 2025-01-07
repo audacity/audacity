@@ -39,7 +39,6 @@ Rectangle {
     signal clipStartEditRequested()
     signal clipEndEditRequested()
 
-    signal clipMoveRequested(bool completed)
     signal clipLeftTrimRequested(bool completed)
     signal clipRightTrimRequested(bool completed)
 
@@ -63,6 +62,7 @@ Rectangle {
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
     signal clipItemMousePositionChanged(real x, real y)
+    signal clipHeaderHoveredChanged(bool value)
 
     radius: 4
     color: clipSelected ? "white" : clipColor
@@ -71,6 +71,11 @@ Rectangle {
 
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
+    property bool headerHovered: headerDragArea.containsMouse
+
+    onHeaderHoveredChanged: {
+        root.clipHeaderHoveredChanged(headerHovered)
+    }
 
     readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
     readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
@@ -311,29 +316,38 @@ Rectangle {
                 hoverEnabled: true
                 cursorShape: Qt.OpenHandCursor
 
+                property var lastClickTime: 0
+                property int doubleClickInterval: 400
+
+                //! IMPORTANT NOTE: clip moving is handled in TracksClipsView (because
+                // Clip UI element will be destroyed along with its MouseArea if the clip is moved
+                // to the other track and we're gonna loose the ability to handle this MouseArea's events)
+                // hence we need to let simple events pass (e.accepted = false). Unfortunately this breaks
+                // detecting composed events like doubleClick so we need to take care of it manually.
+                onPressed: function(e) {
+                    var currentTime = Date.now();
+                    if (currentTime - lastClickTime < doubleClickInterval) {
+                        //! NOTE Handle doubleClick logic
+                        root.editTitle()
+                    } else {
+                        //! NOTE Handle singleClick logic
+                        root.requestSelected()
+
+                        lastClickTime = currentTime;
+                    }
+
+                    e.accepted = false
+                }
+
                 onPositionChanged: function(e) {
                     root.clipItemMousePositionChanged(e.x, e.y)
 
-                    if (pressed) {
-                        root.clipMoveRequested(false)
-                        root.startAutoScroll()
-                    }
-                }
-
-                onPressed: function(e) {
-                    root.requestSelected()
-
-                    root.clipStartEditRequested()
+                    e.accepted = false
                 }
 
                 onReleased: function(e) {
-                    root.clipMoveRequested(true)
-
-                    root.clipEndEditRequested()
-                    root.stopAutoScroll()
+                    e.accepted = false
                 }
-
-                onDoubleClicked: root.editTitle()
             }
 
             StyledTextLabel {

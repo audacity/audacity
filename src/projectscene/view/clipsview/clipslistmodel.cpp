@@ -25,6 +25,13 @@ ClipsListModel::ClipsListModel(QObject* parent)
 {
 }
 
+ClipsListModel::~ClipsListModel()
+{
+    if (m_autoScrollConnection) {
+        disconnect(m_autoScrollConnection);
+    }
+}
+
 void ClipsListModel::init()
 {
     IF_ASSERT_FAILED(m_trackId >= 0) {
@@ -113,8 +120,6 @@ void ClipsListModel::reload()
             }
 
             m_allClipList.insert(m_allClipList.begin() + i, clip);
-
-            positionViewAtClip(clip);
 
             update();
 
@@ -374,6 +379,54 @@ QVariant ClipsListModel::neighbor(const ClipKey& key, int offset) const
     return QVariant::fromValue(m_clipList[sortedIndex]);
 }
 
+int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key, bool completed) const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return 0;
+    }
+
+    if (completed) {
+        return 0;
+    }
+
+    auto vs = prj->viewState();
+    auto yPos = vs->mousePositionY();
+
+    auto tracks = selectionController()->determinateTracks(vs->trackYPosition(key.key.trackId) + 2, yPos);
+    auto pointedTrack = selectionController()->determinePointedTrack(yPos);
+    if (!pointedTrack.has_value()) {
+        return 0;
+    }
+    bool pointingAtEmptySpace = (pointedTrack == INVALID_TRACK);
+    int trackPositionOffset = pointingAtEmptySpace ? tracks.size() : tracks.size() - 1;
+
+    if (!muse::RealIsEqualOrMore(yPos, vs->trackYPosition(key.key.trackId))) {
+        trackPositionOffset = -trackPositionOffset;
+    }
+
+    return trackPositionOffset;
+}
+
+secs_t ClipsListModel::calculateTimePositionOffset(const ClipListItem* item) const
+{
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return 0.0;
+    }
+
+    double newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+    newStartTime = m_context->applySnapToTime(newStartTime);
+    secs_t timePositionOffset = newStartTime - item->time().clipStartTime;
+
+    constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
+    if (!muse::RealIsEqualOrMore(std::abs(timePositionOffset), limit)) {
+        timePositionOffset = 0.0;
+    }
+
+    return timePositionOffset;
+}
+
 void ClipsListModel::openClipPitchEdit(const ClipKey& key)
 {
     selectClip(key);
@@ -416,49 +469,77 @@ void ClipsListModel::resetClipSpeed(const ClipKey& key)
     trackeditInteraction()->resetClipSpeed(key.key);
 }
 
+au::projectscene::ClipKey ClipsListModel::updateClipTrack(ClipKey clipKey) const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return {};
+    }
+
+    auto selectedClips = selectionController()->selectedClips();
+    for (const auto& selectedClip : selectedClips) {
+        if (selectedClip.clipId == clipKey.key.clipId) {
+            return selectedClip;
+        }
+    }
+
+    return clipKey;
+}
+
 void ClipsListModel::startEditClip(const ClipKey& key)
 {
     ClipListItem* item = itemByKey(key.key);
-    IF_ASSERT_FAILED(item) {
+    if (!item) {
+        return;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
         return;
     }
 
     double mousePositionTime = m_context->mousePositionTime();
 
-    m_clipEditStartTimeOffset = mousePositionTime - item->clip().startTime;
-    m_clipEditEndTimeOffset = item->clip().endTime - mousePositionTime;
+    vs->setClipEditStartTimeOffset(mousePositionTime - item->clip().startTime);
+    vs->setClipEditEndTimeOffset(item->clip().endTime - mousePositionTime);
 }
 
 void ClipsListModel::endEditClip(const ClipKey& key)
 {
     UNUSED(key);
 
-    m_clipEditStartTimeOffset = -1.0;
-    m_clipEditEndTimeOffset = -1.0;
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return;
+    }
+
+    vs->setClipEditStartTimeOffset(-1.0);
+    vs->setClipEditEndTimeOffset(-1.0);
 }
 
+/*!
+ * \brief Moves all selected clips
+ * \param key - the key from which the offset will be calculated to move all clips
+
+    Calculate offset of clip that's being grabbed
+    and apply it to all selected clips
+ */
 bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
 {
-    // calculate offset of clip that's being moved
-    // and apply it to all selected clips
     ClipListItem* item = itemByKey(key.key);
-    IF_ASSERT_FAILED(item) {
+    if (!item) {
         return false;
     }
 
-    double newStartTime = m_context->mousePositionTime() - m_clipEditStartTimeOffset;
-    newStartTime = m_context->applySnapToTime(newStartTime);
-    secs_t offset = newStartTime - item->time().clipStartTime;
-
-    constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
-    if (std::abs(offset) < limit) {
-        if ((completed && m_autoScrollConnection)) {
-            disconnect(m_autoScrollConnection);
-        }
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
         return false;
     }
 
-    bool ok = trackeditInteraction()->moveClips(offset, completed);
+    secs_t timePositionOffset = calculateTimePositionOffset(item);
+    int trackPositionOffset = calculateTrackPositionOffset(key, completed);
+
+    bool clipsMovedToOtherTrack = trackeditInteraction()->moveClips(timePositionOffset, trackPositionOffset, completed);
 
     m_context->updateSelectedClipTime();
 
@@ -468,7 +549,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
         m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });
     }
 
-    return ok;
+    return clipsMovedToOtherTrack;
 }
 
 bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
@@ -478,7 +559,12 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    double newStartTime = m_context->mousePositionTime() - m_clipEditStartTimeOffset;
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return false;
+    }
+
+    double newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
 
     newStartTime = m_context->applySnapToTime(newStartTime);
 
@@ -520,7 +606,12 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    double newEndTime = m_context->mousePositionTime() + m_clipEditEndTimeOffset;
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return false;
+    }
+
+    double newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
 
     newEndTime = m_context->applySnapToTime(newEndTime);
 

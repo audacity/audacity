@@ -12,8 +12,10 @@ Rectangle {
     id: root
 
     property bool clipHovered: false
-    property bool tracksHovered: false
+    property bool clipHeaderHovered: false
     property var hoveredClipKey: null
+    property bool tracksHovered: false
+
     color: ui.theme.backgroundPrimaryColor
 
     clip:true
@@ -143,9 +145,10 @@ Rectangle {
 
         height: 40
 
-        function updateCursorPosition(x) {
+        function updateCursorPosition(x, y) {
             lineCursor.x = x
             timeline.context.updateMousePositionTime(x)
+            tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)));
         }
 
         MouseArea {
@@ -154,7 +157,7 @@ Rectangle {
             hoverEnabled: true
 
             onPositionChanged: function(e) {
-                timeline.updateCursorPosition(e.x)
+                timeline.updateCursorPosition(e.x, e.y)
             }
 
             onClicked: function (e) {
@@ -206,6 +209,7 @@ Rectangle {
             id: mainMouseArea
             anchors.fill: parent
 
+            preventStealing: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton
 
             hoverEnabled: true
@@ -216,45 +220,59 @@ Rectangle {
 
             onPressed: function(e) {
                 if (e.button === Qt.LeftButton) {
-                    if (!(e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))) {
-                        playCursorController.seekToX(e.x)
+                    if (root.clipHeaderHovered) {
+                        tracksClipsView.clipStartEditRequested(hoveredClipKey)
+                    } else {
+                        if (!(e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier))) {
+                            playCursorController.seekToX(e.x)
+                        }
+                        selectionController.onPressed(e.x, e.y)
+                        selectionController.resetSelectedClip()
+                        clipsSelection.visible = true
                     }
-                    selectionController.onPressed(e.x, e.y)
-                    selectionController.resetSelectedClip()
-                    clipsSelection.visible = true
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered) {
                         //! TODO AU4: handle context menu over empty track area
                     } else {
                         canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timeline.height), canvasContextMenuModel.items)
                     }
-
                 }
             }
             onPositionChanged: function(e) {
-                selectionController.onPositionChanged(e.x, e.y)
+                timeline.updateCursorPosition(e.x, e.y)
 
-                timeline.updateCursorPosition(e.x)
+                if (root.clipHeaderHovered && pressed) {
+                    tracksClipsView.clipMoveRequested(hoveredClipKey, false)
+                    tracksClipsView.startAutoScroll()
+                } else {
+                    selectionController.onPositionChanged(e.x, e.y)
 
-                if (root.clipHovered) {
-                    root.clipHovered = false
+                    if (root.clipHovered && !tracksClipsView.moveActive) {
+                        root.clipHovered = false
+                    }
                 }
             }
             onReleased: e => {
                 if (e.button !== Qt.LeftButton) {
                     return
                 }
-                if (selectionController.isLeftSelection(e.x)) {
-                    playCursorController.seekToX(e.x)
-                }
-                selectionController.onReleased(e.x, e.y)
-                if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
-                    playCursorController.seekToX(timeline.context.selectionStartPosition)
-                }
 
-                playCursorController.setPlaybackRegion(timeline.context.selectionStartPosition, timeline.context.selectionEndPosition)
+                if (root.clipHeaderHovered && tracksClipsView.moveActive) {
+                    tracksClipsView.clipMoveRequested(hoveredClipKey, true)
+                    tracksClipsView.stopAutoScroll()
+                } else {
+                    if (selectionController.isLeftSelection(e.x)) {
+                        playCursorController.seekToX(e.x)
+                    }
+                    selectionController.onReleased(e.x, e.y)
+                    if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
+                        playCursorController.seekToX(timeline.context.selectionStartPosition)
+                    }
 
-                clipsSelection.visible = false
+                    playCursorController.setPlaybackRegion(timeline.context.selectionStartPosition, timeline.context.selectionEndPosition)
+
+                    clipsSelection.visible = false
+                }
             }
 
             onClicked: e => {
@@ -308,6 +326,11 @@ Rectangle {
 
                 property real lockedVerticalScrollPosition
                 property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
+
+                signal clipMoveRequested(var clipKey, bool completed)
+                signal clipStartEditRequested(var clipKey)
+                signal startAutoScroll()
+                signal stopAutoScroll()
 
                 footer: Item {
                     height: tracksViewState.tracksVerticalScrollPadding
@@ -367,12 +390,22 @@ Rectangle {
                     moveActive: tracksClipsView.moveActive
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
-                        timeline.updateCursorPosition(xWithinTrack)
+                        let xGlobalPosition = xWithinTrack
+                        let yGlobalPosition = y + yWithinTrack - tracksClipsView.contentY
+                        timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
 
                         if (!root.clipHovered) {
                             root.clipHovered = true
                         }
                         root.hoveredClipKey = clipKey
+                    }
+
+                    onSetHoveredClipKey: function(clipKey) {
+                        root.hoveredClipKey = clipKey
+                    }
+
+                    onClipHeaderHoveredChanged: function(val) {
+                        root.clipHeaderHovered = val
                     }
 
                     onClipSelectedRequested: {
@@ -384,7 +417,7 @@ Rectangle {
                         selectionController.resetDataSelection()
                     }
 
-                    onClipMoveRequested: function(completed) {
+                    onUpdateMoveActive: function(completed) {
                         if (tracksClipsView.moveActive !== completed) {
                             return;
                         }
@@ -461,7 +494,7 @@ Rectangle {
             }
 
             onPlayCursorMousePositionChanged: function(ix) {
-                timeline.updateCursorPosition(ix)
+                timeline.updateCursorPosition(ix, -1)
             }
         }
 

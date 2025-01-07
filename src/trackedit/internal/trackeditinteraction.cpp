@@ -21,6 +21,11 @@ muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*complet
     return m_interaction->clipStartTimeChanged();
 }
 
+bool TrackeditInteraction::moveClipToTrack(const ClipKey &clipKey, TrackId trackId, bool completed)
+{
+    return m_interaction->moveClipToTrack(clipKey, trackId, completed);
+}
+
 bool TrackeditInteraction::trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     return withPlaybackStop(&ITrackeditInteraction::trimTracksData, tracksIds, begin, end);
@@ -126,9 +131,12 @@ bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t
     return withPlaybackStop(&ITrackeditInteraction::removeTracksData, tracksIds, begin, end);
 }
 
-bool TrackeditInteraction::moveClips(secs_t offset, bool completed)
+bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
 {
-    return withPlaybackStop(&ITrackeditInteraction::moveClips, offset, completed);
+    return withPlaybackStop(&ITrackeditInteraction::moveClips,
+                            timePositionOffset,
+                            trackPositionOffset,
+                            completed);
 }
 
 bool TrackeditInteraction::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)

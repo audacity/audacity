@@ -19,6 +19,16 @@ void ProjectViewState::changeTracksVericalY(int deltaY)
     m_tracksVericalY.set(deltaY);
 }
 
+double ProjectViewState::mousePositionY() const
+{
+    return m_mouseYPosition.val;
+}
+
+void ProjectViewState::setMousePositionY(double y)
+{
+    m_mouseYPosition.set(y);
+}
+
 muse::ValCh<bool> ProjectViewState::tracksVerticalScrollLocked() const
 {
     return m_tracksVerticalScrollLocked;
@@ -27,6 +37,31 @@ muse::ValCh<bool> ProjectViewState::tracksVerticalScrollLocked() const
 void ProjectViewState::setTracksVerticalScrollLocked(bool lock)
 {
     m_tracksVerticalScrollLocked.set(lock);
+}
+
+int ProjectViewState::trackYPosition(const trackedit::TrackId &trackId) const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return -1;
+    }
+
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    int tracksVericalY = this->tracksVericalY().val;
+    int trackTop = -tracksVericalY;
+    int trackBottom = trackTop;
+
+    for (trackedit::TrackId id : tracks) {
+        trackTop = trackBottom;
+        trackBottom = trackTop + trackHeight(id).val;
+
+        if (trackId == id) {
+            return trackTop;
+        }
+    }
+
+    return -1;
 }
 
 ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::TrackId& trackId) const
@@ -118,4 +153,31 @@ void ProjectViewState::setSnap(const Snap& s)
 muse::ValCh<Snap> ProjectViewState::snap() const
 {
     return m_snap;
+}
+
+void ProjectViewState::setClipEditStartTimeOffset(double val)
+{
+    if (m_clipEditStartTimeOffset == val) {
+        return;
+    }
+
+    m_clipEditStartTimeOffset = val;
+}
+
+double ProjectViewState::clipEditStartTimeOffset() {
+    return m_clipEditStartTimeOffset;
+}
+
+void ProjectViewState::setClipEditEndTimeOffset(double val)
+{
+    if (m_clipEditEndTimeOffset == val) {
+        return;
+    }
+
+    m_clipEditEndTimeOffset = val;
+}
+
+double ProjectViewState::clipEditEndTimeOffset()
+{
+    return m_clipEditEndTimeOffset;
 }

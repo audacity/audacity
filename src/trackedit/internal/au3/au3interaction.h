@@ -35,6 +35,8 @@ public:
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
 
+    bool moveClipToTrack(const trackedit::ClipKey& clipKey, TrackId trackId, bool completed) override;
+
     bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
@@ -57,7 +59,7 @@ public:
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
-    bool moveClips(secs_t offset, bool completed) override;
+    bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
@@ -124,6 +126,8 @@ private:
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     void doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
+    std::shared_ptr<WaveTrack> createMonoTrack();
+    std::shared_ptr<WaveTrack> createStereoTrack();
 
     bool splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
@@ -148,11 +152,14 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
+    int trackPositionOffsetMin() const;
+    bool canMoveClipsToTrack(int trackPositionOffset) const;
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
     muse::ProgressPtr m_progress;
+    std::atomic<bool> m_busy;
 };
 }
