@@ -3,28 +3,14 @@
  */
 #pragma once
 
-#include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "realtimeeffectmenumodelbase.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
-#include "effects/effects_base/ieffectsprovider.h"
 #include <QObject>
 #include <map>
 
 namespace au::projectscene {
-class ModelEffectItem : public QObject, public muse::Injectable
-{
-    Q_OBJECT
-
-    muse::Inject<effects::IEffectsProvider> effectsProvider;
-
-public:
-    ModelEffectItem(QObject* parent, effects::EffectStateId effectState);
-
-    const effects::EffectStateId effectStateId;
-    Q_INVOKABLE QString effectName() const;
-    Q_INVOKABLE void showDialog();
-};
+class RealtimeEffectListItemModel;
 
 class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
 {
@@ -38,7 +24,7 @@ class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
 public:
     explicit RealtimeEffectListModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE void handleMenuItemWithState(const QString& menuItemId, const ModelEffectItem*);
+    Q_INVOKABLE void handleMenuItemWithState(const QString& menuItemId, const RealtimeEffectListItemModel*);
     QVariantList availableEffects();
 
 signals:
@@ -62,7 +48,7 @@ private:
     void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectStateId& item);
     void removeEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectStateId& item);
 
-    using EffectList = std::vector<ModelEffectItem*>;
+    using EffectList = std::vector<RealtimeEffectListItemModel*>;
     std::map<effects::TrackId, EffectList> m_trackEffectLists;
 };
 }

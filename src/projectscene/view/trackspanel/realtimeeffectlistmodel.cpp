@@ -2,7 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectlistmodel.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
+#include "realtimeeffectlistitemmodel.h"
 #include "log.h"
 
 using namespace muse;
@@ -10,19 +10,6 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace au::audio;
 using namespace au::effects;
-
-ModelEffectItem::ModelEffectItem(QObject* parent, EffectStateId effectStateId)
-    : QObject{parent}, effectStateId{effectStateId} {}
-
-QString ModelEffectItem::effectName() const
-{
-    return QString::fromStdString(effectsProvider()->effectName(*reinterpret_cast<RealtimeEffectState*>(effectStateId)));
-}
-
-void ModelEffectItem::showDialog()
-{
-    effectsProvider()->showEffect(reinterpret_cast<RealtimeEffectState*>(effectStateId));
-}
 
 RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
     : RealtimeEffectMenuModelBase(parent)
@@ -39,7 +26,7 @@ void RealtimeEffectListModel::doLoad()
     setListenerOnCurrentTrackeditProject();
 }
 
-void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, const ModelEffectItem* item)
+void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, const RealtimeEffectListItemModel* item)
 {
     TRACEFUNC;
 
@@ -127,7 +114,7 @@ void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChain
     if (affectsSelectedTrack) {
         beginInsertRows(QModelIndex(), index, index);
     }
-    list.insert(list.begin() + index, new ModelEffectItem(this, e));
+    list.insert(list.begin() + index, new RealtimeEffectListItemModel(this, e));
     if (affectsSelectedTrack) {
         endInsertRows();
     }
