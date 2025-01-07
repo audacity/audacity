@@ -69,7 +69,7 @@ EffectBase {
             Layout.fillHeight: false
 
             value: noise.duration
-            mode: TimecodeModeSelectors.Duration
+            mode: TimecodeModeSelector.Duration
             currentFormatStr: noise.durationFormat
             sampleRate: noise.sampleRate
             tempo: noise.tempo

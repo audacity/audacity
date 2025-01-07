@@ -111,7 +111,7 @@ Item {
 
                 value: Boolean(itemData) ? itemData.currentValue : 0
 
-                mode: TimecodeMode.TimePoint
+                mode: TimecodeModeSelector.TimePoint
 
                 sampleRate: Boolean(itemData) ? itemData.sampleRate : 0
                 tempo: Boolean(itemData) ? itemData.tempo : 0
