@@ -30,19 +30,23 @@ void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, con
 {
     TRACEFUNC;
 
+    IF_ASSERT_FAILED(m_trackId.has_value()) {
+        return;
+    }
+
     MenuItem& menuItem = findItem(itemId);
 
     if (itemId == "realtimeeffect-remove") {
-        menuItem.setArgs(actions::ActionData::make_arg2(m_trackId, item->effectStateId));
+        menuItem.setArgs(actions::ActionData::make_arg2(*m_trackId, item->effectStateId));
     }
     if (itemId == "realtimeeffect-replace") {
-        const auto& list = m_trackEffectLists.at(m_trackId);
+        const auto& list = m_trackEffectLists.at(*m_trackId);
         const auto it = std::find(list.begin(), list.end(), item);
         IF_ASSERT_FAILED(it != list.end()) {
             return;
         }
         const int itemIndex = it - list.begin();
-        menuItem.setArgs(actions::ActionData::make_arg3(m_trackId, itemIndex, menuItem.args().arg<effects::EffectId>(2)));
+        menuItem.setArgs(actions::ActionData::make_arg3(*m_trackId, itemIndex, menuItem.args().arg<effects::EffectId>(1)));
     }
 
     AbstractMenuModel::handleMenuItem(itemId);
@@ -152,10 +156,11 @@ QHash<int, QByteArray> RealtimeEffectListModel::roleNames() const
 
 QVariant RealtimeEffectListModel::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || index.row() >= rowCount() || role != rItemData || !m_trackEffectLists.count(m_trackId)) {
+    if (!index.isValid() || index.row() >= rowCount() || role != rItemData || !m_trackId.has_value()
+        || !m_trackEffectLists.count(*m_trackId)) {
         return QVariant();
     }
-    auto it = m_trackEffectLists.at(m_trackId).begin();
+    auto it = m_trackEffectLists.at(*m_trackId).begin();
     std::advance(it, index.row());
     return QVariant::fromValue(*it);
 }
@@ -163,8 +168,8 @@ QVariant RealtimeEffectListModel::data(const QModelIndex& index, int role) const
 int RealtimeEffectListModel::rowCount(const QModelIndex& parent) const
 {
     UNUSED(parent);
-    if (!m_trackEffectLists.count(m_trackId)) {
+    if (!m_trackId.has_value() || !m_trackEffectLists.count(*m_trackId)) {
         return 0;
     }
-    return static_cast<int>(m_trackEffectLists.at(m_trackId).size());
+    return static_cast<int>(m_trackEffectLists.at(*m_trackId).size());
 }

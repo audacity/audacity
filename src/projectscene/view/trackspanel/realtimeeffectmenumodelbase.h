@@ -27,7 +27,7 @@ signals:
 
 protected:
     muse::Inject<effects::IEffectsProvider> effectsProvider;
-    au::trackedit::TrackId m_trackId = -1;
+    std::optional<au::trackedit::TrackId> m_trackId;
 
 private:
     virtual void doLoad() = 0;

@@ -20,12 +20,12 @@ void RealtimeEffectMenuModelBase::load()
 
 au::trackedit::TrackId RealtimeEffectMenuModelBase::trackId() const
 {
-    return m_trackId;
+    return m_trackId.value_or(-1);
 }
 
 void RealtimeEffectMenuModelBase::setTrackId(au::trackedit::TrackId trackId)
 {
-    if (trackId < 0 || m_trackId == trackId) {
+    if (m_trackId == trackId) {
         return;
     }
     beginResetModel();
