@@ -53,7 +53,7 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     const EffectSettingsManager& sm = settingsManager(effectId);
-    EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
+    EffectSettingsAccess* access = instancesRegister()->settingsAccessById(effectInstanceId);
 
     Ret ret;
 
@@ -61,7 +61,12 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
     bool isApplied = false;
     if (DEFAULT_PRESET == presetId) {
         isApplied = true;
-        OptionalMessage msg = sm.LoadFactoryDefaults(*settings);
+        OptionalMessage msg;
+        access->ModifySettings([&](EffectSettings& settings)
+        {
+            msg = sm.LoadFactoryDefaults(settings);
+            return nullptr;
+        });
         ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
         if (!ret) {
             LOGE() << "failed load factory defaults";
@@ -74,7 +79,12 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
         int idx = muse::indexOf(presets, presetId);
         if (idx >= 0) {
             isApplied = true;
-            OptionalMessage msg = sm.LoadFactoryPreset(idx, *settings);
+
+            OptionalMessage msg;
+            access->ModifySettings([&](EffectSettings& settings) {
+                msg = sm.LoadFactoryPreset(idx, settings);
+                return nullptr;
+            });
             ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
             if (!ret) {
                 LOGE() << "failed load factory preset";
@@ -85,7 +95,11 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
     // try apply user
     if (!isApplied) {
         isApplied = true;
-        OptionalMessage msg = sm.LoadUserPreset(UserPresetsGroup(wxString(presetId)), *settings);
+        OptionalMessage msg;
+        access->ModifySettings([&](EffectSettings& settings) {
+            msg = sm.LoadUserPreset(UserPresetsGroup(wxString(presetId)), settings);
+            return nullptr;
+        });
         ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
         if (!ret) {
             LOGE() << "failed load user preset";
@@ -103,7 +117,7 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     const EffectSettingsManager& sm = settingsManager(effectId);
-    EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
+    const EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
     IF_ASSERT_FAILED(settings) {
         return make_ret(Err::InternalError);
     }
@@ -141,8 +155,8 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
         return make_ret(Err::InternalError);
     }
 
-    EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
-    IF_ASSERT_FAILED(settings) {
+    EffectSettingsAccess* access = instancesRegister()->settingsAccessById(effectInstanceId);
+    IF_ASSERT_FAILED(access) {
         return make_ret(Err::InternalError);
     }
 
@@ -171,7 +185,11 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
     }
 
     if (ret) {
-        OptionalMessage res = effect->LoadSettingsFromString(params, *settings);
+        OptionalMessage res;
+        access->ModifySettings([&](EffectSettings& settings) {
+            res = effect->LoadSettingsFromString(params, settings);
+            return nullptr;
+        });
         ret = res ? muse::make_ok() : make_ret(Err::InternalError);
         if (ret) {
             instancesRegister()->notifyAboutSettingsChanged(effectInstanceId);
@@ -191,7 +209,7 @@ muse::Ret EffectPresetsProvider::exportPreset(const EffectInstanceId& effectInst
         return make_ret(Err::InternalError);
     }
 
-    EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
+    const EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
     IF_ASSERT_FAILED(settings) {
         return make_ret(Err::InternalError);
     }

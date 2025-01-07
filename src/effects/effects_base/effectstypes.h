@@ -11,6 +11,8 @@
 
 class Effect;
 class EffectInstanceEx;
+class RealtimeEffectState;
+class EffectSettingsAccess;
 struct EffectSettings;
 class wxString;
 namespace au::effects {
@@ -25,6 +27,10 @@ using Effect = ::Effect;                    // Effect from AU3
 using EffectInstanceId = uint64_t;
 using EffectInstance = ::EffectInstanceEx;  // EffectInstanceEx from AU3
 using EffectSettings = ::EffectSettings;
+using EffectSettingsAccess = ::EffectSettingsAccess;
+using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
+using RealtimeEffectState = ::RealtimeEffectState;
+using RealtimeEffectStatePtr = std::shared_ptr<RealtimeEffectState>;
 using EffectStateId = uintptr_t;
 using TrackId = long;
 using EffectChainLinkIndex = int;
@@ -63,15 +69,6 @@ using EffectCategoryList = std::vector<EffectCategory>;
 
 constexpr const char16_t* VST_CATEGORY_ID = u"vst";
 constexpr const char16_t* BUILTIN_CATEGORY_ID = u"builtin";
-
-struct EffectChainLink {
-    EffectChainLink(std::string effectName, EffectStateId effectStateId)
-        : effectName{std::move(effectName)}, effectStateId{effectStateId} {}
-    const std::string effectName;
-    const EffectStateId effectStateId;
-};
-
-using EffectChainLinkPtr = std::shared_ptr<EffectChainLink>;
 
 using PresetId = wxString;
 using PresetIdList = std::vector<PresetId>;

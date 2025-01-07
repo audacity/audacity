@@ -2,10 +2,12 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectinstancesregister.h"
+#include "libraries/lib-components/EffectInterface.h"
 
 using namespace au::effects;
 
-EffectInstanceId EffectInstancesRegister::regInstance(const EffectId& effectId, const std::shared_ptr<EffectInstance>& i, EffectSettings* s)
+EffectInstanceId EffectInstancesRegister::regInstance(const EffectId& effectId, const std::shared_ptr<EffectInstance>& i,
+                                                      EffectSettingsAccessPtr s)
 {
     EffectInstanceId id = reinterpret_cast<EffectInstanceId>(i.get());
     m_data.insert({ id, { effectId, i, s, muse::async::Notification() } });
@@ -34,7 +36,7 @@ EffectInstanceId EffectInstancesRegister::instanceIdOf(const std::shared_ptr<Eff
     return EffectInstanceId();
 }
 
-std::shared_ptr<EffectInstance> EffectInstancesRegister::instanceById(const EffectInstanceId& instanceId) const
+std::shared_ptr<au::effects::EffectInstance> EffectInstancesRegister::instanceById(const EffectInstanceId& instanceId) const
 {
     auto it = m_data.find(instanceId);
     if (it != m_data.end()) {
@@ -54,11 +56,19 @@ EffectId EffectInstancesRegister::effectIdByInstanceId(const EffectInstanceId& i
     return EffectId();
 }
 
-EffectSettings* EffectInstancesRegister::settingsById(const EffectInstanceId& instanceId) const
+const EffectSettings* EffectInstancesRegister::settingsById(const EffectInstanceId& instanceId) const
+{
+    if (const auto access = settingsAccessById(instanceId)) {
+        return &access->Get();
+    }
+    return nullptr;
+}
+
+EffectSettingsAccess* EffectInstancesRegister::settingsAccessById(const EffectInstanceId& instanceId) const
 {
     auto it = m_data.find(instanceId);
     if (it != m_data.end()) {
-        return it->second.settings;
+        return it->second.access.get();
     }
 
     return nullptr;

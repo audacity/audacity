@@ -46,7 +46,7 @@ std::shared_ptr<au::effects::EffectInstance> AbstractEffectModel::instance() con
     return instancesRegister()->instanceById(id);
 }
 
-EffectSettings* AbstractEffectModel::settings() const
+const EffectSettings* AbstractEffectModel::settings() const
 {
     EffectInstanceId id = this->instanceId();
     if (id == 0) {
@@ -54,6 +54,16 @@ EffectSettings* AbstractEffectModel::settings() const
     }
 
     return instancesRegister()->settingsById(id);
+}
+
+EffectSettingsAccess* AbstractEffectModel::settingsAccess() const
+{
+    EffectInstanceId id = this->instanceId();
+    if (id == 0) {
+        return nullptr;
+    }
+
+    return instancesRegister()->settingsAccessById(id);
 }
 
 EffectInstanceId AbstractEffectModel::instanceId() const
@@ -68,7 +78,12 @@ EffectId AbstractEffectModel::effectId() const
 
 void AbstractEffectModel::preview()
 {
-    executionScenario()->previewEffect(this->instanceId(), *this->settings());
+    if (EffectSettingsAccess* access = this->settingsAccess()) {
+        access->ModifySettings([this](EffectSettings& settings) {
+            executionScenario()->previewEffect(instanceId(), settings);
+            return nullptr;
+        });
+    }
 }
 
 QString AbstractEffectModel::instanceId_prop() const

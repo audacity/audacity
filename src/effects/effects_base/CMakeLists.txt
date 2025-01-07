@@ -52,6 +52,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectviewloader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectviewloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.h
     )
 
 # AU3

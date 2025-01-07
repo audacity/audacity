@@ -29,7 +29,7 @@ private:
 
     void doReload() override;
 
-    using Setter = std::function<void (double)>;
+    using Setter = std::function<void (ReverbSettings&, double)>;
 
     QVariantList m_paramsList;
     QMap<QString, Setter> m_setters;

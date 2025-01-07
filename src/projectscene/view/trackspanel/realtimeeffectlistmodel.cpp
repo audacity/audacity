@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectlistmodel.h"
+#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "log.h"
 
 using namespace muse;
@@ -10,12 +11,17 @@ using namespace muse::uicomponents;
 using namespace au::audio;
 using namespace au::effects;
 
-ModelEffectItem::ModelEffectItem(QObject* parent, std::string effectName, EffectStateId effectStateId)
-    : QObject{parent}, effectStateId{effectStateId}, m_effectName{std::move(effectName)} {}
+ModelEffectItem::ModelEffectItem(QObject* parent, EffectStateId effectStateId)
+    : QObject{parent}, effectStateId{effectStateId} {}
 
 QString ModelEffectItem::effectName() const
 {
-    return QString::fromStdString(m_effectName);
+    return QString::fromStdString(effectsProvider()->effectName(*reinterpret_cast<RealtimeEffectState*>(effectStateId)));
+}
+
+void ModelEffectItem::showDialog()
+{
+    effectsProvider()->showEffect(reinterpret_cast<RealtimeEffectState*>(effectStateId));
 }
 
 RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
@@ -93,25 +99,25 @@ void RealtimeEffectListModel::setListenerOnCurrentTrackeditProject()
 {
     realtimeEffectService()->realtimeEffectAdded().onReceive(this,
                                                              [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                    EffectChainLinkPtr item)
-    { insertEffect(trackId, index, *item); });
+                                                                    EffectStateId item)
+    { insertEffect(trackId, index, item); });
 
     realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
                                                                [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                      EffectChainLinkPtr item) {
-        removeEffect(trackId, index, *item);
+                                                                      EffectStateId item) {
+        removeEffect(trackId, index, item);
     });
 
     realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
                                                                 [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                       EffectChainLinkPtr oldItem,
-                                                                       EffectChainLinkPtr newItem) {
-        removeEffect(trackId, index, *oldItem);
-        insertEffect(trackId, index, *newItem);
+                                                                       EffectStateId oldItem,
+                                                                       EffectStateId newItem) {
+        removeEffect(trackId, index, oldItem);
+        insertEffect(trackId, index, newItem);
     });
 }
 
-void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectChainLink& e)
+void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectStateId& e)
 {
     auto& list = m_trackEffectLists[trackId];
     IF_ASSERT_FAILED(index <= list.size()) {
@@ -121,16 +127,16 @@ void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChain
     if (affectsSelectedTrack) {
         beginInsertRows(QModelIndex(), index, index);
     }
-    list.insert(list.begin() + index, new ModelEffectItem(this, e.effectName, e.effectStateId));
+    list.insert(list.begin() + index, new ModelEffectItem(this, e));
     if (affectsSelectedTrack) {
         endInsertRows();
     }
 }
 
-void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectChainLink& e)
+void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectStateId& e)
 {
     auto& list = m_trackEffectLists[trackId];
-    IF_ASSERT_FAILED(index < list.size() && list[index]->effectStateId == e.effectStateId) {
+    IF_ASSERT_FAILED(index < list.size() && list[index]->effectStateId == e) {
         return;
     }
     const auto affectsSelectedTrack = trackId == m_trackId;

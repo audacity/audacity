@@ -19,7 +19,7 @@ class IEffectInstancesRegister : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IEffectInstancesRegister() = default;
 
-    virtual EffectInstanceId regInstance(const EffectId& effectId, const std::shared_ptr<EffectInstance>& i, EffectSettings* s) = 0;
+    virtual EffectInstanceId regInstance(const EffectId& effectId, const std::shared_ptr<EffectInstance>& i, EffectSettingsAccessPtr s) = 0;
     virtual void unregInstance(const std::shared_ptr<EffectInstance>& i) = 0;
     virtual void unregInstance(const EffectInstanceId& instanceId) = 0;
 
@@ -27,7 +27,8 @@ public:
     virtual std::shared_ptr<EffectInstance> instanceById(const EffectInstanceId& instanceId) const = 0;
     virtual EffectId effectIdByInstanceId(const EffectInstanceId& instanceId) const = 0;
 
-    virtual EffectSettings* settingsById(const EffectInstanceId& instanceId) const = 0;
+    virtual const EffectSettings* settingsById(const EffectInstanceId& instanceId) const = 0;
+    virtual EffectSettingsAccess* settingsAccessById(const EffectInstanceId& instanceId) const = 0;
     virtual void notifyAboutSettingsChanged(const EffectInstanceId& instanceId) = 0;
     virtual muse::async::Notification settingsChanged(const EffectInstanceId& instanceId) const = 0;
 };

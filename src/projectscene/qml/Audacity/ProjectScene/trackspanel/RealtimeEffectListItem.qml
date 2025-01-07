@@ -95,7 +95,7 @@ ListItemBlank {
                 }
 
                 onClicked: {
-                    console.log("not implemented")
+                    root.item.showDialog()
                 }
             }
         }
