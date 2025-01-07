@@ -30,14 +30,18 @@ public:
     virtual void setSelectedTracks(const TrackIdList& trackIds, bool complete = true) = 0;
     virtual void addSelectedTrack(const trackedit::TrackId& trackId) = 0;
     virtual muse::async::Channel<TrackIdList> tracksSelected() const = 0;
+    virtual std::optional<trackedit::TrackId> determinePointedTrack(double y) const = 0;
+    virtual trackedit::TrackIdList determinateTracks(double y1, double y2) const = 0;
 
     // clip selection
     virtual void resetSelectedClips() = 0;
     virtual bool hasSelectedClips() const = 0;
     virtual ClipKeyList selectedClips() const = 0;
+    virtual ClipKeyList selectedClipsInTrackOrder() const = 0;
     virtual void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true) = 0;
     virtual std::optional<ClipId> setSelectedClip(trackedit::TrackId trackId, secs_t time) = 0;
     virtual void addSelectedClip(const ClipKey& clipKey) = 0;
+    virtual void removeClipSelection(const ClipKey& clipKey) = 0;
     virtual muse::async::Channel<ClipKeyList> clipsSelected() const = 0;
 
     //! NOTE: for now it's used only for ruler

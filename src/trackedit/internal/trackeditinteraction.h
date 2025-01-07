@@ -21,6 +21,7 @@ private:
     muse::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
+    bool moveClipToTrack(const trackedit::ClipKey& clipKey, TrackId trackId, bool completed) override;
     bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
@@ -42,7 +43,7 @@ private:
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const ClipKeyList& clipKeyList) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
-    bool moveClips(secs_t offset, bool completed) override;
+    bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;

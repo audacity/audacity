@@ -40,6 +40,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
 
 public:
     ClipsListModel(QObject* parent = nullptr);
+    ~ClipsListModel();
 
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
@@ -71,6 +72,9 @@ public:
 
     Q_INVOKABLE void openClipSpeedEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipSpeed(const ClipKey& key);
+
+    // update clip after moving to other track
+    Q_INVOKABLE projectscene::ClipKey updateClipTrack(ClipKey clipKey) const;
 
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -113,6 +117,9 @@ private:
     int indexByKey(const trackedit::ClipKey& k) const;
     QVariant neighbor(const ClipKey& key, int offset) const;
 
+    trackedit::secs_t calculateTimePositionOffset(const ClipListItem* item) const;
+    int calculateTrackPositionOffset(const ClipKey& key, bool completed) const;
+
     Qt::KeyboardModifiers keyboardModifiers() const;
 
     TimelineContext* m_context = nullptr;
@@ -121,10 +128,6 @@ private:
     QList<ClipListItem*> m_clipList;
     QList<ClipListItem*> m_selectedItems;
     bool m_isStereo = false;
-
-    //! Offset between mouse click position on clip's header and clip's start and end time
-    double m_clipEditStartTimeOffset = -1.0;
-    double m_clipEditEndTimeOffset = -1.0;
 
     QMetaObject::Connection m_autoScrollConnection;
 };

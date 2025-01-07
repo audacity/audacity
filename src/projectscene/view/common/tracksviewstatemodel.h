@@ -38,6 +38,7 @@ public:
     // context of all tracks
     int tracksVericalY() const;
     Q_INVOKABLE void changeTracksVericalY(int deltaY);
+    Q_INVOKABLE void setMouseY(double y);
 
     Q_INVOKABLE void requestVerticalScrollLock();
     Q_INVOKABLE void requestVerticalScrollUnlock();

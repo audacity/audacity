@@ -31,14 +31,18 @@ public:
     void setSelectedTracks(const trackedit::TrackIdList& trackIds, bool complete = true) override;
     void addSelectedTrack(const trackedit::TrackId& trackId) override;
     muse::async::Channel<trackedit::TrackIdList> tracksSelected() const override;
+    std::optional<TrackId> determinePointedTrack(double y) const override;
+    trackedit::TrackIdList determinateTracks(double y1, double y2) const override;
 
     // clip selection
     void resetSelectedClips() override;
     bool hasSelectedClips() const override;
     ClipKeyList selectedClips() const override;
+    ClipKeyList selectedClipsInTrackOrder() const override;
     void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true) override;
     std::optional<trackedit::ClipId> setSelectedClip(trackedit::TrackId trackId, secs_t time) override;
     void addSelectedClip(const ClipKey& clipKey) override;
+    void removeClipSelection(const ClipKey& clipKey) override;
     muse::async::Channel<ClipKeyList> clipsSelected() const override;
     double selectedClipStartTime() const override;
     double selectedClipEndTime() const override;

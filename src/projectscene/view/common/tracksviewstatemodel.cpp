@@ -71,6 +71,14 @@ void TracksViewStateModel::changeTracksVericalY(int deltaY)
     }
 }
 
+void TracksViewStateModel::setMouseY(double y)
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        vs->setMousePositionY(y);
+    }
+}
+
 void TracksViewStateModel::requestVerticalScrollLock()
 {
     IProjectViewStatePtr vs = viewState();

@@ -18,6 +18,8 @@ using gain_t = float;
 using balance_t = float;
 
 using TrackId = int64_t;
+constexpr TrackId INVALID_TRACK = -1;
+
 using ClipId = int64_t;
 
 using TrackIdList = std::vector<TrackId>;

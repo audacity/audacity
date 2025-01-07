@@ -39,14 +39,14 @@ void SelectionViewController::onPressed(double x, double y)
     TrackIdList tracks;
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
-        TrackIdList newTracks = determinateTracks(y, y);
+        TrackIdList newTracks = selectionController()->determinateTracks(y, y);
         if (!newTracks.empty()) {
             if (!muse::contains(tracks, newTracks.at(0))) {
                 tracks.push_back(newTracks.at(0));
             }
         }
     } else {
-        tracks = determinateTracks(m_startPoint.y(), y);
+        tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
     }
 
     selectionController()->setSelectedTracks(tracks, true);
@@ -96,7 +96,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
     } else {
-        tracks = determinateTracks(m_startPoint.y(), y);
+        tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
     }
     selectionController()->setSelectedTracks(tracks, true);
 
@@ -142,7 +142,7 @@ void SelectionViewController::onReleased(double x, double y)
     if (modifiers.testFlag(Qt::ControlModifier)) {
         tracks = selectionController()->selectedTracks();
     } else {
-        tracks = determinateTracks(m_startPoint.y(), y);
+        tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
     }
 
     if ((x2 - x1) < MIN_SELECTION_PX) {
@@ -187,7 +187,7 @@ void SelectionViewController::selectTrackAudioData(double y)
         return;
     }
 
-    const std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    const std::vector<TrackId> tracks = selectionController()->determinateTracks(m_startPoint.y(), y);
     if (tracks.empty()) {
         return;
     }
@@ -241,60 +241,6 @@ TrackIdList SelectionViewController::trackIdList() const
 {
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     return prj ? prj->trackIdList() : TrackIdList();
-}
-
-TrackIdList SelectionViewController::determinateTracks(double y1, double y2) const
-{
-    IProjectViewStatePtr vs = viewState();
-    if (!vs) {
-        return {};
-    }
-
-    if (y1 < 0 && y2 < 0) {
-        return {};
-    }
-
-    if (y1 > y2) {
-        std::swap(y1, y2);
-    }
-
-    if (y1 < 1) {
-        y1 = 1;
-    }
-
-    TrackIdList tracks = trackIdList();
-    if (tracks.empty()) {
-        return {};
-    }
-
-    TrackIdList ret;
-
-    int tracksVericalY = vs->tracksVericalY().val;
-    int trackTop = -tracksVericalY;
-    int trackBottom = trackTop;
-
-    for (TrackId trackId : tracks) {
-        trackTop = trackBottom;
-        trackBottom = trackTop + vs->trackHeight(trackId).val;
-
-        if (y1 > trackTop && y1 < trackBottom) {
-            ret.push_back(trackId);
-        }
-
-        if (y2 > trackTop && y2 < trackBottom) {
-            if (!ret.empty() && ret.back() != trackId) {
-                ret.push_back(trackId);
-            }
-            break;
-        }
-
-        if (!ret.empty() && ret.back() != trackId) {
-            ret.push_back(trackId);
-            continue;
-        }
-    }
-
-    return ret;
 }
 
 Qt::KeyboardModifiers SelectionViewController::keyboardModifiers() const
