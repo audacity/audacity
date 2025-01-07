@@ -3,13 +3,16 @@
 */
 #pragma once
 
+#include <array>
+
+#include "timecodemodeselector.h"
 #include "timecodeformatter.h"
 
 namespace au::playback {
 class BeatsFormatter : public TimecodeFormatter
 {
 public:
-    BeatsFormatter(const QString& formatStr, int fracPart);
+    BeatsFormatter(const QString& formatStr, int fracPart, TimecodeMode mode);
 
     void init() override;
 
@@ -27,7 +30,7 @@ private:
     void updateFields(size_t barsDigits);
 
     std::array<double, 3> m_fieldLengths;
-    int m_fieldValueOffset = 1;
     int m_fracPart = 0;
+    TimecodeMode m_mode;
 };
 }

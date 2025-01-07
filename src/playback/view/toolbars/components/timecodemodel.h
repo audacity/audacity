@@ -6,6 +6,7 @@
 #include <QAbstractListModel>
 #include <QQuickItem>
 
+#include "timecodemodeselector.h"
 #include "timecodeformatter.h"
 #include "fieldsinteractioncontroller.h"
 
@@ -14,6 +15,7 @@ class TimecodeModel : public QAbstractListModel
 {
     Q_OBJECT
 
+    Q_PROPERTY(TimecodeMode mode READ mode WRITE setMode FINAL)
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
 
     Q_PROPERTY(double sampleRate READ sampleRate WRITE setSampleRate FINAL)
@@ -65,6 +67,10 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
+    QString valueString() const;
+
+    TimecodeMode mode() const;
+    void setMode(TimecodeMode mode);
 
     double value() const;
     void setValue(double value);
@@ -104,8 +110,6 @@ signals:
     void currentEditedFieldIndexChanged();
 
 private:
-    friend class TimecodeModelTests;
-
     enum Roles {
         rSymbol = Qt::UserRole + 1,
         rIsEditable
@@ -117,6 +121,8 @@ private:
     void initFieldInteractionController();
 
     void updateValueString();
+
+    TimecodeMode m_mode = TimecodeMode::TimePoint;
 
     double m_value = -1.0;
     QString m_valueString;

@@ -122,6 +122,29 @@ QHash<int, QByteArray> TimecodeModel::roleNames() const
     return roles;
 }
 
+QString TimecodeModel::valueString() const
+{
+    return m_valueString;
+}
+
+TimecodeMode TimecodeModel::mode() const
+{
+    return m_mode;
+}
+
+void TimecodeModel::setMode(TimecodeMode mode)
+{
+    if (m_mode == mode) {
+        return;
+    }
+
+    m_mode = mode;
+
+    reloadFormatter();
+    updateValueString();
+    emit valueChanged();
+}
+
 double TimecodeModel::value() const
 {
     return m_value;
@@ -202,7 +225,7 @@ void TimecodeModel::reloadFormatter()
     ViewFormatType format = static_cast<ViewFormatType>(m_currentFormat);
     if (format == ViewFormatType::BarBeat || format == ViewFormatType::BarBeatTick) {
         int fracPart = format == ViewFormatType::BarBeat ? 0 : 16;
-        m_formatter = std::make_shared<BeatsFormatter>(m_availableViewFormats[m_currentFormat].formatStr, fracPart);
+        m_formatter = std::make_shared<BeatsFormatter>(m_availableViewFormats[m_currentFormat].formatStr, fracPart, m_mode);
     } else {
         m_formatter = std::make_shared<NumericFormatter>(m_availableViewFormats[m_currentFormat].formatStr);
     }

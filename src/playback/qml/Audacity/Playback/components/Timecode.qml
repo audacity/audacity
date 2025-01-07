@@ -14,6 +14,7 @@ RowLayout {
     id: root
 
     property alias value: timecodeModel.value
+    property alias mode: timecodeModel.mode
 
     property alias sampleRate: timecodeModel.sampleRate
     property alias tempo: timecodeModel.tempo
