@@ -3,7 +3,6 @@
  */
 #pragma once
 
-#include "context/iglobalcontext.h"
 #include "realtimeeffectmenumodelbase.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include <QObject>
@@ -18,7 +17,6 @@ class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
 
     Q_PROPERTY(QVariantList availableEffects READ availableEffects NOTIFY availableEffectsChanged)
 
-    muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
 
 public:
@@ -44,7 +42,6 @@ private:
     void doLoad() override;
     void populateMenu() override;
 
-    void setListenerOnCurrentTrackeditProject();
     void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectStateId& item);
     void removeEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectStateId& item);
 

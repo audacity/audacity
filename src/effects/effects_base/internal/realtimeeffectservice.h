@@ -37,6 +37,8 @@ class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asynca
 public:
     void init();
 
+    muse::async::Notification projectClosed() const override;
+
     RealtimeEffectStatePtr addRealtimeEffect(project::IAudacityProject&, TrackId, const EffectId&) override;
     void removeRealtimeEffect(project::IAudacityProject&, TrackId, EffectStateId) override;
     RealtimeEffectStatePtr replaceRealtimeEffect(project::IAudacityProject&, TrackId, int effectListIndex,
@@ -47,6 +49,7 @@ public:
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId, EffectStateId> realtimeEffectReplaced() const override;
 
 private:
+    void updateSubscriptions(const au::project::IAudacityProjectPtr& project);
     Observer::Subscription subscribeToRealtimeEffectList(WaveTrack&, RealtimeEffectList&);
     void onTrackListEvent(const TrackListEvent&);
     void onWaveTrackAdded(WaveTrack&);
@@ -57,6 +60,7 @@ private:
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> m_realtimeEffectAdded;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> m_realtimeEffectRemoved;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId, EffectStateId> m_realtimeEffectReplaced;
+    muse::async::Notification m_projectClosed;
 
     Observer::Subscription m_tracklistSubscription;
     std::unordered_map<TrackId, Observer::Subscription> m_rtEffectSubscriptions;

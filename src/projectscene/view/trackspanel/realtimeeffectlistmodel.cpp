@@ -8,7 +8,6 @@
 using namespace muse;
 using namespace au::projectscene;
 using namespace muse::uicomponents;
-using namespace au::audio;
 using namespace au::effects;
 
 RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
@@ -20,10 +19,32 @@ void RealtimeEffectListModel::doLoad()
 {
     populateMenu();
 
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
-    { setListenerOnCurrentTrackeditProject(); });
+    realtimeEffectService()->realtimeEffectAdded().onReceive(this,
+                                                             [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                    EffectStateId item)
+    { insertEffect(trackId, index, item); });
 
-    setListenerOnCurrentTrackeditProject();
+    realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
+                                                               [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                      EffectStateId item) {
+        removeEffect(trackId, index, item);
+    });
+
+    realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
+                                                                [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                       EffectStateId oldItem,
+                                                                       EffectStateId newItem) {
+        removeEffect(trackId, index, oldItem);
+        insertEffect(trackId, index, newItem);
+    });
+
+    realtimeEffectService()->projectClosed().onNotify(this, [this]
+    {
+        beginResetModel();
+        m_trackEffectLists.clear();
+        m_trackId.reset();
+        endResetModel();
+    });
 }
 
 void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, const RealtimeEffectListItemModel* item)
@@ -84,28 +105,6 @@ void RealtimeEffectListModel::populateMenu()
     setItems(items);
 
     emit availableEffectsChanged();
-}
-
-void RealtimeEffectListModel::setListenerOnCurrentTrackeditProject()
-{
-    realtimeEffectService()->realtimeEffectAdded().onReceive(this,
-                                                             [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                    EffectStateId item)
-    { insertEffect(trackId, index, item); });
-
-    realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
-                                                               [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                      EffectStateId item) {
-        removeEffect(trackId, index, item);
-    });
-
-    realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
-                                                                [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                       EffectStateId oldItem,
-                                                                       EffectStateId newItem) {
-        removeEffect(trackId, index, oldItem);
-        insertEffect(trackId, index, newItem);
-    });
 }
 
 void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectStateId& e)

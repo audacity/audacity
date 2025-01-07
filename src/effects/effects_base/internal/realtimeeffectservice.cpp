@@ -23,20 +23,35 @@ std::string RealtimeEffectService::getEffectName(const RealtimeEffectState& stat
 
 void RealtimeEffectService::init()
 {
-    globalContext()->currentProjectChanged().onNotify(this, [this] {
-        m_rtEffectSubscriptions.clear();
-        auto project = globalContext()->currentProject();
+    globalContext()->currentProjectChanged().onNotify(this, [this]
+    {
+        const au::project::IAudacityProjectPtr project = globalContext()->currentProject();
         if (!project) {
-            return;
+            m_projectClosed.notify();
         }
-        auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
-        m_tracklistSubscription = TrackList::Get(*au3Project).Subscribe([this, w = weak_from_this()](const TrackListEvent& e) {
-            const auto lifeguard = w.lock();
-            if (lifeguard) {
-                onTrackListEvent(e);
-            }
-        });
+        updateSubscriptions(project);
     });
+    updateSubscriptions(globalContext()->currentProject());
+}
+
+void RealtimeEffectService::updateSubscriptions(const au::project::IAudacityProjectPtr& project)
+{
+    m_rtEffectSubscriptions.clear();
+    if (!project) {
+        return;
+    }
+    auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    m_tracklistSubscription = TrackList::Get(*au3Project).Subscribe([this, w = weak_from_this()](const TrackListEvent& e) {
+        const auto lifeguard = w.lock();
+        if (lifeguard) {
+            onTrackListEvent(e);
+        }
+    });
+}
+
+muse::async::Notification RealtimeEffectService::projectClosed() const
+{
+    return m_projectClosed;
 }
 
 void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
