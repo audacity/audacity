@@ -17,15 +17,9 @@ Rectangle {
 
     color: ui.theme.backgroundPrimaryColor
 
-    onSelectedTrackIndexChanged: {
-        const selectedTrackItem = view.itemAtIndex(selectedTrackIndex)
-        trackEffects.trackName = selectedTrackItem.item.title
-    }
-
     ColumnLayout {
         id: trackEffects
         spacing: 0
-        property alias trackName: trackEffectsHeader.trackName
         readonly property int itemSpacing: 12
         Layout.fillWidth: true
 
@@ -33,7 +27,6 @@ Rectangle {
 
         RowLayout {
             id: trackEffectsHeader
-            property alias trackName: trackNameLabel.text
             readonly property int headerHeight: 40
 
             spacing: trackEffects.itemSpacing
@@ -61,6 +54,7 @@ Rectangle {
 
             StyledTextLabel {
                 id: trackNameLabel
+                text: view.itemAtIndex(selectedTrackIndex).item.title
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.maximumWidth: effectsPanel.width - trackEffectsPowerButton.width - trackEffectsHeader.spacing - trackEffects.itemSpacing
