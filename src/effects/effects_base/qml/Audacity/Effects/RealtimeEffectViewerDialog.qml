@@ -16,7 +16,7 @@ StyledDialogView {
     property alias instanceId: viewer.instanceId
     property alias effectState: viewer.effectState
 
-    title: viewer.title
+    title: viewer.title + " - " + viewerModel.trackName
 
     contentWidth: viewer.implicitWidth
     contentHeight: layout.implicitHeight + 16

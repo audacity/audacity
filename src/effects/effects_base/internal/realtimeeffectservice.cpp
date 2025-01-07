@@ -86,6 +86,7 @@ void RealtimeEffectService::onWaveTrackAdded(WaveTrack& track)
                 break;
             }
             auto newEffect = reinterpret_cast<EffectStateId>(state.get());
+            m_effectTrackMap[newEffect] = track.GetId();
             m_realtimeEffectAdded.send(track.GetId(), i, std::move(newEffect));
         }
     }
@@ -108,9 +109,11 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
         const auto effectStateId = reinterpret_cast<EffectStateId>(msg.affectedState.get());
         switch (msg.type) {
         case RealtimeEffectListMessage::Type::Insert:
+            m_effectTrackMap[effectStateId] = trackId;
             m_realtimeEffectAdded.send(trackId, msg.srcIndex, effectStateId);
             break;
         case RealtimeEffectListMessage::Type::Remove:
+            m_effectTrackMap.erase(effectStateId);
             m_realtimeEffectRemoved.send(trackId, msg.srcIndex, effectStateId);
             break;
         case RealtimeEffectListMessage::Type::DidReplace:
@@ -121,6 +124,8 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
             }
             auto oldEffect = effectStateId;
             auto newEffect = reinterpret_cast<EffectStateId>(newState.get());
+            m_effectTrackMap[newEffect] = trackId;
+            m_effectTrackMap.erase(oldEffect);
             m_realtimeEffectReplaced.send(trackId, msg.srcIndex, std::move(oldEffect), std::move(newEffect));
         }
         break;
@@ -142,6 +147,15 @@ muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId,
                      EffectStateId> RealtimeEffectService::realtimeEffectReplaced() const
 {
     return m_realtimeEffectReplaced;
+}
+
+std::optional<TrackId> RealtimeEffectService::trackId(EffectStateId stateId) const
+{
+    const auto it = m_effectTrackMap.find(stateId);
+    if (it == m_effectTrackMap.end()) {
+        return {};
+    }
+    return it->second;
 }
 
 namespace {

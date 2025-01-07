@@ -7,6 +7,7 @@
 #include "async/channel.h"
 #include "global/modularity/imoduleinterface.h"
 #include "effectstypes.h"
+#include <optional>
 
 struct TransportSequences;
 struct AudioIOStartStreamOptions;
@@ -32,5 +33,7 @@ public:
     virtual muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectAdded() const = 0;
     virtual muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectRemoved() const = 0;
     virtual muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId, EffectStateId> realtimeEffectReplaced() const = 0;
+
+    virtual std::optional<TrackId> trackId(EffectStateId) const = 0;
 };
 }

@@ -4,11 +4,17 @@
 #include "realtimeeffectviewerdialogmodel.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "libraries/lib-effects/EffectPlugin.h"
+#include "trackedit/trackedittypes.h"
 
 namespace au::effects {
 RealtimeEffectViewerDialogModel::RealtimeEffectViewerDialogModel(QObject* parent)
     : QObject(parent)
 {
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
+    {
+        subscribe();
+    });
+    subscribe();
 }
 
 RealtimeEffectViewerDialogModel::~RealtimeEffectViewerDialogModel()
@@ -52,5 +58,46 @@ void RealtimeEffectViewerDialogModel::unregisterState()
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
     instancesRegister()->unregInstance(instance);
     m_effectState.reset();
+}
+
+QString RealtimeEffectViewerDialogModel::prop_trackName() const
+{
+    const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(effectStateId());
+    IF_ASSERT_FAILED(trackId.has_value()) {
+        return {};
+    }
+
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    IF_ASSERT_FAILED(project) {
+        return {};
+    }
+
+    return QString::fromStdString(project->trackName(*trackId));
+}
+
+void RealtimeEffectViewerDialogModel::subscribe()
+{
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
+    }
+    project->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
+        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(effectStateId());
+        IF_ASSERT_FAILED(trackId.has_value()) {
+            return;
+        }
+
+        if (track.id == trackId) {
+            emit trackNameChanged();
+        }
+    });
+}
+
+EffectStateId RealtimeEffectViewerDialogModel::effectStateId() const
+{
+    if (!m_effectState) {
+        return 0;
+    }
+    return reinterpret_cast<EffectStateId>(m_effectState.get());
 }
 }
