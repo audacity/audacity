@@ -726,14 +726,14 @@ void detail::Visit(VisitorBase &visitor,
    const GroupItemBase *pTopItem,
    const GroupItemBase *pRegistry, void *pComputedItemContext)
 {
-   assert(pComputedItemContext && pRegistry);
+   assert(pComputedItemContext);
    std::vector< BaseItemSharedPtr > computedItems;
    bool doFlush = false;
    CollectedItems collection{ {}, computedItems };
    Path emptyPath;
    VisitItem(
       visitor, collection, emptyPath, pTopItem,
-      pRegistry, pRegistry->orderingHint, doFlush, pComputedItemContext);
+      pRegistry, pRegistry ? pRegistry->orderingHint : OrderingHint(), doFlush, pComputedItemContext);
    // Flush any writes done by MergeItems()
    if (doFlush)
       gPrefs->Flush();
@@ -757,7 +757,7 @@ void OrderingPreferenceInitializer::operator () ()
          doFlush = true;
       }
    }
-   
+
    if (doFlush)
       gPrefs->Flush();
 }
