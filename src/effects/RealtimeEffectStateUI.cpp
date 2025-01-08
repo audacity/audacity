@@ -182,6 +182,16 @@ void RealtimeEffectStateUI::UpdateTitle()
 
 void RealtimeEffectStateUI::AutoSave(AudacityProject &project)
 {
+   ProjectHistory::Get(project).PushState(
+      /*! i18n-hint: undo history record
+      first parameter - realtime effect name
+      */
+      XO("Change settings for realtime effect %s on %s").Format(mEffectName, mTargetName),
+      /*! i18n-hint: undo history record
+      first parameter - realtime effect name
+      */
+      XO("Change realtime effect %s on %s").Format(mEffectName, mTargetName),
+      UndoPush::CONSOLIDATE);
    ProjectHistory::AutoSave::Call(project);
 }
 

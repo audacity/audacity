@@ -23,7 +23,11 @@ RealtimeEffectList::~RealtimeEffectList()
 
 std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
-   return Duplicate();
+   auto result = std::make_unique<RealtimeEffectList>();
+   for (auto &pState : mStates)
+      result->mStates.push_back(pState->Clone());
+   result->SetActive(this->IsActive());
+   return result;
 }
 
 // Deep copy of states

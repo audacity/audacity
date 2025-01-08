@@ -495,8 +495,17 @@ namespace
                mEffectState->SetActive(mEnableButton->IsDown());
                if (mProject)
                {
-                  ProjectHistory::Get(*mProject).ModifyState(false);
-                  UndoManager::Get(*mProject).MarkUnsaved();
+                  auto const effectName{GetEffectName(*mEffectState)};
+                  ProjectHistory::Get(*mProject).PushState(
+                     /*! i18n-hint: undo history record
+                     first parameter - realtime effect name
+                     */
+                     XO("Change settings for realtime effect %s on %s").Format(effectName, mDelegate->GetSourceName()),
+                     /*! i18n-hint: undo history record
+                     first parameter - realtime effect name
+                     */
+                     XO("Change realtime effect %s on %s").Format(effectName, mDelegate->GetSourceName()),
+                     UndoPush::CONSOLIDATE);
                }
             }
          });
