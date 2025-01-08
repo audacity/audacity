@@ -35,6 +35,7 @@ public:
 
 signals:
     void trackNameChanged();
+    void trackRemoved();
 
 private:
     void subscribe();

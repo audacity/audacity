@@ -20,7 +20,7 @@ void RealtimeEffectMenuModel::populateMenu()
 {
     TRACEFUNC;
 
-    IF_ASSERT_FAILED(m_trackId.has_value()) {
+    IF_ASSERT_FAILED(trackId().has_value()) {
         return;
     }
 
@@ -35,7 +35,7 @@ void RealtimeEffectMenuModel::populateMenu()
             continue;
         }
         MenuItem* item = makeMenuItem("realtimeeffect-add", TranslatableString::untranslatable(meta.title));
-        item->setArgs(actions::ActionData::make_arg2(meta.id, *m_trackId));
+        item->setArgs(actions::ActionData::make_arg2(meta.id, *trackId()));
         menuCategories[meta.categoryId].push_back(item);
     }
 

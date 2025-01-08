@@ -14,16 +14,14 @@ Rectangle {
     id: root
 
     property alias preferredHeight: trackEffectList.height
-
-    visible: trackEffectList.count > 0
+    property alias trackName: trackEffectListModel.trackName
 
     Component.onCompleted: {
-            trackEffectListModel.load()
-        }
+        trackEffectListModel.load()
+    }
 
     RealtimeEffectListModel {
         id: trackEffectListModel
-        trackId: view.itemAtIndex(effectsPanel.selectedTrackIndex).item.trackId
     }
 
     StyledListView {

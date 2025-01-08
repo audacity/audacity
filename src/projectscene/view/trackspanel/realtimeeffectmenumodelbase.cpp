@@ -6,7 +6,30 @@
 using namespace au::projectscene;
 
 RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
-    : AbstractMenuModel(parent) {}
+    : AbstractMenuModel(parent)
+{
+    selectionController()->selectedTrackAdded().onReceive(this, [this](au::trackedit::TrackId trackId)
+    { setTrackId(trackId); });
+
+    selectionController()->tracksSelected().onReceive(this, [this](const au::trackedit::TrackIdList& tracks) {
+        if (tracks.empty()) {
+            setTrackId(std::nullopt);
+        } else {
+            setTrackId(tracks.back());
+        }
+    });
+}
+
+void RealtimeEffectMenuModelBase::setTrackId(std::optional<au::trackedit::TrackId> trackId)
+{
+    if (m_trackId == trackId) {
+        return;
+    }
+    beginResetModel();
+    m_trackId = std::move(trackId);
+    endResetModel();
+    onTrackIdChanged();
+}
 
 void RealtimeEffectMenuModelBase::load()
 {
@@ -18,19 +41,31 @@ void RealtimeEffectMenuModelBase::load()
     doLoad();
 }
 
-au::trackedit::TrackId RealtimeEffectMenuModelBase::trackId() const
+const std::optional<au::trackedit::TrackId>& RealtimeEffectMenuModelBase::trackId() const
 {
-    return m_trackId.value_or(-1);
+    return m_trackId;
 }
 
-void RealtimeEffectMenuModelBase::setTrackId(au::trackedit::TrackId trackId)
+void RealtimeEffectMenuModelBase::resetList()
 {
-    if (m_trackId == trackId) {
-        return;
-    }
     beginResetModel();
-    m_trackId = trackId;
+    doResetList();
     endResetModel();
-    // TODO: I don't think this is necessary
-    emit trackIdChanged();
+}
+
+void RealtimeEffectMenuModelBase::removeTrack(const au::trackedit::TrackId& trackId)
+{
+    beginResetModel();
+    doRemoveTrack(trackId);
+    endResetModel();
+}
+
+void RealtimeEffectMenuModelBase::beginResetModel()
+{
+    AbstractMenuModel::beginResetModel();
+}
+
+void RealtimeEffectMenuModelBase::endResetModel()
+{
+    AbstractMenuModel::endResetModel();
 }

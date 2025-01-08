@@ -5,6 +5,7 @@
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "libraries/lib-effects/EffectPlugin.h"
 #include "trackedit/trackedittypes.h"
+#include "trackedit/itrackeditproject.h"
 
 namespace au::effects {
 RealtimeEffectViewerDialogModel::RealtimeEffectViewerDialogModel(QObject* parent)
@@ -89,6 +90,16 @@ void RealtimeEffectViewerDialogModel::subscribe()
 
         if (track.id == trackId) {
             emit trackNameChanged();
+        }
+    });
+    project->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
+        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(effectStateId());
+        IF_ASSERT_FAILED(trackId.has_value()) {
+            return;
+        }
+
+        if (track.id == trackId) {
+            emit trackRemoved();
         }
     });
 }

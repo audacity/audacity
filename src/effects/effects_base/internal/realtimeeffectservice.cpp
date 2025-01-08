@@ -25,12 +25,9 @@ void RealtimeEffectService::init()
 {
     globalContext()->currentProjectChanged().onNotify(this, [this]
     {
-        const au::project::IAudacityProjectPtr project = globalContext()->currentProject();
-        if (!project) {
-            m_projectClosed.notify();
-        }
-        updateSubscriptions(project);
+        updateSubscriptions(globalContext()->currentProject());
     });
+
     updateSubscriptions(globalContext()->currentProject());
 }
 
@@ -47,11 +44,6 @@ void RealtimeEffectService::updateSubscriptions(const au::project::IAudacityProj
             onTrackListEvent(e);
         }
     });
-}
-
-muse::async::Notification RealtimeEffectService::projectClosed() const
-{
-    return m_projectClosed;
 }
 
 void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)

@@ -5,6 +5,7 @@
 
 #include "uicomponents/view/abstractmenumodel.h"
 #include "trackedit/trackedittypes.h"
+#include "trackedit/iselectioncontroller.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include <QObject>
 
@@ -12,25 +13,31 @@ namespace au::projectscene {
 class RealtimeEffectMenuModelBase : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
-    Q_PROPERTY(au::trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged)
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
     explicit RealtimeEffectMenuModelBase(QObject* parent = nullptr);
 
-    au::trackedit::TrackId trackId() const;
-    void setTrackId(au::trackedit::TrackId trackId);
-
     Q_INVOKABLE void load() final override;
 
-signals:
-    void trackIdChanged();
-
 protected:
+    const std::optional<au::trackedit::TrackId>& trackId() const;
+    void resetList();
+    void removeTrack(const au::trackedit::TrackId& trackId);
+
     muse::Inject<effects::IEffectsProvider> effectsProvider;
-    std::optional<au::trackedit::TrackId> m_trackId;
 
 private:
+    void beginResetModel();
+    void endResetModel();
+    void setTrackId(std::optional<au::trackedit::TrackId>);
+
     virtual void doLoad() = 0;
     virtual void populateMenu() = 0;
+    virtual void doResetList() {}
+    virtual void doRemoveTrack(const au::trackedit::TrackId&) {}
+    virtual void onTrackIdChanged() {}
+
+    std::optional<au::trackedit::TrackId> m_trackId;
 };
 }
