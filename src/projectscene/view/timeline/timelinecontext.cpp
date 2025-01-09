@@ -239,6 +239,11 @@ void TimelineContext::autoScrollView(double scrollStep)
 
 void TimelineContext::startAutoScroll(double posSec)
 {
+    if (globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running ||
+        globalContext()->isRecording()) {
+        return;
+    }
+
     double newPosition = timeToContentPosition(posSec);
     double frameStartPosition = timeToContentPosition(m_frameStartTime);
     double frameEndPosition = timeToContentPosition(m_frameEndTime);
