@@ -20,7 +20,7 @@ StyledDialogView {
 
     contentWidth: viewer.implicitWidth
     contentHeight: layout.implicitHeight + 16
-
+    alwaysOnTop: true
     margins: 16
 
     RealtimeEffectViewerDialogModel {
