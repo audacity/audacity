@@ -266,6 +266,16 @@ void TrackeditInteraction::setClipGroupId(const ClipKey &clipKey, int64_t id)
     return m_interaction->setClipGroupId(clipKey, id);
 }
 
+void TrackeditInteraction::groupClips(const ClipKeyList &clipKeyList)
+{
+    return m_interaction->groupClips(clipKeyList);
+}
+
+void TrackeditInteraction::ungroupClips(const ClipKeyList &clipKeyList)
+{
+    return m_interaction->ungroupClips(clipKeyList);
+}
+
 int64_t TrackeditInteraction::determineGroupId(const ClipKeyList &clipKeyList) const
 {
     return m_interaction->determineGroupId(clipKeyList);

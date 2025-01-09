@@ -1695,6 +1695,26 @@ void Au3Interaction::setClipGroupId(const ClipKey &clipKey, int64_t id)
     clip->SetGroupId(id);
 }
 
+void Au3Interaction::groupClips(const ClipKeyList &clipKeyList)
+{
+    const auto newGroupId = determineGroupId(clipKeyList);
+
+    for (const auto& clipKey : clipKeyList) {
+        setClipGroupId(clipKey, newGroupId);
+    }
+
+     projectHistory()->pushHistoryState("Clips grouped", "Clips grouped");
+}
+
+void Au3Interaction::ungroupClips(const ClipKeyList &clipKeyList)
+{
+    for (const auto& clipKey : clipKeyList) {
+        setClipGroupId(clipKey, -1);
+    }
+
+    projectHistory()->pushHistoryState("Clips ungrouped", "Clips ungrouped");
+}
+
 int64_t Au3Interaction::determineGroupId(const ClipKeyList &clipKeyList) const
 {
     //! NOTE: check if any clip already belongs to a group
