@@ -898,7 +898,7 @@ bool TrackeditActionsController::canReceiveAction(const ActionCode& actionCode) 
     } else if (actionCode == REDO) {
         return trackeditInteraction()->canRedo();
     } else if (actionCode == GROUP_CLIPS_CODE) {
-        return (selectionController()->selectedClips().size() > 1);
+        return (selectionController()->selectedClips().size() > 1 && !selectionController()->isSelectionGrouped());
     } else if (actionCode == UNGROUP_CLIPS_CODE) {
         return (selectionController()->selectedClips().size() > 1 && selectionController()->selectionContainsGroup());
     }

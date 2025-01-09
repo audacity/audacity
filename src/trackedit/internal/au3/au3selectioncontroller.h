@@ -65,6 +65,7 @@ public:
 
     // grouping
     bool selectionContainsGroup() const override;
+    bool isSelectionGrouped() const override;
 
 private:
     void updateSelectionController();
