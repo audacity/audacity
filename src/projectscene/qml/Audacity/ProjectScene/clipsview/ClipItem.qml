@@ -307,7 +307,7 @@ Rectangle {
                 id: headerDragArea
                 anchors.fill: parent
 
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
+                acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
                 cursorShape: Qt.OpenHandCursor
 
