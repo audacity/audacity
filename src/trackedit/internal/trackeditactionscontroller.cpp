@@ -856,11 +856,8 @@ void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::Ac
 void TrackeditActionsController::groupClips()
 {
     const auto selectedClips = selectionController()->selectedClips();
-    const auto newGroupId = trackeditInteraction()->determineGroupId(selectedClips);
 
-    for (const auto& selectedClip : selectedClips) {
-        trackeditInteraction()->setClipGroupId(selectedClip, newGroupId);
-    }
+    trackeditInteraction()->groupClips(selectedClips);
 
     notifyActionEnabledChanged(GROUP_CLIPS_CODE);
     notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
@@ -868,9 +865,7 @@ void TrackeditActionsController::groupClips()
 
 void TrackeditActionsController::ungroupClips()
 {
-    for (const auto& selectedClip : selectionController()->selectedClips()) {
-        trackeditInteraction()->setClipGroupId(selectedClip, -1);
-    }
+    trackeditInteraction()->ungroupClips(selectionController()->selectedClips());
 
     notifyActionEnabledChanged(GROUP_CLIPS_CODE);
     notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);

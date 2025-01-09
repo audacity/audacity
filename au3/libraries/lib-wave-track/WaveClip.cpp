@@ -264,6 +264,7 @@ WaveClip::WaveClip(
    mTrimRight = orig.mTrimRight;
    mRate = orig.mRate;
    mStretchToMatchProjectTempo = orig.mStretchToMatchProjectTempo;
+   mGroupId = orig.mGroupId;
 
    // Deep copy of attachments
    Attachments &attachments = *this;
@@ -322,6 +323,7 @@ WaveClip::WaveClip(
 
    mRate = orig.mRate;
    mStretchToMatchProjectTempo = orig.mStretchToMatchProjectTempo;
+   mGroupId = orig.mGroupId;
 
    // Deep copy of attachments
    Attachments &attachments = *this;
