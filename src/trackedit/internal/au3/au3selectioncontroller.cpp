@@ -334,6 +334,44 @@ bool Au3SelectionController::selectionContainsGroup() const
     return false;
 }
 
+bool Au3SelectionController::isSelectionGrouped() const
+{
+    const auto clipKeyList = selectedClips();
+    if (clipKeyList.empty()) {
+        return false;
+    }
+
+    std::optional<int64_t> selectionGroupId;
+
+    for (const auto& clipKey : clipKeyList) {
+        WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return false;
+        }
+
+        if (!selectionGroupId.has_value()) {
+            selectionGroupId = clip->GetGroupId();
+            continue;
+        }
+
+        if (clip->GetGroupId() != selectionGroupId.value()) {
+            return false;
+        }
+    }
+
+    //! NOTE: none of the clips are grouped
+    if (selectionGroupId.value() == -1) {
+        return false;
+    }
+
+    return true;
+}
+
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
 {
     return m_selectedEndTime.changed;
