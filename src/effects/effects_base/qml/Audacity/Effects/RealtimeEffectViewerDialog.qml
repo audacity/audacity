@@ -23,6 +23,10 @@ StyledDialogView {
     alwaysOnTop: true
     margins: 16
 
+    Component.onCompleted: {
+        viewerModel.load()
+    }
+
     RealtimeEffectViewerDialogModel {
         id: viewerModel
         effectState: root.effectState

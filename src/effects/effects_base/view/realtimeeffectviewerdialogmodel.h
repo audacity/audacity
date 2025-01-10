@@ -9,6 +9,7 @@
 #include "effectstypes.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "context/iglobalcontext.h"
+#include "actions/iactionsdispatcher.h"
 #include "async/asyncable.h"
 
 #include <QObject>
@@ -24,8 +25,11 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
+    Q_INVOKABLE void load();
+
     RealtimeEffectViewerDialogModel(QObject* parent = nullptr);
     ~RealtimeEffectViewerDialogModel() override;
 

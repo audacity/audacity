@@ -11,16 +11,20 @@ namespace au::effects {
 RealtimeEffectViewerDialogModel::RealtimeEffectViewerDialogModel(QObject* parent)
     : QObject(parent)
 {
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
-    {
-        subscribe();
-    });
-    subscribe();
 }
 
 RealtimeEffectViewerDialogModel::~RealtimeEffectViewerDialogModel()
 {
     unregisterState();
+}
+
+void RealtimeEffectViewerDialogModel::load()
+{
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
+    {
+        subscribe();
+    });
+    subscribe();
 }
 
 QString RealtimeEffectViewerDialogModel::prop_effectState() const
