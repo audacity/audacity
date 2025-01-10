@@ -149,7 +149,6 @@ private:
    std::mutex mResponsesMutex;
    std::vector<std::shared_ptr<audacity::network_manager::IResponse>>
       mResponses;
-   std::condition_variable mResponsesEmptyCV;
 
    std::atomic<int64_t> mDownloadedBlocks { 0 };
    std::atomic<int64_t> mCopiedBlocks { 0 };
