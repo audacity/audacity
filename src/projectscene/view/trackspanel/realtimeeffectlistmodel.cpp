@@ -14,27 +14,6 @@ using namespace au::effects;
 RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
     : RealtimeEffectMenuModelBase(parent)
 {
-    realtimeEffectService()->realtimeEffectAdded().onReceive(this,
-                                                             [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                    EffectStateId item)
-    { insertEffect(trackId, index, item); });
-
-    realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
-                                                               [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                      EffectStateId item) {
-        removeEffect(trackId, index, item);
-    });
-
-    realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
-                                                                [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                       EffectStateId oldItem,
-                                                                       EffectStateId newItem) {
-        removeEffect(trackId, index, oldItem);
-        insertEffect(trackId, index, newItem);
-    });
-
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this] { onProjectChanged(); });
-    onProjectChanged();
 }
 
 void RealtimeEffectListModel::onProjectChanged()
@@ -60,6 +39,28 @@ void RealtimeEffectListModel::onProjectChanged()
 
 void RealtimeEffectListModel::doLoad()
 {
+    realtimeEffectService()->realtimeEffectAdded().onReceive(this,
+                                                             [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                    EffectStateId item)
+    { insertEffect(trackId, index, item); });
+
+    realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
+                                                               [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                      EffectStateId item) {
+        removeEffect(trackId, index, item);
+    });
+
+    realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
+                                                                [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                       EffectStateId oldItem,
+                                                                       EffectStateId newItem) {
+        removeEffect(trackId, index, oldItem);
+        insertEffect(trackId, index, newItem);
+    });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this] { onProjectChanged(); });
+    onProjectChanged();
+
     populateMenu();
 }
 
