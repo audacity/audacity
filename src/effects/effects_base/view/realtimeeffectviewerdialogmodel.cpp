@@ -25,6 +25,8 @@ void RealtimeEffectViewerDialogModel::load()
         subscribe();
     });
     subscribe();
+    dispatcher()->reg(this, "nav-trigger-control", [this]
+    { dispatcher()->dispatch("play"); });
 }
 
 QString RealtimeEffectViewerDialogModel::prop_effectState() const

@@ -10,12 +10,14 @@
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
+#include "actions/actionable.h"
 #include "async/asyncable.h"
 
 #include <QObject>
 
 namespace au::effects {
-class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable, public muse::async::Asyncable,
+    public muse::actions::Actionable
 {
     Q_OBJECT
     Q_PROPERTY(QString effectState READ prop_effectState WRITE prop_setEffectState FINAL)

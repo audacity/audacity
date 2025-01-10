@@ -33,8 +33,7 @@ using namespace au::effects;
 static const char16_t* BUILTIN_VIEWER_URI = u"audacity://effects/builtin_viewer?type=%1&instanceId=%2";
 static const char16_t* VST_VIEWER_URI = u"audacity://effects/vst_viewer?type=%1&instanceId=%2";
 
-static const char16_t* REALTIME_VIEWER_URI
-    = u"audacity://effects/realtime_viewer?type=%1&instanceId=%2&effectState=%3&sync=false&modal=false&floating=true";
+static const char16_t* REALTIME_VIEWER_URI = u"audacity://effects/realtime_viewer?type=%1&instanceId=%2&effectState=%3&sync=true";
 
 bool EffectsProvider::isVstSupported() const
 {
