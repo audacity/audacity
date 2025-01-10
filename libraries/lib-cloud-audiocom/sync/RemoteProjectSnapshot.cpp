@@ -151,11 +151,6 @@ RemoteProjectSnapshot::~RemoteProjectSnapshot()
    if (mCopyBlocksFuture.has_value())
       mCopyBlocksFuture->wait();
 
-   {
-      auto lock = std::unique_lock { mResponsesMutex };
-      mResponsesEmptyCV.wait(lock, [this] { return mResponses.empty(); });
-   }
-
    auto db = CloudProjectsDatabase::Get().GetConnection();
 
    for (const auto& dbName : ListAttachedDatabases())
@@ -359,11 +354,8 @@ void RemoteProjectSnapshot::DoCancel()
 
    mRequestsCV.notify_one();
 
-   {
-      auto responsesLock = std::lock_guard { mResponsesMutex };
-      for (auto& response : mResponses)
-         response->abort();
-   }
+   while (!mResponses.empty())
+      RemoveResponse(mResponses.front().get());
 }
 
 void RemoteProjectSnapshot::DownloadBlob(
@@ -642,14 +634,12 @@ void RemoteProjectSnapshot::RemoveResponse(
 {
    {
       auto lock = std::lock_guard { mResponsesMutex };
+      response->abort();
       mResponses.erase(
          std::remove_if(
             mResponses.begin(), mResponses.end(),
             [response](auto& r) { return r.get() == response; }),
          mResponses.end());
-
-      if (mResponses.empty())
-         mResponsesEmptyCV.notify_all();
    }
    {
       auto lock = std::lock_guard { mRequestsMutex };
