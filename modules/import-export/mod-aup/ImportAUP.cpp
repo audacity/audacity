@@ -1341,10 +1341,7 @@ bool AUPImportFileHandle::HandleImport(XMLTagHandler *&handler)
    if (!XMLValueChecker::IsGoodPathName(strAttr))
    {
       // Maybe strAttr is just a fileName, not the full path. Try the project data directory.
-      wxFileNameWrapper fileName0{ GetFilename() };
-      fileName0.SetExt({});
-      wxFileNameWrapper fileName{
-         fileName0.GetFullPath() + wxT("_data"), strAttr };
+      wxFileNameWrapper fileName{ mProjDir.GetFullPath(), strAttr };
       if (XMLValueChecker::IsGoodFileName(strAttr, fileName.GetPath(wxPATH_GET_VOLUME)))
          strAttr = fileName.GetFullPath();
       else
