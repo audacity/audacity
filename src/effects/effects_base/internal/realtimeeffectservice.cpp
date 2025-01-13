@@ -171,7 +171,8 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(au::project::IAu
     if (state) {
         const auto effectName = getEffectName(*state);
         const auto trackName =  project.trackeditProject()->trackName(trackId);
-        projectHistory()->pushHistoryState("Added " + effectName + " to " + trackName, "Add " + effectName);
+        assert(trackName.has_value());
+        projectHistory()->pushHistoryState("Added " + effectName + " to " + trackName.value_or(""), "Add " + effectName);
     }
 
     return state;
@@ -206,7 +207,8 @@ void RealtimeEffectService::removeRealtimeEffect(au::project::IAudacityProject& 
     AudioIO::Get()->RemoveState(*au3Project, au3Track, state);
     const auto effectName = getEffectName(*state);
     const auto trackName = project.trackeditProject()->trackName(trackId);
-    projectHistory()->pushHistoryState("Removed " + effectName + " from " + trackName, "Remove " + effectName);
+    assert(trackName.has_value());
+    projectHistory()->pushHistoryState("Removed " + effectName + " from " + trackName.value_or(""), "Remove " + effectName);
 }
 
 RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(au::project::IAudacityProject& project, TrackId trackId,

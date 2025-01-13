@@ -183,9 +183,13 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     return clips;
 }
 
-std::string Au3TrackeditProject::trackName(const TrackId& trackId) const
+std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId) const
 {
-    return au::au3::DomConverter::track(au::au3::DomAccessor::findTrack(*m_impl->prj, au::au3::Au3TrackId { trackId })).title.toStdString();
+    const Au3Track* au3Track = au::au3::DomAccessor::findTrack(*m_impl->prj, au::au3::Au3TrackId { trackId });
+    if (au3Track == nullptr) {
+        return std::nullopt;
+    }
+    return au::au3::DomConverter::track(au3Track).title.toStdString();
 }
 
 void Au3TrackeditProject::reload()

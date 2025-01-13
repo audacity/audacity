@@ -4,6 +4,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 
 #include "modularity/imoduleinterface.h"
 
@@ -28,7 +29,7 @@ public:
     virtual Clip clip(const ClipKey& key) const = 0;
     virtual muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const = 0;
     virtual std::vector<int64_t> groupsIdsList() const = 0;
-    virtual std::string trackName(const TrackId& trackId) const = 0;
+    virtual std::optional<std::string> trackName(const TrackId& trackId) const = 0;
 
     virtual void reload() = 0;
 
@@ -46,7 +47,7 @@ public:
     virtual void setTimeSignature(const TimeSignature& timeSignature) = 0;
     virtual muse::async::Channel<TimeSignature> timeSignatureChanged() const = 0;
 
-    virtual muse::async::Channel<std::vector<au::trackedit::Track>> tracksChanged() const = 0;
+    virtual muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const = 0;
     virtual muse::async::Channel<trackedit::Track> trackAdded() const = 0;
     virtual muse::async::Channel<trackedit::Track> trackChanged() const = 0;
     virtual muse::async::Channel<trackedit::Track> trackRemoved() const = 0;

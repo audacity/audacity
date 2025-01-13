@@ -192,7 +192,16 @@ QString RealtimeEffectListModel::prop_trackName() const
         return QString();
     }
     const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
-    return QString::fromStdString(project ? project->trackName(*trackId()) : "");
+    IF_ASSERT_FAILED(project) {
+        return QString();
+    }
+
+    const auto trackName = project->trackName(*trackId());
+    IF_ASSERT_FAILED(trackName.has_value()) {
+        return QString();
+    }
+
+    return QString::fromStdString(*trackName);
 }
 
 QHash<int, QByteArray> RealtimeEffectListModel::roleNames() const

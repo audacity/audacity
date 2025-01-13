@@ -79,7 +79,12 @@ QString RealtimeEffectViewerDialogModel::prop_trackName() const
         return {};
     }
 
-    return QString::fromStdString(project->trackName(*trackId));
+    const auto trackName = project->trackName(*trackId);
+    IF_ASSERT_FAILED(trackName.has_value()) {
+        return QString();
+    }
+
+    return QString::fromStdString(*trackName);
 }
 
 void RealtimeEffectViewerDialogModel::subscribe()
