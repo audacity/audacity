@@ -28,6 +28,7 @@
 #include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
 #include "ui/imainwindow.h"
+#include "record/irecordcontroller.h"
 
 //! TODO AU4
 // #include "view/preferences/braillepreferencesmodel.h"
@@ -40,6 +41,7 @@ class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::asy
     INJECT(muse::ui::IMainWindow, mainWindow)
     INJECT(muse::dock::IDockWindowProvider, dockWindowProvider)
     INJECT(IAppShellConfiguration, configuration)
+    INJECT(record::IRecordController, recordController)
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
 

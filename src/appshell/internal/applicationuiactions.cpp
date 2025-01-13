@@ -236,6 +236,10 @@ void ApplicationUiActions::init()
     dockWindowProvider()->windowChanged().onNotify(this, [this]() {
         listenOpenedDocksChanged(dockWindowProvider()->window());
     });
+
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        m_actionEnabledChanged.send(m_controller->prohibitedActionsWhileRecording());
+    });
 }
 
 void ApplicationUiActions::listenOpenedDocksChanged(IDockWindow* window)

@@ -48,6 +48,24 @@ void ProjectActionsController::init()
     });
 }
 
+const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActionsWhileRecording() const
+{
+    static const std::vector<muse::actions::ActionCode> PROHIBITED_WHILE_RECORDING {
+        "file-new",
+        "file-open",
+        "file-close",
+        "project-import",
+        "file-save",
+        "file-save-as",
+        "file-save-backup",
+        "export-audio",
+        "export-labels",
+        "export-midi",
+    };
+
+    return PROHIBITED_WHILE_RECORDING;
+}
+
 bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
 {
     if (!currentProject()) {
@@ -59,6 +77,8 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
         };
 
         return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
+    } else if (recordController()->isRecording()) {
+        return !muse::contains(prohibitedActionsWhileRecording(), code);
     }
 
     return true;

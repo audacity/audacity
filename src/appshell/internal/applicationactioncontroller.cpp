@@ -63,6 +63,16 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "revert-factory", this, &ApplicationActionController::revertToFactorySettings);
 }
 
+const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
+{
+    static const std::vector<ActionCode> PROHIBITED_WHILE_RECORDING {
+        "quit",
+        "restart",
+    };
+
+    return PROHIBITED_WHILE_RECORDING;
+}
+
 void ApplicationActionController::onDragEnterEvent(QDragEnterEvent* event)
 {
     onDragMoveEvent(event);
@@ -122,6 +132,14 @@ void ApplicationActionController::onDropEvent(QDropEvent*)
     //         event->ignore();
     //     }
     // }
+}
+
+bool ApplicationActionController::canReceiveAction(const ActionCode& code) const
+{
+    if (recordController()->isRecording()) {
+        return !muse::contains(prohibitedActionsWhileRecording(), code);
+    }
+    return true;
 }
 
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)

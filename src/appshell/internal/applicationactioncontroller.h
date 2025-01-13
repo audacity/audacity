@@ -36,6 +36,7 @@
 #include "iappshellconfiguration.h"
 #include "iapplication.h"
 #include "project/iprojectfilescontroller.h"
+#include "record/irecordcontroller.h"
 
 //! TODO AU4
 // #include "languages/ilanguagesservice.h"
@@ -55,6 +56,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     INJECT(muse::IApplication, application)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(project::IProjectFilesController, projectFilesController)
+    INJECT(record::IRecordController, recordController)
 //! TODO AU4
     // INJECT(languages::ILanguagesService, languagesService)
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
@@ -63,12 +65,15 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
 public:
     void preInit();
     void init();
+    const std::vector<muse::actions::ActionCode>& prohibitedActionsWhileRecording() const;
 
     muse::ValCh<bool> isFullScreen() const;
 
     void onDragEnterEvent(QDragEnterEvent* event) override;
     void onDragMoveEvent(QDragMoveEvent* event) override;
     void onDropEvent(QDropEvent* event) override;
+
+    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
