@@ -84,17 +84,18 @@ void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, con
 {
     TRACEFUNC;
 
-    IF_ASSERT_FAILED(trackId().has_value()) {
+    const auto tId = trackId();
+    IF_ASSERT_FAILED(tId.has_value()) {
         return;
     }
 
     MenuItem& menuItem = findItem(itemId);
 
     if (itemId == "realtimeeffect-remove") {
-        menuItem.setArgs(actions::ActionData::make_arg2(*trackId(), item->effectStateId));
+        menuItem.setArgs(actions::ActionData::make_arg2(*tId, item->effectStateId));
     }
     if (itemId == "realtimeeffect-replace") {
-        const auto& list = m_trackEffectLists.at(*trackId());
+        const auto& list = m_trackEffectLists.at(*tId);
         const auto it = std::find(list.begin(), list.end(), item);
         IF_ASSERT_FAILED(it != list.end()) {
             return;

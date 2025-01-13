@@ -10,17 +10,6 @@ RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
 {
 }
 
-void RealtimeEffectMenuModelBase::setTrackId(std::optional<au::trackedit::TrackId> trackId)
-{
-    if (m_trackId == trackId) {
-        return;
-    }
-    beginResetModel();
-    m_trackId = std::move(trackId);
-    endResetModel();
-    onTrackIdChanged();
-}
-
 void RealtimeEffectMenuModelBase::load()
 {
     AbstractMenuModel::load();
@@ -28,23 +17,19 @@ void RealtimeEffectMenuModelBase::load()
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]
     { populateMenu(); });
 
-    selectionController()->selectedTrackAdded().onReceive(this, [this](au::trackedit::TrackId trackId)
-    { setTrackId(trackId); });
-
-    selectionController()->tracksSelected().onReceive(this, [this](const au::trackedit::TrackIdList& tracks) {
-        if (tracks.empty()) {
-            setTrackId(std::nullopt);
-        } else {
-            setTrackId(tracks.back());
-        }
+    trackSelection()->selectedTrackIdChanged().onNotify(this, [this]
+    {
+        beginResetModel();
+        endResetModel();
+        onTrackIdChanged();
     });
 
     doLoad();
 }
 
-const std::optional<au::trackedit::TrackId>& RealtimeEffectMenuModelBase::trackId() const
+std::optional<au::trackedit::TrackId> RealtimeEffectMenuModelBase::trackId() const
 {
-    return m_trackId;
+    return trackSelection()->selectedTrackId();
 }
 
 void RealtimeEffectMenuModelBase::resetList()
