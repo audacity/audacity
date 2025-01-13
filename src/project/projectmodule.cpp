@@ -68,6 +68,7 @@ void ProjectModule::registerExports()
 {
     m_configuration = std::make_shared<ProjectConfiguration>();
     m_actionsController = std::make_shared<ProjectActionsController>();
+    m_uiActions = std::make_shared<ProjectUiActions>(m_actionsController);
     m_thumbnailCreator = std::make_shared<ThumbnailCreator>();
 
 #ifdef Q_OS_MAC
@@ -89,7 +90,7 @@ void ProjectModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
-        ar->reg(std::make_shared<ProjectUiActions>(m_actionsController));
+        ar->reg(m_uiActions);
     }
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
@@ -123,6 +124,7 @@ void ProjectModule::onInit(const muse::IApplication::RunMode&)
 {
     m_configuration->init();
     m_actionsController->init();
+    m_uiActions->init();
     m_recentFilesController->init();
 }
 

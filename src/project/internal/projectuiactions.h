@@ -4,15 +4,20 @@
 #include "ui/iuiactionsmodule.h"
 #include "context/iuicontextresolver.h"
 #include "projectactionscontroller.h"
+#include "record/irecordcontroller.h"
+#include "async/asyncable.h"
 
 namespace au::project {
-class ProjectUiActions : public muse::ui::IUiActionsModule
+class ProjectUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
     muse::Inject<context::IUiContextResolver> uicontextResolver;
+    muse::Inject<record::IRecordController> recordController;
 
 public:
 
     ProjectUiActions(std::shared_ptr<ProjectActionsController> controller);
+
+    void init();
 
     const muse::ui::UiActionList& actionsList() const override;
 

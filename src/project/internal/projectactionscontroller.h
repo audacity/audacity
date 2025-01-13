@@ -16,6 +16,7 @@
 #include "irecentfilescontroller.h"
 #include "iprojectautosaver.h"
 #include "iopensaveprojectscenario.h"
+#include "record/irecordcontroller.h"
 
 #include "../iaudacityproject.h"
 #include "trackedit/iprojecthistory.h"
@@ -32,6 +33,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<IProjectAutoSaver> projectAutoSaver;
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<record::IRecordController> recordController;
 
 public:
     ProjectActionsController() = default;
@@ -51,6 +53,7 @@ public:
     muse::async::Notification projectBeingDownloadedChanged() const override;
 
     bool isProjectOpened(const muse::io::path_t& projectPath) const;
+    const muse::actions::ActionCodeList& prohibitedActionsWhileRecording() const;
 
 private:
     project::IAudacityProjectPtr currentProject() const;
@@ -89,6 +92,7 @@ private:
 
     ProjectBeingDownloaded m_projectBeingDownloaded;
     muse::async::Notification m_projectBeingDownloadedChanged;
+    muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
 };
 }
 

@@ -761,6 +761,13 @@ ProjectUiActions::ProjectUiActions(std::shared_ptr<ProjectActionsController> con
 {
 }
 
+void ProjectUiActions::init()
+{
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        m_actionEnabledChanged.send(m_controller->prohibitedActionsWhileRecording());
+    });
+}
+
 const UiActionList& ProjectUiActions::actionsList() const
 {
     return m_actions;
