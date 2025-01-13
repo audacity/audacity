@@ -186,6 +186,10 @@ void SelectionViewController::selectTrackAudioData(double y)
     }
 
     const std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    if (tracks.empty()) {
+        return;
+    }
+
     selectionController()->setSelectedTrackAudioData(tracks.at(0));
 }
 
