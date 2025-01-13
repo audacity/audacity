@@ -1399,7 +1399,7 @@ bool Au3Interaction::newMonoTrack()
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackAdded(DomConverter::track(track.get()));
 
-    selectionController()->setSelectedTracks(TrackIdList(TrackId(track->GetId())));
+    selectionController()->setSelectedTracks({track->GetId()});
 
     pushProjectHistoryTrackAddedState();
 
@@ -1423,7 +1423,7 @@ bool Au3Interaction::newStereoTrack()
     auto track = *tracks.rbegin();
     prj->notifyAboutTrackAdded(DomConverter::track(track));
 
-    selectionController()->setSelectedTracks(TrackIdList(TrackId(track->GetId())));
+    selectionController()->setSelectedTracks({track->GetId()});
 
     pushProjectHistoryTrackAddedState();
 
