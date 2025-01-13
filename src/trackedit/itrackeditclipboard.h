@@ -25,7 +25,7 @@ public:
     virtual ~ITrackeditClipboard() = default;
 
     virtual std::vector<TrackData> trackDataSource() const = 0;
-    virtual std::vector<TrackData> trackDataCopy() const = 0;
+    virtual std::vector<TrackData> trackDataCopy(int64_t newGroupId = -1) const = 0;
     virtual TrackData trackData(size_t i) const = 0;
     virtual void clearTrackData() = 0;
     virtual bool trackDataEmpty() const = 0;

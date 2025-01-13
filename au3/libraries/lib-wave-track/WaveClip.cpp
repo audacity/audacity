@@ -264,7 +264,6 @@ WaveClip::WaveClip(
    mTrimRight = orig.mTrimRight;
    mRate = orig.mRate;
    mStretchToMatchProjectTempo = orig.mStretchToMatchProjectTempo;
-   mGroupId = orig.mGroupId;
 
    // Deep copy of attachments
    Attachments &attachments = *this;
@@ -280,6 +279,7 @@ WaveClip::WaveClip(
    mName = orig.mName;
 
    if (copyCutlines)
+      mGroupId = orig.mGroupId;
       for (const auto &clip: orig.mCutLines)
          mCutLines.push_back(
             std::make_shared<WaveClip>(*clip, factory, true, token));
@@ -323,7 +323,6 @@ WaveClip::WaveClip(
 
    mRate = orig.mRate;
    mStretchToMatchProjectTempo = orig.mStretchToMatchProjectTempo;
-   mGroupId = orig.mGroupId;
 
    // Deep copy of attachments
    Attachments &attachments = *this;
@@ -339,6 +338,8 @@ WaveClip::WaveClip(
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
    if (copyCutlines)
+      mGroupId = orig.mGroupId;
+
       for (const auto& cutline : orig.mCutLines)
       {
          // IDs of cutline placeholder clips are unimportant - let's not

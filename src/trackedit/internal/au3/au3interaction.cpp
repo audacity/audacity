@@ -592,7 +592,9 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
         return make_ret(trackedit::Err::TrackEmpty);
     }
 
-    auto copiedData = clipboard()->trackDataCopy();
+    const auto newGroupId = determineGroupId({});
+    auto copiedData = clipboard()->trackDataCopy(newGroupId);
+
     TrackIdList selectedTracks = selectionController()->selectedTracks();
     if (selectedTracks.empty()) {
         auto tracksIdsToSelect = pasteIntoNewTracks(copiedData);
@@ -788,7 +790,7 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
             return false;
         }
 
-        clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, false), false);
+        clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
     }
 
     for (const auto& clip : clipboardTrack->SortedIntervalArray()) {
@@ -1717,10 +1719,12 @@ void Au3Interaction::ungroupClips(const ClipKeyList &clipKeyList)
 
 int64_t Au3Interaction::determineGroupId(const ClipKeyList &clipKeyList) const
 {
-    //! NOTE: check if any clip already belongs to a group
-    for (const auto& selectedClip : clipKeyList) {
-        if (clipGroupId(selectedClip) != -1) {
-            return clipGroupId(selectedClip);
+    if (!clipKeyList.empty()) {
+        //! NOTE: check if any clip already belongs to a group
+        for (const auto& selectedClip : clipKeyList) {
+            if (clipGroupId(selectedClip) != -1) {
+                return clipGroupId(selectedClip);
+            }
         }
     }
 
