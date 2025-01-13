@@ -8,16 +8,6 @@ using namespace au::projectscene;
 RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
     : AbstractMenuModel(parent)
 {
-    selectionController()->selectedTrackAdded().onReceive(this, [this](au::trackedit::TrackId trackId)
-    { setTrackId(trackId); });
-
-    selectionController()->tracksSelected().onReceive(this, [this](const au::trackedit::TrackIdList& tracks) {
-        if (tracks.empty()) {
-            setTrackId(std::nullopt);
-        } else {
-            setTrackId(tracks.back());
-        }
-    });
 }
 
 void RealtimeEffectMenuModelBase::setTrackId(std::optional<au::trackedit::TrackId> trackId)
@@ -37,6 +27,17 @@ void RealtimeEffectMenuModelBase::load()
 
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]
     { populateMenu(); });
+
+    selectionController()->selectedTrackAdded().onReceive(this, [this](au::trackedit::TrackId trackId)
+    { setTrackId(trackId); });
+
+    selectionController()->tracksSelected().onReceive(this, [this](const au::trackedit::TrackIdList& tracks) {
+        if (tracks.empty()) {
+            setTrackId(std::nullopt);
+        } else {
+            setTrackId(tracks.back());
+        }
+    });
 
     doLoad();
 }
