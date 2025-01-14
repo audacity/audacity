@@ -347,8 +347,11 @@ void TrackeditActionsController::doGlobalDuplicate()
     auto selectedTracks = selectionController()->selectedTracks();
 
     if (!selectedTracks.empty()) {
-        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
-        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+        const auto selectedClips = selectionController()->selectedClips();
+        const auto isClipSelected = !selectedClips.empty();
+
+        secs_t selectedStartTime = isClipSelected ? secs_t(selectionController()->selectedClipStartTime()) : selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = isClipSelected ? secs_t(selectionController()->selectedClipEndTime()) : selectionController()->dataSelectedEndTime();
 
         dispatcher()->dispatch(DUPLICATE_SELECTED,
                                ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
