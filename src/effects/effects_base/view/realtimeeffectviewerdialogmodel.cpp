@@ -27,6 +27,23 @@ void RealtimeEffectViewerDialogModel::load()
     subscribe();
     dispatcher()->reg(this, "nav-trigger-control", [this]
     { dispatcher()->dispatch("play"); });
+
+    realtimeEffectService()->isActiveChanged().onReceive(this, [this](EffectStateId stateId)
+    {
+        if (stateId == effectStateId()) {
+            emit isActiveChanged();
+        }
+    });
+}
+
+bool RealtimeEffectViewerDialogModel::prop_isActive() const
+{
+    return realtimeEffectService()->isActive(effectStateId());
+}
+
+void RealtimeEffectViewerDialogModel::prop_setIsActive(bool isActive)
+{
+    realtimeEffectService()->setIsActive(effectStateId(), isActive);
 }
 
 QString RealtimeEffectViewerDialogModel::prop_effectState() const
@@ -54,6 +71,9 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
     const auto type = effectsProvider()->effectSymbol(effectId);
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
     instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, m_effectState->GetAccess());
+
+    emit isActiveChanged();
+    emit trackNameChanged();
 }
 
 void RealtimeEffectViewerDialogModel::unregisterState()

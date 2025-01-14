@@ -22,6 +22,7 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
     Q_OBJECT
     Q_PROPERTY(QString effectState READ prop_effectState WRITE prop_setEffectState FINAL)
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged);
+    Q_PROPERTY(bool isActive READ prop_isActive WRITE prop_setIsActive NOTIFY isActiveChanged);
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectsProvider> effectsProvider;
@@ -39,9 +40,13 @@ public:
     void prop_setEffectState(const QString& effectState);
     QString prop_trackName() const;
 
+    bool prop_isActive() const;
+    void prop_setIsActive(bool isActive);
+
 signals:
     void trackNameChanged();
     void trackRemoved();
+    void isActiveChanged();
 
 private:
     void subscribe();

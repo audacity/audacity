@@ -56,10 +56,10 @@ StyledDialogView {
 
                 icon: IconCode.BYPASS
                 iconFont: ui.theme.toolbarIconsFont
-                accentButton: true
+                accentButton: viewerModel.isActive
 
                 onClicked: {
-                    accentButton = !accentButton
+                    viewerModel.isActive = !viewerModel.isActive
                 }
             }
 

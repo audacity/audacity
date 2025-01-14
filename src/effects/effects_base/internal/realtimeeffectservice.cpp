@@ -230,6 +230,29 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(au::project:
 
     return newState;
 }
+
+bool RealtimeEffectService::isActive(EffectStateId stateId) const
+{
+    if (stateId == 0) {
+        return false;
+    }
+    return reinterpret_cast<RealtimeEffectState*>(stateId)->GetSettings().extra.GetActive();
+}
+
+void RealtimeEffectService::setIsActive(EffectStateId stateId, bool isActive)
+{
+    const auto state = reinterpret_cast<RealtimeEffectState*>(stateId);
+    if (state->GetSettings().extra.GetActive() == isActive) {
+        return;
+    }
+    state->SetActive(isActive);
+    m_isActiveChanged.send(stateId);
+}
+
+muse::async::Channel<EffectStateId> RealtimeEffectService::isActiveChanged() const
+{
+    return m_isActiveChanged;
+}
 }
 
 // Inject a factory for realtime effects

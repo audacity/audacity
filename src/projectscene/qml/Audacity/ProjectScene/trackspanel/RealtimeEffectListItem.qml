@@ -58,10 +58,10 @@ ListItemBlank {
             icon: IconCode.BYPASS
             iconFont: ui.theme.toolbarIconsFont
 
-            accentButton: true
+            accentButton: item.isActive
 
             onClicked: {
-                accentButton = !accentButton
+                item.isActive = !item.isActive
             }
         }
 
