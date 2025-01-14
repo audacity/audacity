@@ -105,12 +105,9 @@ double DtmfViewModel::silenceDuration() const
 
 void DtmfViewModel::recalculateDurations()
 {
-    if (EffectSettingsAccess* access = settingsAccess()) {
-        access->ModifySettings([this](EffectSettings& settings) {
-            mutSettings<DtmfSettings>().Recalculate(settings);
-            return nullptr;
-        });
-        emit toneDurationChanged();
-        emit silenceDurationChanged();
-    }
+    modifySettings([this](EffectSettings& settings) {
+        mutSettings<DtmfSettings>().Recalculate(settings);
+    });
+    emit toneDurationChanged();
+    emit silenceDurationChanged();
 }
