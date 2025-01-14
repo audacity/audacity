@@ -116,7 +116,7 @@ public:
         unsigned GetAudioInCount() const override;
 
         bool InstanceInit(
-            EffectSettings& settings, double sampleRate, ReverbState& data, ChannelNames chanMap, bool forceStereo);
+            const EffectSettings& settings, double sampleRate, ReverbState& data, ChannelNames chanMap, bool forceStereo);
 
         size_t InstanceProcess(
             EffectSettings& settings, ReverbState& data, const float* const* inBlock, float* const* outBlock, size_t blockLen);
