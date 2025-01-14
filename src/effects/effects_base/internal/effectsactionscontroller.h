@@ -14,7 +14,6 @@
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
-#include "context/iglobalcontext.h"
 #include "../ieffectpresetsscenario.h"
 #include "iinteractive.h"
 #include "playback/iplayback.h"
@@ -31,7 +30,6 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectPresetsScenario> presetsScenario;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::playback::IPlayback> playback;
 
 public:

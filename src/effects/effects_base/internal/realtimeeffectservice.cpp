@@ -150,27 +150,34 @@ std::optional<TrackId> RealtimeEffectService::trackId(EffectStateId stateId) con
     return it->second;
 }
 
-namespace {
-std::pair<au::au3::Au3Project*, au::au3::Au3Track*> au3ProjectAndTrack(au::project::IAudacityProject& project, TrackId trackId)
+std::optional<RealtimeEffectService::UtilData> RealtimeEffectService::utilData(TrackId trackId) const
 {
-    auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project.au3ProjectPtr());
-    auto au3Track = dynamic_cast<au::au3::Au3Track*>(au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId)));
-    return { au3Project, au3Track };
-}
+    const project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return {};
+    }
+
+    const auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    const auto au3Track = dynamic_cast<au::au3::Au3Track*>(au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId)));
+    const auto trackeditProject = globalContext()->currentTrackeditProject().get();
+
+    if (!au3Project || !au3Track || !trackeditProject) {
+        return {};
+    }
+    return UtilData{ au3Project, au3Track, trackeditProject };
 }
 
-RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(au::project::IAudacityProject& project, TrackId trackId,
-                                                                const muse::String& effectId)
+RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId, const muse::String& effectId)
 {
-    const auto [au3Project, au3Track] = au3ProjectAndTrack(project, trackId);
-    IF_ASSERT_FAILED(au3Project && au3Track) {
+    const auto data = utilData(trackId);
+    IF_ASSERT_FAILED(data) {
         return nullptr;
     }
 
-    const auto state = AudioIO::Get()->AddState(*au3Project, au3Track, effectId.toStdString());
+    const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString());
     if (state) {
         const auto effectName = getEffectName(*state);
-        const auto trackName =  project.trackeditProject()->trackName(trackId);
+        const auto trackName =  data->trackeditProject->trackName(trackId);
         assert(trackName.has_value());
         projectHistory()->pushHistoryState("Added " + effectName + " to " + trackName.value_or(""), "Add " + effectName);
     }
@@ -192,36 +199,34 @@ std::shared_ptr<RealtimeEffectState> findEffectState(au::au3::Au3Track& au3Track
 }
 }
 
-void RealtimeEffectService::removeRealtimeEffect(au::project::IAudacityProject& project, TrackId trackId, EffectStateId effectStateId)
+void RealtimeEffectService::removeRealtimeEffect(TrackId trackId, EffectStateId effectStateId)
 {
-    const auto [au3Project, au3Track] = au3ProjectAndTrack(project, trackId);
-    IF_ASSERT_FAILED(au3Project && au3Track) {
+    const auto data = utilData(trackId);
+    IF_ASSERT_FAILED(data) {
         return;
     }
 
-    const auto state = findEffectState(*au3Track, effectStateId);
+    const auto state = findEffectState(*data->au3Track, effectStateId);
     IF_ASSERT_FAILED(state) {
         return;
     }
 
-    AudioIO::Get()->RemoveState(*au3Project, au3Track, state);
+    AudioIO::Get()->RemoveState(*data->au3Project, data->au3Track, state);
     const auto effectName = getEffectName(*state);
-    const auto trackName = project.trackeditProject()->trackName(trackId);
+    const auto trackName = data->trackeditProject->trackName(trackId);
     assert(trackName.has_value());
     projectHistory()->pushHistoryState("Removed " + effectName + " from " + trackName.value_or(""), "Remove " + effectName);
 }
 
-RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(au::project::IAudacityProject& project, TrackId trackId,
-                                                                    int effectListIndex,
-                                                                    const muse::String& newEffectId)
+RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trackId, int effectListIndex, const muse::String& newEffectId)
 {
-    const auto [au3Project, au3Track] = au3ProjectAndTrack(project, trackId);
-    IF_ASSERT_FAILED(au3Project && au3Track) {
+    const auto data = utilData(trackId);
+    IF_ASSERT_FAILED(data) {
         return nullptr;
     }
 
-    const auto newState = AudioIO::Get()->ReplaceState(*au3Project, au3Track, effectListIndex, newEffectId.toStdString());
-    const auto oldState = RealtimeEffectList::Get(*au3Track).GetStateAt(effectListIndex);
+    const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString());
+    const auto oldState = RealtimeEffectList::Get(*data->au3Track).GetStateAt(effectListIndex);
     if (newState && oldState) {
         const auto newEffectName = getEffectName(*newState);
         const auto oldEffectName = getEffectName(*oldState);

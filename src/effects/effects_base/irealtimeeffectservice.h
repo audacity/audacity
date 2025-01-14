@@ -23,10 +23,9 @@ class IRealtimeEffectService : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IRealtimeEffectService() = default;
 
-    virtual RealtimeEffectStatePtr addRealtimeEffect(project::IAudacityProject& project, TrackId trackId, const EffectId& effectId) = 0;
-    virtual void removeRealtimeEffect(project::IAudacityProject& project, TrackId trackId, EffectStateId stateId) = 0;
-    virtual RealtimeEffectStatePtr replaceRealtimeEffect(project::IAudacityProject& project, TrackId trackId, int effectListIndex,
-                                                         const EffectId& newEffectId) = 0;
+    virtual RealtimeEffectStatePtr addRealtimeEffect(TrackId trackId, const EffectId& effectId) = 0;
+    virtual void removeRealtimeEffect(TrackId trackId, EffectStateId stateId) = 0;
+    virtual RealtimeEffectStatePtr replaceRealtimeEffect(TrackId trackId, int effectListIndex, const EffectId& newEffectId) = 0;
 
     virtual muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectAdded() const = 0;
     virtual muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectRemoved() const = 0;

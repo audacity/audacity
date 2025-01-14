@@ -37,10 +37,9 @@ class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asynca
 public:
     void init();
 
-    RealtimeEffectStatePtr addRealtimeEffect(project::IAudacityProject&, TrackId, const EffectId&) override;
-    void removeRealtimeEffect(project::IAudacityProject&, TrackId, EffectStateId) override;
-    RealtimeEffectStatePtr replaceRealtimeEffect(project::IAudacityProject&, TrackId, int effectListIndex,
-                                                 const EffectId& newEffectId) override;
+    RealtimeEffectStatePtr addRealtimeEffect(TrackId, const EffectId&) override;
+    void removeRealtimeEffect(TrackId, EffectStateId) override;
+    RealtimeEffectStatePtr replaceRealtimeEffect(TrackId, int effectListIndex, const EffectId& newEffectId) override;
 
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectAdded() const override;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectRemoved() const override;
@@ -60,6 +59,14 @@ private:
     std::string getEffectName(const std::string& effectId) const;
     std::string getEffectName(const RealtimeEffectState& state) const;
     std::string getTrackName(const au::au3::Au3Project& project, au::effects::TrackId trackId) const;
+
+    struct UtilData {
+        au::au3::Au3Project* const au3Project;
+        au::au3::Au3Track* const au3Track;
+        trackedit::ITrackeditProject* const trackeditProject;
+    };
+
+    std::optional<UtilData> utilData(TrackId) const;
 
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> m_realtimeEffectAdded;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> m_realtimeEffectRemoved;

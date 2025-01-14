@@ -4,6 +4,7 @@
 #include "effectsactionscontroller.h"
 #include "effects/effects_base/effectstypes.h"
 #include "effectsuiactions.h"
+#include "playback/iplayer.h"
 
 #include "wx/string.h"
 
@@ -74,30 +75,18 @@ void EffectsActionsController::repeatLastEffect()
 
 void EffectsActionsController::addRealtimeEffect(const muse::actions::ActionData& args)
 {
-    const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        // Command issued without an open project ?..
-        return;
-    }
-
     const auto effectId = args.arg<EffectId>(0);
     const auto trackId = args.arg<TrackId>(1);
-    if (const RealtimeEffectStatePtr state = realtimeEffectService()->addRealtimeEffect(*project, trackId, effectId)) {
+    if (const RealtimeEffectStatePtr state = realtimeEffectService()->addRealtimeEffect(trackId, effectId)) {
         effectsProvider()->showEffect(state.get());
     }
 }
 
 void EffectsActionsController::removeRealtimeEffect(const muse::actions::ActionData& args)
 {
-    const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        // Command issued without an open project ?..
-        return;
-    }
-
     const auto trackId = args.arg<TrackId>(0);
     const auto effectStateId = args.arg<EffectStateId>(1);
-    realtimeEffectService()->removeRealtimeEffect(*project, trackId, effectStateId);
+    realtimeEffectService()->removeRealtimeEffect(trackId, effectStateId);
 }
 
 void EffectsActionsController::replaceRealtimeEffect(const muse::actions::ActionData& args)
@@ -106,17 +95,11 @@ void EffectsActionsController::replaceRealtimeEffect(const muse::actions::Action
         return;
     }
 
-    const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        // Command issued without an open project ?..
-        return;
-    }
-
     const auto trackId = args.arg<TrackId>(0);
     const auto srcIndex = args.arg<int>(1);
     const auto dstEffectId = args.arg<EffectId>(2);
 
-    realtimeEffectService()->replaceRealtimeEffect(*project, trackId, srcIndex, dstEffectId);
+    realtimeEffectService()->replaceRealtimeEffect(trackId, srcIndex, dstEffectId);
 }
 
 void EffectsActionsController::applyPreset(const muse::actions::ActionData& args)
