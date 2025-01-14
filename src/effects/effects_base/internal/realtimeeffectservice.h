@@ -51,6 +51,9 @@ public:
     void setIsActive(EffectStateId, bool) override;
     muse::async::Channel<EffectStateId> isActiveChanged() const override;
 
+    bool trackEffectsActive(TrackId trackId) const override;
+    void setTrackEffectsActive(TrackId trackId, bool active) override;
+
 private:
     void updateSubscriptions(const au::project::IAudacityProjectPtr& project);
     Observer::Subscription subscribeToRealtimeEffectList(WaveTrack&, RealtimeEffectList&);
@@ -59,6 +62,8 @@ private:
     std::string getEffectName(const std::string& effectId) const;
     std::string getEffectName(const RealtimeEffectState& state) const;
     std::string getTrackName(const au::au3::Au3Project& project, au::effects::TrackId trackId) const;
+    const RealtimeEffectList* realtimeEffectList(au::effects::TrackId) const;
+    RealtimeEffectList* realtimeEffectList(au::effects::TrackId);
 
     struct UtilData {
         au::au3::Au3Project* const au3Project;

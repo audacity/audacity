@@ -36,5 +36,8 @@ public:
     virtual bool isActive(EffectStateId) const = 0;
     virtual void setIsActive(EffectStateId, bool) = 0;
     virtual muse::async::Channel<EffectStateId> isActiveChanged() const = 0;
+
+    virtual bool trackEffectsActive(TrackId trackId) const = 0;
+    virtual void setTrackEffectsActive(TrackId trackId, bool active) = 0;
 };
 }

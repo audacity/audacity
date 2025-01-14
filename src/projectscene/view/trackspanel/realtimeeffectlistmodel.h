@@ -18,6 +18,7 @@ class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
 
     Q_PROPERTY(QVariantList availableEffects READ availableEffects NOTIFY availableEffectsChanged)
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged)
+    Q_PROPERTY(bool trackEffectsActive READ prop_trackEffectsActive WRITE prop_setTrackEffectsActive NOTIFY trackEffectsActiveChanged)
 
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
     muse::Inject<context::IGlobalContext> globalContext;
@@ -29,9 +30,13 @@ public:
     QVariantList availableEffects();
     QString prop_trackName() const;
 
+    bool prop_trackEffectsActive() const;
+    void prop_setTrackEffectsActive(bool active);
+
 signals:
     void availableEffectsChanged();
     void trackNameChanged();
+    void trackEffectsActiveChanged();
 
 private:
     QHash<int, QByteArray> roleNames() const override;

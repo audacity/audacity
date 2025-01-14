@@ -15,6 +15,7 @@ Rectangle {
 
     property alias preferredHeight: trackEffectList.height
     property alias trackName: trackEffectListModel.trackName
+    property alias trackEffectsActive: trackEffectListModel.trackEffectsActive
 
     Component.onCompleted: {
         trackEffectListModel.load()

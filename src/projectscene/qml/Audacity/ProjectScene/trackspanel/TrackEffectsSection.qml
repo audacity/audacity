@@ -46,11 +46,12 @@ Rectangle {
                 icon: IconCode.BYPASS
                 iconFont: ui.theme.toolbarIconsFont
 
-                accentButton: true
                 enabled: root.enabled
+                accentButton: effectList.trackEffectsActive
 
                 onClicked: {
                     accentButton = !accentButton
+                    effectList.trackEffectsActive = accentButton
                 }
             }
 
@@ -88,6 +89,9 @@ Rectangle {
                     rightMargin: 12
                     topMargin: 8
                     bottomMargin: 8
+                }
+                onTrackEffectsActiveChanged: {
+                    trackEffectsPowerButton.accentButton = trackEffectsActive
                 }
             }
         }

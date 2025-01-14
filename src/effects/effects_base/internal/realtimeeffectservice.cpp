@@ -258,6 +258,34 @@ muse::async::Channel<EffectStateId> RealtimeEffectService::isActiveChanged() con
 {
     return m_isActiveChanged;
 }
+
+bool RealtimeEffectService::trackEffectsActive(TrackId trackId) const
+{
+    const auto list = realtimeEffectList(trackId);
+    return list ? list->IsActive() : false;
+}
+
+void RealtimeEffectService::setTrackEffectsActive(TrackId trackId, bool active)
+{
+    const auto list = realtimeEffectList(trackId);
+    if (list) {
+        list->SetActive(active);
+    }
+}
+
+const RealtimeEffectList* RealtimeEffectService::realtimeEffectList(TrackId trackId) const
+{
+    const auto data = utilData(trackId);
+    if (!data) {
+        return nullptr;
+    }
+    return &RealtimeEffectList::Get(*data->au3Track);
+}
+
+RealtimeEffectList* RealtimeEffectService::realtimeEffectList(TrackId trackId)
+{
+    return const_cast<RealtimeEffectList*>(const_cast<const RealtimeEffectService*>(this)->realtimeEffectList(trackId));
+}
 }
 
 // Inject a factory for realtime effects

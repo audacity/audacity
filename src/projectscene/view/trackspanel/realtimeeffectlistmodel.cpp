@@ -185,6 +185,7 @@ QVariantList RealtimeEffectListModel::availableEffects()
 void RealtimeEffectListModel::onTrackIdChanged()
 {
     emit trackNameChanged();
+    emit trackEffectsActiveChanged();
 }
 
 QString RealtimeEffectListModel::prop_trackName() const
@@ -232,4 +233,22 @@ int RealtimeEffectListModel::rowCount(const QModelIndex& parent) const
         return 0;
     }
     return static_cast<int>(m_trackEffectLists.at(*trackId()).size());
+}
+
+bool RealtimeEffectListModel::prop_trackEffectsActive() const
+{
+    const auto tId = trackId();
+    if (!tId.has_value()) {
+        return false;
+    }
+    return realtimeEffectService()->trackEffectsActive(*tId);
+}
+
+void RealtimeEffectListModel::prop_setTrackEffectsActive(bool active)
+{
+    const auto tId = trackId();
+    IF_ASSERT_FAILED(tId.has_value()) {
+        return;
+    }
+    realtimeEffectService()->setTrackEffectsActive(*tId, active);
 }
