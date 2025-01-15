@@ -38,7 +38,7 @@ static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
 static const ActionCode MERGE_SELECTED_ON_TRACK("merge-selected-on-tracks");
 static const ActionCode DUPLICATE_SELECTED("duplicate-selected");
-static const ActionCode DUPLICATE_CLIP("duplicate-clip");
+static const ActionCode DUPLICATE_CLIPS("duplicate-clips");
 static const ActionCode CLIP_SPLIT_CUT("clip-split-cut");
 static const ActionCode CLIP_SPLIT_DELETE("clip-split-delete");
 static const ActionCode SPLIT_CUT_SELECTED("split-cut-selected");
@@ -85,7 +85,7 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_SPLIT_AT,
     MERGE_SELECTED_ON_TRACK,
     DUPLICATE_SELECTED,
-    DUPLICATE_CLIP,
+    DUPLICATE_CLIPS,
     CLIP_SPLIT_CUT,
     CLIP_SPLIT_DELETE,
     SPLIT_CUT_SELECTED,
@@ -135,7 +135,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, UNDO, this, &TrackeditActionsController::undo);
     dispatcher()->reg(this, REDO, this, &TrackeditActionsController::redo);
     dispatcher()->reg(this, DUPLICATE_SELECTED, this, &TrackeditActionsController::duplicateSelected);
-    dispatcher()->reg(this, DUPLICATE_CLIP, this, &TrackeditActionsController::duplicateClip);
+    dispatcher()->reg(this, DUPLICATE_CLIPS, this, &TrackeditActionsController::duplicateClips);
     dispatcher()->reg(this, CLIP_SPLIT_CUT, this, &TrackeditActionsController::clipSplitCut);
     dispatcher()->reg(this, CLIP_SPLIT_DELETE, this, &TrackeditActionsController::clipSplitDelete);
     dispatcher()->reg(this, SPLIT_CUT_SELECTED, this, &TrackeditActionsController::splitCutSelected);
@@ -344,24 +344,18 @@ void TrackeditActionsController::redo()
 
 void TrackeditActionsController::doGlobalDuplicate()
 {
-    auto selectedTracks = selectionController()->selectedTracks();
+    const auto selectedTracks = selectionController()->selectedTracks();
 
     if (!selectedTracks.empty()) {
-        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
-        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+        const auto selectedClips = selectionController()->selectedClips();
+        if (selectedClips.empty()) {
+            secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+            secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-        dispatcher()->dispatch(DUPLICATE_SELECTED,
-                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
-    } else {
-        if (selectionController()->selectedClips().empty()) {
-            return;
-        }
-        if (selectionController()->selectedClips().size() == 1) {
-            ClipKey selectedClipKey = selectionController()->selectedClips().at(0);
-            if (!selectedClipKey.isValid()) {
-                return;
-            }
-            dispatcher()->dispatch(DUPLICATE_CLIP, ActionData::make_arg1<ClipKey>(selectedClipKey));
+            dispatcher()->dispatch(DUPLICATE_SELECTED,
+                                   ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+        } else {
+           dispatcher()->dispatch(DUPLICATE_CLIPS, ActionData::make_arg1<ClipKeyList>(selectedClips));
         }
     }
 }
@@ -585,14 +579,14 @@ void TrackeditActionsController::duplicateSelected(const muse::actions::ActionDa
     trackeditInteraction()->duplicateSelectedOnTracks(tracksIds, begin, end);
 }
 
-void TrackeditActionsController::duplicateClip(const muse::actions::ActionData& args)
+void TrackeditActionsController::duplicateClips(const muse::actions::ActionData& args)
 {
     IF_ASSERT_FAILED(args.count() == 1) {
         return;
     }
 
-    ClipKey clipKey = args.arg<ClipKey>(0);
-    trackeditInteraction()->duplicateClip(clipKey);
+    ClipKeyList clipKeyList = args.arg<ClipKeyList>(0);
+    trackeditInteraction()->duplicateClips(clipKeyList);
 }
 
 void TrackeditActionsController::clipSplitCut(const muse::actions::ActionData& args)
