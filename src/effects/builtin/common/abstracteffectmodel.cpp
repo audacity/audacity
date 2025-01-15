@@ -88,9 +88,11 @@ void AbstractEffectModel::preview()
 
 void AbstractEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
 {
-    EffectSettingsAccess* access = this->settingsAccess();
-    access->ModifySettings([&](EffectSettings& settings)
-    {
+    EffectSettingsAccess* const access = this->settingsAccess();
+    IF_ASSERT_FAILED(access) {
+        return;
+    }
+    access->ModifySettings([&](EffectSettings& settings) {
         modifier(settings);
         return nullptr;
     });
