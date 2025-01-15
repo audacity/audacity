@@ -106,7 +106,7 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
             break;
         case RealtimeEffectListMessage::Type::Remove:
             m_effectTrackMap.erase(effectStateId);
-            m_realtimeEffectRemoved.send(trackId, msg.srcIndex, effectStateId);
+            m_realtimeEffectRemoved.send(trackId, effectStateId);
             break;
         case RealtimeEffectListMessage::Type::DidReplace:
         {
@@ -130,7 +130,7 @@ muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> RealtimeEffec
     return m_realtimeEffectAdded;
 }
 
-muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> RealtimeEffectService::realtimeEffectRemoved() const
+muse::async::Channel<TrackId, EffectStateId> RealtimeEffectService::realtimeEffectRemoved() const
 {
     return m_realtimeEffectRemoved;
 }

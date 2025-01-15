@@ -45,16 +45,15 @@ void RealtimeEffectListModel::doLoad()
     { insertEffect(trackId, index, item); });
 
     realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
-                                                               [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                      EffectStateId item) {
-        removeEffect(trackId, index, item);
+                                                               [this](effects::TrackId trackId, EffectStateId item) {
+        removeEffect(trackId, item);
     });
 
     realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
                                                                 [this](effects::TrackId trackId, EffectChainLinkIndex index,
                                                                        EffectStateId oldItem,
                                                                        EffectStateId newItem) {
-        removeEffect(trackId, index, oldItem);
+        removeEffect(trackId, oldItem);
         insertEffect(trackId, index, newItem);
     });
 
@@ -158,15 +157,22 @@ void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChain
     }
 }
 
-void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectStateId& e)
+void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, const EffectStateId& e)
 {
     if (!m_trackEffectLists.count(trackId)) {
         return;
     }
-    auto& list = m_trackEffectLists.at(trackId);
-    IF_ASSERT_FAILED(index < list.size() && list[index]->effectStateId == e) {
+
+    std::vector<RealtimeEffectListItemModel*>& list = m_trackEffectLists.at(trackId);
+    const auto it = std::find_if(list.begin(), list.end(), [e](const RealtimeEffectListItemModel* item) {
+        return item->effectStateId == e;
+    });
+
+    IF_ASSERT_FAILED(it != list.end()) {
         return;
     }
+    const int index = it - list.begin();
+
     const auto affectsSelectedTrack = trackId == this->trackId();
     if (affectsSelectedTrack) {
         beginRemoveRows(QModelIndex(), index, index);

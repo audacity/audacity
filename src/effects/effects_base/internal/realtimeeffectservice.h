@@ -42,7 +42,7 @@ public:
     RealtimeEffectStatePtr replaceRealtimeEffect(TrackId, int effectListIndex, const EffectId& newEffectId) override;
 
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectAdded() const override;
-    muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectRemoved() const override;
+    muse::async::Channel<TrackId, EffectStateId> realtimeEffectRemoved() const override;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId, EffectStateId> realtimeEffectReplaced() const override;
 
     std::optional<TrackId> trackId(EffectStateId) const override;
@@ -74,7 +74,7 @@ private:
     std::optional<UtilData> utilData(TrackId) const;
 
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> m_realtimeEffectAdded;
-    muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> m_realtimeEffectRemoved;
+    muse::async::Channel<TrackId, EffectStateId> m_realtimeEffectRemoved;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId, EffectStateId> m_realtimeEffectReplaced;
     muse::async::Channel<EffectStateId> m_isActiveChanged;
 

@@ -57,7 +57,7 @@ private:
     void populateMenu() override;
     void onProjectChanged();
     void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectStateId& item);
-    void removeEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::EffectStateId& item);
+    void removeEffect(effects::TrackId trackId, const effects::EffectStateId& item);
 
     using EffectList = std::vector<RealtimeEffectListItemModel*>;
     std::map<effects::TrackId, EffectList> m_trackEffectLists;
