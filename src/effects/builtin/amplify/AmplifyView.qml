@@ -84,20 +84,17 @@ EffectBase {
                 text: qsTrc("effects/amplify", "New Peak Amplitude (dB):")
             }
 
-            TextInputField {
+            RealInputField {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 80
 
-                currentText: amplify.newPeak.toFixed(4)
+                min: amplify.newPeakMin
+                max: amplify.newPeakMax
+                decimals: 4
 
-                validator: DoubleInputValidator {
-                    top: amplify.newPeakMax
-                    bottom: amplify.newPeakMin
-                    decimal: 4
-                }
-
-                onTextEdited: function(newTextValue) {
-                    amplify.newPeak = parseFloat(newTextValue)
+                currentValue: amplify.newPeak
+                onCurrentValueChanged: {
+                    amplify.newPeak = currentValue
                 }
             }
         }
