@@ -26,6 +26,7 @@ public:
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription, trackedit::UndoPushType flags) = 0;
     virtual muse::async::Notification isUndoRedoAvailableChanged() const = 0;
+    virtual muse::async::Notification undoOrRedoCalled() const = 0;
 };
 
 using IProjectHistoryPtr = std::shared_ptr<IProjectHistory>;

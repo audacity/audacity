@@ -14,6 +14,7 @@ public:
     void remove(const RealtimeEffectStatePtr& state);
     void replace(const RealtimeEffectStatePtr& oldState, const RealtimeEffectStatePtr& newState);
     void clear();
+    void refresh(TrackId trackId, const std::vector<RealtimeEffectStatePtr>& newStates);
 
     std::optional<TrackId> trackId(const RealtimeEffectStatePtr& state) const;
 

@@ -31,6 +31,30 @@ void RealtimeEffectService::init()
     });
 
     updateSubscriptions(globalContext()->currentProject());
+
+    projectHistory()->undoOrRedoCalled().onNotify(this, [this]
+    { onUndoRedo(); });
+}
+
+void RealtimeEffectService::onUndoRedo()
+{
+    // Undo/Redo do not lead to callbacks from the RealtimeEffectList, we have to refresh the stack manually.
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return;
+    }
+
+    const auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    auto& trackList = TrackList::Get(*au3Project);
+    const auto range = trackList.Any<WaveTrack>();
+    for (const auto& track : range) {
+        auto& list = RealtimeEffectList::Get(*track);
+        std::vector<RealtimeEffectStatePtr> states(list.GetStatesCount());
+        for (auto i = 0u; i < list.GetStatesCount(); ++i) {
+            states[i] = list.GetStateAt(i);
+        }
+        m_stackManager->refresh(track->GetId(), states);
+    }
 }
 
 void RealtimeEffectService::updateSubscriptions(const au::project::IAudacityProjectPtr& project)

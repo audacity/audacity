@@ -68,6 +68,7 @@ private:
     std::string getTrackName(const au::au3::Au3Project& project, au::effects::TrackId trackId) const;
     const RealtimeEffectList* realtimeEffectList(au::effects::TrackId) const;
     RealtimeEffectList* realtimeEffectList(au::effects::TrackId);
+    void onUndoRedo();
 
     struct UtilData
     {
