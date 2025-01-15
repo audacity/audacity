@@ -494,7 +494,7 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, completed);
+    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed);
     m_context->updateSelectedClipTime();
 
     // handle auto-scroll over the edge
@@ -534,7 +534,7 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, completed);
+    bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed);
     m_context->updateSelectedClipTime();
 
     // handle auto-scroll over the edge

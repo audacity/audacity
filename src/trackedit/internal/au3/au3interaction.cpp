@@ -317,6 +317,207 @@ void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin,
     }
 }
 
+std::optional<secs_t> Au3Interaction::shortestClipDuration(const ClipKeyList &clipKeys) const
+{
+    std::optional<secs_t> shortestClipDuration;
+    for (const auto& selectedClip : clipKeys) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            continue;
+        }
+        if (!shortestClipDuration.has_value() || !muse::RealIsEqualOrMore(clip->GetPlayDuration(), shortestClipDuration.value()) ) {
+            shortestClipDuration = clip->GetPlayDuration();
+        }
+    }
+
+    return shortestClipDuration;
+}
+
+bool Au3Interaction::anyLeftFullyUntrimmed(const ClipKeyList &clipKeys) const
+{
+    for (const auto& selectedClip : clipKeys) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            continue;
+        }
+        if (muse::RealIsEqualOrLess(clip->GetTrimLeft(), 0.0)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Au3Interaction::anyRightFullyUntrimmed(const ClipKeyList &clipKeys) const
+{
+    for (const auto& selectedClip : clipKeys) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            continue;
+        }
+        if (muse::RealIsEqualOrLess(clip->GetTrimRight(), 0.0)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+ClipKeyList Au3Interaction::determineClipsToTrim(const ClipKey &clipKey) const
+{
+    if (!muse::contains(selectionController()->selectedClips(), clipKey)) {
+        //! NOTE: hover handle single clip trim
+        return ClipKeyList{clipKey};
+    } else {
+        return selectionController()->selectedClips();
+    }
+}
+
+bool Au3Interaction::canLeftTrimClips(const ClipKeyList &clipKeys,
+                                      secs_t deltaSec,
+                                      secs_t minClipDuration) const
+{
+    if (clipKeys.size() == 1) {
+        //! NOTE hover handle single clip trim
+        ClipKey selectedClip = clipKeys.front();
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return false;
+        }
+
+        if (muse::RealIsEqualOrLess(deltaSec, 0.0) && muse::is_equal(clip->GetTrimLeft(), 0.0)) {
+            //! NOTE: clip is fully untrimmed
+            return false;
+        }
+    } else {
+        //! NOTE: handle multi-clip trim
+        //! NOTE: check if trim delta is applicable to every clip
+        std::optional<secs_t> duration = shortestClipDuration(clipKeys);
+
+        if (!duration.has_value() || !muse::RealIsEqualOrMore(duration.value() - deltaSec, minClipDuration)
+            || !muse::RealIsEqualOrLess(deltaSec, duration.value())
+            || (muse::RealIsEqualOrLess(deltaSec, 0.0) && anyLeftFullyUntrimmed(clipKeys))) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Au3Interaction::canRightTrimClips(const ClipKeyList &clipKeys,
+                                       secs_t deltaSec,
+                                       secs_t minClipDuration) const
+{
+    if (clipKeys.size() == 1) {
+        //! NOTE hover handle single clip trim
+        ClipKey selectedClip = clipKeys.front();
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return false;
+        }
+
+        if (muse::RealIsEqualOrLess(deltaSec, 0.0) && muse::is_equal(clip->GetTrimRight(), 0.0)) {
+            //! NOTE: clip is fully untrimmed
+            return false;
+        }
+    } else {
+        //! NOTE: handle multi-clip trim
+        //! NOTE: check if trim delta is applicable to every clip
+        std::optional<secs_t> duration = shortestClipDuration(clipKeys);
+
+        if (!duration.has_value() || !muse::RealIsEqualOrMore(duration.value() - deltaSec, minClipDuration)
+            || !muse::RealIsEqualOrLess(deltaSec, duration.value())
+            || (muse::RealIsEqualOrLess(deltaSec, 0.0) && anyRightFullyUntrimmed(clipKeys))) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Au3Interaction::trimClipsLeft(const ClipKeyList &clipKeys, secs_t deltaSec, bool completed)
+{
+    for (const auto& selectedClip : clipKeys) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return false;
+        }
+
+        if (completed) {
+            auto ok = makeRoomForClip(selectedClip);
+            if (!ok) {
+                return false;
+            }
+        }
+
+        clip->TrimLeft(deltaSec);
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+    }
+
+    return true;
+}
+
+bool Au3Interaction::trimClipsRight(const ClipKeyList &clipKeys, secs_t deltaSec, bool completed)
+{
+    for (const auto& selectedClip : clipKeys) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            return false;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            return false;
+        }
+
+        if (completed) {
+            auto ok = makeRoomForClip(selectedClip);
+            if (!ok) {
+                make_ret(trackedit::Err::FailedToMakeRoomForClip);
+            }
+        }
+
+        clip->TrimRight(deltaSec);
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+    }
+
+    return true;
+}
+
 muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
@@ -1141,34 +1342,18 @@ bool Au3Interaction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, se
     return true;
 }
 
-bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool completed)
+bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    //! NOTE: other clips must follow if selected
+    ClipKeyList clips = determineClipsToTrim(clipKey);
+    if (!canLeftTrimClips(clips, deltaSec, minClipDuration)) {
         return false;
     }
 
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    bool result = trimClipsLeft(clips, deltaSec, completed);
+    if (!result) {
         return false;
     }
-
-    if (muse::RealIsEqualOrLess(deltaSec, 0.0) && muse::is_equal(clip->GetTrimLeft(), 0.0)) {
-        //! NOTE: clip is fully untrimmed
-        return false;
-    }
-
-    if (completed) {
-        auto ok = makeRoomForClip(clipKey);
-        if (!ok) {
-            return false;
-        }
-    }
-
-    clip->TrimLeft(deltaSec);
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
     if (completed) {
         projectHistory()->pushHistoryState("Clip trimmed", "Trim clip");
@@ -1177,34 +1362,18 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, bool 
     return true;
 }
 
-bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, bool completed)
+bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    //! NOTE: other clips must follow if selected
+    ClipKeyList clips = determineClipsToTrim(clipKey);
+    if (!canRightTrimClips(clips, deltaSec, minClipDuration)) {
         return false;
     }
 
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    bool result = trimClipsRight(clips, deltaSec, completed);
+    if (!result) {
         return false;
     }
-
-    if (muse::RealIsEqualOrLess(deltaSec, 0.0) && muse::is_equal(clip->GetTrimRight(), 0.0)) {
-        //! NOTE: clip is fully untrimmed
-        return false;
-    }
-
-    if (completed) {
-        auto ok = makeRoomForClip(clipKey);
-        if (!ok) {
-            make_ret(trackedit::Err::FailedToMakeRoomForClip);
-        }
-    }
-
-    clip->TrimRight(deltaSec);
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
     if (completed) {
         projectHistory()->pushHistoryState("Clip trimmed", "Trim clip");

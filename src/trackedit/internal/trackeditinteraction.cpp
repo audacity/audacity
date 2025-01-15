@@ -171,14 +171,14 @@ bool TrackeditInteraction::splitDeleteSelectedOnTracks(const TrackIdList tracksI
     return withPlaybackStop(&ITrackeditInteraction::splitDeleteSelectedOnTracks, tracksIds, begin, end);
 }
 
-bool TrackeditInteraction::trimClipLeft(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed)
+bool TrackeditInteraction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    return withPlaybackStop(&ITrackeditInteraction::trimClipLeft, clipKey, deltaSec, completed);
+    return withPlaybackStop(&ITrackeditInteraction::trimClipLeft, clipKey, deltaSec, minClipDuration, completed);
 }
 
-bool TrackeditInteraction::trimClipRight(const trackedit::ClipKey& clipKey, secs_t deltaSec, bool completed)
+bool TrackeditInteraction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    return withPlaybackStop(&ITrackeditInteraction::trimClipRight, clipKey, deltaSec, completed);
+    return withPlaybackStop(&ITrackeditInteraction::trimClipRight, clipKey, deltaSec, minClipDuration, completed);
 }
 
 muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKey) const
