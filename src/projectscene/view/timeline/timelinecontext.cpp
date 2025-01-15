@@ -562,7 +562,8 @@ void TimelineContext::setZoom(double zoom, double mouseX)
     double timeRange = m_frameEndTime - m_frameStartTime;
     double mouseTime = m_frameStartTime + (mouseX / m_frameWidth) * timeRange;
 
-    double totalTimeRange = trackEditProject()->totalTime() * 2.0;
+    //we limit zoom to the total time range *2, but at least 4 minutes
+    double totalTimeRange = std::max(trackEditProject()->totalTime().to_double() * 2.0, 4 * 60.0);
     double newTimeRange = (m_frameStartTime + m_frameWidth / newZoom) - m_frameStartTime;
 
     if (!muse::is_zero(totalTimeRange) && muse::RealIsEqualOrMore(newTimeRange, totalTimeRange)) {
