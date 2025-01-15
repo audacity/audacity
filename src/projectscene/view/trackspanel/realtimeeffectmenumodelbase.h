@@ -7,6 +7,7 @@
 #include "uicomponents/view/abstractmenumodel.h"
 #include "trackedit/trackedittypes.h"
 #include "effects/effects_base/ieffectsprovider.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
 #include <QObject>
 
 namespace au::projectscene {
@@ -25,6 +26,7 @@ protected:
     void removeTrack(const au::trackedit::TrackId& trackId);
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
+    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
 
 private:
     void beginResetModel();

@@ -18,13 +18,6 @@ void RealtimeEffectMenuModel::doLoad()
 
 void RealtimeEffectMenuModel::populateMenu()
 {
-    TRACEFUNC;
-
-    const auto tId = trackId();
-    IF_ASSERT_FAILED(tId) {
-        return;
-    }
-
     MenuItemList items;
 
     const auto metaList = effectsProvider()->effectMetaList();
@@ -36,7 +29,7 @@ void RealtimeEffectMenuModel::populateMenu()
             continue;
         }
         MenuItem* item = makeMenuItem("realtimeeffect-add", TranslatableString::untranslatable(meta.title));
-        item->setArgs(actions::ActionData::make_arg2(meta.id, *tId));
+        item->setArgs(actions::ActionData::make_arg1(meta.id));
         menuCategories[meta.categoryId].push_back(item);
     }
 
@@ -45,4 +38,18 @@ void RealtimeEffectMenuModel::populateMenu()
     }
 
     setItems(items);
+}
+
+void RealtimeEffectMenuModel::handleMenuItem(const QString& itemId)
+{
+    const MenuItem& menuItem = findItem(itemId);
+    const auto tId = trackId();
+    IF_ASSERT_FAILED(tId.has_value()) {
+        return;
+    }
+
+    const auto effectId = menuItem.args().arg<effects::EffectId>(0);
+    if (const auto state = realtimeEffectService()->addRealtimeEffect(*tId, effectId)) {
+        effectsProvider()->showEffect(state);
+    }
 }

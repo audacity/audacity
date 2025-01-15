@@ -85,11 +85,13 @@ void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, con
         return;
     }
 
-    MenuItem& menuItem = findItem(itemId);
+    const MenuItem& menuItem = findItem(itemId);
 
     if (itemId == "realtimeeffect-remove") {
-        menuItem.setArgs(actions::ActionData::make_arg2(*tId, item->effectStateId));
+        realtimeEffectService()->removeRealtimeEffect(*tId, item->effectStateId);
+        return;
     }
+
     if (itemId == "realtimeeffect-replace") {
         const auto& list = m_trackEffectLists.at(*tId);
         const auto it = std::find_if(list.begin(), list.end(), [item](const RealtimeEffectListItemModelPtr& listItem) {
@@ -99,10 +101,12 @@ void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, con
             return;
         }
         const int itemIndex = it - list.begin();
-        menuItem.setArgs(actions::ActionData::make_arg3(*trackId(), itemIndex, menuItem.args().arg<effects::EffectId>(1)));
+        const auto effectId = menuItem.args().arg<effects::EffectId>(0);
+        if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, itemIndex, effectId)) {
+            effectsProvider()->showEffect(newState);
+        }
+        return;
     }
-
-    AbstractMenuModel::handleMenuItem(itemId);
 }
 
 void RealtimeEffectListModel::populateMenu()
@@ -112,21 +116,15 @@ void RealtimeEffectListModel::populateMenu()
     const auto categoryList = effectsProvider()->effectsCategoryList();
     std::unordered_map<String, MenuItemList> menuCategories;
 
-    {
-        MenuItem* noEffectItem = makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect"));
-        noEffectItem->setArgs(actions::ActionData::make_arg2(effects::TrackId { -1 }, RealtimeEffectStatePtr { }));
-        items << noEffectItem;
-    }
+    items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect"));
 
     // Populate with available realtime effect.
     for (const effects::EffectMeta& meta : effectsProvider()->effectMetaList()) {
         if (!meta.isRealtimeCapable) {
             continue;
         }
-        // TODO no one reacts to "realtimeeffect-replace" actions at the moment.
         MenuItem* item = makeMenuItem("realtimeeffect-replace", muse::TranslatableString::untranslatable(meta.title));
-        item->setArgs(actions::ActionData::make_arg3(effects::TrackId { -1 }, EffectChainLinkIndex { -1 },
-                                                     effects::EffectId { meta.id }));
+        item->setArgs(actions::ActionData::make_arg1(effects::EffectId { meta.id }));
         menuCategories[meta.categoryId].push_back(item);
     }
 

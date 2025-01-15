@@ -40,9 +40,6 @@ void EffectsActionsController::registerActions()
     }
 
     dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
-    dispatcher()->reg(this, "realtimeeffect-add", this, &EffectsActionsController::addRealtimeEffect);
-    dispatcher()->reg(this, "realtimeeffect-remove", this, &EffectsActionsController::removeRealtimeEffect);
-    dispatcher()->reg(this, "realtimeeffect-replace", this, &EffectsActionsController::replaceRealtimeEffect);
 
     // presets
     dispatcher()->reg(this, "action://effects/presets/apply", this, &EffectsActionsController::applyPreset);
@@ -71,35 +68,6 @@ void EffectsActionsController::repeatLastEffect()
 {
     playback()->player()->stop();
     effectExecutionScenario()->repeatLastProcessor();
-}
-
-void EffectsActionsController::addRealtimeEffect(const muse::actions::ActionData& args)
-{
-    const auto effectId = args.arg<EffectId>(0);
-    const auto trackId = args.arg<TrackId>(1);
-    if (const RealtimeEffectStatePtr state = realtimeEffectService()->addRealtimeEffect(trackId, effectId)) {
-        effectsProvider()->showEffect(state);
-    }
-}
-
-void EffectsActionsController::removeRealtimeEffect(const muse::actions::ActionData& args)
-{
-    const auto trackId = args.arg<TrackId>(0);
-    const auto effectStateId = args.arg<RealtimeEffectStatePtr>(1);
-    realtimeEffectService()->removeRealtimeEffect(trackId, effectStateId);
-}
-
-void EffectsActionsController::replaceRealtimeEffect(const muse::actions::ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() == 3) {
-        return;
-    }
-
-    const auto trackId = args.arg<TrackId>(0);
-    const auto srcIndex = args.arg<int>(1);
-    const auto dstEffectId = args.arg<EffectId>(2);
-
-    realtimeEffectService()->replaceRealtimeEffect(trackId, srcIndex, dstEffectId);
 }
 
 void EffectsActionsController::applyPreset(const muse::actions::ActionData& args)

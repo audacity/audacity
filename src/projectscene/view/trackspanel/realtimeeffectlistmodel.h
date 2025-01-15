@@ -5,7 +5,6 @@
 
 #include "realtimeeffectmenumodelbase.h"
 #include "realtimeeffectlistitemmodel.h"
-#include "effects/effects_base/irealtimeeffectservice.h"
 #include "context/iglobalcontext.h"
 #include <QObject>
 #include <map>
@@ -19,7 +18,6 @@ class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged)
     Q_PROPERTY(bool trackEffectsActive READ prop_trackEffectsActive WRITE prop_setTrackEffectsActive NOTIFY trackEffectsActiveChanged)
 
-    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
     muse::Inject<context::IGlobalContext> globalContext;
 
 public:

@@ -15,6 +15,8 @@ public:
     explicit RealtimeEffectMenuModel(QObject* parent = nullptr);
 
 private:
+    void handleMenuItem(const QString& itemId) override;
+
     void doLoad() override;
     void populateMenu() override;
 };
