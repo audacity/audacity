@@ -20,9 +20,9 @@ class RealtimeEffectListItemModel : public QObject, public muse::Injectable, pub
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
 
 public:
-    RealtimeEffectListItemModel(QObject* parent, effects::EffectStateId effectState);
+    RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState);
 
-    const effects::EffectStateId effectStateId;
+    const effects::RealtimeEffectStatePtr effectStateId;
     Q_INVOKABLE QString effectName() const;
     Q_INVOKABLE void showDialog();
 

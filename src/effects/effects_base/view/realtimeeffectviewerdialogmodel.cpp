@@ -28,9 +28,9 @@ void RealtimeEffectViewerDialogModel::load()
     dispatcher()->reg(this, "nav-trigger-control", [this]
     { dispatcher()->dispatch("play"); });
 
-    realtimeEffectService()->isActiveChanged().onReceive(this, [this](EffectStateId stateId)
+    realtimeEffectService()->isActiveChanged().onReceive(this, [this](RealtimeEffectStatePtr stateId)
     {
-        if (stateId == effectStateId()) {
+        if (stateId == m_effectState) {
             emit isActiveChanged();
         }
     });
@@ -38,12 +38,12 @@ void RealtimeEffectViewerDialogModel::load()
 
 bool RealtimeEffectViewerDialogModel::prop_isActive() const
 {
-    return realtimeEffectService()->isActive(effectStateId());
+    return realtimeEffectService()->isActive(m_effectState);
 }
 
 void RealtimeEffectViewerDialogModel::prop_setIsActive(bool isActive)
 {
-    realtimeEffectService()->setIsActive(effectStateId(), isActive);
+    realtimeEffectService()->setIsActive(m_effectState, isActive);
 }
 
 QString RealtimeEffectViewerDialogModel::prop_effectState() const
@@ -89,7 +89,7 @@ void RealtimeEffectViewerDialogModel::unregisterState()
 
 QString RealtimeEffectViewerDialogModel::prop_trackName() const
 {
-    const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(effectStateId());
+    const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(m_effectState);
     IF_ASSERT_FAILED(trackId.has_value()) {
         return {};
     }
@@ -114,7 +114,7 @@ void RealtimeEffectViewerDialogModel::subscribe()
         return;
     }
     project->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
-        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(effectStateId());
+        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(m_effectState);
         IF_ASSERT_FAILED(trackId.has_value()) {
             return;
         }
@@ -124,7 +124,7 @@ void RealtimeEffectViewerDialogModel::subscribe()
         }
     });
     project->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
-        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(effectStateId());
+        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(m_effectState);
         IF_ASSERT_FAILED(trackId.has_value()) {
             return;
         }
@@ -133,13 +133,5 @@ void RealtimeEffectViewerDialogModel::subscribe()
             emit trackRemoved();
         }
     });
-}
-
-EffectStateId RealtimeEffectViewerDialogModel::effectStateId() const
-{
-    if (!m_effectState) {
-        return 0;
-    }
-    return reinterpret_cast<EffectStateId>(m_effectState.get());
 }
 }

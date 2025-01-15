@@ -78,14 +78,14 @@ void EffectsActionsController::addRealtimeEffect(const muse::actions::ActionData
     const auto effectId = args.arg<EffectId>(0);
     const auto trackId = args.arg<TrackId>(1);
     if (const RealtimeEffectStatePtr state = realtimeEffectService()->addRealtimeEffect(trackId, effectId)) {
-        effectsProvider()->showEffect(state.get());
+        effectsProvider()->showEffect(state);
     }
 }
 
 void EffectsActionsController::removeRealtimeEffect(const muse::actions::ActionData& args)
 {
     const auto trackId = args.arg<TrackId>(0);
-    const auto effectStateId = args.arg<EffectStateId>(1);
+    const auto effectStateId = args.arg<RealtimeEffectStatePtr>(1);
     realtimeEffectService()->removeRealtimeEffect(trackId, effectStateId);
 }
 

@@ -51,7 +51,6 @@ signals:
 private:
     void subscribe();
     void unregisterState();
-    EffectStateId effectStateId() const;
 
     RealtimeEffectStatePtr m_effectState;
 };

@@ -38,18 +38,19 @@ public:
     void init();
 
     RealtimeEffectStatePtr addRealtimeEffect(TrackId, const EffectId&) override;
-    void removeRealtimeEffect(TrackId, EffectStateId) override;
+    void removeRealtimeEffect(TrackId, const RealtimeEffectStatePtr&) override;
     RealtimeEffectStatePtr replaceRealtimeEffect(TrackId, int effectListIndex, const EffectId& newEffectId) override;
 
-    muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> realtimeEffectAdded() const override;
-    muse::async::Channel<TrackId, EffectStateId> realtimeEffectRemoved() const override;
-    muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId, EffectStateId> realtimeEffectReplaced() const override;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectAdded() const override;
+    muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectRemoved() const override;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr,
+                         RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
 
-    std::optional<TrackId> trackId(EffectStateId) const override;
+    std::optional<TrackId> trackId(const RealtimeEffectStatePtr&) const override;
 
-    bool isActive(EffectStateId) const override;
-    void setIsActive(EffectStateId, bool) override;
-    muse::async::Channel<EffectStateId> isActiveChanged() const override;
+    bool isActive(const RealtimeEffectStatePtr&) const override;
+    void setIsActive(const RealtimeEffectStatePtr&, bool) override;
+    muse::async::Channel<RealtimeEffectStatePtr> isActiveChanged() const override;
 
     bool trackEffectsActive(TrackId trackId) const override;
     void setTrackEffectsActive(TrackId trackId, bool active) override;
@@ -73,13 +74,13 @@ private:
 
     std::optional<UtilData> utilData(TrackId) const;
 
-    muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> m_realtimeEffectAdded;
-    muse::async::Channel<TrackId, EffectStateId> m_realtimeEffectRemoved;
-    muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId, EffectStateId> m_realtimeEffectReplaced;
-    muse::async::Channel<EffectStateId> m_isActiveChanged;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> m_realtimeEffectAdded;
+    muse::async::Channel<TrackId, RealtimeEffectStatePtr> m_realtimeEffectRemoved;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr, RealtimeEffectStatePtr> m_realtimeEffectReplaced;
+    muse::async::Channel<RealtimeEffectStatePtr> m_isActiveChanged;
 
     Observer::Subscription m_tracklistSubscription;
     std::unordered_map<TrackId, Observer::Subscription> m_rtEffectSubscriptions;
-    std::unordered_map<EffectStateId, TrackId> m_effectTrackMap;
+    std::unordered_map<RealtimeEffectStatePtr, TrackId> m_effectTrackMap;
 };
 }

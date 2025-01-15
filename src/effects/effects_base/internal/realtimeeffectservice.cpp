@@ -77,9 +77,8 @@ void RealtimeEffectService::onWaveTrackAdded(WaveTrack& track)
             IF_ASSERT_FAILED(state) {
                 break;
             }
-            auto newEffect = reinterpret_cast<EffectStateId>(state.get());
-            m_effectTrackMap[newEffect] = track.GetId();
-            m_realtimeEffectAdded.send(track.GetId(), i, std::move(newEffect));
+            m_effectTrackMap[state] = track.GetId();
+            m_realtimeEffectAdded.send(track.GetId(), i, state);
         }
     }
 }
@@ -98,15 +97,14 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
         }
         const auto trackId = waveTrack->GetId();
         auto& list = RealtimeEffectList::Get(*waveTrack);
-        const auto effectStateId = reinterpret_cast<EffectStateId>(msg.affectedState.get());
         switch (msg.type) {
         case RealtimeEffectListMessage::Type::Insert:
-            m_effectTrackMap[effectStateId] = trackId;
-            m_realtimeEffectAdded.send(trackId, msg.srcIndex, effectStateId);
+            m_effectTrackMap[msg.affectedState] = trackId;
+            m_realtimeEffectAdded.send(trackId, msg.srcIndex, msg.affectedState);
             break;
         case RealtimeEffectListMessage::Type::Remove:
-            m_effectTrackMap.erase(effectStateId);
-            m_realtimeEffectRemoved.send(trackId, effectStateId);
+            m_effectTrackMap.erase(msg.affectedState);
+            m_realtimeEffectRemoved.send(trackId, msg.affectedState);
             break;
         case RealtimeEffectListMessage::Type::DidReplace:
         {
@@ -114,36 +112,36 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
             IF_ASSERT_FAILED(newState) {
                 return;
             }
-            auto oldEffect = effectStateId;
-            auto newEffect = reinterpret_cast<EffectStateId>(newState.get());
-            m_effectTrackMap[newEffect] = trackId;
-            m_effectTrackMap.erase(oldEffect);
-            m_realtimeEffectReplaced.send(trackId, msg.srcIndex, std::move(oldEffect), std::move(newEffect));
+            m_effectTrackMap[newState] = trackId;
+            m_effectTrackMap.erase(msg.affectedState);
+            m_realtimeEffectReplaced.send(trackId, msg.srcIndex, msg.affectedState, newState);
         }
         break;
         }
     });
 }
 
-muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId> RealtimeEffectService::realtimeEffectAdded() const
+muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> RealtimeEffectService::realtimeEffectAdded() const
 {
     return m_realtimeEffectAdded;
 }
 
-muse::async::Channel<TrackId, EffectStateId> RealtimeEffectService::realtimeEffectRemoved() const
+muse::async::Channel<TrackId, RealtimeEffectStatePtr> RealtimeEffectService::realtimeEffectRemoved() const
 {
     return m_realtimeEffectRemoved;
 }
 
-muse::async::Channel<TrackId, EffectChainLinkIndex, EffectStateId,
-                     EffectStateId> RealtimeEffectService::realtimeEffectReplaced() const
+muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr,
+                     RealtimeEffectStatePtr> RealtimeEffectService::realtimeEffectReplaced() const
 {
     return m_realtimeEffectReplaced;
 }
 
-std::optional<TrackId> RealtimeEffectService::trackId(EffectStateId stateId) const
+std::optional<TrackId> RealtimeEffectService::trackId(const RealtimeEffectStatePtr& stateId) const
 {
-    const auto it = m_effectTrackMap.find(stateId);
+    const auto it = std::find_if(m_effectTrackMap.begin(), m_effectTrackMap.end(), [stateId](const auto& entry) {
+        return entry.first == stateId;
+    });
     if (it == m_effectTrackMap.end()) {
         return {};
     }
@@ -186,12 +184,12 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
 }
 
 namespace {
-std::shared_ptr<RealtimeEffectState> findEffectState(au::au3::Au3Track& au3Track, EffectStateId effectStateId)
+std::shared_ptr<RealtimeEffectState> findEffectState(au::au3::Au3Track& au3Track, RealtimeEffectStatePtr effectStateId)
 {
     auto& effectList = RealtimeEffectList::Get(au3Track);
     for (auto i = 0; i < effectList.GetStatesCount(); ++i) {
         const auto state = effectList.GetStateAt(i);
-        if (state.get() == reinterpret_cast<RealtimeEffectState*>(effectStateId)) {
+        if (state == effectStateId) {
             return state;
         }
     }
@@ -199,7 +197,7 @@ std::shared_ptr<RealtimeEffectState> findEffectState(au::au3::Au3Track& au3Track
 }
 }
 
-void RealtimeEffectService::removeRealtimeEffect(TrackId trackId, EffectStateId effectStateId)
+void RealtimeEffectService::removeRealtimeEffect(TrackId trackId, const RealtimeEffectStatePtr& effectStateId)
 {
     const auto data = utilData(trackId);
     IF_ASSERT_FAILED(data) {
@@ -236,25 +234,24 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
     return newState;
 }
 
-bool RealtimeEffectService::isActive(EffectStateId stateId) const
+bool RealtimeEffectService::isActive(const RealtimeEffectStatePtr& stateId) const
 {
     if (stateId == 0) {
         return false;
     }
-    return reinterpret_cast<RealtimeEffectState*>(stateId)->GetSettings().extra.GetActive();
+    return stateId->GetSettings().extra.GetActive();
 }
 
-void RealtimeEffectService::setIsActive(EffectStateId stateId, bool isActive)
+void RealtimeEffectService::setIsActive(const RealtimeEffectStatePtr& stateId, bool isActive)
 {
-    const auto state = reinterpret_cast<RealtimeEffectState*>(stateId);
-    if (state->GetSettings().extra.GetActive() == isActive) {
+    if (stateId->GetSettings().extra.GetActive() == isActive) {
         return;
     }
-    state->SetActive(isActive);
+    stateId->SetActive(isActive);
     m_isActiveChanged.send(stateId);
 }
 
-muse::async::Channel<EffectStateId> RealtimeEffectService::isActiveChanged() const
+muse::async::Channel<RealtimeEffectStatePtr> RealtimeEffectService::isActiveChanged() const
 {
     return m_isActiveChanged;
 }

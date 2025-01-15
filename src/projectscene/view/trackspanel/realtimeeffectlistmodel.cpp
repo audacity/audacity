@@ -41,18 +41,18 @@ void RealtimeEffectListModel::doLoad()
 {
     realtimeEffectService()->realtimeEffectAdded().onReceive(this,
                                                              [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                    EffectStateId item)
+                                                                    RealtimeEffectStatePtr item)
     { insertEffect(trackId, index, item); });
 
     realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
-                                                               [this](effects::TrackId trackId, EffectStateId item) {
+                                                               [this](effects::TrackId trackId, RealtimeEffectStatePtr item) {
         removeEffect(trackId, item);
     });
 
     realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
                                                                 [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                       EffectStateId oldItem,
-                                                                       EffectStateId newItem) {
+                                                                       RealtimeEffectStatePtr oldItem, RealtimeEffectStatePtr newItem)
+    {
         removeEffect(trackId, oldItem);
         insertEffect(trackId, index, newItem);
     });
@@ -115,7 +115,7 @@ void RealtimeEffectListModel::populateMenu()
 
     {
         MenuItem* noEffectItem = makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect"));
-        noEffectItem->setArgs(actions::ActionData::make_arg2(effects::TrackId { -1 }, EffectStateId { 0 }));
+        noEffectItem->setArgs(actions::ActionData::make_arg2(effects::TrackId { -1 }, RealtimeEffectStatePtr { }));
         items << noEffectItem;
     }
 
@@ -140,7 +140,7 @@ void RealtimeEffectListModel::populateMenu()
     emit availableEffectsChanged();
 }
 
-void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectStateId& e)
+void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChainLinkIndex index, const RealtimeEffectStatePtr& e)
 {
     const auto sizeBefore = m_trackEffectLists.size();
     auto& list = m_trackEffectLists[trackId];
@@ -157,7 +157,7 @@ void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChain
     }
 }
 
-void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, const EffectStateId& e)
+void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, const RealtimeEffectStatePtr& e)
 {
     if (!m_trackEffectLists.count(trackId)) {
         return;
