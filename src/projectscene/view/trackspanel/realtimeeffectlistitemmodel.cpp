@@ -15,14 +15,19 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
     });
 }
 
+RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
+{
+    effectsProvider()->hideEffect(effectStateId);
+}
+
 QString RealtimeEffectListItemModel::effectName() const
 {
     return QString::fromStdString(effectsProvider()->effectName(*effectStateId));
 }
 
-void RealtimeEffectListItemModel::showDialog()
+void RealtimeEffectListItemModel::toggleDialog()
 {
-    effectsProvider()->showEffect(effectStateId);
+    effectsProvider()->toggleShowEffect(effectStateId);
 }
 
 bool RealtimeEffectListItemModel::prop_isActive() const

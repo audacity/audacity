@@ -4,14 +4,13 @@
 #pragma once
 
 #include "realtimeeffectmenumodelbase.h"
+#include "realtimeeffectlistitemmodel.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "context/iglobalcontext.h"
 #include <QObject>
 #include <map>
 
 namespace au::projectscene {
-class RealtimeEffectListItemModel;
-
 class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
 {
     Q_OBJECT
@@ -59,7 +58,7 @@ private:
     void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::RealtimeEffectStatePtr& item);
     void removeEffect(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& item);
 
-    using EffectList = std::vector<RealtimeEffectListItemModel*>;
+    using EffectList = std::vector<RealtimeEffectListItemModelPtr>;
     std::map<effects::TrackId, EffectList> m_trackEffectLists;
 };
 }

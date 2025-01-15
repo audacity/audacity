@@ -211,12 +211,39 @@ void EffectsProvider::showEffect(const RealtimeEffectStatePtr& state) const
 
     const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
 
+    if (!interactive()->isOpened(query).val) {
+        interactive()->open(query);
+    }
+}
+
+void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
+{
+    const auto effectId = state->GetID().ToStdString();
+    const auto type = muse::String::fromStdString(effectSymbol(effectId));
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
+
+    const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
+
     if (interactive()->isOpened(query).val) {
         interactive()->close(query);
-        return;
     }
+}
 
-    interactive()->open(query);
+void EffectsProvider::toggleShowEffect(const RealtimeEffectStatePtr& state) const
+{
+    const auto effectId = state->GetID().ToStdString();
+    const auto type = muse::String::fromStdString(effectSymbol(effectId));
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
+
+    const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
+
+    if (interactive()->isOpened(query).val) {
+        interactive()->close(query);
+    } else {
+        interactive()->open(query);
+    }
 }
 
 muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,

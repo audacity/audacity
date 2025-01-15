@@ -65,9 +65,6 @@ void RealtimeEffectListModel::doLoad()
 
 void RealtimeEffectListModel::doResetList()
 {
-    if (m_trackEffectLists.empty()) {
-        return;
-    }
     m_trackEffectLists.clear();
 }
 
@@ -95,7 +92,9 @@ void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, con
     }
     if (itemId == "realtimeeffect-replace") {
         const auto& list = m_trackEffectLists.at(*tId);
-        const auto it = std::find(list.begin(), list.end(), item);
+        const auto it = std::find_if(list.begin(), list.end(), [item](const RealtimeEffectListItemModelPtr& listItem) {
+            return listItem.get() == item;
+        });
         IF_ASSERT_FAILED(it != list.end()) {
             return;
         }
@@ -151,7 +150,7 @@ void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChain
     if (affectsSelectedTrack) {
         beginInsertRows(QModelIndex(), index, index);
     }
-    list.insert(list.begin() + index, new RealtimeEffectListItemModel(this, e));
+    list.insert(list.begin() + index, std::make_shared<RealtimeEffectListItemModel>(this, e));
     if (affectsSelectedTrack) {
         endInsertRows();
     }
@@ -163,8 +162,8 @@ void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, const Realt
         return;
     }
 
-    std::vector<RealtimeEffectListItemModel*>& list = m_trackEffectLists.at(trackId);
-    const auto it = std::find_if(list.begin(), list.end(), [e](const RealtimeEffectListItemModel* item) {
+    std::vector<RealtimeEffectListItemModelPtr>& list = m_trackEffectLists.at(trackId);
+    const auto it = std::find_if(list.begin(), list.end(), [e](const RealtimeEffectListItemModelPtr& item) {
         return item->effectStateId == e;
     });
 
@@ -229,7 +228,8 @@ QVariant RealtimeEffectListModel::data(const QModelIndex& index, int role) const
     }
     auto it = m_trackEffectLists.at(*trackId()).begin();
     std::advance(it, index.row());
-    return QVariant::fromValue(*it);
+    const RealtimeEffectListItemModelPtr& item = *it;
+    return QVariant::fromValue(item.get());
 }
 
 int RealtimeEffectListModel::rowCount(const QModelIndex& parent) const

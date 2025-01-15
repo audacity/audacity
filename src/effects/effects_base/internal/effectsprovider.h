@@ -45,7 +45,10 @@ public:
     bool supportsMultipleClipSelection(const EffectId& effectId) const override;
 
     muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) override;
+
     void showEffect(const RealtimeEffectStatePtr& state) const override;
+    void hideEffect(const RealtimeEffectStatePtr& state) const override;
+    void toggleShowEffect(const RealtimeEffectStatePtr& state) const override;
 
     muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                             EffectSettings& settings) override;

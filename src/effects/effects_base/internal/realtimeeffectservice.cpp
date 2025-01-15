@@ -35,6 +35,10 @@ void RealtimeEffectService::updateSubscriptions(const au::project::IAudacityProj
 {
     m_rtEffectSubscriptions.clear();
     if (!project) {
+        for (const std::pair<RealtimeEffectStatePtr, TrackId>& entry : m_effectTrackMap) {
+            m_realtimeEffectRemoved.send(entry.second, entry.first);
+        }
+        m_effectTrackMap.clear();
         return;
     }
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());

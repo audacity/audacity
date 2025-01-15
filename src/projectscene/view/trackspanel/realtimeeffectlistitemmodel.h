@@ -21,10 +21,11 @@ class RealtimeEffectListItemModel : public QObject, public muse::Injectable, pub
 
 public:
     RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState);
+    ~RealtimeEffectListItemModel();
 
     const effects::RealtimeEffectStatePtr effectStateId;
     Q_INVOKABLE QString effectName() const;
-    Q_INVOKABLE void showDialog();
+    Q_INVOKABLE void toggleDialog();
 
     bool prop_isActive() const;
     void prop_setIsActive(bool isActive);
@@ -32,4 +33,6 @@ public:
 signals:
     void isActiveChanged();
 };
+
+using RealtimeEffectListItemModelPtr = std::shared_ptr<RealtimeEffectListItemModel>;
 }
