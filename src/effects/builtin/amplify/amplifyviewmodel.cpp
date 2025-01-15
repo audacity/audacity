@@ -12,6 +12,9 @@ using namespace au::effects;
 AmplifyEffect* AmplifyViewModel::effect() const
 {
     EffectId effectId = this->effectId();
+    if (effectId.isEmpty()) {
+        return nullptr;
+    }
     Effect* e = effectsProvider()->effect(effectId);
     AmplifyEffect* ae = dynamic_cast<AmplifyEffect*>(e);
     return ae;
