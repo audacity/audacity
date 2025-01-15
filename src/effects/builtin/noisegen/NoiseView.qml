@@ -86,18 +86,15 @@ EffectBase {
             text: qsTrc("effects/noise", "Amplitude (0-1):")
         }
 
-        TextInputField {
+        RealInputField {
             Layout.fillWidth: true
 
-            currentText: noise.amplitude
+            min: 0
+            max: 1
 
-            validator: DoubleValidator {
-                bottom: 0
-                top: 1
-            }
-
-            inputField.onDisplayTextChanged: function () {
-                noise.amplitude = parseFloat(inputField.displayText)
+            currentValue: noise.amplitude
+            onCurrentValueChanged: {
+                noise.amplitude = currentValue
             }
         }
     }

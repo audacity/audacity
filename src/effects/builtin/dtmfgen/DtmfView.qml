@@ -63,18 +63,15 @@ EffectBase {
             text: qsTrc("effects/dtmf", "Amplitude (0-1):")
         }
 
-        TextInputField {
+        RealInputField {
             Layout.fillWidth: true
 
-            currentText: dtmf.amplitude
+            min: 0
+            max: 1
 
-            validator: DoubleValidator {
-                top: 1
-                bottom: 0
-            }
-
-            inputField.onDisplayTextChanged: function () {
-                dtmf.amplitude = parseFloat(inputField.displayText)
+            currentValue: dtmf.amplitude
+            onCurrentValueChanged: {
+                dtmf.amplitude = currentValue
             }
         }
 

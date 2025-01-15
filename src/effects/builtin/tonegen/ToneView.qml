@@ -58,17 +58,15 @@ EffectBase {
             text: qsTrc("effects", "Frequency (Hz):")
         }
 
-        TextInputField {
+        RealInputField {
             Layout.preferredWidth: 80
 
-            currentText: tone.frequencyStart
+            min: 1
+            max: 1000000
 
-            validator: DoubleValidator {
-                bottom: 1
-            }
-
-            inputField.onDisplayTextChanged: function () {
-                tone.frequencyStart = parseFloat(inputField.displayText)
+            currentValue: tone.frequencyStart
+            onCurrentValueChanged: {
+                tone.frequencyStart = currentValue
             }
         }
 
@@ -77,18 +75,15 @@ EffectBase {
             text: qsTrc("effects/tone", "Amplitude (0-1):")
         }
 
-        TextInputField {
+        RealInputField {
             Layout.preferredWidth: 80
 
-            currentText: tone.amplitudeStart
+            min: 0
+            max: 1
 
-            validator: DoubleValidator {
-                top: 1
-                bottom: 0
-            }
-
-            inputField.onDisplayTextChanged: function () {
-                tone.amplitudeStart = parseFloat(inputField.displayText)
+            currentValue: tone.amplitudeStart
+            onCurrentValueChanged: {
+                tone.amplitudeStart = currentValue
             }
         }
 

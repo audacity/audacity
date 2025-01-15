@@ -58,30 +58,27 @@ EffectBase {
             text: qsTrc("effects/chirp", "Frequency (Hz):")
         }
 
-        TextInputField {
+        RealInputField {
             Layout.preferredWidth: 80
 
-            currentText: chirp.frequencyStart
+            min: 1
+            max: 1000000
 
-            validator: DoubleValidator {
-                bottom: 1
-            }
-
-            inputField.onDisplayTextChanged: function () {
-                chirp.frequencyStart = parseFloat(inputField.displayText)
+            currentValue: chirp.frequencyStart
+            onCurrentValueChanged: {
+                chirp.frequencyStart = currentValue
             }
         }
 
-        TextInputField {
+        RealInputField {
             Layout.preferredWidth: 80
-            currentText: chirp.frequencyEnd
 
-            validator: DoubleValidator {
-                bottom: 1
-            }
+            min: 1
+            max: 1000000
 
-            inputField.onDisplayTextChanged: function () {
-                chirp.frequencyEnd = parseFloat(inputField.displayText)
+            currentValue: chirp.frequencyEnd
+            onCurrentValueChanged: {
+                chirp.frequencyEnd = currentValue
             }
         }
 
@@ -90,33 +87,27 @@ EffectBase {
             text: qsTrc("effects/chirp", "Amplitude (0-1):")
         }
 
-        TextInputField {
+        RealInputField {
             Layout.preferredWidth: 80
 
-            currentText: chirp.amplitudeStart
+            min: 0
+            max: 1
 
-            validator: DoubleValidator {
-                top: 1
-                bottom: 0
-            }
-
-            inputField.onDisplayTextChanged: function () {
-                chirp.amplitudeStart = parseFloat(inputField.displayText)
+            currentValue: chirp.amplitudeStart
+            onCurrentValueChanged: {
+                chirp.amplitudeStart = currentValue
             }
         }
 
-        TextInputField {
+        RealInputField {
             Layout.preferredWidth: 80
 
-            currentText: chirp.amplitudeEnd
+            min: 0
+            max: 1
 
-            validator: DoubleValidator {
-                top: 1
-                bottom: 0
-            }
-
-            inputField.onDisplayTextChanged: function () {
-                chirp.amplitudeEnd = parseFloat(inputField.displayText)
+            currentValue: chirp.amplitudeEnd
+            onCurrentValueChanged: {
+                chirp.amplitudeEnd = currentValue
             }
         }
 
