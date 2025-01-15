@@ -1,21 +1,23 @@
 #include "realtimeeffectservice.h"
 
 #include "libraries/lib-audio-io/AudioIO.h"
-#include "libraries/lib-audio-io/ProjectAudioIO.h"
 
 #include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectList.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
-#include "au3wrap/internal/domconverter.h"
 
 #include "project/iaudacityproject.h"
 
 namespace au::effects {
+RealtimeEffectService::RealtimeEffectService()
+    : m_stackManager(std::make_unique<StackManager>())
+{
+}
+
 std::string RealtimeEffectService::getEffectName(const RealtimeEffectState& state) const
 {
     return effectsProvider()->effectName(state.GetID().ToStdString());
@@ -34,11 +36,9 @@ void RealtimeEffectService::init()
 void RealtimeEffectService::updateSubscriptions(const au::project::IAudacityProjectPtr& project)
 {
     m_rtEffectSubscriptions.clear();
+    m_stackManager->clear();
+
     if (!project) {
-        for (const std::pair<RealtimeEffectStatePtr, TrackId>& entry : m_effectTrackMap) {
-            m_realtimeEffectRemoved.send(entry.second, entry.first);
-        }
-        m_effectTrackMap.clear();
         return;
     }
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
@@ -81,8 +81,7 @@ void RealtimeEffectService::onWaveTrackAdded(WaveTrack& track)
             IF_ASSERT_FAILED(state) {
                 break;
             }
-            m_effectTrackMap[state] = track.GetId();
-            m_realtimeEffectAdded.send(track.GetId(), i, state);
+            m_stackManager->insert(i, track.GetId(), state);
         }
     }
 }
@@ -99,26 +98,21 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
         if (!waveTrack) {
             return;
         }
-        const auto trackId = waveTrack->GetId();
-        auto& list = RealtimeEffectList::Get(*waveTrack);
         switch (msg.type) {
         case RealtimeEffectListMessage::Type::Insert:
-            m_effectTrackMap[msg.affectedState] = trackId;
-            m_realtimeEffectAdded.send(trackId, msg.srcIndex, msg.affectedState);
+            m_stackManager->insert(waveTrack->GetId(), msg.srcIndex, msg.affectedState);
             break;
         case RealtimeEffectListMessage::Type::Remove:
-            m_effectTrackMap.erase(msg.affectedState);
-            m_realtimeEffectRemoved.send(trackId, msg.affectedState);
+            m_stackManager->remove(msg.affectedState);
             break;
         case RealtimeEffectListMessage::Type::DidReplace:
         {
-            const std::shared_ptr<RealtimeEffectState> newState = list.GetStateAt(msg.dstIndex);
+            auto& list = RealtimeEffectList::Get(*waveTrack);
+            const std::shared_ptr<RealtimeEffectState> newState = list.GetStateAt(msg.srcIndex);
             IF_ASSERT_FAILED(newState) {
                 return;
             }
-            m_effectTrackMap[newState] = trackId;
-            m_effectTrackMap.erase(msg.affectedState);
-            m_realtimeEffectReplaced.send(trackId, msg.srcIndex, msg.affectedState, newState);
+            m_stackManager->replace(msg.affectedState, newState);
         }
         break;
         }
@@ -127,29 +121,23 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
 
 muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> RealtimeEffectService::realtimeEffectAdded() const
 {
-    return m_realtimeEffectAdded;
+    return m_stackManager->realtimeEffectAdded;
 }
 
 muse::async::Channel<TrackId, RealtimeEffectStatePtr> RealtimeEffectService::realtimeEffectRemoved() const
 {
-    return m_realtimeEffectRemoved;
+    return m_stackManager->realtimeEffectRemoved;
 }
 
 muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr,
                      RealtimeEffectStatePtr> RealtimeEffectService::realtimeEffectReplaced() const
 {
-    return m_realtimeEffectReplaced;
+    return m_stackManager->realtimeEffectReplaced;
 }
 
 std::optional<TrackId> RealtimeEffectService::trackId(const RealtimeEffectStatePtr& stateId) const
 {
-    const auto it = std::find_if(m_effectTrackMap.begin(), m_effectTrackMap.end(), [stateId](const auto& entry) {
-        return entry.first == stateId;
-    });
-    if (it == m_effectTrackMap.end()) {
-        return {};
-    }
-    return it->second;
+    return m_stackManager->trackId(stateId);
 }
 
 std::optional<RealtimeEffectService::UtilData> RealtimeEffectService::utilData(TrackId trackId) const
