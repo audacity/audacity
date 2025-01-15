@@ -95,7 +95,11 @@ ListItemBlank {
                 }
 
                 onClicked: {
-                    root.item.showDialog()
+                    // Call asynchronously in case this item gets destroyed before the dialog is closed
+                    // (or it'd cause debug error with message "Object destroyed while one of its QML signal handlers is in progress")
+                    Qt.callLater(function() {
+                        root.item.showDialog()
+                    })
                 }
             }
         }
