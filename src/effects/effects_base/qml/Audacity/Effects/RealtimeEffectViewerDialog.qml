@@ -21,7 +21,6 @@ StyledDialogView {
     contentWidth: viewer.implicitWidth
     contentHeight: layout.implicitHeight + 16
     alwaysOnTop: true
-    modal: true
     margins: 16
 
     Component.onCompleted: {
