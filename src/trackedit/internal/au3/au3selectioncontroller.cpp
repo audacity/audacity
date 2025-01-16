@@ -102,18 +102,12 @@ void Au3SelectionController::addSelectedTrack(const TrackId &trackId)
         }
 
         m_selectedTracks.set(selectedTracks, true);
-        m_selectedTrackAdded.send(trackId);
     }
 }
 
 muse::async::Channel<TrackIdList> Au3SelectionController::tracksSelected() const
 {
     return m_selectedTracks.selected;
-}
-
-muse::async::Channel<au::trackedit::TrackId> Au3SelectionController::selectedTrackAdded() const
-{
-    return m_selectedTrackAdded;
 }
 
 void Au3SelectionController::resetSelectedClips()

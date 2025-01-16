@@ -3,9 +3,6 @@
 namespace au::projectscene {
 void RealtimeEffectPanelTrackSelection::init()
 {
-    selectionController()->selectedTrackAdded().onReceive(this, [this](au::trackedit::TrackId trackId)
-    { setTrackId(trackId); });
-
     selectionController()->tracksSelected().onReceive(this, [this](const au::trackedit::TrackIdList& tracks) {
         if (tracks.empty()) {
             setTrackId(std::nullopt);

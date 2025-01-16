@@ -30,7 +30,6 @@ public:
     virtual void setSelectedTracks(const TrackIdList& trackIds, bool complete = true) = 0;
     virtual void addSelectedTrack(const trackedit::TrackId& trackId) = 0;
     virtual muse::async::Channel<TrackIdList> tracksSelected() const = 0;
-    virtual muse::async::Channel<TrackId> selectedTrackAdded() const = 0;
 
     // clip selection
     virtual void resetSelectedClips() = 0;
