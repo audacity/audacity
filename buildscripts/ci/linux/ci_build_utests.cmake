@@ -15,6 +15,7 @@ set(ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../..)
 set(BUILD_NUMBER "" CACHE STRING "Build number")
 set(BUILD_MODE "" CACHE STRING "Build mode")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
+set(BUILD_ENABLE_CODE_COVERAGE "" CACHE STRING "Build with code coverage")
 
 if (NOT BUILD_NUMBER)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_number.env" BUILD_NUMBER)
@@ -44,6 +45,13 @@ elseif(BUILD_MODE STREQUAL "stable_build")
     set(APP_SUFFIX "")
 endif()
 
+if (BUILD_ENABLE_CODE_COVERAGE STREQUAL "true")
+    set(BUILD_ENABLE_CODE_COVERAGE ON)
+    set(BUILD_USE_UNITY OFF)
+else()
+    set(BUILD_ENABLE_CODE_COVERAGE OFF)
+    set(BUILD_USE_UNITY OFF) # enable it after fixing the problem with unity
+endif()
 
 # Build 
 set(CONFIG
@@ -52,6 +60,8 @@ set(CONFIG
     -DBUILD_MODE=${APP_BUILD_MODE}
     -DBUILD_NUMBER=${BUILD_NUMBER}
     -DBUILD_REVISION=${BUILD_REVISION}
+    -DBUILD_ENABLE_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}
+    -DBUILD_USE_UNITY=${BUILD_USE_UNITY}
 )
 
 execute_process(

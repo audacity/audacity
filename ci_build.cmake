@@ -19,6 +19,9 @@ set(INSTALL_DIR "../build.install" CACHE STRING "Build install dir")
 set(INSTALL_SUFFIX "" CACHE STRING "Install suffix")
 set(BUILD_NUMBER "12345678" CACHE STRING "Build number")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
+set(BUILD_USE_UNITY "" CACHE STRING "Build use unity")
+set(BUILD_ENABLE_CODE_COVERAGE "" CACHE STRING "Build with code coverage")
+
 option(SKIP_RPATH "Skip rpath" OFF)
 
 # CPUS
@@ -49,6 +52,8 @@ message(STATUS "INSTALL_DIR=${INSTALL_DIR}")
 message(STATUS "INSTALL_SUFFIX=${INSTALL_SUFFIX}")
 message(STATUS "BUILD_NUMBER=${BUILD_NUMBER}")
 message(STATUS "BUILD_REVISION=${BUILD_REVISION}")
+message(STATUS "BUILD_USE_UNITY=${BUILD_USE_UNITY}")
+message(STATUS "BUILD_ENABLE_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}")
 
 macro(do_build build_type build_dir)
 
@@ -59,7 +64,9 @@ macro(do_build build_type build_dir)
         -DMUSE_APP_INSTALL_SUFFIX=${INSTALL_SUFFIX}
         -DCMAKE_BUILD_NUMBER=${BUILD_NUMBER}
         -DAU4_REVISION=${BUILD_REVISION}
+        -DMUE_COMPILE_USE_UNITY=${BUILD_USE_UNITY}
         -DCMAKE_SKIP_RPATH=${SKIP_RPATH}
+        -DMUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE=${BUILD_ENABLE_CODE_COVERAGE}
     )
 
     message(STATUS "========= Begin configure =========")

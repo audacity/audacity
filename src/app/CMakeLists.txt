@@ -133,6 +133,13 @@ if (APP_OUTPUT_NAME)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${APP_OUTPUT_NAME})
 endif (APP_OUTPUT_NAME)
 
+if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
+    set(COVERAGE_FLAGS -fprofile-arcs -ftest-coverage --coverage)
+    set(COVERAGE_LINK_FLAGS -lgcov --coverage)
+    target_compile_options(audacity PRIVATE ${COVERAGE_FLAGS})
+    target_link_options(audacity PRIVATE ${COVERAGE_LINK_FLAGS})
+endif()
+
 if (OS_IS_MAC)
     set_target_properties(audacity
         PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/MacOS/MacOSXBundleInfo.plist.in
@@ -155,7 +162,7 @@ endif(CC_IS_MSVC)
 ###########################################
 # Link
 ###########################################
-target_link_libraries(audacity ${LINK_LIB} )
+target_link_libraries(audacity ${LINK_LIB}  ${COVERAGE_LINK_FLAGS})
 
 ###########################################
 # INSTALL
