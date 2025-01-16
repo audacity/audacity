@@ -352,7 +352,11 @@ void TrackeditActionsController::doGlobalDuplicate()
             secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
             secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-            dispatcher()->dispatch(DUPLICATE_SELECTED,
+            //If no range is selected, duplicate all content of the selected tracks
+            //Otherwise, duplicate only the selected range
+            (selectedStartTime == selectedEndTime)
+            ? dispatcher()->dispatch(TRACK_DUPLICATE, ActionData::make_arg1<TrackIdList>(selectedTracks))
+            : dispatcher()->dispatch(DUPLICATE_SELECTED,
                                    ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
         } else {
            dispatcher()->dispatch(DUPLICATE_CLIPS, ActionData::make_arg1<ClipKeyList>(selectedClips));
