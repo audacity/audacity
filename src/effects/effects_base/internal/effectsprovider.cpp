@@ -164,7 +164,7 @@ Effect* EffectsProvider::effect(const EffectId& effectId) const
     return effect;
 }
 
-muse::Ret EffectsProvider::showEffect(const EffectId &effectId, const EffectInstanceId& instanceId)
+muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
     LOGD() << "try open effect: " << effectId << ", instanceId: " << instanceId;
 
@@ -190,9 +190,9 @@ muse::Ret EffectsProvider::showEffect(const EffectId &effectId, const EffectInst
 
         muse::String type = au3::wxToString(effect->GetSymbol().Internal());
         ret = interactive()->open(String(BUILTIN_VIEWER_URI)
-                                                 .arg(type)
-                                                 .arg(size_t(instanceId)).toStdString()
-                                             ).ret;
+                                  .arg(type)
+                                  .arg(size_t(instanceId)).toStdString()
+                                  ).ret;
     } else if ("VST3" == family) {
         ret = muse::make_ret(muse::Ret::Code::NotImplemented);
     } else {
@@ -212,9 +212,23 @@ void EffectsProvider::showEffect(const RealtimeEffectStatePtr& state) const
 
     const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
 
-    if (!interactive()->isOpened(query).val) {
-        interactive()->open(query);
+    // If the dialog for this specific instance is opened, just raise it.
+    if (interactive()->isOpened(query).val) {
+        // Note: at the time of writing, `raise` doesn't seem to be working for QML dialogs (although it does for QtWidget dialogs)
+        // Some changes are needed in the Muse framework.
+        interactive()->raise(query);
+        return;
     }
+
+    // At the time of writing, despite the `alwaysOnTop: true` property set on the dialog, whenever a new dialog is spawned,
+    // the other dialog isn't always on top anymore. UX-wise this is very confusing, so until this problem is solved in the framework,
+    // we only allow one effect dialog open at all times.
+    const Uri genericUri { REALTIME_VIEWER_URI };
+    if (interactive()->isOpened(genericUri).val) {
+        interactive()->close(genericUri);
+    }
+
+    interactive()->open(query);
 }
 
 void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
@@ -243,7 +257,7 @@ void EffectsProvider::toggleShowEffect(const RealtimeEffectStatePtr& state) cons
     if (interactive()->isOpened(query).val) {
         interactive()->close(query);
     } else {
-        interactive()->open(query);
+        showEffect(state);
     }
 }
 
