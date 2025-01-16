@@ -30,8 +30,8 @@ jobs:
             --youtube_api_key ${{ secrets.YOUTUBE_API_KEY }} \
             --youtube_playlist_id 'PLt__f9D3T90yZiTOE1QOAF2Uc1MPAK_fv'
 
-          sudo bash ./buildscripts/ci/learn/push_file_to_s3.sh \
+          sudo bash ./buildscripts/ci/tools/s3_push_file.sh \
             --s3_key ${{ secrets.S3_KEY }} \
             --s3_secret ${{ secrets.S3_SECRET }} \
             --s3_url ${S3_URL} \
-            --file_name "playlist.json"
+            --file_path "playlist.json"
