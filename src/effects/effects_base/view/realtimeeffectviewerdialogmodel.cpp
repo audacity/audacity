@@ -25,8 +25,6 @@ void RealtimeEffectViewerDialogModel::load()
         subscribe();
     });
     subscribe();
-    dispatcher()->reg(this, "nav-trigger-control", [this]
-    { dispatcher()->dispatch("play"); });
 
     realtimeEffectService()->isActiveChanged().onReceive(this, [this](RealtimeEffectStatePtr stateId)
     {

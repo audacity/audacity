@@ -30,7 +30,6 @@ using namespace muse::ui;
 
 static const Uri HOME_PAGE_URI("musescore://home");
 static const Uri PROJECT_PAGE_URI("audacity://project");
-static const Uri REALTIME_VIEWER_URI("audacity://effects/realtime_viewer");
 
 //! TODO AU4: this should point to sth like ProjectView
 //! but we don't have that yet, so binding it to
@@ -103,7 +102,7 @@ UiContext UiContextResolver::currentUiContext() const
         return context::UiCtxHomeOpened;
     }
 
-    if (currentUri == PROJECT_PAGE_URI || currentUri == REALTIME_VIEWER_URI) {
+    if (currentUri == PROJECT_PAGE_URI) {
         auto project = globalContext()->currentProject();
         if (!project) {
             //! NOTE The notation page is open, but the notation itself is not loaded - we consider that the notation is not open.

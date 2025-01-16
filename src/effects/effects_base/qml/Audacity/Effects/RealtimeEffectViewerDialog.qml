@@ -1,6 +1,6 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 import QtQuick
 import QtQuick.Layouts
 
@@ -9,7 +9,7 @@ import Muse.UiComponents
 
 import Audacity.Effects
 
-StyledDialogView {
+StyledDialogViewWithoutNavigationSection {
     id: root
 
     property alias type: viewer.type
