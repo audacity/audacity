@@ -104,6 +104,8 @@ set(MODULE_SRC
 
 set(MODULE_LINK au3wrap)
 
+set(MODULE_USE_UNITY OFF)
+
 setup_module()
 
 if (AU_BUILD_PROJECT_TESTS)

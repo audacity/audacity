@@ -54,6 +54,8 @@ set(MODULE_LINK
     muse::draw
 )
 
+set(MODULE_USE_UNITY OFF)
+
 setup_module()
 
 if (AU_BUILD_TRACKEDIT_TESTS)

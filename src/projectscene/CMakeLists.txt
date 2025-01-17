@@ -128,6 +128,8 @@ set(MODULE_DEF
     ${CLIPSVIEW_V1_DEF}
 )
 
+set(MODULE_USE_UNITY OFF)
+
 setup_module()
 
 if (AU_BUILD_PROJECTSCENE_TESTS)
