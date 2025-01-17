@@ -73,6 +73,7 @@ class wxGrid;
 class ShuttlePrefs;
 class ReadOnlyText;
 class SpinControl;
+class GradientButton;
 
 class WrappedType;
 
@@ -286,6 +287,7 @@ public:
    wxBitmapButton * AddBitmapButton(
       const wxBitmap &Bitmap, int PositionFlags = wxALIGN_CENTRE,
       bool setDefault = false );
+   GradientButton * AddGradientButton(const TranslatableString & Text, int PositionFlags = wxALIGN_CENTRE, bool setDefault = false, bool setPadding = false );
    // When PositionFlags is 0, applies wxALL (which affects borders),
    // and either wxALIGN_CENTER (if bCenter) or else wxEXPAND
    wxStaticText * AddVariableText(
