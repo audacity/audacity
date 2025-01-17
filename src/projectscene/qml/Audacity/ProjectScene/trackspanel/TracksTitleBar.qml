@@ -16,7 +16,7 @@ KDDW.TitleBarBase {
 
     property int effectsSectionWidth: 0
     property bool showEffectsSection: false
- 
+
     signal effectsSectionCloseButtonClicked()
 
     property int expectedHeight: 39
@@ -34,20 +34,14 @@ KDDW.TitleBarBase {
         }
     }
 
-    onShowEffectsSectionChanged: {
-        rowLayout.effectsTitleBar.visible = showEffectsSection
-    }
-
     RowLayout {
         id: rowLayout
         anchors.fill: parent
         spacing: 0
 
-        property alias effectsTitleBar: effectsTitleBar
-
         Rectangle {
             id: effectsTitleBar
-            visible: false
+            visible: root.showEffectsSection
             color: ui.theme.backgroundPrimaryColor
             property int padding: parent.height / 4
             border.color: "transparent"

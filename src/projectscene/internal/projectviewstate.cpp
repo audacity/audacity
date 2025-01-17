@@ -9,6 +9,17 @@ constexpr int DEFAULT_HEIGHT = 116;
 constexpr int MIN_HEIGHT = 44;
 constexpr int COLLAPSE_HEIGHT = 72;
 
+ProjectViewState::ProjectViewState()
+{
+    dispatcher()->reg(this, "toggle-effects", [this] {
+        m_effectsPanelVisible.set(!m_effectsPanelVisible.val);
+    });
+
+    dispatcher()->reg(this, "add-realtime-effects", [this] {
+        m_effectsPanelVisible.set(true);
+    });
+}
+
 muse::ValCh<int> ProjectViewState::tracksVericalY() const
 {
     return m_tracksVericalY;
@@ -118,4 +129,9 @@ void ProjectViewState::setSnap(const Snap& s)
 muse::ValCh<Snap> ProjectViewState::snap() const
 {
     return m_snap;
+}
+
+muse::ValCh<bool> ProjectViewState::isEffectsPanelVisible() const
+{
+    return m_effectsPanelVisible;
 }

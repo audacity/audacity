@@ -40,6 +40,7 @@ Q_MOC_INCLUDE(< QWindow >)
 #include "internal/iappmenumodelhook.h"
 #include "global/iglobalconfiguration.h"
 #include "effects/effects_base/ieffectsprovider.h"
+#include "context/iglobalcontext.h"
 
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
@@ -62,6 +63,7 @@ public:
     INJECT(IAppShellConfiguration, configuration)
     INJECT(IAppMenuModelHook, appMenuModelHook)
     INJECT(effects::IEffectsProvider, effectsProvider);
+    INJECT(context::IGlobalContext, globalContext);
 
 //! TODO AU4
     // INJECT(workspace::IWorkspaceManager, workspacesManager)
@@ -77,6 +79,7 @@ public:
 
 private:
     void setupConnections();
+    void setupProjectConnections(const project::IAudacityProject& project);
 
     using muse::uicomponents::AbstractMenuModel::makeMenuItem;
     muse::uicomponents::MenuItem* makeMenuItem(const muse::actions::ActionCode& actionCode, muse::uicomponents::MenuItemRole role);
@@ -113,6 +116,8 @@ private:
     muse::uicomponents::MenuItemList makeWorkspacesItems();
     muse::uicomponents::MenuItemList makeShowItems();
     muse::uicomponents::MenuItemList makeEffectsItems();
+
+    void setItemIsChecked(const QString& itemId, bool checked);
 };
 }
 

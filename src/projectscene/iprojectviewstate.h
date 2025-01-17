@@ -42,6 +42,8 @@ public:
 
     virtual void setSnap(const Snap& s) = 0;
     virtual muse::ValCh<Snap> snap() const = 0;
+
+    virtual muse::ValCh<bool> isEffectsPanelVisible() const = 0;
 };
 
 using IProjectViewStatePtr = std::shared_ptr<IProjectViewState>;

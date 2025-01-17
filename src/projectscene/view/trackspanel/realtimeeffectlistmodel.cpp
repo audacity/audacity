@@ -16,6 +16,14 @@ RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
 {
 }
 
+void RealtimeEffectListModel::setupProjectConnections(const au::project::IAudacityProject& project)
+{
+    project.viewState()->isEffectsPanelVisible().ch.onReceive(this, [this](bool visible) {
+        prop_setShowEffectsSection(visible);
+    });
+    prop_setShowEffectsSection(project.viewState()->isEffectsPanelVisible().val);
+}
+
 void RealtimeEffectListModel::onProjectChanged()
 {
     const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
@@ -57,7 +65,12 @@ void RealtimeEffectListModel::doLoad()
         insertEffect(trackId, index, newItem);
     });
 
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this] { onProjectChanged(); });
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this] {
+        onProjectChanged();
+        if (const auto project = globalContext()->currentProject()) {
+            setupProjectConnections(*project);
+        }
+    });
     onProjectChanged();
 
     populateMenu();
@@ -255,4 +268,28 @@ void RealtimeEffectListModel::prop_setTrackEffectsActive(bool active)
         return;
     }
     realtimeEffectService()->setTrackEffectsActive(*tId, active);
+}
+
+bool RealtimeEffectListModel::prop_showEffectsSection() const
+{
+    if (const project::IAudacityProjectPtr project = globalContext()->currentProject()) {
+        return project->viewState()->isEffectsPanelVisible().val;
+    }
+    return false;
+}
+
+void RealtimeEffectListModel::prop_setShowEffectsSection(bool show)
+{
+    const project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
+    muse::ValCh<bool> isVisible = project->viewState()->isEffectsPanelVisible();
+    if (isVisible.val == show) {
+        return;
+    }
+
+    isVisible.set(show);
+    emit showEffectsSectionChanged();
 }

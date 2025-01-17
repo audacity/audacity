@@ -127,6 +127,34 @@ void AppMenuModel::setupConnections()
         MenuItem& effectsItem = findMenu("menu-effect");
         effectsItem.setSubitems(makeEffectsItems());
     });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        if (const auto project = globalContext()->currentProject()) {
+            setupProjectConnections(*project);
+        }
+    });
+
+    if (const auto project = globalContext()->currentProject()) {
+        setupProjectConnections(*project);
+    }
+}
+
+void AppMenuModel::setupProjectConnections(const project::IAudacityProject& project)
+{
+    muse::ValCh<bool> isEffectsPanelVisible = project.viewState()->isEffectsPanelVisible();
+    isEffectsPanelVisible.ch.onReceive(this, [this](bool visible)
+    {
+        setItemIsChecked("toggle-effects", visible);
+    });
+    setItemIsChecked("toggle-effects", isEffectsPanelVisible.val);
+}
+
+void AppMenuModel::setItemIsChecked(const QString& itemId, bool checked)
+{
+    MenuItem& item = findMenu(itemId);
+    auto state = item.state();
+    state.checked = checked;
+    item.setState(state);
 }
 
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)

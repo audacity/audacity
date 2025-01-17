@@ -17,6 +17,7 @@ class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
     Q_PROPERTY(QVariantList availableEffects READ availableEffects NOTIFY availableEffectsChanged)
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged)
     Q_PROPERTY(bool trackEffectsActive READ prop_trackEffectsActive WRITE prop_setTrackEffectsActive NOTIFY trackEffectsActiveChanged)
+    Q_PROPERTY(bool showEffectsSection READ prop_showEffectsSection WRITE prop_setShowEffectsSection NOTIFY showEffectsSectionChanged)
 
     muse::Inject<context::IGlobalContext> globalContext;
 
@@ -30,10 +31,14 @@ public:
     bool prop_trackEffectsActive() const;
     void prop_setTrackEffectsActive(bool active);
 
+    bool prop_showEffectsSection() const;
+    void prop_setShowEffectsSection(bool show);
+
 signals:
     void availableEffectsChanged();
     void trackNameChanged();
     void trackEffectsActiveChanged();
+    void showEffectsSectionChanged();
 
 private:
     QHash<int, QByteArray> roleNames() const override;
@@ -52,6 +57,7 @@ private:
 
     void doLoad() override;
     void populateMenu() override;
+    void setupProjectConnections(const project::IAudacityProject& project);
     void onProjectChanged();
     void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::RealtimeEffectStatePtr& item);
     void removeEffect(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& item);

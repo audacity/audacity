@@ -4,12 +4,17 @@
 #pragma once
 
 #include "../iprojectviewstate.h"
+#include "actions/iactionsdispatcher.h"
+#include <actions/actionable.h>
+#include <modularity/ioc.h>
 
 namespace au::projectscene {
-class ProjectViewState : public IProjectViewState
+class ProjectViewState : public IProjectViewState, public muse::actions::Actionable, public muse::Injectable
 {
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+
 public:
-    ProjectViewState() = default;
+    ProjectViewState();
 
     // context of all tracks
     muse::ValCh<int> tracksVericalY() const override;
@@ -35,6 +40,8 @@ public:
     void setSnap(const Snap& s) override;
     muse::ValCh<Snap> snap() const override;
 
+    muse::ValCh<bool> isEffectsPanelVisible() const override;
+
 private:
 
     struct TrackData {
@@ -49,5 +56,6 @@ private:
 
     mutable std::map<trackedit::TrackId, TrackData> m_tracks;
     muse::ValCh<Snap> m_snap;
+    muse::ValCh<bool> m_effectsPanelVisible;
 };
 }

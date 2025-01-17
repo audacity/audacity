@@ -20,7 +20,7 @@ Item {
 
     // property alias contextMenuModel: contextMenuModel
     property int effectsSectionWidth: 240 // TODO: can this be set as a constant that can be imported?
-    property alias showEffectsSection: trackEffectsSection.visible
+    property alias showEffectsSection: trackEffectsSection.showEffectsSection
     property alias selectedTrackIndex: trackEffectsSection.selectedTrackIndex
 
     TracksListModel {
@@ -57,7 +57,7 @@ Item {
             Layout.maximumWidth: root.effectsSectionWidth
             Layout.minimumWidth: root.effectsSectionWidth
             Layout.fillHeight: true
-            visible: false
+            visible: showEffectsSection
         }
 
         SeparatorLine { }
@@ -143,6 +143,7 @@ Item {
 
                     onOpenEffectsRequested: {
                         root.selectedTrackIndex = index
+                        trackEffectsSection.showEffectsSection = true
                         root.openEffectsRequested()
                     }
 
