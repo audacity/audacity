@@ -6,7 +6,6 @@
 #include "global/async/channel.h"
 
 namespace au::project {
-
 class ThumbnailCreator : public IThumbnailCreator, public muse::async::Asyncable
 {
 public:
@@ -21,5 +20,4 @@ private:
     muse::async::Channel<muse::io::path_t> m_createThumbnailRequested;
     muse::async::Channel<bool> m_thumbnailCreated;
 };
-
 }

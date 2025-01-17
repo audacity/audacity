@@ -16,29 +16,28 @@ class WaveChannel;
 class BUILTIN_EFFECTS_API Repair : public StatefulEffect
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   // EffectDefinitionInterface implementation
+    // EffectDefinitionInterface implementation
 
-   EffectType GetType() const override;
-   bool IsInteractive() const override;
+    EffectType GetType() const override;
+    bool IsInteractive() const override;
 
-   // Effect implementation
+    // Effect implementation
 
-   bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    bool Process(EffectInstance& instance, EffectSettings& settings) override;
 
-   bool NeedsDither() const override;
+    bool NeedsDither() const override;
 
 private:
-   // EffectRepair implementation
+    // EffectRepair implementation
 
-   bool ProcessOne(
-      int count, WaveChannel& track, sampleCount start, size_t len,
-      size_t repairStart, // offset relative to start
-      size_t repairLen);
+    bool ProcessOne(
+        int count, WaveChannel& track, sampleCount start, size_t len, size_t repairStart, // offset relative to start
+        size_t repairLen);
 };

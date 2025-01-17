@@ -58,8 +58,7 @@ public:
     struct Instance : PerTrackEffect::Instance, EffectInstanceWithBlockSize
     {
         Instance(const PerTrackEffect& effect, double t0)
-            : PerTrackEffect::Instance{effect}
-            , mT0{t0}
+            : PerTrackEffect::Instance(effect), mT0(t0)
         {
         }
 

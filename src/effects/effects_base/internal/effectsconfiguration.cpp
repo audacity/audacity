@@ -11,5 +11,4 @@ static const std::string moduleName("effects");
 
 void EffectsConfiguration::init()
 {
-
 }

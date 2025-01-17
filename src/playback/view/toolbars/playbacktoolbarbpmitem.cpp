@@ -35,7 +35,7 @@ void PlaybackToolBarBPMItem::setCurrentValue(double value)
     if (qFuzzyCompare(m_currentValue, value)) {
         return;
     }
-    
+
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;

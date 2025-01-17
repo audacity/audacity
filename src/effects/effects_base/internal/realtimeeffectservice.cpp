@@ -99,16 +99,16 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
             m_realtimeEffectRemoved.send(trackId, msg.srcIndex, effectStateId);
             break;
         case RealtimeEffectListMessage::Type::DidReplace:
-        {
-            const std::shared_ptr<RealtimeEffectState> newState = list.GetStateAt(msg.dstIndex);
-            IF_ASSERT_FAILED(newState) {
-                return;
+            {
+                const std::shared_ptr<RealtimeEffectState> newState = list.GetStateAt(msg.dstIndex);
+                IF_ASSERT_FAILED(newState) {
+                    return;
+                }
+                auto oldEffect = effectStateId;
+                auto newEffect = reinterpret_cast<EffectStateId>(newState.get());
+                m_realtimeEffectReplaced.send(trackId, msg.srcIndex, std::move(oldEffect), std::move(newEffect));
             }
-            auto oldEffect = effectStateId;
-            auto newEffect = reinterpret_cast<EffectStateId>(newState.get());
-            m_realtimeEffectReplaced.send(trackId, msg.srcIndex, std::move(oldEffect), std::move(newEffect));
-        }
-        break;
+            break;
         }
     });
 }

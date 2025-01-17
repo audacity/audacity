@@ -57,7 +57,7 @@ void ClipContextMenuModel::setClipKey(const ClipKey& newClipKey)
     emit clipKeyChanged();
 }
 
-void ClipContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList &codes)
+void ClipContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
     AbstractMenuModel::onActionsStateChanges(codes);
 

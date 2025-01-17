@@ -85,7 +85,7 @@ void Au3SelectionController::setSelectedTracks(const TrackIdList& tracksIds, boo
     m_selectedTracks.set(tracksIds, complete);
 }
 
-void Au3SelectionController::addSelectedTrack(const TrackId &trackId)
+void Au3SelectionController::addSelectedTrack(const TrackId& trackId)
 {
     auto selectedTracks = m_selectedTracks.val;
 

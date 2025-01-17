@@ -10,7 +10,6 @@
 #include "trackedittypes.h"
 
 namespace au::trackedit {
-
 class Au3TrackeditClipboard : public ITrackeditClipboard
 {
 public:
@@ -30,5 +29,4 @@ private:
 
     bool m_isMultiSelectionCopy = false;
 };
-
 }

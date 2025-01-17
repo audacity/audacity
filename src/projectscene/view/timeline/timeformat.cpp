@@ -8,7 +8,7 @@
 
 using namespace au::projectscene;
 
-const std::vector<std::pair<double, IntervalInfo>> zoomToIntervalInfo = {
+const std::vector<std::pair<double, IntervalInfo> > zoomToIntervalInfo = {
     // { min pixel width per minorMinor tick, {major, minor, minorMinor, digits} }
     { 32 / 0.000005, { 0.0001, 0.00002, 0.000005, 6 } },            // 0.000005s ticks
     { 28 / 0.00001, { 0.0005, 0.00005, 0.00001, 6 } },              // 0.00001s ticks
@@ -50,8 +50,8 @@ IntervalInfo TimeFormat::intervalInfo(TimelineContext* context)
         zoomToIntervalInfo.end(),
         zoom,
         [](const std::pair<double, IntervalInfo>& interval, double zoomValue) {
-            return interval.first > zoomValue;
-        }
+        return interval.first > zoomValue;
+    }
         );
 
     if (it != zoomToIntervalInfo.end()) {
@@ -83,23 +83,23 @@ QString TimeFormat::label(double d, const IntervalInfo& intervalInfo, TickType t
                 return QString("%1:%2:00").arg(minutes / 60).arg(minutes % 60, 2, 10, QChar('0'));
             } else {
                 return QString("%1:%2").arg(minutes)
-                    .arg(0, 2, 10, QChar('0'));
+                       .arg(0, 2, 10, QChar('0'));
             }
         } else if (intervalInfo.minor > 0.5) {
             int secs = (int)(d + 0.5);
             if (secs >= 3600) {
                 return QString("%1:%2:%3")
-                .arg(secs / 3600)
-                    .arg((secs / 60) % 60, 2, 10, QChar('0'))
-                    .arg(secs % 60, 2, 10, QChar('0'));
+                       .arg(secs / 3600)
+                       .arg((secs / 60) % 60, 2, 10, QChar('0'))
+                       .arg(secs % 60, 2, 10, QChar('0'));
             } else if (secs >= 60) {
                 return QString("%1:%2")
-                .arg(secs / 60)
-                    .arg(secs % 60, 2, 10, QChar('0'));
+                       .arg(secs / 60)
+                       .arg(secs % 60, 2, 10, QChar('0'));
             } else {
                 return QString("%1:%2")
-                .arg(secs / 60)
-                    .arg(secs % 60, 2, 10, QChar('0'));
+                       .arg(secs / 60)
+                       .arg(secs % 60, 2, 10, QChar('0'));
             }
         } else {
             if (intervalInfo.minor >= 1.0) {

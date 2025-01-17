@@ -6,7 +6,6 @@
 #include "global/io/path.h"
 
 namespace au::project {
-
 class IThumbnailCreator : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(au::project::ithumbnailcreator)
@@ -19,5 +18,4 @@ public:
     virtual muse::async::Channel<muse::io::path_t> captureThumbnailRequested() const = 0;
     virtual void onThumbnailCreated(bool success) = 0;
 };
-
 }

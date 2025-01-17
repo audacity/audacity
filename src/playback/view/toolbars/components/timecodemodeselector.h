@@ -3,11 +3,11 @@
 #include <QObject>
 
 namespace au::playback {
-
-class TimecodeModeSelector: public QObject {
+class TimecodeModeSelector : public QObject
+{
     Q_OBJECT
 public:
-    explicit TimecodeModeSelector(QObject *parent = nullptr);
+    explicit TimecodeModeSelector(QObject* parent = nullptr);
 
     enum Mode {
         TimePoint,
@@ -17,5 +17,4 @@ public:
 };
 
 typedef TimecodeModeSelector::Mode TimecodeMode;
-
 }
