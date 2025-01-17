@@ -28,9 +28,13 @@
 #include "ShuttleGui.h"
 #include "Theme.h"
 #include "AllThemeResources.h"
+#include "GradientButton.h"
+#include "HyperLink.h"
 
-#include "../images/WhatsNewBtn.jpeg.h"
-#include "../images/MuseHub.jpeg.h"
+#include "../images/ACE.jpg.h"
+#include "../images/Audacity_3.7.2_Thumb.jpg.h"
+#include "../images/Cloud.xpm"
+#include "../images/Cloud_low_res.xpm"
 
 namespace
 {
@@ -42,24 +46,29 @@ namespace
 enum {
    WhatsNewID_WatchReleaseVideo = wxID_HIGHEST + 1,
    WhatsNewID_GoToMuseHub,
+   WhatsNewID_GoToAudioCom,
 };
 
 const char* WhatsNewURL = "https://audacityteam.org/3.7.0-video";
 const char* ChangeLogURL = "https://support.audacityteam.org/additional-resources/changelog";
-const char* MuseHubURL = "https://www.audacityteam.org/mh-whatsnew";
+//const char* MuseHubURL = "https://www.audacityteam.org/mh-whatsnew";
+const char* MuseHubURL = "https://www.musehub.com/app/ace-studio"; //! TODO AU3: update ACE URL
 const char* PromoURL = "https://audacityteam.org/audacitypromo";
+const char* AudioComURL = "https://audio.com/auth/sign-in"; //! TODO AU3:  update cloud URL
 
 #if defined(SHOW_MUSEHUB)
-   constexpr auto WindowWidth = 860;
+   constexpr auto WindowWidth = 800;
 #else
-   constexpr auto WindowWidth = 440;
+   constexpr auto WindowWidth = 500;
 #endif
 
 // wxHTML renders text with smaller line spacing on macOS
 #if defined (__WXOSX__)
-constexpr auto WindowHeight = 470;
-#else
-constexpr auto WindowHeight = 490;
+constexpr auto WindowHeight = 636;
+#elif defined (__WXMSW__)
+constexpr auto WindowHeight = 676;
+# else
+constexpr auto WindowHeight = 450;
 #endif
 
 }
@@ -82,23 +91,48 @@ struct FSHelper final
       wxFileSystem::AddHandler(mMemoryFSHandler.get());
 
       wxMemoryFSHandler::AddFile(
-         "whats_new_btn.jpeg", bin2c_whats_new_btn_jpeg,
-         sizeof(bin2c_whats_new_btn_jpeg));
+         "audacity_3_7_2_thumb.jpeg", bin2c_Audacity_3_7_2_Thumb_jpg,
+         sizeof(bin2c_Audacity_3_7_2_Thumb_jpg));
       wxMemoryFSHandler::AddFile(
-         "musehub.jpeg", bin2c_musehub_jpeg,
-         sizeof(bin2c_musehub_jpeg));
+         "ace.jpeg", bin2c_ACE_jpg,
+         sizeof(bin2c_ACE_jpg));
    }
 
    ~FSHelper()
    {
-      wxMemoryFSHandler::RemoveFile("whats_new_btn.jpeg");
-      wxMemoryFSHandler::RemoveFile("musehub.jpeg");
+      wxMemoryFSHandler::RemoveFile("audacity_3_7_2_thumb.jpeg");
+      wxMemoryFSHandler::RemoveFile("ace.jpeg");
       wxFileSystem::RemoveHandler(mMemoryFSHandler.get());
    }
 
 private:
    std::unique_ptr<wxMemoryFSHandler> mMemoryFSHandler;
 };
+
+wxString MakeSignUpToCloudText()
+{
+   wxStringOutputStream o;
+   wxTextOutputStream s(o);
+   s
+      << wxT("<body>")
+      << wxT("<p><center>")
+#if defined (__WXOSX__) || defined(__WXMSW__)
+      << wxT("<h3>")
+#else
+      << wxT("<p>")
+#endif
+      << XO("<font color=\"#000000\">")
+      << XO("Sign up to Audacity's cloud saving platform")
+      << wxT("<br>") << XO("and access your projects from anywhere!")
+      << XO("</font>")
+#if defined (__WXOSX__) || defined(__WXMSW__)
+      << wxT("</h3>");
+#else
+      << wxT("</p>");
+#endif
+   
+   return FormatHtmlText(o.GetString());
+}
 
 wxString MakeWhatsNewText()
 {
@@ -109,10 +143,16 @@ wxString MakeWhatsNewText()
       << wxT("<p><center>")
       << wxT(R"(<p><a href=")") << WhatsNewURL << wxT(R"(">)")
       // Bug: (Windows) specified width and height should match exactly to the size of the image
-      << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="352" height="198" /><br></a></p>)")
-      << wxT("<h3>") << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING) << wxT("</h3>")
+#if 0
+   << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="352" height="198" /><br></a></p>)")
+   << wxT("<h3>") << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING) << wxT("</h3>")
+   << wxT("<p>")
+   << XO("Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>").Format(WhatsNewURL, ChangeLogURL);
+#endif
+      << wxT(R"(<img src="memory:audacity_3_7_2_thumb.jpeg" width="352" height="198" /><br></a></p>)")
+      << wxT("<h3>") << XO("What's new in Audacity") << wxT("</h3>")
       << wxT("<p>")
-      << XO("Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>").Format(WhatsNewURL, ChangeLogURL);
+      << XO("You can also read the [[%s|changelog]]</p>").Format(ChangeLogURL);
 
    return FormatHtmlText(o.GetString());
 }
@@ -126,7 +166,7 @@ wxString MakeGetPluginsText()
       << wxT("<p><center>")
       << wxT(R"(<p><a href=")") << PromoURL << wxT(R"(">)")
       // Bug: (Windows) specified width and height should match exactly to the size of the image
-      << wxT(R"(<img src="memory:musehub.jpeg" width="352" height="198" /><br></a></p>)")
+      << wxT(R"(<img src="memory:ace.jpeg" width="352" height="198" /><br></a></p>)")
 #if 0
       //we want to keep these strings, but not display them at the moment
       << wxT("<h3>") << XO("Get free plugins & sounds")<< wxT("</h3>")
@@ -156,20 +196,111 @@ wxString MakeGetPluginsText()
       << wxT("<h3>") << wxT("Remix Source Separation")<< wxT("</h3>")
       << wxT("<p>") << XO("A real-time stem separation tool to isolate vocals, drums, and instruments.") << wxT(" ")
       << wxT("<h3>") << wxT("Recommended effects plugins for Audacity")<< wxT("</h3>")
-      << wxT("<p>") << XO("Check out a variety of plugins by well known developers available on [[%s|MuseHub]].").Format(MuseHubURL) 
-
-#endif
-
+      << wxT("<p>") << XO("Check out a variety of plugins by well known developers available on [[%s|MuseHub]].").Format(MuseHubURL)
       << wxT("<h3>") << wxT("Polyspectral Multiband Compressor")<< wxT("</h3>")
       << wxT("<p>") << XO("A multiband compressor offering precise control over frequencies.");
 
+#endif
+
+      << wxT("<h3>") << wxT("Ace Studio")<< wxT("</h3>")
+      << wxT("<p>") << XO("Ace Studio - The World's No.1 AI Singing Voice Generator.");
+
    return FormatHtmlText(o.GetString());
 }
+
+const wxColour infoBlue(224, 228, 255);
+#if defined (__WXOSX__) || defined(__WXMSW__)
+const wxSize infoWindowSize(746, 176);
+#else
+const wxSize infoWindowSize(1050, 250);
+#endif
+class InfoWindow : public wxWindow
+{
+public:
+    InfoWindow(wxWindow* parent)
+        : wxWindow(parent, wxID_ANY, wxDefaultPosition, infoWindowSize)
+    {
+       ShuttleGui S( this, eIsCreating);
+
+       S.StartHorizontalLay(wxEXPAND);
+       {
+          S.AddSpace(150);
+
+          S.StartVerticalLay(wxEXPAND);
+          {
+#if defined(__WXMSW__)
+             S.AddSpace(30);
+#else
+             S.AddSpace(35);
+#endif
+             
+             const auto text = safenew LinkingHtmlWindow(S.GetParent());
+             text->SetPage(MakeSignUpToCloudText());
+             text->Layout();
+             text->Fit();
+             text->SetBackgroundColour(infoBlue);
+             S
+               .Prop(1)
+               .Position(wxEXPAND | wxLEFT | wxBOTTOM)
+               .AddWindow(text);
+
+	     TranslatableString cloudLabel = XXO("Continue for Cloud Storage");
+             S
+                .Id(WhatsNewID_GoToAudioCom)
+                .Position(wxALL | wxALIGN_CENTER)
+#if defined (__WXOSX__) || defined(__WXMSW__)
+                .AddGradientButton(cloudLabel, wxALL, true, true /* set padding */);
+#else
+                .AddButton(cloudLabel, wxALL, true);
+#endif
+
+#if defined(__WXMSW__)
+             S.AddSpace(20);
+#else
+             S.AddSpace(25);
+#endif
+          }
+          S.EndVerticalLay();
+          
+          S.AddSpace(150);
+       }
+       S.EndHorizontalLay();
+       
+       Layout();
+       
+#if defined (__WXOSX__)
+       wxImage image = wxBitmap(Cloud).ConvertToImage();
+       wxImage resizedImage = image.Scale(189, 104, wxIMAGE_QUALITY_HIGH);
+       m_bitmap = wxBitmap(resizedImage);
+#else
+       m_bitmap = wxBitmap(Cloud_low_res);
+#endif
+
+       Bind(wxEVT_PAINT, &InfoWindow::OnPaint, this);
+    }
+
+private:
+    void OnPaint(wxPaintEvent& event)
+    {
+        wxPaintDC dc(this);
+       
+        wxColour outline(212, 212, 212);
+
+        dc.SetBrush(infoBlue);
+        dc.SetPen(outline);
+        dc.DrawRoundedRectangle(wxPoint(0, 0), infoWindowSize, 10);
+       
+        dc.DrawBitmap(m_bitmap, -5, 40, true);
+    }
+   
+    wxBitmap m_bitmap;
+};
 }
 
 BEGIN_EVENT_TABLE(WhatsNewDialog, wxDialogWrapper)
    EVT_BUTTON(WhatsNewID_WatchReleaseVideo, WhatsNewDialog::OnWatchReleaseVideo)
    EVT_BUTTON(WhatsNewID_GoToMuseHub, WhatsNewDialog::OnGoToMuseHub)
+   EVT_BUTTON(WhatsNewID_GoToAudioCom, WhatsNewDialog::OnGoToAudioCom)
    EVT_BUTTON(wxID_OK, WhatsNewDialog::OnOK)
 END_EVENT_TABLE()
 
@@ -208,11 +339,21 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
    FSHelper helper;
 
+   S.AddSpace(10);
+   
+   S.StartHorizontalLay(wxALIGN_CENTER, 0);
+   {
+      const auto cloudInfo = safenew InfoWindow(S.GetParent());
+      S
+         .Prop(1)
+         .Position(wxALL | wxALIGN_CENTER)
+         .AddWindow(cloudInfo);
+   }
+   S.EndHorizontalLay();
    S.StartHorizontalLay(wxEXPAND);
    {
       S.StartVerticalLay(wxEXPAND | wxLEFT);
       {
-         S.AddSpace(15);
          const auto whatsnew = safenew LinkingHtmlWindow(S.GetParent());
          whatsnew->SetPage(MakeWhatsNewText());
          whatsnew->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
@@ -225,16 +366,20 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 #endif
             .AddWindow(whatsnew);
 
+         TranslatableString releaseLabel = XXO("Watch the release video");
          S
             .Id(WhatsNewID_WatchReleaseVideo)
-            .Position(wxALL | wxALIGN_CENTRE)
-            .AddButton(XXO("Watch the release video"), wxALL, true);
+            .Position(wxALL | wxALIGN_CENTER)
+#if defined (__WXOSX__) || defined(__WXMSW__)
+            .AddGradientButton(releaseLabel, wxALL, true, true /* set padding */);
+#else
+            .AddButton(releaseLabel, wxALL, true);
+#endif
       }
       S.EndVerticalLay();
 #if defined(SHOW_MUSEHUB)
       S.StartVerticalLay(wxEXPAND);
       {
-         S.AddSpace(15);
          const auto getplugins = safenew LinkingHtmlWindow(S.GetParent());
          getplugins->SetPage(MakeGetPluginsText());
          getplugins->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
@@ -242,16 +387,21 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
             .Prop(1)
             .Position(wxEXPAND | wxTOP | wxRIGHT)
             .AddWindow(getplugins);
+         TranslatableString museHubLabel = XXO("Available on MuseHub");
          S
             .Id(WhatsNewID_GoToMuseHub)
-            .Position(wxALL | wxALIGN_CENTRE)
-            .AddButton(XXO("Available on MuseHub"), wxALL, true);
+            .Position(wxALL | wxALIGN_CENTER)
+#if defined (__WXOSX__) || defined(__WXMSW__)
+            .AddGradientButton(museHubLabel, wxALL, true, true /* set padding */);
+#else
+            .AddButton(museHubLabel, wxALL, true);
+#endif
       }
       S.EndVerticalLay();
 #endif
    }
    S.EndHorizontalLay();
-   S.AddSpace(25);
+   S.AddSpace(15);
    const auto line = safenew wxWindow(S.GetParent(), wxID_ANY);
    line->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
    line->SetSize(-1, 1);
@@ -261,10 +411,10 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
       .Position(wxEXPAND)
       .AddWindow(line);
 
-   S.StartHorizontalLay(wxALIGN_CENTRE, 0);
+   S.StartHorizontalLay(wxALIGN_CENTER, 0);
    {
       S.SetBorder(10);
-      const auto tutorialsLink = safenew wxHyperlinkCtrl(
+      const auto tutorialsLink = safenew HyperLink(
          S.GetParent(),
          wxID_ANY,
          _("View tutorials"),
@@ -275,7 +425,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
       S.AddSpace(25);
 
-      const auto forumLink = safenew wxHyperlinkCtrl(
+      const auto forumLink = safenew HyperLink(
          S.GetParent(),
          wxID_ANY,
          _("Visit our forum"),
@@ -292,14 +442,19 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
       {
          S.SetBorder(4);
          mDontShowAgain = S
-            .Position(wxALL | wxALIGN_CENTRE)
+            .Position(wxALL | wxALIGN_CENTER)
             .AddCheckBox( XXO("Don't show this again at start up"), !showSplashScreen);
          
          S.AddSpace(1,1,1);
 
+         TranslatableString okLabel = XXO("OK");
          S
             .Id(wxID_OK)
-            .AddButton(XXO("OK"), wxALL, true);
+#if defined (__WXOSX__) || defined(__WXMSW__)
+            .AddGradientButton(okLabel, wxALL, true);
+#else
+            .AddButton(okLabel, wxALL, true);
+#endif
       }
       S.EndHorizontalLay();
    }
@@ -322,3 +477,9 @@ void WhatsNewDialog::OnGoToMuseHub(wxCommandEvent& evt)
 {
    OpenInDefaultBrowser(MuseHubURL);
 }
+
+void WhatsNewDialog::OnGoToAudioCom(wxCommandEvent& evt)
+{
+   OpenInDefaultBrowser(AudioComURL);
+}
+

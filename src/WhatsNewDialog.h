@@ -31,6 +31,7 @@ private:
    void OnOK(wxCommandEvent&);
    void OnWatchReleaseVideo(wxCommandEvent&);
    void OnGoToMuseHub(wxCommandEvent&);
+   void OnGoToAudioCom(wxCommandEvent&);
 
    DECLARE_EVENT_TABLE()
 };

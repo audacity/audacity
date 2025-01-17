@@ -101,6 +101,7 @@ for registering for changes.
 #include "Prefs.h"
 #include "ShuttlePrefs.h"
 #include "SpinControl.h"
+#include "GradientButton.h"
 #include "Theme.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -390,6 +391,37 @@ wxBitmapButton * ShuttleGuiBase::AddBitmapButton(
    pBtn->SetBackgroundColour(
       wxColour( 246,246,243));
 //      wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE));
+   miProp=0;
+   UpdateSizersCore(false, PositionFlags | wxALL);
+   if (setDefault)
+      pBtn->SetDefault();
+   return pBtn;
+}
+
+GradientButton * ShuttleGuiBase::AddGradientButton(
+   const TranslatableString & Text, int PositionFlags, bool setDefault, bool setPadding)
+{
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), GradientButton);
+   GradientButton * pBtn;
+   const auto translated = Text.Translation();
+   mpWind = pBtn = safenew GradientButton(GetParent(), miId,
+      translated, wxDefaultPosition, wxDefaultSize);
+#if defined(__WXMSW__)
+   wxFont labelFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+#else
+   wxFont labelFont(14, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+#endif
+   pBtn->SetFont(labelFont);
+   if (setPadding) {
+      wxSize size = pBtn->GetSize();
+#if defined(__WXMSW__)
+      pBtn->SetMinSize(wxSize(size.GetWidth() + 30, size.GetHeight() + 20));
+#else
+      pBtn->SetMinSize(wxSize(size.GetWidth() + 25, size.GetHeight() + 15));
+#endif
+   }
    miProp=0;
    UpdateSizersCore(false, PositionFlags | wxALL);
    if (setDefault)
