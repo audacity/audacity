@@ -126,7 +126,7 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
     return ticks;
 }
 
-TickType TimelineRuler::determineTickType(double value, const IntervalInfo &timeInterval)
+TickType TimelineRuler::determineTickType(double value, const IntervalInfo& timeInterval)
 {
     if (muse::is_zero(std::abs(std::remainder(value, timeInterval.major)))) {
         return TickType::MAJOR;

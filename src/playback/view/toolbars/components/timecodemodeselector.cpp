@@ -2,7 +2,7 @@
 
 using namespace au::playback;
 
-TimecodeModeSelector::TimecodeModeSelector(QObject *parent)
+TimecodeModeSelector::TimecodeModeSelector(QObject* parent)
     : QObject(parent)
 {
 }

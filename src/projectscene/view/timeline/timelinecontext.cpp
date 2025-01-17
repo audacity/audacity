@@ -26,7 +26,8 @@ namespace {
 // calculate auto-scroll speed based on where the mouse cursor is
 // it's non linear range mapping:
 // from (0px, SCROLL_MARGIN_PX) to (SCROLL_MIN_SPEED, SCROLL_MAX_SPEED)
-double calculateScrollSpeed(double value, double inMin, double inMax, double outMin, double outMax) {
+double calculateScrollSpeed(double value, double inMin, double inMax, double outMin, double outMax)
+{
     double sign = (muse::RealIsEqualOrMore(value, 0.0)) ? 1.0 : -1.0;
     double absValue = std::abs(value);
     double normalized = std::clamp((absValue - inMin) / (inMax - inMin), 0.0, 1.0);
@@ -200,7 +201,7 @@ void TimelineContext::scrollVertical(qreal newPos)
     }
 
     static constexpr qreal correction = 100.0;
-    emit viewContentYChangeRequested(scrollStep * correction);
+    emit viewContentYChangeRequested(scrollStep* correction);
 }
 
 void TimelineContext::insureVisible(double posSec)
@@ -239,8 +240,8 @@ void TimelineContext::autoScrollView(double scrollStep)
 
 void TimelineContext::startAutoScroll(double posSec)
 {
-    if (globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running ||
-        globalContext()->isRecording()) {
+    if (globalContext()->playbackState()->playbackStatus() == playback::PlaybackStatus::Running
+        || globalContext()->isRecording()) {
         return;
     }
 

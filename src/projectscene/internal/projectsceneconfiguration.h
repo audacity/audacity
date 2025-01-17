@@ -27,7 +27,7 @@ public:
     void setInsertSilenceDuration(const trackedit::secs_t duration) override;
 
     std::string insertSilenceDurationFormat() const override;
-    void setInsertSilenceDurationFormat(const std::string &format) override;
+    void setInsertSilenceDurationFormat(const std::string& format) override;
 
     double zoom() const override;
 

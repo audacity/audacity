@@ -33,7 +33,6 @@ static int timecodeModeToOffset(TimecodeMode mode)
     }
 }
 
-
 static constexpr std::array<size_t, 3> MIN_DIGITS { 3, 2, 2 };
 static constexpr std::array<size_t, 3> UPPER_BOUNDS {
     pow10(MIN_DIGITS[0] - 1) + 1, pow10(MIN_DIGITS[1] - 1) + 1,

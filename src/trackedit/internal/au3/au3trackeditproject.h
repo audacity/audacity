@@ -85,11 +85,11 @@ public:
 
 struct TimeSignatureRestorer final : UndoStateExtension
 {
-   explicit TimeSignatureRestorer(AudacityProject& project);
-   void RestoreUndoRedoState(AudacityProject& project) override;
-   static void reg();
+    explicit TimeSignatureRestorer(AudacityProject& project);
+    void RestoreUndoRedoState(AudacityProject& project) override;
+    static void reg();
 
-   double mTempo;
-   int mUpper;
-   int mLower;
+    double mTempo;
+    int mUpper;
+    int mLower;
 };

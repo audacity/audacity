@@ -164,7 +164,7 @@ Effect* EffectsProvider::effect(const EffectId& effectId) const
     return effect;
 }
 
-muse::Ret EffectsProvider::showEffect(const EffectId &effectId, const EffectInstanceId& instanceId)
+muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
     LOGD() << "try open effect: " << effectId << ", instanceId: " << instanceId;
 
@@ -190,9 +190,9 @@ muse::Ret EffectsProvider::showEffect(const EffectId &effectId, const EffectInst
 
         muse::String type = au3::wxToString(effect->GetSymbol().Internal());
         ret = interactive()->open(String(BUILTIN_VIEWER_URI)
-                                                 .arg(type)
-                                                 .arg(size_t(instanceId)).toStdString()
-                                             ).ret;
+                                  .arg(type)
+                                  .arg(size_t(instanceId)).toStdString()
+                                  ).ret;
     } else if ("VST3" == family) {
         ret = muse::make_ret(muse::Ret::Code::NotImplemented);
     } else {

@@ -23,7 +23,7 @@ void SelectionViewController::onPressed(double x, double y)
         return;
     }
 
-    m_lastPoint = QPointF(x,y);
+    m_lastPoint = QPointF(x, y);
 
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
@@ -64,7 +64,9 @@ void SelectionViewController::onPressed(double x, double y)
         selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
     }
 
-    m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this](){ onPositionChanged(m_lastPoint.x(), m_lastPoint.y()); });
+    m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this](){
+        onPositionChanged(m_lastPoint.x(), m_lastPoint.y());
+    });
 }
 
 void SelectionViewController::onPositionChanged(double x, double y)
@@ -80,7 +82,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     x = std::max(x, 0.0);
-    m_lastPoint = QPointF(x,y);
+    m_lastPoint = QPointF(x, y);
     m_context->startAutoScroll(m_context->positionToTime(x));
 
     //! NOTE: update m_startPoint in case frameTime changed
@@ -123,7 +125,7 @@ void SelectionViewController::onReleased(double x, double y)
     m_selectionStarted = false;
 
     x = std::max(x, 0.0);
-    m_lastPoint = QPointF(x,y);
+    m_lastPoint = QPointF(x, y);
     m_context->stopAutoScroll();
     disconnect(m_autoScrollConnection);
 

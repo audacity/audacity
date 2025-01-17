@@ -27,7 +27,7 @@ void PlaybackToolBarTimeSignatureItem::setUpper(int newUpper)
     if (m_upper == newUpper) {
         return;
     }
-    
+
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
@@ -48,7 +48,7 @@ void PlaybackToolBarTimeSignatureItem::setLower(int newLower)
     if (m_lower == newLower) {
         return;
     }
-    
+
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;

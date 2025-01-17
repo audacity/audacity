@@ -29,7 +29,7 @@ public:
     audio::sample_rate_t sampleRate() const override;
     muse::async::Channel<audio::sample_rate_t> sampleRateChanged() const override;
 
-    muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal>> playbackSignalChanges() const override;
+    muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> > playbackSignalChanges() const override;
 
 private:
     au3::Au3Project* projectRef() const;

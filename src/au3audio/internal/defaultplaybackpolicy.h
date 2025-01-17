@@ -15,7 +15,7 @@ class DefaultPlaybackPolicy final : public PlaybackPolicy, public NonInterfering
 public:
     DefaultPlaybackPolicy(AudacityProject& project, double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
                           bool loopEnabled, bool variableSpeed);
-    ~DefaultPlaybackPolicy() override;
+    ~DefaultPlaybackPolicy() override = default;
 
     void Initialize(PlaybackSchedule& schedule, double rate) override;
 

@@ -177,7 +177,7 @@ void WaveView::setChannelHeightRatio(double channelHeightRatio)
     update();
 }
 
-QColor WaveView::transformColor(const QColor &originalColor) const
+QColor WaveView::transformColor(const QColor& originalColor) const
 {
     int r = originalColor.red();
     int g = originalColor.green();

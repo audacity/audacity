@@ -38,9 +38,10 @@ Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3
     });
     m_impl->projectTimeSignatureSubscription = ProjectTimeSignature::Get(*m_impl->prj).Subscribe(
         [this](const TimeSignatureChangedMessage& event) {
-        onProjectTempoChange(event.newTempo);
+        onProjectTempoChange(
+            event.newTempo);
 
-        au::trackedit::TimeSignature trackeditTimeSignature = au::trackedit::TimeSignature{event.newTempo, event.newUpperTimeSignature, event.newLowerTimeSignature};
+        au::trackedit::TimeSignature trackeditTimeSignature = au::trackedit::TimeSignature { event.newTempo, event.newUpperTimeSignature, event.newLowerTimeSignature };
         m_timeSignatureChanged.send(trackeditTimeSignature);
     });
 }
@@ -332,25 +333,25 @@ ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IA
 }
 
 TimeSignatureRestorer::TimeSignatureRestorer(AudacityProject& project)
-   : mTempo { ProjectTimeSignature::Get(project).GetTempo() }
-   , mUpper { ProjectTimeSignature::Get(project).GetUpperTimeSignature() }
-   , mLower { ProjectTimeSignature::Get(project).GetLowerTimeSignature() }
+    : mTempo{ProjectTimeSignature::Get(project).GetTempo()}
+    , mUpper{ProjectTimeSignature::Get(project).GetUpperTimeSignature()}
+    , mLower{ProjectTimeSignature::Get(project).GetLowerTimeSignature()}
 {
 }
 
 void TimeSignatureRestorer::RestoreUndoRedoState(AudacityProject& project)
 {
-  auto& timeSignature = ProjectTimeSignature::Get(project);
+    auto& timeSignature = ProjectTimeSignature::Get(project);
 
-  timeSignature.SetTempo(mTempo);
-  timeSignature.SetUpperTimeSignature(mUpper);
-  timeSignature.SetLowerTimeSignature(mLower);
+    timeSignature.SetTempo(mTempo);
+    timeSignature.SetUpperTimeSignature(mUpper);
+    timeSignature.SetLowerTimeSignature(mLower);
 }
 
 void TimeSignatureRestorer::reg()
 {
-   static UndoRedoExtensionRegistry::Entry sEntry {
-       [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
-       { return std::make_shared<TimeSignatureRestorer>(project); }
-   };
+    static UndoRedoExtensionRegistry::Entry sEntry {
+        [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
+        { return std::make_shared<TimeSignatureRestorer>(project); }
+    };
 }

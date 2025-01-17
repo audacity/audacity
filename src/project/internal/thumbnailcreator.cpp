@@ -21,7 +21,7 @@ muse::Ret ThumbnailCreator::createThumbnail(const muse::io::path_t& path)
     muse::Ret ret;
     QEventLoop loop;
     m_thumbnailCreated.onReceive(this, [&loop, &ret](bool ok) {
-        ret = ok ? muse::make_ok() :  muse::make_ret(muse::Ret::Code::UnknownError);
+        ret = ok ? muse::make_ok() : muse::make_ret(muse::Ret::Code::UnknownError);
         loop.quit();
     });
 

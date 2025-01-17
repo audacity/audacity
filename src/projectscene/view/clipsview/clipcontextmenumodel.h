@@ -29,7 +29,7 @@ signals:
 
 private:
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
-    void updateStretchEnabledState(muse::uicomponents::MenuItem &item);
+    void updateStretchEnabledState(muse::uicomponents::MenuItem& item);
 
     ClipKey m_clipKey;
 };

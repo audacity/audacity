@@ -58,7 +58,7 @@ void ProjectPropertiesModel::init()
 
 void ProjectPropertiesModel::onThumbnailCreated(bool success)
 {
-   thumbnailCreator()->onThumbnailCreated(success);
+    thumbnailCreator()->onThumbnailCreated(success);
 }
 
 void ProjectPropertiesModel::load()

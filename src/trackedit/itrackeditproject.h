@@ -46,7 +46,7 @@ public:
     virtual void setTimeSignature(const TimeSignature& timeSignature) = 0;
     virtual muse::async::Channel<TimeSignature> timeSignatureChanged() const = 0;
 
-    virtual muse::async::Channel<std::vector<au::trackedit::Track>> tracksChanged() const = 0;
+    virtual muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const = 0;
     virtual muse::async::Channel<trackedit::Track> trackAdded() const = 0;
     virtual muse::async::Channel<trackedit::Track> trackChanged() const = 0;
     virtual muse::async::Channel<trackedit::Track> trackRemoved() const = 0;

@@ -299,7 +299,7 @@ void ClipsListModel::onTimelineFrameTimeChanged()
     updateItemsMetrics();
 }
 
-void ClipsListModel::setSelectedItems(const QList<ClipListItem *> &items)
+void ClipsListModel::setSelectedItems(const QList<ClipListItem*>& items)
 {
     for (auto& selectedItem : m_selectedItems) {
         selectedItem->setSelected(false);
@@ -310,7 +310,7 @@ void ClipsListModel::setSelectedItems(const QList<ClipListItem *> &items)
     }
 }
 
-void ClipsListModel::addSelectedItem(ClipListItem *item)
+void ClipsListModel::addSelectedItem(ClipListItem* item)
 {
     item->setSelected(true);
     m_selectedItems.append(item);
@@ -346,12 +346,12 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
     return ok;
 }
 
-QVariant ClipsListModel::next(const ClipKey &key) const
+QVariant ClipsListModel::next(const ClipKey& key) const
 {
     return neighbor(key, 1);
 }
 
-QVariant ClipsListModel::prev(const ClipKey &key) const
+QVariant ClipsListModel::prev(const ClipKey& key) const
 {
     return neighbor(key, -1);
 }
@@ -465,7 +465,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     if ((completed && m_autoScrollConnection)) {
         disconnect(m_autoScrollConnection);
     } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });;
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ moveSelectedClips(key, false); });
     }
 
     return ok;
@@ -507,7 +507,7 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
     if ((completed && m_autoScrollConnection) || !ok) {
         disconnect(m_autoScrollConnection);
     } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ trimLeftClip(key, false); });;
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ trimLeftClip(key, false); });
     }
 
     return ok;
@@ -547,7 +547,7 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
     if ((completed && m_autoScrollConnection) || !ok) {
         disconnect(m_autoScrollConnection);
     } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ trimRightClip(key, false); });;
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ trimRightClip(key, false); });
     }
 
     return ok;
