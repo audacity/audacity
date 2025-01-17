@@ -82,6 +82,8 @@ set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_LINK au3wrap)
 
+set(MODULE_USE_UNITY OFF)
+
 setup_module()
 
 if (AU_BUILD_PLAYBACK_TESTS)

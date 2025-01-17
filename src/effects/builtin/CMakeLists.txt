@@ -95,4 +95,6 @@ set(MODULE_DEF ${AU3_DEF})
 
 set(MODULE_LINK au3wrap)
 
+set(MODULE_USE_UNITY OFF)
+
 setup_module()
