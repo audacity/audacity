@@ -69,7 +69,7 @@ private:
     void tracksSplitAt(const muse::actions::ActionData& args);
     void mergeSelectedOnTrack(const muse::actions::ActionData& args);
     void duplicateSelected(const muse::actions::ActionData& args);
-    void duplicateClip(const muse::actions::ActionData& args);
+    void duplicateClips(const muse::actions::ActionData& args);
     void clipSplitCut(const muse::actions::ActionData& args);
     void clipSplitDelete(const muse::actions::ActionData& args);
     void splitCutSelected(const muse::actions::ActionData& args);

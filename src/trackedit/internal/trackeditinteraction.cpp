@@ -151,6 +151,11 @@ bool TrackeditInteraction::duplicateClip(const ClipKey& clipKey)
     return withPlaybackStop(&ITrackeditInteraction::duplicateClip, clipKey);
 }
 
+bool TrackeditInteraction::duplicateClips(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::duplicateClips, clipKeyList);
+}
+
 bool TrackeditInteraction::clipSplitCut(const ClipKey& clipKey)
 {
     return withPlaybackStop(&ITrackeditInteraction::clipSplitCut, clipKey);

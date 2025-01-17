@@ -1244,22 +1244,62 @@ bool Au3Interaction::duplicateSelectedOnTracks(const TrackIdList& tracksIds, sec
 
 bool Au3Interaction::duplicateClip(const ClipKey& clipKey)
 {
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    return duplicateClips({ clipKey });
+}
+
+bool Au3Interaction::duplicateClips(const ClipKeyList& clipKeyList)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
         return false;
     }
 
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
+    //Get list of tracks in order by the UI position
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    //Get a set of the tracks we want copy content from
+    std::set<TrackId> selectedTracks;
+    std::transform(clipKeyList.begin(), clipKeyList.end(), std::inserter(selectedTracks, selectedTracks.begin()), [](const ClipKey& clipKey) {
+        return clipKey.trackId;
+    });
+    if (selectedTracks.empty()) {
         return false;
     }
 
-    trackedit::secs_t begin = clip->Start();
-    trackedit::secs_t end = clip->End();
+    //Get only the selected tracks but keeping the UI order
+    std::vector<Au3WaveTrack*> waveTracks;
+    for (auto trackId : tracks) {
+        if (selectedTracks.find(trackId) != selectedTracks.end()) {
+            auto waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+            if (waveTrack) {
+                waveTracks.push_back(waveTrack);
+            }
+        }
+    }
 
-    bool ok = duplicateSelectedOnTrack(clipKey.trackId, begin, end);
-    if (!ok) {
-        return false;
+    auto& projectTracks = Au3TrackList::Get(projectRef());
+    auto& trackFactory = WaveTrackFactory::Get(projectRef());
+    auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+
+    for (const auto& track : waveTracks) {
+        auto newTrack = track->EmptyCopy(pSampleBlockFactory);
+
+        std::vector<ClipKey> clipsToDuplicate;
+        std::copy_if(clipKeyList.begin(), clipKeyList.end(), std::back_inserter(clipsToDuplicate), [track](const ClipKey& clipKey) {
+            return clipKey.trackId == track->GetId();
+        });
+
+        for (const auto& clipKey : clipsToDuplicate) {
+            std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(track, clipKey.clipId);
+
+            IF_ASSERT_FAILED(clip) {
+                continue;
+            }
+
+            newTrack->InsertInterval(track->CopyClip(*clip, true), false);
+        }
+        projectTracks.Add(newTrack);
+        prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
     }
 
     pushProjectHistoryDuplicateState();
@@ -1610,6 +1650,8 @@ bool Au3Interaction::canMoveTrack(const TrackId trackId, const TrackMoveDirectio
     case TrackMoveDirection::Bottom:
         return tracks.CanMoveDown(*au3Track);
     }
+
+    return false;
 }
 
 int Au3Interaction::trackPosition(const TrackId trackId)

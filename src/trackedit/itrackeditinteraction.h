@@ -62,6 +62,7 @@ public:
     virtual bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateClip(const ClipKey& clipKey) = 0;
+    virtual bool duplicateClips(const ClipKeyList& clipKeyList) = 0;
     virtual bool clipSplitCut(const ClipKey& clipKey) = 0;
     virtual bool clipSplitDelete(const ClipKey& clipKey) = 0;
     virtual bool splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) = 0;
