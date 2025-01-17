@@ -37,8 +37,8 @@ static const ActionCode PASTE("paste");
 static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
 static const ActionCode MERGE_SELECTED_ON_TRACK("merge-selected-on-tracks");
-static const ActionCode DUPLICATE_SELECTED("duplicate-selected");
-static const ActionCode DUPLICATE_CLIPS("duplicate-clips");
+static const ActionCode DUPLICATE_SELECTED_CODE("duplicate-selected");
+static const ActionCode DUPLICATE_CLIPS_CODE("duplicate-clips");
 static const ActionCode CLIP_SPLIT_CUT("clip-split-cut");
 static const ActionCode CLIP_SPLIT_DELETE("clip-split-delete");
 static const ActionCode SPLIT_CUT_SELECTED("split-cut-selected");
@@ -47,7 +47,7 @@ static const ActionCode NEW_MONO_TRACK("new-mono-track");
 static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
 static const ActionCode NEW_LABEL_TRACK("new-label-track");
 static const ActionCode TRACK_DELETE("track-delete");
-static const ActionCode TRACK_DUPLICATE("track-duplicate");
+static const ActionCode TRACK_DUPLICATE_CODE("track-duplicate");
 static const ActionCode TRACK_MOVE_UP("track-move-up");
 static const ActionCode TRACK_MOVE_DOWN("track-move-down");
 static const ActionCode TRACK_MOVE_TOP("track-move-top");
@@ -84,8 +84,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_SPLIT,
     TRACK_SPLIT_AT,
     MERGE_SELECTED_ON_TRACK,
-    DUPLICATE_SELECTED,
-    DUPLICATE_CLIPS,
+    DUPLICATE_SELECTED_CODE,
+    DUPLICATE_CLIPS_CODE,
     CLIP_SPLIT_CUT,
     CLIP_SPLIT_DELETE,
     SPLIT_CUT_SELECTED,
@@ -99,7 +99,7 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     REDO,
     STRETCH_ENABLED_CODE,
     TRACK_DELETE,
-    TRACK_DUPLICATE,
+    TRACK_DUPLICATE_CODE,
     GROUP_CLIPS_CODE,
     UNGROUP_CLIPS_CODE
 };
@@ -134,8 +134,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
     dispatcher()->reg(this, UNDO, this, &TrackeditActionsController::undo);
     dispatcher()->reg(this, REDO, this, &TrackeditActionsController::redo);
-    dispatcher()->reg(this, DUPLICATE_SELECTED, this, &TrackeditActionsController::duplicateSelected);
-    dispatcher()->reg(this, DUPLICATE_CLIPS, this, &TrackeditActionsController::duplicateClips);
+    dispatcher()->reg(this, DUPLICATE_SELECTED_CODE, this, &TrackeditActionsController::duplicateSelected);
+    dispatcher()->reg(this, DUPLICATE_CLIPS_CODE, this, &TrackeditActionsController::duplicateClips);
     dispatcher()->reg(this, CLIP_SPLIT_CUT, this, &TrackeditActionsController::clipSplitCut);
     dispatcher()->reg(this, CLIP_SPLIT_DELETE, this, &TrackeditActionsController::clipSplitDelete);
     dispatcher()->reg(this, SPLIT_CUT_SELECTED, this, &TrackeditActionsController::splitCutSelected);
@@ -150,7 +150,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, NEW_STEREO_TRACK, this, &TrackeditActionsController::newStereoTrack);
     dispatcher()->reg(this, NEW_LABEL_TRACK, this, &TrackeditActionsController::newLabelTrack);
     dispatcher()->reg(this, TRACK_DELETE, this, &TrackeditActionsController::deleteTracks);
-    dispatcher()->reg(this, TRACK_DUPLICATE, this, &TrackeditActionsController::duplicateTracks);
+    dispatcher()->reg(this, TRACK_DUPLICATE_CODE, this, &TrackeditActionsController::duplicateTracks);
     dispatcher()->reg(this, TRACK_MOVE_UP, this, &TrackeditActionsController::moveTracksUp);
     dispatcher()->reg(this, TRACK_MOVE_DOWN, this, &TrackeditActionsController::moveTracksDown);
     dispatcher()->reg(this, TRACK_MOVE_TOP, this, &TrackeditActionsController::moveTracksToTop);
@@ -355,11 +355,11 @@ void TrackeditActionsController::doGlobalDuplicate()
             //If no range is selected, duplicate all content of the selected tracks
             //Otherwise, duplicate only the selected range
             (selectedStartTime == selectedEndTime)
-            ? dispatcher()->dispatch(TRACK_DUPLICATE, ActionData::make_arg1<TrackIdList>(selectedTracks))
-            : dispatcher()->dispatch(DUPLICATE_SELECTED,
+            ? dispatcher()->dispatch(TRACK_DUPLICATE_CODE, ActionData::make_arg1<TrackIdList>(selectedTracks))
+            : dispatcher()->dispatch(DUPLICATE_SELECTED_CODE,
                                    ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
         } else {
-           dispatcher()->dispatch(DUPLICATE_CLIPS, ActionData::make_arg1<ClipKeyList>(selectedClips));
+           dispatcher()->dispatch(DUPLICATE_CLIPS_CODE, ActionData::make_arg1<ClipKeyList>(selectedClips));
         }
     }
 }

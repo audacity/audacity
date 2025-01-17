@@ -1247,27 +1247,39 @@ bool Au3Interaction::duplicateClip(const ClipKey& clipKey)
 
 bool Au3Interaction::duplicateClips(const ClipKeyList& clipKeyList)
 {
-    //Get ordered list of trackIds so we can duplicate in the same order
-    std::set<TrackId> trackIds;
-    std::transform(clipKeyList.begin(), clipKeyList.end(), std::inserter(trackIds, trackIds.begin()), [](const ClipKey& clipKey) {
-        return clipKey.trackId;
-    });
-
-    if (trackIds.empty()) {
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
         return false;
     }
 
-    std::vector<Au3WaveTrack*> waveTracks;
-    std::transform(trackIds.begin(), trackIds.end(), std::back_inserter(waveTracks), [this](TrackId trackId) {
-        return DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    //Get list of tracks in order by the UI position
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    //Get a set of the tracks we want copy content from
+    std::set<TrackId> selectedTracks;
+    std::transform(clipKeyList.begin(), clipKeyList.end(), std::inserter(selectedTracks, selectedTracks.begin()), [](const ClipKey& clipKey) {
+        return clipKey.trackId;
     });
+    if (selectedTracks.empty()) {
+        return false;
+    }
+
+    //Get only the selected tracks but keeping the UI order
+    std::vector<Au3WaveTrack*> waveTracks;
+    for (auto trackId : tracks) {
+        if (selectedTracks.find(trackId) != selectedTracks.end()) {
+            auto waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+            if (waveTrack) {
+                waveTracks.push_back(waveTrack);
+            }
+        }
+    }
 
     auto& projectTracks = Au3TrackList::Get(projectRef());
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    auto& trackFactory = WaveTrackFactory::Get(projectRef());
+    auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
 
     for (const auto& track : waveTracks) {
-        auto& trackFactory = WaveTrackFactory::Get(projectRef());
-        auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
         auto newTrack = track->EmptyCopy(pSampleBlockFactory);
 
         std::vector<ClipKey> clipsToDuplicate;
