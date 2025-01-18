@@ -47,6 +47,8 @@ const wxString HelpSystem::HelpHostname = wxT("manual.audacityteam.org");
 const wxString HelpSystem::HelpServerHomeDir = wxT("/");
 const wxString HelpSystem::HelpServerManDir = wxT("/man/");
 
+const wxString HelpSystem::AudacitySupportHostname = wxT("support.audacityteam.org");
+
 const wxString HelpSystem::LocalHelpManDir = wxT("/man/");
 
 namespace {
@@ -345,6 +347,11 @@ void HelpSystem::ShowHelp(wxWindow *parent,
       releasePageName = L"index" + ReleaseSuffix + anchor;
       localHelpPage = wxFileName(FileNames::HtmlHelpDir(), releasePageName).GetFullPath();
       webHelpPath = L"https://" + HelpSystem::HelpHostname + HelpSystem::HelpServerHomeDir;
+   }
+    else if (releasePageName == L"Audacity_Support")
+   {
+      releasePageName = "";
+      webHelpPath = L"https://" + HelpSystem::AudacitySupportHostname;
    }
    else if (releasePageName == L"Quick_Help")
    {
