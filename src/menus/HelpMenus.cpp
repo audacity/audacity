@@ -266,6 +266,14 @@ void OnManual(const CommandContext &context)
       L"Main_Page");
 }
 
+void OnAudacitySupport(const CommandContext &context)
+{
+   auto &project = context.project;
+   HelpSystem::ShowHelp(
+      &GetProjectFrame( project ),
+      L"Audacity_Support");
+}
+
 void OnAudioDeviceInfo(const CommandContext &context)
 {
    auto &project = context.project;
@@ -414,9 +422,11 @@ auto HelpMenu()
    static auto menu = std::shared_ptr{
    Menu( wxT("Help"), XXO("&Help"),
       Section( "Basic",
-         Command( wxT("QuickHelp"), XXO("&Quick Help..."), OnQuickHelp,
+         Command( wxT("QuickHelp"), XXO("&Quick Help"), OnQuickHelp,
             AlwaysEnabledFlag ),
-         Command( wxT("Manual"), XXO("&Manual..."), OnManual,
+         Command( wxT("Manual"), XXO("&Manual"), OnManual,
+            AlwaysEnabledFlag ),
+         Command( wxT("AudacitySupport"), XXO("&Audacity Support"), OnAudacitySupport,
             AlwaysEnabledFlag )
       ),
 
