@@ -136,9 +136,6 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
          block.Url, [this, hash = ToUpper(block.Hash)](auto response)
          { OnBlockDownloaded(std::move(hash), response); }));
    }
-
-   mRequestsThread =
-      std::thread { &RemoteProjectSnapshot::RequestsThread, this };
 }
 
 RemoteProjectSnapshot::~RemoteProjectSnapshot()
@@ -185,7 +182,13 @@ std::shared_ptr<RemoteProjectSnapshot> RemoteProjectSnapshot::Sync(
    if (snapshot->mNothingToDo)
       return {};
 
+   snapshot->StartSync();
    return snapshot;
+}
+
+void RemoteProjectSnapshot::StartSync() {
+   mRequestsThread =
+      std::thread { &RemoteProjectSnapshot::RequestsThread, this };
 }
 
 void RemoteProjectSnapshot::Cancel()
@@ -372,6 +375,7 @@ void RemoteProjectSnapshot::DownloadBlob(
       mResponses.push_back(response);
    }
 
+   assert(!weak_from_this().expired());
    response->setRequestFinishedCallback(
       [this, self = weak_from_this(), onSuccess = std::move(onSuccess), retries, response](auto)
       {
