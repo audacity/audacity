@@ -114,6 +114,7 @@ private:
 
    void ReportProgress();
 
+   void StartSync();
    bool InProgress() const;
    void RequestsThread();
 
