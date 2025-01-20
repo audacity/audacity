@@ -1139,11 +1139,13 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    ClearSequenceFinisher finisher;
 
    //seems like edge cases cannot happen, see WaveTrack::PasteWaveTrack
+   double leftTrimDueToPaste = 0.0;
    auto &factory = GetFactory();
    if (t0 == GetPlayStartTime())
    {
       finisher = ClearSequence(GetSequenceStartTime(), t0);
       SetTrimLeft(other.GetTrimLeft());
+      leftTrimDueToPaste = other.GetTrimLeft();
 
       auto copy = std::make_shared<WaveClip>(other, factory, true);
       copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime())
@@ -1211,6 +1213,8 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    finisher.Commit();
    transaction.Commit();
    MarkChanged();
+
+   SetSequenceStartTime(GetSequenceStartTime() - leftTrimDueToPaste);
 
    const auto sampleTime = 1.0 / GetRate();
    const auto timeOffsetInEnvelope =
