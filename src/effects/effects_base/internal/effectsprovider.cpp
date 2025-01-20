@@ -33,8 +33,8 @@ using namespace au::effects;
 static const char16_t* BUILTIN_VIEWER_URI = u"audacity://effects/builtin_viewer?type=%1&instanceId=%2";
 static const char16_t* VST_VIEWER_URI = u"audacity://effects/vst_viewer?type=%1&instanceId=%2";
 
-// For now modal is true because otherwise we get a crash when changing track selection with a dialog open. Will fix this in another PR.
-static const char16_t* REALTIME_VIEWER_URI = u"audacity://effects/realtime_viewer?type=%1&instanceId=%2&effectState=%3&modal=true";
+static const char16_t* REALTIME_VIEWER_URI
+    = u"audacity://effects/realtime_viewer?type=%1&instanceId=%2&effectState=%3&sync=false&modal=false&floating=true";
 
 bool EffectsProvider::isVstSupported() const
 {
@@ -203,21 +203,62 @@ muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInst
     return ret;
 }
 
-muse::Ret EffectsProvider::showEffect(effects::RealtimeEffectState* state) const
+void EffectsProvider::showEffect(const RealtimeEffectStatePtr& state) const
 {
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
     const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
-    const auto effectState = reinterpret_cast<EffectStateId>(state);
 
-    LOGD() << "try open realtime effect: " << type << ", instanceId: " << instanceId << ", effectState: " << effectState;
+    const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
 
-    RetVal<Val> rv
-        = interactive()->open(String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(effectState)).toStdString());
+    // If the dialog for this specific instance is opened, just raise it.
+    if (interactive()->isOpened(query).val) {
+        // Note: at the time of writing, `raise` doesn't seem to be working for QML dialogs (although it does for QtWidget dialogs)
+        // Some changes are needed in the Muse framework.
+        interactive()->raise(query);
+        return;
+    }
 
-    LOGD() << "open ret: " << rv.ret.toString();
-    return rv.ret;
+    // At the time of writing, despite the `alwaysOnTop: true` property set on the dialog, whenever a new dialog is spawned,
+    // the other dialog isn't always on top anymore. UX-wise this is very confusing, so until this problem is solved in the framework,
+    // we only allow one effect dialog open at all times.
+    const Uri genericUri { REALTIME_VIEWER_URI };
+    if (interactive()->isOpened(genericUri).val) {
+        interactive()->close(genericUri);
+    }
+
+    interactive()->open(query);
+}
+
+void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
+{
+    const auto effectId = state->GetID().ToStdString();
+    const auto type = muse::String::fromStdString(effectSymbol(effectId));
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
+
+    const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
+
+    if (interactive()->isOpened(query).val) {
+        interactive()->close(query);
+    }
+}
+
+void EffectsProvider::toggleShowEffect(const RealtimeEffectStatePtr& state) const
+{
+    const auto effectId = state->GetID().ToStdString();
+    const auto type = muse::String::fromStdString(effectSymbol(effectId));
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
+
+    const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
+
+    if (interactive()->isOpened(query).val) {
+        interactive()->close(query);
+    } else {
+        showEffect(state);
+    }
 }
 
 muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,

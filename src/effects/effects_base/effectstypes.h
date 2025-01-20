@@ -31,7 +31,6 @@ using EffectSettingsAccess = ::EffectSettingsAccess;
 using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
 using RealtimeEffectState = ::RealtimeEffectState;
 using RealtimeEffectStatePtr = std::shared_ptr<RealtimeEffectState>;
-using EffectStateId = uintptr_t;
 using TrackId = long;
 using EffectChainLinkIndex = int;
 

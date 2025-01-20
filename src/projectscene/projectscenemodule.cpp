@@ -15,6 +15,7 @@
 #include "internal/projectsceneactionscontroller.h"
 #include "internal/projectsceneconfiguration.h"
 #include "internal/projectviewstatecreator.h"
+#include "internal/realtimeeffectpaneltrackselection.h"
 
 #include "view/common/tracksviewstatemodel.h"
 #include "view/common/customcursor.h"
@@ -79,11 +80,13 @@ void ProjectSceneModule::registerExports()
     m_projectSceneActionsController = std::make_shared<ProjectSceneActionsController>();
     m_uiActions = std::make_shared<ProjectSceneUiActions>(m_projectSceneActionsController);
     m_configuration = std::make_shared<ProjectSceneConfiguration>();
+    m_realtimeEffectPanelTrackSelection = std::make_shared<RealtimeEffectPanelTrackSelection>();
 
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
     ioc()->registerExport<IWavePainter>(moduleName(), new Au3WavePainter());
+    ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(moduleName(), m_realtimeEffectPanelTrackSelection);
 }
 
 void ProjectSceneModule::resolveImports()
@@ -164,4 +167,5 @@ void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
     m_configuration->init();
     m_uiActions->init();
     m_projectSceneActionsController->init();
+    m_realtimeEffectPanelTrackSelection->init();
 }

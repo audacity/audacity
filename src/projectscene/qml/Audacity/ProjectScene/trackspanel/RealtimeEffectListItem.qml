@@ -58,10 +58,10 @@ ListItemBlank {
             icon: IconCode.BYPASS
             iconFont: ui.theme.toolbarIconsFont
 
-            accentButton: true
+            accentButton: item.isActive
 
             onClicked: {
-                accentButton = !accentButton
+                item.isActive = !item.isActive
             }
         }
 
@@ -95,7 +95,7 @@ ListItemBlank {
                 }
 
                 onClicked: {
-                    root.item.showDialog()
+                    root.item.toggleDialog()
                 }
             }
         }

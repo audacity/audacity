@@ -26,8 +26,8 @@ TransactionScope::TransactionScope(
    if ( !mInTrans )
       // To do, improve the message
       throw SimpleMessageBoxException( ExceptionType::Internal,
-         XO("Database error.  Sorry, but we don't have more details."), 
-         XO("Warning"), 
+         XO("Database error.  Sorry, but we don't have more details."),
+         XO("Warning"),
          "Error:_Disk_full_or_not_writable"
       );
 }
@@ -47,7 +47,9 @@ TransactionScope::~TransactionScope()
 
 bool TransactionScope::Commit()
 {
-   if (mpImpl && !mInTrans) {
+   if (!mpImpl)
+      return false;
+   else if (!mInTrans) {
       wxLogMessage("No active transaction to commit");
       // Misuse of this class
       THROW_INCONSISTENCY_EXCEPTION;

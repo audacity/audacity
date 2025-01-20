@@ -11,21 +11,16 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 
 Rectangle {
-    id: effectsPanel
+    id: root
 
     property int selectedTrackIndex: -1
 
+    enabled: effectList.trackName !== ""
     color: ui.theme.backgroundPrimaryColor
-
-    onSelectedTrackIndexChanged: {
-        const selectedTrackItem = view.itemAtIndex(selectedTrackIndex)
-        trackEffects.trackName = selectedTrackItem.item.title
-    }
 
     ColumnLayout {
         id: trackEffects
         spacing: 0
-        property alias trackName: trackEffectsHeader.trackName
         readonly property int itemSpacing: 12
         Layout.fillWidth: true
 
@@ -33,7 +28,6 @@ Rectangle {
 
         RowLayout {
             id: trackEffectsHeader
-            property alias trackName: trackNameLabel.text
             readonly property int headerHeight: 40
 
             spacing: trackEffects.itemSpacing
@@ -52,18 +46,22 @@ Rectangle {
                 icon: IconCode.BYPASS
                 iconFont: ui.theme.toolbarIconsFont
 
-                accentButton: true
+                enabled: root.enabled
+                accentButton: effectList.trackEffectsActive
 
                 onClicked: {
                     accentButton = !accentButton
+                    effectList.trackEffectsActive = accentButton
                 }
             }
 
             StyledTextLabel {
                 id: trackNameLabel
+                visible: root.enabled
+                text: effectList.trackName
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.maximumWidth: effectsPanel.width - trackEffectsPowerButton.width - trackEffectsHeader.spacing - trackEffects.itemSpacing
+                Layout.maximumWidth: root.width - trackEffectsPowerButton.width - trackEffectsHeader.spacing - trackEffects.itemSpacing
                 horizontalAlignment: Text.AlignLeft
             }
         }
@@ -74,6 +72,7 @@ Rectangle {
         }
 
         Rectangle {
+            visible: root.enabled
             color: ui.theme.backgroundSecondaryColor
             Layout.preferredHeight: effectList.preferredHeight == 0 ? 0 : effectList.preferredHeight + (effectList.anchors.topMargin + effectList.anchors.bottomMargin)
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -91,11 +90,14 @@ Rectangle {
                     topMargin: 8
                     bottomMargin: 8
                 }
+                onTrackEffectsActiveChanged: {
+                    trackEffectsPowerButton.accentButton = trackEffectsActive
+                }
             }
         }
 
         SeparatorLine {
-            visible: effectList.visible
+            visible: root.enabled
         }
 
         FlatButton {
@@ -108,7 +110,6 @@ Rectangle {
 
             RealtimeEffectMenuModel {
                 id: menuModel
-                trackId: view.itemAtIndex(effectsPanel.selectedTrackIndex).item.trackId
             }
 
             onClicked: function() {

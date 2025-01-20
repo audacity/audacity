@@ -1508,7 +1508,7 @@ bool Au3Interaction::newMonoTrack()
 {
     auto track = createMonoTrack();
 
-    selectionController()->setSelectedTracks(TrackIdList(TrackId(track->GetId())));
+    selectionController()->setSelectedTracks({track->GetId()});
 
     pushProjectHistoryTrackAddedState();
 
@@ -1519,7 +1519,7 @@ bool Au3Interaction::newStereoTrack()
 {
     auto track = createStereoTrack();
 
-    selectionController()->setSelectedTracks(TrackIdList(TrackId(track->GetId())));
+    selectionController()->setSelectedTracks({track->GetId()});
 
     pushProjectHistoryTrackAddedState();
 

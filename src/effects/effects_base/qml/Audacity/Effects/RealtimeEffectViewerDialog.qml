@@ -1,6 +1,6 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 import QtQuick
 import QtQuick.Layouts
 
@@ -9,23 +9,28 @@ import Muse.UiComponents
 
 import Audacity.Effects
 
-StyledDialogView {
+StyledDialogViewWithoutNavigationSection {
     id: root
 
     property alias type: viewer.type
     property alias instanceId: viewer.instanceId
     property alias effectState: viewer.effectState
 
-    title: viewer.title
+    title: viewer.title + " - " + viewerModel.trackName
 
     contentWidth: viewer.implicitWidth
     contentHeight: layout.implicitHeight + 16
-
+    alwaysOnTop: true
     margins: 16
+
+    Component.onCompleted: {
+        viewerModel.load()
+    }
 
     RealtimeEffectViewerDialogModel {
         id: viewerModel
         effectState: root.effectState
+        onTrackRemoved: root.close()
     }
 
     ColumnLayout {
@@ -50,10 +55,10 @@ StyledDialogView {
 
                 icon: IconCode.BYPASS
                 iconFont: ui.theme.toolbarIconsFont
-                accentButton: true
+                accentButton: viewerModel.isActive
 
                 onClicked: {
-                    accentButton = !accentButton
+                    viewerModel.isActive = !viewerModel.isActive
                 }
             }
 
