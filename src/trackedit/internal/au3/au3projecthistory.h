@@ -11,6 +11,8 @@
 
 #include "au3wrap/au3types.h"
 
+#include "libraries/lib-utility/Observer.h"
+
 namespace au::trackedit {
 class Au3ProjectHistory : public IProjectHistory
 {
@@ -30,10 +32,13 @@ public:
     void pushHistoryState(
         const std::string& longDescription, const std::string& shortDescription, UndoPushType flags) override;
     muse::async::Notification isUndoRedoAvailableChanged() const override;
+    muse::async::Notification undoOrRedoCalled() const override;
 
 private:
     au3::Au3Project& projectRef();
 
     muse::async::Notification m_isUndoRedoAvailableChanged;
+    muse::async::Notification m_undoOrRedoCalled;
+    ::Observer::Subscription m_undoRedoMessageSubscription;
 };
 }

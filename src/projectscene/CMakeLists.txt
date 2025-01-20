@@ -16,6 +16,10 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/irealtimeeffectpaneltrackselection.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectpaneltrackselection.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectpaneltrackselection.h
+
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectviewstate.cpp
@@ -41,6 +45,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectmenumodelbase.cpp

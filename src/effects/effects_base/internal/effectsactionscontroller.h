@@ -13,8 +13,6 @@
 #include "ui/iuiactionsregister.h"
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
-#include "effects/effects_base/irealtimeeffectservice.h"
-#include "context/iglobalcontext.h"
 #include "../ieffectpresetsscenario.h"
 #include "iinteractive.h"
 #include "playback/iplayback.h"
@@ -27,11 +25,9 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
     muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
-    muse::Inject<IRealtimeEffectService> realtimeEffectService;
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectPresetsScenario> presetsScenario;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::playback::IPlayback> playback;
 
 public:
@@ -44,9 +40,6 @@ private:
 
     void onEffectTriggered(const muse::actions::ActionQuery& q);
     void repeatLastEffect();
-    void addRealtimeEffect(const muse::actions::ActionData& args);
-    void removeRealtimeEffect(const muse::actions::ActionData& args);
-    void replaceRealtimeEffect(const muse::actions::ActionData& args);
 
     void applyPreset(const muse::actions::ActionData& args);
     void saveAsPreset(const muse::actions::ActionData& args);

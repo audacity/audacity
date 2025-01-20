@@ -86,6 +86,19 @@ void AbstractEffectModel::preview()
     }
 }
 
+void AbstractEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
+{
+    EffectSettingsAccess* const access = this->settingsAccess();
+    IF_ASSERT_FAILED(access) {
+        return;
+    }
+    access->ModifySettings([&](EffectSettings& settings) {
+        modifier(settings);
+        return nullptr;
+    });
+    access->Flush();
+}
+
 QString AbstractEffectModel::instanceId_prop() const
 {
     return m_instanceId;

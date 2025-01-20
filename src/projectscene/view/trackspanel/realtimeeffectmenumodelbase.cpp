@@ -6,7 +6,9 @@
 using namespace au::projectscene;
 
 RealtimeEffectMenuModelBase::RealtimeEffectMenuModelBase(QObject* parent)
-    : AbstractMenuModel(parent) {}
+    : AbstractMenuModel(parent)
+{
+}
 
 void RealtimeEffectMenuModelBase::load()
 {
@@ -15,22 +17,41 @@ void RealtimeEffectMenuModelBase::load()
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]
     { populateMenu(); });
 
+    trackSelection()->selectedTrackIdChanged().onNotify(this, [this]
+    {
+        beginResetModel();
+        endResetModel();
+        onTrackIdChanged();
+    });
+
     doLoad();
 }
 
-au::trackedit::TrackId RealtimeEffectMenuModelBase::trackId() const
+std::optional<au::trackedit::TrackId> RealtimeEffectMenuModelBase::trackId() const
 {
-    return m_trackId;
+    return trackSelection()->selectedTrackId();
 }
 
-void RealtimeEffectMenuModelBase::setTrackId(au::trackedit::TrackId trackId)
+void RealtimeEffectMenuModelBase::resetList()
 {
-    if (trackId < 0 || m_trackId == trackId) {
-        return;
-    }
     beginResetModel();
-    m_trackId = trackId;
+    doResetList();
     endResetModel();
-    // TODO: I don't think this is necessary
-    emit trackIdChanged();
+}
+
+void RealtimeEffectMenuModelBase::removeTrack(const au::trackedit::TrackId& trackId)
+{
+    beginResetModel();
+    doRemoveTrack(trackId);
+    endResetModel();
+}
+
+void RealtimeEffectMenuModelBase::beginResetModel()
+{
+    AbstractMenuModel::beginResetModel();
+}
+
+void RealtimeEffectMenuModelBase::endResetModel()
+{
+    AbstractMenuModel::endResetModel();
 }

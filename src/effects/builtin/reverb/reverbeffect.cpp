@@ -130,10 +130,10 @@ bool ReverbEffect::Instance::ProcessInitialize(
 }
 
 bool ReverbEffect::Instance::InstanceInit(
-    EffectSettings& settings, double sampleRate, ReverbState& state,
+    const EffectSettings& settings, double sampleRate, ReverbState& state,
     ChannelNames chanMap, bool forceStereo)
 {
-    auto& rs = GetSettings(settings);
+    const auto& rs = GetSettings(settings);
 
     bool isStereo = false;
     state.mNumChans = 1;

@@ -49,7 +49,7 @@ protected:
 
     std::shared_ptr<effects::EffectInstance> instance() const;
     const EffectSettings* settings() const;
-    EffectSettingsAccess* settingsAccess() const;
+    void modifySettings(const std::function<void(EffectSettings& settings)>&);
 
     template<typename T>
     const T& settings() const
@@ -68,6 +68,7 @@ protected:
     bool m_inited = false;
 
 private:
+    EffectSettingsAccess* settingsAccess() const;
     QString m_instanceId;
 };
 }

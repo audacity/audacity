@@ -4,6 +4,7 @@
 #include "effectsactionscontroller.h"
 #include "effects/effects_base/effectstypes.h"
 #include "effectsuiactions.h"
+#include "playback/iplayer.h"
 
 #include "wx/string.h"
 
@@ -39,9 +40,6 @@ void EffectsActionsController::registerActions()
     }
 
     dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
-    dispatcher()->reg(this, "realtimeeffect-add", this, &EffectsActionsController::addRealtimeEffect);
-    dispatcher()->reg(this, "realtimeeffect-remove", this, &EffectsActionsController::removeRealtimeEffect);
-    dispatcher()->reg(this, "realtimeeffect-replace", this, &EffectsActionsController::replaceRealtimeEffect);
 
     // presets
     dispatcher()->reg(this, "action://effects/presets/apply", this, &EffectsActionsController::applyPreset);
@@ -70,53 +68,6 @@ void EffectsActionsController::repeatLastEffect()
 {
     playback()->player()->stop();
     effectExecutionScenario()->repeatLastProcessor();
-}
-
-void EffectsActionsController::addRealtimeEffect(const muse::actions::ActionData& args)
-{
-    const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        // Command issued without an open project ?..
-        return;
-    }
-
-    const auto effectId = args.arg<EffectId>(0);
-    const auto trackId = args.arg<TrackId>(1);
-    if (const RealtimeEffectStatePtr state = realtimeEffectService()->addRealtimeEffect(*project, trackId, effectId)) {
-        effectsProvider()->showEffect(state.get());
-    }
-}
-
-void EffectsActionsController::removeRealtimeEffect(const muse::actions::ActionData& args)
-{
-    const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        // Command issued without an open project ?..
-        return;
-    }
-
-    const auto trackId = args.arg<TrackId>(0);
-    const auto effectStateId = args.arg<EffectStateId>(1);
-    realtimeEffectService()->removeRealtimeEffect(*project, trackId, effectStateId);
-}
-
-void EffectsActionsController::replaceRealtimeEffect(const muse::actions::ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() == 3) {
-        return;
-    }
-
-    const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        // Command issued without an open project ?..
-        return;
-    }
-
-    const auto trackId = args.arg<TrackId>(0);
-    const auto srcIndex = args.arg<int>(1);
-    const auto dstEffectId = args.arg<EffectId>(2);
-
-    realtimeEffectService()->replaceRealtimeEffect(*project, trackId, srcIndex, dstEffectId);
 }
 
 void EffectsActionsController::applyPreset(const muse::actions::ActionData& args)

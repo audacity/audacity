@@ -2,63 +2,111 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectlistmodel.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
+#include "realtimeeffectlistitemmodel.h"
+#include "global/defer.h"
 #include "log.h"
 
 using namespace muse;
 using namespace au::projectscene;
 using namespace muse::uicomponents;
-using namespace au::audio;
 using namespace au::effects;
-
-ModelEffectItem::ModelEffectItem(QObject* parent, EffectStateId effectStateId)
-    : QObject{parent}, effectStateId{effectStateId} {}
-
-QString ModelEffectItem::effectName() const
-{
-    return QString::fromStdString(effectsProvider()->effectName(*reinterpret_cast<RealtimeEffectState*>(effectStateId)));
-}
-
-void ModelEffectItem::showDialog()
-{
-    effectsProvider()->showEffect(reinterpret_cast<RealtimeEffectState*>(effectStateId));
-}
 
 RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
     : RealtimeEffectMenuModelBase(parent)
 {
 }
 
-void RealtimeEffectListModel::doLoad()
+void RealtimeEffectListModel::onProjectChanged()
 {
-    populateMenu();
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        resetList();
+        return;
+    }
 
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
-    { setListenerOnCurrentTrackeditProject(); });
+    project->trackRemoved().onReceive(this, [this](au::trackedit::Track track)
+    {
+        removeTrack(track.id);
+    });
 
-    setListenerOnCurrentTrackeditProject();
+    project->trackChanged().onReceive(this, [this](au::trackedit::Track track)
+    {
+        if (trackId() == track.id) {
+            emit trackNameChanged();
+        }
+    });
 }
 
-void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, const ModelEffectItem* item)
+void RealtimeEffectListModel::doLoad()
+{
+    realtimeEffectService()->realtimeEffectAdded().onReceive(this,
+                                                             [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                    RealtimeEffectStatePtr item)
+    { insertEffect(trackId, index, item); });
+
+    realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
+                                                               [this](effects::TrackId trackId, RealtimeEffectStatePtr item) {
+        removeEffect(trackId, item);
+    });
+
+    realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
+                                                                [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                       RealtimeEffectStatePtr oldItem, RealtimeEffectStatePtr newItem)
+    {
+        removeEffect(trackId, oldItem);
+        insertEffect(trackId, index, newItem);
+    });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this] { onProjectChanged(); });
+    onProjectChanged();
+
+    populateMenu();
+}
+
+void RealtimeEffectListModel::doResetList()
+{
+    m_trackEffectLists.clear();
+}
+
+void RealtimeEffectListModel::doRemoveTrack(const au::trackedit::TrackId& trackId)
+{
+    if (!m_trackEffectLists.count(trackId)) {
+        return;
+    }
+    m_trackEffectLists.erase(trackId);
+}
+
+void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, const RealtimeEffectListItemModel* item)
 {
     TRACEFUNC;
 
-    MenuItem& menuItem = findItem(itemId);
+    const auto tId = trackId();
+    IF_ASSERT_FAILED(tId.has_value()) {
+        return;
+    }
+
+    const MenuItem& menuItem = findItem(itemId);
 
     if (itemId == "realtimeeffect-remove") {
-        menuItem.setArgs(actions::ActionData::make_arg2(m_trackId, item->effectStateId));
+        realtimeEffectService()->removeRealtimeEffect(*tId, item->effectStateId);
+        return;
     }
+
     if (itemId == "realtimeeffect-replace") {
-        const auto& list = m_trackEffectLists.at(m_trackId);
-        const auto it = std::find(list.begin(), list.end(), item);
+        const auto& list = m_trackEffectLists.at(*tId);
+        const auto it = std::find_if(list.begin(), list.end(), [item](const RealtimeEffectListItemModelPtr& listItem) {
+            return listItem.get() == item;
+        });
         IF_ASSERT_FAILED(it != list.end()) {
             return;
         }
         const int itemIndex = it - list.begin();
-        menuItem.setArgs(actions::ActionData::make_arg3(m_trackId, itemIndex, menuItem.args().arg<effects::EffectId>(2)));
+        const auto effectId = menuItem.args().arg<effects::EffectId>(0);
+        if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, itemIndex, effectId)) {
+            effectsProvider()->showEffect(newState);
+        }
+        return;
     }
-
-    AbstractMenuModel::handleMenuItem(itemId);
 }
 
 void RealtimeEffectListModel::populateMenu()
@@ -68,21 +116,15 @@ void RealtimeEffectListModel::populateMenu()
     const auto categoryList = effectsProvider()->effectsCategoryList();
     std::unordered_map<String, MenuItemList> menuCategories;
 
-    {
-        MenuItem* noEffectItem = makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect"));
-        noEffectItem->setArgs(actions::ActionData::make_arg2(effects::TrackId { -1 }, EffectStateId { 0 }));
-        items << noEffectItem;
-    }
+    items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect"));
 
     // Populate with available realtime effect.
     for (const effects::EffectMeta& meta : effectsProvider()->effectMetaList()) {
         if (!meta.isRealtimeCapable) {
             continue;
         }
-        // TODO no one reacts to "realtimeeffect-replace" actions at the moment.
         MenuItem* item = makeMenuItem("realtimeeffect-replace", muse::TranslatableString::untranslatable(meta.title));
-        item->setArgs(actions::ActionData::make_arg3(effects::TrackId { -1 }, EffectChainLinkIndex { -1 },
-                                                     effects::EffectId { meta.id }));
+        item->setArgs(actions::ActionData::make_arg1(effects::EffectId { meta.id }));
         menuCategories[meta.categoryId].push_back(item);
     }
 
@@ -95,51 +137,40 @@ void RealtimeEffectListModel::populateMenu()
     emit availableEffectsChanged();
 }
 
-void RealtimeEffectListModel::setListenerOnCurrentTrackeditProject()
+void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChainLinkIndex index, const RealtimeEffectStatePtr& e)
 {
-    realtimeEffectService()->realtimeEffectAdded().onReceive(this,
-                                                             [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                    EffectStateId item)
-    { insertEffect(trackId, index, item); });
-
-    realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
-                                                               [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                      EffectStateId item) {
-        removeEffect(trackId, index, item);
-    });
-
-    realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
-                                                                [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                       EffectStateId oldItem,
-                                                                       EffectStateId newItem) {
-        removeEffect(trackId, index, oldItem);
-        insertEffect(trackId, index, newItem);
-    });
-}
-
-void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectStateId& e)
-{
+    const auto sizeBefore = m_trackEffectLists.size();
     auto& list = m_trackEffectLists[trackId];
     IF_ASSERT_FAILED(index <= list.size()) {
         return;
     }
-    const auto affectsSelectedTrack = trackId == m_trackId;
+    const auto affectsSelectedTrack = trackId == this->trackId();
     if (affectsSelectedTrack) {
         beginInsertRows(QModelIndex(), index, index);
     }
-    list.insert(list.begin() + index, new ModelEffectItem(this, e));
+    list.insert(list.begin() + index, std::make_shared<RealtimeEffectListItemModel>(this, e));
     if (affectsSelectedTrack) {
         endInsertRows();
     }
 }
 
-void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, EffectChainLinkIndex index, const EffectStateId& e)
+void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, const RealtimeEffectStatePtr& e)
 {
-    auto& list = m_trackEffectLists[trackId];
-    IF_ASSERT_FAILED(index < list.size() && list[index]->effectStateId == e) {
+    if (!m_trackEffectLists.count(trackId)) {
         return;
     }
-    const auto affectsSelectedTrack = trackId == m_trackId;
+
+    std::vector<RealtimeEffectListItemModelPtr>& list = m_trackEffectLists.at(trackId);
+    const auto it = std::find_if(list.begin(), list.end(), [e](const RealtimeEffectListItemModelPtr& item) {
+        return item->effectStateId == e;
+    });
+
+    IF_ASSERT_FAILED(it != list.end()) {
+        return;
+    }
+    const int index = it - list.begin();
+
+    const auto affectsSelectedTrack = trackId == this->trackId();
     if (affectsSelectedTrack) {
         beginRemoveRows(QModelIndex(), index, index);
     }
@@ -154,6 +185,30 @@ QVariantList RealtimeEffectListModel::availableEffects()
     return menuItemListToVariantList(items());
 }
 
+void RealtimeEffectListModel::onTrackIdChanged()
+{
+    emit trackNameChanged();
+    emit trackEffectsActiveChanged();
+}
+
+QString RealtimeEffectListModel::prop_trackName() const
+{
+    if (!trackId().has_value()) {
+        return QString();
+    }
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    IF_ASSERT_FAILED(project) {
+        return QString();
+    }
+
+    const auto trackName = project->trackName(*trackId());
+    IF_ASSERT_FAILED(trackName.has_value()) {
+        return QString();
+    }
+
+    return QString::fromStdString(*trackName);
+}
+
 QHash<int, QByteArray> RealtimeEffectListModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles = {
@@ -165,19 +220,39 @@ QHash<int, QByteArray> RealtimeEffectListModel::roleNames() const
 
 QVariant RealtimeEffectListModel::data(const QModelIndex& index, int role) const
 {
-    if (!index.isValid() || index.row() >= rowCount() || role != rItemData || !m_trackEffectLists.count(m_trackId)) {
+    if (!index.isValid() || index.row() >= rowCount() || role != rItemData || !trackId().has_value()
+        || !m_trackEffectLists.count(*trackId())) {
         return QVariant();
     }
-    auto it = m_trackEffectLists.at(m_trackId).begin();
+    auto it = m_trackEffectLists.at(*trackId()).begin();
     std::advance(it, index.row());
-    return QVariant::fromValue(*it);
+    const RealtimeEffectListItemModelPtr& item = *it;
+    return QVariant::fromValue(item.get());
 }
 
 int RealtimeEffectListModel::rowCount(const QModelIndex& parent) const
 {
     UNUSED(parent);
-    if (!m_trackEffectLists.count(m_trackId)) {
+    if (!trackId().has_value() || !m_trackEffectLists.count(*trackId())) {
         return 0;
     }
-    return static_cast<int>(m_trackEffectLists.at(m_trackId).size());
+    return static_cast<int>(m_trackEffectLists.at(*trackId()).size());
+}
+
+bool RealtimeEffectListModel::prop_trackEffectsActive() const
+{
+    const auto tId = trackId();
+    if (!tId.has_value()) {
+        return false;
+    }
+    return realtimeEffectService()->trackEffectsActive(*tId);
+}
+
+void RealtimeEffectListModel::prop_setTrackEffectsActive(bool active)
+{
+    const auto tId = trackId();
+    IF_ASSERT_FAILED(tId.has_value()) {
+        return;
+    }
+    realtimeEffectService()->setTrackEffectsActive(*tId, active);
 }
