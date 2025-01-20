@@ -186,6 +186,7 @@ DockPage {
             id: tracksPanel
             readonly property int effectsSectionWidth: 240
             property bool showEffectsSection: false
+            property int titleBarHeight: 39
 
             onShowEffectsSectionChanged: {
                 const newWidth = root.verticalPanelDefaultWidth + (tracksPanel.showEffectsSection ? tracksPanel.effectsSectionWidth : 0)
@@ -214,6 +215,7 @@ DockPage {
                 id: titleBarItem
                 effectsSectionWidth: tracksPanel.effectsSectionWidth
                 showEffectsSection: tracksPanel.showEffectsSection
+                implicitHeight: tracksPanel.titleBarHeight
 
                 onAddRequested: function(type) {
                     tracksPanel.add(type)
