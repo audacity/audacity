@@ -376,6 +376,15 @@ void RemoteProjectSnapshot::DownloadBlob(
    }
 
    assert(!weak_from_this().expired());
+
+   response->setDownloadProgressCallback([this, self = weak_from_this()](int64_t current, int64_t expected) {
+      auto strong = self.lock();
+      if(!strong) {
+         return;
+      }
+      ReportProgress();
+   });
+
    response->setRequestFinishedCallback(
       [this, self = weak_from_this(), onSuccess = std::move(onSuccess), retries, response](auto)
       {
