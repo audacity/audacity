@@ -19,29 +19,34 @@ Rectangle {
     enabled: effectList.trackName !== ""
     color: ui.theme.backgroundPrimaryColor
 
+    readonly property int addEffectButtonHeight: 24
+    readonly property int addEffectButtonMargin: 12
+    readonly property int headerHeight: 40
+    readonly property int itemSpacing: 12
+
     ColumnLayout {
         id: trackEffects
         spacing: 0
-        readonly property int itemSpacing: 12
-        Layout.fillWidth: true
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
 
         SeparatorLine { }
 
         RowLayout {
             id: trackEffectsHeader
-            readonly property int headerHeight: 40
 
-            spacing: trackEffects.itemSpacing
+            spacing: itemSpacing
 
             Layout.fillWidth: true
-            Layout.preferredHeight: headerHeight
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
 
             FlatButton {
                 id: trackEffectsPowerButton
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 Layout.margins: 8
-                Layout.preferredWidth: trackEffectsHeader.headerHeight - Layout.margins * 2
+                Layout.preferredWidth: headerHeight - Layout.margins * 2
                 Layout.preferredHeight: Layout.preferredWidth
 
                 icon: IconCode.BYPASS
@@ -61,36 +66,26 @@ Rectangle {
                 visible: root.enabled
                 text: effectList.trackName
                 Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.maximumWidth: root.width - trackEffectsPowerButton.width - trackEffectsHeader.spacing - trackEffects.itemSpacing
+                Layout.preferredHeight: headerHeight
+                Layout.maximumWidth: root.width - trackEffectsPowerButton.width - 2 * itemSpacing
                 horizontalAlignment: Text.AlignLeft
             }
         }
 
-        SeparatorLine {
-            id: trackEffectsBottom
-            width: effectsSectionWidth
-        }
+        SeparatorLine { }
 
         Rectangle {
+            id: effectListContainer
             visible: root.enabled
             color: ui.theme.backgroundSecondaryColor
-            Layout.preferredHeight: effectList.preferredHeight == 0 ? 0 : effectList.preferredHeight + (effectList.anchors.topMargin + effectList.anchors.bottomMargin)
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+            Layout.preferredHeight: !effectList.empty * Math.min(effectList.implicitHeight, root.height - addEffectButtonHeight - 2 * addEffectButtonMargin - headerHeight - 2 /* SeparatorLine */)
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
             Layout.fillWidth: true
             TrackEffectList {
                 id: effectList
                 color: "transparent"
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
-                    leftMargin: 4
-                    rightMargin: 12
-                    topMargin: 8
-                    bottomMargin: 8
-                }
+                anchors.fill: parent
+                anchors.leftMargin: 4
                 onTrackEffectsActiveChanged: {
                     trackEffectsPowerButton.accentButton = trackEffectsActive
                 }
@@ -98,13 +93,15 @@ Rectangle {
         }
 
         SeparatorLine {
-            visible: root.enabled
+            visible: root.enabled && !effectList.empty
         }
 
         FlatButton {
+            id: addEffectButton
             Layout.fillWidth: true
-            Layout.preferredHeight: 24
-            Layout.margins: trackEffects.itemSpacing
+            Layout.minimumHeight: addEffectButtonHeight
+            Layout.maximumHeight: addEffectButtonHeight
+            Layout.margins: addEffectButtonMargin
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
 
             text: qsTrc("projectscene", "Add effect")
