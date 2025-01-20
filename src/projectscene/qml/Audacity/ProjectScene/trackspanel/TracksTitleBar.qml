@@ -19,13 +19,10 @@ KDDW.TitleBarBase {
  
     signal effectsSectionCloseButtonClicked()
 
-    property int expectedHeight: 39
-
     signal addRequested(type: int)
 
     anchors.fill: parent
-    implicitHeight: gripButton.implicitHeight
-    heightWhenVisible: expectedHeight
+    heightWhenVisible: implicitHeight
 
     Component.onCompleted: {
         if (effectsSectionWidth == 0) {
@@ -54,7 +51,7 @@ KDDW.TitleBarBase {
             border.width: padding
 
             Layout.preferredWidth: root.effectsSectionWidth
-            Layout.preferredHeight: root.expectedHeight
+            Layout.preferredHeight: root.implicitHeight
 
             StyledTextLabel {
                 text: qsTr("Effects")
@@ -70,8 +67,8 @@ KDDW.TitleBarBase {
 
             Rectangle {
                 color: effectsTitleBar.color
-                width: root.expectedHeight
-                height: root.expectedHeight
+                width: root.implicitHeight
+                height: root.implicitHeight
                 anchors.right: parent.right
                 FlatButton {
                     transparent: true
@@ -91,7 +88,7 @@ KDDW.TitleBarBase {
         FlatButton {
             id: gripButton
 
-            Layout.preferredHeight: root.expectedHeight
+            Layout.preferredHeight: root.implicitHeight
             Layout.preferredWidth: 28
             backgroundRadius: 0
 
@@ -124,7 +121,7 @@ KDDW.TitleBarBase {
 
             width: root.verticalPanelDefaultWidth - gripButton.width
             Layout.fillWidth: true
-            Layout.preferredHeight: root.expectedHeight
+            Layout.preferredHeight: root.implicitHeight
 
             accessible.name: qsTrc("projectscene", "Add Track")
             backgroundRadius: 0
