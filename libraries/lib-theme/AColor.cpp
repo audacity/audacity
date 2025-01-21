@@ -130,22 +130,31 @@ namespace
       dc.StretchBlit(x0, y2, xw0, yh2, &memDC, u0, v2, uw0, vh2, wxCOPY, true);
       dc.StretchBlit(x2, y2, xw2, yh2, &memDC, u2, v2, uw2, vh2, wxCOPY, true);
 
-      if(xw1 > 0 && yh1 > 0)//Draw middle
+      //Draw top/bottom sides mid section
+      if(xw1 > 0)
       {
          dc.StretchBlit(x1, y0, xw1, yh0, &memDC, u1, v0, uw1, vh0, wxCOPY, true);
-
-         dc.StretchBlit(x0, y1, xw0, yh1, &memDC, u0, v1, uw0, vh1, wxCOPY, true);
-         dc.StretchBlit(x1, y1, xw1, yh1, &memDC, u1, v1, uw1, vh1, wxCOPY, true);
-         dc.StretchBlit(x2, y1, xw2, yh1, &memDC, u2, v1, uw2, vh1, wxCOPY, true);
-
          dc.StretchBlit(x1, y2, xw1, yh2, &memDC, u1, v2, uw1, vh2, wxCOPY, true);
+      }
+
+      //Draw left/right sides mid section
+      if(yh1 > 0)
+      {
+         dc.StretchBlit(x0, y1, xw0, yh1, &memDC, u0, v1, uw0, vh1, wxCOPY, true);
+         dc.StretchBlit(x2, y1, xw2, yh1, &memDC, u2, v1, uw2, vh1, wxCOPY, true);
+      }
+
+      //Draw center
+      if(xw1 > 0 && yh1 > 0)
+      {
+         dc.StretchBlit(x1, y1, xw1, yh1, &memDC, u1, v1, uw1, vh1, wxCOPY, true);
       }
    }
 
    int GetButtonImageIndex(bool up, bool selected, bool highlight)
    {
       // There are eight button states in the TCP.
-      // A theme might not differentiate among them all.  That's up to 
+      // A theme might not differentiate among them all.  That's up to
       // the theme designer.
       //   Button highlighted (i.e. hovered over) or not.
       //   Track selected or not
@@ -305,7 +314,7 @@ void AColor::Bevel2(wxDC & dc, bool up, const wxRect & r, bool bSel, bool bHighl
 
    dc.Blit( r.x,r.y,r.width/2, h, &memDC, 0, 0, wxCOPY, true );
    int r2 = r.width - r.width/2;
-   dc.Blit( r.x+r.width/2,r.y,r2, h, &memDC, 
+   dc.Blit( r.x+r.width/2,r.y,r2, h, &memDC,
       Bmp.GetWidth() - r2, 0, wxCOPY, true );
 }
 
@@ -349,7 +358,7 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight
 // Set colour of and select brush and pen.
 // Use -1 to omit brush or pen.
 // If pen omitted, then the same colour as the brush will be used.
-// alpha for the brush is normally 255, but if set will make a difference 
+// alpha for the brush is normally 255, but if set will make a difference
 // on mac (only) currently.
 void AColor::UseThemeColour( wxDC * dc, int iBrush, int iPen, int alpha )
 {
@@ -533,16 +542,16 @@ void AColor::Init()
    if (inited)
       return;
 
-   wxColour light = theTheme.Colour( clrLight ); 
+   wxColour light = theTheme.Colour( clrLight );
    // wxSystemSettings::GetColour(wxSYS_COLOUR_3DHIGHLIGHT);
-   wxColour med = theTheme.Colour( clrMedium ); 
+   wxColour med = theTheme.Colour( clrMedium );
    // wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
-   wxColour dark = theTheme.Colour( clrDark ); 
+   wxColour dark = theTheme.Colour( clrDark );
    // wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW);
 
-   wxColour lightSelected = theTheme.Colour( clrLightSelected ); 
-   wxColour medSelected = theTheme.Colour( clrMediumSelected ); 
-   wxColour darkSelected = theTheme.Colour( clrDarkSelected ); 
+   wxColour lightSelected = theTheme.Colour( clrLightSelected );
+   wxColour medSelected = theTheme.Colour( clrMediumSelected );
+   wxColour darkSelected = theTheme.Colour( clrDarkSelected );
 
 
    clippingPen.SetColour(0xCC, 0x11, 0x00);
