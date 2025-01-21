@@ -355,7 +355,7 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
 
    const auto buttonRect = GetClientRect();
    const auto imageIdx = HasAlternateImages(mAlternateIdx) ? mAlternateIdx : 0;
-   
+
    if(imageIdx == mAlternateIdx || HasAlternateImages(imageIdx))
    {
       const auto buttonState = GetState();
@@ -401,12 +401,13 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
                else
                {
                   const auto sumWidth = icon->GetWidth() + border.x + dc.GetTextExtent(GetLabel()).GetWidth();
-                  const auto iconCenter = buttonRect.height / 2;
-                  const auto textLeft = iconCenter + icon->GetWidth() / 2 + border.x;
+                  const auto iconVCenter = buttonRect.height / 2;
+                  const auto iconHCenter = icon->GetWidth() / 2 + border.x;
+                  const auto textLeft = iconHCenter + icon->GetWidth() / 2;
 
                   dc.DrawBitmap(*icon,
-                                buttonRect.x + iconCenter - icon->GetWidth() / 2,
-                                buttonRect.y + iconCenter - icon->GetHeight() / 2);
+                                buttonRect.x + iconHCenter - icon->GetWidth() / 2,
+                                buttonRect.y + iconVCenter - icon->GetHeight() / 2);
                   textRect = wxRect(
                      buttonRect.x + textLeft,
                      buttonRect.y + border.y,
@@ -441,7 +442,7 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
          }
       }
    }
-   
+
    if(HasFocus())
       AColor::DrawFocus( dc, mFocusRect );
 }
@@ -723,7 +724,7 @@ wxSize AButton::DoGetBestClientSize() const
             if(!GetLabel().IsEmpty())
             {
                const auto border = (image.GetSize() - wxSize { mFrameMid, mFrameMid }) / 4;
-               
+
                wxMemoryDC dc;
                dc.SetFont(GetFont());
                auto bestSize = dc.GetTextExtent(GetLabel());
