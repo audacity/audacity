@@ -14,6 +14,7 @@ Rectangle {
     id: root
 
     property int selectedTrackIndex: -1
+    property alias showEffectsSection: effectList.showEffectsSection
 
     enabled: effectList.trackName !== ""
     color: ui.theme.backgroundPrimaryColor

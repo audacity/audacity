@@ -188,11 +188,17 @@ DockPage {
             property bool showEffectsSection: false
             property int titleBarHeight: 39
 
+            // For some reason, I cannot refer to `tp` from anywhere other than `tp` itself
+            // without getting a "tp is not defined" error. Maybe because this `DockPanel`
+            // is within that array thingy ?
+            signal effectsSectionVisibilityChanged(show: bool)
+
             onShowEffectsSectionChanged: {
                 const newWidth = root.verticalPanelDefaultWidth + (tracksPanel.showEffectsSection ? tracksPanel.effectsSectionWidth : 0)
                 tracksPanel.width = newWidth
                 tracksPanel.minimumWidth = newWidth
                 tracksPanel.maximumWidth = newWidth
+                effectsSectionVisibilityChanged(showEffectsSection)
             }
 
             signal add(type: int)
@@ -230,7 +236,16 @@ DockPage {
                 id: tp
                 navigationSection: tracksPanel.navigationSection
                 effectsSectionWidth: tracksPanel.effectsSectionWidth
-                showEffectsSection: tracksPanel.showEffectsSection
+
+                Component.onCompleted: {
+                    tracksPanel.effectsSectionVisibilityChanged.connect(function(show) {
+                        tp.showEffectsSection = show
+                    })
+                }
+
+                onShowEffectsSectionChanged: {
+                    tracksPanel.showEffectsSection = showEffectsSection
+                }
 
                 onOpenEffectsRequested: {
                     tracksPanel.showEffectsSection = true

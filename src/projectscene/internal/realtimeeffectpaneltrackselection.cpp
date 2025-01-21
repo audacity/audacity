@@ -9,9 +9,16 @@ void RealtimeEffectPanelTrackSelection::init()
         }
     });
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this] {
-        if (!globalContext()->currentProject()) {
-            setTrackId({});
+        // Show effects of top-most track if there isn't one selected already and the project isn't empty.
+        const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+        std::optional<trackedit::TrackId> trackId;
+        if (project && !m_trackId.has_value()) {
+            const std::vector<trackedit::TrackId> list = project->trackIdList();
+            if (!list.empty()) {
+                trackId = list.front();
+            }
         }
+        setTrackId(trackId);
     });
 }
 

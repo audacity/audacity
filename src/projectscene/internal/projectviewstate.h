@@ -4,17 +4,20 @@
 #pragma once
 
 #include "../iprojectviewstate.h"
+#include "../iprojectsceneconfiguration.h"
 
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
+#include "async/asyncable.h"
 
 namespace au::projectscene {
-class ProjectViewState : public IProjectViewState
+class ProjectViewState : public IProjectViewState, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
-    ProjectViewState() = default;
+    ProjectViewState();
 
     // context of all tracks
     muse::ValCh<int> tracksVericalY() const override;

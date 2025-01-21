@@ -24,6 +24,7 @@
 
 #include "modularity/imoduleinterface.h"
 #include "types/ret.h"
+#include "types/retval.h"
 
 #include "io/path.h"
 #include "appshelltypes.h"
@@ -74,6 +75,9 @@ public:
 
     virtual muse::io::paths_t sessionProjectsPaths() const = 0;
     virtual muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) = 0;
+
+    virtual muse::ValCh<bool> isEffectsPanelVisible() const = 0;
+    virtual void setIsEffectsPanelVisible(bool visible) = 0;
 };
 }
 

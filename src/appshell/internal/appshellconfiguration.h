@@ -29,6 +29,7 @@
 #include "io/ifilesystem.h"
 // #include "multiinstances/imultiinstancesprovider.h"
 #include "ui/iuiconfiguration.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 // #include "project/iprojectconfiguration.h"
 // #include "playback/iplaybackconfiguration.h"
 // #include "languages/ilanguagesconfiguration.h"
@@ -40,6 +41,7 @@ class AppShellConfiguration : public IAppShellConfiguration, public muse::async:
 {
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
     muse::Inject<muse::io::IFileSystem> fileSystem;
+    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
     // INJECT(ui::IUiConfiguration, uiConfiguration)
     // INJECT(project::IProjectConfiguration, projectConfiguration)
@@ -87,6 +89,9 @@ public:
 
     muse::io::paths_t sessionProjectsPaths() const override;
     muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) override;
+
+    muse::ValCh<bool> isEffectsPanelVisible() const override;
+    void setIsEffectsPanelVisible(bool visible) override;
 
 private:
     std::string utmParameters(const std::string& utmMedium) const;

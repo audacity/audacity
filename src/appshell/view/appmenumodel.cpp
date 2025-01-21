@@ -77,6 +77,13 @@ void AppMenuModel::load()
     //! NOTE: removes some undesired platform-specific items
     //! (such as "Start Dictation" and "Special Characters" on macOS)
     appMenuModelHook()->onAppMenuInited();
+
+    muse::ValCh<bool> isEffectsPanelVisible = configuration()->isEffectsPanelVisible();
+    isEffectsPanelVisible.ch.onReceive(this, [this](bool visible)
+    {
+        setItemIsChecked("toggle-effects", visible);
+    });
+    setItemIsChecked("toggle-effects", isEffectsPanelVisible.val);
 }
 
 bool AppMenuModel::isGlobalMenuAvailable()
@@ -127,6 +134,14 @@ void AppMenuModel::setupConnections()
         MenuItem& effectsItem = findMenu("menu-effect");
         effectsItem.setSubitems(makeEffectsItems());
     });
+}
+
+void AppMenuModel::setItemIsChecked(const QString& itemId, bool checked)
+{
+    MenuItem& item = findMenu(itemId);
+    auto state = item.state();
+    state.checked = checked;
+    item.setState(state);
 }
 
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)

@@ -113,6 +113,8 @@ private:
     muse::uicomponents::MenuItemList makeWorkspacesItems();
     muse::uicomponents::MenuItemList makeShowItems();
     muse::uicomponents::MenuItemList makeEffectsItems();
+
+    void setItemIsChecked(const QString& itemId, bool checked);
 };
 }
 

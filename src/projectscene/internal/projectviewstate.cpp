@@ -9,6 +9,11 @@ constexpr int DEFAULT_HEIGHT = 116;
 constexpr int MIN_HEIGHT = 44;
 constexpr int COLLAPSE_HEIGHT = 72;
 
+ProjectViewState::ProjectViewState()
+{
+    configuration()->setIsEffectsPanelVisible(false);
+}
+
 muse::ValCh<int> ProjectViewState::tracksVericalY() const
 {
     return m_tracksVericalY;
