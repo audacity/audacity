@@ -403,7 +403,7 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
                   const auto sumWidth = icon->GetWidth() + border.x + dc.GetTextExtent(GetLabel()).GetWidth();
                   const auto iconVCenter = buttonRect.height / 2;
                   const auto iconHCenter = icon->GetWidth() / 2 + border.x;
-                  const auto textLeft = iconHCenter + icon->GetWidth() / 2 + border.x;
+                  const auto textLeft = iconHCenter + icon->GetWidth() / 2;
 
                   dc.DrawBitmap(*icon,
                                 buttonRect.x + iconHCenter - icon->GetWidth() / 2,
