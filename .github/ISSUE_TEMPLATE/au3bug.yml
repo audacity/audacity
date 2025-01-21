@@ -1,6 +1,6 @@
-name: Audacity 4.0 alpha Bug report
+name: Audacity 3.x Bug report
 description: File a bug report
-labels: ["bug"]
+labels: ["AU3-bug"]
 type: "bug"
 body:
   - type: textarea
@@ -36,12 +36,17 @@ body:
       description: What are you actually seeing?
     validations:
       required: false
-  - type: input
+  - type: dropdown
     id: version
     attributes:
       label: Audacity Version
       description: What version of Audacity are you running?
-      placeholder: git commit ID, PR or build number
+      options:
+        - Audacity 3.7.2
+        - Audacity 3.7.1
+        - Audacity 3.7.0
+        - Audacity 3.6.4 or older
+        - Other
     validations:
       required: true
   - type: dropdown
