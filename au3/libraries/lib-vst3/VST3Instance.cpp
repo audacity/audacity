@@ -214,3 +214,13 @@ void VST3Instance::ReloadUserOptions()
 
    SetBlockSize(mUserBlockSize);
 }
+
+Steinberg::IPtr<Steinberg::Vst::IEditController> VST3Instance::vstEditController() const
+{
+    return mWrapper->mEditController;
+}
+
+Steinberg::IPtr<Steinberg::Vst::IComponent> VST3Instance::effectComponent() const
+{
+    return mWrapper->mEffectComponent;
+}

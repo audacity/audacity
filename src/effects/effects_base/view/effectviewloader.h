@@ -14,6 +14,7 @@
 #include "../ieffectsuiengine.h"
 
 namespace au::effects {
+//! TODO Move to builtin module
 class EffectViewLoader : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT

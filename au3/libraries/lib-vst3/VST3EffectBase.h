@@ -81,6 +81,8 @@ public:
    EffectSettings MakeSettings() const override;
    bool CopySettingsContents(const EffectSettings& src, EffectSettings& dst) const override;
 
+   std::shared_ptr<VST3::Hosting::Module> vstModule() const { return mModule; }
+
 protected:
    void LoadPreset(const wxString& id, EffectSettings& settings) const;
 };

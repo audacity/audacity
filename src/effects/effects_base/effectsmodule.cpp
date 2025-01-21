@@ -18,6 +18,7 @@
 #include "internal/realtimeeffectservice.h"
 #include "internal/effectpresetsprovider.h"
 #include "internal/effectpresetsscenario.h"
+#include "internal/effectviewlaunchregister.h"
 
 #include "view/effectsviewregister.h"
 #include "view/effectviewloader.h"
@@ -52,6 +53,7 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IRealtimeEffectService>(moduleName(), m_realtimeEffectService);
     ioc()->registerExport<IEffectPresetsProvider>(moduleName(), new EffectPresetsProvider());
     ioc()->registerExport<IEffectPresetsScenario>(moduleName(), new EffectPresetsScenario());
+    ioc()->registerExport<IEffectViewLaunchRegister>(moduleName(), new EffectViewLaunchRegister());
 }
 
 void EffectsModule::resolveImports()

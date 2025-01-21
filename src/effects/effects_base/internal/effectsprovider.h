@@ -12,6 +12,7 @@
 #include "effects/vst/ivsteffectsrepository.h"
 #include "effects/nyquist/inyquisteffectsrepository.h"
 #include "../ieffectsconfiguration.h"
+#include "../ieffectviewlaunchregister.h"
 
 #include "../ieffectsprovider.h"
 
@@ -27,6 +28,7 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
     muse::Inject<INyquistEffectsRepository> nyquistEffectsRepository;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<playback::IPlayback> playback;
+    muse::Inject<IEffectViewLaunchRegister> viewLaunchRegister;
 
 public:
     void reloadEffects();

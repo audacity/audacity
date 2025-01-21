@@ -15,6 +15,7 @@ class BuiltinEffectsModule : public muse::modularity::IModuleSetup
 public:
     std::string moduleName() const override;
     void registerExports() override;
+    void resolveImports() override;
     void registerResources() override;
     void registerUiTypes() override;
     void onPreInit(const muse::IApplication::RunMode& mode) override;

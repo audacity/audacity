@@ -12,6 +12,7 @@ namespace au::effects {
 class VstEffectsRepository : public IVstEffectsRepository
 {
     muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
+
 public:
     VstEffectsRepository() = default;
 

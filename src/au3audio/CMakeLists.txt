@@ -21,6 +21,10 @@ set(MODULE_SRC
     # AU3
     ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/defaultplaybackpolicy.h
+
+    # for muse
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiothreadsecurer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiothreadsecurer.h
     )
 
 # AU3

@@ -8,6 +8,11 @@ namespace Steinberg
 {
    class IPlugView;
    class IPlugFrame;
+
+   namespace Vst {
+      class IEditController;
+      class IComponent;
+   }
 }
 
 class NumericTextCtrl;
@@ -72,4 +77,8 @@ public:
    unsigned GetAudioInCount() const override;
 
    void ReloadUserOptions();
+
+   //! NOTE For AU4
+   Steinberg::IPtr<Steinberg::Vst::IEditController> vstEditController() const;
+   Steinberg::IPtr<Steinberg::Vst::IComponent> effectComponent() const;
 };

@@ -30,9 +30,6 @@
 using namespace muse;
 using namespace au::effects;
 
-static const char16_t* BUILTIN_VIEWER_URI = u"audacity://effects/builtin_viewer?type=%1&instanceId=%2";
-static const char16_t* VST_VIEWER_URI = u"audacity://effects/vst_viewer?type=%1&instanceId=%2";
-
 static const char16_t* REALTIME_VIEWER_URI
     = u"audacity://effects/realtime_viewer?type=%1&instanceId=%2&effectState=%3&sync=false&modal=false&floating=true";
 
@@ -179,25 +176,13 @@ muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInst
 
     LOGD() << "effect family: " << family;
 
-    // built-in
-    Ret ret;
-    if ("Audacity" == family) {
-        Effect* effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(pluginID));
-        IF_ASSERT_FAILED(effect) {
-            LOGE() << "effect not available, effectId: " << effectId;
-            return muse::make_ret(muse::Ret::Code::InternalError);
-        }
-
-        muse::String type = au3::wxToString(effect->GetSymbol().Internal());
-        ret = interactive()->open(String(BUILTIN_VIEWER_URI)
-                                  .arg(type)
-                                  .arg(size_t(instanceId)).toStdString()
-                                  ).ret;
-    } else if ("VST3" == family) {
-        ret = muse::make_ret(muse::Ret::Code::NotImplemented);
-    } else {
-        ret = muse::make_ret(muse::Ret::Code::NotSupported);
+    IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(family);
+    IF_ASSERT_FAILED(launcher) {
+        LOGE() << "not found launcher for family:" << family;
+        return muse::make_ret(muse::Ret::Code::NotSupported);
     }
+
+    Ret ret = launcher->showEffect(effectId, instanceId);
 
     LOGD() << "open ret: " << ret.toString();
     return ret;
@@ -208,7 +193,7 @@ void EffectsProvider::showEffect(const RealtimeEffectStatePtr& state) const
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
-    const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
+    const auto instanceId = instance->id();
 
     const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
 
@@ -236,7 +221,7 @@ void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
-    const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
+    const auto instanceId = instance->id();
 
     const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
 
@@ -250,7 +235,7 @@ void EffectsProvider::toggleShowEffect(const RealtimeEffectStatePtr& state) cons
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
-    const auto instanceId = reinterpret_cast<EffectInstanceId>(instance.get());
+    const auto instanceId = instance->id();
 
     const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
 

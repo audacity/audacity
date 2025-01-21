@@ -450,7 +450,10 @@ class COMPONENTS_API EffectInstance
    : public std::enable_shared_from_this<EffectInstance>
 {
 public:
+   EffectInstance();
    virtual ~EffectInstance();
+
+   int id() const;
 
    virtual size_t GetBlockSize() const = 0;
 
@@ -590,6 +593,9 @@ public:
    virtual size_t ProcessBlock(EffectSettings &settings,
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
    = 0;
+
+private:
+   int m_id = -1;
 };
 
 //! Inherit to add a state variable to an EffectInstance subclass

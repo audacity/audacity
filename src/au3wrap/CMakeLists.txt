@@ -22,7 +22,7 @@
 declare_module(au3wrap)
 
 if(AU_MODULE_EFFECTS_VST)
-    add_subdirectory("vst3")
+    add_subdirectory(vst3)
 endif()
 
 set(MODULE_SRC

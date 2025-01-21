@@ -3,13 +3,14 @@
 */
 #include "effectinstancesregister.h"
 #include "libraries/lib-components/EffectInterface.h"
+#include "libraries/lib-effects/EffectPlugin.h"
 
 using namespace au::effects;
 
 EffectInstanceId EffectInstancesRegister::regInstance(const EffectId& effectId, const std::shared_ptr<EffectInstance>& i,
                                                       EffectSettingsAccessPtr s)
 {
-    EffectInstanceId id = reinterpret_cast<EffectInstanceId>(i.get());
+    EffectInstanceId id = i->id();
     m_data.insert({ id, { effectId, i, s, muse::async::Notification() } });
     return id;
 }

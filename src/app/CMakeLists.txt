@@ -97,7 +97,7 @@ set(LINK_LIB
 )
 
 if (AU_MODULE_EFFECTS_VST)
-    list(APPEND LINK_LIB effects_vst)
+    list(APPEND LINK_LIB effects_vst muse::vst)
     add_definitions(-DAU_MODULE_EFFECTS_VST)
 endif()
 

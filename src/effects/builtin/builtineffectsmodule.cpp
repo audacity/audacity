@@ -4,9 +4,12 @@
 #include "builtineffectsmodule.h"
 
 #include "internal/builtineffectsrepository.h"
+#include "internal/builtinviewlauncher.h"
 
 #include "common/abstracteffectmodel.h"
 #include "common/effectmanagemenu.h"
+
+#include "effects/effects_base/ieffectviewlaunchregister.h"
 
 using namespace au::effects;
 
@@ -25,6 +28,14 @@ void BuiltinEffectsModule::registerExports()
     m_builtinEffectsRepository = std::make_shared<BuiltinEffectsRepository>();
 
     ioc()->registerExport<IBuiltinEffectsRepository>(moduleName(), m_builtinEffectsRepository);
+}
+
+void BuiltinEffectsModule::resolveImports()
+{
+    auto lr = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
+    if (lr) {
+        lr->regLauncher("Audacity" /*builtin*/, std::make_shared<BuiltinViewLauncher>());
+    }
 }
 
 void BuiltinEffectsModule::registerResources()
