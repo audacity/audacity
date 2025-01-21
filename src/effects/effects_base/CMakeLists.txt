@@ -22,6 +22,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/irealtimeeffectservice.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectpresetsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectpresetsscenario.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlauncher.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlaunchregister.h
 
     # internal
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectconfigsettings.cpp
@@ -46,6 +48,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectpresetsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectpresetsscenario.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectpresetsscenario.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.h
 
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.cpp

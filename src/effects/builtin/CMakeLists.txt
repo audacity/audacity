@@ -13,6 +13,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsrepository.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsrepository.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/builtinviewlauncher.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/builtinviewlauncher.h
 
     ${CMAKE_CURRENT_LIST_DIR}/common/params.h
     ${CMAKE_CURRENT_LIST_DIR}/common/abstracteffectmodel.cpp

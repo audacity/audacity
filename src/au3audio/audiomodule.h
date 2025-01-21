@@ -9,6 +9,7 @@
 
 namespace au::audio {
 class AudioEngine;
+class AudioThreadSecurer;
 class AudioModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -24,5 +25,6 @@ public:
 private:
 
     std::shared_ptr<AudioEngine> m_audioEngine;
+    std::shared_ptr<AudioThreadSecurer> m_audioThreadSecurer;
 };
 }

@@ -24,7 +24,7 @@ using rms_t = float;
 
 using EffectId = muse::String;              // PluginID from AU3
 using Effect = ::Effect;                    // Effect from AU3
-using EffectInstanceId = uint64_t;
+using EffectInstanceId = int;
 using EffectInstance = ::EffectInstanceEx;  // EffectInstanceEx from AU3
 using EffectSettings = ::EffectSettings;
 using EffectSettingsAccess = ::EffectSettingsAccess;

@@ -131,6 +131,17 @@ bool EffectSettingsManager::CopySettingsContents(
 
 EffectInstance::~EffectInstance() = default;
 
+static int s_lastId = 0;
+EffectInstance::EffectInstance()
+{
+   m_id = ++s_lastId;
+}
+
+int EffectInstance::id() const
+{
+   return m_id;
+}
+
 bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
 {
    return false;

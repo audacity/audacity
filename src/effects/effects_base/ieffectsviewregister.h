@@ -8,6 +8,7 @@
 #include "modularity/imoduleinterface.h"
 
 namespace au::effects {
+//! TODO Move to builtin module
 class IEffectsViewRegister : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IEffectsViewRegister)
