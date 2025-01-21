@@ -357,9 +357,10 @@ void TrackeditActionsController::doGlobalDuplicate()
             (selectedStartTime == selectedEndTime)
             ? dispatcher()->dispatch(TRACK_DUPLICATE_CODE, ActionData::make_arg1<TrackIdList>(selectedTracks))
             : dispatcher()->dispatch(DUPLICATE_RANGE_SELECTION_CODE,
-                                   ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+                                     ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime,
+                                                                                        selectedEndTime));
         } else {
-           dispatcher()->dispatch(DUPLICATE_CLIPS_CODE, ActionData::make_arg1<ClipKeyList>(selectedClips));
+            dispatcher()->dispatch(DUPLICATE_CLIPS_CODE, ActionData::make_arg1<ClipKeyList>(selectedClips));
         }
     }
 }

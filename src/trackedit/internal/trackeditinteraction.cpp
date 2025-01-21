@@ -21,7 +21,7 @@ muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*complet
     return m_interaction->clipStartTimeChanged();
 }
 
-bool TrackeditInteraction::moveClipToTrack(const ClipKey &clipKey, TrackId trackId, bool completed)
+bool TrackeditInteraction::moveClipToTrack(const ClipKey& clipKey, TrackId trackId, bool completed)
 {
     return m_interaction->moveClipToTrack(clipKey, trackId, completed);
 }
