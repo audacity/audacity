@@ -55,6 +55,7 @@ body:
         - macOS
         - Linux
         - Other
+        - OS independent
     validations: 
       required: true
   - type: textarea
