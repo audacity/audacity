@@ -100,7 +100,7 @@ private:
    void DoCancel();
 
    void
-   DownloadBlob(std::string url, SuccessHandler onSuccess, int retries = 3);
+   DownloadBlob(std::string url, SuccessHandler onSuccess, int retries);
 
    void
    OnProjectBlobDownloaded(audacity::network_manager::ResponsePtr response);

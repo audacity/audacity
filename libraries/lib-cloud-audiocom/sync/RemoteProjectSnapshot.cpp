@@ -410,7 +410,8 @@ void RemoteProjectSnapshot::DownloadBlob(
             return;
          }
 
-         if (responseResult.Code == SyncResultCode::ConnectionFailed)
+         // The cloud storage may throw a recoverable InternalServerError, so lets retry
+         if (responseResult.Code == SyncResultCode::ConnectionFailed || responseResult.Code == SyncResultCode::InternalServerError)
          {
             if (retries <= 0)
             {
@@ -725,6 +726,8 @@ bool RemoteProjectSnapshot::InProgress() const
 void RemoteProjectSnapshot::RequestsThread()
 {
    constexpr auto MAX_CONCURRENT_REQUESTS = 6;
+   // The cloud storage often throws timeouts, so increase the retries count
+   constexpr auto MAX_RETRIES_COUNT = 10;
 
    while (InProgress())
    {
@@ -753,7 +756,7 @@ void RemoteProjectSnapshot::RequestsThread()
          mRequestsInProgress++;
       }
 
-      DownloadBlob(std::move(request.first), std::move(request.second), 3);
+      DownloadBlob(std::move(request.first), std::move(request.second), MAX_RETRIES_COUNT);
 
       // TODO: Random sleep to avoid overloading the server
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
