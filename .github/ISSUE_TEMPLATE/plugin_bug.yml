@@ -1,7 +1,8 @@
 name: Plugin issue
 description: Report problems or crashes with a plugin
 title: "[Plugin issue] "
-labels: ["bug", "plugins"]
+labels: ["plugins"]
+type: "bug"
 body:
   - type: input
     id: plugin
