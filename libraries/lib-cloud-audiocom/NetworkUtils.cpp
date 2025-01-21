@@ -50,7 +50,7 @@ SyncResultCode GetResultCodeFromHttpCode(int code) noexcept
    if (code == HttpCode::Gone)
       return SyncResultCode::Expired;
 
-   if (code > 500)
+   if (code >= 500 && code < 600)
       return SyncResultCode::InternalServerError;
 
    return SyncResultCode::UnknownError;
