@@ -57,8 +57,24 @@ void RealtimeEffectListModel::doLoad()
         insertEffect(trackId, index, newItem);
     });
 
-    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this] { onProjectChanged(); });
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
+    {
+        onProjectChanged();
+    });
     onProjectChanged();
+
+    configuration()->isEffectsPanelVisible().ch.onReceive(this, [this](bool)
+    {
+        emit showEffectsSectionChanged();
+    });
+
+    dispatcher()->reg(this, "toggle-effects", [this] {
+        configuration()->setIsEffectsPanelVisible(!configuration()->isEffectsPanelVisible().val);
+    });
+
+    dispatcher()->reg(this, "add-realtime-effects", [this] {
+        configuration()->setIsEffectsPanelVisible(true);
+    });
 
     populateMenu();
 }
@@ -255,4 +271,14 @@ void RealtimeEffectListModel::prop_setTrackEffectsActive(bool active)
         return;
     }
     realtimeEffectService()->setTrackEffectsActive(*tId, active);
+}
+
+bool RealtimeEffectListModel::prop_showEffectsSection() const
+{
+    return configuration()->isEffectsPanelVisible().val;
+}
+
+void RealtimeEffectListModel::prop_setShowEffectsSection(bool show)
+{
+    configuration()->setIsEffectsPanelVisible(show);
 }

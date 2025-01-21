@@ -100,3 +100,16 @@ muse::async::Channel<TimelineRulerMode> ProjectSceneConfiguration::timelineRuler
 {
     return m_timelineRulerModeChanged;
 }
+
+muse::ValCh<bool> ProjectSceneConfiguration::isEffectsPanelVisible() const
+{
+    return m_effectsPanelVisible;
+}
+
+void ProjectSceneConfiguration::setIsEffectsPanelVisible(bool visible)
+{
+    if (m_effectsPanelVisible.val == visible) {
+        return;
+    }
+    m_effectsPanelVisible.set(visible);
+}

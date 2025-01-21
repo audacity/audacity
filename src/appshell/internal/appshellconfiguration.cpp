@@ -292,3 +292,13 @@ muse::io::paths_t AppShellConfiguration::parseSessionProjectsPaths(const QByteAr
 
     return result;
 }
+
+muse::ValCh<bool> AppShellConfiguration::isEffectsPanelVisible() const
+{
+    return projectSceneConfiguration()->isEffectsPanelVisible();
+}
+
+void AppShellConfiguration::setIsEffectsPanelVisible(bool visible)
+{
+    projectSceneConfiguration()->setIsEffectsPanelVisible(visible);
+}
