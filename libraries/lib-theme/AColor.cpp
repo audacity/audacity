@@ -130,21 +130,21 @@ namespace
       dc.StretchBlit(x0, y2, xw0, yh2, &memDC, u0, v2, uw0, vh2, wxCOPY, true);
       dc.StretchBlit(x2, y2, xw2, yh2, &memDC, u2, v2, uw2, vh2, wxCOPY, true);
 
-      //Draw top/bottom mid section
+      //Draw top/bottom sides mid section
       if(xw1 > 0)
       {
          dc.StretchBlit(x1, y0, xw1, yh0, &memDC, u1, v0, uw1, vh0, wxCOPY, true);
          dc.StretchBlit(x1, y2, xw1, yh2, &memDC, u1, v2, uw1, vh2, wxCOPY, true);
       }
 
-      //Draw left/right mid section
+      //Draw left/right sides mid section
       if(yh1 > 0)
       {
          dc.StretchBlit(x0, y1, xw0, yh1, &memDC, u0, v1, uw0, vh1, wxCOPY, true);
          dc.StretchBlit(x2, y1, xw2, yh1, &memDC, u2, v1, uw2, vh1, wxCOPY, true);
       }
 
-      //Draw middle section
+      //Draw center
       if(xw1 > 0 && yh1 > 0)
       {
          dc.StretchBlit(x1, y1, xw1, yh1, &memDC, u1, v1, uw1, vh1, wxCOPY, true);
