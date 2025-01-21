@@ -1,6 +1,7 @@
 name: Enhancement request
 description: Request an existing feature to be made better, or a new feature
 labels: ["Enhancement Request"]
+type: "feature"
 body:
   - type: textarea
     id: whatfor

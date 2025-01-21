@@ -1,6 +1,7 @@
-name: Bug report
+name: Audacity 4.x Bug report
 description: File a bug report
 labels: ["bug"]
+type: "bug"
 body:
   - type: textarea
     id: desc
