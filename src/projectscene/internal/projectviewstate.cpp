@@ -39,7 +39,7 @@ void ProjectViewState::setTracksVerticalScrollLocked(bool lock)
     m_tracksVerticalScrollLocked.set(lock);
 }
 
-int ProjectViewState::trackYPosition(const trackedit::TrackId &trackId) const
+int ProjectViewState::trackYPosition(const trackedit::TrackId& trackId) const
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -164,7 +164,8 @@ void ProjectViewState::setClipEditStartTimeOffset(double val)
     m_clipEditStartTimeOffset = val;
 }
 
-double ProjectViewState::clipEditStartTimeOffset() {
+double ProjectViewState::clipEditStartTimeOffset()
+{
     return m_clipEditStartTimeOffset;
 }
 

@@ -130,15 +130,15 @@ Observer::Subscription RealtimeEffectService::subscribeToRealtimeEffectList(Wave
             m_stackManager->remove(msg.affectedState);
             break;
         case RealtimeEffectListMessage::Type::DidReplace:
-        {
-            auto& list = RealtimeEffectList::Get(*waveTrack);
-            const std::shared_ptr<RealtimeEffectState> newState = list.GetStateAt(msg.srcIndex);
-            IF_ASSERT_FAILED(newState) {
-                return;
+            {
+                auto& list = RealtimeEffectList::Get(*waveTrack);
+                const std::shared_ptr<RealtimeEffectState> newState = list.GetStateAt(msg.srcIndex);
+                IF_ASSERT_FAILED(newState) {
+                    return;
+                }
+                m_stackManager->replace(msg.affectedState, newState);
             }
-            m_stackManager->replace(msg.affectedState, newState);
-        }
-        break;
+            break;
         }
     });
 }
