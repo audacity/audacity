@@ -185,6 +185,11 @@ public:
       return XO("Preferences for Cloud");
    }
 
+   ManualPageID HelpPageName() override
+   {
+      return "Cloud_Preferences";
+   }
+
    void Browse()
    {
       const auto currentPath = CloudProjectsSavePath.Read();
