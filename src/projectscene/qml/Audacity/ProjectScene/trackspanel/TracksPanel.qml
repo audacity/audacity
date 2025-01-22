@@ -195,7 +195,7 @@ Item {
             visible: dragHandler.dropIndex >= 0
             y: dragHandler.dropIndex >= 0 && dragHandler.dropIndex < view.count
                ? view.itemAtIndex(dragHandler.dropIndex).y - view.contentY
-               : view.contentHeight
+               : view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
         }
 
         function startDrag(item, mouseX, mouseY) {
