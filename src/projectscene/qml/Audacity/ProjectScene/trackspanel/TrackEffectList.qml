@@ -12,11 +12,11 @@ import Audacity.ProjectScene
 
 Rectangle {
     id: root
-
-    property alias preferredHeight: trackEffectList.height
+    implicitHeight: trackEffectList.contentHeight
     property alias trackName: trackEffectListModel.trackName
     property alias trackEffectsActive: trackEffectListModel.trackEffectsActive
     property alias showEffectsSection: trackEffectListModel.showEffectsSection
+    property bool empty: trackEffectList.count == 0
 
     Component.onCompleted: {
         trackEffectListModel.load()
@@ -26,21 +26,49 @@ Rectangle {
         id: trackEffectListModel
     }
 
+    Component {
+        id: listMargin
+        Item {
+            height: 8
+        }
+    }
+
     StyledListView {
         id: trackEffectList
-        width: parent.width
-        height: contentItem.height
-        spacing: 8
+        anchors.fill: parent
+        spacing: 6
         cacheBuffer: 3000
-        ScrollBar.vertical: null
         interactive: true
         model: trackEffectListModel
+        boundsBehavior: Flickable.DragAndOvershootBounds
+        boundsMovement: Flickable.FollowBoundsBehavior
+        flickDeceleration: 10000
+        footer: listMargin
+        header: listMargin
+
+        clip: true
+        anchors.margins: 0
 
         delegate: RealtimeEffectListItem {
             item: itemData
-            height: 24
             availableEffects: trackEffectList.model.availableEffects
             handleMenuItemWithState: trackEffectList.model.handleMenuItemWithState
+            width: parent.width - scrollbarContainer.width
+        }
+
+        ScrollBar.vertical: scrollbar
+
+        Item {
+            id: scrollbarContainer
+            width: 12
+            height: parent.height
+            anchors.right: parent.right
+
+            StyledScrollBar {
+                id: scrollbar
+                anchors.fill: parent
+                thickness: 5
+            }
         }
     }
 }

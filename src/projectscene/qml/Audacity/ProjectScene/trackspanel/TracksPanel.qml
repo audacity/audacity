@@ -153,117 +153,117 @@ Item {
                         mouseMoved.connect(dragHandler.onMouseMove)
                     }
                 }
-            }
-        }
-    }
 
-    Item {
-        id: wheelHandler
+                Item {
+                    id: wheelHandler
 
-        anchors.fill: parent
+                    anchors.fill: parent
 
-        WheelHandler {
-            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                    WheelHandler {
+                        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
 
-            onWheel: function(wheelEvent) {
-                let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
-                let offset  = view.contentY - delta
+                        onWheel: function(wheelEvent) {
+                            let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
+                            let offset  = view.contentY - delta
 
-                let maxContentY = view.contentHeight - view.height
-                maxContentY = Math.max(maxContentY, view.contentY)
-                offset = Math.max(Math.min(offset, maxContentY), 0)
+                            let maxContentY = view.contentHeight - view.height
+                            maxContentY = Math.max(maxContentY, view.contentY)
+                            offset = Math.max(Math.min(offset, maxContentY), 0)
 
-                view.contentY = offset
-            }
-        }
-    }
+                            view.contentY = offset
+                        }
+                    }
+                }
 
-    Item {
-        id: dragHandler
+                Item {
+                    id: dragHandler
 
-        anchors.fill: parent
+                    anchors.fill: parent
 
-        property bool dragging: false
-        property int dragFirstIndex: -1
-        property int dragLastIndex: -1
-        property int dropIndex: -1
+                    property bool dragging: false
+                    property int dragFirstIndex: -1
+                    property int dragLastIndex: -1
+                    property int dropIndex: -1
 
-        Rectangle {
-            id: dropCursor
-            width: parent.width
-            height: 2
-            color: ui.theme.accentColor
-            visible: dragHandler.dropIndex >= 0
-            y: dragHandler.dropIndex >= 0 && dragHandler.dropIndex < view.count
-               ? view.itemAtIndex(dragHandler.dropIndex).y - view.contentY
-               : view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
-        }
+                    Rectangle {
+                        id: dropCursor
+                        width: parent.width
+                        height: 2
+                        color: ui.theme.accentColor
+                        visible: dragHandler.dropIndex >= 0
+                        y: dragHandler.dropIndex >= 0 && dragHandler.dropIndex < view.count
+                        ? view.itemAtIndex(dragHandler.dropIndex).y - view.contentY
+                        : view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
+                    }
 
-        function startDrag(item, mouseX, mouseY) {
-            let selection = tracksModel.selectionModel().selectedIndexes
-            if (selection.length === 0) {
-                return
-            }
+                    function startDrag(item, mouseX, mouseY) {
+                        let selection = tracksModel.selectionModel().selectedIndexes
+                        if (selection.length === 0) {
+                            return
+                        }
 
-            mouseY = view.mapFromItem(item, mouseX, mouseY).y + view.contentY
+                        mouseY = view.mapFromItem(item, mouseX, mouseY).y + view.contentY
 
-            dragFirstIndex = selection[0].row
-            dragLastIndex = selection[selection.length - 1].row
+                        dragFirstIndex = selection[0].row
+                        dragLastIndex = selection[selection.length - 1].row
 
-            dragging = true
-        }
+                        dragging = true
+                    }
 
-        function endDrag() {
-            dragging = false
-            setDraggedStateForTracks(false)
+                    function endDrag() {
+                        dragging = false
+                        setDraggedStateForTracks(false)
 
-            if (dragFirstIndex < dropIndex) {
-                dropIndex--
-            }
+                        if (dragFirstIndex < dropIndex) {
+                            dropIndex--
+                        }
 
-            if (dragFirstIndex == dropIndex || dropIndex < 0) {
-                return
-            }
+                        if (dragFirstIndex == dropIndex || dropIndex < 0) {
+                            return
+                        }
 
-            let selectedRows = tracksModel.selectionModel().selectedIndexes.map(index => index.row)
+                        let selectedRows = tracksModel.selectionModel().selectedIndexes.map(index => index.row)
 
-            tracksModel.requestTracksMove(selectedRows, dropIndex)
-            dropIndex = -1
-        }
+                        tracksModel.requestTracksMove(selectedRows, dropIndex)
+                        dropIndex = -1
+                    }
 
-        function onMouseMove(item, mouseX, mouseY) {
-            if (!dragging) {
-                return
-            }
+                    function onMouseMove(item, mouseX, mouseY) {
+                        if (!dragging) {
+                            return
+                        }
 
-            mouseY = view.mapFromItem(item, mouseX, mouseY).y + view.contentY
+                        mouseY = view.mapFromItem(item, mouseX, mouseY).y + view.contentY
 
-            let itemAtCursor = view.itemAt(0, mouseY)
-            let indexAtCursor = view.indexAt(0, mouseY)
+                        let itemAtCursor = view.itemAt(0, mouseY)
+                        let indexAtCursor = view.indexAt(0, mouseY)
 
-            if (itemAtCursor) {
-                if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY - view.contentY).y) {
-                    indexAtCursor++
+                        if (itemAtCursor) {
+                            if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY - view.contentY).y) {
+                                indexAtCursor++
+                            }
+                        }
+                        else {
+                            indexAtCursor = mouseY < 0 ? 0 : view.count
+                        }
+
+                        if (dragFirstIndex > indexAtCursor || (dragLastIndex + 1) < indexAtCursor ) {
+                            dropIndex = indexAtCursor
+                            setDraggedStateForTracks(true)
+                        }
+                        else {
+                            dropIndex = -1
+                            setDraggedStateForTracks(false)
+                        }
+                    }
+
+                    function setDraggedStateForTracks(state) {
+                        tracksModel.selectionModel().selectedIndexes.forEach(selectedIndex => {
+                            view.itemAtIndex(selectedIndex.row).dragged = state
+                        })
+                    }
                 }
             }
-            else {
-                indexAtCursor = mouseY < 0 ? 0 : view.count
-            }
-
-            if (dragFirstIndex > indexAtCursor || (dragLastIndex + 1) < indexAtCursor ) {
-                dropIndex = indexAtCursor
-                setDraggedStateForTracks(true)
-            }
-            else {
-                dropIndex = -1
-                setDraggedStateForTracks(false)
-            }
-        }
-
-        function setDraggedStateForTracks(state) {
-            tracksModel.selectionModel().selectedIndexes.forEach(selectedIndex => {
-                view.itemAtIndex(selectedIndex.row).dragged = state
-            })
         }
     }
 }
