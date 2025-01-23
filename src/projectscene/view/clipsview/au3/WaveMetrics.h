@@ -10,7 +10,7 @@ struct WaveMetrics
     double top = 0.0;
     double left = 0.0;
     double height = 0.0;
-    double width = 0.0;    // not used for draw, just info
+    double width = 0.0;
 
     double zoom = 1.0;
 

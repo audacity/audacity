@@ -8,12 +8,12 @@ constexpr auto SAMPLE_TICK_SIZE = 4;
 namespace {
 
 struct SampleData {
-    QVector<int> y {};
-    QVector<int> x {};
+    std::vector<int> y {};
+    std::vector<int> x {};
 
     SampleData() = default;
 
-    SampleData(QVector<int> pY, QVector<int> pX)
+    SampleData(std::vector<int> pY, std::vector<int> pX)
     {
         IF_ASSERT_FAILED(pY.size() == pX.size()) {
             return;
@@ -84,6 +84,7 @@ void DrawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metr
 {
     const ZoomInfo zoomInfo{metrics.fromTime, metrics.zoom};
 
+    // If there is no selection, just draw the normal background
     if (metrics.selectionStartTime == metrics.selectionEndTime) {
         painter.fillRect(metrics.left, metrics.top, metrics.width, metrics.height, style.normalBackground);
         return;
@@ -106,16 +107,16 @@ void DrawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metr
 
 void DrawSampleHead(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter, const Style& style)
 {
-    const ZoomInfo zoomInfo{metrics.fromTime, metrics.zoom};
     size_t slen = samples.size();
+    const ZoomInfo zoomInfo{metrics.fromTime, metrics.zoom};
 
-    const auto selectedStartPosition = std::max(-10000, std::min(10000, (int)(zoomInfo.TimeToPosition(metrics.selectionStartTime))));
-    const auto selectedEndPosition = std::max(-10000, std::min(10000, (int)(zoomInfo.TimeToPosition(metrics.selectionEndTime))));
+    const auto selectedStartPosition = std::max(-10000, std::min(10000, static_cast<int>(zoomInfo.TimeToPosition(metrics.selectionStartTime))));
+    const auto selectedEndPosition = std::max(-10000, std::min(10000, static_cast<int>(zoomInfo.TimeToPosition(metrics.selectionEndTime))));
     
-    auto pr = QRect(0, 0, SAMPLE_TICK_SIZE, SAMPLE_TICK_SIZE);
     painter.setBrush(style.sampleBrush);
 
-    for (decltype(slen) s = 0; s < slen; s++) {
+    auto pr = QRect(0, 0, SAMPLE_TICK_SIZE, SAMPLE_TICK_SIZE);
+    for (size_t s = 0; s < slen; s++) {
         if (samples.y[s] >= 0 && samples.y[s] < metrics.height) {
             if (selectedStartPosition <= samples.x[s] && samples.x[s] <= selectedEndPosition) {
                 painter.setPen(style.sampleHeadSelection);
@@ -131,13 +132,11 @@ void DrawSampleHead(const SampleData& samples, const au::projectscene::WaveMetri
     }
 }
 
-void DrawSampleStalk(const SampleData& samples, bool dB, float dBRange, float zoomMax, float zoomMin, const au::projectscene::WaveMetrics& metrics, QPainter& painter, const Style& style)
+void DrawSampleStalk(const SampleData& samples, int yZero, const au::projectscene::WaveMetrics& metrics, QPainter& painter, const Style& style)
 {
-    size_t slen = samples.size();
-    int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, metrics.height, dB, true, dBRange, false);
-    
     painter.setPen(style.sampleStalk);
-    yZero = metrics.left + std::max(-1, std::min(static_cast<int>(metrics.height), yZero));
+
+    const size_t slen = samples.size();
     for (size_t s = 0; s < slen; s++) {
         painter.drawLine(
             metrics.left + samples.x[s], metrics.top + samples.y[s],
@@ -147,7 +146,7 @@ void DrawSampleStalk(const SampleData& samples, bool dB, float dBRange, float zo
 
 void DrawConnectingPoints(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter)
 {
-    size_t slen = samples.size();
+    const size_t slen = samples.size();
     for (size_t s = 0; s < slen - 1; s++) {
         painter.drawLine(
             metrics.left + samples.x[s], metrics.top + samples.y[s],
@@ -171,35 +170,28 @@ SampleData GetSampleData(const Au3WaveClip& clip, int channelIndex, const au::pr
 
     // Assume size_t will not overflow, else we wouldn't be here drawing the
     // few individual samples
-    auto slen = std::min(snSamples - s0, s1 - s0 + 1).as_size_t();
-
+    const auto slen = std::min(snSamples - s0, s1 - s0 + 1).as_size_t();
     if (slen <= 0) {
         SampleData();
     }
 
-    Floats buffer{ size_t(slen) };
+    Floats buffer{ slen };
     clip.GetSamples(channelIndex, (samplePtr)buffer.get(), floatSample, s0, slen, false);
 
-    auto xpos = QVector<int>(static_cast<int>(slen));
-    auto ypos = QVector<int>(static_cast<int>(slen));
+    auto xpos = std::vector<int>(slen);
+    auto ypos = std::vector<int>(slen);
+    const auto invRate = 1.0 / rate;
 
-    for (decltype(slen) s = 0; s < slen; s++) {
+    for (size_t s = 0; s < slen; s++) {
         const double time = (s + s0).as_double() / rate;
-        const int xx
-            =std::max(-10000, std::min(10000,
-                                       (int)(zoomInfo.TimeToPosition(time))));
+        const int xx = std::max(-10000, std::min(10000, static_cast<int>(zoomInfo.TimeToPosition(time))));
         xpos[s] = xx;
 
-        // Calculate sample as it would be rendered, so quantize time
-        double value
-            =clip.GetEnvelope().GetValue(time, 1.0 / clip.GetRate());
+        const double value = clip.GetEnvelope().GetValue(time, invRate);
         const double tt = buffer[s] * value;
 
-        ypos[s]
-            =std::max(-1,
-                      std::min(static_cast<int>(metrics.height),
-                               GetWaveYPos(tt, zoomMin, zoomMax,
-                                           metrics.height, dB, true, dBRange, false)));
+        ypos[s] = std::max(-1, std::min(static_cast<int>(metrics.height),
+                                        GetWaveYPos(tt, zoomMin, zoomMax,metrics.height, dB, true, dBRange, false)));
     }
 
     return SampleData(ypos, xpos);
@@ -226,8 +218,11 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter,
     }
 
     if (showPoints) {
+        int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, metrics.height, dB, true, dBRange, false);
+        yZero = metrics.left + std::max(-1, std::min(static_cast<int>(metrics.height), yZero));
+
         DrawSampleHead(samples, metrics, painter, style);
-        DrawSampleStalk(samples, dB, dBRange, zoomMax, zoomMin, metrics, painter, style);
+        DrawSampleStalk(samples, yZero, metrics, painter, style);
     } else {
         DrawConnectingPoints(samples, metrics, painter);
     }
