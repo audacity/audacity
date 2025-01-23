@@ -9,13 +9,16 @@
 
 #include "global/realfn.h"
 
+#include "au3samplespainter.h"
 #include "ClipInterface.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "WaveMetrics.h"
 #include "ZoomInfo.h"
 #include "Envelope.h"
 #include "FrameStatistics.h"
 #include "WaveformScale.h"
+#include "WaveMetrics.h"
 #include "graphics/Color.h"
 
 #include "waveform/WaveBitmapCache.h"
@@ -32,15 +35,6 @@ using namespace au::au3;
 constexpr double CLIPVIEW_WIDTH_MIN = 4; // px
 
 using Style = au::projectscene::Au3WavePainter::Style;
-
-namespace WaveChannelViewConstants {
-// Only two types of sample display for now, but
-// others (eg sinc interpolation) may be added later.
-enum SampleDisplay {
-    LinearInterpolate = 0,
-    StemPlot
-};
-}
 
 namespace {
 class WaveformSettings final : public ClientData::Cloneable<>
@@ -91,21 +85,6 @@ private:
     std::vector<uint8_t> mBytes;
 };
 
-struct WaveMetrics
-{
-    double top = 0.0;
-    double left = 0.0;
-    double height = 0.0;
-    double width = 0.0;    // not used for draw, just info
-
-    double zoom = 1.0;
-
-    double fromTime = 0.0;
-    double toTime = 0.0;
-
-    double selectionStartTime = 0.0;
-    double selectionEndTime = 0.0;
-};
 
 class WaveformPainter final : public WaveClipListener
 {
@@ -146,10 +125,10 @@ public:
     void Draw(size_t channelIndex,
               QPainter& painter,
               const WavePaintParameters& params,
-              const WaveMetrics& metrics)
+              const au::projectscene::WaveMetrics& metrics)
     {
-        assert(channelIndex >= 0 && channelIndex < mChannelCaches.size());
-        if (channelIndex < 0 || channelIndex >= mChannelCaches.size()) {
+        assert(channelIndex < mChannelCaches.size());
+        if (channelIndex >= mChannelCaches.size()) {
             return;
         }
 
@@ -333,179 +312,8 @@ void GetEnvelopeValues(const Envelope& env,
     }
 }
 
-/// Takes a value between min and max and returns a value between
-/// height and 0
-int GetWaveYPos(float value, float min, float max,
-                int height, bool dB, bool outer,
-                float dBr, bool clip)
-{
-    if (dB) {
-        if (height == 0) {
-            return 0;
-        }
-
-        float sign = (value >= 0 ? 1 : -1);
-
-        if (value != 0.) {
-            float db = LINEAR_TO_DB(fabs(value));
-            value = (db + dBr) / dBr;
-            if (!outer) {
-                value -= 0.5;
-            }
-            if (value < 0.0) {
-                value = 0.0;
-            }
-            value *= sign;
-        }
-    } else {
-        if (!outer) {
-            if (value >= 0.0) {
-                value -= 0.5;
-            } else {
-                value += 0.5;
-            }
-        }
-    }
-
-    if (clip) {
-        if (value < min) {
-            value = min;
-        }
-        if (value > max) {
-            value = max;
-        }
-    }
-
-    value = (max - value) / (max - min);
-    return (int)(value * (height - 1) + 0.5);
-}
-
-void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rect,
-                           const Style& style,
-                           const ZoomInfo& zoomInfo,
-                           const Au3WaveClip& clip,
-                           int leftOffset,
-                           float zoomMin, float zoomMax,
-                           bool dB, float dBRange,
-                           bool showPoints, bool highlight)
-{
-    const double toffset = clip.GetPlayStartTime();
-    double rate = clip.GetRate();
-    const double t0 = std::max(0.0, zoomInfo.PositionToTime(0, -leftOffset) - toffset);
-    const auto s0 = sampleCount(floor(t0 * rate));
-    const auto snSamples = clip.GetVisibleSampleCount();
-    if (s0 > snSamples) {
-        return;
-    }
-
-    const double t1 = zoomInfo.PositionToTime(rect.width() - 1, -leftOffset) - toffset;
-    const auto s1 = sampleCount(ceil(t1 * rate));
-
-    // Assume size_t will not overflow, else we wouldn't be here drawing the
-    // few individual samples
-    auto slen = std::min(snSamples - s0, s1 - s0 + 1).as_size_t();
-
-    if (slen <= 0) {
-        return;
-    }
-
-    Floats buffer{ size_t(slen) };
-    clip.GetSamples(channelIndex, (samplePtr)buffer.get(), floatSample, s0, slen,
-                    // Suppress exceptions in this drawing operation:
-                    false);
-
-    ArrayOf<int> xpos{ size_t(slen) };
-    ArrayOf<int> ypos{ size_t(slen) };
-    ArrayOf<int> clipped;
-    int clipcnt = 0;
-
-    //TODO: uncomment and fix
-    //const auto bShowClipping = artist->mShowClipping;
-    const auto bShowClipping = false;
-    if (bShowClipping) {
-        clipped.reinit(size_t(slen));
-    }
-
-    painter.setPen(highlight ? style.highlight : style.samplePen);
-
-    for (decltype(slen) s = 0; s < slen; s++) {
-        const double time = toffset + (s + s0).as_double() / rate;
-        const int xx   // An offset into the rectangle rect
-            =std::max(-10000, std::min(10000,
-                                       (int)(zoomInfo.TimeToPosition(time, -leftOffset))));
-        xpos[s] = xx;
-
-        // Calculate sample as it would be rendered, so quantize time
-        double value
-            =clip.GetEnvelope().GetValue(time, 1.0 / clip.GetRate());
-        const double tt = buffer[s] * value;
-
-        if (clipped && bShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO))) {
-            clipped[clipcnt++] = xx;
-        }
-        ypos[s]
-            =std::max(-1,
-                      std::min(rect.height(),
-                               GetWaveYPos(tt, zoomMin, zoomMax,
-                                           rect.height(), dB, true, dBRange, false)));
-    }
-
-    if (showPoints) {
-        // Draw points where spacing is enough
-        //TODO: uncomment and fix
-        //const auto bigPoints = artist->bigPoints;
-        const auto bigPoints = false;
-        const int tickSize = bigPoints ? 4 : 3;// Bigger ellipses when draggable.
-        auto pr = QRect(0, 0, tickSize, tickSize);
-
-        //maybe need different colour when draggable.
-        auto brush = highlight ? style.highlight : (bigPoints ? style.sampleBrush : style.sampleBrush);
-
-        painter.setBrush(brush);
-
-        for (decltype(slen) s = 0; s < slen; s++) {
-            if (ypos[s] >= 0 && ypos[s] < rect.height()) {
-                pr.moveLeft(rect.x() + xpos[s] - tickSize / 2);
-                pr.moveTop(rect.y() + ypos[s] - tickSize / 2);
-
-                //painter.drawEllipse(pr);
-            }
-        }
-    }
-
-    //TODO: uncomment and fix
-    //const auto sampleDisplay = artist->mSampleDisplay;
-    const auto sampleDisplay = true;
-    if (showPoints && (sampleDisplay == (int)WaveChannelViewConstants::StemPlot)) {
-        // Draw vertical lines
-        int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height(), dB, true, dBRange, false);
-        yZero = rect.y() + std::max(-1, std::min(rect.height(), yZero));
-        for (decltype(slen) s = 0; s < slen; s++) {
-            painter.drawLine(
-                rect.x() + xpos[s], rect.y() + ypos[s],
-                rect.x() + xpos[s], yZero);
-        }
-    } else {
-        // Connect samples with straight lines
-        for (decltype(slen) s = 0; s < slen - 1; s++) {
-            painter.drawLine(
-                rect.x() + xpos[s], rect.y() + ypos[s],
-                rect.x() + xpos[s + 1], rect.y() + ypos[s + 1]);
-        }
-    }
-
-    // Draw clipping
-    if (clipcnt) {
-        painter.setPen(style.clippedPen);
-        while (--clipcnt >= 0) {
-            auto s = clipped[clipcnt];
-            painter.drawLine(rect.x() + s, rect.y(), rect.x() + s, rect.y() + rect.height());
-        }
-    }
-}
-
 void DrawMinMaxRMS(int channelIndex, QPainter& painter,
-                   const WaveMetrics& metrics,
+                   const au::projectscene::WaveMetrics& metrics,
                    const Style& style,
                    const Au3WaveClip& clip,
                    double zoomMin, double zoomMax,
@@ -536,7 +344,7 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
         ColorFromQColor(style.clippedPen))
     .SetEnvelope(clip.GetEnvelope());
 
-    WaveMetrics _metrics = metrics;
+    au::projectscene::WaveMetrics _metrics = metrics;
     _metrics.fromTime += clip.GetTrimLeft();
     _metrics.toTime += clip.GetTrimLeft();
 
@@ -555,11 +363,23 @@ static bool showIndividualSamples(const Au3WaveClip& clip, double zoom)
     return showIndividualSamples;
 }
 
+static bool showDraggablePoints(const Au3WaveClip& clip, double zoom)
+{
+    const double sampleRate = clip.GetRate();
+    const double stretchRatio = clip.GetStretchRatio();
+
+    // Require at least 4 pixels per sample for drawing the draggable points.
+    const double threshold2 = 4 * sampleRate / stretchRatio;
+
+    bool showPoints = zoom > threshold2;
+    return showPoints;
+}
+
 static void DrawWaveform(int channelIndex,
                          QPainter& painter,
                          Au3WaveTrack& track,
                          const Au3WaveClip& clip,
-                         const WaveMetrics& metrics,
+                         const au::projectscene::WaveMetrics& metrics,
                          double zoom,
                          const Style& style,
                          bool dB)
@@ -594,19 +414,16 @@ static void DrawWaveform(int channelIndex,
                       zoomMin, zoomMax,
                       dB, dBRange);
     } else {
-        // Require at least 3 pixels per sample for drawing the draggable points.
-        // const double threshold2 = 3 * sampleRate / stretchRatio;
-        // const bool showPoints =zoom > threshold2;
-        // bool highlight = false;
-        // DrawIndividualSamples(
-        //     channelIndex,
-        //     painter, rect,
-        //     style,
-        //     zoomInfo,
-        //     clip, leftOffset,
-        //     zoomMin, zoomMax,
-        //     dB, dBRange,
-        //     showPoints, highlight);
+        const bool showPoints = showDraggablePoints(clip, zoom);
+        DrawIndividualSamples(
+             channelIndex,
+             painter,
+             style,
+             metrics,
+             clip,
+             zoomMin, zoomMax,
+             dB, dBRange,
+             showPoints);
     }
 }
 
