@@ -414,7 +414,7 @@ void Viewport::OnScroll()
    // This keeps the time ruler in sync with horizontal scrolling, without
    // making an undesirable compilation dependency of this source file on
    // the ruler
-   BasicUI::Yield();
+   BasicUI::ProcessIdle();
 #endif
 }
 
