@@ -201,6 +201,7 @@ public:
    virtual ~Services();
    virtual void DoCallAfter(const Action &action) = 0;
    virtual void DoYield() = 0;
+   virtual void DoProcessIdle() = 0;
    virtual void DoShowErrorDialog(const WindowPlacement &placement,
       const TranslatableString &dlogTitle,
       const TranslatableString &message,
@@ -262,6 +263,9 @@ BASIC_UI_API void CallAfter(Action action);
  dispatching.
  */
 BASIC_UI_API void Yield();
+
+//! Dispatch waiting events only (no pending mouse, keyboard, or timer events)
+BASIC_UI_API void ProcessIdle();
 
 //! Open an URL in default browser
 /*! This function may be called in other threads than the main.

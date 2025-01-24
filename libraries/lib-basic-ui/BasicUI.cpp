@@ -243,6 +243,27 @@ void Yield()
    while ( !sActions.empty() );
 }
 
+void ProcessIdle()
+{
+   do {
+      // Dispatch anything in the queue, added while there were no Services
+      {
+         auto guard = std::lock_guard{ sActionsMutex };
+         std::vector<Action> actions;
+         actions.swap(sActions);
+         for (auto &action : actions)
+            action();
+      }
+
+      // Dispatch according to Services, if present
+      if (auto p = Get())
+         p->DoProcessIdle();
+   }
+   // Re-test for more actions that might have been enqueued by actions just
+   // dispatched
+   while ( !sActions.empty() );
+}
+
 bool OpenInDefaultBrowser(const wxString &url)
 {
 #if defined(HAS_XDG_OPEN_HELPER)
