@@ -2,7 +2,7 @@
 #include "WaveTrack.h"
 #include "Channel.h"
 
-namespace au::projectscene{
+namespace au::projectscene {
 static const ChannelGroup::Attachments::RegisteredFactory
     key1{ [](auto&) {
         return std::make_unique<WaveformSettings>(WaveformSettings::defaults());

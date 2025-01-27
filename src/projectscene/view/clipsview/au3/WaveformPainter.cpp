@@ -75,9 +75,9 @@ WaveformPainter& WaveformPainter::EnsureClip(const au::au3::Au3WaveClip& clip)
 }
 
 void WaveformPainter::Draw(size_t channelIndex,
-            QPainter& painter,
-            const WavePaintParameters& params,
-            const au::projectscene::WaveMetrics& metrics)
+                           QPainter& painter,
+                           const WavePaintParameters& params,
+                           const au::projectscene::WaveMetrics& metrics)
 {
     assert(channelIndex < mChannelCaches.size());
     if (channelIndex >= mChannelCaches.size()) {

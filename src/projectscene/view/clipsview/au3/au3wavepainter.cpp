@@ -110,9 +110,9 @@ void Au3WavePainter::doPaint(QPainter& painter, const Au3WaveTrack* _track, cons
         if (!m_snap) {
             m_snap = viewState->getSnap();
         }
-        viewState->setSnap(Snap{ SnapType::Samples, true, false });
+        viewState->setSnap(Snap { SnapType::Samples, true, false });
     } else {
-        viewState->setSnap(m_snap.value_or(Snap{ SnapType::Bar, false, false }));
+        viewState->setSnap(m_snap.value_or(Snap { SnapType::Bar, false, false }));
         m_snap.reset();
     }
 
@@ -124,8 +124,8 @@ void Au3WavePainter::doPaint(QPainter& painter, const Au3WaveTrack* _track, cons
     for (unsigned i = 0; i < clip->NChannels(); ++i) {
         wm.height = channelHeight[i];
         showSamples
-            ? samplesPainter()->paint(i, painter, wm, params.style, *track, *clip)
-            : minMaxRMSPainter()->paint(i, painter, wm, params.style, *track, *clip);
+        ? samplesPainter()->paint(i, painter, wm, params.style, *track, *clip)
+        : minMaxRMSPainter()->paint(i, painter, wm, params.style, *track, *clip);
         wm.top += wm.height;
     }
 }

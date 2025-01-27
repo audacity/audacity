@@ -9,7 +9,8 @@
 constexpr auto SAMPLE_TICK_SIZE = 4;
 
 namespace au::projectscene {
-void SamplesPainter::paint(int channelIndex, QPainter& painter, const WaveMetrics& metrics, const Style& style, const au::au3::Au3WaveTrack& track, const au::au3::Au3WaveClip& clip)
+void SamplesPainter::paint(int channelIndex, QPainter& painter, const WaveMetrics& metrics, const Style& style,
+                           const au::au3::Au3WaveTrack& track, const au::au3::Au3WaveClip& clip)
 {
     float zoomMin, zoomMax;
     auto& cache = WaveformScale::Get(track);
@@ -20,7 +21,7 @@ void SamplesPainter::paint(int channelIndex, QPainter& painter, const WaveMetric
     const bool dB = !settings.isLinear();
     const double trimLeft = clip.GetTrimLeft();
 
-    drawBackground(painter, metrics, style, trimLeft);   
+    drawBackground(painter, metrics, style, trimLeft);
     drawBaseLine(painter, metrics, style);
 
     const auto samples = getSampleData(clip, channelIndex, metrics, dB, dBRange, zoomMax, zoomMin);
@@ -39,9 +40,10 @@ void SamplesPainter::paint(int channelIndex, QPainter& painter, const WaveMetric
     }
 }
 
-void SamplesPainter::drawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const Style& style, const double trimLeft)
+void SamplesPainter::drawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const Style& style,
+                                    const double trimLeft)
 {
-    const ZoomInfo zoomInfo{metrics.fromTime, metrics.zoom};
+    const ZoomInfo zoomInfo{ metrics.fromTime, metrics.zoom };
 
     // If there is no selection, just draw the normal background
     if (metrics.selectionStartTime == metrics.selectionEndTime) {
@@ -55,11 +57,14 @@ void SamplesPainter::drawBackground(QPainter& painter, const au::projectscene::W
     if (relativeSelectionEndTime < metrics.fromTime || relativeSelectionStartTime > metrics.toTime) {
         painter.fillRect(metrics.left, metrics.top, metrics.width, metrics.height, style.normalBackground);
     } else {
-        const auto selectedStartPosition = std::max(zoomInfo.TimeToPosition(relativeSelectionStartTime), zoomInfo.TimeToPosition(metrics.fromTime));
-        const auto selectedEndPosition = std::min(zoomInfo.TimeToPosition(relativeSelectionEndTime), zoomInfo.TimeToPosition(metrics.toTime));
- 
+        const auto selectedStartPosition
+            = std::max(zoomInfo.TimeToPosition(relativeSelectionStartTime), zoomInfo.TimeToPosition(metrics.fromTime));
+        const auto selectedEndPosition
+            = std::min(zoomInfo.TimeToPosition(relativeSelectionEndTime), zoomInfo.TimeToPosition(metrics.toTime));
+
         painter.fillRect(metrics.left, metrics.top, selectedStartPosition - metrics.left, metrics.height, style.normalBackground);
-        painter.fillRect(selectedStartPosition, metrics.top, selectedEndPosition - selectedStartPosition, metrics.height, style.selectedBackground);
+        painter.fillRect(selectedStartPosition, metrics.top, selectedEndPosition - selectedStartPosition, metrics.height,
+                         style.selectedBackground);
         painter.fillRect(selectedEndPosition, metrics.top, metrics.top + metrics.width, metrics.height, style.normalBackground);
     }
 }
@@ -72,8 +77,8 @@ void SamplesPainter::drawBaseLine(QPainter& painter, const au::projectscene::Wav
 }
 
 int SamplesPainter::getWaveYPos(float value, float min, float max,
-                int height, bool dB, bool outer,
-                float dBr, bool clip)
+                                int height, bool dB, bool outer,
+                                float dBr, bool clip)
 {
     if (dB) {
         if (height == 0) {
@@ -116,16 +121,16 @@ int SamplesPainter::getWaveYPos(float value, float min, float max,
     return (int)(value * (height - 1) + 0.5);
 }
 
-
-
-void SamplesPainter::drawSampleHead(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter, const Style& style)
+void SamplesPainter::drawSampleHead(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter,
+                                    const Style& style)
 {
     size_t slen = samples.size();
-    const ZoomInfo zoomInfo{metrics.fromTime, metrics.zoom};
+    const ZoomInfo zoomInfo{ metrics.fromTime, metrics.zoom };
 
-    const auto selectedStartPosition = std::max(-10000, std::min(10000, static_cast<int>(zoomInfo.TimeToPosition(metrics.selectionStartTime))));
+    const auto selectedStartPosition
+        = std::max(-10000, std::min(10000, static_cast<int>(zoomInfo.TimeToPosition(metrics.selectionStartTime))));
     const auto selectedEndPosition = std::max(-10000, std::min(10000, static_cast<int>(zoomInfo.TimeToPosition(metrics.selectionEndTime))));
-    
+
     painter.setBrush(style.sampleBrush);
 
     auto pr = QRect(0, 0, SAMPLE_TICK_SIZE, SAMPLE_TICK_SIZE);
@@ -145,7 +150,8 @@ void SamplesPainter::drawSampleHead(const SampleData& samples, const au::project
     }
 }
 
-void SamplesPainter::drawSampleStalk(const SampleData& samples, int yZero, const au::projectscene::WaveMetrics& metrics, QPainter& painter, const Style& style)
+void SamplesPainter::drawSampleStalk(const SampleData& samples, int yZero, const au::projectscene::WaveMetrics& metrics, QPainter& painter,
+                                     const Style& style)
 {
     painter.setPen(style.sampleStalk);
 
@@ -167,9 +173,10 @@ void SamplesPainter::drawConnectingPoints(const SampleData& samples, const au::p
     }
 }
 
-SampleData SamplesPainter::getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics, bool dB, float dBRange, float zoomMax, float zoomMin)
+SampleData SamplesPainter::getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics,
+                                         bool dB, float dBRange, float zoomMax, float zoomMin)
 {
-    const ZoomInfo zoomInfo{metrics.fromTime, metrics.zoom};
+    const ZoomInfo zoomInfo{ metrics.fromTime, metrics.zoom };
     double rate = clip.GetRate();
     const double t0 = metrics.fromTime;
     const auto s0 = sampleCount(floor(t0 * rate));
@@ -204,7 +211,7 @@ SampleData SamplesPainter::getSampleData(const au::au3::Au3WaveClip& clip, int c
         const double tt = buffer[s] * value;
 
         ypos[s] = std::max(-1, std::min(static_cast<int>(metrics.height),
-                                        getWaveYPos(tt, zoomMin, zoomMax,metrics.height, dB, true, dBRange, false)));
+                                        getWaveYPos(tt, zoomMin, zoomMax, metrics.height, dB, true, dBRange, false)));
     }
 
     return SampleData(ypos, xpos);

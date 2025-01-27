@@ -12,7 +12,8 @@ graphics::Color ColorFromQColor(const QColor& color)
 }
 
 namespace au::projectscene {
-void MinMaxRMSPainter::paint(int channelIndex, QPainter& painter, const WaveMetrics& metrics, const Style& style, const au::au3::Au3WaveTrack& track, const au::au3::Au3WaveClip& clip)
+void MinMaxRMSPainter::paint(int channelIndex, QPainter& painter, const WaveMetrics& metrics, const Style& style,
+                             const au::au3::Au3WaveTrack& track, const au::au3::Au3WaveClip& clip)
 {
     auto& waveformPainter = WaveformPainter::Get(clip);
     WavePaintParameters paintParameters;

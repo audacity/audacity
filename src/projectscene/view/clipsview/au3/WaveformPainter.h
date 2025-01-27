@@ -15,10 +15,7 @@ public:
     static WaveformPainter& Get(const au::au3::Au3WaveClip& cache);
 
     WaveformPainter& EnsureClip(const au::au3::Au3WaveClip& clip);
-    void Draw(size_t channelIndex,
-              QPainter& painter,
-              const WavePaintParameters& params,
-              const au::projectscene::WaveMetrics& metrics);
+    void Draw(size_t channelIndex, QPainter& painter, const WavePaintParameters& params, const au::projectscene::WaveMetrics& metrics);
     void MarkChanged() noexcept override;
     void Invalidate() override;
     std::unique_ptr<WaveClipListener> Clone() const override;

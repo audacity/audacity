@@ -18,6 +18,7 @@ class IRMSPainter : MODULE_EXPORT_INTERFACE
 
 public:
     virtual ~IRMSPainter() = default;
-    virtual void paint(int channelIndex, QPainter& painter, const WaveMetrics& metrics, const Style& style, const au::au3::Au3WaveTrack& track, const au::au3::Au3WaveClip& clip) = 0;
+    virtual void paint(int channelIndex, QPainter& painter, const WaveMetrics& metrics, const Style& style,
+                       const au::au3::Au3WaveTrack& track, const au::au3::Au3WaveClip& clip) = 0;
 };
 }
