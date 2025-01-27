@@ -50,6 +50,7 @@ public:
                          RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
 
     std::optional<TrackId> trackId(const RealtimeEffectStatePtr&) const override;
+    std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const override;
 
     bool isActive(const RealtimeEffectStatePtr&) const override;
     void setIsActive(const RealtimeEffectStatePtr&, bool) override;
@@ -60,14 +61,16 @@ public:
 
 private:
     void updateSubscriptions(const au::project::IAudacityProjectPtr& project);
-    Observer::Subscription subscribeToRealtimeEffectList(WaveTrack&, RealtimeEffectList&);
+    Observer::Subscription subscribeToRealtimeEffectList(TrackId trackId, RealtimeEffectList&);
     void onTrackListEvent(const TrackListEvent&);
     void onWaveTrackAdded(WaveTrack&);
     std::string getEffectName(const std::string& effectId) const;
     std::string getEffectName(const RealtimeEffectState& state) const;
     std::string getTrackName(const au::au3::Au3Project& project, au::effects::TrackId trackId) const;
+    std::optional<std::string> effectTrackName(TrackId trackId) const;
     const RealtimeEffectList* realtimeEffectList(au::effects::TrackId) const;
     RealtimeEffectList* realtimeEffectList(au::effects::TrackId);
+    void initializeTrackOnStackManager(au::effects::TrackId trackId);
     void onUndoRedo();
 
     struct UtilData
@@ -75,6 +78,7 @@ private:
         au::au3::Au3Project* const au3Project;
         au::au3::Au3Track* const au3Track;
         trackedit::ITrackeditProject* const trackeditProject;
+        RealtimeEffectList* const effectList;
     };
 
     std::optional<UtilData> utilData(TrackId) const;

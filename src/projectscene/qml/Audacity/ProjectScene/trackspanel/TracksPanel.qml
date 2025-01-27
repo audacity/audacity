@@ -20,8 +20,8 @@ Item {
 
     // property alias contextMenuModel: contextMenuModel
     property int effectsSectionWidth: 240 // TODO: can this be set as a constant that can be imported?
-    property alias showEffectsSection: trackEffectsSection.showEffectsSection
-    property alias selectedTrackIndex: trackEffectsSection.selectedTrackIndex
+    property alias showEffectsSection: effectSectionModel.showEffectsSection
+    property int selectedTrackIndex: -1
 
     TracksListModel {
         id: tracksModel
@@ -38,6 +38,7 @@ Item {
     Component.onCompleted: {
         tracksViewState.init()
         tracksModel.load()
+        effectSectionModel.load()
     }
 
     QtObject {
@@ -51,13 +52,63 @@ Item {
         anchors.fill: parent
         spacing: 0
 
-        TrackEffectsSection {
-            id: trackEffectsSection
+        ColumnLayout {
+
+            RealtimeEffectSectionModel {
+                id: effectSectionModel
+            }
+
+            id: effectColumn
             Layout.preferredWidth: root.effectsSectionWidth
             Layout.maximumWidth: root.effectsSectionWidth
             Layout.minimumWidth: root.effectsSectionWidth
             Layout.fillHeight: true
-            visible: showEffectsSection
+            visible: effectSectionModel.showEffectsSection
+            spacing: 0
+
+            SeparatorLine { }
+
+            TrackEffectsSection {
+                id: trackEffectsSection
+                isMasterTrack: false
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumHeight: trackEffectsSection.minimumHeight
+            }
+
+            SeparatorLine {
+                id: separator
+                MouseArea {
+                    id: mouseArea
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: 10
+                    cursorShape: Qt.SizeVerCursor
+
+                    property real startY: 0
+                    property real startHeight: 0
+
+                    onPressed: (mouse) => {
+                        startY = mouse.y
+                        startHeight = trackEffectsSection.height
+                    }
+
+                    onPositionChanged: (mouse) => {
+                        const deltaY = mouse.y - startY
+                        const newMasterHeight = masterEffectsSection.height - deltaY
+                        masterEffectsSection.Layout.preferredHeight = Math.min(newMasterHeight, effectColumn.height - trackEffectsSection.minimumHeight)
+                    }
+                }
+            }
+
+            TrackEffectsSection {
+                id: masterEffectsSection
+                isMasterTrack: true
+                Layout.fillWidth: true
+                Layout.preferredHeight: 300
+                Layout.minimumHeight: masterEffectsSection.minimumHeight
+            }
         }
 
         SeparatorLine { }
@@ -132,18 +183,12 @@ Item {
                         tracksViewState.requestVerticalScrollUnlock()
                     }
 
-                    onIsSelectedChanged: {
-                        if (isSelected)
-                            root.selectedTrackIndex = index
-                    }
-
                     onSelectionRequested: function (exclusive) {
                         tracksModel.selectRow(model.index, exclusive)
                     }
 
                     onOpenEffectsRequested: {
-                        root.selectedTrackIndex = index
-                        trackEffectsSection.showEffectsSection = true
+                        effectSectionModel.showEffectsSection = true
                         root.openEffectsRequested()
                     }
 

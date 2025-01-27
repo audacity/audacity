@@ -79,6 +79,8 @@ KDDW.TitleBarBase {
             }
         }
 
+        SeparatorLine { }
+
         FlatButton {
             id: gripButton
 

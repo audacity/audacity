@@ -20,7 +20,10 @@ namespace au::effects {
 class IRealtimeEffectService : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IRealtimeEffectService);
+
 public:
+    static constexpr TrackId masterTrackId = -2;
+
     virtual ~IRealtimeEffectService() = default;
 
     virtual RealtimeEffectStatePtr addRealtimeEffect(TrackId trackId, const EffectId& effectId) = 0;
@@ -33,6 +36,7 @@ public:
                                  RealtimeEffectStatePtr> realtimeEffectReplaced() const = 0;
 
     virtual std::optional<TrackId> trackId(const RealtimeEffectStatePtr& state) const = 0;
+    virtual std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const = 0;
 
     virtual bool isActive(const RealtimeEffectStatePtr& state) const = 0;
     virtual void setIsActive(const RealtimeEffectStatePtr& state, bool) = 0;

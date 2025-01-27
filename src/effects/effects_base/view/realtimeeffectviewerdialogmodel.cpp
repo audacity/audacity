@@ -72,6 +72,7 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
 
     emit isActiveChanged();
     emit trackNameChanged();
+    emit isMasterEffectChanged();
 }
 
 void RealtimeEffectViewerDialogModel::unregisterState()
@@ -87,17 +88,7 @@ void RealtimeEffectViewerDialogModel::unregisterState()
 
 QString RealtimeEffectViewerDialogModel::prop_trackName() const
 {
-    const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(m_effectState);
-    IF_ASSERT_FAILED(trackId.has_value()) {
-        return {};
-    }
-
-    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
-    IF_ASSERT_FAILED(project) {
-        return {};
-    }
-
-    const auto trackName = project->trackName(*trackId);
+    const auto trackName = realtimeEffectService()->effectTrackName(m_effectState);
     IF_ASSERT_FAILED(trackName.has_value()) {
         return QString();
     }
@@ -131,5 +122,10 @@ void RealtimeEffectViewerDialogModel::subscribe()
             emit trackRemoved();
         }
     });
+}
+
+bool RealtimeEffectViewerDialogModel::prop_isMasterEffect() const
+{
+    return realtimeEffectService()->trackId(m_effectState) == IRealtimeEffectService::masterTrackId;
 }
 }

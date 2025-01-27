@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectmenumodelbase.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
 
 using namespace au::projectscene;
 
@@ -29,7 +30,7 @@ void RealtimeEffectMenuModelBase::load()
 
 std::optional<au::trackedit::TrackId> RealtimeEffectMenuModelBase::trackId() const
 {
-    return trackSelection()->selectedTrackId();
+    return m_isMasterTrack ? au::effects::IRealtimeEffectService::masterTrackId : trackSelection()->selectedTrackId();
 }
 
 void RealtimeEffectMenuModelBase::resetList()
@@ -54,4 +55,13 @@ void RealtimeEffectMenuModelBase::beginResetModel()
 void RealtimeEffectMenuModelBase::endResetModel()
 {
     AbstractMenuModel::endResetModel();
+}
+
+void RealtimeEffectMenuModelBase::prop_setIsMasterTrack(bool isMasterTrack)
+{
+    if (m_isMasterTrack == isMasterTrack) {
+        return;
+    }
+    m_isMasterTrack = isMasterTrack;
+    emit isMasterTrackChanged();
 }

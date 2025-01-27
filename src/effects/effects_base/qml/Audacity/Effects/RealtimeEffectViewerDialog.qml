@@ -46,15 +46,12 @@ StyledDialogViewWithoutNavigationSection {
 
             spacing: 8
 
-            FlatButton {
-                id: powerButton
-
+            BypassEffectButton {
                 Layout.margins: 0
                 Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                 Layout.preferredWidth: headerBar.height
 
-                icon: IconCode.BYPASS
-                iconFont: ui.theme.toolbarIconsFont
+                isMasterEffect: viewerModel.isMasterEffect
                 accentButton: viewerModel.isActive
 
                 onClicked: {

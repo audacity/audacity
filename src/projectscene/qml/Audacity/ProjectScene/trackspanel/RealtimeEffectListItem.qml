@@ -5,6 +5,8 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.Effects
+
 ListItemBlank {
     id: root
 
@@ -44,24 +46,18 @@ ListItemBlank {
 
         }
 
-        FlatButton {
-            id: powerButton
-
-            // TODO: make that from TrackEffectsSection reusable
+        BypassEffectButton {
             Layout.margins: 0
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: root.height
             Layout.minimumHeight: root.height
             Layout.maximumHeight: root.height
-            height: width
 
-            icon: IconCode.BYPASS
-            iconFont: ui.theme.toolbarIconsFont
-
-            accentButton: item.isActive
+            isMasterEffect: item && item.isMasterEffect
+            accentButton: item && item.isActive
 
             onClicked: {
-                item.isActive = !item.isActive
+                item.isActive = item && !item.isActive
             }
         }
 
@@ -91,7 +87,7 @@ ListItemBlank {
                     id: trackNameLabel
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
-                    text: root.item.effectName()
+                    text: root.item ? root.item.effectName() : ""
                 }
 
                 onClicked: {

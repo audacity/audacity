@@ -13,9 +13,10 @@ import Audacity.ProjectScene
 Rectangle {
     id: root
     implicitHeight: trackEffectList.contentHeight
+    readonly property int topMargin: 8
+    property alias isMasterTrack: trackEffectListModel.isMasterTrack
     property alias trackName: trackEffectListModel.trackName
     property alias trackEffectsActive: trackEffectListModel.trackEffectsActive
-    property alias showEffectsSection: trackEffectListModel.showEffectsSection
     property bool empty: trackEffectList.count == 0
 
     Component.onCompleted: {
@@ -29,7 +30,7 @@ Rectangle {
     Component {
         id: listMargin
         Item {
-            height: 8
+            height: root.topMargin
         }
     }
 
@@ -68,6 +69,7 @@ Rectangle {
                 id: scrollbar
                 anchors.fill: parent
                 thickness: 5
+                policy: ScrollBar.AlwaysOn
             }
         }
     }

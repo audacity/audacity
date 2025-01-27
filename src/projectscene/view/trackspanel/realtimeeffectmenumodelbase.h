@@ -14,6 +14,8 @@ namespace au::projectscene {
 class RealtimeEffectMenuModelBase : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
+    Q_PROPERTY(bool isMasterTrack READ isMasterTrack WRITE prop_setIsMasterTrack NOTIFY isMasterTrackChanged)
+
     muse::Inject<IRealtimeEffectPanelTrackSelection> trackSelection;
 public:
     explicit RealtimeEffectMenuModelBase(QObject* parent = nullptr);
@@ -24,18 +26,26 @@ protected:
     std::optional<au::trackedit::TrackId> trackId() const;
     void resetList();
     void removeTrack(const au::trackedit::TrackId& trackId);
+    bool isMasterTrack() const { return m_isMasterTrack; }
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
 
+signals:
+    void isMasterTrackChanged();
+
 private:
     void beginResetModel();
     void endResetModel();
+
+    void prop_setIsMasterTrack(bool isMasterTrack);
 
     virtual void doLoad() = 0;
     virtual void populateMenu() = 0;
     virtual void doResetList() {}
     virtual void doRemoveTrack(const au::trackedit::TrackId&) {}
     virtual void onTrackIdChanged() {}
+
+    bool m_isMasterTrack = false;
 };
 }

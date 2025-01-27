@@ -20,6 +20,11 @@ RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
     effectsProvider()->hideEffect(effectStateId);
 }
 
+bool RealtimeEffectListItemModel::prop_isMasterEffect() const
+{
+    return realtimeEffectService()->trackId(effectStateId) == effects::IRealtimeEffectService::masterTrackId;
+}
+
 QString RealtimeEffectListItemModel::effectName() const
 {
     return QString::fromStdString(effectsProvider()->effectName(*effectStateId));
