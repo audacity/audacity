@@ -214,11 +214,11 @@ const wxSize infoWindowSize(746, 176);
 #else
 const wxSize infoWindowSize(1050, 250);
 #endif
-class InfoWindow : public wxWindow
+class InfoWindow : public wxPanel
 {
 public:
     InfoWindow(wxWindow* parent)
-        : wxWindow(parent, wxID_ANY, wxDefaultPosition, infoWindowSize)
+        : wxPanel(parent, wxID_ANY, wxDefaultPosition, infoWindowSize)
     {
        ShuttleGui S( this, eIsCreating);
 
