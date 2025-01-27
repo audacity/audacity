@@ -45,6 +45,7 @@ public:
     virtual void setIsSnapTripletsEnabled(bool enabled) = 0;
 
     virtual void setSnap(const Snap& s) = 0;
+    virtual Snap getSnap() const = 0;
     virtual muse::ValCh<Snap> snap() const = 0;
 
     virtual void setClipEditStartTimeOffset(double val) = 0;

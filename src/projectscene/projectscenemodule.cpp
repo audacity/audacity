@@ -40,6 +40,8 @@
 #include "view/clipsview/selectioncontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
 #include "view/clipsview/pitchandspeedchangemodel.h"
+#include "view/clipsview/samplespainter.h"
+#include "view/clipsview/minmaxrmspainter.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -86,6 +88,8 @@ void ProjectSceneModule::registerExports()
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
     ioc()->registerExport<IWavePainter>(moduleName(), new Au3WavePainter());
+    ioc()->registerExport<ISamplesPainter>(moduleName(), new SamplesPainter());
+    ioc()->registerExport<IRMSPainter>(moduleName(), new MinMaxRMSPainter());
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(moduleName(), m_realtimeEffectPanelTrackSelection);
 }
 

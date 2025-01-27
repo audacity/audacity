@@ -155,6 +155,11 @@ void ProjectViewState::setSnap(const Snap& s)
     m_snap.set(s);
 }
 
+Snap ProjectViewState::getSnap() const
+{
+    return m_snap.val;
+}
+
 muse::ValCh<Snap> ProjectViewState::snap() const
 {
     return m_snap;
