@@ -390,76 +390,90 @@ ClipKeyList Au3Interaction::determineClipsToTrim(const ClipKey& clipKey) const
     }
 }
 
-bool Au3Interaction::canLeftTrimClips(const ClipKeyList& clipKeys,
-                                      secs_t deltaSec,
-                                      secs_t minClipDuration) const
+secs_t Au3Interaction::clampLeftTrimDelta(const ClipKeyList& clipKeys,
+                                          secs_t deltaSec,
+                                          secs_t minClipDuration) const
 {
     if (clipKeys.size() == 1) {
         //! NOTE hover handle single clip trim
         ClipKey selectedClip = clipKeys.front();
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
-            return false;
+            return 0.0;
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
         IF_ASSERT_FAILED(clip) {
-            return false;
+            return 0.0;
         }
 
         if (muse::RealIsEqualOrLess(deltaSec, 0.0) && muse::is_equal(clip->GetTrimLeft(), 0.0)) {
             //! NOTE: clip is fully untrimmed
-            return false;
+            return 0.0;
         }
     } else {
         //! NOTE: handle multi-clip trim
         //! NOTE: check if trim delta is applicable to every clip
         std::optional<secs_t> duration = shortestClipDuration(clipKeys);
 
-        if (!duration.has_value() || !muse::RealIsEqualOrMore(duration.value() - deltaSec, minClipDuration)
-            || !muse::RealIsEqualOrLess(deltaSec, duration.value())
+        if (!duration.has_value()) {
+            return 0.0;
+        }
+
+        if (!muse::RealIsEqualOrMore(duration.value() - deltaSec, minClipDuration)) {
+            return duration.value() - minClipDuration;
+        }
+
+        if (!muse::RealIsEqualOrLess(deltaSec, duration.value())
             || (muse::RealIsEqualOrLess(deltaSec, 0.0) && anyLeftFullyUntrimmed(clipKeys))) {
-            return false;
+            return 0.0;
         }
     }
 
-    return true;
+    return deltaSec;
 }
 
-bool Au3Interaction::canRightTrimClips(const ClipKeyList& clipKeys,
-                                       secs_t deltaSec,
-                                       secs_t minClipDuration) const
+secs_t Au3Interaction::clampRightTrimDelta(const ClipKeyList& clipKeys,
+                                           secs_t deltaSec,
+                                           secs_t minClipDuration) const
 {
     if (clipKeys.size() == 1) {
         //! NOTE hover handle single clip trim
         ClipKey selectedClip = clipKeys.front();
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
-            return false;
+            return 0.0;
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
         IF_ASSERT_FAILED(clip) {
-            return false;
+            return 0.0;
         }
 
         if (muse::RealIsEqualOrLess(deltaSec, 0.0) && muse::is_equal(clip->GetTrimRight(), 0.0)) {
             //! NOTE: clip is fully untrimmed
-            return false;
+            return 0.0;
         }
     } else {
         //! NOTE: handle multi-clip trim
         //! NOTE: check if trim delta is applicable to every clip
         std::optional<secs_t> duration = shortestClipDuration(clipKeys);
 
-        if (!duration.has_value() || !muse::RealIsEqualOrMore(duration.value() - deltaSec, minClipDuration)
-            || !muse::RealIsEqualOrLess(deltaSec, duration.value())
+        if (!duration.has_value()) {
+            return 0.0;
+        }
+
+        if (!muse::RealIsEqualOrMore(duration.value() - deltaSec, minClipDuration)) {
+            return duration.value() - minClipDuration;
+        }
+
+        if (!muse::RealIsEqualOrLess(deltaSec, duration.value())
             || (muse::RealIsEqualOrLess(deltaSec, 0.0) && anyRightFullyUntrimmed(clipKeys))) {
-            return false;
+            return 0.0;
         }
     }
 
-    return true;
+    return deltaSec;
 }
 
 bool Au3Interaction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
@@ -1468,11 +1482,13 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsToTrim(clipKey);
-    if (!canLeftTrimClips(clips, deltaSec, minClipDuration)) {
+
+    secs_t adjustedDelta = clampLeftTrimDelta(clips, deltaSec, minClipDuration);
+    if (muse::RealIsEqual(adjustedDelta, 0.0)) {
         return false;
     }
 
-    bool result = trimClipsLeft(clips, deltaSec, completed);
+    bool result = trimClipsLeft(clips, adjustedDelta, completed);
     if (!result) {
         return false;
     }
@@ -1488,11 +1504,12 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsToTrim(clipKey);
-    if (!canRightTrimClips(clips, deltaSec, minClipDuration)) {
+    secs_t adjustedDelta = clampRightTrimDelta(clips, deltaSec, minClipDuration);
+    if (muse::RealIsEqual(adjustedDelta, 0.0)) {
         return false;
     }
 
-    bool result = trimClipsRight(clips, deltaSec, completed);
+    bool result = trimClipsRight(clips, adjustedDelta, completed);
     if (!result) {
         return false;
     }

@@ -118,8 +118,8 @@ private:
     bool anyLeftFullyUntrimmed(const ClipKeyList& clipKeys) const;
     bool anyRightFullyUntrimmed(const ClipKeyList& clipKeys) const;
     ClipKeyList determineClipsToTrim(const ClipKey& clipKey) const;
-    bool canLeftTrimClips(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
-    bool canRightTrimClips(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
+    secs_t clampLeftTrimDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
+    secs_t clampRightTrimDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
     bool trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
