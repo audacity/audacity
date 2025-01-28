@@ -39,7 +39,6 @@ public:
 
     virtual muse::secs_t playbackPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> playbackPositionChanged() const = 0;
-    virtual muse::async::Notification playbackRewound() const = 0;
 
     // tracks
     virtual muse::Ret playTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {}) = 0;

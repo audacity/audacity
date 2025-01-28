@@ -261,10 +261,7 @@ void PlaybackController::rewindToStart()
 
     seek(0.0);
 
-    IF_ASSERT_FAILED(player()) {
-        return;
-    }
-    player()->rewind();
+    selectionController()->resetTimeSelection();
 }
 
 void PlaybackController::rewindToEnd()
@@ -273,6 +270,8 @@ void PlaybackController::rewindToEnd()
     stop();
 
     seek(totalPlayTime());
+
+    selectionController()->resetTimeSelection();
 }
 
 void PlaybackController::onSeekAction(const muse::actions::ActionData& args)

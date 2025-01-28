@@ -71,6 +71,8 @@ public:
     bool selectionContainsGroup() const override;
     bool isSelectionGrouped() const override;
 
+    void resetTimeSelection() override;
+
 private:
     void updateSelectionController();
 

@@ -52,5 +52,7 @@ public:
 
     MOCK_METHOD(bool, selectionContainsGroup, (), (const, override));
     MOCK_METHOD(bool, isSelectionGrouped, (), (const, override));
+
+    MOCK_METHOD(void, resetTimeSelection, (), (override));
 };
 }
