@@ -8,13 +8,13 @@ import QtQuick.Controls
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.Effects
 import Audacity.ProjectScene
 
 Rectangle {
     id: root
 
-    property int selectedTrackIndex: -1
-    property alias showEffectsSection: effectList.showEffectsSection
+    property alias isMasterTrack: effectList.isMasterTrack
 
     enabled: effectList.trackName !== ""
     color: ui.theme.backgroundPrimaryColor
@@ -23,6 +23,7 @@ Rectangle {
     readonly property int addEffectButtonMargin: 12
     readonly property int headerHeight: 40
     readonly property int itemSpacing: 12
+    readonly property int minimumHeight: headerHeight + addEffectButtonHeight + 2 * addEffectButtonMargin + separator.height + !effectList.empty * effectList.topMargin
 
     ColumnLayout {
         id: trackEffects
@@ -30,8 +31,6 @@ Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-
-        SeparatorLine { }
 
         RowLayout {
             id: trackEffectsHeader
@@ -41,7 +40,7 @@ Rectangle {
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
 
-            FlatButton {
+            BypassEffectButton {
                 id: trackEffectsPowerButton
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
@@ -49,11 +48,9 @@ Rectangle {
                 Layout.preferredWidth: headerHeight - Layout.margins * 2
                 Layout.preferredHeight: Layout.preferredWidth
 
-                icon: IconCode.BYPASS
-                iconFont: ui.theme.toolbarIconsFont
-
                 enabled: root.enabled
                 accentButton: effectList.trackEffectsActive
+                isMasterEffect: root.isMasterTrack
 
                 onClicked: {
                     accentButton = !accentButton
@@ -72,13 +69,15 @@ Rectangle {
             }
         }
 
-        SeparatorLine { }
+        SeparatorLine {
+            id: separator
+        }
 
         Rectangle {
             id: effectListContainer
             visible: root.enabled
             color: ui.theme.backgroundSecondaryColor
-            Layout.preferredHeight: !effectList.empty * Math.min(effectList.implicitHeight, root.height - addEffectButtonHeight - 2 * addEffectButtonMargin - headerHeight - 2 /* SeparatorLine */)
+            Layout.preferredHeight: !effectList.empty * Math.min(effectList.implicitHeight, root.height - addEffectButtonHeight - 2 * addEffectButtonMargin - headerHeight - separator.height)
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
             Layout.fillWidth: true
             TrackEffectList {
@@ -108,6 +107,7 @@ Rectangle {
 
             RealtimeEffectMenuModel {
                 id: menuModel
+                isMasterTrack: effectList.isMasterTrack
             }
 
             onClicked: function() {

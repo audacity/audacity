@@ -15,6 +15,7 @@ class RealtimeEffectListItemModel : public QObject, public muse::Injectable, pub
 {
     Q_OBJECT
     Q_PROPERTY(bool isActive READ prop_isActive WRITE prop_setIsActive NOTIFY isActiveChanged)
+    Q_PROPERTY(bool isMasterEffect READ prop_isMasterEffect CONSTANT)
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
@@ -29,6 +30,7 @@ public:
 
     bool prop_isActive() const;
     void prop_setIsActive(bool isActive);
+    bool prop_isMasterEffect() const;
 
 signals:
     void isActiveChanged();

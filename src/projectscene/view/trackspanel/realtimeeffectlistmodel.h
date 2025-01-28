@@ -3,28 +3,22 @@
  */
 #pragma once
 
-#include "iprojectsceneconfiguration.h"
 #include "realtimeeffectmenumodelbase.h"
 #include "realtimeeffectlistitemmodel.h"
 #include "context/iglobalcontext.h"
-#include "actions/iactionsdispatcher.h"
-#include "actions/actionable.h"
 #include <QObject>
 #include <map>
 
 namespace au::projectscene {
-class RealtimeEffectListModel : public RealtimeEffectMenuModelBase, public muse::actions::Actionable
+class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
 {
     Q_OBJECT
 
     Q_PROPERTY(QVariantList availableEffects READ availableEffects NOTIFY availableEffectsChanged)
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged)
     Q_PROPERTY(bool trackEffectsActive READ prop_trackEffectsActive WRITE prop_setTrackEffectsActive NOTIFY trackEffectsActiveChanged)
-    Q_PROPERTY(bool showEffectsSection READ prop_showEffectsSection WRITE prop_setShowEffectsSection NOTIFY showEffectsSectionChanged)
 
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<IProjectSceneConfiguration> configuration;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     explicit RealtimeEffectListModel(QObject* parent = nullptr);
@@ -36,14 +30,10 @@ public:
     bool prop_trackEffectsActive() const;
     void prop_setTrackEffectsActive(bool active);
 
-    bool prop_showEffectsSection() const;
-    void prop_setShowEffectsSection(bool show);
-
 signals:
     void availableEffectsChanged();
     void trackNameChanged();
     void trackEffectsActiveChanged();
-    void showEffectsSectionChanged();
 
 private:
     QHash<int, QByteArray> roleNames() const override;

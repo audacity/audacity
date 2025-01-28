@@ -42,10 +42,18 @@ void RealtimeEffectListModel::doLoad()
     realtimeEffectService()->realtimeEffectAdded().onReceive(this,
                                                              [this](effects::TrackId trackId, EffectChainLinkIndex index,
                                                                     RealtimeEffectStatePtr item)
-    { insertEffect(trackId, index, item); });
+    {
+        if (isMasterTrack() && trackId != IRealtimeEffectService::masterTrackId) {
+            return;
+        }
+        insertEffect(trackId, index, item);
+    });
 
     realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
                                                                [this](effects::TrackId trackId, RealtimeEffectStatePtr item) {
+        if (isMasterTrack() && trackId != IRealtimeEffectService::masterTrackId) {
+            return;
+        }
         removeEffect(trackId, item);
     });
 
@@ -53,6 +61,9 @@ void RealtimeEffectListModel::doLoad()
                                                                 [this](effects::TrackId trackId, EffectChainLinkIndex index,
                                                                        RealtimeEffectStatePtr oldItem, RealtimeEffectStatePtr newItem)
     {
+        if (isMasterTrack() && trackId != IRealtimeEffectService::masterTrackId) {
+            return;
+        }
         removeEffect(trackId, oldItem);
         insertEffect(trackId, index, newItem);
     });
@@ -62,19 +73,6 @@ void RealtimeEffectListModel::doLoad()
         onProjectChanged();
     });
     onProjectChanged();
-
-    configuration()->isEffectsPanelVisible().ch.onReceive(this, [this](bool)
-    {
-        emit showEffectsSectionChanged();
-    });
-
-    dispatcher()->reg(this, "toggle-effects", [this] {
-        configuration()->setIsEffectsPanelVisible(!configuration()->isEffectsPanelVisible().val);
-    });
-
-    dispatcher()->reg(this, "add-realtime-effects", [this] {
-        configuration()->setIsEffectsPanelVisible(true);
-    });
 
     populateMenu();
 }
@@ -211,7 +209,10 @@ QString RealtimeEffectListModel::prop_trackName() const
 {
     if (!trackId().has_value()) {
         return QString();
+    } else if (isMasterTrack()) {
+        return muse::TranslatableString("projectScene", "Master").translated().toQString();
     }
+
     const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
     IF_ASSERT_FAILED(project) {
         return QString();
@@ -271,14 +272,4 @@ void RealtimeEffectListModel::prop_setTrackEffectsActive(bool active)
         return;
     }
     realtimeEffectService()->setTrackEffectsActive(*tId, active);
-}
-
-bool RealtimeEffectListModel::prop_showEffectsSection() const
-{
-    return configuration()->isEffectsPanelVisible().val;
-}
-
-void RealtimeEffectListModel::prop_setShowEffectsSection(bool show)
-{
-    configuration()->setIsEffectsPanelVisible(show);
 }

@@ -1,0 +1,4 @@
+module Audacity.Effects
+BypassEffectButton 1.0 BypassEffectButton.qml
+EffectsViewer 1.0 EffectsViewer.qml
+StyledDialogViewWithoutNavigationSection 1.0 StyledDialogViewWithoutNavigationSection.qml
