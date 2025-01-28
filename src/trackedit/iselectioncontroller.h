@@ -72,5 +72,7 @@ public:
     // grouping
     virtual bool selectionContainsGroup() const = 0;
     virtual bool isSelectionGrouped() const = 0;
+
+    virtual void resetTimeSelection() = 0;
 };
 }

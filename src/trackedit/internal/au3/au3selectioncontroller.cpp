@@ -29,12 +29,6 @@ using namespace au::au3;
 
 void Au3SelectionController::init()
 {
-    playback()->player()->playbackRewound().onNotify(this, [this] {
-        MYLOG() << "playback rewound";
-        setDataSelectedStartTime(0, true);
-        setDataSelectedEndTime(0, true);
-    });
-
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
@@ -504,6 +498,12 @@ bool Au3SelectionController::isSelectionGrouped() const
     }
 
     return true;
+}
+
+void Au3SelectionController::resetTimeSelection()
+{
+    resetDataSelection();
+    resetSelectedClips();
 }
 
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
