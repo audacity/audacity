@@ -37,6 +37,10 @@ void PlayCursorController::init()
     playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t secs) {
         updatePositionX(secs);
     });
+
+    globalContext()->recordPositionChanged().onReceive(this, [this](muse::secs_t secs){
+        updatePositionX(secs);
+    });
 }
 
 void PlayCursorController::seekToX(double x, bool triggerPlay)

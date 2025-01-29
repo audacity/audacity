@@ -4,16 +4,18 @@
 
 #pragma once
 
+#include "modularity/ioc.h"
+
+#include "actions/iactionsdispatcher.h"
+#include "context/iglobalcontext.h"
 #include "global/async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
 #include "au3audio/iaudioengine.h"
+#include "au3wrap/au3types.h"
 #include "trackedit/iprojecthistory.h"
 
-#include "au3wrap/au3types.h"
-
 #include "../../irecord.h"
+#include "irecordcontroller.h"
 
 struct TransportSequences;
 struct AudioIOStartStreamOptions;
@@ -24,6 +26,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::audio::IAudioEngine> audioEngine;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
 
 public:
@@ -34,6 +37,9 @@ public:
     muse::Ret stop() override;
 
     IAudioInputPtr audioInput() const override;
+
+    muse::secs_t recordPosition() const override;
+    muse::async::Channel<muse::secs_t> recordPositionChanged() const override;
 
 private:
     struct RecordData {
@@ -62,5 +68,7 @@ private:
 
     IAudioInputPtr m_audioInput;
     RecordData m_recordData;
+
+    muse::ValCh<muse::secs_t> m_recordPosition;
 };
 }

@@ -50,6 +50,16 @@ bool RecordController::isRecording() const
     return m_currentRecordStatus == RecordStatus::Running || m_currentRecordStatus == RecordStatus::Paused;
 }
 
+Channel<muse::secs_t> RecordController::recordPositionChanged() const
+{
+    return record()->recordPositionChanged();
+}
+
+secs_t RecordController::recordPosition() const
+{
+    return record()->recordPosition();
+}
+
 Notification RecordController::isRecordingChanged() const
 {
     return m_isRecordingChanged;
