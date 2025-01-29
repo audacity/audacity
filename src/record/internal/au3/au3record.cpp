@@ -188,6 +188,8 @@ void Au3Record::init()
 
     audioEngine()->commitRequested().onNotify(this, [this]() {
         commitRecording();
+
+        dispatcher()->dispatch("playback-seek", muse::actions::ActionData::make_arg1<double>(globalContext()->recordPosition()));
     });
 
     audioEngine()->finished().onNotify(this, [this]() {
@@ -352,6 +354,16 @@ muse::Ret Au3Record::stop()
 IAudioInputPtr Au3Record::audioInput() const
 {
     return m_audioInput;
+}
+
+muse::async::Channel<muse::secs_t> Au3Record::recordPositionChanged() const
+{
+    return m_recordPosition.ch;
+}
+
+secs_t Au3Record::recordPosition() const
+{
+    return m_recordPosition.val;
 }
 
 Au3Project& Au3Record::projectRef() const
@@ -636,5 +648,7 @@ void Au3Record::notifyAboutRecordClipsChanged()
         }
 
         prj->notifyAboutClipChanged(DomConverter::clip(track, clip.get()));
+
+        m_recordPosition.set(clip->GetPlayEndTime());
     }
 }

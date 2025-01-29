@@ -79,3 +79,13 @@ muse::async::Notification GlobalContext::isRecordingChanged() const
 {
     return recordController()->isRecordingChanged();
 }
+
+muse::secs_t GlobalContext::recordPosition() const
+{
+    return recordController()->recordPosition();
+}
+
+muse::async::Channel<muse::secs_t> GlobalContext::recordPositionChanged() const
+{
+    return recordController()->recordPositionChanged();
+}

@@ -35,6 +35,9 @@ public:
     bool isRecording() const override;
     muse::async::Notification isRecordingChanged() const override;
 
+    muse::secs_t recordPosition() const override;
+    muse::async::Channel<muse::secs_t> recordPositionChanged() const override;
+
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 private:
