@@ -17,10 +17,20 @@ public:
                    const wxPoint& pos = wxDefaultPosition,
                    const wxSize& size = wxDefaultSize);
 
+    void SetNormalColor(wxColor start, wxColor end);
+    void SetPressedColor(wxColor start, wxColor end);
+
+    void SetNormalColor(wxColor color);
+    void SetPressedColor(wxColor color);
+
 private:
     void OnPaint(wxPaintEvent& event);
     void OnMouseDown(wxMouseEvent& event);
     void OnMouseUp(wxMouseEvent& event);
-   
+
     bool m_isPressed = false;
+    wxColor m_normalColorStart;
+    wxColor m_normalColorEnd;
+    wxColor m_pressedColorStart;
+    wxColor m_pressedColorEnd;
 };
