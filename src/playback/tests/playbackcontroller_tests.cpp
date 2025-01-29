@@ -4,15 +4,15 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include "actions/tests/mocks/actionsdispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "global/tests/mocks/applicationmock.h"
-#include "actions/tests/mocks/actionsdispatchermock.h"
+#include "mocks/playbackmock.h"
+#include "mocks/playermock.h"
+#include "project/tests/mocks/audacityprojectmock.h"
 #include "record/tests/mocks/recordcontrollermock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
-#include "project/tests/mocks/audacityprojectmock.h"
-#include "mocks/playermock.h"
-#include "mocks/playbackmock.h"
 
 #include "../internal/playbackcontroller.h"
 
@@ -96,6 +96,16 @@ public:
     void seek(const secs_t time, bool triggerPlay = false)
     {
         m_controller->onSeekAction(muse::actions::ActionData::make_arg2<double, bool>(time, triggerPlay));
+    }
+
+    void rewindToStart()
+    {
+        m_controller->rewindToStart();
+    }
+
+    void rewindToEnd()
+    {
+        m_controller->rewindToEnd();
     }
 
     PlaybackController* m_controller = nullptr;
@@ -566,5 +576,41 @@ TEST_F(PlaybackControllerTests, Seek_WithTriggeringPlay_FromTimeThatIsMoreThanTo
 
     //! [WHEN] Seek to the new time with triggering play
     seek(newSeekTime, true);
+}
+
+/**
+ * @brief Rewind to start
+ * @details User clicked rewind to start button
+ *         Selection should be cleared
+ */
+TEST_F(PlaybackControllerTests, Rewind_ToStart_CheckSelectionReset)
+{
+    //! [GIVEN] No matter of current clip/range selection
+
+    //! [THEN]
+    //! Time (clip or range) selection is reset
+    EXPECT_CALL(*m_selectionController, resetTimeSelection())
+    .Times(1);
+
+    //! [WHEN] Rewind to start
+    rewindToStart();
+}
+
+/**
+ * @brief Rewind to end
+ * @details User clicked rewind to end button
+ *          Selection should be cleared
+ */
+TEST_F(PlaybackControllerTests, Rewind_ToEnd_CheckSelectionReset)
+{
+    //! [GIVEN] No matter of current clip/range selection
+
+    //! [THEN]
+    //! Time (clip or range) selection is reset
+    EXPECT_CALL(*m_selectionController, resetTimeSelection())
+    .Times(1);
+
+    //! [WHEN] Rewind to end
+    rewindToEnd();
 }
 }
