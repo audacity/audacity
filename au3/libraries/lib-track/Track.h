@@ -832,6 +832,7 @@ struct TrackListEvent
       const std::weak_ptr<Track> &pTrack = {}, int extra = -1)
       : mType{ type }
       , mpTrack{ pTrack }
+      , mId { pTrack.lock() ? std::make_optional(pTrack.lock()->GetId()) : std::nullopt }
       , mExtra{ extra }
    {}
 
@@ -839,6 +840,10 @@ struct TrackListEvent
 
    const Type mType;
    const std::weak_ptr<Track> mpTrack;
+   /*!
+    * ID of `mpTrack` if it was set.
+    */
+   const std::optional<TrackId> mId;
    const int mExtra;
 };
 

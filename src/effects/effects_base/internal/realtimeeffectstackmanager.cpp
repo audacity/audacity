@@ -51,6 +51,19 @@ void StackManager::remove(const RealtimeEffectStatePtr& state)
     realtimeEffectRemoved.send(trackId, state);
 }
 
+void StackManager::remove(TrackId trackId)
+{
+    const auto stackIt = m_stacks.find(trackId);
+    if (stackIt == m_stacks.end()) {
+        return;
+    }
+    const Stack& stack = stackIt->second;
+    for (const auto& state : stack) {
+        remove(state);
+    }
+    m_stacks.erase(stackIt);
+}
+
 void StackManager::replace(const RealtimeEffectStatePtr& oldState, const RealtimeEffectStatePtr& newState)
 {
     const auto stackIt = findStack(oldState);

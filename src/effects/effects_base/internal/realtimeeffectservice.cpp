@@ -82,17 +82,22 @@ void RealtimeEffectService::updateSubscriptions(const au::project::IAudacityProj
 
 void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
 {
-    auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(e.mpTrack.lock());
-    if (!waveTrack) {
-        return;
-    }
     switch (e.mType) {
-    case TrackListEvent::ADDITION:
-        onWaveTrackAdded(*waveTrack);
-        break;
+    case TrackListEvent::ADDITION: {
+        if (const auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(e.mpTrack.lock())) {
+            onWaveTrackAdded(*waveTrack);
+        }
+    }
+    break;
     case TrackListEvent::DELETION:
-        m_rtEffectSubscriptions.erase(waveTrack->GetId());
-        break;
+    {
+        IF_ASSERT_FAILED(e.mId.has_value()) {
+            return;
+        }
+        m_rtEffectSubscriptions.erase(*e.mId);
+        m_stackManager->remove(*e.mId);
+    }
+    break;
     }
 }
 

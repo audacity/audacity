@@ -12,6 +12,7 @@ class StackManager
 public:
     void insert(TrackId trackId, EffectChainLinkIndex index, const RealtimeEffectStatePtr& state);
     void remove(const RealtimeEffectStatePtr& state);
+    void remove(TrackId trackId);
     void replace(const RealtimeEffectStatePtr& oldState, const RealtimeEffectStatePtr& newState);
     void clear();
     void refresh(TrackId trackId, const std::vector<RealtimeEffectStatePtr>& newStates);
