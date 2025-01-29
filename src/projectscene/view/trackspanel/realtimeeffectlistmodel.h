@@ -40,10 +40,6 @@ private:
     QVariant data(const QModelIndex& index, int role) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    void doResetList() override;
-    void doRemoveTrack(const au::trackedit::TrackId& trackId) override;
-    void onTrackIdChanged() override;
-
 private:
     enum RoleNames
     {
@@ -51,7 +47,9 @@ private:
     };
 
     void doLoad() override;
-    void populateMenu() override;
+    void doPopulateMenu() override;
+    void onSelectedTrackIdChanged() override;
+
     void onProjectChanged();
     void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::RealtimeEffectStatePtr& item);
     void removeEffect(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& item);

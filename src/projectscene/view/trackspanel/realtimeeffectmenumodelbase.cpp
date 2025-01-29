@@ -16,13 +16,13 @@ void RealtimeEffectMenuModelBase::load()
     AbstractMenuModel::load();
 
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]
-    { populateMenu(); });
+    { doPopulateMenu(); });
 
     trackSelection()->selectedTrackIdChanged().onNotify(this, [this]
     {
         beginResetModel();
         endResetModel();
-        onTrackIdChanged();
+        onSelectedTrackIdChanged();
     });
 
     doLoad();
@@ -33,18 +33,14 @@ std::optional<au::trackedit::TrackId> RealtimeEffectMenuModelBase::trackId() con
     return m_isMasterTrack ? au::effects::IRealtimeEffectService::masterTrackId : trackSelection()->selectedTrackId();
 }
 
-void RealtimeEffectMenuModelBase::resetList()
+void RealtimeEffectMenuModelBase::resetModel(Action duringReset, Action afterReset)
 {
     beginResetModel();
-    doResetList();
+    duringReset();
     endResetModel();
-}
-
-void RealtimeEffectMenuModelBase::removeTrack(const au::trackedit::TrackId& trackId)
-{
-    beginResetModel();
-    doRemoveTrack(trackId);
-    endResetModel();
+    if (afterReset) {
+        afterReset();
+    }
 }
 
 void RealtimeEffectMenuModelBase::beginResetModel()

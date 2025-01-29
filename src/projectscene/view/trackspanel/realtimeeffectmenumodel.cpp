@@ -13,10 +13,10 @@ RealtimeEffectMenuModel::RealtimeEffectMenuModel(QObject* parent)
 
 void RealtimeEffectMenuModel::doLoad()
 {
-    populateMenu();
+    doPopulateMenu();
 }
 
-void RealtimeEffectMenuModel::populateMenu()
+void RealtimeEffectMenuModel::doPopulateMenu()
 {
     MenuItemList items;
 

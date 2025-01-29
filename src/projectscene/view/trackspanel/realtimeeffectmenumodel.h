@@ -18,6 +18,6 @@ private:
     void handleMenuItem(const QString& itemId) override;
 
     void doLoad() override;
-    void populateMenu() override;
+    void doPopulateMenu() override;
 };
 }
