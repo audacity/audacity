@@ -24,6 +24,8 @@ public:
     explicit RealtimeEffectListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void handleMenuItemWithState(const QString& menuItemId, const RealtimeEffectListItemModel*);
+    Q_INVOKABLE int count() const { return rowCount(); }
+    Q_INVOKABLE void moveRow(int from, int to);
     QVariantList availableEffects();
     QString prop_trackName() const;
 

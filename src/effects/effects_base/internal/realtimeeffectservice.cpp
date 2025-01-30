@@ -192,6 +192,11 @@ std::optional<std::string> RealtimeEffectService::effectTrackName(const Realtime
     return effectTrackName(*trackId);
 }
 
+std::optional<EffectChainLinkIndex> RealtimeEffectService::effectIndex(const RealtimeEffectStatePtr& state) const
+{
+    return m_stackManager->effectIndex(state);
+}
+
 std::optional<std::string> RealtimeEffectService::effectTrackName(TrackId trackId) const
 {
     if (trackId == masterTrackId) {

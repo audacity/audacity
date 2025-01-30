@@ -100,6 +100,18 @@ std::optional<TrackId> StackManager::trackId(const RealtimeEffectStatePtr& state
     return stackIt->first;
 }
 
+std::optional<int> StackManager::effectIndex(const RealtimeEffectStatePtr& state) const
+{
+    const auto stackIt = findStack(state);
+    if (stackIt == m_stacks.end()) {
+        return {};
+    }
+    const TrackId trackId = stackIt->first;
+    const Stack& stack = stackIt->second;
+    const auto it = std::find(stack.begin(), stack.end(), state);
+    return it != stack.end() ? std::make_optional(it - stack.begin()) : std::nullopt;
+}
+
 StackManager::TrackStacks::const_iterator StackManager::findStack(const RealtimeEffectStatePtr& state) const
 {
     return std::find_if(m_stacks.begin(), m_stacks.end(), [state](const auto& pair) {
