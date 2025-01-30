@@ -51,6 +51,19 @@ void StackManager::remove(const RealtimeEffectStatePtr& state)
     realtimeEffectRemoved.send(trackId, state);
 }
 
+void StackManager::remove(TrackId trackId)
+{
+    const auto stackIt = m_stacks.find(trackId);
+    if (stackIt == m_stacks.end()) {
+        return;
+    }
+    const Stack& stack = stackIt->second;
+    for (const auto& state : stack) {
+        remove(state);
+    }
+    m_stacks.erase(stackIt);
+}
+
 void StackManager::replace(const RealtimeEffectStatePtr& oldState, const RealtimeEffectStatePtr& newState)
 {
     const auto stackIt = findStack(oldState);
@@ -85,6 +98,18 @@ std::optional<TrackId> StackManager::trackId(const RealtimeEffectStatePtr& state
         return {};
     }
     return stackIt->first;
+}
+
+std::optional<int> StackManager::effectIndex(const RealtimeEffectStatePtr& state) const
+{
+    const auto stackIt = findStack(state);
+    if (stackIt == m_stacks.end()) {
+        return {};
+    }
+    const TrackId trackId = stackIt->first;
+    const Stack& stack = stackIt->second;
+    const auto it = std::find(stack.begin(), stack.end(), state);
+    return it != stack.end() ? std::make_optional(it - stack.begin()) : std::nullopt;
 }
 
 StackManager::TrackStacks::const_iterator StackManager::findStack(const RealtimeEffectStatePtr& state) const

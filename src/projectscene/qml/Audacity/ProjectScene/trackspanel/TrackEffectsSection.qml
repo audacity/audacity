@@ -60,8 +60,7 @@ Rectangle {
 
             StyledTextLabel {
                 id: trackNameLabel
-                visible: root.enabled
-                text: effectList.trackName
+                text: root.enabled ? effectList.trackName : ""
                 Layout.fillWidth: true
                 Layout.preferredHeight: headerHeight
                 Layout.maximumWidth: root.width - trackEffectsPowerButton.width - 2 * itemSpacing

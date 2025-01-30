@@ -24,6 +24,8 @@ public:
     explicit RealtimeEffectListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void handleMenuItemWithState(const QString& menuItemId, const RealtimeEffectListItemModel*);
+    Q_INVOKABLE int count() const { return rowCount(); }
+    Q_INVOKABLE void moveRow(int from, int to);
     QVariantList availableEffects();
     QString prop_trackName() const;
 
@@ -40,10 +42,6 @@ private:
     QVariant data(const QModelIndex& index, int role) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    void doResetList() override;
-    void doRemoveTrack(const au::trackedit::TrackId& trackId) override;
-    void onTrackIdChanged() override;
-
 private:
     enum RoleNames
     {
@@ -51,7 +49,9 @@ private:
     };
 
     void doLoad() override;
-    void populateMenu() override;
+    void doPopulateMenu() override;
+    void onSelectedTrackIdChanged() override;
+
     void onProjectChanged();
     void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::RealtimeEffectStatePtr& item);
     void removeEffect(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& item);

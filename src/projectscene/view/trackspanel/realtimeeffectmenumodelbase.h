@@ -23,9 +23,10 @@ public:
     Q_INVOKABLE void load() final override;
 
 protected:
+    using Action = std::function<void ()>;
+    void resetModel(Action duringReset, Action afterReset = {});
+
     std::optional<au::trackedit::TrackId> trackId() const;
-    void resetList();
-    void removeTrack(const au::trackedit::TrackId& trackId);
     bool isMasterTrack() const { return m_isMasterTrack; }
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
@@ -41,10 +42,8 @@ private:
     void prop_setIsMasterTrack(bool isMasterTrack);
 
     virtual void doLoad() = 0;
-    virtual void populateMenu() = 0;
-    virtual void doResetList() {}
-    virtual void doRemoveTrack(const au::trackedit::TrackId&) {}
-    virtual void onTrackIdChanged() {}
+    virtual void doPopulateMenu() = 0;
+    virtual void onSelectedTrackIdChanged() {}
 
     bool m_isMasterTrack = false;
 };

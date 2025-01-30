@@ -37,6 +37,7 @@ public:
 
     virtual std::optional<TrackId> trackId(const RealtimeEffectStatePtr& state) const = 0;
     virtual std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const = 0;
+    virtual std::optional<EffectChainLinkIndex> effectIndex(const RealtimeEffectStatePtr& state) const = 0;
 
     virtual bool isActive(const RealtimeEffectStatePtr& state) const = 0;
     virtual void setIsActive(const RealtimeEffectStatePtr& state, bool) = 0;

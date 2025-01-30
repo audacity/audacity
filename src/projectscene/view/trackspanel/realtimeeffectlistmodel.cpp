@@ -20,13 +20,30 @@ void RealtimeEffectListModel::onProjectChanged()
 {
     const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
     if (!project) {
-        resetList();
+        resetModel([this] {
+            m_trackEffectLists.clear();
+        }, [this] {
+            emit trackNameChanged();
+            emit trackEffectsActiveChanged();
+        });
         return;
     }
 
     project->trackRemoved().onReceive(this, [this](au::trackedit::Track track)
     {
-        removeTrack(track.id);
+        if (trackId() != track.id) {
+            // Not the active track, no need to reset the model.
+            m_trackEffectLists.erase(track.id);
+            return;
+        }
+        resetModel([this, tId = track.id]
+        {
+            m_trackEffectLists.erase(tId);
+        }, [this]
+        {
+            emit trackNameChanged();
+            emit trackEffectsActiveChanged();
+        });
     });
 
     project->trackChanged().onReceive(this, [this](au::trackedit::Track track)
@@ -74,20 +91,7 @@ void RealtimeEffectListModel::doLoad()
     });
     onProjectChanged();
 
-    populateMenu();
-}
-
-void RealtimeEffectListModel::doResetList()
-{
-    m_trackEffectLists.clear();
-}
-
-void RealtimeEffectListModel::doRemoveTrack(const au::trackedit::TrackId& trackId)
-{
-    if (!m_trackEffectLists.count(trackId)) {
-        return;
-    }
-    m_trackEffectLists.erase(trackId);
+    doPopulateMenu();
 }
 
 void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, const RealtimeEffectListItemModel* item)
@@ -123,7 +127,7 @@ void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, con
     }
 }
 
-void RealtimeEffectListModel::populateMenu()
+void RealtimeEffectListModel::doPopulateMenu()
 {
     MenuItemList items;
 
@@ -199,7 +203,31 @@ QVariantList RealtimeEffectListModel::availableEffects()
     return menuItemListToVariantList(items());
 }
 
-void RealtimeEffectListModel::onTrackIdChanged()
+void RealtimeEffectListModel::moveRow(int from, int to)
+{
+    const auto tId = trackId();
+    IF_ASSERT_FAILED(tId.has_value()) {
+        return;
+    }
+
+    if (from == to) {
+        return;
+    }
+
+    const auto& list = m_trackEffectLists.at(*tId);
+    IF_ASSERT_FAILED(from >= 0 && from < list.size() && to >= 0 && to < list.size()) {
+        return;
+    }
+
+    const auto& fromItem = list.at(from);
+    const auto& toItem = list.at(to);
+    auto& service = *realtimeEffectService();
+    service.removeRealtimeEffect(*tId, toItem->effectStateId);
+    service.removeRealtimeEffect(*tId, fromItem->effectStateId);
+    // TODO
+}
+
+void RealtimeEffectListModel::onSelectedTrackIdChanged()
 {
     emit trackNameChanged();
     emit trackEffectsActiveChanged();

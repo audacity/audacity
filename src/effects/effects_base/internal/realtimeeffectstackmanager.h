@@ -12,11 +12,13 @@ class StackManager
 public:
     void insert(TrackId trackId, EffectChainLinkIndex index, const RealtimeEffectStatePtr& state);
     void remove(const RealtimeEffectStatePtr& state);
+    void remove(TrackId trackId);
     void replace(const RealtimeEffectStatePtr& oldState, const RealtimeEffectStatePtr& newState);
     void clear();
     void refresh(TrackId trackId, const std::vector<RealtimeEffectStatePtr>& newStates);
 
     std::optional<TrackId> trackId(const RealtimeEffectStatePtr& state) const;
+    std::optional<int> effectIndex(const RealtimeEffectStatePtr& state) const;
 
     muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectAdded;
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectRemoved;
