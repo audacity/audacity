@@ -26,6 +26,9 @@ Item {
     signal trimLeftRequested(bool completed)
     signal trimRightRequested(bool completed)
 
+    signal stretchLeftRequested(bool completed)
+    signal stretchRightRequested(bool completed)
+
     //! NOTE: auto-scroll for trimming is triggered from clipslistmodel
     signal stopAutoScroll()
 
@@ -260,11 +263,15 @@ Item {
             hoverEnabled: true
 
             onPressed: {
-                //! TODO AU4: implement time-stretch
+                root.clipStartEditRequested()
             }
 
             onReleased: {
-                //! TODO AU4: implement time-stretch
+                root.stretchLeftRequested(true)
+                root.stopAutoScroll()
+
+                // this needs to be always at the very end
+                root.clipEndEditRequested()
             }
 
             onEntered: {
@@ -279,6 +286,10 @@ Item {
 
             onPositionChanged: {
                 clipHandlesMousePositionChanged(mouseX + leftTimecode.x, mouseY)
+
+                if (pressed) {
+                    root.stretchLeftRequested(false)
+                }
             }
         }
     }
@@ -342,11 +353,15 @@ Item {
             hoverEnabled: true
 
             onPressed: {
-                //! TODO AU4: implement time-stretch
+                root.clipStartEditRequested()
             }
 
             onReleased: {
-                //! TODO AU4: implement time-stretch
+                root.stretchRightRequested(true)
+                root.stopAutoScroll()
+
+                // this needs to be always at the very end
+                root.clipEndEditRequested()
             }
 
             onEntered: {
@@ -361,6 +376,10 @@ Item {
 
             onPositionChanged: {
                 clipHandlesMousePositionChanged(mouseX + rightTimecode.x, mouseY)
+
+                if (pressed) {
+                    root.stretchRightRequested(false)
+                }
             }
         }
     }

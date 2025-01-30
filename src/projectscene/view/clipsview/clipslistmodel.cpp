@@ -644,6 +644,98 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
     return ok;
 }
 
+bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed)
+{
+    ClipListItem* item = itemByKey(key.key);
+    IF_ASSERT_FAILED(item) {
+        return false;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return false;
+    }
+
+    double newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+
+    newStartTime = m_context->applySnapToTime(newStartTime);
+
+    double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
+    double newClipTime = item->clip().endTime - newStartTime;
+    if (newClipTime < minClipTime) {
+        newStartTime = item->clip().endTime - minClipTime;
+    }
+
+    newStartTime = std::max(newStartTime, 0.0);
+
+    if (muse::RealIsEqual(newStartTime, item->clip().startTime)) {
+        return false;
+    }
+
+    bool ok = trackeditInteraction()->stretchClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed);
+    m_context->updateSelectedClipTime();
+
+    // handle auto-scroll over the edge
+    if (!ok) {
+        m_context->stopAutoScroll();
+    } else {
+        m_context->startAutoScroll(m_context->mousePositionTime());
+    }
+
+    if ((completed && m_autoScrollConnection) || !ok) {
+        disconnect(m_autoScrollConnection);
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ stretchLeftClip(key, false); });
+    }
+
+    return ok;
+}
+
+bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed)
+{
+    ClipListItem* item = itemByKey(key.key);
+    IF_ASSERT_FAILED(item) {
+        return false;
+    }
+
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return false;
+    }
+
+    double newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+
+    newEndTime = m_context->applySnapToTime(newEndTime);
+
+    double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
+    double newClipTime = newEndTime - item->clip().startTime;
+    if (newClipTime < minClipTime) {
+        newEndTime = item->clip().startTime + minClipTime;
+    }
+
+    if (muse::RealIsEqual(newEndTime, item->clip().endTime)) {
+        return false;
+    }
+
+    bool ok = trackeditInteraction()->stretchClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed);
+    m_context->updateSelectedClipTime();
+
+    // handle auto-scroll over the edge
+    if (!ok) {
+        m_context->stopAutoScroll();
+    } else {
+        m_context->startAutoScroll(m_context->mousePositionTime());
+    }
+
+    if ((completed && m_autoScrollConnection) || !ok) {
+        disconnect(m_autoScrollConnection);
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ stretchRightClip(key, false); });
+    }
+
+    return ok;
+}
+
 void ClipsListModel::selectClip(const ClipKey& key)
 {
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
