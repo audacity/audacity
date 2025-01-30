@@ -203,30 +203,6 @@ QVariantList RealtimeEffectListModel::availableEffects()
     return menuItemListToVariantList(items());
 }
 
-void RealtimeEffectListModel::moveRow(int from, int to)
-{
-    const auto tId = trackId();
-    IF_ASSERT_FAILED(tId.has_value()) {
-        return;
-    }
-
-    if (from == to) {
-        return;
-    }
-
-    const auto& list = m_trackEffectLists.at(*tId);
-    IF_ASSERT_FAILED(from >= 0 && from < list.size() && to >= 0 && to < list.size()) {
-        return;
-    }
-
-    const auto& fromItem = list.at(from);
-    const auto& toItem = list.at(to);
-    auto& service = *realtimeEffectService();
-    service.removeRealtimeEffect(*tId, toItem->effectStateId);
-    service.removeRealtimeEffect(*tId, fromItem->effectStateId);
-    // TODO
-}
-
 void RealtimeEffectListModel::onSelectedTrackIdChanged()
 {
     emit trackNameChanged();

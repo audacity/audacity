@@ -2,7 +2,6 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectlistitemmodel.h"
-#include "log.h"
 
 namespace au::projectscene {
 RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectStateId)
@@ -19,15 +18,6 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
 RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
 {
     effectsProvider()->hideEffect(effectStateId);
-}
-
-int RealtimeEffectListItemModel::getIndex() const
-{
-    const auto index = realtimeEffectService()->effectIndex(effectStateId);
-    IF_ASSERT_FAILED(index.has_value()) {
-        return 0;
-    }
-    return *index;
 }
 
 bool RealtimeEffectListItemModel::prop_isMasterEffect() const
