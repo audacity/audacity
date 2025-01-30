@@ -37,6 +37,8 @@ set( SOURCES
    GradientButton.h
    HyperLink.cpp
    HyperLink.h
+   RoundedStaticBitmap.cpp
+   RoundedStaticBitmap.h
 )
 
 set( LIBRARIES
