@@ -194,6 +194,26 @@ bool TrackeditInteraction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec
     return withPlaybackStop(&ITrackeditInteraction::trimClipRight, clipKey, deltaSec, minClipDuration, completed);
 }
 
+bool TrackeditInteraction::stretchClipLeft(const ClipKey& clipKey,
+                                           secs_t deltaSec,
+                                           secs_t minClipDuration,
+                                           bool completed)
+{
+    return withPlaybackStop(&ITrackeditInteraction::stretchClipLeft, clipKey, deltaSec, minClipDuration, completed);
+}
+
+bool TrackeditInteraction::stretchClipRight(const ClipKey& clipKey,
+                                            secs_t deltaSec,
+                                            secs_t minClipDuration,
+                                            bool completed)
+{
+    return withPlaybackStop(&ITrackeditInteraction::stretchClipRight,
+                            clipKey,
+                            deltaSec,
+                            minClipDuration,
+                            completed);
+}
+
 muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
     return m_interaction->clipDuration(clipKey);

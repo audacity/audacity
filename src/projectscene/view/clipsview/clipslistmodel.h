@@ -59,6 +59,8 @@ public:
     Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed);
     Q_INVOKABLE bool trimRightClip(const ClipKey& key, bool completed);
+    Q_INVOKABLE bool stretchLeftClip(const ClipKey& key, bool completed);
+    Q_INVOKABLE bool stretchRightClip(const ClipKey& key, bool completed);
 
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClips();
