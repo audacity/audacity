@@ -25,7 +25,9 @@ function extract_appimage()
     local -r dir="${image%.AppImage}.AppDir"
     "./${image}" --appimage-extract >/dev/null # dest folder "squashfs-root"
     mv squashfs-root "${dir}" # rename folder to avoid collisions
-    ln -s "${dir}/AppRun" "${binary_name}" # symlink for convenience
+    # wrapper script for convenience
+    printf '#!/bin/sh\nexec "%s/AppRun" "$@"\n' "$(readlink -f "${dir}")" > "${binary_name}"
+    chmod +x "${binary_name}"
     rm -f "${image}"
 }
 
@@ -59,7 +61,7 @@ function create_path()
 if create_path "appimagetool"; then
 (
     cd "appimagetool"
-    download_appimage_release AppImage/AppImageKit appimagetool continuous
+    download_appimage_release AppImage/appimagetool appimagetool continuous
 )
 fi
 export PATH="${PWD%/}/appimagetool:${PATH}"
