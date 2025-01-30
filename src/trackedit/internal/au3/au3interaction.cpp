@@ -864,6 +864,26 @@ bool Au3Interaction::resetClipSpeed(const ClipKey& clipKey)
     return ok;
 }
 
+bool Au3Interaction::changeClipColor(const ClipKey& clipKey, const std::string& newColor)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    clip->SetColor(newColor);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
 bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));

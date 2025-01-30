@@ -17,6 +17,7 @@
 #include "context/iglobalcontext.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/trackcolor.h"
 
 namespace au::trackedit {
 class Au3Interaction : public ITrackeditInteraction
@@ -46,6 +47,7 @@ public:
     bool resetClipPitch(const ClipKey& clipKey) override;
     bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
     bool resetClipSpeed(const ClipKey& clipKey) override;
+    bool changeClipColor(const ClipKey& clipKey, const std::string& color) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;

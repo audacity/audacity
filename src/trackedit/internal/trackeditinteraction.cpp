@@ -66,6 +66,11 @@ bool TrackeditInteraction::resetClipSpeed(const ClipKey& clipKey)
     return withPlaybackStop(&ITrackeditInteraction::resetClipSpeed, clipKey);
 }
 
+bool TrackeditInteraction::changeClipColor(const ClipKey& clipKey, const std::string& color)
+{
+    return m_interaction->changeClipColor(clipKey, color);
+}
+
 bool TrackeditInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
 {
     return withPlaybackStop(&ITrackeditInteraction::changeClipOptimizeForVoice, clipKey, optimize);

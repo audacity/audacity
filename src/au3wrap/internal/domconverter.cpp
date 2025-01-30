@@ -41,7 +41,9 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.title = wxToString(au3clip->GetName());
     clip.startTime = au3clip->GetPlayStartTime();
     clip.endTime = au3clip->GetPlayEndTime();
-    clip.color = TrackColor::Get(waveTrack).GetColor();
+    clip.color = (!wxToString(au3clip->GetColor()).isEmpty()) ? muse::draw::Color(au3clip->GetColor()) : TrackColor::Get(
+        waveTrack).GetColor();
+    clip.hasCustomColor = !wxToString(au3clip->GetColor()).isEmpty();
     clip.stereo = au3clip->NChannels() > 1;
 
     clip.pitch = au3clip->GetCentShift();

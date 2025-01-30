@@ -149,6 +149,8 @@ void WaveView::setClipColor(const QColor& newClipColor)
     }
     m_clipColor = newClipColor;
     emit clipColorChanged();
+
+    update();
 }
 
 bool WaveView::clipSelected() const

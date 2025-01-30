@@ -6,6 +6,7 @@
 
 #include <qobjectdefs.h>
 
+#include "actions/actiontypes.h"
 #include "global/types/number.h"
 #include "trackedit/trackedittypes.h"
 
@@ -112,6 +113,13 @@ enum class Direction {
     Left = 0,
     Right
 };
+
+constexpr const char16_t* COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-color?color=%1";
+inline muse::actions::ActionQuery makeColorChangeAction(const std::string& colorHex)
+{
+    return muse::actions::ActionQuery(muse::String(COLOR_CHANGE_ACTION).arg(muse::String::fromStdString(
+                                                                                colorHex)));
+}
 }
 
 #endif // AU_PROJECTSCENE_TRACKTYPES_H

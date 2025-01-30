@@ -848,6 +848,9 @@ public:
    int64_t GetGroupId() const;
    void SetGroupId(int64_t id);
 
+   void SetColor(const wxString& color);
+   const wxString& GetColor() const;
+
    // TimeToSamples and SamplesToTime take clip stretch ratio into account.
    // Use them to convert time / sample offsets.
    sampleCount TimeToSamples(double time) const override;
@@ -1054,6 +1057,8 @@ private:
    wxString mName;
 
    int64_t mGroupId = -1;
+
+   wxString mColor;
 };
 
 #endif

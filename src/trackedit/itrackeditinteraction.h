@@ -46,6 +46,7 @@ public:
     virtual bool resetClipPitch(const ClipKey& clipKey) = 0;
     virtual bool changeClipSpeed(const ClipKey& clipKey, double speed) = 0;
     virtual bool resetClipSpeed(const ClipKey& clipKey) = 0;
+    virtual bool changeClipColor(const ClipKey& clipKey, const std::string& color) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual void clearClipboard() = 0;

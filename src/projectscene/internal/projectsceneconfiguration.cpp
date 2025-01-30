@@ -113,3 +113,20 @@ void ProjectSceneConfiguration::setIsEffectsPanelVisible(bool visible)
     }
     m_effectsPanelVisible.set(visible);
 }
+
+const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfiguration::clipColors() const
+{
+    static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
+        { "Blue", "#66A3FF" },
+        { "Violet", "#9996FC" },
+        { "Magenta", "#DA8CCC" },
+        { "Red", "#F08080" },
+        { "Orange", "#FF9E65" },
+        { "Yellow", "#E8C050" },
+        { "Green", "#74BE59" },
+        { "Turquoise", "#34B494" },
+        { "Cyan", "#48BECF" }
+    };
+
+    return colors;
+}

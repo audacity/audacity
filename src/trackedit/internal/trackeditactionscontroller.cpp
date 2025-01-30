@@ -64,6 +64,9 @@ static const ActionCode STRETCH_ENABLED_CODE("stretch-clip-to-match-tempo");
 static const ActionCode GROUP_CLIPS_CODE("group-clips");
 static const ActionCode UNGROUP_CLIPS_CODE("ungroup-clips");
 
+static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
+static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-color");
+
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
     CUT_CODE,
@@ -163,6 +166,9 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, GROUP_CLIPS_CODE, this, &TrackeditActionsController::groupClips);
     dispatcher()->reg(this, UNGROUP_CLIPS_CODE, this, &TrackeditActionsController::ungroupClips);
+
+    dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
+    dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
 
     projectHistory()->isUndoRedoAvailableChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(UNDO);
@@ -868,6 +874,24 @@ void TrackeditActionsController::ungroupClips()
 
     notifyActionEnabledChanged(GROUP_CLIPS_CODE);
     notifyActionEnabledChanged(UNGROUP_CLIPS_CODE);
+}
+
+void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& q)
+{
+    if (!selectionController()->hasSelectedClips()) {
+        return;
+    }
+
+    std::string newColor;
+    if (q.contains("color")) {
+        newColor = q.param("color").toString();
+    } else {
+        newColor = "";
+    }
+
+    auto clipKey = selectionController()->selectedClips().front();
+    trackeditInteraction()->changeClipColor(clipKey, newColor);
+    notifyActionCheckedChanged(q.toString());
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode& actionCode) const
