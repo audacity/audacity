@@ -177,7 +177,7 @@ SampleData SamplesPainter::getSampleData(const au::au3::Au3WaveClip& clip, int c
                                          bool dB, float dBRange, float zoomMax, float zoomMin)
 {
     const ZoomInfo zoomInfo{ metrics.fromTime, metrics.zoom };
-    double rate = clip.GetRate();
+    double rate = clip.GetRate() / clip.GetStretchRatio();
     const double t0 = metrics.fromTime;
     const auto s0 = sampleCount(floor(t0 * rate));
     const auto snSamples = clip.GetVisibleSampleCount();
