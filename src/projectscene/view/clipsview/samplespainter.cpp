@@ -31,7 +31,7 @@ void SamplesPainter::paint(int channelIndex, QPainter& painter, const WaveMetric
 
     if (showDraggablePoints(clip, metrics.zoom)) {
         int yZero = getWaveYPos(0.0, zoomMin, zoomMax, metrics.height, dB, true, dBRange, false);
-        yZero = metrics.left + std::max(-1, std::min(static_cast<int>(metrics.height), yZero));
+        yZero = metrics.top + std::max(-1, std::min(static_cast<int>(metrics.height + metrics.top), yZero));
 
         drawSampleHead(samples, metrics, painter, style);
         drawSampleStalk(samples, yZero, metrics, painter, style);
