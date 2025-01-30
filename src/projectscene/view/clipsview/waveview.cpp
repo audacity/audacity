@@ -18,6 +18,16 @@ static const QColor BACKGROUND_COLOR = QColor(255, 255, 255);
 static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLES_HIGHLIGHT_COLOR = QColor(255, 255, 255);
 static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
+static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
+static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
+static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
+
+static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
+static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8;
+static const float SAMPLE_HEAD_DATA_SELECTED_ALPHA = 0.9;
+static const float SAMPLE_STALK_DEFAULT_ALPHA = 0.4;
+static const float SAMPLE_STALK_CLIP_SELECTED_ALPHA = 0.6;
+static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7;
 
 WaveView::WaveView(QQuickItem* parent)
     : QQuickPaintedItem(parent)
@@ -67,6 +77,9 @@ void WaveView::paint(QPainter* painter)
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
         params.style.selectedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_HIGHLIGHT_COLOR, 0.8);
         params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
+        params.style.centerLine = muse::draw::blendQColors(params.style.blankBrush, CENTER_LINE_COLOR, 0.2);
+        params.style.sampleHead = muse::draw::blendQColors(params.style.blankBrush, SAMPLE_HEAD_COLOR, SAMPLE_HEAD_CLIP_SELECTED_ALPHA);
+        params.style.sampleStalk = muse::draw::blendQColors(params.style.blankBrush, SAMPLE_STALK_COLOR, SAMPLE_STALK_CLIP_SELECTED_ALPHA);
     } else {
         params.style.blankBrush = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.9);
         params.style.normalBackground = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
@@ -74,9 +87,14 @@ void WaveView::paint(QPainter* painter)
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.6);
         params.style.selectedSamplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.75);
         params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
+        params.style.centerLine = muse::draw::blendQColors(params.style.samplePen, CENTER_LINE_COLOR, 0.2);
+        params.style.sampleHead = muse::draw::blendQColors(params.style.samplePen, SAMPLE_HEAD_COLOR, SAMPLE_HEAD_DEFAULT_ALPHA);
+        params.style.sampleStalk = muse::draw::blendQColors(params.style.samplePen, SAMPLE_STALK_COLOR, SAMPLE_STALK_DEFAULT_ALPHA);
+        params.style.sampleHeadSelection = muse::draw::blendQColors(params.style.samplePen, SAMPLE_HEAD_COLOR,
+                                                                    SAMPLE_HEAD_DATA_SELECTED_ALPHA);
+        params.style.sampleStalkSelection = muse::draw::blendQColors(params.style.samplePen, SAMPLE_STALK_COLOR,
+                                                                     SAMPLE_STALK_DATA_SELECTED_ALPHA);
     }
-
-    painter->fillRect(0, 0, width(), height(), params.style.blankBrush);
 
     wavePainter()->paint(*painter, m_clipKey.key, params);
 

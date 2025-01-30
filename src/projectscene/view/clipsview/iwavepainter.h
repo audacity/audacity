@@ -23,6 +23,11 @@ public:
         QColor rmsPen;
         QColor clippedPen;
         QColor highlight;
+        QColor centerLine;
+        QColor sampleHead;
+        QColor sampleStalk;
+        QColor sampleHeadSelection;
+        QColor sampleStalkSelection;
     };
 
     struct Geometry {

@@ -45,6 +45,7 @@ public:
     void setIsSnapTripletsEnabled(bool enabled) override;
 
     void setSnap(const Snap& s) override;
+    Snap getSnap() const override;
     muse::ValCh<Snap> snap() const override;
 
     void setClipEditStartTimeOffset(double val) override;
