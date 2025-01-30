@@ -9,6 +9,16 @@ using namespace muse::actions;
 
 static const ActionCode ENABLE_STRETCH_CODE("stretch-clip-to-match-tempo");
 
+namespace {
+//! NOTE: can be moved to the framework
+bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
+{
+    return std::any_of(actionCodes.begin(), actionCodes.end(), [&](ActionCode code) {
+        return std::find(list.begin(), list.end(), code) != list.end();
+    });
+}
+}
+
 void ClipContextMenuModel::load()
 {
     AbstractMenuModel::load();
@@ -22,9 +32,12 @@ void ClipContextMenuModel::load()
     auto enableStretchItem = makeItemWithArg(ENABLE_STRETCH_CODE);
     updateStretchEnabledState(*enableStretchItem);
 
+    auto colorItems = makeClipColourItems();
+
     MenuItemList items {
         makeItemWithArg("clip-properties"),
         makeItemWithArg("clip-rename"),
+        makeMenu(muse::TranslatableString("clip", "Clip colour"), colorItems),
         makeSeparator(),
         makeItemWithArg("clip-cut"),
         makeItemWithArg("clip-copy"),
@@ -44,6 +57,8 @@ void ClipContextMenuModel::load()
     };
 
     setItems(items);
+
+    updateColorCheckedState();
 }
 
 ClipKey ClipContextMenuModel::clipKey() const
@@ -65,6 +80,10 @@ void ClipContextMenuModel::onActionsStateChanges(const muse::actions::ActionCode
         MenuItem& item = findItem(ActionCode(ENABLE_STRETCH_CODE));
         updateStretchEnabledState(item);
     }
+
+    if (containsAny(codes, m_colorChangeActionCodeList)) {
+        updateColorCheckedState();
+    }
 }
 
 void ClipContextMenuModel::updateStretchEnabledState(MenuItem& item)
@@ -80,4 +99,50 @@ void ClipContextMenuModel::updateStretchEnabledState(MenuItem& item)
     auto state = item.state();
     state.checked = clip.stretchToMatchTempo;
     item.setState(state);
+}
+
+void ClipContextMenuModel::updateColorCheckedState()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+    auto clip = project->trackeditProject()->clip(m_clipKey.key);
+    if (!clip.isValid()) {
+        return;
+    }
+
+    for (const auto& action : m_colorChangeActionCodeList) {
+        MenuItem& item = findItem(ActionCode(action));
+        ActionQuery query(action);
+
+        if ((!clip.hasCustomColor && action == m_colorChangeActionCodeList.at(0))
+            || (clip.hasCustomColor && query.param("color").toString() == clip.color.toString())) {
+            auto state = item.state();
+            state.checked = true;
+            item.setState(state);
+        } else {
+            auto state = item.state();
+            state.checked = false;
+            item.setState(state);
+        }
+    }
+}
+
+MenuItemList ClipContextMenuModel::makeClipColourItems()
+{
+    m_colorChangeActionCodeList.clear();
+    MenuItemList items;
+    items <<
+        makeMenuItem("action://trackedit/clip/change-color-auto", muse::TranslatableString("clip", muse::String::fromStdString("Auto")));
+    m_colorChangeActionCodeList.push_back("action://trackedit/clip/change-color-auto");
+
+    const auto& colors = projectSceneConfiguration()->clipColors();
+    for (const auto& color : colors) {
+        items << makeMenuItem(makeColorChangeAction(color.second).toString(),
+                              muse::TranslatableString("clip", muse::String::fromStdString(color.first)));
+        m_colorChangeActionCodeList.push_back(makeColorChangeAction(color.second).toString());
+    }
+
+    return items;
 }

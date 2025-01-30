@@ -32,5 +32,7 @@ public:
 
     virtual muse::ValCh<bool> isEffectsPanelVisible() const = 0;
     virtual void setIsEffectsPanelVisible(bool visible) = 0;
+
+    virtual const std::vector<std::pair<std::string, std::string> >& clipColors() const = 0;
 };
 }

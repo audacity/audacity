@@ -15,7 +15,7 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
-const UiActionList ProjectSceneUiActions::m_actions = {
+static UiActionList STATIC_ACTIONS = {
     UiAction("automation",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
@@ -145,7 +145,15 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Rename clip"),
-             TranslatableString("action", "Rename clip")
+             TranslatableString("action", "Rename clip"),
+             Checkable::Yes
+             ),
+    UiAction("action://trackedit/clip/change-color-auto",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Follow track color"),
+             TranslatableString("action", "Follow track color"),
+             Checkable::Yes
              ),
     UiAction("play-position-decrease",
              au::context::UiCtxProjectOpened,
@@ -170,10 +178,31 @@ const UiActionList ProjectSceneUiActions::m_actions = {
 ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller)
     : m_controller(controller)
 {
+    m_actions = STATIC_ACTIONS;
 }
 
 void ProjectSceneUiActions::init()
 {
+    const auto& colors = configuration()->clipColors();
+    m_actions.clear();
+    m_actions.reserve(colors.size() + STATIC_ACTIONS.size());
+
+    for (const auto& color : colors) {
+        UiAction action;
+        action.code = muse::actions::ActionQuery(makeColorChangeAction(color.second)).toString();
+        action.uiCtx = context::UiCtxProjectOpened;
+        action.scCtx = context::CTX_PROJECT_FOCUSED;
+        action.description = muse::TranslatableString("action", "Change clip color");
+        action.title = muse::TranslatableString("action", "Change clip color");
+        action.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
+        action.iconColor = QString::fromStdString(color.second);
+        action.checkable = Checkable::Yes;
+
+        m_actions.push_back(std::move(action));
+    }
+
+    m_actions.insert(m_actions.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());
+
     m_controller->actionCheckedChanged().onReceive(this, [this](const ActionCode& code) {
         m_actionCheckedChanged.send({ code });
     });

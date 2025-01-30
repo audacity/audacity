@@ -3,15 +3,18 @@
 */
 #pragma once
 
-#include "iprojecthistory.h"
-#include "itrackeditinteraction.h"
-#include "iselectioncontroller.h"
 #include "modularity/ioc.h"
+
 #include "async/asyncable.h"
 #include "actions/iactionsdispatcher.h"
 #include "actions/actionable.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
+
+#include "projectscene/iprojectsceneconfiguration.h"
+#include "iprojecthistory.h"
+#include "itrackeditinteraction.h"
+#include "iselectioncontroller.h"
 
 #include "../itrackeditactionscontroller.h"
 
@@ -24,6 +27,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
 public:
     void init();
@@ -102,6 +106,8 @@ private:
 
     void groupClips();
     void ungroupClips();
+
+    void setClipColor(const muse::actions::ActionQuery& q);
 
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;

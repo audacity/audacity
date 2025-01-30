@@ -34,7 +34,7 @@ public:
 
 private:
     std::shared_ptr<ProjectSceneActionsController> m_controller;
-    static const muse::ui::UiActionList m_actions;
+    muse::ui::UiActionList m_actions;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };

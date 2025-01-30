@@ -999,6 +999,7 @@ static constexpr auto ClipStretchToMatchTempo_attr = "clipStretchToMatchTempo";
 static constexpr auto ClipTempo_attr = "clipTempo";
 static constexpr auto Name_attr = "name";
 static constexpr auto GroupId_attr = "groupId";
+static constexpr auto Color_attr = "color";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
@@ -1080,6 +1081,11 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
                  return false;
              mGroupId = longValue;
          }
+         else if (attr == Color_attr)
+         {
+             if(value.IsStringView())
+                 SetColor(value.ToWString());
+         }
          else if (Attachments::FindIf(
             [&](WaveClipListener &listener){
                return listener.HandleXMLAttribute(attr, value); }
@@ -1159,6 +1165,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
    xmlFile.WriteAttr(ClipTempo_attr, mClipTempo.value_or(0.), 8);
    xmlFile.WriteAttr(Name_attr, mName);
    xmlFile.WriteAttr(GroupId_attr, static_cast<long>(mGroupId));
+   xmlFile.WriteAttr(Color_attr, mColor);
    Attachments::ForEach([&](const WaveClipListener &listener){
       listener.WriteXMLAttributes(xmlFile);
    });
@@ -1827,6 +1834,16 @@ int64_t WaveClip::GetGroupId() const
 void WaveClip::SetGroupId(int64_t id)
 {
    mGroupId = id;
+}
+
+void WaveClip::SetColor(const wxString &color)
+{
+   mColor = color;
+}
+
+const wxString &WaveClip::GetColor() const
+{
+   return mColor;
 }
 
 sampleCount WaveClip::TimeToSamples(double time) const

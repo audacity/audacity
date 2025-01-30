@@ -40,6 +40,8 @@ public:
     muse::ValCh<bool> isEffectsPanelVisible() const override;
     void setIsEffectsPanelVisible(bool visible) override;
 
+    const std::vector<std::pair<std::string, std::string> >& clipColors() const override;
+
 private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
     muse::async::Channel<TimelineRulerMode> m_timelineRulerModeChanged;

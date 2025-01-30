@@ -23,6 +23,7 @@ struct Clip {
     bool optimizeForVoice = false;
 
     bool stretchToMatchTempo = false;
+    bool hasCustomColor = false;
 
     inline bool isValid() const { return key.isValid(); }
 };
