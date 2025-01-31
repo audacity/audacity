@@ -166,18 +166,26 @@ unwanted_files=(
 )
 
 fallback_libraries=(
-  libatk-1.0.so.0 # This will possibly prevent browser from opening
+  # This will possibly prevent browser from opening
+  libatk-1.0.so.0
   libatk-bridge-2.0.so.0
-  libcairo.so.2 # This breaks FFmpeg support
+  # This breaks FFmpeg support
+  libcairo.so.2
   libcairo-gobject.so.2
-  libjack.so.0 # https://github.com/LMMS/lmms/pull/3958
-  libportaudio.so # This is required to enable system PortAudio (so Jack is enabled!)
-  libgmodule-2.0.so.0 # Otherwise - Manjaro/Arch will crash, because of libgio mismatch
+  libpango-1.0.so.0
+  librsvg-2.so.2
+  # https://github.com/LMMS/lmms/pull/3958
+  libjack.so.0
+  # This is required to enable system PortAudio (so Jack is enabled!)
+  libportaudio.so
+  # Otherwise - Manjaro/Arch will crash, because of libgio mismatch
+  libgmodule-2.0.so.0
   libgio-2.0.so.0
   libglib-2.0.so.0
   libgobject-2.0.so.0
   libgthread-2.0.so.0
-  libpixman-1.so.0 # https://github.com/audacity/audacity/issues/5327
+  # https://github.com/audacity/audacity/issues/5327
+  libpixman-1.so.0
 )
 
 for file in "${unwanted_files[@]}"; do
