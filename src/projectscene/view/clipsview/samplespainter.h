@@ -28,7 +28,8 @@ private:
     void drawSampleHead(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter, const Style& style);
     void drawSampleStalk(const SampleData& samples, int yZero, const au::projectscene::WaveMetrics& metrics, QPainter& painter,
                          const Style& style);
-    void drawConnectingPoints(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter);
+    void drawConnectingPoints(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter,
+                              const Style& style);
     SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const WaveMetrics& metrics, bool dB, float dBRange,
                              float zoomMax, float zoomMin);
     bool showDraggablePoints(const au::au3::Au3WaveClip& clip, double zoom);
