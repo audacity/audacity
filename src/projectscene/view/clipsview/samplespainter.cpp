@@ -36,7 +36,7 @@ void SamplesPainter::paint(int channelIndex, QPainter& painter, const WaveMetric
         drawSampleHead(samples, metrics, painter, style);
         drawSampleStalk(samples, yZero, metrics, painter, style);
     } else {
-        drawConnectingPoints(samples, metrics, painter);
+        drawConnectingPoints(samples, metrics, painter, style);
     }
 }
 
@@ -163,8 +163,11 @@ void SamplesPainter::drawSampleStalk(const SampleData& samples, int yZero, const
     }
 }
 
-void SamplesPainter::drawConnectingPoints(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter)
+void SamplesPainter::drawConnectingPoints(const SampleData& samples, const au::projectscene::WaveMetrics& metrics, QPainter& painter,
+                                          const Style& style)
 {
+    painter.setPen(style.samplePen);
+
     const size_t slen = samples.size();
     for (size_t s = 0; s < slen - 1; s++) {
         painter.drawLine(
