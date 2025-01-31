@@ -55,6 +55,8 @@ private:
     bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
     bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
+    bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
+    bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
     std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
     bool newMonoTrack() override;

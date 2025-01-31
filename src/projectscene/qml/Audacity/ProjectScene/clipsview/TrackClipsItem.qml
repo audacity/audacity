@@ -175,6 +175,14 @@ Item {
                     clipsModel.trimRightClip(clipItem.key, completed)
                 }
 
+                onClipLeftStretchRequested: function(completed) {
+                    clipsModel.stretchLeftClip(clipItem.key, completed)
+                }
+
+                onClipRightStretchRequested: function(completed) {
+                    clipsModel.stretchRightClip(clipItem.key, completed)
+                }
+
                 onStartAutoScroll: {
                     root.context.startAutoScroll(root.context.mousePositionTime())
                 }

@@ -71,6 +71,8 @@ public:
     bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
     bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
+    bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
+    bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
     std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
 
@@ -117,11 +119,15 @@ private:
     std::optional<secs_t> shortestClipDuration(const ClipKeyList& clipKeys) const;
     bool anyLeftFullyUntrimmed(const ClipKeyList& clipKeys) const;
     bool anyRightFullyUntrimmed(const ClipKeyList& clipKeys) const;
-    ClipKeyList determineClipsToTrim(const ClipKey& clipKey) const;
+    ClipKeyList determineClipsForInteraction(const ClipKey& clipKey) const;
     secs_t clampLeftTrimDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
     secs_t clampRightTrimDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
+    secs_t clampLeftStretchDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
+    secs_t clampRightStretchDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
     bool trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
+    bool stretchClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
+    bool stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);

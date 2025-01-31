@@ -41,6 +41,8 @@ Rectangle {
 
     signal clipLeftTrimRequested(bool completed)
     signal clipRightTrimRequested(bool completed)
+    signal clipLeftStretchRequested(bool completed);
+    signal clipRightStretchRequested(bool completed);
 
     signal requestSelected()
     signal requestSelectionReset()
@@ -179,7 +181,7 @@ Rectangle {
 
         onReleased: function(e) {
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
-                //! TODO AU4: stretch request
+                root.clipLeftStretchRequested(true)
             } else {
                 root.clipLeftTrimRequested(true)
             }
@@ -197,7 +199,9 @@ Rectangle {
                 if (customCursor.source !== leftStretchShape) {
                     customCursor.source = leftStretchShape
                 }
-                //! TODO AU4: stretch request
+                if (pressed) {
+                    root.clipLeftStretchRequested(false)
+                }
             } else {
                 if (customCursor.source !== leftTrimShape) {
                     customCursor.source = leftTrimShape
@@ -239,7 +243,7 @@ Rectangle {
 
         onReleased: function(e) {
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
-                //! TODO AU4: stretch request
+                root.clipRightStretchRequested(true)
             } else {
                 root.clipRightTrimRequested(true)
             }
@@ -257,7 +261,9 @@ Rectangle {
                 if (customCursor.source !== rightStretchShape) {
                     customCursor.source = rightStretchShape
                 }
-                //! TODO AU4: stretch request
+                if (pressed) {
+                    root.clipRightStretchRequested(false)
+                }
             } else {
                 if (customCursor.source !== rightTrimShape) {
                     customCursor.source = rightTrimShape
@@ -557,6 +563,14 @@ Rectangle {
 
         onTrimRightRequested: function(completed) {
             root.clipRightTrimRequested(completed)
+        }
+
+        onStretchLeftRequested: function(completed) {
+            root.clipLeftStretchRequested(completed)
+        }
+
+        onStretchRightRequested: function(completed) {
+            root.clipRightStretchRequested(completed)
         }
 
         onStopAutoScroll: {
