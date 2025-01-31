@@ -55,14 +55,22 @@ function create_path()
 }
 
 function bundle_gtk2_theme() {
+    local theme_name="$1"
     local target_dir="${appdir}/usr/share/themes"
-    local theme_src="/usr/share/themes/Adwaita"
+    local theme_src="/usr/share/themes/${theme_name}"
+
+    if [[ -z "$theme_name" ]]; then
+        echo "Error: No theme name provided." >&2
+        return 1
+    fi
 
     if [[ -d "$theme_src" ]]; then
         mkdir -p "$target_dir"
         cp -r "$theme_src" "$target_dir"
+        echo "Successfully bundled theme: $theme_name"
     else
-        echo "Adwaita theme not found in $theme_src" >&2
+        echo "Error: Theme '$theme_name' not found in $theme_src" >&2
+        return 1
     fi
 }
 
@@ -208,8 +216,9 @@ for fb_lib in "${fallback_libraries[@]}"; do
   fallback_library "${fb_lib}"
 done
 
-# linuxdeploy plugin gtk does not install a gtk2 theme
-bundle_gtk2_theme
+# linuxdeploy plugin gtk does not install gtk2 themes
+bundle_gtk2_theme "Adwaita"
+bundle_gtk2_theme "Adwaita-dark"
 
 #============================================================================
 # Build AppImage
