@@ -54,6 +54,18 @@ function create_path()
     mkdir -p "${path}"
 }
 
+function bundle_gtk2_theme() {
+    local target_dir="${appdir}/usr/share/themes"
+    local theme_src="/usr/share/themes/Adwaita"
+
+    if [[ -d "$theme_src" ]]; then
+        mkdir -p "$target_dir"
+        cp -r "$theme_src" "$target_dir"
+    else
+        echo "Adwaita theme not found in $theme_src" >&2
+    fi
+}
+
 #============================================================================
 # Fetch AppImage packaging tools
 #============================================================================
@@ -195,6 +207,9 @@ done
 for fb_lib in "${fallback_libraries[@]}"; do
   fallback_library "${fb_lib}"
 done
+
+# linuxdeploy plugin gtk does not install a gtk2 theme
+bundle_gtk2_theme
 
 #============================================================================
 # Build AppImage
