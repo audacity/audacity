@@ -12,10 +12,11 @@ using namespace au::projectscene;
 static const std::string moduleName("projectscene");
 
 static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
-static const muse::Settings::Key TIMELINE_RULER_MODE(moduleName, "projectscene/timelineRulerMode");
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
 static const muse::Settings::Key INSERT_SILENCE_DURATION(moduleName, "projectscene/insertSilenceDuration");
 static const muse::Settings::Key INSERT_SILENCE_DURATION_FORMAT(moduleName, "projectscene/insertSilenceDurationFormat");
+
+static const QString TIMELINE_RULER_MODE("projectscene/timelineRulerMode");
 
 void ProjectSceneConfiguration::init()
 {
@@ -29,11 +30,6 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(INSERT_SILENCE_DURATION, muse::Val(30));
     muse::settings()->setDefaultValue(INSERT_SILENCE_DURATION_FORMAT,
                                       muse::Val(NumericConverterFormats::DefaultSelectionFormat().Translation().ToStdString()));
-
-    muse::settings()->setDefaultValue(TIMELINE_RULER_MODE, muse::Val(TimelineRulerMode::MINUTES_AND_SECONDS));
-    muse::settings()->valueChanged(TIMELINE_RULER_MODE).onReceive(nullptr, [this](const muse::Val& val) {
-        m_timelineRulerModeChanged.send(val.toEnum<TimelineRulerMode>());
-    });
 }
 
 bool ProjectSceneConfiguration::isVerticalRulersVisible() const
@@ -88,17 +84,24 @@ void ProjectSceneConfiguration::setMouseZoomPrecision(int precision)
 
 TimelineRulerMode ProjectSceneConfiguration::timelineRulerMode() const
 {
-    return muse::settings()->value(TIMELINE_RULER_MODE).toEnum<TimelineRulerMode>();
+    TimelineRulerMode result = TimelineRulerMode::MINUTES_AND_SECONDS;
+
+    QString modeStr = uiConfiguration()->itemValue(TIMELINE_RULER_MODE);
+    if (!modeStr.isEmpty()) {
+        result = static_cast<TimelineRulerMode>(modeStr.toInt());
+    }
+
+    return result;
 }
 
 void ProjectSceneConfiguration::setTimelineRulerMode(const TimelineRulerMode mode)
 {
-    muse::settings()->setSharedValue(TIMELINE_RULER_MODE, muse::Val(mode));
+    uiConfiguration()->setItemValue(TIMELINE_RULER_MODE, QString::number(static_cast<int>(mode)));
 }
 
-muse::async::Channel<TimelineRulerMode> ProjectSceneConfiguration::timelineRulerModeChanged() const
+muse::async::Notification ProjectSceneConfiguration::timelineRulerModeChanged() const
 {
-    return m_timelineRulerModeChanged;
+    return uiConfiguration()->itemValueChanged(TIMELINE_RULER_MODE);
 }
 
 muse::ValCh<bool> ProjectSceneConfiguration::isEffectsPanelVisible() const
