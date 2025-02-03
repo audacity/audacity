@@ -8,7 +8,7 @@
 #include "irealtimeeffectservice.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effectstypes.h"
-#include "realtimeeffectstackmanager.h"
+#include "irealtimeeffectstackmanager.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
 #include "libraries/lib-utility/Observer.h"
@@ -33,24 +33,23 @@ class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asynca
 {
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<effects::IEffectsProvider> effectsProvider;
+    muse::Inject<IEffectsProvider> effectsProvider;
+    muse::Inject<IStackManager> stackManager;
 
 public:
-    RealtimeEffectService();
-
     void init();
 
     RealtimeEffectStatePtr addRealtimeEffect(TrackId, const EffectId&) override;
     void removeRealtimeEffect(TrackId, const RealtimeEffectStatePtr&) override;
     RealtimeEffectStatePtr replaceRealtimeEffect(TrackId, int effectListIndex, const EffectId& newEffectId) override;
+    void reorderRealtimeEffect(const RealtimeEffectStatePtr& state, int newIndex) override;
 
-    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectAdded() const override;
-    muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectRemoved() const override;
-    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr,
-                         RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
+    muse::async::Channel<TrackId> realtimeEffectStackChanged() const override;
 
     std::optional<TrackId> trackId(const RealtimeEffectStatePtr&) const override;
     std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const override;
+    std::optional<EffectChainLinkIndex> effectIndex(const RealtimeEffectStatePtr& state) const override;
+    std::optional<std::vector<RealtimeEffectStatePtr>> effectStack(TrackId trackId) const override;
 
     bool isActive(const RealtimeEffectStatePtr&) const override;
     void setIsActive(const RealtimeEffectStatePtr&, bool) override;
@@ -71,7 +70,6 @@ private:
     const RealtimeEffectList* realtimeEffectList(au::effects::TrackId) const;
     RealtimeEffectList* realtimeEffectList(au::effects::TrackId);
     void initializeTrackOnStackManager(au::effects::TrackId trackId);
-    void onUndoRedo();
 
     struct UtilData
     {
@@ -86,7 +84,5 @@ private:
 
     Observer::Subscription m_tracklistSubscription;
     std::unordered_map<TrackId, Observer::Subscription> m_rtEffectSubscriptions;
-
-    const std::unique_ptr<StackManager> m_stackManager;
 };
 }

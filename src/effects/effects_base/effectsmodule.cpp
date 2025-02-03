@@ -19,6 +19,7 @@
 #include "internal/effectpresetsprovider.h"
 #include "internal/effectpresetsscenario.h"
 #include "internal/effectviewlaunchregister.h"
+#include "internal/realtimeeffectstackmanager.h"
 
 #include "view/effectsviewregister.h"
 #include "view/effectviewloader.h"
@@ -43,6 +44,7 @@ void EffectsModule::registerExports()
     m_configuration = std::make_shared<EffectsConfiguration>();
     m_actionsController = std::make_shared<EffectsActionsController>();
     m_realtimeEffectService = std::make_shared<RealtimeEffectService>();
+    m_stackManager = std::make_shared<StackManagerFacade>();
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
@@ -54,6 +56,7 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IEffectPresetsProvider>(moduleName(), new EffectPresetsProvider());
     ioc()->registerExport<IEffectPresetsScenario>(moduleName(), new EffectPresetsScenario());
     ioc()->registerExport<IEffectViewLaunchRegister>(moduleName(), new EffectViewLaunchRegister());
+    ioc()->registerExport<IStackManager>(moduleName(), m_stackManager);
 }
 
 void EffectsModule::resolveImports()
@@ -86,6 +89,7 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     m_configuration->init();
     m_actionsController->init();
     m_realtimeEffectService->init();
+    m_stackManager->init();
 }
 
 void EffectsModule::onDelayedInit()

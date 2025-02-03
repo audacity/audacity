@@ -43,16 +43,6 @@ void RealtimeEffectMenuModelBase::resetModel(Action duringReset, Action afterRes
     }
 }
 
-void RealtimeEffectMenuModelBase::beginResetModel()
-{
-    AbstractMenuModel::beginResetModel();
-}
-
-void RealtimeEffectMenuModelBase::endResetModel()
-{
-    AbstractMenuModel::endResetModel();
-}
-
 void RealtimeEffectMenuModelBase::prop_setIsMasterTrack(bool isMasterTrack)
 {
     if (m_isMasterTrack == isMasterTrack) {

@@ -36,9 +36,6 @@ signals:
     void isMasterTrackChanged();
 
 private:
-    void beginResetModel();
-    void endResetModel();
-
     void prop_setIsMasterTrack(bool isMasterTrack);
 
     virtual void doLoad() = 0;

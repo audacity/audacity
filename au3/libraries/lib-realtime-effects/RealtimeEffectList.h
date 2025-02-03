@@ -64,6 +64,7 @@ public:
    //! avoid races
    std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
    std::unique_ptr<RealtimeEffectList> Duplicate() const;
+   void ShallowCopyTo(RealtimeEffectList& dst) const;
 
    static RealtimeEffectList &Get(AudacityProject &project);
    static const RealtimeEffectList &Get(const AudacityProject &project);
