@@ -98,7 +98,7 @@ set(MUSE_MODULE_SHORTCUTS ON)
 set(MUSE_MODULE_UI ON)
 set(MUSE_MODULE_UI_TESTS OFF)
 set(MUSE_MODULE_UPDATE OFF)
-set(MUSE_MODULE_WORKSPACE OFF)
+set(MUSE_MODULE_WORKSPACE ON)
 
 # Modules (alphabetical order please)
 option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
