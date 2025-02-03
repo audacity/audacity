@@ -28,7 +28,7 @@ public:
     virtual void setMouseZoomPrecision(int precision) = 0;
     virtual TimelineRulerMode timelineRulerMode() const = 0;
     virtual void setTimelineRulerMode(const TimelineRulerMode mode) = 0;
-    virtual muse::async::Channel<TimelineRulerMode> timelineRulerModeChanged() const = 0;
+    virtual muse::async::Notification timelineRulerModeChanged() const = 0;
 
     virtual muse::ValCh<bool> isEffectsPanelVisible() const = 0;
     virtual void setIsEffectsPanelVisible(bool visible) = 0;
