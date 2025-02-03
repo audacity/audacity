@@ -42,9 +42,9 @@
 #include "framework/network/networkmodule.h"
 #include "framework/learn/learnmodule.h"
 #include "framework/languages/languagesmodule.h"
+#include "framework/workspace/workspacemodule.h"
 
 // need stubs
-#include "framework/stubs/workspace/workspacestubmodule.h"
 #include "framework/stubs/multiinstances/multiinstancesstubmodule.h"
 
 // -----
