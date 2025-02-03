@@ -24,8 +24,8 @@ TimelineRuler::TimelineRuler(QQuickItem* parent)
     setFormatter(configuration()->timelineRulerMode());
 
     uiconfiguration()->currentThemeChanged().onNotify(this, [this]() { update(); });
-    configuration()->timelineRulerModeChanged().onReceive(this, [this](const TimelineRulerMode mode){
-        setFormatter(mode);
+    configuration()->timelineRulerModeChanged().onNotify(this, [this](){
+        setFormatter(configuration()->timelineRulerMode());
         update();
     });
 }
