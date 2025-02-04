@@ -824,7 +824,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
       {
          if (!value.TryGet(dValue) || (dValue < 0.0))
          {
-            return SetError(XO("Invalid project 'selLow' attribute."));
+            return SetError(XO("Invalid project 'rate' attribute."));
          }
 
          set(rate, dValue);
