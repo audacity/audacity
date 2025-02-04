@@ -107,12 +107,6 @@ int App::run(int argc, char** argv)
 
     QGuiApplication::styleHints()->setMousePressAndHoldInterval(250);
 
-#ifndef MU_QT5_COMPAT
-    // Necessary for QQuickWidget, but potentially suboptimal for performance.
-    // Remove as soon as possible.
-    QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
-#endif
-
     // ====================================================
     // Parse command line options
     // ====================================================
