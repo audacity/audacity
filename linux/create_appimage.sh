@@ -25,7 +25,9 @@ function extract_appimage()
     local -r dir="${image%.AppImage}.AppDir"
     "./${image}" --appimage-extract >/dev/null # dest folder "squashfs-root"
     mv squashfs-root "${dir}" # rename folder to avoid collisions
-    ln -s "${dir}/AppRun" "${binary_name}" # symlink for convenience
+    # wrapper script for convenience
+    printf '#!/bin/sh\nexec "%s/AppRun" "$@"\n' "$(readlink -f "${dir}")" > "${binary_name}"
+    chmod +x "${binary_name}"
     rm -f "${image}"
 }
 
@@ -52,6 +54,26 @@ function create_path()
     mkdir -p "${path}"
 }
 
+function bundle_gtk2_theme() {
+    local theme_name="$1"
+    local target_dir="${appdir}/usr/share/themes"
+    local theme_src="/usr/share/themes/${theme_name}"
+
+    if [[ -z "$theme_name" ]]; then
+        echo "Error: No theme name provided." >&2
+        return 1
+    fi
+
+    if [[ -d "$theme_src" ]]; then
+        mkdir -p "$target_dir"
+        cp -r "$theme_src" "$target_dir"
+        echo "Successfully bundled theme: $theme_name"
+    else
+        echo "Error: Theme '$theme_name' not found in $theme_src" >&2
+        return 1
+    fi
+}
+
 #============================================================================
 # Fetch AppImage packaging tools
 #============================================================================
@@ -59,7 +81,7 @@ function create_path()
 if create_path "appimagetool"; then
 (
     cd "appimagetool"
-    download_appimage_release AppImage/AppImageKit appimagetool continuous
+    download_appimage_release AppImage/appimagetool appimagetool continuous
 )
 fi
 export PATH="${PWD%/}/appimagetool:${PATH}"
@@ -164,18 +186,26 @@ unwanted_files=(
 )
 
 fallback_libraries=(
-  libatk-1.0.so.0 # This will possibly prevent browser from opening
+  # This will possibly prevent browser from opening
+  libatk-1.0.so.0
   libatk-bridge-2.0.so.0
-  libcairo.so.2 # This breaks FFmpeg support
+  # This breaks FFmpeg support
+  libcairo.so.2
   libcairo-gobject.so.2
-  libjack.so.0 # https://github.com/LMMS/lmms/pull/3958
-  libportaudio.so # This is required to enable system PortAudio (so Jack is enabled!)
-  libgmodule-2.0.so.0 # Otherwise - Manjaro/Arch will crash, because of libgio mismatch
+  libpango-1.0.so.0
+  librsvg-2.so.2
+  # https://github.com/LMMS/lmms/pull/3958
+  libjack.so.0
+  # This is required to enable system PortAudio (so Jack is enabled!)
+  libportaudio.so
+  # Otherwise - Manjaro/Arch will crash, because of libgio mismatch
+  libgmodule-2.0.so.0
   libgio-2.0.so.0
   libglib-2.0.so.0
   libgobject-2.0.so.0
   libgthread-2.0.so.0
-  libpixman-1.so.0 # https://github.com/audacity/audacity/issues/5327
+  # https://github.com/audacity/audacity/issues/5327
+  libpixman-1.so.0
 )
 
 for file in "${unwanted_files[@]}"; do
@@ -185,6 +215,10 @@ done
 for fb_lib in "${fallback_libraries[@]}"; do
   fallback_library "${fb_lib}"
 done
+
+# linuxdeploy plugin gtk does not install gtk2 themes
+bundle_gtk2_theme "Adwaita"
+bundle_gtk2_theme "Adwaita-dark"
 
 #============================================================================
 # Build AppImage

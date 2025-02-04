@@ -138,6 +138,9 @@ jobs:
       uses: audacity/audacity-actions/dependencies@v2
       with:
         force_gcc11: ${{ matrix.config.force_gcc11 }}
+    - name: Install themes
+      run: |
+        sudo apt install gnome-themes-extra
     - name: Configure
       uses: audacity/audacity-actions/configure@v2
       with:
