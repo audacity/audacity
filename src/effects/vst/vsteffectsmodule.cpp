@@ -64,7 +64,7 @@ void VstEffectsModule::resolveImports()
 
     auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerQmlUri(Uri("audacity://effects/vst_viewer"), "Audacity/Vst/VstEditorDialog.qml");
+        ir->registerQmlUri(Uri("audacity://effects/vst_viewer"), "Audacity/Vst/VstViewerDialog.qml");
     }
 }
 

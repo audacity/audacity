@@ -1,39 +1,54 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
-import QtQuick
-import QtQuick.Layouts
-
-import Muse.Ui
-import Muse.UiComponents
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2021 MuseScore BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+import QtQuick 2.15
+import Muse.Ui 1.0
+import Muse.UiComponents 1.0    
 
 StyledDialogView {
     id: root
 
-    property alias type: viewer.type
     property alias instanceId: viewer.instanceId
 
     title: viewer.title
 
-    contentWidth: Math.max(viewer.implicitWidth, bbox.implicitWidth)
+    contentWidth: Math.max(viewer.implicitWidth, 400)
     contentHeight: viewer.implicitHeight + bbox.implicitHeight + 16
 
-    margins: 16
+    onContentWidthChanged: {
+        console.log("contentWidth: " + contentWidth)
+    }
 
-    EffectsViewer {
+    VstViewer {
         id: viewer
-        width: parent.width
-
-        onIsApplyAllowedChanged: {
-            bbox.buttonById(ButtonBoxModel.Apply).enabled = isApplyAllowed
-            //bbox.buttonById(previewBtn.buttonId).enabled = isApplyAllowed
-        }
+        width: implicitWidth
+        height: implicitHeight
     }
 
     ButtonBox {
         id: bbox
-        width: parent.width
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
+        anchors.margins: 8
 
         //! TODO Move function to ButtonBox (Muse framework)
         function buttonById(id) {
@@ -48,9 +63,10 @@ StyledDialogView {
         }
 
         Component.onCompleted: {
-            bbox.buttonById(ButtonBoxModel.Apply).enabled = false
+            // bbox.buttonById(ButtonBoxModel.Apply).enabled = false
         }
 
+        //! NOTE Not implemented
         // FlatButton {
         //     id: manageBtn
         //     text: qsTrc("effects", "Manage")
@@ -60,6 +76,7 @@ StyledDialogView {
         //     onClicked: viewer.manage(manageBtn)
         // }
 
+        //! NOTE Not implemented
         // FlatButton {
         //     id: previewBtn
         //     text: qsTrc("effects", "Preview")
