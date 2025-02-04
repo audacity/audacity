@@ -3,6 +3,10 @@
 #
 declare_module(effects_vst)
 
+set(MODULE_QRC vst.qrc)
+
+set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
+
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/vsteffectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/vsteffectsmodule.h
@@ -18,10 +22,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/vst3viewlauncher.h
 
     # from muse
-    ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/abstractvsteditorview.cpp
-    ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/abstractvsteditorview.h
-    ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/vstfxeditorview.cpp
-    ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/vstfxeditorview.h
+    ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/vstview.cpp
+    ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/vstview.h
 
     # for muse
     ${CMAKE_CURRENT_LIST_DIR}/internal/musevstplugininstance.cpp
@@ -43,4 +45,5 @@ set(MODULE_DEF ${AU3_DEF})
 
 set(MODULE_LINK au3wrap vst_sdk_3)
 
+set(MODULE_USE_UNITY OFF)
 setup_module()

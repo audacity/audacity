@@ -1,0 +1,3 @@
+module Muse.Vst
+VstEditorDialog 1.0 VstEditorDialog.qml
+VstEditor 1.0 VstEditor.qml
