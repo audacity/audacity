@@ -4,6 +4,7 @@
 #include "vsteffectsmodule.h"
 
 #include "ui/iinteractiveuriregister.h"
+#include "vst/view/vstview.h"
 
 #include "internal/vsteffectsrepository.h"
 #include "internal/vst3pluginsscanner.h"
@@ -18,12 +19,14 @@
 
 #include "effects/effects_base/ieffectviewlaunchregister.h"
 
-//! NOTE From Muse
-#include "view/vstfxeditorview.h"
-
 using namespace muse;
 using namespace muse::ui;
 using namespace au::effects;
+
+static void vst_init_qrc()
+{
+    Q_INIT_RESOURCE(vst);
+}
 
 std::string VstEffectsModule::moduleName() const
 {
@@ -61,9 +64,18 @@ void VstEffectsModule::resolveImports()
 
     auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerUri(Uri("audacity://effects/vst_viewer"),
-                        ContainerMeta(ContainerType::QWidgetDialog, qRegisterMetaType<muse::vst::VstFxEditorView>("VstFxEditorView")));
+        ir->registerQmlUri(Uri("audacity://effects/vst_viewer"), "Audacity/Vst/VstEditorDialog.qml");
     }
+}
+
+void VstEffectsModule::registerResources()
+{
+    vst_init_qrc();
+}
+
+void VstEffectsModule::registerUiTypes()
+{
+    qmlRegisterType<muse::vst::VstView>("Audacity.Vst", 1, 0, "VstView");
 }
 
 void VstEffectsModule::onInit(const muse::IApplication::RunMode&)
