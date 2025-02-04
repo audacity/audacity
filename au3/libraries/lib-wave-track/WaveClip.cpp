@@ -85,7 +85,7 @@ double WaveClipChannel::Start() const
 
 double WaveClipChannel::End() const
 {
-    return GetClip().GetPlayEndTime();
+    return GetClip().GetCommittedEndTime();
 }
 
 AudioSegmentSampleView
@@ -1946,6 +1946,16 @@ double WaveClip::GetPlayEndTime() const
                     + ((numSamples + GreatestAppendBufferLen()).as_double())
                     * GetStretchRatio() / mRate
                     - mTrimRight;
+    // JS: calculated value is not the length;
+    // it is a maximum value and can be negative; no clipping to 0
+    return SnapToTrackSample(maxLen);
+}
+
+double WaveClip::GetCommittedEndTime() const
+{
+    const auto numSamples = GetNumSamples();
+    double maxLen = mSequenceOffset - mTrimRight
+                    + numSamples.as_double() * GetStretchRatio() / mRate;
     // JS: calculated value is not the length;
     // it is a maximum value and can be negative; no clipping to 0
     return SnapToTrackSample(maxLen);
