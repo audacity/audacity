@@ -395,6 +395,11 @@ public:
    //! period, whether the clip is stretched or not.
    double GetPlayEndTime() const override;
 
+   //! Open-end of play region that is commited to the Sequence blocks
+   //! Always a multiple of the track's sample
+   //! period, whether the clip is stretched or not.
+   double GetCommittedEndTime() const;
+
    //! Always a multiple of the track's sample period, whether the clip is
    //! stretched or not.
    double GetPlayDuration() const;
@@ -835,7 +840,7 @@ public:
     @pre `GetSampleFormats() == other.GetSampleFormats()`
     @pre `GetSampleBlockFactory() == other.GetSampleBlockFactory()`
     @pre `!mustAlign || GetNumSamples() == other.GetNumSamples()`
-    
+
     @post `!mustAlign || StrongInvariant()`
     */
    void MakeStereo(WaveClip &&other, bool mustAlign);
