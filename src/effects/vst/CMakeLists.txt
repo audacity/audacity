@@ -21,6 +21,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/vst3viewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/vst3viewlauncher.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/vstviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/vstviewmodel.h
+
     # from muse
     ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/vstview.cpp
     ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/vstview.h

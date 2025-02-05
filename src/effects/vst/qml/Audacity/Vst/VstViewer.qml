@@ -43,6 +43,19 @@ Rectangle {
         view.init()
     }
 
+    function onApply() {
+        viewModel.onApply()
+    }
+
+    function preview() {
+       viewModel.preview()
+    }
+
+    VstViewModel {
+        id: viewModel
+        instanceId: view.instanceId
+    }
+
     VstView {
         id: view
         anchors.fill: parent

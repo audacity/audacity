@@ -6,6 +6,11 @@
 #include "ui/iinteractiveuriregister.h"
 #include "vst/view/vstview.h"
 
+#include "audioplugins/iaudiopluginsscannerregister.h"
+#include "audioplugins/iaudiopluginmetareaderregister.h"
+
+#include "effects/effects_base/ieffectviewlaunchregister.h"
+
 #include "internal/vsteffectsrepository.h"
 #include "internal/vst3pluginsscanner.h"
 #include "internal/vst3pluginsmetareader.h"
@@ -14,10 +19,7 @@
 #include "internal/musevstpluginsregister.h"
 #include "internal/musevstmodulesrepository.h"
 
-#include "audioplugins/iaudiopluginsscannerregister.h"
-#include "audioplugins/iaudiopluginmetareaderregister.h"
-
-#include "effects/effects_base/ieffectviewlaunchregister.h"
+#include "view/vstviewmodel.h"
 
 using namespace muse;
 using namespace muse::ui;
@@ -76,6 +78,7 @@ void VstEffectsModule::registerResources()
 void VstEffectsModule::registerUiTypes()
 {
     qmlRegisterType<muse::vst::VstView>("Audacity.Vst", 1, 0, "VstView");
+    qmlRegisterType<VstViewModel>("Audacity.Vst", 1, 0, "VstViewModel");
 }
 
 void VstEffectsModule::onInit(const muse::IApplication::RunMode&)

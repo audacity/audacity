@@ -26,7 +26,7 @@ StyledDialogView {
 
         onIsApplyAllowedChanged: {
             bbox.buttonById(ButtonBoxModel.Apply).enabled = isApplyAllowed
-            //bbox.buttonById(previewBtn.buttonId).enabled = isApplyAllowed
+            bbox.buttonById(previewBtn.buttonId).enabled = isApplyAllowed
         }
     }
 
@@ -51,23 +51,23 @@ StyledDialogView {
             bbox.buttonById(ButtonBoxModel.Apply).enabled = false
         }
 
-        // FlatButton {
-        //     id: manageBtn
-        //     text: qsTrc("effects", "Manage")
-        //     buttonRole: ButtonBoxModel.CustomRole
-        //     buttonId: ButtonBoxModel.CustomButton + 1
-        //     isLeftSide: true
-        //     onClicked: viewer.manage(manageBtn)
-        // }
+        FlatButton {
+            id: manageBtn
+            text: qsTrc("effects", "Manage")
+            buttonRole: ButtonBoxModel.CustomRole
+            buttonId: ButtonBoxModel.CustomButton + 1
+            isLeftSide: true
+            onClicked: viewer.manage(manageBtn)
+        }
 
-        // FlatButton {
-        //     id: previewBtn
-        //     text: qsTrc("effects", "Preview")
-        //     buttonRole: ButtonBoxModel.CustomRole
-        //     buttonId: ButtonBoxModel.CustomButton + 2
-        //     isLeftSide: true
-        //     onClicked: viewer.preview()
-        // }
+        FlatButton {
+            id: previewBtn
+            text: qsTrc("effects", "Preview")
+            buttonRole: ButtonBoxModel.CustomRole
+            buttonId: ButtonBoxModel.CustomButton + 2
+            isLeftSide: true
+            onClicked: viewer.preview()
+        }
 
         FlatButton {
             text: qsTrc("global", "Cancel")
