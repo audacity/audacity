@@ -30,11 +30,15 @@ struct TrackListRestorer final : UndoStateExtension {
 
    void RestoreUndoRedoState(AudacityProject &project) override {
       auto &dstTracks = TrackList::Get(project);
-      dstTracks.Clear();
+      constexpr auto synchrony = TrackList::EventPublicationSynchrony::Asynchronous;
+      dstTracks.BeginUndoRedo(synchrony);
+      constexpr auto sendEvent = true;
+      dstTracks.Clear(sendEvent);
       for (auto pTrack : *mpTracks)
          dstTracks.Add(
             pTrack->Duplicate(Track::DuplicateOptions {}.Backup()),
-            TrackList::DoAssignId::No);
+            TrackList::DoAssignId::No, synchrony);
+       dstTracks.EndUndoRedo(synchrony);
    }
 
    bool CanUndoOrRedo(const AudacityProject &project) override {

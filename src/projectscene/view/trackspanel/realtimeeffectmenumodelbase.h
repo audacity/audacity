@@ -23,9 +23,6 @@ public:
     Q_INVOKABLE void load() final override;
 
 protected:
-    using Action = std::function<void ()>;
-    void resetModel(Action duringReset, Action afterReset = {});
-
     std::optional<au::trackedit::TrackId> trackId() const;
     bool isMasterTrack() const { return m_isMasterTrack; }
 
@@ -36,9 +33,6 @@ signals:
     void isMasterTrackChanged();
 
 private:
-    void beginResetModel();
-    void endResetModel();
-
     void prop_setIsMasterTrack(bool isMasterTrack);
 
     virtual void doLoad() = 0;

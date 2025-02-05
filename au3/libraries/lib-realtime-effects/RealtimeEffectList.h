@@ -48,10 +48,14 @@ class REALTIME_EFFECTS_API RealtimeEffectList final
    , public XMLTagHandler
    , public Observer::Publisher<RealtimeEffectListMessage>
 {
-   RealtimeEffectList(const RealtimeEffectList &) = delete;
-   RealtimeEffectList &operator=(const RealtimeEffectList &) = delete;
-
 public:
+   //! Should be called (for pushing undo states) only from main thread, to
+   //! avoid races
+   //! These methods to not publish messages.
+   RealtimeEffectList(const RealtimeEffectList &);
+   RealtimeEffectList &operator=(const RealtimeEffectList &);
+   std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
+
    using Lock = spinlock;
    using States = std::vector<std::shared_ptr<RealtimeEffectState>>;
 
@@ -59,11 +63,6 @@ public:
    virtual ~RealtimeEffectList();
 
    Lock &GetLock() const { return mLock; }
-
-   //! Should be called (for pushing undo states) only from main thread, to
-   //! avoid races
-   std::unique_ptr<ClientData::Cloneable<>> Clone() const override;
-   std::unique_ptr<RealtimeEffectList> Duplicate() const;
 
    static RealtimeEffectList &Get(AudacityProject &project);
    static const RealtimeEffectList &Get(const AudacityProject &project);

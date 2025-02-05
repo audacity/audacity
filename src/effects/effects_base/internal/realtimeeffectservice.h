@@ -8,11 +8,11 @@
 #include "irealtimeeffectservice.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effectstypes.h"
-#include "realtimeeffectstackmanager.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
 #include "libraries/lib-utility/Observer.h"
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 
 struct TrackListEvent;
@@ -33,24 +33,25 @@ class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asynca
 {
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<effects::IEffectsProvider> effectsProvider;
+    muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
-    RealtimeEffectService();
-
     void init();
 
     RealtimeEffectStatePtr addRealtimeEffect(TrackId, const EffectId&) override;
     void removeRealtimeEffect(TrackId, const RealtimeEffectStatePtr&) override;
     RealtimeEffectStatePtr replaceRealtimeEffect(TrackId, int effectListIndex, const EffectId& newEffectId) override;
+    void moveRealtimeEffect(const RealtimeEffectStatePtr& state, int newIndex) override;
 
-    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectAdded() const override;
+    muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectAdded() const override;
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectRemoved() const override;
-    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr,
-                         RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> realtimeEffectMoved() const override;
+    muse::async::Channel<TrackId> realtimeEffectStackChanged() const override;
 
     std::optional<TrackId> trackId(const RealtimeEffectStatePtr&) const override;
     std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const override;
+    std::optional<std::vector<RealtimeEffectStatePtr> > effectStack(TrackId trackId) const override;
 
     bool isActive(const RealtimeEffectStatePtr&) const override;
     void setIsActive(const RealtimeEffectStatePtr&, bool) override;
@@ -60,33 +61,25 @@ public:
     void setTrackEffectsActive(TrackId trackId, bool active) override;
 
 private:
-    void updateSubscriptions(const au::project::IAudacityProjectPtr& project);
-    Observer::Subscription subscribeToRealtimeEffectList(TrackId trackId, RealtimeEffectList&);
+    void onProjectChanged(const au::project::IAudacityProjectPtr& project);
+    void registerRealtimeEffectList(TrackId, RealtimeEffectList&);
+    void unregisterRealtimeEffectList(TrackId);
     void onTrackListEvent(const TrackListEvent&);
-    void onWaveTrackAdded(WaveTrack&);
-    std::string getEffectName(const std::string& effectId) const;
     std::string getEffectName(const RealtimeEffectState& state) const;
-    std::string getTrackName(const au::au3::Au3Project& project, au::effects::TrackId trackId) const;
     std::optional<std::string> effectTrackName(TrackId trackId) const;
+    RealtimeEffectStatePtr effect(TrackId trackId, EffectChainLinkIndex index) const;
     const RealtimeEffectList* realtimeEffectList(au::effects::TrackId) const;
     RealtimeEffectList* realtimeEffectList(au::effects::TrackId);
-    void initializeTrackOnStackManager(au::effects::TrackId trackId);
-    void onUndoRedo();
 
-    struct UtilData
-    {
-        au::au3::Au3Project* const au3Project;
-        au::au3::Au3Track* const au3Track;
-        trackedit::ITrackeditProject* const trackeditProject;
-        RealtimeEffectList* const effectList;
-    };
-
-    std::optional<UtilData> utilData(TrackId) const;
     muse::async::Channel<RealtimeEffectStatePtr> m_isActiveChanged;
-
     Observer::Subscription m_tracklistSubscription;
     std::unordered_map<TrackId, Observer::Subscription> m_rtEffectSubscriptions;
-
-    const std::unique_ptr<StackManager> m_stackManager;
+    muse::async::Channel<TrackId, RealtimeEffectStatePtr> m_realtimeEffectAdded;
+    muse::async::Channel<TrackId, RealtimeEffectStatePtr> m_realtimeEffectRemoved;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> m_realtimeEffectReplaced;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> m_realtimeEffectMoved;
+    muse::async::Channel<TrackId> m_realtimeEffectStackChanged;
+    bool m_trackUndoRedoOngoing = false;
+    std::unordered_set<TrackId> m_modifiedTracks;
 };
 }

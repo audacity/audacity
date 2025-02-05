@@ -20,31 +20,13 @@ void RealtimeEffectListModel::onProjectChanged()
 {
     const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
     if (!project) {
-        resetModel([this] {
-            m_trackEffectLists.clear();
-        }, [this] {
-            emit trackNameChanged();
-            emit trackEffectsActiveChanged();
-        });
+        beginResetModel();
+        m_trackEffectLists.clear();
+        endResetModel();
+        emit trackNameChanged();
+        emit trackEffectsActiveChanged();
         return;
     }
-
-    project->trackRemoved().onReceive(this, [this](au::trackedit::Track track)
-    {
-        if (trackId() != track.id) {
-            // Not the active track, no need to reset the model.
-            m_trackEffectLists.erase(track.id);
-            return;
-        }
-        resetModel([this, tId = track.id]
-        {
-            m_trackEffectLists.erase(tId);
-        }, [this]
-        {
-            emit trackNameChanged();
-            emit trackEffectsActiveChanged();
-        });
-    });
 
     project->trackChanged().onReceive(this, [this](au::trackedit::Track track)
     {
@@ -54,35 +36,54 @@ void RealtimeEffectListModel::onProjectChanged()
     });
 }
 
+bool RealtimeEffectListModel::belongsWithMe(effects::TrackId trackId) const
+{
+    return isMasterTrack() == (trackId == IRealtimeEffectService::masterTrackId);
+}
+
 void RealtimeEffectListModel::doLoad()
 {
-    realtimeEffectService()->realtimeEffectAdded().onReceive(this,
-                                                             [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                    RealtimeEffectStatePtr item)
-    {
-        if (isMasterTrack() && trackId != IRealtimeEffectService::masterTrackId) {
-            return;
-        }
-        insertEffect(trackId, index, item);
-    });
+    //! Note: we listen to the individual effect-list changes because `onChanged` and its layout change reset the scrollbar position. Unless ...
+    //! the RealtimeEffectListItem.qml listens to layoutAboutToBeChanged and layoutChanged signals and saves and restores the `contentY` property.
+    //! At the time of writing, we actually do this (see RealtimeEffectListItem.qml), but it may have some unexpected drawback, so for now we call less drastic
+    //! `beginInsertRows`, `dataChanged`, etc. whenever possible.
+    //! (When undo or redo is called, we just get a new list, and it is hard to know which of insert, remove, replace and especially move happened,
+    //! so we just call layoutAboutToChange.)
 
-    realtimeEffectService()->realtimeEffectRemoved().onReceive(this,
-                                                               [this](effects::TrackId trackId, RealtimeEffectStatePtr item) {
-        if (isMasterTrack() && trackId != IRealtimeEffectService::masterTrackId) {
-            return;
+    realtimeEffectService()->realtimeEffectAdded().onReceive(this,
+                                                             [this](effects::TrackId trackId, RealtimeEffectStatePtr state) {
+        if (belongsWithMe(
+                trackId)) {
+            onAdded(trackId, state);
         }
-        removeEffect(trackId, item);
     });
 
     realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
                                                                 [this](effects::TrackId trackId, EffectChainLinkIndex index,
-                                                                       RealtimeEffectStatePtr oldItem, RealtimeEffectStatePtr newItem)
-    {
-        if (isMasterTrack() && trackId != IRealtimeEffectService::masterTrackId) {
-            return;
+                                                                       RealtimeEffectStatePtr newState) {
+        if (belongsWithMe(trackId)) {
+            onReplaced(trackId, index, newState);
         }
-        removeEffect(trackId, oldItem);
-        insertEffect(trackId, index, newItem);
+    });
+
+    realtimeEffectService()->realtimeEffectRemoved().onReceive(this, [this](effects::TrackId trackId, RealtimeEffectStatePtr state) {
+        if (belongsWithMe(trackId)) {
+            onRemoved(trackId, state);
+        }
+    });
+
+    realtimeEffectService()->realtimeEffectMoved().onReceive(this, [this](effects::TrackId trackId, EffectChainLinkIndex from,
+                                                                          EffectChainLinkIndex to) {
+        if (belongsWithMe(trackId)) {
+            onMoved(trackId, from, to);
+        }
+    });
+
+    realtimeEffectService()->realtimeEffectStackChanged().onReceive(this, [this](effects::TrackId trackId)
+    {
+        if (belongsWithMe(trackId)) {
+            onChanged(trackId);
+        }
     });
 
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
@@ -92,6 +93,96 @@ void RealtimeEffectListModel::doLoad()
     onProjectChanged();
 
     doPopulateMenu();
+}
+
+void RealtimeEffectListModel::onAdded(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& newState)
+{
+    const auto it = m_trackEffectLists.find(trackId);
+    IF_ASSERT_FAILED(it != m_trackEffectLists.end()) {
+        return;
+    }
+
+    auto& list = it->second;
+    const int index = list.size();
+    beginInsertRows(QModelIndex(), index, index);
+    list.insert(list.begin() + index, std::make_shared<RealtimeEffectListItemModel>(this, newState));
+    endInsertRows();
+}
+
+void RealtimeEffectListModel::onReplaced(effects::TrackId trackId, effects::EffectChainLinkIndex index,
+                                         const effects::RealtimeEffectStatePtr& newState)
+{
+    const auto it = m_trackEffectLists.find(trackId);
+    IF_ASSERT_FAILED(it != m_trackEffectLists.end()) {
+        return;
+    }
+
+    auto& list = it->second;
+    IF_ASSERT_FAILED(index >= 0 && index < static_cast<int>(list.size())) {
+        return;
+    }
+
+    list[index] = std::make_shared<RealtimeEffectListItemModel>(this, newState);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0));
+}
+
+void RealtimeEffectListModel::onRemoved(effects::TrackId trackId, const RealtimeEffectStatePtr& state)
+{
+    const auto it = m_trackEffectLists.find(trackId);
+    IF_ASSERT_FAILED(it != m_trackEffectLists.end()) {
+        return;
+    }
+
+    const auto& list = it->second;
+    const auto it2 = std::find_if(list.begin(), list.end(), [state](const RealtimeEffectListItemModelPtr& item) {
+        return item->effectStateId == state;
+    });
+    IF_ASSERT_FAILED(it2 != list.end()) {
+        return;
+    }
+
+    const int index = it2 - list.begin();
+    beginRemoveRows(QModelIndex(), index, index);
+    m_trackEffectLists[trackId].erase(it2);
+    endRemoveRows();
+}
+
+void RealtimeEffectListModel::onMoved(effects::TrackId trackId, effects::EffectChainLinkIndex from, effects::EffectChainLinkIndex to)
+{
+    if (from == to) {
+        return;
+    }
+
+    const auto it = m_trackEffectLists.find(trackId);
+    IF_ASSERT_FAILED(it != m_trackEffectLists.end()) {
+        return;
+    }
+
+    auto& list = it->second;
+    IF_ASSERT_FAILED(from >= 0 && from < static_cast<int>(list.size())) {
+        return;
+    }
+
+    IF_ASSERT_FAILED(to >= 0 && to < static_cast<int>(list.size())) {
+        return;
+    }
+
+    // Using beginMoveRows/endMoveRows unfortunately causes a weird behavior
+    // when reordering while the scrollbar is not at the top.
+    // This approach has the drawback of resetting the scrollbar position to 0,
+    // unless the `contentY` property is saved and restored (see RealtimeEffectListItem.qml).
+
+    emit layoutAboutToBeChanged();
+
+    const QModelIndex oldIndex = index(from, 0);
+    const QModelIndex newIndex = index(to, 0);
+    const QVector<QModelIndex> persistentIndexes = { oldIndex };
+    const QVector<QModelIndex> newIndexes = { newIndex };
+    changePersistentIndexList(persistentIndexes, newIndexes);
+    auto item = list.takeAt(from);
+    list.insert(to, std::move(item));
+
+    emit layoutChanged();
 }
 
 void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, const RealtimeEffectListItemModel* item)
@@ -155,52 +246,69 @@ void RealtimeEffectListModel::doPopulateMenu()
     emit availableEffectsChanged();
 }
 
-void RealtimeEffectListModel::insertEffect(effects::TrackId trackId, EffectChainLinkIndex index, const RealtimeEffectStatePtr& e)
+void RealtimeEffectListModel::onChanged(effects::TrackId trackId)
 {
-    const auto sizeBefore = m_trackEffectLists.size();
-    auto& list = m_trackEffectLists[trackId];
-    IF_ASSERT_FAILED(index <= list.size()) {
-        return;
-    }
-    const auto affectsSelectedTrack = trackId == this->trackId();
-    if (affectsSelectedTrack) {
-        beginInsertRows(QModelIndex(), index, index);
-    }
-    list.insert(list.begin() + index, std::make_shared<RealtimeEffectListItemModel>(this, e));
-    if (affectsSelectedTrack) {
-        endInsertRows();
-    }
-}
+    const std::optional<std::vector<RealtimeEffectStatePtr> > newStack = realtimeEffectService()->effectStack(trackId);
 
-void RealtimeEffectListModel::removeEffect(effects::TrackId trackId, const RealtimeEffectStatePtr& e)
-{
-    if (!m_trackEffectLists.count(trackId)) {
-        return;
+    emit layoutAboutToBeChanged();
+
+    if (!newStack.has_value()) {
+        m_trackEffectLists.erase(trackId);
+        // Track was deleted, apparently.
+        emit trackNameChanged();
+        emit trackEffectsActiveChanged();
+    } else {
+        // Do not brute-force delete and re-create everything: in case the dialog for a RealtimeEffectListItemModel is open,
+        // we don't want it to close unless the effect state it refers to was removed.
+        const EffectList& oldList = m_trackEffectLists[trackId];
+        EffectList newList(newStack->size());
+        for (auto i = 0; i < static_cast<int>(newStack->size()); ++i) {
+            const auto& state = newStack->at(i);
+            const auto it = std::find_if(oldList.begin(), oldList.end(), [state](const RealtimeEffectListItemModelPtr& item) {
+                return item->effectStateId == state;
+            });
+            if (it != oldList.end()) {
+                newList[i] = *it;
+            } else {
+                newList[i] = std::make_shared<RealtimeEffectListItemModel>(this, state);
+            }
+        }
+        m_trackEffectLists[trackId] = std::move(newList);
     }
 
-    std::vector<RealtimeEffectListItemModelPtr>& list = m_trackEffectLists.at(trackId);
-    const auto it = std::find_if(list.begin(), list.end(), [e](const RealtimeEffectListItemModelPtr& item) {
-        return item->effectStateId == e;
-    });
-
-    IF_ASSERT_FAILED(it != list.end()) {
-        return;
-    }
-    const int index = it - list.begin();
-
-    const auto affectsSelectedTrack = trackId == this->trackId();
-    if (affectsSelectedTrack) {
-        beginRemoveRows(QModelIndex(), index, index);
-    }
-    list.erase(list.begin() + index);
-    if (affectsSelectedTrack) {
-        endRemoveRows();
-    }
+    emit layoutChanged();
 }
 
 QVariantList RealtimeEffectListModel::availableEffects()
 {
     return menuItemListToVariantList(items());
+}
+
+int RealtimeEffectListModel::count() const
+{
+    return rowCount();
+}
+
+void RealtimeEffectListModel::moveRow(int from, int to)
+{
+    const auto tId = trackId();
+    IF_ASSERT_FAILED(tId.has_value()) {
+        return;
+    }
+
+    const auto& list = m_trackEffectLists.at(*tId);
+
+    IF_ASSERT_FAILED(from >= 0 && from < list.size()) {
+        return;
+    }
+
+    to = std::clamp<int>(to, 0, static_cast<int>(list.size()) - 1);
+
+    if (from == to) {
+        return;
+    }
+
+    realtimeEffectService()->moveRealtimeEffect(list[from]->effectStateId, to);
 }
 
 void RealtimeEffectListModel::onSelectedTrackIdChanged()

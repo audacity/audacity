@@ -607,6 +607,22 @@ std::shared_ptr<Track> TrackList::Remove(Track &track)
    return holder;
 }
 
+void TrackList::BeginUndoRedo(EventPublicationSynchrony synchrony)
+{
+   if (synchrony == EventPublicationSynchrony::Asynchronous)
+      QueueEvent({TrackListEvent::UNDO_REDO_BEGIN});
+   else
+      Publish({TrackListEvent::UNDO_REDO_BEGIN});
+}
+
+void TrackList::EndUndoRedo(EventPublicationSynchrony synchrony)
+{
+   if (synchrony == EventPublicationSynchrony::Asynchronous)
+      QueueEvent({TrackListEvent::UNDO_REDO_END});
+   else
+      Publish({TrackListEvent::UNDO_REDO_END});
+}
+
 void TrackList::Clear(bool sendEvent)
 {
    // Null out the back-pointers to this in tracks, in case there

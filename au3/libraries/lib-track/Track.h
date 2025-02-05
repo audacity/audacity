@@ -826,6 +826,9 @@ struct TrackListEvent
        *! mExtra is 1 if the track is being replaced by another track, 0 otherwise.
        */
       DELETION,
+
+      UNDO_REDO_BEGIN,
+      UNDO_REDO_END,
    };
 
    TrackListEvent( Type type,
@@ -1080,6 +1083,9 @@ public:
 
    //! Remove a track and return it
    Track::Holder Remove(Track &track);
+
+   void BeginUndoRedo(EventPublicationSynchrony);
+   void EndUndoRedo(EventPublicationSynchrony);
 
    /// Make the list empty
    void Clear(bool sendEvent = true);

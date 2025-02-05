@@ -29,14 +29,17 @@ public:
     virtual RealtimeEffectStatePtr addRealtimeEffect(TrackId trackId, const EffectId& effectId) = 0;
     virtual void removeRealtimeEffect(TrackId trackId, const RealtimeEffectStatePtr& state) = 0;
     virtual RealtimeEffectStatePtr replaceRealtimeEffect(TrackId trackId, int effectListIndex, const EffectId& newEffectId) = 0;
+    virtual void moveRealtimeEffect(const RealtimeEffectStatePtr& state, int newIndex) = 0;
 
-    virtual muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectAdded() const = 0;
+    virtual muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectAdded() const = 0;
     virtual muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectRemoved() const = 0;
-    virtual muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr,
-                                 RealtimeEffectStatePtr> realtimeEffectReplaced() const = 0;
+    virtual muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectReplaced() const = 0;
+    virtual muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> realtimeEffectMoved() const = 0;
+    virtual muse::async::Channel<TrackId> realtimeEffectStackChanged() const = 0;
 
     virtual std::optional<TrackId> trackId(const RealtimeEffectStatePtr& state) const = 0;
     virtual std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const = 0;
+    virtual std::optional<std::vector<RealtimeEffectStatePtr> > effectStack(TrackId trackId) const = 0;
 
     virtual bool isActive(const RealtimeEffectStatePtr& state) const = 0;
     virtual void setIsActive(const RealtimeEffectStatePtr& state, bool) = 0;
