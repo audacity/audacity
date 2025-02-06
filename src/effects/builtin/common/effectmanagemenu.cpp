@@ -31,6 +31,13 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 {
     MenuItemList items;
 
+    auto makeApplyAction = [](const EffectInstanceId& iid, const PresetId& p) {
+        ActionQuery q("action://effects/presets/apply");
+        q.addParam("instanceId", Val(iid));
+        q.addParam("presetId", Val(au3::wxToStdSting(p)));
+        return q;
+    };
+
     // user
     PresetIdList userPresets = presetsController()->userPresets(effectId);
     {
@@ -41,9 +48,8 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             MenuItemList subitems;
             for (const PresetId& p : userPresets) {
                 String name = au3::wxToString(p);
-                MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
+                MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), TranslatableString::untranslatable(name));
                 item->setId("user_apply_" + name);
-                item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p)); // apply for instance
                 subitems << item;
             }
             menuItem->setSubitems(subitems);
@@ -52,9 +58,10 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     }
 
     {
-        MenuItem* item = makeMenuItem("action://effects/presets/save");
-        item->setArgs(ActionData::make_arg1<EffectInstanceId>(instanceId));
-        items << item;  // apply from instance
+        ActionQuery q("action://effects/presets/save");
+        q.addParam("instanceId", Val(instanceId));
+        MenuItem* item = makeMenuItem(q.toString());
+        items << item;
     }
 
     {
@@ -65,9 +72,11 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             MenuItemList subitems;
             for (const PresetId& p : userPresets) {
                 String name = au3::wxToString(p);
-                MenuItem* item = makeMenuItem("action://effects/presets/delete", TranslatableString::untranslatable(name));
+                ActionQuery q("action://effects/presets/delete");
+                q.addParam("effectId", Val(effectId.toStdString()));
+                q.addParam("presetId", Val(au3::wxToStdSting(p)));
+                MenuItem* item = makeMenuItem(q.toString(), TranslatableString::untranslatable(name));
                 item->setId("user_delete_" + name);
-                item->setArgs(ActionData::make_arg2<EffectId, PresetId>(effectId, p)); // delete for effect
                 subitems << item;
             }
             menuItem->setSubitems(subitems);
@@ -83,16 +92,14 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         MenuItem* menuItem = makeMenu(TranslatableString("effects", "Factory Presets"), {});
 
         MenuItemList subitems;
-        MenuItem* defItem = makeMenuItem("action://effects/presets/apply", TranslatableString("effects", "Defaults"));
+        MenuItem* defItem = makeMenuItem(makeApplyAction(instanceId, "default").toString(), TranslatableString("effects", "Defaults"));
         defItem->setId("factory_apply_default");
-        defItem->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, "default"));
         subitems << defItem;
 
         for (const PresetId& p : factoryPresets) {
             String name = au3::wxToString(p);
-            MenuItem* item = makeMenuItem("action://effects/presets/apply", TranslatableString::untranslatable(name));
+            MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), TranslatableString::untranslatable(name));
             item->setId("factory_apply_" + name);
-            item->setArgs(ActionData::make_arg2<EffectInstanceId, PresetId>(instanceId, p));     // apply for instance
             subitems << item;
         }
         menuItem->setSubitems(subitems);
@@ -104,14 +111,16 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     // import / export
     {
-        MenuItem* item = makeMenuItem("action://effects/presets/import");
-        item->setArgs(ActionData::make_arg1<EffectInstanceId>(instanceId));
+        ActionQuery q("action://effects/presets/import");
+        q.addParam("instanceId", Val(instanceId));
+        MenuItem* item = makeMenuItem(q.toString());
         items << item;
     }
 
     {
+        ActionQuery q("action://effects/presets/export");
+        q.addParam("instanceId", Val(instanceId));
         MenuItem* item = makeMenuItem("action://effects/presets/export");
-        item->setArgs(ActionData::make_arg1<EffectInstanceId>(instanceId));
         items << item;
     }
 
