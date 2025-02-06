@@ -1,22 +1,22 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "realtimeeffectmenumodel.h"
+#include "addeffectmenumodel.h"
 #include "log.h"
 
 using namespace muse;
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 
-RealtimeEffectMenuModel::RealtimeEffectMenuModel(QObject* parent)
+AddEffectMenuModel::AddEffectMenuModel(QObject* parent)
     : RealtimeEffectMenuModelBase(parent) {}
 
-void RealtimeEffectMenuModel::doLoad()
+void AddEffectMenuModel::doLoad()
 {
     doPopulateMenu();
 }
 
-void RealtimeEffectMenuModel::doPopulateMenu()
+void AddEffectMenuModel::doPopulateMenu()
 {
     MenuItemList items;
 
@@ -40,7 +40,7 @@ void RealtimeEffectMenuModel::doPopulateMenu()
     setItems(items);
 }
 
-void RealtimeEffectMenuModel::handleMenuItem(const QString& itemId)
+void AddEffectMenuModel::handleMenuItem(const QString& itemId)
 {
     const MenuItem& menuItem = findItem(itemId);
     const auto tId = trackId();

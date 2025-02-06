@@ -24,7 +24,7 @@
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/toolbars/undoredotoolbarmodel.h"
 
-#include "view/trackspanel/realtimeeffectmenumodel.h"
+#include "view/trackspanel/addeffectmenumodel.h"
 #include "view/trackspanel/realtimeeffectlistmodel.h"
 #include "view/trackspanel/realtimeeffectsectionmodel.h"
 #include "view/trackspanel/trackslistmodel.h"
@@ -130,7 +130,7 @@ void ProjectSceneModule::registerUiTypes()
                                                              "Cannot create");
 
     // tracks panel
-    qmlRegisterType<RealtimeEffectMenuModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectMenuModel");
+    qmlRegisterType<AddEffectMenuModel>("Audacity.ProjectScene", 1, 0, "AddEffectMenuModel");
     qmlRegisterType<RealtimeEffectListModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectListModel");
     qmlRegisterType<RealtimeEffectSectionModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectSectionModel");
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");

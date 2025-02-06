@@ -225,7 +225,7 @@ void RealtimeEffectListModel::doPopulateMenu()
     const auto categoryList = effectsProvider()->effectsCategoryList();
     std::unordered_map<String, MenuItemList> menuCategories;
 
-    items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect"));
+    items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect")) << makeSeparator();
 
     // Populate with available realtime effect.
     for (const effects::EffectMeta& meta : effectsProvider()->effectMetaList()) {
