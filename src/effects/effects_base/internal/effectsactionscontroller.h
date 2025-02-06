@@ -41,11 +41,11 @@ private:
     void onEffectTriggered(const muse::actions::ActionQuery& q);
     void repeatLastEffect();
 
-    void applyPreset(const muse::actions::ActionData& args);
-    void saveAsPreset(const muse::actions::ActionData& args);
-    void deletePreset(const muse::actions::ActionData& args);
-    void importPreset(const muse::actions::ActionData& args);
-    void exportPreset(const muse::actions::ActionData& args);
+    void applyPreset(const muse::actions::ActionQuery& q);
+    void saveAsPreset(const muse::actions::ActionQuery& q);
+    void deletePreset(const muse::actions::ActionQuery& q);
+    void importPreset(const muse::actions::ActionQuery& q);
+    void exportPreset(const muse::actions::ActionQuery& q);
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;

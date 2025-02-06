@@ -42,11 +42,11 @@ void EffectsActionsController::registerActions()
     dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
 
     // presets
-    dispatcher()->reg(this, "action://effects/presets/apply", this, &EffectsActionsController::applyPreset);
-    dispatcher()->reg(this, "action://effects/presets/save", this, &EffectsActionsController::saveAsPreset);
-    dispatcher()->reg(this, "action://effects/presets/delete", this, &EffectsActionsController::deletePreset);
-    dispatcher()->reg(this, "action://effects/presets/import", this, &EffectsActionsController::importPreset);
-    dispatcher()->reg(this, "action://effects/presets/export", this, &EffectsActionsController::exportPreset);
+    dispatcher()->reg(this, ActionQuery("action://effects/presets/apply"), this, &EffectsActionsController::applyPreset);
+    dispatcher()->reg(this, ActionQuery("action://effects/presets/save"), this, &EffectsActionsController::saveAsPreset);
+    dispatcher()->reg(this, ActionQuery("action://effects/presets/delete"), this, &EffectsActionsController::deletePreset);
+    dispatcher()->reg(this, ActionQuery("action://effects/presets/import"), this, &EffectsActionsController::importPreset);
+    dispatcher()->reg(this, ActionQuery("action://effects/presets/export"), this, &EffectsActionsController::exportPreset);
 
     m_uiActions->reload();
     uiActionsRegister()->reg(m_uiActions);
@@ -70,55 +70,55 @@ void EffectsActionsController::repeatLastEffect()
     effectExecutionScenario()->repeatLastProcessor();
 }
 
-void EffectsActionsController::applyPreset(const muse::actions::ActionData& args)
+void EffectsActionsController::applyPreset(const muse::actions::ActionQuery& q)
 {
-    IF_ASSERT_FAILED(args.count() == 2) {
+    IF_ASSERT_FAILED(q.contains("instanceId") && q.contains("presetId")) {
         return;
     }
 
-    EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
-    PresetId presetId = args.arg<PresetId>(1);
+    EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
+    PresetId presetId = q.param("presetId").toString();
     presetsScenario()->applyPreset(effectInstanceId, presetId);
 }
 
-void EffectsActionsController::saveAsPreset(const muse::actions::ActionData& args)
+void EffectsActionsController::saveAsPreset(const ActionQuery& q)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED(q.contains("instanceId")) {
         return;
     }
 
-    EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
+    EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
     presetsScenario()->saveCurrentAsPreset(effectInstanceId);
 }
 
-void EffectsActionsController::deletePreset(const muse::actions::ActionData& args)
+void EffectsActionsController::deletePreset(const ActionQuery& q)
 {
-    IF_ASSERT_FAILED(args.count() == 2) {
+    IF_ASSERT_FAILED(q.contains("instanceId") && q.contains("presetId")) {
         return;
     }
 
-    EffectId effectId = args.arg<EffectId>(0);
-    PresetId presetId = args.arg<PresetId>(1);
+    EffectId effectId = EffectId::fromStdString(q.param("effectId").toString());
+    PresetId presetId = q.param("presetId").toString();
     presetsScenario()->deletePreset(effectId, presetId);
 }
 
-void EffectsActionsController::importPreset(const muse::actions::ActionData& args)
+void EffectsActionsController::importPreset(const ActionQuery& q)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED(q.contains("instanceId")) {
         return;
     }
 
-    EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
+    EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
     presetsScenario()->importPreset(effectInstanceId);
 }
 
-void EffectsActionsController::exportPreset(const muse::actions::ActionData& args)
+void EffectsActionsController::exportPreset(const ActionQuery& q)
 {
-    IF_ASSERT_FAILED(args.count() == 1) {
+    IF_ASSERT_FAILED(q.contains("instanceId")) {
         return;
     }
 
-    EffectInstanceId effectInstanceId = args.arg<EffectInstanceId>(0);
+    EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
     presetsScenario()->exportPreset(effectInstanceId);
 }
 
