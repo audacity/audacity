@@ -292,6 +292,16 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
     return nullptr;
 }
 
+RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trackId, const RealtimeEffectStatePtr& state,
+                                                                    const muse::String& newEffectId)
+{
+    const auto index = utils::effectIndex(globalContext()->currentProject(), state);
+    if (!index.has_value()) {
+        return nullptr;
+    }
+    return replaceRealtimeEffect(trackId, *index, newEffectId);
+}
+
 void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& state, int newIndex)
 {
     const auto tId = trackId(state);

@@ -135,7 +135,7 @@ void RealtimeEffectListModel::onRemoved(effects::TrackId trackId, const Realtime
 
     const auto& list = it->second;
     const auto it2 = std::find_if(list.begin(), list.end(), [state](const RealtimeEffectListItemModelPtr& item) {
-        return item->effectStateId == state;
+        return item->effectState() == state;
     });
     IF_ASSERT_FAILED(it2 != list.end()) {
         return;
@@ -197,7 +197,7 @@ void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, con
     const MenuItem& menuItem = findItem(itemId);
 
     if (itemId == "realtimeeffect-remove") {
-        realtimeEffectService()->removeRealtimeEffect(*tId, item->effectStateId);
+        realtimeEffectService()->removeRealtimeEffect(*tId, item->effectState());
         return;
     }
 
@@ -265,7 +265,7 @@ void RealtimeEffectListModel::onChanged(effects::TrackId trackId)
         for (auto i = 0; i < static_cast<int>(newStack->size()); ++i) {
             const auto& state = newStack->at(i);
             const auto it = std::find_if(oldList.begin(), oldList.end(), [state](const RealtimeEffectListItemModelPtr& item) {
-                return item->effectStateId == state;
+                return item->effectState() == state;
             });
             if (it != oldList.end()) {
                 newList[i] = *it;
@@ -308,7 +308,7 @@ void RealtimeEffectListModel::moveRow(int from, int to)
         return;
     }
 
-    realtimeEffectService()->moveRealtimeEffect(list[from]->effectStateId, to);
+    realtimeEffectService()->moveRealtimeEffect(list[from]->effectState(), to);
 }
 
 void RealtimeEffectListModel::onSelectedTrackIdChanged()

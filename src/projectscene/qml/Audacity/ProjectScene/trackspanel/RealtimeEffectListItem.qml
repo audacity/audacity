@@ -6,6 +6,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.ProjectScene
 
 ListItemBlank {
     id: root
@@ -28,6 +29,10 @@ ListItemBlank {
     clip: false // should be true?
     background.color: "transparent"
     hoverHitColor: "transparent"
+
+    Component.onCompleted: {
+        menuModel.load()
+    }
 
     Behavior on y {
         NumberAnimation {
@@ -197,15 +202,20 @@ ListItemBlank {
                 normalColor: ui.theme.backgroundPrimaryColor
                 icon: IconCode.SMALL_ARROW_DOWN
 
+                RealtimeEffectListItemMenuModel {
+                    id: menuModel
+                    effectState: root.item ? root.item.effectState() : null
+                }
+
                 onClicked: {
-                    effectMenuLoader.toggleOpened(root.availableEffects)
+                    effectMenuLoader.toggleOpened(menuModel.availableEffects)
                 }
 
                 StyledMenuLoader {
                     id: effectMenuLoader
 
                     onHandleMenuItem: function(menuItem) {
-                        root.handleMenuItemWithState(menuItem, root.item)
+                        menuModel.handleMenuItem(menuItem)
                     }
                 }
             }

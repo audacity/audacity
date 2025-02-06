@@ -26,6 +26,7 @@
 
 #include "view/trackspanel/addeffectmenumodel.h"
 #include "view/trackspanel/realtimeeffectlistmodel.h"
+#include "view/trackspanel/realtimeeffectlistitemmenumodel.h"
 #include "view/trackspanel/realtimeeffectsectionmodel.h"
 #include "view/trackspanel/trackslistmodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
@@ -132,6 +133,7 @@ void ProjectSceneModule::registerUiTypes()
     // tracks panel
     qmlRegisterType<AddEffectMenuModel>("Audacity.ProjectScene", 1, 0, "AddEffectMenuModel");
     qmlRegisterType<RealtimeEffectListModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectListModel");
+    qmlRegisterType<RealtimeEffectListItemMenuModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectListItemMenuModel");
     qmlRegisterType<RealtimeEffectSectionModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectSectionModel");
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
     qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");
