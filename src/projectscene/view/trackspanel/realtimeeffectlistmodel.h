@@ -3,36 +3,46 @@
  */
 #pragma once
 
-#include "realtimeeffectmenumodelbase.h"
 #include "realtimeeffectlistitemmodel.h"
+#include "internal/irealtimeeffectpaneltrackselection.h"
+
 #include "context/iglobalcontext.h"
-#include <QObject>
+#include "effects/effects_base/irealtimeeffectservice.h"
+#include "async/asyncable.h"
+#include "modularity/ioc.h"
+#include <QAbstractListModel>
 #include <map>
 
 namespace au::projectscene {
-class RealtimeEffectListModel : public RealtimeEffectMenuModelBase
+class RealtimeEffectListModel : public QAbstractListModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    Q_PROPERTY(QVariantList availableEffects READ availableEffects NOTIFY availableEffectsChanged)
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged)
+    Q_PROPERTY(bool isMasterTrack READ prop_isMasterTrack WRITE prop_setIsMasterTrack NOTIFY isMasterTrackChanged)
     Q_PROPERTY(bool trackEffectsActive READ prop_trackEffectsActive WRITE prop_setTrackEffectsActive NOTIFY trackEffectsActiveChanged)
 
+    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<IRealtimeEffectPanelTrackSelection> trackSelection;
 
 public:
     explicit RealtimeEffectListModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE void handleMenuItemWithState(const QString& menuItemId, const RealtimeEffectListItemModel*);
+    Q_INVOKABLE void load();
     Q_INVOKABLE int count() const;
     Q_INVOKABLE void moveRow(int from, int to);
-    QVariantList availableEffects();
+
     QString prop_trackName() const;
 
     bool prop_trackEffectsActive() const;
     void prop_setTrackEffectsActive(bool active);
 
+    bool prop_isMasterTrack() const;
+    void prop_setIsMasterTrack(bool isMasterTrack);
+
 signals:
+    void isMasterTrackChanged();
     void availableEffectsChanged();
     void trackNameChanged();
     void trackEffectsActiveChanged();
@@ -48,9 +58,8 @@ private:
         rItemData = Qt::UserRole + 1
     };
 
-    void doLoad() override;
-    void doPopulateMenu() override;
-    void onSelectedTrackIdChanged() override;
+    void onSelectedTrackIdChanged();
+    std::optional<effects::TrackId> trackId() const;
 
     bool belongsWithMe(effects::TrackId trackId) const;
     void onAdded(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& newState);
@@ -62,5 +71,6 @@ private:
 
     using EffectList = QList<RealtimeEffectListItemModelPtr>;
     std::map<effects::TrackId, EffectList> m_trackEffectLists;
+    bool m_isMasterTrack = false;
 };
 }

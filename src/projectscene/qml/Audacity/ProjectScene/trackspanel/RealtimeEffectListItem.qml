@@ -14,7 +14,6 @@ ListItemBlank {
     property var item: null
     property var listView: null
     property var availableEffects: null
-    property var handleMenuItemWithState: null
     property int index: -1
     property int scrollOffset: 0
     property int topMargin: 0

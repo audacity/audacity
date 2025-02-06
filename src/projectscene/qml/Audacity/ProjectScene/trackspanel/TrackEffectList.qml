@@ -57,7 +57,6 @@ Rectangle {
             index: model.index
             listView: trackEffectList
             availableEffects: trackEffectList.model.availableEffects
-            handleMenuItemWithState: trackEffectList.model.handleMenuItemWithState
             width: trackEffectList.width - scrollbarContainer.width
         }
 
