@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectlistitemmenumodel.h"
+#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "global/defer.h"
 #include "log.h"
 
@@ -45,10 +46,12 @@ void RealtimeEffectListItemMenuModel::doPopulateMenu()
     }
 
     for (const auto& entry : menuCategories) {
-        items << makeMenu(muse::TranslatableString::untranslatable(entry.first), entry.second);
+        MenuItem* const menu = makeMenu(muse::TranslatableString::untranslatable(entry.first), entry.second);
+        items << menu;
     }
 
     setItems(items);
+    updateEffectCheckmarks();
 }
 
 void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
@@ -88,5 +91,25 @@ void RealtimeEffectListItemMenuModel::prop_setEffectState(effects::RealtimeEffec
         return;
     }
     m_effectState = effectState;
+    updateEffectCheckmarks();
     emit effectStateChanged();
+}
+
+void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
+{
+    const MenuItemList& itemList = items();
+    const auto myEffectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    for (MenuItem* item : itemList) {
+        auto selected = false;
+        for (MenuItem* subItem : item->subitems()) {
+            const auto effectId = subItem->args().arg<effects::EffectId>(0);
+            auto state = subItem->state();
+            state.checked = myEffectId == effectId;
+            selected |= state.checked;
+            subItem->setState(std::move(state));
+        }
+        auto state = item->state();
+        state.checked = selected;
+        item->setState(std::move(state));
+    }
 }

@@ -35,6 +35,7 @@ private:
     void doPopulateMenu() override;
 
     bool belongsWithMe(effects::TrackId) const;
+    void updateEffectCheckmarks();
 
     effects::RealtimeEffectStatePtr m_effectState;
 };
