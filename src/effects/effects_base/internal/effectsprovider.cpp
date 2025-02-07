@@ -12,6 +12,8 @@
 #include "libraries/lib-components/EffectInterface.h"
 #include "libraries/lib-effects/EffectManager.h"
 #include "libraries/lib-effects/MixAndRender.h"
+#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
+#include "libraries/lib-stretching-sequence/TempoChange.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-transactions/TransactionScope.h"
@@ -346,10 +348,13 @@ void restoreEffectStateHack(EffectBase& effect)
 
 muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& settings)
 {
+    const bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
+    const bool isGenerator = effect.GetType() == EffectTypeGenerate;
+
     //! ============================================================================
     //! NOTE Step 1 - check conditions
     //! ============================================================================
-    if (effect.mNumTracks == 0) {     // nothing to preview
+    if (effect.mNumTracks == 0 && !isGenerator) {     // nothing to preview
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
@@ -394,9 +399,6 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
     //! ============================================================================
 
     EffectContext newCtx;
-
-    const bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
-    const bool isGenerator = effect.GetType() == EffectTypeGenerate;
 
     //! Step 3.1 - prepare time
 
@@ -445,9 +447,19 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
             newTrack->MoveTo(0);
             newTrack->SetSelected(true);
         } else {
-            for (auto src : originCtx.tracks->Selected<const au::au3::Au3WaveTrack>()) {
-                auto dest = src->Copy(newCtx.t0, newCtx.t1);
+            if (effect.mNumTracks > 0) {
+                for (const WaveTrack* src : originCtx.tracks->Selected<const au::au3::Au3WaveTrack>()) {
+                    auto dest = src->Copy(newCtx.t0, newCtx.t1);
+                    dest->SetSelected(true);
+                    newCtx.tracks->Add(dest);
+                }
+            } else {
+                // If we are previewing a generator without a given track, we can just give mono.
+                constexpr auto nChannels = 1;
+                const auto dest = WaveTrackFactory::Get(*pProject).Create(nChannels);
                 dest->SetSelected(true);
+                const auto tempo = ProjectTimeSignature::Get(*pProject).GetTempo();
+                DoProjectTempoChange(*dest, tempo);
                 newCtx.tracks->Add(dest);
             }
         }
