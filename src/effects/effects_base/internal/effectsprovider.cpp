@@ -195,6 +195,10 @@ void EffectsProvider::showEffect(const RealtimeEffectStatePtr& state) const
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    if (!instance) {
+        LOGW() << "Could not get instance for " << effectId;
+        return;
+    }
     const auto instanceId = instance->id();
 
     const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
@@ -223,6 +227,10 @@ void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    if (!instance) {
+        LOGW() << "Could not get instance for " << effectId;
+        return;
+    }
     const auto instanceId = instance->id();
 
     const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
@@ -237,6 +245,11 @@ void EffectsProvider::toggleShowEffect(const RealtimeEffectStatePtr& state) cons
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    if (!instance) {
+        // This could happen if e.g. a VST plugin was uninstalled since the last run.
+        LOGW() << "Could not get instance for " << effectId;
+        return;
+    }
     const auto instanceId = instance->id();
 
     const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };

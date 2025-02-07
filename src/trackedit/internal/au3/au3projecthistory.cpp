@@ -16,14 +16,6 @@ void au::trackedit::Au3ProjectHistory::init()
 {
     auto& project = projectRef();
     ::ProjectHistory::Get(project).InitialState();
-    m_undoRedoMessageSubscription = UndoManager::Get(project).Subscribe(
-        [this](const UndoRedoMessage& message){
-        switch (message.type) {
-        case UndoRedoMessage::Type::UndoOrRedo:
-            m_undoOrRedoCalled.notify();
-            return;
-        }
-    });
 }
 
 bool au::trackedit::Au3ProjectHistory::undoAvailable()
@@ -103,11 +95,6 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
 muse::async::Notification Au3ProjectHistory::isUndoRedoAvailableChanged() const
 {
     return m_isUndoRedoAvailableChanged;
-}
-
-muse::async::Notification Au3ProjectHistory::undoOrRedoCalled() const
-{
-    return m_undoOrRedoCalled;
 }
 
 Au3Project& au::trackedit::Au3ProjectHistory::projectRef()

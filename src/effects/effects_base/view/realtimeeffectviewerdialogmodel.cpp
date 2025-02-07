@@ -112,16 +112,6 @@ void RealtimeEffectViewerDialogModel::subscribe()
             emit trackNameChanged();
         }
     });
-    project->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
-        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(m_effectState);
-        IF_ASSERT_FAILED(trackId.has_value()) {
-            return;
-        }
-
-        if (track.id == trackId) {
-            emit trackRemoved();
-        }
-    });
 }
 
 bool RealtimeEffectViewerDialogModel::prop_isMasterEffect() const

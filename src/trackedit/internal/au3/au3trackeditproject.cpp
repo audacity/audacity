@@ -123,6 +123,10 @@ static std::string eventTypeToString(const TrackListEvent& e)
 
 void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
 {
+    if (e.mType == TrackListEvent::UNDO_REDO_BEGIN || e.mType == TrackListEvent::UNDO_REDO_END) {
+        return;
+    }
+
     TrackId trackId = -1;
     auto track = e.mpTrack.lock();
     if (track) {

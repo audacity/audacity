@@ -17,23 +17,27 @@ RealtimeEffectList::RealtimeEffectList()
 {
 }
 
+RealtimeEffectList::RealtimeEffectList(const RealtimeEffectList &other)
+{
+   *this = other;
+}
+
 RealtimeEffectList::~RealtimeEffectList()
 {
 }
 
 std::unique_ptr<ClientData::Cloneable<>> RealtimeEffectList::Clone() const
 {
-   return Duplicate();
+   return std::make_unique<RealtimeEffectList>(*this);
 }
 
-// Deep copy of states
-std::unique_ptr<RealtimeEffectList> RealtimeEffectList::Duplicate() const
+RealtimeEffectList& RealtimeEffectList::operator=(const RealtimeEffectList& other)
 {
-   auto result = std::make_unique<RealtimeEffectList>();
-   for (auto &pState : mStates)
-      result->mStates.push_back(pState);
-   result->SetActive(this->IsActive());
-   return result;
+   mStates.clear();
+   for (auto &pState : other.mStates)
+      mStates.push_back(pState);
+   SetActive(other.IsActive());
+   return *this;
 }
 
 // Access for per-project effect list
@@ -290,31 +294,3 @@ void RealtimeEffectList::SetActive(bool value)
 {
    (LockGuard{ mLock }, mActive.store(value, std::memory_order_relaxed));
 }
-
-struct MasterEffectListRestorer final : UndoStateExtension
-{
-   MasterEffectListRestorer(AudacityProject &project)
-      : list{ RealtimeEffectList::Get(project).Duplicate() }
-   {
-   }
-
-   void RestoreUndoRedoState(AudacityProject& project) override
-   {
-      auto& projectList = RealtimeEffectList::Get(project);
-      // Unlike in `Duplicate`, we don't manipulate the lists directly but use
-      // the API so that the updates are published.
-      projectList.Clear();
-      for (auto i = 0; i < list->GetStatesCount(); ++i)
-         projectList.AddState(list->GetStateAt(i));
-      projectList.SetActive(list->IsActive());
-   }
-
-   const std::unique_ptr<RealtimeEffectList> list;
-};
-
-static UndoRedoExtensionRegistry::Entry sEntry {
-   [](AudacityProject& project) -> std::shared_ptr<UndoStateExtension>
-   {
-      return std::make_shared<MasterEffectListRestorer>(project);
-   }
-};

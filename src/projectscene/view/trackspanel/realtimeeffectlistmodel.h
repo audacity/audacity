@@ -24,6 +24,8 @@ public:
     explicit RealtimeEffectListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void handleMenuItemWithState(const QString& menuItemId, const RealtimeEffectListItemModel*);
+    Q_INVOKABLE int count() const;
+    Q_INVOKABLE void moveRow(int from, int to);
     QVariantList availableEffects();
     QString prop_trackName() const;
 
@@ -50,11 +52,15 @@ private:
     void doPopulateMenu() override;
     void onSelectedTrackIdChanged() override;
 
+    bool belongsWithMe(effects::TrackId trackId) const;
+    void onAdded(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& newState);
+    void onReplaced(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::RealtimeEffectStatePtr& newState);
+    void onRemoved(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& state);
+    void onMoved(effects::TrackId trackId, effects::EffectChainLinkIndex from, effects::EffectChainLinkIndex to);
+    void onChanged(effects::TrackId trackId);
     void onProjectChanged();
-    void insertEffect(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::RealtimeEffectStatePtr& item);
-    void removeEffect(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& item);
 
-    using EffectList = std::vector<RealtimeEffectListItemModelPtr>;
+    using EffectList = QList<RealtimeEffectListItemModelPtr>;
     std::map<effects::TrackId, EffectList> m_trackEffectLists;
 };
 }

@@ -46,7 +46,6 @@ public:
 
 signals:
     void trackNameChanged();
-    void trackRemoved();
     void isActiveChanged();
     void isMasterEffectChanged();
 
