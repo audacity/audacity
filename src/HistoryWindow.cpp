@@ -187,7 +187,8 @@ void HistoryDialog::Populate(ShuttleGui & S)
          S.StartMultiColumn(3, wxCENTRE);
          {
             S.AddPrompt(XXO("&Total space used"));
-            mTotal = S.Id(ID_TOTAL).Style(wxTE_READONLY).AddTextBox({}, wxT(""), 10);
+            mTotal = S.Id(ID_TOTAL).Style(wxTE_READONLY)
+               .Name(XXO("&Total space used")).AddTextBox({}, wxT(""), 10);
             S.AddVariableText( {} )->Hide();
 
 #if defined(ALLOW_DISCARD)
@@ -210,7 +211,8 @@ void HistoryDialog::Populate(ShuttleGui & S)
             mDiscard = S.Id(ID_DISCARD).AddButton(XXO("&Discard"));
 #endif
             S.AddPrompt(XXO("Clip&board space used"));
-            mClipboard = S.Style(wxTE_READONLY).AddTextBox({}, wxT(""), 10);
+            mClipboard = S.Style(wxTE_READONLY)
+               .Name(XXO("Clip&board space used")).AddTextBox({}, wxT(""), 10);
 
 #if defined(ALLOW_DISCARD)
             S.Id(ID_DISCARD_CLIPBOARD).AddButton(XXO("D&iscard"));
