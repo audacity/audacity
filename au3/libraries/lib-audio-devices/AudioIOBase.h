@@ -307,7 +307,7 @@ protected:
    std::atomic<bool>   mPaused{ false };
 
    /*! Read by worker threads but unchanging during playback */
-   int                 mStreamToken{ 0 };
+   std::atomic<int>    mStreamToken{ 0 };
 
    /// Audio playback rate in samples per second
    /*! Read by worker threads but unchanging during playback */
