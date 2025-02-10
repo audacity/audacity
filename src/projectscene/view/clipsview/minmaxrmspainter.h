@@ -1,9 +1,9 @@
 #pragma once
 
-#include "irmspainter.h"
+#include "iwavepainter.h"
 
 namespace au::projectscene {
-class MinMaxRMSPainter : public IRMSPainter
+class MinMaxRMSPainter : public IWavePainter
 {
 public:
     MinMaxRMSPainter() = default;

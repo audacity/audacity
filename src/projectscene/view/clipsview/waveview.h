@@ -6,13 +6,21 @@
 #include <QQuickPaintedItem>
 
 #include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "iwavepainter.h"
 
-#include "types/projectscenetypes.h"
 #include "../timeline/timelinecontext.h"
+#include "types/projectscenetypes.h"
 
 class WaveClipItem;
 namespace au::projectscene {
+enum class PlotType
+{
+    MinMaxRMS,
+    ConnectingDots,
+    Stem
+};
+
 class WaveView : public QQuickPaintedItem
 {
     Q_OBJECT
@@ -24,7 +32,11 @@ class WaveView : public QQuickPaintedItem
 
     Q_PROPERTY(ClipTime clipTime READ clipTime WRITE setClipTime NOTIFY clipTimeChanged FINAL)
 
-    muse::Inject<IWavePainter> wavePainter;
+    Q_PROPERTY(bool isNearSample READ isNearSample WRITE setIsNearSample NOTIFY isNearSampleChanged FINAL)
+    Q_PROPERTY(
+        bool enableMultiSampleEdit READ enableMultiSampleEdit WRITE setEnableMultiSampleEdit NOTIFY enableMultiSampleEditChanged FINAL)
+
+    muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
     WaveView(QQuickItem* parent = nullptr);
@@ -42,8 +54,14 @@ public:
     void setClipTime(const ClipTime& newClipTime);
     double channelHeightRatio() const;
     void setChannelHeightRatio(double channelHeightRatio);
+    bool isNearSample() const;
+    void setIsNearSample(bool isNearSample);
+    bool enableMultiSampleEdit() const;
+    void setEnableMultiSampleEdit(bool enableMultiSampleEdit);
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
+    Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
+    Q_INVOKABLE void setLastClickPos(const unsigned int x, const unsigned int y);
 
     void paint(QPainter* painter) override;
 
@@ -54,10 +72,14 @@ signals:
     void clipTimeChanged();
     void clipSelectedChanged();
     void channelHeightRatioChanged();
+    void isNearSampleChanged();
+    void enableMultiSampleEditChanged();
 
 private:
 
     void updateView();
+    void handleSnapChange(PlotType plotType);
+    IWavePainter::Params getWavePainterParams() const;
 
     TimelineContext* m_context = nullptr;
     ClipKey m_clipKey;
@@ -66,5 +88,11 @@ private:
     double m_channelHeightRatio = 0.5;
     bool m_clipSelected = false;
     ClipTime m_clipTime;
+    bool m_isNearSample = false;
+    bool m_enableMultiSampleEdit = false;
+    PlotType m_currentPlotType = PlotType::MinMaxRMS;
+    std::optional<Snap> m_snap;
+    std::optional<int> m_currentChannel;
+    std::optional<QPoint> m_lastPosition;
 };
 }

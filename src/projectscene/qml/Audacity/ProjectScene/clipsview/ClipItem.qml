@@ -85,6 +85,7 @@ Rectangle {
     readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
     readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
     readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
+    readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
 
     function editTitle() {
         editLoader.edit(titleLabel.text)
@@ -141,16 +142,25 @@ Rectangle {
             }
         }
 
-        onPositionChanged: {
-            clipItemMousePositionChanged(mouseX, mouseY)
+        onPositionChanged: function (e) {
+            clipItemMousePositionChanged(e.x, e.y)
+
+            // propagate mouse position to the wave view adjusting the y position
+            waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
         }
     }
 
     CustomCursor {
         id: customCursor
-        active: (leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
+        active: (waveView.isNearSample || leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
             || leftTrimStretchEdgeHover.pressedButtons || rightTrimStretchEdgeHover.pressedButtons)
-        source: leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
+        source: {
+            if (waveView.isNearSample) {
+                return pencilShape
+            }
+            return leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
+        }
+        size: waveView.isNearSample ? 36 : 26
     }
 
     MouseArea {
@@ -504,6 +514,15 @@ Rectangle {
             clipColor: root.clipColor
             clipSelected: root.clipSelected
 
+            function onWaveViewPositionChanged(x, y) {
+                if (waveView.enableMultiSampleEdit) {
+                    waveView.setLastClickPos(x, y)
+                    waveView.update()
+                } else {
+                    waveView.setLastMousePos(x, y)
+                }
+            }
+
             ChannelSplitter {
                 id: channelSplitter
 
@@ -516,6 +535,48 @@ Rectangle {
                     root.ratioChanged(ratio)
                 }
             }
+
+            MouseArea {
+                id: waveViewArea
+                cursorShape: Qt.IBeamCursor
+                enabled: waveView.isNearSample
+                acceptedButtons: Qt.LeftButton
+                hoverEnabled: true
+                pressAndHoldInterval: 100
+
+                anchors.fill: parent
+
+                onClicked: function(e) {
+                    waveView.setLastClickPos(e.x, e.y)
+                    waveView.update()
+                }
+
+                onPressAndHold: function(e) {
+                    waveView.enableMultiSampleEdit = true
+                    waveView.setLastClickPos(e.x, e.y)
+                    waveView.update()
+                }
+
+                onReleased: function(e) {
+                    waveView.enableMultiSampleEdit = false
+                    if (!waveView.containsMouse) {
+                        waveView.isNearSample = false
+                    }
+                }
+
+                onPositionChanged: function (e) {
+                    // propagate mouse position to the clip item ajusting the y position
+                    clipItemMousePositionChanged(e.x, e.y - header.height)
+
+                    waveView.onWaveViewPositionChanged(e.x, e.y)
+                }
+
+                onContainsMouseChanged: {
+                    if (!containsMouse && !waveView.enableMultiSampleEdit) {
+                        waveView.isNearSample = false
+                    }
+                }
+            }        
         }
 
         RoundedRectangle {

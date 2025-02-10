@@ -88,14 +88,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/iwavepainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/isamplespainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/samplespainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/samplespainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/irmspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/samplespainterutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/samplespainterutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/minmaxrmspainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/minmaxrmspainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/au3wavepainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/au3wavepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/minmaxrmspainter.h 
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/connectingdotspainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/connectingdotspainter.h 
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformSettings.cpp
