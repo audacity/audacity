@@ -171,6 +171,7 @@ if (MUSE_ENABLE_UNIT_TESTS)
     message(STATUS "Enabled testing")
 endif()
 
+add_subdirectory(share)
 add_subdirectory(${muse_framework_SOURCE_DIR}/framework ${muse_framework_BINARY_DIR})
 add_subdirectory(src)
 add_subdirectory(share)
