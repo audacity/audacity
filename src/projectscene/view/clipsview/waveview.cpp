@@ -188,6 +188,12 @@ void WaveView::paint(QPainter* painter)
     wm.width = g.width;
     wm.left = g.left;
 
+    // calculate selection area relative to the clip itself
+    if (!muse::RealIsEqual(params.selectionStartTime, params.selectionEndTime)) {
+        wm.selectionStartTime = params.selectionStartTime - clip->Start() + clip->GetTrimLeft();
+        wm.selectionEndTime = params.selectionEndTime - clip->Start() + clip->GetTrimLeft();
+    }
+
     for (size_t channelIndex = 0; channelIndex < clip->NChannels(); ++channelIndex) {
         wm.height = channelHeight[channelIndex];
         wavePainter->paint(channelIndex, *painter, wm, params.style, *track, *clip);
