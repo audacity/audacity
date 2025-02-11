@@ -41,6 +41,7 @@
 #include "view/clipsview/selectioncontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
 #include "view/clipsview/pitchandspeedchangemodel.h"
+#include "view/clipsview/wavepainterproxy.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -87,6 +88,7 @@ void ProjectSceneModule::registerExports()
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(moduleName(), m_realtimeEffectPanelTrackSelection);
+    ioc()->registerExport<IWavePainter>(moduleName(), new WavePainterProxy());
 }
 
 void ProjectSceneModule::resolveImports()

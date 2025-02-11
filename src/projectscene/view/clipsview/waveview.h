@@ -7,20 +7,13 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "iwavepainter.h"
 
+#include "iwavepainter.h"
 #include "../timeline/timelinecontext.h"
 #include "types/projectscenetypes.h"
 
 class WaveClipItem;
 namespace au::projectscene {
-enum class PlotType
-{
-    MinMaxRMS,
-    ConnectingDots,
-    Stem
-};
-
 class WaveView : public QQuickPaintedItem
 {
     Q_OBJECT
@@ -37,6 +30,7 @@ class WaveView : public QQuickPaintedItem
         bool enableMultiSampleEdit READ enableMultiSampleEdit WRITE setEnableMultiSampleEdit NOTIFY enableMultiSampleEditChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::projectscene::IWavePainter> wavePainter;
 
 public:
     WaveView(QQuickItem* parent = nullptr);
@@ -78,7 +72,6 @@ signals:
 private:
 
     void updateView();
-    void handleSnapChange(PlotType plotType);
     IWavePainter::Params getWavePainterParams() const;
 
     TimelineContext* m_context = nullptr;
@@ -90,8 +83,8 @@ private:
     ClipTime m_clipTime;
     bool m_isNearSample = false;
     bool m_enableMultiSampleEdit = false;
-    PlotType m_currentPlotType = PlotType::MinMaxRMS;
-    std::optional<Snap> m_snap;
+
+    //std::optional<Snap> m_snap;
     std::optional<int> m_currentChannel;
     std::optional<QPoint> m_lastPosition;
 };

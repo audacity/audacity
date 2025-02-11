@@ -1,11 +1,13 @@
 #include "samplespainter.h"
 
-#include "au3/WaveformScale.h"
-#include "au3/WaveformSettings.h"
+#include "au3wrap/internal/domaccessor.h"
 #include "Envelope.h"
 #include "sampledata.h"
 #include "samplespainterutils.h"
+#include "wavepainterutils.h"
 #include "WaveClip.h"
+#include "WaveformScale.h"
+#include "WaveformSettings.h"
 #include "ZoomInfo.h"
 
 constexpr auto SAMPLE_TICK_SIZE = 4;
@@ -55,30 +57,50 @@ void drawSampleStalk(const au::projectscene::SampleData& samples, int yZero, con
 }
 
 namespace au::projectscene {
-void SamplesPainter::paint(int channelIndex, QPainter& painter, const WaveMetrics& metrics, const Style& style,
-                           const au::au3::Au3WaveTrack& track, const au::au3::Au3WaveClip& clip)
+void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey, const IWavePainter::Params& params)
 {
-    float zoomMin, zoomMax;
-    const auto& cache = WaveformScale::Get(track);
-    cache.GetDisplayBounds(zoomMin, zoomMax);
-
-    const auto& settings = WaveformSettings::Get(track);
-    const float dBRange = settings.dBRange;
-    const bool dB = !settings.isLinear();
-    const double trimLeft = clip.GetTrimLeft();
-
-    samplespainterutils::drawBackground(painter, metrics, style, trimLeft);
-    samplespainterutils::drawBaseLine(painter, metrics, style);
-
-    const auto samples = samplespainterutils::getSampleData(clip, channelIndex, metrics, dB, dBRange, zoomMax, zoomMin);
-    if (samples.size() == 0) {
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(track) {
         return;
     }
 
-    int yZero = samplespainterutils::getWaveYPos(0.0, zoomMin, zoomMax, metrics.height, dB, true, dBRange, false);
-    yZero = metrics.top + std::max(-1, std::min(static_cast<int>(metrics.height + metrics.top), yZero));
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    if (!waveClip) {
+        return;
+    }
 
-    drawSampleHead(samples, metrics, painter, style);
-    drawSampleStalk(samples, yZero, metrics, painter, style);
+    const std::vector<double> channelHeight {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
+
+    float zoomMin, zoomMax;
+    const auto& cache = WaveformScale::Get(*track);
+    cache.GetDisplayBounds(zoomMin, zoomMax);
+
+    const auto& settings = WaveformSettings::Get(*track);
+    const float dBRange = settings.dBRange;
+    const bool dB = !settings.isLinear();
+    const double trimLeft = waveClip->GetTrimLeft();
+
+    auto waveMetrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), clipKey, params);
+
+    for (size_t index = 0; index < waveClip->NChannels(); index++) {
+        waveMetrics.height = channelHeight[index];
+        samplespainterutils::drawBackground(painter, waveMetrics, params.style, trimLeft);
+        samplespainterutils::drawBaseLine(painter, waveMetrics, params.style);
+        const auto samples = samplespainterutils::getSampleData(*waveClip, index, waveMetrics, dB, dBRange, zoomMax, zoomMin);
+        if (samples.size() == 0) {
+            continue;
+        }
+
+        int yZero = samplespainterutils::getWaveYPos(0.0, zoomMin, zoomMax, waveMetrics.height, dB, true, dBRange, false);
+        yZero = waveMetrics.top + std::max(-1, std::min(static_cast<int>(waveMetrics.height + waveMetrics.top), yZero));
+
+        drawSampleHead(samples, waveMetrics, painter, params.style);
+        drawSampleStalk(samples, yZero, waveMetrics, painter, params.style);
+        waveMetrics.top += waveMetrics.height;
+    }
 }
 }

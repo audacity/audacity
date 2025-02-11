@@ -1,9 +1,11 @@
 #pragma once
 
-#include "iwavepainter.h"
+#include "../iwavepainter.h"
+
+#include "project/iaudacityproject.h"
 
 #include "au3wrap/au3types.h"
-#include "au3/WaveMetrics.h"
+#include "WaveMetrics.h"
 #include "sampledata.h"
 
 namespace au::projectscene::samplespainterutils {
@@ -15,8 +17,9 @@ void drawBackground(QPainter& painter, const au::projectscene::WaveMetrics& metr
 void drawBaseLine(QPainter& painter, const au::projectscene::WaveMetrics& metrics, const IWavePainter::Style& style);
 SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics, bool dB,
                          float dBRange, float zoomMax, float zoomMin);
-std::optional<int> isNearSample(const au::au3::Au3WaveTrack& waveTrack, const au::au3::Au3WaveClip& waveClip, const QPoint& position,
-                                const WaveMetrics& wm);
-void setLastClickPos(const unsigned int currentChannel, const au::au3::Au3WaveTrack& waveTrack, au::au3::Au3WaveClip& waveClip,
-                     const std::optional<QPoint>& lastPosition, const QPoint& position, const WaveMetrics& wm, bool enableMultiSampleEdit);
+std::optional<int> isNearSample(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
+                                const QPoint& position, const IWavePainter::Params& params);
+void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
+                     const trackedit::ClipKey& clipKey, const std::optional<QPoint>& lastPosition, const QPoint& currentPosition,
+                     const IWavePainter::Params& params, bool enableMultiSampleEdit);
 }

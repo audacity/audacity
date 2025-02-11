@@ -6,17 +6,12 @@
 #include <QPainter>
 #include <QElapsedTimer>
 
-#include "iwavepainter.h"
-
-#include "../timeline/timelinecontext.h"
-#include "au3wrap/internal/domaccessor.h"
-#include "au3wrap/internal/domconverter.h"
 #include "draw/types/color.h"
-#include "connectingdotspainter.h"
 #include "log.h"
-#include "minmaxrmspainter.h"
-#include "samplespainter.h"
-#include "samplespainterutils.h"
+
+#include "au3/wavepainterutils.h"
+#include "au3/samplespainterutils.h"
+#include "../timeline/timelinecontext.h"
 
 using namespace au::projectscene;
 
@@ -35,47 +30,6 @@ static const float SAMPLE_STALK_DEFAULT_ALPHA = 0.4;
 static const float SAMPLE_STALK_CLIP_SELECTED_ALPHA = 0.6;
 static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7;
 
-static constexpr auto PIXELS_PER_SAMPLE_WHEN_CONNECTING_POINTS = 0.5;
-static constexpr auto PIXELS_PER_SAMPLE_WHEN_INDIVIDUAL_POINTS = 4;
-
-namespace {
-au::projectscene::PlotType getPlotType(const au::au3::Au3WaveClip& waveClip, double zoom)
-{
-    const double sampleRate = waveClip.GetRate();
-    const double stretchRatio = waveClip.GetStretchRatio();
-
-    const double rate = sampleRate / stretchRatio;
-
-    const double threshold1 = PIXELS_PER_SAMPLE_WHEN_CONNECTING_POINTS * rate;
-    if (zoom < threshold1) {
-        return PlotType::MinMaxRMS;
-    }
-
-    const double threshold2 = PIXELS_PER_SAMPLE_WHEN_INDIVIDUAL_POINTS * rate;
-    if (zoom < threshold2) {
-        return PlotType::ConnectingDots;
-    }
-
-    return au::projectscene::PlotType::Stem;
-}
-
-std::unique_ptr<au::projectscene::IWavePainter> getWavePainter(PlotType plotType)
-{
-    switch (plotType) {
-    case PlotType::MinMaxRMS:
-        return std::make_unique<MinMaxRMSPainter>();
-    case PlotType::ConnectingDots:
-        return std::make_unique<ConnectingDotsPainter>();
-    case PlotType::Stem:
-        return std::make_unique<SamplesPainter>();
-    default:
-        break;
-    }
-
-    return nullptr;
-}
-}
-
 WaveView::WaveView(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {
@@ -91,19 +45,6 @@ void WaveView::setClipKey(const ClipKey& newClipKey)
     emit clipKeyChanged();
 
     update();
-}
-
-void WaveView::handleSnapChange(PlotType plotType)
-{
-    if (plotType == PlotType::Stem) {
-        if (!m_snap) {
-            m_snap = globalContext()->currentProject()->viewState()->getSnap();
-        }
-        globalContext()->currentProject()->viewState()->setSnap(Snap { SnapType::Samples, true, false });
-    } else {
-        globalContext()->currentProject()->viewState()->setSnap(m_snap.value_or(Snap { SnapType::Bar, false, false }));
-        m_snap.reset();
-    }
 }
 
 IWavePainter::Params WaveView::getWavePainterParams() const
@@ -151,54 +92,7 @@ IWavePainter::Params WaveView::getWavePainterParams() const
 
 void WaveView::paint(QPainter* painter)
 {
-    au::au3::Au3Project* project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*project, TrackId(m_clipKey.key.trackId));
-    IF_ASSERT_FAILED(track) {
-        return;
-    }
-
-    std::shared_ptr<WaveClip> clip = au::au3::DomAccessor::findWaveClip(track, m_clipKey.key.clipId);
-    if (!clip) {
-        return;
-    }
-
-    painter->setPen(Qt::NoPen);
-
-    const auto params = getWavePainterParams();
-    m_currentPlotType = getPlotType(*clip, params.zoom);
-    handleSnapChange(m_currentPlotType);
-
-    std::unique_ptr<IWavePainter> wavePainter = getWavePainter(m_currentPlotType);
-    if (!wavePainter) {
-        return;
-    }
-
-    const IWavePainter::Geometry& g = params.geometry;
-    const std::vector<double> channelHeight {
-        g.height * params.channelHeightRatio,
-        g.height * (1 - params.channelHeightRatio),
-    };
-
-    WaveMetrics wm;
-    wm.zoom = params.zoom;
-    wm.fromTime = params.fromTime;
-    wm.toTime = params.toTime;
-    wm.selectionStartTime = 0;
-    wm.selectionEndTime = 0;
-    wm.width = g.width;
-    wm.left = g.left;
-
-    // calculate selection area relative to the clip itself
-    if (!muse::RealIsEqual(params.selectionStartTime, params.selectionEndTime)) {
-        wm.selectionStartTime = params.selectionStartTime - clip->Start() + clip->GetTrimLeft();
-        wm.selectionEndTime = params.selectionEndTime - clip->Start() + clip->GetTrimLeft();
-    }
-
-    for (size_t channelIndex = 0; channelIndex < clip->NChannels(); ++channelIndex) {
-        wm.height = channelHeight[channelIndex];
-        wavePainter->paint(channelIndex, *painter, wm, params.style, *track, *clip);
-        wm.top += wm.height;
-    }
+    wavePainter()->paint(*painter, m_clipKey.key, getWavePainterParams());
 }
 
 ClipKey WaveView::clipKey() const
@@ -350,7 +244,8 @@ QColor WaveView::transformColor(const QColor& originalColor) const
 
 void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)
 {
-    if (m_currentPlotType != PlotType::Stem) {
+    if (wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                      m_context->zoom()) != IWavePainter::PlotType::Stem) {
         return;
     }
 
@@ -360,59 +255,21 @@ void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)
     }
 
     const auto params = getWavePainterParams();
-
-    WaveMetrics wm;
-    wm.zoom = params.zoom;
-    wm.fromTime = params.fromTime;
-    wm.toTime = params.toTime;
-    wm.selectionStartTime = 0;
-    wm.selectionEndTime = 0;
-
-    au::au3::Au3Project* project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*project, TrackId(m_clipKey.key.trackId));
-    IF_ASSERT_FAILED(track) {
-        return;
-    }
-
-    std::shared_ptr<WaveClip> clip = au::au3::DomAccessor::findWaveClip(track, m_clipKey.key.clipId);
-    if (!clip) {
-        return;
-    }
-    wm.height = params.geometry.height / clip->NChannels();
-
-    m_currentChannel =  samplespainterutils::isNearSample(*track, *clip, QPoint(x, y), wm);
+    m_currentChannel =  samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, QPoint(x, y), params);
     setIsNearSample(m_currentChannel.has_value());
 }
 
 void WaveView::setLastClickPos(const unsigned int x, const unsigned int y)
 {
-    if (m_currentPlotType != PlotType::Stem) {
+    if (wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                      m_context->zoom()) != IWavePainter::PlotType::Stem) {
         return;
     }
-
-    au::au3::Au3Project* project = reinterpret_cast<au::au3::Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*project, TrackId(m_clipKey.key.trackId));
-    IF_ASSERT_FAILED(track) {
-        return;
-    }
-
-    std::shared_ptr<WaveClip> clip = au::au3::DomAccessor::findWaveClip(track, m_clipKey.key.clipId);
-    if (!clip) {
-        return;
-    }
-
-    const auto params = getWavePainterParams();
-    WaveMetrics wm;
-    wm.zoom = params.zoom;
-    wm.fromTime = params.fromTime;
-    wm.toTime = params.toTime;
-    wm.selectionStartTime = 0;
-    wm.selectionEndTime = 0;
-    wm.height = params.geometry.height / clip->NChannels();
 
     auto const currentPosition = QPoint(x, y);
 
-    auto const newChannel = samplespainterutils::isNearSample(*track, *clip, currentPosition, wm);
+    const auto params = getWavePainterParams();
+    auto const newChannel = samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
     if (!m_enableMultiSampleEdit && (m_currentChannel != newChannel)) {
         m_lastPosition.reset();
     }
@@ -422,6 +279,7 @@ void WaveView::setLastClickPos(const unsigned int x, const unsigned int y)
     }
 
     samplespainterutils::setLastClickPos(
-        m_currentChannel.value(), *track, *clip, m_lastPosition, currentPosition, wm, m_enableMultiSampleEdit);
+        m_currentChannel.value(),
+        globalContext()->currentProject(), m_clipKey.key, m_lastPosition, currentPosition, params, m_enableMultiSampleEdit);
     m_lastPosition = currentPosition;
 }

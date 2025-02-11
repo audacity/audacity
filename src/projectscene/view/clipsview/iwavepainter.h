@@ -3,8 +3,6 @@
 #include <QColor>
 #include <QRect>
 
-#include "au3/WaveMetrics.h"
-#include "au3wrap/au3types.h"
 #include "modularity/imoduleinterface.h"
 #include "trackedit/trackedittypes.h"
 
@@ -49,7 +47,14 @@ public:
         Style style;
     };
 
-    virtual void paint(int channelIndex, QPainter& painter, const WaveMetrics& metrics, const Style& style,
-                       const au::au3::Au3WaveTrack& track, const au::au3::Au3WaveClip& clip) = 0;
+    enum class PlotType
+    {
+        MinMaxRMS,
+        ConnectingDots,
+        Stem
+    };
+
+    virtual void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params,
+                       std::optional<PlotType> plotType = std::nullopt) = 0;
 };
 }

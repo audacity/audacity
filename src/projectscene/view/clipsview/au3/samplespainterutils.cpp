@@ -1,11 +1,13 @@
 #include "samplespainterutils.h"
 
-#include "au3/WaveformScale.h"
-#include "au3/WaveformSettings.h"
+#include "au3wrap/internal/domaccessor.h"
+#include "wavepainterutils.h"
 #include "Envelope.h"
 #include "WaveClip.h"
 #include "WaveClipUtilities.h"
 #include "WaveTrack.h"
+#include "WaveformScale.h"
+#include "WaveformSettings.h"
 #include "ZoomInfo.h"
 
 static constexpr auto X_MIN_DISTANCE = 5;
@@ -169,38 +171,58 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     return SampleData(ypos, xpos);
 }
 
-std::optional<int> isNearSample(const au::au3::Au3WaveTrack& waveTrack, const au::au3::Au3WaveClip& waveClip, const QPoint& position,
-                                const WaveMetrics& wm)
+std::optional<int> isNearSample(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
+                                const QPoint& position, const IWavePainter::Params& params)
 {
-    const ZoomInfo zoomInfo { wm.fromTime, wm.zoom };
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
+    if (!track) {
+        return std::nullopt;
+    }
+
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    if (!waveClip) {
+        return std::nullopt;
+    }
+
+    auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
+
+    const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
     const auto time = zoomInfo.PositionToTime(position.x());
-    const auto sampleOffset = waveClip.TimeToSamples(time);
-    const auto adjustedTime = waveClip.SamplesToTime(sampleOffset);
+    const auto sampleOffset = waveClip->TimeToSamples(time);
+    const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
     const auto adjustedPosition = zoomInfo.TimeToPosition(adjustedTime);
 
-    auto& settings = WaveformSettings::Get(waveTrack);
+    auto& settings = WaveformSettings::Get(*track);
     const float dBRange = settings.dBRange;
     const bool dB = !settings.isLinear();
 
     float zoomMin, zoomMax;
-    auto& cache = WaveformScale::Get(waveTrack);
+    auto& cache = WaveformScale::Get(*track);
     cache.GetDisplayBounds(zoomMin, zoomMax);
+
+    const std::vector<double> channelHeight {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
 
     std::map<int, int> channelSampleDistance;
     int top = 0;
-    for (size_t i = 0; i < waveClip.NChannels(); i++) {
+    for (size_t i = 0; i < waveClip->NChannels(); i++) {
+        waveMetrics.height = channelHeight[i];
+
         float oneSample;
-        if (!WaveClipUtilities::GetFloatAtTime(waveClip, adjustedTime, i, oneSample, false)) {
+        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime, i, oneSample, false)) {
             continue;
         }
 
-        const double value = waveClip.GetEnvelope().GetValue(adjustedTime, (1 / waveClip.GetRate()));
+        const double value = waveClip->GetEnvelope().GetValue(adjustedTime, (1 / waveClip->GetRate()));
         const auto tt = oneSample * value;
 
         const auto adjustedYPos = position.y() - top;
 
-        const auto baselineYPos = getWaveYPos(0.0, zoomMin, zoomMax, wm.height, dB, true, dBRange, false);
+        const auto baselineYPos = getWaveYPos(0.0, zoomMin, zoomMax, waveMetrics.height, dB, true, dBRange, false);
         if (std::abs(adjustedYPos - baselineYPos) <= BASELINE_HIT_AREA_SIZE) {
             return i;
         }
@@ -210,11 +232,11 @@ std::optional<int> isNearSample(const au::au3::Au3WaveTrack& waveTrack, const au
             continue;
         }
 
-        const auto ypos = getWaveYPos(tt, zoomMin, zoomMax, wm.height, dB, true, dBRange, false);
+        const auto ypos = getWaveYPos(tt, zoomMin, zoomMax, waveMetrics.height, dB, true, dBRange, false);
 
-        if (position.y() < top || position.y() > top + wm.height) {
+        if (position.y() < top || position.y() > top + waveMetrics.height) {
             // Check bounderies
-            top += static_cast<int>(wm.height);
+            top += static_cast<int>(waveMetrics.height);
             continue;
         }
 
@@ -227,7 +249,8 @@ std::optional<int> isNearSample(const au::au3::Au3WaveTrack& waveTrack, const au
         } else if (std::abs(adjustedYPos - ypos) <= Y_MIN_DISTANCE) {
             channelSampleDistance[i] = std::abs(baselineYPos - ypos);
         }
-        top += static_cast<int>(wm.height);
+        top += static_cast<int>(waveMetrics.height);
+        waveMetrics.top += waveMetrics.height;
     }
 
     if (channelSampleDistance.size() == 0) {
@@ -265,45 +288,66 @@ void interpolatePoints(std::vector<QPoint>& container, const QPoint& previousPos
     }
 }
 
-void setLastClickPos(const unsigned int currentChannel, const au::au3::Au3WaveTrack& waveTrack, au::au3::Au3WaveClip& waveClip,
-                     const std::optional<QPoint>& lastPosition, const QPoint& position, const WaveMetrics& wm, bool enableMultiSampleEdit)
+void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
+                     const trackedit::ClipKey& clipKey, const std::optional<QPoint>& lastPosition, const QPoint& currentPosition,
+                     const IWavePainter::Params& params, bool enableMultiSampleEdit)
 {
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
+    if (!track) {
+        return;
+    }
+
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    if (!waveClip) {
+        return;
+    }
+
     std::vector<QPoint> points;
-    points.push_back(position);
+    points.push_back(currentPosition);
 
     if (enableMultiSampleEdit && lastPosition) {
-        if (std::abs(lastPosition.value().x() - position.x()) > 1) {
-            interpolatePoints(points, lastPosition.value(), position);
+        if (std::abs(lastPosition.value().x() - currentPosition.x()) > 1) {
+            interpolatePoints(points, lastPosition.value(), currentPosition);
         }
     }
 
-    const ZoomInfo zoomInfo { wm.fromTime, wm.zoom };
+    const std::vector<double> channelHeight {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
+
+    auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
+    waveMetrics.height = channelHeight[currentChannel];
+
+    const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
     for (const auto& point : points) {
         const auto time = zoomInfo.PositionToTime(point.x());
-        const auto sampleOffset = waveClip.TimeToSamples(time);
-        const auto adjustedTime = waveClip.SamplesToTime(sampleOffset);
+        const auto sampleOffset = waveClip->TimeToSamples(time);
+        const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
 
         float oneSample;
-        if (!WaveClipUtilities::GetFloatAtTime(waveClip, adjustedTime, currentChannel, oneSample, false)) {
+        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime, currentChannel, oneSample, false)) {
             return;
         }
 
-        auto& settings = WaveformSettings::Get(waveTrack);
+        auto& settings = WaveformSettings::Get(*track);
         const float dBRange = settings.dBRange;
         const bool dB = !settings.isLinear();
 
         float zoomMin, zoomMax;
-        auto& cache = WaveformScale::Get(waveTrack);
+        auto& cache = WaveformScale::Get(*track);
         cache.GetDisplayBounds(zoomMin, zoomMax);
 
-        const auto y = std::min(static_cast<int>(point.y() - (currentChannel * wm.height)), static_cast<int>(wm.height - 2));
+        const auto y = std::min(
+            static_cast<int>(point.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 2));
         const auto yy = std::max(y, 2);
 
-        float newValue = samplespainterutils::ValueOfPixel(yy, wm.height, false, dB, dBRange, zoomMin, zoomMax);
+        float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
 
-        auto const samplesFormat = waveClip.GetSampleFormats();
-        WaveClipUtilities::SetFloatsFromTime(waveClip, adjustedTime, currentChannel, &newValue, 1, samplesFormat.Effective());
+        auto const samplesFormat = waveClip->GetSampleFormats();
+        WaveClipUtilities::SetFloatsFromTime(*waveClip, adjustedTime, currentChannel, &newValue, 1, samplesFormat.Effective());
     }
 }
 }
