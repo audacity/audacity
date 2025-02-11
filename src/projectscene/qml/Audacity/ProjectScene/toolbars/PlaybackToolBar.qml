@@ -218,19 +218,22 @@ Item {
         Component {
             id: snapComp
 
-            Snap {
+            DropdownWithTitle {
                 property var itemData: null
 
                 width: 143
                 height: 28
 
-                isSnapEnabled: Boolean(itemData) ? itemData.isSnapEnabled : false
-                currentSnapMode: Boolean(itemData) ? itemData.currentValue : ""
-                contextMenuModel: Boolean(itemData) ? itemData.availableSnapTypes : null
+                title: qsTrc("projectscene", "Snap")
+
+                current: Boolean(itemData) ? itemData.currentValue : ""
+                model: Boolean(itemData) ? itemData.availableSnapTypes : null
+
+                isOptionEnabled: Boolean(itemData) ? itemData.isSnapEnabled : false
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
-                onSnapEnableChangeRequested: function(enabled) {
+                onIsOptionEnableChangeRequested: function(enabled) {
                     itemData.isSnapEnabled = enabled
                 }
 
