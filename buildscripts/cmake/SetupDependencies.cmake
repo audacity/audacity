@@ -62,7 +62,7 @@ function(populate name remote_suffix)
 
 endfunction()
 
-populate(wxwidgets "wxwidgets/3.1.3.4")
+populate(wxwidgets "wxwidgets/3.1.3.6")
 populate(expat "expat/2.0.5")
 populate(portaudio "portaudio/19.7.0")
 
