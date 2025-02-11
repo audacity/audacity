@@ -68,6 +68,23 @@ function bundle_gtk2_theme() {
         mkdir -p "$target_dir"
         cp -r "$theme_src" "$target_dir"
         echo "Successfully bundled theme: $theme_name"
+
+        # Install hack to make arrows on spin buttons visible
+        local gtk2_dir="${target_dir}/${theme_name}/gtk-2.0"
+        local hacks_file="${gtk2_dir}/hacks.rc"
+
+        if [[ -f "$hacks_file" ]]; then
+            echo "Applying GTK2 style hack to $hacks_file"
+            cat << 'EOT' >> "$hacks_file"
+
+style "narrow-spins" {
+  GtkButton::inner-border = {0, 0, 0, 0}
+}
+widget "*GtkVBox.wxPizza*.GtkButton" style "narrow-spins"
+EOT
+        else
+            echo "Warning: GTK2 theme hack file (hacks.rc) not found in '${gtk2_dir}'. Style hack not applied." >&2
+        fi
     else
         echo "Error: Theme '$theme_name' not found in $theme_src" >&2
         return 1
