@@ -119,6 +119,8 @@ private:
     void setItemIsChecked(const QString& itemId, bool checked);
 
     void updateUndoRedoItems();
+
+    std::shared_ptr<muse::uicomponents::AbstractMenuModel> m_workspacesMenuModel;
 };
 }
 

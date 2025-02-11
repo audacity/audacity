@@ -8,6 +8,8 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 
 StyledToolBarView {
+    id: root
+
     navigationPanel.name: "UndoRedoToolBar"
     navigationPanel.accessible.name: qsTrc("projectscene", "Undo/redo toolbar")
 
@@ -36,4 +38,3 @@ StyledToolBarView {
         }
     }
 }
-

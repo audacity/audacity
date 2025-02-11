@@ -235,8 +235,8 @@ void PlaybackToolBarModel::updateActions()
 
     beginResetModel();
 
-    muse::ui::ToolConfig playbackConfig
-        = uiConfiguration()->toolConfig(TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    muse::ui::ToolConfig playbackConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME,
+                                                                        ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
     for (const muse::ui::ToolConfig::Item& citem : playbackConfig.items) {
         if (!citem.show) {

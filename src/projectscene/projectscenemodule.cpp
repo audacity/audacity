@@ -23,6 +23,7 @@
 
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/toolbars/undoredotoolbarmodel.h"
+#include "view/toolbars/workspacestoolbarmodel.h"
 
 #include "view/trackspanel/addeffectmenumodel.h"
 #include "view/trackspanel/realtimeeffectlistmodel.h"
@@ -128,8 +129,9 @@ void ProjectSceneModule::registerUiTypes()
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
-
     qmlRegisterType<UndoRedoToolBarModel>("Audacity.ProjectScene", 1, 0, "UndoRedoToolBarModel");
+    qmlRegisterType<WorkspacesToolBarModel>("Audacity.ProjectScene", 1, 0, "WorkspacesToolBarModel");
+
     qmlRegisterType<PlaybackToolBarModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarModel");
     qmlRegisterType<PlaybackToolBarCustomiseModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseModel");
     qmlRegisterUncreatableType<PlaybackToolBarCustomiseItem>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseItem",
