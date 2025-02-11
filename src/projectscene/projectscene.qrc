@@ -28,8 +28,6 @@
         <file>qml/Audacity/ProjectScene/clipsview/PlayCursor.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/VerticalRulersPanel.qml</file>
         <file>qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/Snap.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/SnapChooseItem.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/CustomiseView.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarActionDelegate.qml</file>
@@ -56,5 +54,7 @@
         <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/SpeedSection.qml</file>
         <file>qml/Audacity/ProjectScene/common/InsertSilence.qml</file>
         <file>qml/Audacity/ProjectScene/historypanel/HistoryPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml</file>
+        <file>qml/Audacity/ProjectScene/toolbars/internal/DropdownWithTitle.qml</file>
     </qresource>
 </RCC>

@@ -45,6 +45,7 @@ public:
     Q_INVOKABLE QString playbackToolBarName() const;
     Q_INVOKABLE QString undoRedoToolBarName() const;
     Q_INVOKABLE QString noteInputBarName() const;
+    Q_INVOKABLE QString workspacesToolBarName() const;
 
     Q_INVOKABLE QString tracksPanelName() const;
     Q_INVOKABLE QString historyPanelName() const;

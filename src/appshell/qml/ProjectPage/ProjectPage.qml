@@ -119,13 +119,37 @@ DockPage {
             alignment: DockToolBarAlignment.Center
             contentBottomPadding: 2
 
-            compactPriorityOrder: 1
+            compactPriorityOrder: 2
 
             ProjectToolBar {
                 isCompactMode: projectToolBar.isCompact
 
                 navigationPanel.section: root.topToolKeyNavSec
                 navigationPanel.order: 2
+            }
+        },
+
+        DockToolBar {
+            id: workspacesToolBar
+
+            objectName: pageModel.workspacesToolBarName()
+            title: qsTrc("appshell", "Workspaces toolbar")
+
+            floatable: false
+            closable: false
+            resizable: false
+            separatorsVisible: false
+
+            alignment: DockToolBarAlignment.Right
+            contentBottomPadding: 2
+
+            compactPriorityOrder: 1
+
+            WorkspacesToolBar {
+                isCompactMode: workspacesToolBar.isCompact
+
+                navigationPanel.section: root.topToolKeyNavSec
+                navigationPanel.order: 3
             }
         },
 
@@ -145,7 +169,7 @@ DockPage {
 
             UndoRedoToolBar {
                 navigationPanel.section: root.topToolKeyNavSec
-                navigationPanel.order: 3
+                navigationPanel.order: 4
             }
         }
     ]
@@ -155,7 +179,7 @@ DockPage {
             id: playbackToolBar
 
             objectName: pageModel.playbackToolBarName()
-            title: qsTrc("appshell", "Play Tool Bar")
+            title: qsTrc("appshell", "Play toolbar")
 
             dropDestinations: [
                 root.toolBarTopDropDestination,

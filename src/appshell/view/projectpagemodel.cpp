@@ -68,6 +68,11 @@ QString ProjectPageModel::noteInputBarName() const
     return NOTE_INPUT_BAR_NAME;
 }
 
+QString ProjectPageModel::workspacesToolBarName() const
+{
+    return WORKSPACES_TOOLBAR_NAME;
+}
+
 QString ProjectPageModel::tracksPanelName() const
 {
     return TRACKS_PANEL_NAME;

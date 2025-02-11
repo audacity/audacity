@@ -24,6 +24,11 @@
 #include "types/translatablestring.h"
 
 #include "muse_framework_config.h"
+
+#ifdef MUSE_MODULE_WORKSPACE
+#include "workspace/view/workspacesmenumodel.h"
+#endif
+
 #include "log.h"
 
 using namespace mu;
@@ -46,6 +51,9 @@ static QString makeId(const ActionCode& actionCode, int itemIndex)
 AppMenuModel::AppMenuModel(QObject* parent)
     : AbstractMenuModel(parent)
 {
+#ifdef MUSE_MODULE_WORKSPACE
+    m_workspacesMenuModel = std::make_shared<workspace::WorkspacesMenuModel>(this);
+#endif
 }
 
 void AppMenuModel::load()
@@ -53,6 +61,10 @@ void AppMenuModel::load()
     TRACEFUNC;
 
     AbstractMenuModel::load();
+
+#ifdef MUSE_MODULE_WORKSPACE
+    m_workspacesMenuModel->load();
+#endif
 
     MenuItemList items {
         makeFileMenu(),
@@ -110,16 +122,12 @@ void AppMenuModel::setupConnections()
         recentScoreListItem.setSubitems(recentScoresList);
     });
 
-    //! TODO AU4
-    // workspacesManager()->currentWorkspaceChanged().onNotify(this, [this]() {
-    //     MenuItem& workspacesItem = findMenu("menu-workspaces");
-    //     workspacesItem.setSubitems(makeWorkspacesItems());
-    // });
-
-    // workspacesManager()->workspacesListChanged().onNotify(this, [this]() {
-    //     MenuItem& workspacesItem = findMenu("menu-workspaces");
-    //     workspacesItem.setSubitems(makeWorkspacesItems());
-    // });
+#ifdef MUSE_MODULE_WORKSPACE
+    connect(m_workspacesMenuModel.get(), &workspace::WorkspacesMenuModel::itemsChanged, this, [this](){
+        MenuItem& workspacesItem = findMenu("menu-workspaces");
+        workspacesItem.setSubitems(m_workspacesMenuModel->items());
+    });
+#endif
 
     uiActionsRegister()->actionsChanged().onReceive(this, [this](const ui::UiActionList& acts) {
         for (const UiAction& act : acts) {
@@ -276,12 +284,18 @@ MenuItem* AppMenuModel::makeViewMenu()
         makeMenuItem("toggle-metadata-editor"),
         makeMenuItem("toggle-history"),
         makeSeparator(),
+#ifdef MUSE_MODULE_WORKSPACE
+        makeMenu(TranslatableString("appshell/menu/view", "W&orkspaces"), m_workspacesMenuModel->items(), "menu-workspaces"),
+        makeSeparator(),
+#endif
 #ifndef Q_OS_MAC
         makeMenuItem("fullscreen"),
         makeSeparator(),
 #endif
         makeMenuItem("toggle-clipping-in-waveform"),
         makeMenuItem("toggle-vertical-rulers"),
+        makeSeparator(),
+        makeMenuItem("dock-restore-default-layout")
     };
 
     return makeMenu(TranslatableString("appshell/menu/view", "&View"), viewItems, "menu-view");
