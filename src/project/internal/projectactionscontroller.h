@@ -60,13 +60,14 @@ private:
 
     void newProject();
     void openProject(const muse::actions::ActionData& args);
-    void importProject();
+    void importFile();
     muse::Ret openProject(const muse::io::path_t& givenPath, const muse::String& displayNameOverride = muse::String());
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
     //! TODO AU4
     // muse::Ret openAudacityUrl(const QUrl& url);
     muse::RetVal<IAudacityProjectPtr> loadProject(const muse::io::path_t& filePath);
     muse::io::path_t selectOpeningFile();
+    muse::io::path_t selectImportFile();
 
     muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);
 

@@ -20,7 +20,7 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
-// #include "FFmpeg.h"
+#include "FFmpeg.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 
 #include <wx/log.h>
