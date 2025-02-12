@@ -56,6 +56,8 @@ public:
     muse::Ret createNew() override;
 
     muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") override;
+    muse::Ret import(const muse::io::path_t& path, bool forceMode = false) override;
+    muse::Ret import(const std::vector<muse::io::path_t>& paths, bool forceMode) override;
     void close() override;
     muse::async::Notification aboutCloseBegin() const override;
     muse::async::Notification aboutCloseEnd() const override;
@@ -87,6 +89,7 @@ private:
     void setPath(const muse::io::path_t& path);
 
     muse::Ret doLoad(const muse::io::path_t& path, bool forceMode, const std::string& format);
+    muse::Ret doImport(const muse::io::path_t& path, bool forceMode);
 
     muse::Ret saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup = true,
                           bool createThumbnail = true);
