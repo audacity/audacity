@@ -145,6 +145,18 @@ void TracksListClipsModel::load()
     updateTotalTracksHeight();
 }
 
+void TracksListClipsModel::handleDroppedFiles(const QStringList& fileUrls)
+{
+    std::vector<muse::io::path_t> localPaths;
+    for (const auto& fileUrl : fileUrls) {
+        QUrl url(fileUrl);
+        localPaths.push_back(muse::io::path_t(url.toLocalFile()));
+    }
+
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    prj->import(localPaths);
+}
+
 int TracksListClipsModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_trackList.size());

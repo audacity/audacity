@@ -34,7 +34,6 @@ void Register()
 }
 
 const bool registered = ([]() {
-    qDebug() << "Registering FFmpeg AVFormat version 61";
     FFmpegAPIResolver::Get().AddAVCodecFactories(61, {
             &CreateAVCodecContextWrapper,
             &CreateAVCodecContextWrapperFromCodec,

@@ -11,6 +11,7 @@
 #include "libraries/lib-import-export/Import.h"
 #include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
+#include "libraries/lib-module-manager/ModuleManager.h"
 
 #include "modularity/ioc.h"
 
@@ -65,6 +66,7 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     FFmpegStartup();
 #endif
 
+    ModuleManager::Get().Initialize();
     Importer::Get().Initialize();
 
     muse::String tempDir = projectConfiguration()->temporaryDir().toString();

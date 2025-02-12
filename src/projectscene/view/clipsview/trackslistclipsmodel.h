@@ -34,6 +34,7 @@ public:
     TracksListClipsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
+    Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
