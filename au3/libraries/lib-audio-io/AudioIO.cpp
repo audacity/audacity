@@ -1419,8 +1419,10 @@ void AudioIO::StopStream()
       mRecordingSchedule.mCrossfadeData.clear(); // free arrays
    } );
 
-   if( mPortStreamV19 == NULL )
+   if( mPortStreamV19 == NULL ) {
+      mStreamToken = 0;
       return;
+   }
 
    // DV: This code seems to be unnecessary.
    // We do not leave mPortStreamV19 open in stopped

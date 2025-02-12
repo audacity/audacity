@@ -93,7 +93,7 @@ struct AUDIO_IO_API TransportSequences final {
  * will be sent to the sound card after the callback, or null if not playing
  * audio back.
  * @param framesPerBuffer The length of the playback and recording buffers
- * @param PaStreamCallbackTimeInfo Pointer to PortAudio time information
+ * @param timeInfo Pointer to PortAudio time information
  * structure, which tells us how long we have been playing / recording
  * @param statusFlags PortAudio stream status flags
  * @param userData pointer to user-defined data structure. Provided for
@@ -113,7 +113,7 @@ class AUDIO_IO_API AudioIoCallback /* not final */
 {
 public:
    AudioIoCallback();
-   ~AudioIoCallback();
+   ~AudioIoCallback() override;
 
 public:
    // This function executes in a thread spawned by the PortAudio library
@@ -399,7 +399,7 @@ class AUDIO_IO_API AudioIO final
 {
 
    AudioIO();
-   ~AudioIO();
+   ~AudioIO() override;
    void StartThread();
 
 public:
@@ -504,7 +504,7 @@ public:
     * soundcard mixer (driven by PortMixer) */
    wxArrayString GetInputSourceNames();
 
-   sampleFormat GetCaptureFormat() { return mCaptureFormat; }
+   sampleFormat GetCaptureFormat() const { return mCaptureFormat; }
    size_t GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
    size_t GetNumCaptureChannels() const { return mNumCaptureChannels; }
 
