@@ -71,19 +71,40 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   /* i18n-hint: Title for the update notifications panel in the preferences dialog. */
-   S.StartStatic(XO("Update notifications"));
+   /* i18n-hint: Title for the panel in the application preferences dialog. */
+   S.StartStatic(XO("Network communications"));
    {
-      S.TieCheckBox(
-         /* i18n-hint: Check-box title that configures periodic updates checking. */
-         XXC("&Check for updates", "application preferences"),
-         *DefaultUpdatesCheckingFlag);
-
       S.StartVerticalLay();
       {
-         S.AddFixedText(XO(
-            "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."),
+         S.TieCheckBox(
+            /* i18n-hint: Check-box title that configures periodic updates checking. */
+            XXC("&Check for updates", "application preferences"),
+            *DefaultUpdatesCheckingFlag);
+
+         S.AddFixedText(
+            XO("Requires network access."),
             false, 470);
+
+         S.AddSpace(20);
+
+         S.TieCheckBox(
+            /* i18n-hint: Check-box title that enables anonymous usage info. */
+            XXC("&Send anonymous usage info", "application preferences"),
+            *SendAnonymousUsageInfo
+         );
+
+         S.AddFixedText(XO(
+            "We create a random ID to track how often Audacity is used."),
+            false, 470);
+
+         S.AddSpace(20);
+
+         S.AddFixedText(XO(
+            "In order to protect your privacy, "
+            "Audacity does not collect any personally identifiable information about you."),
+            false, 470);
+
+         S.AddSpace(20);
 
          /* i18n-hint: %s will be replaced with "our Privacy Policy" */
          AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
@@ -94,6 +115,8 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
             "https://www.audacityteam.org/about/desktop-privacy-notice/");
 
          privacyPolicy.Populate(S);
+
+         S.AddSpace(10);
       }
 
       S.EndVerticalLay();
@@ -108,6 +131,7 @@ bool ApplicationPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
    DefaultUpdatesCheckingFlag->Invalidate();
+   SendAnonymousUsageInfo->Invalidate();
 
    return true;
 }

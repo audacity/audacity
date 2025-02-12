@@ -28,6 +28,7 @@
 
 #include "IResponse.h"
 #include "NetworkManager.h"
+#include "NetworkUtils.h"
 #include "Request.h"
 
 #include "CodeConversions.h"
@@ -77,6 +78,8 @@ void UserService::UpdateUserData()
    request.setHeader(
       common_headers::Accept, common_content_types::ApplicationJson);
 
+   SetOptionalHeaders(request);
+
    auto response = NetworkManager::GetInstance().doGet(request);
 
    response->setRequestFinishedCallback(
@@ -103,7 +106,7 @@ void UserService::UpdateUserData()
          const auto profileName = document["profile"]["name"].GetString();
 
          BasicUI::CallAfter(
-            [this, 
+            [this,
              id = std::string(id),
              username = std::string(username),
              profileName = std::string(profileName),

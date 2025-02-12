@@ -1223,7 +1223,7 @@ else()
 
    # Create the desktop file
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
-   
+
    if(${_OPT}has_url_schemes_support)
       configure_file( audacity-url-handler.desktop.in ${_INTDIR}/audacity-url-handler.desktop )
    endif()
@@ -1292,6 +1292,7 @@ set( AUDACITY_LIBRARIES
    lib-preference-pages-interface
    lib-audacity-application-logic-interface
    lib-builtin-effects-interface
+   lib-uuid-interface
 )
 
 if (USE_VST)
@@ -1423,7 +1424,7 @@ else()
          install( FILES "${_INTDIR}/audacity-url-handler.desktop"
                   DESTINATION "${_DATADIR}/applications" )
       endif()
-               
+
       install( FILES "${topdir}/LICENSE.txt" "${topdir}/README.md"
                DESTINATION "${_DATADIR}/doc/${AUDACITY_NAME}" )
       install( FILES "${_SRCDIR}/audacity.xml"

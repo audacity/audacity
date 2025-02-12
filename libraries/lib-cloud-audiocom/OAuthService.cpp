@@ -25,6 +25,7 @@
 #include "Request.h"
 
 #include "ServiceConfig.h"
+#include "NetworkUtils.h"
 
 #include "UrlDecode.h"
 
@@ -52,6 +53,7 @@ const std::string_view authorizationCodePrefix = "authorization_code=";
 const std::string_view codePrefix = "code=";
 const std::string_view urlPrefix = "url=";
 const std::string_view userPrefix = "user=";
+const std::string_view instanceIdPrefix = "x-audacity-instance-id=";
 
 void WriteClientFields(rapidjson::Document& document)
 {
@@ -179,7 +181,7 @@ bool OAuthService::HandleLinkURI(
 
    // Some browsers (safari) add an extra trailing chars we don't need
    size_t hashPos = authorizationCode.find('#');
-    
+
    if (hashPos != std::string::npos) {
       authorizationCode = authorizationCode.substr(0, hashPos);
    }
@@ -365,12 +367,18 @@ std::string OAuthService::MakeAudioComAuthorizeURL(std::string_view userId, std:
       token = token.substr(pos + 1);
    }
 
-   return concat(
+   std::string url = concat(
       GetServiceConfig().GetAuthWithRedirectURL(), "?",
       tokenPrefix, token, "&",
       userPrefix, userId, "&",
       urlPrefix, redirectUrl
    );
+
+   if (SendAnonymousUsageInfo->Read()) {
+      url += concat(std::string_view("&"), instanceIdPrefix, InstanceId->Read());
+   }
+
+   return url;
 }
 
 void OAuthService::Authorize(std::string_view email,
@@ -402,6 +410,8 @@ void OAuthService::Authorize(std::string_view email,
    Request request(GetServiceConfig().GetAPIUrl("/auth/token"));
    request.setHeader(common_headers::ContentType, common_content_types::ApplicationJson);
    request.setHeader(common_headers::Accept, common_content_types::ApplicationJson);
+
+   SetOptionalHeaders(request);
 
    auto response = NetworkManager::GetInstance().doPost(request,  buffer.GetString(), buffer.GetSize());
    response->setRequestFinishedCallback(
@@ -453,6 +463,8 @@ void OAuthService::Register(std::string_view email,
    request.setHeader(common_headers::ContentType, common_content_types::ApplicationJson);
    request.setHeader(common_headers::Accept, common_content_types::ApplicationJson);
 
+   SetOptionalHeaders(request);
+
    auto response = NetworkManager::GetInstance().doPost(request,  buffer.GetString(), buffer.GetSize());
    response->setRequestFinishedCallback(
       [response, this, trace,
@@ -486,6 +498,8 @@ void OAuthService::DoAuthorise(
 
    request.setHeader(
       common_headers::Accept, common_content_types::ApplicationJson);
+
+   SetOptionalHeaders(request);
 
    auto response = NetworkManager::GetInstance().doPost(
       request, payload.data(), payload.size());
