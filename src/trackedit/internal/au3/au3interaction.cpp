@@ -428,6 +428,15 @@ secs_t Au3Interaction::clampLeftTrimDelta(const ClipKeyList& clipKeys,
             || (muse::RealIsEqualOrLess(deltaSec, 0.0) && anyLeftFullyUntrimmed(clipKeys))) {
             return 0.0;
         }
+
+        //! NOTE: check that no clip in selection extends beyond its track start
+        std::optional<secs_t> leftmostClipStartTime = getLeftmostClipStartTime(selectionController()->selectedClips());
+
+        if (leftmostClipStartTime.has_value()) {
+            if (muse::RealIsEqualOrLess(leftmostClipStartTime.value() + deltaSec, 0.0)) {
+                return 0.0;
+            }
+        }
     }
 
     return deltaSec;
