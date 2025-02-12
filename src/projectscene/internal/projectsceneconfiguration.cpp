@@ -91,7 +91,7 @@ TimelineRulerMode ProjectSceneConfiguration::timelineRulerMode() const
 {
     TimelineRulerMode result = TimelineRulerMode::MINUTES_AND_SECONDS;
 
-    QString modeStr = uiConfiguration()->itemValue(TIMELINE_RULER_MODE);
+    QString modeStr = uiConfiguration()->uiItemState(TIMELINE_RULER_MODE);
     if (!modeStr.isEmpty()) {
         result = static_cast<TimelineRulerMode>(modeStr.toInt());
     }
@@ -101,12 +101,12 @@ TimelineRulerMode ProjectSceneConfiguration::timelineRulerMode() const
 
 void ProjectSceneConfiguration::setTimelineRulerMode(const TimelineRulerMode mode)
 {
-    uiConfiguration()->setItemValue(TIMELINE_RULER_MODE, QString::number(static_cast<int>(mode)));
+    uiConfiguration()->setUiItemState(TIMELINE_RULER_MODE, QString::number(static_cast<int>(mode)));
 }
 
 muse::async::Notification ProjectSceneConfiguration::timelineRulerModeChanged() const
 {
-    return uiConfiguration()->itemValueChanged(TIMELINE_RULER_MODE);
+    return uiConfiguration()->uiItemStateChanged(TIMELINE_RULER_MODE);
 }
 
 muse::ValCh<bool> ProjectSceneConfiguration::isEffectsPanelVisible() const

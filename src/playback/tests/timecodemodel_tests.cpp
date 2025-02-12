@@ -15,7 +15,7 @@ constexpr double BAR_DURATION = UPPER_TIME_SIGNATURE * BEAT_DURATION;
 constexpr double TICK_DURATION = BEAT_DURATION / 4;
 
 struct TimecodeModelTestParam {
-    TimecodeModel::ViewFormatType format;
+    TimecodeFormatType format;
     TimecodeMode mode;
     double inputValue;
     QString expectedOutput;
@@ -52,42 +52,44 @@ INSTANTIATE_TEST_SUITE_P(
     AllTimecodeModelTests,
     TimecodeModelParameterizedTests,
     ::testing::Values(
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 0.0, "00 h 00 m 00 s" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 0.6, "00 h 00 m 01 s" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 1.0, "00 h 00 m 01 s" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 1.6, "00 h 00 m 02 s" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 60.0, "00 h 01 m 00 s" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 61.0, "00 h 01 m 01 s" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 3600.0, "01 h 00 m 00 s" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::HHMMSS, TimecodeMode::TimePoint, 3601.0, "01 h 00 m 01 s" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::TimePoint, 0.0, "001 bar 01 beat" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::TimePoint,
+        TimecodeModelTestParam { TimecodeFormatType::HHMMSS, TimecodeMode::TimePoint, 0.0, "00 h 00 m 00 s" },
+        TimecodeModelTestParam { TimecodeFormatType::HHMMSS, TimecodeMode::TimePoint, 0.6, "00 h 00 m 01 s" },
+        TimecodeModelTestParam { TimecodeFormatType::HHMMSS, TimecodeMode::TimePoint, 1.0, "00 h 00 m 01 s" },
+        TimecodeModelTestParam { TimecodeFormatType::HHMMSS, TimecodeMode::TimePoint, 1.6, "00 h 00 m 02 s" },
+        TimecodeModelTestParam { TimecodeFormatType::HHMMSS, TimecodeMode::TimePoint, 60.0, "00 h 01 m 00 s" },
+        TimecodeModelTestParam { TimecodeFormatType::HHMMSS, TimecodeMode::TimePoint, 61.0, "00 h 01 m 01 s" },
+        TimecodeModelTestParam { TimecodeFormatType::HHMMSS, TimecodeMode::TimePoint, 3600.0, "01 h 00 m 00 s" },
+        TimecodeModelTestParam { TimecodeFormatType::HHMMSS, TimecodeMode::TimePoint, 3601.0, "01 h 00 m 01 s" },
+        TimecodeModelTestParam { TimecodeFormatType::BarBeat, TimecodeMode::TimePoint, 0.0, "001 bar 01 beat" },
+        TimecodeModelTestParam { TimecodeFormatType::BarBeat, TimecodeMode::TimePoint,
                                  (1.0 * BEAT_DURATION + 1.0 * TICK_DURATION), "001 bar 02 beat" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::TimePoint, (2.0 * BEAT_DURATION),
+        TimecodeModelTestParam { TimecodeFormatType::BarBeat, TimecodeMode::TimePoint, (2.0 * BEAT_DURATION),
                                  "001 bar 03 beat" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::TimePoint,
+        TimecodeModelTestParam { TimecodeFormatType::BarBeat, TimecodeMode::TimePoint,
                                  (1.0 * BAR_DURATION + 1.0 * TICK_DURATION), "002 bar 01 beat" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::Duration, 0.0, "000 bar 00 beat" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::Duration,
+        TimecodeModelTestParam { TimecodeFormatType::BarBeat, TimecodeMode::Duration, 0.0, "000 bar 00 beat" },
+        TimecodeModelTestParam { TimecodeFormatType::BarBeat, TimecodeMode::Duration,
                                  (1.0 * BEAT_DURATION + 1.0 * TICK_DURATION), "000 bar 01 beat" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::Duration, (2.0 * BEAT_DURATION), "000 bar 02 beat" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeat, TimecodeMode::Duration, (1.0 * BAR_DURATION + 1.0 * TICK_DURATION),
+        TimecodeModelTestParam { TimecodeFormatType::BarBeat, TimecodeMode::Duration, (2.0 * BEAT_DURATION),
+                                 "000 bar 02 beat" },
+        TimecodeModelTestParam { TimecodeFormatType::BarBeat, TimecodeMode::Duration,
+                                 (1.0 * BAR_DURATION + 1.0 * TICK_DURATION),
                                  "001 bar 00 beat" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint, -1.0, "--- bar -- beat --" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint, 0.0, "001 bar 01 beat 01" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint,
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::TimePoint, -1.0, "--- bar -- beat --" },
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::TimePoint, 0.0, "001 bar 01 beat 01" },
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::TimePoint,
                                  (1.0 * BEAT_DURATION + 0.7 * TICK_DURATION), "001 bar 02 beat 01" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint, (2.0 * BEAT_DURATION),
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::TimePoint, (2.0 * BEAT_DURATION),
                                  "001 bar 03 beat 01" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::TimePoint,
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::TimePoint,
                                  (1.0 * BAR_DURATION + 3.2 * TICK_DURATION), "002 bar 01 beat 04" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration, -1.0, "--- bar -- beat --" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration, 0.0, "000 bar 00 beat 00" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration,
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::Duration, -1.0, "--- bar -- beat --" },
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::Duration, 0.0, "000 bar 00 beat 00" },
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::Duration,
                                  (1.0 * BEAT_DURATION + 0.7 * TICK_DURATION), "000 bar 01 beat 00" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration, (2.0 * BEAT_DURATION),
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::Duration, (2.0 * BEAT_DURATION),
                                  "000 bar 02 beat 00" },
-        TimecodeModelTestParam { TimecodeModel::ViewFormatType::BarBeatTick, TimecodeMode::Duration,
+        TimecodeModelTestParam { TimecodeFormatType::BarBeatTick, TimecodeMode::Duration,
                                  (1.0 * BAR_DURATION + 3.2 * TICK_DURATION), "001 bar 00 beat 03" }
         )
     );
@@ -97,7 +99,7 @@ class TimecodeModelEditTests : public ::testing::Test
 protected:
     void SetUp() override
     {
-        m_model.setCurrentFormat(static_cast<int>(TimecodeModel::ViewFormatType::HHMMSS));
+        m_model.setCurrentFormat(static_cast<int>(TimecodeFormatType::HHMMSS));
         m_model.setSampleRate(44100.0);
     }
 

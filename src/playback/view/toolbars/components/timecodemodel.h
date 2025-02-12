@@ -6,6 +6,8 @@
 #include <QAbstractListModel>
 #include <QQuickItem>
 
+#include "playback/playbacktypes.h"
+
 #include "timecodemodeselector.h"
 #include "timecodeformatter.h"
 #include "fieldsinteractioncontroller.h"
@@ -35,33 +37,15 @@ class TimecodeModel : public QAbstractListModel
 public:
     explicit TimecodeModel(QObject* parent = nullptr);
 
-    enum class ViewFormatType {
-        Undefined = -1,
-        Seconds,
-        SecondsMilliseconds,
-        HHMMSS,
-        DDHHMMSS,
-        HHMMSSHundredths,
-        HHMMSSMilliseconds,
-        HHMMSSSamples,
-        Samples,
-        HHMMSSFilmFrames,
-        FilmFrames,
-        HHMMSSNTSCDropFrames,
-        HHMMSSNTSCNonDropFrames,
-        NTSCFrames,
-        HHMMSSPALFrames,
-        PALFrames,
-        HHMMSSCDDAFrames,
-        CDDAFrames,
-        BarBeat,
-        BarBeatTick
-    };
-
     struct ViewFormat {
-        ViewFormatType type = ViewFormatType::Undefined;
+        TimecodeFormatType type = TimecodeFormatType::Undefined;
         QString title;
         QString formatStr;
+
+        bool isValid() const
+        {
+            return type != TimecodeFormatType::Undefined;
+        }
     };
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
@@ -122,6 +106,8 @@ private:
 
     void updateValueString();
 
+    const ViewFormat& currentViewFormat() const;
+
     TimecodeMode m_mode = TimecodeMode::TimePoint;
 
     double m_value = -1.0;
@@ -136,6 +122,6 @@ private:
     std::shared_ptr<FieldsInteractionController> m_fieldsInteractionController;
 
     QList<ViewFormat> m_availableViewFormats;
-    int m_currentFormat = int(ViewFormatType::HHMMSS);
+    TimecodeFormatType m_currentFormat = TimecodeFormatType::HHMMSS;
 };
 }

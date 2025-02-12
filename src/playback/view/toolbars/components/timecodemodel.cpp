@@ -26,33 +26,36 @@ TimecodeModel::TimecodeModel(QObject* parent)
 {
     // translate all
     m_availableViewFormats = {
-        { ViewFormatType::Seconds, muse::qtrc("playback", "seconds"), "01000,01000s" },
-        { ViewFormatType::SecondsMilliseconds, muse::qtrc("playback", "seconds + milliseconds"), "01000,01000>01000 s" },
-        { ViewFormatType::HHMMSS, muse::qtrc("playback", "hh:mm:ss"), "0100 h 060 m 060 s" },
-        { ViewFormatType::DDHHMMSS, muse::qtrc("playback", "dd:hh:mm:ss"), "0100 d 024 h 060 m 060 s" },
+        { TimecodeFormatType::Seconds, muse::qtrc("playback", "seconds"), "01000,01000s" },
+        { TimecodeFormatType::SecondsMilliseconds, muse::qtrc("playback", "seconds + milliseconds"), "01000,01000>01000 s" },
+        { TimecodeFormatType::HHMMSS, muse::qtrc("playback", "hh:mm:ss"), "0100 h 060 m 060 s" },
+        { TimecodeFormatType::DDHHMMSS, muse::qtrc("playback", "dd:hh:mm:ss"), "0100 d 024 h 060 m 060 s" },
 
-        { ViewFormatType::HHMMSSHundredths, muse::qtrc("playback", "hh:mm:ss + hundredths"), "0100 h 060 m 060>0100 s" },
-        { ViewFormatType::HHMMSSMilliseconds, muse::qtrc("playback", "hh:mm:ss + milliseconds"), "0100 h 060 m 060>01000 s" },
+        { TimecodeFormatType::HHMMSSHundredths, muse::qtrc("playback", "hh:mm:ss + hundredths"), "0100 h 060 m 060>0100 s" },
+        { TimecodeFormatType::HHMMSSMilliseconds, muse::qtrc("playback", "hh:mm:ss + milliseconds"), "0100 h 060 m 060>01000 s" },
 
-        { ViewFormatType::HHMMSSSamples, muse::qtrc("playback", "hh:mm:ss + samples"), "0100 h 060 m 060 s+># samples" },
-        { ViewFormatType::Samples, muse::qtrc("playback", "samples"), "01000,01000,01000 samples|#" },
+        { TimecodeFormatType::HHMMSSSamples, muse::qtrc("playback", "hh:mm:ss + samples"), "0100 h 060 m 060 s+># samples" },
+        { TimecodeFormatType::Samples, muse::qtrc("playback", "samples"), "01000,01000,01000 samples|#" },
 
-        { ViewFormatType::HHMMSSFilmFrames, muse::qtrc("playback", "hh:mm:ss + film frames (24 fps)"), "0100 h 060 m 060 s+>24 frames" },
-        { ViewFormatType::FilmFrames, muse::qtrc("playback", "Film frames (24 fps)"), "01000,01000 frames|24" },
+        { TimecodeFormatType::HHMMSSFilmFrames, muse::qtrc("playback", "hh:mm:ss + film frames (24 fps)"),
+          "0100 h 060 m 060 s+>24 frames" },
+        { TimecodeFormatType::FilmFrames, muse::qtrc("playback", "Film frames (24 fps)"), "01000,01000 frames|24" },
 
-        { ViewFormatType::HHMMSSNTSCDropFrames, muse::qtrc("playback", "hh:mm:ss + NTSC drop frames"), "0100 h 060 m 060 s+>30 frames|N" },
-        { ViewFormatType::HHMMSSNTSCNonDropFrames, muse::qtrc("playback", "hh:mm:ss + NTSC non-drop frames"),
+        { TimecodeFormatType::HHMMSSNTSCDropFrames, muse::qtrc("playback", "hh:mm:ss + NTSC drop frames"),
+          "0100 h 060 m 060 s+>30 frames|N" },
+        { TimecodeFormatType::HHMMSSNTSCNonDropFrames, muse::qtrc("playback", "hh:mm:ss + NTSC non-drop frames"),
           "0100 h 060 m 060 s+>030 frames| .999000999" },
-        { ViewFormatType::NTSCFrames, muse::qtrc("playback", "NTSC frames"), "01000,01000 frames|29.97002997" },
+        { TimecodeFormatType::NTSCFrames, muse::qtrc("playback", "NTSC frames"), "01000,01000 frames|29.97002997" },
 
-        { ViewFormatType::HHMMSSPALFrames, muse::qtrc("playback", "hh:mm:ss + PAL frames (25 fps)"), "0100 h 060 m 060 s+>25 frames" },
-        { ViewFormatType::PALFrames, muse::qtrc("playback", "PAL frames (25 fps)"), "01000,01000 frames|25" },
+        { TimecodeFormatType::HHMMSSPALFrames, muse::qtrc("playback", "hh:mm:ss + PAL frames (25 fps)"), "0100 h 060 m 060 s+>25 frames" },
+        { TimecodeFormatType::PALFrames, muse::qtrc("playback", "PAL frames (25 fps)"), "01000,01000 frames|25" },
 
-        { ViewFormatType::HHMMSSCDDAFrames, muse::qtrc("playback", "hh:mm:ss + CDDA frames (25 fps)"), "0100 h 060 m 060 s+>75 frames" },
-        { ViewFormatType::CDDAFrames, muse::qtrc("playback", "CDDA frames (75 fps)"), "01000,01000 frames|75" },
+        { TimecodeFormatType::HHMMSSCDDAFrames, muse::qtrc("playback", "hh:mm:ss + CDDA frames (25 fps)"),
+          "0100 h 060 m 060 s+>75 frames" },
+        { TimecodeFormatType::CDDAFrames, muse::qtrc("playback", "CDDA frames (75 fps)"), "01000,01000 frames|75" },
 
-        { ViewFormatType::BarBeat, muse::qtrc("playback", "bar:beat"), "bar:beat" },
-        { ViewFormatType::BarBeatTick, muse::qtrc("playback", "bar:beat:tick"), "bar:beat:tick" },
+        { TimecodeFormatType::BarBeat, muse::qtrc("playback", "bar:beat"), "bar:beat" },
+        { TimecodeFormatType::BarBeatTick, muse::qtrc("playback", "bar:beat:tick"), "bar:beat:tick" },
     };
 
     initFieldInteractionController();
@@ -80,7 +83,7 @@ QVariantList TimecodeModel::availableFormats()
 
         UiActionState state;
         state.enabled = true;
-        state.checked = m_currentFormat == id;
+        state.checked = m_currentFormat == viewFormat.type;
 
         item->setState(state);
 
@@ -165,16 +168,17 @@ void TimecodeModel::setValue(double value)
 
 int TimecodeModel::currentFormat() const
 {
-    return m_currentFormat;
+    return static_cast<int>(m_currentFormat);
 }
 
 void TimecodeModel::setCurrentFormat(int format)
 {
-    if (m_currentFormat == format) {
+    TimecodeFormatType newFormat = static_cast<TimecodeFormatType>(format);
+    if (m_currentFormat == newFormat) {
         return;
     }
 
-    m_currentFormat = format;
+    m_currentFormat = newFormat;
 
     reloadFormatter();
     updateValueString();
@@ -186,14 +190,20 @@ void TimecodeModel::setCurrentFormat(int format)
 
 QString TimecodeModel::currentFormatStr() const
 {
-    return m_availableViewFormats[m_currentFormat].title;
+    ViewFormat current = currentViewFormat();
+    if (!current.isValid()) {
+        return QString();
+    }
+
+    return current.title;
 }
 
 void TimecodeModel::setCurrentFormatStr(const QString& title)
 {
     for (int i = 0; i < m_availableViewFormats.size(); ++i) {
-        if (m_availableViewFormats[i].title == title) {
-            setCurrentFormat(i);
+        ViewFormat format = m_availableViewFormats[i];
+        if (format.title == title) {
+            setCurrentFormat(static_cast<int>(format.type));
             return;
         }
     }
@@ -222,12 +232,16 @@ void TimecodeModel::setVisualItem(QQuickItem* item)
 
 void TimecodeModel::reloadFormatter()
 {
-    ViewFormatType format = static_cast<ViewFormatType>(m_currentFormat);
-    if (format == ViewFormatType::BarBeat || format == ViewFormatType::BarBeatTick) {
-        int fracPart = format == ViewFormatType::BarBeat ? 0 : 16;
-        m_formatter = std::make_shared<BeatsFormatter>(m_availableViewFormats[m_currentFormat].formatStr, fracPart, m_mode);
+    ViewFormat currentFormat = currentViewFormat();
+    if (!currentFormat.isValid()) {
+        return;
+    }
+
+    if (currentFormat.type == TimecodeFormatType::BarBeat || currentFormat.type == TimecodeFormatType::BarBeatTick) {
+        int fracPart = currentFormat.type == TimecodeFormatType::BarBeat ? 0 : 16;
+        m_formatter = std::make_shared<BeatsFormatter>(currentFormat.formatStr, fracPart, m_mode);
     } else {
-        m_formatter = std::make_shared<NumericFormatter>(m_availableViewFormats[m_currentFormat].formatStr);
+        m_formatter = std::make_shared<NumericFormatter>(currentFormat.formatStr);
     }
 
     initFormatter();
@@ -266,6 +280,18 @@ void TimecodeModel::updateValueString()
     endResetModel();
 
     m_fieldsInteractionController->setValueString(m_valueString);
+}
+
+const TimecodeModel::ViewFormat& TimecodeModel::currentViewFormat() const
+{
+    for (int i = 0; i < m_availableViewFormats.size(); ++i) {
+        if (m_availableViewFormats[i].type == m_currentFormat) {
+            return m_availableViewFormats[i];
+        }
+    }
+
+    static ViewFormat stub;
+    return stub;
 }
 
 double TimecodeModel::sampleRate() const
