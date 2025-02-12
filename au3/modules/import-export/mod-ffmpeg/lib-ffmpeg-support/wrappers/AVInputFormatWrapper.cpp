@@ -10,7 +10,7 @@
 
 #include "AVInputFormatWrapper.h"
 
-#include "FFmpegFunctions.h"
+#include "../FFmpegFunctions.h"
 
 AVInputFormatWrapper::AVInputFormatWrapper(AVInputFormat* wrapped) noexcept
     : mAVInputFormat(wrapped)
@@ -19,10 +19,10 @@ AVInputFormatWrapper::AVInputFormatWrapper(AVInputFormat* wrapped) noexcept
 
 AVInputFormat* AVInputFormatWrapper::GetWrappedValue() noexcept
 {
-   return mAVInputFormat;
+    return mAVInputFormat;
 }
 
- const AVInputFormat* AVInputFormatWrapper::GetWrappedValue() const noexcept
+const AVInputFormat* AVInputFormatWrapper::GetWrappedValue() const noexcept
 {
-   return mAVInputFormat;
+    return mAVInputFormat;
 }

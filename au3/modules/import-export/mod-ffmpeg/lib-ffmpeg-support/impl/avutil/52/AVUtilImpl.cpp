@@ -16,29 +16,39 @@ extern "C"
 
 #include <wx/log.h>
 
-#include "FFmpegFunctions.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
 
-#include "wrappers/AVChannelLayoutWrapper.h"
-#include "wrappers/AVFrameWrapper.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVChannelLayoutWrapper.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVFrameWrapper.h"
 
 #include "../../FFmpegAPIResolver.h"
 #include "../../FFmpegLog.h"
 
-namespace avutil_52
-{
+namespace avutil_52 {
 #include "../AVChannelLayoutWrapperImpl.inl"
 #include "../AVFrameWrapperImpl.inl"
 #include "../FFmpegLogImpl.inl"
 
-const bool registered = ([]() {
-   FFmpegAPIResolver::Get().AddAVUtilFactories(52, {
-      &CreateAVFrameWrapper,
-      &CreateLogCallbackSetter,
-      &CreateDefaultChannelLayout,
-      &CreateLegacyChannelLayout,
-      &CreateAVChannelLayout
-   });
+void Register()
+{
+    FFmpegAPIResolver::Get().AddAVUtilFactories(52, {
+            &CreateAVFrameWrapper,
+            &CreateLogCallbackSetter,
+            &CreateDefaultChannelLayout,
+            &CreateLegacyChannelLayout,
+            &CreateAVChannelLayout
+        });
+}
 
-   return true;
+const bool registered = ([]() {
+    FFmpegAPIResolver::Get().AddAVUtilFactories(52, {
+            &CreateAVFrameWrapper,
+            &CreateLogCallbackSetter,
+            &CreateDefaultChannelLayout,
+            &CreateLegacyChannelLayout,
+            &CreateAVChannelLayout
+        });
+
+    return true;
 })();
 }

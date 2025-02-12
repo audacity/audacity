@@ -10,28 +10,29 @@
 
 #include "AVFrameWrapper.h"
 
-#include "FFmpegFunctions.h"
+#include "../FFmpegFunctions.h"
 
 #include "AVChannelLayoutWrapper.h"
 
 AVFrameWrapper::AVFrameWrapper(const FFmpegFunctions& ffmpeg) noexcept
     : mFFmpeg(ffmpeg)
 {
-   mAVFrame = mFFmpeg.av_frame_alloc();
+    mAVFrame = mFFmpeg.av_frame_alloc();
 }
 
 AVFrame* AVFrameWrapper::GetWrappedValue() noexcept
 {
-   return mAVFrame;
+    return mAVFrame;
 }
 
 const AVFrame* AVFrameWrapper::GetWrappedValue() const noexcept
 {
-   return mAVFrame;
+    return mAVFrame;
 }
 
 AVFrameWrapper::~AVFrameWrapper()
 {
-   if (mAVFrame != nullptr)
-      mFFmpeg.av_frame_free(&mAVFrame);
+    if (mAVFrame != nullptr) {
+        mFFmpeg.av_frame_free(&mAVFrame);
+    }
 }

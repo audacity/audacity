@@ -10,7 +10,7 @@
 
 #include "AVPacketWrapper.h"
 
-#include "FFmpegFunctions.h"
+#include "../FFmpegFunctions.h"
 
 AVPacketWrapper::AVPacketWrapper(const FFmpegFunctions& ffmpeg) noexcept
     : mFFmpeg(ffmpeg)
@@ -19,26 +19,22 @@ AVPacketWrapper::AVPacketWrapper(const FFmpegFunctions& ffmpeg) noexcept
 
 AVPacket* AVPacketWrapper::GetWrappedValue() noexcept
 {
-   return mAVPacket;
+    return mAVPacket;
 }
 
 const AVPacket* AVPacketWrapper::GetWrappedValue() const noexcept
 {
-   return mAVPacket;
+    return mAVPacket;
 }
 
 AVPacketWrapper::~AVPacketWrapper()
 {
-   if (mAVPacket != nullptr)
-   {
-      if (!mUseAVFree)
-      {
-         mFFmpeg.av_packet_free(&mAVPacket);
-      }
-      else
-      {
-         mFFmpeg.av_packet_unref(mAVPacket);
-         mFFmpeg.av_free(mAVPacket);
-      }
-   }
+    if (mAVPacket != nullptr) {
+        if (!mUseAVFree) {
+            mFFmpeg.av_packet_free(&mAVPacket);
+        } else {
+            mFFmpeg.av_packet_unref(mAVPacket);
+            mFFmpeg.av_free(mAVPacket);
+        }
+    }
 }

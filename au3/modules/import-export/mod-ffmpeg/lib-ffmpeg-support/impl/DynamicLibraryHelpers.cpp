@@ -12,23 +12,24 @@
 
 #include <wx/dynlib.h>
 
-#include "FFmpegTypes.h"
+#include "../FFmpegTypes.h"
 
 using GetVersionFn = unsigned (*)();
 
 bool GetAVVersion(
-   const wxDynamicLibrary& lib, const char* name, FFMPegVersion& version)
+    const wxDynamicLibrary& lib, const char* name, FFMPegVersion& version)
 {
-   GetVersionFn versionFn = reinterpret_cast<GetVersionFn>(lib.GetSymbol(name));
+    GetVersionFn versionFn = reinterpret_cast<GetVersionFn>(lib.GetSymbol(name));
 
-   if (nullptr == versionFn)
-      return false;
+    if (nullptr == versionFn) {
+        return false;
+    }
 
-   const unsigned fullVersion = versionFn();
+    const unsigned fullVersion = versionFn();
 
-   version.Major = (fullVersion >> 16) & 0xFF;
-   version.Minor = (fullVersion >> 8) & 0xFF;
-   version.Micro = fullVersion & 0xFF;
+    version.Major = (fullVersion >> 16) & 0xFF;
+    version.Minor = (fullVersion >> 8) & 0xFF;
+    version.Micro = fullVersion & 0xFF;
 
-   return true;
+    return true;
 }

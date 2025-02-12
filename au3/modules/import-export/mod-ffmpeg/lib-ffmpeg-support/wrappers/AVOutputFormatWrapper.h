@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "FFmpegTypes.h"
+#include "../FFmpegTypes.h"
 
 struct FFmpegFunctions;
 typedef struct AVOutputFormat AVOutputFormat;

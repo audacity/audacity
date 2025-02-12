@@ -67,9 +67,15 @@ set(AU3_DEF
     -DAUDACITY_APPLICATION_LOGIC_API=
     -DMENUS_API=
     -DDYNAMIC_RANGE_PROCESSOR_API=
+
+    -DIMPORT_EXPORT_API=
+    -DTAGS_API=
+
+    -DFFMPEG_SUPPORT_API=
 )
 
 set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
+set(AU3_MODULES ${AUDACITY_ROOT}/modules)
 set(AU3_INCLUDE
     ${wxwidgets_INCLUDE_DIRS}
     ${expat_INCLUDE_DIRS}
@@ -137,6 +143,8 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-menus
 
     ${AU3_LIBRARIES}/lib-vst3
+
+    ${AU3_MODULES}/import-export/mod-ffmpeg
 )
 
 set(WXBASE_RESTRICTIONS

@@ -6,7 +6,7 @@ extern "C"
 
 #include <algorithm>
 
-#include "AVCodecID.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/AVCodecID.h"
 
 #include "../../FFmpegAPIResolver.h"
 
@@ -21,17 +21,23 @@ extern "C"
 
 #define AV_CODEC_ID_VIMA AV_CODEC_ID_ADPCM_VIMA
 
-namespace avcodec_61
-{
+namespace avcodec_61 {
 #include "../../AVCodecIDLookup.inl"
 
+void RegisterId()
+{
+    FFmpegAPIResolver::Get().AddAVCodecIDResolver(61, {
+            &GetAVCodeID,
+            &GetAudacityCodecID
+        });
+}
+
 const bool registered = ([]() {
-   FFmpegAPIResolver::Get().AddAVCodecIDResolver(61, {
-      &GetAVCodeID,
-      &GetAudacityCodecID
-   });
+    FFmpegAPIResolver::Get().AddAVCodecIDResolver(61, {
+            &GetAVCodeID,
+            &GetAudacityCodecID
+        });
 
-   return true;
+    return true;
 })();
-
 }

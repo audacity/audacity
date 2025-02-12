@@ -11,7 +11,7 @@
 #pragma once
 
 #include <cstdint>
-#include "FFmpegTypes.h"
+#include "../FFmpegTypes.h"
 
 struct FFmpegFunctions;
 typedef struct AVCodec AVCodec;
