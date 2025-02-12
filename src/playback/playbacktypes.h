@@ -20,6 +20,29 @@ enum class PlaybackStatus {
     Running
 };
 
+enum class TimecodeFormatType {
+    Undefined = -1,
+    Seconds,
+    SecondsMilliseconds,
+    HHMMSS,
+    DDHHMMSS,
+    HHMMSSHundredths,
+    HHMMSSMilliseconds,
+    HHMMSSSamples,
+    Samples,
+    HHMMSSFilmFrames,
+    FilmFrames,
+    HHMMSSNTSCDropFrames,
+    HHMMSSNTSCNonDropFrames,
+    NTSCFrames,
+    HHMMSSPALFrames,
+    PALFrames,
+    HHMMSSCDDAFrames,
+    CDDAFrames,
+    BarBeat,
+    BarBeatTick
+};
+
 struct PlaybackRegion
 {
     muse::secs_t start;

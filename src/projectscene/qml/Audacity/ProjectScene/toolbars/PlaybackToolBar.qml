@@ -118,7 +118,7 @@ Item {
                 upperTimeSignature: Boolean(itemData) ? itemData.upperTimeSignature : -1
                 lowerTimeSignature: Boolean(itemData) ? itemData.lowerTimeSignature : -1
 
-                currentFormat: Boolean(itemData) ? itemData.currentFormat : 0
+                currentFormat: Boolean(itemData) ? itemData.currentFormat : -1
 
                 enabled: Boolean(itemData) ? itemData.enabled : false
 
