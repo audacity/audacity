@@ -53,7 +53,7 @@
 
 PREFERENCES_API void InitPreferences( std::unique_ptr<audacity::BasicSettings> uPrefs );
 PREFERENCES_API void GetPreferencesVersion(int& vMajor, int& vMinor, int& vMicro);
-PREFERENCES_API void SetPreferencesVersion(int vMajor, int vMinor, int vMicor);
+PREFERENCES_API void SetPreferencesVersion(int vMajor, int vMinor, int vMicro);
 //! Call this to reset preferences to an (almost)-"new" default state
 /*!
  There is at least one exception to that: user preferences we want to make
@@ -107,7 +107,7 @@ protected:
    // from within a transaction.
    friend class SettingTransaction;
    friend class SettingScope;
-   
+
    virtual void EnterTransaction(size_t depth) = 0;
    //! @return true if successful
    virtual bool Commit() = 0;
@@ -194,7 +194,7 @@ public:
       : CachingSettingBase< T >{ path }
       , mFunction{ function }
    {}
-   
+
 
    const T& GetDefault() const
    {
@@ -259,10 +259,10 @@ public:
    bool Write( const T &value )
    {
       const auto config = this->GetConfig();
-      
+
       if (config == nullptr)
          return false;
-      
+
       switch ( SettingScope::Add( *this ) ) {
          // Eager writes, but not flushed, when there is no transaction
          default:
@@ -307,7 +307,7 @@ private:
 
       if (this->mPreviousValues.empty())
          return false;
-      
+
       const auto result = this->mPreviousValues.size() > 1 || DoWrite();
       mPreviousValues.pop_back();
 
@@ -318,7 +318,7 @@ private:
    {
       // This can be only called from within the transaction
       assert(!this->mPreviousValues.empty());
-      
+
       if (!this->mPreviousValues.empty())
       {
          this->mCurrentValue = std::move(this->mPreviousValues.back());
@@ -700,5 +700,7 @@ struct PREFERENCES_API PreferenceInitializer {
 
 // Special extra-sticky settings
 extern PREFERENCES_API StickySetting<BoolSetting> DefaultUpdatesCheckingFlag;
+extern PREFERENCES_API StickySetting<BoolSetting> SendAnonymousUsageInfo;
+extern PREFERENCES_API StickySetting<StringSetting> InstanceId;
 
 #endif

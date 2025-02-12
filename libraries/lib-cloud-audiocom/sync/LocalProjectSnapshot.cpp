@@ -390,6 +390,8 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
       common_headers::Accept, common_content_types::ApplicationJson);
    // request.setHeader(common_headers::ContentEncoding, "gzip");
 
+   SetOptionalHeaders(request);
+
    const auto language = mServiceConfig.GetAcceptLanguageValue();
 
    if (!language.empty())

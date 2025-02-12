@@ -20,7 +20,7 @@ set( SOURCES
    Prefs.cpp
    Prefs.h
 )
-set( LIBRARIES 
+set( LIBRARIES
    lib-basic-ui-interface
    lib-components-interface
 )

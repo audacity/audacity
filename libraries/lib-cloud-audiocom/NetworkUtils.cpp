@@ -14,6 +14,7 @@
 #include <algorithm>
 
 #include "OAuthService.h"
+#include "Prefs.h"
 #include "ServiceConfig.h"
 
 #include "IResponse.h"
@@ -24,6 +25,12 @@
 namespace audacity::cloud::audiocom
 {
 using namespace audacity::network_manager;
+
+namespace optional_headers {
+
+const std::string InstanceId = "x-audacity-instance-id";
+
+}
 
 namespace
 {
@@ -112,6 +119,13 @@ void SetCommonHeaders(Request& request)
    if (oauthService.HasAccessToken())
       request.setHeader(
          common_headers::Authorization, oauthService.GetAccessToken());
+}
+
+void SetOptionalHeaders(Request& request)
+{
+   if (SendAnonymousUsageInfo->Read())
+      request.setHeader(
+         optional_headers::InstanceId, InstanceId->Read().ToStdString());
 }
 
 bool IsUploadRecoverable(SyncResultCode code)

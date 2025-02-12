@@ -303,6 +303,8 @@ struct AudiocomUploadOperation final :
       request.setHeader(
          common_headers::Accept, common_content_types::ApplicationJson);
 
+      SetOptionalHeaders(request);
+
       mAuthToken = std::string(authToken);
       SetRequiredHeaders(request);
 

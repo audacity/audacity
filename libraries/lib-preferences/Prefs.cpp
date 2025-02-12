@@ -63,6 +63,10 @@
 StickySetting<BoolSetting> DefaultUpdatesCheckingFlag{
     L"/Update/DefaultUpdatesChecking", true };
 
+StickySetting<BoolSetting> SendAnonymousUsageInfo{ L"SendAnonymousUsageInfo", false };
+
+StickySetting<StringSetting> InstanceId{ L"InstanceId" };
+
 std::unique_ptr<audacity::BasicSettings> ugPrefs {};
 
 audacity::BasicSettings *gPrefs = nullptr;
@@ -311,11 +315,11 @@ auto SettingScope::Add( TransactionalSettingBase &setting ) -> AddResult
       {
          if ((*it)->mPending.find(&setting) != (*it)->mPending.end())
             break;
-         
+
          (*it)->mPending.insert(&setting);
       }
    }
-   
+
    return inserted ? Added : PreviouslyAdded;
 }
 
@@ -323,12 +327,12 @@ bool SettingTransaction::Commit()
 {
    if (sScopes.empty() || sScopes.back() != this)
       return false;
-   
+
    if ( !mCommitted ) {
       for ( auto pSetting : mPending )
          if ( !pSetting->Commit() )
             return false;
-      
+
       if (sScopes.size() > 1 || gPrefs->Flush())
       {
          mPending.clear();
@@ -336,7 +340,7 @@ bool SettingTransaction::Commit()
          return true;
       }
    }
-   
+
    return false;
 }
 
