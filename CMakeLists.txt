@@ -120,6 +120,10 @@ if (AU_MODULE_EFFECTS_VST)
     set(MUSE_MODULE_VST ON)
     set(MUSE_MODULE_VST_VST3_SDK_PATH ${AU_MODULE_VST_VST3_SDK_PATH})
 endif()
+option(AU_USE_FFMPEG "Build mod-ffmpeg module" ON)
+if (AU_USE_FFMPEG)
+    add_definitions(-DAU_USE_FFMPEG)
+endif()
 
 # === Setup ===
 

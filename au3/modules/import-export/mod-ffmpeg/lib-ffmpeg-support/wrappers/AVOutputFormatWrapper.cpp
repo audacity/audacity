@@ -10,7 +10,7 @@
 
 #include "AVOutputFormatWrapper.h"
 
-#include "FFmpegFunctions.h"
+#include "../FFmpegFunctions.h"
 
 AVOutputFormatWrapper::AVOutputFormatWrapper(const AVOutputFormat* wrapped) noexcept
     : mAVOutputFormat(wrapped)
@@ -19,5 +19,5 @@ AVOutputFormatWrapper::AVOutputFormatWrapper(const AVOutputFormat* wrapped) noex
 
 const AVOutputFormat* AVOutputFormatWrapper::GetWrappedValue() const noexcept
 {
-   return mAVOutputFormat;
+    return mAVOutputFormat;
 }

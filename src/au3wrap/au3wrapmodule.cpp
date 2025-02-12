@@ -5,9 +5,11 @@
 
 #include <wx/log.h>
 
+#include "FFmpeg.h"
 #include "FileNames.h"
-#include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-audio-io/AudioIO.h"
+#include "libraries/lib-import-export/Import.h"
+#include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 
 #include "modularity/ioc.h"
@@ -20,7 +22,7 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
-#include "QtCore/qstandardpaths.h"
+#include <QStandardPaths>
 
 #include "log.h"
 
@@ -56,6 +58,13 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     }
 
     m_audioDevicesProvider->init();
+
+    // TODO: this is old way to load ffmpeg, should be automatically dispatched
+#ifdef AU_USE_FFMPEG
+    FFmpegStartup();
+#endif
+
+    Importer::Get().Initialize();
 
     //! TODO AU4: we probably want to have preferences for temporary directory later
     muse::String tempDir = globalConfiguration()->userAppDataPath().toString();

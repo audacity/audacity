@@ -16,21 +16,27 @@ extern "C"
 
 #include <algorithm>
 
-#include "AVCodecID.h"
+#include "../../../AVCodecID.h"
 
 #include "../../FFmpegAPIResolver.h"
 
-namespace avcodec_55
-{
+namespace avcodec_55 {
 #include "../../AVCodecIDLookup.inl"
 
-const bool registered = ([]() {
-   FFmpegAPIResolver::Get().AddAVCodecIDResolver(55, {
-      &GetAVCodeID,
-      &GetAudacityCodecID
-   });
-
-   return true;
-})();
+void RegisterId()
+{
+    FFmpegAPIResolver::Get().AddAVCodecIDResolver(55, {
+            &GetAVCodeID,
+            &GetAudacityCodecID
+        });
 }
 
+const bool registered = ([]() {
+    FFmpegAPIResolver::Get().AddAVCodecIDResolver(55, {
+            &GetAVCodeID,
+            &GetAudacityCodecID
+        });
+
+    return true;
+})();
+}

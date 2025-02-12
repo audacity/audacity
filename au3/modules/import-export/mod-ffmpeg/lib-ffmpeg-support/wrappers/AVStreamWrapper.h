@@ -12,7 +12,7 @@
 
 #include <memory>
 
-#include "FFmpegTypes.h"
+#include "../FFmpegTypes.h"
 
 struct FFmpegFunctions;
 class AVDictionaryWrapper;

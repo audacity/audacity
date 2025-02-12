@@ -1,5 +1,6 @@
-extern "C"
-{
+#include <QtCore/qdebug.h>
+#include <QtCore/qglobal.h>
+extern "C" {
 #include "../../avutil/59/avconfig.h"
 #include "../../ffmpeg-7.0.0-single-header.h"
 }
@@ -9,38 +10,47 @@ extern "C"
 
 #include "float_cast.h"
 
-#include "FFmpegFunctions.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
 
-#include "wrappers/AVCodecContextWrapper.h"
-#include "wrappers/AVCodecWrapper.h"
-#include "wrappers/AVPacketWrapper.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVCodecContextWrapper.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVCodecWrapper.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/wrappers/AVPacketWrapper.h"
 
 #include "../../FFmpegAPIResolver.h"
 
-namespace avcodec_61
-{
+namespace avcodec_61 {
 #include "../AVCodecContextWrapperImpl.inl"
 #include "../AVCodecWrapperImpl.inl"
 #include "../AVPacketWrapperImpl.inl"
 
-const bool registered = ([]() {
-   FFmpegAPIResolver::Get().AddAVCodecFactories(61, {
-      &CreateAVCodecContextWrapper,
-      &CreateAVCodecContextWrapperFromCodec,
-      &CreateAVCodecWrapper,
-      &CreateAVPacketWrapper,
-   });
+void Register()
+{
+    FFmpegAPIResolver::Get().AddAVCodecFactories(61, {
+            &CreateAVCodecContextWrapper,
+            &CreateAVCodecContextWrapperFromCodec,
+            &CreateAVCodecWrapper,
+            &CreateAVPacketWrapper,
+        });
+}
 
-   return true;
+const bool registered = ([]() {
+    qDebug() << "Registering FFmpeg AVFormat version 61";
+    FFmpegAPIResolver::Get().AddAVCodecFactories(61, {
+            &CreateAVCodecContextWrapper,
+            &CreateAVCodecContextWrapperFromCodec,
+            &CreateAVCodecWrapper,
+            &CreateAVPacketWrapper,
+        });
+
+    return true;
 })();
 }
 
-#include "FFmpegTypes.h"
+#include "modules/import-export/mod-ffmpeg/lib-ffmpeg-support/FFmpegTypes.h"
 static_assert(
-   AV_CODEC_FLAG_GLOBAL_HEADER == AUDACITY_AV_CODEC_FLAG_GLOBAL_HEADER
-   && AV_CODEC_CAP_SMALL_LAST_FRAME == AUDACITY_AV_CODEC_CAP_SMALL_LAST_FRAME
-   && AV_CODEC_FLAG_QSCALE == AUDACITY_AV_CODEC_FLAG_QSCALE
-,
-   "FFmpeg constants don't match"
-);
-
+    AV_CODEC_FLAG_GLOBAL_HEADER == AUDACITY_AV_CODEC_FLAG_GLOBAL_HEADER
+    && AV_CODEC_CAP_SMALL_LAST_FRAME == AUDACITY_AV_CODEC_CAP_SMALL_LAST_FRAME
+    && AV_CODEC_FLAG_QSCALE == AUDACITY_AV_CODEC_FLAG_QSCALE
+    ,
+    "FFmpeg constants don't match"
+    );

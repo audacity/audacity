@@ -308,18 +308,21 @@ void Importer::ReadImportItems()
     * extension1:extension2:extension3\mime_type1:mime_type2:mime_type3|filter1:filter2:filter3\unusedfilter1:unusedfilter2
     * backslashes are escaped and unescaped internally
     */
+
    for (item_counter = 0; true; item_counter++)
    {
       wxString condition, filters, used_filters, unused_filters, extensions, mime_types;
       item_name.Printf (wxT("/ExtImportItems/Item%d"), item_counter);
       /* Break at first non-existent item */
-      if (!gPrefs->Read(item_name, &item_value))
+      if (!gPrefs->Read(item_name, &item_value)) {
         break;
+      }
 
       toker.SetString(item_value, wxT("|"), wxTOKEN_RET_EMPTY_ALL);
       /* Break at first broken item */
-      if (toker.CountTokens() != 2)
+      if (toker.CountTokens() != 2) {
         break;
+      }
 
       auto new_item = std::make_unique<ExtImportItem>();
 

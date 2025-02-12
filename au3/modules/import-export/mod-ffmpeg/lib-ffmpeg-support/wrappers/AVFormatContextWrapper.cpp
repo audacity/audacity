@@ -10,7 +10,7 @@
 
 #include "AVFormatContextWrapper.h"
 
-#include "FFmpegFunctions.h"
+#include "../FFmpegFunctions.h"
 
 #include "AVInputFormatWrapper.h"
 #include "AVOutputFormatWrapper.h"
@@ -23,122 +23,127 @@ AVFormatContextWrapper::AVFormatContextWrapper(const FFmpegFunctions& ffmpeg) no
 
 AVFormatContext* AVFormatContextWrapper::GetWrappedValue() noexcept
 {
-   return mAVFormatContext;
+    return mAVFormatContext;
 }
 
 const AVFormatContext* AVFormatContextWrapper::GetWrappedValue() const noexcept
 {
-   return mAVFormatContext;
+    return mAVFormatContext;
 }
 
 AVFormatContextWrapper::~AVFormatContextWrapper()
 {
-   if (mAVFormatContext != nullptr)
-      mFFmpeg.avformat_free_context(mAVFormatContext);
+    if (mAVFormatContext != nullptr) {
+        mFFmpeg.avformat_free_context(mAVFormatContext);
+    }
 }
 
 AVIOContextWrapper::OpenResult AVFormatContextWrapper::OpenInputContext(
-   const wxString& path,
-   const AVInputFormatWrapper* inputFormat,
-   AVDictionaryWrapper options
-)
+    const wxString& path,
+    const AVInputFormatWrapper* inputFormat,
+    AVDictionaryWrapper options)
 {
-   auto ioContext = mFFmpeg.CreateAVIOContext();
+    auto ioContext = mFFmpeg.CreateAVIOContext();
 
-   const auto result = ioContext->Open(path, false);
+    const auto result = ioContext->Open(path, false);
 
-   if (result != AVIOContextWrapper::OpenResult::Success)
-      return result;
+    if (result != AVIOContextWrapper::OpenResult::Success) {
+        return result;
+    }
 
-   SetAVIOContext(std::move(ioContext));
+    SetAVIOContext(std::move(ioContext));
 
-   AVDictionary* dict = options.Release();
+    AVDictionary* dict = options.Release();
 
-   /*
-      Documentation for the last argument:
-      "A dictionary filled with AVFormatContext and demuxer-private options.
-      On return this parameter will be destroyed and replaced with a
-      dict containing options that were not found.
-      May be NULL."
-    */
-   int rc = (mFFmpeg.avformat_open_input(
-          &mAVFormatContext, path.c_str(),
-          inputFormat != nullptr ? inputFormat->GetWrappedValue() : nullptr,
-          &dict));
+    /*
+       Documentation for the last argument:
+       "A dictionary filled with AVFormatContext and demuxer-private options.
+       On return this parameter will be destroyed and replaced with a
+       dict containing options that were not found.
+       May be NULL."
+     */
+    int rc = (mFFmpeg.avformat_open_input(
+                  &mAVFormatContext, path.c_str(),
+                  inputFormat != nullptr ? inputFormat->GetWrappedValue() : nullptr,
+                  &dict));
 
-   // Don't leak the replacement dictionary
-   AVDictionaryWrapper cleanup{ mFFmpeg, dict };
+    // Don't leak the replacement dictionary
+    AVDictionaryWrapper cleanup{ mFFmpeg, dict };
 
-   if (rc)
-   {
-      return AVIOContextWrapper::OpenResult::InternalError;
-   }
+    if (rc) {
+        return AVIOContextWrapper::OpenResult::InternalError;
+    }
 
-   if (mFFmpeg.avformat_find_stream_info(mAVFormatContext, nullptr) < 0)
-      return AVIOContextWrapper::OpenResult::InternalError;
+    if (mFFmpeg.avformat_find_stream_info(mAVFormatContext, nullptr) < 0) {
+        return AVIOContextWrapper::OpenResult::InternalError;
+    }
 
-   UpdateStreamList();
+    UpdateStreamList();
 
-   mInputFormat = mFFmpeg.CreateAVInputFormatWrapper(GetIFormat());
+    mInputFormat = mFFmpeg.CreateAVInputFormatWrapper(GetIFormat());
 
-   return result;
+    return result;
 }
 
 AVIOContextWrapper::OpenResult
 AVFormatContextWrapper::OpenOutputContext(const wxString& path)
 {
-   auto ioContext = mFFmpeg.CreateAVIOContext();
+    auto ioContext = mFFmpeg.CreateAVIOContext();
 
-   const auto result = ioContext->Open(path, true);
+    const auto result = ioContext->Open(path, true);
 
-   if (result != AVIOContextWrapper::OpenResult::Success)
-      return result;
+    if (result != AVIOContextWrapper::OpenResult::Success) {
+        return result;
+    }
 
-   SetAVIOContext(std::move(ioContext));
+    SetAVIOContext(std::move(ioContext));
 
-   return result;
+    return result;
 }
 
 std::unique_ptr<AVPacketWrapper> AVFormatContextWrapper::ReadNextPacket()
 {
-   std::unique_ptr<AVPacketWrapper> packet = mFFmpeg.CreateAVPacketWrapper();
+    std::unique_ptr<AVPacketWrapper> packet = mFFmpeg.CreateAVPacketWrapper();
 
-   if (mFFmpeg.av_read_frame(mAVFormatContext, packet->GetWrappedValue()) < 0)
-      return {};
+    if (mFFmpeg.av_read_frame(mAVFormatContext, packet->GetWrappedValue()) < 0) {
+        return {};
+    }
 
-   return packet;
+    return packet;
 }
 
 std::unique_ptr<AVStreamWrapper> AVFormatContextWrapper::CreateStream()
 {
-   // The complementary deallocation happens in avformat_free_context
-   AVStream* stream = mFFmpeg.avformat_new_stream(mAVFormatContext, nullptr);
+    // The complementary deallocation happens in avformat_free_context
+    AVStream* stream = mFFmpeg.avformat_new_stream(mAVFormatContext, nullptr);
 
-   if (stream == nullptr)
-      return {};
+    if (stream == nullptr) {
+        return {};
+    }
 
-   UpdateStreamList();
+    UpdateStreamList();
 
-   return mFFmpeg.CreateAVStreamWrapper(stream, true);
+    return mFFmpeg.CreateAVStreamWrapper(stream, true);
 }
 
 const AVInputFormatWrapper*
 AVFormatContextWrapper::GetInputFormat() const noexcept
 {
-   return mInputFormat.get();
+    return mInputFormat.get();
 }
 
 const AVOutputFormatWrapper*
 AVFormatContextWrapper::GetOutputFormat() const noexcept
 {
-   return mOutputFormat.get();
+    return mOutputFormat.get();
 }
 
 const AVStreamWrapper*
 AVFormatContextWrapper::GetStream(int index) const noexcept
 {
-   if (index < GetStreamsCount())
-      return GetStreams()[index].get();
+    if (index < GetStreamsCount()) {
+        return GetStreams()[index].get();
+    }
 
-   return nullptr;
+    return nullptr;
 }

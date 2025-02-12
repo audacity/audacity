@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "FFmpegTypes.h"
+#include "../FFmpegTypes.h"
 
 class AVChannelLayoutWrapper;
 

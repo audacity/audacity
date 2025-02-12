@@ -16,11 +16,7 @@ Describes shared object that is used to access FFmpeg libraries.
 #if !defined(__AUDACITY_FFMPEG__)
 #define __AUDACITY_FFMPEG__
 
-#include "wxPanelWrapper.h" // to inherit
 #include "Prefs.h"
-
-class wxCheckBox;
-class ShuttleGui;
 
 TranslatableString GetFFmpegVersion();
 
@@ -31,29 +27,12 @@ void FFmpegStartup();
 
 bool LoadFFmpeg(bool showerror);
 
-bool FindFFmpegLibs(wxWindow* parent = nullptr);
+bool FindFFmpegLibs();
 
-/// If Audacity failed to load libav*, this dialog
-/// shows up and tells user about that. It will pop-up
-/// again and again until it is disabled.
-class FFmpegNotFoundDialog final : public wxDialogWrapper
-{
-public:
-
-   FFmpegNotFoundDialog(wxWindow *parent);
-
-   void PopulateOrExchange(ShuttleGui & S);
-
-   void OnOk(wxCommandEvent & WXUNUSED(event));
-
-private:
-
-   wxCheckBox *mDontShow;
-
-   DECLARE_EVENT_TABLE()
-};
+//! TODO AU4:
+//! bool FindFFmpegLibs(); - should open a window and allow to select FFmpeg path manually
+//! implement NotFoundDialog
 
 extern BoolSetting FFmpegNotFoundDontShow;
 
 #endif // USE_FFMPEG
-

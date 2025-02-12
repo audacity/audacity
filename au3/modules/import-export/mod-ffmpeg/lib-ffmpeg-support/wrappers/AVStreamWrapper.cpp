@@ -10,10 +10,10 @@
 
 #include "AVStreamWrapper.h"
 
-#include "FFmpegFunctions.h"
+#include "../FFmpegFunctions.h"
 
 AVStreamWrapper::AVStreamWrapper(
-   const FFmpegFunctions& ffmpeg, AVStream* wrapped) noexcept
+    const FFmpegFunctions& ffmpeg, AVStream* wrapped) noexcept
     : mFFmpeg(ffmpeg)
     , mAVStream(wrapped)
 {
@@ -21,10 +21,10 @@ AVStreamWrapper::AVStreamWrapper(
 
 AVStream* AVStreamWrapper::GetWrappedValue() noexcept
 {
-   return mAVStream;
+    return mAVStream;
 }
 
 const AVStream* AVStreamWrapper::GetWrappedValue() const noexcept
 {
-   return mAVStream;
+    return mAVStream;
 }

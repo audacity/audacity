@@ -14,7 +14,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "FFmpegTypes.h"
+#include "../FFmpegTypes.h"
 
 #include "SampleFormat.h"
 
