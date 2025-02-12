@@ -19,6 +19,7 @@ Paul Licameli -- split from ProjectFileIO.h
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <chrono>
 
 #include "ClientData.h"
 #include "Identifier.h"
