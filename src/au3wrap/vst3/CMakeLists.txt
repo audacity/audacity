@@ -3,11 +3,31 @@
 #
 declare_module(vst_sdk_3)
 
-if (NOT AU_MODULE_VST_VST3_SDK_PATH)
-    message(FATAL_ERROR "AU_MODULE_VST_VST3_SDK_PATH path is not set")
-endif()
+if(MUSE_MODULE_VST_VST3_SDK_PATH)
+    set(VST3_SDK_PATH ${MUSE_MODULE_VST_VST3_SDK_PATH})
+else()
 
-set(VST3_SDK_PATH ${AU_MODULE_VST_VST3_SDK_PATH})
+    # If not set MUSE_MODULE_VST_VST3_SDK_PATH
+    # download vst3sdk source
+
+    set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
+    set(remote_url ${REMOTE_ROOT_URL}/vst3sdk/v3.7.12_build_20)
+    set(local_path ${PROJECT_BINARY_DIR}/_deps/vst3sdk)
+    if (NOT EXISTS ${local_path}/vst3sdk.cmake)
+        file(MAKE_DIRECTORY ${local_path})
+        file(DOWNLOAD ${remote_url}/vst3sdk.cmake ${local_path}/vst3sdk.cmake
+            HTTPHEADER "Cache-Control: no-cache"
+        )
+    endif()
+
+    include(${local_path}/vst3sdk.cmake)
+
+    # func from ${name}.cmake)
+    cmake_language(CALL vst3sdk_Populate ${remote_url} ${local_path} "source" "" "")
+
+    set(VST3_SDK_PATH ${local_path})
+
+endif()
 
 include(GetPlatformInfo)
 include(GetCompilerInfo)
@@ -61,6 +81,8 @@ set(VST_BASE_SRC
     ${VST3_SDK_PATH}/base/source/fstring.h
     ${VST3_SDK_PATH}/base/source/updatehandler.cpp
     ${VST3_SDK_PATH}/base/source/updatehandler.h
+    ${VST3_SDK_PATH}/base/source/timer.cpp
+    ${VST3_SDK_PATH}/base/source/timer.h
     ${VST3_SDK_PATH}/base/thread/include/fcondition.h
     ${VST3_SDK_PATH}/base/thread/include/flock.h
     ${VST3_SDK_PATH}/base/thread/source/fcondition.cpp
@@ -100,6 +122,8 @@ set(VST_PLUGIN_INTERFACES_SRC
 
 set(VST_SDK_COMMON_SRC
     ${VST3_SDK_PATH}/public.sdk/source/common/commoniids.cpp
+    ${VST3_SDK_PATH}/public.sdk/source/common/commonstringconvert.cpp
+    ${VST3_SDK_PATH}/public.sdk/source/common/commonstringconvert.h
     ${VST3_SDK_PATH}/public.sdk/source/common/openurl.cpp
     ${VST3_SDK_PATH}/public.sdk/source/common/openurl.h
     ${VST3_SDK_PATH}/public.sdk/source/common/threadchecker.h
@@ -149,6 +173,9 @@ set(MODULE_SRC
 set(MODULE_INCLUDE
     ${VST3_SDK_PATH}
     )
+
+set(MODULE_USE_PCH OFF)
+set(MODULE_USE_UNITY OFF)
 
 setup_module()
 

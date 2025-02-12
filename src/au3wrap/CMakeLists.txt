@@ -21,10 +21,6 @@
 # This module stores global state
 declare_module(au3wrap)
 
-if(AU_MODULE_EFFECTS_VST)
-    add_subdirectory(vst3)
-endif()
-
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
@@ -546,6 +542,10 @@ set(AU3_SRC
 )
 
 if(AU_MODULE_EFFECTS_VST)
+
+    # VST3 SDK
+    add_subdirectory(vst3)
+
     set(MODULE_SRC ${MODULE_SRC}
         ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.cpp
         ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.h
@@ -561,8 +561,6 @@ if(AU_MODULE_EFFECTS_VST)
         ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.h
         ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.cpp
         ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.h
-        ${AU3_LIBRARIES}/lib-vst3/memorystream.cpp
-        ${AU3_LIBRARIES}/lib-vst3/memorystream.h
     )
 endif()
 
@@ -658,36 +656,6 @@ if(AU_USE_FFMPEG)
         ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/AVUtilFunctionsLoader.cpp
         ${AU3_MODULES}/import-export/mod-ffmpeg/lib-ffmpeg-support/impl/avutil/AVUtilFunctionsLoader.h
     )
-endif()
-
-include(GetPlatformInfo)
-
-if(OS_IS_WIN)
-    if (AU_MODULE_EFFECTS_VST)
-        set(MODULE_SRC ${MODULE_SRC}
-            ${AU3_LIBRARIES}/lib-vst3/module_win32.cpp
-        )
-    endif()
-
-elseif(OS_IS_LIN)
-    if (AU_MODULE_EFFECTS_VST)
-        set(MODULE_SRC ${MODULE_SRC}
-            ${AU3_LIBRARIES}/lib-vst3/module_linux.cpp
-        )
-    endif()
-elseif(OS_IS_MAC)
-    if (AU_MODULE_EFFECTS_VST)
-        set(MODULE_SRC ${MODULE_SRC}
-            ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
-        )
-
-        set_source_files_properties(
-            ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
-            PROPERTIES
-            SKIP_UNITY_BUILD_INCLUSION ON
-            SKIP_PRECOMPILE_HEADERS ON
-            )
-    endif()
 endif()
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
