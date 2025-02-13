@@ -15,10 +15,10 @@
 bool WaveClipUtilities::GetFloatAtTime(const WaveClip& clip,
                                        double t, size_t iChannel, float& value, bool mayThrow)
 {
-    if (!clip.WithinPlayRegion(t + clip.GetPlayStartTime())) {
+    if (!clip.WithinPlayRegion(t)) {
         return false;
     }
-    const auto start = clip.TimeToSamples(t);
+    const auto start = clip.TimeToSamples(t - clip.GetPlayStartTime());
     return clip.GetSamples(
         iChannel, reinterpret_cast<samplePtr>(&value), floatSample, start, 1u,
         mayThrow);
