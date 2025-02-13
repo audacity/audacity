@@ -20,10 +20,5 @@ class WavePainterProxy : public IWavePainter
 public:
     WavePainterProxy() = default;
     void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params, std::optional<PlotType> plotType) override;
-
-private:
-    void handleSnapChange(PlotType plotType);
-
-    std::optional<Snap> m_snap;
 };
 }

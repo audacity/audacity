@@ -10,8 +10,6 @@ void WavePainterProxy::paint(QPainter& painter, const trackedit::ClipKey& clipKe
 
     PlotType pType = plotType.value_or(wavepainterutils::getPlotType(globalContext()->currentProject(), clipKey, params.zoom));
 
-    handleSnapChange(pType);
-
     switch (pType) {
     case PlotType::ConnectingDots:
         connectingDotsPainter()->paint(painter, clipKey, params);
@@ -24,21 +22,6 @@ void WavePainterProxy::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         break;
     default:
         break;
-    }
-}
-
-void WavePainterProxy::handleSnapChange(PlotType plotType)
-{
-    if (plotType == PlotType::Stem) {
-        if (!m_snap) {
-            m_snap = globalContext()->currentProject()->viewState()->getSnap();
-        }
-        globalContext()->currentProject()->viewState()->setSnap(Snap { SnapType::Samples, true, false });
-    } else {
-        if (m_snap) {
-            globalContext()->currentProject()->viewState()->setSnap(m_snap.value_or(Snap { SnapType::Bar, false, false }));
-            m_snap.reset();
-        }
     }
 }
 }
