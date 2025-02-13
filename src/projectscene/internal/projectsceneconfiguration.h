@@ -37,14 +37,14 @@ public:
     void setTimelineRulerMode(const TimelineRulerMode mode) override;
     muse::async::Notification timelineRulerModeChanged() const override;
 
-    muse::ValCh<bool> isEffectsPanelVisible() const override;
+    bool isEffectsPanelVisible() const override;
     void setIsEffectsPanelVisible(bool visible) override;
+    muse::async::Notification isEffectsPanelVisibleChanged() const override;
 
     const std::vector<std::pair<std::string, std::string> >& clipColors() const override;
 
 private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
-
-    muse::ValCh<bool> m_effectsPanelVisible;
+    muse::async::Notification m_effectsPanelVisible;
 };
 }

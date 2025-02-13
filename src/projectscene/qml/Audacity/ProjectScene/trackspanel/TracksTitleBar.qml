@@ -17,8 +17,7 @@ KDDW.TitleBarBase {
     property int effectsSectionWidth: 0
     property bool showEffectsSection: false
 
-    signal effectsSectionCloseButtonClicked()
-
+    signal effectsSectionCloseRequested()
     signal addRequested(type: int)
 
     anchors.fill: parent
@@ -33,24 +32,29 @@ KDDW.TitleBarBase {
 
     RowLayout {
         id: rowLayout
+
         anchors.fill: parent
+
         spacing: 0
 
         Rectangle {
             id: effectsTitleBar
-            visible: root.showEffectsSection
-            color: ui.theme.backgroundPrimaryColor
+
             property int padding: parent.height / 4
-            border.color: "transparent"
-            border.width: padding
 
             Layout.preferredWidth: root.effectsSectionWidth
             Layout.preferredHeight: root.implicitHeight
 
+            color: ui.theme.backgroundPrimaryColor
+            border.color: "transparent"
+            border.width: padding
+            visible: root.showEffectsSection
+
             StyledTextLabel {
-                text: qsTrc("projectscene", "Realtime effects")
                 anchors.fill: parent
                 padding: effectsTitleBar.padding
+
+                text: qsTrc("projectscene", "Realtime effects")
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
             }
@@ -60,20 +64,24 @@ KDDW.TitleBarBase {
             }
 
             Rectangle {
-                color: effectsTitleBar.color
+                anchors.right: parent.right
                 width: root.implicitHeight
                 height: root.implicitHeight
-                anchors.right: parent.right
+
+                color: effectsTitleBar.color
+
                 FlatButton {
-                    transparent: true
+                    anchors.centerIn: parent
                     width: parent.width - 2 * effectsTitleBar.padding
                     height: parent.height - 2 * effectsTitleBar.padding
-                    anchors.centerIn: parent
+
                     normalColor: ui.theme.backgroundPrimaryColor
                     hoverHitColor: ui.theme.buttonColor
                     icon: IconCode.CLOSE_X_ROUNDED
+                    transparent: true
+
                     onClicked: {
-                        root.effectsSectionCloseButtonClicked()
+                        root.effectsSectionCloseRequested()
                     }
                 }
             }

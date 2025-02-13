@@ -90,8 +90,9 @@ public:
     muse::io::paths_t sessionProjectsPaths() const override;
     muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) override;
 
-    muse::ValCh<bool> isEffectsPanelVisible() const override;
+    bool isEffectsPanelVisible() const override;
     void setIsEffectsPanelVisible(bool visible) override;
+    muse::async::Notification isEffectsPanelVisibleChanged() const override;
 
 private:
     std::string utmParameters(const std::string& utmMedium) const;

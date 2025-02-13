@@ -13,23 +13,24 @@ RealtimeEffectSectionModel::RealtimeEffectSectionModel(QObject* parent)
 
 void RealtimeEffectSectionModel::load()
 {
-    configuration()->isEffectsPanelVisible().ch.onReceive(this, [this](bool)
-    {
+    configuration()->isEffectsPanelVisibleChanged().onNotify(this, [this]() {
         emit showEffectsSectionChanged();
     });
 
     dispatcher()->reg(this, "toggle-effects", [this] {
-        configuration()->setIsEffectsPanelVisible(!configuration()->isEffectsPanelVisible().val);
+        configuration()->setIsEffectsPanelVisible(!configuration()->isEffectsPanelVisible());
     });
 
     dispatcher()->reg(this, "add-realtime-effects", [this] {
-        configuration()->setIsEffectsPanelVisible(!configuration()->isEffectsPanelVisible().val);
+        configuration()->setIsEffectsPanelVisible(!configuration()->isEffectsPanelVisible());
     });
+
+    emit showEffectsSectionChanged();
 }
 
 bool RealtimeEffectSectionModel::prop_showEffectsSection() const
 {
-    return configuration()->isEffectsPanelVisible().val;
+    return configuration()->isEffectsPanelVisible();
 }
 
 void RealtimeEffectSectionModel::prop_setShowEffectsSection(bool show)

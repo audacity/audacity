@@ -17,6 +17,7 @@ static const muse::Settings::Key INSERT_SILENCE_DURATION(moduleName, "projectsce
 static const muse::Settings::Key INSERT_SILENCE_DURATION_FORMAT(moduleName, "projectscene/insertSilenceDurationFormat");
 
 static const QString TIMELINE_RULER_MODE("projectscene/timelineRulerMode");
+static const QString EFFECTS_PANEL_VISIBILITY("projectscene/effectsPanelVisible");
 
 void ProjectSceneConfiguration::init()
 {
@@ -104,17 +105,19 @@ muse::async::Notification ProjectSceneConfiguration::timelineRulerModeChanged() 
     return uiConfiguration()->uiItemStateChanged(TIMELINE_RULER_MODE);
 }
 
-muse::ValCh<bool> ProjectSceneConfiguration::isEffectsPanelVisible() const
+bool ProjectSceneConfiguration::isEffectsPanelVisible() const
 {
-    return m_effectsPanelVisible;
+    return uiConfiguration()->isVisible(EFFECTS_PANEL_VISIBILITY);
 }
 
 void ProjectSceneConfiguration::setIsEffectsPanelVisible(bool visible)
 {
-    if (m_effectsPanelVisible.val == visible) {
-        return;
-    }
-    m_effectsPanelVisible.set(visible);
+    uiConfiguration()->setIsVisible(EFFECTS_PANEL_VISIBILITY, visible);
+}
+
+muse::async::Notification ProjectSceneConfiguration::isEffectsPanelVisibleChanged() const
+{
+    return uiConfiguration()->isVisibleChanged(EFFECTS_PANEL_VISIBILITY);
 }
 
 const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfiguration::clipColors() const
