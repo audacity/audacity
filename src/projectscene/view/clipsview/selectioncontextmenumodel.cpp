@@ -22,14 +22,12 @@ void SelectionContextMenuModel::load()
 MenuItemList SelectionContextMenuModel::makeItems()
 {
     MenuItemList items {
-        makeMenuItem("clip-cut-selected"),
-        makeMenuItem("clip-copy-selected"),
-        makeMenuItem("paste"),
-        makeMenuItem("clip-delete-selected"),
-        makeSeparator(),
         makeMenuItem("split-cut"),
+        makeMenuItem("clip-cut-selected"),
+        makeSeparator(),
+        makeMenuItem("clip-copy-selected"),
         makeMenuItem("duplicate"),
-        makeMenuItem("split-delete"),
+        makeMenuItem("paste"),
         makeSeparator(),
         makeMenuItem("split")
     };
