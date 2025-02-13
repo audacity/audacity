@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2025-02-13 19:07+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/audacity/teams/164520/vi/)\n"
@@ -3243,6 +3243,16 @@ msgstr ""
 "Bạn cần cập nhật Audacity để mở nó."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Project update required"
+msgstr "Dự án đã được phục hồi"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "Không thể khởi chạy tập tin dự án"
 
@@ -4357,7 +4367,7 @@ msgstr "Tất cả các báo cáo đều được ẩn danh. Xem %s để biết
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr "Chính sách quyền riêng tư của chúng tôi"
 
@@ -4522,8 +4532,8 @@ msgstr "Hiển thị chi tiết nhật ký máy "
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
@@ -4730,6 +4740,11 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Không tìm thấy thư mục dữ liệu của dự án: \"%s\""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
+#, fuzzy
+msgid "Invalid project 'rate' attribute."
+msgstr "Thuộc tính 'h' của dự án không hợp lệ."
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr "Đã tìm thấy track MIDI trong tệp dự án này, tuy nhiên phiên bản Audacity này không hỗ trợ MIDI."
 
@@ -4892,7 +4907,6 @@ msgstr "Đầu ra của lệnh"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -7122,8 +7136,9 @@ msgid "Generating audio preview..."
 msgstr "Đang tạo bản xem trước âm thanh.."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-msgid "Open trace audio.com"
-msgstr "Mở dấu vết audio.com"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Mở từ audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7243,11 +7258,16 @@ msgstr "Đợi làm trống đĩa"
 msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr "Khi bạn đã làm trống "
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
 msgstr "Chia sẻ audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Get Effects"
+msgstr "Hiệu ứng"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7256,28 +7276,18 @@ msgid "&Share Audio Toolbar"
 msgstr "&Thanh công cụ Chia sẻ Audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr "Tài khoản không được kết nối"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "Bạn chưa đăng nhập"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "&Liên kết Tài khoản"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "&Hủy liên kết Tài khoản"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Đăng nhập"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
 msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Mở từ audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7383,16 +7393,8 @@ msgid "Don't worry, your changes will be saved to a temporary location and will 
 msgstr "Xin đừng lo lắng, những thay đổi của bạn sẽ được lưu vào một thư mục tạm thời và sẽ được đồng bộ hóa với bản sao trên đám mây khi kết nối Internet của bạn trở lại."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr "Bạn chưa đăng nhập"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr "Đăng nhập vào audio.com để tiến hành."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Sign in"
-msgstr "Đăng nhập"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7681,20 +7683,6 @@ msgstr "Đang hoàn thiện tải lên ..."
 msgid "Track Title"
 msgstr "Tiêu đề của track"
 
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "Chia sẻ audio yêu cầu một tài khoản %s miễn phí được liên kết với Audacity. %%Nhấn \"Liên kết tài khoản\" ở trên để thực hiện."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Nhấn \"Tiếp tục\" để tải lên audio.com"
-
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
 msgstr "Đang chuẩn bị audio ..."
@@ -7799,6 +7787,47 @@ msgstr "Thử lại"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr "Một thao tác trên audio.com đang được xử lý trước khi bạn có thể tiếp tục. Một khi bạn làm xong, hãy bấm vào \"Thử lại\""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Loading..."
+msgstr "&Nạp..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Please wait..."
+msgstr "&Đặt lại"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Connection error"
+msgstr "Lỗi không xác định"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Try again"
+msgstr "&Thử lại"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Get it on MuseHub"
+msgstr "Các nguồn thu âm hợp lệ:\n"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgstr ""
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -8257,7 +8286,6 @@ msgstr "Ứng dụng kiểm tra cập nhật báo lỗi yêu và cầu quyền t
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "Xem %s dể biết thêm thông tin."
@@ -10631,6 +10659,22 @@ msgstr "Hiệu ứng %d"
 msgid "Power"
 msgstr "Nguồn"
 
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, fuzzy, c-format
+msgid "Change realtime effect %s on %s"
+msgstr "Hiệu ứng thời gian thực cho %s"
+
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
 msgstr "Thay thế hiệu ứng"
@@ -11449,6 +11493,22 @@ msgid "Calibration Complete"
 msgstr "Quá trinh đo đạt hoàn tất"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr "Các tính năng mới trong Audacity %s"
@@ -11456,6 +11516,11 @@ msgstr "Các tính năng mới trong Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11510,6 +11575,14 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Continue for Cloud Storage"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -15280,12 +15353,19 @@ msgid "Audio Device Info"
 msgstr "Thông tin thiết bị audio "
 
 #: src/menus/HelpMenus.cpp
-msgid "&Quick Help..."
+#, fuzzy
+msgid "&Quick Help"
 msgstr "&Trợ giúp nhanh..."
 
 #: src/menus/HelpMenus.cpp
-msgid "&Manual..."
+#, fuzzy
+msgid "&Manual"
 msgstr "&Thủ công..."
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Support"
+msgstr "Dữ liệu Hỗ trợ của Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -16602,10 +16682,10 @@ msgstr ""
 msgid "Preferences for Application"
 msgstr "Các tùy chỉnh cho ứng dụng"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Update notifications"
-msgstr "Các thông báo cập nhật"
+msgid "Network communications"
+msgstr ""
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16614,8 +16694,23 @@ msgid "&Check for updates"
 msgstr "&Kiểm tra cập nhật"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Ứng dụng kiểm tra cập nhật yêu cầu truy cập mạng. Để bảo vệ sự riêng tư của bạn, Audacity không lưu trữ bất kỳ thông tin cá nhân nào."
+msgid "Requires network access."
+msgstr ""
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Send anonymous usage info"
+msgstr ""
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "We create a random ID to track how often Audacity is used."
+msgstr ""
+
+#: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
+msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
+msgstr "Để bảo vệ sự riêng tư của bạn, Audacity không thu thập bất kỳ thông tin cá nhân nào. Tuy nhiên, ứng dụng kiểm tra cập nhật yêu cầu quyền truy cập mạng."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -17112,12 +17207,29 @@ msgid "Do &nothing"
 msgstr "Không làm &gì cả"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "&Do nothing"
+msgstr "Không làm gì cả"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "Nhập Âm nhạc"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Khi Audacity phát hiện nhạc trong tệp được nhập vào dự án trống"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -19623,31 +19735,57 @@ msgstr "Bản cập nhật Audacity"
 msgid "Downloading %s"
 msgstr "Đang tải về %s"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
-msgstr "Ứng dụng kiểm tra cập nhật"
+msgid "Stay Updated & Anonymous Usage Info"
+msgstr ""
 
-#. i18n-hint: The first paragraph of app update notice dialog.
-#: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Để luôn cập nhật, bạn sẽ nhận được thông báo trong ứng dụng bất cứ khi nào có phiên bản Audacity mới để tải xuống."
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "Để bảo vệ sự riêng tư của bạn, Audacity không thu thập bất kỳ thông tin cá nhân nào. Tuy nhiên, ứng dụng kiểm tra cập nhật yêu cầu quyền truy cập mạng."
-
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can turn off app update checking at any time in %s."
-msgstr "Bạn có thể tắt tính năng kiểm tra cập nhật ứng dụng bất kỳ lúc nào trong %s."
-
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
 msgstr "Các bản cập nhật ứng dụng"
+
+#. i18n-hint: The first paragraph of app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr "Để luôn cập nhật, bạn sẽ nhận được thông báo trong ứng dụng bất cứ khi nào có phiên bản Audacity mới để tải xuống."
+
+#. i18n-hint: Subtitle of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Anonymous usage info (UUID)"
+msgstr ""
+
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/update/UpdateNoticeDialog.cpp
+msgid "To help us understand how often people use Audacity, we generate a random, anonymous ID (UUID). This helps us improve features and plan for the future. No personal data is collected."
+msgstr ""
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "You can disable this anytime in %s."
+msgstr "Bạn có thể thay đổi thư mục trong  %s."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "You can turn this off anytime in %s."
+msgstr "Bạn có thể tắt tính năng kiểm tra cập nhật ứng dụng bất kỳ lúc nào trong %s."
+
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "View privacy policy"
+msgstr "Chính sách quyền riêng tư của chúng tôi"
+
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "Disable UUID"
+msgstr "Tắt"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
+msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21493,3 +21631,41 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Phiên bản cũ"
+
+#, fuzzy
+#~ msgid "What's new in Audacity"
+#~ msgstr "Các tính năng mới trong Audacity %s"
+
+#~ msgid "Update notifications"
+#~ msgstr "Các thông báo cập nhật"
+
+#~ msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+#~ msgstr "Ứng dụng kiểm tra cập nhật yêu cầu truy cập mạng. Để bảo vệ sự riêng tư của bạn, Audacity không lưu trữ bất kỳ thông tin cá nhân nào."
+
+#~ msgid "App update checking"
+#~ msgstr "Ứng dụng kiểm tra cập nhật"
+
+#~ msgid "Open trace audio.com"
+#~ msgstr "Mở dấu vết audio.com"
+
+#~ msgid "Account not linked"
+#~ msgstr "Tài khoản không được kết nối"
+
+#~ msgid "&Link Account"
+#~ msgstr "&Liên kết Tài khoản"
+
+#~ msgid "&Unlink Account"
+#~ msgstr "&Hủy liên kết Tài khoản"
+
+#, c-format
+#~ msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+#~ msgstr "Chia sẻ audio yêu cầu một tài khoản %s miễn phí được liên kết với Audacity. %%Nhấn \"Liên kết tài khoản\" ở trên để thực hiện."
+
+#~ msgid "audio.com"
+#~ msgstr "audio.com"
+
+#~ msgid "Press \"Continue\" to upload to audio.com"
+#~ msgstr "Nhấn \"Tiếp tục\" để tải lên audio.com"
+
+#~ msgid "When Audacity detects music in file imported on empty project"
+#~ msgstr "Khi Audacity phát hiện nhạc trong tệp được nhập vào dự án trống"

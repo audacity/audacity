@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2025-02-13 19:07+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/audacity/teams/164520/sl/)\n"
@@ -3260,6 +3260,16 @@ msgstr ""
 "Da ga lahko odprete, boste morali posodobiti program."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Project update required"
+msgstr "Projekt je bil obnovljen"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "Projektne datoteke ni mogoče inicializirati."
 
@@ -4378,7 +4388,7 @@ msgstr "Vsa poročila so anonimna. Glejte %s za podrobnosti."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr "naša politika zasebnosti"
 
@@ -4543,8 +4553,8 @@ msgstr "Pokaži dnevnik za podrobnosti"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "V redu"
 
@@ -4751,6 +4761,11 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Mape s projektnimi podatki ni mogoče najti: »%s«"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
+#, fuzzy
+msgid "Invalid project 'rate' attribute."
+msgstr "Neveljavni atribut projekta »h«."
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr "Projektna datoteka vsebuje steze MIDI, vendar ta gradnja Audacity ne vključuje podpore MIDI, zaradi tega bodo steze preskočene."
 
@@ -4913,7 +4928,6 @@ msgstr "Izhod ukaza"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "V &redu"
 
@@ -7148,8 +7162,9 @@ msgid "Generating audio preview..."
 msgstr "Ustvarjanje predogleda zvoka ..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-msgid "Open trace audio.com"
-msgstr "Odpri sledenje audio.com"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Odpri z audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7269,11 +7284,16 @@ msgstr "Čakanje na sprostitev prostora"
 msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr "Ko audio.com omogočite sprostitev prostora za shranjevanje, kliknite Poskusi znova."
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
 msgstr "Zvok v skupno rabo"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Get Effects"
+msgstr "Učinki"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7282,28 +7302,18 @@ msgid "&Share Audio Toolbar"
 msgstr "Vrstica skupne ra&be zvoka"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr "Račun ni povezan"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "Niste prijavljeni."
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr "Anonimno"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "Poveži &račun"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "&Odveži račun"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Prijava"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
 msgstr "&Odjavi se"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Odpri z audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7409,16 +7419,8 @@ msgid "Don't worry, your changes will be saved to a temporary location and will 
 msgstr "Ne skrbite, spremembe bodo shranjene na začasno mesto in sinhronizirane s kopijo v oblaku, ko se internetna povezava ponovno vzpostavi."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr "Niste prijavljeni."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr "Za nadaljevanje se prijavite v audio.com."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Sign in"
-msgstr "Prijava"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7717,20 +7719,6 @@ msgstr "Dokončevanje nalaganja na strežnik ..."
 msgid "Track Title"
 msgstr "Naslov steze"
 
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "Skupna raba zvoka zahteva brezplačen račun %s,  povezan z Audacity. %%Pritisnite \"Poveži račun\" zgoraj za nadaljevanje."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Pritisnite \"Nadaljuj\", da jo naložite na audio.com"
-
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
 msgstr "Pripravljanje zvoka ..."
@@ -7835,6 +7823,47 @@ msgstr "Poskusi znova"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr "Preden lahko nadaljujete, morate ukrepati na audio.com. Ko končate, kliknite Poskusi znova"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Loading..."
+msgstr "&Naloži ..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Please wait..."
+msgstr "Ponas&tavi ..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Connection error"
+msgstr "Neznana napaka"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Try again"
+msgstr "Poskusi &znova"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Get it on MuseHub"
+msgstr "Na voljo na [[%s|MuseHub]]."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgstr ""
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -8293,7 +8322,6 @@ msgstr "Iskanje posodobitev in poročanje o napakah zahtevata dostop do omrežja
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "Za podrobnosti glejte %s."
@@ -10681,6 +10709,22 @@ msgstr "Učinek %d"
 msgid "Power"
 msgstr "Jakost"
 
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, fuzzy, c-format
+msgid "Change realtime effect %s on %s"
+msgstr "Učinki v realnem času za %s"
+
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
 msgstr "Zamenjaj učinek"
@@ -11502,6 +11546,22 @@ msgid "Calibration Complete"
 msgstr "Kalibracija zaključena"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr "Novosti v Audacity %s"
@@ -11510,6 +11570,11 @@ msgstr "Novosti v Audacity %s"
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr "Oglejte si [[%s video ob izdaji]] ali preberite [[%s|zapisnik sprememb]], da izveste več o tem, kar smo vključili v najnovejšo izdajo!</p>"
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11564,6 +11629,15 @@ msgstr "Preverite raznolike vstavke dobro znanih razvijalcev, ki so na voljo v [
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr "Več pasovni kompresor, ki ponuja natančen nadzor nad frekvencami."
+
+#: src/WhatsNewDialog.cpp
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Continue for Cloud Storage"
+msgstr "Nadaljuj z Googlom"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -15342,12 +15416,19 @@ msgid "Audio Device Info"
 msgstr "Podatki o zvočni napravi"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Quick Help..."
+#, fuzzy
+msgid "&Quick Help"
 msgstr "&Hitra pomoč …"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Manual..."
+#, fuzzy
+msgid "&Manual"
 msgstr "Priro&čnik …"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Support"
+msgstr "Podatki Audacity za podporo"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -16664,10 +16745,10 @@ msgstr "Poka&ži RMS v obliki signala"
 msgid "Preferences for Application"
 msgstr "Nastavitve programa"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Update notifications"
-msgstr "Obveščanje o posodobitvah"
+msgid "Network communications"
+msgstr ""
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16676,8 +16757,23 @@ msgid "&Check for updates"
 msgstr "Poi&šči posodobitve"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Preverjanje obstoja posodobitev zahteva dostop do omrežja. Da bi zaščitili vašo zasebnost, Audacity ne hrani vaših osebnih podatkov."
+msgid "Requires network access."
+msgstr ""
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Send anonymous usage info"
+msgstr ""
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "We create a random ID to track how often Audacity is used."
+msgstr ""
+
+#: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
+msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
+msgstr "Da bi zaščitili vašo zasebnost, Audacity ne zbira vaših osebnih podatkov. Vendar pa preverjanje in iskanje posodobitev zahteva dostop do omrežja."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -17174,12 +17270,29 @@ msgid "Do &nothing"
 msgstr "Ne stori &ničesar"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "&Do nothing"
+msgstr "Ne naredi ničesar"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "Uvozi glasbe"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Ko Audacity zazna glasbo v datoteki, uvoženi v prazen projekt"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -19694,31 +19807,57 @@ msgstr "Posodobitev Audacity"
 msgid "Downloading %s"
 msgstr "Prenašanje %s"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
-msgstr "Preverjanje obstoja posodobitev programa"
+msgid "Stay Updated & Anonymous Usage Info"
+msgstr ""
 
-#. i18n-hint: The first paragraph of app update notice dialog.
-#: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Da bo vaš program vedno posodobljen, boste prejeli v okviru programa obvestilo, ko bo za prenos na voljo nova različica Audacity."
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "Da bi zaščitili vašo zasebnost, Audacity ne zbira vaših osebnih podatkov. Vendar pa preverjanje in iskanje posodobitev zahteva dostop do omrežja."
-
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can turn off app update checking at any time in %s."
-msgstr "Iskanje posodobitev lahko kadar koli izključite v %s."
-
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
 msgstr "Posododitve programa"
+
+#. i18n-hint: The first paragraph of app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr "Da bo vaš program vedno posodobljen, boste prejeli v okviru programa obvestilo, ko bo za prenos na voljo nova različica Audacity."
+
+#. i18n-hint: Subtitle of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Anonymous usage info (UUID)"
+msgstr ""
+
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/update/UpdateNoticeDialog.cpp
+msgid "To help us understand how often people use Audacity, we generate a random, anonymous ID (UUID). This helps us improve features and plan for the future. No personal data is collected."
+msgstr ""
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "You can disable this anytime in %s."
+msgstr "Mapo lahko spremenite pod %s."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "You can turn this off anytime in %s."
+msgstr "Iskanje posodobitev lahko kadar koli izključite v %s."
+
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "View privacy policy"
+msgstr "naša politika zasebnosti"
+
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "Disable UUID"
+msgstr "Onemogoči"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
+msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21566,3 +21705,44 @@ msgstr "Spektralna orodja"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Opuščeno"
+
+#, fuzzy
+#~ msgid "What's new in Audacity"
+#~ msgstr "Novosti v Audacity %s"
+
+#~ msgid "Update notifications"
+#~ msgstr "Obveščanje o posodobitvah"
+
+#~ msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+#~ msgstr "Preverjanje obstoja posodobitev zahteva dostop do omrežja. Da bi zaščitili vašo zasebnost, Audacity ne hrani vaših osebnih podatkov."
+
+#~ msgid "App update checking"
+#~ msgstr "Preverjanje obstoja posodobitev programa"
+
+#~ msgid "Open trace audio.com"
+#~ msgstr "Odpri sledenje audio.com"
+
+#~ msgid "Account not linked"
+#~ msgstr "Račun ni povezan"
+
+#~ msgid "Anonymous"
+#~ msgstr "Anonimno"
+
+#~ msgid "&Link Account"
+#~ msgstr "Poveži &račun"
+
+#~ msgid "&Unlink Account"
+#~ msgstr "&Odveži račun"
+
+#, c-format
+#~ msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+#~ msgstr "Skupna raba zvoka zahteva brezplačen račun %s,  povezan z Audacity. %%Pritisnite \"Poveži račun\" zgoraj za nadaljevanje."
+
+#~ msgid "audio.com"
+#~ msgstr "audio.com"
+
+#~ msgid "Press \"Continue\" to upload to audio.com"
+#~ msgstr "Pritisnite \"Nadaljuj\", da jo naložite na audio.com"
+
+#~ msgid "When Audacity detects music in file imported on empty project"
+#~ msgstr "Ko Audacity zazna glasbo v datoteki, uvoženi v prazen projekt"

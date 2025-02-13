@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2025-02-13 19:07+0300\n"
 "PO-Revision-Date: 2015-02-20 17:07-0000\n"
 "Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
 "Language-Team: Galician <proxecto@trasno.net>\n"
@@ -3324,6 +3324,16 @@ msgid ""
 msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, fuzzy
+msgid "Project update required"
+msgstr "O proxecto foi recuperado"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy
 msgid "Unable to initialize the project file"
 msgstr "Non é posíbel inicializar o fluxo MP3"
@@ -4472,7 +4482,7 @@ msgstr "Seleccione un ou máis ficheiros de son..."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr ""
 
@@ -4640,8 +4650,8 @@ msgstr "Amosar o rexistro para ver detalles"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "Aceptar"
 
@@ -4852,6 +4862,11 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Non foi posíbel atopar o cartafol de datos do proxecto: «%s»"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
+#, fuzzy
+msgid "Invalid project 'rate' attribute."
+msgstr "Frecuencia de mostraxe incorrecta"
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr ""
 
@@ -5009,7 +5024,6 @@ msgstr "Saída da orde"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&Aceptar"
 
@@ -7378,9 +7392,9 @@ msgid "Generating audio preview..."
 msgstr "Xerando ruído"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
-msgid "Open trace audio.com"
-msgstr "Copiar son etiquetado"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 #, fuzzy
@@ -7516,12 +7530,17 @@ msgstr ""
 msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr ""
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy
 msgid "Share Audio"
 msgstr "Copiar son etiquetado"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Get Effects"
+msgstr "Efectos"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7531,29 +7550,21 @@ msgid "&Share Audio Toolbar"
 msgstr "Barra de ferramentas de &selección"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr ""
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "You are not signed in"
+msgstr "Vostede non pode asignar unha tecla a esta entrada"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr ""
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "Aliñar %s"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 #, fuzzy
 msgid "&Sign Out"
 msgstr "Lineal"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 #, fuzzy
@@ -7666,18 +7677,8 @@ msgid "Don't worry, your changes will be saved to a temporary location and will 
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "You are not signed in"
-msgstr "Vostede non pode asignar unha tecla a esta entrada"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "Sign in"
-msgstr "Aliñar %s"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7994,20 +7995,6 @@ msgstr "Buscar o recorte de picos..."
 msgid "Track Title"
 msgstr "Título da pista"
 
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr ""
-
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy
 msgid "Preparing audio..."
@@ -8116,6 +8103,46 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Loading..."
+msgstr "Ca&rgar..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Please wait..."
+msgstr "Res&tablecer"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Connection error"
+msgstr "Descoñecido"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Try again"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+#, fuzzy
+msgid "Get it on MuseHub"
+msgstr "Control de gravación"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
 msgstr ""
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
@@ -8597,7 +8624,6 @@ msgstr ""
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, fuzzy, c-format
 msgid "See %s for more info."
 msgstr "Seleccione un ou máis ficheiros de son..."
@@ -11025,6 +11051,22 @@ msgstr "Efectos"
 msgid "Power"
 msgstr ""
 
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, fuzzy, c-format
+msgid "Change realtime effect %s on %s"
+msgstr "Efecto aplicado: %s"
+
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
 msgid "Replace effect"
@@ -11874,6 +11916,22 @@ msgid "Calibration Complete"
 msgstr "Resultados da calibración\n"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr ""
@@ -11881,6 +11939,11 @@ msgstr ""
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11935,6 +11998,14 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Continue for Cloud Storage"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -16042,13 +16113,18 @@ msgstr "Información de dispositivos de son"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
-msgid "&Quick Help..."
+msgid "&Quick Help"
 msgstr "&Axuda rápida"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
-msgid "&Manual..."
+msgid "&Manual"
 msgstr "&Manual"
+
+#: src/menus/HelpMenus.cpp
+#, fuzzy
+msgid "Audacity &Support"
+msgstr "Equipo de asistencia técnica do Audacity"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -17553,9 +17629,9 @@ msgstr "A&mosar o recorte de picos"
 msgid "Preferences for Application"
 msgstr "Preferencias:"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Update notifications"
+msgid "Network communications"
 msgstr ""
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
@@ -17566,7 +17642,21 @@ msgid "&Check for updates"
 msgstr "Comprobar &dependencias"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+msgid "Requires network access."
+msgstr ""
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Send anonymous usage info"
+msgstr ""
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "We create a random ID to track how often Audacity is used."
+msgstr ""
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
 msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
@@ -18109,12 +18199,29 @@ msgid "Do &nothing"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+#, fuzzy
+msgid "&Do nothing"
+msgstr "Tempo de suavizado"
+
+#: src/prefs/ImportExportPrefs.cpp
 #, fuzzy
 msgid "Music Imports"
 msgstr "Importación de MP3"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
@@ -20836,30 +20943,58 @@ msgstr "Rexistro do Audacity"
 msgid "Downloading %s"
 msgstr "Descargar"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
+msgid "Stay Updated & Anonymous Usage Info"
+msgstr ""
+
+#. i18n-hint: First line of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
 msgstr ""
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr ""
+
+#. i18n-hint: Subtitle of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Anonymous usage info (UUID)"
 msgstr ""
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
+msgid "To help us understand how often people use Audacity, we generate a random, anonymous ID (UUID). This helps us improve features and plan for the future. No personal data is collected."
 msgstr ""
 
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can turn off app update checking at any time in %s."
+#, fuzzy, c-format
+msgid "You can disable this anytime in %s."
+msgstr ""
+"Non foi posíbel crear o cartafol:\n"
+"  %s"
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, fuzzy, c-format
+msgid "You can turn this off anytime in %s."
+msgstr ""
+"Non foi posíbel crear o cartafol:\n"
+"  %s"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "View privacy policy"
 msgstr ""
 
-#. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App updates"
+#, fuzzy
+msgid "Disable UUID"
+msgstr "Desactivado"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
 msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
@@ -22849,6 +22984,14 @@ msgstr "Es&pectro"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#, fuzzy
+#~ msgid "What's new in Audacity"
+#~ msgstr "Saír de Audacity"
+
+#, fuzzy
+#~ msgid "Open trace audio.com"
+#~ msgstr "Copiar son etiquetado"
 
 #~ msgid "Insane"
 #~ msgstr "Tolo"
