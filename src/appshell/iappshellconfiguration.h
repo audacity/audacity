@@ -22,13 +22,13 @@
 #ifndef AU_APPSHELL_IAPPSHELLCONFIGURATION_H
 #define AU_APPSHELL_IAPPSHELLCONFIGURATION_H
 
-#include "modularity/imoduleinterface.h"
 #include "types/ret.h"
-#include "types/retval.h"
-
 #include "io/path.h"
-#include "appshelltypes.h"
 #include "async/notification.h"
+
+#include "modularity/imoduleinterface.h"
+
+#include "appshelltypes.h"
 
 namespace au::appshell {
 class IAppShellConfiguration : MODULE_EXPORT_INTERFACE
@@ -76,8 +76,9 @@ public:
     virtual muse::io::paths_t sessionProjectsPaths() const = 0;
     virtual muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) = 0;
 
-    virtual muse::ValCh<bool> isEffectsPanelVisible() const = 0;
+    virtual bool isEffectsPanelVisible() const = 0;
     virtual void setIsEffectsPanelVisible(bool visible) = 0;
+    virtual muse::async::Notification isEffectsPanelVisibleChanged() const = 0;
 };
 }
 

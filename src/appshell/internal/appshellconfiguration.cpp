@@ -233,6 +233,21 @@ muse::Ret AppShellConfiguration::setSessionProjectsPaths(const muse::io::paths_t
     return writeSessionState(data);
 }
 
+bool AppShellConfiguration::isEffectsPanelVisible() const
+{
+    return projectSceneConfiguration()->isEffectsPanelVisible();
+}
+
+void AppShellConfiguration::setIsEffectsPanelVisible(bool visible)
+{
+    projectSceneConfiguration()->setIsEffectsPanelVisible(visible);
+}
+
+async::Notification AppShellConfiguration::isEffectsPanelVisibleChanged() const
+{
+    return projectSceneConfiguration()->isEffectsPanelVisibleChanged();
+}
+
 std::string AppShellConfiguration::utmParameters(const std::string& utmMedium) const
 {
     return std::string();
@@ -291,14 +306,4 @@ muse::io::paths_t AppShellConfiguration::parseSessionProjectsPaths(const QByteAr
     }
 
     return result;
-}
-
-muse::ValCh<bool> AppShellConfiguration::isEffectsPanelVisible() const
-{
-    return projectSceneConfiguration()->isEffectsPanelVisible();
-}
-
-void AppShellConfiguration::setIsEffectsPanelVisible(bool visible)
-{
-    projectSceneConfiguration()->setIsEffectsPanelVisible(visible);
 }

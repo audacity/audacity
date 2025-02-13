@@ -89,13 +89,6 @@ void AppMenuModel::load()
     //! NOTE: removes some undesired platform-specific items
     //! (such as "Start Dictation" and "Special Characters" on macOS)
     appMenuModelHook()->onAppMenuInited();
-
-    muse::ValCh<bool> isEffectsPanelVisible = configuration()->isEffectsPanelVisible();
-    isEffectsPanelVisible.ch.onReceive(this, [this](bool visible)
-    {
-        setItemIsChecked("toggle-effects", visible);
-    });
-    setItemIsChecked("toggle-effects", isEffectsPanelVisible.val);
 }
 
 bool AppMenuModel::isGlobalMenuAvailable()
@@ -145,6 +138,10 @@ void AppMenuModel::setupConnections()
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
         updateUndoRedoItems();
+    });
+
+    configuration()->isEffectsPanelVisibleChanged().onNotify(this, [this]() {
+        setItemIsChecked("toggle-effects", configuration()->isEffectsPanelVisible());
     });
 }
 
@@ -273,30 +270,41 @@ MenuItem* AppMenuModel::makeSelectMenu()
 
 MenuItem* AppMenuModel::makeViewMenu()
 {
+    MenuItem* effectsItem = makeMenuItem("toggle-effects");
+    if (effectsItem) {
+        auto state = effectsItem->state();
+        state.checked = configuration()->isEffectsPanelVisible();
+        effectsItem->setState(state);
+    }
+
     MenuItemList viewItems {
         makeMenu(TranslatableString("appshell/menu/zoom", "Zoom"), makeZoomItems(), "menu-zoom"),
         makeMenu(TranslatableString("appshell/menu/skip", "Skip to "), makeSkipToItems(), "menu-skip"),
         makeSeparator(),
-        makeMenuItem("toggle-mixer"),
-        makeMenuItem("toggle-effects"),
-        makeSeparator(),
-        makeMenuItem("toggle-label-editor"),
-        makeMenuItem("toggle-metadata-editor"),
-        makeMenuItem("toggle-history"),
-        makeSeparator(),
+        makeMenuItem("toggle-mixer")
+    };
+
+    if (effectsItem) {
+        viewItems << effectsItem;
+    }
+
+    viewItems << makeSeparator()
+              << makeMenuItem("toggle-label-editor")
+              << makeMenuItem("toggle-metadata-editor")
+              << makeMenuItem("toggle-history")
+              << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
-        makeMenu(TranslatableString("appshell/menu/view", "W&orkspaces"), m_workspacesMenuModel->items(), "menu-workspaces"),
-        makeSeparator(),
+        << makeMenu(TranslatableString("appshell/menu/view", "W&orkspaces"), m_workspacesMenuModel->items(), "menu-workspaces")
+        << makeSeparator()
 #endif
 #ifndef Q_OS_MAC
-        makeMenuItem("fullscreen"),
-        makeSeparator(),
+        << makeMenuItem("fullscreen")
+        << makeSeparator()
 #endif
-        makeMenuItem("toggle-clipping-in-waveform"),
-        makeMenuItem("toggle-vertical-rulers"),
-        makeSeparator(),
-        makeMenuItem("dock-restore-default-layout")
-    };
+        << makeMenuItem("toggle-clipping-in-waveform")
+        << makeMenuItem("toggle-vertical-rulers")
+        << makeSeparator()
+        << makeMenuItem("dock-restore-default-layout");
 
     return makeMenu(TranslatableString("appshell/menu/view", "&View"), viewItems, "menu-view");
 }
