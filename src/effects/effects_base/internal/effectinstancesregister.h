@@ -21,6 +21,9 @@ public:
     std::shared_ptr<EffectInstance> instanceById(const EffectInstanceId& instanceId) const override;
     EffectId effectIdByInstanceId(const EffectInstanceId& instanceId) const override;
 
+    void requestUpdateSettings(const EffectInstanceId& instanceId) override;
+    muse::async::Notification updateSettingsRequested(const EffectInstanceId& instanceId) const override;
+
     const EffectSettings* settingsById(const EffectInstanceId& instanceId) const override;
     EffectSettingsAccess* settingsAccessById(const EffectInstanceId& instanceId) const override;
     void notifyAboutSettingsChanged(const EffectInstanceId& instanceId) override;
@@ -33,6 +36,7 @@ private:
         std::shared_ptr<EffectInstance> instance = nullptr;
         EffectSettingsAccessPtr access = nullptr;
         muse::async::Notification settingsChanged;
+        muse::async::Notification updateSettingsRequest;
     };
 
     std::map<EffectInstanceId, RegisteredEffectInstance> m_data;

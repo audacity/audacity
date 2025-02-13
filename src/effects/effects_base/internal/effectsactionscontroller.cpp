@@ -93,7 +93,7 @@ void EffectsActionsController::saveAsPreset(const ActionQuery& q)
 
 void EffectsActionsController::deletePreset(const ActionQuery& q)
 {
-    IF_ASSERT_FAILED(q.contains("instanceId") && q.contains("presetId")) {
+    IF_ASSERT_FAILED(q.contains("effectId") && q.contains("presetId")) {
         return;
     }
 
