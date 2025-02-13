@@ -146,8 +146,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("split-cut-labels",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split cut labels"),
-             TranslatableString("action", "Split cut labels")
+             TranslatableString("action", "Cut labels and leave gap"),
+             TranslatableString("action", "Cut labels and leave gap")
              ),
     UiAction("copy-labels",
              au::context::UiCtxAny,
@@ -164,8 +164,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("split-delete-labels",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split delete labels"),
-             TranslatableString("action", "Split delete labels")
+             TranslatableString("action", "Delete labels and leave gap"),
+             TranslatableString("action", "Delete labels and leave gap")
              ),
     UiAction("split-labels",
              au::context::UiCtxAny,
@@ -176,8 +176,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("join-labels",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Join labels"),
-             TranslatableString("action", "Join labels")
+             TranslatableString("action", "Merge labels"),
+             TranslatableString("action", "Merge labels")
              ),
     UiAction("silence-labels",
              au::context::UiCtxAny,

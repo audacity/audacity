@@ -287,26 +287,26 @@ const UiActionList TrackeditUiActions::m_actions = {
     UiAction("clip-split-cut",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split cut"),
-             TranslatableString("action", "Split cut")
+             TranslatableString("action", "Cut and leave gap"),
+             TranslatableString("action", "Cut and leave gap")
              ),
     UiAction("clip-split-delete",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split delete"),
-             TranslatableString("action", "Split delete")
+             TranslatableString("action", "Delete and leave gap"),
+             TranslatableString("action", "Delete and leave gap")
              ),
     UiAction("split-cut-selected",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split cut"),
-             TranslatableString("action", "Split cut")
+             TranslatableString("action", "Cut and leave gap"),
+             TranslatableString("action", "Cut and leave gap")
              ),
     UiAction("split-delete-selected",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split delete"),
-             TranslatableString("action", "Split delete")
+             TranslatableString("action", "Delete and leave gap"),
+             TranslatableString("action", "Delete and leave gap")
              ),
     UiAction("clip-export",
              au::context::UiCtxAny,

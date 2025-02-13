@@ -37,7 +37,7 @@ void ClipContextMenuModel::load()
     MenuItemList items {
         makeItemWithArg("clip-properties"),
         makeItemWithArg("clip-rename"),
-        makeMenu(muse::TranslatableString("clip", "Clip colour"), colorItems),
+        makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems),
         makeSeparator(),
         makeItemWithArg("clip-cut"),
         makeItemWithArg("clip-copy"),
