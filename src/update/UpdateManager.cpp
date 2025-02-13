@@ -325,9 +325,9 @@ std::string UpdateManager::GetUpdatesUrl() const
    #if AUDACITY_BUILD_LEVEL == 0
    const std::string url = "https://updates.audacityteam.org/builds/alpha.xml";
    #elif AUDACITY_BUILD_LEVEL == 1
-      const std::string url url = "https://updates.audacityteam.org/builds/beta.xml";
+      const std::string url = "https://updates.audacityteam.org/builds/beta.xml";
    #else
-      const std::string url url = "https://updates.audacityteam.org/feed/latest.xml";
+      const std::string url = "https://updates.audacityteam.org/feed/latest.xml";
    #endif
 
    if (SendAnonymousUsageInfo->Read())
