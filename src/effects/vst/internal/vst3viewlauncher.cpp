@@ -11,7 +11,7 @@
 
 using namespace au::effects;
 
-static const char16_t* VST_VIEWER_URI = u"audacity://effects/vst_viewer?instanceId=%1";
+static const char16_t* VST_VIEWER_URI = u"audacity://effects/vst_viewer?instanceId=%1&modal=false&floating=true";
 
 muse::Ret Vst3ViewLauncher::showEffect(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
