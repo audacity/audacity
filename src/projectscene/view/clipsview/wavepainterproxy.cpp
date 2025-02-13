@@ -11,13 +11,13 @@ void WavePainterProxy::paint(QPainter& painter, const trackedit::ClipKey& clipKe
     PlotType pType = plotType.value_or(wavepainterutils::getPlotType(globalContext()->currentProject(), clipKey, params.zoom));
     switch (pType) {
     case PlotType::ConnectingDots:
-        m_connectingDotsPainter.paint(painter, clipKey, params);
+        connectingDotsPainter()->paint(painter, clipKey, params);
         break;
     case PlotType::MinMaxRMS:
-        m_minMaxRMSPainter.paint(painter, clipKey, params);
+        minMaxRMSPainter()->paint(painter, clipKey, params);
         break;
     case PlotType::Stem:
-        m_samplesPainter.paint(painter, clipKey, params);
+        samplesPainter()->paint(painter, clipKey, params);
         break;
     default:
         break;

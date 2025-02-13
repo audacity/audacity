@@ -42,6 +42,9 @@
 #include "view/clipsview/selectionviewcontroller.h"
 #include "view/clipsview/pitchandspeedchangemodel.h"
 #include "view/clipsview/wavepainterproxy.h"
+#include "view/clipsview/au3/connectingdotspainter.h"
+#include "view/clipsview/au3/minmaxrmspainter.h"
+#include "view/clipsview/au3/samplespainter.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -89,6 +92,9 @@ void ProjectSceneModule::registerExports()
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(moduleName(), m_realtimeEffectPanelTrackSelection);
     ioc()->registerExport<IWavePainter>(moduleName(), new WavePainterProxy());
+    ioc()->registerExport<IConnectingDotsPainter>(moduleName(), new ConnectingDotsPainter());
+    ioc()->registerExport<IMinMaxRMSPainter>(moduleName(), new MinMaxRMSPainter());
+    ioc()->registerExport<ISamplesPainter>(moduleName(), new SamplesPainter());
 }
 
 void ProjectSceneModule::resolveImports()
