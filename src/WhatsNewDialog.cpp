@@ -40,7 +40,15 @@ namespace
 {
 
 #if defined (__WXOSX__) || defined(__WXMSW__)
-#  define SHOW_MUSEHUB
+#define SHOW_MUSEHUB true
+#else
+#define SHOW_MUSEHUB false
+#endif
+
+#if defined(HAS_AUDIOCOM_UPLOAD)
+#define SHOW_CLOUD_PROMO true
+#else
+#define SHOW_CLOUD_PROMO false
 #endif
 
 enum {
@@ -52,23 +60,18 @@ enum {
 const char* WhatsNewURL = "https://audacityteam.org/3.7.0-video";
 const char* ChangeLogURL = "https://support.audacityteam.org/additional-resources/changelog";
 //const char* MuseHubURL = "https://www.audacityteam.org/mh-whatsnew";
-const char* MuseHubURL = "https://www.musehub.com/app/ace-studio"; //! TODO AU3: update ACE URL
+const char* MuseHubURL = "https://www.musehub.com/app/ace-studio?utm_source=au-app&utm_medium=ace-studio&utm_campaign=au-app-welcome-ace-studio";
 const char* PromoURL = "https://audacityteam.org/audacitypromo";
-const char* AudioComURL = "https://audio.com/auth/sign-in"; //! TODO AU3:  update cloud URL
+const char* AudioComURL = "https://audio.com/audacity/auth/sign-in?mtm_campaign=audacitydesktop&mtm_content=app_launch_popup";
 
-#if defined(SHOW_MUSEHUB)
-   constexpr auto WindowWidth = 800;
-#else
-   constexpr auto WindowWidth = 500;
-#endif
 
+constexpr auto WindowWidth = SHOW_MUSEHUB ? 820 : 540;
+
+#if defined(__WXOSX__)
 // wxHTML renders text with smaller line spacing on macOS
-#if defined (__WXOSX__)
-constexpr auto WindowHeight = 636;
-#elif defined (__WXMSW__)
-constexpr auto WindowHeight = 676;
-# else
-constexpr auto WindowHeight = 450;
+   constexpr auto WindowHeight = SHOW_CLOUD_PROMO ? 636 : 470;
+#else
+   constexpr auto WindowHeight = SHOW_CLOUD_PROMO ? 685 : 496;
 #endif
 
 }
@@ -130,7 +133,7 @@ wxString MakeSignUpToCloudText()
 #else
       << wxT("</p>");
 #endif
-   
+
    return FormatHtmlText(o.GetString());
 }
 
@@ -150,7 +153,7 @@ wxString MakeWhatsNewText()
    << XO("Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>").Format(WhatsNewURL, ChangeLogURL);
 #endif
       << wxT(R"(<img src="memory:audacity_3_7_2_thumb.jpeg" width="352" height="198" /><br></a></p>)")
-      << wxT("<h3>") << XO("What's new in Audacity") << wxT("</h3>")
+      << wxT("<h3>") << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING) << wxT("</h3>")
       << wxT("<p>")
       << XO("You can also read the [[%s|changelog]]</p>").Format(ChangeLogURL);
 
@@ -208,12 +211,9 @@ wxString MakeGetPluginsText()
    return FormatHtmlText(o.GetString());
 }
 
-const wxColour infoBlue(224, 228, 255);
-#if defined (__WXOSX__) || defined(__WXMSW__)
-const wxSize infoWindowSize(746, 176);
-#else
-const wxSize infoWindowSize(1050, 250);
-#endif
+static const wxColour infoBlue(224, 228, 255);
+static const wxSize infoWindowSize = SHOW_MUSEHUB ? wxSize(761, 180) : wxSize(520, 180);
+
 class InfoWindow : public wxPanel
 {
 public:
@@ -233,7 +233,7 @@ public:
 #else
              S.AddSpace(35);
 #endif
-             
+
              const auto text = safenew LinkingHtmlWindow(S.GetParent());
              text->SetPage(MakeSignUpToCloudText());
              text->Layout();
@@ -241,8 +241,15 @@ public:
              text->SetBackgroundColour(infoBlue);
              S
                .Prop(1)
-               .Position(wxEXPAND | wxLEFT | wxBOTTOM)
+               .Position(wxEXPAND | wxALL)
                .AddWindow(text);
+          }
+          S.EndVerticalLay();
+          if constexpr (SHOW_MUSEHUB) {
+            S.AddSpace(150);
+          }
+       }
+       S.EndHorizontalLay();
 
 	     TranslatableString cloudLabel = XXO("Continue for Cloud Storage");
              S
@@ -259,15 +266,9 @@ public:
 #else
              S.AddSpace(25);
 #endif
-          }
-          S.EndVerticalLay();
-          
-          S.AddSpace(150);
-       }
-       S.EndHorizontalLay();
-       
+
        Layout();
-       
+
 #if defined (__WXOSX__)
        wxImage image = wxBitmap(Cloud).ConvertToImage();
        wxImage resizedImage = image.Scale(189, 104, wxIMAGE_QUALITY_HIGH);
@@ -283,16 +284,16 @@ private:
     void OnPaint(wxPaintEvent& event)
     {
         wxPaintDC dc(this);
-       
+
         wxColour outline(212, 212, 212);
 
         dc.SetBrush(infoBlue);
         dc.SetPen(outline);
         dc.DrawRoundedRectangle(wxPoint(0, 0), infoWindowSize, 10);
-       
+
         dc.DrawBitmap(m_bitmap, -5, 40, true);
     }
-   
+
     wxBitmap m_bitmap;
 };
 }
@@ -312,7 +313,7 @@ WhatsNewDialog::WhatsNewDialog(wxWindow* parent, wxWindowID id)
 
 #if defined(__WXMSW__)
    //On Windows UI controls doesn't use same theme preference
-   //as per application, we should use the latter one to get 
+   //as per application, we should use the latter one to get
    //match with LinkingHtmlWindow's theme
    SetBackgroundColour(theTheme.Colour(clrMedium));
 #endif
@@ -339,27 +340,30 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
    FSHelper helper;
 
-   S.AddSpace(10);
-   
-   S.StartHorizontalLay(wxALIGN_CENTER, 0);
-   {
-      const auto cloudInfo = safenew InfoWindow(S.GetParent());
-      S
-         .Prop(1)
-         .Position(wxALL | wxALIGN_CENTER)
-         .AddWindow(cloudInfo);
+   if constexpr (SHOW_CLOUD_PROMO) {
+      S.AddSpace(10);
+
+      S.StartHorizontalLay(wxALIGN_CENTER, 0);
+      {
+         const auto cloudInfo = safenew InfoWindow(S.GetParent());
+         S
+            .Prop(1)
+            .Position(wxALL | wxALIGN_CENTER)
+            .AddWindow(cloudInfo);
+      }
+      S.EndHorizontalLay();
    }
-   S.EndHorizontalLay();
+
    S.StartHorizontalLay(wxEXPAND);
    {
-      S.StartVerticalLay(wxEXPAND | wxLEFT);
+      S.StartVerticalLay(wxEXPAND);
       {
          const auto whatsnew = safenew LinkingHtmlWindow(S.GetParent());
          whatsnew->SetPage(MakeWhatsNewText());
          whatsnew->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
          S
             .Prop(1)
-#if defined(SHOW_MUSEHUB)
+#if SHOW_MUSEHUB
             .Position(wxEXPAND | wxLEFT | wxTOP)
 #else
             .Position(wxEXPAND | wxALL)
@@ -377,28 +381,28 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 #endif
       }
       S.EndVerticalLay();
-#if defined(SHOW_MUSEHUB)
-      S.StartVerticalLay(wxEXPAND);
-      {
-         const auto getplugins = safenew LinkingHtmlWindow(S.GetParent());
-         getplugins->SetPage(MakeGetPluginsText());
-         getplugins->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
-         S
-            .Prop(1)
-            .Position(wxEXPAND | wxTOP | wxRIGHT)
-            .AddWindow(getplugins);
-         TranslatableString museHubLabel = XXO("Available on MuseHub");
-         S
-            .Id(WhatsNewID_GoToMuseHub)
-            .Position(wxALL | wxALIGN_CENTER)
-#if defined (__WXOSX__) || defined(__WXMSW__)
-            .AddGradientButton(museHubLabel, wxALL, true, true /* set padding */);
-#else
-            .AddButton(museHubLabel, wxALL, true);
-#endif
+      if constexpr(SHOW_MUSEHUB) {
+         S.StartVerticalLay(wxEXPAND);
+         {
+            const auto getplugins = safenew LinkingHtmlWindow(S.GetParent());
+            getplugins->SetPage(MakeGetPluginsText());
+            getplugins->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
+            S
+               .Prop(1)
+               .Position(wxEXPAND | wxTOP)
+               .AddWindow(getplugins);
+            TranslatableString museHubLabel = XXO("Available on MuseHub");
+            S
+               .Id(WhatsNewID_GoToMuseHub)
+               .Position(wxALL | wxALIGN_CENTER)
+   #if defined (__WXOSX__) || defined(__WXMSW__)
+               .AddGradientButton(museHubLabel, wxALL, true, true /* set padding */);
+   #else
+               .AddButton(museHubLabel, wxALL, true);
+   #endif
+         }
+         S.EndVerticalLay();
       }
-      S.EndVerticalLay();
-#endif
    }
    S.EndHorizontalLay();
    S.AddSpace(15);
@@ -444,7 +448,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
          mDontShowAgain = S
             .Position(wxALL | wxALIGN_CENTER)
             .AddCheckBox( XXO("Don't show this again at start up"), !showSplashScreen);
-         
+
          S.AddSpace(1,1,1);
 
          TranslatableString okLabel = XXO("OK");
