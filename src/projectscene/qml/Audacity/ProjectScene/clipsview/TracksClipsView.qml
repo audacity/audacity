@@ -15,6 +15,7 @@ Rectangle {
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
     property bool tracksHovered: false
+    property bool underSelection: false
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -87,6 +88,14 @@ Rectangle {
     SelectionViewController {
         id: selectionController
         context: timeline.context
+
+        onSelectionStarted: {
+            underSelection = true
+        }
+
+        onSelectionEnded: {
+            underSelection = false
+        }
     }
 
     Component.onCompleted: {
@@ -388,6 +397,7 @@ Rectangle {
                     isTrackSelected: model.isTrackSelected
                     isMultiSelectionActive: model.isMultiSelectionActive
                     moveActive: tracksClipsView.moveActive
+                    underSelection: root.underSelection
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack

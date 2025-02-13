@@ -68,6 +68,8 @@ Rectangle {
     signal clipItemMousePositionChanged(real x, real y)
     signal clipHeaderHoveredChanged(bool value)
 
+    signal isNearSampleChanged(bool value)
+
     radius: 4
     color: clipSelected ? "white" : clipColor
     border.color: "#000000"
@@ -93,6 +95,22 @@ Rectangle {
 
     function acceptEditTitle(newTitle) {
         Qt.callLater(root.titleEditAccepted, newTitle)
+    }
+
+    function mousePositionChanged(x, y) {
+        clipItemMousePositionChanged(x, y)
+        waveView.onWaveViewPositionChanged(x, y - header.height)
+    }
+
+    function mousePressAndHold(x, y) {
+        waveView.setLastClickPos(x, y - header.height)
+        waveView.enableMultiSampleEdit = true
+        waveView.update()
+    }
+
+    function mouseReleased() {
+        waveView.enableMultiSampleEdit = false
+        waveView.isNearSample = false
     }
 
     ClipContextMenuModel {
@@ -542,7 +560,7 @@ Rectangle {
                 enabled: waveView.isNearSample
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
-                pressAndHoldInterval: 100
+                propagateComposedEvents: true
 
                 anchors.fill: parent
 
@@ -551,17 +569,12 @@ Rectangle {
                     waveView.update()
                 }
 
-                onPressAndHold: function(e) {
-                    waveView.enableMultiSampleEdit = true
-                    waveView.setLastClickPos(e.x, e.y)
-                    waveView.update()
+                onPressed: function(e) {
+                    e.accepted = false
                 }
 
-                onReleased: function(e) {
-                    waveView.enableMultiSampleEdit = false
-                    if (!waveView.containsMouse) {
-                        waveView.isNearSample = false
-                    }
+                onPressAndHold: function(e) {
+                    e.accepted = false
                 }
 
                 onPositionChanged: function (e) {
@@ -576,7 +589,11 @@ Rectangle {
                         waveView.isNearSample = false
                     }
                 }
-            }        
+            }
+
+            onIsNearSampleChanged: {
+                root.isNearSampleChanged(isNearSample)
+            }    
         }
 
         RoundedRectangle {

@@ -275,6 +275,7 @@ void WaveView::setLastClickPos(const unsigned int x, const unsigned int y)
     }
 
     if (!m_currentChannel.has_value()) {
+        m_currentChannel = samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
         return;
     }
 

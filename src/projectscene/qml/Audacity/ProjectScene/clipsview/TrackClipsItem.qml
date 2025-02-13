@@ -19,6 +19,7 @@ Item {
     property bool isStereo: clipsModel.isStereo
     property double channelHeightRatio: isStereo ? 0.5 : 1
     property bool moveActive: false
+    property bool underSelection: false
 
     signal interactionStarted()
     signal interactionEnded()
@@ -66,6 +67,56 @@ Item {
         anchors.fill: parent
         anchors.bottomMargin: sep.height
         z: 1
+
+        property bool isNearSample: false
+
+        function mapToAllClips(e, f) {
+            for (let i = 0; i < repeator.count; i++) {
+                let clipLoader = repeator.itemAt(i)
+                if (clipLoader && clipLoader.item) {
+                    let clipPos = clipLoader.mapFromItem(this, e.x, e.y)
+                    f(clipLoader.item, {button: e.button, modifiers: e.modifiers, x: clipPos.x, y: clipPos.y})
+                }
+            }
+        }
+
+        MouseArea {
+            id: clipsContainerMouseArea
+            propagateComposedEvents: true
+            hoverEnabled: false
+            pressAndHoldInterval: 100
+            enabled: !root.underSelection && clipsContaner.isNearSample
+
+            anchors.fill: parent
+
+            onClicked: function(e) {
+                e.accepted = false
+            }
+
+            onDoubleClicked: function(e) {
+                e.accepted = false
+            }
+            
+            onPressAndHold: function(e) {
+                clipsContaner.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
+                })
+                clipsContainerMouseArea.hoverEnabled = true
+                e.accepted = false
+            }
+
+            onReleased: function(e) {
+                clipsContaner.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
+                })
+            }
+
+            onPositionChanged: function(e) {
+                clipsContaner.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
+                })
+            }
+        }
 
         Repeater {
             id: repeator
@@ -154,6 +205,10 @@ Item {
                         return -1
                     }
                     return rightNeighbor.x - (clipItem.x + clipItem.width)
+                }
+
+                onIsNearSampleChanged: function(isNearSample) {
+                    clipsContaner.isNearSample = isNearSample
                 }
 
                 onClipHeaderHoveredChanged: function(headerHovered) {
