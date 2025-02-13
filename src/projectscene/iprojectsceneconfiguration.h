@@ -1,9 +1,11 @@
 #pragma once
 
 #include "async/channel.h"
+#include "async/notification.h"
+
 #include "modularity/imoduleinterface.h"
+
 #include "types/projectscenetypes.h"
-#include "types/retval.h"
 
 namespace au::projectscene {
 class IProjectSceneConfiguration : MODULE_EXPORT_INTERFACE
@@ -30,8 +32,9 @@ public:
     virtual void setTimelineRulerMode(const TimelineRulerMode mode) = 0;
     virtual muse::async::Notification timelineRulerModeChanged() const = 0;
 
-    virtual muse::ValCh<bool> isEffectsPanelVisible() const = 0;
+    virtual bool isEffectsPanelVisible() const = 0;
     virtual void setIsEffectsPanelVisible(bool visible) = 0;
+    virtual muse::async::Notification isEffectsPanelVisibleChanged() const = 0;
 
     virtual const std::vector<std::pair<std::string, std::string> >& clipColors() const = 0;
 
