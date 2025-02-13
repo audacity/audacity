@@ -76,6 +76,7 @@ set( IMAGE_LIST
    Play.png
    PlayDisabled.png
    PlayPointer.png
+   Plug.png
    Record.png
    RecordBelow.png
    RecordBelowDisabled.png

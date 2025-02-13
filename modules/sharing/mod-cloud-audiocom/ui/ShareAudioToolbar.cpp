@@ -28,6 +28,7 @@
 #include "ProjectWindow.h"
 #include "Theme.h"
 
+#include "GetEffectsDialog.h"
 #include "dialogs/ShareAudioDialog.h"
 #include "toolbars/ToolManager.h"
 #include "widgets/AButton.h"
@@ -77,12 +78,19 @@ void ShareAudioToolbar::RegenerateTooltips()
 #if wxUSE_TOOLTIPS
    for (long iWinID = ID_SHARE_AUDIO_BUTTON; iWinID < BUTTON_COUNT; iWinID++)
    {
-      auto pCtrl = static_cast<AButton*>(this->FindWindow(iWinID));
+      auto pCtrl = static_cast<AButton*>(this->FindWindowById(iWinID));
+      if (!pCtrl) {
+         assert(true);
+         continue;
+      }
       CommandID name;
       switch (iWinID)
       {
       case ID_SHARE_AUDIO_BUTTON:
-         name = ID();
+         name = wxT("Share Audio");
+         break;
+      case ID_GET_EFFECTS_BUTTON:
+         name = wxT("Get Effects");
          break;
       }
 
@@ -100,6 +108,7 @@ void ShareAudioToolbar::Populate()
    MakeButtonBackgroundsSmall();
    SetBackgroundColour(theTheme.Colour(clrMedium));
    MakeShareAudioButton();
+   MakeGetEffectsButton();
 
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
@@ -146,22 +155,33 @@ void ShareAudioToolbar::ReCreateButtons()
    RegenerateTooltips();
 }
 
-void ShareAudioToolbar::MakeShareAudioButton()
+AButton* ShareAudioToolbar::MakeButton(int id, const TranslatableString& label, const wxImage& icon)
 {
-   const auto height = (toolbarSingle - toolbarMargin) * 2;
+   const auto height = 25;
 
-   mShareAudioButton = safenew AButton(this, ID_SHARE_AUDIO_BUTTON);
-   //i18n-hint: Share audio button text, keep as short as possible
-   mShareAudioButton->SetLabel(XO("Share Audio"));
-   mShareAudioButton->SetButtonType(AButton::FrameTextVButton);
-   mShareAudioButton->SetImages(
+   auto button = safenew AButton(this, id);
+   button->SetLabel(label);
+   button->SetButtonType(AButton::FrameTextHButton);
+   button->SetImages(
       theTheme.Image(bmpRecoloredUpSmall),
       theTheme.Image(bmpRecoloredUpHiliteSmall),
       theTheme.Image(bmpRecoloredDownSmall),
       theTheme.Image(bmpRecoloredHiliteSmall),
       theTheme.Image(bmpRecoloredUpSmall));
-   mShareAudioButton->SetIcon(theTheme.Image(bmpShareAudio));
-   mShareAudioButton->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+   button->SetIcon(icon);
+   button->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+
+   button->SetMinSize(wxSize{-1, height});
+   button->SetMaxSize(wxSize{-1, height});
+   button->SetFrameMid(3);
+
+   return button;
+}
+
+
+void ShareAudioToolbar::MakeShareAudioButton()
+{
+   mShareAudioButton = MakeButton(ID_SHARE_AUDIO_BUTTON, XO("Share Audio"), theTheme.Image(bmpShareAudio));
 
    mShareAudioButton->Bind(wxEVT_BUTTON, [this](auto) {
       audiocom::ShareAudioDialog dlg(
@@ -171,18 +191,32 @@ void ShareAudioToolbar::MakeShareAudioButton()
 
          mShareAudioButton->PopUp();
       });
-   mShareAudioButton->SetMinSize(wxSize{-1, height});
-   mShareAudioButton->SetMaxSize(wxSize{-1, height});
+}
+
+void ShareAudioToolbar::MakeGetEffectsButton()
+{
+   mGetEffectsButton = MakeButton(ID_GET_EFFECTS_BUTTON, XO("Get Effects"), theTheme.Image(bmpPlug));
+
+   mGetEffectsButton->Bind(wxEVT_BUTTON, [this](auto) {
+      musehub::GetEffectsDialog dlg(&ProjectWindow::Get(mProject));
+      dlg.ShowModal();
+
+         mGetEffectsButton->PopUp();
+      });
+
 }
 
 void ShareAudioToolbar::ArrangeButtons()
 {
-   Add(mShareAudioButton, 0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
 
-   SetMinSize({ std::max(76, GetSizer()->GetMinSize().GetWidth()), -1 });
-   SetMaxSize({ -1, -1 });
+   wxGridSizer *sizer = new wxGridSizer(2, 1, toolbarSpacing, toolbarSpacing);
+   Add(sizer, 0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
+
+   sizer->Add(mShareAudioButton, 0, wxEXPAND);
+   sizer->Add(mGetEffectsButton, 0, wxEXPAND);
 
    // Layout the toolbar
+   sizer->Layout();
    Layout();
 }
 

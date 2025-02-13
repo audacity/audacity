@@ -8,11 +8,14 @@
 
 #include "GradientButton.h"
 
-const wxColour darkBlue(68, 137, 247);
-const wxColour startColorPressed(59, 129, 231);
-const wxColour startColorNormal(75, 145, 247);
-const wxColour endColorPressed(38, 106, 214);
-const wxColour endColorNormal(54, 122, 246);
+static const wxColor darkBlue(68, 137, 247);
+
+// TODO move to theme
+static const wxColor defaultNormalColorStart(75, 145, 247);
+static const wxColor defaultNormalColorEnd(54, 122, 246);
+
+static const wxColor defaultPressedColorStart(59, 129, 231);
+static const wxColor defaultPressedColorEnd(38, 106, 214);
 
 constexpr int roundingRadius = 4;
 #if defined(__WXMAC__)
@@ -25,7 +28,9 @@ constexpr int roundYOffset = 0;
 
 GradientButton::GradientButton(wxWindow* parent, wxWindowID id, const wxString& label,
                                const wxPoint& pos, const wxSize& size)
-    : wxButton(parent, id, label, pos, size) {
+    : m_normalColorStart(defaultNormalColorStart), m_normalColorEnd(defaultNormalColorEnd),
+      m_pressedColorStart(defaultPressedColorStart), m_pressedColorEnd(defaultPressedColorEnd),
+      wxButton(parent, id, label, pos, size) {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     Bind(wxEVT_PAINT, &GradientButton::OnPaint, this);
     Bind(wxEVT_LEFT_DOWN, &GradientButton::OnMouseDown, this);
@@ -42,13 +47,22 @@ void GradientButton::OnPaint(wxPaintEvent& event) {
     dc.Clear();
     wxGraphicsContext* gc = wxGraphicsContext::Create(dc);
     if (gc) {
-        wxColour startColor = m_isPressed ? startColorPressed : startColorNormal;
-        wxColour endColor = m_isPressed ? endColorPressed : endColorNormal;
+        wxColour startColor = m_isPressed ? m_pressedColorStart : m_normalColorStart;
+        wxColour endColor = m_isPressed ? m_pressedColorEnd : m_normalColorEnd;
 
         gc->SetBrush(gc->CreateLinearGradientBrush(
             0, 0, size.GetWidth(), size.GetHeight(), startColor, endColor));
         gc->DrawRoundedRectangle(roundXOffset, roundYOffset, size.GetWidth(), size.GetHeight(), roundingRadius);
         delete gc;
+    }
+
+    if (HasFocus()) {
+        wxPen dottedPen(*wxBLACK, 1, wxPENSTYLE_DOT);
+        dc.SetPen(dottedPen);
+        dc.SetBrush(*wxTRANSPARENT_BRUSH);
+        dc.DrawRoundedRectangle(roundXOffset + 2, roundYOffset + 2,
+           size.GetWidth() - 4, size.GetHeight() - 4,
+           roundingRadius);
     }
 
     wxString label = GetLabel();
@@ -74,3 +88,24 @@ void GradientButton::OnMouseUp(wxMouseEvent& event) {
     Refresh();
     event.Skip();
 }
+
+void GradientButton::SetNormalColor(wxColour start, wxColour end) {
+   m_normalColorStart = start;
+   m_normalColorEnd = end;
+};
+
+void GradientButton::SetPressedColor(wxColour start, wxColour end) {
+   m_pressedColorStart = start;
+   m_pressedColorEnd = end;
+};
+
+void GradientButton::SetNormalColor(wxColour color) {
+   m_normalColorStart = color;
+   m_normalColorEnd = color;
+};
+
+void GradientButton::SetPressedColor(wxColour color) {
+   m_pressedColorStart = color;
+   m_pressedColorEnd = color;
+};
+

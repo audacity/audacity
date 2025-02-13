@@ -437,6 +437,15 @@ void PopulatePreferences()
          gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
    }
 
+   if (std::tuple { vMajor, vMinor, vMicro } < std::tuple{ 3, 7, 2 })
+   {
+      // Reset Share Audio width
+      if(gPrefs->Exists("/GUI/ToolBars/Share Audio/W"))
+         gPrefs->DeleteEntry("/GUI/ToolBars/Share Audio/W");
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
@@ -1275,7 +1284,7 @@ AudacityApp::~AudacityApp()
 }
 
 void AudacityApp::ShowSplashScreen() {
-   // Bug 718: Position splash screen on same screen 
+   // Bug 718: Position splash screen on same screen
    // as where Audacity project will appear.
    wxRect wndRect;
    bool bMaximized = false;
@@ -1307,11 +1316,11 @@ void AudacityApp::ShowSplashScreen() {
       }
    );
 
-   // Unfortunately with the Windows 10 Creators update, the splash screen 
+   // Unfortunately with the Windows 10 Creators update, the splash screen
    // now appears before setting its position.
-   // On a dual monitor screen it will appear on one screen and then 
+   // On a dual monitor screen it will appear on one screen and then
    // possibly jump to the second.
-   // We could fix this by writing our own splash screen and using Hide() 
+   // We could fix this by writing our own splash screen and using Hide()
    // until the splash scren was correctly positioned, then Show()
 
    // Possibly move it on to the second screen...
