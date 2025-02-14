@@ -84,6 +84,7 @@ Item {
 
             anchors.fill: parent
             hoverEnabled: true
+            cursorShape: Qt.SizeHorCursor
 
             onPressed: function(e) {
                 root.clipStartEditRequested()
@@ -168,6 +169,7 @@ Item {
 
             anchors.fill: parent
             hoverEnabled: true
+            cursorShape: Qt.SizeHorCursor
 
             onPressed: function(e) {
                 root.clipStartEditRequested()
@@ -261,6 +263,7 @@ Item {
             id: leftTimeMa
             anchors.fill: parent
             hoverEnabled: true
+            cursorShape: Qt.SizeHorCursor
 
             onPressed: {
                 root.clipStartEditRequested()
@@ -351,6 +354,7 @@ Item {
             id: rightTimeMa
             anchors.fill: parent
             hoverEnabled: true
+            cursorShape: Qt.SizeHorCursor
 
             onPressed: {
                 root.clipStartEditRequested()
