@@ -79,23 +79,23 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
             return;
         }
         switch (msg.type) {
-        case RealtimeEffectListMessage::Type::Insert:
-            m_realtimeEffectAdded.send(trackId, msg.affectedState);
-            return;
-        case RealtimeEffectListMessage::Type::Remove:
-            m_realtimeEffectRemoved.send(trackId, msg.affectedState);
-            return;
-        case RealtimeEffectListMessage::Type::DidReplace: {
-            const auto newState = effect(trackId, msg.srcIndex);
-            IF_ASSERT_FAILED(newState) {
+            case RealtimeEffectListMessage::Type::Insert:
+                m_realtimeEffectAdded.send(trackId, msg.affectedState);
                 return;
+            case RealtimeEffectListMessage::Type::Remove:
+                m_realtimeEffectRemoved.send(trackId, msg.affectedState);
+                return;
+            case RealtimeEffectListMessage::Type::DidReplace: {
+                const auto newState = effect(trackId, msg.srcIndex);
+                IF_ASSERT_FAILED(newState) {
+                    return;
+                }
+                m_realtimeEffectReplaced.send(trackId, msg.srcIndex, newState);
             }
-            m_realtimeEffectReplaced.send(trackId, msg.srcIndex, newState);
-        }
-            return;
-        case RealtimeEffectListMessage::Type::Move:
-            m_realtimeEffectMoved.send(trackId, msg.srcIndex, msg.dstIndex);
-            return;
+                return;
+            case RealtimeEffectListMessage::Type::Move:
+                m_realtimeEffectMoved.send(trackId, msg.srcIndex, msg.dstIndex);
+                return;
         }
     });
 

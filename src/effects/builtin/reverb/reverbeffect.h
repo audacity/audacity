@@ -133,7 +133,7 @@ public:
     const EffectParameterMethods& Parameters() const override;
 
     static constexpr EffectParameter RoomSize {
-        & ReverbSettings::mRoomSize,
+        &ReverbSettings::mRoomSize,
         L"RoomSize",
         ReverbSettings::roomSizeDefault,
         0,
@@ -141,7 +141,7 @@ public:
         1 };
 
     static constexpr EffectParameter PreDelay {
-        & ReverbSettings::mPreDelay,
+        &ReverbSettings::mPreDelay,
         L"Delay",
         ReverbSettings::preDelayDefault,
         0,
@@ -149,7 +149,7 @@ public:
         1 };
 
     static constexpr EffectParameter Reverberance {
-        & ReverbSettings::mReverberance,
+        &ReverbSettings::mReverberance,
         L"Reverberance",
         ReverbSettings::reverberanceDefault,
         0,
@@ -158,7 +158,7 @@ public:
     };
 
     static constexpr EffectParameter HfDamping {
-        & ReverbSettings::mHfDamping,
+        &ReverbSettings::mHfDamping,
         L"HfDamping",
         ReverbSettings::hfDampingDefault,
         0,
@@ -167,7 +167,7 @@ public:
     };
 
     static constexpr EffectParameter ToneLow {
-        & ReverbSettings::mToneLow,
+        &ReverbSettings::mToneLow,
         L"ToneLow",
         ReverbSettings::toneLowDefault,
         0,
@@ -175,7 +175,7 @@ public:
         1 };
 
     static constexpr EffectParameter ToneHigh {
-        & ReverbSettings::mToneHigh,
+        &ReverbSettings::mToneHigh,
         L"ToneHigh",
         ReverbSettings::toneHighDefault,
         0,
@@ -183,7 +183,7 @@ public:
         1 };
 
     static constexpr EffectParameter WetGain {
-        & ReverbSettings::mWetGain,
+        &ReverbSettings::mWetGain,
         L"WetGain",
         ReverbSettings::wetGainDefault,
         -20,
@@ -191,7 +191,7 @@ public:
         1 };
 
     static constexpr EffectParameter DryGain {
-        & ReverbSettings::mDryGain,
+        &ReverbSettings::mDryGain,
         L"DryGain",
         ReverbSettings::dryGainDefault,
         -20,
@@ -199,7 +199,7 @@ public:
         1 };
 
     static constexpr EffectParameter StereoWidth {
-        & ReverbSettings::mStereoWidth,
+        &ReverbSettings::mStereoWidth,
         L"StereoWidth",
         ReverbSettings::stereoWidthDefault,
         0,
@@ -208,11 +208,11 @@ public:
     };
 
     static constexpr EffectParameter WetOnly {
-        & ReverbSettings::mWetOnly,
+        &ReverbSettings::mWetOnly,
         L"WetOnly",
         ReverbSettings::wetOnlyDefault,
-                                     false,
-                                     true,
+        false,
+        true,
         1 };
 };
 } // namespace au::effects
