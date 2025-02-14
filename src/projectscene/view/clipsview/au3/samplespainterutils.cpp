@@ -213,7 +213,7 @@ std::optional<int> isNearSample(std::shared_ptr<au::project::IAudacityProject> p
         waveMetrics.height = channelHeight[i];
 
         float oneSample;
-        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime + waveClip->GetPlayStartTime(), i, oneSample, false)) {
+        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime, i, oneSample, false)) {
             continue;
         }
 
@@ -328,7 +328,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
 
         float oneSample;
-        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime + waveClip->GetPlayStartTime(), currentChannel, oneSample, false)) {
+        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime, currentChannel, oneSample, false)) {
             return;
         }
 
