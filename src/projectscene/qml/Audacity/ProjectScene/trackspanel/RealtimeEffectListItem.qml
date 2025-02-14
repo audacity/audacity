@@ -72,8 +72,9 @@ ListItemBlank {
 
             visible: true
             transparent: true
-            hoverHitColor: ui.theme.buttonColor
-            mouseArea.cursorShape: Qt.SizeAllCursor
+            hoverHitColor: normalColor
+            accentColor: normalColor
+            mouseArea.cursorShape: Qt.SizeVerCursor
 
             mouseArea.drag.target: content
             mouseArea.drag.axis: Drag.YAxis

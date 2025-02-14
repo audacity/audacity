@@ -39,9 +39,9 @@ Rectangle {
         anchors.fill: parent
         spacing: 6
         cacheBuffer: 3000
-        interactive: true
+        interactive: trackEffectList.contentHeight > trackEffectList.height
         model: trackEffectListModel
-        boundsBehavior: Flickable.DragAndOvershootBounds
+        boundsBehavior: Flickable.StopAtBounds
         boundsMovement: Flickable.FollowBoundsBehavior
         flickDeceleration: 10000
         footer: listMargin
