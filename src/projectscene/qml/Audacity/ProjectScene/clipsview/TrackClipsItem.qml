@@ -90,6 +90,9 @@ Item {
             anchors.fill: parent
 
             onClicked: function(e) {
+                clipsContaner.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.mouseClicked(mouseEvent.x, mouseEvent.y)
+                })
                 e.accepted = false
             }
 

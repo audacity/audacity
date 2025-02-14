@@ -113,6 +113,11 @@ Rectangle {
         waveView.isNearSample = false
     }
 
+    function mouseClicked(x, y) {
+        waveView.setLastClickPos(x, y - header.height)
+        waveView.update()
+    }
+
     ClipContextMenuModel {
         id: singleClipContextMenuModel
         clipKey: root.clipKey
