@@ -155,6 +155,7 @@ ListItemBlank {
         Rectangle {
             id: effectNameRect
 
+            color: "transparent"
             border.color: ui.theme.strokeColor
             border.width: 1
             radius: effectNameButton.backgroundRadius
@@ -166,7 +167,6 @@ ListItemBlank {
                 id: effectNameButton
 
                 anchors.fill: parent
-                normalColor: ui.theme.backgroundPrimaryColor
 
                 StyledTextLabel {
                     anchors.fill: parent
@@ -188,6 +188,7 @@ ListItemBlank {
         Rectangle {
             id: chooseEffectRect
 
+            color: "transparent"
             border.color: ui.theme.strokeColor
             border.width: 1
             radius: effectNameButton.backgroundRadius
@@ -198,7 +199,6 @@ ListItemBlank {
                 id: chooseEffectDropdown
 
                 anchors.fill: parent
-                normalColor: ui.theme.backgroundPrimaryColor
                 icon: IconCode.SMALL_ARROW_DOWN
 
                 RealtimeEffectListItemMenuModel {
