@@ -65,7 +65,7 @@ static auto intChoicesMethod = {
 EnumSetting< int > Resample::FastMethodSetting{
    wxT("/Quality/LibsoxrSampleRateConverterChoice"),
    methodNames,
-   1,  // Medium Quality
+   3,  // Also best quality as modern PCs are probably fast enough. 
 
    // for migrating old preferences:
    intChoicesMethod,
