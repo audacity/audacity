@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-02-13 19:07+0300\n"
-"PO-Revision-Date: 2025-02-14 00:00+0000\n"
+"PO-Revision-Date: 2025-02-16 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -817,7 +817,7 @@ msgstr "Odwraca próbki do góry nogami, odwracając ich biegunowość"
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr "Legacy Compressor"
+msgstr "Stary kompresor"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -20804,7 +20804,7 @@ msgstr ""
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Legacy Limiter"
-msgstr "Legacy Limiter"
+msgstr "Stary limiter"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -21687,4 +21687,4 @@ msgstr "Narzędzia widma"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
-msgstr "Legacy"
+msgstr "Stare"
