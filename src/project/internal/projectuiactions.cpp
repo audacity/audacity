@@ -468,11 +468,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Sort by name"),
              TranslatableString("action", "Sort by name")
              ),
-    UiAction("keep-tracks-synchronised",
+    UiAction("keep-tracks-synchronized",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Keep tracks synchronised"),
-             TranslatableString("action", "Keep tracks synchronised")
+             TranslatableString("action", "Keep tracks synchronized"),
+             TranslatableString("action", "Keep tracks synchronized")
              ),
 
     // generate menu

@@ -299,7 +299,7 @@ MenuItem* AppMenuModel::makeTracksMenu()
         makeMenu(TranslatableString("appshell/menu/align", "Align content"), makeAlignItems(), "menu-align"),
         makeMenu(TranslatableString("appshell/menu/sort", "Sort tracks"), makeSortItems(), "menu-sort"),
         makeSeparator(),
-        makeMenuItem("keep-tracks-synchronised")
+        makeMenuItem("keep-tracks-synchronized")
     };
 
     return makeMenu(TranslatableString("appshell/menu/tracks", "&Tracks"), tracksItems, "menu-tracks");

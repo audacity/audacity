@@ -169,7 +169,7 @@
                     <li>Enable changing notes duration if selecting note stem, hook or a range</li>
                     <li>Visual improvements for palettes</li>
                     <li>Mark notes that are out of instrument range with red or yellow color even when they are selected</li>
-                    <li>Save Online is now fully synchronised with the musescore.com upload page</li>
+                    <li>Save Online is now fully synchronized with the musescore.com upload page</li>
                 </ul>
                 <p>Fixes:</p>
                 <ul>
