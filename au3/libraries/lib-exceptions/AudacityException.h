@@ -32,142 +32,144 @@ enum class ExceptionType
 class EXCEPTIONS_API AudacityException /* not final */
 {
 public:
-   AudacityException() {}
-   virtual ~AudacityException() = 0;
+    AudacityException() {}
+    virtual ~AudacityException() = 0;
 
-   //! Action to do in the main thread at idle time of the event loop.
-   virtual void DelayedHandlerAction() = 0;
+    //! Action to do in the main thread at idle time of the event loop.
+    virtual void DelayedHandlerAction() = 0;
 
-   static void EnqueueAction(
-      std::exception_ptr pException,
-      std::function<void(AudacityException*)> delayedHandler);
+    static void EnqueueAction(
+        std::exception_ptr pException, std::function<void(AudacityException*)> delayedHandler);
 
 protected:
-   //! Make this protected to prevent slicing copies
-   AudacityException( const AudacityException& ) = default;
+    //! Make this protected to prevent slicing copies
+    AudacityException(const AudacityException&) = default;
 
-   //! Don't allow moves of this class or subclasses
-   // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2442
-   AudacityException( AudacityException&& ) = delete;
+    //! Don't allow moves of this class or subclasses
+    // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2442
+    AudacityException(AudacityException&&) = delete;
 
-   //! Disallow assignment
-   AudacityException &operator = ( const AudacityException & ) = delete;
+    //! Disallow assignment
+    AudacityException& operator =(const AudacityException&) = delete;
 };
 
 //! Abstract AudacityException subclass displays a message, specified by further subclass
 /*! At most one message will be displayed for each pass through the main event idle loop,
  no matter how many exceptions were caught. */
-class EXCEPTIONS_API MessageBoxException /* not final */
-   : public AudacityException
+class EXCEPTIONS_API MessageBoxException /* not final */ : public AudacityException
 {
-   //! Privatize the inherited function
-   using AudacityException::DelayedHandlerAction;
+    //! Privatize the inherited function
+    using AudacityException::DelayedHandlerAction;
 
-   //! Do not allow subclasses to change behavior, except by overriding ErrorMessage().
-   void DelayedHandlerAction() final;
+    //! Do not allow subclasses to change behavior, except by overriding ErrorMessage().
+    void DelayedHandlerAction() final;
 
 protected:
-   //! If default-constructed with empty caption, it makes no message box.
-   explicit MessageBoxException(
-      ExceptionType exceptionType, //!< Exception type
-      const TranslatableString &caption //!< Shown in message box's frame; not the actual message
-   );
-   ~MessageBoxException() override;
+    //! If default-constructed with empty caption, it makes no message box.
+    explicit MessageBoxException(
+        ExceptionType exceptionType, //!< Exception type
+        const TranslatableString& caption //!< Shown in message box's frame; not the actual message
+        );
+    ~MessageBoxException() override;
 
-   MessageBoxException( const MessageBoxException& );
+    MessageBoxException(const MessageBoxException&);
 
 public:
-   //! %Format the error message for this exception.
-   virtual TranslatableString ErrorMessage() const = 0;
-   virtual wxString ErrorHelpUrl() const { return helpUrl; };
+    //! %Format the error message for this exception.
+    virtual TranslatableString ErrorMessage() const = 0;
+    virtual wxString ErrorHelpUrl() const { return helpUrl; }
 
 private:
-   TranslatableString caption; //!< Stored caption
-   ExceptionType exceptionType; //!< Exception type
+    TranslatableString caption; //!< Stored caption
+    ExceptionType exceptionType; //!< Exception type
 
-   mutable bool moved { false }; //!< Whether @c *this has been the source of a copy
+    mutable bool moved { false }; //!< Whether @c *this has been the source of a copy
 protected:
-   mutable wxString helpUrl{ "" };
+    mutable wxString helpUrl{ "" };
 };
 
 //! A MessageBoxException that shows a given, unvarying string.
-class EXCEPTIONS_API SimpleMessageBoxException /* not final */
-   : public MessageBoxException
+class EXCEPTIONS_API SimpleMessageBoxException /* not final */ : public MessageBoxException
 {
 public:
-   explicit SimpleMessageBoxException(
-      ExceptionType exceptionType,        //!< Exception type
-      const TranslatableString &message_, //<! Message to show
-      const TranslatableString &caption = XO("Message"), //<! Short caption in frame around message
-      const wxString &helpUrl_ = "" // Optional URL for help.
-   )
-      : MessageBoxException { exceptionType, caption }
-      , message{ message_ }
-   {
-      helpUrl = helpUrl_;
-   }
-   ~SimpleMessageBoxException() override;
+    explicit SimpleMessageBoxException(
+        ExceptionType exceptionType,      //!< Exception type
+        const TranslatableString& message_, //<! Message to show
+        const TranslatableString& caption = XO("Message"), //<! Short caption in frame around message
+        const wxString& helpUrl_ = "" // Optional URL for help.
+        )
+        : MessageBoxException{exceptionType, caption}
+        , message{message_}
+    {
+        helpUrl = helpUrl_;
+    }
 
-   SimpleMessageBoxException( const SimpleMessageBoxException& ) = default;
-   SimpleMessageBoxException &operator = (
-      SimpleMessageBoxException && ) = delete;
+    ~SimpleMessageBoxException() override;
 
-   // Format a default, internationalized error message for this exception.
-   virtual TranslatableString ErrorMessage() const override;
+    SimpleMessageBoxException(const SimpleMessageBoxException&) = default;
+    SimpleMessageBoxException& operator =(
+        SimpleMessageBoxException&&) = delete;
+
+    // Format a default, internationalized error message for this exception.
+    virtual TranslatableString ErrorMessage() const override;
 
 private:
-   TranslatableString message; //!< Stored message
+    TranslatableString message; //!< Stored message
 };
 
-
 //! A default template parameter for @ref GuardedCall
-inline void DefaultDelayedHandlerAction(AudacityException *pException)
+inline void DefaultDelayedHandlerAction(AudacityException* pException)
 {
-   if ( pException )
-      pException->DelayedHandlerAction();
+    if (pException) {
+        pException->DelayedHandlerAction();
+    }
 }
 
 //! A default template parameter for @ref GuardedCall<R>
 /*! @tparam R return type from GuardedCall (or convertible to it) */
-template <typename R> struct SimpleGuard
+template<typename R> struct SimpleGuard
 {
-   explicit SimpleGuard(
-      const R &value //!< The value to return from GuardedCall when an exception is handled
-   )
-      noexcept(noexcept( R{ std::declval<const R&>() } ))
-         : m_value{ value } {}
-   R operator () ( AudacityException * ) const
-      noexcept(noexcept( R{ std::declval<R>() } ))
-         { return m_value; }
-   const R m_value;
+    explicit SimpleGuard(
+        const R& value //!< The value to return from GuardedCall when an exception is handled
+        )
+    noexcept(noexcept(R{ std::declval<const R&>() }))
+        : m_value{value} {}
+    R operator ()(AudacityException*) const
+    noexcept(noexcept(R { std::declval<R>() }))
+    {
+        return m_value;
+    }
+    const R m_value;
 };
 
 //! Specialization of SimpleGuard, also defining a default value
 template<> struct SimpleGuard<bool>
 {
-   explicit SimpleGuard(
-      bool value //!< The value to return from @ref GaurdedCall when an exception is handled
-   ) noexcept
-      : m_value{ value } {}
-   bool operator () ( AudacityException * ) const noexcept { return m_value; }
-   static SimpleGuard Default() noexcept
-      { return SimpleGuard{ false }; }
-   const bool m_value;
+    explicit SimpleGuard(
+        bool value //!< The value to return from @ref GaurdedCall when an exception is handled
+        ) noexcept
+        : m_value{value} {}
+    bool operator ()(AudacityException*) const noexcept { return m_value; }
+    static SimpleGuard Default() noexcept
+    { return SimpleGuard{ false }; }
+    const bool m_value;
 };
 
 //! Specialization of SimpleGuard, also defining a default value
 template<> struct SimpleGuard<void>
 {
-   SimpleGuard() noexcept {}
-   void operator () ( AudacityException * ) const noexcept {}
-   static SimpleGuard Default() noexcept { return {}; }
+    SimpleGuard() noexcept {}
+    void operator ()(AudacityException*) const noexcept {}
+    static SimpleGuard Default() noexcept { return {}; }
 };
 
 //! Convert a value to a handler function returning that value, suitable for @ref GuardedCall<R>
-template < typename R >
-SimpleGuard< R > MakeSimpleGuard( R value )
-   noexcept(noexcept( SimpleGuard< R >{ value } ))
-      { return SimpleGuard< R >{ value }; }
+template< typename R >
+SimpleGuard< R > MakeSimpleGuard(R value)
+noexcept(noexcept(SimpleGuard< R > { value }))
+{
+    return SimpleGuard< R > { value };
+}
 
 //! Convert a value to a no-op handler function, suitable for @ref GuardedCall<void>
 inline SimpleGuard< void > MakeSimpleGuard() noexcept { return {}; }
@@ -194,57 +196,59 @@ inline SimpleGuard< void > MakeSimpleGuard() noexcept { return {}; }
 
   @throws nothing, when handler throws nothing and delayedHandler is defaulted
  */
-template <
-   typename R = void,
+template<
+    typename R = void,
 
-   typename F1, // function object with signature R()
+    typename F1, // function object with signature R()
 
-   typename F2 = SimpleGuard< R >, // function object
-      // with signature R( AudacityException * )
+    typename F2 = SimpleGuard< R >, // function object
+    // with signature R( AudacityException * )
 
-   typename F3 = void (*)(AudacityException *pException)
->
+    typename F3 = void (*)(AudacityException* pException)
+    >
 //! Execute some code on any thread; catch any AudacityException; enqueue error report on the main thread
 R GuardedCall(
-   const F1 &body, //!< typically a lambda
-   const F2 &handler = F2::Default(), //!< default just returns false or void; see also @ref MakeSimpleGuard
-   F3 delayedHandler = DefaultDelayedHandlerAction /*!< called later in the
+    const F1& body, //!< typically a lambda
+    const F2& handler = F2::Default(), //!< default just returns false or void; see also @ref MakeSimpleGuard
+    F3 delayedHandler = DefaultDelayedHandlerAction /*!< called later in the
       main thread, passing it a stored exception; usually defaulted */
-)
+    )
 noexcept(
-   noexcept( handler( std::declval<AudacityException*>() ) ) &&
-   noexcept( handler( nullptr ) ) &&
-   noexcept(
-      std::function<void(AudacityException*)>{std::move(delayedHandler)} ) )
+    noexcept(handler(std::declval<AudacityException*>()))
+    && noexcept(handler(nullptr))
+    && noexcept(
+        std::function<void (AudacityException*)> { std::move(delayedHandler) }))
 {
-   try { return body(); }
-   catch ( AudacityException &e ) {
+    try {
+        return body();
+    }
+    catch (AudacityException& e) {
    #ifndef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
-      const auto uncaughtExceptionsCount = std::uncaught_exceptions();
+        const auto uncaughtExceptionsCount = std::uncaught_exceptions();
    #endif
-      auto end = finally( [&]()
-      noexcept(noexcept(
-         std::function<void(AudacityException*)>{
-            std::move(delayedHandler)} )) {
-         // At this point, e is the "current" exception, but not "uncaught"
-         // unless it was rethrown by handler.  handler might also throw some
-         // other exception object.
+        auto end = finally([&]()
+                           noexcept(noexcept(
+                                        std::function<void(AudacityException*)> {
+            std::move(delayedHandler) })) {
+            // At this point, e is the "current" exception, but not "uncaught"
+            // unless it was rethrown by handler.  handler might also throw some
+            // other exception object.
       #ifdef UNCAUGHT_EXCEPTIONS_UNAVAILABLE
-         if (!std::uncaught_exception()) {
+            if (!std::uncaught_exception()) {
       #else
-         if (uncaughtExceptionsCount >= std::uncaught_exceptions()) {
+            if (uncaughtExceptionsCount >= std::uncaught_exceptions()) {
       #endif
-            auto pException = std::current_exception(); // This points to e
-            AudacityException::EnqueueAction(
-               pException, std::move(delayedHandler));
-         }
-      });
+                auto pException = std::current_exception(); // This points to e
+                AudacityException::EnqueueAction(
+                    pException, std::move(delayedHandler));
+            }
+        });
 
-      return handler( &e );
-   }
-   catch ( ... ) {
-      return handler( nullptr );
-   }
+        return handler(&e);
+    }
+    catch (...) {
+        return handler(nullptr);
+    }
 }
 
 #endif

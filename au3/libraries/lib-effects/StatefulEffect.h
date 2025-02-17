@@ -22,25 +22,25 @@
 class EFFECTS_API StatefulEffect : public StatefulEffectBase, public Effect
 {
 public:
-   class EFFECTS_API Instance : public StatefulEffectBase::Instance {
-   public:
-      using StatefulEffectBase::Instance::Instance;
-      bool Process(EffectSettings &settings) override;
-      SampleCount GetLatency(
-         const EffectSettings &settings, double sampleRate) const override;
-      //! Default implementation fails (returns 0 always)
-      size_t ProcessBlock(EffectSettings &settings,
-         const float *const *inBlock, float *const *outBlock, size_t blockLen)
-      override;
-      std::string GetLastError() const override;
+    class EFFECTS_API Instance : public StatefulEffectBase::Instance
+    {
+    public:
+        using StatefulEffectBase::Instance::Instance;
+        bool Process(EffectSettings& settings) override;
+        SampleCount GetLatency(
+            const EffectSettings& settings, double sampleRate) const override;
+        //! Default implementation fails (returns 0 always)
+        size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen)
+        override;
+        std::string GetLastError() const override;
 
-   private:
-      std::string mLastError;
-   };
+    private:
+        std::string mLastError;
+    };
 
-   ~StatefulEffect() override;
+    ~StatefulEffect() override;
 
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
+    std::shared_ptr<EffectInstance> MakeInstance() const override;
 };
 
 #endif
