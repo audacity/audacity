@@ -409,13 +409,14 @@ using AVCodecIDFwd = int;
 //! Define a wrapper struct so that implicit conversion to and from int won't
 //! mistakenly happen
 struct AudacityAVCodecID {
-   AudacityAVCodecID(AVCodecIDFwd) = delete;
-   AudacityAVCodecID( AudacityAVCodecIDValue value ) : value{value} {}
-   AudacityAVCodecIDValue value;
+    AudacityAVCodecID(AVCodecIDFwd) = delete;
+    AudacityAVCodecID(AudacityAVCodecIDValue value)
+        : value{value} {}
+    AudacityAVCodecIDValue value;
 };
 
-inline bool operator == ( AudacityAVCodecID x, AudacityAVCodecID y )
+inline bool operator ==(AudacityAVCodecID x, AudacityAVCodecID y)
 { return x.value == y.value; }
 
-inline bool operator != ( AudacityAVCodecID x, AudacityAVCodecID y )
+inline bool operator !=(AudacityAVCodecID x, AudacityAVCodecID y)
 { return !(x == y); }

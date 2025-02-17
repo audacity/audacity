@@ -12,23 +12,21 @@
 
 #include "AudioComDialogBase.h"
 
-namespace audacity::cloud::audiocom::sync
-{
-
+namespace audacity::cloud::audiocom::sync {
 enum class ProjectVersionConflictDialogMode
 {
-   Save,
-   OpenDirty,
-   OpenActive
+    Save,
+    OpenDirty,
+    OpenActive
 };
 
 class ProjectVersionConflictDialog final : public AudioComDialogBase
 {
 public:
-   ProjectVersionConflictDialog(
-      const AudacityProject* project, ProjectVersionConflictDialogMode openMode);
+    ProjectVersionConflictDialog(
+        const AudacityProject* project, ProjectVersionConflictDialogMode openMode);
 
-   static DialogButtonIdentifier UseLocalIdentifier();
-   static DialogButtonIdentifier UseRemoteIdentifier();
+    static DialogButtonIdentifier UseLocalIdentifier();
+    static DialogButtonIdentifier UseRemoteIdentifier();
 };
 } // namespace audacity::cloud::audiocom::sync

@@ -16,23 +16,25 @@
 #include "ExportUtils.h"
 #include "OAuthService.h"
 
-namespace
-{
+namespace {
 auto subscription = URLSchemesRegistry::Get().Subscribe(
-   [](URLschemeHandlerMessage message)
-   {
-      using namespace audacity::cloud::audiocom;
+    [](URLschemeHandlerMessage message)
+{
+    using namespace audacity::cloud::audiocom;
 
-      if (GetOAuthService().HandleLinkURI(
-             message.url,
-             // TODO Is this correct?
-             AudiocomTrace::ignore, {}))
-         return;
+    if (GetOAuthService().HandleLinkURI(
+            message.url,
+            // TODO Is this correct?
+            AudiocomTrace::ignore, {})) {
+        return;
+    }
 
-      if (sync::HandleProjectLink(message.url))
-         return;
+    if (sync::HandleProjectLink(message.url)) {
+        return;
+    }
 
-      if (sync::HandleMixdownLink(message.url))
-         return;
-   });
+    if (sync::HandleMixdownLink(message.url)) {
+        return;
+    }
+});
 }

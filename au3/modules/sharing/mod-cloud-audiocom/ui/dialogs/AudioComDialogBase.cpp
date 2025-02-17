@@ -30,252 +30,250 @@
 #include "AppEvents.h"
 #include "Observer.h"
 
-namespace audacity::cloud::audiocom::sync
-{
-namespace
-{
+namespace audacity::cloud::audiocom::sync {
+namespace {
 wxWindow* GetProjectWindow(const AudacityProject* project)
 {
-   if (project == nullptr)
-      return nullptr;
+    if (project == nullptr) {
+        return nullptr;
+    }
 
-   return &ProjectWindow::Get(*const_cast<AudacityProject*>(project));
+    return &ProjectWindow::Get(*const_cast<AudacityProject*>(project));
 }
 
 wxString GetOptionalPrefsIdentifier(const DialogIdentifier& identifier)
 {
-   if (identifier.empty())
-      return {};
+    if (identifier.empty()) {
+        return {}
+    }
 
-   return wxString::Format("/cloud/audiocom/%s/skip", identifier.GET());
+    return wxString::Format("/cloud/audiocom/%s/skip", identifier.GET());
 }
 } // namespace
 
 DialogButtonIdentifier
 audacity::cloud::audiocom::sync::AudioComDialogBase::ShowDialog(
-   std::function<DialogButtonIdentifier()> poller)
+    std::function<DialogButtonIdentifier()> poller)
 {
-   mDialogSizer->AddStretchSpacer(1);
+    mDialogSizer->AddStretchSpacer(1);
 
-   if (HasSeparator())
-   {
-      mDialogSizer->Add(
-         safenew wxStaticLine { this },
-         wxSizerFlags {}.Border(wxTOP, 16).Expand());
-      mDialogSizer->AddSpacer(8);
-   }
-   else
-      mDialogSizer->AddSpacer(16);
+    if (HasSeparator()) {
+        mDialogSizer->Add(
+            safenew wxStaticLine { this },
+            wxSizerFlags {}.Border(wxTOP, 16).Expand());
+        mDialogSizer->AddSpacer(8);
+    } else {
+        mDialogSizer->AddSpacer(16);
+    }
 
-   mDialogSizer->Add(
-      mButtonSizer, wxSizerFlags {}.Border(wxLEFT | wxRIGHT, 16).Expand());
-   mDialogSizer->AddSpacer(8);
+    mDialogSizer->Add(
+        mButtonSizer, wxSizerFlags {}.Border(wxLEFT | wxRIGHT, 16).Expand());
+    mDialogSizer->AddSpacer(8);
 
-   SetSizerAndFit(mDialogSizer);
-   SetupAccessibility(this);
-   Center();
+    SetSizerAndFit(mDialogSizer);
+    SetupAccessibility(this);
+    Center();
 
-   // We cannot do it earlier to avoid licking the sizers and children
-   if (!mOptionalPrefsIdentifier.empty())
-   {
-      if (gPrefs->ReadBool(mOptionalPrefsIdentifier.GET(), false))
-         return mEscButtonIdentifier;
-   }
+    // We cannot do it earlier to avoid licking the sizers and children
+    if (!mOptionalPrefsIdentifier.empty()) {
+        if (gPrefs->ReadBool(mOptionalPrefsIdentifier.GET(), false)) {
+            return mEscButtonIdentifier;
+        }
+    }
 
-   Show();
-   Raise();
+    Show();
+    Raise();
 
-   {
-      wxWindowDisabler disabler { this };
+    {
+        wxWindowDisabler disabler { this };
 
-      if (!poller)
-         poller = [] { return DialogButtonIdentifier {}; };
+        if (!poller) {
+            poller = [] { return DialogButtonIdentifier {}; } }
 
-      while (IsShown())
-      {
-         wxYield();
+        while (IsShown())
+        {
+            wxYield();
 
-         if (auto result = poller(); !result.empty())
-            return result;
-      }
-   }
+            if (auto result = poller(); !result.empty()) {
+                return result;
+            }
+        }
+    }
 
-   // On Windows, parent window will lose focus after the wxWindowDisabler is destroyed
-   if (auto parent = GetParent())
-      parent->Raise();
+    // On Windows, parent window will lose focus after the wxWindowDisabler is destroyed
+    if (auto parent = GetParent()) {
+        parent->Raise();
+    }
 
-   // mResultButtonIdentifier is empty if the dialog was closed using the
-   // cross button
-   return mResultButtonIdentifier.empty() ? mEscButtonIdentifier :
-                                            mResultButtonIdentifier;
+    // mResultButtonIdentifier is empty if the dialog was closed using the
+    // cross button
+    return mResultButtonIdentifier.empty() ? mEscButtonIdentifier
+           : mResultButtonIdentifier;
 }
 
 DialogButtonIdentifier AudioComDialogBase::CancelButtonIdentifier()
 {
-   return { L"Cancel" };
+    return { L"Cancel" };
 }
 
 AudioComDialogBase::AudioComDialogBase(
-   const AudacityProject* project,
-   const DialogIdentifier& optionalPrefsIdentifier, DialogMode dialogMode)
-    : wxDialogWrapper { GetProjectWindow(project), wxID_ANY,
-                        dialogMode == DialogMode::Saving ?
-                           XO("Save to audio.com") :
-                           XO("Open from audio.com") }
-    , mProject { project }
-    , mOptionalPrefsIdentifier { GetOptionalPrefsIdentifier(
-         optionalPrefsIdentifier) }
-    , mDialogSizer { new wxBoxSizer(wxVERTICAL) }
-    , mButtonSizer { new wxBoxSizer(wxHORIZONTAL) }
+    const AudacityProject* project,
+    const DialogIdentifier& optionalPrefsIdentifier, DialogMode dialogMode)
+    : wxDialogWrapper{GetProjectWindow(project), wxID_ANY,
+                      dialogMode == DialogMode::Saving
+                      ? XO("Save to audio.com")
+                      : XO("Open from audio.com")}
+    , mProject{project}
+    , mOptionalPrefsIdentifier{GetOptionalPrefsIdentifier(
+                                   optionalPrefsIdentifier)}
+    , mDialogSizer{new wxBoxSizer(wxVERTICAL)}
+    , mButtonSizer{new wxBoxSizer(wxHORIZONTAL)}
 {
-   mDialogSizer->SetMinSize({ 420, 140 });
-   if (!mOptionalPrefsIdentifier.empty())
-   {
-      const auto skipDialog =
-         gPrefs->ReadBool(mOptionalPrefsIdentifier.GET(), false);
+    mDialogSizer->SetMinSize({ 420, 140 });
+    if (!mOptionalPrefsIdentifier.empty()) {
+        const auto skipDialog
+            =gPrefs->ReadBool(mOptionalPrefsIdentifier.GET(), false);
 
-      auto checkbox =
-         safenew wxCheckBox { this, wxID_ANY,
-                              XO("Don't show this again").Translation() };
+        auto checkbox
+            =safenew wxCheckBox { this, wxID_ANY,
+                                  XO("Don't show this again").Translation() };
 
-      checkbox->SetValue(skipDialog);
+        checkbox->SetValue(skipDialog);
 
-      mButtonSizer->Add(checkbox, wxSizerFlags {}.CenterVertical());
+        mButtonSizer->Add(checkbox, wxSizerFlags {}.CenterVertical());
 
-      checkbox->Bind(
-         wxEVT_CHECKBOX,
-         [this, checkbox](auto&)
-         {
+        checkbox->Bind(
+            wxEVT_CHECKBOX,
+            [this, checkbox](auto&)
+        {
             gPrefs->Write(mOptionalPrefsIdentifier.GET(), checkbox->GetValue());
             gPrefs->Flush();
-         });
-   }
+        });
+    }
 
-   mButtonSizer->AddStretchSpacer();
+    mButtonSizer->AddStretchSpacer();
 
-   Bind(
-      wxEVT_CHAR_HOOK,
-      [this](auto& evt)
-      {
-         if (!IsEscapeKey(evt))
-         {
+    Bind(
+        wxEVT_CHAR_HOOK,
+        [this](auto& evt)
+    {
+        if (!IsEscapeKey(evt)) {
             evt.Skip();
             return;
-         }
+        }
 
-         EndDialog(mEscButtonIdentifier);
-      });
+        EndDialog(mEscButtonIdentifier);
+    });
 }
 
 void AudioComDialogBase::AddTitle(const TranslatableString& title)
 {
-   auto font = GetFont().Bold();
+    auto font = GetFont().Bold();
 
-   font.SetFractionalPointSize(font.GetFractionalPointSize() * 1.5f);
+    font.SetFractionalPointSize(font.GetFractionalPointSize() * 1.5f);
 
-   auto statText = safenew wxStaticText { this, wxID_ANY, title.Translation() };
+    auto statText = safenew wxStaticText { this, wxID_ANY, title.Translation() };
 
-   statText->SetFont(font);
+    statText->SetFont(font);
 
-   mDialogSizer->AddSpacer(16);
-   mDialogSizer->Add(statText, wxSizerFlags {}.Border(wxLEFT | wxRIGHT, 16));
+    mDialogSizer->AddSpacer(16);
+    mDialogSizer->Add(statText, wxSizerFlags {}.Border(wxLEFT | wxRIGHT, 16));
 }
 
 void AudioComDialogBase::AddParagraph(const TranslatableString& paragraph)
 {
-   auto statText =
-      safenew wxStaticText { this, wxID_ANY, paragraph.Translation() };
+    auto statText
+        =safenew wxStaticText { this, wxID_ANY, paragraph.Translation() };
 
-   mDialogSizer->AddSpacer(16);
-   mDialogSizer->Add(statText, wxSizerFlags {}.Border(wxLEFT | wxRIGHT, 16));
+    mDialogSizer->AddSpacer(16);
+    mDialogSizer->Add(statText, wxSizerFlags {}.Border(wxLEFT | wxRIGHT, 16));
 
-   statText->Wrap(400);
+    statText->Wrap(400);
 }
 
 void AudioComDialogBase::AddButton(
-   DialogButtonIdentifier identifier, const TranslatableString& text, int type)
+    DialogButtonIdentifier identifier, const TranslatableString& text, int type)
 {
-   auto button = safenew wxButton { this, wxID_ANY, text.Translation() };
+    auto button = safenew wxButton { this, wxID_ANY, text.Translation() };
 
-   mButtonSizer->Add(button, wxSizerFlags {}.Border(wxLEFT, 8));
+    mButtonSizer->Add(button, wxSizerFlags {}.Border(wxLEFT, 8));
 
-   if (type & EscButton)
-      mEscButtonIdentifier = identifier;
+    if (type & EscButton) {
+        mEscButtonIdentifier = identifier;
+    }
 
-   button->Bind(
-      wxEVT_BUTTON, [this, identifier = std::move(identifier)](auto&)
-      { EndDialog(identifier); });
+    button->Bind(
+        wxEVT_BUTTON, [this, identifier = std::move(identifier)](auto&)
+    { EndDialog(identifier); });
 
-   if (type & DefaultButton)
-      button->SetDefault();
+    if (type & DefaultButton) {
+        button->SetDefault();
+    }
 }
 
 void AudioComDialogBase::SetDialogTitle(const TranslatableString& dialog)
 {
-   SetTitle(dialog);
+    SetTitle(dialog);
 }
 
 bool AudioComDialogBase::HasSeparator() const
 {
-   return true;
+    return true;
 }
 
 void AudioComDialogBase::EndDialog(DialogButtonIdentifier identifier)
 {
-   mResultButtonIdentifier = std::move(identifier);
-   Close();
+    mResultButtonIdentifier = std::move(identifier);
+    Close();
 }
 
-namespace
-{
+namespace {
 struct IdleItem final
 {
-   std::function<bool()> Condition;
-   std::function<void()> DialogFactory;
+    std::function<bool()> Condition;
+    std::function<void()> DialogFactory;
 };
 
 struct Idler final
 {
-   std::list<IdleItem> Items;
+    std::list<IdleItem> Items;
 
-   Observer::Subscription Subsctiption;
+    Observer::Subscription Subsctiption;
 
-   bool IdlerLocked {};
+    bool IdlerLocked {};
 
-   Idler()
-       : Subsctiption { AppEvents::OnAppIdle([this] { OnIdle(); }) }
-   {
-   }
+    Idler()
+        : Subsctiption{AppEvents::OnAppIdle([this] { OnIdle(); })}
+    {
+    }
 
-   void OnIdle()
-   {
-      if (IdlerLocked)
-         return;
+    void OnIdle()
+    {
+        if (IdlerLocked) {
+            return;
+        }
 
-      for (auto it = Items.begin(); it != Items.end();)
-      {
-         if (it->Condition())
-         {
-            IdlerLocked = true;
+        for (auto it = Items.begin(); it != Items.end();) {
+            if (it->Condition()) {
+                IdlerLocked = true;
 
-            auto swapFlag = finally([this] { IdlerLocked = false; });
+                auto swapFlag = finally([this] { IdlerLocked = false; });
 
-            it->DialogFactory();
-            it = Items.erase(it);
-         }
-         else
-            ++it;
-      }
-   }
+                it->DialogFactory();
+                it = Items.erase(it);
+            } else {
+                ++it;
+            }
+        }
+    }
 };
 } // namespace
 
 void ShowDialogOn(
-   std::function<bool()> condition, std::function<void()> dialogFactory)
+    std::function<bool()> condition, std::function<void()> dialogFactory)
 {
-   static Idler idler;
+    static Idler idler;
 
-   idler.Items.push_back({ std::move(condition), std::move(dialogFactory) });
+    idler.Items.push_back({ std::move(condition), std::move(dialogFactory) });
 }
-
 } // namespace audacity::cloud::audiocom::sync

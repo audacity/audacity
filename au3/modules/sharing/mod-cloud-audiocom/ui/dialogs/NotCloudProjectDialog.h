@@ -12,14 +12,13 @@
 
 #include "AudioComDialogBase.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class NotCloudProjectDialog final : public AudioComDialogBase
 {
 public:
-   explicit NotCloudProjectDialog(const AudacityProject* project);
+    explicit NotCloudProjectDialog(const AudacityProject* project);
 
-   static DialogButtonIdentifier SaveLocallyIdentifier();
-   static DialogButtonIdentifier SaveRemotelyIdentifier();
+    static DialogButtonIdentifier SaveLocallyIdentifier();
+    static DialogButtonIdentifier SaveRemotelyIdentifier();
 };
 } // namespace audacity::cloud::audiocom::sync

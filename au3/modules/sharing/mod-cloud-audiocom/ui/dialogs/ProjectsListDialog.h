@@ -27,59 +27,56 @@ class wxGridEvent;
 class wxCommandEvent;
 class wxTimer;
 
-namespace audacity::cloud::audiocom::sync
-{
-
+namespace audacity::cloud::audiocom::sync {
 class ProjectsListDialog final : public wxDialogWrapper
 {
 public:
-   ProjectsListDialog(wxWindow* parent, AudacityProject* project);
-   ~ProjectsListDialog() override;
+    ProjectsListDialog(wxWindow* parent, AudacityProject* project);
+    ~ProjectsListDialog() override;
 
 private:
-   class ProjectsTableData;
+    class ProjectsTableData;
 #if wxUSE_ACCESSIBILITY
-   class ProjectListAccessible;
+    class ProjectListAccessible;
 #endif
 
-   void SetupHandlers();
+    void SetupHandlers();
 
-   void OnBeforeRefresh();
-   void OnRefreshCompleted(bool success);
-   void FormatPageLabel();
+    void OnBeforeRefresh();
+    void OnRefreshCompleted(bool success);
+    void FormatPageLabel();
 
-   void OnOpen();
-   void OnOpenAudioCom();
+    void OnOpen();
+    void OnOpenAudioCom();
 
-   void OnGridSelect(wxGridRangeSelectEvent& event);
-   void OnSelectCell(wxGridEvent& event);
+    void OnGridSelect(wxGridRangeSelectEvent& event);
+    void OnSelectCell(wxGridEvent& event);
 
-   void OnSearchTextChanged();
-   void OnSearchTextSubmitted();
+    void OnSearchTextChanged();
+    void OnSearchTextSubmitted();
 
-   AudacityProject* mProject { nullptr };
+    AudacityProject* mProject { nullptr };
 
-   wxTextCtrl* mSearchCtrl { nullptr };
+    wxTextCtrl* mSearchCtrl { nullptr };
 
-   wxGrid* mProjectsTable { nullptr };
-   ProjectsTableData* mProjectsTableData { nullptr };
+    wxGrid* mProjectsTable { nullptr };
+    ProjectsTableData* mProjectsTableData { nullptr };
 
-   wxStaticText* mPageLabel { nullptr };
-   wxButton* mPrevPageButton { nullptr };
-   wxButton* mNextPageButton { nullptr };
+    wxStaticText* mPageLabel { nullptr };
+    wxButton* mPrevPageButton { nullptr };
+    wxButton* mNextPageButton { nullptr };
 
-   wxButton* mOpenButton { nullptr };
-   wxButton* mOpenAudioCom { nullptr };
+    wxButton* mOpenButton { nullptr };
+    wxButton* mOpenAudioCom { nullptr };
 
-   wxString mLastSearchValue;
+    wxString mLastSearchValue;
 
-   std::unique_ptr<wxTimer> mSearchTimer;
+    std::unique_ptr<wxTimer> mSearchTimer;
 
 #if wxUSE_ACCESSIBILITY
-   ProjectListAccessible* mAccessible { nullptr };
+    ProjectListAccessible* mAccessible { nullptr };
 #endif
 
-   bool mInRangeSelection { false };
+    bool mInRangeSelection { false };
 };
-
 } // namespace audacity::cloud::audiocom::sync

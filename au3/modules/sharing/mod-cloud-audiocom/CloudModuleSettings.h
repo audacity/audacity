@@ -12,13 +12,12 @@
 
 #include "Prefs.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 enum class CloudLocationMode
 {
-   Ask,
-   Local,
-   Cloud,
+    Ask,
+    Local,
+    Cloud,
 };
 
 extern EnumSetting<CloudLocationMode> SaveLocationMode;

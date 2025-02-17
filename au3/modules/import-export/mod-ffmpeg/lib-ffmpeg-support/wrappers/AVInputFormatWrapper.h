@@ -16,24 +16,24 @@ typedef struct AVInputFormat AVInputFormat;
 class FFMPEG_SUPPORT_API AVInputFormatWrapper
 {
 public:
-   AVInputFormatWrapper(const AVInputFormatWrapper&) = delete;
-   AVInputFormatWrapper& operator=(AVInputFormatWrapper&) = delete;
+    AVInputFormatWrapper(const AVInputFormatWrapper&) = delete;
+    AVInputFormatWrapper& operator=(AVInputFormatWrapper&) = delete;
 
-   AVInputFormatWrapper(AVInputFormatWrapper&&) = delete;
-   AVInputFormatWrapper& operator=(AVInputFormatWrapper&&) = delete;
+    AVInputFormatWrapper(AVInputFormatWrapper&&) = delete;
+    AVInputFormatWrapper& operator=(AVInputFormatWrapper&&) = delete;
 
-   explicit AVInputFormatWrapper(AVInputFormat* wrapped) noexcept;
+    explicit AVInputFormatWrapper(AVInputFormat* wrapped) noexcept;
 
-   AVInputFormat* GetWrappedValue() noexcept;
-   const AVInputFormat* GetWrappedValue() const noexcept;
+    AVInputFormat* GetWrappedValue() noexcept;
+    const AVInputFormat* GetWrappedValue() const noexcept;
 
-   virtual ~AVInputFormatWrapper() = default;
+    virtual ~AVInputFormatWrapper() = default;
 
-   virtual const char* GetName() const noexcept = 0;
-   virtual const char* GetLongName() const noexcept = 0;
-   virtual int GetFlags() const noexcept = 0;
-   virtual const char* GetExtensions() const noexcept = 0;
-   virtual const struct AVCodecTag* const* GetCodecTag() const noexcept = 0;
+    virtual const char* GetName() const noexcept = 0;
+    virtual const char* GetLongName() const noexcept = 0;
+    virtual int GetFlags() const noexcept = 0;
+    virtual const char* GetExtensions() const noexcept = 0;
+    virtual const struct AVCodecTag* const* GetCodecTag() const noexcept = 0;
 protected:
-   AVInputFormat* mAVInputFormat { nullptr };
+    AVInputFormat* mAVInputFormat { nullptr };
 };

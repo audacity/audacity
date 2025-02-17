@@ -21,11 +21,11 @@
 class FFmpegPreset
 {
 public:
-   FFmpegPreset();
-   ~FFmpegPreset();
+    FFmpegPreset();
+    ~FFmpegPreset();
 
-   wxString mPresetName;
-   wxArrayString mControlState;
+    wxString mPresetName;
+    wxArrayString mControlState;
 };
 
 using FFmpegPresetMap = std::unordered_map<wxString, FFmpegPreset>;
@@ -35,27 +35,27 @@ class ExportFFmpegOptions;
 class FFmpegPresets final : XMLTagHandler
 {
 public:
-   FFmpegPresets();
-   ~FFmpegPresets() override;
+    FFmpegPresets();
+    ~FFmpegPresets() override;
 
-   void GetPresetList(wxArrayString &list);
-   void LoadPreset(ExportFFmpegOptions *parent, wxString &name);
-   bool SavePreset(ExportFFmpegOptions *parent, wxString &name);
-   void DeletePreset(wxString &name);
-   bool OverwriteIsOk( wxString &name );
-   FFmpegPreset *FindPreset(wxString &name);
+    void GetPresetList(wxArrayString& list);
+    void LoadPreset(ExportFFmpegOptions* parent, wxString& name);
+    bool SavePreset(ExportFFmpegOptions* parent, wxString& name);
+    void DeletePreset(wxString& name);
+    bool OverwriteIsOk(wxString& name);
+    FFmpegPreset* FindPreset(wxString& name);
 
-   void ImportPresets(wxString &filename);
-   void ExportPresets(wxString &filename);
+    void ImportPresets(wxString& filename);
+    void ExportPresets(wxString& filename);
 
-   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
-   void WriteXMLHeader(XMLWriter &xmlFile) const;
-   void WriteXML(XMLWriter &xmlFile) const;
+    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
+    XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
+    void WriteXMLHeader(XMLWriter& xmlFile) const;
+    void WriteXML(XMLWriter& xmlFile) const;
 
 private:
 
-   FFmpegPresetMap mPresets;
-   FFmpegPreset *mPreset; // valid during XML parsing only
-   bool mAbortImport; // tells importer to ignore the rest of the import
+    FFmpegPresetMap mPresets;
+    FFmpegPreset* mPreset; // valid during XML parsing only
+    bool mAbortImport; // tells importer to ignore the rest of the import
 };

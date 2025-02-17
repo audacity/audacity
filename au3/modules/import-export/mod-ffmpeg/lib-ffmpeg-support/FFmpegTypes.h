@@ -18,10 +18,10 @@
 
 #if EDOM > 0
 #   define AUDACITY_AVERROR(e) \
-      (-(e)) ///< Returns a negative error code from a POSIX error code, to
+    (-(e))   ///< Returns a negative error code from a POSIX error code, to
              ///< return from library functions.
 #   define AUDACITY_AVUNERROR(e) \
-      (-(e)) ///< Returns a POSIX error code from a library function error
+    (-(e))   ///< Returns a POSIX error code from a library function error
              ///< return value.
 #else
 /* Some platforms have E* and errno already negated. */
@@ -29,7 +29,7 @@
 #   define AUDACITY_AVUNERROR(e) (e)
 #endif
 
-#define AUDACITY_AVERROR_EOF AUDACITY_FFERRTAG('E', 'O', 'F', ' ') 
+#define AUDACITY_AVERROR_EOF AUDACITY_FFERRTAG('E', 'O', 'F', ' ')
 
 #define AUDACITY_AVFMT_NOFILE 0x0001
 /*
@@ -81,8 +81,7 @@
 
 #define AUDACITY_AV_CODEC_FLAG_QSCALE (1 << 1)
 
-#define AUDACITY_AV_CODEC_CAP_SMALL_LAST_FRAME    (1 <<  6)
-
+#define AUDACITY_AV_CODEC_CAP_SMALL_LAST_FRAME    (1 << 6)
 
 //#define FF_LAMBDA_SHIFT 7
 //#define FF_LAMBDA_SCALE (1 << FF_LAMBDA_SHIFT)
@@ -135,14 +134,14 @@ using AVDiscardFwd = int;
 // Stable structures and emums
 
 struct AudacityAVRational {
-   int num { 0 }; ///< numerator
-   int den { 0 }; ///< denominator
+    int num { 0 }; ///< numerator
+    int den { 0 }; ///< denominator
 };
 
 //! Simply an overlay of AVDictionaryEntry, but we avoid including that type
 struct AudacityAVDictionaryEntry {
-   char* key { nullptr };
-   char* value { nullptr };
+    char* key { nullptr };
+    char* value { nullptr };
 };
 
 enum AudacityAVSampleFormat {
@@ -166,14 +165,14 @@ enum AudacityAVSampleFormat {
 
 struct FFMPegVersion final
 {
-   unsigned Major { 0 };
-   unsigned Minor { 0 };
-   unsigned Micro { 0 };
+    unsigned Major { 0 };
+    unsigned Minor { 0 };
+    unsigned Micro { 0 };
 
-   unsigned GetIntVersion() const noexcept
-   {
-      return AV_VERSION_INT(Major, Minor, Micro);
-   }
+    unsigned GetIntVersion() const noexcept
+    {
+        return AV_VERSION_INT(Major, Minor, Micro);
+    }
 };
 
 typedef struct AVBuffer AVBuffer;
@@ -182,9 +181,9 @@ typedef struct AVChannelLayout AVChannelLayout;
 
 struct AudacityAVBufferRef
 {
-   AVBuffer* buffer;
+    AVBuffer* buffer;
 
-   uint8_t* data;
+    uint8_t* data;
 
-   int size;
+    int size;
 };

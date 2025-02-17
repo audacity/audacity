@@ -33,67 +33,67 @@
 #   include "WindowAccessible.h"
 #endif
 
-namespace audacity::cloud::audiocom::sync
-{
-namespace
-{
+namespace audacity::cloud::audiocom::sync {
+namespace {
 const StatusBarField FieldId { L"CloudSyncStatus" };
 
 const AttachedProjectObjects::RegisteredFactory key {
-   [](AudacityProject& project)
-   { return std::make_shared<CloudSyncStatusField>(project); }
+    [](AudacityProject& project)
+    { return std::make_shared<CloudSyncStatusField>(project); }
 };
 
 class CloudSyncStatusBarFieldItem final : public StatusBarFieldItem
 {
 public:
-   CloudSyncStatusBarFieldItem()
-       : StatusBarFieldItem { FieldId }
-   {
-   }
+    CloudSyncStatusBarFieldItem()
+        : StatusBarFieldItem{FieldId}
+    {
+    }
 
-   int GetDefaultWidth(const AudacityProject& project) const override
-   {
-      return CloudSyncStatusField::Get(project).GetWidth();
-   }
+    int GetDefaultWidth(const AudacityProject& project) const override
+    {
+        return CloudSyncStatusField::Get(project).GetWidth();
+    }
 
-   void OnSize(AudacityProject& project) override
-   {
-      const auto index =
-         ProjectStatusFieldsRegistry::GetFieldIndex(project, name);
+    void OnSize(AudacityProject& project) override
+    {
+        const auto index
+            =ProjectStatusFieldsRegistry::GetFieldIndex(project, name);
 
-      if (index < 0)
-         return;
+        if (index < 0) {
+            return;
+        }
 
-      wxRect rect;
-      if (ProjectWindow::Get(project).GetStatusBar()->GetFieldRect(index, rect))
-         CloudSyncStatusField::Get(project).OnSize(rect);
-   }
+        wxRect rect;
+        if (ProjectWindow::Get(project).GetStatusBar()->GetFieldRect(index, rect)) {
+            CloudSyncStatusField::Get(project).OnSize(rect);
+        }
+    }
 
-   void
-   SetText(AudacityProject& project, const TranslatableString& msg) override
-   {
-   }
+    void
+    SetText(AudacityProject& project, const TranslatableString& msg) override
+    {
+    }
 
-   TranslatableString GetText(const AudacityProject& project) const override
-   {
-      return CloudSyncStatusField::Get(project).GetText();
-   }
+    TranslatableString GetText(const AudacityProject& project) const override
+    {
+        return CloudSyncStatusField::Get(project).GetText();
+    }
 
-   bool IsVisible(const AudacityProject& project) const override
-   {
-      return CloudSyncStatusField::Get(project).IsVisible();
-   }
+    bool IsVisible(const AudacityProject& project) const override
+    {
+        return CloudSyncStatusField::Get(project).IsVisible();
+    }
 
-   void MarkDirty(const AudacityProject& project)
-   {
-      DispatchFieldChanged(project);
-   }
+    void MarkDirty(const AudacityProject& project)
+    {
+        DispatchFieldChanged(project);
+    }
 }; // class CloudSyncStatusBarFieldItem
 
 StatusBarFieldItemRegistrator rateStatusBarField {
-   std::make_unique<CloudSyncStatusBarFieldItem>(),
-   { {}, { Registry::OrderingHint::After, RateStatusBarField().GET() } }
+    std::make_unique<CloudSyncStatusBarFieldItem>(),
+    { {}, { Registry::OrderingHint::After, RateStatusBarField().GET() } }
 };
 
 const auto CloudSyncFailedMessage   = XO("Failed.");
@@ -108,240 +108,241 @@ const auto StatusFieldPadding = 20;
 #else
 const auto StatusFieldPadding = 0;
 #endif
-
 } // namespace
 
-class CloudSyncStatusField::StatusWidget final :
-    public wxPanelWrapper,
-    public PrefsListener
+class CloudSyncStatusField::StatusWidget final : public wxPanelWrapper, public PrefsListener
 {
 public:
-   StatusWidget(CloudSyncStatusField& owner, wxWindow* parent)
-       : wxPanelWrapper { parent }
-       , mOwner { owner }
-   {
-      SetBackgroundStyle(wxBG_STYLE_PAINT);
-      UpdatePrefs();
+    StatusWidget(CloudSyncStatusField& owner, wxWindow* parent)
+        : wxPanelWrapper{parent}
+        , mOwner{owner}
+    {
+        SetBackgroundStyle(wxBG_STYLE_PAINT);
+        UpdatePrefs();
 
-      Bind(wxEVT_PAINT, [this](auto&) { OnPaint(); });
+        Bind(wxEVT_PAINT, [this](auto&) { OnPaint(); });
 
 #if wxUSE_ACCESSIBILITY
-      SetAccessible(safenew WindowAccessible(this));
+        SetAccessible(safenew WindowAccessible(this));
 #endif
-   }
+    }
 
-   ~StatusWidget() override
-   {
-   }
+    ~StatusWidget() override
+    {
+    }
 
-   void SetRect(const wxRect& rect)
-   {
-      SetSize(rect);
-   }
+    void SetRect(const wxRect& rect)
+    {
+        SetSize(rect);
+    }
 
-   int GetPreferredWidth(State state) const
-   {
-      switch (state)
-      {
-      case State::Failed:
-         return mSyncedBitmap->GetWidth() + mCloudSyncFailedMessageWidth +
-                Padding * 4;
-      case State::Uploading:
-         return mProgressBitmap->GetWidth() + mCloudSyncProgressMessageWidth +
-                ProgressBarWidth + Padding * 4;
-      }
+    int GetPreferredWidth(State state) const
+    {
+        switch (state) {
+        case State::Failed:
+            return mSyncedBitmap->GetWidth() + mCloudSyncFailedMessageWidth
+                   + Padding * 4;
+        case State::Uploading:
+            return mProgressBitmap->GetWidth() + mCloudSyncProgressMessageWidth
+                   + ProgressBarWidth + Padding * 4;
+        }
 
-      return mSyncedBitmap->GetWidth() + Padding * 2;
-   }
+        return mSyncedBitmap->GetWidth() + Padding * 2;
+    }
 
-   const wxBitmap* GetBitmap() const
-   {
-      return mOwner.mState == State::Uploading ? mProgressBitmap :
-                                                 mSyncedBitmap;
-   }
+    const wxBitmap* GetBitmap() const
+    {
+        return mOwner.mState == State::Uploading ? mProgressBitmap
+               : mSyncedBitmap;
+    }
 
-   TranslatableString GetTranslatableText() const
-   {
-      if (mOwner.mState == State::Uploading)
-         return TranslatableString { CloudSyncProgressMessage }.Format(
+    TranslatableString GetTranslatableText() const
+    {
+        if (mOwner.mState == State::Uploading) {
+            return TranslatableString { CloudSyncProgressMessage }
+        }
+        .Format(
             mOwner.mProgress);
-      else if (mOwner.mState == State::Failed)
-         return CloudSyncFailedMessage;
+        else if (mOwner.mState == State::Failed) {
+            return CloudSyncFailedMessage;
+        }
 
-      return {};
-   }
+        return {};
+    }
 
-   wxString GetText() const
-   {
-      return GetTranslatableText().Translation();
-   }
+    wxString GetText() const
+    {
+        return GetTranslatableText().Translation();
+    }
 
-   void OnPaint()
-   {
-      wxAutoBufferedPaintDC dc(this);
-      std::unique_ptr<wxGraphicsContext> gc(wxGraphicsContext::Create(dc));
+    void OnPaint()
+    {
+        wxAutoBufferedPaintDC dc(this);
+        std::unique_ptr<wxGraphicsContext> gc(wxGraphicsContext::Create(dc));
 
-      auto bitmap = GetBitmap();
+        auto bitmap = GetBitmap();
 
-      const wxSize widgetSize = GetSize();
-      const wxSize bitmapSize = bitmap->GetSize();
+        const wxSize widgetSize = GetSize();
+        const wxSize bitmapSize = bitmap->GetSize();
 
-      gc->SetBrush(wxBrush(GetBackgroundColour()));
-      gc->DrawRectangle(0, 0, widgetSize.x, widgetSize.y);
-      gc->DrawBitmap(
-         *bitmap, Padding, (widgetSize.y - bitmapSize.y) / 2.0, bitmapSize.x,
-         bitmapSize.y);
+        gc->SetBrush(wxBrush(GetBackgroundColour()));
+        gc->DrawRectangle(0, 0, widgetSize.x, widgetSize.y);
+        gc->DrawBitmap(
+            *bitmap, Padding, (widgetSize.y - bitmapSize.y) / 2.0, bitmapSize.x,
+            bitmapSize.y);
 
-      const auto text = GetText();
+        const auto text = GetText();
 
-      if (text.empty())
-         return;
+        if (text.empty()) {
+            return;
+        }
 
-      gc->SetFont(GetFont(), GetForegroundColour());
-      gc->DrawText(text, Padding + bitmapSize.x + 2 * Padding, 0);
+        gc->SetFont(GetFont(), GetForegroundColour());
+        gc->DrawText(text, Padding + bitmapSize.x + 2 * Padding, 0);
 
-      if (mOwner.mState != State::Uploading)
-         return;
+        if (mOwner.mState != State::Uploading) {
+            return;
+        }
 
-      gc->SetAntialiasMode(wxANTIALIAS_NONE);
+        gc->SetAntialiasMode(wxANTIALIAS_NONE);
 
-      const auto progress = std::clamp(mOwner.mProgress, 0, 100);
+        const auto progress = std::clamp(mOwner.mProgress, 0, 100);
 
-      const auto progressFilledPen =
-         gc->CreatePen(wxGraphicsPenInfo {}
-                          .Colour(wxColour(0xc3c3c3))
-                          .Width(ProgressBarBorderSize));
+        const auto progressFilledPen
+            =gc->CreatePen(wxGraphicsPenInfo {}
+                           .Colour(wxColour(0xc3c3c3))
+                           .Width(ProgressBarBorderSize));
 
-      const auto progressEmptyPen =
-         gc->CreatePen(wxGraphicsPenInfo {}
-                          .Colour(wxColour(0xc3c3c3))
-                          .Width(ProgressBarBorderSize));
-      const auto zeroPen = gc->CreatePen(
-         wxGraphicsPenInfo {}.Width(0).Style(wxPENSTYLE_TRANSPARENT));
+        const auto progressEmptyPen
+            =gc->CreatePen(wxGraphicsPenInfo {}
+                           .Colour(wxColour(0xc3c3c3))
+                           .Width(ProgressBarBorderSize));
+        const auto zeroPen = gc->CreatePen(
+            wxGraphicsPenInfo {}.Width(0).Style(wxPENSTYLE_TRANSPARENT));
 
-      const auto progressFilledBrush = gc->CreateBrush(wxColour(0x3cf03c));
-      const auto progressEmptyBrush  = gc->CreateBrush(wxColour(0xffffff));
+        const auto progressFilledBrush = gc->CreateBrush(wxColour(0x3cf03c));
+        const auto progressEmptyBrush  = gc->CreateBrush(wxColour(0xffffff));
 
-      const auto progressBarBorderLeft =
-         Padding + bitmapSize.x + 2 * Padding + mCloudSyncProgressMessageWidth;
+        const auto progressBarBorderLeft
+            =Padding + bitmapSize.x + 2 * Padding + mCloudSyncProgressMessageWidth;
 
-      const auto progressBarBorderRight =
-         progressBarBorderLeft + ProgressBarWidth;
+        const auto progressBarBorderRight
+            =progressBarBorderLeft + ProgressBarWidth;
 
-      const auto progressBarBorderTop =
-         (widgetSize.y - ProgressBarHeight) / 2.0;
+        const auto progressBarBorderTop
+            =(widgetSize.y - ProgressBarHeight) / 2.0;
 
-      const auto progressBarBorderBottom =
-         progressBarBorderTop + ProgressBarHeight;
+        const auto progressBarBorderBottom
+            =progressBarBorderTop + ProgressBarHeight;
 
-      const auto filledWidth =
-         (ProgressBarWidth - ProgressBarBorderSize * 2) * progress / 100;
+        const auto filledWidth
+            =(ProgressBarWidth - ProgressBarBorderSize * 2) * progress / 100;
 
-      const auto progressBarFillLeft =
-         progressBarBorderLeft + ProgressBarBorderSize;
-      const auto progressBarFillRight = progressBarFillLeft + filledWidth;
+        const auto progressBarFillLeft
+            =progressBarBorderLeft + ProgressBarBorderSize;
+        const auto progressBarFillRight = progressBarFillLeft + filledWidth;
 
-      const auto progressBarEmptyLeft =
-         progressBarFillRight + (progress > 0 ? 1 : 0);
-      const auto progressBarEmptyRight =
-         progressBarBorderRight - ProgressBarBorderSize;
+        const auto progressBarEmptyLeft
+            =progressBarFillRight + (progress > 0 ? 1 : 0);
+        const auto progressBarEmptyRight
+            =progressBarBorderRight - ProgressBarBorderSize;
 
-      const auto filledHeight = ProgressBarHeight - ProgressBarBorderSize;
+        const auto filledHeight = ProgressBarHeight - ProgressBarBorderSize;
 
-      // Draw border
-      if (progress == 0)
-         gc->SetPen(progressEmptyPen);
-      else
-         gc->SetPen(progressFilledPen);
+        // Draw border
+        if (progress == 0) {
+            gc->SetPen(progressEmptyPen);
+        } else {
+            gc->SetPen(progressFilledPen);
+        }
 
-      gc->StrokeLine(
-         progressBarBorderLeft, progressBarBorderTop, progressBarBorderLeft,
-         progressBarBorderBottom);
-
-      if (progress > 0)
-      {
-         gc->StrokeLine(
-            progressBarFillLeft, progressBarBorderTop, progressBarFillRight,
-            progressBarBorderTop);
-
-         gc->StrokeLine(
-            progressBarFillLeft, progressBarBorderBottom, progressBarFillRight,
+        gc->StrokeLine(
+            progressBarBorderLeft, progressBarBorderTop, progressBarBorderLeft,
             progressBarBorderBottom);
 
-         gc->SetPen(zeroPen);
-         gc->SetBrush(progressFilledBrush);
+        if (progress > 0) {
+            gc->StrokeLine(
+                progressBarFillLeft, progressBarBorderTop, progressBarFillRight,
+                progressBarBorderTop);
 
-         gc->DrawRectangle(
-            progressBarFillLeft, progressBarBorderTop + ProgressBarBorderSize,
-            progressBarFillRight - progressBarFillLeft + 1, filledHeight);
-      }
+            gc->StrokeLine(
+                progressBarFillLeft, progressBarBorderBottom, progressBarFillRight,
+                progressBarBorderBottom);
 
-      if (progress < 100)
-      {
-         gc->SetPen(progressEmptyPen);
+            gc->SetPen(zeroPen);
+            gc->SetBrush(progressFilledBrush);
 
-         gc->StrokeLine(
-            progressBarEmptyLeft, progressBarBorderTop, progressBarEmptyRight,
-            progressBarBorderTop);
+            gc->DrawRectangle(
+                progressBarFillLeft, progressBarBorderTop + ProgressBarBorderSize,
+                progressBarFillRight - progressBarFillLeft + 1, filledHeight);
+        }
 
-         gc->StrokeLine(
-            progressBarEmptyLeft, progressBarBorderBottom,
-            progressBarEmptyRight, progressBarBorderBottom);
+        if (progress < 100) {
+            gc->SetPen(progressEmptyPen);
 
-         gc->SetPen(zeroPen);
-         gc->SetBrush(progressEmptyBrush);
+            gc->StrokeLine(
+                progressBarEmptyLeft, progressBarBorderTop, progressBarEmptyRight,
+                progressBarBorderTop);
 
-         gc->DrawRectangle(
-            progressBarEmptyLeft, progressBarBorderTop + ProgressBarBorderSize,
-            progressBarEmptyRight - progressBarEmptyLeft + 1, filledHeight);
-      }
+            gc->StrokeLine(
+                progressBarEmptyLeft, progressBarBorderBottom,
+                progressBarEmptyRight, progressBarBorderBottom);
 
-      if (progress == 100)
-         gc->SetPen(progressFilledPen);
-      else
-         gc->SetPen(progressEmptyPen);
+            gc->SetPen(zeroPen);
+            gc->SetBrush(progressEmptyBrush);
 
-      gc->StrokeLine(
-         progressBarBorderRight, progressBarBorderTop, progressBarBorderRight,
-         progressBarBorderBottom);
-   }
+            gc->DrawRectangle(
+                progressBarEmptyLeft, progressBarBorderTop + ProgressBarBorderSize,
+                progressBarEmptyRight - progressBarEmptyLeft + 1, filledHeight);
+        }
 
-   void UpdatePrefs() override
-   {
-      mSyncedBitmap   = &theTheme.Bitmap(bmpCloud);
-      mProgressBitmap = &theTheme.Bitmap(bmpCloudProgress);
+        if (progress == 100) {
+            gc->SetPen(progressFilledPen);
+        } else {
+            gc->SetPen(progressEmptyPen);
+        }
 
-      mCloudSyncFailedMessageWidth =
-         GetTextExtent(CloudSyncFailedMessage.Translation()).x;
+        gc->StrokeLine(
+            progressBarBorderRight, progressBarBorderTop, progressBarBorderRight,
+            progressBarBorderBottom);
+    }
 
-      mCloudSyncProgressMessageWidth =
-         GetTextExtent(TranslatableString { CloudSyncProgressMessage }
-                          .Format(100)
-                          .Translation())
-            .x;
-   }
+    void UpdatePrefs() override
+    {
+        mSyncedBitmap   = &theTheme.Bitmap(bmpCloud);
+        mProgressBitmap = &theTheme.Bitmap(bmpCloudProgress);
 
-   void UpdateName()
-   {
-      SetName(GetTranslatableText());
-   }
+        mCloudSyncFailedMessageWidth
+            =GetTextExtent(CloudSyncFailedMessage.Translation()).x;
+
+        mCloudSyncProgressMessageWidth
+            =GetTextExtent(TranslatableString { CloudSyncProgressMessage }
+                           .Format(100)
+                           .Translation())
+              .x;
+    }
+
+    void UpdateName()
+    {
+        SetName(GetTranslatableText());
+    }
 
 private:
-   CloudSyncStatusField& mOwner;
+    CloudSyncStatusField& mOwner;
 
-   const wxBitmap* mSyncedBitmap {};
-   const wxBitmap* mProgressBitmap {};
+    const wxBitmap* mSyncedBitmap {};
+    const wxBitmap* mProgressBitmap {};
 
-   int mCloudSyncFailedMessageWidth {};
-   int mCloudSyncProgressMessageWidth {};
+    int mCloudSyncFailedMessageWidth {};
+    int mCloudSyncProgressMessageWidth {};
 }; // class CloudSyncStatusField::StatusWidget
 
 CloudSyncStatusField::CloudSyncStatusField(AudacityProject& project)
-    : mProject { project }
-    , mCloudExtension { ProjectCloudExtension::Get(project) }
-    , mCloudStatusChangedSubscription { mCloudExtension.SubscribeStatusChanged(
-         [this](const auto& extension) { OnCloudStatusChanged(extension); },
-         true) }
+    : mProject{project}
+    , mCloudExtension{ProjectCloudExtension::Get(project)}
+    , mCloudStatusChangedSubscription{mCloudExtension.SubscribeStatusChanged(
+                                          [this](const auto& extension) { OnCloudStatusChanged(extension); },
+                                          true)}
 {
 }
 
@@ -349,101 +350,102 @@ CloudSyncStatusField::~CloudSyncStatusField() = default;
 
 CloudSyncStatusField& CloudSyncStatusField::Get(AudacityProject& project)
 {
-   return project.AttachedObjects::Get<CloudSyncStatusField&>(key);
+    return project.AttachedObjects::Get<CloudSyncStatusField&>(key);
 }
 
 const CloudSyncStatusField&
 CloudSyncStatusField::Get(const AudacityProject& project)
 {
-   return Get(const_cast<AudacityProject&>(project));
+    return Get(const_cast<AudacityProject&>(project));
 }
 
 int CloudSyncStatusField::GetWidth() const
 {
-   return mCloudExtension.IsCloudProject() ?
-             (GetStatusWidget().GetPreferredWidth(mState) +
-              StatusFieldPadding) :
-             0;
+    return mCloudExtension.IsCloudProject()
+           ? (GetStatusWidget().GetPreferredWidth(mState)
+              + StatusFieldPadding)
+           : 0;
 }
 
 void CloudSyncStatusField::OnSize(const wxRect& rect)
 {
-   GetStatusWidget().SetRect(rect);
+    GetStatusWidget().SetRect(rect);
 }
 
 bool CloudSyncStatusField::IsVisible() const
 {
-   return mState != State::Hidden;
+    return mState != State::Hidden;
 }
 
 TranslatableString CloudSyncStatusField::GetText() const
 {
-   return {};
+    return {};
 }
 
 void CloudSyncStatusField::MarkDirty()
 {
-   auto field = dynamic_cast<CloudSyncStatusBarFieldItem*>(
-      ProjectStatusFieldsRegistry::Get(FieldId));
+    auto field = dynamic_cast<CloudSyncStatusBarFieldItem*>(
+        ProjectStatusFieldsRegistry::Get(FieldId));
 
-   if (field)
-      field->MarkDirty(mProject);
+    if (field) {
+        field->MarkDirty(mProject);
+    }
 
-   auto& statusWidget = GetStatusWidget();
+    auto& statusWidget = GetStatusWidget();
 
-   statusWidget.Show(mState != State::Hidden);
-   statusWidget.UpdateName();
+    statusWidget.Show(mState != State::Hidden);
+    statusWidget.UpdateName();
 
-   if (statusWidget.GetParent())
-      statusWidget.GetParent()->Refresh();
-   else
-      statusWidget.Refresh();
+    if (statusWidget.GetParent()) {
+        statusWidget.GetParent()->Refresh();
+    } else {
+        statusWidget.Refresh();
+    }
 }
 
 void CloudSyncStatusField::OnCloudStatusChanged(
-   const CloudStatusChangedMessage& message)
+    const CloudStatusChangedMessage& message)
 {
-   mState = [](ProjectSyncStatus status)
-   {
-      switch (status)
-      {
-      case ProjectSyncStatus::Local:
-         return State::Hidden;
-      case ProjectSyncStatus::Unsynced:
-         return State::Dirty;
-      case ProjectSyncStatus::Synced:
-         return State::Synced;
-      case ProjectSyncStatus::Failed:
-         return State::Failed;
-      case ProjectSyncStatus::Syncing:
-         return State::Uploading;
-      default:
-         return State::Hidden;
-      }
-   }(message.Status);
+    mState = [](ProjectSyncStatus status)
+    {
+        switch (status) {
+        case ProjectSyncStatus::Local:
+            return State::Hidden;
+        case ProjectSyncStatus::Unsynced:
+            return State::Dirty;
+        case ProjectSyncStatus::Synced:
+            return State::Synced;
+        case ProjectSyncStatus::Failed:
+            return State::Failed;
+        case ProjectSyncStatus::Syncing:
+            return State::Uploading;
+        default:
+            return State::Hidden;
+        }
+    }(message.Status);
 
-   if (mState == State::Uploading)
-      mProgress = static_cast<int>(message.Progress * 100.0);
+    if (mState == State::Uploading) {
+        mProgress = static_cast<int>(message.Progress * 100.0);
+    }
 
-   MarkDirty();
+    MarkDirty();
 }
 
 CloudSyncStatusField::StatusWidget& CloudSyncStatusField::GetStatusWidget()
 {
-   if (!mStatusWidget)
-   {
-      mStatusWidget = safenew StatusWidget(
-         *this, ProjectWindow::Get(mProject).GetStatusBar());
+    if (!mStatusWidget) {
+        mStatusWidget = safenew StatusWidget(
+            *this, ProjectWindow::Get(mProject).GetStatusBar());
 
-      mStatusWidget->Show(mCloudExtension.IsCloudProject());
-   }
+        mStatusWidget->Show(mCloudExtension.IsCloudProject());
+    }
 
-   return *mStatusWidget;
+    return *mStatusWidget;
 }
 
 const CloudSyncStatusField::StatusWidget&
 CloudSyncStatusField::GetStatusWidget() const
 {
-   return const_cast<CloudSyncStatusField*>(this)->GetStatusWidget();
+    return const_cast<CloudSyncStatusField*>(this)->GetStatusWidget();
 }
 } // namespace audacity::cloud::audiocom::sync

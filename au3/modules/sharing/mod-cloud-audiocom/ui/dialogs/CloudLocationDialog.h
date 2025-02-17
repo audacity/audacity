@@ -12,31 +12,30 @@
 
 #include "wxPanelWrapper.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 enum class LocationDialogResult
 {
-   Local,
-   Cloud,
-   Cancel,
+    Local,
+    Cloud,
+    Cancel,
 };
 
 enum class LocationDialogType
 {
-   Save,
-   Export,
+    Save,
+    Export,
 };
 
 class CloudLocationDialog final : private wxDialogWrapper
 {
 public:
-   CloudLocationDialog(wxWindow* parent, LocationDialogType type);
-   ~CloudLocationDialog() override;
+    CloudLocationDialog(wxWindow* parent, LocationDialogType type);
+    ~CloudLocationDialog() override;
 
-   LocationDialogResult ShowDialog();
+    LocationDialogResult ShowDialog();
 
 private:
-   LocationDialogType mType;
-   bool mDoNotShow;
+    LocationDialogType mType;
+    bool mDoNotShow;
 };
 } // namespace audacity::cloud::audiocom::sync

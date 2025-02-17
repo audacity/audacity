@@ -16,23 +16,21 @@
 #include "ReadOnlyText.h"
 
 namespace {
-
-void AddControls( ShuttleGui &S )
+void AddControls(ShuttleGui& S)
 {
-   S.StartStatic(XO("LAME MP3 Export Library"));
-   {
-      S.StartTwoColumn();
-      {
-         auto MP3Version = S
-            .Position(wxALIGN_CENTRE_VERTICAL)
-            .AddReadOnlyText(XO("MP3 Library Version:"), "");
-         MP3Version->SetValue(GetMP3Version(S.GetParent(), false));
-      }
-      S.EndTwoColumn();
-   }
-   S.EndStatic();
+    S.StartStatic(XO("LAME MP3 Export Library"));
+    {
+        S.StartTwoColumn();
+        {
+            auto MP3Version = S
+                              .Position(wxALIGN_CENTRE_VERTICAL)
+                              .AddReadOnlyText(XO("MP3 Library Version:"), "");
+            MP3Version->SetValue(GetMP3Version(S.GetParent(), false));
+        }
+        S.EndTwoColumn();
+    }
+    S.EndStatic();
 }
 
 LibraryPrefs::RegisteredControls reg{ wxT("MP3"), AddControls };
-
 }

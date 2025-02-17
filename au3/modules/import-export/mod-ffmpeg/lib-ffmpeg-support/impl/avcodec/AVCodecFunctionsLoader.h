@@ -14,4 +14,4 @@ class wxDynamicLibrary;
 struct AVCodecFunctions;
 
 bool LoadAVCodecFunctions(
-   const wxDynamicLibrary& lib, AVCodecFunctions& functions);
+    const wxDynamicLibrary& lib, AVCodecFunctions& functions);
