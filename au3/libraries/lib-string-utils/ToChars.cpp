@@ -989,7 +989,7 @@ bool grisu2(char* buf, char* last, int& len, int& decimal_exponent, FloatType va
 inline ToCharsResult append_exponent(char* buf, char* last, int e)
 {
     if (buf >= last) {
-        return { last, std::errc::value_too_large }
+        return { last, std::errc::value_too_large };
     }
 
     if (e < 0) {
@@ -1005,7 +1005,7 @@ inline ToCharsResult append_exponent(char* buf, char* last, int e)
     char* requiredLast = buf + requiredSymbolsCount + 1;
 
     if (requiredLast > last) {
-        return { last, std::errc::value_too_large }
+        return { last, std::errc::value_too_large };
     }
 
     if (k < 10) {
@@ -1049,7 +1049,7 @@ inline ToCharsResult format_buffer(
     if (k <= n && n <= max_exp) {
         char* requiredLast = buf + (static_cast<size_t>(n));
         if (requiredLast > last) {
-            return { last, std::errc::value_too_large }
+            return { last, std::errc::value_too_large };
         }
         // digits[000]
         // len <= max_exp + 2
@@ -1066,7 +1066,7 @@ inline ToCharsResult format_buffer(
         char* requiredLast = buf + (static_cast<size_t>(k) + 1U);
 
         if (requiredLast > last) {
-            return { last, std::errc::value_too_large }
+            return { last, std::errc::value_too_large };
         }
         // dig.its
         // len <= max_digits10 + 1
@@ -1083,7 +1083,7 @@ inline ToCharsResult format_buffer(
             =buf + (2U + static_cast<size_t>(-n) + static_cast<size_t>(k));
 
         if (requiredLast > last) {
-            return { last, std::errc::value_too_large }
+            return { last, std::errc::value_too_large };
         }
         // 0.[000]digits
         // len <= 2 + (-min_exp - 1) + max_digits10
@@ -1101,7 +1101,7 @@ inline ToCharsResult format_buffer(
         char* requiredLast = buf + 1;
 
         if (requiredLast > last) {
-            return { last, std::errc::value_too_large }
+            return { last, std::errc::value_too_large };
         }
         // dE+123
         // len <= 1 + 5
@@ -1111,7 +1111,7 @@ inline ToCharsResult format_buffer(
         char* requiredLast = buf + 1 + static_cast<size_t>(k);
 
         if (requiredLast > last) {
-            return { last, std::errc::value_too_large }
+            return { last, std::errc::value_too_large };
         }
         // d.igitsE+123
         // len <= max_digits10 + 1 + 5
@@ -1139,7 +1139,7 @@ ToCharsResult float_to_chars(
     char* first, char* last, T value, int digitsAfterDecimalPoint)
 {
     if (first >= last || first == nullptr) {
-        return { last, std::errc::value_too_large }
+        return { last, std::errc::value_too_large };
     }
 
     if (value == 0) {
@@ -1159,7 +1159,7 @@ ToCharsResult float_to_chars(
     int len = 0;
     int decimal_exponent = 0;
     if (!dtoa_impl::grisu2(first, last, len, decimal_exponent, value)) {
-        return { last, std::errc::value_too_large }
+        return { last, std::errc::value_too_large };
     }
     // Format the buffer like printf("%.*g", prec, value)
     const int kMinExp = digitsAfterDecimalPoint < 0 ? -4 : -digitsAfterDecimalPoint;
@@ -1200,7 +1200,7 @@ ToCharsResult
 ToChars(char* buffer, char* last, long long value) noexcept
 {
     if (buffer >= last || buffer == nullptr) {
-        return { last, std::errc::value_too_large }
+        return { last, std::errc::value_too_large };
     }
 
     if (value < 0) {
@@ -1214,7 +1214,7 @@ ToChars(char* buffer, char* last, long long value) noexcept
 ToCharsResult ToChars(char* buffer, char* last, unsigned long long value) noexcept
 {
     if (buffer >= last || buffer == nullptr) {
-        return { last, std::errc::value_too_large }
+        return { last, std::errc::value_too_large };
     }
 
     if (value == 0) {
@@ -1228,7 +1228,7 @@ ToCharsResult ToChars(char* buffer, char* last, unsigned long long value) noexce
     const size_t bufferSize = static_cast<size_t>(last - buffer);
 
     if (bufferSize >= safeSize) {
-        return { internal::itoa_impl::u64toa_jeaiii(value, buffer), std::errc() }
+        return { internal::itoa_impl::u64toa_jeaiii(value, buffer), std::errc() };
     }
 
     char tempBuffer[safeSize];
@@ -1237,7 +1237,7 @@ ToCharsResult ToChars(char* buffer, char* last, unsigned long long value) noexce
     const size_t resultSize = static_cast<size_t>(tempLast - tempBuffer);
 
     if (resultSize > bufferSize) {
-        return { last, std::errc::value_too_large }
+        return { last, std::errc::value_too_large };
     }
 
     std::copy(tempBuffer, tempLast, buffer);

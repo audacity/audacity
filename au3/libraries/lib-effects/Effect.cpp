@@ -135,7 +135,7 @@ OptionalMessage Effect::LoadUserPreset(
     wxString parms;
     if (!GetConfig(GetDefinition(), PluginSettings::Private,
                    name, wxT("Parameters"), parms)) {
-        return {}
+        return {};
     }
 
     return LoadSettingsFromString(parms, settings);
@@ -257,10 +257,10 @@ OptionalMessage Effect::LoadSettingsFromString(
         if (!const_cast<Effect*>(this)->VisitSettings(S, settings)) {
             // the old method...
             if (LoadSettings(eap, settings)) {
-                return { nullptr }
+                return { nullptr };
             }
         } else if (!S.bOK) {
-            result = {}
+            result = {};
         } else {
             result = { nullptr };
             S.SetForWriting(&eap);

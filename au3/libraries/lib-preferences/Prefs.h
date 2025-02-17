@@ -260,7 +260,7 @@ public:
             this->mValid = (this->mCurrentValue != defaultValue);
             return this->mCurrentValue;
         } else {
-            return T{}
+            return T{};
         }
     }
 

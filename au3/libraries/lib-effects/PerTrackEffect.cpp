@@ -238,7 +238,7 @@ bool PerTrackEffect::ProcessPass(TrackList& outputs,
                 // round to nearest sample
                 return sampleCount{ (wt.GetRate() * genDur) + 0.5 };
             } else {
-                return {}
+                return {};
             }
         }();
 

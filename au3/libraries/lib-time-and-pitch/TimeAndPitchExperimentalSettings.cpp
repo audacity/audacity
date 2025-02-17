@@ -20,17 +20,17 @@ template<typename T> std::optional<T> GetFromFile(const char* filenameStem)
     bool tuningOn = false;
     gPrefs->Read(wxT("/TimeAndPitch/TuningOn"), &tuningOn, false);
     if (!tuningOn) {
-        return {}
+        return {};
     }
     T value;
     std::ifstream file { TimeAndPitchExperimentalSettings::GetLogDir() + "/"
                          + filenameStem + ".txt" };
     if (!file.is_open()) {
-        return {}
+        return {};
     }
     // Check if file is empty or first character is newline.
     if (file.peek() == std::ifstream::traits_type::eof() || file.peek() == '\n') {
-        return {}
+        return {};
     }
     file >> value;
     return value;

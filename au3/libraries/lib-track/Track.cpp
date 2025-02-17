@@ -545,7 +545,7 @@ Track* TrackList::FindById(TrackId id)
     auto it = std::find_if(ListOfTracks::begin(), ListOfTracks::end(),
                            [=](const ListOfTracks::value_type& ptr){ return ptr->GetId() == id; });
     if (it == ListOfTracks::end()) {
-        return {}
+        return {};
     }
     return it->get();
 }

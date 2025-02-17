@@ -408,7 +408,7 @@ std::shared_ptr<EffectInstance>
 RealtimeEffectState::EnsureInstance(double sampleRate)
 {
     if (!mPlugin) {
-        return {}
+        return {};
     }
 
     auto pInstance = mwInstance.lock();
@@ -422,7 +422,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
             mwInstance = pInstance = MakeInstance();
         }
         if (!pInstance) {
-            return {}
+            return {};
         }
 
         // PRL: conserving pre-3.2.0 behavior, but I don't know why this arbitrary
@@ -430,7 +430,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
         pInstance->SetBlockSize(512);
 
         if (!pInstance->RealtimeInitialize(mMainSettings.settings, sampleRate)) {
-            return {}
+            return {};
         }
         mInitialized = true;
         return pInstance;
@@ -452,7 +452,7 @@ std::shared_ptr<EffectInstance>
 RealtimeEffectState::Initialize(double sampleRate)
 {
     if (!mPlugin) {
-        return {}
+        return {};
     }
 
     mCurrentProcessor = 0;
@@ -496,10 +496,10 @@ RealtimeEffectState::AddGroup(
 {
     auto pInstance = EnsureInstance(sampleRate);
     if (!pInstance) {
-        return {}
+        return {};
     }
     if (!mPlugin) {
-        return {}
+        return {};
     }
     auto first = mCurrentProcessor;
     const auto numAudioIn = pInstance->GetAudioInCount();

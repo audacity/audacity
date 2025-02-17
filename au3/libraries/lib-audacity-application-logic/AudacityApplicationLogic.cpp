@@ -107,11 +107,11 @@ bool AudacityApplicationLogic::DoEffect(
                 std::shared_ptr<EffectInstanceEx> pInstanceEx;
                 if ((flags& EffectManager::kConfigured) == 0 && pAccess) {
                     if (!cb(*effect, pInstance, *pAccess)) {
-                        return {}
+                        return {};
                     } else if (!(pInstanceEx
                                      =std::dynamic_pointer_cast<EffectInstanceEx>(
                                            pInstance))) {
-                        return {}
+                        return {};
                     } else {
                         // Retrieve again after the dialog modified settings
                         settings = pAccess->Get();

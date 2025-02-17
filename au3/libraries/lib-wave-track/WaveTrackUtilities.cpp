@@ -340,7 +340,7 @@ void WaveTrackUtilities::ExpandCutLine(WaveTrack& track,
                               XO("There is not enough room available to expand the cut line"),
                               XO("Warning"),
                               "Error:_Insufficient_space_in_track"
-                    }
+                    };
                 }
             }
         }

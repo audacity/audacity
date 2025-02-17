@@ -193,7 +193,7 @@ std::optional<size_t> RealtimeEffectList::FindState(
                end = mStates.end(),
                iter = std::find(begin, end, pState);
     if (iter == end) {
-        return {}
+        return {};
     }
     return std::distance(begin, iter);
 }

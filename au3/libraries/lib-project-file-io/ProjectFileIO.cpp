@@ -175,7 +175,7 @@ public:
         int64_t rowID, bool readOnly) noexcept
     {
         if (db == nullptr) {
-            return {}
+            return {};
         }
 
         sqlite3_blob* blob = nullptr;
@@ -184,7 +184,7 @@ public:
             db, schema, table, column, rowID, readOnly ? 0 : 1, &blob);
 
         if (rc != SQLITE_OK) {
-            return {}
+            return {};
         }
 
         return std::make_optional<SQLiteBlobStream>(blob, readOnly);
@@ -346,7 +346,7 @@ protected:
     {
         if (!mBlobStream || mBlobStream->IsEof()) {
             if (!OpenBlob(mNextBlobIndex++)) {
-                return {}
+                return {};
             }
         }
 
@@ -1947,7 +1947,7 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
 
     // Open the project file
     if (!OpenConnection(fileName)) {
-        return {}
+        return {};
     }
 
     int64_t rowId = -1;
@@ -1971,7 +1971,7 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
     }
 
     if (!useAutosave && !GetValue("SELECT ROWID FROM main.project WHERE id = 1;", rowId, false)) {
-        return {}
+        return {};
     } else {
         // Load 'er up
         BufferedProjectBlobStream stream(
@@ -1994,7 +1994,7 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
         if (blockids.size() > 0) {
             success = DeleteBlocks(blockids, true);
             if (!success) {
-                return {}
+                return {};
             }
         }
 
@@ -2015,7 +2015,7 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
     wxString queryResult;
     success = GetValue("SELECT Count(*) FROM project;", queryResult);
     if (!success) {
-        return {}
+        return {};
     }
 
     mTemporary = !queryResult.IsSameAs(wxT("1"));
@@ -2573,6 +2573,6 @@ static ProjectHistory::AutoSave::Scope scope {
                       XO("Automatic database backup failed."),
                       XO("Warning"),
                       "Error:_Disk_full_or_not_writable"
-            }
+            };
         }
     } };

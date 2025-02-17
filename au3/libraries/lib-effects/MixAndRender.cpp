@@ -27,7 +27,7 @@ Track::Holder MixAndRender(const TrackIterRange<const WaveTrack>& trackRange,
                            double startTime, double endTime)
 {
     if (trackRange.empty()) {
-        return {}
+        return {};
     }
 
     // This function was formerly known as "Quick Mix".
@@ -151,7 +151,7 @@ Track::Holder MixAndRender(const TrackIterRange<const WaveTrack>& trackRange,
     mix->Flush();
     if (updateResult == ProgressResult::Cancelled
         || updateResult == ProgressResult::Failed) {
-        return {}
+        return {};
     } else {
 #if 0
         int elapsedMS = wxGetElapsedTime();
@@ -180,7 +180,7 @@ GetEffectStagesImpl(const Host& host)
 {
     auto& effects = RealtimeEffectList::Get(host);
     if (!effects.IsActive()) {
-        return {}
+        return {};
     }
     std::vector<MixerOptions::StageSpecification> result;
     for (size_t i = 0, count = effects.GetStatesCount(); i < count; ++i) {

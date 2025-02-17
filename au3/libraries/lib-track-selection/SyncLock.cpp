@@ -133,7 +133,7 @@ std::pair<Track*, Track*> FindSyncLockGroup(Track& member)
     if (!first) {
         // Can't meet the criteria described above.  In that case,
         // consider the track to be the sole member of a group.
-        return { &member, &member }
+        return { &member, &member };
     }
 
     auto last = pList->Find(first);

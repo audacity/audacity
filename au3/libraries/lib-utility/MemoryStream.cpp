@@ -137,7 +137,7 @@ MemoryStream::Iterator MemoryStream::Iterator::operator++(int)
 MemoryStream::StreamChunk MemoryStream::Iterator::operator*() const
 {
     if (mShowLinearPart) {
-        return { mStream->mLinearData.data(), mStream->mLinearData.size() }
+        return { mStream->mLinearData.data(), mStream->mLinearData.size() };
     }
 
     return { mListIterator->Data.data(), mListIterator->BytesUsed };

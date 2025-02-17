@@ -30,14 +30,14 @@ std::vector<std::shared_ptr<EffectInstance> > MakeInstances(
         auto pInstance = factory();
         if (!pInstance) {
             // A constructor that can't satisfy its post should throw instead
-            throw std::exception{}
+            throw std::exception{};
         }
         auto count = pInstance->GetAudioInCount();
         ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
         MakeChannelMap(nInputChannels, channel, map);
         // Give the plugin a chance to initialize
         if (!pInstance->ProcessInitialize(settings, sampleRate, map)) {
-            throw std::exception{}
+            throw std::exception{};
         }
         instances.resize(ii);
 
@@ -144,7 +144,7 @@ std::optional<size_t> EffectStage::Acquire(Buffers& data, size_t bound)
     if (auto oCurBlockSize = FetchProcessAndAdvance(data, bound, false)
         ; !oCurBlockSize
         ) {
-        return {}
+        return {};
     } else {
         curBlockSize = *oCurBlockSize;
         if (mIsProcessor && !mLatencyDone) {
@@ -158,7 +158,7 @@ std::optional<size_t> EffectStage::Acquire(Buffers& data, size_t bound)
                 if (mInstances[ii]
                     && mInstances[ii]->GetLatency(mSettings, mSampleRate) != delay) {
                     // This mismatch is unexpected.  Fail
-                    return {}
+                    return {};
                 }
             }
             // Discard all the latency
@@ -170,7 +170,7 @@ std::optional<size_t> EffectStage::Acquire(Buffers& data, size_t bound)
                 if (curBlockSize == 0) {
                     if (!(oCurBlockSize = FetchProcessAndAdvance(data, bound, false)
                           )) {
-                        return {}
+                        return {};
                     } else {
                         curBlockSize = *oCurBlockSize;
                     }
@@ -185,7 +185,7 @@ std::optional<size_t> EffectStage::Acquire(Buffers& data, size_t bound)
                     if (!(oCurBlockSize = FetchProcessAndAdvance(
                               data, bound - curBlockSize, false, curBlockSize)
                           )) {
-                        return {}
+                        return {};
                     } else {
                         curBlockSize += *oCurBlockSize;
                     }
@@ -199,7 +199,7 @@ std::optional<size_t> EffectStage::Acquire(Buffers& data, size_t bound)
                     // Feed zeroes to the effect
                     auto zeroes = limitSampleBufferSize(data.BlockSize(), delay);
                     if (!(FetchProcessAndAdvance(data, zeroes, true))) {
-                        return {}
+                        return {};
                     }
                     delay -= zeroes;
                     // Debit mDelayRemaining later in Release()
@@ -219,7 +219,7 @@ std::optional<size_t> EffectStage::Acquire(Buffers& data, size_t bound)
         auto zeroes
             =limitSampleBufferSize(bound - curBlockSize, mDelayRemaining);
         if (!FetchProcessAndAdvance(data, zeroes, true, curBlockSize)) {
-            return {}
+            return {};
         }
         // Debit mDelayRemaining later in Release()
     }
@@ -262,7 +262,7 @@ std::optional<size_t> EffectStage::FetchProcessAndAdvance(
         }
     }
     if (!oCurBlockSize) {
-        return {}
+        return {};
     }
 
     const auto curBlockSize = *oCurBlockSize;
@@ -281,7 +281,7 @@ std::optional<size_t> EffectStage::FetchProcessAndAdvance(
                 continue;
             }
             if (!Process(*pInstance, ii, data, curBlockSize, outBufferOffset)) {
-                return {}
+                return {};
             }
         }
 
@@ -291,14 +291,14 @@ std::optional<size_t> EffectStage::FetchProcessAndAdvance(
             if (!mIsProcessor) {
                 // This allows polling the progress meter for a generator
                 if (!mUpstream.Release()) {
-                    return {}
+                    return {};
                 }
             }
         } else {
             // Will count down the upstream
             mLastProduced += curBlockSize;
             if (!mUpstream.Release()) {
-                return {}
+                return {};
             }
             mInBuffers.Advance(curBlockSize);
             if (mInBuffers.Remaining() < mInBuffers.BlockSize()) {

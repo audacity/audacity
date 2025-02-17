@@ -59,7 +59,7 @@ void EffectManager::UnregisterEffect(const PluginID& ID)
 TranslatableString EffectManager::GetEffectFamilyName(const PluginID& ID)
 {
     if (auto description = PluginManager::Get().GetPlugin(ID)) {
-        return TranslatableString { description->GetEffectFamily(), {} }
+        return TranslatableString { description->GetEffectFamily(), {} };
     }
 
     auto effect = GetEffect(ID);
@@ -72,7 +72,7 @@ TranslatableString EffectManager::GetEffectFamilyName(const PluginID& ID)
 TranslatableString EffectManager::GetVendorName(const PluginID& ID)
 {
     if (auto description = PluginManager::Get().GetPlugin(ID)) {
-        return TranslatableString { description->GetVendor(), {} }
+        return TranslatableString { description->GetVendor(), {} };
     }
 
     auto effect = GetEffect(ID);
@@ -212,9 +212,9 @@ EffectManager::GetEffectAndDefaultSettings(const PluginID& ID)
 {
     auto& results = DoGetEffect(ID);
     if (results.effect) {
-        return { results.effect, &results.settings }
+        return { results.effect, &results.settings };
     } else {
-        return { nullptr, nullptr }
+        return { nullptr, nullptr };
     }
 }
 

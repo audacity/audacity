@@ -118,7 +118,7 @@ RegistryPath PluginManager::GetPluginEnabledSetting(
         // RegisterPlugin() for the module
         auto family = desc.GetEffectFamily();
         if (family.empty()) {  // as for built-in effect and command modules
-            return {}
+            return {};
         } else {
             return wxT('/') + family + wxT("/Enable");
         }
@@ -1483,7 +1483,7 @@ RegistryPath PluginManager::SettingsPath(
     // configuration files will break.
 
     if (auto iter = mRegisteredPlugins.find(ID); iter == mRegisteredPlugins.end()) {
-        return {}
+        return {};
     } else {
         const PluginDescriptor& plug = iter->second;
 

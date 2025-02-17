@@ -187,7 +187,7 @@ public:
         } else if constexpr (std::is_void_v<result_type>) {
             return;
         } else {
-            return result_type{}
+            return result_type{};
         }
     }
 

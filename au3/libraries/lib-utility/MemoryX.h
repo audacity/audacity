@@ -99,7 +99,7 @@ public:
         static_assert(std::is_unsigned<Integral1>::value, "Unsigned arguments only");
         static_assert(std::is_unsigned<Integral2>::value, "Unsigned arguments only");
         for (size_t ii = 0; ii < N; ++ii) {
-            (*this)[ii] = ArrayOf<X> { M, initialize }
+            (*this)[ii] = ArrayOf<X> { M, initialize };
         }
     }
 
@@ -409,12 +409,18 @@ constexpr IntType SwapIntBytes(IntType value) noexcept
 
     if constexpr (size == 1) {
         return value;
-    } else if constexpr (size == 2) {
+    }
+
+    if constexpr (size == 2) {
         return (value >> 8) | (value << 8);
-    } else if constexpr (size == 4) { // On x86, this (and 64 bit version) is a single instruction! (At least, clang is smart enough to do that)
+    }
+
+    if constexpr (size == 4) {           // On x86, this (and 64 bit version) is a single instruction! (At least, clang is smart enough to do that)
         return ((value >> 24) & 0xFF) | ((value >> 8) & 0xFF00)
                | ((value << 8) & 0xFF0000) | ((value << 24) & 0xFF000000);
-    } else if constexpr (size == 8) {
+    }
+
+    if constexpr (size == 8) {
         return ((value >> 56) & 0xFF) | ((value >> 40) & 0xFF00)
                | ((value >> 24) & 0xFF0000) | ((value >> 8) & 0xFF000000)
                | ((value << 8) & 0xFF00000000) | ((value << 24) & 0xFF0000000000)

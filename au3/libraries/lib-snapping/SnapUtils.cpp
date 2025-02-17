@@ -151,7 +151,7 @@ SnapResult SnapFunctionsRegistry::Snap(
     auto item = Find(id);
 
     if (item == nullptr) {
-        return SnapResult { time, false }
+        return SnapResult { time, false };
     }
 
     return item->Snap(project, time, nearest);
@@ -164,7 +164,7 @@ SnapResult SnapFunctionsRegistry::SingleStep(
     auto item = Find(id);
 
     if (item == nullptr) {
-        return SnapResult { time, false }
+        return SnapResult { time, false };
     }
 
     return item->SingleStep(project, time, upwards);
@@ -189,7 +189,7 @@ namespace {
 SnapResult SnapWithMultiplier(double value, double multiplier, bool nearest)
 {
     if (multiplier <= 0.0) {
-        return SnapResult { value, false }
+        return SnapResult { value, false };
     }
 
     auto result = nearest ? std::round(value * multiplier) / multiplier
@@ -223,7 +223,7 @@ public:
         const double result = time + step;
 
         if (result < 0.0) {
-            return { 0.0, false }
+            return { 0.0, false };
         }
 
         return SnapWithMultiplier(result, mMultiplier, true);
@@ -249,7 +249,7 @@ public:
     Snap(const AudacityProject& project, double time, bool nearest) const override
     {
         if (!mMultiplierFunctor) {
-            return { time, false }
+            return { time, false };
         }
         return SnapWithMultiplier(time, mMultiplierFunctor(project), nearest);
     }
@@ -258,7 +258,7 @@ public:
         const AudacityProject& project, double time, bool upwards) const override
     {
         if (!mMultiplierFunctor) {
-            return { time, false }
+            return { time, false };
         }
 
         const auto multiplier = mMultiplierFunctor(project);
@@ -272,7 +272,7 @@ public:
         double result = next / multiplier;
 
         if (result < 0.0) {
-            return { 0.0, false }
+            return { 0.0, false };
         }
 
         while (static_cast<int>(std::floor(result * multiplier)) < next) {

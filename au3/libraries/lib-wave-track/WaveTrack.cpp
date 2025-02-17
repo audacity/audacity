@@ -747,7 +747,7 @@ std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
 {
     auto nChannels = NChannels();
     if (iChannel >= nChannels) {
-        return {}
+        return {};
     }
     // TODO: more-than-two-channels
     ::Channel& aliased = (iChannel == 0)
@@ -2856,8 +2856,7 @@ WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
         }
     }
     if (intersectingIntervals.empty()) {
-        return { AudioSegmentSampleView {
-                     (TimeToLongSamples(t1) - TimeToLongSamples(t0)).as_size_t() } }
+        return { AudioSegmentSampleView { (TimeToLongSamples(t1) - TimeToLongSamples(t0)).as_size_t() } };
     }
     std::sort(
         intersectingIntervals.begin(), intersectingIntervals.end(),

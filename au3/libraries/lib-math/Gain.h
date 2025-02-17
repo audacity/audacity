@@ -24,7 +24,7 @@ Type ExpGain(Type gain) noexcept
     constexpr Type b(6.908);
 
     if (gain < std::numeric_limits<Type>::epsilon()) {
-        return {}
+        return {};
     }
 
     const Type expGain = a * std::exp(b * gain);

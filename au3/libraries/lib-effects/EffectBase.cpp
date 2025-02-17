@@ -245,7 +245,7 @@ auto EffectBase::FindInstance(EffectPlugin& plugin)
     auto result = plugin.MakeInstance();
     if (auto pInstanceEx = std::dynamic_pointer_cast<EffectInstanceEx>(result)
         ; pInstanceEx && pInstanceEx->Init()) {
-        return { pInstanceEx }
+        return { pInstanceEx };
     }
     return {};
 }
