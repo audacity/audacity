@@ -24,72 +24,71 @@ struct DeviceSourceMap;
 
 class AudacityProject;
 
-class DeviceToolBar final : public ToolBar {
+class DeviceToolBar final : public ToolBar
+{
+public:
 
- public:
+    static Identifier ID();
 
-   static Identifier ID();
+    DeviceToolBar(AudacityProject& project);
+    virtual ~DeviceToolBar();
 
-   DeviceToolBar( AudacityProject &project );
-   virtual ~DeviceToolBar();
+    bool ShownByDefault() const override;
 
-   bool ShownByDefault() const override;
+    static DeviceToolBar& Get(AudacityProject& project);
+    static const DeviceToolBar& Get(const AudacityProject& project);
 
-   static DeviceToolBar &Get( AudacityProject &project );
-   static const DeviceToolBar &Get( const AudacityProject &project );
+    void Create(wxWindow* parent) override;
 
-   void Create(wxWindow * parent) override;
+    void UpdatePrefs() override;
+    void UpdateSelectedPrefs(int) override;
 
-   void UpdatePrefs() override;
-   void UpdateSelectedPrefs( int ) override;
+    void DeinitChildren();
+    void Populate() override;
+    void Repaint(wxDC* WXUNUSED(dc)) override {}
+    void EnableDisableButtons() override;
+    void OnFocus(wxFocusEvent& event);
+    void OnCaptureKey(wxCommandEvent& event);
 
-   void DeinitChildren();
-   void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
-   void EnableDisableButtons() override;
-   void OnFocus(wxFocusEvent &event);
-   void OnCaptureKey(wxCommandEvent &event);
+    void OnChoice(wxCommandEvent& event);
 
-   void OnChoice(wxCommandEvent & event);
+    /// When the prefs don't exist this value is used.
+    /// 883 takes a complete row in the default initial size of Audacity.
+    int GetInitialWidth()  override { return 883; }
+    int GetMinToolbarWidth() override { return 350; }
 
-   /// When the prefs don't exist this value is used.
-   /// 883 takes a complete row in the default initial size of Audacity.
-   int GetInitialWidth()  override{ return 883; }
-   int GetMinToolbarWidth() override { return 350; }
+    void ShowInputDialog();
+    void ShowOutputDialog();
+    void ShowHostDialog();
+    void ShowChannelsDialog();
 
-   void ShowInputDialog();
-   void ShowOutputDialog();
-   void ShowHostDialog();
-   void ShowChannelsDialog();
+private:
+    void OnRescannedDevices(DeviceChangeMessage);
 
- private:
-   void OnRescannedDevices(DeviceChangeMessage);
+    int  ChangeHost();
+    void ChangeDevice(bool isInput);
+    void RefillCombos();
+    void FillHosts();
+    void FillHostDevices();
+    void FillInputChannels();
+    void SetDevices(const DeviceSourceMap* in, const DeviceSourceMap* out);
+    void SetNames();
+    void RegenerateTooltips() override;
+    void ShowComboDialog(wxChoice* combo, const TranslatableString& title);
 
-   int  ChangeHost();
-   void ChangeDevice(bool isInput);
-   void RefillCombos();
-   void FillHosts();
-   void FillHostDevices();
-   void FillInputChannels();
-   void SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out);
-   void SetNames();
-   void RegenerateTooltips() override;
-   void ShowComboDialog(wxChoice *combo, const TranslatableString &title);
+    wxChoice* mInput;
+    wxChoice* mOutput;
+    wxChoice* mInputChannels;
+    wxChoice* mHost;
 
-   wxChoice *mInput;
-   wxChoice *mOutput;
-   wxChoice *mInputChannels;
-   wxChoice *mHost;
+    Observer::Subscription mSubscription;
 
-   Observer::Subscription mSubscription;
+public:
 
- public:
-
-   DECLARE_CLASS(DeviceToolBar)
-   DECLARE_EVENT_TABLE()
+    DECLARE_CLASS(DeviceToolBar)
+    DECLARE_EVENT_TABLE()
 };
 
 int DeviceToolbarPrefsID();
 
 #endif
-

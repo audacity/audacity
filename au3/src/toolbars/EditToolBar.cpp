@@ -29,8 +29,6 @@
 
 *//*******************************************************************/
 
-
-
 #include "EditToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -56,27 +54,27 @@
 #include "../commands/CommandDispatch.h"
 
 enum {
-   ETBZoomInID,
-   ETBZoomOutID,
-   ETBZoomToggleID,
+    ETBZoomInID,
+    ETBZoomOutID,
+    ETBZoomToggleID,
 
-   ETBZoomSelID,
-   ETBZoomFitID,
+    ETBZoomSelID,
+    ETBZoomFitID,
 
-   ETBTrimID,
-   ETBSilenceID,
+    ETBTrimID,
+    ETBSilenceID,
 
-   // no sync-lock on/off button.
-   // #define OPTION_SYNC_LOCK_BUTTON
+    // no sync-lock on/off button.
+    // #define OPTION_SYNC_LOCK_BUTTON
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
-   ETBSyncLockID,
+    ETBSyncLockID,
 #endif
 
-   ETBUndoID,
-   ETBRedoID,
+    ETBUndoID,
+    ETBRedoID,
 
-   ETBNumButtons
+    ETBNumButtons
 };
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
@@ -86,19 +84,23 @@ enum {
 constexpr int first_ETB_ID = 11300;
 
 static const ToolBarButtons::ButtonList EditToolbarButtonList = {
-   { ETBZoomInID,   wxT("ZoomIn"),      XO("Zoom In")  },
-   { ETBZoomOutID,  wxT("ZoomOut"),     XO("Zoom Out")  },
-   { ETBZoomToggleID,   wxT("ZoomToggle"),      XO("Zoom Toggle")  },
-   { ETBZoomSelID,  wxT("ZoomSel"),     XO("Fit selection to width")  },
-   { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit project to width")  },
+    { ETBZoomInID,   wxT("ZoomIn"),      XO("Zoom In") },
+    { ETBZoomOutID,  wxT("ZoomOut"),     XO("Zoom Out") },
+    { ETBZoomToggleID,   wxT("ZoomToggle"),      XO("Zoom Toggle") },
+    { ETBZoomSelID,  wxT("ZoomSel"),     XO("Fit selection to width") },
+    { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit project to width") },
 
-   { ETBTrimID,     wxT("Trim"),        XO("Trim audio outside selection")  },
-   { ETBSilenceID,  wxT("Silence"),     XO("Silence audio selection")  },
+    { ETBTrimID,     wxT("Trim"),        XO("Trim audio outside selection") },
+    { ETBSilenceID,  wxT("Silence"),     XO("Silence audio selection") },
 #ifdef OPTION_SYNC_LOCK_BUTTON
-   { ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")  },
+    {
+        ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")
+    },
 #endif
-   { ETBUndoID,     wxT("Undo"),        XO("Undo")  },
-   { ETBRedoID,     wxT("Redo"),        XO("Redo")  },
+    {
+        ETBUndoID,     wxT("Undo"),        XO("Undo")
+    },
+    { ETBRedoID,     wxT("Redo"),        XO("Redo") },
 };
 
 IMPLEMENT_CLASS(EditToolBar, ToolBar);
@@ -107,34 +109,35 @@ IMPLEMENT_CLASS(EditToolBar, ToolBar);
 /// Methods for EditToolBar
 ////////////////////////////////////////////////////////////
 
-BEGIN_EVENT_TABLE( EditToolBar, ToolBar )
-   EVT_COMMAND_RANGE(ETBZoomInID+first_ETB_ID,
-                      ETBZoomInID+first_ETB_ID + ETBNumButtons - 1,
-                      wxEVT_COMMAND_BUTTON_CLICKED,
-                      EditToolBar::OnButton )
+BEGIN_EVENT_TABLE(EditToolBar, ToolBar)
+EVT_COMMAND_RANGE(ETBZoomInID + first_ETB_ID,
+                  ETBZoomInID + first_ETB_ID + ETBNumButtons - 1,
+                  wxEVT_COMMAND_BUTTON_CLICKED,
+                  EditToolBar::OnButton)
 END_EVENT_TABLE()
 
 Identifier EditToolBar::ID()
 {
-   return wxT("Edit");
+    return wxT("Edit");
 }
 
 //Standard constructor
-EditToolBar::EditToolBar( AudacityProject &project )
-: ToolBar(project, XO("Edit"), ID())
-, mButtons{ this, project, EditToolbarButtonList, ETBNumButtons, first_ETB_ID }
+EditToolBar::EditToolBar(AudacityProject& project)
+    : ToolBar(project, XO("Edit"), ID())
+    , mButtons{this, project, EditToolbarButtonList, ETBNumButtons, first_ETB_ID}
 {
 #ifdef OPTION_SYNC_LOCK_BUTTON
-   auto action = [this]() {
-      bool bSyncLockTracks = SyncLockTracks.Read();
+    auto action = [this]() {
+        bool bSyncLockTracks = SyncLockTracks.Read();
 
-      if (bSyncLockTracks)
-         mButtons.PushDown(ETBSyncLockID);
-      else
-         mButtons.PopUp(ETBSyncLockID);
-   };
+        if (bSyncLockTracks) {
+            mButtons.PushDown(ETBSyncLockID);
+        } else {
+            mButtons.PopUp(ETBSyncLockID);
+        }
+    };
 
-   mButtons.SetCustomEnableDisableButtonsAction(action);
+    mButtons.SetCustomEnableDisableButtonsAction(action);
 #endif
 }
 
@@ -142,116 +145,116 @@ EditToolBar::~EditToolBar()
 {
 }
 
-void EditToolBar::Create(wxWindow * parent)
+void EditToolBar::Create(wxWindow* parent)
 {
-   ToolBar::Create(parent);
-   UpdatePrefs();
+    ToolBar::Create(parent);
+    UpdatePrefs();
 }
 
 void EditToolBar::AddSeparator()
 {
-   mToolSizer->AddSpacer(0);
+    mToolSizer->AddSpacer(0);
 }
 
 void EditToolBar::AddButton(
-   teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-   int id, const TranslatableString &label, bool toggle)
+    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+    int id, const TranslatableString& label, bool toggle)
 {
-   auto r = mButtons.CreateButton(eEnabledUp, eEnabledDown, eDisabled, id, label, toggle);
-   mToolSizer->Add(r);
+    auto r = mButtons.CreateButton(eEnabledUp, eEnabledDown, eDisabled, id, label, toggle);
+    mToolSizer->Add(r);
 }
 
 void EditToolBar::Populate()
 {
-   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
-   MakeButtonBackgroundsSmall();
+    SetBackgroundColour(theTheme.Colour(clrMedium));
+    MakeButtonBackgroundsSmall();
 
-   Add(mToolSizer = safenew wxGridSizer(2, 5, toolbarSpacing, toolbarSpacing),
-      0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
+    Add(mToolSizer = safenew wxGridSizer(2, 5, toolbarSpacing, toolbarSpacing),
+        0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
 
-   /* Buttons */
-   // Tooltips match menu entries.
-   // We previously had longer tooltips which were not more clear.
-   AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
-      XO("Zoom In"));
-   AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
-      XO("Zoom Out"));
-   AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
-      XO("Zoom to Selection"));
-   AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
-      XO("Fit to Width"));
-   AddButton(bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
-      XO("Zoom Toggle"));
+    /* Buttons */
+    // Tooltips match menu entries.
+    // We previously had longer tooltips which were not more clear.
+    AddButton(bmpZoomIn, bmpZoomIn, bmpZoomInDisabled, ETBZoomInID,
+              XO("Zoom In"));
+    AddButton(bmpZoomOut, bmpZoomOut, bmpZoomOutDisabled, ETBZoomOutID,
+              XO("Zoom Out"));
+    AddButton(bmpZoomSel, bmpZoomSel, bmpZoomSelDisabled, ETBZoomSelID,
+              XO("Zoom to Selection"));
+    AddButton(bmpZoomFit, bmpZoomFit, bmpZoomFitDisabled, ETBZoomFitID,
+              XO("Fit to Width"));
+    AddButton(bmpZoomToggle, bmpZoomToggle, bmpZoomToggleDisabled, ETBZoomToggleID,
+              XO("Zoom Toggle"));
 
-   // Tooltips slightly more verbose than the menu entries are.
-   AddButton(bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
-      XO("Trim audio outside selection"));
-   AddButton(bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
-      XO("Silence audio selection"));
+    // Tooltips slightly more verbose than the menu entries are.
+    AddButton(bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
+              XO("Trim audio outside selection"));
+    AddButton(bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
+              XO("Silence audio selection"));
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
-   AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
-      XO("Sync-Lock Tracks"), true);
+    AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
+              XO("Sync-Lock Tracks"), true);
 #else
-   AddSeparator();
+    AddSeparator();
 #endif
 
-   AddButton(bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
-      XO("Undo"));
-   AddButton(bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
-      XO("Redo"));
+    AddButton(bmpUndo, bmpUndo, bmpUndoDisabled, ETBUndoID,
+              XO("Undo"));
+    AddButton(bmpRedo, bmpRedo, bmpRedoDisabled, ETBRedoID,
+              XO("Redo"));
 
-   mButtons.SetEnabled(ETBZoomInID, false);
-   mButtons.SetEnabled(ETBZoomOutID, false);
-   mButtons.SetEnabled(ETBZoomToggleID, false);
+    mButtons.SetEnabled(ETBZoomInID, false);
+    mButtons.SetEnabled(ETBZoomOutID, false);
+    mButtons.SetEnabled(ETBZoomToggleID, false);
 
-   mButtons.SetEnabled(ETBZoomSelID, false);
-   mButtons.SetEnabled(ETBZoomFitID, false);
+    mButtons.SetEnabled(ETBZoomSelID, false);
+    mButtons.SetEnabled(ETBZoomFitID, false);
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
-   mButtons.PushDown(ETBSyncLockID);
+    mButtons.PushDown(ETBSyncLockID);
 #endif
 
-   RegenerateTooltips();
+    RegenerateTooltips();
 }
 
 void EditToolBar::UpdatePrefs()
 {
-   RegenerateTooltips();
+    RegenerateTooltips();
 
-   // Set label to pull in language change
-   SetLabel(XO("Edit"));
+    // Set label to pull in language change
+    SetLabel(XO("Edit"));
 
-   // Give base class a chance
-   ToolBar::UpdatePrefs();
+    // Give base class a chance
+    ToolBar::UpdatePrefs();
 }
 
 void EditToolBar::RegenerateTooltips()
 {
-   mButtons.RegenerateTooltips();
+    mButtons.RegenerateTooltips();
 }
 
 void EditToolBar::EnableDisableButtons()
 {
-   mButtons.EnableDisableButtons();
+    mButtons.EnableDisableButtons();
 }
 
-void EditToolBar::OnButton(wxCommandEvent &event)
+void EditToolBar::OnButton(wxCommandEvent& event)
 {
-   mButtons.OnButton(event);
+    mButtons.OnButton(event);
 }
 
 static RegisteredToolbarFactory factory{
-   []( AudacityProject &project ){
-      return ToolBar::Holder{ safenew EditToolBar{ project } }; }
+    []( AudacityProject& project ){
+        return ToolBar::Holder{ safenew EditToolBar{ project } };
+    }
 };
 
 #include "ToolManager.h"
 
 namespace {
 AttachedToolBarMenuItem sAttachment{
-   /* i18n-hint: Clicking this menu item shows the toolbar for editing */
-   EditToolBar::ID(), wxT("ShowEditTB"), XXO("&Edit Toolbar")
+    /* i18n-hint: Clicking this menu item shows the toolbar for editing */
+    EditToolBar::ID(), wxT("ShowEditTB"), XXO("&Edit Toolbar")
 };
 }
-

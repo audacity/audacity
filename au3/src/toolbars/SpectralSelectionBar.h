@@ -26,67 +26,66 @@ class AudacityProject;
 class NumericTextCtrl;
 struct ProjectNumericFormatsEvent;
 
-class SpectralSelectionBar final : public ToolBar {
-
+class SpectralSelectionBar final : public ToolBar
+{
 public:
 
-   static Identifier ID();
+    static Identifier ID();
 
-   SpectralSelectionBar( AudacityProject &project );
-   virtual ~SpectralSelectionBar();
+    SpectralSelectionBar(AudacityProject& project);
+    virtual ~SpectralSelectionBar();
 
-   bool ShownByDefault() const override;
-   DockID DefaultDockID() const override;
+    bool ShownByDefault() const override;
+    DockID DefaultDockID() const override;
 
-   static SpectralSelectionBar &Get( AudacityProject &project );
-   static const SpectralSelectionBar &Get( const AudacityProject &project );
+    static SpectralSelectionBar& Get(AudacityProject& project);
+    static const SpectralSelectionBar& Get(const AudacityProject& project);
 
-   void Create(wxWindow *parent) override;
+    void Create(wxWindow* parent) override;
 
-   void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
-   void EnableDisableButtons() override {};
-   void UpdatePrefs() override;
+    void Populate() override;
+    void Repaint(wxDC* WXUNUSED(dc)) override {}
+    void EnableDisableButtons() override {}
+    void UpdatePrefs() override;
 
-   void SetFrequencies(double bottom, double top);
-   void SetFrequencySelectionFormatName(const NumericFormatID & formatName);
-   void SetBandwidthSelectionFormatName(const NumericFormatID & formatName);
+    void SetFrequencies(double bottom, double top);
+    void SetFrequencySelectionFormatName(const NumericFormatID& formatName);
+    void SetBandwidthSelectionFormatName(const NumericFormatID& formatName);
 
-   void RegenerateTooltips() override {};
+    void RegenerateTooltips() override {}
 
 private:
 
-   void ValuesToControls();
-   void SetBounds();
-   void OnFormatsChanged(ProjectNumericFormatsEvent);
-   void OnUpdate(wxCommandEvent &evt);
-   void OnCtrl(wxCommandEvent &evt);
-   void OnChoice(wxCommandEvent &evt);
-   void OnIdle( wxIdleEvent &evt );
+    void ValuesToControls();
+    void SetBounds();
+    void OnFormatsChanged(ProjectNumericFormatsEvent);
+    void OnUpdate(wxCommandEvent& evt);
+    void OnCtrl(wxCommandEvent& evt);
+    void OnChoice(wxCommandEvent& evt);
+    void OnIdle(wxIdleEvent& evt);
 
-   void OnSize(wxSizeEvent &evt);
+    void OnSize(wxSizeEvent& evt);
 
-   void ModifySpectralSelection(bool done = false);
+    void ModifySpectralSelection(bool done = false);
 
-   Observer::Subscription mFormatsSubscription;
+    Observer::Subscription mFormatsSubscription;
 
-   bool mbCenterAndWidth;
+    bool mbCenterAndWidth;
 
-   double mCenter; // hertz
-   double mWidth; // logarithm of ratio of hertz
-   double mLow; // hertz
-   double mHigh; // hertz
+    double mCenter; // hertz
+    double mWidth; // logarithm of ratio of hertz
+    double mLow; // hertz
+    double mHigh; // hertz
 
-   NumericTextCtrl *mCenterCtrl, *mWidthCtrl, *mLowCtrl, *mHighCtrl;
-   wxChoice *mChoice;
+    NumericTextCtrl* mCenterCtrl, * mWidthCtrl, * mLowCtrl, * mHighCtrl;
+    wxChoice* mChoice;
 
-   int mHeight;   // height of main sizer after creation - used by OnChoice()
+    int mHeight;  // height of main sizer after creation - used by OnChoice()
 
 public:
 
-   DECLARE_CLASS(SpectralSelectionBar)
-   DECLARE_EVENT_TABLE()
+    DECLARE_CLASS(SpectralSelectionBar)
+    DECLARE_EVENT_TABLE()
 };
 
 #endif
-

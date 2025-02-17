@@ -21,7 +21,6 @@
 
 #include "Observer.h"
 
-
 class wxChoice;
 class wxComboBox;
 class wxCommandEvent;
@@ -34,85 +33,83 @@ class NumericTextCtrl;
 
 extern IntSetting SelectionToolbarMode;
 
-class AUDACITY_DLL_API SelectionBar final : public ToolBar {
+class AUDACITY_DLL_API SelectionBar final : public ToolBar
+{
+public:
+    enum class SelectionMode
+    {
+        StartEnd,
+        StartLength,
+        LengthEnd,
+        LengthCenter
+    };
 
- public:
-   enum class SelectionMode
-   {
-      StartEnd,
-      StartLength,
-      LengthEnd,
-      LengthCenter 
-   };
-   
-   static Identifier ID();
+    static Identifier ID();
 
-   SelectionBar( AudacityProject &project );
-   virtual ~SelectionBar();
+    SelectionBar(AudacityProject& project);
+    virtual ~SelectionBar();
 
-   bool ShownByDefault() const override;
-   DockID DefaultDockID() const override;
+    bool ShownByDefault() const override;
+    DockID DefaultDockID() const override;
 
-   static SelectionBar &Get( AudacityProject &project );
-   static const SelectionBar &Get( const AudacityProject &project );
+    static SelectionBar& Get(AudacityProject& project);
+    static const SelectionBar& Get(const AudacityProject& project);
 
-   void Create(wxWindow *parent) override;
+    void Create(wxWindow* parent) override;
 
-   void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
-   void EnableDisableButtons() override {};
-   void UpdatePrefs() override;
+    void Populate() override;
+    void Repaint(wxDC* WXUNUSED(dc)) override {}
+    void EnableDisableButtons() override {}
+    void UpdatePrefs() override;
 
-   void SetTimes(double start, double end);
+    void SetTimes(double start, double end);
 
-   void SetSelectionFormat(const NumericFormatID & format);
-   void RegenerateTooltips() override;
+    void SetSelectionFormat(const NumericFormatID& format);
+    void RegenerateTooltips() override;
 
- private:
-   AButton* MakeSetupButton();
-   
-   void AddTitle( const TranslatableString & Title,
-      wxSizer * pSizer );
-   void AddTime( int id, wxSizer * pSizer );
-   void AddSelectionSetupButton(wxSizer* pSizer);
+private:
+    AButton* MakeSetupButton();
 
-   void SetSelectionMode(SelectionMode mode);
-   void ValuesToControls();
-   void OnUpdate(wxCommandEvent &evt);
+    void AddTitle(const TranslatableString& Title, wxSizer* pSizer);
+    void AddTime(int id, wxSizer* pSizer);
+    void AddSelectionSetupButton(wxSizer* pSizer);
 
-   void OnFocus(wxFocusEvent &event);
-   void OnCaptureKey(wxCommandEvent &event);
-   void OnSize(wxSizeEvent &evt);
-   void OnIdle( wxIdleEvent &evt );
+    void SetSelectionMode(SelectionMode mode);
+    void ValuesToControls();
+    void OnUpdate(wxCommandEvent& evt);
 
-   void ModifySelection(int driver, bool done = false);
-   void SelectionModeUpdated();
+    void OnFocus(wxFocusEvent& event);
+    void OnCaptureKey(wxCommandEvent& event);
+    void OnSize(wxSizeEvent& evt);
+    void OnIdle(wxIdleEvent& evt);
 
-   void UpdateTimeControlsFormat(const NumericFormatID& format);
+    void ModifySelection(int driver, bool done = false);
+    void SelectionModeUpdated();
 
-   void FitToTimeControls();
+    void UpdateTimeControlsFormat(const NumericFormatID& format);
 
-   void OnFormatsChanged(struct ProjectNumericFormatsEvent);
+    void FitToTimeControls();
 
-   double mRate;
-   double mStart, mEnd, mLength, mCenter;
+    void OnFormatsChanged(struct ProjectNumericFormatsEvent);
 
-   SelectionMode mSelectionMode {};
-   SelectionMode mLastSelectionMode {};
+    double mRate;
+    double mStart, mEnd, mLength, mCenter;
 
-   std::array<NumericTextCtrl*, 2> mTimeControls {};
-   AButton* mSetupButton{};
+    SelectionMode mSelectionMode {};
+    SelectionMode mLastSelectionMode {};
 
-   Observer::Subscription mFormatChangedToFitValueSubscription[2];
+    std::array<NumericTextCtrl*, 2> mTimeControls {};
+    AButton* mSetupButton{};
 
-   wxString mLastValidText;
-   const Observer::Subscription mFormatsSubscription;
+    Observer::Subscription mFormatChangedToFitValueSubscription[2];
 
- public:
+    wxString mLastValidText;
+    const Observer::Subscription mFormatsSubscription;
 
-   DECLARE_CLASS(SelectionBar)
-   DECLARE_EVENT_TABLE()
+public:
+
+    DECLARE_CLASS(SelectionBar)
+    DECLARE_EVENT_TABLE()
 };
 
 #endif
-
