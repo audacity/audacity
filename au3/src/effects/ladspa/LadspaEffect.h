@@ -22,30 +22,26 @@
 
 //#include "SampleFormat.h"
 
-class LadspaEffect final
-   : public LadspaEffectBase
-   , public StatelessEffectUIServices
+class LadspaEffect final : public LadspaEffectBase, public StatelessEffectUIServices
 {
 public:
-   using LadspaEffectBase::LadspaEffectBase;
-   ~LadspaEffect() override;
+    using LadspaEffectBase::LadspaEffectBase;
+    ~LadspaEffect() override;
 
 private:
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
+    int ShowClientInterface(const EffectPlugin& plugin, wxWindow& parent, wxDialog& dialog, EffectEditor* pEditor, bool forceModal)
+    const override;
 
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
+    std::unique_ptr<EffectEditor> MakeEditor(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs)
+    const override;
 
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
+    void ExportPresets(
+        const EffectPlugin& plugin, const EffectSettings& settings)
+    const override;
+    OptionalMessage ImportPresets(
+        const EffectPlugin& plugin, EffectSettings& settings) const override;
 
-   void ShowOptions(const EffectPlugin &plugin) const override;
+    void ShowOptions(const EffectPlugin& plugin) const override;
 };
 #endif

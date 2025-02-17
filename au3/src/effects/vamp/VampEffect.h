@@ -11,8 +11,6 @@
 
 **********************************************************************/
 
-
-
 #if defined(USE_VAMP)
 
 #include <vamp-hostsdk/PluginLoader.h>
@@ -39,83 +37,79 @@ using Floats = ArrayOf<float>;
 class VampEffect final : public StatefulEffect, public StatefulEffectUIServices
 {
 public:
-   VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,
-              const PluginPath & path,
-              int output,
-              bool hasParameters);
-   virtual ~VampEffect();
+    VampEffect(std::unique_ptr<Vamp::Plugin>&& plugin, const PluginPath& path, int output, bool hasParameters);
+    virtual ~VampEffect();
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
+    PluginPath GetPath() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    VendorSymbol GetVendor() const override;
+    wxString GetVersion() const override;
+    TranslatableString GetDescription() const override;
 
-   // EffectDefinitionInterface implementation
+    // EffectDefinitionInterface implementation
 
-   EffectType GetType() const override;
-   EffectFamilySymbol GetFamily() const override;
-   bool IsInteractive() const override;
-   bool IsDefault() const override;
+    EffectType GetType() const override;
+    EffectFamilySymbol GetFamily() const override;
+    bool IsInteractive() const override;
+    bool IsDefault() const override;
 
-   bool SaveSettings(
-      const EffectSettings &settings, CommandParameters & parms) const override;
-   bool LoadSettings(
-      const CommandParameters & parms, EffectSettings &settings) const override;
+    bool SaveSettings(
+        const EffectSettings& settings, CommandParameters& parms) const override;
+    bool LoadSettings(
+        const CommandParameters& parms, EffectSettings& settings) const override;
 
-   unsigned GetAudioInCount() const override;
+    unsigned GetAudioInCount() const override;
 
-   // Effect implementation
+    // Effect implementation
 
-   bool Init() override;
-   bool Process(EffectInstance &instance, EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
+    bool Init() override;
+    bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
 private:
-   // VampEffect implementation
+    // VampEffect implementation
 
-   void AddFeatures(LabelTrack *track, Vamp::Plugin::FeatureSet & features);
+    void AddFeatures(LabelTrack* track, Vamp::Plugin::FeatureSet& features);
 
-   void UpdateFromPlugin();
+    void UpdateFromPlugin();
 
-   void OnCheckBox(wxCommandEvent & evt);
-   void OnChoice(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-   void OnTextCtrl(wxCommandEvent & evt);
+    void OnCheckBox(wxCommandEvent& evt);
+    void OnChoice(wxCommandEvent& evt);
+    void OnSlider(wxCommandEvent& evt);
+    void OnTextCtrl(wxCommandEvent& evt);
 
 private:
-   wxWeakRef<wxWindow> mUIParent{};
+    wxWeakRef<wxWindow> mUIParent{};
 
-   std::unique_ptr<Vamp::Plugin> mPlugin;
-   PluginPath mPath;
-   int mOutput;
-   bool mHasParameters;
+    std::unique_ptr<Vamp::Plugin> mPlugin;
+    PluginPath mPath;
+    int mOutput;
+    bool mHasParameters;
 
-   Vamp::HostExt::PluginLoader::PluginKey mKey;
-   wxString mName;
-   double mRate;
+    Vamp::HostExt::PluginLoader::PluginKey mKey;
+    wxString mName;
+    double mRate;
 
-   bool mInSlider;
-   bool mInText;
+    bool mInSlider;
+    bool mInText;
 
-   Vamp::Plugin::ParameterList mParameters;
+    Vamp::Plugin::ParameterList mParameters;
 
-   Floats mValues;
+    Floats mValues;
 
-   ArrayOf<wxSlider *> mSliders;
-   ArrayOf<wxTextCtrl *> mFields;
-   ArrayOf<wxStaticText *> mLabels;
-   ArrayOf<wxCheckBox *> mToggles;
-   ArrayOf<wxChoice *> mChoices;
-   wxChoice *mProgram;
+    ArrayOf<wxSlider*> mSliders;
+    ArrayOf<wxTextCtrl*> mFields;
+    ArrayOf<wxStaticText*> mLabels;
+    ArrayOf<wxCheckBox*> mToggles;
+    ArrayOf<wxChoice*> mChoices;
+    wxChoice* mProgram;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

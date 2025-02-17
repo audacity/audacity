@@ -18,13 +18,13 @@
 class VSTControl final : public VSTControlBase
 {
 public:
-   VSTControl();
-   ~VSTControl();
+    VSTControl();
+    ~VSTControl();
 
-   bool Create(wxWindow *parent, VSTLink *link);
+    bool Create(wxWindow* parent, VSTLink* link);
 
 private:
-   HANDLE mHwnd;
+    HANDLE mHwnd;
 };
 
 #endif

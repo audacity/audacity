@@ -20,96 +20,96 @@
 
 const ComponentInterfaceSymbol EffectLimiter::Symbol { XO("Limiter") };
 
-namespace
-{
+namespace {
 BuiltinEffectsModule::Registration<EffectLimiter> reg;
 } // namespace
 
 const EffectParameterMethods& EffectLimiter::Parameters() const
 {
-   static CapturedParameters<
-      EffectLimiter, LimiterEditor::thresholdDb, LimiterEditor::makeupTargetDb,
-      LimiterEditor::kneeWidthDb, LimiterEditor::lookaheadMs,
-      LimiterEditor::releaseMs, LimiterEditor::showInput,
-      LimiterEditor::showOutput, LimiterEditor::showActual,
-      LimiterEditor::showTarget>
-      parameters;
-   return parameters;
+    static CapturedParameters<
+        EffectLimiter, LimiterEditor::thresholdDb, LimiterEditor::makeupTargetDb,
+        LimiterEditor::kneeWidthDb, LimiterEditor::lookaheadMs,
+        LimiterEditor::releaseMs, LimiterEditor::showInput,
+        LimiterEditor::showOutput, LimiterEditor::showActual,
+        LimiterEditor::showTarget>
+    parameters;
+    return parameters;
 }
 
 std::shared_ptr<EffectInstance> EffectLimiter::MakeInstance() const
 {
-   return std::make_shared<CompressorInstance>(*this);
+    return std::make_shared<CompressorInstance>(*this);
 }
 
 bool EffectLimiter::CheckWhetherSkipEffect(const EffectSettings& settings) const
 {
-   // Given the infinite ratio, a limiter is always susceptible to modifying the
-   // audio.
-   return false;
+    // Given the infinite ratio, a limiter is always susceptible to modifying the
+    // audio.
+    return false;
 }
 
 EffectLimiter::EffectLimiter()
 {
-   SetLinearEffectFlag(false);
+    SetLinearEffectFlag(false);
 }
 
 ComponentInterfaceSymbol EffectLimiter::GetSymbol() const
 {
-   return Symbol;
+    return Symbol;
 }
 
 TranslatableString EffectLimiter::GetDescription() const
 {
-   return XO("Augments loudness while minimizing distortion.");
+    return XO("Augments loudness while minimizing distortion.");
 }
 
 ManualPageID EffectLimiter::ManualPage() const
 {
-   // TODO
-   return L"";
+    // TODO
+    return L"";
 }
 
 EffectType EffectLimiter::GetType() const
 {
-   return EffectTypeProcess;
+    return EffectTypeProcess;
 }
 
 auto EffectLimiter::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::Always;
+    return RealtimeSince::Always;
 }
 
 RegistryPaths EffectLimiter::GetFactoryPresets() const
 {
-   const auto presets = DynamicRangeProcessorUtils::GetLimiterPresets();
-   RegistryPaths paths(presets.size());
-   std::transform(
-      presets.begin(), presets.end(), paths.begin(), [](const auto& preset) {
-         return RegistryPath { preset.name.Translation() };
-      });
-   return paths;
+    const auto presets = DynamicRangeProcessorUtils::GetLimiterPresets();
+    RegistryPaths paths(presets.size());
+    std::transform(
+        presets.begin(), presets.end(), paths.begin(), [](const auto& preset) {
+        return RegistryPath { preset.name.Translation() };
+    });
+    return paths;
 }
 
 OptionalMessage
 EffectLimiter::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
-   const auto presets = DynamicRangeProcessorUtils::GetLimiterPresets();
-   if (id < 0 || id >= presets.size())
-      return {};
-   EffectLimiter::GetSettings(settings) = presets[id].preset;
-   return { nullptr };
+    const auto presets = DynamicRangeProcessorUtils::GetLimiterPresets();
+    if (id < 0 || id >= presets.size()) {
+        return {}
+    }
+    EffectLimiter::GetSettings(settings) = presets[id].preset;
+    return { nullptr };
 }
 
 std::unique_ptr<EffectEditor> EffectLimiter::MakeEditor(
-   ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-   const EffectOutputs* pOutputs) const
+    ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+    const EffectOutputs* pOutputs) const
 {
-   return DynamicRangeProcessorEffectUtils::MakeLimiterEditor(
-      S, instance, access, *this, pOutputs, GetSettings(access.Get()));
+    return DynamicRangeProcessorEffectUtils::MakeLimiterEditor(
+        S, instance, access, *this, pOutputs, GetSettings(access.Get()));
 }
 
 std::unique_ptr<EffectOutputs> EffectLimiter::MakeOutputs() const
 {
-   return std::make_unique<DynamicRangeProcessorDummyOutputs>();
+    return std::make_unique<DynamicRangeProcessorDummyOutputs>();
 }

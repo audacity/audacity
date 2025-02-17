@@ -17,9 +17,10 @@
 #if defined(__WXMAC__)
 #include <Cocoa/Cocoa.h>
 
-void MacMakeWindowFloating(NSView *handle)
+void MacMakeWindowFloating(NSView* handle)
 {
-   // Make sure the effect window actually floats above the main window
-   [ [handle window] setLevel:NSFloatingWindowLevel];
+    // Make sure the effect window actually floats above the main window
+    [ [handle window] setLevel:NSFloatingWindowLevel];
 }
+
 #endif

@@ -18,18 +18,18 @@ class ShuttleGui;
 class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   explicit LadspaEffectOptionsDialog(const EffectDefinitionInterface &effect);
-   virtual ~LadspaEffectOptionsDialog();
+    explicit LadspaEffectOptionsDialog(const EffectDefinitionInterface& effect);
+    virtual ~LadspaEffectOptionsDialog();
 
-   void PopulateOrExchange(ShuttleGui & S);
+    void PopulateOrExchange(ShuttleGui& S);
 
-   void OnOk(wxCommandEvent & evt);
+    void OnOk(wxCommandEvent& evt);
 
 private:
-   const EffectDefinitionInterface &mEffect;
-   bool mUseLatency{};
+    const EffectDefinitionInterface& mEffect;
+    bool mUseLatency{};
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

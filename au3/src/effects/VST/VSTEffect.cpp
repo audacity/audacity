@@ -48,8 +48,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 enum
 {
-   ID_Duration = 20000,
-   ID_Sliders = 21000,
+    ID_Duration = 20000,
+    ID_Sliders = 21000,
 };
 
 wxDEFINE_EVENT(EVT_SIZEWINDOW, wxCommandEvent);
@@ -83,126 +83,115 @@ VSTEffect::~VSTEffect() = default;
 /// provided by the effect, so it will not work with all effects since they don't
 /// all provide the information (kn0ck0ut is one).
 ///
-int VSTEffect::ShowClientInterface(const EffectPlugin &,
-   wxWindow &parent, wxDialog &dialog,
-   EffectEditor* pEditor, bool forceModal) const
+int VSTEffect::ShowClientInterface(const EffectPlugin&,
+                                   wxWindow& parent, wxDialog& dialog,
+                                   EffectEditor* pEditor, bool forceModal) const
 {
-   //   mProcessLevel = 1;      // in GUI thread
+    //   mProcessLevel = 1;      // in GUI thread
 
-   VSTEditor* vstEditor = static_cast<VSTEditor*>(pEditor);
+    VSTEditor* vstEditor = static_cast<VSTEditor*>(pEditor);
 
-   return vstEditor->ShowDialog(/* nonModal = */ SupportsRealtime() && !forceModal);
+    return vstEditor->ShowDialog(/* nonModal = */ SupportsRealtime() && !forceModal);
 }
 
-std::unique_ptr<EffectEditor> VSTEffect::PopulateUI(const EffectPlugin &,
-   ShuttleGui &S, EffectInstance& instance, EffectSettingsAccess &access,
-   const EffectOutputs *) const
+std::unique_ptr<EffectEditor> VSTEffect::PopulateUI(const EffectPlugin&,
+                                                    ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+                                                    const EffectOutputs*) const
 {
-   auto parent = S.GetParent();
+    auto parent = S.GetParent();
 
-   // Determine whether fancy UI is available
-   bool gui = mGui;
+    // Determine whether fancy UI is available
+    bool gui = mGui;
 
-   // Then use fancy UI only if preferences say so
-   if (gui)
-      GetConfig(*this, PluginSettings::Shared, wxT("Options"),
-                             wxT("UseGUI"),
-                             gui,
-                          true);
+    // Then use fancy UI only if preferences say so
+    if (gui) {
+        GetConfig(*this, PluginSettings::Shared, wxT("Options"),
+                  wxT("UseGUI"),
+                  gui,
+                  true);
+    }
 
-   auto pParent = S.GetParent();
+    auto pParent = S.GetParent();
 
-   auto& vst2Instance = dynamic_cast<VSTInstance&>(instance);
+    auto& vst2Instance = dynamic_cast<VSTInstance&>(instance);
 
-   auto editor = std::make_unique<VSTEditor>(
-      vst2Instance, GetType(), gui, *this, access, pParent, mAEffect->numParams);
+    auto editor = std::make_unique<VSTEditor>(
+        vst2Instance, GetType(), gui, *this, access, pParent, mAEffect->numParams);
 
-   // Also let the instance know about the validator, so it can forward
-   // to it calls coming from the vst callback
-   vst2Instance.SetOwningValidator(editor.get());
+    // Also let the instance know about the validator, so it can forward
+    // to it calls coming from the vst callback
+    vst2Instance.SetOwningValidator(editor.get());
 
+    // Build the appropriate dialog type
+    if (gui) {
+        editor->BuildFancy(instance);
+    } else {
+        editor->BuildPlain(access, GetType(), mProjectRate);
+    }
 
-   // Build the appropriate dialog type
-   if (gui)
-   {
-      editor->BuildFancy(instance);
-   }
-   else
-   {
-      editor->BuildPlain(access, GetType(), mProjectRate);
-   }
-
-
-   return editor;
+    return editor;
 }
 
 std::unique_ptr<EffectEditor> VSTEffect::MakeEditor(
-   ShuttleGui &, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *) const
+    ShuttleGui&, EffectInstance&, EffectSettingsAccess&,
+    const EffectOutputs*) const
 {
-   //! Will not come here because Effect::PopulateUI is overridden
-   assert(false);
-   return nullptr;
+    //! Will not come here because Effect::PopulateUI is overridden
+    assert(false);
+    return nullptr;
 }
 
 // Throws exceptions rather than reporting errors.
 void VSTEffect::ExportPresets(
-   const EffectPlugin &, const EffectSettings& settings) const
+    const EffectPlugin&, const EffectSettings& settings) const
 {
-   wxString path;
+    wxString path;
 
-   // Ask the user for the real name
-   //
-   // Passing a valid parent will cause some effects dialogs to malfunction
-   // upon returning from the SelectFile().
-   path = SelectFile(FileNames::Operation::Presets,
-      XO("Save VST Preset As:"),
-      wxEmptyString,
-      wxT("preset"),
-      wxT("xml"),
-      {
+    // Ask the user for the real name
+    //
+    // Passing a valid parent will cause some effects dialogs to malfunction
+    // upon returning from the SelectFile().
+    path = SelectFile(FileNames::Operation::Presets,
+                      XO("Save VST Preset As:"),
+                      wxEmptyString,
+                      wxT("preset"),
+                      wxT("xml"),
+    {
         { XO("Standard VST bank file"), { wxT("fxb") }, true },
         { XO("Standard VST program file"), { wxT("fxp") }, true },
         { XO("Audacity VST preset file"), { wxT("xml") }, true },
-      },
-      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-      NULL);
+    },
+                      wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
+                      NULL);
 
-   // User canceled...
-   if (path.empty())
-   {
-      return;
-   }
+    // User canceled...
+    if (path.empty()) {
+        return;
+    }
 
-   if ( ! StoreSettings(GetSettings(settings)) )
-      return;
+    if (!StoreSettings(GetSettings(settings))) {
+        return;
+    }
 
-   wxFileName fn(path);
-   wxString ext = fn.GetExt();
-   if (ext.CmpNoCase(wxT("fxb")) == 0)
-   {
-      SaveFXB(fn);
-   }
-   else if (ext.CmpNoCase(wxT("fxp")) == 0)
-   {
-      SaveFXP(fn);
-   }
-   else if (ext.CmpNoCase(wxT("xml")) == 0)
-   {
-      // may throw
-      SaveXML(fn);
-   }
-   else
-   {
-      // This shouldn't happen, but complain anyway
-      AudacityMessageBox(
-         XO("Unrecognized file extension."),
-         XO("Error Saving VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+    wxFileName fn(path);
+    wxString ext = fn.GetExt();
+    if (ext.CmpNoCase(wxT("fxb")) == 0) {
+        SaveFXB(fn);
+    } else if (ext.CmpNoCase(wxT("fxp")) == 0) {
+        SaveFXP(fn);
+    } else if (ext.CmpNoCase(wxT("xml")) == 0) {
+        // may throw
+        SaveXML(fn);
+    } else {
+        // This shouldn't happen, but complain anyway
+        AudacityMessageBox(
+            XO("Unrecognized file extension."),
+            XO("Error Saving VST Presets"),
+            wxOK | wxCENTRE,
+            nullptr);
 
-      return;
-   }
+        return;
+    }
 }
 
 //
@@ -211,86 +200,79 @@ void VSTEffect::ExportPresets(
 // Based on work by Sven Giermann
 //
 OptionalMessage VSTEffect::ImportPresets(const EffectPlugin&,
-   EffectSettings& settings) const
+                                         EffectSettings& settings) const
 {
-   auto temp = std::make_unique<VSTEffect>(this->mPath);
-   if (!temp->InitializePlugin())
-      return {};
-   return temp->ImportPresetsNC(settings);
+    auto temp = std::make_unique<VSTEffect>(this->mPath);
+    if (!temp->InitializePlugin()) {
+        return {}
+    }
+    return temp->ImportPresetsNC(settings);
 }
 
 OptionalMessage VSTEffect::ImportPresetsNC(EffectSettings& settings)
 {
-   wxString path;
+    wxString path;
 
-   // Ask the user for the real name
-   path = SelectFile(FileNames::Operation::Presets,
-      XO("Load VST Preset:"),
-      wxEmptyString,
-      wxT("preset"),
-      wxT("xml"),
-      { {
-         XO("VST preset files"),
-         { wxT("fxb"), wxT("fxp"), wxT("xml") },
-         true
-      } },
-      wxFD_OPEN | wxRESIZE_BORDER,
-      nullptr);
+    // Ask the user for the real name
+    path = SelectFile(FileNames::Operation::Presets,
+                      XO("Load VST Preset:"),
+                      wxEmptyString,
+                      wxT("preset"),
+                      wxT("xml"),
+                      { {
+                          XO("VST preset files"),
+                          { wxT("fxb"), wxT("fxp"), wxT("xml") },
+                          true
+                      } },
+                      wxFD_OPEN | wxRESIZE_BORDER,
+                      nullptr);
 
-   // User canceled...
-   if (path.empty())
-   {
-      return {};
-   }
+    // User canceled...
+    if (path.empty()) {
+        return {};
+    }
 
-   wxFileName fn(path);
-   wxString ext = fn.GetExt();
-   bool success = false;
-   if (ext.CmpNoCase(wxT("fxb")) == 0)
-   {
-      success = LoadFXB(fn);
-   }
-   else if (ext.CmpNoCase(wxT("fxp")) == 0)
-   {
-      success = LoadFXP(fn);
-   }
-   else if (ext.CmpNoCase(wxT("xml")) == 0)
-   {
-      success = LoadXML(fn);
-   }
-   else
-   {
-      // This shouldn't happen, but complain anyway
-      AudacityMessageBox(
-         XO("Unrecognized file extension."),
-         XO("Error Loading VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+    wxFileName fn(path);
+    wxString ext = fn.GetExt();
+    bool success = false;
+    if (ext.CmpNoCase(wxT("fxb")) == 0) {
+        success = LoadFXB(fn);
+    } else if (ext.CmpNoCase(wxT("fxp")) == 0) {
+        success = LoadFXP(fn);
+    } else if (ext.CmpNoCase(wxT("xml")) == 0) {
+        success = LoadXML(fn);
+    } else {
+        // This shouldn't happen, but complain anyway
+        AudacityMessageBox(
+            XO("Unrecognized file extension."),
+            XO("Error Loading VST Presets"),
+            wxOK | wxCENTRE,
+            nullptr);
 
-      return {};
-   }
+        return {};
+    }
 
-   if (!success)
-   {
-      AudacityMessageBox(
-         XO("Unable to load presets file."),
-         XO("Error Loading VST Presets"),
-         wxOK | wxCENTRE,
-         nullptr);
+    if (!success) {
+        AudacityMessageBox(
+            XO("Unable to load presets file."),
+            XO("Error Loading VST Presets"),
+            wxOK | wxCENTRE,
+            nullptr);
 
-      return {};
-   }
+        return {};
+    }
 
-   if (!FetchSettings(GetSettings(settings)))
-      return {};
+    if (!FetchSettings(GetSettings(settings))) {
+        return {}
+    }
 
-   return MakeMessageFS(
-      VSTInstance::GetSettings(settings));
+    return MakeMessageFS(
+        VSTInstance::GetSettings(settings));
 }
 
-void VSTEffect::ShowOptions(const EffectPlugin &) const
+void VSTEffect::ShowOptions(const EffectPlugin&) const
 {
-   VSTEffectOptionsDialog{ *this }.ShowModal();
+    VSTEffectOptionsDialog { *this }.ShowModal();
 }
 
 // Inject factory hook to make VSTEffect capable of UI

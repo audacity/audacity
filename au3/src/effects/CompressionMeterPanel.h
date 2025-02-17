@@ -25,39 +25,37 @@ class wxPaintDC;
 class CompressionMeterPanel final : public wxPanelWrapper
 {
 public:
-   CompressionMeterPanel(
-      wxWindow* parent, int id, CompressorInstance& instance, float dbRange,
-      std::function<void()> onClipped);
+    CompressionMeterPanel(
+        wxWindow* parent, int id, CompressorInstance& instance, float dbRange, std::function<void()> onClipped);
 
-   void SetDbRange(float dbRange);
-   void Reset();
-   void ResetClipped();
+    void SetDbRange(float dbRange);
+    void Reset();
+    void ResetClipped();
 
 protected:
-   DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE();
 
 private:
-   void PaintMeter(
-      wxPaintDC& dc, const wxColor& color, const wxRect& rect,
-      const MeterValueProvider& provider);
+    void PaintMeter(
+        wxPaintDC& dc, const wxColor& color, const wxRect& rect, const MeterValueProvider& provider);
 
-   void OnPaint(wxPaintEvent& evt);
-   void OnTimer(wxTimerEvent& evt);
+    void OnPaint(wxPaintEvent& evt);
+    void OnTimer(wxTimerEvent& evt);
 
-   bool AcceptsFocus() const override;
-   // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
-   bool AcceptsFocusFromKeyboard() const override;
+    bool AcceptsFocus() const override;
+    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
+    bool AcceptsFocusFromKeyboard() const override;
 
-   const std::shared_ptr<DynamicRangeProcessorMeterValuesQueue>
-      mMeterValuesQueue;
-   const Observer::Subscription mPlaybackStartStopSubscription;
-   const Observer::Subscription mPlaybackPausedSubscription;
-   const std::function<void()> mOnClipped;
-   std::unique_ptr<MeterValueProvider> mCompressionMeter;
-   std::unique_ptr<MeterValueProvider> mOutputMeter;
-   float mDbBottomEdgeValue;
+    const std::shared_ptr<DynamicRangeProcessorMeterValuesQueue>
+    mMeterValuesQueue;
+    const Observer::Subscription mPlaybackStartStopSubscription;
+    const Observer::Subscription mPlaybackPausedSubscription;
+    const std::function<void()> mOnClipped;
+    std::unique_ptr<MeterValueProvider> mCompressionMeter;
+    std::unique_ptr<MeterValueProvider> mOutputMeter;
+    float mDbBottomEdgeValue;
 
-   wxTimer mTimer;
-   bool mStopWhenZero = false;
-   bool mClipped = false;
+    wxTimer mTimer;
+    bool mStopWhenZero = false;
+    bool mClipped = false;
 };

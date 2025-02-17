@@ -18,40 +18,39 @@
 #include "EqualizationUI.h"
 #include "StatefulEffectUIServices.h"
 
-class EffectEqualization :
-    public EqualizationBase,
-    public StatefulEffectUIServices
+class EffectEqualization : public EqualizationBase, public StatefulEffectUIServices
 {
-   using EqualizationBase::EqualizationBase;
+    using EqualizationBase::EqualizationBase;
 
-   ComponentInterfaceSymbol GetSymbol() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
 
-   bool ValidateUI(const EffectPlugin& plugin, EffectSettings&) const override;
+    bool ValidateUI(const EffectPlugin& plugin, EffectSettings&) const override;
 
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
 
 private:
-   wxWeakRef<wxWindow> mUIParent {};
-   EqualizationUI mUI { *this, mUIParent, GetName(), mCurvesList, mOptions };
+    wxWeakRef<wxWindow> mUIParent {};
+    EqualizationUI mUI { *this, mUIParent, GetName(), mCurvesList, mOptions };
 };
 
 class EffectEqualizationCurve final : public EffectEqualization
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   EffectEqualizationCurve() : EffectEqualization( kEqOptionCurve ) {}
+    EffectEqualizationCurve()
+        : EffectEqualization(kEqOptionCurve) {}
 };
 
 class EffectEqualizationGraphic final : public EffectEqualization
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   EffectEqualizationGraphic() : EffectEqualization( kEqOptionGraphic ) {}
+    EffectEqualizationGraphic()
+        : EffectEqualization(kEqOptionGraphic) {}
 };
 
 #endif

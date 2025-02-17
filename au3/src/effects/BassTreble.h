@@ -17,21 +17,18 @@
 
 class ShuttleGui;
 
-class EffectBassTreble final :
-    public BassTrebleBase,
-    public StatelessEffectUIServices
+class EffectBassTreble final : public BassTrebleBase, public StatelessEffectUIServices
 {
 public:
-   EffectBassTreble() = default;
-   ~EffectBassTreble() override = default;
+    EffectBassTreble() = default;
+    ~EffectBassTreble() override = default;
 
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
+    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
-   struct Editor;
+    struct Editor;
 
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) const override;
+    std::unique_ptr<EffectEditor> MakeEditor(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) const override;
 };
 
 #endif

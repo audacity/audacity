@@ -17,14 +17,14 @@
 class VSTControl final : public VSTControlBase
 {
 public:
-   VSTControl();
-   virtual ~VSTControl();
+    VSTControl();
+    virtual ~VSTControl();
 
-   bool Create(wxWindow *parent, VSTLink *link) override;
+    bool Create(wxWindow* parent, VSTLink* link) override;
 
 private:
-   struct Impl;
-   std::unique_ptr<Impl> mImpl;
+    struct Impl;
+    std::unique_ptr<Impl> mImpl;
 };
 
 #endif

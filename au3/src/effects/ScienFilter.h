@@ -29,99 +29,95 @@ class ShuttleGui;
 
 class EffectScienFilterPanel;
 
-class EffectScienFilter final :
-    public ScienFilterBase,
-    public StatefulEffectUIServices
+class EffectScienFilter final : public ScienFilterBase, public StatefulEffectUIServices
 {
 public:
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 private:
-   bool TransferGraphLimitsFromWindow();
-   void EnableDisableRippleCtl(int FilterType);
+    bool TransferGraphLimitsFromWindow();
+    void EnableDisableRippleCtl(int FilterType);
 
-   void OnSize(wxSizeEvent& evt);
-   void OnSlider(wxCommandEvent& evt);
+    void OnSize(wxSizeEvent& evt);
+    void OnSlider(wxCommandEvent& evt);
 
-   void OnOrder(wxCommandEvent& evt);
-   void OnCutoff(wxCommandEvent& evt);
-   void OnRipple(wxCommandEvent& evt);
-   void OnStopbandRipple(wxCommandEvent& evt);
-   void OnFilterType(wxCommandEvent& evt);
-   void OnFilterSubtype(wxCommandEvent& evt);
+    void OnOrder(wxCommandEvent& evt);
+    void OnCutoff(wxCommandEvent& evt);
+    void OnRipple(wxCommandEvent& evt);
+    void OnStopbandRipple(wxCommandEvent& evt);
+    void OnFilterType(wxCommandEvent& evt);
+    void OnFilterSubtype(wxCommandEvent& evt);
 
-   void OnSliderDBMAX(wxCommandEvent& evt);
-   void OnSliderDBMIN(wxCommandEvent& evt);
+    void OnSliderDBMAX(wxCommandEvent& evt);
+    void OnSliderDBMIN(wxCommandEvent& evt);
 
-   wxWeakRef<wxWindow> mUIParent {};
+    wxWeakRef<wxWindow> mUIParent {};
 
-   EffectScienFilterPanel* mPanel;
-   wxSlider* mdBMinSlider;
-   wxSlider* mdBMaxSlider;
+    EffectScienFilterPanel* mPanel;
+    wxSlider* mdBMinSlider;
+    wxSlider* mdBMaxSlider;
 
-   wxStaticText* mRippleCtlP;
-   wxTextCtrl* mRippleCtl;
-   wxStaticText* mRippleCtlU;
+    wxStaticText* mRippleCtlP;
+    wxTextCtrl* mRippleCtl;
+    wxStaticText* mRippleCtlU;
 
-   wxTextCtrl* mCutoffCtl;
+    wxTextCtrl* mCutoffCtl;
 
-   wxStaticText* mStopbandRippleCtlP;
-   wxTextCtrl* mStopbandRippleCtl;
-   wxStaticText* mStopbandRippleCtlU;
+    wxStaticText* mStopbandRippleCtlP;
+    wxTextCtrl* mStopbandRippleCtl;
+    wxStaticText* mStopbandRippleCtlU;
 
-   wxChoice* mFilterTypeCtl;
-   wxChoice* mFilterSubTypeCtl;
-   wxChoice* mFilterOrderCtl;
+    wxChoice* mFilterTypeCtl;
+    wxChoice* mFilterSubTypeCtl;
+    wxChoice* mFilterOrderCtl;
 
-   RulerPanel* mdBRuler;
-   RulerPanel* mfreqRuler;
+    RulerPanel* mdBRuler;
+    RulerPanel* mfreqRuler;
 
-   friend class EffectScienFilterPanel;
+    friend class EffectScienFilterPanel;
 };
 
 class EffectScienFilterPanel final : public wxPanelWrapper
 {
 public:
-   EffectScienFilterPanel(
-      wxWindow *parent, wxWindowID winid,
-      EffectScienFilter *effect, double lo, double hi);
-   virtual ~EffectScienFilterPanel();
+    EffectScienFilterPanel(
+        wxWindow* parent, wxWindowID winid, EffectScienFilter* effect, double lo, double hi);
+    virtual ~EffectScienFilterPanel();
 
-   // We don't need or want to accept focus.
-   bool AcceptsFocus() const;
-   // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
-   bool AcceptsFocusFromKeyboard() const;
+    // We don't need or want to accept focus.
+    bool AcceptsFocus() const;
+    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
+    bool AcceptsFocusFromKeyboard() const;
 
-   void SetFreqRange(double lo, double hi);
-   void SetDbRange(double min, double max);
-
-private:
-   void OnPaint(wxPaintEvent & evt);
-   void OnSize(wxSizeEvent & evt);
+    void SetFreqRange(double lo, double hi);
+    void SetDbRange(double min, double max);
 
 private:
-   EffectScienFilter *mEffect;
-   wxWindow *mParent;
+    void OnPaint(wxPaintEvent& evt);
+    void OnSize(wxSizeEvent& evt);
 
-   double mLoFreq;
-   double mHiFreq;
+private:
+    EffectScienFilter* mEffect;
+    wxWindow* mParent;
 
-   double mDbMin;
-   double mDbMax;
+    double mLoFreq;
+    double mHiFreq;
 
-   std::unique_ptr<wxBitmap> mBitmap;
-   wxRect mEnvRect;
-   int mWidth;
-   int mHeight;
+    double mDbMin;
+    double mDbMax;
 
-   friend class EffectScienFilter;
+    std::unique_ptr<wxBitmap> mBitmap;
+    wxRect mEnvRect;
+    int mWidth;
+    int mHeight;
 
-   DECLARE_EVENT_TABLE()
+    friend class EffectScienFilter;
+
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

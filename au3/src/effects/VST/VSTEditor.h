@@ -28,90 +28,83 @@ class VSTControl;
 
 class VSTTimer;
 
-class VSTEditor final
-   : public wxEvtHandler
-   , public EffectEditor
-   , public VSTUIWrapper
+class VSTEditor final : public wxEvtHandler, public EffectEditor, public VSTUIWrapper
 {
 public:
 
-   VSTEditor(VSTInstance&       instance, EffectType type, bool gui,
-      const EffectUIServices&  services,
-      EffectSettingsAccess&    access,
-      wxWindow*                pParent,
-      int                      numParams
-   );
+    VSTEditor(VSTInstance& instance, EffectType type, bool gui, const EffectUIServices& services, EffectSettingsAccess& access,
+              wxWindow* pParent, int numParams);
 
-   ~VSTEditor() override;
+    ~VSTEditor() override;
 
-   VSTInstance& GetInstance() const;
+    VSTInstance& GetInstance() const;
 
-   bool ValidateUI() override;
-   bool UpdateUI() override;
+    bool ValidateUI() override;
+    bool UpdateUI() override;
 
-   void OnClose() override;
+    void OnClose() override;
 
-   void BuildPlain(EffectSettingsAccess& access, EffectType effectType, double projectRate);
-   void BuildFancy(EffectInstance& instance);
+    void BuildPlain(EffectSettingsAccess& access, EffectType effectType, double projectRate);
+    void BuildFancy(EffectInstance& instance);
 
-   void OnTimer();
+    void OnTimer();
 
-   std::unique_ptr<VSTTimer> mTimer;
+    std::unique_ptr<VSTTimer> mTimer;
 
-   void RefreshParameters(int skip = -1) const;
+    void RefreshParameters(int skip = -1) const;
 
-   void Automate(int index, float value) override;
+    void Automate(int index, float value) override;
 
-   void OnSlider(wxCommandEvent& evt);
+    void OnSlider(wxCommandEvent& evt);
 
-   int ShowDialog(bool nonModal);
+    int ShowDialog(bool nonModal);
 
-   bool IsGraphicalUI() override;
+    bool IsGraphicalUI() override;
 
-   void Flush() override;
+    void Flush() override;
 
 protected:
-   void SizeWindow(int w, int h) override;
+    void SizeWindow(int w, int h) override;
 
 private:
-   void NotifyParameterChanged(int index, float value);
-   void OnIdle(wxIdleEvent &evt);
+    void NotifyParameterChanged(int index, float value);
+    void OnIdle(wxIdleEvent& evt);
 
-   VSTInstance& mInstance;
-   const EffectType mType;
-   const bool mGui;
+    VSTInstance& mInstance;
+    const EffectType mType;
+    const bool mGui;
 
-   bool FetchSettingsFromInstance(EffectSettings& settings);
-   bool StoreSettingsToInstance(const EffectSettings& settings);
-   void NeedEditIdle(bool state);
-   void NeedIdle() override;
-   void Idle() override;
+    bool FetchSettingsFromInstance(EffectSettings& settings);
+    bool StoreSettingsToInstance(const EffectSettings& settings);
+    void NeedEditIdle(bool state);
+    void NeedIdle() override;
+    void Idle() override;
 
-   void OnSizeWindow(wxCommandEvent& evt);
+    void OnSizeWindow(wxCommandEvent& evt);
 
-   int  mTimerGuard{ 0 };
+    int mTimerGuard{ 0 };
 
-   bool mWantsEditIdle{ false };
-   bool mWantsIdle{ false };
+    bool mWantsEditIdle{ false };
+    bool mWantsIdle{ false };
 
-   // Remembers last slider movements until idle time
-   std::vector<std::pair<int, double>> mLastMovements{};
+    // Remembers last slider movements until idle time
+    std::vector<std::pair<int, double> > mLastMovements{};
 
-   ArrayOf<wxStaticText*> mNames;
-   ArrayOf<wxSlider*> mSliders;
-   ArrayOf<wxStaticText*> mDisplays;
-   ArrayOf<wxStaticText*> mLabels;
-   NumericTextCtrl* mDuration;
+    ArrayOf<wxStaticText*> mNames;
+    ArrayOf<wxSlider*> mSliders;
+    ArrayOf<wxStaticText*> mDisplays;
+    ArrayOf<wxStaticText*> mLabels;
+    NumericTextCtrl* mDuration;
 
-   wxWindow* mParent;
-   wxWeakRef<wxDialog> mDialog;
+    wxWindow* mParent;
+    wxWeakRef<wxDialog> mDialog;
 
-   VSTControl* mControl{};
+    VSTControl* mControl{};
 
-   // Mapping from parameter ID to string
-   std::vector<wxString> mParamNames;
+    // Mapping from parameter ID to string
+    std::vector<wxString> mParamNames;
 
-   int mNumParams{ 0 };
+    int mNumParams{ 0 };
 };
 
 #endif

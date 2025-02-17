@@ -18,8 +18,7 @@ class wxGraphicsContext;
 class wxPaintDC;
 class wxPanelWrapper;
 
-namespace DynamicRangeProcessorPanel
-{
+namespace DynamicRangeProcessorPanel {
 static const wxColour backgroundColor { 43, 43, 75 };
 static const wxColour attackColor { 255, 0, 0, 100 };
 static const wxColour releaseColor { 190, 120, 255, 100 };

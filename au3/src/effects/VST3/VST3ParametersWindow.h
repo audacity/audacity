@@ -17,13 +17,11 @@
 #include <pluginterfaces/base/smartpointer.h>
 #include <pluginterfaces/vst/vsttypes.h>
 
-namespace Steinberg
-{
-   namespace Vst
-   {
-      class IComponentHandler;
-      class IEditController;
-   }
+namespace Steinberg {
+namespace Vst {
+class IComponentHandler;
+class IEditController;
+}
 }
 
 class wxStaticText;
@@ -34,42 +32,36 @@ class VST3ParameterControl;
  */
 class VST3ParametersWindow : public wxScrolledWindow
 {
-   const Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
-   const Steinberg::IPtr<Steinberg::Vst::IComponentHandler> mComponentHandler;
-   std::unordered_map<Steinberg::Vst::ParamID, VST3ParameterControl*> mControls;
-   std::unordered_map<Steinberg::Vst::ParamID, VST3ParameterControl*> mLabels;
+    const Steinberg::IPtr<Steinberg::Vst::IEditController> mEditController;
+    const Steinberg::IPtr<Steinberg::Vst::IComponentHandler> mComponentHandler;
+    std::unordered_map<Steinberg::Vst::ParamID, VST3ParameterControl*> mControls;
+    std::unordered_map<Steinberg::Vst::ParamID, VST3ParameterControl*> mLabels;
 public:
 
-   /*!
-   *  \brief Creates VST3ParametersWindow inside parent.
-    * \param parent Where all parameter controls will be placed
-    * \param editController Used to read current values
-    * \param handler Used to report parameter changes 
-    */
-   static VST3ParametersWindow* Setup(wxWindow& parent,
-      Steinberg::Vst::IEditController& editController,
-      Steinberg::Vst::IComponentHandler& componentHandler);
+    /*!
+    *  \brief Creates VST3ParametersWindow inside parent.
+     * \param parent Where all parameter controls will be placed
+     * \param editController Used to read current values
+     * \param handler Used to report parameter changes
+     */
+    static VST3ParametersWindow* Setup(wxWindow& parent, Steinberg::Vst::IEditController& editController,
+                                       Steinberg::Vst::IComponentHandler& componentHandler);
 
-   VST3ParametersWindow(wxWindow *parent,
-                      Steinberg::Vst::IEditController& editController,
-                      Steinberg::Vst::IComponentHandler& handler,
-                      wxWindowID id = wxID_ANY,
-                      const wxPoint& pos = wxDefaultPosition,
-                      const wxSize& size = wxDefaultSize,
-                      long style = wxScrolledWindowStyle,
-                      const wxString& name = wxPanelNameStr);
+    VST3ParametersWindow(wxWindow* parent, Steinberg::Vst::IEditController& editController, Steinberg::Vst::IComponentHandler& handler,
+                         wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+                         long style = wxScrolledWindowStyle, const wxString& name = wxPanelNameStr);
 
-   //Updates all controls to match current state of the IEditController
-   void ReloadParameters();
+    //Updates all controls to match current state of the IEditController
+    void ReloadParameters();
 
-   //Updates individual parameter, useful during playback
-   //(to update automated parameters or meters)
-   void UpdateParameter(Steinberg::Vst::ParamID paramId);
+    //Updates individual parameter, useful during playback
+    //(to update automated parameters or meters)
+    void UpdateParameter(Steinberg::Vst::ParamID paramId);
 
 private:
 
-   void RegisterParameterControl(VST3ParameterControl* control);
-   void RegisterParameterLabel(VST3ParameterControl* label);
+    void RegisterParameterControl(VST3ParameterControl* control);
+    void RegisterParameterLabel(VST3ParameterControl* label);
 
-   void OnParameterValueChanged(const wxCommandEvent& evt);
+    void OnParameterValueChanged(const wxCommandEvent& evt);
 };

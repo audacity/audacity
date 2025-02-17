@@ -18,40 +18,40 @@ EVT_PAINT(ClipIndicatorPanel::OnPaint)
 END_EVENT_TABLE()
 
 ClipIndicatorPanel::ClipIndicatorPanel(wxWindow* parent, int id)
-    : wxPanelWrapper { parent, id }
-    , mPlaybackStartStopSubscription { AudioIO::Get()->Subscribe(
-         [this](const AudioIOEvent& evt) {
-            if (evt.type == AudioIOEvent::PLAYBACK && evt.on)
-               Reset();
-         }) }
+    : wxPanelWrapper{parent, id}
+    , mPlaybackStartStopSubscription{AudioIO::Get()->Subscribe(
+                                         [this](const AudioIOEvent& evt) {
+        if (evt.type == AudioIOEvent::PLAYBACK && evt.on)
+            Reset();
+    })}
 {
 }
 
 void ClipIndicatorPanel::SetClipped()
 {
-   mClipping = true;
-   Refresh();
+    mClipping = true;
+    Refresh();
 }
 
 void ClipIndicatorPanel::Reset()
 {
-   mClipping = false;
-   Refresh();
+    mClipping = false;
+    Refresh();
 }
 
 void ClipIndicatorPanel::OnPaint(wxPaintEvent& evt)
 {
-   using namespace DynamicRangeProcessorPanel;
+    using namespace DynamicRangeProcessorPanel;
 
-   wxPaintDC dc { this };
-   const auto color = mClipping ? *wxRED : *wxLIGHT_GREY;
-   dc.SetBrush(color);
-   dc.SetPen(lineColor);
-   auto rect = GetPanelRect(*this);
-   dc.DrawRoundedRectangle(rect, 2);
+    wxPaintDC dc { this };
+    const auto color = mClipping ? *wxRED : *wxLIGHT_GREY;
+    dc.SetBrush(color);
+    dc.SetPen(lineColor);
+    auto rect = GetPanelRect(*this);
+    dc.DrawRoundedRectangle(rect, 2);
 
-   // This is supposed to be a LED. Add a little shine.
-   dc.SetBrush(GetColorMix(*wxWHITE, color, 0.5));
-   dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.DrawRoundedRectangle(rect.Deflate(2), 2);
+    // This is supposed to be a LED. Add a little shine.
+    dc.SetBrush(GetColorMix(*wxWHITE, color, 0.5));
+    dc.SetPen(*wxTRANSPARENT_PEN);
+    dc.DrawRoundedRectangle(rect.Deflate(2), 2);
 }

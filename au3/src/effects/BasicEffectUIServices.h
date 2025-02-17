@@ -18,21 +18,19 @@
 
 //! Supplies implementations of all pure virtual functions of the base class
 //! except PopulateUI
-class AUDACITY_DLL_API BasicEffectUIServices
-   : public EffectUIServices
+class AUDACITY_DLL_API BasicEffectUIServices : public EffectUIServices
 {
 public:
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
-   void ShowOptions(const EffectPlugin &plugin) const override;
-   bool ValidateUI(const EffectPlugin &context, EffectSettings &)
-      const override;
-   bool CloseUI() const override;
+    int ShowClientInterface(const EffectPlugin& plugin, wxWindow& parent, wxDialog& dialog, EffectEditor* pEditor, bool forceModal)
+    const override;
+    void ExportPresets(
+        const EffectPlugin& plugin, const EffectSettings& settings)
+    const override;
+    OptionalMessage ImportPresets(
+        const EffectPlugin& plugin, EffectSettings& settings) const override;
+    void ShowOptions(const EffectPlugin& plugin) const override;
+    bool ValidateUI(const EffectPlugin& context, EffectSettings&)
+    const override;
+    bool CloseUI() const override;
 };
 #endif

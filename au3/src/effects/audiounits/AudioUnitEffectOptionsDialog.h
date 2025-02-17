@@ -30,16 +30,16 @@ constexpr auto UITypeKey = L"UIType";
 class AudioUnitEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   explicit AudioUnitEffectOptionsDialog(
-      const EffectDefinitionInterface &effect);
-   virtual ~AudioUnitEffectOptionsDialog();
-   void PopulateOrExchange(ShuttleGui & S);
-   void OnOk(wxCommandEvent & evt);
+    explicit AudioUnitEffectOptionsDialog(
+        const EffectDefinitionInterface& effect);
+    virtual ~AudioUnitEffectOptionsDialog();
+    void PopulateOrExchange(ShuttleGui& S);
+    void OnOk(wxCommandEvent& evt);
 private:
-   const EffectDefinitionInterface &mEffect;
-   bool mUseLatency;
-   TranslatableString mUITypeString;
-   DECLARE_EVENT_TABLE()
+    const EffectDefinitionInterface& mEffect;
+    bool mUseLatency;
+    TranslatableString mUITypeString;
+    DECLARE_EVENT_TABLE()
 };
 
 static const auto FullValue = XO("Full");

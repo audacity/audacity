@@ -24,30 +24,27 @@ class wxChoice;
 class wxSimplebook;
 class ShuttleGui;
 
-class EffectLoudness final :
-    public LoudnessBase,
-    public StatefulEffectUIServices
+class EffectLoudness final : public LoudnessBase, public StatefulEffectUIServices
 {
 public:
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 private:
-   void OnChoice(wxCommandEvent& evt);
-   void OnUpdateUI(wxCommandEvent& evt);
-   void UpdateUI();
+    void OnChoice(wxCommandEvent& evt);
+    void OnUpdateUI(wxCommandEvent& evt);
+    void UpdateUI();
 
-   wxWeakRef<wxWindow> mUIParent {};
+    wxWeakRef<wxWindow> mUIParent {};
 
-   wxSimplebook* mBook;
-   wxChoice* mChoice;
-   wxStaticText* mWarning;
-   wxCheckBox* mStereoIndCheckBox;
-   wxCheckBox* mDualMonoCheckBox;
+    wxSimplebook* mBook;
+    wxChoice* mChoice;
+    wxStaticText* mWarning;
+    wxCheckBox* mStereoIndCheckBox;
+    wxCheckBox* mDualMonoCheckBox;
 };
 
 #endif

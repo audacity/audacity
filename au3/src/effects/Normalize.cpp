@@ -26,113 +26,111 @@
 #include "../widgets/valnum.h"
 #include "ProgressDialog.h"
 
-namespace{ BuiltinEffectsModule::Registration< EffectNormalize > reg; }
+namespace {
+BuiltinEffectsModule::Registration< EffectNormalize > reg;
+}
 
 BEGIN_EVENT_TABLE(EffectNormalize, wxEvtHandler)
-   EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
-   EVT_TEXT(wxID_ANY, EffectNormalize::OnUpdateUI)
+EVT_CHECKBOX(wxID_ANY, EffectNormalize::OnUpdateUI)
+EVT_TEXT(wxID_ANY, EffectNormalize::OnUpdateUI)
 END_EVENT_TABLE()
 
 std::unique_ptr<EffectEditor> EffectNormalize::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+    ShuttleGui& S, EffectInstance&, EffectSettingsAccess&,
+    const EffectOutputs*)
 {
-   mUIParent = S.GetParent();
-   mCreating = true;
+    mUIParent = S.GetParent();
+    mCreating = true;
 
-   S.StartVerticalLay(0);
-   {
-      S.StartMultiColumn(2, wxALIGN_CENTER);
-      {
-         S.StartVerticalLay(false);
-         {
-            mDCCheckBox = S.Validator<wxGenericValidator>(&mDC)
-               .AddCheckBox(XXO("&Remove DC offset (center on 0.0 vertically)"),
-                                        mDC);
-
-            S.StartHorizontalLay(wxALIGN_LEFT, false);
+    S.StartVerticalLay(0);
+    {
+        S.StartMultiColumn(2, wxALIGN_CENTER);
+        {
+            S.StartVerticalLay(false);
             {
-               mGainCheckBox = S
-                  .MinSize()
-                  .Validator<wxGenericValidator>(&mGain)
-                  .AddCheckBox(XXO("&Normalize peak amplitude to   "),
-                     mGain);
+                mDCCheckBox = S.Validator<wxGenericValidator>(&mDC)
+                              .AddCheckBox(XXO("&Remove DC offset (center on 0.0 vertically)"),
+                                           mDC);
 
-               mLevelTextCtrl = S
-                  .Name(XO("Peak amplitude dB"))
-                  .Validator<FloatingPointValidator<double>>(
-                     2,
-                     &mPeakLevel,
-                     NumValidatorStyle::ONE_TRAILING_ZERO,
-                     PeakLevel.min,
-                     PeakLevel.max )
-                  .AddTextBox( {}, L"", 10);
-               mLeveldB = S.AddVariableText(XO("dB"), false,
-                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
-               mWarning = S.AddVariableText( {}, false,
-                  wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                S.StartHorizontalLay(wxALIGN_LEFT, false);
+                {
+                    mGainCheckBox = S
+                                    .MinSize()
+                                    .Validator<wxGenericValidator>(&mGain)
+                                    .AddCheckBox(XXO("&Normalize peak amplitude to   "),
+                                                 mGain);
+
+                    mLevelTextCtrl = S
+                                     .Name(XO("Peak amplitude dB"))
+                                     .Validator<FloatingPointValidator<double> >(
+                        2,
+                        &mPeakLevel,
+                        NumValidatorStyle::ONE_TRAILING_ZERO,
+                        PeakLevel.min,
+                        PeakLevel.max)
+                                     .AddTextBox({}, L"", 10);
+                    mLeveldB = S.AddVariableText(XO("dB"), false,
+                                                 wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                    mWarning = S.AddVariableText({}, false,
+                                                 wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
+                }
+                S.EndHorizontalLay();
+
+                mStereoIndCheckBox = S
+                                     .Validator<wxGenericValidator>(&mStereoInd)
+                                     .AddCheckBox(XXO("N&ormalize stereo channels independently"),
+                                                  mStereoInd);
             }
-            S.EndHorizontalLay();
-
-            mStereoIndCheckBox = S
-               .Validator<wxGenericValidator>(&mStereoInd)
-               .AddCheckBox(XXO("N&ormalize stereo channels independently"),
-                                               mStereoInd);
-         }
-         S.EndVerticalLay();
-      }
-      S.EndMultiColumn();
-   }
-   S.EndVerticalLay();
-   mCreating = false;
-   return nullptr;
+            S.EndVerticalLay();
+        }
+        S.EndMultiColumn();
+    }
+    S.EndVerticalLay();
+    mCreating = false;
+    return nullptr;
 }
 
-bool EffectNormalize::TransferDataToWindow(const EffectSettings &)
+bool EffectNormalize::TransferDataToWindow(const EffectSettings&)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
+    if (!mUIParent->TransferDataToWindow()) {
+        return false;
+    }
 
-   UpdateUI();
+    UpdateUI();
 
-   return true;
+    return true;
 }
 
-bool EffectNormalize::TransferDataFromWindow(EffectSettings &)
+bool EffectNormalize::TransferDataFromWindow(EffectSettings&)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
+    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow()) {
+        return false;
+    }
 
-   return true;
+    return true;
 }
 
 // NormalizeBase implementation
 
-void EffectNormalize::OnUpdateUI(wxCommandEvent & WXUNUSED(evt))
+void EffectNormalize::OnUpdateUI(wxCommandEvent& WXUNUSED(evt))
 {
-   UpdateUI();
+    UpdateUI();
 }
 
 void EffectNormalize::UpdateUI()
 {
+    if (!mUIParent->TransferDataFromWindow()) {
+        mWarning->SetLabel(_("(Maximum 0dB)"));
+        EffectEditor::EnableApply(mUIParent, false);
+        return;
+    }
+    mWarning->SetLabel(wxT(""));
 
-   if (!mUIParent->TransferDataFromWindow())
-   {
-      mWarning->SetLabel(_("(Maximum 0dB)"));
-      EffectEditor::EnableApply(mUIParent, false);
-      return;
-   }
-   mWarning->SetLabel(wxT(""));
+    // Disallow level stuff if not normalizing
+    mLevelTextCtrl->Enable(mGain);
+    mLeveldB->Enable(mGain);
+    mStereoIndCheckBox->Enable(mGain);
 
-   // Disallow level stuff if not normalizing
-   mLevelTextCtrl->Enable(mGain);
-   mLeveldB->Enable(mGain);
-   mStereoIndCheckBox->Enable(mGain);
-
-   // Disallow OK/Preview if doing nothing
-   EffectEditor::EnableApply(mUIParent, mGain || mDC);
+    // Disallow OK/Preview if doing nothing
+    EffectEditor::EnableApply(mUIParent, mGain || mDC);
 }

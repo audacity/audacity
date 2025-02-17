@@ -39,7 +39,9 @@
 #include "ShuttleGui.h"
 
 #ifdef LEGACY_EQ
-namespace{ BuiltinEffectsModule::Registration< EffectEqualization > reg; }
+namespace {
+BuiltinEffectsModule::Registration< EffectEqualization > reg;
+}
 #endif
 
 // "Filter Curve EQ" in the user-facing string, but preserve the old
@@ -47,41 +49,47 @@ namespace{ BuiltinEffectsModule::Registration< EffectEqualization > reg; }
 const ComponentInterfaceSymbol EffectEqualizationCurve::Symbol
 { wxT("Filter Curve"), XO("Filter Curve EQ") };
 
-namespace{ BuiltinEffectsModule::Registration< EffectEqualizationCurve > reg2; }
+namespace {
+BuiltinEffectsModule::Registration< EffectEqualizationCurve > reg2;
+}
 
 const ComponentInterfaceSymbol EffectEqualizationGraphic::Symbol
 { wxT("Graphic EQ"), XO("Graphic EQ") };
 
-namespace{ BuiltinEffectsModule::Registration< EffectEqualizationGraphic > reg3; }
+namespace {
+BuiltinEffectsModule::Registration< EffectEqualizationGraphic > reg3;
+}
 
 ComponentInterfaceSymbol EffectEqualization::GetSymbol() const
 {
-   if (mOptions == kEqOptionGraphic)
-      return EffectEqualizationGraphic::Symbol;
-   if (mOptions == kEqOptionCurve)
-      return EffectEqualizationCurve::Symbol;
-   return EqualizationBase::Symbol;
+    if (mOptions == kEqOptionGraphic) {
+        return EffectEqualizationGraphic::Symbol;
+    }
+    if (mOptions == kEqOptionCurve) {
+        return EffectEqualizationCurve::Symbol;
+    }
+    return EqualizationBase::Symbol;
 }
 
 bool EffectEqualization::ValidateUI(
-   const EffectPlugin &, EffectSettings &settings) const
+    const EffectPlugin&, EffectSettings& settings) const
 {
-   // Stateful effect still cheats const_cast!
-   return const_cast<EffectEqualization&>(*this).mUI.ValidateUI(settings);
+    // Stateful effect still cheats const_cast!
+    return const_cast<EffectEqualization&>(*this).mUI.ValidateUI(settings);
 }
 
 std::unique_ptr<EffectEditor> EffectEqualization::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-   const EffectOutputs *pOutputs)
+    ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+    const EffectOutputs* pOutputs)
 {
-   mUIParent = S.GetParent();
-   return mUI.PopulateOrExchange(S, instance, access, pOutputs);
+    mUIParent = S.GetParent();
+    return mUI.PopulateOrExchange(S, instance, access, pOutputs);
 }
 
 //
 // Populate the window with relevant variables
 //
-bool EffectEqualization::TransferDataToWindow(const EffectSettings &settings)
+bool EffectEqualization::TransferDataToWindow(const EffectSettings& settings)
 {
-   return mUI.TransferDataToWindow(settings);
+    return mUI.TransferDataToWindow(settings);
 }
