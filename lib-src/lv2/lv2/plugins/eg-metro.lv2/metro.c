@@ -281,7 +281,7 @@ update_position(Metro* self, const LV2_Atom_Object* obj)
 		self->speed = ((LV2_Atom_Float*)speed)->body;
 	}
 	if (beat && beat->type == uris->atom_Float) {
-		// Received a beat position, synchronise
+		// Received a beat position, synchronize
 		// This hard sync may cause clicks, a real plugin would be more graceful
 		const float frames_per_beat = 60.0f / self->bpm * self->rate;
 		const float bar_beats       = ((LV2_Atom_Float*)beat)->body;
