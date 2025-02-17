@@ -30,28 +30,27 @@ executable.
 #include <unistd.h>
 
 static const char audacity[] = "Audacity";
-extern char **environ;
+extern char** environ;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-   size_t len = strlen(argv[0]);
-   char *path = alloca(len + sizeof(audacity)); // not precise, but we don't need it to be
+    size_t len = strlen(argv[0]);
+    char* path = alloca(len + sizeof(audacity)); // not precise, but we don't need it to be
 
-   strcpy(path, argv[0]);
+    strcpy(path, argv[0]);
 
-   char *slash = strrchr(path, '/');
-   if (slash)
-   {
-      strcpy(++slash, audacity);
-   }
-   // change argv[0] so that `ps` will show the actually running binary
-   argv[0] = path;
+    char* slash = strrchr(path, '/');
+    if (slash) {
+        strcpy(++slash, audacity);
+    }
+    // change argv[0] so that `ps` will show the actually running binary
+    argv[0] = path;
 
-   if (!getenv("AUDACITY_PRESERVE_LIBRARY_PATH")) {
-      unsetenv("DYLD_LIBRARY_PATH");
-   }
+    if (!getenv("AUDACITY_PRESERVE_LIBRARY_PATH")) {
+        unsetenv("DYLD_LIBRARY_PATH");
+    }
 
-   execve(path, argv, environ);
-   perror(path);
-   exit(-1);
+    execve(path, argv, environ);
+    perror(path);
+    exit(-1);
 }
