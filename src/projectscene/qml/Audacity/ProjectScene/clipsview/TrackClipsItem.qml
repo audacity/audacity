@@ -63,12 +63,13 @@ Item {
     }
 
     Item {
-        id: clipsContaner
+        id: clipsContainer
         anchors.fill: parent
         anchors.bottomMargin: sep.height
         z: 1
 
         property bool isNearSample: false
+        property bool multiSampleEdit: false
 
         function mapToAllClips(e, f) {
             for (let i = 0; i < repeator.count; i++) {
@@ -85,12 +86,12 @@ Item {
             propagateComposedEvents: true
             hoverEnabled: false
             pressAndHoldInterval: 100
-            enabled: !root.underSelection && clipsContaner.isNearSample
+            enabled: !root.underSelection && clipsContainer.isNearSample
 
             anchors.fill: parent
 
             onClicked: function(e) {
-                clipsContaner.mapToAllClips(e, function(clipItem, mouseEvent) {
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.mouseClicked(mouseEvent.x, mouseEvent.y)
                 })
                 e.accepted = false
@@ -101,7 +102,8 @@ Item {
             }
             
             onPressAndHold: function(e) {
-                clipsContaner.mapToAllClips(e, function(clipItem, mouseEvent) {
+                clipsContainer.multiSampleEdit = true
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
                 })
                 clipsContainerMouseArea.hoverEnabled = true
@@ -109,13 +111,14 @@ Item {
             }
 
             onReleased: function(e) {
-                clipsContaner.mapToAllClips(e, function(clipItem, mouseEvent) {
+                clipsContainer.multiSampleEdit = false
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
                 })
             }
 
             onPositionChanged: function(e) {
-                clipsContaner.mapToAllClips(e, function(clipItem, mouseEvent) {
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
                 })
             }
@@ -140,7 +143,7 @@ Item {
                         return null
                     }
 
-                    if (clipItem.x > (clipsContaner.width + clipsModel.cacheBufferPx)) {
+                    if (clipItem.x > (clipsContainer.width + clipsModel.cacheBufferPx)) {
                         return null
                     }
 
@@ -184,6 +187,7 @@ Item {
                 isMultiSelectionActive: root.isMultiSelectionActive
                 isDataSelected: root.isDataSelected
                 moveActive: root.moveActive
+                multiSampleEdit: clipsContainer.multiSampleEdit
 
                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
@@ -211,7 +215,7 @@ Item {
                 }
 
                 onIsNearSampleChanged: function(isNearSample) {
-                    clipsContaner.isNearSample = isNearSample
+                    clipsContainer.isNearSample = isNearSample
                 }
 
                 onClipHeaderHoveredChanged: function(headerHovered) {

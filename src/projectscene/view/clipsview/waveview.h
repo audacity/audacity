@@ -26,8 +26,6 @@ class WaveView : public QQuickPaintedItem
     Q_PROPERTY(ClipTime clipTime READ clipTime WRITE setClipTime NOTIFY clipTimeChanged FINAL)
 
     Q_PROPERTY(bool isNearSample READ isNearSample WRITE setIsNearSample NOTIFY isNearSampleChanged FINAL)
-    Q_PROPERTY(
-        bool enableMultiSampleEdit READ enableMultiSampleEdit WRITE setEnableMultiSampleEdit NOTIFY enableMultiSampleEditChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::projectscene::IWavePainter> wavePainter;
@@ -50,12 +48,10 @@ public:
     void setChannelHeightRatio(double channelHeightRatio);
     bool isNearSample() const;
     void setIsNearSample(bool isNearSample);
-    bool enableMultiSampleEdit() const;
-    void setEnableMultiSampleEdit(bool enableMultiSampleEdit);
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
-    Q_INVOKABLE void setLastClickPos(const unsigned int x, const unsigned int y);
+    Q_INVOKABLE void setLastClickPos(const unsigned int x, const unsigned int y, bool multiSampleEdit);
 
     void paint(QPainter* painter) override;
 
@@ -82,7 +78,6 @@ private:
     bool m_clipSelected = false;
     ClipTime m_clipTime;
     bool m_isNearSample = false;
-    bool m_enableMultiSampleEdit = false;
 
     //std::optional<Snap> m_snap;
     std::optional<int> m_currentChannel;

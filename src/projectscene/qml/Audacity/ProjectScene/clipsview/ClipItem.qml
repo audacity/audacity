@@ -38,6 +38,8 @@ Rectangle {
 
     property bool collapsed: false
 
+    property bool multiSampleEdit: false
+
     signal clipStartEditRequested()
     signal clipEndEditRequested()
 
@@ -103,18 +105,16 @@ Rectangle {
     }
 
     function mousePressAndHold(x, y) {
-        waveView.setLastClickPos(x, y - header.height)
-        waveView.enableMultiSampleEdit = true
+        waveView.setLastClickPos(x, y - header.height, root.multiSampleEdit)
         waveView.update()
     }
 
     function mouseReleased() {
-        waveView.enableMultiSampleEdit = false
         waveView.isNearSample = false
     }
 
     function mouseClicked(x, y) {
-        waveView.setLastClickPos(x, y - header.height)
+        waveView.setLastClickPos(x, y - header.height, root.multiSampleEdit)
         waveView.update()
     }
 
@@ -538,8 +538,8 @@ Rectangle {
             clipSelected: root.clipSelected
 
             function onWaveViewPositionChanged(x, y) {
-                if (waveView.enableMultiSampleEdit) {
-                    waveView.setLastClickPos(x, y)
+                if (root.multiSampleEdit) {
+                    waveView.setLastClickPos(x, y, root.multiSampleEdit)
                     waveView.update()
                 } else {
                     waveView.setLastMousePos(x, y)
@@ -570,7 +570,7 @@ Rectangle {
                 anchors.fill: parent
 
                 onClicked: function(e) {
-                    waveView.setLastClickPos(e.x, e.y)
+                    waveView.setLastClickPos(e.x, e.y, root.multiSampleEdit)
                     waveView.update()
                 }
 
@@ -590,7 +590,7 @@ Rectangle {
                 }
 
                 onContainsMouseChanged: {
-                    if (!containsMouse && !waveView.enableMultiSampleEdit) {
+                    if (!containsMouse && !root.multiSampleEdit) {
                         waveView.isNearSample = false
                     }
                 }

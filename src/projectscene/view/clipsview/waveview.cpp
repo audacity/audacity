@@ -206,25 +206,6 @@ void WaveView::setIsNearSample(bool isNearSample)
     emit isNearSampleChanged();
 }
 
-bool WaveView::enableMultiSampleEdit() const
-{
-    return m_enableMultiSampleEdit;
-}
-
-void WaveView::setEnableMultiSampleEdit(bool enableMultiSampleEdit)
-{
-    if (m_enableMultiSampleEdit == enableMultiSampleEdit) {
-        return;
-    }
-
-    if (!enableMultiSampleEdit) {
-        m_lastPosition.reset();
-    }
-
-    m_enableMultiSampleEdit = enableMultiSampleEdit;
-    emit enableMultiSampleEditChanged();
-}
-
 QColor WaveView::transformColor(const QColor& originalColor) const
 {
     int r = originalColor.red();
@@ -249,17 +230,12 @@ void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)
         return;
     }
 
-    if (m_enableMultiSampleEdit) {
-        setIsNearSample(true);
-        return;
-    }
-
     const auto params = getWavePainterParams();
     m_currentChannel =  samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, QPoint(x, y), params);
     setIsNearSample(m_currentChannel.has_value());
 }
 
-void WaveView::setLastClickPos(const unsigned int x, const unsigned int y)
+void WaveView::setLastClickPos(const unsigned int x, const unsigned int y, bool multiSampleEdit)
 {
     if (wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
                                       m_context->zoom()) != IWavePainter::PlotType::Stem) {
@@ -269,10 +245,6 @@ void WaveView::setLastClickPos(const unsigned int x, const unsigned int y)
     auto const currentPosition = QPoint(x, y);
 
     const auto params = getWavePainterParams();
-    auto const newChannel = samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
-    if (!m_enableMultiSampleEdit && (m_currentChannel != newChannel)) {
-        m_lastPosition.reset();
-    }
 
     if (!m_currentChannel.has_value()) {
         m_currentChannel = samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
@@ -281,6 +253,6 @@ void WaveView::setLastClickPos(const unsigned int x, const unsigned int y)
 
     samplespainterutils::setLastClickPos(
         m_currentChannel.value(),
-        globalContext()->currentProject(), m_clipKey.key, m_lastPosition, currentPosition, params, m_enableMultiSampleEdit);
+        globalContext()->currentProject(), m_clipKey.key, m_lastPosition, currentPosition, params, multiSampleEdit);
     m_lastPosition = currentPosition;
 }
