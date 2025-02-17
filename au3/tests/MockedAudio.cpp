@@ -14,10 +14,10 @@
 
 MockedAudio::MockedAudio()
 {
-   Pa_Initialize();
+    Pa_Initialize();
 }
 
 MockedAudio::~MockedAudio()
 {
-   Pa_Terminate();
+    Pa_Terminate();
 }

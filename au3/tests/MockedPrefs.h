@@ -16,11 +16,11 @@ class MockedSettings;
 
 struct MockedPrefs final
 {
-   MockedPrefs();
-   ~MockedPrefs();
+    MockedPrefs();
+    ~MockedPrefs();
 
-   MockedPrefs(const MockedPrefs&) = delete;
-   MockedPrefs& operator=(const MockedPrefs&) = delete;
-   MockedPrefs(MockedPrefs&&) = delete;
-   MockedPrefs& operator=(MockedPrefs&&) = delete;
+    MockedPrefs(const MockedPrefs&) = delete;
+    MockedPrefs& operator=(const MockedPrefs&) = delete;
+    MockedPrefs(MockedPrefs&&) = delete;
+    MockedPrefs& operator=(MockedPrefs&&) = delete;
 };
