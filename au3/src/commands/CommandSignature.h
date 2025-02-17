@@ -28,25 +28,23 @@ class Validator;
 class AUDACITY_DLL_API CommandSignature
 {
 private:
-   ParamValueMap mDefaults;
-   ValidatorMap mValidators;
-   CommandSignature(const CommandSignature &) = delete;
-   CommandSignature& operator=(const CommandSignature &) = delete;
+    ParamValueMap mDefaults;
+    ValidatorMap mValidators;
+    CommandSignature(const CommandSignature&) = delete;
+    CommandSignature& operator=(const CommandSignature&) = delete;
 public:
-   explicit CommandSignature();
-   ~CommandSignature();
+    explicit CommandSignature();
+    ~CommandSignature();
 
-   // Add a parameter to the signature.
-   //    name:  the parameter name (case-sensitive)
-   //    dft:   a default value
-   //    valid: a suitable validator (caller doesn't need to DELETE it)
-   void AddParameter(const wxString &name,
-                     const wxVariant &dft,
-                     std::unique_ptr<Validator> &&valid);
+    // Add a parameter to the signature.
+    //    name:  the parameter name (case-sensitive)
+    //    dft:   a default value
+    //    valid: a suitable validator (caller doesn't need to DELETE it)
+    void AddParameter(const wxString& name, const wxVariant& dft, std::unique_ptr<Validator>&& valid);
 
-   // Methods for accessing the signature
-   ParamValueMap GetDefaults() const;
-   Validator &GetValidator(const wxString &paramName);
+    // Methods for accessing the signature
+    ParamValueMap GetDefaults() const;
+    Validator& GetValidator(const wxString& paramName);
 };
 
 #endif /* End of include guard: __COMMANDSIGNATURE__ */

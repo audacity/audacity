@@ -43,32 +43,34 @@ class wxMutex;
 class wxCondition;
 class wxMutexLocker;
 
-class Response {
-   private:
-      std::string mMessage;
-   public:
-      Response(const wxString &response)
-         : mMessage(response.utf8_str())
-      { }
+class Response
+{
+private:
+    std::string mMessage;
+public:
+    Response(const wxString& response)
+        : mMessage(response.utf8_str())
+    { }
 
-      wxString GetMessage()
-      {
-         return wxString(mMessage.c_str(), wxConvUTF8);
-      }
+    wxString GetMessage()
+    {
+        return wxString(mMessage.c_str(), wxConvUTF8);
+    }
 };
 
-class ResponseQueue {
-   private:
-      std::queue<Response> mResponses;
-      wxMutex mMutex;
-      wxCondition mCondition;
+class ResponseQueue
+{
+private:
+    std::queue<Response> mResponses;
+    wxMutex mMutex;
+    wxCondition mCondition;
 
-   public:
-      ResponseQueue();
-      ~ResponseQueue();
+public:
+    ResponseQueue();
+    ~ResponseQueue();
 
-      void AddResponse(Response response);
-      Response WaitAndGetResponse();
+    void AddResponse(Response response);
+    Response WaitAndGetResponse();
 };
 
 #endif /* End of include guard: __RESPONSEQUEUE__ */

@@ -31,21 +31,20 @@ class AudacityProject;
 class BatchEvalCommandType final : public OldStyleCommandType
 {
 public:
-   ComponentInterfaceSymbol BuildName() const override;
-   void BuildSignature(CommandSignature &signature) override;
-   OldStyleCommandPointer Create( AudacityProject &project,
-      std::unique_ptr<CommandOutputTargets> &&target) override;
+    ComponentInterfaceSymbol BuildName() const override;
+    void BuildSignature(CommandSignature& signature) override;
+    OldStyleCommandPointer Create(AudacityProject& project, std::unique_ptr<CommandOutputTargets>&& target) override;
 };
 
 class BatchEvalCommand final : public CommandImplementation
 {
 public:
-   BatchEvalCommand(AudacityProject &project, OldStyleCommandType &type)
-      : CommandImplementation(project, type)
-   { }
+    BatchEvalCommand(AudacityProject& project, OldStyleCommandType& type)
+        : CommandImplementation(project, type)
+    { }
 
-   virtual ~BatchEvalCommand();
-   bool Apply(const CommandContext &context) override;
+    virtual ~BatchEvalCommand();
+    bool Apply(const CommandContext& context) override;
 };
 
 #endif /* End of include guard: __BATCHEVALCOMMAND__ */

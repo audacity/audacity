@@ -15,5 +15,5 @@ TopLevelKeystrokeHandlingWindow::~TopLevelKeystrokeHandlingWindow() = default;
 
 bool TopLevelKeystrokeHandlingWindow::HandleCommandKeystrokes()
 {
-   return true;
+    return true;
 }

@@ -30,30 +30,30 @@ class CommandOutputTargets;
 class AUDACITY_DLL_API CommandDirectory
 {
 private:
-   static std::unique_ptr<CommandDirectory> mInstance;
-   static CommandMap &sCmdMap();
+    static std::unique_ptr<CommandDirectory> mInstance;
+    static CommandMap& sCmdMap();
 
-   static void AddCommand(std::unique_ptr<OldStyleCommandType> type);
+    static void AddCommand(std::unique_ptr<OldStyleCommandType> type);
 public:
-   /// Register a type of command with the directory with a statically
-   /// constructed instance of this class.
-   struct RegisterType{
-     RegisterType( std::unique_ptr<OldStyleCommandType> type )
-        { AddCommand( std::move( type ) ); }
-   };
+    /// Register a type of command with the directory with a statically
+    /// constructed instance of this class.
+    struct RegisterType {
+        RegisterType(std::unique_ptr<OldStyleCommandType> type)
+        { AddCommand(std::move(type)); }
+    };
 
-   ~CommandDirectory();
+    ~CommandDirectory();
 
-   /// If a command with the given name has been registered in the directory,
-   /// return a pointer to the factory for commands of that type.
-   /// Otherwise return NULL.
-   OldStyleCommandType *LookUp(const wxString &cmdName) const;
+    /// If a command with the given name has been registered in the directory,
+    /// return a pointer to the factory for commands of that type.
+    /// Otherwise return NULL.
+    OldStyleCommandType* LookUp(const wxString& cmdName) const;
 
-   /// Get a pointer to the singleton instance
-   static CommandDirectory *Get();
+    /// Get a pointer to the singleton instance
+    static CommandDirectory* Get();
 
 private:
-   CommandDirectory();
+    CommandDirectory();
 };
 
 #endif /* End of include guard: __COMMANDDIRECTORY__ */

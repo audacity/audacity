@@ -13,7 +13,6 @@
 
 *//*******************************************************************/
 
-
 #include "CommandSignature.h"
 
 CommandSignature::CommandSignature() = default;
@@ -22,30 +21,30 @@ CommandSignature::~CommandSignature()
 {
 }
 
-void CommandSignature::AddParameter(const wxString &name,
-      const wxVariant &dft,
-      std::unique_ptr<Validator> &&valid)
+void CommandSignature::AddParameter(const wxString& name,
+                                    const wxVariant& dft,
+                                    std::unique_ptr<Validator>&& valid)
 {
-   wxASSERT_MSG(valid->Validate(dft),
-         wxT("Invalid command signature: the default value of '")
-         + dft.MakeString()
-         + wxT("' for the '")
-         + name
-         + wxT("' parameter doesn't satisfy the provided validator.")
-         + wxT(" It should be ")
-         + valid->GetDescription()
-         + wxT("."));
-   mDefaults.insert(std::pair<wxString, wxVariant>(name, dft));
-   mValidators.insert(ValidatorMap::value_type(name, std::move(valid)));
+    wxASSERT_MSG(valid->Validate(dft),
+                 wxT("Invalid command signature: the default value of '")
+                 + dft.MakeString()
+                 + wxT("' for the '")
+                 + name
+                 + wxT("' parameter doesn't satisfy the provided validator.")
+                 + wxT(" It should be ")
+                 + valid->GetDescription()
+                 + wxT("."));
+    mDefaults.insert(std::pair<wxString, wxVariant>(name, dft));
+    mValidators.insert(ValidatorMap::value_type(name, std::move(valid)));
 }
 
 ParamValueMap CommandSignature::GetDefaults() const
 {
-   return mDefaults;
+    return mDefaults;
 }
 
-Validator &CommandSignature::GetValidator(const wxString &paramName)
+Validator& CommandSignature::GetValidator(const wxString& paramName)
 {
-   wxASSERT(mValidators.find(paramName) != mValidators.end());
-   return *mValidators[paramName];
+    wxASSERT(mValidators.find(paramName) != mValidators.end());
+    return *mValidators[paramName];
 }

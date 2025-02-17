@@ -31,24 +31,22 @@ class wxString;
 
 class CommandBuilder
 {
-   private:
-      bool mValid;
-      ResponseTargetPointer mResponse;
-      OldStyleCommandPointer mCommand;
-      wxString mError;
+private:
+    bool mValid;
+    ResponseTargetPointer mResponse;
+    OldStyleCommandPointer mCommand;
+    wxString mError;
 
-      void Failure(const wxString &msg = {});
-      void Success(const OldStyleCommandPointer &cmd);
-      void BuildCommand( AudacityProject &project,
-         const wxString &cmdName, const wxString &cmdParams);
-      void BuildCommand( AudacityProject &project, const wxString &cmdString);
-   public:
-      CommandBuilder(AudacityProject &project, const wxString &cmdString);
-      CommandBuilder(AudacityProject &project, const wxString &cmdName,
-                     const wxString &cmdParams);
-      ~CommandBuilder();
-      bool WasValid();
-      OldStyleCommandPointer GetCommand();
-      wxString GetResponse();
+    void Failure(const wxString& msg = {});
+    void Success(const OldStyleCommandPointer& cmd);
+    void BuildCommand(AudacityProject& project, const wxString& cmdName, const wxString& cmdParams);
+    void BuildCommand(AudacityProject& project, const wxString& cmdString);
+public:
+    CommandBuilder(AudacityProject& project, const wxString& cmdString);
+    CommandBuilder(AudacityProject& project, const wxString& cmdName, const wxString& cmdParams);
+    ~CommandBuilder();
+    bool WasValid();
+    OldStyleCommandPointer GetCommand();
+    wxString GetResponse();
 };
 #endif /* End of include guard: __COMMANDBUILDER__ */
