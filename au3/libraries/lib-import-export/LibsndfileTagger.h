@@ -19,10 +19,8 @@
 #include <memory>
 #include <string>
 
-namespace LibImportExport
-{
-namespace Test
-{
+namespace LibImportExport {
+namespace Test {
 /*!
  * @brief In the Audacity code, we only are interested in
  * LibFileFormats::AcidizerTags and the information it carries, but for testing
@@ -32,23 +30,24 @@ namespace Test
  */
 struct AcidizerTags : LibFileFormats::AcidizerTags
 {
-   struct Beats
-   {
-      explicit Beats(int beats)
-          : beats { beats }
-      {
-      }
-      const int beats;
-   };
+    struct Beats
+    {
+        explicit Beats(int beats)
+            : beats{beats}
+        {
+        }
 
-   using LibFileFormats::AcidizerTags::AcidizerTags;
+        const int beats;
+    };
 
-   AcidizerTags(Beats beats)
-       : beats { beats.beats }
-   {
-   }
+    using LibFileFormats::AcidizerTags::AcidizerTags;
 
-   const std::optional<int> beats;
+    AcidizerTags(Beats beats)
+        : beats{beats.beats}
+    {
+    }
+
+    const std::optional<int> beats;
 };
 
 /*!
@@ -59,19 +58,19 @@ struct AcidizerTags : LibFileFormats::AcidizerTags
 class IMPORT_EXPORT_API LibsndfileTagger final
 {
 public:
-   LibsndfileTagger(double duration = 0., const std::string& filename = "");
-   ~LibsndfileTagger();
+    LibsndfileTagger(double duration = 0., const std::string& filename = "");
+    ~LibsndfileTagger();
 
-   operator bool() const;
-   void AddAcidizerTags(const Test::AcidizerTags& acidTags);
-   void AddDistributorInfo(const std::string& distributor);
-   SNDFILE& ReopenInReadMode();
+    operator bool() const;
+    void AddAcidizerTags(const Test::AcidizerTags& acidTags);
+    void AddDistributorInfo(const std::string& distributor);
+    SNDFILE& ReopenInReadMode();
 
 private:
-   const std::string mFilename;
-   SNDFILE* mFile;
-   std::unique_ptr<uint8_t[]> mAcidData;
-   std::unique_ptr<uint8_t[]> mDistributorData;
+    const std::string mFilename;
+    SNDFILE* mFile;
+    std::unique_ptr<uint8_t[]> mAcidData;
+    std::unique_ptr<uint8_t[]> mDistributorData;
 };
 } // namespace Test
 } // namespace LibImportExport

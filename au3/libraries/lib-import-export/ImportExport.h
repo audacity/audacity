@@ -18,18 +18,18 @@ class AudacityProject;
 class IMPORT_EXPORT_API ImportExport final : public ClientData::Base
 {
 public:
-   static constexpr double InvalidRate = 0;
+    static constexpr double InvalidRate = 0;
 
-   static ImportExport& Get(AudacityProject& project);
-   static const ImportExport& Get( const AudacityProject &project );
+    static ImportExport& Get(AudacityProject& project);
+    static const ImportExport& Get(const AudacityProject& project);
 
-   ImportExport();
-   ImportExport( const ImportExport & ) = delete;
-   ImportExport &operator=( const ImportExport & ) = delete;
+    ImportExport();
+    ImportExport(const ImportExport&) = delete;
+    ImportExport& operator=(const ImportExport&) = delete;
 
-   double GetPreferredExportRate() const;
-   void SetPreferredExportRate(double rate);
+    double GetPreferredExportRate() const;
+    void SetPreferredExportRate(double rate);
 
 private:
-   double mExportRate{InvalidRate};
+    double mExportRate{ InvalidRate };
 };
