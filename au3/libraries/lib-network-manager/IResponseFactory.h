@@ -14,11 +14,8 @@
 #include <string>
 #include <memory>
 
-namespace audacity
-{
-namespace network_manager
-{
-
+namespace audacity {
+namespace network_manager {
 class IResponse;
 class Request;
 class MultipartData;
@@ -43,16 +40,14 @@ class IResponseFactory
 public:
     virtual ~IResponseFactory () = default;
 
-    virtual void setProxy (const std::string& proxy) = 0;
+    virtual void setProxy(const std::string& proxy) = 0;
 
-    virtual ResponsePtr performRequest (RequestVerb verb, const Request& request) = 0;
+    virtual ResponsePtr performRequest(RequestVerb verb, const Request& request) = 0;
     virtual ResponsePtr performRequest(
-       RequestVerb verb, const Request& request,
-       RequestPayloadStreamPtr payloadStream) = 0;
-    virtual ResponsePtr performRequest (RequestVerb verb, const Request& request, std::unique_ptr<MultipartData> form) = 0;
+        RequestVerb verb, const Request& request, RequestPayloadStreamPtr payloadStream) = 0;
+    virtual ResponsePtr performRequest(RequestVerb verb, const Request& request, std::unique_ptr<MultipartData> form) = 0;
 
-    virtual void terminate () = 0;
+    virtual void terminate() = 0;
 };
-
 }
 }
