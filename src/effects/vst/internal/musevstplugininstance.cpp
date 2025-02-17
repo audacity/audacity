@@ -4,6 +4,7 @@
 #include "musevstplugininstance.h"
 
 #include "libraries/lib-vst3/VST3Instance.h"
+#include "libraries//lib-vst3/VST3Wrapper.h"
 
 // from muse
 #include "vst/vsttypes.h"
@@ -32,11 +33,7 @@ const muse::audio::AudioResourceId& MuseVstPluginInstance::resourceId() const
 
 const std::string& MuseVstPluginInstance::name() const
 {
-    static std::string n;
-    if (n.empty()) {
-        n = m_effectId.toStdString();
-    }
-    return n;
+    return m_auVstInstance->GetWrapper().GetModule().getName();
 }
 
 muse::vst::VstPluginInstanceId MuseVstPluginInstance::id() const
