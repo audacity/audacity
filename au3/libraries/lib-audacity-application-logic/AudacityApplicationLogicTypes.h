@@ -18,12 +18,11 @@ class Effect;
 class EffectInstance;
 class SimpleEffectSettingsAccess;
 
-namespace AudacityApplicationLogic
-{
-using ShowEffectHostInterfaceCb = std::function<bool(
-   Effect&, std::shared_ptr<EffectInstance>&, SimpleEffectSettingsAccess&)>;
+namespace AudacityApplicationLogic {
+using ShowEffectHostInterfaceCb = std::function<bool (
+                                                    Effect&, std::shared_ptr<EffectInstance>&, SimpleEffectSettingsAccess&)>;
 
-using StopPlaybackCb = std::function<void()>;
+using StopPlaybackCb = std::function<void ()>;
 
-using SelectAllIfNoneCb = std::function<void()>;
+using SelectAllIfNoneCb = std::function<void ()>;
 } // namespace AudacityApplicationLogic

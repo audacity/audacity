@@ -16,13 +16,12 @@
 
 class AudacityProject;
 
-namespace AudacityApplicationLogic
-{
+namespace AudacityApplicationLogic {
 /** Run an effect given the plugin ID */
 // Returns true on success.  Will only operate on tracks that
 // have the "selected" flag set to true, which is consistent with
 // Audacity's standard UI.
 AUDACITY_APPLICATION_LOGIC_API bool DoEffect(
-   const PluginID& ID, AudacityProject& project, unsigned flags,
-   ShowEffectHostInterfaceCb, StopPlaybackCb, SelectAllIfNoneCb);
+    const PluginID& ID, AudacityProject & project, unsigned flags,
+    ShowEffectHostInterfaceCb, StopPlaybackCb, SelectAllIfNoneCb);
 } // namespace AudacityApplicationLogic
