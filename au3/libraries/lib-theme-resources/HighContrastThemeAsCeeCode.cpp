@@ -1,11 +1,11 @@
 /*!********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file HighContrastThemeAsCeeCode.cpp
- 
+
  Paul Licameli split from Theme.cpp
- 
+
  **********************************************************************/
 
 #include <vector>
@@ -17,9 +17,9 @@ static const std::vector<unsigned char> ImageCacheAsData {
 };
 
 static ThemeBase::RegisteredTheme theme{
-   /* i18n-hint: greater difference between foreground and
-      background colors */
-   { "high-contrast", XO("High Contrast") },
-   PreferredSystemAppearance::HighContrastDark,
-   ImageCacheAsData
+    /* i18n-hint: greater difference between foreground and
+       background colors */
+    { "high-contrast", XO("High Contrast") },
+    PreferredSystemAppearance::HighContrastDark,
+    ImageCacheAsData
 };

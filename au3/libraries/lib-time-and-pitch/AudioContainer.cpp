@@ -12,15 +12,14 @@
 
 AudioContainer::AudioContainer(int numSamplesPerChannel, int numChannels)
 {
-   for (auto i = 0; i < numChannels; ++i)
-   {
-      const auto channelData =
-         channelVectors.emplace_back(numSamplesPerChannel).data();
-      channelPointers.push_back(channelData);
-   }
+    for (auto i = 0; i < numChannels; ++i) {
+        const auto channelData
+            =channelVectors.emplace_back(numSamplesPerChannel).data();
+        channelPointers.push_back(channelData);
+    }
 }
 
 float* const* AudioContainer::Get() const
 {
-   return channelPointers.data();
+    return channelPointers.data();
 }
