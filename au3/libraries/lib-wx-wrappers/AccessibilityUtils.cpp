@@ -28,43 +28,45 @@
 #   include "WindowAccessible.h"
 #endif
 
-template<typename... Types>
+template<typename ... Types>
 bool IsOfType(wxWindow* window)
 {
-   std::tuple<std::add_pointer_t<Types>...> types;
+    std::tuple<std::add_pointer_t<Types>...> types;
 
-   return std::apply(
-      [window](auto... args) -> bool
-      { return ((dynamic_cast<decltype(args)>(window) != nullptr) || ...); },
-      types);
+    return std::apply(
+        [window](auto... args) -> bool
+    { return (dynamic_cast<decltype(args)>(window) != nullptr) || ...; },
+        types);
 }
 
 void SetupAccessibility(wxWindow* window)
 {
-   std::deque<wxWindow*> elementsQueue;
-   elementsQueue.push_back(window);
+    std::deque<wxWindow*> elementsQueue;
+    elementsQueue.push_back(window);
 
-   while (!elementsQueue.empty())
-   {
-      auto element = elementsQueue.front();
-      elementsQueue.pop_front();
+    while (!elementsQueue.empty())
+    {
+        auto element = elementsQueue.front();
+        elementsQueue.pop_front();
 
-      for (auto child : element->GetChildren())
-         elementsQueue.push_back(child);
+        for (auto child : element->GetChildren()) {
+            elementsQueue.push_back(child);
+        }
 
 #if wxUSE_ACCESSIBILITY
-      if (element->GetAccessible() == nullptr)
-      {
-         if (IsOfType<
-                wxCheckBox, wxChoice, wxSlider, wxTextCtrl, wxStaticBox,
-                wxRadioButton>(element))
-            element->SetAccessible(safenew WindowAccessible(element));
-      }
+        if (element->GetAccessible() == nullptr) {
+            if (IsOfType<
+                    wxCheckBox, wxChoice, wxSlider, wxTextCtrl, wxStaticBox,
+                    wxRadioButton>(element)) {
+                element->SetAccessible(safenew WindowAccessible(element));
+            }
+        }
 #endif
 
-      const auto label = element->GetLabel();
+        const auto label = element->GetLabel();
 
-      if (!label.empty())
-         element->SetName(wxStripMenuCodes(label));
-   }
+        if (!label.empty()) {
+            element->SetName(wxStripMenuCodes(label));
+        }
+    }
 }

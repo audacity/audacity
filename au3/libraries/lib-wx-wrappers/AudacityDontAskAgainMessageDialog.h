@@ -15,18 +15,17 @@
 class WX_WRAPPERS_API AudacityDontAskAgainMessageDialog : public wxDialogWrapper
 {
 public:
-   AudacityDontAskAgainMessageDialog(
-      wxWindow* parent, const TranslatableString& caption,
-      const TranslatableString& message);
+    AudacityDontAskAgainMessageDialog(
+        wxWindow* parent, const TranslatableString& caption, const TranslatableString& message);
 
-   bool ShowDialog();
-   bool IsChecked() const;
+    bool ShowDialog();
+    bool IsChecked() const;
 
 private:
-   DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE();
 
-   void OnCheckBoxEvent(wxCommandEvent& evt);
-   void OnClose(wxCloseEvent& event);
+    void OnCheckBoxEvent(wxCommandEvent& evt);
+    void OnClose(wxCloseEvent& event);
 
-   bool mChecked = false;
+    bool mChecked = false;
 };

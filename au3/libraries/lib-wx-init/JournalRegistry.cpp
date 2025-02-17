@@ -14,61 +14,57 @@
 #include <wx/string.h>
 
 namespace Journal {
-
 namespace {
-
 bool sError = false;
 
-static Dictionary &sDictionary()
+static Dictionary& sDictionary()
 {
-   static Dictionary theDictionary;
-   return theDictionary;
+    static Dictionary theDictionary;
+    return theDictionary;
 }
-
 }
 
 bool GetError()
 {
-   return sError;
+    return sError;
 }
 
 void SetError()
 {
-   sError = true;
+    sError = true;
 }
 
 RegisteredCommand::RegisteredCommand(
-   const wxString &name, Dispatcher dispatcher )
+    const wxString& name, Dispatcher dispatcher)
 {
-   if ( !sDictionary().insert( { name, dispatcher } ).second ) {
-      wxLogDebug( wxString::Format (
-         wxT("Duplicated registration of Journal command name %s"),
-         name
-      ) );
-      // Cause failure of startup of journalling and graceful exit
-      SetError();
-   }
+    if (!sDictionary().insert({ name, dispatcher }).second) {
+        wxLogDebug(wxString::Format(
+                       wxT("Duplicated registration of Journal command name %s"),
+                       name
+                       ));
+        // Cause failure of startup of journalling and graceful exit
+        SetError();
+    }
 }
 
-const Dictionary &GetDictionary()
+const Dictionary& GetDictionary()
 {
-   return sDictionary();
-}
- 
-static std::vector<Initializer> &sInitializers()
-{
-   static std::vector<Initializer> sTheFunctions;
-   return sTheFunctions;
+    return sDictionary();
 }
 
-RegisteredInitializer::RegisteredInitializer( Initializer initializer )
+static std::vector<Initializer>& sInitializers()
 {
-   sInitializers().push_back( move(initializer) );
+    static std::vector<Initializer> sTheFunctions;
+    return sTheFunctions;
 }
 
-const Initializers &GetInitializers()
+RegisteredInitializer::RegisteredInitializer(Initializer initializer)
 {
-   return sInitializers();
+    sInitializers().push_back(move(initializer));
 }
 
+const Initializers& GetInitializers()
+{
+    return sInitializers();
+}
 }

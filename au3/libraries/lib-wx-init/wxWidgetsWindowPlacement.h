@@ -18,23 +18,22 @@ Paul Licameli
 class wxWindow;
 
 //! Window placement information for wxWidgetsBasicUI can be constructed from a wxWindow pointer
-struct WX_INIT_API wxWidgetsWindowPlacement final
-: BasicUI::WindowPlacement {
-   //! Retrieve the pointer to window, if placement is of this type; else null
-   static wxWindow *GetParent(const WindowPlacement &placement);
+struct WX_INIT_API wxWidgetsWindowPlacement final : BasicUI::WindowPlacement {
+    //! Retrieve the pointer to window, if placement is of this type; else null
+    static wxWindow* GetParent(const WindowPlacement& placement);
 
-   wxWidgetsWindowPlacement() = default;
+    wxWidgetsWindowPlacement() = default;
 
-   //! Construct from a pointer to window which may be null
-   explicit wxWidgetsWindowPlacement( wxWindow *pWindow )
-      : pWindow{ pWindow }
-   {}
+    //! Construct from a pointer to window which may be null
+    explicit wxWidgetsWindowPlacement(wxWindow* pWindow)
+        : pWindow{pWindow}
+    {}
 
-   ~wxWidgetsWindowPlacement() override;
+    ~wxWidgetsWindowPlacement() override;
 
-   explicit operator bool() const override;
+    explicit operator bool() const override;
 
-   wxWindow *pWindow{};
+    wxWindow* pWindow{};
 };
 
 #endif

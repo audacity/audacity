@@ -18,10 +18,8 @@
 
 #include "wxPanelWrapper.h" // to inherit
 
-namespace audacity
-{
-namespace sentry
-{
+namespace audacity {
+namespace sentry {
 class Report;
 }
 }
@@ -35,28 +33,27 @@ class wxTextCtrl;
 class ErrorReportDialog final : public wxDialogWrapper
 {
 public:
-   ErrorReportDialog(
-      wxWindow* parent, const TranslatableString& dlogTitle,
-      const TranslatableString& message, const ManualPageID& helpUrl,
-      const wxString& log, const bool modal);
+    ErrorReportDialog(
+        wxWindow* parent, const TranslatableString& dlogTitle, const TranslatableString& message, const ManualPageID& helpUrl,
+        const wxString& log, const bool modal);
 
-   ~ErrorReportDialog();
+    ~ErrorReportDialog();
 
 private:
-   void OnSend(wxCommandEvent& event);
-   void OnDontSend(wxCommandEvent& event);
+    void OnSend(wxCommandEvent& event);
+    void OnDontSend(wxCommandEvent& event);
 
-   void OnHelp(wxCommandEvent& event);
+    void OnHelp(wxCommandEvent& event);
 
-   std::unique_ptr<audacity::sentry::Report> mReport;
+    std::unique_ptr<audacity::sentry::Report> mReport;
 
-   ManualPageID mHelpUrl;
+    ManualPageID mHelpUrl;
 
-   wxTextCtrl* mCommentsControl { nullptr };
+    wxTextCtrl* mCommentsControl { nullptr };
 
-   bool mIsModal;
+    bool mIsModal;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif // __AUDACITY_SENTRYERRORDIALOG__
