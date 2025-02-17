@@ -58,7 +58,7 @@ private:
     };
 
     bool HandleXMLTag(
-       const std::string_view& tag, const AttributesList& attrs) override;
+        const std::string_view& tag, const AttributesList& attrs) override;
     void HandleXMLEndTag(const std::string_view& tag) override;
     void HandleXMLContent(const std::string_view& content) override;
     XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;

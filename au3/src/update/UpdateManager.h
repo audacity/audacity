@@ -23,7 +23,7 @@
 #include <iostream>
 #include <fstream>
 #include <mutex>
- 
+
 /// A class that managing of updates.
 /**
     Opt-in request and show update dialog by the scheduled time.
@@ -57,7 +57,7 @@ private:
 
     std::string mAudacityInstallerPath;
     std::ofstream mAudacityInstaller;
-    
+
     std::mutex mUpdateMutex;
     bool mOnProgress{ false };
 public:

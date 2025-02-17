@@ -20,19 +20,19 @@ class wxWindow;
 /// Show dialog window with update information for the user.
 class UpdatePopupDialog final : public wxDialogWrapper
 {
-    DECLARE_DYNAMIC_CLASS (AboutDialog)
+    DECLARE_DYNAMIC_CLASS(AboutDialog)
 public:
     explicit UpdatePopupDialog (wxWindow* parent, const VersionPatch& versionPatch, bool configurableNotification);
     virtual ~UpdatePopupDialog();
 
-    void OnUpdate (wxCommandEvent& event);
-    void OnSkip (wxCommandEvent& event);
-    void OnDontShow (wxCommandEvent& event);
+    void OnUpdate(wxCommandEvent& event);
+    void OnSkip(wxCommandEvent& event);
+    void OnDontShow(wxCommandEvent& event);
 
     DECLARE_EVENT_TABLE()
 
 private:
-    HtmlWindow* AddHtmlContent (wxWindow* parent);
+    HtmlWindow* AddHtmlContent(wxWindow* parent);
 
     const VersionPatch& mVersionPatch;
 };
