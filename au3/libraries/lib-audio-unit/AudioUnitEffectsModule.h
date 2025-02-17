@@ -30,47 +30,45 @@
 class AudioUnitEffectsModule final : public PluginProvider
 {
 public:
-   struct Factory : DefaultedGlobalHook<Factory,
-      Callable::UniquePtrFactory<AudioUnitEffectBase,
-         const PluginPath &, const wxString &/*name*/, AudioComponent>::Function
-   >{};
+    struct Factory : DefaultedGlobalHook<Factory,
+                                         Callable::UniquePtrFactory<AudioUnitEffectBase,
+                                                                    const PluginPath&, const wxString& /*name*/, AudioComponent>::Function
+                                         > {};
 
-   AudioUnitEffectsModule();
-   virtual ~AudioUnitEffectsModule();
+    AudioUnitEffectsModule();
+    virtual ~AudioUnitEffectsModule();
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
+    PluginPath GetPath() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    VendorSymbol GetVendor() const override;
+    wxString GetVersion() const override;
+    TranslatableString GetDescription() const override;
 
-   // PluginProvider implementation
+    // PluginProvider implementation
 
-   bool Initialize() override;
-   void Terminate() override;
-   EffectFamilySymbol GetOptionalFamilySymbol() override;
+    bool Initialize() override;
+    void Terminate() override;
+    EffectFamilySymbol GetOptionalFamilySymbol() override;
 
-   const FileExtensions &GetFileExtensions() override;
-   FilePath InstallPath() override { return {}; }
+    const FileExtensions& GetFileExtensions() override;
+    FilePath InstallPath() override { return {}; }
 
-   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
-   unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, TranslatableString &errMsg,
-      const RegistrationCallback &callback)
-         override;
+    void AutoRegisterPlugins(PluginManagerInterface& pm) override;
+    PluginPaths FindModulePaths(PluginManagerInterface& pm) override;
+    unsigned DiscoverPluginsAtPath(
+        const PluginPath& path, TranslatableString& errMsg, const RegistrationCallback& callback)
+    override;
 
-   
-   bool CheckPluginExist(const PluginPath& path) const override;
-   
-   std::unique_ptr<ComponentInterface>
-      LoadPlugin(const PluginPath & path) override;
+    bool CheckPluginExist(const PluginPath& path) const override;
 
-   // AudioUnitEffectModule implementation
+    std::unique_ptr<ComponentInterface>
+    LoadPlugin(const PluginPath& path) override;
 
-   void LoadAudioUnitsOfType(OSType inAUType, PluginPaths & effects);
+    // AudioUnitEffectModule implementation
+
+    void LoadAudioUnitsOfType(OSType inAUType, PluginPaths& effects);
 };
 
 #endif
