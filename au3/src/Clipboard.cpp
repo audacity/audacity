@@ -11,68 +11,70 @@
 #include "Track.h"
 
 Clipboard::Clipboard()
-: mTracks { TrackList::Create( nullptr ) }
+    : mTracks{TrackList::Create(nullptr)}
 {
 }
 
 Clipboard::~Clipboard() = default;
 
-void Clipboard::Swap( Clipboard &other )
+void Clipboard::Swap(Clipboard& other)
 {
-   std::swap( mTracks, other.mTracks );
-   std::swap( mProject, other.mProject );
-   std::swap( mT0, other.mT0 );
-   std::swap( mT1, other.mT1 );
+    std::swap(mTracks, other.mTracks);
+    std::swap(mProject, other.mProject);
+    std::swap(mT0, other.mT0);
+    std::swap(mT1, other.mT1);
 }
 
-Clipboard &Clipboard::Get()
+Clipboard& Clipboard::Get()
 {
-   static Clipboard instance;
-   return instance;
+    static Clipboard instance;
+    return instance;
 }
 
 //static
-const TrackList &Clipboard::GetTracks() const
+const TrackList& Clipboard::GetTracks() const
 {
-   return *mTracks;
+    return *mTracks;
 }
 
 void Clipboard::Clear()
 {
-   mT0 = 0.0;
-   mT1 = 0.0;
-   mProject.reset();
-   mTracks->Clear();
+    mT0 = 0.0;
+    mT1 = 0.0;
+    mProject.reset();
+    mTracks->Clear();
 
-   if (this == &Get())
-      // Delayed message at idle time
-      // Don't need to capture a weak pointer to the global object
-      BasicUI::CallAfter([this]{ Publish({}); });
+    if (this == &Get()) {
+        // Delayed message at idle time
+        // Don't need to capture a weak pointer to the global object
+        BasicUI::CallAfter([this]{ Publish({}); });
+    }
 }
 
-void Clipboard::Assign( TrackList && newContents,
-   double t0, double t1, const std::weak_ptr<AudacityProject> &pProject )
+void Clipboard::Assign(TrackList&& newContents,
+                       double t0, double t1, const std::weak_ptr<AudacityProject>& pProject)
 {
-   assert(!newContents.GetOwner());
-   newContents.Swap( *mTracks );
-   newContents.Clear();
-   
-   mT0 = t0;
-   mT1 = t1;
-   mProject = pProject;
+    assert(!newContents.GetOwner());
+    newContents.Swap(*mTracks);
+    newContents.Clear();
 
-   if (this == &Get())
-      // Delayed message at idle time
-      // Don't need to capture a weak pointer to the global object
-      BasicUI::CallAfter([this]{ Publish({}); });
+    mT0 = t0;
+    mT1 = t1;
+    mProject = pProject;
+
+    if (this == &Get()) {
+        // Delayed message at idle time
+        // Don't need to capture a weak pointer to the global object
+        BasicUI::CallAfter([this]{ Publish({}); });
+    }
 }
 
 Clipboard::Scope::Scope()
 {
-   Get().Swap(mTempClipboard);
+    Get().Swap(mTempClipboard);
 }
 
 Clipboard::Scope::~Scope()
 {
-   Get().Swap(mTempClipboard);
+    Get().Swap(mTempClipboard);
 }

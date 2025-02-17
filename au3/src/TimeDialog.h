@@ -23,37 +23,33 @@ class AudacityProject;
 
 class AUDACITY_DLL_API TimeDialog final : public wxDialogWrapper
 {
- public:
+public:
 
-   TimeDialog(wxWindow *parent,
-              const TranslatableString &title,
-              const NumericFormatID &format,
-              const AudacityProject &project,
-              double time,
-              const TranslatableString &prompt = XO("Duration"));
+    TimeDialog(wxWindow* parent, const TranslatableString& title, const NumericFormatID& format, const AudacityProject& project,
+               double time, const TranslatableString& prompt = XO("Duration"));
 
-   void SetFormatString(const NumericFormatID &formatString);
-   void SetTimeValue(double newTime);
-   const double GetTimeValue();
+    void SetFormatString(const NumericFormatID& formatString);
+    void SetTimeValue(double newTime);
+    const double GetTimeValue();
 
- private:
+private:
 
-   void PopulateOrExchange(ShuttleGui & S);
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+    void PopulateOrExchange(ShuttleGui& S);
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
 
-   void OnUpdate(wxCommandEvent &event);
+    void OnUpdate(wxCommandEvent& event);
 
- private:
+private:
 
-   TranslatableString mPrompt;
-   NumericFormatID mFormat;
-   const AudacityProject &mProject;
-   double mTime;
+    TranslatableString mPrompt;
+    NumericFormatID mFormat;
+    const AudacityProject& mProject;
+    double mTime;
 
-   NumericTextCtrl *mTimeCtrl;
+    NumericTextCtrl* mTimeCtrl;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

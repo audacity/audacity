@@ -20,24 +20,21 @@ class AudacityProject;
 class ProjectWindowBase /* not final */ : public wxFrame
 {
 public:
-   explicit ProjectWindowBase(
-      wxWindow * parent, wxWindowID id,
-      const wxPoint & pos, const wxSize &size,
-      AudacityProject &project );
+    explicit ProjectWindowBase(
+        wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, AudacityProject& project);
 
-   ~ProjectWindowBase() override;
+    ~ProjectWindowBase() override;
 
-   std::shared_ptr<AudacityProject> FindProject()
-      { return mwProject.lock(); }
-   std::shared_ptr<const AudacityProject> FindProject() const
-      { return mwProject.lock(); }
+    std::shared_ptr<AudacityProject> FindProject()
+    { return mwProject.lock(); }
+    std::shared_ptr<const AudacityProject> FindProject() const
+    { return mwProject.lock(); }
 
 protected:
-   std::weak_ptr<AudacityProject> mwProject;
+    std::weak_ptr<AudacityProject> mwProject;
 };
 
-AUDACITY_DLL_API AudacityProject *FindProjectFromWindow( wxWindow *pWindow );
-const AudacityProject *FindProjectFromWindow( const wxWindow *pWindow );
+AUDACITY_DLL_API AudacityProject* FindProjectFromWindow(wxWindow* pWindow);
+const AudacityProject* FindProjectFromWindow(const wxWindow* pWindow);
 
 #endif
-

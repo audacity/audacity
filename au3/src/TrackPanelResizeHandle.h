@@ -19,60 +19,55 @@ class Track;
 //! Constructed from one channel, but changes height of all channels in a track
 class TrackPanelResizeHandle final : public UIHandle
 {
-   TrackPanelResizeHandle(const TrackPanelResizeHandle&) = delete;
+    TrackPanelResizeHandle(const TrackPanelResizeHandle&) = delete;
 
 public:
-   /*!
-    @pre `pChannel != nullptr`
-    */
-   TrackPanelResizeHandle(const std::shared_ptr<Channel> &pChannel, int y);
+    /*!
+     @pre `pChannel != nullptr`
+     */
+    TrackPanelResizeHandle(const std::shared_ptr<Channel>& pChannel, int y);
 
-   TrackPanelResizeHandle &operator=(const TrackPanelResizeHandle&) = default;
+    TrackPanelResizeHandle& operator=(const TrackPanelResizeHandle&) = default;
 
-   static HitTestPreview HitPreview(bool bLinked);
+    static HitTestPreview HitPreview(bool bLinked);
 
-   virtual ~TrackPanelResizeHandle();
+    virtual ~TrackPanelResizeHandle();
 
-   std::shared_ptr<const Track> FindTrack() const override;
-   std::shared_ptr<Channel> FindChannel();
+    std::shared_ptr<const Track> FindTrack() const override;
+    std::shared_ptr<Channel> FindChannel();
 
-   Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+    Result Click(const TrackPanelMouseEvent& event, AudacityProject* pProject) override;
 
-   Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+    Result Drag(const TrackPanelMouseEvent& event, AudacityProject* pProject) override;
 
-   HitTestPreview Preview
-      (const TrackPanelMouseState &state, AudacityProject *pProject)
-      override;
+    HitTestPreview Preview(const TrackPanelMouseState& state, AudacityProject* pProject)
+    override;
 
-   Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-       wxWindow *pParent) override;
+    Result Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent) override;
 
-   Result Cancel(AudacityProject *pProject) override;
+    Result Cancel(AudacityProject* pProject) override;
 
 private:
-   static Track &GetTrack(Channel &channel);
-   Channel *PrevChannel(Channel &channel);
-   Channel *NextChannel(Channel &channel);
+    static Track& GetTrack(Channel& channel);
+    Channel* PrevChannel(Channel& channel);
+    Channel* NextChannel(Channel& channel);
 
-   enum Mode {
-      IsResizing,
-      IsResizingBetweenLinkedTracks,
-      IsResizingBelowLinkedTracks,
-   };
-   Mode mMode{ IsResizing };
+    enum Mode {
+        IsResizing,
+        IsResizingBetweenLinkedTracks,
+        IsResizingBelowLinkedTracks,
+    };
+    Mode mMode{ IsResizing };
 
-   std::weak_ptr<Channel> mwChannel;
+    std::weak_ptr<Channel> mwChannel;
 
-   bool mInitialMinimized{};
-   int mInitialTrackHeight{};
-   int mInitialExpandedHeight{};
-   int mInitialUpperTrackHeight{};
-   int mInitialUpperExpandedHeight{};
+    bool mInitialMinimized{};
+    int mInitialTrackHeight{};
+    int mInitialExpandedHeight{};
+    int mInitialUpperTrackHeight{};
+    int mInitialUpperExpandedHeight{};
 
-   int mMouseClickY{};
+    int mMouseClickY{};
 };
 
 #endif

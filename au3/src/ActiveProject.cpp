@@ -21,15 +21,15 @@ static std::weak_ptr<AudacityProject> gActiveProject;
 
 AUDACITY_DLL_API std::weak_ptr<AudacityProject> GetActiveProject()
 {
-   return gActiveProject;
+    return gActiveProject;
 }
 
-void SetActiveProject(AudacityProject * project)
+void SetActiveProject(AudacityProject* project)
 {
-   auto pProject = project ? project->shared_from_this() : nullptr;
-   if ( gActiveProject.lock() != pProject ) {
-      gActiveProject = pProject;
-      KeyboardCapture::Capture( nullptr );
-   }
-   wxTheApp->SetTopWindow( FindProjectFrame( project ) );
+    auto pProject = project ? project->shared_from_this() : nullptr;
+    if (gActiveProject.lock() != pProject) {
+        gActiveProject = pProject;
+        KeyboardCapture::Capture(nullptr);
+    }
+    wxTheApp->SetTopWindow(FindProjectFrame(project));
 }

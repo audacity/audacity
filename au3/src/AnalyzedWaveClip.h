@@ -18,15 +18,14 @@ class ClipMirAudioReader;
 class AnalyzedWaveClip : public MIR::AnalyzedAudioClip
 {
 public:
-   AnalyzedWaveClip(
-      std::shared_ptr<ClipMirAudioReader> reader,
-      std::optional<MIR::ProjectSyncInfo> syncInfo);
+    AnalyzedWaveClip(
+        std::shared_ptr<ClipMirAudioReader> reader, std::optional<MIR::ProjectSyncInfo> syncInfo);
 
-   const std::optional<MIR::ProjectSyncInfo>& GetSyncInfo() const override;
-   void SetRawAudioTempo(double tempo) override;
-   void Synchronize() override;
+    const std::optional<MIR::ProjectSyncInfo>& GetSyncInfo() const override;
+    void SetRawAudioTempo(double tempo) override;
+    void Synchronize() override;
 
 private:
-   const std::shared_ptr<ClipMirAudioReader> mReader;
-   const std::optional<MIR::ProjectSyncInfo> mSyncInfo;
+    const std::shared_ptr<ClipMirAudioReader> mReader;
+    const std::optional<MIR::ProjectSyncInfo> mSyncInfo;
 };

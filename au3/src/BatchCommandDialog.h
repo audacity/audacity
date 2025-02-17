@@ -25,44 +25,44 @@ class wxButton;
 class AudacityProject;
 class ShuttleGui;
 
-class MacroCommandDialog final : public wxDialogWrapper {
- public:
-   // constructors and destructors
-   MacroCommandDialog(wxWindow *parent, wxWindowID id, AudacityProject &project);
-   void SetCommandAndParams(const CommandID &Command, const wxString &Params);
- public:
-   CommandID   mSelectedCommand;
-   wxString   mSelectedParameters;
- private:
-   void Populate();
-   void PopulateOrExchange(ShuttleGui &S);
-   void OnEditParams(wxCommandEvent &event);
-   void OnUsePreset(wxCommandEvent &event);
-   void OnChoice(wxCommandEvent &event);
-   void OnOk(wxCommandEvent &event);
-   void OnCancel(wxCommandEvent &event);
-   void OnHelp(wxCommandEvent &event);
-   void OnItemSelected(wxListEvent &event);
-   ManualPageID GetHelpPageName() { return L"Scripting Reference" ; }
+class MacroCommandDialog final : public wxDialogWrapper
+{
+public:
+    // constructors and destructors
+    MacroCommandDialog(wxWindow* parent, wxWindowID id, AudacityProject& project);
+    void SetCommandAndParams(const CommandID& Command, const wxString& Params);
+public:
+    CommandID mSelectedCommand;
+    wxString mSelectedParameters;
+private:
+    void Populate();
+    void PopulateOrExchange(ShuttleGui& S);
+    void OnEditParams(wxCommandEvent& event);
+    void OnUsePreset(wxCommandEvent& event);
+    void OnChoice(wxCommandEvent& event);
+    void OnOk(wxCommandEvent& event);
+    void OnCancel(wxCommandEvent& event);
+    void OnHelp(wxCommandEvent& event);
+    void OnItemSelected(wxListEvent& event);
+    ManualPageID GetHelpPageName() { return L"Scripting Reference"; }
 
-   void ValidateChoices();
-   void PopulateCommandList();
-   //int GetSelectedItem();
+    void ValidateChoices();
+    void PopulateCommandList();
+    //int GetSelectedItem();
 
-   wxButton   *mEditParams;
-   wxButton   *mUsePreset;
-   wxListCtrl *mChoices;
-   wxTextCtrl * mCommand;
-   wxTextCtrl * mParameters;
-   wxTextCtrl * mDetails;
+    wxButton* mEditParams;
+    wxButton* mUsePreset;
+    wxListCtrl* mChoices;
+    wxTextCtrl* mCommand;
+    wxTextCtrl* mParameters;
+    wxTextCtrl* mDetails;
 
-   CommandID mInternalCommandName;
+    CommandID mInternalCommandName;
 
-   AudacityProject& mProject;
-   const MacroCommandsCatalog mCatalog;
+    AudacityProject& mProject;
+    const MacroCommandsCatalog mCatalog;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
-
 
 #endif

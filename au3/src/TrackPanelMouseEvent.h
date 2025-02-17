@@ -26,40 +26,40 @@ const int kCaptureLostEventId = 19019;
 // sub-rectangle was hit.
 struct TrackPanelMouseState
 {
-   TrackPanelMouseState
-      ( wxMouseState &state_, const wxRect &rect_,
-        const std::shared_ptr<TrackPanelCell> &pCell_ )
-      : state{ state_ }
-      , rect{ rect_ }
-      , pCell{ pCell_ }
-   {
-   }
+    TrackPanelMouseState
+        (wxMouseState& state_, const wxRect& rect_,
+        const std::shared_ptr<TrackPanelCell>& pCell_)
+        : state{state_}
+        , rect{rect_}
+        , pCell{pCell_}
+    {
+    }
 
-   wxMouseState &state;
-   const wxRect &rect;
-   std::shared_ptr<TrackPanelCell> pCell; // may be NULL
+    wxMouseState& state;
+    const wxRect& rect;
+    std::shared_ptr<TrackPanelCell> pCell; // may be NULL
 };
 
 // Augment a mouse event with information about which track panel cell and
 // sub-rectangle was hit.
 struct TrackPanelMouseEvent
 {
-   TrackPanelMouseEvent
-      ( wxMouseEvent &event_, const wxRect &rect_, const wxSize &whole_,
-        const std::shared_ptr<TrackPanelCell> &pCell_ )
-      : event{ event_ }
-      , rect{ rect_ }
-      , whole{ whole_ }
-      , pCell{ pCell_ }
-      , steps{ 0 }
-   {
-   }
+    TrackPanelMouseEvent
+        (wxMouseEvent& event_, const wxRect& rect_, const wxSize& whole_,
+        const std::shared_ptr<TrackPanelCell>& pCell_)
+        : event{event_}
+        , rect{rect_}
+        , whole{whole_}
+        , pCell{pCell_}
+        , steps{0}
+    {
+    }
 
-   wxMouseEvent &event;
-   const wxRect &rect;
-   const wxSize &whole;
-   std::shared_ptr<TrackPanelCell> pCell; // may be NULL
-   double steps;  // for mouse wheel rotation
+    wxMouseEvent& event;
+    const wxRect& rect;
+    const wxSize& whole;
+    std::shared_ptr<TrackPanelCell> pCell; // may be NULL
+    double steps; // for mouse wheel rotation
 };
 
 #endif

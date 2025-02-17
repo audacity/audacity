@@ -19,28 +19,26 @@ class wxTextCtrl;
 
 enum class ScanType
 {
-   Startup,
-   Manual
+    Startup,
+    Manual
 };
 
 ///Used to display a list of found plugins that aren't compatible
 ///with Audacity
 class IncompatiblePluginsDialog final : public wxDialogWrapper
 {
-   wxStaticText* mText{nullptr};
-   wxTextCtrl* mPluginList{nullptr};
+    wxStaticText* mText{ nullptr };
+    wxTextCtrl* mPluginList{ nullptr };
 public:
 
-   IncompatiblePluginsDialog(wxWindow *parent, wxWindowID id, ScanType scanType,
-             const std::vector<wxString>& plugins = { },
-             const wxPoint& pos = wxDefaultPosition,
-             const wxSize& size = wxDefaultSize);
+    IncompatiblePluginsDialog(wxWindow* parent, wxWindowID id, ScanType scanType, const std::vector<wxString>& plugins = { },
+                              const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
 
-   void SetPlugins(const std::vector<wxString>& plugins);
+    void SetPlugins(const std::vector<wxString>& plugins);
 
 private:
-   void OnPluginManagerClicked(wxCommandEvent&);
-   void OnContinueClicked(wxCommandEvent&);
+    void OnPluginManagerClicked(wxCommandEvent&);
+    void OnContinueClicked(wxCommandEvent&);
 
-   ScanType m_scanType;
+    ScanType m_scanType;
 };

@@ -20,14 +20,14 @@ class wxDC;
 #include <wx/mousestate.h> // member variable
 
 struct TrackPanelDrawingContext {
-   wxDC &dc;
-   UIHandlePtr target;
-   wxMouseState lastState;
+    wxDC& dc;
+    UIHandlePtr target;
+    wxMouseState lastState;
 
-   void *pUserData;
+    void* pUserData;
 
-   // This redundancy fixes an MSVC compiler warning:
-   TrackPanelDrawingContext() = delete;
+    // This redundancy fixes an MSVC compiler warning:
+    TrackPanelDrawingContext() = delete;
 };
 
 #endif

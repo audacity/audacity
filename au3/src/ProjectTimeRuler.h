@@ -22,21 +22,21 @@ class Ruler;
 class ProjectTimeRuler final : public ClientData::Base
 {
 public:
-   explicit ProjectTimeRuler(AudacityProject& project);
-   
-   static ProjectTimeRuler& Get(AudacityProject& project);
-   static const ProjectTimeRuler& Get(const AudacityProject& project);
+    explicit ProjectTimeRuler(AudacityProject& project);
 
-   LinearUpdater& GetUpdater();
-   const LinearUpdater& GetUpdater() const;
+    static ProjectTimeRuler& Get(AudacityProject& project);
+    static const ProjectTimeRuler& Get(const AudacityProject& project);
 
-   BeatsFormat& GetBeatsFormat();
-   const BeatsFormat& GetBeatsFormat() const;
+    LinearUpdater& GetUpdater();
+    const LinearUpdater& GetUpdater() const;
 
-   Ruler& GetRuler();
-   const Ruler& GetRuler() const;
+    BeatsFormat& GetBeatsFormat();
+    const BeatsFormat& GetBeatsFormat() const;
+
+    Ruler& GetRuler();
+    const Ruler& GetRuler() const;
 
 private:
-   struct Impl;
-   std::unique_ptr<Impl> mImpl;
+    struct Impl;
+    std::unique_ptr<Impl> mImpl;
 };

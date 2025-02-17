@@ -16,92 +16,100 @@
 namespace {
 struct ProjectWindows final : ClientData::Base
 {
-   static ProjectWindows &Get( AudacityProject &project );
-   static const ProjectWindows &Get( const AudacityProject &project );
-   explicit ProjectWindows(AudacityProject &project)
-      : mAttachedWindows{project}
-   {}
+    static ProjectWindows& Get(AudacityProject& project);
+    static const ProjectWindows& Get(const AudacityProject& project);
+    explicit ProjectWindows(AudacityProject& project)
+        : mAttachedWindows{project}
+    {}
 
-   wxWeakRef< wxWindow > mPanel{};
-   wxWeakRef< wxFrame > mFrame{};
+    wxWeakRef< wxWindow > mPanel{};
+    wxWeakRef< wxFrame > mFrame{};
 
-   AttachedWindows mAttachedWindows;
+    AttachedWindows mAttachedWindows;
 };
 
 const AudacityProject::AttachedObjects::RegisteredFactory key{
-   [](AudacityProject &project) {
-      return std::make_unique<ProjectWindows>(project);
-   }
+    [](AudacityProject& project) {
+        return std::make_unique<ProjectWindows>(project);
+    }
 };
 
-ProjectWindows &ProjectWindows::Get( AudacityProject &project )
+ProjectWindows& ProjectWindows::Get(AudacityProject& project)
 {
-   return project.AttachedObjects::Get< ProjectWindows >( key );
+    return project.AttachedObjects::Get< ProjectWindows >(key);
 }
 
-const ProjectWindows &ProjectWindows::Get( const AudacityProject &project )
+const ProjectWindows& ProjectWindows::Get(const AudacityProject& project)
 {
-   return Get( const_cast< AudacityProject & >( project ) );
+    return Get(const_cast< AudacityProject& >(project));
 }
 }
 
-AUDACITY_DLL_API wxWindow &GetProjectPanel( AudacityProject &project )
+AUDACITY_DLL_API wxWindow& GetProjectPanel(AudacityProject& project)
 {
-   auto ptr = ProjectWindows::Get(project).mPanel;
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
+    auto ptr = ProjectWindows::Get(project).mPanel;
+    if (!ptr) {
+        THROW_INCONSISTENCY_EXCEPTION;
+    }
+    return *ptr;
 }
 
-AUDACITY_DLL_API const wxWindow &GetProjectPanel(
-   const AudacityProject &project )
+AUDACITY_DLL_API const wxWindow& GetProjectPanel(
+    const AudacityProject& project)
 {
-   auto ptr = ProjectWindows::Get(project).mPanel;
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
+    auto ptr = ProjectWindows::Get(project).mPanel;
+    if (!ptr) {
+        THROW_INCONSISTENCY_EXCEPTION;
+    }
+    return *ptr;
 }
 
 AUDACITY_DLL_API void SetProjectPanel(
-   AudacityProject &project, wxWindow &panel )
+    AudacityProject& project, wxWindow& panel)
 {
-   ProjectWindows::Get(project).mPanel = &panel;
+    ProjectWindows::Get(project).mPanel = &panel;
 }
 
-AUDACITY_DLL_API wxFrame &GetProjectFrame( AudacityProject &project )
+AUDACITY_DLL_API wxFrame& GetProjectFrame(AudacityProject& project)
 {
-   auto ptr = ProjectWindows::Get(project).mFrame;
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
+    auto ptr = ProjectWindows::Get(project).mFrame;
+    if (!ptr) {
+        THROW_INCONSISTENCY_EXCEPTION;
+    }
+    return *ptr;
 }
 
-AUDACITY_DLL_API const wxFrame &GetProjectFrame( const AudacityProject &project )
+AUDACITY_DLL_API const wxFrame& GetProjectFrame(const AudacityProject& project)
 {
-   auto ptr = ProjectWindows::Get(project).mFrame;
-   if ( !ptr )
-      THROW_INCONSISTENCY_EXCEPTION;
-   return *ptr;
+    auto ptr = ProjectWindows::Get(project).mFrame;
+    if (!ptr) {
+        THROW_INCONSISTENCY_EXCEPTION;
+    }
+    return *ptr;
 }
 
-wxFrame *FindProjectFrame( AudacityProject *project ) {
-   if (!project)
-      return nullptr;
-   return ProjectWindows::Get(*project).mFrame;
-}
-
-const wxFrame *FindProjectFrame( const AudacityProject *project ) {
-   if (!project)
-      return nullptr;
-   return ProjectWindows::Get(*project).mFrame;
-}
-
-void SetProjectFrame(AudacityProject &project, wxFrame &frame )
+wxFrame* FindProjectFrame(AudacityProject* project)
 {
-   ProjectWindows::Get(project).mFrame = &frame;
+    if (!project) {
+        return nullptr;
+    }
+    return ProjectWindows::Get(*project).mFrame;
 }
 
-AUDACITY_DLL_API AttachedWindows &GetAttachedWindows(AudacityProject &project)
+const wxFrame* FindProjectFrame(const AudacityProject* project)
 {
-   return ProjectWindows::Get(project).mAttachedWindows;
+    if (!project) {
+        return nullptr;
+    }
+    return ProjectWindows::Get(*project).mFrame;
+}
+
+void SetProjectFrame(AudacityProject& project, wxFrame& frame)
+{
+    ProjectWindows::Get(project).mFrame = &frame;
+}
+
+AUDACITY_DLL_API AttachedWindows& GetAttachedWindows(AudacityProject& project)
+{
+    return ProjectWindows::Get(project).mAttachedWindows;
 }

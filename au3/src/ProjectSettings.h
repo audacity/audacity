@@ -23,74 +23,72 @@ class AudacityProject;
 
 namespace ToolCodes {
 enum : int {
-   // The buttons that are in the Tools toolbar must be in correspondence
-   // with the first few
-   selectTool,
-   envelopeTool,
-   drawTool,
-   multiTool,
+    // The buttons that are in the Tools toolbar must be in correspondence
+    // with the first few
+    selectTool,
+    envelopeTool,
+    drawTool,
+    multiTool,
 
 #ifdef EXPERIMENTAL_BRUSH_TOOL
-   brushTool,
+    brushTool,
 #endif
 
-   numTools,
-   firstTool = selectTool,
+    numTools,
+    firstTool = selectTool,
 };
 }
 
 struct ProjectSettingsEvent {
-   const enum Type : int {
-      ChangedTool,
-   } type;
-   const int oldValue;
-   const int newValue;
+    const enum Type : int {
+        ChangedTool,
+    } type;
+    const int oldValue;
+    const int newValue;
 };
 
 ///\brief Holds various per-project settings values,
 /// and sends events to the project when certain values change
-class AUDACITY_DLL_API ProjectSettings final
-   : public ClientData::Base
-   , public Observer::Publisher<ProjectSettingsEvent>
-   , private PrefsListener
+class AUDACITY_DLL_API ProjectSettings final : public ClientData::Base, public Observer::Publisher<ProjectSettingsEvent>,
+    private PrefsListener
 {
 public:
-   static ProjectSettings &Get( AudacityProject &project );
-   static const ProjectSettings &Get( const AudacityProject &project );
-   
-   explicit ProjectSettings( AudacityProject &project );
-   ProjectSettings( const ProjectSettings & ) = delete;
-   ProjectSettings &operator=( const ProjectSettings & ) = delete;
+    static ProjectSettings& Get(AudacityProject& project);
+    static const ProjectSettings& Get(const AudacityProject& project);
 
-   // Current tool
+    explicit ProjectSettings(AudacityProject& project);
+    ProjectSettings(const ProjectSettings&) = delete;
+    ProjectSettings& operator=(const ProjectSettings&) = delete;
 
-   void SetTool(int tool);
-   int GetTool() const { return mCurrentTool; }
+    // Current tool
 
-   // Current brush radius
-   void SetBrushRadius(int brushRadius) { mCurrentBrushRadius = brushRadius; }
-   int GetBrushRadius() const { return mCurrentBrushRadius; }
+    void SetTool(int tool);
+    int GetTool() const { return mCurrentTool; }
 
-   void SetSmartSelection(bool isSelected) { mbSmartSelection = isSelected; }
-   bool IsSmartSelection() const { return mbSmartSelection; }
+    // Current brush radius
+    void SetBrushRadius(int brushRadius) { mCurrentBrushRadius = brushRadius; }
+    int GetBrushRadius() const { return mCurrentBrushRadius; }
 
-   void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
-   bool IsOvertones() const { return mbOvertones; }
+    void SetSmartSelection(bool isSelected) { mbSmartSelection = isSelected; }
+    bool IsSmartSelection() const { return mbSmartSelection; }
 
-   bool GetShowSplashScreen() const { return mShowSplashScreen; }
+    void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
+    bool IsOvertones() const { return mbOvertones; }
+
+    bool GetShowSplashScreen() const { return mShowSplashScreen; }
 
 private:
-   void UpdatePrefs() override;
+    void UpdatePrefs() override;
 
-   AudacityProject &mProject;
+    AudacityProject& mProject;
 
-   int mCurrentTool;
-   int mCurrentBrushRadius;
-   int mCurrentBrushHop;
-   bool mbSmartSelection { false };
-   bool mbOvertones { false };
-   
-   bool mShowSplashScreen;
+    int mCurrentTool;
+    int mCurrentBrushRadius;
+    int mCurrentBrushHop;
+    bool mbSmartSelection { false };
+    bool mbOvertones { false };
+
+    bool mShowSplashScreen;
 };
 
 #endif

@@ -20,32 +20,31 @@ class wxCommandEvent;
 class PluginRegistrationDialog final : public wxDialogWrapper
 {
 public:
-   ///@param defaultCategory - sets the default effect plugins filter.
-   ///Could be one of EffectType or set to -1 to disable it.
-   PluginRegistrationDialog(wxWindow *parent, int defaultEffectCategory = -1);
+    ///@param defaultCategory - sets the default effect plugins filter.
+    ///Could be one of EffectType or set to -1 to disable it.
+    PluginRegistrationDialog(wxWindow* parent, int defaultEffectCategory = -1);
 
 private:
 
-   void Populate();
-   void PopulateOrExchange(ShuttleGui & S);
-   void ReloadModel();
+    void Populate();
+    void PopulateOrExchange(ShuttleGui& S);
+    void ReloadModel();
 
-   void OnSearchTextChanged(wxCommandEvent& evt);
-   void OnStateFilterValueChanged(wxCommandEvent& evt);
-   void OnTypeFilterValueChanged(wxCommandEvent& evt);
-   void OnCategoryFilterValueChanged(wxCommandEvent& evt);
-   void OnOK(wxCommandEvent & evt);
-   void OnCancel(wxCommandEvent & evt);
-   void OnRescan(wxCommandEvent & evt);
-   void OnGetMoreEffects(wxCommandEvent & evt);
+    void OnSearchTextChanged(wxCommandEvent& evt);
+    void OnStateFilterValueChanged(wxCommandEvent& evt);
+    void OnTypeFilterValueChanged(wxCommandEvent& evt);
+    void OnCategoryFilterValueChanged(wxCommandEvent& evt);
+    void OnOK(wxCommandEvent& evt);
+    void OnCancel(wxCommandEvent& evt);
+    void OnRescan(wxCommandEvent& evt);
+    void OnGetMoreEffects(wxCommandEvent& evt);
 
-   wxArrayString mPluginProviderIDs;
+    wxArrayString mPluginProviderIDs;
 
-   wxDataViewCtrl* mPluginList{};
-   wxObjectDataPtr<PluginDataModel> mPluginsModel;
+    wxDataViewCtrl* mPluginList{};
+    wxObjectDataPtr<PluginDataModel> mPluginsModel;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
-
 
 #endif

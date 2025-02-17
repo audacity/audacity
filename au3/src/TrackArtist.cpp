@@ -38,7 +38,6 @@ audio tracks.
 
 *//*******************************************************************/
 
-
 #include "TrackArtist.h"
 
 #include "AllThemeResources.h"
@@ -50,114 +49,111 @@ audio tracks.
 #include "Decibels.h"
 #include "prefs/TracksPrefs.h"
 
-namespace
+namespace {
+void ChangeLightness(wxPen& pen, int ialpha)
 {
-   void ChangeLightness(wxPen& pen, int ialpha)
-   {
-      pen.SetColour(pen.GetColour().ChangeLightness(ialpha));
-   }
-
-   void ChangeLightness(wxBrush& brush, int ialpha)
-   {
-      brush.SetColour(brush.GetColour().ChangeLightness(ialpha));
-   }
+    pen.SetColour(pen.GetColour().ChangeLightness(ialpha));
 }
 
-TrackArtist::TrackArtist( TrackPanel *parent_ )
-   : parent( parent_ )
+void ChangeLightness(wxBrush& brush, int ialpha)
 {
-   mdBrange = DecibelScaleCutoff.GetDefault();
-   mSampleDisplay = 1;// Stem plots by default.
+    brush.SetColour(brush.GetColour().ChangeLightness(ialpha));
+}
+}
 
-   SetColours(0);
+TrackArtist::TrackArtist(TrackPanel* parent_)
+    : parent(parent_)
+{
+    mdBrange = DecibelScaleCutoff.GetDefault();
+    mSampleDisplay = 1;// Stem plots by default.
 
-   UpdatePrefs();
+    SetColours(0);
+
+    UpdatePrefs();
 }
 
 TrackArtist::~TrackArtist()
 {
 }
 
-TrackArtist * TrackArtist::Get( TrackPanelDrawingContext &context )
+TrackArtist* TrackArtist::Get(TrackPanelDrawingContext& context)
 {
-   return static_cast< TrackArtist* >( context.pUserData );
+    return static_cast< TrackArtist* >(context.pUserData);
 }
 
-void TrackArtist::SetColours( int iColorIndex)
+void TrackArtist::SetColours(int iColorIndex)
 {
-   theTheme.SetBrushColour( blankBrush,      clrBlank );
-   theTheme.SetBrushColour( unselectedBrush, clrUnselected);
-   theTheme.SetBrushColour( selectedBrush,   clrSelected);
-   theTheme.SetBrushColour( sampleBrush,     clrSample);
-   theTheme.SetBrushColour( selsampleBrush,  clrSelSample);
-   theTheme.SetBrushColour( dragsampleBrush, clrDragSample);
-   theTheme.SetBrushColour( blankSelectedBrush, clrBlankSelected);
-   theTheme.SetBrushColour( envelopeBackgroundBrush, clrEnvelopeBackground);
-   theTheme.SetBrushColour( clipAffordanceBackgroundBrush, clrBlank);
-   theTheme.SetBrushColour( clipAffordanceBackgroundSelBrush, clrBlankSelected);
+    theTheme.SetBrushColour(blankBrush,      clrBlank);
+    theTheme.SetBrushColour(unselectedBrush, clrUnselected);
+    theTheme.SetBrushColour(selectedBrush,   clrSelected);
+    theTheme.SetBrushColour(sampleBrush,     clrSample);
+    theTheme.SetBrushColour(selsampleBrush,  clrSelSample);
+    theTheme.SetBrushColour(dragsampleBrush, clrDragSample);
+    theTheme.SetBrushColour(blankSelectedBrush, clrBlankSelected);
+    theTheme.SetBrushColour(envelopeBackgroundBrush, clrEnvelopeBackground);
+    theTheme.SetBrushColour(clipAffordanceBackgroundBrush, clrBlank);
+    theTheme.SetBrushColour(clipAffordanceBackgroundSelBrush, clrBlankSelected);
 
-   theTheme.SetPenColour(   blankPen,        clrBlank);
-   theTheme.SetPenColour(   unselectedPen,   clrUnselected);
-   theTheme.SetPenColour(   selectedPen,     clrSelected);
-   theTheme.SetPenColour(   muteSamplePen,   clrMuteSample);
-   theTheme.SetPenColour(   odProgressDonePen, clrProgressDone);
-   theTheme.SetPenColour(   odProgressNotYetPen, clrProgressNotYet);
-   theTheme.SetPenColour(   clippedPen,      clrClipped);
-   theTheme.SetPenColour(   muteClippedPen,  clrMuteClipped);
-   theTheme.SetPenColour(   blankSelectedPen,clrBlankSelected);
+    theTheme.SetPenColour(blankPen,        clrBlank);
+    theTheme.SetPenColour(unselectedPen,   clrUnselected);
+    theTheme.SetPenColour(selectedPen,     clrSelected);
+    theTheme.SetPenColour(muteSamplePen,   clrMuteSample);
+    theTheme.SetPenColour(odProgressDonePen, clrProgressDone);
+    theTheme.SetPenColour(odProgressNotYetPen, clrProgressNotYet);
+    theTheme.SetPenColour(clippedPen,      clrClipped);
+    theTheme.SetPenColour(muteClippedPen,  clrMuteClipped);
+    theTheme.SetPenColour(blankSelectedPen, clrBlankSelected);
 
-   theTheme.SetPenColour(   selsamplePen,    clrSelSample);
-   theTheme.SetPenColour(   muteRmsPen,      clrMuteRms);
+    theTheme.SetPenColour(selsamplePen,    clrSelSample);
+    theTheme.SetPenColour(muteRmsPen,      clrMuteRms);
 
-   theTheme.SetPenColour( beatSepearatorPen[0], clrBeatSeparatorPen );
-   theTheme.SetPenColour( beatSepearatorPen[1], clrBeatSeparatorPen );
-   theTheme.SetPenColour( barSepearatorPen[0], clrBarSeparatorPen );
-   theTheme.SetPenColour( barSepearatorPen[1], clrBarSeparatorPen );
-   theTheme.SetBrushColour( beatStrongBrush[0], clrBeatFillStrongBrush );
-   theTheme.SetBrushColour( beatStrongBrush[1], clrBeatFillStrongBrush );
-   theTheme.SetBrushColour( beatWeakBrush[0], clrBeatFillWeakBrush );
-   theTheme.SetBrushColour( beatWeakBrush[1], clrBeatFillWeakBrush );
-   theTheme.SetBrushColour( beatStrongSelBrush[0], clrBeatFillStrongSelBrush );
-   theTheme.SetBrushColour( beatStrongSelBrush[1], clrBeatFillStrongSelBrush );
-   theTheme.SetBrushColour( beatWeakSelBrush[0], clrBeatFillWeakSelBrush );
-   theTheme.SetBrushColour( beatWeakSelBrush[1], clrBeatFillWeakSelBrush );
+    theTheme.SetPenColour(beatSepearatorPen[0], clrBeatSeparatorPen);
+    theTheme.SetPenColour(beatSepearatorPen[1], clrBeatSeparatorPen);
+    theTheme.SetPenColour(barSepearatorPen[0], clrBarSeparatorPen);
+    theTheme.SetPenColour(barSepearatorPen[1], clrBarSeparatorPen);
+    theTheme.SetBrushColour(beatStrongBrush[0], clrBeatFillStrongBrush);
+    theTheme.SetBrushColour(beatStrongBrush[1], clrBeatFillStrongBrush);
+    theTheme.SetBrushColour(beatWeakBrush[0], clrBeatFillWeakBrush);
+    theTheme.SetBrushColour(beatWeakBrush[1], clrBeatFillWeakBrush);
+    theTheme.SetBrushColour(beatStrongSelBrush[0], clrBeatFillStrongSelBrush);
+    theTheme.SetBrushColour(beatStrongSelBrush[1], clrBeatFillStrongSelBrush);
+    theTheme.SetBrushColour(beatWeakSelBrush[0], clrBeatFillWeakSelBrush);
+    theTheme.SetBrushColour(beatWeakSelBrush[1], clrBeatFillWeakSelBrush);
 
-   ChangeLightness(beatSepearatorPen[1], 90);
-   ChangeLightness(barSepearatorPen[1], 90);
-   ChangeLightness(beatStrongBrush[1], 90);
-   ChangeLightness(beatWeakBrush[1], 90);
-   ChangeLightness(beatStrongSelBrush[1], 90);
-   ChangeLightness(beatWeakSelBrush[1], 90);
-   ChangeLightness(clipAffordanceBackgroundBrush, 90 );
-   ChangeLightness(clipAffordanceBackgroundSelBrush, 90);
+    ChangeLightness(beatSepearatorPen[1], 90);
+    ChangeLightness(barSepearatorPen[1], 90);
+    ChangeLightness(beatStrongBrush[1], 90);
+    ChangeLightness(beatWeakBrush[1], 90);
+    ChangeLightness(beatStrongSelBrush[1], 90);
+    ChangeLightness(beatWeakSelBrush[1], 90);
+    ChangeLightness(clipAffordanceBackgroundBrush, 90);
+    ChangeLightness(clipAffordanceBackgroundSelBrush, 90);
 
-   switch( iColorIndex %4 )
-   {
-      default:
-      case 0:
-         theTheme.SetPenColour(   samplePen,       clrSample);
-         theTheme.SetPenColour(   rmsPen,          clrRms);
-         break;
-      case 1: // RED
-         theTheme.SetPenColour(   samplePen,       clrSample2);
-         theTheme.SetPenColour(   rmsPen,          clrRms2);
-         break;
-      case 2: // GREEN
-         theTheme.SetPenColour(   samplePen,       clrSample3);
-         theTheme.SetPenColour(   rmsPen,          clrRms3);
-         break;
-      case 3: //BLACK
-         theTheme.SetPenColour(   samplePen,       clrSample4);
-         theTheme.SetPenColour(   rmsPen,          clrRms4);
-         break;
-
-   }
+    switch (iColorIndex % 4) {
+    default:
+    case 0:
+        theTheme.SetPenColour(samplePen,       clrSample);
+        theTheme.SetPenColour(rmsPen,          clrRms);
+        break;
+    case 1:   // RED
+        theTheme.SetPenColour(samplePen,       clrSample2);
+        theTheme.SetPenColour(rmsPen,          clrRms2);
+        break;
+    case 2:   // GREEN
+        theTheme.SetPenColour(samplePen,       clrSample3);
+        theTheme.SetPenColour(rmsPen,          clrRms3);
+        break;
+    case 3:   //BLACK
+        theTheme.SetPenColour(samplePen,       clrSample4);
+        theTheme.SetPenColour(rmsPen,          clrRms4);
+        break;
+    }
 }
 
 void TrackArtist::UpdatePrefs()
 {
-   mdBrange = DecibelScaleCutoff.Read();
-   mSampleDisplay = TracksPrefs::SampleViewChoice();
+    mdBrange = DecibelScaleCutoff.Read();
+    mSampleDisplay = TracksPrefs::SampleViewChoice();
 
-   SetColours(0);
+    SetColours(0);
 }

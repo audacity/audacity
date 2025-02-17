@@ -1,12 +1,12 @@
 /*!********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file ActiveProject.h
  @brief Handle changing of active project and keep global project pointer
- 
+
  Paul Licameli split from Project.h
- 
+
  **********************************************************************/
 
 #ifndef __AUDACITY_ACTIVE_PROJECT__
@@ -19,6 +19,6 @@ class AudacityProject;
 
 AUDACITY_DLL_API std::weak_ptr<AudacityProject> GetActiveProject();
 // For use by ProjectManager only:
-AUDACITY_DLL_API void SetActiveProject(AudacityProject * project);
+AUDACITY_DLL_API void SetActiveProject(AudacityProject* project);
 
 #endif

@@ -23,15 +23,15 @@ class ShuttleGui;
 class SoundActivatedRecordDialog final : public wxDialogWrapper
 {
 public:
-   SoundActivatedRecordDialog(wxWindow* parent);
-   ~SoundActivatedRecordDialog();
+    SoundActivatedRecordDialog(wxWindow* parent);
+    ~SoundActivatedRecordDialog();
 
 private:
-   void OnOK(wxCommandEvent& event);
+    void OnOK(wxCommandEvent& event);
 
-   void PopulateOrExchange(ShuttleGui& S);
+    void PopulateOrExchange(ShuttleGui& S);
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -19,18 +19,18 @@
 //initial and final element positions inside wxSizer (if present)
 class MovableControlEvent final : public wxCommandEvent
 {
-   int mSourceIndex{-1};
-   int mTargetIndex{-1};
+    int mSourceIndex{ -1 };
+    int mTargetIndex{ -1 };
 public:
-   MovableControlEvent(wxEventType eventType, int winid = 0);
+    MovableControlEvent(wxEventType eventType, int winid = 0);
 
-   void SetSourceIndex(int index) noexcept;
-   int GetSourceIndex() const noexcept;
+    void SetSourceIndex(int index) noexcept;
+    int GetSourceIndex() const noexcept;
 
-   void SetTargetIndex(int index) noexcept;
-   int GetTargetIndex() const noexcept;
+    void SetTargetIndex(int index) noexcept;
+    int GetTargetIndex() const noexcept;
 
-   wxEvent* Clone() const override;
+    wxEvent* Clone() const override;
 };
 
 wxDECLARE_EVENT(EVT_MOVABLE_CONTROL_DRAG_STARTED, MovableControlEvent);
@@ -42,44 +42,36 @@ wxDECLARE_EVENT(EVT_MOVABLE_CONTROL_DRAG_FINISHED, MovableControlEvent);
 //can work only in pair with wxBoxSizer with wxVERTICAL layout.
 class MovableControl : public wxWindow
 {
-   bool mDragging { false };
-   wxPoint mInitialPosition;
+    bool mDragging { false };
+    wxPoint mInitialPosition;
 
-   int mTargetIndex { -1 };
-   int mSourceIndex { -1 };
+    int mTargetIndex { -1 };
+    int mSourceIndex { -1 };
 public:
 
-   MovableControl() = default;
+    MovableControl() = default;
 
-   MovableControl(wxWindow* parent,
-                wxWindowID id,
-                const wxPoint& pos = wxDefaultPosition,
-                const wxSize& size = wxDefaultSize,
-                long style = 0,
+    MovableControl(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+                   long style = 0, const wxString& name = wxPanelNameStr);
+
+    void Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = 0,
                 const wxString& name = wxPanelNameStr);
 
-   void Create(wxWindow* parent,
-                wxWindowID id,
-                const wxPoint& pos = wxDefaultPosition,
-                const wxSize& size = wxDefaultSize,
-                long style = 0,
-                const wxString& name = wxPanelNameStr);
+    void ProcessDragEvent(wxWindow* target, wxEventType eventType);
 
-   void ProcessDragEvent(wxWindow* target, wxEventType eventType);
-
-   int FindIndexInParent() const;
+    int FindIndexInParent() const;
 
 private:
 
-   void OnKeyDown(wxKeyEvent& evt);
-   
-   void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
+    void OnKeyDown(wxKeyEvent& evt);
 
-   void DragFinished();
+    void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
 
-   void OnMouseDown(wxMouseEvent& evt);
+    void DragFinished();
 
-   void OnMouseUp(wxMouseEvent& evt);
+    void OnMouseDown(wxMouseEvent& evt);
 
-   void OnMove(wxMouseEvent& evt);
+    void OnMouseUp(wxMouseEvent& evt);
+
+    void OnMove(wxMouseEvent& evt);
 };

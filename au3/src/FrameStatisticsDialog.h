@@ -14,8 +14,8 @@
 class FrameStatisticsDialog final
 {
 public:
-   //! Shows the dialog
-   static void Show(bool show);
-   //! Destroys the dialog to prevent Audacity from hanging on exit
-   static void Destroy();
+    //! Shows the dialog
+    static void Show(bool show);
+    //! Destroys the dialog to prevent Audacity from hanging on exit
+    static void Destroy();
 };

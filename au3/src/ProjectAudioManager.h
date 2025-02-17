@@ -28,14 +28,14 @@ struct AudioIOStartStreamOptions;
 class TrackList;
 class SelectedRegion;
 class WritableSampleTrack;
-using WritableSampleTrackArray =
-   std::vector< std::shared_ptr< WritableSampleTrack > >;
+using WritableSampleTrackArray
+    =std::vector< std::shared_ptr< WritableSampleTrack > >;
 
 enum class PlayMode : int {
-   normalPlay,
-   oneSecondPlay, // Disables auto-scrolling
-   loopedPlay, // Possibly looped play (not always); disables auto-scrolling
-   cutPreviewPlay
+    normalPlay,
+    oneSecondPlay, // Disables auto-scrolling
+    loopedPlay, // Possibly looped play (not always); disables auto-scrolling
+    cutPreviewPlay
 };
 
 struct TransportSequences;
@@ -45,157 +45,148 @@ enum class ProjectFileIOMessage : int;
 
 //! Notification, after recording has stopped, when dropouts have been detected
 struct RecordingDropoutEvent {
-   //! Start time and duration
-   using Interval = std::pair<double, double>;
-   using Intervals = std::vector<Interval>;
+    //! Start time and duration
+    using Interval = std::pair<double, double>;
+    using Intervals = std::vector<Interval>;
 
-   explicit RecordingDropoutEvent(const Intervals &intervals)
-      : intervals{ intervals }
-   {}
+    explicit RecordingDropoutEvent(const Intervals& intervals)
+        : intervals{intervals}
+    {}
 
-   //! Disjoint and sorted increasingly
-   const Intervals &intervals;
+    //! Disjoint and sorted increasingly
+    const Intervals& intervals;
 };
 
-class AUDACITY_DLL_API ProjectAudioManager final
-   : public ClientData::Base
-   , public AudioIOListener
-   , public std::enable_shared_from_this< ProjectAudioManager >
-   , public Observer::Publisher<RecordingDropoutEvent>
+class AUDACITY_DLL_API ProjectAudioManager final : public ClientData::Base, public AudioIOListener,
+    public std::enable_shared_from_this< ProjectAudioManager >, public Observer::Publisher<RecordingDropoutEvent>
 {
 public:
-   static ProjectAudioManager &Get( AudacityProject &project );
-   static const ProjectAudioManager &Get( const AudacityProject &project );
+    static ProjectAudioManager& Get(AudacityProject& project);
+    static const ProjectAudioManager& Get(const AudacityProject& project);
 
-   //! Find suitable tracks to record into, or return an empty array.
-   static WritableSampleTrackArray ChooseExistingRecordingTracks(
-      AudacityProject &proj, bool selectedOnly,
-      double targetRate = RATE_NOT_SELECTED);
+    //! Find suitable tracks to record into, or return an empty array.
+    static WritableSampleTrackArray ChooseExistingRecordingTracks(
+        AudacityProject& proj, bool selectedOnly, double targetRate = RATE_NOT_SELECTED);
 
-   static bool UseDuplex();
+    static bool UseDuplex();
 
-   explicit ProjectAudioManager( AudacityProject &project );
-   ProjectAudioManager( const ProjectAudioManager & ) = delete;
-   ProjectAudioManager &operator=( const ProjectAudioManager & ) = delete;
-   ~ProjectAudioManager() override;
+    explicit ProjectAudioManager(AudacityProject& project);
+    ProjectAudioManager(const ProjectAudioManager&) = delete;
+    ProjectAudioManager& operator=(const ProjectAudioManager&) = delete;
+    ~ProjectAudioManager() override;
 
-   bool IsTimerRecordCancelled() { return mTimerRecordCanceled; }
-   void SetTimerRecordCancelled() { mTimerRecordCanceled = true; }
-   void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
+    bool IsTimerRecordCancelled() { return mTimerRecordCanceled; }
+    void SetTimerRecordCancelled() { mTimerRecordCanceled = true; }
+    void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
 
-   bool Paused() const;
+    bool Paused() const;
 
-   bool Playing() const;
+    bool Playing() const;
 
-   // Whether recording into this project (not just into some project) is
-   // active
-   bool Recording() const;
+    // Whether recording into this project (not just into some project) is
+    // active
+    bool Recording() const;
 
-   bool Stopping() const { return mStopping; }
+    bool Stopping() const { return mStopping; }
 
-   // Whether the last attempt to start recording requested appending to tracks
-   bool Appending() const { return mAppending; }
-   // Whether potentially looping play (using new default PlaybackPolicy)
-   bool Looping() const { return mLooping; }
-   bool Cutting() const { return mCutting; }
+    // Whether the last attempt to start recording requested appending to tracks
+    bool Appending() const { return mAppending; }
+    // Whether potentially looping play (using new default PlaybackPolicy)
+    bool Looping() const { return mLooping; }
+    bool Cutting() const { return mCutting; }
 
-   // A project is only allowed to stop an audio stream that it owns.
-   bool CanStopAudioStream () const;
+    // A project is only allowed to stop an audio stream that it owns.
+    bool CanStopAudioStream() const;
 
-   void OnRecord(bool altAppearance);
+    void OnRecord(bool altAppearance);
 
-   bool DoRecord(AudacityProject &project,
-      //! If captureSequences is empty, then tracks are created
-      const TransportSequences &transportSequences,
-      double t0, double t1,
-      bool altAppearance,
-      const AudioIOStartStreamOptions &options);
+    bool DoRecord(AudacityProject& project,
+                  //! If captureSequences is empty, then tracks are created
+                  const TransportSequences& transportSequences, double t0, double t1, bool altAppearance,
+                  const AudioIOStartStreamOptions& options);
 
-   int PlayPlayRegion(const SelectedRegion &selectedRegion,
-                      const AudioIOStartStreamOptions &options,
-                      PlayMode playMode,
-                      bool backwards = false);
+    int PlayPlayRegion(const SelectedRegion& selectedRegion, const AudioIOStartStreamOptions& options, PlayMode playMode,
+                       bool backwards = false);
 
-   // Play currently selected region, or if nothing selected,
-   // play from current cursor.
-   void PlayCurrentRegion(
-      bool newDefault = false, //!< See ProjectAudioIO::GetDefaultOptions
-      bool cutpreview = false);
+    // Play currently selected region, or if nothing selected,
+    // play from current cursor.
+    void PlayCurrentRegion(
+        bool newDefault = false, //!< See ProjectAudioIO::GetDefaultOptions
+        bool cutpreview = false);
 
-   void OnPause();
-   
+    void OnPause();
 
-   // Stop playing or recording
-   void Stop(bool stopStream = true);
+    // Stop playing or recording
+    void Stop(bool stopStream = true);
 
-   void StopIfPaused();
+    void StopIfPaused();
 
-   bool DoPlayStopSelect( bool click, bool shift );
-   void DoPlayStopSelect( );
+    bool DoPlayStopSelect(bool click, bool shift);
+    void DoPlayStopSelect();
 
-   PlayMode GetLastPlayMode() const { return mLastPlayMode; }
+    PlayMode GetLastPlayMode() const { return mLastPlayMode; }
 
 private:
 
-   void TogglePaused();
-   void SetPausedOff();
+    void TogglePaused();
+    void SetPausedOff();
 
-   void SetAppending( bool value ) { mAppending = value; }
-   void SetLooping( bool value ) { mLooping = value; }
-   void SetCutting( bool value ) { mCutting = value; }
-   void SetStopping( bool value ) { mStopping = value; }
+    void SetAppending(bool value) { mAppending = value; }
+    void SetLooping(bool value) { mLooping = value; }
+    void SetCutting(bool value) { mCutting = value; }
+    void SetStopping(bool value) { mStopping = value; }
 
-   // Cancel the addition of temporary recording tracks into the project
-   void CancelRecording();
+    // Cancel the addition of temporary recording tracks into the project
+    void CancelRecording();
 
-   // Audio IO callback methods
-   void OnAudioIORate(int rate) override;
-   void OnAudioIOStartRecording() override;
-   void OnAudioIOStopRecording() override;
-   void OnAudioIONewBlocks() override;
-   void OnCommitRecording() override;
-   void OnSoundActivationThreshold() override;
+    // Audio IO callback methods
+    void OnAudioIORate(int rate) override;
+    void OnAudioIOStartRecording() override;
+    void OnAudioIOStopRecording() override;
+    void OnAudioIONewBlocks() override;
+    void OnCommitRecording() override;
+    void OnSoundActivationThreshold() override;
 
-   void OnCheckpointFailure(ProjectFileIOMessage);
+    void OnCheckpointFailure(ProjectFileIOMessage);
 
-   Observer::Subscription mCheckpointFailureSubscription;
-   AudacityProject &mProject;
+    Observer::Subscription mCheckpointFailureSubscription;
+    AudacityProject& mProject;
 
-   PlayMode mLastPlayMode{ PlayMode::normalPlay };
+    PlayMode mLastPlayMode{ PlayMode::normalPlay };
 
-   //flag for cancellation of timer record.
-   bool mTimerRecordCanceled{ false };
+    //flag for cancellation of timer record.
+    bool mTimerRecordCanceled{ false };
 
-   // Using int as the type for this atomic flag, allows us to toggle its value
-   // with an atomic operation.
-   std::atomic<int> mPaused{ 0 };
+    // Using int as the type for this atomic flag, allows us to toggle its value
+    // with an atomic operation.
+    std::atomic<int> mPaused{ 0 };
 
-   bool mAppending{ false };
-   bool mLooping{ false };
-   bool mCutting{ false };
-   bool mStopping{ false };
+    bool mAppending{ false };
+    bool mLooping{ false };
+    bool mCutting{ false };
+    bool mStopping{ false };
 
-   int mDisplayedRate{ 0 };
-   static std::pair< TranslatableStrings, unsigned >
-      StatusWidthFunction(
-         const AudacityProject &project, StatusBarField field);
+    int mDisplayedRate{ 0 };
+    static std::pair< TranslatableStrings, unsigned >
+    StatusWidthFunction(
+        const AudacityProject& project, StatusBarField field);
 };
 
-AudioIOStartStreamOptions DefaultSpeedPlayOptions( AudacityProject &project );
+AudioIOStartStreamOptions DefaultSpeedPlayOptions(AudacityProject& project);
 
 struct PropertiesOfSelected
 {
-   bool allSameRate{ false };
-   int rateOfSelected{ RATE_NOT_SELECTED };
-   bool anySelected{ false };
+    bool allSameRate{ false };
+    int rateOfSelected{ RATE_NOT_SELECTED };
+    bool anySelected{ false };
 };
 
 AUDACITY_DLL_API
-PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject &proj);
+PropertiesOfSelected GetPropertiesOfSelected(const AudacityProject& proj);
 
 #include "CommandFlag.h"
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
-   &CanStopAudioStreamFlag();
+& CanStopAudioStreamFlag();
 
 #endif
