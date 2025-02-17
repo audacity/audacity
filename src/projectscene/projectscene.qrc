@@ -8,6 +8,7 @@
         <file>qml/Audacity/ProjectScene/clipsview/ClipsSelection.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItemButtonBackground.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TrackItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TrackSelectionBar.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml</file>

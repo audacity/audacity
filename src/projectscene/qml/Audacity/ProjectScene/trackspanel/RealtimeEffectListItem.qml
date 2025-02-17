@@ -150,73 +150,57 @@ ListItemBlank {
             }
         }
 
-        // Wrappinng a FlatButton in a Rectangle because of two bad reasons:
-        // * I don't find a `border` property for `FlatButton`
-        // * Somehow, the button's color is a bit darkened it direct child of the RowLayout
-        Rectangle {
-            id: effectNameRect
+        FlatButton {
+            id: effectNameButton
 
-            color: "transparent"
-            border.color: ui.theme.strokeColor
-            border.width: 1
-            radius: effectNameButton.backgroundRadius
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredWidth: 148
 
-            FlatButton {
-                id: effectNameButton
+            backgroundItem: RealtimeEffectListItemButtonBackground {
+                mouseArea: effectNameButton.mouseArea
+            }
 
+            StyledTextLabel {
                 anchors.fill: parent
+                anchors.leftMargin: 6
+                anchors.rightMargin: 6
+                id: trackNameLabel
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                text: root.item ? root.item.effectName() : ""
+            }
 
-                StyledTextLabel {
-                    anchors.fill: parent
-                    anchors.leftMargin: 6
-                    anchors.rightMargin: 6
-                    id: trackNameLabel
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    text: root.item ? root.item.effectName() : ""
-                }
-
-                onClicked: {
-                    root.item.toggleDialog()
-                }
+            onClicked: {
+                root.item.toggleDialog()
             }
         }
 
-        // Wrapping a FlatButton for the same reasons as above.
-        Rectangle {
-            id: chooseEffectRect
+        FlatButton {
+            id: chooseEffectDropdown
 
-            color: "transparent"
-            border.color: ui.theme.strokeColor
-            border.width: 1
-            radius: effectNameButton.backgroundRadius
             Layout.fillHeight: true
             Layout.preferredWidth: height
 
-            FlatButton {
-                id: chooseEffectDropdown
+            icon: IconCode.SMALL_ARROW_DOWN
+            backgroundItem: RealtimeEffectListItemButtonBackground {
+                mouseArea: chooseEffectDropdown.mouseArea
+            }
 
-                anchors.fill: parent
-                icon: IconCode.SMALL_ARROW_DOWN
+            RealtimeEffectListItemMenuModel {
+                id: menuModel
+                effectState: root.item ? root.item.effectState() : null
+            }
 
-                RealtimeEffectListItemMenuModel {
-                    id: menuModel
-                    effectState: root.item ? root.item.effectState() : null
-                }
+            onClicked: {
+                effectMenuLoader.toggleOpened(menuModel.availableEffects)
+            }
 
-                onClicked: {
-                    effectMenuLoader.toggleOpened(menuModel.availableEffects)
-                }
+            StyledMenuLoader {
+                id: effectMenuLoader
 
-                StyledMenuLoader {
-                    id: effectMenuLoader
-
-                    onHandleMenuItem: function(menuItem) {
-                        menuModel.handleMenuItem(menuItem)
-                    }
+                onHandleMenuItem: function(menuItem) {
+                    menuModel.handleMenuItem(menuItem)
                 }
             }
         }
