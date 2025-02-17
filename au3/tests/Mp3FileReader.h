@@ -17,7 +17,6 @@
 
 struct Mp3FileReader
 {
-   static bool Read(
-      const std::string& path, std::vector<std::vector<float>>& audio,
-      AudioFileInfo& info);
+    static bool Read(
+        const std::string& path, std::vector<std::vector<float> >& audio, AudioFileInfo& info);
 };
