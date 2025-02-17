@@ -25,91 +25,91 @@
 class GRAPHICS_API FrameStatistics final
 {
 public:
-   using Clock = std::chrono::high_resolution_clock;
-   using Duration = Clock::duration;
-   using Timepoint = Clock::time_point;
+    using Clock = std::chrono::high_resolution_clock;
+    using Duration = Clock::duration;
+    using Timepoint = Clock::time_point;
 
-   //! ID of the profiling section
-   enum class SectionID
-   {
-      //! Full repaint time of the TrackPanel
-      TrackPanel,
-      //! Time required to draw a single clip
-      WaveformView,
-      //! Time required to access the data cache
-      WaveDataCache,
-      //! Time required to build the structures required for the bitmap cache population
-      WaveBitmapCachePreprocess,
-      //! Time required to access the wave bitmaps cache
-      WaveBitmapCache,
-      //! Number of the sections
-      Count
-   };
+    //! ID of the profiling section
+    enum class SectionID
+    {
+        //! Full repaint time of the TrackPanel
+        TrackPanel,
+        //! Time required to draw a single clip
+        WaveformView,
+        //! Time required to access the data cache
+        WaveDataCache,
+        //! Time required to build the structures required for the bitmap cache population
+        WaveBitmapCachePreprocess,
+        //! Time required to access the wave bitmaps cache
+        WaveBitmapCache,
+        //! Number of the sections
+        Count
+    };
 
-   //! A helper that notifies the view that a specific section has changed
-   struct GRAPHICS_API UpdatePublisher : Observer::Publisher<SectionID>
-   {
-      void Invoke(SectionID id);
-   };
+    //! A helper that notifies the view that a specific section has changed
+    struct GRAPHICS_API UpdatePublisher : Observer::Publisher<SectionID>
+    {
+        void Invoke(SectionID id);
+    };
 
-   //! RAII wrapper used to measure a section time
-   class GRAPHICS_API Stopwatch final
-   {
-   public:
-      ~Stopwatch() noexcept;
-   private:
-      explicit Stopwatch(SectionID section) noexcept;
+    //! RAII wrapper used to measure a section time
+    class GRAPHICS_API Stopwatch final
+    {
+    public:
+        ~Stopwatch() noexcept;
+    private:
+        explicit Stopwatch(SectionID section) noexcept;
 
-      SectionID mSection;
-      Timepoint mStart;
+        SectionID mSection;
+        Timepoint mStart;
 
-      friend class FrameStatistics;
-   };
+        friend class FrameStatistics;
+    };
 
-   //! Profiling section data
-   class GRAPHICS_API Section final
-   {
-   public:
-      //! Duration of the last event
-      Duration GetLastDuration() const noexcept;
-      //! All time minimum duration of the events in this section
-      Duration GetMinDuration() const noexcept;
-      //! All time maximum duration of the events in this section
-      Duration GetMaxDuration() const noexcept;
-      //! Average duration of the last KERNEL_SIZE events in this section
-      Duration GetAverageDuration() const noexcept;
-      //! Total number of the events in this section
-      size_t   GetEventsCount() const noexcept;
-   private:
-      void AddEvent(Duration duration) noexcept;
+    //! Profiling section data
+    class GRAPHICS_API Section final
+    {
+    public:
+        //! Duration of the last event
+        Duration GetLastDuration() const noexcept;
+        //! All time minimum duration of the events in this section
+        Duration GetMinDuration() const noexcept;
+        //! All time maximum duration of the events in this section
+        Duration GetMaxDuration() const noexcept;
+        //! Average duration of the last KERNEL_SIZE events in this section
+        Duration GetAverageDuration() const noexcept;
+        //! Total number of the events in this section
+        size_t   GetEventsCount() const noexcept;
+    private:
+        void AddEvent(Duration duration) noexcept;
 
-      static constexpr size_t KERNEL_SIZE = 16;
+        static constexpr size_t KERNEL_SIZE = 16;
 
-      Duration mLastDuration {};
-      Duration mMinDuration { std::numeric_limits<Duration::rep>::max() };
-      Duration mMaxDuration { std::numeric_limits<Duration::rep>::min() };
-      Duration mAvgAccum {};
-      Duration mAvgDuration {};
+        Duration mLastDuration {};
+        Duration mMinDuration { std::numeric_limits<Duration::rep>::max() };
+        Duration mMaxDuration { std::numeric_limits<Duration::rep>::min() };
+        Duration mAvgAccum {};
+        Duration mAvgDuration {};
 
-      Duration mFilteringKernel[KERNEL_SIZE] {};
-      size_t mNextIndex { 0 };
-      size_t mKernelItems { 0 };
+        Duration mFilteringKernel[KERNEL_SIZE] {};
+        size_t mNextIndex { 0 };
+        size_t mKernelItems { 0 };
 
-      size_t mEventsCount { 0 };
+        size_t mEventsCount { 0 };
 
-      friend class FrameStatistics;
-   };
+        friend class FrameStatistics;
+    };
 
-   //! Create a Stopwatch for the section specified
-   static Stopwatch CreateStopwatch(SectionID section) noexcept;
-   //! Get the section data
-   static const Section& GetSection(SectionID section) noexcept;
-   //! Subscribe to sections update
-   static Observer::Subscription Subscribe(UpdatePublisher::Callback callback);
+    //! Create a Stopwatch for the section specified
+    static Stopwatch CreateStopwatch(SectionID section) noexcept;
+    //! Get the section data
+    static const Section& GetSection(SectionID section) noexcept;
+    //! Subscribe to sections update
+    static Observer::Subscription Subscribe(UpdatePublisher::Callback callback);
 private:
-   void AddEvent(SectionID section, Duration duration);
+    void AddEvent(SectionID section, Duration duration);
 
-   Section mSections[size_t(SectionID::Count)];
+    Section mSections[size_t(SectionID::Count)];
 
-   UpdatePublisher mUpdatePublisher;
+    UpdatePublisher mUpdatePublisher;
 };

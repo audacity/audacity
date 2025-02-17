@@ -14,18 +14,17 @@
 #include <algorithm>
 #include <numeric>
 
-namespace
-{
+namespace {
 FrameStatistics& GetInstance() noexcept
 {
-   static FrameStatistics frameStatistics;
-   return frameStatistics;
+    static FrameStatistics frameStatistics;
+    return frameStatistics;
 }
 }
 
 FrameStatistics::Stopwatch::~Stopwatch() noexcept
 {
-   GetInstance().AddEvent(mSection, FrameStatistics::Clock::now() - mStart);
+    GetInstance().AddEvent(mSection, FrameStatistics::Clock::now() - mStart);
 }
 
 FrameStatistics::Stopwatch::Stopwatch(SectionID section) noexcept
@@ -37,97 +36,97 @@ FrameStatistics::Stopwatch::Stopwatch(SectionID section) noexcept
 FrameStatistics::Duration
 FrameStatistics::Section::GetLastDuration() const noexcept
 {
-   return mLastDuration;
+    return mLastDuration;
 }
 
 FrameStatistics::Duration
 FrameStatistics::Section::GetMinDuration() const noexcept
 {
-   return mMinDuration;
+    return mMinDuration;
 }
 
 FrameStatistics::Duration
 FrameStatistics::Section::GetMaxDuration() const noexcept
 {
-   return mMaxDuration;
+    return mMaxDuration;
 }
 
 FrameStatistics::Duration
 FrameStatistics::Section::GetAverageDuration() const noexcept
 {
-   return mAvgDuration;
+    return mAvgDuration;
 }
 
 size_t FrameStatistics::Section::GetEventsCount() const noexcept
 {
-   return mEventsCount;
+    return mEventsCount;
 }
 
 void FrameStatistics::Section::AddEvent(Duration duration) noexcept
 {
-   ++mEventsCount;
+    ++mEventsCount;
 
-   mLastDuration = duration;
+    mLastDuration = duration;
 
-   mMinDuration = std::min(mMinDuration, duration);
-   mMaxDuration = std::max(mMaxDuration, duration);
+    mMinDuration = std::min(mMinDuration, duration);
+    mMaxDuration = std::max(mMaxDuration, duration);
 
-   // Kernel is initialized with zeroes
-   mAvgAccum = mAvgAccum - mFilteringKernel[mNextIndex] + duration;
-   
-   mFilteringKernel[mNextIndex] = duration;
+    // Kernel is initialized with zeroes
+    mAvgAccum = mAvgAccum - mFilteringKernel[mNextIndex] + duration;
 
-   mNextIndex = (mNextIndex + 1) % KERNEL_SIZE;
+    mFilteringKernel[mNextIndex] = duration;
 
-   if (mKernelItems < KERNEL_SIZE)
-      ++mKernelItems;
+    mNextIndex = (mNextIndex + 1) % KERNEL_SIZE;
 
-   mAvgDuration = mAvgAccum / mKernelItems;
+    if (mKernelItems < KERNEL_SIZE) {
+        ++mKernelItems;
+    }
+
+    mAvgDuration = mAvgAccum / mKernelItems;
 }
 
 FrameStatistics::Stopwatch
 FrameStatistics::CreateStopwatch(SectionID section) noexcept
 {
-   // New frame has started
-   if (section == SectionID::TrackPanel)
-   {
-      auto& instance = GetInstance();
+    // New frame has started
+    if (section == SectionID::TrackPanel) {
+        auto& instance = GetInstance();
 
-      instance.mSections[size_t(SectionID::WaveformView)] = {};
-      instance.mSections[size_t(SectionID::WaveDataCache)] = {};
-      instance.mSections[size_t(SectionID::WaveBitmapCachePreprocess)] = {};
-      instance.mSections[size_t(SectionID::WaveBitmapCache)] = {};
-   }
+        instance.mSections[size_t(SectionID::WaveformView)] = {};
+        instance.mSections[size_t(SectionID::WaveDataCache)] = {};
+        instance.mSections[size_t(SectionID::WaveBitmapCachePreprocess)] = {};
+        instance.mSections[size_t(SectionID::WaveBitmapCache)] = {};
+    }
 
-   return Stopwatch(section);
+    return Stopwatch(section);
 }
 
 const FrameStatistics::Section&
 FrameStatistics::GetSection(SectionID section) noexcept
 {
-   if (section < SectionID::Count)
-      return GetInstance().mSections[size_t(section)];
+    if (section < SectionID::Count) {
+        return GetInstance().mSections[size_t(section)];
+    }
 
-   static Section fakeSection;
-   return fakeSection;
+    static Section fakeSection;
+    return fakeSection;
 }
 
 Observer::Subscription
 FrameStatistics::Subscribe(UpdatePublisher::Callback callback)
 {
-   return GetInstance().mUpdatePublisher.Subscribe(std::move(callback));
+    return GetInstance().mUpdatePublisher.Subscribe(std::move(callback));
 }
 
 void FrameStatistics::AddEvent(SectionID section, Duration duration)
 {
-   if (section < SectionID::Count)
-   {
-      GetInstance().mSections[size_t(section)].AddEvent(duration);
-      GetInstance().mUpdatePublisher.Invoke(section);
-   }
+    if (section < SectionID::Count) {
+        GetInstance().mSections[size_t(section)].AddEvent(duration);
+        GetInstance().mUpdatePublisher.Invoke(section);
+    }
 }
 
 void FrameStatistics::UpdatePublisher::Invoke(FrameStatistics::SectionID id)
 {
-   Publish(id);
+    Publish(id);
 }
