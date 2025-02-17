@@ -13,126 +13,129 @@
 #include "MirProjectInterface.h"
 #include "MirTypes.h"
 
-namespace MIR
-{
-
+namespace MIR {
 class EmptyMirAudioReader : public MirAudioReader
 {
-   double GetSampleRate() const override
-   {
-      return 0;
-   }
-   long long GetNumSamples() const override
-   {
-      return 0;
-   }
-   void
-   ReadFloats(float* buffer, long long start, size_t numFrames) const override
-   {
-   }
+    double GetSampleRate() const override
+    {
+        return 0;
+    }
+
+    long long GetNumSamples() const override
+    {
+        return 0;
+    }
+
+    void
+    ReadFloats(float* buffer, long long start, size_t numFrames) const override
+    {
+    }
 };
 
 class SquareWaveMirAudioReader : public MirAudioReader
 {
-   const int period = 8;
+    const int period = 8;
 
-   double GetSampleRate() const override
-   {
-      return 10;
-   }
-   long long GetNumSamples() const override
-   {
-      return period * 10;
-   }
-   void
-   ReadFloats(float* buffer, long long where, size_t numFrames) const override
-   {
-      for (size_t i = 0; i < numFrames; ++i)
-         buffer[i] = (where + i) % period < period / 2 ? 1.f : -1.f;
-   }
+    double GetSampleRate() const override
+    {
+        return 10;
+    }
+
+    long long GetNumSamples() const override
+    {
+        return period * 10;
+    }
+
+    void
+    ReadFloats(float* buffer, long long where, size_t numFrames) const override
+    {
+        for (size_t i = 0; i < numFrames; ++i) {
+            buffer[i] = (where + i) % period < period / 2 ? 1.f : -1.f;
+        }
+    }
 };
 
 class FakeProjectInterface final : public ProjectInterface
 {
 public:
-   FakeProjectInterface(double tempo)
-       : projectTempo { tempo }
-   {
-   }
-   ~FakeProjectInterface() override = default;
+    FakeProjectInterface(double tempo)
+        : projectTempo{tempo}
+    {
+    }
 
-   double projectTempo;
-   bool isBeatsAndMeasures = false;
-   bool clipsWereSynchronized = false;
-   bool shouldBeReconfigured = false;
+    ~FakeProjectInterface() override = default;
 
-   bool wasReconfigured = false;
+    double projectTempo;
+    bool isBeatsAndMeasures = false;
+    bool clipsWereSynchronized = false;
+    bool shouldBeReconfigured = false;
 
-   bool ViewIsBeatsAndMeasures() const override
-   {
-      return isBeatsAndMeasures;
-   }
+    bool wasReconfigured = false;
 
-   void ReconfigureMusicGrid(
-      double newTempo, std::optional<MIR::TimeSignature> timeSignature) override
-   {
-      projectTempo = newTempo;
-      isBeatsAndMeasures = true;
-      wasReconfigured = true;
-   }
+    bool ViewIsBeatsAndMeasures() const override
+    {
+        return isBeatsAndMeasures;
+    }
 
-   double GetTempo() const override
-   {
-      return projectTempo;
-   }
+    void ReconfigureMusicGrid(
+        double newTempo, std::optional<MIR::TimeSignature> timeSignature) override
+    {
+        projectTempo = newTempo;
+        isBeatsAndMeasures = true;
+        wasReconfigured = true;
+    }
 
-   bool ShouldBeReconfigured(double qpm, bool isSingleFileImport) override
-   {
-      return shouldBeReconfigured;
-   }
+    double GetTempo() const override
+    {
+        return projectTempo;
+    }
 
-   void OnClipsSynchronized() override
-   {
-      clipsWereSynchronized = true;
-   }
+    bool ShouldBeReconfigured(double qpm, bool isSingleFileImport) override
+    {
+        return shouldBeReconfigured;
+    }
+
+    void OnClipsSynchronized() override
+    {
+        clipsWereSynchronized = true;
+    }
 };
 
 class FakeAnalyzedAudioClip final : public AnalyzedAudioClip
 {
 public:
-   struct Params
-   {
-      const double tempo;
-      const TempoObtainedFrom method;
-   };
+    struct Params
+    {
+        const double tempo;
+        const TempoObtainedFrom method;
+    };
 
-   FakeAnalyzedAudioClip(std::optional<Params> params)
-       : syncInfo { params.has_value() ? std::make_optional<ProjectSyncInfo>(
-                                            { params->tempo, params->method }) :
-                                         std::nullopt }
-   {
-   }
+    FakeAnalyzedAudioClip(std::optional<Params> params)
+        : syncInfo{params.has_value() ? std::make_optional<ProjectSyncInfo>(
+                       { params->tempo, params->method })
+                   : std::nullopt}
+    {
+    }
 
-   ~FakeAnalyzedAudioClip() override = default;
+    ~FakeAnalyzedAudioClip() override = default;
 
-   const std::optional<MIR::ProjectSyncInfo> syncInfo;
-   std::optional<double> rawAudioTempo;
-   bool synchronizeCalled = false;
+    const std::optional<MIR::ProjectSyncInfo> syncInfo;
+    std::optional<double> rawAudioTempo;
+    bool synchronizeCalled = false;
 
-   const std::optional<MIR::ProjectSyncInfo>& GetSyncInfo() const override
-   {
-      return syncInfo;
-   }
+    const std::optional<MIR::ProjectSyncInfo>& GetSyncInfo() const override
+    {
+        return syncInfo;
+    }
 
-   void SetRawAudioTempo(double tempo) override
-   {
-      rawAudioTempo = tempo;
-   }
+    void SetRawAudioTempo(double tempo) override
+    {
+        rawAudioTempo = tempo;
+    }
 
-   void Synchronize() override
-   {
-      synchronizeCalled = true;
-   }
+    void Synchronize() override
+    {
+        synchronizeCalled = true;
+    }
 };
-
 } // namespace MIR

@@ -20,35 +20,32 @@ class DownmixSource;
 class DownmixStage final : public AudioGraph::Source
 {
 public:
-   enum class ApplyVolume
-   {
-      Discard,//< No source volume is applied
-      MapChannels, //< Apply volume per source's channel
-      Mixdown, //< Average volume from all channels in the source, numOutChannels should be 1
-   };
+    enum class ApplyVolume
+    {
+        Discard,//< No source volume is applied
+        MapChannels, //< Apply volume per source's channel
+        Mixdown, //< Average volume from all channels in the source, numOutChannels should be 1
+    };
 
 private:
-   std::vector<std::unique_ptr<DownmixSource>> mDownmixSources;
-   // Resample into these buffers, or produce directly when not resampling
-   AudioGraph::Buffers mFloatBuffers;
-   size_t mNumChannels;
-   ApplyVolume mApplyVolume;
+    std::vector<std::unique_ptr<DownmixSource> > mDownmixSources;
+    // Resample into these buffers, or produce directly when not resampling
+    AudioGraph::Buffers mFloatBuffers;
+    size_t mNumChannels;
+    ApplyVolume mApplyVolume;
 
 public:
 
-   DownmixStage(std::vector<std::unique_ptr<DownmixSource>> downmixSources,
-                size_t numChannels,
-                size_t bufferSize,
-                ApplyVolume applyGain);
+    DownmixStage(std::vector<std::unique_ptr<DownmixSource> > downmixSources, size_t numChannels, size_t bufferSize, ApplyVolume applyGain);
 
-   ~DownmixStage() override;
+    ~DownmixStage() override;
 
-   bool AcceptsBuffers(const Buffers& buffers) const override;
+    bool AcceptsBuffers(const Buffers& buffers) const override;
 
-   bool AcceptsBlockSize(size_t blockSize) const override;
+    bool AcceptsBlockSize(size_t blockSize) const override;
 
-   std::optional<size_t> Acquire(Buffers& data, size_t maxToProcess) override;
-   sampleCount Remaining() const override;
+    std::optional<size_t> Acquire(Buffers& data, size_t maxToProcess) override;
+    sampleCount Remaining() const override;
 
-   bool Release() override;
+    bool Release() override;
 };

@@ -33,26 +33,24 @@ using CommandHandlerObject = wxEvtHandler;
 
 // First of two functions registered with each command: an extractor
 // of the handler object from the AudacityProject, or null
-using CommandHandlerFinder =
-   std::function< CommandHandlerObject&(AudacityProject &) >;
+using CommandHandlerFinder
+    =std::function< CommandHandlerObject& (AudacityProject&) >;
 
 // Second of two function pointers registered with each command: a pointer
 // to a member function of the handler object, or a pointer to a non-member
 // function when the CommandHandlerFinder is null
 union CommandFunctorPointer {
-   using MemberFn =
-      void (CommandHandlerObject::*)(const CommandContext &context);
-   using NonMemberFn =
-      void (*)(const CommandContext &context);
+    using MemberFn
+        =void (CommandHandlerObject::*)(const CommandContext& context);
+    using NonMemberFn
+        =void (*)(const CommandContext& context);
 
-   CommandFunctorPointer() = default;
-   explicit CommandFunctorPointer(MemberFn memberFn)
-      : memberFn{ memberFn } {}
-   explicit CommandFunctorPointer(NonMemberFn nonMemberFn)
-      : nonMemberFn{ nonMemberFn } {}
+    CommandFunctorPointer() = default;
+    explicit CommandFunctorPointer(MemberFn memberFn) : memberFn{ memberFn } {}
+    explicit CommandFunctorPointer(NonMemberFn nonMemberFn) : nonMemberFn{ nonMemberFn } {}
 
-   MemberFn memberFn;
-   NonMemberFn nonMemberFn;
+    MemberFn memberFn;
+    NonMemberFn nonMemberFn;
 };
 
 #endif

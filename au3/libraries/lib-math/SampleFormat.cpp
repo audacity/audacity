@@ -50,69 +50,71 @@ static Dither gDitherAlgorithm;
 
 void InitDitherers()
 {
-   // Read dither preferences
-   gLowQualityDither = Dither::FastDitherChoice();
-   gHighQualityDither = Dither::BestDitherChoice();
+    // Read dither preferences
+    gLowQualityDither = Dither::FastDitherChoice();
+    gHighQualityDither = Dither::BestDitherChoice();
 }
 
 TranslatableString GetSampleFormatStr(sampleFormat format)
 {
-   switch(format) {
-   case int16Sample:
-      /* i18n-hint: Audio data bit depth (precision): 16-bit integers */
-      return XO("16-bit PCM");
-   case int24Sample:
-      /* i18n-hint: Audio data bit depth (precision): 24-bit integers */
-      return XO("24-bit PCM");
-   case floatSample:
-      /* i18n-hint: Audio data bit depth (precision): 32-bit floating point */
-      return XO("32-bit float");
-   }
-   return XO("Unknown format"); // compiler food
+    switch (format) {
+    case int16Sample:
+        /* i18n-hint: Audio data bit depth (precision): 16-bit integers */
+        return XO("16-bit PCM");
+    case int24Sample:
+        /* i18n-hint: Audio data bit depth (precision): 24-bit integers */
+        return XO("24-bit PCM");
+    case floatSample:
+        /* i18n-hint: Audio data bit depth (precision): 32-bit floating point */
+        return XO("32-bit float");
+    }
+    return XO("Unknown format"); // compiler food
 }
 
 // TODO: Risky?  Assumes 0.0f is represented by 0x00000000;
 void ClearSamples(samplePtr dst, sampleFormat format,
                   size_t start, size_t len)
 {
-   auto size = SAMPLE_SIZE(format);
-   memset(dst + start*size, 0, len*size);
+    auto size = SAMPLE_SIZE(format);
+    memset(dst + start * size, 0, len * size);
 }
 
 void ReverseSamples(samplePtr dst, sampleFormat format,
-                  int start, int len)
+                    int start, int len)
 {
-   auto size = SAMPLE_SIZE(format);
-   samplePtr first = dst + start * size;
-   samplePtr last = dst + (start + len - 1) * size;
-   enum : size_t { fixedSize = SAMPLE_SIZE(floatSample) };
-   wxASSERT(static_cast<size_t>(size) <= fixedSize);
-   char temp[fixedSize];
-   while (first < last) {
-      memcpy(temp, first, size);
-      memcpy(first, last, size);
-      memcpy(last, temp, size);
-      first += size;
-      last -= size;
-   }
+    auto size = SAMPLE_SIZE(format);
+    samplePtr first = dst + start * size;
+    samplePtr last = dst + (start + len - 1) * size;
+    enum : size_t {
+        fixedSize = SAMPLE_SIZE(floatSample)
+    };
+    wxASSERT(static_cast<size_t>(size) <= fixedSize);
+    char temp[fixedSize];
+    while (first < last) {
+        memcpy(temp, first, size);
+        memcpy(first, last, size);
+        memcpy(last, temp, size);
+        first += size;
+        last -= size;
+    }
 }
 
 void  SamplesToFloats(constSamplePtr src, sampleFormat srcFormat,
-   float *dst, size_t len, size_t srcStride, size_t dstStride)
+                      float* dst, size_t len, size_t srcStride, size_t dstStride)
 {
-   CopySamples( src, srcFormat,
-      reinterpret_cast<samplePtr>(dst), floatSample, len,
-      DitherType::none,
-      srcStride, dstStride);
+    CopySamples(src, srcFormat,
+                reinterpret_cast<samplePtr>(dst), floatSample, len,
+                DitherType::none,
+                srcStride, dstStride);
 }
 
 void CopySamples(constSamplePtr src, sampleFormat srcFormat,
-   samplePtr dst, sampleFormat dstFormat, size_t len,
-   DitherType ditherType, /* = gHighQualityDither */
-   unsigned int srcStride /* = 1 */,
-   unsigned int dstStride /* = 1 */)
+                 samplePtr dst, sampleFormat dstFormat, size_t len,
+                 DitherType ditherType, /* = gHighQualityDither */
+                 unsigned int srcStride /* = 1 */,
+                 unsigned int dstStride /* = 1 */)
 {
-   gDitherAlgorithm.Apply(
-      ditherType,
-      src, srcFormat, dst, dstFormat, len, srcStride, dstStride);
+    gDitherAlgorithm.Apply(
+        ditherType,
+        src, srcFormat, dst, dstFormat, len, srcStride, dstStride);
 }

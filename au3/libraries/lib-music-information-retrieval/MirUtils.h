@@ -13,8 +13,7 @@
 #include <algorithm>
 #include <vector>
 
-namespace MIR
-{
+namespace MIR {
 /*!
  * @brief Function to generate numbers whose prime factorization contains only
  * twos or threes
@@ -27,7 +26,7 @@ std::vector<float> GetNormalizedHann(int size);
 
 constexpr auto IsPowOfTwo(int x)
 {
-   return x > 0 && (x & (x - 1)) == 0;
+    return x > 0 && (x & (x - 1)) == 0;
 }
 
 //*******************************
