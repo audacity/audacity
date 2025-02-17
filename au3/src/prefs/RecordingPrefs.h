@@ -12,8 +12,6 @@
 #ifndef __AUDACITY_RECORDING_PREFS__
 #define __AUDACITY_RECORDING_PREFS__
 
-
-
 #include <wx/defs.h>
 
 #include "PrefsPanel.h"
@@ -21,10 +19,10 @@
 class wxTextCtrl;
 class ShuttleGui;
 
-#define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ \
-   L"Recording", \
-   /* i18n-hint: modifier as in "Recording preferences", not progressive verb */ \
-   XC("Recording", "preference") \
+#define RECORDING_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol { \
+        L"Recording", \
+        /* i18n-hint: modifier as in "Recording preferences", not progressive verb */ \
+        XC("Recording", "preference") \
 }
 
 #define AUDIO_PRE_ROLL_KEY (wxT("/AudioIO/PreRoll"))
@@ -35,25 +33,25 @@ class ShuttleGui;
 
 class RecordingPrefs final : public PrefsPanel
 {
- public:
-   RecordingPrefs(wxWindow * parent, wxWindowID winid);
-   virtual ~RecordingPrefs();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+public:
+    RecordingPrefs(wxWindow* parent, wxWindowID winid);
+    virtual ~RecordingPrefs();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   ManualPageID HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+    bool Commit() override;
+    ManualPageID HelpPageName() override;
+    void PopulateOrExchange(ShuttleGui& S) override;
 
- private:
-   void Populate();
-   void OnToggleCustomName(wxCommandEvent & /* Evt */);
+private:
+    void Populate();
+    void OnToggleCustomName(wxCommandEvent& /* Evt */);
 
-   wxTextCtrl *mToggleCustomName;
-   bool mUseCustomTrackName;
-   bool mOldNameChoice;
+    wxTextCtrl* mToggleCustomName;
+    bool mUseCustomTrackName;
+    bool mOldNameChoice;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

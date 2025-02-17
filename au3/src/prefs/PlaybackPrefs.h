@@ -18,24 +18,24 @@
 
 class ShuttleGui;
 
-#define PLAYBACK_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Playback") }
+#define PLAYBACK_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol { XO("Playback") }
 
 class PlaybackPrefs final : public PrefsPanel
 {
- public:
-   PlaybackPrefs(wxWindow * parent, wxWindowID winid);
-   virtual ~PlaybackPrefs();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+public:
+    PlaybackPrefs(wxWindow* parent, wxWindowID winid);
+    virtual ~PlaybackPrefs();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   ManualPageID HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   
-   static bool GetUnpinnedScrubbingPreference();
+    bool Commit() override;
+    ManualPageID HelpPageName() override;
+    void PopulateOrExchange(ShuttleGui& S) override;
 
- private:
-   void Populate();
+    static bool GetUnpinnedScrubbingPreference();
+
+private:
+    void Populate();
 };
 
 #endif
