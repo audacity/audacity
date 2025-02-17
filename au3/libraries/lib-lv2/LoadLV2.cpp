@@ -50,9 +50,9 @@ Functions that find and load all LV2 plugins on the system.
 // ============================================================================
 DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
-   // Create and register the importer
-   // Trust the module manager not to leak this
-   return std::make_unique<LV2EffectsModule>();
+    // Create and register the importer
+    // Trust the module manager not to leak this
+    return std::make_unique<LV2EffectsModule>();
 }
 
 // ============================================================================
@@ -81,28 +81,28 @@ LV2EffectsModule::~LV2EffectsModule()
 
 PluginPath LV2EffectsModule::GetPath() const
 {
-   return {};
+    return {};
 }
 
 ComponentInterfaceSymbol LV2EffectsModule::GetSymbol() const
 {
-   return XO("LV2 Effects");
+    return XO("LV2 Effects");
 }
 
 VendorSymbol LV2EffectsModule::GetVendor() const
 {
-   return XO("The Audacity Team");
+    return XO("The Audacity Team");
 }
 
 wxString LV2EffectsModule::GetVersion() const
 {
-   // This "may" be different if this were to be maintained as a separate DLL
-   return LV2EFFECTS_VERSION;
+    // This "may" be different if this were to be maintained as a separate DLL
+    return LV2EFFECTS_VERSION;
 }
 
 TranslatableString LV2EffectsModule::GetDescription() const
 {
-   return XO("Provides LV2 Effects support to Audacity");
+    return XO("Provides LV2 Effects support to Audacity");
 }
 
 // ============================================================================
@@ -111,237 +111,237 @@ TranslatableString LV2EffectsModule::GetDescription() const
 
 bool LV2EffectsModule::Initialize()
 {
-   if(!LV2Symbols::InitializeGWorld())
-      return false;
+    if (!LV2Symbols::InitializeGWorld()) {
+        return false;
+    }
 
-   wxGetEnv(wxT("LV2_PATH"), &mStartupPathVar);
+    wxGetEnv(wxT("LV2_PATH"), &mStartupPathVar);
 
-   if(PluginHost::IsHostProcess())
-   {
-      //Plugin validation process does not call `AutoRegisterPlugins`
-      //Register plugins from `LV2_PATH` here
-      lilv_world_load_all(LV2Symbols::gWorld);
-   }
-   return true;
+    if (PluginHost::IsHostProcess()) {
+        //Plugin validation process does not call `AutoRegisterPlugins`
+        //Register plugins from `LV2_PATH` here
+        lilv_world_load_all(LV2Symbols::gWorld);
+    }
+    return true;
 }
 
 void LV2EffectsModule::Terminate()
 {
-   LV2Symbols::FinalizeGWorld();
+    LV2Symbols::FinalizeGWorld();
 }
 
 bool LV2EffectsModule::SupportsCustomModulePaths() const
 {
-   return true;
+    return true;
 }
 
 EffectFamilySymbol LV2EffectsModule::GetOptionalFamilySymbol()
 {
 #if USE_LV2
-   return LV2EFFECTS_FAMILY;
+    return LV2EFFECTS_FAMILY;
 #else
-   return {};
+    return {};
 #endif
 }
 
-const FileExtensions &LV2EffectsModule::GetFileExtensions()
+const FileExtensions& LV2EffectsModule::GetFileExtensions()
 {
-   static FileExtensions empty;
-   return empty;
+    static FileExtensions empty;
+    return empty;
 }
 
-void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface &pluginManager)
+void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager)
 {
-   //Plugins aren't registered in PluginManager here, but
-   //instead we update `LV2_PATH` and run `lilv_world_load_all`
-   //to register bundles within LV2 module.
+    //Plugins aren't registered in PluginManager here, but
+    //instead we update `LV2_PATH` and run `lilv_world_load_all`
+    //to register bundles within LV2 module.
 
-   wxString newVar;
+    wxString newVar;
 
 #if defined(__WXMAC__)
 #define LV2PATH wxT("/Library/Audio/Plug-Ins/LV2")
 
-   wxFileName libdir;
+    wxFileName libdir;
 //   libdir.AssignDir(wxT(LIBDIR));
-   libdir.AppendDir(wxT("lv2"));
+    libdir.AppendDir(wxT("lv2"));
 
-   newVar += wxT(":$HOME/.lv2");
+    newVar += wxT(":$HOME/.lv2");
 
-   // Look in ~/Library/Audio/Plug-Ins/lv2 and /Library/Audio/Plug-Ins/lv2
-   newVar += wxT(":$HOME") LV2PATH;
-   newVar += wxT(":") LV2PATH;
-   
-   newVar += wxT(":/usr/local/lib/lv2");
-   newVar += wxT(":/usr/lib/lv2");
-   newVar += wxT(":") + libdir.GetPath();
+    // Look in ~/Library/Audio/Plug-Ins/lv2 and /Library/Audio/Plug-Ins/lv2
+    newVar += wxT(":$HOME") LV2PATH;
+    newVar += wxT(":") LV2PATH;
+
+    newVar += wxT(":/usr/local/lib/lv2");
+    newVar += wxT(":/usr/lib/lv2");
+    newVar += wxT(":") + libdir.GetPath();
 
 #elif defined(__WXMSW__)
 
-   newVar += wxT(";%APPDATA%\\LV2");
-   newVar += wxT(";%COMMONPROGRAMFILES%\\LV2");
-   newVar += wxT(";%COMMONPROGRAMFILES(x86)%\\LV2");
+    newVar += wxT(";%APPDATA%\\LV2");
+    newVar += wxT(";%COMMONPROGRAMFILES%\\LV2");
+    newVar += wxT(";%COMMONPROGRAMFILES(x86)%\\LV2");
 
 #else
 
-   wxFileName libdir;
-   libdir.AssignDir(wxT(LIBDIR));
-   libdir.AppendDir(wxT("lv2"));
+    wxFileName libdir;
+    libdir.AssignDir(wxT(LIBDIR));
+    libdir.AppendDir(wxT("lv2"));
 
-   newVar += wxT(":$HOME/.lv2");
+    newVar += wxT(":$HOME/.lv2");
 #if defined(__LP64__)
-   newVar += wxT(":/usr/local/lib64/lv2");
-   newVar += wxT(":/usr/lib64/lv2");
+    newVar += wxT(":/usr/local/lib64/lv2");
+    newVar += wxT(":/usr/lib64/lv2");
 #endif
-   newVar += wxT(":/usr/local/lib/lv2");
-   newVar += wxT(":/usr/lib/lv2");
-   newVar += wxT(":") + libdir.GetPath();
+    newVar += wxT(":/usr/local/lib/lv2");
+    newVar += wxT(":/usr/lib/lv2");
+    newVar += wxT(":") + libdir.GetPath();
 
-   // Tell SUIL where to find his GUI support modules
-   wxSetEnv(wxT("SUIL_MODULE_DIR"), wxT(PKGLIBDIR));
+    // Tell SUIL where to find his GUI support modules
+    wxSetEnv(wxT("SUIL_MODULE_DIR"), wxT(PKGLIBDIR));
 #endif
 
-   {
-      auto customPaths = pluginManager.ReadCustomPaths(*this);
-      if(!customPaths.empty())
-      {
-         wxArrayString wxarr;
-         std::copy(customPaths.begin(), customPaths.end(), std::back_inserter(wxarr));
-         newVar += wxString::Format(";%s", wxJoin(wxarr, ';'));
-      }
-   }
-   // Start with the LV2_PATH environment variable (if any)
-   wxString pathVar = mStartupPathVar;
-   if (mStartupPathVar.empty())
-      pathVar = newVar.Mid(1);
-   else
-      pathVar += newVar;
+    {
+        auto customPaths = pluginManager.ReadCustomPaths(*this);
+        if (!customPaths.empty()) {
+            wxArrayString wxarr;
+            std::copy(customPaths.begin(), customPaths.end(), std::back_inserter(wxarr));
+            newVar += wxString::Format(";%s", wxJoin(wxarr, ';'));
+        }
+    }
+    // Start with the LV2_PATH environment variable (if any)
+    wxString pathVar = mStartupPathVar;
+    if (mStartupPathVar.empty()) {
+        pathVar = newVar.Mid(1);
+    } else {
+        pathVar += newVar;
+    }
 
-   wxSetEnv(wxT("LV2_PATH"), pathVar);
-   lilv_world_load_all(LV2Symbols::gWorld);
+    wxSetEnv(wxT("LV2_PATH"), pathVar);
+    lilv_world_load_all(LV2Symbols::gWorld);
 }
 
-PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface &)
+PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface&)
 {
-   // Retrieve data about all LV2 plugins
-   const LilvPlugins *plugs = lilv_world_get_all_plugins(LV2Symbols::gWorld);
+    // Retrieve data about all LV2 plugins
+    const LilvPlugins* plugs = lilv_world_get_all_plugins(LV2Symbols::gWorld);
 
-   // Iterate over all plugins retrieve their URI
-   PluginPaths plugins;
-   LILV_FOREACH(plugins, i, plugs)
-   {
-      const LilvPlugin *plug = lilv_plugins_get(plugs, i);
-      const LilvNode *cls = lilv_plugin_class_get_uri(lilv_plugin_get_class(plug));
-      LilvNodePtr name{ lilv_plugin_get_name(plug) };
+    // Iterate over all plugins retrieve their URI
+    PluginPaths plugins;
+    LILV_FOREACH(plugins, i, plugs)
+    {
+        const LilvPlugin* plug = lilv_plugins_get(plugs, i);
+        const LilvNode* cls = lilv_plugin_class_get_uri(lilv_plugin_get_class(plug));
+        LilvNodePtr name{ lilv_plugin_get_name(plug) };
 
-      // Bypass unsupported plugin types
-      using namespace LV2Symbols;
-      if (lilv_node_equals(cls, node_InstrumentPlugin) ||
-          lilv_node_equals(cls, node_MIDIPlugin) ||
-          lilv_node_equals(cls, node_MathConstants) ||
-          lilv_node_equals(cls, node_MathFunctions))
-      {
-         wxLogInfo(wxT("LV2 plugin '%s' has unsupported type '%s'"), lilv_node_as_string(lilv_plugin_get_uri(plug)), lilv_node_as_string(cls));
-         continue;
-      }
+        // Bypass unsupported plugin types
+        using namespace LV2Symbols;
+        if (lilv_node_equals(cls, node_InstrumentPlugin)
+            || lilv_node_equals(cls, node_MIDIPlugin)
+            || lilv_node_equals(cls, node_MathConstants)
+            || lilv_node_equals(cls, node_MathFunctions)) {
+            wxLogInfo(wxT("LV2 plugin '%s' has unsupported type '%s'"), lilv_node_as_string(lilv_plugin_get_uri(plug)),
+                      lilv_node_as_string(cls));
+            continue;
+        }
 
-      // If it doesn't have a name or has no ports, then it's not valid
-      if (!name || !lilv_plugin_get_port_by_index(plug, 0))
-      {
-         wxLogInfo(wxT("LV2 plugin '%s' is invalid"), lilv_node_as_string(lilv_plugin_get_uri(plug)));
-         continue;
-      }
+        // If it doesn't have a name or has no ports, then it's not valid
+        if (!name || !lilv_plugin_get_port_by_index(plug, 0)) {
+            wxLogInfo(wxT("LV2 plugin '%s' is invalid"), lilv_node_as_string(lilv_plugin_get_uri(plug)));
+            continue;
+        }
 
-      plugins.push_back(LilvString(lilv_plugin_get_uri(plug)));
-   }
+        plugins.push_back(LilvString(lilv_plugin_get_uri(plug)));
+    }
 
-   return plugins;
+    return plugins;
 }
 
 unsigned LV2EffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, TranslatableString &errMsg,
-   const RegistrationCallback &callback)
+    const PluginPath& path, TranslatableString& errMsg,
+    const RegistrationCallback& callback)
 {
-   errMsg = {};
-   if (const auto plug = GetPlugin(path)) {
-      LV2EffectBase effect(*plug);
-      if (effect.InitializePlugin()) {
-         if (callback)
-            callback( this, &effect );
-         return 1;
-      }
-   }
+    errMsg = {};
+    if (const auto plug = GetPlugin(path)) {
+        LV2EffectBase effect(*plug);
+        if (effect.InitializePlugin()) {
+            if (callback) {
+                callback(this, &effect);
+            }
+            return 1;
+        }
+    }
 
-   errMsg = XO("Could not load the library");
-   return 0;
+    errMsg = XO("Could not load the library");
+    return 0;
 }
 
 std::unique_ptr<ComponentInterface>
-LV2EffectsModule::LoadPlugin(const PluginPath & path)
+LV2EffectsModule::LoadPlugin(const PluginPath& path)
 {
-   // Acquires a resource for the application.
-   if (const auto plug = GetPlugin(path)) {
-      auto result = Factory::Call(*plug);
-      result->InitializePlugin();
-      return result;
-   }
-   return nullptr;
+    // Acquires a resource for the application.
+    if (const auto plug = GetPlugin(path)) {
+        auto result = Factory::Call(*plug);
+        result->InitializePlugin();
+        return result;
+    }
+    return nullptr;
 }
 
-bool LV2EffectsModule::CheckPluginExist(const PluginPath & path) const
+bool LV2EffectsModule::CheckPluginExist(const PluginPath& path) const
 {
-   return GetPlugin(path) != nullptr;
+    return GetPlugin(path) != nullptr;
 }
 
 namespace {
 class LV2PluginValidator final : public PluginProvider::Validator
 {
 public:
-   void Validate(ComponentInterface& pluginInterface) override
-   {
-      if(auto lv2effect = dynamic_cast<LV2EffectBase*>(&pluginInterface))
-      {
-         LV2_Atom_Forge forge;
-         lv2_atom_forge_init(&forge, lv2effect->mFeatures.URIDMapFeature());
+    void Validate(ComponentInterface& pluginInterface) override
+    {
+        if (auto lv2effect = dynamic_cast<LV2EffectBase*>(&pluginInterface)) {
+            LV2_Atom_Forge forge;
+            lv2_atom_forge_init(&forge, lv2effect->mFeatures.URIDMapFeature());
 
-         LV2PortStates portStates { lv2effect->mPorts };
-         LV2InstanceFeaturesList instanceFeatures { lv2effect->mFeatures };
-         
-         auto settings = lv2effect->MakeSettings();
-         auto wrapper = LV2Wrapper::Create(
-            instanceFeatures,
-            lv2effect->mPorts,
-            portStates,
-            GetSettings(settings),
-            44100.0,
-            nullptr);
+            LV2PortStates portStates { lv2effect->mPorts };
+            LV2InstanceFeaturesList instanceFeatures { lv2effect->mFeatures };
 
-         if(!wrapper)
-            throw std::runtime_error("Cannot create LV2 instance");
-         
-      }
-      else
-         throw std::runtime_error("Not a LV2Effect");
-   }
+            auto settings = lv2effect->MakeSettings();
+            auto wrapper = LV2Wrapper::Create(
+                instanceFeatures,
+                lv2effect->mPorts,
+                portStates,
+                GetSettings(settings),
+                44100.0,
+                nullptr);
+
+            if (!wrapper) {
+                throw std::runtime_error("Cannot create LV2 instance");
+            }
+        } else {
+            throw std::runtime_error("Not a LV2Effect");
+        }
+    }
 };
 }
 
 std::unique_ptr<PluginProvider::Validator> LV2EffectsModule::MakeValidator() const
 {
-   return std::make_unique<LV2PluginValidator>();
+    return std::make_unique<LV2PluginValidator>();
 }
 
 // ============================================================================
 // LV2EffectsModule implementation
 // ============================================================================
 
-const LilvPlugin *LV2EffectsModule::GetPlugin(const PluginPath & path)
+const LilvPlugin* LV2EffectsModule::GetPlugin(const PluginPath& path)
 {
-   using namespace LV2Symbols;
-   if (LilvNodePtr uri{ lilv_new_uri(gWorld, path.ToUTF8()) })
-      // lilv.h says returns from the following two functions don't need freeing
-      return lilv_plugins_get_by_uri(
-         lilv_world_get_all_plugins(gWorld), uri.get());
-   return nullptr;
+    using namespace LV2Symbols;
+    if (LilvNodePtr uri{ lilv_new_uri(gWorld, path.ToUTF8()) }) {
+        // lilv.h says returns from the following two functions don't need freeing
+        return lilv_plugins_get_by_uri(
+            lilv_world_get_all_plugins(gWorld), uri.get());
+    }
+    return nullptr;
 }
 
 #endif

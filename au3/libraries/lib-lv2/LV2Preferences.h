@@ -27,7 +27,6 @@
 
 class EffectDefinitionInterface;
 
-
 namespace LV2Preferences {
 //! Maximum block size in number of samples (not bytes)
 constexpr auto DEFAULT_BLOCKSIZE = 1048576;
@@ -36,19 +35,19 @@ constexpr auto DEFAULT_BLOCKSIZE = 1048576;
  @{
  */
 LV2_API
-bool GetBufferSize(const EffectDefinitionInterface &effect, int &bufferSize);
+bool GetBufferSize(const EffectDefinitionInterface& effect, int& bufferSize);
 LV2_API
-bool SetBufferSize(const EffectDefinitionInterface &effect, int bufferSize);
+bool SetBufferSize(const EffectDefinitionInterface& effect, int bufferSize);
 
 LV2_API
-bool GetUseLatency(const EffectDefinitionInterface &effect, bool &useLatency);
+bool GetUseLatency(const EffectDefinitionInterface& effect, bool& useLatency);
 LV2_API
-bool SetUseLatency(const EffectDefinitionInterface &effect, bool useLatency);
+bool SetUseLatency(const EffectDefinitionInterface& effect, bool useLatency);
 
 LV2_API
-bool GetUseGUI(const EffectDefinitionInterface &effect, bool &useGUI);
+bool GetUseGUI(const EffectDefinitionInterface& effect, bool& useGUI);
 LV2_API
-bool SetUseGUI(const EffectDefinitionInterface &effect, bool useGUI);
+bool SetUseGUI(const EffectDefinitionInterface& effect, bool useGUI);
 /*!
  @}
 */

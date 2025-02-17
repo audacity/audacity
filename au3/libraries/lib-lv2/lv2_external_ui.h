@@ -39,28 +39,27 @@ extern "C" {
  * UI is created in invisible state.
  */
 typedef struct _LV2_External_UI_Widget {
-  /**
-   * Host calls this function regularly. UI library implementing the
-   * callback may do IPC or redraw the UI.
-   *
-   * @param _this_ the UI context
-   */
-  void (*run)(struct _LV2_External_UI_Widget * _this_);
+    /**
+     * Host calls this function regularly. UI library implementing the
+     * callback may do IPC or redraw the UI.
+     *
+     * @param _this_ the UI context
+     */
+    void (* run)(struct _LV2_External_UI_Widget* _this_);
 
-  /**
-   * Host calls this function to make the plugin UI visible.
-   *
-   * @param _this_ the UI context
-   */
-  void (*show)(struct _LV2_External_UI_Widget * _this_);
+    /**
+     * Host calls this function to make the plugin UI visible.
+     *
+     * @param _this_ the UI context
+     */
+    void (* show)(struct _LV2_External_UI_Widget* _this_);
 
-  /**
-   * Host calls this function to make the plugin UI invisible again.
-   *
-   * @param _this_ the UI context
-   */
-  void (*hide)(struct _LV2_External_UI_Widget * _this_);
-
+    /**
+     * Host calls this function to make the plugin UI invisible again.
+     *
+     * @param _this_ the UI context
+     */
+    void (* hide)(struct _LV2_External_UI_Widget* _this_);
 } LV2_External_UI_Widget;
 
 #define LV2_EXTERNAL_UI_RUN(ptr)  (ptr)->run(ptr)
@@ -72,34 +71,33 @@ typedef struct _LV2_External_UI_Widget {
  * LV2_Feature::data must be pointer to LV2_External_UI_Host.
  */
 typedef struct _LV2_External_UI_Host {
-  /**
-   * Callback that plugin UI will call when UI (GUI window) is closed by user.
-   * This callback will be called during execution of LV2_External_UI_Widget::run()
-   * (i.e. not from background thread).
-   *
-   * After this callback is called, UI is defunct. Host must call LV2UI_Descriptor::cleanup().
-   * If host wants to make the UI visible again, the UI must be reinstantiated.
-   *
-   * @note When using the deprecated URI LV2_EXTERNAL_UI_DEPRECATED_URI,
-   *       some hosts will not call LV2UI_Descriptor::cleanup() as they should,
-   *       and may call show() again without re-initialization.
-   *
-   * @param controller Host context associated with plugin UI, as
-   *                   supplied to LV2UI_Descriptor::instantiate().
-   */
-  void (*ui_closed)(LV2UI_Controller controller);
+    /**
+     * Callback that plugin UI will call when UI (GUI window) is closed by user.
+     * This callback will be called during execution of LV2_External_UI_Widget::run()
+     * (i.e. not from background thread).
+     *
+     * After this callback is called, UI is defunct. Host must call LV2UI_Descriptor::cleanup().
+     * If host wants to make the UI visible again, the UI must be reinstantiated.
+     *
+     * @note When using the deprecated URI LV2_EXTERNAL_UI_DEPRECATED_URI,
+     *       some hosts will not call LV2UI_Descriptor::cleanup() as they should,
+     *       and may call show() again without re-initialization.
+     *
+     * @param controller Host context associated with plugin UI, as
+     *                   supplied to LV2UI_Descriptor::instantiate().
+     */
+    void (* ui_closed)(LV2UI_Controller controller);
 
-  /**
-   * Optional (may be NULL) "user friendly" identifier which the UI
-   * may display to allow a user to easily associate this particular
-   * UI instance with the correct plugin instance as it is represented
-   * by the host (e.g. "track 1" or "channel 4").
-   *
-   * If supplied by host, the string will be referenced only during
-   * LV2UI_Descriptor::instantiate()
-   */
-  const char * plugin_human_id;
-
+    /**
+     * Optional (may be NULL) "user friendly" identifier which the UI
+     * may display to allow a user to easily associate this particular
+     * UI instance with the correct plugin instance as it is represented
+     * by the host (e.g. "track 1" or "channel 4").
+     *
+     * If supplied by host, the string will be referenced only during
+     * LV2UI_Descriptor::instantiate()
+     */
+    const char* plugin_human_id;
 } LV2_External_UI_Host;
 
 #ifdef __cplusplus

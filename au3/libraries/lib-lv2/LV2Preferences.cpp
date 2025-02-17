@@ -31,56 +31,56 @@ static constexpr auto UseGUIStr = L"UseGUI";
 
 namespace {
 template<typename T>
-bool GetSetting(const EffectDefinitionInterface &effect, const wchar_t *path,
-   T& var, const T &defaultValue)
+bool GetSetting(const EffectDefinitionInterface& effect, const wchar_t* path,
+                T& var, const T& defaultValue)
 {
-   return GetConfig(effect, PluginSettings::Shared, SettingsStr, path,
-      var, defaultValue);
+    return GetConfig(effect, PluginSettings::Shared, SettingsStr, path,
+                     var, defaultValue);
 }
 
 template<typename T>
-bool SetSetting(const EffectDefinitionInterface &effect, const wchar_t *path,
-   const T& value)
+bool SetSetting(const EffectDefinitionInterface& effect, const wchar_t* path,
+                const T& value)
 {
-   return SetConfig(effect, PluginSettings::Shared, SettingsStr, path,
-      value);
+    return SetConfig(effect, PluginSettings::Shared, SettingsStr, path,
+                     value);
 }
 }
 
 bool LV2Preferences::GetBufferSize(
-   const EffectDefinitionInterface &effect, int &bufferSize)
+    const EffectDefinitionInterface& effect, int& bufferSize)
 {
-   return GetSetting(effect, BufferSizeStr, bufferSize, 8192);
+    return GetSetting(effect, BufferSizeStr, bufferSize, 8192);
 }
 
 bool LV2Preferences::SetBufferSize(
-   const EffectDefinitionInterface &effect, int bufferSize)
+    const EffectDefinitionInterface& effect, int bufferSize)
 {
-   return SetSetting(effect, BufferSizeStr, bufferSize);
+    return SetSetting(effect, BufferSizeStr, bufferSize);
 }
 
 bool LV2Preferences::GetUseLatency(
-   const EffectDefinitionInterface &effect, bool &useLatency)
+    const EffectDefinitionInterface& effect, bool& useLatency)
 {
-   return GetSetting(effect, UseLatencyStr, useLatency, true);
+    return GetSetting(effect, UseLatencyStr, useLatency, true);
 }
 
 bool LV2Preferences::SetUseLatency(
-   const EffectDefinitionInterface &effect, bool useLatency)
+    const EffectDefinitionInterface& effect, bool useLatency)
 {
-   return SetSetting(effect, UseLatencyStr, useLatency);
+    return SetSetting(effect, UseLatencyStr, useLatency);
 }
 
 bool LV2Preferences::GetUseGUI(
-   const EffectDefinitionInterface &effect, bool &useGUI)
+    const EffectDefinitionInterface& effect, bool& useGUI)
 {
-   return GetSetting(effect, UseGUIStr, useGUI, true);
+    return GetSetting(effect, UseGUIStr, useGUI, true);
 }
 
 bool LV2Preferences::SetUseGUI(
-   const EffectDefinitionInterface &effect, bool useGUI)
+    const EffectDefinitionInterface& effect, bool useGUI)
 {
-   return SetSetting(effect, UseGUIStr, useGUI);
+    return SetSetting(effect, UseGUIStr, useGUI);
 }
 
 #endif
