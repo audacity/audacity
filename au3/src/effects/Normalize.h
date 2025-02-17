@@ -22,32 +22,29 @@ class wxStaticText;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectNormalize final :
-    public NormalizeBase,
-    public StatefulEffectUIServices
+class EffectNormalize final : public NormalizeBase, public StatefulEffectUIServices
 {
 public:
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 
 private:
-   void OnUpdateUI(wxCommandEvent & evt);
-   void UpdateUI();
+    void OnUpdateUI(wxCommandEvent& evt);
+    void UpdateUI();
 
-   wxWeakRef<wxWindow> mUIParent{};
+    wxWeakRef<wxWindow> mUIParent{};
 
-   wxCheckBox *mGainCheckBox;
-   wxCheckBox *mDCCheckBox;
-   wxTextCtrl *mLevelTextCtrl;
-   wxStaticText *mLeveldB;
-   wxStaticText *mWarning;
-   wxCheckBox *mStereoIndCheckBox;
-   bool mCreating;
+    wxCheckBox* mGainCheckBox;
+    wxCheckBox* mDCCheckBox;
+    wxTextCtrl* mLevelTextCtrl;
+    wxStaticText* mLeveldB;
+    wxStaticText* mWarning;
+    wxCheckBox* mStereoIndCheckBox;
+    bool mCreating;
 };
 
 #endif

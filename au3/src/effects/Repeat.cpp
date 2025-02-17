@@ -29,8 +29,7 @@
 
 #include "LoadEffects.h"
 
-namespace
-{
+namespace {
 BuiltinEffectsModule::Registration<EffectRepeat> reg;
 }
 
@@ -39,86 +38,84 @@ EVT_TEXT(wxID_ANY, EffectRepeat::OnRepeatTextChange)
 END_EVENT_TABLE()
 
 std::unique_ptr<EffectEditor> EffectRepeat::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+    ShuttleGui& S, EffectInstance&, EffectSettingsAccess&,
+    const EffectOutputs*)
 {
-   mUIParent = S.GetParent();
-   S.StartHorizontalLay(wxCENTER, false);
-   {
-      mRepeatCount = S.Validator<IntegerValidator<int>>(
+    mUIParent = S.GetParent();
+    S.StartHorizontalLay(wxCENTER, false);
+    {
+        mRepeatCount = S.Validator<IntegerValidator<int> >(
             &repeatCount, NumValidatorStyle::DEFAULT,
-            Count.min, 2147483647 / mProjectRate )
-         .AddTextBox(XXO("&Number of repeats to add:"), L"", 12);
-   }
-   S.EndHorizontalLay();
+            Count.min, 2147483647 / mProjectRate)
+                       .AddTextBox(XXO("&Number of repeats to add:"), L"", 12);
+    }
+    S.EndHorizontalLay();
 
-   S.StartMultiColumn(1, wxCENTER);
-   {
-      mCurrentTime = S.AddVariableText(
-         XO("Current selection length: dd:hh:mm:ss"));
-      mTotalTime = S.AddVariableText(XO("New selection length: dd:hh:mm:ss"));
-   }
-   S.EndMultiColumn();
-   return nullptr;
+    S.StartMultiColumn(1, wxCENTER);
+    {
+        mCurrentTime = S.AddVariableText(
+            XO("Current selection length: dd:hh:mm:ss"));
+        mTotalTime = S.AddVariableText(XO("New selection length: dd:hh:mm:ss"));
+    }
+    S.EndMultiColumn();
+    return nullptr;
 }
 
-bool EffectRepeat::TransferDataToWindow(const EffectSettings &)
+bool EffectRepeat::TransferDataToWindow(const EffectSettings&)
 {
-   mRepeatCount->ChangeValue(wxString::Format(wxT("%d"), repeatCount));
+    mRepeatCount->ChangeValue(wxString::Format(wxT("%d"), repeatCount));
 
-   DisplayNewTime();
+    DisplayNewTime();
 
-   return true;
+    return true;
 }
 
-bool EffectRepeat::TransferDataFromWindow(EffectSettings &)
+bool EffectRepeat::TransferDataFromWindow(EffectSettings&)
 {
-   if (!mUIParent->Validate())
-   {
-      return false;
-   }
+    if (!mUIParent->Validate()) {
+        return false;
+    }
 
-   long l;
+    long l;
 
-   mRepeatCount->GetValue().ToLong(&l);
+    mRepeatCount->GetValue().ToLong(&l);
 
-   repeatCount = (int) l;
+    repeatCount = (int)l;
 
-   return true;
+    return true;
 }
 
 void EffectRepeat::DisplayNewTime()
 {
-   long l;
-   wxString str;
-   mRepeatCount->GetValue().ToLong(&l);
+    long l;
+    wxString str;
+    mRepeatCount->GetValue().ToLong(&l);
 
-   NumericConverter nc(FormatterContext::SampleRateContext(mProjectRate),
-                       NumericConverterType_TIME(),
-                       GetSelectionFormat(),
-                       mT1 - mT0);
+    NumericConverter nc(FormatterContext::SampleRateContext(mProjectRate),
+                        NumericConverterType_TIME(),
+                        GetSelectionFormat(),
+                        mT1 - mT0);
 
-   str = wxString::Format( _("Current selection length: %s"), nc.GetString() );
+    str = wxString::Format(_("Current selection length: %s"), nc.GetString());
 
-   mCurrentTime->SetLabel(str);
-   mCurrentTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+    mCurrentTime->SetLabel(str);
+    mCurrentTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
-   if (l > 0) {
-      EffectEditor::EnableApply(mUIParent, true);
-      repeatCount = l;
+    if (l > 0) {
+        EffectEditor::EnableApply(mUIParent, true);
+        repeatCount = l;
 
-      nc.SetValue((mT1 - mT0) * (repeatCount + 1));
-      str = wxString::Format( _("New selection length: %s"), nc.GetString() );
-   }
-   else {
-      str = _("Warning: No repeats.");
-      EffectEditor::EnableApply(mUIParent, false);
-   }
-   mTotalTime->SetLabel(str);
-   mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
+        nc.SetValue((mT1 - mT0) * (repeatCount + 1));
+        str = wxString::Format(_("New selection length: %s"), nc.GetString());
+    } else {
+        str = _("Warning: No repeats.");
+        EffectEditor::EnableApply(mUIParent, false);
+    }
+    mTotalTime->SetLabel(str);
+    mTotalTime->SetName(str); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 }
 
-void EffectRepeat::OnRepeatTextChange(wxCommandEvent & WXUNUSED(evt))
+void EffectRepeat::OnRepeatTextChange(wxCommandEvent& WXUNUSED(evt))
 {
-   DisplayNewTime();
+    DisplayNewTime();
 }

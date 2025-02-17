@@ -19,32 +19,29 @@ class wxSlider;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectClickRemoval final :
-    public ClickRemovalBase,
-    public StatefulEffectUIServices
+class EffectClickRemoval final : public ClickRemovalBase, public StatefulEffectUIServices
 {
 public:
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
-   DECLARE_EVENT_TABLE()
-
-private:
-   void OnWidthText(wxCommandEvent & evt);
-   void OnThreshText(wxCommandEvent & evt);
-   void OnWidthSlider(wxCommandEvent & evt);
-   void OnThreshSlider(wxCommandEvent & evt);
+    DECLARE_EVENT_TABLE()
 
 private:
-   wxWeakRef<wxWindow> mUIParent{};
+    void OnWidthText(wxCommandEvent& evt);
+    void OnThreshText(wxCommandEvent& evt);
+    void OnWidthSlider(wxCommandEvent& evt);
+    void OnThreshSlider(wxCommandEvent& evt);
 
-   wxSlider* mWidthS;
-   wxSlider* mThreshS;
-   wxTextCtrl* mWidthT;
-   wxTextCtrl* mThreshT;
+private:
+    wxWeakRef<wxWindow> mUIParent{};
+
+    wxSlider* mWidthS;
+    wxSlider* mThreshS;
+    wxTextCtrl* mWidthT;
+    wxTextCtrl* mThreshT;
 };
 
 #endif

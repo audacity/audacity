@@ -26,31 +26,28 @@ class wxChoice;
 class wxTextCtrl;
 class wxCheckBox;
 
-class EffectTruncSilence final :
-    public TruncSilenceBase,
-    public StatefulEffectUIServices
+class EffectTruncSilence final : public TruncSilenceBase, public StatefulEffectUIServices
 {
 public:
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 
-   void OnControlChange(wxCommandEvent & evt);
-   void UpdateUI();
+    void OnControlChange(wxCommandEvent& evt);
+    void UpdateUI();
 
 private:
-   wxWeakRef<wxWindow> mUIParent {};
+    wxWeakRef<wxWindow> mUIParent {};
 
-   wxTextCtrl* mThresholdText;
-   wxChoice* mActionChoice;
-   wxTextCtrl* mInitialAllowedSilenceT;
-   wxTextCtrl* mTruncLongestAllowedSilenceT;
-   wxTextCtrl* mSilenceCompressPercentT;
-   wxCheckBox* mIndependent;
+    wxTextCtrl* mThresholdText;
+    wxChoice* mActionChoice;
+    wxTextCtrl* mInitialAllowedSilenceT;
+    wxTextCtrl* mTruncLongestAllowedSilenceT;
+    wxTextCtrl* mSilenceCompressPercentT;
+    wxCheckBox* mIndependent;
 };
 
 #endif

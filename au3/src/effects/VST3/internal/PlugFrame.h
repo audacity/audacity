@@ -15,24 +15,21 @@
 #include <wx/wx.h>
 #include <pluginterfaces/gui/iplugview.h>
 
-namespace internal
+namespace internal {
+//!Dispatches window resize events from VST PlugView to the wxWindow
+class PlugFrame final : public Steinberg::IPlugFrame
 {
+    wxWeakRef<wxWindow> mWindow;
+    bool mInitialized{ false };
+public:
 
-   //!Dispatches window resize events from VST PlugView to the wxWindow
-   class PlugFrame final : public Steinberg::IPlugFrame
-   {
-      wxWeakRef<wxWindow> mWindow;
-      bool mInitialized{false};
-   public:
+    PlugFrame(wxWindow* window);
+    virtual ~PlugFrame();
 
-      PlugFrame(wxWindow* window);
-      virtual ~PlugFrame();
+    void init(Steinberg::IPlugView* view, Steinberg::ViewRect* size);
 
-      void init(Steinberg::IPlugView* view, Steinberg::ViewRect* size);
+    Steinberg::tresult PLUGIN_API resizeView(Steinberg::IPlugView* view, Steinberg::ViewRect* newSize) override;
 
-      Steinberg::tresult PLUGIN_API resizeView(Steinberg::IPlugView* view, Steinberg::ViewRect* newSize) override;
-
-      DECLARE_FUNKNOWN_METHODS
-   };
-
+    DECLARE_FUNKNOWN_METHODS
+};
 }

@@ -21,17 +21,16 @@ class ShuttleGui;
 
 class EffectEcho final : public EchoBase, public StatelessEffectUIServices
 {
-   public:
+public:
 
-   struct Editor;
+    struct Editor;
 
-   // Effect implementation
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
+    // Effect implementation
+    std::unique_ptr<EffectEditor> MakeEditor(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs)
+    const override;
 
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
+    std::shared_ptr<EffectInstance> MakeInstance() const override;
 };
 
 #endif // __AUDACITY_EFFECT_ECHO__

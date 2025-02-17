@@ -19,16 +19,16 @@ class wxPaintDC;
 class ClipIndicatorPanel final : public wxPanelWrapper
 {
 public:
-   ClipIndicatorPanel(wxWindow* parent, int id);
-   void SetClipped();
-   void Reset();
+    ClipIndicatorPanel(wxWindow* parent, int id);
+    void SetClipped();
+    void Reset();
 
 protected:
-   DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE();
 
 private:
-   void OnPaint(wxPaintEvent& evt);
+    void OnPaint(wxPaintEvent& evt);
 
-   const Observer::Subscription mPlaybackStartStopSubscription;
-   bool mClipping = false;
+    const Observer::Subscription mPlaybackStartStopSubscription;
+    bool mClipping = false;
 };

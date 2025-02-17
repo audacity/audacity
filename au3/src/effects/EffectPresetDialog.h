@@ -9,27 +9,27 @@ class EffectPlugin;
 class EffectPresetsDialog final : public wxDialogWrapper
 {
 public:
-   EffectPresetsDialog(wxWindow* parent, EffectPlugin* effect);
-   virtual ~EffectPresetsDialog();
+    EffectPresetsDialog(wxWindow* parent, EffectPlugin* effect);
+    virtual ~EffectPresetsDialog();
 
-   wxString GetSelected() const;
-   void SetSelected(const wxString& parms);
-
-private:
-   void SetPrefix(const TranslatableString& type, const wxString& prefix);
-   void UpdateUI();
-
-   void OnType(wxCommandEvent& evt);
-   void OnOk(wxCommandEvent& evt);
-   void OnCancel(wxCommandEvent& evt);
+    wxString GetSelected() const;
+    void SetSelected(const wxString& parms);
 
 private:
-   wxChoice* mType;
-   wxListBox* mPresets;
+    void SetPrefix(const TranslatableString& type, const wxString& prefix);
+    void UpdateUI();
 
-   RegistryPaths mFactoryPresets;
-   RegistryPaths mUserPresets;
-   wxString mSelection;
+    void OnType(wxCommandEvent& evt);
+    void OnOk(wxCommandEvent& evt);
+    void OnCancel(wxCommandEvent& evt);
 
-   DECLARE_EVENT_TABLE()
+private:
+    wxChoice* mType;
+    wxListBox* mPresets;
+
+    RegistryPaths mFactoryPresets;
+    RegistryPaths mUserPresets;
+    wxString mSelection;
+
+    DECLARE_EVENT_TABLE()
 };

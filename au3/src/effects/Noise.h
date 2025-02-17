@@ -23,15 +23,14 @@ class ShuttleGui;
 class EffectNoise : public NoiseBase, public StatefulEffectUIServices
 {
 public:
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
 private:
-   NumericTextCtrl* mNoiseDurationT;
-   wxWeakRef<wxWindow> mUIParent {};
+    NumericTextCtrl* mNoiseDurationT;
+    wxWeakRef<wxWindow> mUIParent {};
 };
 
 #endif

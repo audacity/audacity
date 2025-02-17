@@ -27,36 +27,35 @@ class ShuttleGui;
 class EffectAmplify : public AmplifyBase, public StatefulEffectUIServices
 {
 public:
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
+    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
+    ManualPageID ManualPage() const override;
 
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
-DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 
-   void OnAmpText(wxCommandEvent& evt);
-   void OnPeakText(wxCommandEvent & evt);
-   void OnAmpSlider(wxCommandEvent & evt);
-   void OnClipCheckBox(wxCommandEvent & evt);
+    void OnAmpText(wxCommandEvent& evt);
+    void OnPeakText(wxCommandEvent& evt);
+    void OnAmpSlider(wxCommandEvent& evt);
+    void OnClipCheckBox(wxCommandEvent& evt);
 
-   void CheckClip();
+    void CheckClip();
 
 private:
-   wxWeakRef<wxWindow> mUIParent {};
+    wxWeakRef<wxWindow> mUIParent {};
 
-   wxSlider *mAmpS;
-   wxTextCtrl *mAmpT;
-   wxTextCtrl *mNewPeakT;
-   wxCheckBox *mClip;
+    wxSlider* mAmpS;
+    wxTextCtrl* mAmpT;
+    wxTextCtrl* mNewPeakT;
+    wxCheckBox* mClip;
 };
 
 #endif // __AUDACITY_EFFECT_AMPLIFY__

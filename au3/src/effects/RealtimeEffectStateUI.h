@@ -25,45 +25,44 @@ class EffectInstance;
 class AudacityProject;
 
 //! UI state for realtime effect
-class RealtimeEffectStateUI final
-   : public wxEvtHandler // Must be the first base class!
-   , public ClientData::Base
+class RealtimeEffectStateUI final : public wxEvtHandler, // Must be the first base class!
+    public ClientData::Base
 {
 public:
-   explicit RealtimeEffectStateUI(RealtimeEffectState& state);
-   ~RealtimeEffectStateUI() override;
+    explicit RealtimeEffectStateUI(RealtimeEffectState& state);
+    ~RealtimeEffectStateUI() override;
 
-   [[nodiscard]] bool IsShown() const noexcept;
+    [[nodiscard]] bool IsShown() const noexcept;
 
-   void Show(AudacityProject& project);
-   // Pass non-null to cause autosave
-   void Hide(AudacityProject* project = nullptr);
-   void Toggle(AudacityProject& project);
+    void Show(AudacityProject& project);
+    // Pass non-null to cause autosave
+    void Hide(AudacityProject* project = nullptr);
+    void Toggle(AudacityProject& project);
 
-   //! Sets the display name of the target, that will help
-   //! distinguish effect UI among others.
-   void SetTargetName(const wxString& name);
+    //! Sets the display name of the target, that will help
+    //! distinguish effect UI among others.
+    void SetTargetName(const wxString& name);
 
-   static RealtimeEffectStateUI &Get(RealtimeEffectState &state);
-   static const RealtimeEffectStateUI &Get(const RealtimeEffectState &state);
+    static RealtimeEffectStateUI& Get(RealtimeEffectState& state);
+    static const RealtimeEffectStateUI& Get(const RealtimeEffectState& state);
 
-   // Cause immediate or delayed autosave at a time when transport is stopped
-   void AutoSave(AudacityProject &project);
+    // Cause immediate or delayed autosave at a time when transport is stopped
+    void AutoSave(AudacityProject& project);
 
 private:
-   void UpdateTitle();
-   
-   RealtimeEffectState& mRealtimeEffectState;
+    void UpdateTitle();
 
-   wxWeakRef<EffectUIHost> mEffectUIHost;
+    RealtimeEffectState& mRealtimeEffectState;
 
-   TranslatableString mEffectName;
-   wxString mTargetName;
-   AudacityProject *mpProject{};
+    wxWeakRef<EffectUIHost> mEffectUIHost;
 
-   Observer::Subscription mProjectWindowDestroyedSubscription;
-   Observer::Subscription mParameterChangedSubscription;
+    TranslatableString mEffectName;
+    wxString mTargetName;
+    AudacityProject* mpProject{};
 
-   void OnClose(wxCloseEvent & evt);
-   DECLARE_EVENT_TABLE()
+    Observer::Subscription mProjectWindowDestroyedSubscription;
+    Observer::Subscription mParameterChangedSubscription;
+
+    void OnClose(wxCloseEvent& evt);
+    DECLARE_EVENT_TABLE()
 }; // class RealtimeEffectStateUI

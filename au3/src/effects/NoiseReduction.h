@@ -16,19 +16,15 @@
 #include "NoiseReductionBase.h"
 #include "StatefulEffectUIServices.h"
 
-class EffectNoiseReduction final :
-    public NoiseReductionBase,
-    public StatefulEffectUIServices
+class EffectNoiseReduction final : public NoiseReductionBase, public StatefulEffectUIServices
 {
 public:
-   int ShowHostInterface(EffectBase &plugin, wxWindow &parent,
-      const EffectDialogFactory &factory,
-      std::shared_ptr<EffectInstance> &pInstance, EffectSettingsAccess &access,
-      bool forceModal = false) override;
+    int ShowHostInterface(EffectBase& plugin, wxWindow& parent, const EffectDialogFactory& factory,
+                          std::shared_ptr<EffectInstance>& pInstance, EffectSettingsAccess& access, bool forceModal = false) override;
 
-   class Dialog;
+    class Dialog;
 private:
-   friend class Dialog;
+    friend class Dialog;
 };
 
 #endif

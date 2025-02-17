@@ -24,14 +24,13 @@ class ShuttleGui;
 class EffectPhaser : public PhaserBase, public StatelessEffectUIServices
 {
 public:
-   // Effect implementation
+    // Effect implementation
 
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs)
-   const override;
+    std::unique_ptr<EffectEditor> MakeEditor(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs)
+    const override;
 
-   struct Editor;
+    struct Editor;
 };
 
 #endif

@@ -26,42 +26,40 @@ class NumericTextCtrl;
 class ContrastDialog final : public ContrastBase, public wxDialogWrapper
 {
 public:
-   // constructors and destructors
-   ContrastDialog(wxWindow * parent, wxWindowID id,
-              const TranslatableString & title, const wxPoint & pos);
+    // constructors and destructors
+    ContrastDialog(wxWindow* parent, wxWindowID id, const TranslatableString& title, const wxPoint& pos);
 
-   wxButton * m_pButton_UseCurrentF;
-   wxButton * m_pButton_UseCurrentB;
-   wxButton * m_pButton_GetURL;
-   wxButton * m_pButton_Export;
-   wxButton * m_pButton_Reset;
-   wxButton * m_pButton_Close;
+    wxButton* m_pButton_UseCurrentF;
+    wxButton* m_pButton_UseCurrentB;
+    wxButton* m_pButton_GetURL;
+    wxButton* m_pButton_Export;
+    wxButton* m_pButton_Reset;
+    wxButton* m_pButton_Close;
 
-   NumericTextCtrl *mForegroundStartT;
-   NumericTextCtrl *mForegroundEndT;
-   NumericTextCtrl *mBackgroundStartT;
-   NumericTextCtrl *mBackgroundEndT;
+    NumericTextCtrl* mForegroundStartT;
+    NumericTextCtrl* mForegroundEndT;
+    NumericTextCtrl* mBackgroundStartT;
+    NumericTextCtrl* mBackgroundEndT;
 
 private:
-   // handlers
-   void OnChar(wxKeyEvent &event);
-   void OnGetURL(wxCommandEvent &event);
-   void OnExport(wxCommandEvent &event);
-   void OnGetForeground(wxCommandEvent & event);
-   void OnGetBackground(wxCommandEvent & event);
-   void results();
-   void OnReset(wxCommandEvent & event);
-   void OnClose(wxCommandEvent & event);
+    // handlers
+    void OnChar(wxKeyEvent& event);
+    void OnGetURL(wxCommandEvent& event);
+    void OnExport(wxCommandEvent& event);
+    void OnGetForeground(wxCommandEvent& event);
+    void OnGetBackground(wxCommandEvent& event);
+    void results();
+    void OnReset(wxCommandEvent& event);
+    void OnClose(wxCommandEvent& event);
 
-   wxTextCtrl *mForegroundRMSText;
-   wxTextCtrl *mBackgroundRMSText;
-   wxTextCtrl *mPassFailText;
-   wxTextCtrl *mDiffText;
+    wxTextCtrl* mForegroundRMSText;
+    wxTextCtrl* mBackgroundRMSText;
+    wxTextCtrl* mPassFailText;
+    wxTextCtrl* mDiffText;
 
-   AudacityProject& GetProject() override;
+    AudacityProject& GetProject() override;
 
-   DECLARE_EVENT_TABLE()
-
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

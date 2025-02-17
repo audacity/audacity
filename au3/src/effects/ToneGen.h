@@ -26,54 +26,54 @@ class ShuttleGui;
 class EffectToneGen : public ToneGenBase, public StatefulEffectUIServices
 {
 public:
-   EffectToneGen(bool isChirp)
-       : ToneGenBase { isChirp }
-   {
-   }
+    EffectToneGen(bool isChirp)
+        : ToneGenBase{isChirp}
+    {
+    }
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
+    ManualPageID ManualPage() const override;
 
-   // Effect implementation
+    // Effect implementation
 
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
 protected:
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 
 private:
-   // ToneGenBase implementation
+    // ToneGenBase implementation
 
-   void OnControlUpdate(wxCommandEvent & evt);
+    void OnControlUpdate(wxCommandEvent& evt);
 
-   wxWeakRef<wxWindow> mUIParent{};
-   NumericTextCtrl *mToneDurationT;
+    wxWeakRef<wxWindow> mUIParent{};
+    NumericTextCtrl* mToneDurationT;
 };
 
 class EffectChirp final : public EffectToneGen
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   EffectChirp() : EffectToneGen{ true } {}
-   ~EffectChirp() override = default;
+    EffectChirp()
+        : EffectToneGen{true} {}
+    ~EffectChirp() override = default;
 };
-
 
 class EffectTone final : public EffectToneGen
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   EffectTone() : EffectToneGen{ false } {}
-   ~EffectTone() override = default;
+    EffectTone()
+        : EffectToneGen{false} {}
+    ~EffectTone() override = default;
 };
 
 #endif

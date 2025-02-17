@@ -16,22 +16,18 @@
 
 class ShuttleGui;
 
-class EffectPaulstretch final :
-    public PaulstretchBase,
-    public StatefulEffectUIServices
+class EffectPaulstretch final : public PaulstretchBase, public StatefulEffectUIServices
 {
 public:
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 private:
-   wxWeakRef<wxWindow> mUIParent;
-   void OnText(wxCommandEvent & evt);
+    wxWeakRef<wxWindow> mUIParent;
+    void OnText(wxCommandEvent& evt);
 };
 
 #endif
-

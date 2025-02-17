@@ -15,39 +15,37 @@
 
 class ShuttleGui;
 
-class EffectLimiter final :
-    public EffectWithSettings<LimiterSettings, StatelessPerTrackEffect>
+class EffectLimiter final : public EffectWithSettings<LimiterSettings, StatelessPerTrackEffect>
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   EffectLimiter();
+    EffectLimiter();
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
+    ManualPageID ManualPage() const override;
 
-   // EffectDefinitionInterface implementation
+    // EffectDefinitionInterface implementation
 
-   EffectType GetType() const override;
-   RealtimeSince RealtimeSupport() const override;
-   RegistryPaths GetFactoryPresets() const override;
-   OptionalMessage
-   LoadFactoryPreset(int id, EffectSettings& settings) const override;
+    EffectType GetType() const override;
+    RealtimeSince RealtimeSupport() const override;
+    RegistryPaths GetFactoryPresets() const override;
+    OptionalMessage
+    LoadFactoryPreset(int id, EffectSettings& settings) const override;
 
-   // Effect implementation
+    // Effect implementation
 
-   std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) const override;
+    std::unique_ptr<EffectEditor> MakeEditor(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) const override;
 
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
+    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
-   std::unique_ptr<EffectOutputs> MakeOutputs() const override;
+    std::unique_ptr<EffectOutputs> MakeOutputs() const override;
 
-   bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
+    bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
 
-   const EffectParameterMethods& Parameters() const override;
+    const EffectParameterMethods& Parameters() const override;
 };

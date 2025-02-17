@@ -25,62 +25,62 @@
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
 
-namespace{ BuiltinEffectsModule::Registration< EffectNoise > reg; }
+namespace {
+BuiltinEffectsModule::Registration< EffectNoise > reg;
+}
 
 std::unique_ptr<EffectEditor> EffectNoise::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *)
+    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
+    const EffectOutputs*)
 {
-   mUIParent = S.GetParent();
+    mUIParent = S.GetParent();
 
-   wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
+    wxASSERT(nTypes == WXSIZEOF(kTypeStrings));
 
-   S.StartMultiColumn(2, wxCENTER);
-   {
-      S.Validator<wxGenericValidator>(&mType)
-         .AddChoice(XXO("&Noise type:"), Msgids(kTypeStrings, nTypes));
+    S.StartMultiColumn(2, wxCENTER);
+    {
+        S.Validator<wxGenericValidator>(&mType)
+        .AddChoice(XXO("&Noise type:"), Msgids(kTypeStrings, nTypes));
 
-      S
-         .Validator<FloatingPointValidator<double>>(
-            6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, Amp.min, Amp.max )
-         .AddTextBox(XXO("&Amplitude (0-1):"), L"", 12);
+        S
+        .Validator<FloatingPointValidator<double> >(
+            6, &mAmp, NumValidatorStyle::NO_TRAILING_ZEROES, Amp.min, Amp.max)
+        .AddTextBox(XXO("&Amplitude (0-1):"), L"", 12);
 
-      S.AddPrompt(XXO("&Duration:"));
-      auto &extra = access.Get().extra;
-      mNoiseDurationT = safenew
-         NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
-                         S.GetParent(), wxID_ANY,
-                         NumericConverterType_TIME(),
-                         extra.GetDurationFormat(),
-                         extra.GetDuration(),
-                         NumericTextCtrl::Options{}
-                            .AutoPos(true));
-      S.Name(XO("Duration"))
-         .Position(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL)
-         .AddWindow(mNoiseDurationT);
-   }
-   S.EndMultiColumn();
-   return nullptr;
+        S.AddPrompt(XXO("&Duration:"));
+        auto& extra = access.Get().extra;
+        mNoiseDurationT = safenew
+                              NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                                              S.GetParent(), wxID_ANY,
+                                              NumericConverterType_TIME(),
+                                              extra.GetDurationFormat(),
+                                              extra.GetDuration(),
+                                              NumericTextCtrl::Options{}
+                                              .AutoPos(true));
+        S.Name(XO("Duration"))
+        .Position(wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL | wxALL)
+        .AddWindow(mNoiseDurationT);
+    }
+    S.EndMultiColumn();
+    return nullptr;
 }
 
-bool EffectNoise::TransferDataToWindow(const EffectSettings &settings)
+bool EffectNoise::TransferDataToWindow(const EffectSettings& settings)
 {
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
+    if (!mUIParent->TransferDataToWindow()) {
+        return false;
+    }
 
-   mNoiseDurationT->SetValue(settings.extra.GetDuration());
-   return true;
+    mNoiseDurationT->SetValue(settings.extra.GetDuration());
+    return true;
 }
 
-bool EffectNoise::TransferDataFromWindow(EffectSettings &settings)
+bool EffectNoise::TransferDataFromWindow(EffectSettings& settings)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
+    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow()) {
+        return false;
+    }
 
-   settings.extra.SetDuration(mNoiseDurationT->GetValue());
-   return true;
+    settings.extra.SetDuration(mNoiseDurationT->GetValue());
+    return true;
 }

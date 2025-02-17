@@ -8,8 +8,6 @@
 
 **********************************************************************/
 
-
-
 #if defined(USE_VAMP)
 
 #include <memory>
@@ -29,44 +27,41 @@
 class VampEffectsModule final : public PluginProvider
 {
 public:
-   VampEffectsModule();
-   virtual ~VampEffectsModule();
+    VampEffectsModule();
+    virtual ~VampEffectsModule();
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
+    PluginPath GetPath() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    VendorSymbol GetVendor() const override;
+    wxString GetVersion() const override;
+    TranslatableString GetDescription() const override;
 
-   // PluginProvider implementation
+    // PluginProvider implementation
 
-   bool Initialize() override;
-   void Terminate() override;
-   EffectFamilySymbol GetOptionalFamilySymbol() override;
+    bool Initialize() override;
+    void Terminate() override;
+    EffectFamilySymbol GetOptionalFamilySymbol() override;
 
-   const FileExtensions &GetFileExtensions() override;
-   FilePath InstallPath() override { return {}; }
+    const FileExtensions& GetFileExtensions() override;
+    FilePath InstallPath() override { return {}; }
 
-   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
-   unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, TranslatableString &errMsg,
-      const RegistrationCallback &callback)
-         override;
-   
-   bool CheckPluginExist(const PluginPath& path) const override;
+    void AutoRegisterPlugins(PluginManagerInterface& pm) override;
+    PluginPaths FindModulePaths(PluginManagerInterface& pm) override;
+    unsigned DiscoverPluginsAtPath(
+        const PluginPath& path, TranslatableString& errMsg, const RegistrationCallback& callback)
+    override;
 
-   std::unique_ptr<ComponentInterface>
-      LoadPlugin(const PluginPath & path) override;
+    bool CheckPluginExist(const PluginPath& path) const override;
+
+    std::unique_ptr<ComponentInterface>
+    LoadPlugin(const PluginPath& path) override;
 
 private:
-   // VampEffectModule implementation
+    // VampEffectModule implementation
 
-   std::unique_ptr<Vamp::Plugin> FindPlugin(const PluginPath & wpath,
-                            int & output,
-                            bool & hasParameters);
+    std::unique_ptr<Vamp::Plugin> FindPlugin(const PluginPath& wpath, int& output, bool& hasParameters);
 };
 
 #endif
