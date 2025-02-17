@@ -12,7 +12,7 @@
 #define __AUDACITY_LOAD_THEME_RESOURCES__
 
 namespace ThemeResources {
-   THEME_RESOURCES_API void Load();
+THEME_RESOURCES_API void Load();
 }
 
 #endif

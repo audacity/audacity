@@ -29,8 +29,6 @@
 #ifndef __AUDACITY_TAGS__
 #define __AUDACITY_TAGS__
 
-
-
 #include "XMLTagHandler.h"
 
 #include "ClientData.h"
@@ -65,74 +63,70 @@ using TagMap = std::unordered_map< wxString, wxString >;
 #define TAG_SOFTWARE    wxT("Software")
 #define TAG_COPYRIGHT   wxT("Copyright")
 
-class TAGS_API Tags final
-   : public XMLTagHandler
-   , public std::enable_shared_from_this< Tags >
-   , public ClientData::Base
-   , public UndoStateExtension
+class TAGS_API Tags final : public XMLTagHandler, public std::enable_shared_from_this< Tags >, public ClientData::Base,
+    public UndoStateExtension
 {
+public:
 
- public:
+    static Tags& Get(AudacityProject& project);
+    static const Tags& Get(const AudacityProject& project);
+    // Returns reference to *tags
+    static Tags& Set(
+        AudacityProject& project, const std::shared_ptr<Tags>& tags);
 
-   static Tags &Get( AudacityProject &project );
-   static const Tags &Get( const AudacityProject &project );
-   // Returns reference to *tags
-   static Tags &Set(
-      AudacityProject &project, const std::shared_ptr<Tags> &tags );
+    Tags(); // constructor
+    Tags(const Tags&) = default;
+    //Tags( Tags && ) = default;
+    virtual ~Tags();
 
-   Tags();  // constructor
-   Tags( const Tags& ) = default;
-   //Tags( Tags && ) = default;
-   virtual ~Tags();
+    std::shared_ptr<Tags> Duplicate() const;
 
-   std::shared_ptr<Tags> Duplicate() const;
+    void Merge(const Tags& other);
 
-   void Merge( const Tags &other );
+    Tags& operator=(const Tags& src);
 
-   Tags & operator= (const Tags & src );
+    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
+    XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
+    void WriteXML(XMLWriter& xmlFile) const /* not override */;
 
-   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
-   void WriteXML(XMLWriter &xmlFile) const /* not override */;
+    void LoadDefaultGenres();
+    void LoadGenres();
 
-   void LoadDefaultGenres();
-   void LoadGenres();
+    void LoadDefaults();
 
-   void LoadDefaults();
+    int GetNumUserGenres();
+    wxString GetUserGenre(int value);
 
-   int GetNumUserGenres();
-   wxString GetUserGenre(int value);
+    wxString GetGenre(int value);
+    int GetGenre(const wxString& name);
 
-   wxString GetGenre(int value);
-   int GetGenre(const wxString & name);
+    bool HasTag(const wxString& name) const;
+    wxString GetTag(const wxString& name) const;
 
-   bool HasTag(const wxString & name) const;
-   wxString GetTag(const wxString & name) const;
+    using Iterators = IteratorRange<TagMap::const_iterator>;
+    Iterators GetRange() const;
 
-   using Iterators = IteratorRange<TagMap::const_iterator>;
-   Iterators GetRange() const;
+    void SetTag(const wxString& name, const wxString& value, const bool bSpecialTag=false);
+    void SetTag(const wxString& name, const int& value);
 
-   void SetTag(const wxString & name, const wxString & value, const bool bSpecialTag=false);
-   void SetTag(const wxString & name, const int & value);
+    bool IsEmpty();
+    void Clear();
 
-   bool IsEmpty();
-   void Clear();
+    size_t Count() const;
 
-   size_t Count() const;
+    // UndoStateExtension implementation
+    void RestoreUndoRedoState(AudacityProject&) override;
 
-   // UndoStateExtension implementation
-   void RestoreUndoRedoState(AudacityProject &) override;
+    friend TAGS_API bool operator ==(const Tags& lhs, const Tags& rhs);
 
-   friend TAGS_API bool operator == (const Tags &lhs, const Tags &rhs);
+private:
+    TagMap mXref;
+    TagMap mMap;
 
- private:
-   TagMap mXref;
-   TagMap mMap;
-
-   wxArrayString mGenres;
+    wxArrayString mGenres;
 };
 
-inline bool operator != (const Tags &lhs, const Tags &rhs)
+inline bool operator !=(const Tags& lhs, const Tags& rhs)
 { return !(lhs == rhs); }
 
 #endif

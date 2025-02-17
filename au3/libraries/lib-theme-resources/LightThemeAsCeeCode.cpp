@@ -1,11 +1,11 @@
 /*!********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file LightThemeAsCeeCode.cpp
- 
+
  Paul Licameli split from Theme.cpp
- 
+
  **********************************************************************/
 
 #include <vector>
@@ -17,6 +17,6 @@ static const std::vector<unsigned char> ImageCacheAsData {
 };
 
 static ThemeBase::RegisteredTheme theme{
-   /* i18n-hint: Light meaning opposite of dark */
-   { "light", XO("Light") }, PreferredSystemAppearance::Light, ImageCacheAsData
+    /* i18n-hint: Light meaning opposite of dark */
+    { "light", XO("Light") }, PreferredSystemAppearance::Light, ImageCacheAsData
 };

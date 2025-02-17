@@ -13,20 +13,20 @@ Paul Licameli split from CommonTrackPanelCell.cpp
 
 TrackAttachment::~TrackAttachment() = default;
 
-void TrackAttachment::CopyTo( Track& ) const
+void TrackAttachment::CopyTo(Track&) const
 {
 }
 
-void TrackAttachment::Reparent( const std::shared_ptr<Track> & )
+void TrackAttachment::Reparent(const std::shared_ptr<Track>&)
 {
 }
 
-void TrackAttachment::WriteXMLAttributes( XMLWriter & ) const
+void TrackAttachment::WriteXMLAttributes(XMLWriter&) const
 {
 }
 
 bool TrackAttachment::HandleXMLAttribute(
-   const std::string_view&, const XMLAttributeValueView& )
+    const std::string_view&, const XMLAttributeValueView&)
 {
-   return false;
+    return false;
 }

@@ -17,13 +17,13 @@
 class DummyFormantShifterLogger : public FormantShifterLoggerInterface
 {
 public:
-   ~DummyFormantShifterLogger() override;
-   void NewSamplesComing(int sampleCount) override;
-   void Log(int value, const char* name) const override;
-   void Log(const float* samples, size_t size, const char* name) const override;
-   void Log(
-      const std::complex<float>* samples, size_t size, const char* name,
-      const std::function<float(const std::complex<float>&)>& transform)
-      const override;
-   void ProcessFinished(std::complex<float>* spectrum, size_t fftSize) override;
+    ~DummyFormantShifterLogger() override;
+    void NewSamplesComing(int sampleCount) override;
+    void Log(int value, const char* name) const override;
+    void Log(const float* samples, size_t size, const char* name) const override;
+    void Log(
+        const std::complex<float>* samples, size_t size, const char* name,
+        const std::function<float(const std::complex<float>&)>& transform)
+    const override;
+    void ProcessFinished(std::complex<float>* spectrum, size_t fftSize) override;
 };

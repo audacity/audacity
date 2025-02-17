@@ -13,8 +13,7 @@
 #include <optional>
 #include <string>
 
-namespace TimeAndPitchExperimentalSettings
-{
+namespace TimeAndPitchExperimentalSettings {
 std::string GetLogDir();
 std::optional<int> GetLogSample(int sampleRate);
 std::optional<double> GetCutoffQuefrencyOverride();
