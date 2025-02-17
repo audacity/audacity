@@ -3,7 +3,7 @@ SoX Resampler Library       Copyright (c) 2007-16 robs@users.sourceforge.net
 INSTALLATION GUIDE CONTENTS
 
 * Standard build
-* Build customisation
+* Build customization
 * Cross-compilation
 * Integration with other build systems
 * Run-time configuration
@@ -59,9 +59,9 @@ STANDARD BUILD
 
 
 
-BUILD CUSTOMISATION
+BUILD CUSTOMIZATION
 
-If it is necessary to customise the build, then steps 2 and 3 above should be
+If it is necessary to customize the build, then steps 2 and 3 above should be
 substituted as follows: change directory to the one containing this file, then
 enter commands along the lines:
 
