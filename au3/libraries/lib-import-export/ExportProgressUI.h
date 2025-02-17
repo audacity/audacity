@@ -21,34 +21,32 @@
 class ExportProcessorDelegate;
 class Exporter;
 
-namespace ExportProgressUI
-{
+namespace ExportProgressUI {
 IMPORT_EXPORT_API ExportResult Show(ExportTask exportTask);
 
-template <typename Callable>
+template<typename Callable>
 void ExceptionWrappedCall(Callable callable)
 {
-   try
-   {
-      callable();
-   }
-   catch (ExportDiskFullError& e)
-   {
-      ShowDiskFullExportErrorDialog(e.GetFileName());
-   }
-   catch (ExportErrorException& e)
-   {
-      ShowExportErrorDialog(
-         e.GetMessage(), XO("Warning"), e.GetHelpPageId(), true);
-   }
-   catch (ExportException& e)
-   {
-      BasicUI::ShowMessageBox(TranslatableString { e.What(), {} });
-   }
-   catch (...)
-   {
-      BasicUI::ShowMessageBox(XO("Export error"));
-   }
+    try
+    {
+        callable();
+    }
+    catch (ExportDiskFullError& e)
+    {
+        ShowDiskFullExportErrorDialog(e.GetFileName());
+    }
+    catch (ExportErrorException& e)
+    {
+        ShowExportErrorDialog(
+            e.GetMessage(), XO("Warning"), e.GetHelpPageId(), true);
+    }
+    catch (ExportException& e)
+    {
+        BasicUI::ShowMessageBox(TranslatableString { e.What(), {} });
+    }
+    catch (...)
+    {
+        BasicUI::ShowMessageBox(XO("Export error"));
+    }
 }
-
 } // namespace ExportProgressUI

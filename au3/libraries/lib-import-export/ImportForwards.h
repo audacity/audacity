@@ -15,9 +15,9 @@
 class ImportPlugin;
 class UnusableImportPlugin;
 
-using ImportPluginList =
-   std::vector< ImportPlugin * >;
-using UnusableImportPluginList =
-   std::vector< std::unique_ptr<UnusableImportPlugin> >;
+using ImportPluginList
+    =std::vector< ImportPlugin* >;
+using UnusableImportPluginList
+    =std::vector< std::unique_ptr<UnusableImportPlugin> >;
 
 #endif

@@ -104,7 +104,7 @@ protected:
 };
 
 class WaveTrack;
-using TrackHolders = std::vector<std::shared_ptr<Track>>;
+using TrackHolders = std::vector<std::shared_ptr<Track> >;
 
 class IMPORT_EXPORT_API ImportFileHandle /* not final */
 {
