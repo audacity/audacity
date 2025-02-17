@@ -11,5 +11,5 @@
 #include "MockSampleBlockFactory.h"
 
 static SampleBlockFactory::Factory::Scope scope { [](AudacityProject&) {
-   return std::make_shared<MockSampleBlockFactory>();
-} };
+        return std::make_shared<MockSampleBlockFactory>();
+    } };

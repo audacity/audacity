@@ -14,23 +14,21 @@
 
 #include "Request.h"
 
-namespace audacity
-{
-namespace sentry
-{
+namespace audacity {
+namespace sentry {
 // This is a private class, so it is not exported
 //! A helper, that creates a correct Request to Sentry
 class SentryRequestBuilder final
 {
 public:
-   static const SentryRequestBuilder& Get();
+    static const SentryRequestBuilder& Get();
 
-   network_manager::Request CreateRequest() const;
+    network_manager::Request CreateRequest() const;
 
 private:
-   SentryRequestBuilder();
+    SentryRequestBuilder();
 
-   std::string mUrl;
+    std::string mUrl;
 };
 } // namespace sentry
 } // namespace audacity

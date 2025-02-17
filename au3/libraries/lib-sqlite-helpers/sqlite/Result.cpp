@@ -4,7 +4,5 @@
  * SPDX-FileContributor: Dmitry Vedenko
  */
 
-namespace audacity::sqlite
-{
-
+namespace audacity::sqlite {
 } // namespace audacity::sqlite

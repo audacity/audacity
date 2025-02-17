@@ -18,35 +18,33 @@ class AudacityProject;
 
 struct SnapChangedMessage final
 {
-   SnapMode   newSnapMode { SnapMode::SNAP_OFF };
-   Identifier newSnapTo { "seconds" };
+    SnapMode newSnapMode { SnapMode::SNAP_OFF };
+    Identifier newSnapTo { "seconds" };
 };
 
 //! Project snapping settings
-class SNAPPING_API ProjectSnap final :
-    public ClientData::Base,
-    public Observer::Publisher<SnapChangedMessage>
+class SNAPPING_API ProjectSnap final : public ClientData::Base, public Observer::Publisher<SnapChangedMessage>
 {
 public:
-   static ProjectSnap& Get(AudacityProject& project);
-   static const ProjectSnap& Get(const AudacityProject& project);
+    static ProjectSnap& Get(AudacityProject& project);
+    static const ProjectSnap& Get(const AudacityProject& project);
 
-   explicit ProjectSnap(const AudacityProject& project);
-   ProjectSnap(const ProjectSnap&) = delete;
-   ProjectSnap& operator=(const ProjectSnap&) = delete;
+    explicit ProjectSnap(const AudacityProject& project);
+    ProjectSnap(const ProjectSnap&) = delete;
+    ProjectSnap& operator=(const ProjectSnap&) = delete;
 
-   void SetSnapMode(SnapMode mode);
-   SnapMode GetSnapMode() const;
+    void SetSnapMode(SnapMode mode);
+    SnapMode GetSnapMode() const;
 
-   void SetSnapTo(Identifier snap);
-   Identifier GetSnapTo() const;
+    void SetSnapTo(Identifier snap);
+    Identifier GetSnapTo() const;
 
-   SnapResult SnapTime(double time) const;
-   SnapResult SingleStep(double time, bool upwards) const;
+    SnapResult SnapTime(double time) const;
+    SnapResult SingleStep(double time, bool upwards) const;
 
 private:
-   const AudacityProject& mProject;
-   
-   SnapMode mSnapMode { ReadSnapMode() };
-   Identifier mSnapTo { ReadSnapTo() };
+    const AudacityProject& mProject;
+
+    SnapMode mSnapMode { ReadSnapMode() };
+    Identifier mSnapTo { ReadSnapTo() };
 };

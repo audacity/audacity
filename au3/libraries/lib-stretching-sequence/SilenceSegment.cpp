@@ -14,31 +14,30 @@
 #include <cassert>
 
 SilenceSegment::SilenceSegment(size_t numChannels, sampleCount numSamples)
-    : mNumChannels { numChannels }
-    , mNumRemainingSamples { numSamples }
+    : mNumChannels{numChannels}
+    , mNumRemainingSamples{numSamples}
 {
 }
 
 size_t
-SilenceSegment::GetFloats(float *const *buffers, size_t numSamples)
+SilenceSegment::GetFloats(float* const* buffers, size_t numSamples)
 {
-   const size_t numSamplesToProduce =
-      std::min<long long>(mNumRemainingSamples.as_long_long(), numSamples);
-   for (auto i = 0u; i < mNumChannels; ++i)
-   {
-      auto buffer = buffers[i];
-      std::fill(buffer, buffer + numSamplesToProduce, 0.f);
-   }
-   mNumRemainingSamples -= numSamplesToProduce;
-   return numSamplesToProduce;
+    const size_t numSamplesToProduce
+        =std::min<long long>(mNumRemainingSamples.as_long_long(), numSamples);
+    for (auto i = 0u; i < mNumChannels; ++i) {
+        auto buffer = buffers[i];
+        std::fill(buffer, buffer + numSamplesToProduce, 0.f);
+    }
+    mNumRemainingSamples -= numSamplesToProduce;
+    return numSamplesToProduce;
 }
 
 bool SilenceSegment::Empty() const
 {
-   return mNumRemainingSamples == 0u;
+    return mNumRemainingSamples == 0u;
 }
 
 size_t SilenceSegment::NChannels() const
 {
-   return mNumChannels;
+    return mNumChannels;
 }

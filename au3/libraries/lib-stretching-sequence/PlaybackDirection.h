@@ -2,6 +2,6 @@
 
 enum class PlaybackDirection
 {
-   forward,
-   backward,
+    forward,
+    backward,
 };

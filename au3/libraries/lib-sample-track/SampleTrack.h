@@ -21,49 +21,45 @@ enum class sampleFormat : unsigned;
 
 class SampleTrack;
 
-class SAMPLE_TRACK_API SampleTrack /* not final */
-   : public PlayableTrack
-   , public PlayableSequence
+class SAMPLE_TRACK_API SampleTrack /* not final */ : public PlayableTrack, public PlayableSequence
 {
 public:
-   SampleTrack();
-   SampleTrack(const SampleTrack &other, ProtectedCreationArg&&);
-   ~SampleTrack() override;
+    SampleTrack();
+    SampleTrack(const SampleTrack& other, ProtectedCreationArg&&);
+    ~SampleTrack() override;
 
-   // Fix the otherwise ambiguous lookup of these virtual function names
-   using ChannelGroup::GetStartTime;
-   using ChannelGroup::GetEndTime;
+    // Fix the otherwise ambiguous lookup of these virtual function names
+    using ChannelGroup::GetStartTime;
+    using ChannelGroup::GetEndTime;
 
-   const TypeInfo &GetTypeInfo() const override;
-   static const TypeInfo &ClassTypeInfo();
+    const TypeInfo& GetTypeInfo() const override;
+    static const TypeInfo& ClassTypeInfo();
 
-   virtual sampleFormat GetSampleFormat() const = 0;
+    virtual sampleFormat GetSampleFormat() const = 0;
 
-   using WideSampleSequence::GetFloats;
+    using WideSampleSequence::GetFloats;
 };
 
 ENUMERATE_TRACK_TYPE(SampleTrack)
 
-class SAMPLE_TRACK_API WritableSampleTrack /* not final */
-   : public SampleTrack
-   , public RecordableSequence
+class SAMPLE_TRACK_API WritableSampleTrack /* not final */ : public SampleTrack, public RecordableSequence
 {
 public:
-   WritableSampleTrack();
-   WritableSampleTrack(
-      const WritableSampleTrack &other, ProtectedCreationArg&&);
-   ~WritableSampleTrack() override;
+    WritableSampleTrack();
+    WritableSampleTrack(
+        const WritableSampleTrack& other, ProtectedCreationArg&&);
+    ~WritableSampleTrack() override;
 
-   // Resolve ambiguous lookups
-   using ChannelGroup::NChannels;
+    // Resolve ambiguous lookups
+    using ChannelGroup::NChannels;
 
-   // Needed to resolve ambiguity with WideSampleSequence::GetRate, when this
-   // abstract interface is used directly.
-   // Expect the concrete subclass to define a common override for them.
-   using RecordableSequence::GetRate;
+    // Needed to resolve ambiguity with WideSampleSequence::GetRate, when this
+    // abstract interface is used directly.
+    // Expect the concrete subclass to define a common override for them.
+    using RecordableSequence::GetRate;
 
-   const TypeInfo &GetTypeInfo() const override;
-   static const TypeInfo &ClassTypeInfo();
+    const TypeInfo& GetTypeInfo() const override;
+    static const TypeInfo& ClassTypeInfo();
 };
 
 ENUMERATE_TRACK_TYPE(WritableSampleTrack)

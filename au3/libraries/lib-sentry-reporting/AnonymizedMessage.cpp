@@ -14,15 +14,12 @@
 
 #include "CodeConversions.h"
 
-namespace audacity
-{
-namespace sentry
-{
-
+namespace audacity {
+namespace sentry {
 AnonymizedMessage::AnonymizedMessage(std::string message)
     : mMessage(std::move(message))
 {
-   CleanupPaths();
+    CleanupPaths();
 }
 
 AnonymizedMessage::AnonymizedMessage(const std::wstring& message)
@@ -47,45 +44,44 @@ AnonymizedMessage::AnonymizedMessage(const wchar_t* message)
 
 bool AnonymizedMessage::Empty() const noexcept
 {
-   return mMessage.empty();
+    return mMessage.empty();
 }
 
 size_t AnonymizedMessage::Length() const noexcept
 {
-   return mMessage.size();
+    return mMessage.size();
 }
 
 const std::string& AnonymizedMessage::GetString() const noexcept
 {
-   return mMessage;
+    return mMessage;
 }
 
 wxString AnonymizedMessage::ToWXString() const noexcept
 {
-   return audacity::ToWXString(mMessage);
+    return audacity::ToWXString(mMessage);
 }
 
 const char* AnonymizedMessage::c_str() const noexcept
 {
-   return mMessage.c_str();
+    return mMessage.c_str();
 }
 
 size_t AnonymizedMessage::length() const noexcept
 {
-   return mMessage.length();
+    return mMessage.length();
 }
 
 void AnonymizedMessage::CleanupPaths()
 {
-   // Finding the path boundary in the arbitrary text is a hard task.
-   // We assume that spaces cannot be a part of the path.
-   // In the worst case - we will get <path> <path>
-   static const std::regex re(
-      R"(\b(?:(?:[a-zA-Z]:)?[\\/]?)?(?:[^<>:"/|\\/?\s*]+[\\/]+)*(?:[^<>:"/|\\/?*\s]+\.\w+)?)");
+    // Finding the path boundary in the arbitrary text is a hard task.
+    // We assume that spaces cannot be a part of the path.
+    // In the worst case - we will get <path> <path>
+    static const std::regex re(
+        R"(\b(?:(?:[a-zA-Z]:)?[\\/]?)?(?:[^<>:"/|\\/?\s*]+[\\/]+)*(?:[^<>:"/|\\/?*\s]+\.\w+)?)");
 
-   mMessage = std::regex_replace(
-      mMessage, re, "<path>", std::regex_constants::match_not_null);
+    mMessage = std::regex_replace(
+        mMessage, re, "<path>", std::regex_constants::match_not_null);
 }
-
 } // namespace sentry
 } // namespace audacity

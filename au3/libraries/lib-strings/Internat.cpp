@@ -38,199 +38,192 @@ wxArrayString Internat::exclude;
 
 STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1)
 {
-   return str1 ;
+    return str1;
 }
 
 // In any translated string, we can replace the name 'Audacity' with fork names
 // without requiring translators to see extra strings for the two versions.
 STRINGS_API const wxString& GetCustomTranslation(const wxString& str1)
 {
-   const wxString& str2 = wxGetTranslation( str1 );
-   return GetCustomSubstitution( str2 );
+    const wxString& str2 = wxGetTranslation(str1);
+    return GetCustomSubstitution(str2);
 }
-
 
 void Internat::Init()
 {
-   // Save decimal point character
-   struct lconv * localeInfo = localeconv();
-   if (localeInfo)
-      mDecimalSeparator = wxString(wxSafeConvertMB2WX(localeInfo->decimal_point)).GetChar(0);
+    // Save decimal point character
+    struct lconv* localeInfo = localeconv();
+    if (localeInfo) {
+        mDecimalSeparator = wxString(wxSafeConvertMB2WX(localeInfo->decimal_point)).GetChar(0);
+    }
 
 //   wxLogDebug(wxT("Decimal separator set to '%c'"), mDecimalSeparator);
 
-   // Setup list of characters that aren't allowed in file names
-   // Hey!  The default wxPATH_NATIVE does not do as it should.
+    // Setup list of characters that aren't allowed in file names
+    // Hey!  The default wxPATH_NATIVE does not do as it should.
 #if defined(__WXMAC__)
-   wxPathFormat format = wxPATH_MAC;
+    wxPathFormat format = wxPATH_MAC;
 #elif defined(__WXGTK__)
-   wxPathFormat format = wxPATH_UNIX;
+    wxPathFormat format = wxPATH_UNIX;
 #elif defined(__WXMSW__)
-   wxPathFormat format = wxPATH_WIN;
+    wxPathFormat format = wxPATH_WIN;
 #endif
 
-   // This is supposed to return characters not permitted in paths to files
-   // or to directories
-   auto forbid = wxFileName::GetForbiddenChars(format);
+    // This is supposed to return characters not permitted in paths to files
+    // or to directories
+    auto forbid = wxFileName::GetForbiddenChars(format);
 
-   for (auto cc: forbid) {
+    for (auto cc: forbid) {
 #if defined(__WXGTK__)
-      if (cc == wxT('*') || cc == wxT('?')) {
-         continue;
-      }
+        if (cc == wxT('*') || cc == wxT('?')) {
+            continue;
+        }
 #endif
-      exclude.push_back(wxString{ cc });
-   }
+        exclude.push_back(wxString { cc });
+    }
 
-   // The path separators may not be forbidden, so add them
-   //auto separators = wxFileName::GetPathSeparators(format);
+    // The path separators may not be forbidden, so add them
+    //auto separators = wxFileName::GetPathSeparators(format);
 
-   // Bug 1441 exclude all separators from filenames on all platforms.
-   auto separators = wxString("\\/");
+    // Bug 1441 exclude all separators from filenames on all platforms.
+    auto separators = wxString("\\/");
 
-   for(auto cc: separators) {
-      if (forbid.Find(cc) == wxNOT_FOUND)
-         exclude.push_back(wxString{ cc });
-   }
+    for (auto cc: separators) {
+        if (forbid.Find(cc) == wxNOT_FOUND) {
+            exclude.push_back(wxString { cc });
+        }
+    }
 }
 
 void Internat::SetCeeNumberFormat()
 {
-   wxSetlocale( LC_NUMERIC, "C" );
-   mDecimalSeparator = '.';
+    wxSetlocale(LC_NUMERIC, "C");
+    mDecimalSeparator = '.';
 }
-
 
 wxChar Internat::GetDecimalSeparator()
 {
-   return mDecimalSeparator;
+    return mDecimalSeparator;
 }
 
 bool Internat::CompatibleToDouble(const wxString& stringToConvert, double* result)
 {
-   // Regardless of the locale, always respect comma _and_ point
-   wxString s = stringToConvert;
-   // Convert to C locale decimal point for stable parsing.
-   s.Replace(wxT(","), wxT("."));
-   s.Replace(wxString(GetDecimalSeparator()), wxT("."));
-   return s.ToCDouble(result);
+    // Regardless of the locale, always respect comma _and_ point
+    wxString s = stringToConvert;
+    // Convert to C locale decimal point for stable parsing.
+    s.Replace(wxT(","), wxT("."));
+    s.Replace(wxString(GetDecimalSeparator()), wxT("."));
+    return s.ToCDouble(result);
 }
 
 double Internat::CompatibleToDouble(const wxString& stringToConvert)
 {
-   double result = 0;
-   Internat::CompatibleToDouble(stringToConvert, &result);
-   return result;
+    double result = 0;
+    Internat::CompatibleToDouble(stringToConvert, &result);
+    return result;
 }
 
 wxString Internat::ToString(double numberToConvert,
-                     int digitsAfterDecimalPoint /* = -1 */)
+                            int digitsAfterDecimalPoint /* = -1 */)
 {
-   wxString result = ToDisplayString(
-      numberToConvert, digitsAfterDecimalPoint);
+    wxString result = ToDisplayString(
+        numberToConvert, digitsAfterDecimalPoint);
 
-   result.Replace(wxString(GetDecimalSeparator()), wxT("."));
+    result.Replace(wxString(GetDecimalSeparator()), wxT("."));
 
-   return result;
+    return result;
 }
 
 wxString Internat::ToDisplayString(double numberToConvert,
-                                    int digitsAfterDecimalPoint /* = -1 */)
+                                   int digitsAfterDecimalPoint /* = -1 */)
 {
-   wxString decSep = wxString(GetDecimalSeparator());
-   wxString result;
+    wxString decSep = wxString(GetDecimalSeparator());
+    wxString result;
 
-   if (digitsAfterDecimalPoint == -1)
-   {
-      result.Printf(wxT("%f"), numberToConvert);
+    if (digitsAfterDecimalPoint == -1) {
+        result.Printf(wxT("%f"), numberToConvert);
 
-      // Not all libcs respect the decimal separator, so always convert
-      // any dots found to the decimal separator.
-      result.Replace(wxT("."), decSep);
+        // Not all libcs respect the decimal separator, so always convert
+        // any dots found to the decimal separator.
+        result.Replace(wxT("."), decSep);
 
-      if (result.Find(decSep) != -1)
-      {
-         // Strip trailing zeros, but leave one, and decimal separator.
-         int pos = result.length() - 1;
-         while ((pos > 1) &&
-                  (result.GetChar(pos) == wxT('0')) &&
-                  (result.GetChar(pos - 1) != decSep))
-            pos--;
-         // (Previous code removed all of them and decimal separator.)
-         //    if (result.GetChar(pos) == decSep)
-         //       pos--; // strip point before empty fractional part
-         result = result.Left(pos+1);
-      }
-   }
-   else
-   {
-      wxString format;
-      format.Printf(wxT("%%.%if"), digitsAfterDecimalPoint);
-      result.Printf(format, numberToConvert);
+        if (result.Find(decSep) != -1) {
+            // Strip trailing zeros, but leave one, and decimal separator.
+            int pos = result.length() - 1;
+            while ((pos > 1)
+                   && (result.GetChar(pos) == wxT('0'))
+                   && (result.GetChar(pos - 1) != decSep)) {
+                pos--;
+            }
+            // (Previous code removed all of them and decimal separator.)
+            //    if (result.GetChar(pos) == decSep)
+            //       pos--; // strip point before empty fractional part
+            result = result.Left(pos + 1);
+        }
+    } else {
+        wxString format;
+        format.Printf(wxT("%%.%if"), digitsAfterDecimalPoint);
+        result.Printf(format, numberToConvert);
 
-      // Not all libcs respect the decimal separator, so always convert
-      // any dots found to the decimal separator
-      result.Replace(wxT("."), decSep);
-   }
+        // Not all libcs respect the decimal separator, so always convert
+        // any dots found to the decimal separator
+        result.Replace(wxT("."), decSep);
+    }
 
-   return result;
+    return result;
 }
 
 TranslatableString Internat::FormatSize(wxLongLong size)
 {
-   /* wxLongLong contains no built-in conversion to double */
-   double dSize = size.GetHi() * pow(2.0, 32);  // 2 ^ 32
-   dSize += size.GetLo();
+    /* wxLongLong contains no built-in conversion to double */
+    double dSize = size.GetHi() * pow(2.0, 32); // 2 ^ 32
+    dSize += size.GetLo();
 
-   return FormatSize(dSize);
+    return FormatSize(dSize);
 }
 
 TranslatableString Internat::FormatSize(double size)
 {
-   TranslatableString sizeStr;
+    TranslatableString sizeStr;
 
-   if (size == -1)
-      sizeStr = XO("Unable to determine");
-   else {
-      /* make it look nice, by formatting into k, MB, etc */
-      if (size < 1024.0)
-         sizeStr = XO("%s bytes").Format( ToDisplayString(size) );
-      else if (size < 1024.0 * 1024.0) {
-         /* i18n-hint: Abbreviation for Kilo bytes */
-         sizeStr = XO("%s KB").Format( ToDisplayString(size / 1024.0, 1) );
-      }
-      else if (size < 1024.0 * 1024.0 * 1024.0) {
-         /* i18n-hint: Abbreviation for Mega bytes */
-         sizeStr = XO("%s MB").Format( ToDisplayString(size / (1024.0 * 1024.0), 1) );
-      }
-      else {
-         /* i18n-hint: Abbreviation for Giga bytes */
-         sizeStr = XO("%s GB").Format( ToDisplayString(size / (1024.0 * 1024.0 * 1024.0), 1) );
-      }
-   }
+    if (size == -1) {
+        sizeStr = XO("Unable to determine");
+    } else {
+        /* make it look nice, by formatting into k, MB, etc */
+        if (size < 1024.0) {
+            sizeStr = XO("%s bytes").Format(ToDisplayString(size));
+        } else if (size < 1024.0 * 1024.0) {
+            /* i18n-hint: Abbreviation for Kilo bytes */
+            sizeStr = XO("%s KB").Format(ToDisplayString(size / 1024.0, 1));
+        } else if (size < 1024.0 * 1024.0 * 1024.0) {
+            /* i18n-hint: Abbreviation for Mega bytes */
+            sizeStr = XO("%s MB").Format(ToDisplayString(size / (1024.0 * 1024.0), 1));
+        } else {
+            /* i18n-hint: Abbreviation for Giga bytes */
+            sizeStr = XO("%s GB").Format(ToDisplayString(size / (1024.0 * 1024.0 * 1024.0), 1));
+        }
+    }
 
-   return sizeStr;
+    return sizeStr;
 }
 
-bool Internat::SanitiseFilename(wxString &name, const wxString &sub)
+bool Internat::SanitiseFilename(wxString& name, const wxString& sub)
 {
-   bool result = false;
-   for(const auto &item : exclude)
-   {
-      if(name.Contains(item))
-      {
-         name.Replace(item, sub);
-         result = true;
-      }
-   }
+    bool result = false;
+    for (const auto& item : exclude) {
+        if (name.Contains(item)) {
+            name.Replace(item, sub);
+            result = true;
+        }
+    }
 
 #ifdef __WXMAC__
-   // Special Mac stuff
-   // '/' is permitted in file names as seen in dialogs, even though it is
-   // the path separator.  The "real" filename as seen in the terminal has ':'.
-   // Do NOT return true if this is the only substitution.
-   name.Replace(wxT("/"), wxT(":"));
+    // Special Mac stuff
+    // '/' is permitted in file names as seen in dialogs, even though it is
+    // the path separator.  The "real" filename as seen in the terminal has ':'.
+    // Do NOT return true if this is the only substitution.
+    name.Replace(wxT("/"), wxT(":"));
 #endif
 
-   return result;
+    return result;
 }

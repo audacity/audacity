@@ -14,17 +14,17 @@
 class ChannelGroup;
 
 //! Method to set project tempo on a channel group, defaulting to no-op
-using OnProjectTempoChange =
-AttachedVirtualFunction<
-   struct OnProjectTempoChangeTag,
-   void, ChannelGroup,
-   const std::optional<double>& /* oldTempo */, double /* newTempo */
->;
+using OnProjectTempoChange
+    =AttachedVirtualFunction<
+          struct OnProjectTempoChangeTag,
+          void, ChannelGroup,
+          const std::optional<double>& /* oldTempo */, double /* newTempo */
+          >;
 DECLARE_EXPORTED_ATTACHED_VIRTUAL(
-   STRETCHING_SEQUENCE_API, OnProjectTempoChange);
+    STRETCHING_SEQUENCE_API, OnProjectTempoChange);
 
 STRETCHING_SEQUENCE_API
-void DoProjectTempoChange(ChannelGroup &group, double newTempo);
+void DoProjectTempoChange(ChannelGroup& group, double newTempo);
 
 STRETCHING_SEQUENCE_API
-const std::optional<double>& GetProjectTempo(const ChannelGroup &group);
+const std::optional<double>& GetProjectTempo(const ChannelGroup& group);

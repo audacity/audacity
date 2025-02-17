@@ -15,85 +15,85 @@
 class MockPlayableSequence final : public PlayableSequence
 {
 public:
-   MockPlayableSequence(int sampleRate, size_t numChannels)
-       : sampleRate(sampleRate)
-       , numChannels(numChannels)
-   {
-   }
+    MockPlayableSequence(int sampleRate, size_t numChannels)
+        : sampleRate(sampleRate)
+        , numChannels(numChannels)
+    {
+    }
 
-   // WideSampleSequence
-   bool DoGet(
-      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
-      sampleFormat format, sampleCount start, size_t len, bool backwards,
-      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
-      sampleCount* pNumWithinClips = nullptr) const override
-   {
-      return true;
-   }
+    // WideSampleSequence
+    bool DoGet(
+        size_t iChannel, size_t nBuffers, const samplePtr buffers[],
+        sampleFormat format, sampleCount start, size_t len, bool backwards,
+        fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
+        sampleCount* pNumWithinClips = nullptr) const override
+    {
+        return true;
+    }
 
-   size_t NChannels() const override
-   {
-      return numChannels;
-   }
+    size_t NChannels() const override
+    {
+        return numChannels;
+    }
 
-   float GetChannelVolume(int channel) const override
-   {
-      return 1.f;
-   }
+    float GetChannelVolume(int channel) const override
+    {
+        return 1.f;
+    }
 
-   double GetStartTime() const override
-   {
-      return 0.;
-   }
+    double GetStartTime() const override
+    {
+        return 0.;
+    }
 
-   double GetEndTime() const override
-   {
-      return 0.;
-   }
+    double GetEndTime() const override
+    {
+        return 0.;
+    }
 
-   double GetRate() const override
-   {
-      return sampleRate;
-   }
+    double GetRate() const override
+    {
+        return sampleRate;
+    }
 
-   sampleFormat WidestEffectiveFormat() const override
-   {
-      return floatSample;
-   }
+    sampleFormat WidestEffectiveFormat() const override
+    {
+        return floatSample;
+    }
 
-   bool HasTrivialEnvelope() const override
-   {
-      return true;
-   }
+    bool HasTrivialEnvelope() const override
+    {
+        return true;
+    }
 
-   void GetEnvelopeValues(
-      double* buffer, size_t bufferLen, double t0,
-      bool backwards) const override
-   {
-   }
+    void GetEnvelopeValues(
+        double* buffer, size_t bufferLen, double t0,
+        bool backwards) const override
+    {
+    }
 
-   // AudioGraph::Channel
-   AudioGraph::ChannelType GetChannelType() const override
-   {
-      return AudioGraph::MonoChannel;
-   }
+    // AudioGraph::Channel
+    AudioGraph::ChannelType GetChannelType() const override
+    {
+        return AudioGraph::MonoChannel;
+    }
 
-   // PlayableSequence
-   const ChannelGroup *FindChannelGroup() const override
-   {
-      return nullptr;
-   }
+    // PlayableSequence
+    const ChannelGroup* FindChannelGroup() const override
+    {
+        return nullptr;
+    }
 
-   bool GetSolo() const override
-   {
-      return false;
-   }
+    bool GetSolo() const override
+    {
+        return false;
+    }
 
-   bool GetMute() const override
-   {
-      return false;
-   }
+    bool GetMute() const override
+    {
+        return false;
+    }
 
-   const int sampleRate;
-   const size_t numChannels;
+    const int sampleRate;
+    const size_t numChannels;
 };

@@ -14,47 +14,48 @@
 
 #include "CodeConversions.h"
 
-namespace audacity
-{
-
-bool ParseRFC822Date (const std::string& dateString, SystemTime* time)
+namespace audacity {
+bool ParseRFC822Date(const std::string& dateString, SystemTime* time)
 {
     wxDateTime dt;
     wxString::const_iterator end;
 
-    if (!dt.ParseRfc822Date (dateString, &end))
+    if (!dt.ParseRfc822Date(dateString, &end)) {
         return false;
+    }
 
-    if (time != nullptr)
-        *time = std::chrono::system_clock::from_time_t (dt.GetTicks ());
+    if (time != nullptr) {
+        *time = std::chrono::system_clock::from_time_t(dt.GetTicks());
+    }
 
     return true;
 }
 
-bool ParseISO8601Date (const std::string& dateString, SystemTime* time)
+bool ParseISO8601Date(const std::string& dateString, SystemTime* time)
 {
     wxDateTime dt;
 
     wxString::const_iterator end;
     const wxString fmt = wxS("%Y%m%dT%H%M%SZ");
 
-    if (!dt.ParseFormat(dateString, fmt, &end))
-       return false;
+    if (!dt.ParseFormat(dateString, fmt, &end)) {
+        return false;
+    }
 
-    if (time != nullptr)
-        *time = std::chrono::system_clock::from_time_t (dt.GetTicks ());
+    if (time != nullptr) {
+        *time = std::chrono::system_clock::from_time_t(dt.GetTicks());
+    }
 
     return true;
 }
 
-std::string SerializeRFC822Date (SystemTime timePoint)
+std::string SerializeRFC822Date(SystemTime timePoint)
 {
-    const wxDateTime dt (
-            time_t (std::chrono::duration_cast<std::chrono::seconds> (
-                    timePoint.time_since_epoch ()
-            ).count ()));
+    const wxDateTime dt(
+        time_t(std::chrono::duration_cast<std::chrono::seconds>(
+                   timePoint.time_since_epoch()
+                   ).count()));
 
-    return ToUTF8 (dt.Format("%a, %d %b %Y %H:%M:%S %z"));
+    return ToUTF8(dt.Format("%a, %d %b %Y %H:%M:%S %z"));
 }
-
 }
