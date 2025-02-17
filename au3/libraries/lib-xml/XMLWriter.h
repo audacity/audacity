@@ -22,51 +22,50 @@
 ///
 /// XMLWriter
 ///
-class XML_API XMLWriter /* not final */ {
+class XML_API XMLWriter /* not final */
+{
+public:
 
- public:
+    XMLWriter();
+    virtual ~XMLWriter();
 
-   XMLWriter();
-   virtual ~XMLWriter();
+    virtual void StartTag(const wxString& name);
+    virtual void EndTag(const wxString& name);
 
-   virtual void StartTag(const wxString &name);
-   virtual void EndTag(const wxString &name);
+    // nonvirtual pass-through
+    void WriteAttr(const wxString& name, const Identifier& value)
+    // using GET once here, permitting Identifiers in XML,
+    // so no need for it at each WriteAttr call
+    { WriteAttr(name, value.GET()); }
 
-   // nonvirtual pass-through
-   void WriteAttr(const wxString &name, const Identifier &value)
-      // using GET once here, permitting Identifiers in XML,
-      // so no need for it at each WriteAttr call
-      { WriteAttr( name, value.GET() ); }
+    virtual void WriteAttr(const wxString& name, const wxString& value);
+    virtual void WriteAttr(const wxString& name, const wxChar* value);
 
-   virtual void WriteAttr(const wxString &name, const wxString &value);
-   virtual void WriteAttr(const wxString &name, const wxChar *value);
+    virtual void WriteAttr(const wxString& name, int value);
+    virtual void WriteAttr(const wxString& name, bool value);
+    virtual void WriteAttr(const wxString& name, long value);
+    virtual void WriteAttr(const wxString& name, long long value);
+    virtual void WriteAttr(const wxString& name, size_t value);
+    virtual void WriteAttr(const wxString& name, float value, int digits = -1);
+    virtual void WriteAttr(const wxString& name, double value, int digits = -1);
 
-   virtual void WriteAttr(const wxString &name, int value);
-   virtual void WriteAttr(const wxString &name, bool value);
-   virtual void WriteAttr(const wxString &name, long value);
-   virtual void WriteAttr(const wxString &name, long long value);
-   virtual void WriteAttr(const wxString &name, size_t value);
-   virtual void WriteAttr(const wxString &name, float value, int digits = -1);
-   virtual void WriteAttr(const wxString &name, double value, int digits = -1);
+    virtual void WriteData(const wxString& value);
 
-   virtual void WriteData(const wxString &value);
+    virtual void WriteSubTree(const wxString& value);
 
-   virtual void WriteSubTree(const wxString &value);
+    virtual void Write(const wxString& data) = 0;
 
-   virtual void Write(const wxString &data) = 0;
+private:
+    // Escape a string, replacing certain characters with their
+    // XML encoding, i.e. '<' becomes '&lt;'
+    static wxString XMLEsc(const wxString& s);
 
- private:
-   // Escape a string, replacing certain characters with their
-   // XML encoding, i.e. '<' becomes '&lt;'
-   static wxString XMLEsc(const wxString & s);
+protected:
 
- protected:
-
-   bool mInTag;
-   int mDepth;
-   wxArrayString mTagstack;
-   std::vector<int> mHasKids;
-
+    bool mInTag;
+    int mDepth;
+    wxArrayString mTagstack;
+    std::vector<int> mHasKids;
 };
 
 ///
@@ -81,107 +80,105 @@ class XML_API XMLWriter /* not final */ {
 /// If the construction and all operations are inside a GuardedCall or event
 /// handler, then the default delayed handler action in case of exceptions will
 /// notify the user of problems.
-class XML_API XMLFileWriter final : private wxFFile, public XMLWriter {
+class XML_API XMLFileWriter final : private wxFFile, public XMLWriter
+{
+public:
 
- public:
+    /// The caption is for message boxes to show in case of errors.
+    /// Might throw.
+    XMLFileWriter(
+        const FilePath& outputPath, const TranslatableString& caption, bool keepBackup = false);
 
-   /// The caption is for message boxes to show in case of errors.
-   /// Might throw.
-   XMLFileWriter(
-      const FilePath &outputPath, const TranslatableString &caption,
-      bool keepBackup = false );
+    virtual ~XMLFileWriter();
 
-   virtual ~XMLFileWriter();
+    /// Close all tags and then close the file.
+    /// Might throw.  If not, then create
+    /// or modify the file at the output path.
+    /// Composed of two steps, PreCommit() and PostCommit()
+    void Commit();
 
-   /// Close all tags and then close the file.
-   /// Might throw.  If not, then create
-   /// or modify the file at the output path.
-   /// Composed of two steps, PreCommit() and PostCommit()
-   void Commit();
+    /// Does the part of Commit that might fail because of exhaustion of space
+    void PreCommit();
 
-   /// Does the part of Commit that might fail because of exhaustion of space
-   void PreCommit();
+    /// Does other parts of Commit that are not likely to fail for exhaustion
+    /// of space, but might for other reasons
+    void PostCommit();
 
-   /// Does other parts of Commit that are not likely to fail for exhaustion
-   /// of space, but might for other reasons
-   void PostCommit();
+    /// Write to file. Might throw.
+    void Write(const wxString& data) override;
 
-   /// Write to file. Might throw.
-   void Write(const wxString &data) override;
+    FilePath GetBackupName() const { return mBackupName; }
 
-   FilePath GetBackupName() const { return mBackupName; }
+private:
 
- private:
+    void ThrowException(
+        const wxFileName& fileName, const TranslatableString& caption)
+    {
+        throw FileException{ FileException::Cause::Write, fileName, caption };
+    }
 
-   void ThrowException(
-      const wxFileName &fileName, const TranslatableString &caption)
-   {
-      throw FileException{ FileException::Cause::Write, fileName, caption };
-   }
+    /// Close file without automatically ending tags.
+    /// Might throw.
+    void CloseWithoutEndingTags(); // for auto-save files
 
-   /// Close file without automatically ending tags.
-   /// Might throw.
-   void CloseWithoutEndingTags(); // for auto-save files
+    const FilePath mOutputPath;
+    const TranslatableString mCaption;
+    FilePath mBackupName;
+    const bool mKeepBackup;
 
-   const FilePath mOutputPath;
-   const TranslatableString mCaption;
-   FilePath mBackupName;
-   const bool mKeepBackup;
+    wxFFile mBackupFile;
 
-   wxFFile mBackupFile;
-
-   bool mCommitted{ false };
+    bool mCommitted{ false };
 };
 
 ///
 /// XMLStringWriter
 ///
-class XML_API XMLStringWriter final : public wxString, public XMLWriter {
+class XML_API XMLStringWriter final : public wxString, public XMLWriter
+{
+public:
 
- public:
+    XMLStringWriter(size_t initialSize = 0);
+    virtual ~XMLStringWriter();
 
-   XMLStringWriter(size_t initialSize = 0);
-   virtual ~XMLStringWriter();
+    void Write(const wxString& data) override;
 
-   void Write(const wxString &data) override;
-
- private:
-
+private:
 };
 
 class XML_API XMLUtf8BufferWriter final
 {
 public:
-   void StartTag(const std::string_view& name);
-   void EndTag(const std::string_view& name);
+    void StartTag(const std::string_view& name);
+    void EndTag(const std::string_view& name);
 
-   void WriteAttr(const std::string_view& name, const Identifier& value);
-   // using GET once here, permitting Identifiers in XML,
-   // so no need for it at each WriteAttr call
+    void WriteAttr(const std::string_view& name, const Identifier& value);
+    // using GET once here, permitting Identifiers in XML,
+    // so no need for it at each WriteAttr call
 
-   void WriteAttr(const std::string_view& name, const std::string_view& value);
+    void WriteAttr(const std::string_view& name, const std::string_view& value);
 
-   void WriteAttr(const std::string_view& name, int value);
-   void WriteAttr(const std::string_view& name, bool value);
-   void WriteAttr(const std::string_view& name, long value);
-   void WriteAttr(const std::string_view& name, long long value);
-   void WriteAttr(const std::string_view& name, size_t value);
-   void WriteAttr(const std::string_view& name, float value, int digits = -1);
-   void WriteAttr(const std::string_view& name, double value, int digits = -1);
+    void WriteAttr(const std::string_view& name, int value);
+    void WriteAttr(const std::string_view& name, bool value);
+    void WriteAttr(const std::string_view& name, long value);
+    void WriteAttr(const std::string_view& name, long long value);
+    void WriteAttr(const std::string_view& name, size_t value);
+    void WriteAttr(const std::string_view& name, float value, int digits = -1);
+    void WriteAttr(const std::string_view& name, double value, int digits = -1);
 
-   void WriteData(const std::string_view& value);
+    void WriteData(const std::string_view& value);
 
-   void WriteSubTree(const std::string_view& value);
+    void WriteSubTree(const std::string_view& value);
 
-   void Write(const std::string_view& value);
+    void Write(const std::string_view& value);
 
-   MemoryStream ConsumeResult();
+    MemoryStream ConsumeResult();
 private:
-   void WriteEscaped(const std::string_view& value);
+    void WriteEscaped(const std::string_view& value);
 
-   MemoryStream mStream;
+    MemoryStream mStream;
 
-   bool mInTag { false };
+    bool mInTag { false };
 };
 
 #endif
