@@ -1,5 +1,5 @@
 /*!********************************************************************
-* 
+*
  Audacity: A Digital Audio Editor
 
  CrashReportContext.cpp
@@ -26,14 +26,10 @@
 bool SendReport(CrashReportContext* c, const char* minidumpPath)
 {
     auto pid = fork();
-    if(pid == 0)
-    {
-        if(c->mParameters[0] != 0)
-        {
+    if (pid == 0) {
+        if (c->mParameters[0] != 0) {
             execl(c->mSenderPath, CRASHREPORTER_PROGRAM_NAME, "-a", c->mParameters, "-u", c->mReportURL, minidumpPath, NULL);
-        }
-        else
-        {
+        } else {
             execl(c->mSenderPath, CRASHREPORTER_PROGRAM_NAME, "-u", c->mReportURL, minidumpPath, NULL);
         }
         fprintf(stderr, "Failed to start handler: %s\n", strerror(errno));
@@ -42,73 +38,69 @@ bool SendReport(CrashReportContext* c, const char* minidumpPath)
     return pid != -1;
 }
 
-namespace
+namespace {
+//converts parameters map to a string, so that the Crash Reporting program
+//would understand them
+std::string StringifyParameters(const std::map<std::string, std::string>& parameters)
 {
+    std::stringstream stream;
 
-    //converts parameters map to a string, so that the Crash Reporting program
-    //would understand them
-    std::string StringifyParameters(const std::map<std::string, std::string>& parameters)
-    {
-        std::stringstream stream;
-
-        std::size_t parameterIndex = 0;
-        std::size_t parametersCount = parameters.size();
-        for (auto& pair : parameters)
-        {
-            stream << pair.first.c_str() << "=\"" << pair.second.c_str() << "\"";
-            ++parameterIndex;
-            if (parameterIndex < parametersCount)
-                stream << ",";
+    std::size_t parameterIndex = 0;
+    std::size_t parametersCount = parameters.size();
+    for (auto& pair : parameters) {
+        stream << pair.first.c_str() << "=\"" << pair.second.c_str() << "\"";
+        ++parameterIndex;
+        if (parameterIndex < parametersCount) {
+            stream << ",";
         }
-        return stream.str();
     }
+    return stream.str();
+}
 
-    //copy contents of src to a raw char dest buffer, 
-    //returns false if dest is not large enough
-    bool StrcpyChecked(char* dest, size_t destsz, const std::string& src)
-    {
-        if(src.length() < destsz)
-        {
-            memcpy(dest, src.c_str(), src.length());
-            dest[src.length()] = '\0';
-            return true;
-        }
-        return false;
+//copy contents of src to a raw char dest buffer,
+//returns false if dest is not large enough
+bool StrcpyChecked(char* dest, size_t destsz, const std::string& src)
+{
+    if (src.length() < destsz) {
+        memcpy(dest, src.c_str(), src.length());
+        dest[src.length()] = '\0';
+        return true;
     }
+    return false;
+}
 
 #if defined(__APPLE__)
 
-    static constexpr size_t MaxDumpPathLength{ 4096 };
-    static char DumpPath[MaxDumpPathLength];
+static constexpr size_t MaxDumpPathLength{ 4096 };
+static char DumpPath[MaxDumpPathLength];
 
-    bool DumpCallback(const char* dump_dir, const char* minidump_id, void* context, bool succeeded)
-    {
-        if(succeeded)
-        {
-            const int PathDumpLength = strlen(dump_dir) + strlen("/") + strlen(minidump_id) + strlen(".dmp");
-            if(PathDumpLength < MaxDumpPathLength)
-            {
-                strcpy(DumpPath, dump_dir);
-                strcat(DumpPath, "/");
-                strcat(DumpPath, minidump_id);
-                strcat(DumpPath, ".dmp");
-                auto crashReportContext = static_cast<CrashReportContext*>(context);
-                return SendReport(crashReportContext, DumpPath);
-            }
-            return false;
-        }
-        return succeeded;
-    }
-#else
-    bool DumpCallback(const google_breakpad::MinidumpDescriptor& descriptor, void* context, bool succeeded) 
-    {
-        if(succeeded)
-        {
+bool DumpCallback(const char* dump_dir, const char* minidump_id, void* context, bool succeeded)
+{
+    if (succeeded) {
+        const int PathDumpLength = strlen(dump_dir) + strlen("/") + strlen(minidump_id) + strlen(".dmp");
+        if (PathDumpLength < MaxDumpPathLength) {
+            strcpy(DumpPath, dump_dir);
+            strcat(DumpPath, "/");
+            strcat(DumpPath, minidump_id);
+            strcat(DumpPath, ".dmp");
             auto crashReportContext = static_cast<CrashReportContext*>(context);
-            return SendReport(crashReportContext, descriptor.path());
+            return SendReport(crashReportContext, DumpPath);
         }
-        return succeeded;
+        return false;
     }
+    return succeeded;
+}
+
+#else
+bool DumpCallback(const google_breakpad::MinidumpDescriptor& descriptor, void* context, bool succeeded)
+{
+    if (succeeded) {
+        auto crashReportContext = static_cast<CrashReportContext*>(context);
+        return SendReport(crashReportContext, descriptor.path());
+    }
+    return succeeded;
+}
+
 #endif
 }
 
@@ -132,7 +124,7 @@ void CrashReportContext::StartHandler(const std::string& databasePath)
 {
     //intentinal leak: error hooks may be useful while application is terminating
     //CrashReportContext data should be alive too...
-#if(__APPLE__)
+#if (__APPLE__)
     static auto handler = new google_breakpad::ExceptionHandler(
         databasePath,
         nullptr,
@@ -140,16 +132,16 @@ void CrashReportContext::StartHandler(const std::string& databasePath)
         this,
         true,
         nullptr
-    );
-#else 
+        );
+#else
     google_breakpad::MinidumpDescriptor descriptor(databasePath);
-	static auto handler = new google_breakpad::ExceptionHandler(
-		descriptor,
-		nullptr,
-		DumpCallback,
-		this,
-		true,
-		-1
-	);
+    static auto handler = new google_breakpad::ExceptionHandler(
+        descriptor,
+        nullptr,
+        DumpCallback,
+        this,
+        true,
+        -1
+        );
 #endif
 }
