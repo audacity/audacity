@@ -32,9 +32,7 @@ bool IsSameSample(double sampleRate, double t0, double t1) noexcept
 
 bool IsSamePPS(double sampleRate, double lhs, double rhs)
 {
-   return std::abs(1.0 / lhs - 1.0 / rhs) *
-             GraphicsDataCacheBase::CacheElementWidth <
-          (1.0 / sampleRate);
+   return lhs == rhs;
 }
 
 bool IsSameKey(
