@@ -476,12 +476,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
-    UiAction("generate-omitted",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "(Omitted)"),
-             TranslatableString("action", "(Omitted)")
-             ),
 
     // effects menu
     UiAction("effect-plugin-manager",
@@ -495,30 +489,6 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Add realtime effects"),
              TranslatableString("action", "Add realtime effects")
-             ),
-    UiAction("favourite-effect-1",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Fav effect #1"),
-             TranslatableString("action", "Fav effect #1")
-             ),
-    UiAction("favourite-effect-2",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Fav effect #2"),
-             TranslatableString("action", "Fav effect #2")
-             ),
-    UiAction("favourite-effect-3",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Fav effect #3"),
-             TranslatableString("action", "Fav effect #3")
-             ),
-    UiAction("plugins-omitted",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "(Plugins omitted)"),
-             TranslatableString("action", "(Plugins omitted)")
              ),
 
     // analyze menu
@@ -539,12 +509,6 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Plot spectrum"),
              TranslatableString("action", "Plot spectrum")
-             ),
-    UiAction("analyzer-omitted",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "(Omitted)"),
-             TranslatableString("action", "(Omitted)")
              ),
 
     // tools menu
