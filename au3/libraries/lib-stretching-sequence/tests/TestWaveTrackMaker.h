@@ -18,11 +18,11 @@
 class TestWaveTrackMaker final
 {
 public:
-   TestWaveTrackMaker(int sampleRate, SampleBlockFactoryPtr);
-   std::shared_ptr<WaveTrack> Track(const WaveClipHolders& clips) const;
-   std::shared_ptr<WaveTrack> Track(const WaveClipHolder& clip) const;
+    TestWaveTrackMaker(int sampleRate, SampleBlockFactoryPtr);
+    std::shared_ptr<WaveTrack> Track(const WaveClipHolders& clips) const;
+    std::shared_ptr<WaveTrack> Track(const WaveClipHolder& clip) const;
 
 private:
-   const int mSampleRate;
-   const SampleBlockFactoryPtr mFactory;
+    const int mSampleRate;
+    const SampleBlockFactoryPtr mFactory;
 };

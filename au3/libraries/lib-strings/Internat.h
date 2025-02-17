@@ -20,11 +20,11 @@
 class wxArrayString;
 class wxArrayStringEx;
 
-extern STRINGS_API const wxString& GetCustomTranslation(const wxString& str1 );
-extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1 );
+extern STRINGS_API const wxString& GetCustomTranslation(const wxString& str1);
+extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1);
 
 // Marks string for substitution only.
-#define _TS( s ) GetCustomSubstitution( s )
+#define _TS(s) GetCustomSubstitution(s)
 
 // Marks strings for extraction only... use .Translate() to translate.
 // '&', preceding menu accelerators, should NOT occur in the argument.
@@ -50,22 +50,22 @@ extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1 );
    #undef _
 #endif
 
-#if defined( _DEBUG )
-   // Force a crash if you misuse _ in a static initializer, so that translation
-   // is looked up too early and not found.
+#if defined(_DEBUG)
+// Force a crash if you misuse _ in a static initializer, so that translation
+// is looked up too early and not found.
 
    #ifdef __WXMSW__
 
-   extern "C" __declspec(dllimport) void __stdcall DebugBreak();
+extern "C" __declspec(dllimport) void __stdcall DebugBreak();
    #define _(s) ((wxTranslations::Get() || (DebugBreak(), true)), \
-                GetCustomTranslation((s)))
+                 GetCustomTranslation((s)))
 
    #else
 
    #include <signal.h>
-   // Raise a signal because it's even too early to use wxASSERT for this.
+// Raise a signal because it's even too early to use wxASSERT for this.
    #define _(s) ((wxTranslations::Get() || raise(SIGTRAP)), \
-                GetCustomTranslation((s)))
+                 GetCustomTranslation((s)))
 
    #endif
 
@@ -76,7 +76,6 @@ extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1 );
 #ifdef XP
    #undef XP
 #endif
-
 
 // The two string arguments will go to the .pot file, as
 // msgid sing
@@ -92,65 +91,63 @@ extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1 );
 // parentheses.  The third argument of the macro call is the zero-based index
 // of the format argument that selects singular or plural
 #define XP(sing, plur, n) \
-   TranslatableString{ wxT(sing), {} }.Plural<(n)>( wxT(plur) )
+    TranslatableString{ wxT(sing), {} }.Plural<(n)>(wxT(plur))
 
 // Like XP but with an additional context argument, as for XC
 #define XPC(sing, plur, n, c) \
-   TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>( wxT(plur) )
+    TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>(wxT(plur))
 
 class STRINGS_API Internat
 {
 public:
-   /** \brief Initialize internationalisation support. Call this once at
-    * program start. */
-   static void Init();
+    /** \brief Initialize internationalisation support. Call this once at
+     * program start. */
+    static void Init();
 
-   /** \brief Get the decimal separator for the current locale.
-    *
-    * Normally, this is a decimal point ('.'), but e.g. Germany uses a
-    * comma (',').*/
-   static wxChar GetDecimalSeparator();
-   static void SetCeeNumberFormat();
+    /** \brief Get the decimal separator for the current locale.
+     *
+     * Normally, this is a decimal point ('.'), but e.g. Germany uses a
+     * comma (',').*/
+    static wxChar GetDecimalSeparator();
+    static void SetCeeNumberFormat();
 
-   /** \brief Convert a string to a number.
-    *
-    * This function will accept BOTH point and comma as a decimal separator,
-    * regardless of the current locale.
-    * Returns 'true' on success, and 'false' if an error occurs. */
-   static bool CompatibleToDouble(const wxString& stringToConvert, double* result);
+    /** \brief Convert a string to a number.
+     *
+     * This function will accept BOTH point and comma as a decimal separator,
+     * regardless of the current locale.
+     * Returns 'true' on success, and 'false' if an error occurs. */
+    static bool CompatibleToDouble(const wxString& stringToConvert, double* result);
 
-   // Function version of above.
-   static double CompatibleToDouble(const wxString& stringToConvert);
+    // Function version of above.
+    static double CompatibleToDouble(const wxString& stringToConvert);
 
-   /** \brief Convert a number to a string, always uses the dot as decimal
-    * separator*/
-   static wxString ToString(double numberToConvert,
-                     int digitsAfterDecimalPoint = -1);
+    /** \brief Convert a number to a string, always uses the dot as decimal
+     * separator*/
+    static wxString ToString(double numberToConvert, int digitsAfterDecimalPoint = -1);
 
-   /** \brief Convert a number to a string, uses the user's locale's decimal
-    * separator */
-   static wxString ToDisplayString(double numberToConvert,
-                     int digitsAfterDecimalPoint = -1);
+    /** \brief Convert a number to a string, uses the user's locale's decimal
+     * separator */
+    static wxString ToDisplayString(double numberToConvert, int digitsAfterDecimalPoint = -1);
 
-   /** \brief Convert a number to a string while formatting it in bytes, KB,
-    * MB, GB */
-   static TranslatableString FormatSize(wxLongLong size);
-   static TranslatableString FormatSize(double size);
+    /** \brief Convert a number to a string while formatting it in bytes, KB,
+     * MB, GB */
+    static TranslatableString FormatSize(wxLongLong size);
+    static TranslatableString FormatSize(double size);
 
-   /** \brief Check a proposed file name string for illegal characters and
-    * remove them
-    * return true iff name is "visibly" changed (not necessarily equivalent to
-    * character-wise changed)
-    */
-   static bool SanitiseFilename(wxString &name, const wxString &sub);
+    /** \brief Check a proposed file name string for illegal characters and
+     * remove them
+     * return true iff name is "visibly" changed (not necessarily equivalent to
+     * character-wise changed)
+     */
+    static bool SanitiseFilename(wxString& name, const wxString& sub);
 
-   static const wxArrayString &GetExcludedCharacters()
-   { return exclude; }
+    static const wxArrayString& GetExcludedCharacters()
+    { return exclude; }
 
 private:
-   static wxChar mDecimalSeparator;
+    static wxChar mDecimalSeparator;
 
-   static wxArrayString exclude;
+    static wxArrayString exclude;
 };
 
 // Convert C strings to wxString

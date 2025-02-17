@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file FutureStrings.h
- 
+
  Paul Licameli
- 
+
  **********************************************************************/
 
 #if 0
@@ -40,7 +40,7 @@ Some example strings are also given first, to document the syntax.
 //XO("Get down"),
 
 //XO(
-   /* i18n-hint one more example of alternative correct placement of an
+/* i18n-hint one more example of alternative correct placement of an
     internationalization comment.  All comments on different occurrences of the
     same string are collected in the template file.  */
 //   "Get down"),

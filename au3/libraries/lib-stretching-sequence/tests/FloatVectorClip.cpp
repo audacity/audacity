@@ -13,62 +13,62 @@
 #include <cmath>
 
 FloatVectorClip::FloatVectorClip(
-   int sampleRate, const std::vector<std::vector<float>>& audio)
-    : mSampleRate { sampleRate }
-    , mAudio { audio }
+    int sampleRate, const std::vector<std::vector<float> >& audio)
+    : mSampleRate{sampleRate}
+    , mAudio{audio}
 {
 }
 
-namespace
-{
-std::vector<std::vector<float>>
+namespace {
+std::vector<std::vector<float> >
 Duplicate(const std::vector<float>& audio, size_t numChannels)
 {
-   std::vector<std::vector<float>> duplicate;
-   for (auto i = 0u; i < numChannels; ++i)
-      duplicate.push_back(audio);
-   return duplicate;
+    std::vector<std::vector<float> > duplicate;
+    for (auto i = 0u; i < numChannels; ++i) {
+        duplicate.push_back(audio);
+    }
+    return duplicate;
 }
 } // namespace
 
 FloatVectorClip::FloatVectorClip(
-   int sampleRate, const std::vector<float>& audio, size_t numChannels)
+    int sampleRate, const std::vector<float>& audio, size_t numChannels)
     : FloatVectorClip(sampleRate, Duplicate(audio, numChannels))
 {
 }
 
 AudioSegmentSampleView FloatVectorClip::GetSampleView(
-   size_t iChannel, sampleCount start, size_t len, bool mayThrow) const
+    size_t iChannel, sampleCount start, size_t len, bool mayThrow) const
 {
-   std::vector<BlockSampleView> blockViews {
-      std::make_shared<std::vector<float>>(mAudio[iChannel])
-   };
-   // todo(mhodgkinson) review argument types.
-   return AudioSegmentSampleView(
-      std::move(blockViews), start.as_size_t(), len);
+    std::vector<BlockSampleView> blockViews {
+        std::make_shared<std::vector<float> >(mAudio[iChannel])
+    };
+    // todo(mhodgkinson) review argument types.
+    return AudioSegmentSampleView(
+        std::move(blockViews), start.as_size_t(), len);
 }
 
 sampleCount FloatVectorClip::GetVisibleSampleCount() const
 {
-   return mAudio[0].size();
+    return mAudio[0].size();
 }
 
 size_t FloatVectorClip::NChannels() const
 {
-   return mAudio.size();
+    return mAudio.size();
 }
 
 int FloatVectorClip::GetRate() const
 {
-   return mSampleRate;
+    return mSampleRate;
 }
 
 sampleCount FloatVectorClip::TimeToSamples(double time) const
 {
-   return sampleCount(floor(time * GetRate() + 0.5));
+    return sampleCount(floor(time * GetRate() + 0.5));
 }
 
 double FloatVectorClip::GetPlayDuration() const
 {
-   return stretchRatio * mAudio[0].size() / mSampleRate;
+    return stretchRatio * mAudio[0].size() / mSampleRate;
 }

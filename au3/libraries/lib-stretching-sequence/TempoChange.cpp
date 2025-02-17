@@ -13,43 +13,43 @@
 
 namespace {
 struct ProjectTempo : ClientData::Cloneable<> {
-   ~ProjectTempo() = default;
-   std::unique_ptr<ClientData::Cloneable<>> Clone() const override
-   { return std::make_unique<ProjectTempo>(*this); }
+    ~ProjectTempo() = default;
+    std::unique_ptr<ClientData::Cloneable<> > Clone() const override
+    { return std::make_unique<ProjectTempo>(*this); }
 
-   static ProjectTempo &Get(ChannelGroup &group);
-   static const ProjectTempo &Get(const ChannelGroup &group);
+    static ProjectTempo& Get(ChannelGroup& group);
+    static const ProjectTempo& Get(const ChannelGroup& group);
 
-   std::optional<double> mProjectTempo;
+    std::optional<double> mProjectTempo;
 };
 
 const ChannelGroup::Attachments::RegisteredFactory
-projectTempoDataFactory{
-   [](auto &) { return std::make_unique<ProjectTempo>(); } };
+    projectTempoDataFactory{
+    [](auto&) { return std::make_unique<ProjectTempo>(); } };
 
-ProjectTempo &ProjectTempo::Get(ChannelGroup &group)
+ProjectTempo& ProjectTempo::Get(ChannelGroup& group)
 {
-   return group.Attachments::Get<ProjectTempo>(projectTempoDataFactory);
+    return group.Attachments::Get<ProjectTempo>(projectTempoDataFactory);
 }
 
-const ProjectTempo &ProjectTempo::Get(const ChannelGroup &group)
+const ProjectTempo& ProjectTempo::Get(const ChannelGroup& group)
 {
-   return Get(const_cast<ChannelGroup&>(group));
+    return Get(const_cast<ChannelGroup&>(group));
 }
 }
 
-void DoProjectTempoChange(ChannelGroup &group, double newTempo)
+void DoProjectTempoChange(ChannelGroup& group, double newTempo)
 {
-   auto &oldTempo = ProjectTempo::Get(group).mProjectTempo;
-   OnProjectTempoChange::Call(group, oldTempo, newTempo);
-   oldTempo = newTempo;
+    auto& oldTempo = ProjectTempo::Get(group).mProjectTempo;
+    OnProjectTempoChange::Call(group, oldTempo, newTempo);
+    oldTempo = newTempo;
 }
 
-const std::optional<double>& GetProjectTempo(const ChannelGroup &group)
+const std::optional<double>& GetProjectTempo(const ChannelGroup& group)
 {
-   return ProjectTempo::Get(group).mProjectTempo;
+    return ProjectTempo::Get(group).mProjectTempo;
 }
 
 DEFINE_ATTACHED_VIRTUAL(OnProjectTempoChange) {
-   return [](auto&, auto&, auto){ };
+    return [](auto&, auto&, auto){ };
 }

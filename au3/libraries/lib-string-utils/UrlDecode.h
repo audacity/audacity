@@ -12,9 +12,6 @@
 
 #include <string>
 
-namespace audacity
-{
-
-STRING_UTILS_API std::string UrlDecode (const std::string& url);
-
+namespace audacity {
+STRING_UTILS_API std::string UrlDecode(const std::string& url);
 }

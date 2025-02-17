@@ -14,12 +14,11 @@
 #define __AUDACITY_SENTRY__
 
 #ifdef HAS_SENTRY_REPORTING
-#	include "SentryReport.h"
+#     include "SentryReport.h"
 
 #   define ADD_EXCEPTION_CONTEXT(name, value) audacity::sentry::AddExceptionContext(name, value)
 #else
 #   define ADD_EXCEPTION_CONTEXT(name, value)
 #endif // HAS_SENTRY_REPORTING
-
 
 #endif /* __AUDACITY_SENTRY__ */

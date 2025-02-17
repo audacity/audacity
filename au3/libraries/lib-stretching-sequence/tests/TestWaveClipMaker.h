@@ -20,25 +20,22 @@ class SampleBlockFactory;
 class TestWaveClipMaker final
 {
 public:
-   TestWaveClipMaker(int sampleRate, SampleBlockFactoryPtr);
+    TestWaveClipMaker(int sampleRate, SampleBlockFactoryPtr);
 
-   using Operations = std::function<void(WaveClip&)>;
+    using Operations = std::function<void (WaveClip&)>;
 
-   WaveClipHolder ClipFilledWith(
-      const std::vector<std::vector<float>>& values,
-      Operations operations = [](WaveClip&) {}) const;
+    WaveClipHolder ClipFilledWith(
+        const std::vector<std::vector<float> >& values, Operations operations = [] (WaveClip&) {}) const;
 
-   WaveClipHolder ClipFilledWith(
-      const std::vector<float>& values, size_t numChannels,
-      Operations operations = [](WaveClip&) {}) const;
+    WaveClipHolder ClipFilledWith(
+        const std::vector<float>& values, size_t numChannels, Operations operations = [] (WaveClip&) {}) const;
 
-   WaveClipHolder ClipFilledWith(
-      float value, size_t numValues, size_t numChannels,
-      Operations operations = [](WaveClip&) {}) const;
+    WaveClipHolder ClipFilledWith(
+        float value, size_t numValues, size_t numChannels, Operations operations = [] (WaveClip&) {}) const;
 
 private:
-   static constexpr bool copyCutLines = false;
+    static constexpr bool copyCutLines = false;
 
-   const int mSampleRate;
-   const SampleBlockFactoryPtr mFactory;
+    const int mSampleRate;
+    const SampleBlockFactoryPtr mFactory;
 };
