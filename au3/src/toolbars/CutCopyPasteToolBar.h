@@ -23,43 +23,41 @@ class wxGridSizer;
 class wxImage;
 class wxWindow;
 
-class CutCopyPasteToolBar final : public ToolBar {
+class CutCopyPasteToolBar final : public ToolBar
+{
+public:
 
- public:
+    CutCopyPasteToolBar(AudacityProject& project);
+    virtual ~CutCopyPasteToolBar();
 
-   CutCopyPasteToolBar( AudacityProject &project );
-   virtual ~CutCopyPasteToolBar();
+    bool ShownByDefault() const override;
+    bool HideAfterReset() const override;
 
-   bool ShownByDefault() const override;
-   bool HideAfterReset() const override;
+    static Identifier ID();
 
-   static Identifier ID();
+    void Create(wxWindow* parent) override;
 
-   void Create(wxWindow *parent) override;
+    void OnButton(wxCommandEvent& event);
 
-   void OnButton(wxCommandEvent & event);
+    void Populate() override;
+    void Repaint(wxDC* WXUNUSED(dc)) override {}
+    void EnableDisableButtons() override;
+    void UpdatePrefs() override;
 
-   void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
-   void EnableDisableButtons() override;
-   void UpdatePrefs() override;
+private:
 
- private:
+    void AddButton(
+        teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled, int id, const TranslatableString& label, bool toggle = false);
 
-   void AddButton(
-      teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-      int id, const TranslatableString &label, bool toggle = false);
+    void RegenerateTooltips() override;
 
-   void RegenerateTooltips() override;
+    ToolBarButtons mButtons;
+    wxGridSizer* mToolSizer;
 
-   ToolBarButtons mButtons;
-   wxGridSizer* mToolSizer;
+public:
 
- public:
-
-   DECLARE_CLASS(CutCopyPaste)
-   DECLARE_EVENT_TABLE()
+    DECLARE_CLASS(CutCopyPaste)
+    DECLARE_EVENT_TABLE()
 };
 
 #endif
-

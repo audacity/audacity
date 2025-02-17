@@ -27,8 +27,6 @@
 
 *//*******************************************************************/
 
-
-
 #include "CutCopyPasteToolBar.h"
 
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -59,20 +57,20 @@
 #include "ToolManager.h"
 
 enum {
-   TBCutID,
-   TBCopyID,
-   TBPasteID,
-   TBDeleteID,
-   TBNumButtons
+    TBCutID,
+    TBCopyID,
+    TBPasteID,
+    TBDeleteID,
+    TBNumButtons
 };
 
 constexpr int first_TB_ID = 21300;
 
 static const ToolBarButtons::ButtonList CutCopyPasteToolbarButtonList = {
-   { TBCutID,    wxT("Cut"),    XO("Cut")   },
-   { TBCopyID,   wxT("Copy"),   XO("Copy")  },
-   { TBPasteID,  wxT("Paste"),  XO("Paste") },
-   { TBDeleteID, wxT("Delete"), XO("Delete")}
+    { TBCutID,    wxT("Cut"),    XO("Cut") },
+    { TBCopyID,   wxT("Copy"),   XO("Copy") },
+    { TBPasteID,  wxT("Paste"),  XO("Paste") },
+    { TBDeleteID, wxT("Delete"), XO("Delete") }
 };
 
 IMPLEMENT_CLASS(CutCopyPasteToolBar, ToolBar);
@@ -81,22 +79,22 @@ IMPLEMENT_CLASS(CutCopyPasteToolBar, ToolBar);
 /// Methods for CutCopyPasteToolBar
 ////////////////////////////////////////////////////////////
 
-BEGIN_EVENT_TABLE( CutCopyPasteToolBar, ToolBar )
-   EVT_COMMAND_RANGE(TBCutID+first_TB_ID,
-                      TBCutID+first_TB_ID + TBNumButtons - 1,
-                      wxEVT_COMMAND_BUTTON_CLICKED,
-                      CutCopyPasteToolBar::OnButton )
+BEGIN_EVENT_TABLE(CutCopyPasteToolBar, ToolBar)
+EVT_COMMAND_RANGE(TBCutID + first_TB_ID,
+                  TBCutID + first_TB_ID + TBNumButtons - 1,
+                  wxEVT_COMMAND_BUTTON_CLICKED,
+                  CutCopyPasteToolBar::OnButton)
 END_EVENT_TABLE()
 
 Identifier CutCopyPasteToolBar::ID()
 {
-   return wxT("CutCopyPaste");
+    return wxT("CutCopyPaste");
 }
 
 //Standard constructor
-CutCopyPasteToolBar::CutCopyPasteToolBar( AudacityProject &project )
-: ToolBar(project, XO("Cut/Copy/Paste"), ID())
-, mButtons{ this, project, CutCopyPasteToolbarButtonList, TBNumButtons, first_TB_ID }
+CutCopyPasteToolBar::CutCopyPasteToolBar(AudacityProject& project)
+    : ToolBar(project, XO("Cut/Copy/Paste"), ID())
+    , mButtons{this, project, CutCopyPasteToolbarButtonList, TBNumButtons, first_TB_ID}
 {
 }
 
@@ -106,91 +104,91 @@ CutCopyPasteToolBar::~CutCopyPasteToolBar()
 
 bool CutCopyPasteToolBar::ShownByDefault() const
 {
-   return false;
+    return false;
 }
 
 bool CutCopyPasteToolBar::HideAfterReset() const
 {
-   return true;
+    return true;
 }
 
-void CutCopyPasteToolBar::Create(wxWindow * parent)
+void CutCopyPasteToolBar::Create(wxWindow* parent)
 {
-   ToolBar::Create(parent);
-   UpdatePrefs();
+    ToolBar::Create(parent);
+    UpdatePrefs();
 }
 
 void CutCopyPasteToolBar::AddButton(
-   teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
-   int id, const TranslatableString &label, bool toggle)
+    teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled,
+    int id, const TranslatableString& label, bool toggle)
 {
-   auto r = mButtons.CreateButton(eEnabledUp, eEnabledDown, eDisabled, id, label, toggle);
-   mToolSizer->Add(r);
+    auto r = mButtons.CreateButton(eEnabledUp, eEnabledDown, eDisabled, id, label, toggle);
+    mToolSizer->Add(r);
 }
 
 void CutCopyPasteToolBar::Populate()
 {
-   SetBackgroundColour( theTheme.Colour( clrMedium  ) );
-   MakeButtonBackgroundsSmall();
+    SetBackgroundColour(theTheme.Colour(clrMedium));
+    MakeButtonBackgroundsSmall();
 
-   Add(mToolSizer = safenew wxGridSizer(2, 2, toolbarSpacing, toolbarSpacing),
-      0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
+    Add(mToolSizer = safenew wxGridSizer(2, 2, toolbarSpacing, toolbarSpacing),
+        0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
 
-   /* Buttons */
-   // Tooltips match menu entries.
-   // We previously had longer tooltips which were not more clear.
-   AddButton(bmpCut, bmpCut, bmpCutDisabled, TBCutID,
-      XO("Cut"));
-   AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, TBCopyID,
-      XO("Copy"));
-   AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, TBPasteID,
-      XO("Paste"));
-   AddButton(bmpDelete, bmpDelete, bmpDeleteDisabled, TBDeleteID,
-      XO("Delete"));
+    /* Buttons */
+    // Tooltips match menu entries.
+    // We previously had longer tooltips which were not more clear.
+    AddButton(bmpCut, bmpCut, bmpCutDisabled, TBCutID,
+              XO("Cut"));
+    AddButton(bmpCopy, bmpCopy, bmpCopyDisabled, TBCopyID,
+              XO("Copy"));
+    AddButton(bmpPaste, bmpPaste, bmpPasteDisabled, TBPasteID,
+              XO("Paste"));
+    AddButton(bmpDelete, bmpDelete, bmpDeleteDisabled, TBDeleteID,
+              XO("Delete"));
 
-   mButtons.SetEnabled(TBPasteID, false);
+    mButtons.SetEnabled(TBPasteID, false);
 
-   RegenerateTooltips();
+    RegenerateTooltips();
 }
 
 void CutCopyPasteToolBar::UpdatePrefs()
 {
-   RegenerateTooltips();
+    RegenerateTooltips();
 
-   // Set label to pull in language change
-   SetLabel(XO("Cut/Copy/Paste"));
+    // Set label to pull in language change
+    SetLabel(XO("Cut/Copy/Paste"));
 
-   // Give base class a chance
-   ToolBar::UpdatePrefs();
+    // Give base class a chance
+    ToolBar::UpdatePrefs();
 }
 
 void CutCopyPasteToolBar::RegenerateTooltips()
 {
-   mButtons.RegenerateTooltips();
+    mButtons.RegenerateTooltips();
 }
 
 void CutCopyPasteToolBar::EnableDisableButtons()
 {
-   mButtons.EnableDisableButtons();
+    mButtons.EnableDisableButtons();
 }
 
-void CutCopyPasteToolBar::OnButton(wxCommandEvent & event)
+void CutCopyPasteToolBar::OnButton(wxCommandEvent& event)
 {
-   mButtons.OnButton(event);
+    mButtons.OnButton(event);
 }
 
 static RegisteredToolbarFactory factory{
-   []( AudacityProject &project ){
-      return ToolBar::Holder{ safenew CutCopyPasteToolBar{ project } }; }
+    []( AudacityProject& project ){
+        return ToolBar::Holder{ safenew CutCopyPasteToolBar{ project } };
+    }
 };
 
 namespace {
 AttachedToolBarMenuItem sAttachment{
-   /* i18n-hint: Clicking this menu item shows the toolbar for editing */
-   CutCopyPasteToolBar::ID(),
-   wxT("ShowCutCopyPasteTB"),
-   XXO("&Cut/Copy/Paste Toolbar"),
-   { Registry::OrderingHint::After, "ShowEditTB" }
+    /* i18n-hint: Clicking this menu item shows the toolbar for editing */
+    CutCopyPasteToolBar::ID(),
+    wxT("ShowCutCopyPasteTB"),
+    XXO("&Cut/Copy/Paste Toolbar"),
+    { Registry::OrderingHint::After, "ShowEditTB" }
 };
 }
-

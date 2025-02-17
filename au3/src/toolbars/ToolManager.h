@@ -27,7 +27,6 @@
 
 #include "CommandFunctors.h"
 
-
 class wxCommandEvent;
 class wxFrame;
 class wxMouseEvent;
@@ -48,138 +47,133 @@ class ToolFrame;
 /// class ToolManager
 ////////////////////////////////////////////////////////////
 
-class AUDACITY_DLL_API ToolManager final
-   : public wxEvtHandler
-   , public wxEventFilter
-   , public ClientData::Base
+class AUDACITY_DLL_API ToolManager final : public wxEvtHandler, public wxEventFilter, public ClientData::Base
 {
+public:
+    // a hook function to break dependency of ToolManager on ProjectWindow
+    struct AUDACITY_DLL_API TopPanelHook : GlobalHook<TopPanelHook,
+                                                      wxWindow* (wxWindow&)
+                                                      > {};
 
- public:
-   // a hook function to break dependency of ToolManager on ProjectWindow
-   struct AUDACITY_DLL_API TopPanelHook : GlobalHook<TopPanelHook,
-      wxWindow*( wxWindow& )
-   >{};
+    static ToolManager& Get(AudacityProject& project);
+    static const ToolManager& Get(const AudacityProject& project);
 
-   static ToolManager &Get( AudacityProject &project );
-   static const ToolManager &Get( const AudacityProject &project );
+    ToolManager(AudacityProject* parent);
+    ToolManager(const ToolManager&) = delete;
+    ToolManager& operator=(const ToolManager&) = delete;
+    ~ToolManager();
 
-   ToolManager( AudacityProject *parent );
-   ToolManager( const ToolManager & ) = delete;
-   ToolManager &operator=( const ToolManager & ) = delete;
-   ~ToolManager();
+    void CreateWindows();
 
-   void CreateWindows();
+    void LayoutToolBars();
 
-   void LayoutToolBars();
+    bool IsDocked(Identifier type) const;
 
-   bool IsDocked( Identifier type ) const;
+    bool IsVisible(Identifier type) const;
 
-   bool IsVisible( Identifier type ) const;
+    void ShowHide(Identifier type);
 
-   void ShowHide( Identifier type );
+    void Expose(Identifier type, bool show);
 
-   void Expose( Identifier type, bool show );
+    ToolBar* GetToolBar(const Identifier& type) const;
 
-   ToolBar *GetToolBar(const Identifier &type) const;
+    ToolDock* GetTopDock();
+    const ToolDock* GetTopDock() const;
+    ToolDock* GetBotDock();
+    const ToolDock* GetBotDock() const;
 
-   ToolDock *GetTopDock();
-   const ToolDock *GetTopDock() const;
-   ToolDock *GetBotDock();
-   const ToolDock *GetBotDock() const;
+    void Reset();
+    static void OnResetToolBars(const CommandContext& context);
 
-   void Reset();
-   static void OnResetToolBars(const CommandContext &context);
+    void Destroy();
+    void RegenerateTooltips();
 
-   void Destroy();
-   void RegenerateTooltips();
+    int FilterEvent(wxEvent& event) override;
 
-   int FilterEvent(wxEvent &event) override;
+    bool RestoreFocus();
 
-   bool RestoreFocus();
+    //! Visit bars, lexicographically by their textual ids
+    template< typename F >
+    void ForEach(F&& fun)
+    {
+        std::for_each(std::begin(mBars), std::end(mBars), [&fun](auto& pair){
+            fun(pair.second.get());
+        });
+    }
 
-   //! Visit bars, lexicographically by their textual ids
-   template< typename F >
-   void ForEach(F &&fun)
-   {
-      std::for_each(std::begin(mBars), std::end(mBars), [&fun](auto &pair){
-         fun(pair.second.get());
-      });
-   }
+    size_t CountBars() const
+    {
+        return mBars.size();
+    }
 
-   size_t CountBars() const
-   {
-      return mBars.size();
-   }
+    static void ModifyToolbarMenus(AudacityProject& project);
+    // Calls ModifyToolbarMenus() on all projects
+    static void ModifyAllProjectToolbarMenus();
 
-   static void ModifyToolbarMenus(AudacityProject &project);
-   // Calls ModifyToolbarMenus() on all projects
-   static void ModifyAllProjectToolbarMenus();
+private:
 
- private:
+    ToolBar* Float(ToolBar* t, wxPoint& pos);
 
-   ToolBar *Float( ToolBar *t, wxPoint & pos );
+    void OnMenuUpdate(struct MenuUpdateMessage);
+    void OnTimer(wxTimerEvent& event);
+    void OnMouse(wxMouseEvent& event);
+    void OnCaptureLost(wxMouseCaptureLostEvent& event);
+    void UndockBar(wxPoint mp);
+    void OnGrabber(GrabberEvent& event);
+    void HandleEscapeKey();
+    void DoneDragging();
 
-   void OnMenuUpdate(struct MenuUpdateMessage);
-   void OnTimer( wxTimerEvent & event );
-   void OnMouse( wxMouseEvent & event );
-   void OnCaptureLost( wxMouseCaptureLostEvent & event );
-   void UndockBar( wxPoint mp );
-   void OnGrabber( GrabberEvent & event );
-   void HandleEscapeKey();
-   void DoneDragging();
+    void OnIndicatorCreate(wxWindowCreateEvent& event);
+    void OnIndicatorPaint(wxPaintEvent& event);
 
-   void OnIndicatorCreate( wxWindowCreateEvent & event );
-   void OnIndicatorPaint( wxPaintEvent & event );
+    void ReadConfig();
+    void WriteConfig();
+    void Updated();
 
-   void ReadConfig();
-   void WriteConfig();
-   void Updated();
+    Observer::Subscription mMenuManagerSubscription;
+    AudacityProject* mParent;
+    wxWindowRef mLastFocus{};
 
-   Observer::Subscription mMenuManagerSubscription;
-   AudacityProject *mParent;
-   wxWindowRef mLastFocus{};
+    ToolFrame* mDragWindow;
+    ToolDock* mDragDock;
+    ToolBar* mDragBar {};
+    wxPoint mDragOffset;
+    ToolBarConfiguration::Position mDragBefore {};
 
-   ToolFrame *mDragWindow;
-   ToolDock *mDragDock;
-   ToolBar *mDragBar {};
-   wxPoint mDragOffset;
-   ToolBarConfiguration::Position mDragBefore {};
+    wxPoint mLastPos;
+    wxRect mBarPos;
 
-   wxPoint mLastPos;
-   wxRect mBarPos;
+    using FramePtr = Destroy_ptr<wxFrame>;
+    FramePtr mIndicator;
+    std::unique_ptr<wxRegion> mLeft, mDown;
+    wxRegion* mCurrent;
 
-   using FramePtr = Destroy_ptr<wxFrame>;
-   FramePtr mIndicator;
-   std::unique_ptr<wxRegion> mLeft, mDown;
-   wxRegion *mCurrent;
-
-   wxTimer mTimer;
-   bool mLastState;
+    wxTimer mTimer;
+    bool mLastState;
 
 #if defined(__WXMAC__)
-   bool mTransition;
+    bool mTransition;
 #endif
 
-   ToolDock *mTopDock{};
-   ToolDock *mBotDock{};
+    ToolDock* mTopDock{};
+    ToolDock* mBotDock{};
 
-   //! map not unordered_map, for the promise made by ForEach
-   std::map<Identifier, ToolBar::Holder> mBars;
+    //! map not unordered_map, for the promise made by ForEach
+    std::map<Identifier, ToolBar::Holder> mBars;
 
-   wxPoint mPrevPosition {};
-   ToolDock *mPrevDock {};
-   ToolBarConfiguration::Position mPrevSlot
-      { ToolBarConfiguration::UnspecifiedPosition };
-   ToolBarConfiguration mPrevConfiguration;
-   bool mDidDrag{};
-   bool mClicked{};
+    wxPoint mPrevPosition {};
+    ToolDock* mPrevDock {};
+    ToolBarConfiguration::Position mPrevSlot
+    { ToolBarConfiguration::UnspecifiedPosition };
+    ToolBarConfiguration mPrevConfiguration;
+    bool mDidDrag{};
+    bool mClicked{};
 
- public:
+public:
 
-   DECLARE_CLASS( ToolManager )
-   DECLARE_EVENT_TABLE()
+    DECLARE_CLASS(ToolManager)
+    DECLARE_EVENT_TABLE()
 };
-
 
 ////////////////////////////////////////////////////////////
 /// class ToolFrame
@@ -189,55 +183,55 @@ class ToolFrame final : public wxFrame
 {
 public:
 
-   ToolFrame( AudacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos );
+    ToolFrame(AudacityProject* parent, ToolManager* manager, ToolBar* bar, wxPoint pos);
 
-   ~ToolFrame();
+    ~ToolFrame();
 
-   ToolBar *GetBar() { return mBar; }
-   void ClearBar() { mBar = nullptr; }
-   void LockInMinSize(ToolBar * pBar);
+    ToolBar* GetBar() { return mBar; }
+    void ClearBar() { mBar = nullptr; }
+    void LockInMinSize(ToolBar* pBar);
 
-   //
-   // Transition a toolbar from float to dragging
-   //
-   void OnGrabber( GrabberEvent & event );
+    //
+    // Transition a toolbar from float to dragging
+    //
+    void OnGrabber(GrabberEvent& event);
 
-   //
-   // Handle toolbar updates
-   //
-   void OnToolBarUpdate( wxCommandEvent & event );
+    //
+    // Handle toolbar updates
+    //
+    void OnToolBarUpdate(wxCommandEvent& event);
 
-   //
-   // Handle frame paint events
-   //
-   void OnPaint( wxPaintEvent & WXUNUSED(event) );
+    //
+    // Handle frame paint events
+    //
+    void OnPaint(wxPaintEvent & WXUNUSED(event));
 
-   void OnMotion( wxMouseEvent & event );
+    void OnMotion(wxMouseEvent& event);
 
-   void OnCaptureLost( wxMouseCaptureLostEvent & WXUNUSED(event) );
+    void OnCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event));
 
-   //
-   // Do not allow the window to close through keyboard accelerators
-   // (like ALT+F4 on Windows)
-   //
-   void OnClose( wxCloseEvent & event );
+    //
+    // Do not allow the window to close through keyboard accelerators
+    // (like ALT+F4 on Windows)
+    //
+    void OnClose(wxCloseEvent& event);
 
-   void OnKeyDown( wxKeyEvent &event );
+    void OnKeyDown(wxKeyEvent& event);
 
-   void Resize( const wxSize &size );
+    void Resize(const wxSize& size);
 
 private:
 
-   AudacityProject *const mParent;
-   ToolManager *mManager;
-   ToolBar *mBar;
-   wxSize mMinSize;
-   wxSize mOrigSize;
+    AudacityProject* const mParent;
+    ToolManager* mManager;
+    ToolBar* mBar;
+    wxSize mMinSize;
+    wxSize mOrigSize;
 
 public:
 
-   DECLARE_CLASS( ToolFrame )
-   DECLARE_EVENT_TABLE()
+    DECLARE_CLASS(ToolFrame)
+    DECLARE_EVENT_TABLE()
 };
 
 #include "MenuRegistry.h"
@@ -245,17 +239,16 @@ public:
 // Construct a static instance of this class to add a menu item that shows and
 // hides a toolbar
 struct AUDACITY_DLL_API AttachedToolBarMenuItem : CommandHandlerObject {
-   AttachedToolBarMenuItem(
-      Identifier id, const CommandID &name, const TranslatableString &label_in,
-      const Registry::OrderingHint &hint = {},
-      // IDs of other toolbars not to be shown simultaneously with this one:
-      std::vector< Identifier > excludeIds = {} );
+    AttachedToolBarMenuItem(
+        Identifier id, const CommandID& name, const TranslatableString& label_in, const Registry::OrderingHint& hint = {},
+        // IDs of other toolbars not to be shown simultaneously with this one:
+        std::vector< Identifier > excludeIds = {});
 
-   void OnShowToolBar(const CommandContext &context);
+    void OnShowToolBar(const CommandContext& context);
 
-   const Identifier mId;
-   const MenuRegistry::AttachedItem mAttachedItem;
-   const std::vector< Identifier > mExcludeIds;
+    const Identifier mId;
+    const MenuRegistry::AttachedItem mAttachedItem;
+    const std::vector< Identifier > mExcludeIds;
 };
 
 #endif

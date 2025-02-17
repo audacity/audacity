@@ -34,45 +34,46 @@ struct ProjectSettingsEvent;
 
 const int FirstToolID = 11200;
 
-class ToolsToolBar final : public ToolBar {
+class ToolsToolBar final : public ToolBar
+{
+public:
+    static Identifier ID();
 
- public:
-   static Identifier ID();
+    ToolsToolBar(AudacityProject& project);
+    virtual ~ToolsToolBar();
 
-   ToolsToolBar( AudacityProject &project );
-   virtual ~ToolsToolBar();
+    static ToolsToolBar& Get(AudacityProject& project);
+    static const ToolsToolBar& Get(const AudacityProject& project);
 
-   static ToolsToolBar &Get( AudacityProject &project );
-   static const ToolsToolBar &Get( const AudacityProject &project );
+    void UpdatePrefs() override;
 
-   void UpdatePrefs() override;
+    void OnTool(wxCommandEvent& evt);
+    void OnToolChanged(ProjectSettingsEvent);
+    void DoToolChanged();
 
-   void OnTool(wxCommandEvent & evt);
-   void OnToolChanged(ProjectSettingsEvent);
-   void DoToolChanged();
+    void Populate() override;
+    void Repaint(wxDC* WXUNUSED(dc)) override {}
+    void EnableDisableButtons() override {}
 
-   void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
-   void EnableDisableButtons() override {};
+private:
 
- private:
+    void Create(wxWindow* parent) override;
+    void RegenerateTooltips() override;
+    wxImage* MakeToolImage(wxImage* tool, wxImage* mask, int style);
 
-   void Create(wxWindow * parent) override;
-   void RegenerateTooltips() override;
-   wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
+    enum {
+        numTools = 4
+    };
 
-   enum { numTools = 4 };
+    Observer::Subscription mSubscription;
+    AButton* mTool[numTools];
+    wxGridSizer* mToolSizer;
+    int mCurrentTool;
 
-   Observer::Subscription mSubscription;
-   AButton *mTool[numTools];
-   wxGridSizer *mToolSizer;
-   int mCurrentTool;
+public:
 
- public:
-
-   DECLARE_CLASS(ToolsToolBar)
-   DECLARE_EVENT_TABLE()
+    DECLARE_CLASS(ToolsToolBar)
+    DECLARE_EVENT_TABLE()
 };
 
 #endif
-

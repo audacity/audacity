@@ -31,48 +31,44 @@ struct AudioIOEvent;
 
 class TimeSignatureToolBar final : public ToolBar
 {
+public:
+    static Identifier ID();
 
- public:
-   static Identifier ID();
+    TimeSignatureToolBar(AudacityProject& project);
+    virtual ~TimeSignatureToolBar();
 
-   TimeSignatureToolBar(AudacityProject& project);
-   virtual ~TimeSignatureToolBar();
+    bool ShownByDefault() const override;
+    DockID DefaultDockID() const override;
 
-   bool ShownByDefault() const override;
-   DockID DefaultDockID() const override;
+    static TimeSignatureToolBar& Get(AudacityProject& project);
+    static const TimeSignatureToolBar& Get(const AudacityProject& project);
 
-   static TimeSignatureToolBar& Get(AudacityProject& project);
-   static const TimeSignatureToolBar& Get(const AudacityProject& project);
+    void Create(wxWindow* parent) override;
 
-   void Create(wxWindow *parent) override;
+    void Populate() override;
+    void Repaint(wxDC* WXUNUSED(dc)) override {}
+    void EnableDisableButtons() override {}
+    void UpdatePrefs() override;
 
-   void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
-   void EnableDisableButtons() override {};
-   void UpdatePrefs() override;
-   
-   void RegenerateTooltips() override;
+    void RegenerateTooltips() override;
 
- private:
-   void OnSize(wxSizeEvent& evt);
-   
-   void OnAudioIOEvent(const AudioIOEvent& event);
+private:
+    void OnSize(wxSizeEvent& evt);
 
-   void AddTitle(
-      const TranslatableString& Title, wxSizer* pSizer,
-      int flags = wxEXPAND | wxRIGHT, int border = 5,
-      double fontMultiplier = 1.0);
-   
-   Observer::Subscription mTimeSignatureChangedSubscription;
-   Observer::Subscription mPlaybackStateChangedSubscription;
+    void OnAudioIOEvent(const AudioIOEvent& event);
 
-   wxWeakRef<SpinControl> mTempoControl;
-   wxWeakRef<SpinControl> mUpperSignatureControl;
-   wxWeakRef<wxComboBox> mLowerSignatureControl;
+    void AddTitle(
+        const TranslatableString& Title, wxSizer* pSizer, int flags = wxEXPAND | wxRIGHT, int border = 5, double fontMultiplier = 1.0);
 
- public:
-    
+    Observer::Subscription mTimeSignatureChangedSubscription;
+    Observer::Subscription mPlaybackStateChangedSubscription;
 
-   DECLARE_CLASS(TimeSignatureToolBar)
-   DECLARE_EVENT_TABLE()
+    wxWeakRef<SpinControl> mTempoControl;
+    wxWeakRef<SpinControl> mUpperSignatureControl;
+    wxWeakRef<wxComboBox> mLowerSignatureControl;
+
+public:
+
+    DECLARE_CLASS(TimeSignatureToolBar)
+    DECLARE_EVENT_TABLE()
 };
