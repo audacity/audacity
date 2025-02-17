@@ -530,18 +530,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Show macros palette"),
              TranslatableString("action", "Open a panel containing all macros")
              ),
-    UiAction("macro-fade-ends",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Macro fade ends"),
-             TranslatableString("action", "Macro fade ends")
-             ),
-    UiAction("macro-mp3-conversion",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Macro MP3 conversion"),
-             TranslatableString("action", "Macro MP3 conversion")
-             ),
     UiAction("nyquist-plugin-installer",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
