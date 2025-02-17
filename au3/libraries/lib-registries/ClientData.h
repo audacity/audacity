@@ -23,11 +23,10 @@ Paul Licameli
 
 //! @copydoc ClientData.h
 namespace ClientData {
-
 //! A convenient default parameter for class template @b Site
 struct REGISTRIES_API Base
 {
-   virtual ~Base();
+    virtual ~Base();
 };
 
 //! A one-argument alias template for the default template-template parameter of ClientData::Site
@@ -40,24 +39,24 @@ template< typename Object > using BarePtr = Object*;
 //! A convenient base class defining abstract virtual Clone() for a given kind of pointer
 /*!
  @tparam Owner template-template parameter for the kind of smart pointer, like std::shared_ptr, returned by Clone()
- 
+
  @sa ClientData::DeepCopying
  */
 template<
-   typename Covariant = void, // CRTP derived class when not void
-   template<typename> class Owner = UniquePtr
-> struct REGISTRIES_API Cloneable
+    typename Covariant = void, // CRTP derived class when not void
+    template<typename> class Owner = UniquePtr
+    > struct REGISTRIES_API Cloneable
 {
-   using Base = std::conditional_t<
-      std::is_void_v<Covariant>, Cloneable, Covariant
-   >;
-   using PointerType = Owner< Base >;
+    using Base = std::conditional_t<
+        std::is_void_v<Covariant>, Cloneable, Covariant
+        >;
+    using PointerType = Owner< Base >;
 
-   Cloneable() = default;
-   Cloneable(const Cloneable&) = default;
-   Cloneable &operator=(const Cloneable &) = default;
-   virtual ~Cloneable() = default;
-   virtual PointerType Clone() const = 0;
+    Cloneable() = default;
+    Cloneable(const Cloneable&) = default;
+    Cloneable& operator=(const Cloneable&) = default;
+    virtual ~Cloneable() = default;
+    virtual PointerType Clone() const = 0;
 };
 
 extern template struct REGISTRIES_API Cloneable<>;
@@ -70,7 +69,7 @@ extern template struct REGISTRIES_API Cloneable<>;
    The set of client objects attached to each host object is not fixed in the definition of
    the host class, but instead a system of registration of factories of client objects lets it
    be open-ended.
- 
+
    Besides mere storage and retrieval, this can also implement the [observer pattern](https://en.wikipedia.org/wiki/Observer_pattern),
    in which the host pushes notifications to some virtual function defined in
    each attached item.
@@ -117,7 +116,7 @@ public:
 ```
 
   @par Client side usage pattern
- 
+
  ```
 class MyClientData : public AbstractClientData
 {
@@ -194,480 +193,492 @@ void DoYetAnotherThing( Host &host )
    any later constructed host objects will carry null pointers in the associated
    slot, and a small "leak" in the space of per-host slots will persist until
    the program exits.  All such usage is not recommended.
- 
+
  @tparam Host
  Type that derives from this base class; it
  supports hooks to invoke attached object factories.  This is an example of the
  [curiously recurring template pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern#General_form)
 
  @tparam ClientData Common base class of attachments; must have a virtual destructor
- 
+
  @tparam CopyingPolicy @ref CopyingPolicy value Chooses deep, shallow, or (default) no-op copying of attachments
- 
+
  @tparam Pointer
  The kind of pointer @b Host will hold to ClientData; default is std::unique_ptr.
  You might want to use std::shared_ptr, std::weak_ptr, or wxWeakRef instead
- 
+
  @tparam ObjectLockingPolicy @ref LockingPolicy value chooses thread safety policy for array of attachments in each @b Host, default is unsafe
- 
+
  @tparam RegistryLockingPolicy @ref LockingPolicy value chooses thread safety policy for the static table of attachment factory functions, default is unsafe
 */
 template<
-   typename Host,
-   typename ClientData = Base,
+    typename Host,
+    typename ClientData = Base,
 
-   // Remaining parameters are often defaulted
+    // Remaining parameters are often defaulted
 
-   CopyingPolicy ObjectCopyingPolicy = SkipCopying,
+    CopyingPolicy ObjectCopyingPolicy = SkipCopying,
 
-   template<typename> class Pointer = UniquePtr,
+    template<typename> class Pointer = UniquePtr,
 
-   LockingPolicy ObjectLockingPolicy = NoLocking,
-   LockingPolicy RegistryLockingPolicy = NoLocking
->
+    LockingPolicy ObjectLockingPolicy = NoLocking,
+    LockingPolicy RegistryLockingPolicy = NoLocking
+    >
 class Site
 {
 public:
-   ~Site()
-   {
-      static_assert( std::has_virtual_destructor<ClientData>::value,
-         "ClientData::Site requires a data class with a virtual destructor" );
-   }
+    ~Site()
+    {
+        static_assert(std::has_virtual_destructor<ClientData>::value,
+                      "ClientData::Site requires a data class with a virtual destructor");
+    }
 
-   using DataType = ClientData;
-   using DataPointer = Pointer< ClientData >;
-   //! Type of function from which RegisteredFactory is constructed; it builds attachments
-   using DataFactory = std::function< DataPointer( Host& ) >;
+    using DataType = ClientData;
+    using DataPointer = Pointer< ClientData >;
+    //! Type of function from which RegisteredFactory is constructed; it builds attachments
+    using DataFactory = std::function< DataPointer (Host&) >;
 
-   Site()
-   {
-      auto factories = GetFactories();
-      auto size = factories.mObject.size();
-      mData.reserve( size );
-   }
-   Site( const Site &other )
-      : mData( other.mData )
-      { }
-   Site& operator =( const Site & other )
-      { mData = other.mData; return *this; }
-   Site( Site && other )
-      : mData( std::move(other.mData) )
-      { }
-   Site& operator =( Site && other )
-      { mData = std::move(other.mData); return *this; }
+    Site()
+    {
+        auto factories = GetFactories();
+        auto size = factories.mObject.size();
+        mData.reserve(size);
+    }
 
-   //! How many attachment pointers are in the Site
-   size_t size() const { return mData.size(); }
+    Site(const Site& other)
+        : mData(other.mData)
+    { }
+    Site& operator =(const Site& other)
+    { mData = other.mData; return *this; }
+    Site(Site&& other)
+        : mData(std::move(other.mData))
+    { }
+    Site& operator =(Site&& other)
+    { mData = std::move(other.mData); return *this; }
 
-   //! How many static factories have been registered with this specialization of Site
-   /*!
-    Usually agrees with the size() of each site unless some registrations happened later
-    than some Site's construction.
+    //! How many attachment pointers are in the Site
+    size_t size() const { return mData.size(); }
+
+    //! How many static factories have been registered with this specialization of Site
+    /*!
+     Usually agrees with the size() of each site unless some registrations happened later
+     than some Site's construction.
+     */
+    static size_t numFactories() { return GetFactories().mObject.size(); }
+
+    //! Client code makes static instance from a factory of attachments; passes it to @ref Get or @ref Find as a retrieval key
+    /*!
+    It can be destroyed to de-register the factory, but usually not before
+    destruction of statics at program exit.
     */
-   static size_t numFactories() { return GetFactories().mObject.size(); }
-
-   //! Client code makes static instance from a factory of attachments; passes it to @ref Get or @ref Find as a retrieval key
-   /*!
-   It can be destroyed to de-register the factory, but usually not before
-   destruction of statics at program exit.
-   */
-   class RegisteredFactory
-   {
-   public:
-      RegisteredFactory(
-         DataFactory factory
-      )
-      {
-         auto factories = GetFactories();
-         mIndex = factories.mObject.size();
-         factories.mObject.emplace_back( std::move( factory ) );
-      }
-      RegisteredFactory( RegisteredFactory &&other )
-      {
-         mIndex = other.mIndex;
-         mOwner = other.mOwner;
-         other.mOwner = false;
-      }
-      ~RegisteredFactory()
-      {
-         if (mOwner) {
+    class RegisteredFactory
+    {
+    public:
+        RegisteredFactory(
+            DataFactory factory)
+        {
             auto factories = GetFactories();
-            // Should always be true, the factory vector never shrinks:
-            if ( mIndex < factories.mObject.size() )
-               factories.mObject[mIndex] = nullptr;
-         }
-      }
-   private:
-      friend Site;
-      bool mOwner{ true };
-      size_t mIndex;
-   };
+            mIndex = factories.mObject.size();
+            factories.mObject.emplace_back(std::move(factory));
+        }
 
-   //! @name Retrieval and reassignment of attachments
-   //! @{
+        RegisteredFactory(RegisteredFactory&& other)
+        {
+            mIndex = other.mIndex;
+            mOwner = other.mOwner;
+            other.mOwner = false;
+        }
 
-   //! Get reference to an attachment, creating on demand if not present, down-cast it to @b Subclass
-   /*!
-    Uses static_cast.  Throws on failure to create it.
-    (Lifetime of the object may depend on the host's lifetime and also on the
-    client's use of Assign(). Site is not responsible for guarantees.)
-    @tparam Subclass Expected actual type of attachment, assumed to be correct
-    @param key Reference to static object created in client code
+        ~RegisteredFactory()
+        {
+            if (mOwner) {
+                auto factories = GetFactories();
+                // Should always be true, the factory vector never shrinks:
+                if (mIndex < factories.mObject.size()) {
+                    factories.mObject[mIndex] = nullptr;
+                }
+            }
+        }
+
+    private:
+        friend Site;
+        bool mOwner{ true };
+        size_t mIndex;
+    };
+
+    //! @name Retrieval and reassignment of attachments
+    //! @{
+
+    //! Get reference to an attachment, creating on demand if not present, down-cast it to @b Subclass
+    /*!
+     Uses static_cast.  Throws on failure to create it.
+     (Lifetime of the object may depend on the host's lifetime and also on the
+     client's use of Assign(). Site is not responsible for guarantees.)
+     @tparam Subclass Expected actual type of attachment, assumed to be correct
+     @param key Reference to static object created in client code
+     */
+    template< typename Subclass = ClientData >
+    Subclass& Get(const RegisteredFactory& key)
+    {
+        auto data = GetData();
+        return DoGet< Subclass >(data, key);
+    }
+
+    //! @copydoc Get
+    /*! const overload returns const references only. */
+    template< typename Subclass = const ClientData >
+    auto Get(const RegisteredFactory& key) const ->
+    std::enable_if_t< std::is_const< Subclass >::value, Subclass& >
+    {
+        auto data = GetData();
+        return DoGet< Subclass >(data, key);
+    }
+
+    //!Get a (bare) pointer to an attachment, or null, down-cast it to @b Subclass *; will not create on demand
+    /*!
+     (Lifetime of the object may depend on the host's lifetime and also on the
+     client's use of Assign(). Site is not responsible for guarantees.)
+     @tparam Subclass Expected actual type of attachment, assumed to be correct
+     @param key  Reference to static object created in client code
+     */
+    template< typename Subclass = ClientData >
+    Subclass* Find(const RegisteredFactory& key)
+    {
+        auto data = GetData();
+        return DoFind< Subclass >(data, key);
+    }
+
+    //! @copydoc Find
+    /*! const overload returns pointers to const only. */
+    template< typename Subclass = const ClientData >
+    auto Find(const RegisteredFactory& key) const ->
+    std::enable_if_t< std::is_const< Subclass >::value, Subclass * >
+    {
+        auto data = GetData();
+        return DoFind< Subclass >(data, key);
+    }
+
+    //! Reassign Site's pointer to ClientData.
+    /*!
+    If @b ObjectLockingPolicy isn't default, then reassignments are serialized.
+    @tparam ReplacementPointer @b Pointer<Subclass> where @b Subclass derives ClientData
     */
-   template< typename Subclass = ClientData >
-   Subclass &Get( const RegisteredFactory &key )
-   {
-      auto data = GetData();
-      return DoGet< Subclass >( data, key );
-   }
+    template< typename ReplacementPointer >
+    void Assign(
+        const RegisteredFactory& key, //!< Reference to static object created in client code
+        ReplacementPointer&& replacement //!< A temporary or std::move'd pointer
+        )
+    {
+        auto index = key.mIndex;
+        auto data = GetData();
+        EnsureIndex(data, index);
+        auto iter = GetIterator(data, index);
+        // Copy or move as appropriate:
+        *iter = std::forward< ReplacementPointer >(replacement);
+    }
 
-   //! @copydoc Get
-   /*! const overload returns const references only. */
-   template< typename Subclass = const ClientData >
-   auto Get( const RegisteredFactory &key ) const ->
-      std::enable_if_t< std::is_const< Subclass >::value, Subclass & >
-   {
-      auto data = GetData();
-      return DoGet< Subclass >( data, key );
-   }
-
-   //!Get a (bare) pointer to an attachment, or null, down-cast it to @b Subclass *; will not create on demand
-   /*!
-    (Lifetime of the object may depend on the host's lifetime and also on the
-    client's use of Assign(). Site is not responsible for guarantees.)
-    @tparam Subclass Expected actual type of attachment, assumed to be correct
-    @param key  Reference to static object created in client code
-    */
-   template< typename Subclass = ClientData >
-   Subclass *Find( const RegisteredFactory &key )
-   {
-      auto data = GetData();
-      return DoFind< Subclass >( data, key );
-   }
-
-   //! @copydoc Find
-   /*! const overload returns pointers to const only. */
-   template< typename Subclass = const ClientData >
-   auto Find( const RegisteredFactory &key ) const ->
-      std::enable_if_t< std::is_const< Subclass >::value, Subclass * >
-   {
-      auto data = GetData();
-      return DoFind< Subclass >( data, key );
-   }
-
-   //! Reassign Site's pointer to ClientData.
-   /*!
-   If @b ObjectLockingPolicy isn't default, then reassignments are serialized.
-   @tparam ReplacementPointer @b Pointer<Subclass> where @b Subclass derives ClientData
-   */
-   template< typename ReplacementPointer >
-   void Assign(
-      const RegisteredFactory &key, //!< Reference to static object created in client code
-      ReplacementPointer &&replacement //!< A temporary or std::move'd pointer
-   )
-   {
-      auto index = key.mIndex;
-      auto data = GetData();
-      EnsureIndex( data, index );
-      auto iter = GetIterator( data, index );
-      // Copy or move as appropriate:
-      *iter = std::forward< ReplacementPointer >( replacement );
-   }
-   
-   //! @}
+    //! @}
 
 protected:
-   //! @name member functions for use by @b Host
-   //! @{
+    //! @name member functions for use by @b Host
+    //! @{
 
-   //! Invoke function on each ClientData object that has been created in @c this
-   /*!
-   @tparam Function takes reference to ClientData, return value is ignored
-   @param function of type @b Function
-    */
-   template< typename Function >
-   void ForEach( const Function &function )
-   {
-      auto data = GetData();
-      for( auto &pObject : data.mObject ) {
-         const auto &ptr = Dereferenceable(pObject);
-         if ( ptr )
-            function( *ptr );
-      }
-   }
+    //! Invoke function on each ClientData object that has been created in @c this
+    /*!
+    @tparam Function takes reference to ClientData, return value is ignored
+    @param function of type @b Function
+     */
+    template< typename Function >
+    void ForEach(const Function& function)
+    {
+        auto data = GetData();
+        for ( auto& pObject : data.mObject ) {
+            const auto& ptr = Dereferenceable(pObject);
+            if (ptr) {
+                function(*ptr);
+            }
+        }
+    }
 
-   //! @copydoc ForEach
-   /*! const overload only compiles with a function that takes reference to const ClientData. */
-   template< typename Function >
-   void ForEach( const Function &function ) const
-   {
-      auto data = GetData();
-      for( auto &pObject : data.mObject ) {
-         const auto &ptr = Dereferenceable(pObject);
-         if ( ptr ) {
-            const auto &c_ref = *ptr;
-            function( c_ref );
-         }
-      }
-   }
+    //! @copydoc ForEach
+    /*! const overload only compiles with a function that takes reference to const ClientData. */
+    template< typename Function >
+    void ForEach(const Function& function) const
+    {
+        auto data = GetData();
+        for ( auto& pObject : data.mObject ) {
+            const auto& ptr = Dereferenceable(pObject);
+            if (ptr) {
+                const auto& c_ref = *ptr;
+                function(c_ref);
+            }
+        }
+    }
 
-   //! Invoke function on corresponding pairs of ClientData objects that have
-   //! been created in @c this and in another Site with the same factories
-   /*!
+    //! Invoke function on corresponding pairs of ClientData objects that have
+    //! been created in @c this and in another Site with the same factories
+    /*!
+     Beware that the sequence of visitation is not specified.
+     @tparam Function takes two pointers to ClientData, return value is ignored
+     @param other supplies the objects to the second argument of function
+     @param function of type @b Function may assume the precondition, that the
+     arguments are not both null, and if create is true, then neither argument is
+     null.  When neither is null, also the objects have come from the same
+     factory.
+     @param create whether to create objects at vacant slots that correspond to
+     non-vacant slots.  (Never create where there are corresponding nulls.)
+     */
+    template<typename Function>
+    void ForCorresponding(Site& other, const Function& function,
+                          bool create = true)
+    {
+        size_t size;
+        {
+            auto factories = GetFactories();
+            size = factories.mObject.size();
+            // Release lock on factories before getting one on data -- otherwise
+            // there would be a deadlock possibility inside EnsureIndex
+        }
+
+        // Lock two containers, carefully avoiding deadlock possibility by
+        // ordering them by address in memory
+        std::optional<decltype(GetData())> oOtherData;
+        if (std::addressof(other) < std::addressof(*this)) {
+            oOtherData.emplace(other.GetData());
+        }
+        auto data = GetData();
+        if (!oOtherData) {
+            oOtherData.emplace(other.GetData());
+        }
+        auto& otherData = *oOtherData;
+
+        // Like BuildAll but needing correspondence
+        EnsureIndex(data, size - 1);
+        EnsureIndex(otherData, size - 1);
+
+        auto iter = GetIterator(data, 0);
+        auto otherIter = GetIterator(otherData, 0);
+
+        for (size_t ii = 0; ii < size; ++ii, ++iter, ++otherIter) {
+            auto& pObject = *iter;
+            auto& pOtherObject = *otherIter;
+            // These lines might lock weak pointers, depending on template
+            // arguments of the class
+            auto deref = &Dereferenceable(pObject);
+            auto otherDeref = &Dereferenceable(pOtherObject);
+            if (!*deref && !*otherDeref) {
+                continue;
+            } else if (!*deref && create) {
+                // creation on demand
+                auto factories = GetFactories();
+                auto& factory = factories.mObject[ii];
+                pObject = factory
+                          ? factory(static_cast<Host&>(*this))
+                          : DataPointer{};
+                deref = &Dereferenceable(pObject);
+            } else if (!*otherDeref && create) {
+                // creation on demand
+                auto factories = GetFactories();
+                auto& factory = factories.mObject[ii];
+                pOtherObject = factory
+                               ? factory(static_cast<Host&>(other))
+                               : DataPointer{};
+                otherDeref = &Dereferenceable(pOtherObject);
+            }
+
+            function(
+                (*deref ? &**deref : nullptr),
+                (*otherDeref ? &**otherDeref : nullptr));
+        }
+    }
+
+    //! Return pointer to first attachment in @c this that is not null and satisfies a predicate, or nullptr
+    /*!
     Beware that the sequence of visitation is not specified.
-    @tparam Function takes two pointers to ClientData, return value is ignored
-    @param other supplies the objects to the second argument of function
-    @param function of type @b Function may assume the precondition, that the
-    arguments are not both null, and if create is true, then neither argument is
-    null.  When neither is null, also the objects have come from the same
-    factory.
-    @param create whether to create objects at vacant slots that correspond to
-    non-vacant slots.  (Never create where there are corresponding nulls.)
-    */
-   template<typename Function>
-   void ForCorresponding(Site &other, const Function &function,
-      bool create = true)
-   {
-      size_t size;
-      {
-         auto factories = GetFactories();
-         size = factories.mObject.size();
-         // Release lock on factories before getting one on data -- otherwise
-         // there would be a deadlock possibility inside EnsureIndex
-      }
+    @tparam Function takes reference to ClientData, returns value convertible to bool
+    @param function of type @b Function
+     */
+    template< typename Function >
+    ClientData* FindIf(const Function& function)
+    {
+        auto data = GetData();
+        for ( auto& pObject : data.mObject ) {
+            const auto& ptr = Dereferenceable(pObject);
+            if (ptr && function(*ptr)) {
+                return &*ptr;
+            }
+        }
+        return nullptr;
+    }
 
-      // Lock two containers, carefully avoiding deadlock possibility by
-      // ordering them by address in memory
-      std::optional<decltype(GetData())> oOtherData;
-      if (std::addressof(other) < std::addressof(*this))
-         oOtherData.emplace(other.GetData());
-      auto data = GetData();
-      if (!oOtherData)
-         oOtherData.emplace(other.GetData());
-      auto &otherData = *oOtherData;
+    //! @copydoc FindIf
+    /*! const overload only compiles with a function callable with a const reference to ClientData. */
+    template< typename Function >
+    const ClientData* FindIf(const Function& function) const
+    {
+        auto data = GetData();
+        for ( auto& pObject : data.mObject ) {
+            const auto& ptr = Dereferenceable(pObject);
+            if (ptr) {
+                const auto& c_ref = *ptr;
+                if (function(c_ref)) {
+                    return &*c_ref;
+                }
+            }
+        }
+        return nullptr;
+    }
 
-      // Like BuildAll but needing correspondence
-      EnsureIndex(data, size - 1);
-      EnsureIndex(otherData, size - 1);
+    //! Erase attached objects satisfying a predicate
+    /*!
+    Beware that the sequence of visitation is not specified.
+    @tparam Function takes reference to ClientData, returns value convertible to bool
+    @param function of type @b Function
+     */
+    template<typename Function>
+    void EraseIf(const Function& function)
+    {
+        auto data = GetData();
+        for (auto& pObject : data.mObject) {
+            const auto& ptr = Dereferenceable(pObject);
+            if (ptr) {
+                auto& ref = *ptr;
+                if (function(ref)) {
+                    pObject = nullptr;
+                }
+            }
+        }
+    }
 
-      auto iter = GetIterator(data, 0);
-      auto otherIter = GetIterator(otherData, 0);
-
-      for (size_t ii = 0; ii < size; ++ii, ++iter, ++otherIter) {
-         auto &pObject = *iter;
-         auto &pOtherObject = *otherIter;
-         // These lines might lock weak pointers, depending on template
-         // arguments of the class
-         auto deref = &Dereferenceable(pObject);
-         auto otherDeref = &Dereferenceable(pOtherObject);
-         if (!*deref && !*otherDeref)
-            continue;
-         else if (!*deref && create) {
-            // creation on demand
+    //! For each RegisteredFactory, if the corresponding attachment is absent in @c this, build and store it
+    void BuildAll()
+    {
+        // Note that we cannot call this function in the Site constructor as we
+        // might wish, because we pass *this to the factories, but this is not yet
+        // fully constructed as the ultimate derived class.  So delayed calls to
+        // this function are needed.
+        size_t size;
+        {
             auto factories = GetFactories();
-            auto &factory = factories.mObject[ii];
-            pObject = factory
-               ? factory(static_cast<Host&>(*this))
-               : DataPointer{};
-            deref = &Dereferenceable(pObject);
-         }
-         else if (!*otherDeref && create) {
-            // creation on demand
-            auto factories = GetFactories();
-            auto &factory = factories.mObject[ii];
-            pOtherObject = factory
-               ? factory(static_cast<Host&>(other))
-               : DataPointer{};
-            otherDeref = &Dereferenceable(pOtherObject);
-         }
+            size = factories.mObject.size();
+            // Release lock on factories before getting one on data -- otherwise
+            // there would be a deadlock possibility inside EnsureIndex
+        }
+        auto data = GetData();
+        EnsureIndex(data, size - 1);
+        auto iter = GetIterator(data, 0);
+        for ( size_t ii = 0; ii < size; ++ii, ++iter ) {
+            static_cast< void >(Build(data, iter, ii));
+        }
+    }
 
-         function(
-            (*deref ? &**deref : nullptr),
-            (*otherDeref ? &**otherDeref : nullptr));
-      }
-   }
-
-   //! Return pointer to first attachment in @c this that is not null and satisfies a predicate, or nullptr
-   /*!
-   Beware that the sequence of visitation is not specified.
-   @tparam Function takes reference to ClientData, returns value convertible to bool
-   @param function of type @b Function
-    */
-   template< typename Function >
-   ClientData *FindIf( const Function &function )
-   {
-      auto data = GetData();
-      for( auto &pObject : data.mObject ) {
-         const auto &ptr = Dereferenceable(pObject);
-         if ( ptr && function ( *ptr ) )
-            return &*ptr;
-      }
-      return nullptr;
-   }
-
-   //! @copydoc FindIf
-   /*! const overload only compiles with a function callable with a const reference to ClientData. */
-   template< typename Function >
-   const ClientData *FindIf( const Function &function ) const
-   {
-      auto data = GetData();
-      for( auto &pObject : data.mObject ) {
-         const auto &ptr = Dereferenceable(pObject);
-         if ( ptr ) {
-            const auto &c_ref = *ptr;
-            if ( function( c_ref ) )
-               return &*c_ref;
-         }
-      }
-      return nullptr;
-   }
-
-   //! Erase attached objects satisfying a predicate
-   /*!
-   Beware that the sequence of visitation is not specified.
-   @tparam Function takes reference to ClientData, returns value convertible to bool
-   @param function of type @b Function
-    */
-   template<typename Function>
-   void EraseIf(const Function &function)
-   {
-      auto data = GetData();
-      for (auto &pObject : data.mObject) {
-         const auto &ptr = Dereferenceable(pObject);
-         if (ptr) {
-            auto &ref = *ptr;
-            if (function(ref))
-               pObject = nullptr;
-         }
-      }
-   }
-
-   //! For each RegisteredFactory, if the corresponding attachment is absent in @c this, build and store it
-   void BuildAll()
-   {
-      // Note that we cannot call this function in the Site constructor as we
-      // might wish, because we pass *this to the factories, but this is not yet
-      // fully constructed as the ultimate derived class.  So delayed calls to
-      // this function are needed.
-      size_t size;
-      {
-         auto factories = GetFactories();
-         size = factories.mObject.size();
-         // Release lock on factories before getting one on data -- otherwise
-         // there would be a deadlock possibility inside EnsureIndex
-      }
-      auto data = GetData();
-      EnsureIndex( data, size - 1 );
-      auto iter = GetIterator( data, 0 );
-      for ( size_t ii = 0; ii < size; ++ii, ++iter )
-         static_cast< void >( Build( data, iter, ii ) );
-   }
-
-   //! @}
+    //! @}
 
 private:
-   using DataFactories =
-      Lockable< std::vector< DataFactory >, RegistryLockingPolicy >;
-   using DataContainer =
-      Lockable<
-         Copyable< std::vector< DataPointer >, ObjectCopyingPolicy >,
-         ObjectLockingPolicy
-      >;
+    using DataFactories
+        =Lockable< std::vector< DataFactory >, RegistryLockingPolicy >;
+    using DataContainer
+        =Lockable<
+              Copyable< std::vector< DataPointer >, ObjectCopyingPolicy >,
+              ObjectLockingPolicy
+              >;
 
-   decltype( Dereferenceable( std::declval<DataPointer&>() ) )
-   Slot( Locked<DataContainer> &data, const RegisteredFactory &key, bool create )
-   {
-      auto index = key.mIndex;
-      EnsureIndex( data, index );
-      auto iter = GetIterator( data, index );
-      auto &pointer = create ? Build( data, iter, index ) : *iter;
-      return Dereferenceable( pointer );
-   }
+    decltype(Dereferenceable(std::declval<DataPointer&>()))
+    Slot(Locked<DataContainer>& data, const RegisteredFactory& key, bool create)
+    {
+        auto index = key.mIndex;
+        EnsureIndex(data, index);
+        auto iter = GetIterator(data, index);
+        auto& pointer = create ? Build(data, iter, index) : *iter;
+        return Dereferenceable(pointer);
+    }
 
-   template< typename Subclass >
-   Subclass &DoGet( Locked<DataContainer> &data, const RegisteredFactory &key )
-   {
-      const auto &d = Slot( data, key, true );
-      if (!d)
-         // Oops, a factory was deregistered too soon, or returned a null, or
-         // the pointer was reassigned null
-         THROW_INCONSISTENCY_EXCEPTION;
-      return static_cast< Subclass& >( *d );
-   }
+    template< typename Subclass >
+    Subclass& DoGet(Locked<DataContainer>& data, const RegisteredFactory& key)
+    {
+        const auto& d = Slot(data, key, true);
+        if (!d) {
+            // Oops, a factory was deregistered too soon, or returned a null, or
+            // the pointer was reassigned null
+            THROW_INCONSISTENCY_EXCEPTION;
+        }
+        return static_cast< Subclass& >(*d);
+    }
 
-   template< typename Subclass >
-   Subclass *DoFind( Locked<DataContainer> &data, const RegisteredFactory &key )
-   {
-      const auto &d = Slot( data, key, false );
-      if (!d)
-         return nullptr;
-      else
-         return static_cast< Subclass* >( &*d );
-   }
+    template< typename Subclass >
+    Subclass* DoFind(Locked<DataContainer>& data, const RegisteredFactory& key)
+    {
+        const auto& d = Slot(data, key, false);
+        if (!d) {
+            return nullptr;
+        } else {
+            return static_cast< Subclass* >(&*d);
+        }
+    }
 
-   static Locked< DataFactories > GetFactories()
-   {
-      // C++11 does not need extra thread synch for static initialization
-      // Note that linker eliminates duplicates of this function
-      static DataFactories factories;
+    static Locked< DataFactories > GetFactories()
+    {
+        // C++11 does not need extra thread synch for static initialization
+        // Note that linker eliminates duplicates of this function
+        static DataFactories factories;
 
-      // But give back a scoped lock to the user of this function, in case
-      // there is contention to resize the vector
-      return Locked< DataFactories >{ factories };
-   }
+        // But give back a scoped lock to the user of this function, in case
+        // there is contention to resize the vector
+        return Locked< DataFactories > { factories };
+    }
 
-   Locked<DataContainer> GetData()
-   {
-      return Locked< DataContainer >{ mData };
-   }
-   
-   Locked<const DataContainer> GetData() const
-   {
-      return Locked< const DataContainer >{ mData };
-   }
-   
-   static void EnsureIndex( Locked<DataContainer> &data, size_t index )
-   {
-      if (data.mObject.size() <= index)
-         data.mObject.resize(index + 1);
-   }
+    Locked<DataContainer> GetData()
+    {
+        return Locked< DataContainer > { mData };
+    }
 
-   static typename DataContainer::iterator inline
-   GetIterator( Locked<DataContainer> &data, size_t index )
-   {
-      // This function might help generalize Site with different kinds of
-      // containers for pointers to ClientData that are not random-access.
-      // Perhaps non-relocation of elements will be needed.
-      // Perhaps another template-template parameter could vary the kind of
-      // container.
-      auto result = data.mObject.begin();
-      std::advance( result, index );
-      return result;
-   }
+    Locked<const DataContainer> GetData() const
+    {
+        return Locked< const DataContainer > { mData };
+    }
 
-   DataPointer &Build( Locked<DataContainer> &,
-      typename DataContainer::iterator iter, size_t index )
-   {
-      // If there is no object at index, then invoke the factory, else do
-      // nothing.
-      // The factory may be null or may return null, in which case do nothing.
-      auto &result = *iter;
-      if (!Dereferenceable(result)) {
-         // creation on demand
-         auto factories = GetFactories();
-         auto &factory = factories.mObject[index];
-         result = factory
-            ? factory( static_cast< Host& >( *this ) )
-            : DataPointer{};
-      }
-      return result;
-   }
+    static void EnsureIndex(Locked<DataContainer>& data, size_t index)
+    {
+        if (data.mObject.size() <= index) {
+            data.mObject.resize(index + 1);
+        }
+    }
 
-   //! Container of pointers returned by factories, per instance of @b Host class
-   /*! This is the only non-static data member that Site injects into the derived class. */
-   DataContainer mData;
+    static typename DataContainer::iterator inline
+    GetIterator(Locked<DataContainer>& data, size_t index)
+    {
+        // This function might help generalize Site with different kinds of
+        // containers for pointers to ClientData that are not random-access.
+        // Perhaps non-relocation of elements will be needed.
+        // Perhaps another template-template parameter could vary the kind of
+        // container.
+        auto result = data.mObject.begin();
+        std::advance(result, index);
+        return result;
+    }
+
+    DataPointer& Build(Locked<DataContainer>&,
+                       typename DataContainer::iterator iter, size_t index)
+    {
+        // If there is no object at index, then invoke the factory, else do
+        // nothing.
+        // The factory may be null or may return null, in which case do nothing.
+        auto& result = *iter;
+        if (!Dereferenceable(result)) {
+            // creation on demand
+            auto factories = GetFactories();
+            auto& factory = factories.mObject[index];
+            result = factory
+                     ? factory(static_cast< Host& >(*this))
+                     : DataPointer{};
+        }
+        return result;
+    }
+
+    //! Container of pointers returned by factories, per instance of @b Host class
+    /*! This is the only non-static data member that Site injects into the derived class. */
+    DataContainer mData;
 };
-
 }
 
 #endif
