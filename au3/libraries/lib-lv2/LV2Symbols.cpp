@@ -25,10 +25,9 @@
 #include "lv2_external_ui.h"
 
 namespace LV2Symbols {
-
 using LilvWorldPtr = Lilv_ptr<LilvWorld, lilv_world_free>;
 static LilvWorldPtr uWorld;
-LilvWorld *gWorld = nullptr;
+LilvWorld* gWorld = nullptr;
 
 // Define the static URI map
 URIDMap gURIDMap;
@@ -36,8 +35,8 @@ URIDMap gURIDMap;
 // Define the static LILV URI nodes
 #undef NODE
 #define NODE(n, u) \
-   LilvNode *node_##n = nullptr; \
-   LilvNodePtr unode_##n;
+    LilvNode* node_##n = nullptr; \
+    LilvNodePtr unode_##n;
 NODELIST
 
 // Define the static URIDs
@@ -47,45 +46,47 @@ URIDLIST
 
 bool InitializeGWorld()
 {
-   // Try to initialise Lilv, or return.
-   uWorld.reset(lilv_world_new());
-   if (!uWorld)
-      return false;
-   gWorld = uWorld.get();
+    // Try to initialise Lilv, or return.
+    uWorld.reset(lilv_world_new());
+    if (!uWorld) {
+        return false;
+    }
+    gWorld = uWorld.get();
 
-   // Create LilvNodes for each of the URIs we need
+    // Create LilvNodes for each of the URIs we need
    #undef NODE
    #define NODE(n, u) \
-      unode_##n.reset(lilv_new_uri(gWorld, u)); \
-      node_##n = unode_##n.get();
-   NODELIST
+    unode_##n.reset(lilv_new_uri(gWorld, u)); \
+    node_##n = unode_##n.get();
+    NODELIST
 
-   // Generate URIDs
+    // Generate URIDs
    #undef URID
    #define URID(n, u) urid_##n = Lookup_URI(gURIDMap, u);
-      URIDLIST
+    URIDLIST
 
-   return true;
+    return true;
 }
 
 void FinalizeGWorld()
 {
-   gWorld = nullptr;
+    gWorld = nullptr;
 }
 
-LV2_URID Lookup_URI(URIDMap & map, const char *uri, bool add)
+LV2_URID Lookup_URI(URIDMap& map, const char* uri, bool add)
 {
-   size_t ndx = map.size();
-   for (size_t i = 0; i < ndx; ++i)
-      if (strcmp(map[i].get(), uri) == 0)
-         return i + 1;
-   if (add) {
-      // Almost all compilers have strdup(),
-      // but VC++ and MinGW call it _strdup().
-      map.push_back(MallocString<>(wxCRT_StrdupA(uri)));
-      return ndx + 1;
-   }
-   return 0;
+    size_t ndx = map.size();
+    for (size_t i = 0; i < ndx; ++i) {
+        if (strcmp(map[i].get(), uri) == 0) {
+            return i + 1;
+        }
+    }
+    if (add) {
+        // Almost all compilers have strdup(),
+        // but VC++ and MinGW call it _strdup().
+        map.push_back(MallocString<>(wxCRT_StrdupA(uri)));
+        return ndx + 1;
+    }
+    return 0;
 }
-
 }

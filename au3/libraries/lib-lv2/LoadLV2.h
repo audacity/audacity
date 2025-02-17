@@ -30,55 +30,54 @@
 class LV2_API LV2EffectsModule final : public PluginProvider
 {
 public:
-   struct LV2_API Factory : DefaultedGlobalHook<Factory,
-      Callable::UniquePtrFactory<LV2EffectBase, const LilvPlugin &>::Function
-   >{};
+    struct LV2_API Factory : DefaultedGlobalHook<Factory,
+                                                 Callable::UniquePtrFactory<LV2EffectBase, const LilvPlugin&>::Function
+                                                 > {};
 
-   LV2EffectsModule();
-   virtual ~LV2EffectsModule();
+    LV2EffectsModule();
+    virtual ~LV2EffectsModule();
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
+    PluginPath GetPath() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    VendorSymbol GetVendor() const override;
+    wxString GetVersion() const override;
+    TranslatableString GetDescription() const override;
 
-   // PluginProvider implementation
+    // PluginProvider implementation
 
-   bool Initialize() override;
-   void Terminate() override;
-   bool SupportsCustomModulePaths() const override;
-   EffectFamilySymbol GetOptionalFamilySymbol() override;
+    bool Initialize() override;
+    void Terminate() override;
+    bool SupportsCustomModulePaths() const override;
+    EffectFamilySymbol GetOptionalFamilySymbol() override;
 
-   const FileExtensions &GetFileExtensions() override;
-   FilePath InstallPath() override { return {}; }
+    const FileExtensions& GetFileExtensions() override;
+    FilePath InstallPath() override { return {}; }
 
-   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
-   unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, TranslatableString &errMsg,
-      const RegistrationCallback &callback)
-         override;
+    void AutoRegisterPlugins(PluginManagerInterface& pm) override;
+    PluginPaths FindModulePaths(PluginManagerInterface& pm) override;
+    unsigned DiscoverPluginsAtPath(
+        const PluginPath& path, TranslatableString& errMsg, const RegistrationCallback& callback)
+    override;
 
-   bool CheckPluginExist(const PluginPath& path) const override;
+    bool CheckPluginExist(const PluginPath& path) const override;
 
-   std::unique_ptr<ComponentInterface>
-      LoadPlugin(const PluginPath & path) override;
+    std::unique_ptr<ComponentInterface>
+    LoadPlugin(const PluginPath& path) override;
 
-   // LV2EffectModule implementation
+    // LV2EffectModule implementation
 
-   std::unique_ptr<Validator> MakeValidator() const override;
+    std::unique_ptr<Validator> MakeValidator() const override;
 
 private:
 
-   static const LilvPlugin *GetPlugin(const PluginPath & path);
+    static const LilvPlugin* GetPlugin(const PluginPath& path);
 
-   //During initialization LV2 module will update LV2_PATH
-   //environment variable, we need to preserve the its contents
-   //on startup to avoid appended duplications
-   wxString mStartupPathVar;
+    //During initialization LV2 module will update LV2_PATH
+    //environment variable, we need to preserve the its contents
+    //on startup to avoid appended duplications
+    wxString mStartupPathVar;
 };
 
 #endif
