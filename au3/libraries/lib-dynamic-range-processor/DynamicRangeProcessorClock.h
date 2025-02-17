@@ -19,12 +19,12 @@
 class DYNAMIC_RANGE_PROCESSOR_API DynamicRangeProcessorClock final
 {
 public:
-   std::chrono::steady_clock::time_point GetNow() const;
-   void Pause();
-   void Resume();
+    std::chrono::steady_clock::time_point GetNow() const;
+    void Pause();
+    void Resume();
 
 private:
-   std::optional<std::chrono::steady_clock::time_point> mPauseBegin;
-   std::chrono::duration<double> mElapsedWhilePaused =
-      std::chrono::duration<double>::zero();
+    std::optional<std::chrono::steady_clock::time_point> mPauseBegin;
+    std::chrono::duration<double> mElapsedWhilePaused
+        =std::chrono::duration<double>::zero();
 };

@@ -20,8 +20,7 @@
 #include "MathApprox.h"
 
 namespace DanielRudrich {
-namespace
-{
+namespace {
 float getSlope(float ratio) { return 1 / ratio - 1; }
 float getRatio(float slope) { return 1 / (slope + 1); }
 } // namespace
@@ -32,10 +31,10 @@ float GainReductionComputer::getCharacteristicSample(float inputLevelInDecibels,
                                                      float ratio,
                                                      float makeUpGainInDecibels)
 {
-   const auto slope = getSlope(ratio);
-   float overShoot = inputLevelInDecibels - thresholdInDecibels;
-   overShoot = applyCharacteristicToOverShoot(overShoot, kneeInDecibels, slope);
-   return overShoot + inputLevelInDecibels + makeUpGainInDecibels;
+    const auto slope = getSlope(ratio);
+    float overShoot = inputLevelInDecibels - thresholdInDecibels;
+    overShoot = applyCharacteristicToOverShoot(overShoot, kneeInDecibels, slope);
+    return overShoot + inputLevelInDecibels + makeUpGainInDecibels;
 }
 
 GainReductionComputer::GainReductionComputer()
@@ -47,59 +46,58 @@ GainReductionComputer::GainReductionComputer()
     kneeHalf = 0.0f;
     attackTime = 0.01f;
     releaseTime = 0.15f;
-    setRatio (2); // 2 : 1
+    setRatio(2);  // 2 : 1
     makeUpGain = 0.0f;
     reset();
 }
 
-void GainReductionComputer::prepare (const double newSampleRate)
+void GainReductionComputer::prepare(const double newSampleRate)
 {
     sampleRate = newSampleRate;
 
-    alphaAttack = 1.0f - timeToGain (attackTime);
-    alphaRelease = 1.0f - timeToGain (releaseTime);
+    alphaAttack = 1.0f - timeToGain(attackTime);
+    alphaRelease = 1.0f - timeToGain(releaseTime);
 }
 
-void GainReductionComputer::setAttackTime (const float attackTimeInSeconds)
+void GainReductionComputer::setAttackTime(const float attackTimeInSeconds)
 {
     attackTime = attackTimeInSeconds;
-    alphaAttack = 1.0f - timeToGain (attackTime);
+    alphaAttack = 1.0f - timeToGain(attackTime);
 }
 
-void GainReductionComputer::setReleaseTime (const float releaseTimeInSeconds)
+void GainReductionComputer::setReleaseTime(const float releaseTimeInSeconds)
 {
     releaseTime = releaseTimeInSeconds;
-    alphaRelease = 1.0f - timeToGain (releaseTime);
+    alphaRelease = 1.0f - timeToGain(releaseTime);
 }
 
-const float GainReductionComputer::timeToGain (const float timeInSeconds)
+const float GainReductionComputer::timeToGain(const float timeInSeconds)
 {
-    return std::exp (-1.0f / (static_cast<float> (sampleRate) * timeInSeconds));
+    return std::exp(-1.0f / (static_cast<float>(sampleRate) * timeInSeconds));
 }
 
-void GainReductionComputer::setKnee (const float kneeInDecibels)
+void GainReductionComputer::setKnee(const float kneeInDecibels)
 {
     knee = kneeInDecibels;
     kneeHalf = knee / 2.0f;
 }
 
-void GainReductionComputer::setThreshold (const float thresholdInDecibels)
+void GainReductionComputer::setThreshold(const float thresholdInDecibels)
 {
     threshold = thresholdInDecibels;
 }
 
-void GainReductionComputer::setMakeUpGain (const float makeUpGainInDecibels)
+void GainReductionComputer::setMakeUpGain(const float makeUpGainInDecibels)
 {
     makeUpGain = makeUpGainInDecibels;
 }
 
-void GainReductionComputer::setRatio (const float ratio)
+void GainReductionComputer::setRatio(const float ratio)
 {
     slope = getSlope(ratio);
 }
 
-
-inline const float GainReductionComputer::applyCharacteristicToOverShoot (const float overShootInDecibels)
+inline const float GainReductionComputer::applyCharacteristicToOverShoot(const float overShootInDecibels)
 {
     return applyCharacteristicToOverShoot(overShootInDecibels, knee, slope);
 }
@@ -108,62 +106,66 @@ float GainReductionComputer::applyCharacteristicToOverShoot(
     float overShootInDecibels, float knee, float slope)
 {
     const auto kneeHalf = knee / 2;
-    if (overShootInDecibels <= -kneeHalf)
+    if (overShootInDecibels <= -kneeHalf) {
         return 0.0f;
-    else if (overShootInDecibels > -kneeHalf && overShootInDecibels <= kneeHalf)
+    } else if (overShootInDecibels > -kneeHalf && overShootInDecibels <= kneeHalf) {
         return 0.5f * slope * (overShootInDecibels + kneeHalf) * (overShootInDecibels + kneeHalf) / knee;
-    else
+    } else {
         return slope * overShootInDecibels;
+    }
 }
 
-void GainReductionComputer::computeGainInDecibelsFromSidechainSignal (const float* sideChainSignal, float* destination, const int numSamples)
+void GainReductionComputer::computeGainInDecibelsFromSidechainSignal(const float* sideChainSignal, float* destination, const int numSamples)
 {
     maxInputLevel = -std::numeric_limits<float>::infinity();
     maxGainReduction = 0.0f;
 
-    for (int i = 0; i < numSamples; ++i)
-    {
+    for (int i = 0; i < numSamples; ++i) {
         // convert sample to decibels
-        const float levelInDecibels =
-           log2ToDb * FastLog2(std::abs(sideChainSignal[i]));
+        const float levelInDecibels
+            =log2ToDb * FastLog2(std::abs(sideChainSignal[i]));
 
-        if (levelInDecibels > maxInputLevel)
+        if (levelInDecibels > maxInputLevel) {
             maxInputLevel = levelInDecibels;
+        }
 
         // calculate overshoot and apply knee and ratio
         const float overShoot = levelInDecibels - threshold;
-        const float gainReduction = applyCharacteristicToOverShoot (overShoot);
+        const float gainReduction = applyCharacteristicToOverShoot(overShoot);
 
         // apply ballistics
         const float diff = gainReduction - state;
-        if (diff < 0.0f) // wanted gain reduction is below state -> attack phase
+        if (diff < 0.0f) { // wanted gain reduction is below state -> attack phase
             state += alphaAttack * diff;
-        else // release phase
+        } else { // release phase
             state += alphaRelease * diff;
+        }
 
         // write back gain reduction
         destination[i] = state;
 
-        if (state < maxGainReduction)
+        if (state < maxGainReduction) {
             maxGainReduction = state;
+        }
     }
 }
 
-void GainReductionComputer::computeLinearGainFromSidechainSignal (const float* sideChainSignal, float* destination, const int numSamples)
+void GainReductionComputer::computeLinearGainFromSidechainSignal(const float* sideChainSignal, float* destination, const int numSamples)
 {
-    computeGainInDecibelsFromSidechainSignal (sideChainSignal, destination, numSamples);
-    for (int i = 0; i < numSamples; ++i)
-        destination[i] = std::pow (10.0f, 0.05f * (destination[i] + makeUpGain));
+    computeGainInDecibelsFromSidechainSignal(sideChainSignal, destination, numSamples);
+    for (int i = 0; i < numSamples; ++i) {
+        destination[i] = std::pow(10.0f, 0.05f * (destination[i] + makeUpGain));
+    }
 }
 
-
-void GainReductionComputer::getCharacteristic (float* inputLevelsInDecibels, float* dest, const int numSamples)
+void GainReductionComputer::getCharacteristic(float* inputLevelsInDecibels, float* dest, const int numSamples)
 {
-    for (int i = 0; i < numSamples; ++i)
-        dest[i] = getCharacteristicSample (inputLevelsInDecibels[i]);
+    for (int i = 0; i < numSamples; ++i) {
+        dest[i] = getCharacteristicSample(inputLevelsInDecibels[i]);
+    }
 }
 
-float GainReductionComputer::getCharacteristicSample (const float inputLevelInDecibels)
+float GainReductionComputer::getCharacteristicSample(const float inputLevelInDecibels)
 {
     return getCharacteristicSample(inputLevelInDecibels, knee, threshold,
                                    getRatio(slope), makeUpGain);

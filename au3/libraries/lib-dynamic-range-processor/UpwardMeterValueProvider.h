@@ -12,19 +12,18 @@
 
 #include "DownwardMeterValueProvider.h"
 
-class DYNAMIC_RANGE_PROCESSOR_API UpwardMeterValueProvider final :
-    public MeterValueProvider
+class DYNAMIC_RANGE_PROCESSOR_API UpwardMeterValueProvider final : public MeterValueProvider
 {
 public:
-   UpwardMeterValueProvider();
+    UpwardMeterValueProvider();
 
-   void Update(float value, bool alsoFiveSecondMax) override;
-   float GetGlobalMax() const override;
-   float GetFiveSecMax() const override;
-   float GetCurrentMax() const override;
-   Direction GetDirection() const override;
-   bool IsInvisible() const override;
+    void Update(float value, bool alsoFiveSecondMax) override;
+    float GetGlobalMax() const override;
+    float GetFiveSecMax() const override;
+    float GetCurrentMax() const override;
+    Direction GetDirection() const override;
+    bool IsInvisible() const override;
 
 private:
-   DownwardMeterValueProvider mDownwardProvider;
+    DownwardMeterValueProvider mDownwardProvider;
 };

@@ -17,14 +17,13 @@
 std::unique_ptr<MeterValueProvider>
 MeterValueProvider::Create(Direction direction)
 {
-   switch (direction)
-   {
-   case Direction::Upwards:
-      return std::make_unique<UpwardMeterValueProvider>();
-   case Direction::Downwards:
-      return std::make_unique<DownwardMeterValueProvider>();
-   default:
-      assert(false);
-      return nullptr;
-   }
+    switch (direction) {
+    case Direction::Upwards:
+        return std::make_unique<UpwardMeterValueProvider>();
+    case Direction::Downwards:
+        return std::make_unique<DownwardMeterValueProvider>();
+    default:
+        assert(false);
+        return nullptr;
+    }
 }

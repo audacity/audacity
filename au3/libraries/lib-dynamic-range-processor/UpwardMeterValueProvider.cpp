@@ -11,36 +11,36 @@
 #include "UpwardMeterValueProvider.h"
 
 UpwardMeterValueProvider::UpwardMeterValueProvider()
-    : mDownwardProvider { 80.f }
+    : mDownwardProvider{80.f}
 {
 }
 
 void UpwardMeterValueProvider::Update(float value, bool alsoFiveSecondMax)
 {
-   mDownwardProvider.Update(-value, alsoFiveSecondMax);
+    mDownwardProvider.Update(-value, alsoFiveSecondMax);
 }
 
 float UpwardMeterValueProvider::GetGlobalMax() const
 {
-   return -mDownwardProvider.GetGlobalMax();
+    return -mDownwardProvider.GetGlobalMax();
 }
 
 float UpwardMeterValueProvider::GetFiveSecMax() const
 {
-   return -mDownwardProvider.GetFiveSecMax();
+    return -mDownwardProvider.GetFiveSecMax();
 }
 
 float UpwardMeterValueProvider::GetCurrentMax() const
 {
-   return -mDownwardProvider.GetCurrentMax();
+    return -mDownwardProvider.GetCurrentMax();
 }
 
 MeterValueProvider::Direction UpwardMeterValueProvider::GetDirection() const
 {
-   return Direction::Upwards;
+    return Direction::Upwards;
 }
 
 bool UpwardMeterValueProvider::IsInvisible() const
 {
-   return mDownwardProvider.IsInvisible();
+    return mDownwardProvider.IsInvisible();
 }
