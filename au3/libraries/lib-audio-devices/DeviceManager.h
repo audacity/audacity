@@ -26,70 +26,69 @@
 #include "DeviceChange.h"
 
 typedef struct DeviceSourceMap {
-   int deviceIndex;
-   int sourceIndex;
-   int hostIndex;
-   int totalSources;
-   int numChannels;
-   wxString sourceString;
-   wxString deviceString;
-   wxString hostString;
+    int deviceIndex;
+    int sourceIndex;
+    int hostIndex;
+    int totalSources;
+    int numChannels;
+    wxString sourceString;
+    wxString deviceString;
+    wxString hostString;
 } DeviceSourceMap;
 
 AUDIO_DEVICES_API
-wxString MakeDeviceSourceString(const DeviceSourceMap *map);
+wxString MakeDeviceSourceString(const DeviceSourceMap* map);
 
 class AUDIO_DEVICES_API DeviceManager final
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER) && defined(HAVE_DEVICE_CHANGE)
-: public DeviceChangeHandler
+    : public DeviceChangeHandler
 #else
-: public DeviceChangeMessagePublisher
+    : public DeviceChangeMessagePublisher
 #endif
 {
- public:
-   /// Gets the singleton instance
-   static DeviceManager* Instance();
+public:
+    /// Gets the singleton instance
+    static DeviceManager* Instance();
 
-   /// Gets a NEW list of devices by terminating and restarting portaudio
-   /// Assumes that DeviceManager is only used on the main thread.
-   void Rescan();
+    /// Gets a NEW list of devices by terminating and restarting portaudio
+    /// Assumes that DeviceManager is only used on the main thread.
+    void Rescan();
 
-   // Time since devices scanned in seconds.
-   std::chrono::duration<float> GetTimeSinceRescan();
+    // Time since devices scanned in seconds.
+    std::chrono::duration<float> GetTimeSinceRescan();
 
-   DeviceSourceMap* GetDefaultOutputDevice(int hostIndex);
-   DeviceSourceMap* GetDefaultInputDevice(int hostIndex);
+    DeviceSourceMap* GetDefaultOutputDevice(int hostIndex);
+    DeviceSourceMap* GetDefaultInputDevice(int hostIndex);
 
-   const std::vector<DeviceSourceMap> &GetInputDeviceMaps();
-   const std::vector<DeviceSourceMap> &GetOutputDeviceMaps();
+    const std::vector<DeviceSourceMap>& GetInputDeviceMaps();
+    const std::vector<DeviceSourceMap>& GetOutputDeviceMaps();
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #if defined(HAVE_DEVICE_CHANGE)
-   // DeviceChangeHandler implementation
-   void DeviceChangeNotification();
+    // DeviceChangeHandler implementation
+    void DeviceChangeNotification();
 #endif
 #endif
 
 private:
-   std::chrono::time_point<std::chrono::steady_clock> mRescanTime;
+    std::chrono::time_point<std::chrono::steady_clock> mRescanTime;
 
- protected:
-   //private constructor - Singleton.
-   DeviceManager();
-   ~DeviceManager();
-   /// Does an initial scan.
-   /// Called by GetInputDeviceMaps and GetOutputDeviceMaps when needed.
-   void Init();
+protected:
+    //private constructor - Singleton.
+    DeviceManager();
+    ~DeviceManager();
+    /// Does an initial scan.
+    /// Called by GetInputDeviceMaps and GetOutputDeviceMaps when needed.
+    void Init();
 
-   DeviceSourceMap* GetDefaultDevice(int hostIndex, int isInput);
+    DeviceSourceMap* GetDefaultDevice(int hostIndex, int isInput);
 
-   bool m_inited;
+    bool m_inited;
 
-   std::vector<DeviceSourceMap> mInputDeviceSourceMaps;
-   std::vector<DeviceSourceMap> mOutputDeviceSourceMaps;
+    std::vector<DeviceSourceMap> mInputDeviceSourceMaps;
+    std::vector<DeviceSourceMap> mOutputDeviceSourceMaps;
 
-   static DeviceManager dm;
+    static DeviceManager dm;
 };
 
 #endif
-

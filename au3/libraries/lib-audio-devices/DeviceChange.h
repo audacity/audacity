@@ -13,7 +13,9 @@
 
 #include "Observer.h"
 
-enum class DeviceChangeMessage : char { Rescan, Change };
+enum class DeviceChangeMessage : char {
+    Rescan, Change
+};
 using DeviceChangeMessagePublisher = Observer::Publisher<DeviceChangeMessage>;
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
@@ -31,34 +33,33 @@ using DeviceChangeMessagePublisher = Observer::Publisher<DeviceChangeMessage>;
 class DeviceChangeInterface /* not final */
 {
 public:
-   virtual ~DeviceChangeInterface() {};
+    virtual ~DeviceChangeInterface() {}
 
-   virtual bool SetHandler(DeviceChangeMessagePublisher *handler) = 0;
-   virtual void Enable(bool enable = true) = 0;
+    virtual bool SetHandler(DeviceChangeMessagePublisher* handler) = 0;
+    virtual void Enable(bool enable = true) = 0;
 };
 
-class DeviceChangeHandler
-   : public wxEvtHandler // for wxTimerEvent
-   , public DeviceChangeMessagePublisher
+class DeviceChangeHandler : public wxEvtHandler, // for wxTimerEvent
+    public DeviceChangeMessagePublisher
 {
 public:
-   DeviceChangeHandler();
-   virtual ~DeviceChangeHandler();
+    DeviceChangeHandler();
+    virtual ~DeviceChangeHandler();
 
-   void Enable(bool enable = true);
+    void Enable(bool enable = true);
 
-   virtual void DeviceChangeNotification() = 0;
+    virtual void DeviceChangeNotification() = 0;
 
 private:
-   void OnChange(DeviceChangeMessage);
-   void OnTimer(wxTimerEvent & evt);
+    void OnChange(DeviceChangeMessage);
+    void OnTimer(wxTimerEvent& evt);
 
-   std::unique_ptr<DeviceChangeInterface> mListener;
-   wxTimer mTimer;
+    std::unique_ptr<DeviceChangeInterface> mListener;
+    wxTimer mTimer;
 
-   Observer::Subscription mSubscription;
+    Observer::Subscription mSubscription;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif
