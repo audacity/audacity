@@ -15,6 +15,6 @@
 void SetSchemaRegistrar(std::function<bool(std::string_view)> registrar);
 
 auto registrar = ([]() {
-   SetSchemaRegistrar([](std::string_view) { return true; });
-   return true;
+    SetSchemaRegistrar([](std::string_view) { return true; });
+    return true;
 })();

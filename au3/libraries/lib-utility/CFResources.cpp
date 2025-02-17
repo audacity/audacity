@@ -1,11 +1,11 @@
 /*!********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file CFResources.cpp
- 
+
  Paul Licameli
- 
+
  **********************************************************************/
 #include "CFResources.h"
 

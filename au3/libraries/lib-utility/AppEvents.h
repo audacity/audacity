@@ -10,15 +10,13 @@
 
 #include "Observer.h"
 
-namespace AppEvents
-{
+namespace AppEvents {
 /*! Register callback to be called when application is initialized.
  *  If application is already initialized, callback will be called immediately.
  *  @param callback Callback to be called when application is initialized.
  *  @pre `!!calback`
  */
 UTILITY_API void OnAppInitialized(std::function<void()> callback);
-
 
 /*! Register callback to be called when application is closing.
  *  @param callback Callback to be called when application is initialized.
@@ -41,11 +39,10 @@ UTILITY_API Observer::Subscription OnAppIdle(std::function<void()> callback);
 class UTILITY_API ProviderBase /* not final */
 {
 protected:
-   virtual ~ProviderBase() = default;
+    virtual ~ProviderBase() = default;
 
-   void HandleAppInitialized();
-   void HandleAppIdle();
-   void HandleAppClosing();
+    void HandleAppInitialized();
+    void HandleAppIdle();
+    void HandleAppClosing();
 };
-
 } // namespace AppEvents

@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file CRTPBase.h
- 
+
  Paul Licameli
- 
+
  **********************************************************************/
 #ifndef __AUDACITY_CRTP_BASE__
 #define __AUDACITY_CRTP_BASE__
@@ -26,15 +26,15 @@
 
  A typical template specialization like `T<X, Y, Z>` parses as multiple macro
  arguments, so made it work with variadic macros.
- 
+
  Write a semicolon after the macro call.
  */
    #define CRTP_BASE(alias, struct_or_class, ...) \
-      template struct_or_class __declspec(dllexport) __VA_ARGS__; \
-      using alias = __VA_ARGS__
+    template struct_or_class __declspec(dllexport) __VA_ARGS__; \
+    using alias = __VA_ARGS__
 #else
    #define CRTP_BASE(alias, struct_or_class, ...) \
-      using alias = __VA_ARGS__
+    using alias = __VA_ARGS__
 #endif
 
 #endif
