@@ -14,7 +14,7 @@
 #include <map>
 
 //! This class is used to configure Breakpad's handler before start.
-/*! Typically handler should be started as early as possible. 
+/*! Typically handler should be started as early as possible.
 * BreakpadConfigurer may be a short living object, it is used to configure
 * Breakpad handler, and run it with BreakpadConfigurer::Start() method,
 * It's expected that Start() will be called once during application
@@ -26,20 +26,20 @@
 */
 class CRASHREPORTS_API BreakpadConfigurer final
 {
-	std::string mDatabasePathUTF8;
-	std::string mSenderPathUTF8;
-	std::string mReportURL;
-	std::map<std::string, std::string> mParameters;
+    std::string mDatabasePathUTF8;
+    std::string mSenderPathUTF8;
+    std::string mReportURL;
+    std::map<std::string, std::string> mParameters;
 public:
-	//! Sets the directory where crashreports will be stored (should have rw permission)
-	BreakpadConfigurer& SetDatabasePathUTF8(const std::string& pathUTF8);
-	//! Sets report URL to the crash reporting server (URL-Encoded, optional)
-	BreakpadConfigurer& SetReportURL(const std::string& reportURL);
-	//! Sets an additional parameters that should be sent to a crash reporting server (ASCII encoded)
-	BreakpadConfigurer& SetParameters(const std::map<std::string, std::string>& parameters);
-	//! Sets a path to a directory where crash reporter sending program is located
-	BreakpadConfigurer& SetSenderPathUTF8(const std::string& pathUTF8);
+    //! Sets the directory where crashreports will be stored (should have rw permission)
+    BreakpadConfigurer& SetDatabasePathUTF8(const std::string& pathUTF8);
+    //! Sets report URL to the crash reporting server (URL-Encoded, optional)
+    BreakpadConfigurer& SetReportURL(const std::string& reportURL);
+    //! Sets an additional parameters that should be sent to a crash reporting server (ASCII encoded)
+    BreakpadConfigurer& SetParameters(const std::map<std::string, std::string>& parameters);
+    //! Sets a path to a directory where crash reporter sending program is located
+    BreakpadConfigurer& SetSenderPathUTF8(const std::string& pathUTF8);
 
-	//! Starts the handler
-	void Start();
+    //! Starts the handler
+    void Start();
 };
