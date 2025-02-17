@@ -20,18 +20,18 @@
 */
 struct PROJECT_API ProjectFormatVersion final
 {
-   uint8_t Major { 0 };
-   uint8_t Minor { 0 };
-   uint8_t Revision { 0 };
-   uint8_t ModLevel { 0 };
+    uint8_t Major { 0 };
+    uint8_t Minor { 0 };
+    uint8_t Revision { 0 };
+    uint8_t ModLevel { 0 };
 
-   // Create ProjectFormatVersion from the uint32_t value 
-   static ProjectFormatVersion FromPacked(uint32_t) noexcept;
-   //! Returns a version packed to 32-bit integer.
-   uint32_t GetPacked() const noexcept;
+    // Create ProjectFormatVersion from the uint32_t value
+    static ProjectFormatVersion FromPacked(uint32_t) noexcept;
+    //! Returns a version packed to 32-bit integer.
+    uint32_t GetPacked() const noexcept;
 
-   //! Returns true if version is valid, i.e. Major != 0
-   bool IsValid() const noexcept;
+    //! Returns true if version is valid, i.e. Major != 0
+    bool IsValid() const noexcept;
 };
 
 PROJECT_API bool operator==(ProjectFormatVersion lhs, ProjectFormatVersion rhs) noexcept;

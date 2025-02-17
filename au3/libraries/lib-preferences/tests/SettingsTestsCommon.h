@@ -1,9 +1,8 @@
 #pragma once
 #include "BasicSettings.h"
 
-namespace audacity
-{
-   class BasicSettings;
+namespace audacity {
+class BasicSettings;
 }
 
 void TestRW(audacity::BasicSettings& settings);

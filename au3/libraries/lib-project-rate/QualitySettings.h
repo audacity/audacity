@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  QualitySettings.h
- 
+
  Paul Licameli split from QualityPrefs.h
- 
+
  **********************************************************************/
 
 #ifndef __AUDACITY_QUALITY_SETTINGS__

@@ -53,178 +53,173 @@
 //! Type of message published by UndoManager
 /*! all are published only during idle time, except BeginPurge and EndPurge */
 struct UndoRedoMessage {
-   const enum Type {
-      Pushed, /*!< Project state did not change, but a new state was copied
+    const enum Type {
+        Pushed, /*!< Project state did not change, but a new state was copied
                into Undo history and any redo states were lost */
-      Modified, /*!< Project state did not change, but current state was
+        Modified, /*!< Project state did not change, but current state was
                  modified in Undo history */
-      Renamed, /*!< Project state did not change, but current state was renamed
+        Renamed, /*!< Project state did not change, but current state was renamed
                 in Undo history */
-      UndoOrRedo, /*!< Project state changed because of undo or redo; undo
+        UndoOrRedo, /*!< Project state changed because of undo or redo; undo
                    manager contents did not change other than the pointer to
                    current state */
-      Reset, /*!< Project state changed other than for single-step undo/redo;
+        Reset, /*!< Project state changed other than for single-step undo/redo;
               undo manager contents did not change other than the pointer to
               current state */
-      Purge, //!< Undo or redo states eliminated
+        Purge, //!< Undo or redo states eliminated
 
-      // Eagerly sent messages (not waiting for idle time)
-      BeginPurge, //!< Begin elimination of old undo states
-      EndPurge, //!< End elimination of old undo states
-   } type;
+        // Eagerly sent messages (not waiting for idle time)
+        BeginPurge, //!< Begin elimination of old undo states
+        EndPurge, //!< End elimination of old undo states
+    } type;
 
-   //! Only significant for BeginPurge messages
-   const size_t begin = 0, end = 0;
+    //! Only significant for BeginPurge messages
+    const size_t begin = 0, end = 0;
 };
 
 class AudacityProject;
 
 //! Base class for extra information attached to undo/redo states
-class PROJECT_HISTORY_API UndoStateExtension {
+class PROJECT_HISTORY_API UndoStateExtension
+{
 public:
-   virtual ~UndoStateExtension();
+    virtual ~UndoStateExtension();
 
-   //! Modify the project when undoing or redoing to some state in history
-   virtual void RestoreUndoRedoState(AudacityProject &project) = 0;
+    //! Modify the project when undoing or redoing to some state in history
+    virtual void RestoreUndoRedoState(AudacityProject& project) = 0;
 
-   //! Whether undo or redo is now permitted; default returns true
-   virtual bool CanUndoOrRedo(const AudacityProject &project);
+    //! Whether undo or redo is now permitted; default returns true
+    virtual bool CanUndoOrRedo(const AudacityProject& project);
 };
 
-class PROJECT_HISTORY_API UndoRedoExtensionRegistry {
+class PROJECT_HISTORY_API UndoRedoExtensionRegistry
+{
 public:
-   //! Type of function that produces an UndoStateExtension object when saving state of a project
-   /*! Shared pointer allows easy sharing of unchanging parts of project state among history states */
-   using Saver =
-      std::function<std::shared_ptr<UndoStateExtension>(AudacityProject&)>;
+    //! Type of function that produces an UndoStateExtension object when saving state of a project
+    /*! Shared pointer allows easy sharing of unchanging parts of project state among history states */
+    using Saver
+        =std::function<std::shared_ptr<UndoStateExtension>(AudacityProject&)>;
 
-   //! Typically statically constructed
-   struct PROJECT_HISTORY_API Entry {
-      Entry(const Saver &saver);
-   };
+    //! Typically statically constructed
+    struct PROJECT_HISTORY_API Entry {
+        Entry(const Saver& saver);
+    };
 };
 
 struct UndoState {
-   using Extensions = std::vector<std::shared_ptr<UndoStateExtension>>;
+    using Extensions = std::vector<std::shared_ptr<UndoStateExtension> >;
 
-   UndoState(Extensions extensions)
-      : extensions(std::move(extensions))
-   {}
+    UndoState(Extensions extensions)
+        : extensions(std::move(extensions))
+    {}
 
-   Extensions extensions;
+    Extensions extensions;
 };
 
 struct UndoStackElem {
+    UndoStackElem(UndoState::Extensions extensions,
+                  const TranslatableString& description_,
+                  const TranslatableString& shortDescription_)
+        : state(std::move(extensions))
+        , description(description_)
+        , shortDescription(shortDescription_)
+    {
+    }
 
-   UndoStackElem( UndoState::Extensions extensions,
-      const TranslatableString &description_,
-      const TranslatableString &shortDescription_)
-      : state(std::move(extensions))
-      , description(description_)
-      , shortDescription(shortDescription_)
-   {
-   }
-
-   UndoState state;
-   TranslatableString description;
-   TranslatableString shortDescription;
+    UndoState state;
+    TranslatableString description;
+    TranslatableString shortDescription;
 };
 
-using UndoStack = std::vector <std::unique_ptr<UndoStackElem>>;
+using UndoStack = std::vector <std::unique_ptr<UndoStackElem> >;
 
 // These flags control what extra to do on a PushState
 // Default is AUTOSAVE
 // Frequent/faster actions use CONSOLIDATE
 enum class UndoPush : unsigned char {
-   NONE = 0,
-   CONSOLIDATE = 1 << 0,
-   NOAUTOSAVE = 1 << 1
+    NONE = 0,
+    CONSOLIDATE = 1 << 0,
+    NOAUTOSAVE = 1 << 1
 };
 
-inline UndoPush operator | (UndoPush a, UndoPush b)
+inline UndoPush operator |(UndoPush a, UndoPush b)
 { return static_cast<UndoPush>(static_cast<int>(a) | static_cast<int>(b)); }
-inline UndoPush operator & (UndoPush a, UndoPush b)
+inline UndoPush operator &(UndoPush a, UndoPush b)
 { return static_cast<UndoPush>(static_cast<int>(a) & static_cast<int>(b)); }
 
 //! Maintain a non-persistent list of states of the project, to support undo and redo commands
 /*! The history should be cleared before destruction */
-class PROJECT_HISTORY_API UndoManager final
-   : public ClientData::Base
-   , public Observer::Publisher<UndoRedoMessage>
-   , public std::enable_shared_from_this<UndoManager>
+class PROJECT_HISTORY_API UndoManager final : public ClientData::Base, public Observer::Publisher<UndoRedoMessage>,
+    public std::enable_shared_from_this<UndoManager>
 {
- public:
-   static UndoManager &Get( AudacityProject &project );
-   static const UndoManager &Get( const AudacityProject &project );
- 
-   explicit
-   UndoManager( AudacityProject &project );
-   ~UndoManager();
+public:
+    static UndoManager& Get(AudacityProject& project);
+    static const UndoManager& Get(const AudacityProject& project);
 
-   UndoManager( const UndoManager& ) = delete;
-   UndoManager& operator = ( const UndoManager& ) = delete;
+    explicit
+    UndoManager(AudacityProject& project);
+    ~UndoManager();
 
-   void PushState(const TranslatableString &longDescription,
-                  const TranslatableString &shortDescription,
-                  UndoPush flags = UndoPush::NONE);
-   void ModifyState();
-   void RenameState( int state,
-      const TranslatableString &longDescription,
-      const TranslatableString &shortDescription);
-   void AbandonRedo();
-   void ClearStates();
-   void RemoveStates(
-      size_t begin, //!< inclusive start of range
-      size_t end    //!< exclusive end of range
-   );
-   unsigned int GetNumStates();
-   unsigned int GetCurrentState();
+    UndoManager(const UndoManager&) = delete;
+    UndoManager& operator =(const UndoManager&) = delete;
 
-   void StopConsolidating() { mayConsolidate = false; }
+    void PushState(const TranslatableString& longDescription, const TranslatableString& shortDescription, UndoPush flags = UndoPush::NONE);
+    void ModifyState();
+    void RenameState(int state, const TranslatableString& longDescription, const TranslatableString& shortDescription);
+    void AbandonRedo();
+    void ClearStates();
+    void RemoveStates(
+        size_t begin, //!< inclusive start of range
+        size_t end  //!< exclusive end of range
+        );
+    unsigned int GetNumStates();
+    unsigned int GetCurrentState();
 
-   void GetShortDescription(unsigned int n, TranslatableString *desc);
-   void SetLongDescription(unsigned int n, const TranslatableString &desc);
+    void StopConsolidating() { mayConsolidate = false; }
 
-   // These functions accept a callback that uses the state,
-   // and then they send to the project Reset or UndoOrRedo when
-   // that has finished.
-   using Consumer = std::function< void( const UndoStackElem & ) >;
-   void SetStateTo(unsigned int n, const Consumer &consumer);
-   void Undo(const Consumer &consumer);
-   void Redo(const Consumer &consumer);
+    void GetShortDescription(unsigned int n, TranslatableString* desc);
+    void SetLongDescription(unsigned int n, const TranslatableString& desc);
 
-   //! Give read-only access to all states
-   void VisitStates( const Consumer &consumer, bool newestFirst );
-   //! Visit a specified range of states
-   /*! end is exclusive; visit newer states first if end < begin */
-   void VisitStates(
-      const Consumer &consumer, size_t begin, size_t end );
+    // These functions accept a callback that uses the state,
+    // and then they send to the project Reset or UndoOrRedo when
+    // that has finished.
+    using Consumer = std::function< void (const UndoStackElem&) >;
+    void SetStateTo(unsigned int n, const Consumer& consumer);
+    void Undo(const Consumer& consumer);
+    void Redo(const Consumer& consumer);
 
-   bool UndoAvailable();
-   bool RedoAvailable();
+    //! Give read-only access to all states
+    void VisitStates(const Consumer& consumer, bool newestFirst);
+    //! Visit a specified range of states
+    /*! end is exclusive; visit newer states first if end < begin */
+    void VisitStates(
+        const Consumer& consumer, size_t begin, size_t end);
 
-   void MarkUnsaved();
-   bool UnsavedChanges() const;
-   int GetSavedState() const;
-   void StateSaved();
+    bool UndoAvailable();
+    bool RedoAvailable();
 
-   // void Debug(); // currently unused
+    void MarkUnsaved();
+    bool UnsavedChanges() const;
+    int GetSavedState() const;
+    void StateSaved();
 
- private:
-   bool CheckAvailable(int index);
+    // void Debug(); // currently unused
 
-   void EnqueueMessage(UndoRedoMessage message);
-   void RemoveStateAt(int n);
+private:
+    bool CheckAvailable(int index);
 
-   AudacityProject &mProject;
- 
-   int current;
-   int saved;
+    void EnqueueMessage(UndoRedoMessage message);
+    void RemoveStateAt(int n);
 
-   UndoStack stack;
+    AudacityProject& mProject;
 
-   TranslatableString lastAction;
-   bool mayConsolidate { false };
+    int current;
+    int saved;
+
+    UndoStack stack;
+
+    TranslatableString lastAction;
+    bool mayConsolidate { false };
 };
 
 #endif
