@@ -29,62 +29,63 @@ class Effect;
 class EFFECTS_API BuiltinEffectsModule final : public PluginProvider
 {
 public:
-   BuiltinEffectsModule();
-   virtual ~BuiltinEffectsModule();
+    BuiltinEffectsModule();
+    virtual ~BuiltinEffectsModule();
 
-   using Factory = std::function< std::unique_ptr<Effect> () >;
+    using Factory = std::function< std::unique_ptr<Effect>() >;
 
-   // Typically you make a static object of this type in the .cpp file that
-   // also implements the Effect subclass.
-   template< typename Subclass >
-   struct Registration final { Registration( bool excluded = false ) {
-      DoRegistration(
-         Subclass::Symbol, []{ return std::make_unique< Subclass >(); },
-         excluded );
-   } };
+    // Typically you make a static object of this type in the .cpp file that
+    // also implements the Effect subclass.
+    template< typename Subclass >
+    struct Registration final {
+        Registration(bool excluded = false)
+        {
+            DoRegistration(
+                Subclass::Symbol, []{ return std::make_unique< Subclass >(); },
+                excluded);
+        }
+    };
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
+    PluginPath GetPath() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    VendorSymbol GetVendor() const override;
+    wxString GetVersion() const override;
+    TranslatableString GetDescription() const override;
 
-   // PluginProvider implementation
+    // PluginProvider implementation
 
-   bool Initialize() override;
-   void Terminate() override;
-   EffectFamilySymbol GetOptionalFamilySymbol() override;
+    bool Initialize() override;
+    void Terminate() override;
+    EffectFamilySymbol GetOptionalFamilySymbol() override;
 
-   const FileExtensions &GetFileExtensions() override;
-   FilePath InstallPath() override { return {}; }
+    const FileExtensions& GetFileExtensions() override;
+    FilePath InstallPath() override { return {}; }
 
-   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
-   unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, TranslatableString &errMsg,
-      const RegistrationCallback &callback)
-         override;
-   
-   bool CheckPluginExist(const PluginPath& path) const override;
+    void AutoRegisterPlugins(PluginManagerInterface& pm) override;
+    PluginPaths FindModulePaths(PluginManagerInterface& pm) override;
+    unsigned DiscoverPluginsAtPath(
+        const PluginPath& path, TranslatableString& errMsg, const RegistrationCallback& callback)
+    override;
 
-   std::unique_ptr<ComponentInterface>
-      LoadPlugin(const PluginPath & path) override;
+    bool CheckPluginExist(const PluginPath& path) const override;
 
-private:
-   // BuiltinEffectModule implementation
-
-   std::unique_ptr<Effect> Instantiate(const PluginPath & path);
+    std::unique_ptr<ComponentInterface>
+    LoadPlugin(const PluginPath& path) override;
 
 private:
-   static void DoRegistration(
-      const ComponentInterfaceSymbol &name, const Factory &factory,
-      bool excluded );
+    // BuiltinEffectModule implementation
 
-   struct Entry;
-   using EffectHash = std::unordered_map< wxString, const Entry* > ;
-   EffectHash mEffects;
+    std::unique_ptr<Effect> Instantiate(const PluginPath& path);
+
+private:
+    static void DoRegistration(
+        const ComponentInterfaceSymbol& name, const Factory& factory, bool excluded);
+
+    struct Entry;
+    using EffectHash = std::unordered_map< wxString, const Entry* >;
+    EffectHash mEffects;
 };
 
 #endif

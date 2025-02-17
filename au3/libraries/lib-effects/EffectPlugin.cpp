@@ -20,5 +20,5 @@ EffectInstanceEx::~EffectInstanceEx() = default;
 
 bool EffectInstanceEx::Init()
 {
-   return true;
+    return true;
 }
