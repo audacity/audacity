@@ -21,9 +21,11 @@ Rectangle {
     property alias channelHeightRatio: channelSplitter.channelHeightRatio
     property var canvas: null
     property color clipColor: "#677CE4"
+    property int groupId: -1
     property bool clipSelected: false
     property bool isDataSelected: false
     property bool isMultiSelectionActive: false
+    property bool multiClipsSelected: root.isMultiSelectionActive && root.clipSelected
     property bool moveActive: false
     property real selectionStart: 0
     property real selectionWidth: 0
@@ -131,7 +133,7 @@ Rectangle {
         acceptedButtons: Qt.RightButton
 
         onClicked: function(e) {
-            if (root.isMultiSelectionActive && root.clipSelected) {
+            if (root.multiClipsSelected) {
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
             } else {
                 singleClipContextMenuLoader.show(Qt.point(e.x, e.y), singleClipContextMenuModel.items)
@@ -474,15 +476,17 @@ Rectangle {
                     height: 16
                     anchors.verticalCenter: parent.verticalCenter
 
-                    menuModel: singleClipContextMenuModel
+                    menuModel: (root.multiClipsSelected || root.groupId != -1) ? multiClipContextMenuModel : singleClipContextMenuModel
 
                     onHandleMenuItem: function(itemId) {
-                        Qt.callLater(singleClipContextMenuModel.handleMenuItem, itemId)
+                        Qt.callLater(menuModel.handleMenuItem, itemId)
                     }
 
                     onClicked: {
-                        root.requestSelectionReset()
-                        root.requestSelected()
+                        if (!root.multiClipsSelected) {
+                            root.requestSelectionReset()
+                            root.requestSelected()
+                        }
                     }
                 }
             }

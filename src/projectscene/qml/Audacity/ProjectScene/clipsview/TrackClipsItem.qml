@@ -121,6 +121,7 @@ Item {
                 canvas: root.canvas
                 title: clipItem.title
                 clipColor: clipItem.color
+                groupId: clipItem.groupId
                 clipKey: clipItem.key
                 clipTime: clipItem.time
                 pitch: clipItem.pitch

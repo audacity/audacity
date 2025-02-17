@@ -2254,6 +2254,9 @@ void Au3Interaction::setClipGroupId(const ClipKey& clipKey, int64_t id)
     }
 
     clip->SetGroupId(id);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 }
 
 void Au3Interaction::groupClips(const ClipKeyList& clipKeyList)

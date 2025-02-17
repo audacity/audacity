@@ -14,6 +14,7 @@ struct Clip {
     ClipKey key;
     muse::String title;
     muse::draw::Color color;
+    int groupId = -1;
     double startTime = 0.0;
     double endTime = 0.0;
     bool stereo = false;
