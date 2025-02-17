@@ -19,50 +19,50 @@ class WaveChannel;
 class BUILTIN_EFFECTS_API FindClippingBase : public StatefulEffect
 {
 public:
-   static inline FindClippingBase*
-   FetchParameters(FindClippingBase& e, EffectSettings&)
-   {
-      return &e;
-   }
-   static const ComponentInterfaceSymbol Symbol;
+    static inline FindClippingBase*
+    FetchParameters(FindClippingBase& e, EffectSettings&)
+    {
+        return &e;
+    }
 
-   FindClippingBase();
-   virtual ~FindClippingBase();
+    static const ComponentInterfaceSymbol Symbol;
 
-   // ComponentInterface implementation
+    FindClippingBase();
+    virtual ~FindClippingBase();
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
+    // ComponentInterface implementation
 
-   // EffectDefinitionInterface implementation
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
+    ManualPageID ManualPage() const override;
 
-   EffectType GetType() const override;
+    // EffectDefinitionInterface implementation
 
-   // Effect implementation
+    EffectType GetType() const override;
 
-   bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    // Effect implementation
+
+    bool Process(EffectInstance& instance, EffectSettings& settings) override;
 
 private:
-   // EffectFindCliping implementation
+    // EffectFindCliping implementation
 
-   bool ProcessOne(
-      LabelTrack& lt, int count, const WaveChannel& wt, sampleCount start,
-      sampleCount len);
+    bool ProcessOne(
+        LabelTrack& lt, int count, const WaveChannel& wt, sampleCount start, sampleCount len);
 
 protected:
-   int mStart; ///< Using int rather than sampleCount because values are only
+    int mStart; ///< Using int rather than sampleCount because values are only
+                ///< ever small numbers
+    int mStop; ///< Using int rather than sampleCount because values are only
                ///< ever small numbers
-   int mStop;  ///< Using int rather than sampleCount because values are only
-               ///< ever small numbers
-   // To do: eliminate this
+    // To do: eliminate this
 
-   const EffectParameterMethods& Parameters() const override;
+    const EffectParameterMethods& Parameters() const override;
 
-   static constexpr EffectParameter Start {
-      &FindClippingBase::mStart, L"Duty Cycle Start", 3, 1, INT_MAX, 1
-   };
-   static constexpr EffectParameter Stop {
-      &FindClippingBase::mStop, L"Duty Cycle End", 3, 1, INT_MAX, 1
-   };
+    static constexpr EffectParameter Start {
+        &FindClippingBase::mStart, L"Duty Cycle Start", 3, 1, INT_MAX, 1
+    };
+    static constexpr EffectParameter Stop {
+        &FindClippingBase::mStop, L"Duty Cycle End", 3, 1, INT_MAX, 1
+    };
 };

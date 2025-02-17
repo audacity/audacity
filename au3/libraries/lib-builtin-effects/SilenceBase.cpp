@@ -21,7 +21,7 @@ const ComponentInterfaceSymbol SilenceBase::Symbol
 
 SilenceBase::SilenceBase()
 {
-   SetLinearEffectFlag(true);
+    SetLinearEffectFlag(true);
 }
 
 SilenceBase::~SilenceBase()
@@ -32,30 +32,28 @@ SilenceBase::~SilenceBase()
 
 ComponentInterfaceSymbol SilenceBase::GetSymbol() const
 {
-   return Symbol;
+    return Symbol;
 }
 
 TranslatableString SilenceBase::GetDescription() const
 {
-   return XO("Creates audio of zero amplitude");
+    return XO("Creates audio of zero amplitude");
 }
 
 ManualPageID SilenceBase::ManualPage() const
 {
-   return L"Silence";
+    return L"Silence";
 }
-
 
 // EffectDefinitionInterface implementation
 
 EffectType SilenceBase::GetType() const
 {
-   return EffectTypeGenerate;
+    return EffectTypeGenerate;
 }
-
 
 bool SilenceBase::GenerateTrack(const EffectSettings& settings, WaveTrack& tmp)
 {
-   tmp.InsertSilence(0.0, settings.extra.GetDuration());
-   return true;
+    tmp.InsertSilence(0.0, settings.extra.GetDuration());
+    return true;
 }

@@ -14,23 +14,23 @@
 class BUILTIN_EFFECTS_API SilenceBase : public Generator
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   SilenceBase();
-   virtual ~SilenceBase();
+    SilenceBase();
+    virtual ~SilenceBase();
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
+    ManualPageID ManualPage() const override;
 
-   // EffectDefinitionInterface implementation
+    // EffectDefinitionInterface implementation
 
-   EffectType GetType() const override;
+    EffectType GetType() const override;
 
 protected:
-   // Generator implementation
+    // Generator implementation
 
-   bool GenerateTrack(const EffectSettings& settings, WaveTrack& tmp) override;
+    bool GenerateTrack(const EffectSettings& settings, WaveTrack& tmp) override;
 };
