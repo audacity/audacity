@@ -45,7 +45,7 @@
 #include <wx/thread.h>
 
 #ifndef M_PI
-#define	M_PI		3.14159265358979323846  /* pi */
+#define     M_PI        3.14159265358979323846  /* pi */
 #endif
 
 /*
@@ -54,39 +54,40 @@
 */
 HFFT InitializeFFT(size_t fftlen)
 {
-   int temp;
-   HFFT h{ safenew FFTParam };
+    int temp;
+    HFFT h{ safenew FFTParam };
 
-   /*
-   *  FFT size is only half the number of data points
-   *  The full FFT output can be reconstructed from this FFT's output.
-   *  (This optimization can be made since the data is real.)
-   */
-   h->Points = fftlen / 2;
+    /*
+    *  FFT size is only half the number of data points
+    *  The full FFT output can be reconstructed from this FFT's output.
+    *  (This optimization can be made since the data is real.)
+    */
+    h->Points = fftlen / 2;
 
-   h->SinTable.reinit(2*h->Points);
+    h->SinTable.reinit(2 * h->Points);
 
-   h->BitReversed.reinit(h->Points);
+    h->BitReversed.reinit(h->Points);
 
-   for(size_t i = 0; i < h->Points; i++)
-   {
-      temp = 0;
-      for(size_t mask = h->Points / 2; mask > 0; mask >>= 1)
-         temp = (temp >> 1) + (i & mask ? h->Points : 0);
+    for (size_t i = 0; i < h->Points; i++) {
+        temp = 0;
+        for (size_t mask = h->Points / 2; mask > 0; mask >>= 1) {
+            temp = (temp >> 1) + (i & mask ? h->Points : 0);
+        }
 
-      h->BitReversed[i] = temp;
-   }
+        h->BitReversed[i] = temp;
+    }
 
-   for(size_t i = 0; i < h->Points; i++)
-   {
-      h->SinTable[h->BitReversed[i]  ]=(fft_type)-sin(2*M_PI*i/(2*h->Points));
-      h->SinTable[h->BitReversed[i]+1]=(fft_type)-cos(2*M_PI*i/(2*h->Points));
-   }
+    for (size_t i = 0; i < h->Points; i++) {
+        h->SinTable[h->BitReversed[i]  ]=(fft_type) - sin(2 * M_PI * i / (2 * h->Points));
+        h->SinTable[h->BitReversed[i] + 1]=(fft_type) - cos(2 * M_PI * i / (2 * h->Points));
+    }
 
-   return h;
+    return h;
 }
 
-enum : size_t { MAX_HFFT = 10 };
+enum : size_t {
+    MAX_HFFT = 10
+};
 
 // Maintain a pool:
 static std::vector< std::unique_ptr<FFTParam> > hFFTArray(MAX_HFFT);
@@ -96,41 +97,42 @@ wxCriticalSection getFFTMutex;
 /* This version keeps common tables rather than allocating a NEW table every time */
 HFFT GetFFT(size_t fftlen)
 {
-   // To do:  smarter policy about when to retain in the pool and when to
-   // allocate a unique instance.
+    // To do:  smarter policy about when to retain in the pool and when to
+    // allocate a unique instance.
 
-   wxCriticalSectionLocker locker{ getFFTMutex };
-   
-   size_t h = 0;
-   auto n = fftlen/2;
-   auto size = hFFTArray.size();
-   for(;
-       (h < size) && hFFTArray[h] && (n != hFFTArray[h]->Points);
-       h++)
-      ;
-   if(h < size) {
-      if(hFFTArray[h] == NULL) {
-         hFFTArray[h].reset( InitializeFFT(fftlen).release() );
-      }
-      return HFFT{ hFFTArray[h].get() };
-   } else {
-      // All buffers used, so fall back to allocating a NEW set of tables
-      return InitializeFFT(fftlen);
-   }
+    wxCriticalSectionLocker locker{ getFFTMutex };
+
+    size_t h = 0;
+    auto n = fftlen / 2;
+    auto size = hFFTArray.size();
+    for (;
+         (h < size) && hFFTArray[h] && (n != hFFTArray[h]->Points);
+         h++) {
+    }
+    if (h < size) {
+        if (hFFTArray[h] == NULL) {
+            hFFTArray[h].reset(InitializeFFT(fftlen).release());
+        }
+        return HFFT{ hFFTArray[h].get() };
+    } else {
+        // All buffers used, so fall back to allocating a NEW set of tables
+        return InitializeFFT(fftlen);
+    }
 }
 
 /* Release a previously requested handle to the FFT tables */
-void FFTDeleter::operator() (FFTParam *hFFT) const
+void FFTDeleter::operator()(FFTParam* hFFT) const
 {
-   wxCriticalSectionLocker locker{ getFFTMutex };
+    wxCriticalSectionLocker locker{ getFFTMutex };
 
-   auto it = hFFTArray.begin(), end = hFFTArray.end();
-   while (it != end && it->get() != hFFT)
-      ++it;
-   if ( it != end )
-      ;
-   else
-      delete hFFT;
+    auto it = hFFTArray.begin(), end = hFFTArray.end();
+    while (it != end && it->get() != hFFT) {
+        ++it;
+    }
+    if (it != end) {
+    } else {
+        delete hFFT;
+    }
 }
 
 /*
@@ -151,88 +153,87 @@ void FFTDeleter::operator() (FFTParam *hFFT) const
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void RealFFTf(fft_type *buffer, const FFTParam *h)
+void RealFFTf(fft_type* buffer, const FFTParam* h)
 {
-   fft_type *A,*B;
-   const fft_type *sptr;
-   const fft_type *endptr1,*endptr2;
-   const int *br1,*br2;
-   fft_type HRplus,HRminus,HIplus,HIminus;
-   fft_type v1,v2,sin,cos;
+    fft_type* A, * B;
+    const fft_type* sptr;
+    const fft_type* endptr1, * endptr2;
+    const int* br1, * br2;
+    fft_type HRplus, HRminus, HIplus, HIminus;
+    fft_type v1, v2, sin, cos;
 
-   auto ButterfliesPerGroup = h->Points/2;
+    auto ButterfliesPerGroup = h->Points / 2;
 
-   /*
-   *  Butterfly:
-   *     Ain-----Aout
-   *         \ /
-   *         / \
-   *     Bin-----Bout
-   */
+    /*
+    *  Butterfly:
+    *     Ain-----Aout
+    *         \ /
+    *         / \
+    *     Bin-----Bout
+    */
 
-   endptr1 = buffer + h->Points * 2;
+    endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup > 0)
-   {
-      A = buffer;
-      B = buffer + ButterfliesPerGroup * 2;
-      sptr = h->SinTable.get();
+    while (ButterfliesPerGroup > 0)
+    {
+        A = buffer;
+        B = buffer + ButterfliesPerGroup * 2;
+        sptr = h->SinTable.get();
 
-      while(A < endptr1)
-      {
-         sin = *sptr;
-         cos = *(sptr+1);
-         endptr2 = B;
-         while(A < endptr2)
-         {
-            v1 = *B * cos + *(B + 1) * sin;
-            v2 = *B * sin - *(B + 1) * cos;
-            *B = (*A + v1);
-            *(A++) = *(B++) - 2 * v1;
-            *B = (*A - v2);
-            *(A++) = *(B++) + 2 * v2;
-         }
-         A = B;
-         B += ButterfliesPerGroup * 2;
-         sptr += 2;
-      }
-      ButterfliesPerGroup >>= 1;
-   }
-   /* Massage output to get the output for a real input sequence. */
-   br1 = h->BitReversed.get() + 1;
-   br2 = h->BitReversed.get() + h->Points - 1;
+        while (A < endptr1)
+        {
+            sin = *sptr;
+            cos = *(sptr + 1);
+            endptr2 = B;
+            while (A < endptr2)
+            {
+                v1 = *B * cos + *(B + 1) * sin;
+                v2 = *B * sin - *(B + 1) * cos;
+                *B = (*A + v1);
+                *(A++) = *(B++) - 2 * v1;
+                *B = (*A - v2);
+                *(A++) = *(B++) + 2 * v2;
+            }
+            A = B;
+            B += ButterfliesPerGroup * 2;
+            sptr += 2;
+        }
+        ButterfliesPerGroup >>= 1;
+    }
+    /* Massage output to get the output for a real input sequence. */
+    br1 = h->BitReversed.get() + 1;
+    br2 = h->BitReversed.get() + h->Points - 1;
 
-   while(br1<br2)
-   {
-      sin=h->SinTable[*br1];
-      cos=h->SinTable[*br1+1];
-      A=buffer+*br1;
-      B=buffer+*br2;
-      HRplus = (HRminus = *A     - *B    ) + (*B     * 2);
-      HIplus = (HIminus = *(A+1) - *(B+1)) + (*(B+1) * 2);
-      v1 = (sin*HRminus - cos*HIplus);
-      v2 = (cos*HRminus + sin*HIplus);
-      *A = (HRplus  + v1) * (fft_type)0.5;
-      *B = *A - v1;
-      *(A+1) = (HIminus + v2) * (fft_type)0.5;
-      *(B+1) = *(A+1) - HIminus;
+    while (br1 < br2)
+    {
+        sin=h->SinTable[*br1];
+        cos=h->SinTable[*br1 + 1];
+        A=buffer + *br1;
+        B=buffer + *br2;
+        HRplus = (HRminus = *A - *B) + (*B * 2);
+        HIplus = (HIminus = *(A + 1) - *(B + 1)) + (*(B + 1) * 2);
+        v1 = (sin * HRminus - cos * HIplus);
+        v2 = (cos * HRminus + sin * HIplus);
+        *A = (HRplus + v1) * (fft_type)0.5;
+        *B = *A - v1;
+        *(A + 1) = (HIminus + v2) * (fft_type)0.5;
+        *(B + 1) = *(A + 1) - HIminus;
 
-      br1++;
-      br2--;
-   }
-   /* Handle the center bin (just need a conjugate) */
-   A=buffer+*br1+1;
-   *A=-*A;
-   /* Handle DC bin separately - and ignore the Fs/2 bin
-   buffer[0]+=buffer[1];
-   buffer[1]=(fft_type)0;*/
-   /* Handle DC and Fs/2 bins separately */
-   /* Put the Fs/2 value into the imaginary part of the DC bin */
-   v1=buffer[0]-buffer[1];
-   buffer[0]+=buffer[1];
-   buffer[1]=v1;
+        br1++;
+        br2--;
+    }
+    /* Handle the center bin (just need a conjugate) */
+    A=buffer + *br1 + 1;
+    *A=-*A;
+    /* Handle DC bin separately - and ignore the Fs/2 bin
+    buffer[0]+=buffer[1];
+    buffer[1]=(fft_type)0;*/
+    /* Handle DC and Fs/2 bins separately */
+    /* Put the Fs/2 value into the imaginary part of the DC bin */
+    v1=buffer[0] - buffer[1];
+    buffer[0]+=buffer[1];
+    buffer[1]=v1;
 }
-
 
 /* Description: This routine performs an inverse FFT to real data.
 *              This code is for floating point data.
@@ -253,108 +254,108 @@ void RealFFTf(fft_type *buffer, const FFTParam *h)
 *        values would be similar in amplitude to the input values, which is
 *        good when using fixed point arithmetic)
 */
-void InverseRealFFTf(fft_type *buffer, const FFTParam *h)
+void InverseRealFFTf(fft_type* buffer, const FFTParam* h)
 {
-   fft_type *A,*B;
-   const fft_type *sptr;
-   const fft_type *endptr1,*endptr2;
-   const int *br1;
-   fft_type HRplus,HRminus,HIplus,HIminus;
-   fft_type v1,v2,sin,cos;
+    fft_type* A, * B;
+    const fft_type* sptr;
+    const fft_type* endptr1, * endptr2;
+    const int* br1;
+    fft_type HRplus, HRminus, HIplus, HIminus;
+    fft_type v1, v2, sin, cos;
 
-   auto ButterfliesPerGroup = h->Points / 2;
+    auto ButterfliesPerGroup = h->Points / 2;
 
-   /* Massage input to get the input for a real output sequence. */
-   A = buffer + 2;
-   B = buffer + h->Points * 2 - 2;
-   br1 = h->BitReversed.get() + 1;
-   while(A<B)
-   {
-      sin=h->SinTable[*br1];
-      cos=h->SinTable[*br1+1];
-      HRplus = (HRminus = *A     - *B    ) + (*B     * 2);
-      HIplus = (HIminus = *(A+1) - *(B+1)) + (*(B+1) * 2);
-      v1 = (sin*HRminus + cos*HIplus);
-      v2 = (cos*HRminus - sin*HIplus);
-      *A = (HRplus  + v1) * (fft_type)0.5;
-      *B = *A - v1;
-      *(A+1) = (HIminus - v2) * (fft_type)0.5;
-      *(B+1) = *(A+1) - HIminus;
+    /* Massage input to get the input for a real output sequence. */
+    A = buffer + 2;
+    B = buffer + h->Points * 2 - 2;
+    br1 = h->BitReversed.get() + 1;
+    while (A < B)
+    {
+        sin=h->SinTable[*br1];
+        cos=h->SinTable[*br1 + 1];
+        HRplus = (HRminus = *A - *B) + (*B * 2);
+        HIplus = (HIminus = *(A + 1) - *(B + 1)) + (*(B + 1) * 2);
+        v1 = (sin * HRminus + cos * HIplus);
+        v2 = (cos * HRminus - sin * HIplus);
+        *A = (HRplus + v1) * (fft_type)0.5;
+        *B = *A - v1;
+        *(A + 1) = (HIminus - v2) * (fft_type)0.5;
+        *(B + 1) = *(A + 1) - HIminus;
 
-      A+=2;
-      B-=2;
-      br1++;
-   }
-   /* Handle center bin (just need conjugate) */
-   *(A+1)=-*(A+1);
-   /* Handle DC bin separately - this ignores any Fs/2 component
-   buffer[1]=buffer[0]=buffer[0]/2;*/
-   /* Handle DC and Fs/2 bins specially */
-   /* The DC bin is passed in as the real part of the DC complex value */
-   /* The Fs/2 bin is passed in as the imaginary part of the DC complex value */
-   /* (v1+v2) = buffer[0] == the DC component */
-   /* (v1-v2) = buffer[1] == the Fs/2 component */
-   v1=0.5f*(buffer[0]+buffer[1]);
-   v2=0.5f*(buffer[0]-buffer[1]);
-   buffer[0]=v1;
-   buffer[1]=v2;
+        A+=2;
+        B-=2;
+        br1++;
+    }
+    /* Handle center bin (just need conjugate) */
+    *(A + 1)=-*(A + 1);
+    /* Handle DC bin separately - this ignores any Fs/2 component
+    buffer[1]=buffer[0]=buffer[0]/2;*/
+    /* Handle DC and Fs/2 bins specially */
+    /* The DC bin is passed in as the real part of the DC complex value */
+    /* The Fs/2 bin is passed in as the imaginary part of the DC complex value */
+    /* (v1+v2) = buffer[0] == the DC component */
+    /* (v1-v2) = buffer[1] == the Fs/2 component */
+    v1=0.5f * (buffer[0] + buffer[1]);
+    v2=0.5f * (buffer[0] - buffer[1]);
+    buffer[0]=v1;
+    buffer[1]=v2;
 
-   /*
-   *  Butterfly:
-   *     Ain-----Aout
-   *         \ /
-   *         / \
-   *     Bin-----Bout
-   */
+    /*
+    *  Butterfly:
+    *     Ain-----Aout
+    *         \ /
+    *         / \
+    *     Bin-----Bout
+    */
 
-   endptr1 = buffer + h->Points * 2;
+    endptr1 = buffer + h->Points * 2;
 
-   while(ButterfliesPerGroup > 0)
-   {
-      A = buffer;
-      B = buffer + ButterfliesPerGroup * 2;
-      sptr = h->SinTable.get();
+    while (ButterfliesPerGroup > 0)
+    {
+        A = buffer;
+        B = buffer + ButterfliesPerGroup * 2;
+        sptr = h->SinTable.get();
 
-      while(A < endptr1)
-      {
-         sin = *(sptr++);
-         cos = *(sptr++);
-         endptr2 = B;
-         while(A < endptr2)
-         {
-            v1 = *B * cos - *(B + 1) * sin;
-            v2 = *B * sin + *(B + 1) * cos;
-            *B = (*A + v1) * (fft_type)0.5;
-            *(A++) = *(B++) - v1;
-            *B = (*A + v2) * (fft_type)0.5;
-            *(A++) = *(B++) - v2;
-         }
-         A = B;
-         B += ButterfliesPerGroup * 2;
-      }
-      ButterfliesPerGroup >>= 1;
-   }
+        while (A < endptr1)
+        {
+            sin = *(sptr++);
+            cos = *(sptr++);
+            endptr2 = B;
+            while (A < endptr2)
+            {
+                v1 = *B * cos - *(B + 1) * sin;
+                v2 = *B * sin + *(B + 1) * cos;
+                *B = (*A + v1) * (fft_type)0.5;
+                *(A++) = *(B++) - v1;
+                *B = (*A + v2) * (fft_type)0.5;
+                *(A++) = *(B++) - v2;
+            }
+            A = B;
+            B += ButterfliesPerGroup * 2;
+        }
+        ButterfliesPerGroup >>= 1;
+    }
 }
 
-void ReorderToFreq(const FFTParam *hFFT, const fft_type *buffer,
-		   fft_type *RealOut, fft_type *ImagOut)
+void ReorderToFreq(const FFTParam* hFFT, const fft_type* buffer,
+                   fft_type* RealOut, fft_type* ImagOut)
 {
-   // Copy the data into the real and imaginary outputs
-   for(size_t i = 1; i < hFFT->Points; i++) {
-      RealOut[i] = buffer[hFFT->BitReversed[i]  ];
-      ImagOut[i] = buffer[hFFT->BitReversed[i]+1];
-   }
-   RealOut[0] = buffer[0]; // DC component
-   ImagOut[0] = 0;
-   RealOut[hFFT->Points] = buffer[1]; // Fs/2 component
-   ImagOut[hFFT->Points] = 0;
+    // Copy the data into the real and imaginary outputs
+    for (size_t i = 1; i < hFFT->Points; i++) {
+        RealOut[i] = buffer[hFFT->BitReversed[i]  ];
+        ImagOut[i] = buffer[hFFT->BitReversed[i] + 1];
+    }
+    RealOut[0] = buffer[0]; // DC component
+    ImagOut[0] = 0;
+    RealOut[hFFT->Points] = buffer[1]; // Fs/2 component
+    ImagOut[hFFT->Points] = 0;
 }
 
-void ReorderToTime(const FFTParam *hFFT, const fft_type *buffer, fft_type *TimeOut)
+void ReorderToTime(const FFTParam* hFFT, const fft_type* buffer, fft_type* TimeOut)
 {
-   // Copy the data into the real outputs
-   for(size_t i = 0; i < hFFT->Points; i++) {
-      TimeOut[i*2  ]=buffer[hFFT->BitReversed[i]  ];
-      TimeOut[i*2+1]=buffer[hFFT->BitReversed[i]+1];
-   }
+    // Copy the data into the real outputs
+    for (size_t i = 0; i < hFFT->Points; i++) {
+        TimeOut[i * 2  ]=buffer[hFFT->BitReversed[i]  ];
+        TimeOut[i * 2 + 1]=buffer[hFFT->BitReversed[i] + 1];
+    }
 }

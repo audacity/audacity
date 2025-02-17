@@ -13,8 +13,7 @@
 #include <cassert>
 #include <optional>
 
-namespace LibFileFormats
-{
+namespace LibFileFormats {
 /*!
  * @brief Models how SoundForge allows the editing of ACID metadata, as far as
  * our interest goes: setting the type to one-shot prevents the setting of BPM.
@@ -24,34 +23,35 @@ namespace LibFileFormats
  */
 struct AcidizerTags
 {
-   struct OneShot
-   {
-   };
+    struct OneShot
+    {
+    };
 
-   struct Loop
-   {
-      explicit Loop(double bpm)
-          : bpm { bpm }
-      {
-      }
-      const double bpm;
-   };
+    struct Loop
+    {
+        explicit Loop(double bpm)
+            : bpm{bpm}
+        {
+        }
 
-   AcidizerTags()
-   {
-   }
+        const double bpm;
+    };
 
-   AcidizerTags(OneShot)
-       : isOneShot { true }
-   {
-   }
+    AcidizerTags()
+    {
+    }
 
-   AcidizerTags(Loop loop)
-       : bpm { loop.bpm }
-   {
-   }
+    AcidizerTags(OneShot)
+        : isOneShot{true}
+    {
+    }
 
-   const std::optional<double> bpm;
-   const bool isOneShot = false;
+    AcidizerTags(Loop loop)
+        : bpm{loop.bpm}
+    {
+    }
+
+    const std::optional<double> bpm;
+    const bool isOneShot = false;
 };
 } // namespace LibFileFormats

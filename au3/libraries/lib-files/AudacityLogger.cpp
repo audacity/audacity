@@ -13,7 +13,6 @@ Provides thread-safe logging based on the wxWidgets log facility.
 
 *//*******************************************************************/
 
-
 #include "AudacityLogger.h"
 
 #include "Internat.h"
@@ -32,104 +31,103 @@ Provides thread-safe logging based on the wxWidgets log facility.
 //     as such, can be used by the ever growing threading within Audacity.
 //
 
-AudacityLogger *AudacityLogger::Get()
+AudacityLogger* AudacityLogger::Get()
 {
-   static std::once_flag flag;
-   std::call_once( flag, []{
-      // wxWidgets will clean up the logger for the main thread, so we can say
-      // safenew.  See:
-      // http://docs.wxwidgets.org/3.0/classwx_log.html#a2525bf54fa3f31dc50e6e3cd8651e71d
-      std::unique_ptr < wxLog > // DELETE any previous logger
-         { wxLog::SetActiveTarget(safenew AudacityLogger) };
-   } );
+    static std::once_flag flag;
+    std::call_once(flag, []{
+        // wxWidgets will clean up the logger for the main thread, so we can say
+        // safenew.  See:
+        // http://docs.wxwidgets.org/3.0/classwx_log.html#a2525bf54fa3f31dc50e6e3cd8651e71d
+        std::unique_ptr < wxLog > // DELETE any previous logger
+        { wxLog::SetActiveTarget(safenew AudacityLogger) };
+    });
 
-   // Use dynamic_cast so that we get a NULL ptr in case our logger
-   // is no longer the target.
-   return dynamic_cast<AudacityLogger *>(wxLog::GetActiveTarget());
+    // Use dynamic_cast so that we get a NULL ptr in case our logger
+    // is no longer the target.
+    return dynamic_cast<AudacityLogger*>(wxLog::GetActiveTarget());
 }
 
 AudacityLogger::AudacityLogger()
-:  wxEvtHandler(),
-   wxLog()
+    :  wxEvtHandler(),
+    wxLog()
 {
-   mUpdated = false;
+    mUpdated = false;
 }
 
 AudacityLogger::~AudacityLogger()  = default;
 
 void AudacityLogger::Flush()
 {
-   if (mUpdated && mListener && mListener())
-      mUpdated = false;
+    if (mUpdated && mListener && mListener()) {
+        mUpdated = false;
+    }
 }
 
 auto AudacityLogger::SetListener(Listener listener) -> Listener
 {
-   auto result = std::move(mListener);
-   mListener = std::move(listener);
-   return result;
+    auto result = std::move(mListener);
+    mListener = std::move(listener);
+    return result;
 }
 
-void AudacityLogger::DoLogText(const wxString & str)
+void AudacityLogger::DoLogText(const wxString& str)
 {
-   if (!wxIsMainThread()) {
-      wxMutexGuiEnter();
-   }
+    if (!wxIsMainThread()) {
+        wxMutexGuiEnter();
+    }
 
-   if (mBuffer.empty()) {
-      wxString stamp;
+    if (mBuffer.empty()) {
+        wxString stamp;
 
-      TimeStamp(&stamp);
+        TimeStamp(&stamp);
 
-      mBuffer << stamp << _TS("Audacity ") << AUDACITY_VERSION_STRING << wxT("\n");
-   }
+        mBuffer << stamp << _TS("Audacity ") << AUDACITY_VERSION_STRING << wxT("\n");
+    }
 
-   mBuffer << str << wxT("\n");
+    mBuffer << str << wxT("\n");
 
-   mUpdated = true;
+    mUpdated = true;
 
-   Flush();
+    Flush();
 
-   if (!wxIsMainThread()) {
-      wxMutexGuiLeave();
-   }
+    if (!wxIsMainThread()) {
+        wxMutexGuiLeave();
+    }
 }
 
-bool AudacityLogger::SaveLog(const wxString &fileName) const
+bool AudacityLogger::SaveLog(const wxString& fileName) const
 {
-   wxFFile file(fileName, wxT("w"));
+    wxFFile file(fileName, wxT("w"));
 
-   if (file.IsOpened()) {
-      file.Write(mBuffer);
-      file.Close();
-      return true;
-   }
+    if (file.IsOpened()) {
+        file.Write(mBuffer);
+        file.Close();
+        return true;
+    }
 
-   return false;
+    return false;
 }
 
 bool AudacityLogger::ClearLog()
 {
-   mBuffer = wxEmptyString;
-   DoLogText(wxT("Log Cleared."));
+    mBuffer = wxEmptyString;
+    DoLogText(wxT("Log Cleared."));
 
-   return true;
+    return true;
 }
 
 wxString AudacityLogger::GetLog(int count)
 {
-   if (count == 0)
-   {
-      return mBuffer;
-   }
+    if (count == 0) {
+        return mBuffer;
+    }
 
-   wxString buffer;
+    wxString buffer;
 
-   auto lines = wxStringTokenize(mBuffer, wxT("\r\n"), wxTOKEN_RET_DELIMS);
-   for (int index = lines.size() - 1; index >= 0 && count > 0; --index, --count)
-   {
-      buffer.Prepend(lines[index]);
-   }
+    auto lines = wxStringTokenize(mBuffer, wxT("\r\n"), wxTOKEN_RET_DELIMS);
+    for (int index = lines.size() - 1; index >= 0 && count > 0; --index, --count) {
+        buffer.Prepend(lines[index]);
+    }
 
-   return buffer;
+    return buffer;
 }

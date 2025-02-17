@@ -22,7 +22,7 @@
 
 FilePath PlatformCompatibility::GetLongFileName(const FilePath& shortFileName)
 {
-   wxFileName fn(shortFileName);
+    wxFileName fn(shortFileName);
 
-   return fn.GetLongPath();
+    return fn.GetLongPath();
 }
