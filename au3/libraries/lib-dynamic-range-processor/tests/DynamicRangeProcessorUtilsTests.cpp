@@ -11,20 +11,19 @@
 #include "DynamicRangeProcessorUtils.h"
 #include <catch2/catch.hpp>
 
-namespace DynamicRangeProcessorUtils
-{
+namespace DynamicRangeProcessorUtils {
 TEST_CASE("DynamicRangeProcessorUtils")
 {
-   SECTION("GetCompressorPresets")
-   {
-      REQUIRE(
-         GetCompressorPresets().size() ==
-         Detail::serializedCompressorPresets.size());
-   }
-   SECTION("GetLimiterPresets")
-   {
-      REQUIRE(
-         GetLimiterPresets().size() == Detail::serializedLimiterPresets.size());
-   }
+    SECTION("GetCompressorPresets")
+    {
+        REQUIRE(
+            GetCompressorPresets().size()
+            == Detail::serializedCompressorPresets.size());
+    }
+    SECTION("GetLimiterPresets")
+    {
+        REQUIRE(
+            GetLimiterPresets().size() == Detail::serializedLimiterPresets.size());
+    }
 }
 } // namespace DynamicRangeProcessorUtils
