@@ -7,7 +7,7 @@ Audacity: A Digital Audio Editor
 Paul Licameli
    Moved a constant here from Envelope.h where it did not belong
    Define the key string in one place here too
- 
+
    Split from GUISettings.h
 
 **********************************************************************/

@@ -34,9 +34,9 @@
          (these are device names understood by PortAudio)
    /Display
       WaveformColor			- 0xRRGGBB  --since it will be stored in
-      ShadowColor				- 			  decimal, it will be somewhat
-      SpectrumLowColor		- 			  non-intuitive to edit, but
-      SpectrumHighColor		- 			  much easier to parse.
+      ShadowColor				-             decimal, it will be somewhat
+      SpectrumLowColor		-             non-intuitive to edit, but
+      SpectrumHighColor		-             much easier to parse.
    /Locale
       Language				- two-letter language code for translations
 
@@ -46,7 +46,6 @@
 \endverbatim
 
 *//*******************************************************************/
-
 
 #include "Prefs.h"
 
@@ -65,7 +64,7 @@ StickySetting<BoolSetting> DefaultUpdatesCheckingFlag{
 
 std::unique_ptr<audacity::BasicSettings> ugPrefs {};
 
-audacity::BasicSettings *gPrefs = nullptr;
+audacity::BasicSettings* gPrefs = nullptr;
 int gMenusDirty = 0;
 
 int gVersionMajorKeyInit{};
@@ -74,68 +73,67 @@ int gVersionMicroKeyInit{};
 
 struct PrefsListener::Impl
 {
-   Impl( PrefsListener &owner );
-   ~Impl();
-   void OnEvent(int id);
-   PrefsListener &mOwner;
-   Observer::Subscription mSubscription;
+    Impl(PrefsListener& owner);
+    ~Impl();
+    void OnEvent(int id);
+    PrefsListener& mOwner;
+    Observer::Subscription mSubscription;
 };
 
 namespace {
-
 class PreferencesResetHandlerRegistry
 {
-   std::vector<std::unique_ptr<PreferencesResetHandler>> mHandlers;
+    std::vector<std::unique_ptr<PreferencesResetHandler> > mHandlers;
 public:
-   static PreferencesResetHandlerRegistry& Get()
-   {
-      static PreferencesResetHandlerRegistry registry;
-      return registry;
-   }
+    static PreferencesResetHandlerRegistry& Get()
+    {
+        static PreferencesResetHandlerRegistry registry;
+        return registry;
+    }
 
-   void Register(std::unique_ptr<PreferencesResetHandler> handler)
-   {
-      mHandlers.push_back(std::move(handler));
-   }
+    void Register(std::unique_ptr<PreferencesResetHandler> handler)
+    {
+        mHandlers.push_back(std::move(handler));
+    }
 
-   void BeginReset()
-   {
-      for(auto& handler : mHandlers)
-         handler->OnSettingResetBegin();
-   }
+    void BeginReset()
+    {
+        for (auto& handler : mHandlers) {
+            handler->OnSettingResetBegin();
+        }
+    }
 
-   void EndReset()
-   {
-      for(auto& handler : mHandlers)
-         handler->OnSettingResetEnd();
-   }
-
+    void EndReset()
+    {
+        for (auto& handler : mHandlers) {
+            handler->OnSettingResetEnd();
+        }
+    }
 };
 
 struct Hub : Observer::Publisher<int>
 {
-   using Publisher::Publish;
+    using Publisher::Publish;
 };
 
-static Hub &hub()
+static Hub& hub()
 {
-   static Hub theHub;
-   return theHub;
+    static Hub theHub;
+    return theHub;
 }
-
 }
 
 void PrefsListener::Broadcast(int id)
 {
-   BasicUI::CallAfter([id]{
-      hub().Publish(id);
-   });
+    BasicUI::CallAfter([id]{
+        hub().Publish(id);
+    });
 }
 
-PrefsListener::Impl::Impl( PrefsListener &owner )
-   : mOwner{ owner }
+PrefsListener::Impl::Impl(PrefsListener& owner)
+    : mOwner{owner}
 {
-   mSubscription = hub().Subscribe(*this, &Impl::OnEvent);
+    mSubscription = hub().Subscribe(*this, &Impl::OnEvent);
 }
 
 PrefsListener::Impl::~Impl()
@@ -143,7 +141,7 @@ PrefsListener::Impl::~Impl()
 }
 
 PrefsListener::PrefsListener()
-   : mpImpl{ std::make_unique<Impl>( *this ) }
+    : mpImpl{std::make_unique<Impl>(*this)}
 {
 }
 
@@ -155,361 +153,376 @@ void PrefsListener::UpdatePrefs()
 {
 }
 
-void PrefsListener::UpdateSelectedPrefs( int )
+void PrefsListener::UpdateSelectedPrefs(int)
 {
 }
 
-void PrefsListener::Impl::OnEvent( int id )
+void PrefsListener::Impl::OnEvent(int id)
 {
-   if (id <= 0)
-      mOwner.UpdatePrefs();
-   else
-      mOwner.UpdateSelectedPrefs( id );
+    if (id <= 0) {
+        mOwner.UpdatePrefs();
+    } else {
+        mOwner.UpdateSelectedPrefs(id);
+    }
 }
 
 #if 0
 // Copy one entry from one wxConfig object to another
-static void CopyEntry(wxString path, wxConfigBase *src, wxConfigBase *dst, wxString entry)
+static void CopyEntry(wxString path, wxConfigBase* src, wxConfigBase* dst, wxString entry)
 {
-   switch(src->GetEntryType(entry)) {
-   case wxConfigBase::Type_Unknown:
-   case wxConfigBase::Type_String: {
-      wxString value = src->Read(entry, wxT(""));
-      dst->Write(path + entry, value);
-      break;
-   }
-   case wxConfigBase::Type_Boolean: {
-      bool value = false;
-      src->Read(entry, &value, value);
-      dst->Write(path + entry, value);
-      break;
-   }
-   case wxConfigBase::Type_Integer: {
-      long value = false;
-      src->Read(entry, &value, value);
-      dst->Write(path + entry, value);
-      break;
-   }
-   case wxConfigBase::Type_Float: {
-      double value = false;
-      src->Read(entry, &value, value);
-      dst->Write(path + entry, value);
-      break;
-   }
-   }
+    switch (src->GetEntryType(entry)) {
+    case wxConfigBase::Type_Unknown:
+    case wxConfigBase::Type_String: {
+        wxString value = src->Read(entry, wxT(""));
+        dst->Write(path + entry, value);
+        break;
+    }
+    case wxConfigBase::Type_Boolean: {
+        bool value = false;
+        src->Read(entry, &value, value);
+        dst->Write(path + entry, value);
+        break;
+    }
+    case wxConfigBase::Type_Integer: {
+        long value = false;
+        src->Read(entry, &value, value);
+        dst->Write(path + entry, value);
+        break;
+    }
+    case wxConfigBase::Type_Float: {
+        double value = false;
+        src->Read(entry, &value, value);
+        dst->Write(path + entry, value);
+        break;
+    }
+    }
 }
-
 
 // Recursive routine to copy all groups and entries from one wxConfig object to another
-static void CopyEntriesRecursive(wxString path, wxConfigBase *src, wxConfigBase *dst)
+static void CopyEntriesRecursive(wxString path, wxConfigBase* src, wxConfigBase* dst)
 {
-   wxString entryName;
-   long entryIndex;
-   bool entryKeepGoing;
+    wxString entryName;
+    long entryIndex;
+    bool entryKeepGoing;
 
-   entryKeepGoing = src->GetFirstEntry(entryName, entryIndex);
-   while (entryKeepGoing) {
-      CopyEntry(path, src, dst, entryName);
-      entryKeepGoing = src->GetNextEntry(entryName, entryIndex);
-   }
+    entryKeepGoing = src->GetFirstEntry(entryName, entryIndex);
+    while (entryKeepGoing) {
+        CopyEntry(path, src, dst, entryName);
+        entryKeepGoing = src->GetNextEntry(entryName, entryIndex);
+    }
 
-   wxString groupName;
-   long groupIndex;
-   bool groupKeepGoing;
+    wxString groupName;
+    long groupIndex;
+    bool groupKeepGoing;
 
-   groupKeepGoing = src->GetFirstGroup(groupName, groupIndex);
-   while (groupKeepGoing) {
-      wxString subPath = path+groupName+wxT("/");
-      src->SetPath(subPath);
-      CopyEntriesRecursive(subPath, src, dst);
-      src->SetPath(path);
-      groupKeepGoing = src->GetNextGroup(groupName, groupIndex);
-   }
+    groupKeepGoing = src->GetFirstGroup(groupName, groupIndex);
+    while (groupKeepGoing) {
+        wxString subPath = path + groupName + wxT("/");
+        src->SetPath(subPath);
+        CopyEntriesRecursive(subPath, src, dst);
+        src->SetPath(path);
+        groupKeepGoing = src->GetNextGroup(groupName, groupIndex);
+    }
 }
+
 #endif
 
-void InitPreferences( std::unique_ptr<audacity::BasicSettings> uPrefs )
+void InitPreferences(std::unique_ptr<audacity::BasicSettings> uPrefs)
 {
-   gPrefs = uPrefs.get();
-   ugPrefs = std::move(uPrefs);
-   //wxConfigBase::Set(gPrefs);
-   PrefsListener::Broadcast();
+    gPrefs = uPrefs.get();
+    ugPrefs = std::move(uPrefs);
+    //wxConfigBase::Set(gPrefs);
+    PrefsListener::Broadcast();
 }
 
 void GetPreferencesVersion(int& vMajor, int& vMinor, int& vMicro)
 {
-   vMajor = gVersionMajorKeyInit;
-   vMinor = gVersionMinorKeyInit;
-   vMicro = gVersionMicroKeyInit;
+    vMajor = gVersionMajorKeyInit;
+    vMinor = gVersionMinorKeyInit;
+    vMicro = gVersionMicroKeyInit;
 }
 
 void SetPreferencesVersion(int vMajor, int vMinor, int vMicro)
 {
-   gVersionMajorKeyInit = vMajor;
-   gVersionMinorKeyInit = vMinor;
-   gVersionMicroKeyInit = vMicro;
+    gVersionMajorKeyInit = vMajor;
+    gVersionMinorKeyInit = vMinor;
+    gVersionMicroKeyInit = vMicro;
 }
 
 void ResetPreferences()
 {
-   PreferencesResetHandlerRegistry::Get().BeginReset();
+    PreferencesResetHandlerRegistry::Get().BeginReset();
 
-   gPrefs->Clear();
+    gPrefs->Clear();
 
-   PreferencesResetHandlerRegistry::Get().EndReset();
+    PreferencesResetHandlerRegistry::Get().EndReset();
 }
 
 void FinishPreferences()
 {
-   if (gPrefs) {
-      ugPrefs.reset();
-      gPrefs = nullptr;
-   }
+    if (gPrefs) {
+        ugPrefs.reset();
+        gPrefs = nullptr;
+    }
 }
 
-namespace
-{
+namespace {
 std::vector<SettingScope*> sScopes;
 }
 
 SettingScope::SettingScope()
 {
-   sScopes.push_back(this);
+    sScopes.push_back(this);
 }
 
 SettingScope::~SettingScope() noexcept
 {
-   // Settings can be scoped only on stack
-   // so it should be safe to assume that sScopes.top() == this;
-   assert(!sScopes.empty() && sScopes.back() == this);
+    // Settings can be scoped only on stack
+    // so it should be safe to assume that sScopes.top() == this;
+    assert(!sScopes.empty() && sScopes.back() == this);
 
-   if (sScopes.empty() || sScopes.back() != this)
-      return;
+    if (sScopes.empty() || sScopes.back() != this) {
+        return;
+    }
 
-   if (!mCommitted)
-      for (auto pSetting : mPending)
-         pSetting->Rollback();
+    if (!mCommitted) {
+        for (auto pSetting : mPending) {
+            pSetting->Rollback();
+        }
+    }
 
-   sScopes.pop_back();
+    sScopes.pop_back();
 }
 
 // static
-auto SettingScope::Add( TransactionalSettingBase &setting ) -> AddResult
+auto SettingScope::Add(TransactionalSettingBase& setting) -> AddResult
 {
-   if ( sScopes.empty() || sScopes.back()->mCommitted )
-      return NotAdded;
+    if (sScopes.empty() || sScopes.back()->mCommitted) {
+        return NotAdded;
+    }
 
-   const bool inserted = sScopes.back()->mPending.insert(&setting).second;
+    const bool inserted = sScopes.back()->mPending.insert(&setting).second;
 
-   if (inserted)
-   {
-      setting.EnterTransaction(sScopes.size());
+    if (inserted) {
+        setting.EnterTransaction(sScopes.size());
 
-      // We need to introduce this setting into all
-      // previous scopes that do not yet contain it.
-      for (auto it = sScopes.rbegin() + 1; it != sScopes.rend(); ++it)
-      {
-         if ((*it)->mPending.find(&setting) != (*it)->mPending.end())
-            break;
-         
-         (*it)->mPending.insert(&setting);
-      }
-   }
-   
-   return inserted ? Added : PreviouslyAdded;
+        // We need to introduce this setting into all
+        // previous scopes that do not yet contain it.
+        for (auto it = sScopes.rbegin() + 1; it != sScopes.rend(); ++it) {
+            if ((*it)->mPending.find(&setting) != (*it)->mPending.end()) {
+                break;
+            }
+
+            (*it)->mPending.insert(&setting);
+        }
+    }
+
+    return inserted ? Added : PreviouslyAdded;
 }
 
 bool SettingTransaction::Commit()
 {
-   if (sScopes.empty() || sScopes.back() != this)
-      return false;
-   
-   if ( !mCommitted ) {
-      for ( auto pSetting : mPending )
-         if ( !pSetting->Commit() )
-            return false;
-      
-      if (sScopes.size() > 1 || gPrefs->Flush())
-      {
-         mPending.clear();
-         mCommitted = true;
-         return true;
-      }
-   }
-   
-   return false;
+    if (sScopes.empty() || sScopes.back() != this) {
+        return false;
+    }
+
+    if (!mCommitted) {
+        for ( auto pSetting : mPending ) {
+            if (!pSetting->Commit()) {
+                return false;
+            }
+        }
+
+        if (sScopes.size() > 1 || gPrefs->Flush()) {
+            mPending.clear();
+            mCommitted = true;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //////////
 EnumValueSymbols::EnumValueSymbols(
-   ByColumns_t,
-   const TranslatableStrings &msgids,
-   wxArrayStringEx internals
-)
-   : mInternals( std::move( internals ) )
+    ByColumns_t,
+    const TranslatableStrings& msgids,
+    wxArrayStringEx internals)
+    : mInternals(std::move(internals))
 {
-   auto size = mInternals.size(), size2 = msgids.size();
-   if ( size != size2 ) {
-      wxASSERT( false );
-      size = std::min( size, size2 );
-   }
-   reserve( size );
-   auto iter1 = mInternals.begin();
-   auto iter2 = msgids.begin();
-   while( size-- )
-      emplace_back( *iter1++, *iter2++ );
+    auto size = mInternals.size(), size2 = msgids.size();
+    if (size != size2) {
+        wxASSERT(false);
+        size = std::min(size, size2);
+    }
+    reserve(size);
+    auto iter1 = mInternals.begin();
+    auto iter2 = msgids.begin();
+    while (size--) {
+        emplace_back(*iter1++, *iter2++);
+    }
 }
 
-const TranslatableStrings &EnumValueSymbols::GetMsgids() const
+const TranslatableStrings& EnumValueSymbols::GetMsgids() const
 {
-   if ( mMsgids.empty() )
-      mMsgids = transform_container<TranslatableStrings>( *this,
-         std::mem_fn( &EnumValueSymbol::Msgid ) );
-   return mMsgids;
+    if (mMsgids.empty()) {
+        mMsgids = transform_container<TranslatableStrings>(*this,
+                                                           std::mem_fn(&EnumValueSymbol::Msgid));
+    }
+    return mMsgids;
 }
 
-const wxArrayStringEx &EnumValueSymbols::GetInternals() const
+const wxArrayStringEx& EnumValueSymbols::GetInternals() const
 {
-   if ( mInternals.empty() )
-      mInternals = transform_container<wxArrayStringEx>( *this,
-         std::mem_fn( &EnumValueSymbol::Internal ) );
-   return mInternals;
+    if (mInternals.empty()) {
+        mInternals = transform_container<wxArrayStringEx>(*this,
+                                                          std::mem_fn(&EnumValueSymbol::Internal));
+    }
+    return mInternals;
 }
 
 //////////
-const EnumValueSymbol &ChoiceSetting::Default() const
+const EnumValueSymbol& ChoiceSetting::Default() const
 {
-   if ( mDefaultSymbol >= 0 && mDefaultSymbol < (long)mSymbols.size() )
-      return mSymbols[ mDefaultSymbol ];
-   static EnumValueSymbol empty;
-   return empty;
+    if (mDefaultSymbol >= 0 && mDefaultSymbol < (long)mSymbols.size()) {
+        return mSymbols[ mDefaultSymbol ];
+    }
+    static EnumValueSymbol empty;
+    return empty;
 }
 
 wxString ChoiceSetting::Read() const
 {
-   const auto &defaultValue = Default().Internal();
-   return ReadWithDefault( defaultValue );
+    const auto& defaultValue = Default().Internal();
+    return ReadWithDefault(defaultValue);
 }
 
-wxString ChoiceSetting::ReadWithDefault( const wxString &defaultValue ) const
+wxString ChoiceSetting::ReadWithDefault(const wxString& defaultValue) const
 {
-   wxString value;
-   if ( !gPrefs->Read(mKey, &value, defaultValue) )
-      if (!mMigrated) {
-         const_cast<ChoiceSetting*>(this)->Migrate( value );
-         mMigrated = true;
-      }
+    wxString value;
+    if (!gPrefs->Read(mKey, &value, defaultValue)) {
+        if (!mMigrated) {
+            const_cast<ChoiceSetting*>(this)->Migrate(value);
+            mMigrated = true;
+        }
+    }
 
-   // Remap to default if the string is not known -- this avoids surprises
-   // in case we try to interpret config files from future versions
-   auto index = Find( value );
-   if ( index >= mSymbols.size() )
-      value = defaultValue;
-   return value;
+    // Remap to default if the string is not known -- this avoids surprises
+    // in case we try to interpret config files from future versions
+    auto index = Find(value);
+    if (index >= mSymbols.size()) {
+        value = defaultValue;
+    }
+    return value;
 }
 
-size_t ChoiceSetting::Find( const wxString &value ) const
+size_t ChoiceSetting::Find(const wxString& value) const
 {
-   auto start = GetSymbols().begin();
-   return size_t(
-      std::find( start, GetSymbols().end(), EnumValueSymbol{ value, {} } )
-         - start );
+    auto start = GetSymbols().begin();
+    return size_t(
+        std::find(start, GetSymbols().end(), EnumValueSymbol { value, {} })
+        - start);
 }
 
-void ChoiceSetting::Migrate( wxString &value )
+void ChoiceSetting::Migrate(wxString& value)
 {
-   (void)value;// Compiler food
+    (void)value;// Compiler food
 }
 
-bool ChoiceSetting::Write( const wxString &value )
+bool ChoiceSetting::Write(const wxString& value)
 {
-   auto index = Find( value );
-   if (index >= mSymbols.size())
-      return false;
+    auto index = Find(value);
+    if (index >= mSymbols.size()) {
+        return false;
+    }
 
-   auto result = gPrefs->Write( mKey, value );
-   mMigrated = true;
+    auto result = gPrefs->Write(mKey, value);
+    mMigrated = true;
 
-   if (mpOtherSettings)
-      mpOtherSettings->Invalidate();
+    if (mpOtherSettings) {
+        mpOtherSettings->Invalidate();
+    }
 
-   return result;
+    return result;
 }
 
-void ChoiceSetting::SetDefault( long value )
+void ChoiceSetting::SetDefault(long value)
 {
-   mDefaultSymbol = value;
+    mDefaultSymbol = value;
 }
 
 int EnumSettingBase::ReadInt() const
 {
-   auto index = Find( Read() );
+    auto index = Find(Read());
 
-   wxASSERT( index < mIntValues.size() );
-   return mIntValues[ index ];
+    wxASSERT(index < mIntValues.size());
+    return mIntValues[ index ];
 }
 
-int EnumSettingBase::ReadIntWithDefault( int defaultValue ) const
+int EnumSettingBase::ReadIntWithDefault(int defaultValue) const
 {
-   wxString defaultString;
-   auto index0 = FindInt( defaultValue );
-   if ( index0 < mSymbols.size() )
-      defaultString = mSymbols[ index0 ].Internal();
-   else
-      wxASSERT( false );
+    wxString defaultString;
+    auto index0 = FindInt(defaultValue);
+    if (index0 < mSymbols.size()) {
+        defaultString = mSymbols[ index0 ].Internal();
+    } else {
+        wxASSERT(false);
+    }
 
-   auto index = Find( ReadWithDefault( defaultString ) );
+    auto index = Find(ReadWithDefault(defaultString));
 
-   wxASSERT( index < mSymbols.size() );
-   return mIntValues[ index ];
+    wxASSERT(index < mSymbols.size());
+    return mIntValues[ index ];
 }
 
-size_t EnumSettingBase::FindInt( int code ) const
+size_t EnumSettingBase::FindInt(int code) const
 {
-   const auto start = mIntValues.begin();
-   return size_t(
-      std::find( start, mIntValues.end(), code )
-         - start );
+    const auto start = mIntValues.begin();
+    return size_t(
+        std::find(start, mIntValues.end(), code)
+        - start);
 }
 
-void EnumSettingBase::Migrate( wxString &value )
+void EnumSettingBase::Migrate(wxString& value)
 {
-   int intValue = 0;
-   if ( !mOldKey.empty() &&
-        gPrefs->Read(mOldKey, &intValue, 0) ) {
-      // Make the migration, only once and persistently.
-      // Do not DELETE the old key -- let that be read if user downgrades
-      // Audacity.  But further changes will be stored only to the NEW key
-      // and won't be seen then.
-      auto index = (long) FindInt( intValue );
-      if ( index >= (long)mSymbols.size() )
-         index = mDefaultSymbol;
-      if ( index >= 0 && index < (long)mSymbols.size() ) {
-         value = mSymbols[index].Internal();
-         Write(value);
-         gPrefs->Flush();
-      }
-   }
+    int intValue = 0;
+    if (!mOldKey.empty()
+        && gPrefs->Read(mOldKey, &intValue, 0)) {
+        // Make the migration, only once and persistently.
+        // Do not DELETE the old key -- let that be read if user downgrades
+        // Audacity.  But further changes will be stored only to the NEW key
+        // and won't be seen then.
+        auto index = (long)FindInt(intValue);
+        if (index >= (long)mSymbols.size()) {
+            index = mDefaultSymbol;
+        }
+        if (index >= 0 && index < (long)mSymbols.size()) {
+            value = mSymbols[index].Internal();
+            Write(value);
+            gPrefs->Flush();
+        }
+    }
 }
 
 void PreferencesResetHandler::Register(std::unique_ptr<PreferencesResetHandler> handler)
 {
-   PreferencesResetHandlerRegistry::Get().Register(std::move(handler));
+    PreferencesResetHandlerRegistry::Get().Register(std::move(handler));
 }
 
 PreferencesResetHandler::~PreferencesResetHandler() = default;
 
-bool EnumSettingBase::WriteInt( int code ) // you flush gPrefs afterward
+bool EnumSettingBase::WriteInt(int code)   // you flush gPrefs afterward
 {
-   auto index = FindInt( code );
-   if ( index >= mSymbols.size() )
-      return false;
-   return Write( mSymbols[index].Internal() );
+    auto index = FindInt(code);
+    if (index >= mSymbols.size()) {
+        return false;
+    }
+    return Write(mSymbols[index].Internal());
 }
 
-wxString WarningDialogKey(const wxString &internalDialogName)
+wxString WarningDialogKey(const wxString& internalDialogName)
 {
-   return wxT("/Warnings/") + internalDialogName;
+    return wxT("/Warnings/") + internalDialogName;
 }
 
 ByColumns_t ByColumns{};
@@ -517,43 +530,44 @@ ByColumns_t ByColumns{};
 #include <set>
 
 namespace {
-   using PreferenceInitializers = std::set< PreferenceInitializer* >;
-   PreferenceInitializers &allInitializers()
-   {
-      static PreferenceInitializers theSet;
-      return theSet;
-   }
+using PreferenceInitializers = std::set< PreferenceInitializer* >;
+PreferenceInitializers& allInitializers()
+{
+    static PreferenceInitializers theSet;
+    return theSet;
+}
 }
 
 PreferenceInitializer::PreferenceInitializer()
 {
-   allInitializers().insert( this );
+    allInitializers().insert(this);
 }
 
 PreferenceInitializer::~PreferenceInitializer()
 {
-   allInitializers().erase( this );
+    allInitializers().erase(this);
 }
 
 void PreferenceInitializer::ReinitializeAll()
 {
-   for ( auto pInitializer : allInitializers() )
-      (*pInitializer)();
+    for ( auto pInitializer : allInitializers()) {
+        (*pInitializer)();
+    }
 }
 
-audacity::BasicSettings *SettingBase::GetConfig() const
+audacity::BasicSettings* SettingBase::GetConfig() const
 {
-   return gPrefs;
+    return gPrefs;
 }
 
 bool SettingBase::Delete()
 {
-   auto config = GetConfig();
-   return config && config->DeleteEntry( GetPath() );
+    auto config = GetConfig();
+    return config && config->DeleteEntry(GetPath());
 }
 
 bool BoolSetting::Toggle()
 {
-   bool value = Read();
-   return Write( !value );
+    bool value = Read();
+    return Write(!value);
 }
