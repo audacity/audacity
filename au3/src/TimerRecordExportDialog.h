@@ -9,39 +9,33 @@ class ExportFilePanel;
 
 class TimerRecordExportDialog final : public wxDialogWrapper
 {
-   enum
-   {
-      ExportFilePanelID = wxID_HIGHEST,
-      EditMetadataID
-   };
+    enum
+    {
+        ExportFilePanelID = wxID_HIGHEST,
+        EditMetadataID
+    };
 public:
-   TimerRecordExportDialog(AudacityProject& project,
-                     wxWindow* parent = nullptr,
-                     wxWindowID = wxID_ANY);
-   
-   void Bind(wxFileName& filename,
-             wxString& format,
-             int& sampleRate,
-             int& channels,
-             ExportProcessor::Parameters& paramters);
+    TimerRecordExportDialog(AudacityProject& project, wxWindow* parent = nullptr, wxWindowID = wxID_ANY);
+
+    void Bind(wxFileName& filename, wxString& format, int& sampleRate, int& channels, ExportProcessor::Parameters& paramters);
 
 private:
-   void PopulateOrExchange(ShuttleGui& S);
+    void PopulateOrExchange(ShuttleGui& S);
 
-   void OnOK(wxCommandEvent&);
-   void OnEditMetadata(wxCommandEvent&);
-   void OnFormatChanged(wxCommandEvent&);
+    void OnOK(wxCommandEvent&);
+    void OnEditMetadata(wxCommandEvent&);
+    void OnFormatChanged(wxCommandEvent&);
 
-   AudacityProject& mProject;
+    AudacityProject& mProject;
 
-   wxButton* mEditMetadata{};
-   ExportFilePanel* mExportFilePanel{nullptr};
+    wxButton* mEditMetadata{};
+    ExportFilePanel* mExportFilePanel{ nullptr };
 
-   wxFileName* mFileName{};
-   wxString* mFormat{};
-   int* mSampleRate{};
-   int* mChannels{};
-   ExportProcessor::Parameters* mParameters{};
+    wxFileName* mFileName{};
+    wxString* mFormat{};
+    int* mSampleRate{};
+    int* mChannels{};
+    ExportProcessor::Parameters* mParameters{};
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };

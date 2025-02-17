@@ -65,12 +65,12 @@
 #undef SMART_CHECKBOX
 
 enum {
-   ID_BRUSH_BUTTON = 10000,
+    ID_BRUSH_BUTTON = 10000,
 #ifdef SMART_CHECKBOX
-   ID_CHECKBOX_SMART,
+    ID_CHECKBOX_SMART,
 #endif
-   ID_CHECKBOX_OVERTONES,
-   ID_SLIDER_BRUSH_SIZE
+    ID_CHECKBOX_OVERTONES,
+    ID_SLIDER_BRUSH_SIZE
 };
 
 class wxButton;
@@ -83,420 +83,431 @@ class AudacityProject;
 class ShuttleGui;
 class UndoManager;
 
-class SpectralDataDialog final : public wxDialogWrapper,
-      public PrefsListener,
-      public ClientData::Base,
-      public TopLevelKeystrokeHandlingWindow
+class SpectralDataDialog final : public wxDialogWrapper, public PrefsListener, public ClientData::Base,
+    public TopLevelKeystrokeHandlingWindow
 {
+public:
+    static SpectralDataDialog& Get(AudacityProject& project);
+    static SpectralDataDialog* Find(AudacityProject* pProject);
 
-      public:
-         static SpectralDataDialog &Get(AudacityProject &project);
-         static SpectralDataDialog *Find(AudacityProject *pProject);
+    explicit SpectralDataDialog(AudacityProject& parent);
 
-         explicit SpectralDataDialog(AudacityProject &parent);
+    void UpdateDisplayForClipboard(ClipboardChangeMessage);
+    void UpdateDisplay(UndoRedoMessage);
+    void DoUpdateDisplay();
+    void UpdateControls(bool active);
 
-         void UpdateDisplayForClipboard(ClipboardChangeMessage);
-         void UpdateDisplay(UndoRedoMessage);
-         void DoUpdateDisplay();
-         void UpdateControls( bool active );
+    bool Show(bool show = true) override;
 
-         bool Show( bool show = true ) override;
+private:
+    void Populate(ShuttleGui& S);
 
-      private:
-         void Populate(ShuttleGui & S);
+    void OnAudioIO(AudioIOEvent ev);
+    void DoUpdate();
 
-         void OnAudioIO(AudioIOEvent ev);
-         void DoUpdate();
+    void OnCloseWindow(wxCloseEvent& event);
+    void OnApply(wxCommandEvent& event);
+    void OnBrushButton(wxCommandEvent& event);
+    void OnBrushSizeSlider(wxCommandEvent& event);
+    void OnCheckSmartSelection(wxCommandEvent& event);
+    void OnCheckOvertones(wxCommandEvent& event);
 
-         void OnCloseWindow(wxCloseEvent &event);
-         void OnApply(wxCommandEvent &event);
-         void OnBrushButton(wxCommandEvent &event);
-         void OnBrushSizeSlider(wxCommandEvent &event);
-         void OnCheckSmartSelection(wxCommandEvent &event);
-         void OnCheckOvertones(wxCommandEvent &event);
+    // PrefsListener implementation
+    void UpdatePrefs() override;
 
-         // PrefsListener implementation
-         void UpdatePrefs() override;
+    Observer::Subscription mAudioIOSubscription,
+                           mUndoSubscription,
+                           mClipboardSubscription
+    ;
+    AudacityProject& mProject;
+    wxToggleButton* mBrushButton = nullptr;
+    bool mAudioIOBusy { false };
 
-         Observer::Subscription mAudioIOSubscription
-            , mUndoSubscription
-            , mClipboardSubscription
-         ;
-         AudacityProject   &mProject;
-         wxToggleButton *mBrushButton = nullptr;
-         bool              mAudioIOBusy { false };
+public:
+    void DoToolChanged();
 
-      public:
-         void DoToolChanged();
-
-         DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
-class AUDACITY_DLL_API SpectralDataDialogWorker final
-      : public ClientData::Base{
+class AUDACITY_DLL_API SpectralDataDialogWorker final : public ClientData::Base
+{
 public:
-   explicit SpectralDataDialogWorker( AudacityProject &project );
-   ~SpectralDataDialogWorker();
+    explicit SpectralDataDialogWorker(AudacityProject& project);
+    ~SpectralDataDialogWorker();
 
-   void OnToolChanged(ProjectSettingsEvent);
-   void OnIdle(wxIdleEvent &evt);
+    void OnToolChanged(ProjectSettingsEvent);
+    void OnIdle(wxIdleEvent& evt);
 private:
-   Observer::Subscription mSettingsSubscription;
-   AudacityProject &mProject;
-   unsigned mPrevNViews = 0;
+    Observer::Subscription mSettingsSubscription;
+    AudacityProject& mProject;
+    unsigned mPrevNViews = 0;
 };
 
 BEGIN_EVENT_TABLE(SpectralDataDialog, wxDialogWrapper)
-   EVT_TOGGLEBUTTON(ID_BRUSH_BUTTON, SpectralDataDialog::OnBrushButton)
+EVT_TOGGLEBUTTON(ID_BRUSH_BUTTON, SpectralDataDialog::OnBrushButton)
  #ifdef SMART_CHECKBOX
-   EVT_CHECKBOX(ID_CHECKBOX_SMART, SpectralDataDialog::OnCheckSmartSelection)
+EVT_CHECKBOX(ID_CHECKBOX_SMART, SpectralDataDialog::OnCheckSmartSelection)
 #endif
-   EVT_CHECKBOX(ID_CHECKBOX_OVERTONES, SpectralDataDialog::OnCheckOvertones)
-   EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
-   EVT_SLIDER(ID_SLIDER_BRUSH_SIZE, SpectralDataDialog::OnBrushSizeSlider)
+EVT_CHECKBOX(ID_CHECKBOX_OVERTONES, SpectralDataDialog::OnCheckOvertones)
+EVT_CLOSE(SpectralDataDialog::OnCloseWindow)
+EVT_SLIDER(ID_SLIDER_BRUSH_SIZE, SpectralDataDialog::OnBrushSizeSlider)
 END_EVENT_TABLE()
 
 #define Title XO("Spectral Data Control Panel")
 
-SpectralDataDialog::SpectralDataDialog(AudacityProject &parent)
-   : mProject(parent)
-   , wxDialogWrapper(FindProjectFrame( &parent ), wxID_ANY, Title,
-                         wxDefaultPosition, wxDefaultSize,
-                         wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
-
+SpectralDataDialog::SpectralDataDialog(AudacityProject& parent)
+    : mProject(parent)
+    , wxDialogWrapper(FindProjectFrame(&parent), wxID_ANY, Title,
+                      wxDefaultPosition, wxDefaultSize,
+                      wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   SetName();
-   //------------------------- Main section --------------------
-   // Construct the GUI.
-   ShuttleGui S(this, eIsCreating);
-   Populate(S);
-   CentreOnParent();
+    SetName();
+    //------------------------- Main section --------------------
+    // Construct the GUI.
+    ShuttleGui S(this, eIsCreating);
+    Populate(S);
+    CentreOnParent();
 
-   mAudioIOSubscription = AudioIO::Get()
-      ->Subscribe(*this, &SpectralDataDialog::OnAudioIO);
+    mAudioIOSubscription = AudioIO::Get()
+                           ->Subscribe(*this, &SpectralDataDialog::OnAudioIO);
 
-   mClipboardSubscription = Clipboard::Get()
-      .Subscribe(*this, &::SpectralDataDialog::UpdateDisplayForClipboard);
+    mClipboardSubscription = Clipboard::Get()
+                             .Subscribe(*this, &::SpectralDataDialog::UpdateDisplayForClipboard);
 
-   mUndoSubscription = UndoManager::Get(parent)
-      .Subscribe(*this, &SpectralDataDialog::UpdateDisplay);
+    mUndoSubscription = UndoManager::Get(parent)
+                        .Subscribe(*this, &SpectralDataDialog::UpdateDisplay);
 
-   DoToolChanged();
+    DoToolChanged();
 }
 
 static const AttachedWindows::RegisteredFactory key{
-      []( AudacityProject &project ){
-         return safenew SpectralDataDialog( project );
-      }
+    []( AudacityProject& project ){
+        return safenew SpectralDataDialog(project);
+    }
 };
 
-static wxToggleButton *MakeButton(wxWindow *pParent)
+static wxToggleButton* MakeButton(wxWindow* pParent)
 {
-   auto button = safenew wxBitmapToggleButton{
-      pParent, ID_BRUSH_BUTTON, theTheme.Bitmap(bmpSpectralBrush) };
-   // Name isn't shown but may be pronounced by a screen reader
-   button->SetName(XO("Brush Tool").Translation());
-   return button;
+    auto button = safenew wxBitmapToggleButton{
+        pParent, ID_BRUSH_BUTTON, theTheme.Bitmap(bmpSpectralBrush) };
+    // Name isn't shown but may be pronounced by a screen reader
+    button->SetName(XO("Brush Tool").Translation());
+    return button;
 }
 
-void SpectralDataDialog::Populate(ShuttleGui & S)
+void SpectralDataDialog::Populate(ShuttleGui& S)
 {
-   mBrushButton = MakeButton(this);
+    mBrushButton = MakeButton(this);
 
-   S.StartVerticalLay(true);
-   S.SetBorder(10);
-   {
-      S.AddVariableText(XO("Spectral Brush"));
-      S.AddWindow(mBrushButton, wxALIGN_LEFT);
+    S.StartVerticalLay(true);
+    S.SetBorder(10);
+    {
+        S.AddVariableText(XO("Spectral Brush"));
+        S.AddWindow(mBrushButton, wxALIGN_LEFT);
 
-      S.AddVariableText(XO("Brush radius"));
-      S.Id(ID_SLIDER_BRUSH_SIZE)
-            .Style(wxSL_HORIZONTAL)
-            .Name(XO("Custom brush size"))
-            .AddSlider( {}, 5, 10, 1);
+        S.AddVariableText(XO("Brush radius"));
+        S.Id(ID_SLIDER_BRUSH_SIZE)
+        .Style(wxSL_HORIZONTAL)
+        .Name(XO("Custom brush size"))
+        .AddSlider({}, 5, 10, 1);
 
-      S.AddWindow(safenew wxStaticLine{ S.GetParent() });
+        S.AddWindow(safenew wxStaticLine { S.GetParent() });
 
-      S.Id(ID_CHECKBOX_OVERTONES)
-         .AddCheckBox(
+        S.Id(ID_CHECKBOX_OVERTONES)
+        .AddCheckBox(
             XXO("Auto-select overtones (beta)"),
             false);
 
 #ifdef SMART_CHECKBOX
-      S.Id(ID_CHECKBOX_SMART)
-            .AddCheckBox(XXO("Enable smart selection"), false);
+        S.Id(ID_CHECKBOX_SMART)
+        .AddCheckBox(XXO("Enable smart selection"), false);
 #endif
 
-      S.AddVariableText(
-         XO("Select the fundamental frequency\n"
-            "and release the mouse"));
-   }
-   S.EndVerticalLay();
-   // ----------------------- End of main section --------------
+        S.AddVariableText(
+            XO("Select the fundamental frequency\n"
+               "and release the mouse"));
+    }
+    S.EndVerticalLay();
+    // ----------------------- End of main section --------------
 
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
+    Layout();
+    Fit();
+    SetMinSize(GetSize());
 }
 
 void SpectralDataDialog::OnAudioIO(AudioIOEvent ev)
 {
-   if (ev.type != AudioIOEvent::MONITOR && ev.type != AudioIOEvent::PAUSE)
-      mAudioIOBusy = ev.on;
+    if (ev.type != AudioIOEvent::MONITOR && ev.type != AudioIOEvent::PAUSE) {
+        mAudioIOBusy = ev.on;
+    }
 }
 
 void SpectralDataDialog::UpdateDisplayForClipboard(ClipboardChangeMessage)
 {
-   DoUpdateDisplay();
+    DoUpdateDisplay();
 }
 
 void SpectralDataDialog::UpdateDisplay(UndoRedoMessage message)
 {
-   switch (message.type) {
-   case UndoRedoMessage::Pushed:
-   case UndoRedoMessage::Modified:
-   case UndoRedoMessage::UndoOrRedo:
-   case UndoRedoMessage::Reset:
-   case UndoRedoMessage::Purge:
-      break;
-   default:
-      return;
-   }
-   DoUpdateDisplay();
+    switch (message.type) {
+    case UndoRedoMessage::Pushed:
+    case UndoRedoMessage::Modified:
+    case UndoRedoMessage::UndoOrRedo:
+    case UndoRedoMessage::Reset:
+    case UndoRedoMessage::Purge:
+        break;
+    default:
+        return;
+    }
+    DoUpdateDisplay();
 }
 
 void SpectralDataDialog::DoUpdateDisplay()
 {
-   if(IsShown())
-      DoUpdate();
+    if (IsShown()) {
+        DoUpdate();
+    }
 }
 
-void SpectralDataDialog::UpdateControls( bool active )
+void SpectralDataDialog::UpdateControls(bool active)
 {
-   if (mBrushButton)
-      mBrushButton->SetValue(active);
+    if (mBrushButton) {
+        mBrushButton->SetValue(active);
+    }
 }
 
-static bool IsBrushToolActive(AudacityProject &project)
+static bool IsBrushToolActive(AudacityProject& project)
 {
-   return ProjectSettings::Get(project).GetTool() == ToolCodes::brushTool;
+    return ProjectSettings::Get(project).GetTool() == ToolCodes::brushTool;
 }
 
-bool SpectralDataDialog::Show( bool show )
+bool SpectralDataDialog::Show(bool show)
 {
-   if ( show && !IsShown())
-      DoUpdate();
-   if ( IsShown() && !show && IsBrushToolActive(mProject) )
-      ProjectSettings::Get(mProject).SetTool(ToolCodes::selectTool);
-   auto result = wxDialogWrapper::Show( show );
-   CommandManager::Get( mProject ).UpdateCheckmarks( mProject );
-   return result;
+    if (show && !IsShown()) {
+        DoUpdate();
+    }
+    if (IsShown() && !show && IsBrushToolActive(mProject)) {
+        ProjectSettings::Get(mProject).SetTool(ToolCodes::selectTool);
+    }
+    auto result = wxDialogWrapper::Show(show);
+    CommandManager::Get(mProject).UpdateCheckmarks(mProject);
+    return result;
 }
 
 void SpectralDataDialog::DoUpdate()
 {
 }
 
-void SpectralDataDialog::OnCloseWindow(wxCloseEvent & WXUNUSED(event))
+void SpectralDataDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
 {
-   this->Show(false);
+    this->Show(false);
 }
 
 // PrefsListener implementation
 void SpectralDataDialog::UpdatePrefs()
 {
-   bool shown = IsShown();
-   if (shown) {
-      Show(false);
-   }
+    bool shown = IsShown();
+    if (shown) {
+        Show(false);
+    }
 
-   SetSizer(nullptr);
-   DestroyChildren();
+    SetSizer(nullptr);
+    DestroyChildren();
 
-   SetTitle(Title);
-   ShuttleGui S(this, eIsCreating);
-   Populate(S);
-   DoToolChanged();
+    SetTitle(Title);
+    ShuttleGui S(this, eIsCreating);
+    Populate(S);
+    DoToolChanged();
 
-   if (shown) {
-      Show(true);
-   }
+    if (shown) {
+        Show(true);
+    }
 }
 
-void SpectralDataDialog::OnBrushButton(wxCommandEvent &event) {
-   if (mBrushButton->GetValue())
-      ProjectSettings::Get(mProject).SetTool(ToolCodes::brushTool);
-   else
-      // Don't stay up
-      mBrushButton->SetValue(true);
+void SpectralDataDialog::OnBrushButton(wxCommandEvent& event)
+{
+    if (mBrushButton->GetValue()) {
+        ProjectSettings::Get(mProject).SetTool(ToolCodes::brushTool);
+    } else {
+        // Don't stay up
+        mBrushButton->SetValue(true);
+    }
 }
 
 static const AudacityProject::AttachedObjects::RegisteredFactory sSpectralWorkerKey{
-   []( AudacityProject &project ){
-      return std::make_shared< SpectralDataDialogWorker >( project );
-   }
+    []( AudacityProject& project ){
+        return std::make_shared< SpectralDataDialogWorker >(project);
+    }
 };
 
 AttachedWindows::RegisteredFactory sSpectralDataDialogKey{
-      []( AudacityProject &parent ) -> wxWeakRef< wxWindow > {
-         return safenew SpectralDataDialog( parent );
-      }
+    []( AudacityProject& parent ) -> wxWeakRef< wxWindow > {
+        return safenew SpectralDataDialog(parent);
+    }
 };
 
-SpectralDataDialog &SpectralDataDialog::Get( AudacityProject &project )
+SpectralDataDialog& SpectralDataDialog::Get(AudacityProject& project)
 {
-   // Ensure existence of the dialog
-   return static_cast<SpectralDataDialog&>(
-      GetAttachedWindows(project).Get( sSpectralDataDialogKey ) );
+    // Ensure existence of the dialog
+    return static_cast<SpectralDataDialog&>(
+        GetAttachedWindows(project).Get(sSpectralDataDialogKey));
 }
 
-SpectralDataDialog *SpectralDataDialog::Find( AudacityProject *pProject )
+SpectralDataDialog* SpectralDataDialog::Find(AudacityProject* pProject)
 {
-   // Return a pointer to the dialog only if it exists
-   return pProject
-      ? static_cast<SpectralDataDialog*>(
-         GetAttachedWindows(*pProject).Find( sSpectralDataDialogKey ) )
-      : nullptr;
+    // Return a pointer to the dialog only if it exists
+    return pProject
+           ? static_cast<SpectralDataDialog*>(
+        GetAttachedWindows(*pProject).Find(sSpectralDataDialogKey))
+           : nullptr;
 }
 
 // Current workflow for spectral editing dialog:
 // 1. ProjectSettings change event listened by Worker::OnToolChanged()
 // 2. In Worker::OnToolChanged(), get Dialog from AttachedWindows and invoke Show()
 // 3. Dialog::OnApply() listens to the apply button in Dialog, which calculates and applies the effect
-SpectralDataDialogWorker::SpectralDataDialogWorker(AudacityProject &project)
-   : mProject{ project }
+SpectralDataDialogWorker::SpectralDataDialogWorker(AudacityProject& project)
+    : mProject{project}
 {
-   mSettingsSubscription = ProjectSettings::Get(project)
-      .Subscribe(*this, &SpectralDataDialogWorker::OnToolChanged);
-   wxTheApp->Bind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
+    mSettingsSubscription = ProjectSettings::Get(project)
+                            .Subscribe(*this, &SpectralDataDialogWorker::OnToolChanged);
+    wxTheApp->Bind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
 }
 
 SpectralDataDialogWorker::~SpectralDataDialogWorker()
 {
-   wxTheApp->Unbind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
+    wxTheApp->Unbind(wxEVT_IDLE, &SpectralDataDialogWorker::OnIdle, this);
 }
 
 void SpectralDataDialogWorker::OnToolChanged(ProjectSettingsEvent evt)
 {
-   if (evt.type == ProjectSettingsEvent::ChangedTool) {
-      // Find not Get to avoid creating the dialog if not yet done
-      if (auto pDialog = SpectralDataDialog::Find(&mProject);
-          pDialog && pDialog->IsShown())
-         pDialog->DoToolChanged();
-      else {
-         // Dialog is hidden, or not yet constructed
-         using Type = std::underlying_type_t<decltype(ToolCodes::brushTool)>;
-         constexpr auto value = static_cast<Type>(ToolCodes::brushTool);
+    if (evt.type == ProjectSettingsEvent::ChangedTool) {
+        // Find not Get to avoid creating the dialog if not yet done
+        if (auto pDialog = SpectralDataDialog::Find(&mProject);
+            pDialog && pDialog->IsShown()) {
+            pDialog->DoToolChanged();
+        } else {
+            // Dialog is hidden, or not yet constructed
+            using Type = std::underlying_type_t<decltype(ToolCodes::brushTool)>;
+            constexpr auto value = static_cast<Type>(ToolCodes::brushTool);
 
-         auto &projectSettings = ProjectSettings::Get( mProject );
-         if (projectSettings.GetTool() == value) {
-            auto oldValue = evt.oldValue;
-            if (oldValue + 1 == value)
-               // continue tool rotation
-               wxTheApp->CallAfter([&]{ projectSettings.SetTool(
-                  (value + 1) % ToolCodes::numTools); });
-            else if ((oldValue + ToolCodes::numTools - 1 ) % ToolCodes::numTools
-               == value)
-               // continue backwards tool rotation
-               wxTheApp->CallAfter([&]{ projectSettings.SetTool(
-                  (value + ToolCodes::numTools - 1 ) % ToolCodes::numTools); });
-            else
-               // restore old tool value
-               wxTheApp->CallAfter([&]{ projectSettings.SetTool(oldValue); });
-         }
-      }
-   }
+            auto& projectSettings = ProjectSettings::Get(mProject);
+            if (projectSettings.GetTool() == value) {
+                auto oldValue = evt.oldValue;
+                if (oldValue + 1 == value) {
+                    // continue tool rotation
+                    wxTheApp->CallAfter([&]{
+                        projectSettings.SetTool(
+                            (value + 1) % ToolCodes::numTools);
+                    });
+                } else if ((oldValue + ToolCodes::numTools - 1) % ToolCodes::numTools
+                           == value) {
+                    // continue backwards tool rotation
+                    wxTheApp->CallAfter([&]{
+                        projectSettings.SetTool(
+                            (value + ToolCodes::numTools - 1) % ToolCodes::numTools);
+                    });
+                } else {
+                    // restore old tool value
+                    wxTheApp->CallAfter([&]{ projectSettings.SetTool(oldValue); });
+                }
+            }
+        }
+    }
 }
 
-static bool HasVisibleSpectralView(WaveTrack *wt)
+static bool HasVisibleSpectralView(WaveTrack* wt)
 {
-   auto &view = ChannelView::Get(*wt->GetChannel(0));
-   if (auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)) {
-      const auto range = waveChannelViewPtr->GetSubViews();
-      return std::any_of( range.begin(), range.end(),
-         [](const auto &pair){
-            return dynamic_cast<SpectrumView*>(pair.second.get()); } );
-   }
-   return false;
+    auto& view = ChannelView::Get(*wt->GetChannel(0));
+    if (auto waveChannelViewPtr = dynamic_cast<WaveChannelView*>(&view)) {
+        const auto range = waveChannelViewPtr->GetSubViews();
+        return std::any_of(range.begin(), range.end(),
+                           [](const auto& pair){
+            return dynamic_cast<SpectrumView*>(pair.second.get());
+        });
+    }
+    return false;
 }
 
-static unsigned CountVisibleSpectralViews( AudacityProject &project )
+static unsigned CountVisibleSpectralViews(AudacityProject& project)
 {
-   const auto range = TrackList::Get(project).Any< WaveTrack >();
-   return std::count_if( range.begin(), range.end(), HasVisibleSpectralView );
+    const auto range = TrackList::Get(project).Any< WaveTrack >();
+    return std::count_if(range.begin(), range.end(), HasVisibleSpectralView);
 }
 
-void SpectralDataDialogWorker::OnIdle(wxIdleEvent &evt)
+void SpectralDataDialogWorker::OnIdle(wxIdleEvent& evt)
 {
-   evt.Skip();
-   auto nViews = CountVisibleSpectralViews(mProject);
-   if (nViews > mPrevNViews) {
-      // Some track transitioned its view to spectral or multi.
-      // Show the dialog.
-      auto &dialog = SpectralDataDialog::Get(mProject);
-      dialog.Show();
-      dialog.Raise();
-   }
-   else if (nViews == 0 && mPrevNViews > 0) {
-      // The last spectrum view was closed.
-      // Hide the dialog.
-      if (auto pDialog = SpectralDataDialog::Find(&mProject))
-         pDialog->Hide();
-   }
-   mPrevNViews = nViews;
+    evt.Skip();
+    auto nViews = CountVisibleSpectralViews(mProject);
+    if (nViews > mPrevNViews) {
+        // Some track transitioned its view to spectral or multi.
+        // Show the dialog.
+        auto& dialog = SpectralDataDialog::Get(mProject);
+        dialog.Show();
+        dialog.Raise();
+    } else if (nViews == 0 && mPrevNViews > 0) {
+        // The last spectrum view was closed.
+        // Hide the dialog.
+        if (auto pDialog = SpectralDataDialog::Find(&mProject)) {
+            pDialog->Hide();
+        }
+    }
+    mPrevNViews = nViews;
 }
 
 void SpectralDataDialog::DoToolChanged()
 {
-   UpdateControls( IsBrushToolActive(mProject) );
+    UpdateControls(IsBrushToolActive(mProject));
 }
 
-void SpectralDataDialog::OnBrushSizeSlider(wxCommandEvent &event) {
-   auto &projectSettings = ProjectSettings::Get( mProject );
-   projectSettings.SetBrushRadius(event.GetInt());
+void SpectralDataDialog::OnBrushSizeSlider(wxCommandEvent& event)
+{
+    auto& projectSettings = ProjectSettings::Get(mProject);
+    projectSettings.SetBrushRadius(event.GetInt());
 }
 
-void SpectralDataDialog::OnCheckSmartSelection(wxCommandEvent &event){
-   int isSelected = event.GetInt();
-   wxASSERT(isSelected == 0 || isSelected == 1);
-   auto &projectSettings = ProjectSettings::Get( mProject );
-   projectSettings.SetSmartSelection(isSelected);
+void SpectralDataDialog::OnCheckSmartSelection(wxCommandEvent& event)
+{
+    int isSelected = event.GetInt();
+    wxASSERT(isSelected == 0 || isSelected == 1);
+    auto& projectSettings = ProjectSettings::Get(mProject);
+    projectSettings.SetSmartSelection(isSelected);
 }
 
-void SpectralDataDialog::OnCheckOvertones(wxCommandEvent &event){
-   int isSelected = event.GetInt();
-   wxASSERT(isSelected == 0 || isSelected == 1);
-   auto &projectSettings = ProjectSettings::Get( mProject );
-   projectSettings.SetOvertones(isSelected);
+void SpectralDataDialog::OnCheckOvertones(wxCommandEvent& event)
+{
+    int isSelected = event.GetInt();
+    wxASSERT(isSelected == 0 || isSelected == 1);
+    auto& projectSettings = ProjectSettings::Get(mProject);
+    projectSettings.SetOvertones(isSelected);
 #ifndef SMART_CHECKBOX
-   // One checkbox controls both things
-   OnCheckSmartSelection(event);
+    // One checkbox controls both things
+    OnCheckSmartSelection(event);
 #endif
 }
 
 namespace {
-void OnSpectralEditingPanel(const CommandContext &context)
+void OnSpectralEditingPanel(const CommandContext& context)
 {
-   auto &project = context.project;
-   auto &dialog = SpectralDataDialog::Get(project);
-   dialog.Show( !dialog.IsShown() );
+    auto& project = context.project;
+    auto& dialog = SpectralDataDialog::Get(project);
+    dialog.Show(!dialog.IsShown());
 }
 
 using namespace MenuRegistry;
 MenuRegistry::AttachedItem sAttachment{
-   wxT("View/Other/Toolbars/Toolbars/Other"),
-   Command( wxT("ShowSpectralSelectionPanel"),
-      XXO("Spectra&l Selection Panel"),
-      OnSpectralEditingPanel,
-      AlwaysEnabledFlag,
-      Options{}
-         .CheckTest( [](AudacityProject &project) {
-            // Find not Get to avoid creating the dialog if not yet done
-            auto pDialog = SpectralDataDialog::Find(&project);
-            return pDialog && pDialog->IsShown();
-         } ) )
+    wxT("View/Other/Toolbars/Toolbars/Other"),
+    Command(wxT("ShowSpectralSelectionPanel"),
+            XXO("Spectra&l Selection Panel"),
+            OnSpectralEditingPanel,
+            AlwaysEnabledFlag,
+            Options {}
+            .CheckTest([](AudacityProject& project) {
+        // Find not Get to avoid creating the dialog if not yet done
+        auto pDialog = SpectralDataDialog::Find(&project);
+        return pDialog && pDialog->IsShown();
+    }))
 };
-
 }
 
 #endif

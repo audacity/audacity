@@ -19,16 +19,16 @@ class AudacityProject;
 
 class WhatsNewDialog final : public wxDialogWrapper
 {
-   wxCheckBox* mDontShowAgain{};
+    wxCheckBox* mDontShowAgain{};
 public:
-   WhatsNewDialog(wxWindow* parent, wxWindowID id);
-   ~WhatsNewDialog() override;
+    WhatsNewDialog(wxWindow* parent, wxWindowID id);
+    ~WhatsNewDialog() override;
 
-   static void Show(AudacityProject& project);
+    static void Show(AudacityProject& project);
 
 private:
-   void Populate(ShuttleGui& S);
-   void OnOK(wxCommandEvent&);
+    void Populate(ShuttleGui& S);
+    void OnOK(wxCommandEvent&);
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };

@@ -18,9 +18,6 @@
 #ifndef __AUDACITY_TRACKARTIST__
 #define __AUDACITY_TRACKARTIST__
 
-
-
-
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variables
 
@@ -37,78 +34,78 @@ class TrackPanel;
 struct TrackPanelDrawingContext;
 class ZoomInfo;
 
-class AUDACITY_DLL_API TrackArtist final : private PrefsListener {
-
+class AUDACITY_DLL_API TrackArtist final : private PrefsListener
+{
 public:
 
-   enum : unsigned {
-      PassTracks,
-      PassMargins,
-      PassBorders,
-      PassControls,
-      PassZooming,
-      PassBackground,
-      PassFocus,
-      PassSnapping,
-      
-      NPasses
-   };
+    enum : unsigned {
+        PassTracks,
+        PassMargins,
+        PassBorders,
+        PassControls,
+        PassZooming,
+        PassBackground,
+        PassFocus,
+        PassSnapping,
 
-   TrackArtist( TrackPanel *parent_ );
-   ~TrackArtist();
-   static TrackArtist *Get( TrackPanelDrawingContext & );
+        NPasses
+    };
 
-   void SetColours(int iColorIndex);
+    TrackArtist(TrackPanel* parent_);
+    ~TrackArtist();
+    static TrackArtist* Get(TrackPanelDrawingContext&);
 
-   void UpdatePrefs() override;
+    void SetColours(int iColorIndex);
 
-   TrackPanel *parent;
+    void UpdatePrefs() override;
 
-   // Preference values
-   float mdBrange;            // "/GUI/EnvdBRange"
-   int  mSampleDisplay;
+    TrackPanel* parent;
 
-   wxBrush blankBrush;
-   wxBrush unselectedBrush;
-   wxBrush selectedBrush;
-   wxBrush sampleBrush;
-   wxBrush selsampleBrush;
-   wxBrush dragsampleBrush;// for samples which are draggable.
-   wxBrush muteSampleBrush;
-   wxBrush blankSelectedBrush;
-   wxBrush envelopeBackgroundBrush;
-   wxBrush clipAffordanceBackgroundBrush;
-   wxBrush clipAffordanceBackgroundSelBrush;
-   wxPen blankPen;
-   wxPen unselectedPen;
-   wxPen selectedPen;
-   wxPen samplePen;
-   wxPen rmsPen;
-   wxPen muteRmsPen;
-   wxPen selsamplePen;
-   wxPen muteSamplePen;
-   wxPen odProgressNotYetPen;
-   wxPen odProgressDonePen;
-   wxPen clippedPen;
-   wxPen muteClippedPen;
-   wxPen blankSelectedPen;
+    // Preference values
+    float mdBrange;           // "/GUI/EnvdBRange"
+    int mSampleDisplay;
 
-   wxPen beatSepearatorPen[2];
-   wxPen barSepearatorPen[2];
-   wxBrush beatStrongBrush[2];
-   wxBrush beatWeakBrush[2];
-   wxBrush beatStrongSelBrush[2];
-   wxBrush beatWeakSelBrush[2];
+    wxBrush blankBrush;
+    wxBrush unselectedBrush;
+    wxBrush selectedBrush;
+    wxBrush sampleBrush;
+    wxBrush selsampleBrush;
+    wxBrush dragsampleBrush;// for samples which are draggable.
+    wxBrush muteSampleBrush;
+    wxBrush blankSelectedBrush;
+    wxBrush envelopeBackgroundBrush;
+    wxBrush clipAffordanceBackgroundBrush;
+    wxBrush clipAffordanceBackgroundSelBrush;
+    wxPen blankPen;
+    wxPen unselectedPen;
+    wxPen selectedPen;
+    wxPen samplePen;
+    wxPen rmsPen;
+    wxPen muteRmsPen;
+    wxPen selsamplePen;
+    wxPen muteSamplePen;
+    wxPen odProgressNotYetPen;
+    wxPen odProgressDonePen;
+    wxPen clippedPen;
+    wxPen muteClippedPen;
+    wxPen blankSelectedPen;
 
-   const SelectedRegion *pSelectedRegion{};
-   ZoomInfo *pZoomInfo{};
-   const PendingTracks *pPendingTracks{};
+    wxPen beatSepearatorPen[2];
+    wxPen barSepearatorPen[2];
+    wxBrush beatStrongBrush[2];
+    wxBrush beatWeakBrush[2];
+    wxBrush beatStrongSelBrush[2];
+    wxBrush beatWeakSelBrush[2];
 
-   bool drawEnvelope{ false };
-   bool bigPoints{ false };
-   bool drawSliders{ false };
-   bool onBrushTool{ false };
-   bool hasSolo{ false };
+    const SelectedRegion* pSelectedRegion{};
+    ZoomInfo* pZoomInfo{};
+    const PendingTracks* pPendingTracks{};
+
+    bool drawEnvelope{ false };
+    bool bigPoints{ false };
+    bool drawSliders{ false };
+    bool onBrushTool{ false };
+    bool hasSolo{ false };
 };
 
 #endif                          // define __AUDACITY_TRACKARTIST__

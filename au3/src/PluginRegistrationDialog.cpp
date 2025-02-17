@@ -40,357 +40,358 @@
 
 enum
 {
-   ID_FilterState = 10000,
-   ID_FilterType,
-   ID_FilterCategory,
-   ID_List,
-   ID_Rescan,
-   ID_GetMoreEffects,
+    ID_FilterState = 10000,
+    ID_FilterType,
+    ID_FilterCategory,
+    ID_List,
+    ID_Rescan,
+    ID_GetMoreEffects,
 };
 
 BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnOK)
-   EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
-   EVT_BUTTON(ID_Rescan, PluginRegistrationDialog::OnRescan)
-   EVT_BUTTON(ID_GetMoreEffects, PluginRegistrationDialog::OnGetMoreEffects)
-   EVT_CHOICE(ID_FilterState, PluginRegistrationDialog::OnStateFilterValueChanged)
-   EVT_CHOICE(ID_FilterType, PluginRegistrationDialog::OnTypeFilterValueChanged)
-   EVT_CHOICE(ID_FilterCategory, PluginRegistrationDialog::OnCategoryFilterValueChanged)
+EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnOK)
+EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
+EVT_BUTTON(ID_Rescan, PluginRegistrationDialog::OnRescan)
+EVT_BUTTON(ID_GetMoreEffects, PluginRegistrationDialog::OnGetMoreEffects)
+EVT_CHOICE(ID_FilterState, PluginRegistrationDialog::OnStateFilterValueChanged)
+EVT_CHOICE(ID_FilterType, PluginRegistrationDialog::OnTypeFilterValueChanged)
+EVT_CHOICE(ID_FilterCategory, PluginRegistrationDialog::OnCategoryFilterValueChanged)
 END_EVENT_TABLE()
 
 static const TranslatableStrings ShowFilterValues {
-   XO("All"),
-   XO("Disabled"),
-   XO("Enabled")
+    XO("All"),
+    XO("Disabled"),
+    XO("Enabled")
 };
 
-static const std::vector<std::pair<int, TranslatableString>> CategoryFilterValues {
-   { -1, XO("All") },
-   { EffectTypeGenerate, XO("Generator") },
-   { EffectTypeProcess, XO("Effect") },
-   { EffectTypeAnalyze, XO("Analyzer") },
-   { EffectTypeTool, XO("Tool") }
+static const std::vector<std::pair<int, TranslatableString> > CategoryFilterValues {
+    { -1, XO("All") },
+    { EffectTypeGenerate, XO("Generator") },
+    { EffectTypeProcess, XO("Effect") },
+    { EffectTypeAnalyze, XO("Analyzer") },
+    { EffectTypeTool, XO("Tool") }
 };
 
-PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, int defaultEffectCategory)
-:  wxDialogWrapper(parent,
-            wxID_ANY,
-            XO("Manage Plugins"),
-            wxDefaultPosition, wxDefaultSize,
-            wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+PluginRegistrationDialog::PluginRegistrationDialog(wxWindow* parent, int defaultEffectCategory)
+    :  wxDialogWrapper(parent,
+                       wxID_ANY,
+                       XO("Manage Plugins"),
+                       wxDefaultPosition, wxDefaultSize,
+                       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   mPluginsModel = safenew PluginDataModel(defaultEffectCategory);
-   SetName();
-   Populate();
+    mPluginsModel = safenew PluginDataModel(defaultEffectCategory);
+    SetName();
+    Populate();
 }
 
 void PluginRegistrationDialog::Populate()
 {
-   //------------------------- Main section --------------------
-   ShuttleGui S(this, eIsCreating);
-   PopulateOrExchange(S);
-   // ----------------------- End of main section --------------
+    //------------------------- Main section --------------------
+    ShuttleGui S(this, eIsCreating);
+    PopulateOrExchange(S);
+    // ----------------------- End of main section --------------
 }
 
 /// Defines the dialog and does data exchange with it.
-void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
+void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui& S)
 {
-   constexpr int Margin = 12;
+    constexpr int Margin = 12;
 
-   static const std::unordered_map<TranslatableString, TranslatableString> extraProviders = {
-      { XO("Builtin Effects"), XO("Native Audacity") }
-   };
+    static const std::unordered_map<TranslatableString, TranslatableString> extraProviders = {
+        { XO("Builtin Effects"), XO("Native Audacity") }
+    };
 
-   TranslatableStrings pluginProviderNames;
-   pluginProviderNames.push_back(XO("All"));
-   mPluginProviderIDs.clear();
-   mPluginProviderIDs.push_back({});
-   auto& moduleManager = ModuleManager::Get();
-   for(auto& [name, provider] : moduleManager.Providers())
-   {
-      //Use same name as in prefs
-      auto familySymbol = provider->GetOptionalFamilySymbol();
-      if(!familySymbol.empty())
-         pluginProviderNames.push_back(familySymbol.Msgid());
-      else
-      {
-         auto it = extraProviders.find(provider->GetSymbol().Msgid());
-         if(it != extraProviders.end())
-            pluginProviderNames.push_back(it->second);
-         else
-            continue;
-      }
-      mPluginProviderIDs.push_back(PluginManager::GetID(provider.get()));
-   }
+    TranslatableStrings pluginProviderNames;
+    pluginProviderNames.push_back(XO("All"));
+    mPluginProviderIDs.clear();
+    mPluginProviderIDs.push_back({});
+    auto& moduleManager = ModuleManager::Get();
+    for (auto& [name, provider] : moduleManager.Providers()) {
+        //Use same name as in prefs
+        auto familySymbol = provider->GetOptionalFamilySymbol();
+        if (!familySymbol.empty()) {
+            pluginProviderNames.push_back(familySymbol.Msgid());
+        } else {
+            auto it = extraProviders.find(provider->GetSymbol().Msgid());
+            if (it != extraProviders.end()) {
+                pluginProviderNames.push_back(it->second);
+            } else {
+                continue;
+            }
+        }
+        mPluginProviderIDs.push_back(PluginManager::GetID(provider.get()));
+    }
 
-   S.Prop(1).StartPanel(wxEXPAND);
-   {
-      S.StartVerticalLay(true);
-      {
-         S.AddSpace(1, Margin);
-         S.StartHorizontalLay(wxEXPAND, 0);
-         {
-            S.AddSpace(Margin, 1);
-            S.StartHorizontalLay(wxALIGN_LEFT, 0);
+    S.Prop(1).StartPanel(wxEXPAND);
+    {
+        S.StartVerticalLay(true);
+        {
+            S.AddSpace(1, Margin);
+            S.StartHorizontalLay(wxEXPAND, 0);
             {
-               TranslatableStrings categoryFilterNames;
-               std::transform(
-                  CategoryFilterValues.begin(),
-                  CategoryFilterValues.end(),
-                  std::back_inserter(categoryFilterNames),
-                  [](const auto& p) { return p.second; });
-               const auto selectedCategory =
-                  std::distance(
-                     CategoryFilterValues.begin(),
-                     std::find_if(
+                S.AddSpace(Margin, 1);
+                S.StartHorizontalLay(wxALIGN_LEFT, 0);
+                {
+                    TranslatableStrings categoryFilterNames;
+                    std::transform(
                         CategoryFilterValues.begin(),
                         CategoryFilterValues.end(),
-                        [category = mPluginsModel->GetFilterCategory()](const auto& p) {
-                           return p.first == category;
-                        }
-                     ));
-               S
-                  .Id(ID_FilterState)
-                  .AddChoice(XXO("&Show:"), ShowFilterValues, 0)
-                     ->SetMinSize(wxSize(120, -1));
-               S
-                  .Id(ID_FilterType)
-                  .AddChoice(XXO("&Type:"), pluginProviderNames, 0)
-                     ->SetMinSize(wxSize(120, -1));
-               S
-                  .Id(ID_FilterCategory)
-                  .AddChoice(XXO("C&ategory:"), categoryFilterNames, selectedCategory)
-                     ->SetMinSize(wxSize(120, -1));
+                        std::back_inserter(categoryFilterNames),
+                        [](const auto& p) { return p.second; });
+                    const auto selectedCategory
+                        =std::distance(
+                              CategoryFilterValues.begin(),
+                              std::find_if(
+                                  CategoryFilterValues.begin(),
+                                  CategoryFilterValues.end(),
+                                  [category = mPluginsModel->GetFilterCategory()](const auto& p) {
+                        return p.first == category;
+                    }
+                                  ));
+                    S
+                    .Id(ID_FilterState)
+                    .AddChoice(XXO("&Show:"), ShowFilterValues, 0)
+                    ->SetMinSize(wxSize(120, -1));
+                    S
+                    .Id(ID_FilterType)
+                    .AddChoice(XXO("&Type:"), pluginProviderNames, 0)
+                    ->SetMinSize(wxSize(120, -1));
+                    S
+                    .Id(ID_FilterCategory)
+                    .AddChoice(XXO("C&ategory:"), categoryFilterNames, selectedCategory)
+                    ->SetMinSize(wxSize(120, -1));
+                }
+                S.EndHorizontalLay();
+                S.AddSpace(1, 1, 1);
+                S.StartHorizontalLay(wxALIGN_CENTRE, 0);
+                {
+                    const auto searchCtrl = S
+                                            .MinSize({ 240, -1 })
+                                            .AddTextBox(XXO("Searc&h:"), wxEmptyString, 0);
+                    if (searchCtrl != nullptr) {
+                        searchCtrl->Bind(wxEVT_TEXT, &PluginRegistrationDialog::OnSearchTextChanged, this);
+                    }
+                }
+                S.EndHorizontalLay();
+                S.AddSpace(Margin, 1);
             }
             S.EndHorizontalLay();
-            S.AddSpace(1, 1, 1);
-            S.StartHorizontalLay(wxALIGN_CENTRE, 0);
+
             {
-               const auto searchCtrl = S
-                  .MinSize({240, -1})
-                  .AddTextBox(XXO("Searc&h:"), wxEmptyString, 0);
-               if(searchCtrl != nullptr)
-                  searchCtrl->Bind(wxEVT_TEXT, &PluginRegistrationDialog::OnSearchTextChanged, this);
+                const auto pluginsList = safenew PluginDataViewCtrl(
+                    S.GetParent(), ID_List, wxDefaultPosition, wxDefaultSize,
+                    wxDV_MULTIPLE | wxDV_HORIZ_RULES | wxDV_VERT_RULES,
+                    wxDefaultValidator,
+                    _("Plugin")
+                    );
+                mPluginList = pluginsList;
+                mPluginList->AssociateModel(mPluginsModel.get());
+                mPluginList->SetMinSize({ 728, 288 });
+                mPluginList->GetColumn(PluginDataModel::ColumnName)->SetSortOrder(true);
+                mPluginsModel->Resort();
             }
-            S.EndHorizontalLay();
-            S.AddSpace(Margin, 1);
-         }
-         S.EndHorizontalLay();
 
-         {
-            const auto pluginsList = safenew PluginDataViewCtrl(
-               S.GetParent(), ID_List, wxDefaultPosition, wxDefaultSize,
-                wxDV_MULTIPLE | wxDV_HORIZ_RULES | wxDV_VERT_RULES,
-               wxDefaultValidator,
-               _("Plugin")
-            );
-            mPluginList = pluginsList;
-            mPluginList->AssociateModel(mPluginsModel.get());
-            mPluginList->SetMinSize({728, 288});
-            mPluginList->GetColumn(PluginDataModel::ColumnName)->SetSortOrder(true);
-            mPluginsModel->Resort();
-         }
-
-         S.SetBorder(Margin);
-         S.Id(ID_List)
+            S.SetBorder(Margin);
+            S.Id(ID_List)
             .Prop(1)
             .AddWindow(mPluginList, wxEXPAND);
-         S.SetBorder(2);
+            S.SetBorder(2);
 
-         S.AddSpace(1, Margin);
+            S.AddSpace(1, Margin);
 
-         S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, 0);
-         {
-            S.AddSpace(Margin, 1);
-            S.Id(ID_Rescan).AddButton(XXO("&Rescan"));
+            S.StartHorizontalLay(wxALIGN_LEFT | wxEXPAND, 0);
+            {
+                S.AddSpace(Margin, 1);
+                S.Id(ID_Rescan).AddButton(XXO("&Rescan"));
 #if defined(__WXMSW__) || defined(__WXMAC__)
-            S.Id(ID_GetMoreEffects).AddButton(XXO("&Get more effects..."));
+                S.Id(ID_GetMoreEffects).AddButton(XXO("&Get more effects..."));
 #endif
-            S.AddSpace(1, 1, 1);
+                S.AddSpace(1, 1, 1);
 
-            S.Id(wxID_OK).AddButton(XXO("&OK"));
-            S.Id(wxID_CANCEL).AddButton(XXO("&Cancel"));
-            S.AddSpace(Margin, 1);
-         }
-         S.EndHorizontalLay();
-         S.AddSpace(1, Margin);
-      }
-      S.EndVerticalLay();
-   }
-   S.EndStatic();
+                S.Id(wxID_OK).AddButton(XXO("&OK"));
+                S.Id(wxID_CANCEL).AddButton(XXO("&Cancel"));
+                S.AddSpace(Margin, 1);
+            }
+            S.EndHorizontalLay();
+            S.AddSpace(1, Margin);
+        }
+        S.EndVerticalLay();
+    }
+    S.EndStatic();
 
-   wxRect r = wxGetClientDisplayRect();
+    wxRect r = wxGetClientDisplayRect();
 
-   Layout();
-   Fit();
+    Layout();
+    Fit();
 
-   wxSize sz = GetSize();
-   sz.SetWidth(wxMin(sz.GetWidth(), r.GetWidth()));
-   sz.SetHeight(wxMin(sz.GetHeight(), r.GetHeight()));
-   SetMinSize(sz);
+    wxSize sz = GetSize();
+    sz.SetWidth(wxMin(sz.GetWidth(), r.GetWidth()));
+    sz.SetHeight(wxMin(sz.GetHeight(), r.GetHeight()));
+    SetMinSize(sz);
 
-   mPluginList->GetColumn(PluginDataModel::ColumnName)->SetWidth(200);
-   mPluginList->GetColumn(PluginDataModel::ColumnType)->SetWidth(80);
-   mPluginList->GetColumn(PluginDataModel::ColumnPath)->SetWidth(350);
+    mPluginList->GetColumn(PluginDataModel::ColumnName)->SetWidth(200);
+    mPluginList->GetColumn(PluginDataModel::ColumnType)->SetWidth(80);
+    mPluginList->GetColumn(PluginDataModel::ColumnPath)->SetWidth(350);
 
-   // Parent window is usually not there yet, so centre on screen rather than on parent.
-   CenterOnScreen();
-
+    // Parent window is usually not there yet, so centre on screen rather than on parent.
+    CenterOnScreen();
 }
 
 void PluginRegistrationDialog::ReloadModel()
 {
-   mPluginsModel.reset(safenew PluginDataModel(
-      mPluginsModel->GetFilterCategory(),
-      mPluginsModel->GetFilterState(),
-      mPluginsModel->GetFilterType(),
-      mPluginsModel->GetFilterExpr()
-   ));
-   mPluginList->AssociateModel(mPluginsModel.get());
+    mPluginsModel.reset(safenew PluginDataModel(
+                            mPluginsModel->GetFilterCategory(),
+                            mPluginsModel->GetFilterState(),
+                            mPluginsModel->GetFilterType(),
+                            mPluginsModel->GetFilterExpr()
+                            ));
+    mPluginList->AssociateModel(mPluginsModel.get());
 }
 
 void PluginRegistrationDialog::OnSearchTextChanged(wxCommandEvent& evt)
 {
-   mPluginsModel->SetFilterExpr(evt.GetString().Trim().Trim(true));
+    mPluginsModel->SetFilterExpr(evt.GetString().Trim().Trim(true));
 }
 
 void PluginRegistrationDialog::OnStateFilterValueChanged(wxCommandEvent& evt)
 {
-   const auto index = evt.GetInt();
+    const auto index = evt.GetInt();
 
-   mPluginsModel->SetFilterState(
-      index == 2 ? 1 : (index == 1 ? 0 : -1)
-   );
+    mPluginsModel->SetFilterState(
+        index == 2 ? 1 : (index == 1 ? 0 : -1)
+        );
 }
 
 void PluginRegistrationDialog::OnTypeFilterValueChanged(wxCommandEvent& evt)
 {
-   const auto index = evt.GetInt();
-   if(index >= 0 && index < mPluginProviderIDs.size())
-      mPluginsModel->SetFilterType(mPluginProviderIDs[index]);
+    const auto index = evt.GetInt();
+    if (index >= 0 && index < mPluginProviderIDs.size()) {
+        mPluginsModel->SetFilterType(mPluginProviderIDs[index]);
+    }
 }
 
 void PluginRegistrationDialog::OnCategoryFilterValueChanged(wxCommandEvent& evt)
 {
-   const auto index = evt.GetInt();
-   if(index >= 0 && index < CategoryFilterValues.size())
-      mPluginsModel->SetFilterCategory(CategoryFilterValues[index].first);
+    const auto index = evt.GetInt();
+    if (index >= 0 && index < CategoryFilterValues.size()) {
+        mPluginsModel->SetFilterCategory(CategoryFilterValues[index].first);
+    }
 }
 
 void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
 {
-   wxTheApp->CallAfter([self = wxWeakRef(this)] {
-      std::set<PluginPath> disabledPlugins;
-      std::vector<wxString> failedPlugins;
+    wxTheApp->CallAfter([self = wxWeakRef(this)] {
+        std::set<PluginPath> disabledPlugins;
+        std::vector<wxString> failedPlugins;
 
-      auto& pm = PluginManager::Get();
+        auto& pm = PluginManager::Get();
 
-      // Record list of plugins that are currently disabled
-      for (auto& plug : pm.AllPlugins())
-      {
-         PluginType plugType = plug.GetPluginType();
-         if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
-            continue;
+        // Record list of plugins that are currently disabled
+        for (auto& plug : pm.AllPlugins()) {
+            PluginType plugType = plug.GetPluginType();
+            if (plugType != PluginTypeEffect && plugType != PluginTypeStub) {
+                continue;
+            }
 
-         if (!plug.IsEnabled())
-            disabledPlugins.insert(plug.GetPath());
-      }
+            if (!plug.IsEnabled()) {
+                disabledPlugins.insert(plug.GetPath());
+            }
+        }
 
-      //PluginManager::ClearEffectPlugins() removes all effects
-      //making all pointers cached in PluginDataModel invalid.
-      //Reset model pointer before clearing effects so that
-      //nothing attempts to access it.
-      if(self)
-         self->mPluginList->AssociateModel(nullptr);
+        //PluginManager::ClearEffectPlugins() removes all effects
+        //making all pointers cached in PluginDataModel invalid.
+        //Reset model pointer before clearing effects so that
+        //nothing attempts to access it.
+        if (self) {
+            self->mPluginList->AssociateModel(nullptr);
+        }
 
-      pm.ClearEffectPlugins();
+        pm.ClearEffectPlugins();
 
-      auto newPlugins = PluginManager::Get().CheckPluginUpdates();
-      if (!newPlugins.empty())
-      {
-         PluginStartupRegistration reg(newPlugins);
-         reg.Run();
+        auto newPlugins = PluginManager::Get().CheckPluginUpdates();
+        if (!newPlugins.empty()) {
+            PluginStartupRegistration reg(newPlugins);
+            reg.Run();
 
-         failedPlugins = reg.GetFailedPluginsPaths();
-      }
+            failedPlugins = reg.GetFailedPluginsPaths();
+        }
 
-      // Disable all plugins which were previously disabled
-      for (auto& plug : pm.AllPlugins())
-      {
-         PluginType plugType = plug.GetPluginType();
-         if (plugType != PluginTypeEffect && plugType != PluginTypeStub)
-            continue;
+        // Disable all plugins which were previously disabled
+        for (auto& plug : pm.AllPlugins()) {
+            PluginType plugType = plug.GetPluginType();
+            if (plugType != PluginTypeEffect && plugType != PluginTypeStub) {
+                continue;
+            }
 
-         const auto& path = plug.GetPath();
-         if (disabledPlugins.find(path) != disabledPlugins.end())
-            plug.SetEnabled(false);
-      }
+            const auto& path = plug.GetPath();
+            if (disabledPlugins.find(path) != disabledPlugins.end()) {
+                plug.SetEnabled(false);
+            }
+        }
 
-      pm.Save();
-      pm.NotifyPluginsChanged();
+        pm.Save();
+        pm.NotifyPluginsChanged();
 
-      if(self)
-      {
-         self->ReloadModel();
-         if (!failedPlugins.empty())
-         {
-            auto dialog = safenew IncompatiblePluginsDialog(self.get(), wxID_ANY, ScanType::Manual, failedPlugins);
-            dialog->ShowModal();
-            self->Refresh();
-         }
-      }
-   });
+        if (self) {
+            self->ReloadModel();
+            if (!failedPlugins.empty()) {
+                auto dialog = safenew IncompatiblePluginsDialog(self.get(), wxID_ANY, ScanType::Manual, failedPlugins);
+                dialog->ShowModal();
+                self->Refresh();
+            }
+        }
+    });
 }
 
 void PluginRegistrationDialog::OnGetMoreEffects(wxCommandEvent& WXUNUSED(evt))
 {
-   OpenInDefaultBrowser("https://www.musehub.com");
+    OpenInDefaultBrowser("https://www.musehub.com");
 }
 
-void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
+void PluginRegistrationDialog::OnOK(wxCommandEvent& WXUNUSED(evt))
 {
-   auto result = ProgressResult::Success;
-   {
-      // Make sure the progress dialog is deleted before we call EndModal() or
-      // we will leave the project window in an unusable state on OSX.
-      // See bug #1192.
-      std::unique_ptr<ProgressDialog> dialog;
-      wxArrayString last3;
-      auto updateProgress = [&](int num, int denom, const wxString& msg)
-      {
-         last3.insert(last3.begin(), msg);
-         if(last3.size() > 3)
-            last3.pop_back();
-         if(!dialog)
-         {
-            dialog = std::make_unique<ProgressDialog>(
-               Verbatim( GetTitle() ),
-               TranslatableString {},
-               pdlgHideStopButton
-            );
-            dialog->CenterOnParent();
-         }
-         result = dialog->Update(
-            num,
-            denom,
-            TranslatableString(wxJoin(last3, '\n'), {})
-         );
-         return result == ProgressResult::Success;
-      };
-      auto onError = [](const TranslatableString& error) {
-         AudacityMessageBox(error);
-      };
+    auto result = ProgressResult::Success;
+    {
+        // Make sure the progress dialog is deleted before we call EndModal() or
+        // we will leave the project window in an unusable state on OSX.
+        // See bug #1192.
+        std::unique_ptr<ProgressDialog> dialog;
+        wxArrayString last3;
+        auto updateProgress = [&](int num, int denom, const wxString& msg)
+        {
+            last3.insert(last3.begin(), msg);
+            if (last3.size() > 3) {
+                last3.pop_back();
+            }
+            if (!dialog) {
+                dialog = std::make_unique<ProgressDialog>(
+                    Verbatim(GetTitle()),
+                    TranslatableString {},
+                    pdlgHideStopButton
+                    );
+                dialog->CenterOnParent();
+            }
+            result = dialog->Update(
+                num,
+                denom,
+                TranslatableString(wxJoin(last3, '\n'), {})
+                );
+            return result == ProgressResult::Success;
+        };
+        auto onError = [](const TranslatableString& error) {
+            AudacityMessageBox(error);
+        };
 
-      mPluginsModel->ApplyChanges(updateProgress, onError);
-   }
-   if(result == ProgressResult::Success)
-      EndModal(wxID_OK);
-   else
-      ReloadModel();
-
+        mPluginsModel->ApplyChanges(updateProgress, onError);
+    }
+    if (result == ProgressResult::Success) {
+        EndModal(wxID_OK);
+    } else {
+        ReloadModel();
+    }
 }
 
-void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))
+void PluginRegistrationDialog::OnCancel(wxCommandEvent& WXUNUSED(evt))
 {
-   EndModal(wxID_CANCEL);
+    EndModal(wxID_CANCEL);
 }

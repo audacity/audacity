@@ -26,7 +26,6 @@ class AudacityProject;
 // The didRecoverAnything param is strictly for a return value.
 // Any value passed in is ignored.
 //
-bool ShowAutoRecoveryDialogIfNeeded(AudacityProject*& pproj,
-                                    bool *didRecoverAnything);
+bool ShowAutoRecoveryDialogIfNeeded(AudacityProject*& pproj, bool* didRecoverAnything);
 
 #endif

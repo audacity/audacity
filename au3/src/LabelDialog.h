@@ -34,83 +34,75 @@ typedef std::vector<RowData> RowDataArray;
 
 class LabelDialog final : public wxDialogWrapper
 {
- public:
+public:
 
-   LabelDialog(wxWindow *parent,
-               AudacityProject &project,
-               TrackList *tracks,
-
-               // if NULL edit all tracks, else this one only:
-               LabelTrack *selectedTrack,
-
-               // This is nonnegative only if selectedTrack is not NULL
-               // and is the unique label to edit
-               int index,
-
-               ViewInfo &viewinfo,
-               const NumericFormatID & format,
-               const NumericFormatID &freqFormat);
-   ~LabelDialog();
+    LabelDialog(wxWindow* parent, AudacityProject& project, TrackList* tracks,
+                // if NULL edit all tracks, else this one only:
+                LabelTrack* selectedTrack,
+                // This is nonnegative only if selectedTrack is not NULL
+                // and is the unique label to edit
+                int index, ViewInfo& viewinfo, const NumericFormatID& format, const NumericFormatID& freqFormat);
+    ~LabelDialog();
 
     bool Show(bool show = true) override;
 
- private:
+private:
 
-   void Populate();
-   void PopulateOrExchange( ShuttleGui & S );
-   void PopulateLabels();
-   void OnHelp(wxCommandEvent & event);
-   ManualPageID GetHelpPageName() {return "Labels_Editor";}
+    void Populate();
+    void PopulateOrExchange(ShuttleGui& S);
+    void PopulateLabels();
+    void OnHelp(wxCommandEvent& event);
+    ManualPageID GetHelpPageName() { return "Labels_Editor"; }
 
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
-   bool Validate() override;
-   void FindAllLabels();
-   void AddLabels(const LabelTrack *t);
-   void FindInitialRow();
-   wxString TrackName(int & index, const wxString &dflt = _("Label Track"));
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
+    bool Validate() override;
+    void FindAllLabels();
+    void AddLabels(const LabelTrack* t);
+    void FindInitialRow();
+    wxString TrackName(int& index, const wxString& dflt = _("Label Track"));
 
-   void OnUpdate(wxCommandEvent &event);
-   void OnFreqUpdate(wxCommandEvent &event);
-   void OnInsert(wxCommandEvent &event);
-   void OnRemove(wxCommandEvent &event);
-   void OnImport(wxCommandEvent &event);
-   void OnExport(wxCommandEvent &event);
-   void OnSelectCell(wxGridEvent &event);
-   void OnCellChange(wxGridEvent &event);
-   void OnChangeTrack(wxGridEvent &event, int row, RowData *rd);
-   void OnChangeLabel(wxGridEvent &event, int row, RowData *rd);
-   void OnChangeStime(wxGridEvent &event, int row, RowData *rd);
-   void OnChangeEtime(wxGridEvent &event, int row, RowData *rd);
-   void OnChangeLfreq(wxGridEvent &event, int row, RowData *rd);
-   void OnChangeHfreq(wxGridEvent &event, int row, RowData *rd);
-   void OnOK(wxCommandEvent &event);
-   void OnCancel(wxCommandEvent &event);
+    void OnUpdate(wxCommandEvent& event);
+    void OnFreqUpdate(wxCommandEvent& event);
+    void OnInsert(wxCommandEvent& event);
+    void OnRemove(wxCommandEvent& event);
+    void OnImport(wxCommandEvent& event);
+    void OnExport(wxCommandEvent& event);
+    void OnSelectCell(wxGridEvent& event);
+    void OnCellChange(wxGridEvent& event);
+    void OnChangeTrack(wxGridEvent& event, int row, RowData* rd);
+    void OnChangeLabel(wxGridEvent& event, int row, RowData* rd);
+    void OnChangeStime(wxGridEvent& event, int row, RowData* rd);
+    void OnChangeEtime(wxGridEvent& event, int row, RowData* rd);
+    void OnChangeLfreq(wxGridEvent& event, int row, RowData* rd);
+    void OnChangeHfreq(wxGridEvent& event, int row, RowData* rd);
+    void OnOK(wxCommandEvent& event);
+    void OnCancel(wxCommandEvent& event);
 
-   void ReadSize();
-   void WriteSize();
+    void ReadSize();
+    void WriteSize();
 
- private:
+private:
 
-   AudacityProject &mProject;
+    AudacityProject& mProject;
 
-   Grid *mGrid;
-   ChoiceEditor *mChoiceEditor;
-   NumericEditor *mTimeEditor;
-   NumericEditor *mFrequencyEditor;
+    Grid* mGrid;
+    ChoiceEditor* mChoiceEditor;
+    NumericEditor* mTimeEditor;
+    NumericEditor* mFrequencyEditor;
 
-   RowDataArray mData;
+    RowDataArray mData;
 
-   TrackList *mTracks;
-   LabelTrack *mSelectedTrack {};
-   int mIndex { -1 };
-   ViewInfo *mViewInfo;
-   wxArrayString mTrackNames;
-   NumericFormatID mFormat, mFreqFormat;
+    TrackList* mTracks;
+    LabelTrack* mSelectedTrack {};
+    int mIndex { -1 };
+    ViewInfo* mViewInfo;
+    wxArrayString mTrackNames;
+    NumericFormatID mFormat, mFreqFormat;
 
-   int mInitialRow;
+    int mInitialRow;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

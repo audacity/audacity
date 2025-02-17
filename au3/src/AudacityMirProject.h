@@ -17,31 +17,30 @@ class AudacityProject;
 class AudacityMirProject final : public MIR::ProjectInterface
 {
 public:
-   explicit AudacityMirProject(AudacityProject& project);
-   ~AudacityMirProject() override;
+    explicit AudacityMirProject(AudacityProject& project);
+    ~AudacityMirProject() override;
 
-   bool ViewIsBeatsAndMeasures() const override;
+    bool ViewIsBeatsAndMeasures() const override;
 
-   void ReconfigureMusicGrid(
-      double newTempo,
-      std::optional<MIR::TimeSignature> timeSignature) override;
+    void ReconfigureMusicGrid(
+        double newTempo, std::optional<MIR::TimeSignature> timeSignature) override;
 
-   double GetTempo() const override;
+    double GetTempo() const override;
 
-   bool ShouldBeReconfigured(double newTempo, bool isSingleFileImport) override;
+    bool ShouldBeReconfigured(double newTempo, bool isSingleFileImport) override;
 
-   void OnClipsSynchronized() override;
+    void OnClipsSynchronized() override;
 
 private:
-   enum class ModificationType
-   {
-      Automatic,
-      Manual,
-   };
+    enum class ModificationType
+    {
+        Automatic,
+        Manual,
+    };
 
-   AudacityProject& mProject;
-   const double mProjectTempo;
-   const bool mImportedOnEmptyProject;
-   std::optional<ModificationType> mMostSignificantModification;
-   bool mProjectWasModified = false;
+    AudacityProject& mProject;
+    const double mProjectTempo;
+    const bool mImportedOnEmptyProject;
+    std::optional<ModificationType> mMostSignificantModification;
+    bool mProjectWasModified = false;
 };

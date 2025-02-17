@@ -19,30 +19,29 @@
 #include "effects/EffectUIServices.h"
 #include <wx/frame.h>
 
-namespace
-{
+namespace {
 AudacityApplicationLogic::StopPlaybackCb StopPlaybackCb(AudacityProject& project)
 {
-   return [&]() { ProjectAudioManager::Get(project).Stop(); };
+    return [&]() { ProjectAudioManager::Get(project).Stop(); };
 }
 } // namespace
 
 bool EffectUI::DoEffect(
-   const PluginID& ID, AudacityProject& project, unsigned flags)
+    const PluginID& ID, AudacityProject& project, unsigned flags)
 {
-   auto getShowEffectHostInterfaceCb =
-      [window = &GetProjectFrame(project)](
-         Effect& effect, std::shared_ptr<EffectInstance>& pInstance,
-         SimpleEffectSettingsAccess& access) {
-         const auto pServices = dynamic_cast<EffectUIServices*>(&effect);
-         return pServices && pServices->ShowHostInterface(
-                                effect, *window, EffectUI::DialogFactory,
-                                pInstance, access, true);
-      };
-   auto selectAllIfNoneCb = [&]() {
-      SelectUtilities::SelectAllIfNone(project);
-   };
-   return AudacityApplicationLogic::DoEffect(
-      ID, project, flags, std::move(getShowEffectHostInterfaceCb),
-      StopPlaybackCb(project), std::move(selectAllIfNoneCb));
+    auto getShowEffectHostInterfaceCb
+        =[window = &GetProjectFrame(project)](
+              Effect& effect, std::shared_ptr<EffectInstance>& pInstance,
+              SimpleEffectSettingsAccess& access) {
+        const auto pServices = dynamic_cast<EffectUIServices*>(&effect);
+        return pServices && pServices->ShowHostInterface(
+            effect, *window, EffectUI::DialogFactory,
+            pInstance, access, true);
+    };
+    auto selectAllIfNoneCb = [&]() {
+        SelectUtilities::SelectAllIfNone(project);
+    };
+    return AudacityApplicationLogic::DoEffect(
+        ID, project, flags, std::move(getShowEffectHostInterfaceCb),
+        StopPlaybackCb(project), std::move(selectAllIfNoneCb));
 }

@@ -25,59 +25,57 @@ class AudacityProject;
 class ShuttleGui;
 class UndoManager;
 
-class HistoryDialog final : public wxDialogWrapper,
-                            public PrefsListener
+class HistoryDialog final : public wxDialogWrapper, public PrefsListener
 {
+public:
+    HistoryDialog(AudacityProject* parent, UndoManager* manager);
 
- public:
-   HistoryDialog(AudacityProject * parent, UndoManager *manager);
+    void UpdateDisplayForClipboard(struct ClipboardChangeMessage);
+    void UpdateDisplay(struct UndoRedoMessage);
+    void DoUpdateDisplay();
 
-   void UpdateDisplayForClipboard(struct ClipboardChangeMessage);
-   void UpdateDisplay(struct UndoRedoMessage);
-   void DoUpdateDisplay();
-   
-   bool Show( bool show = true ) override;
+    bool Show(bool show = true) override;
 
- private:
-   void Populate(ShuttleGui & S);
+private:
+    void Populate(ShuttleGui& S);
 
-   void OnAudioIO(AudioIOEvent);
-   void DoUpdate();
-   void UpdateLevels();
+    void OnAudioIO(AudioIOEvent);
+    void DoUpdate();
+    void UpdateLevels();
 
-   void OnShow(wxShowEvent & event);
-   void OnSize(wxSizeEvent & event);
-   void OnCloseWindow(wxCloseEvent & event);
-   void OnListKeyDown(wxKeyEvent & event);
-   void OnItemSelected(wxListEvent & event);
-   void OnDiscard(wxCommandEvent & event);
-   void OnDiscardClipboard(wxCommandEvent & event);
-   void OnCompact(wxCommandEvent & event);
-   void OnGetURL(wxCommandEvent & event);
+    void OnShow(wxShowEvent& event);
+    void OnSize(wxSizeEvent& event);
+    void OnCloseWindow(wxCloseEvent& event);
+    void OnListKeyDown(wxKeyEvent& event);
+    void OnItemSelected(wxListEvent& event);
+    void OnDiscard(wxCommandEvent& event);
+    void OnDiscardClipboard(wxCommandEvent& event);
+    void OnCompact(wxCommandEvent& event);
+    void OnGetURL(wxCommandEvent& event);
 
-   // PrefsListener implementation
-   void UpdatePrefs() override;
+    // PrefsListener implementation
+    void UpdatePrefs() override;
 
-   Observer::Subscription mAudioIOSubscription
-      , mUndoSubscription
-      , mClipboardSubscription
-   ;
+    Observer::Subscription mAudioIOSubscription,
+                           mUndoSubscription,
+                           mClipboardSubscription
+    ;
 
-   AudacityProject   *mProject;
-   UndoManager       *mManager;
-   wxListCtrl        *mList;
-   wxTextCtrl        *mTotal;
-   wxTextCtrl        *mClipboard;
-   wxTextCtrl        *mAvail;
-   wxSpinCtrl        *mLevels;
-   wxButton          *mDiscard;
-   wxButton          *mCompact;
+    AudacityProject* mProject;
+    UndoManager* mManager;
+    wxListCtrl* mList;
+    wxTextCtrl* mTotal;
+    wxTextCtrl* mClipboard;
+    wxTextCtrl* mAvail;
+    wxSpinCtrl* mLevels;
+    wxButton* mDiscard;
+    wxButton* mCompact;
 
-   int               mSelected;
-   bool              mAudioIOBusy;
+    int mSelected;
+    bool mAudioIOBusy;
 
- public:
-   DECLARE_EVENT_TABLE()
+public:
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -16,9 +16,9 @@
 class DirManager;
 
 enum : unsigned {
-   FSCKstatus_CLOSE_REQ = 0x1,
-   FSCKstatus_CHANGED   = 0x2,
-   FSCKstatus_SAVE_AUP  = 0x4, // used in combination with FSCKstatus_CHANGED
+    FSCKstatus_CLOSE_REQ = 0x1,
+    FSCKstatus_CHANGED   = 0x2,
+    FSCKstatus_SAVE_AUP  = 0x4,// used in combination with FSCKstatus_CHANGED
 };
 
 // Check the project for errors and possibly prompt user
@@ -27,6 +27,6 @@ enum : unsigned {
 // bAutoRecoverMode: Do not show any option dialogs for how to deal with errors found here.
 //    Too complicated during auto-recover. Just correct problems the "safest" way.
 int ProjectFSCK(
-   DirManager &dm, const bool bForceError, const bool bAutoRecoverMode);
+    DirManager& dm, const bool bForceError, const bool bAutoRecoverMode);
 
 #endif

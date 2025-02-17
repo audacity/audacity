@@ -16,4 +16,4 @@ class wxFileName;
 /*! @return true if successful, else no effect on the file
  @excsafety{Strong}
  */
-bool ConvertLegacyProjectFile(const wxFileName &filename);
+bool ConvertLegacyProjectFile(const wxFileName& filename);
