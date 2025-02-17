@@ -22,49 +22,42 @@
 
 #include "concurrency/CancellationContext.h"
 
-namespace audacity::cloud::audiocom
-{
+namespace audacity::cloud::audiocom {
 class ServiceConfig;
 }
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 using concurrency::CancellationContextPtr;
 
 class DataUploader final
 {
-   DataUploader() = default;
-   ~DataUploader();
+    DataUploader() = default;
+    ~DataUploader();
 
-   DataUploader(const DataUploader&)            = delete;
-   DataUploader(DataUploader&&)                 = delete;
-   DataUploader& operator=(const DataUploader&) = delete;
-   DataUploader& operator=(DataUploader&&)      = delete;
+    DataUploader(const DataUploader&)            = delete;
+    DataUploader(DataUploader&&)                 = delete;
+    DataUploader& operator=(const DataUploader&) = delete;
+    DataUploader& operator=(DataUploader&&)      = delete;
 
 public:
-   static DataUploader& Get();
+    static DataUploader& Get();
 
-   void Upload(
-      CancellationContextPtr cancellationContex, const ServiceConfig& config,
-      const UploadUrls& target, std::vector<uint8_t> data,
-      std::function<void(ResponseResult)> callback,
-      std::function<void(double)> progressCallback = {});
+    void Upload(
+        CancellationContextPtr cancellationContex, const ServiceConfig& config, const UploadUrls& target, std::vector<uint8_t> data,
+        std::function<void(ResponseResult)> callback, std::function<void(double)> progressCallback = {});
 
-   void Upload(
-      CancellationContextPtr cancellationContex, const ServiceConfig& config,
-      const UploadUrls& target, std::string filePath,
-      std::function<void(ResponseResult)> callback,
-      std::function<void(double)> progressCallback = {});
+    void Upload(
+        CancellationContextPtr cancellationContex, const ServiceConfig& config, const UploadUrls& target, std::string filePath,
+        std::function<void(ResponseResult)> callback, std::function<void(double)> progressCallback = {});
 
 private:
-   struct UploadOperation;
+    struct UploadOperation;
 
-   void RemoveResponse(UploadOperation& response);
+    void RemoveResponse(UploadOperation& response);
 
-   std::mutex mResponseMutex;
+    std::mutex mResponseMutex;
 
-   using ResponsesList = std::vector<std::shared_ptr<UploadOperation>>;
-   ResponsesList mResponses;
+    using ResponsesList = std::vector<std::shared_ptr<UploadOperation> >;
+    ResponsesList mResponses;
 };
-
 } // namespace audacity::cloud::audiocom::sync

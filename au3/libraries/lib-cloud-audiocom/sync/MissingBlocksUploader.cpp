@@ -15,250 +15,254 @@
 
 #include "WavPackCompressor.h"
 
-namespace audacity::cloud::audiocom::sync
-{
-
+namespace audacity::cloud::audiocom::sync {
 MissingBlocksUploader::MissingBlocksUploader(
-   Tag, const ServiceConfig& serviceConfig)
-    : mServiceConfig { serviceConfig }
+    Tag, const ServiceConfig& serviceConfig)
+    : mServiceConfig{serviceConfig}
 {
 }
 
 std::shared_ptr<MissingBlocksUploader> MissingBlocksUploader::Create(
-   CancellationContextPtr cancellationContex, const ServiceConfig& serviceConfig,
-   std::vector<BlockUploadTask> uploadTasks,
-   MissingBlocksUploadProgressCallback progressCallback)
+    CancellationContextPtr cancellationContex, const ServiceConfig& serviceConfig,
+    std::vector<BlockUploadTask> uploadTasks,
+    MissingBlocksUploadProgressCallback progressCallback)
 {
-   auto uploader =
-      std::make_shared<MissingBlocksUploader>(Tag {}, serviceConfig);
+    auto uploader
+        =std::make_shared<MissingBlocksUploader>(Tag {}, serviceConfig);
 
-   if (!cancellationContex)
-      cancellationContex = concurrency::CancellationContext::Create();
+    if (!cancellationContex) {
+        cancellationContex = concurrency::CancellationContext::Create();
+    }
 
-   cancellationContex->OnCancelled(uploader);
+    cancellationContex->OnCancelled(uploader);
 
-   uploader->Start(
-      std::move(cancellationContex), std::move(uploadTasks),
-      std::move(progressCallback));
+    uploader->Start(
+        std::move(cancellationContex), std::move(uploadTasks),
+        std::move(progressCallback));
 
-   return uploader;
+    return uploader;
 }
 
 MissingBlocksUploader::~MissingBlocksUploader()
 {
-   Cancel();
+    Cancel();
 }
 
 void MissingBlocksUploader::Start(
-   CancellationContextPtr cancellationContex,
-   std::vector<BlockUploadTask> uploadTasks,
-   MissingBlocksUploadProgressCallback progressCallback)
+    CancellationContextPtr cancellationContex,
+    std::vector<BlockUploadTask> uploadTasks,
+    MissingBlocksUploadProgressCallback progressCallback)
 {
-   mCancellationContext = std::move(cancellationContex);
-   mUploadTasks         = std::move(uploadTasks);
-   mProgressCallback    = std::move(progressCallback);
-   if (!mProgressCallback)
-      mProgressCallback = [](auto...) {};
+    mCancellationContext = std::move(cancellationContex);
+    mUploadTasks         = std::move(uploadTasks);
+    mProgressCallback    = std::move(progressCallback);
+    if (!mProgressCallback) {
+        mProgressCallback = [](auto...) {} }
 
-   mProgressData.TotalBlocks = mUploadTasks.size();
+    mProgressData.TotalBlocks = mUploadTasks.size();
 
-   for (auto& thread : mProducerThread)
-      thread = std::thread([this] { ProducerThread(); });
+    for (auto& thread : mProducerThread) {
+        thread = std::thread([this] { ProducerThread(); });
+    }
 
-   mConsumerThread = std::thread([this] { ConsumerThread(); });
+    mConsumerThread = std::thread([this] { ConsumerThread(); });
 }
 
 void MissingBlocksUploader::Cancel()
 {
-   if (!mIsRunning.exchange(false))
-      return;
+    if (!mIsRunning.exchange(false)) {
+        return;
+    }
 
-   mRingBufferNotEmpty.notify_all();
-   mRingBufferNotFull.notify_all();
-   mUploadsNotFull.notify_all();
+    mRingBufferNotEmpty.notify_all();
+    mRingBufferNotFull.notify_all();
+    mUploadsNotFull.notify_all();
 
-   for (auto& thread : mProducerThread)
-      thread.join();
+    for (auto& thread : mProducerThread) {
+        thread.join();
+    }
 
-   mConsumerThread.join();
+    mConsumerThread.join();
 
-   std::lock_guard lock(mProgressDataMutex);
+    std::lock_guard lock(mProgressDataMutex);
 }
 
 MissingBlocksUploader::ProducedItem MissingBlocksUploader::ProduceBlock()
 {
-   const auto index = mFirstUnprocessedBlockIndex++;
-   const auto& task = mUploadTasks[index];
+    const auto index = mFirstUnprocessedBlockIndex++;
+    const auto& task = mUploadTasks[index];
 
-   return { task, CompressBlock(task.Block) };
+    return { task, CompressBlock(task.Block) };
 }
 
 void MissingBlocksUploader::ConsumeBlock(ProducedItem item)
 {
-   {
-      std::unique_lock<std::mutex> lock(mUploadsMutex);
-      mUploadsNotFull.wait(
-         lock,
-         [this]
-         {
-            return mConcurrentUploads < NUM_UPLOADERS ||
-                   !mIsRunning.load(std::memory_order_consume);
-         });
+    {
+        std::unique_lock<std::mutex> lock(mUploadsMutex);
+        mUploadsNotFull.wait(
+            lock,
+            [this]
+        {
+            return mConcurrentUploads < NUM_UPLOADERS
+                   || !mIsRunning.load(std::memory_order_consume);
+        });
 
-      if (!mIsRunning.load(std::memory_order_relaxed))
-         return;
-
-      ++mConcurrentUploads;
-   }
-
-   DataUploader::Get().Upload(
-      mCancellationContext, mServiceConfig, item.Task.BlockUrls,
-      std::move(item.CompressedData),
-      [this, task = item.Task,
-       weakThis = weak_from_this()](ResponseResult result)
-      {
-         auto lock = weakThis.lock();
-
-         if (!lock)
+        if (!mIsRunning.load(std::memory_order_relaxed)) {
             return;
+        }
 
-         if (result.Code != SyncResultCode::Success)
+        ++mConcurrentUploads;
+    }
+
+    DataUploader::Get().Upload(
+        mCancellationContext, mServiceConfig, item.Task.BlockUrls,
+        std::move(item.CompressedData),
+        [this, task = item.Task,
+         weakThis = weak_from_this()](ResponseResult result)
+    {
+        auto lock = weakThis.lock();
+
+        if (!lock) {
+            return;
+        }
+
+        if (result.Code != SyncResultCode::Success) {
             HandleFailedBlock(result, task);
-         else
+        } else {
             ConfirmBlock(task);
-      });
+        }
+    });
 }
 
 void MissingBlocksUploader::PushBlockToQueue(ProducedItem item)
 {
-   std::unique_lock<std::mutex> lock(mRingBufferMutex);
-   mRingBufferNotFull.wait(
-      lock,
-      [this]
-      {
-         return ((mRingBufferWriteIndex + 1) % RING_BUFFER_SIZE) !=
-                   mRingBufferReadIndex ||
-                !mIsRunning.load(std::memory_order_consume);
-      });
+    std::unique_lock<std::mutex> lock(mRingBufferMutex);
+    mRingBufferNotFull.wait(
+        lock,
+        [this]
+    {
+        return ((mRingBufferWriteIndex + 1) % RING_BUFFER_SIZE)
+               != mRingBufferReadIndex
+               || !mIsRunning.load(std::memory_order_consume);
+    });
 
-   if (!mIsRunning.load(std::memory_order_relaxed))
-      return;
+    if (!mIsRunning.load(std::memory_order_relaxed)) {
+        return;
+    }
 
-   mRingBuffer[mRingBufferWriteIndex] = std::move(item);
-   mRingBufferWriteIndex = (mRingBufferWriteIndex + 1) % RING_BUFFER_SIZE;
+    mRingBuffer[mRingBufferWriteIndex] = std::move(item);
+    mRingBufferWriteIndex = (mRingBufferWriteIndex + 1) % RING_BUFFER_SIZE;
 
-   mRingBufferNotEmpty.notify_one();
+    mRingBufferNotEmpty.notify_one();
 }
 
 MissingBlocksUploader::ProducedItem MissingBlocksUploader::PopBlockFromQueue()
 {
-   std::unique_lock<std::mutex> lock(mRingBufferMutex);
-   mRingBufferNotEmpty.wait(
-      lock,
-      [this]
-      {
-         return mRingBufferWriteIndex != mRingBufferReadIndex ||
-                !mIsRunning.load(std::memory_order_consume);
-      });
+    std::unique_lock<std::mutex> lock(mRingBufferMutex);
+    mRingBufferNotEmpty.wait(
+        lock,
+        [this]
+    {
+        return mRingBufferWriteIndex != mRingBufferReadIndex
+               || !mIsRunning.load(std::memory_order_consume);
+    });
 
-   if (!mIsRunning.load(std::memory_order_relaxed))
-      return {};
+    if (!mIsRunning.load(std::memory_order_relaxed)) {
+        return {}
+    }
 
-   auto item            = std::move(mRingBuffer[mRingBufferReadIndex]);
-   mRingBufferReadIndex = (mRingBufferReadIndex + 1) % RING_BUFFER_SIZE;
+    auto item            = std::move(mRingBuffer[mRingBufferReadIndex]);
+    mRingBufferReadIndex = (mRingBufferReadIndex + 1) % RING_BUFFER_SIZE;
 
-   mRingBufferNotFull.notify_one();
+    mRingBufferNotFull.notify_one();
 
-   return std::move(item);
+    return std::move(item);
 }
 
 void MissingBlocksUploader::ConfirmBlock(BlockUploadTask item)
 {
-   MissingBlocksUploadProgress progressData;
-   {
-      std::lock_guard<std::mutex> lock(mProgressDataMutex);
-      mProgressData.UploadedBlocks++;
-      progressData = mProgressData;
-   }
+    MissingBlocksUploadProgress progressData;
+    {
+        std::lock_guard<std::mutex> lock(mProgressDataMutex);
+        mProgressData.UploadedBlocks++;
+        progressData = mProgressData;
+    }
 
-   mProgressCallback(progressData, item.Block, {});
+    mProgressCallback(progressData, item.Block, {});
 
-   {
-      std::lock_guard<std::mutex> lock(mUploadsMutex);
-      --mConcurrentUploads;
-      mUploadsNotFull.notify_one();
-   }
+    {
+        std::lock_guard<std::mutex> lock(mUploadsMutex);
+        --mConcurrentUploads;
+        mUploadsNotFull.notify_one();
+    }
 }
 
 void MissingBlocksUploader::HandleFailedBlock(
-   const ResponseResult& result, BlockUploadTask task)
+    const ResponseResult& result, BlockUploadTask task)
 {
-   MissingBlocksUploadProgress progressData;
-   {
-      std::lock_guard<std::mutex> lock(mProgressDataMutex);
+    MissingBlocksUploadProgress progressData;
+    {
+        std::lock_guard<std::mutex> lock(mProgressDataMutex);
 
-      mProgressData.FailedBlocks++;
-      mProgressData.UploadErrors.push_back(result);
-      progressData = mProgressData;
-   }
+        mProgressData.FailedBlocks++;
+        mProgressData.UploadErrors.push_back(result);
+        progressData = mProgressData;
+    }
 
-   mProgressCallback(progressData, task.Block, result);
+    mProgressCallback(progressData, task.Block, result);
 
-   {
-      std::lock_guard<std::mutex> lock(mUploadsMutex);
-      --mConcurrentUploads;
-      mUploadsNotFull.notify_one();
-   }
+    {
+        std::lock_guard<std::mutex> lock(mUploadsMutex);
+        --mConcurrentUploads;
+        mUploadsNotFull.notify_one();
+    }
 
-   mCancellationContext->Cancel();
+    mCancellationContext->Cancel();
 }
 
 void MissingBlocksUploader::ProducerThread()
 {
-   while (mIsRunning.load(std::memory_order_consume))
-   {
-      BlockUploadTask task;
+    while (mIsRunning.load(std::memory_order_consume))
+    {
+        BlockUploadTask task;
 
-      {
-         std::lock_guard<std::mutex> lock(mBlocksMutex);
+        {
+            std::lock_guard<std::mutex> lock(mBlocksMutex);
 
-         if (mFirstUnprocessedBlockIndex >= mUploadTasks.size())
-            return;
+            if (mFirstUnprocessedBlockIndex >= mUploadTasks.size()) {
+                return;
+            }
 
-         const auto index = mFirstUnprocessedBlockIndex++;
-         task = std::move(mUploadTasks[index]);
-      }
+            const auto index = mFirstUnprocessedBlockIndex++;
+            task = std::move(mUploadTasks[index]);
+        }
 
-      auto compressedData = CompressBlock(task.Block);
+        auto compressedData = CompressBlock(task.Block);
 
-      if (compressedData.empty())
-      {
-         MissingBlocksUploadProgress progressData;
-         {
-            std::lock_guard<std::mutex> lock(mProgressDataMutex);
-            mProgressData.FailedBlocks++;
-            progressData = mProgressData;
-         }
+        if (compressedData.empty()) {
+            MissingBlocksUploadProgress progressData;
+            {
+                std::lock_guard<std::mutex> lock(mProgressDataMutex);
+                mProgressData.FailedBlocks++;
+                progressData = mProgressData;
+            }
 
-         mProgressCallback(
-            progressData, task.Block,
-            { SyncResultCode::InternalClientError, {} });
-      }
-      else
-      {
-         PushBlockToQueue(
-            ProducedItem { std::move(task), std::move(compressedData) });
-      }
-   }
+            mProgressCallback(
+                progressData, task.Block,
+                { SyncResultCode::InternalClientError, {} });
+        } else {
+            PushBlockToQueue(
+                ProducedItem { std::move(task), std::move(compressedData) });
+        }
+    }
 }
 
 void MissingBlocksUploader::ConsumerThread()
 {
-   while (mIsRunning.load(std::memory_order_consume))
-   {
-      auto item = PopBlockFromQueue();
-      ConsumeBlock(std::move(item));
-   }
+    while (mIsRunning.load(std::memory_order_consume))
+    {
+        auto item = PopBlockFromQueue();
+        ConsumeBlock(std::move(item));
+    }
 }
-
 } // namespace audacity::cloud::audiocom::sync
