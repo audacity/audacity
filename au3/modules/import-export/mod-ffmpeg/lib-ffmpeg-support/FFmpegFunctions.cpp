@@ -430,7 +430,7 @@ FFmpegFunctions::CreateDecoder(AVCodecIDFwd codecID) const
     AVCodec* codec = avcodec_find_decoder(codecID);
 
     if (codec == nullptr) {
-        return {}
+        return {};
     }
 
     return mPrivate->CodecFactories.CreateAVCodecWrapper(codec);
@@ -442,7 +442,7 @@ FFmpegFunctions::CreateEncoder(AVCodecIDFwd codecID) const
     auto codec = avcodec_find_encoder(codecID);
 
     if (codec == nullptr) {
-        return {}
+        return {};
     }
 
     return mPrivate->CodecFactories.CreateAVCodecWrapper(codec);
@@ -454,7 +454,7 @@ FFmpegFunctions::CreateEncoder(const char* name) const
     auto codec = avcodec_find_encoder_by_name(name);
 
     if (codec == nullptr) {
-        return {}
+        return {};
     }
 
     return mPrivate->CodecFactories.CreateAVCodecWrapper(codec);
@@ -472,7 +472,7 @@ FFmpegFunctions::CreateAVCodecContextWrapperFromCodec(
     std::unique_ptr<AVCodecWrapper> codec) const
 {
     if (codec == nullptr) {
-        return {}
+        return {};
     }
 
     return mPrivate->CodecFactories.CreateAVCodecContextWrapperFromCodec(
