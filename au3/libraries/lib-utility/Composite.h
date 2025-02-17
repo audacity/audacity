@@ -85,7 +85,8 @@ template<bool Deprecate> struct This;
 template<> struct This<false> {};
 template<> struct [[deprecated(
    "Composite::Builder specialization does not enable Base::value_type"
-)]]                                                                                                         This<true> {};
+)]]
+This<true> {};
 }
 
 //! Specialization of Traits can wrap the push_back of the base class

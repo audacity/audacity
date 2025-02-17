@@ -626,7 +626,7 @@ bool VoiceKey::AboveThreshold(
         tests += (int)(dc < mThresholdDirectionChangesLower);
 #if 0
         std::cout << "DirectionChanges: " << dc << " " << mThresholdDirectionChangesLower << " < " << mThresholdDirectionChangesUpper <<
-        std::endl;
+            std::endl;
 #endif
     }
     if (mUseDirectionChangesHigh) {
@@ -635,7 +635,7 @@ bool VoiceKey::AboveThreshold(
         tests += (int)(dc > mThresholdDirectionChangesUpper);
 #if 0
         std::cout << "DirectionChanges: " << dc << " " << mThresholdDirectionChangesLower << " < " << mThresholdDirectionChangesUpper <<
-        std::endl;
+            std::endl;
 #endif
     }
 

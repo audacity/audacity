@@ -629,7 +629,7 @@ public:
             // Other methods guarantee that the cast is correct
             // (provided no operations on the TrackList invalidated
             // underlying iterators or replaced the tracks there)
-            return static_cast< TrackType* >(&** this->mIter);
+            return static_cast< TrackType* >(&**this->mIter);
         }
     }
 
@@ -669,7 +669,7 @@ private:
     bool valid() const
     {
         // assume mIter != mEnd
-        const auto pTrack = track_cast< TrackType* >(&** this->mIter);
+        const auto pTrack = track_cast< TrackType* >(&**this->mIter);
         if (!pTrack) {
             return false;
         }

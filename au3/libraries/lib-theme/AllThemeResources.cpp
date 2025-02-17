@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  AllThemeResources.cpp
- 
+
  Paul Licameli split from Theme.cpp
- 
+
  **********************************************************************/
 
 // This tiny file exists so that compilation dependency on AllThemeResources.h
