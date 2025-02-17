@@ -34,71 +34,72 @@
 
 #include "FileNames.h"
 
-
 // "Good" means the name is well-formed and names an existing file or folder.
-bool XMLValueChecker::IsGoodFileName(const FilePath & strFileName, const FilePath & strDirName /* = "{} */)
+bool XMLValueChecker::IsGoodFileName(const FilePath& strFileName, const FilePath& strDirName /* = "{} */)
 {
-   // Test strFileName.
-   if (!IsGoodFileString(strFileName) ||
-         (strDirName.length() + 1 + strFileName.length() > PLATFORM_MAX_PATH))
-      return false;
+    // Test strFileName.
+    if (!IsGoodFileString(strFileName)
+        || (strDirName.length() + 1 + strFileName.length() > PLATFORM_MAX_PATH)) {
+        return false;
+    }
 
-   // Test the corresponding wxFileName.
-   wxFileName fileName(strDirName, strFileName);
-   return (fileName.IsOk() && fileName.FileExists());
+    // Test the corresponding wxFileName.
+    wxFileName fileName(strDirName, strFileName);
+    return fileName.IsOk() && fileName.FileExists();
 }
 
-bool XMLValueChecker::IsGoodFileString(const FilePath &str)
+bool XMLValueChecker::IsGoodFileString(const FilePath& str)
 {
-   return (!str.empty() &&
+    return !str.empty() &&
 
-            // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms,
-            // sometimes huge, but we use 260 for all platforms.
-            (str.length() <= 260) &&
+           // FILENAME_MAX is 260 in MSVC, but inconsistent across platforms,
+           // sometimes huge, but we use 260 for all platforms.
+           (str.length() <= 260) &&
 
-            (str.Find(wxFileName::GetPathSeparator()) == -1)); // No path separator characters.
+           (str.Find(wxFileName::GetPathSeparator()) == -1); // No path separator characters.
 }
 
-bool XMLValueChecker::IsGoodSubdirName(const FilePath & strSubdirName, const FilePath & strDirName /* = {} */)
+bool XMLValueChecker::IsGoodSubdirName(const FilePath& strSubdirName, const FilePath& strDirName /* = {} */)
 {
-   // Test strSubdirName.
-   // Note this prevents path separators, and relative path to parents (strDirName),
-   // so fixes vulnerability #3 in the NGS report for UmixIt,
-   // where an attacker could craft an AUP file with relative pathnames to get to system files, for example.
-   if (!IsGoodFileString(strSubdirName) ||
-         (strSubdirName == wxT(".")) || (strSubdirName == wxT("..")) ||
-         (strDirName.length() + 1 + strSubdirName.length() > PLATFORM_MAX_PATH))
-      return false;
+    // Test strSubdirName.
+    // Note this prevents path separators, and relative path to parents (strDirName),
+    // so fixes vulnerability #3 in the NGS report for UmixIt,
+    // where an attacker could craft an AUP file with relative pathnames to get to system files, for example.
+    if (!IsGoodFileString(strSubdirName)
+        || (strSubdirName == wxT(".")) || (strSubdirName == wxT(".."))
+        || (strDirName.length() + 1 + strSubdirName.length() > PLATFORM_MAX_PATH)) {
+        return false;
+    }
 
-   // Test the corresponding wxFileName.
-   wxFileName fileName(strDirName, strSubdirName);
-   return (fileName.IsOk() && fileName.DirExists());
+    // Test the corresponding wxFileName.
+    wxFileName fileName(strDirName, strSubdirName);
+    return fileName.IsOk() && fileName.DirExists();
 }
 
-bool XMLValueChecker::IsGoodPathName(const FilePath & strPathName)
+bool XMLValueChecker::IsGoodPathName(const FilePath& strPathName)
 {
-   // Test the corresponding wxFileName.
-   wxFileName fileName(strPathName);
-   return XMLValueChecker::IsGoodFileName(fileName.GetFullName(), fileName.GetPath(wxPATH_GET_VOLUME));
+    // Test the corresponding wxFileName.
+    wxFileName fileName(strPathName);
+    return XMLValueChecker::IsGoodFileName(fileName.GetFullName(), fileName.GetPath(wxPATH_GET_VOLUME));
 }
 
-bool XMLValueChecker::IsGoodPathString(const FilePath &str)
+bool XMLValueChecker::IsGoodPathString(const FilePath& str)
 {
-   return (!str.empty() &&
-            (str.length() <= PLATFORM_MAX_PATH));
+    return !str.empty()
+           && (str.length() <= PLATFORM_MAX_PATH);
 }
 
-void XMLTagHandler::ReadXMLEndTag(const char *tag)
+void XMLTagHandler::ReadXMLEndTag(const char* tag)
 {
-   HandleXMLEndTag(tag);
+    HandleXMLEndTag(tag);
 }
 
-void XMLTagHandler::ReadXMLContent(const char *s, int len)
+void XMLTagHandler::ReadXMLContent(const char* s, int len)
 {
-   HandleXMLContent(std::string_view(s, len));
+    HandleXMLContent(std::string_view(s, len));
 }
 
-XMLTagHandler *XMLTagHandler::ReadXMLChild(const char *tag)
+XMLTagHandler* XMLTagHandler::ReadXMLChild(const char* tag)
 {
-   return HandleXMLChild(tag);
+    return HandleXMLChild(tag);
 }

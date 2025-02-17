@@ -80,267 +80,244 @@ XMLAttributeValueView::XMLAttributeValueView(double value) noexcept
 }
 
 XMLAttributeValueView::XMLAttributeValueView(
-   const std::string_view& value) noexcept
+    const std::string_view& value) noexcept
     : mType(Type::StringView)
 {
-   mStringView.Data = value.data();
-   mStringView.Length = value.length();
+    mStringView.Data = value.data();
+    mStringView.Length = value.length();
 }
 
 XMLAttributeValueView::Type XMLAttributeValueView::GetType() const noexcept
 {
-   return mType;
+    return mType;
 }
 
 bool XMLAttributeValueView::IsNull() const noexcept
 {
-   return mType == Type::Null;
+    return mType == Type::Null;
 }
 
 bool XMLAttributeValueView::IsSignedInteger() const noexcept
 {
-   return mType == Type::SignedInteger;
+    return mType == Type::SignedInteger;
 }
 
 bool XMLAttributeValueView::IsUnsignedInteger() const noexcept
 {
-   return mType == Type::UnsignedInteger;
+    return mType == Type::UnsignedInteger;
 }
 
 bool XMLAttributeValueView::IsFloat() const noexcept
 {
-   return mType == Type::Float;
+    return mType == Type::Float;
 }
 
 bool XMLAttributeValueView::IsDouble() const noexcept
 {
-   return mType == Type::Double;
+    return mType == Type::Double;
 }
 
 bool XMLAttributeValueView::IsStringView() const noexcept
 {
-   return mType == Type::StringView;
+    return mType == Type::StringView;
 }
 
 bool XMLAttributeValueView::TryGet(bool& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(short& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(unsigned short& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(int& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(unsigned int& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(long& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(unsigned long& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(long long& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(unsigned long long& value) const noexcept
 {
-   return TryGetInteger(value);
+    return TryGetInteger(value);
 }
 
 bool XMLAttributeValueView::TryGet(float& value) const noexcept
 {
-   if (mType == Type::Float)
-   {
-      value = mFloat;
-      return true;
-   }
-   else if (mType == Type::SignedInteger || mType == Type::UnsignedInteger)
-   {
-      value = mInteger;
-      return true;
-   }
-   else if (mType == Type::StringView)
-   {
-      const char* end = mStringView.Data + mStringView.Length;
+    if (mType == Type::Float) {
+        value = mFloat;
+        return true;
+    } else if (mType == Type::SignedInteger || mType == Type::UnsignedInteger) {
+        value = mInteger;
+        return true;
+    } else if (mType == Type::StringView) {
+        const char* end = mStringView.Data + mStringView.Length;
 
-      float tempValue = {};
+        float tempValue = {};
 
-      const auto result = FromChars(mStringView.Data, end, tempValue);
+        const auto result = FromChars(mStringView.Data, end, tempValue);
 
-      if (result.ec == std::errc() && result.ptr == end)
-      {
-         value = tempValue;
-         return true;
-      }
-   }
+        if (result.ec == std::errc() && result.ptr == end) {
+            value = tempValue;
+            return true;
+        }
+    }
 
-   return false;
+    return false;
 }
 
 bool XMLAttributeValueView::TryGet(double& value) const noexcept
 {
-   if (mType == Type::Float)
-   {
-      value = mFloat;
-      return true;
-   }
-   else if (mType == Type::Double)
-   {
-      value = mDouble;
-      return true;
-   }
-   else if (mType == Type::SignedInteger || mType == Type::UnsignedInteger)
-   {
-      value = mInteger;
-      return true;
-   }
-   else if (mType == Type::StringView)
-   {
-      const char* end = mStringView.Data + mStringView.Length;
+    if (mType == Type::Float) {
+        value = mFloat;
+        return true;
+    } else if (mType == Type::Double) {
+        value = mDouble;
+        return true;
+    } else if (mType == Type::SignedInteger || mType == Type::UnsignedInteger) {
+        value = mInteger;
+        return true;
+    } else if (mType == Type::StringView) {
+        const char* end = mStringView.Data + mStringView.Length;
 
-      double tempValue = {};
+        double tempValue = {};
 
-      const auto result = FromChars(mStringView.Data, end, tempValue);
+        const auto result = FromChars(mStringView.Data, end, tempValue);
 
-      if (result.ec == std::errc() && result.ptr == end)
-      {
-         value = tempValue;
-         return true;
-      }
-   }
+        if (result.ec == std::errc() && result.ptr == end) {
+            value = tempValue;
+            return true;
+        }
+    }
 
-   return false;
+    return false;
 }
 
 bool XMLAttributeValueView::TryGet(std::string_view& value) const noexcept
 {
-   if (mType != Type::StringView)
-      return false;
+    if (mType != Type::StringView) {
+        return false;
+    }
 
-   value = std::string_view(mStringView.Data, mStringView.Length);
+    value = std::string_view(mStringView.Data, mStringView.Length);
 
-   return true;
+    return true;
 }
 
 std::string XMLAttributeValueView::ToString() const
 {
-   switch (mType)
-   {
-   case XMLAttributeValueView::Type::Null:
-      return {};
-   case XMLAttributeValueView::Type::SignedInteger:
-      return std::to_string(mInteger);
-   case XMLAttributeValueView::Type::UnsignedInteger:
-      return std::to_string(static_cast<uint64_t>(mInteger));
-   case XMLAttributeValueView::Type::Float:
-      return std::to_string(mFloat);
-   case XMLAttributeValueView::Type::Double:
-      return std::to_string(mDouble);
-   case XMLAttributeValueView::Type::StringView:
-      return std::string(mStringView.Data, mStringView.Length);
-   }
+    switch (mType) {
+    case XMLAttributeValueView::Type::Null:
+        return {};
+    case XMLAttributeValueView::Type::SignedInteger:
+        return std::to_string(mInteger);
+    case XMLAttributeValueView::Type::UnsignedInteger:
+        return std::to_string(static_cast<uint64_t>(mInteger));
+    case XMLAttributeValueView::Type::Float:
+        return std::to_string(mFloat);
+    case XMLAttributeValueView::Type::Double:
+        return std::to_string(mDouble);
+    case XMLAttributeValueView::Type::StringView:
+        return std::string(mStringView.Data, mStringView.Length);
+    }
 
-   return {};
+    return {};
 }
 
 wxString XMLAttributeValueView::ToWString() const
 {
-   switch (mType)
-   {
-   case XMLAttributeValueView::Type::Null:
-      return {};
-   case XMLAttributeValueView::Type::SignedInteger:
-      return wxString() << mInteger;
-   case XMLAttributeValueView::Type::UnsignedInteger:
-      return wxString() << static_cast<uint64_t>(mInteger);
-   case XMLAttributeValueView::Type::Float:
-      return wxString() << mFloat;
-   case XMLAttributeValueView::Type::Double:
-      return wxString() << mDouble;
-   case XMLAttributeValueView::Type::StringView:
-      return wxString::FromUTF8(mStringView.Data, mStringView.Length);
-   }
+    switch (mType) {
+    case XMLAttributeValueView::Type::Null:
+        return {};
+    case XMLAttributeValueView::Type::SignedInteger:
+        return wxString() << mInteger;
+    case XMLAttributeValueView::Type::UnsignedInteger:
+        return wxString() << static_cast<uint64_t>(mInteger);
+    case XMLAttributeValueView::Type::Float:
+        return wxString() << mFloat;
+    case XMLAttributeValueView::Type::Double:
+        return wxString() << mDouble;
+    case XMLAttributeValueView::Type::StringView:
+        return wxString::FromUTF8(mStringView.Data, mStringView.Length);
+    }
 
-   return {};
+    return {};
 }
 
-template <typename ResultType>
+template<typename ResultType>
 bool CheckInteger(ResultType& output, int64_t value) noexcept
 {
-   constexpr int64_t minValue = std::numeric_limits<ResultType>::min();
-   constexpr int64_t maxValue = std::numeric_limits<ResultType>::max();
+    constexpr int64_t minValue = std::numeric_limits<ResultType>::min();
+    constexpr int64_t maxValue = std::numeric_limits<ResultType>::max();
 
-   if (minValue <= value && value <= maxValue)
-   {
-      output = static_cast<ResultType>(value);
-      return true;
-   }
+    if (minValue <= value && value <= maxValue) {
+        output = static_cast<ResultType>(value);
+        return true;
+    }
 
-   return false;
+    return false;
 }
 
-template <typename ResultType>
+template<typename ResultType>
 bool CheckInteger(ResultType& output, uint64_t value) noexcept
 {
-   constexpr uint64_t maxValue = std::numeric_limits<ResultType>::max();
-   const uint64_t unsignedValue = static_cast<uint64_t>(value);
+    constexpr uint64_t maxValue = std::numeric_limits<ResultType>::max();
+    const uint64_t unsignedValue = static_cast<uint64_t>(value);
 
-   if (unsignedValue <= maxValue)
-   {
-      output = static_cast<ResultType>(unsignedValue);
-      return true;
-   }
+    if (unsignedValue <= maxValue) {
+        output = static_cast<ResultType>(unsignedValue);
+        return true;
+    }
 
-   return false;
+    return false;
 }
 
-template <typename ResultType>
+template<typename ResultType>
 bool XMLAttributeValueView::TryGetInteger(ResultType& value) const noexcept
 {
-   static_assert(std::is_integral_v<ResultType>);
+    static_assert(std::is_integral_v<ResultType>);
 
-   if (mType == Type::SignedInteger)
-   {
-      return CheckInteger(value, mInteger);
-   }
-   else if (mType == Type::UnsignedInteger)
-   {
-      return CheckInteger(value, static_cast<uint64_t>(mInteger));
-   }
-   else if (mType == Type::StringView)
-   {
-      const char* end = mStringView.Data + mStringView.Length;
+    if (mType == Type::SignedInteger) {
+        return CheckInteger(value, mInteger);
+    } else if (mType == Type::UnsignedInteger) {
+        return CheckInteger(value, static_cast<uint64_t>(mInteger));
+    } else if (mType == Type::StringView) {
+        const char* end = mStringView.Data + mStringView.Length;
 
-      ResultType tempValue = {};
+        ResultType tempValue = {};
 
-      const auto result = FromChars(mStringView.Data, end, tempValue);
+        const auto result = FromChars(mStringView.Data, end, tempValue);
 
-      if (result.ec == std::errc() && result.ptr == end)
-      {
-         value = tempValue;
-         return true;
-      }
-   }
+        if (result.ec == std::errc() && result.ptr == end) {
+            value = tempValue;
+            return true;
+        }
+    }
 
-   return false;
+    return false;
 }
