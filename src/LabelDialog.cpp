@@ -924,7 +924,6 @@ void LabelDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    if (mGrid->IsCellEditControlShown()) {
       mGrid->SaveEditControlValue();
       mGrid->HideCellEditControl();
-      return;
    }
 
    // Standard handling
