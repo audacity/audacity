@@ -17,26 +17,24 @@ Paul Licameli split from TrackPanel.cpp
 
 class AudacityProject;
 
-class EditCursorOverlay final
-   : public Overlay
-   , public ClientData::Base
+class EditCursorOverlay final : public Overlay, public ClientData::Base
 {
 public:
-   explicit
-   EditCursorOverlay(AudacityProject *project, bool isMaster = true);
+    explicit
+    EditCursorOverlay(AudacityProject* project, bool isMaster = true);
 
 private:
-   unsigned SequenceNumber() const override;
-   std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
-   void Draw(OverlayPanel &panel, wxDC &dc) override;
+    unsigned SequenceNumber() const override;
+    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
+    void Draw(OverlayPanel& panel, wxDC& dc) override;
 
-   AudacityProject *mProject;
-   bool mIsMaster;
-   std::shared_ptr<EditCursorOverlay> mPartner;
+    AudacityProject* mProject;
+    bool mIsMaster;
+    std::shared_ptr<EditCursorOverlay> mPartner;
 
-   int mLastCursorX;
-   double mCursorTime;
-   int mNewCursorX;
+    int mLastCursorX;
+    double mCursorTime;
+    int mNewCursorX;
 };
 
 #endif

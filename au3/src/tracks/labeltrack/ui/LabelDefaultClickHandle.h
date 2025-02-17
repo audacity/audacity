@@ -21,31 +21,26 @@ class LabelTrack;
 class LabelDefaultClickHandle /* not final */ : public UIHandle
 {
 public:
-   LabelDefaultClickHandle();
-   virtual ~LabelDefaultClickHandle();
+    LabelDefaultClickHandle();
+    virtual ~LabelDefaultClickHandle();
 
-   LabelDefaultClickHandle &operator=
-      (const LabelDefaultClickHandle&) = default;
-   
-   Result Click
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+    LabelDefaultClickHandle& operator=(const LabelDefaultClickHandle&) = default;
 
-   Result Drag
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
+    Result Click(const TrackPanelMouseEvent& event, AudacityProject* pProject) override;
 
-   // does not override Preview()
+    Result Drag(const TrackPanelMouseEvent& event, AudacityProject* pProject) override;
 
-   Result Release
-      (const TrackPanelMouseEvent &event, AudacityProject *pProject,
-       wxWindow *pParent) override;
+    // does not override Preview()
 
-   Result Cancel(AudacityProject *pProject) override;
+    Result Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent) override;
+
+    Result Cancel(AudacityProject* pProject) override;
 
 private:
-   struct LabelState;
-   std::shared_ptr< LabelState > mLabelState;
-   void SaveState( AudacityProject *pProject );
-   void RestoreState( AudacityProject *pProject );
+    struct LabelState;
+    std::shared_ptr< LabelState > mLabelState;
+    void SaveState(AudacityProject* pProject);
+    void RestoreState(AudacityProject* pProject);
 };
 
 #endif

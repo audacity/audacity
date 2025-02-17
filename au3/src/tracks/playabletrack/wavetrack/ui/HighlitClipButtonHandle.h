@@ -29,48 +29,44 @@ class AffordanceHandle;
 class HighlitClipButtonHandle /* not final */ : public UIHandle
 {
 public:
-   HighlitClipButtonHandle(
-      ClipButtonId id, std::shared_ptr<WaveTrack> track,
-      std::shared_ptr<WaveTrack::Interval> clip);
+    HighlitClipButtonHandle(
+        ClipButtonId id, std::shared_ptr<WaveTrack> track, std::shared_ptr<WaveTrack::Interval> clip);
 
-   void Enter(bool forward, AudacityProject* pProject) override;
+    void Enter(bool forward, AudacityProject* pProject) override;
 
-   void Draw(
-      TrackPanelDrawingContext& context, const wxRect& rect,
-      unsigned iPass) override;
+    void Draw(
+        TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
 
-   Result
-   Click(const TrackPanelMouseEvent& event, AudacityProject* pProject) override;
+    Result
+    Click(const TrackPanelMouseEvent& event, AudacityProject* pProject) override;
 
-   Result
-   Drag(const TrackPanelMouseEvent& event, AudacityProject* pProject) override;
+    Result
+    Drag(const TrackPanelMouseEvent& event, AudacityProject* pProject) override;
 
-   Result Cancel(AudacityProject* pProject) override;
+    Result Cancel(AudacityProject* pProject) override;
 
-   std::shared_ptr<const Track> FindTrack() const override;
+    std::shared_ptr<const Track> FindTrack() const override;
 
-   Result Release(
-      const TrackPanelMouseEvent& event, AudacityProject* pProject,
-      wxWindow* pParent) override;
+    Result Release(
+        const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent) override;
 
-   virtual void DoDraw(const wxRect& args, wxDC& dc) = 0;
+    virtual void DoDraw(const wxRect& args, wxDC& dc) = 0;
 
 protected:
-   virtual Result DoRelease(
-      const TrackPanelMouseEvent& event, AudacityProject* pProject,
-      wxWindow* pParent) = 0;
+    virtual Result DoRelease(
+        const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent) = 0;
 
-   UIHandle::Result UpdateTrackSelection(
-      const TrackPanelMouseEvent& event, AudacityProject* pProject);
+    UIHandle::Result UpdateTrackSelection(
+        const TrackPanelMouseEvent& event, AudacityProject* pProject);
 
-   UIHandle::Result
-   SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project);
+    UIHandle::Result
+    SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project);
 
-   ClipButtonId mButtonId;
-   std::shared_ptr<WaveTrack> mTrack;
-   std::shared_ptr<WaveTrack::Interval> mClip;
+    ClipButtonId mButtonId;
+    std::shared_ptr<WaveTrack> mTrack;
+    std::shared_ptr<WaveTrack::Interval> mClip;
 
 private:
-   static void Highlight(const wxRect& rect, wxDC& dc);
-   std::weak_ptr<TrackPanelCell> mwCell;
+    static void Highlight(const wxRect& rect, wxDC& dc);
+    std::weak_ptr<TrackPanelCell> mwCell;
 };

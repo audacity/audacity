@@ -17,15 +17,15 @@ class ClipTimes;
 //! Implements some features which are specific to Wave Clips
 class WaveTrackAffordanceHandle final : public AffordanceHandle
 {
-   std::shared_ptr<ClipTimes> mTarget;
+    std::shared_ptr<ClipTimes> mTarget;
 public:
-   WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<ClipTimes>& target);
+    WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<ClipTimes>& target);
 
-   Result Click(const TrackPanelMouseEvent& event, AudacityProject* project) override;
+    Result Click(const TrackPanelMouseEvent& event, AudacityProject* project) override;
 
-   UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project) override;
+    UIHandle::Result SelectAt(const TrackPanelMouseEvent& event, AudacityProject* project) override;
 
-   bool HandlesRightClick() override;
+    bool HandlesRightClick() override;
 
-   UIHandle::Result Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent) override;
+    UIHandle::Result Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent) override;
 };
