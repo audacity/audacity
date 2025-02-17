@@ -80,7 +80,7 @@
                     SliderMain: #484f57;
                     SliderDark: #484f57;
                TrackBackground: #23272b;
-                   GraphLabels: #dddee4; // changed from #000000 to #dddee4
+                   GraphLabels: #dddee4;
              SpectroBackground: #ffff14;
                     ScrubRuler: #6a6a6a;
                  RulerSelected: #9295a6;
