@@ -16,33 +16,31 @@
 
 class TranslatableString;
 
-namespace audacity::network_manager
-{
+namespace audacity::network_manager {
 class IResponse;
 } // namespace audacity::network_manager
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 struct CLOUD_AUDIOCOM_API CloudSyncError final
 {
-   enum ErrorType
-   {
-      None,
-      Authorization,
-      ProjectLimitReached,
-      ProjectStorageLimitReached,
-      ProjectVersionConflict,
-      ProjectNotFound,
-      DataUploadFailed,
-      Network,
-      Server,
-      Cancelled,
-      Aborted,
-      ClientFailure,
-   };
+    enum ErrorType
+    {
+        None,
+        Authorization,
+        ProjectLimitReached,
+        ProjectStorageLimitReached,
+        ProjectVersionConflict,
+        ProjectNotFound,
+        DataUploadFailed,
+        Network,
+        Server,
+        Cancelled,
+        Aborted,
+        ClientFailure,
+    };
 
-   ErrorType Type { };
-   std::string ErrorMessage;
+    ErrorType Type { };
+    std::string ErrorMessage;
 };
 
 CLOUD_AUDIOCOM_API
@@ -59,5 +57,4 @@ CloudSyncError MakeClientFailure(const char* message);
 
 CLOUD_AUDIOCOM_API CloudSyncError::ErrorType
 DeduceError(SyncResultCode code);
-
 } // namespace audacity::cloud::audiocom::sync

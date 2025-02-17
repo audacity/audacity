@@ -12,8 +12,7 @@
 
 #include "Prefs.h"
 
-namespace audacity::cloud::audiocom
-{
+namespace audacity::cloud::audiocom {
 CLOUD_AUDIOCOM_API extern StringSetting CloudProjectsSavePath;
 CLOUD_AUDIOCOM_API extern IntSetting DaysToKeepFiles;
 } // namespace audacity::cloud::audiocom

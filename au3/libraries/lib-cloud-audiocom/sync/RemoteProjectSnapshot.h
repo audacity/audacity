@@ -24,145 +24,140 @@
 #include "CloudSyncDTO.h"
 #include "NetworkUtils.h"
 
-namespace audacity::network_manager
-{
+namespace audacity::network_manager {
 class IResponse;
 using ResponsePtr = std::shared_ptr<IResponse>;
 } // namespace audacity::network_manager
 
-namespace audacity::cloud::audiocom::sync
-{
-
+namespace audacity::cloud::audiocom::sync {
 struct RemoteProjectSnapshotState final
 {
-   ResponseResult Result;
+    ResponseResult Result;
 
-   int64_t BlocksDownloaded { 0 };
-   int64_t BlocksTotal { 0 };
+    int64_t BlocksDownloaded { 0 };
+    int64_t BlocksTotal { 0 };
 
-   bool ProjectDownloaded { false };
+    bool ProjectDownloaded { false };
 
-   bool IsComplete() const noexcept;
+    bool IsComplete() const noexcept;
 };
 
-using RemoteProjectSnapshotStateCallback =
-   std::function<void(RemoteProjectSnapshotState)>;
+using RemoteProjectSnapshotStateCallback
+    =std::function<void (RemoteProjectSnapshotState)>;
 
-class RemoteProjectSnapshot final
-   : public std::enable_shared_from_this<RemoteProjectSnapshot>
+class RemoteProjectSnapshot final : public std::enable_shared_from_this<RemoteProjectSnapshot>
 {
-   struct Tag
-   {
-   };
+    struct Tag
+    {
+    };
 
 public:
-   RemoteProjectSnapshot(
-      Tag, ProjectInfo projectInfo, SnapshotInfo snapshotInfo, std::string path,
-      RemoteProjectSnapshotStateCallback callback, bool downloadDetached);
+    RemoteProjectSnapshot(
+        Tag, ProjectInfo projectInfo, SnapshotInfo snapshotInfo, std::string path, RemoteProjectSnapshotStateCallback callback,
+        bool downloadDetached);
 
-   ~RemoteProjectSnapshot();
+    ~RemoteProjectSnapshot();
 
-   RemoteProjectSnapshot(const RemoteProjectSnapshot&)            = delete;
-   RemoteProjectSnapshot& operator=(const RemoteProjectSnapshot&) = delete;
-   RemoteProjectSnapshot(RemoteProjectSnapshot&&)                 = delete;
-   RemoteProjectSnapshot& operator=(RemoteProjectSnapshot&&)      = delete;
+    RemoteProjectSnapshot(const RemoteProjectSnapshot&)            = delete;
+    RemoteProjectSnapshot& operator=(const RemoteProjectSnapshot&) = delete;
+    RemoteProjectSnapshot(RemoteProjectSnapshot&&)                 = delete;
+    RemoteProjectSnapshot& operator=(RemoteProjectSnapshot&&)      = delete;
 
-   static std::shared_ptr<RemoteProjectSnapshot> Sync(
-      ProjectInfo projectInfo, SnapshotInfo snapshotInfo, std::string path,
-      RemoteProjectSnapshotStateCallback callback, bool downloadDetached);
+    static std::shared_ptr<RemoteProjectSnapshot> Sync(
+        ProjectInfo projectInfo, SnapshotInfo snapshotInfo, std::string path, RemoteProjectSnapshotStateCallback callback,
+        bool downloadDetached);
 
-   void Cancel();
+    void Cancel();
 
-   TransferStats GetTransferStats() const;
+    TransferStats GetTransferStats() const;
 
-   std::string_view GetProjectId() const;
+    std::string_view GetProjectId() const;
 
 private:
-   enum class State
-   {
-      Downloading,
-      Cancelled,
-      Failed,
-      Succeeded
-   };
+    enum class State
+    {
+        Downloading,
+        Cancelled,
+        Failed,
+        Succeeded
+    };
 
-   using SuccessHandler =
-      std::function<void(audacity::network_manager::ResponsePtr)>;
+    using SuccessHandler
+        =std::function<void (audacity::network_manager::ResponsePtr)>;
 
-   std::string AttachOriginalDB();
+    std::string AttachOriginalDB();
 
-   void SetupBlocksCopy(
-      const std::string& dbName, std::unordered_set<std::string> blocks);
+    void SetupBlocksCopy(
+        const std::string& dbName, std::unordered_set<std::string> blocks);
 
-   std::unordered_set<std::string>
-   CalculateKnownBlocks(const std::string& attachedDbName) const;
+    std::unordered_set<std::string>
+    CalculateKnownBlocks(const std::string& attachedDbName) const;
 
-   void DoCancel();
+    void DoCancel();
 
-   void
-   DownloadBlob(std::string url, SuccessHandler onSuccess, int retries = 3);
+    void
+    DownloadBlob(std::string url, SuccessHandler onSuccess, int retries = 3);
 
-   void
-   OnProjectBlobDownloaded(audacity::network_manager::ResponsePtr response);
-   void OnBlockDownloaded(
-      std::string blockHash, audacity::network_manager::ResponsePtr response);
+    void
+    OnProjectBlobDownloaded(audacity::network_manager::ResponsePtr response);
+    void OnBlockDownloaded(
+        std::string blockHash, audacity::network_manager::ResponsePtr response);
 
-   void OnFailure(ResponseResult result);
-   void RemoveResponse(audacity::network_manager::IResponse* response);
+    void OnFailure(ResponseResult result);
+    void RemoveResponse(audacity::network_manager::IResponse* response);
 
-   void MarkProjectInDB(bool successfulDownload);
+    void MarkProjectInDB(bool successfulDownload);
 
-   void ReportProgress();
+    void ReportProgress();
 
-   bool InProgress() const;
-   void RequestsThread();
+    bool InProgress() const;
+    void RequestsThread();
 
-   void SetState(State state);
+    void SetState(State state);
 
-   void CleanupOrphanBlocks();
+    void CleanupOrphanBlocks();
 
-   const std::string mSnapshotDBName;
-   const ProjectInfo mProjectInfo;
-   const SnapshotInfo mSnapshotInfo;
-   const std::string mPath;
-   RemoteProjectSnapshotStateCallback mCallback;
+    const std::string mSnapshotDBName;
+    const ProjectInfo mProjectInfo;
+    const SnapshotInfo mSnapshotInfo;
+    const std::string mPath;
+    RemoteProjectSnapshotStateCallback mCallback;
 
-   std::vector<std::string> mAttachedDBNames;
+    std::vector<std::string> mAttachedDBNames;
 
-   std::atomic<State> mState { State::Downloading };
+    std::atomic<State> mState { State::Downloading };
 
-   using Clock     = std::chrono::steady_clock;
-   using TimePoint = Clock::time_point;
+    using Clock     = std::chrono::steady_clock;
+    using TimePoint = Clock::time_point;
 
-   TimePoint mStartTime { Clock::now() };
-   TimePoint mEndTime;
+    TimePoint mStartTime { Clock::now() };
+    TimePoint mEndTime;
 
-   std::thread mRequestsThread;
-   std::mutex mRequestsMutex;
-   std::condition_variable mRequestsCV;
+    std::thread mRequestsThread;
+    std::mutex mRequestsMutex;
+    std::condition_variable mRequestsCV;
 
-   std::vector<std::pair<std::string, SuccessHandler>> mRequests;
+    std::vector<std::pair<std::string, SuccessHandler> > mRequests;
 
-   int mRequestsInProgress { 0 };
-   size_t mNextRequestIndex { 0 };
+    int mRequestsInProgress { 0 };
+    size_t mNextRequestIndex { 0 };
 
-   std::mutex mResponsesMutex;
-   std::vector<std::shared_ptr<audacity::network_manager::IResponse>>
-      mResponses;
-   std::condition_variable mResponsesEmptyCV;
+    std::mutex mResponsesMutex;
+    std::vector<std::shared_ptr<audacity::network_manager::IResponse> >
+    mResponses;
+    std::condition_variable mResponsesEmptyCV;
 
-   std::atomic<int64_t> mDownloadedBlocks { 0 };
-   std::atomic<int64_t> mCopiedBlocks { 0 };
-   std::atomic<int64_t> mDownloadedBytes { 0 };
+    std::atomic<int64_t> mDownloadedBlocks { 0 };
+    std::atomic<int64_t> mCopiedBlocks { 0 };
+    std::atomic<int64_t> mDownloadedBytes { 0 };
 
-   int64_t mMissingBlocks { 0 };
+    int64_t mMissingBlocks { 0 };
 
-   std::optional<std::future<bool>> mCopyBlocksFuture;
+    std::optional<std::future<bool> > mCopyBlocksFuture;
 
-   std::atomic<bool> mProjectDownloaded { false };
+    std::atomic<bool> mProjectDownloaded { false };
 
-   bool mNothingToDo { false };
-   const bool mDownloadDetached { false };
-
+    bool mNothingToDo { false };
+    const bool mDownloadDetached { false };
 }; // class RemoteProjectSnapshot
 } // namespace audacity::cloud::audiocom::sync
