@@ -274,7 +274,7 @@ Mixer::NeedsDither(bool needsDither, double rate) const
 
     if (needsDither) {
         // Results will be dithered to width mFormat
-        return { true, mFormat }
+        return { true, mFormat };
     } else {
         // Results will not be dithered
         assert(widestEffectiveFormat <= mFormat);

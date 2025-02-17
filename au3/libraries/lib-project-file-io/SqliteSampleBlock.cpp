@@ -505,7 +505,7 @@ double SqliteSampleBlock::GetSumRms() const
 MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS(size_t start, size_t len)
 {
     if (IsSilent()) {
-        return {}
+        return {};
     }
 
     float min = FLT_MAX;

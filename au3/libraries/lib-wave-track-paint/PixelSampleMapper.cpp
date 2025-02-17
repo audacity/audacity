@@ -41,21 +41,18 @@ double PixelSampleMapper::applyCorrection(
     LinearMapper* currentMapper = std::get_if<LinearMapper>(&mMapper);
 
     if (currentMapper == nullptr) {
-        return {}
+        return {};
     }
 
-    const LinearMapper* oldLinearMapper
-        =std::get_if<LinearMapper>(&oldMapper.mMapper);
+    const LinearMapper* oldLinearMapper = std::get_if<LinearMapper>(&oldMapper.mMapper);
 
     if (oldLinearMapper == nullptr) {
-        return {}
+        return {};
     }
 
     // Find the sample position that is the origin in the old cache.
-    const double oldWhere0
-        =(*oldLinearMapper)(1).as_double() - currentMapper->mSamplesPerPixel;
-    const double oldWhereLast
-        =oldWhere0 + oldLen * currentMapper->mSamplesPerPixel;
+    const double oldWhere0 =(*oldLinearMapper)(1).as_double() - currentMapper->mSamplesPerPixel;
+    const double oldWhereLast = oldWhere0 + oldLen * currentMapper->mSamplesPerPixel;
     // Find the length in samples of the old cache.
     const double denom = oldWhereLast - oldWhere0;
 

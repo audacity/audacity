@@ -110,7 +110,7 @@ public:
         std::shared_ptr<IntervalType> operator *() const
         {
             if (!mpGroup || mIndex >= mpGroup->NChannels()) {
-                return {}
+                return {};
             }
             return mpGroup->template GetChannel<IntervalType>(mIndex);
         }
@@ -231,7 +231,7 @@ public:
         std::shared_ptr<IntervalType> operator *() const
         {
             if (!mpChannel || mIndex >= mpChannel->NIntervals()) {
-                return {}
+                return {};
             }
             return mpChannel->template GetInterval<IntervalType>(mIndex);
         }
@@ -375,7 +375,7 @@ public:
         std::shared_ptr<ChannelType> operator *() const
         {
             if (!mpGroup || mIndex >= mpGroup->NChannels()) {
-                return {}
+                return {};
             }
             return mpGroup->template GetChannel<ChannelType>(mIndex);
         }
@@ -494,7 +494,7 @@ public:
         std::shared_ptr<IntervalType> operator *() const
         {
             if (!mpGroup || mIndex >= mpGroup->NIntervals()) {
-                return {}
+                return {};
             }
             return mpGroup->template GetInterval<IntervalType>(mIndex);
         }

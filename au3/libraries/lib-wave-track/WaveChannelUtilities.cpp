@@ -149,7 +149,7 @@ SampleAccessArgs<BufferType> GetSampleAccessArgs(
             =std::max(startOrEndTime - clip.GetPlayStartTime(), 0.);
         const sampleCount startSamp { std::round(startTime * sampsPerSec) };
         if (startSamp >= sampsInClip) {
-            return { nullptr, sampleCount { 0u }, 0u }
+            return { nullptr, sampleCount { 0u }, 0u };
         }
         const auto len
             =limitSampleBufferSize(remainingToRead, sampsInClip - startSamp);
@@ -160,13 +160,12 @@ SampleAccessArgs<BufferType> GetSampleAccessArgs(
         const auto endTime = std::min(
             startOrEndTime - clip.GetPlayStartTime(), clip.GetPlayDuration());
         const sampleCount endSamp { std::round(endTime * sampsPerSec) };
-        const auto startSamp
-            =std::max(endSamp - remainingToRead, sampleCount { 0 });
+        const auto startSamp = std::max(endSamp - remainingToRead, sampleCount { 0 });
         // `len` cannot be greater than `remainingToRead`, itself a `size_t` ->
         // safe cast.
         const auto len = (endSamp - startSamp).as_size_t();
         if (len == 0 || startSamp >= sampsInClip) {
-            return { nullptr, sampleCount { 0u }, 0u }
+            return { nullptr, sampleCount { 0u }, 0u };
         }
         const auto bufferEnd = buffer + remainingToRead;
         return { reinterpret_cast<BufferCharType<BufferType> >(bufferEnd - len),

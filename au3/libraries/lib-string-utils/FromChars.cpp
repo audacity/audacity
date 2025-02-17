@@ -66,13 +66,13 @@ FromCharsResult FastStringToInt(
     const auto availableBytes = last - first;
 
     if (availableBytes <= 0) {
-        return { first, std::errc::invalid_argument }
+        return { first, std::errc::invalid_argument };
     }
 
     UnsignedResultType result = digitToInt(*first);
 
     if (result > 10) {
-        return { first, std::errc::invalid_argument }
+        return { first, std::errc::invalid_argument };
     }
 
     constexpr auto maxSafeDigits = std::numeric_limits<ResultType>::digits10;
@@ -93,7 +93,7 @@ FromCharsResult FastStringToInt(
     while (ptr < last && (d = digitToInt(*ptr)) <= 9)
     {
         if (!safeMul10Add<UnsignedResultType>(result, result, d)) {
-            return { ptr, std::errc::result_out_of_range }
+            return { ptr, std::errc::result_out_of_range };
         }
 
         // Even if there were no unsigned overflow,
@@ -105,7 +105,7 @@ FromCharsResult FastStringToInt(
                   + (isNegative ? 1 : 0);
 
             if (result > max) {
-                return { ptr, std::errc::result_out_of_range }
+                return { ptr, std::errc::result_out_of_range };
             }
         }
 
@@ -131,7 +131,7 @@ IntFromChars(const char* buffer, const char* last, ResultType& value) noexcept
     const char* origin = buffer;
 
     if (buffer >= last) {
-        return { buffer, std::errc::invalid_argument }
+        return { buffer, std::errc::invalid_argument };
     }
 
     const bool isNegative = *buffer == '-';
@@ -140,7 +140,7 @@ IntFromChars(const char* buffer, const char* last, ResultType& value) noexcept
         if constexpr (std::is_signed_v<ResultType>) {
             ++buffer;
         } else {
-            return { origin, std::errc::invalid_argument }
+            return { origin, std::errc::invalid_argument };
         }
     }
 
@@ -148,7 +148,7 @@ IntFromChars(const char* buffer, const char* last, ResultType& value) noexcept
         =FastStringToInt(buffer, last, value, isNegative);
 
     if (fastStringResult.ec == std::errc::invalid_argument) {
-        return { origin, std::errc::invalid_argument }
+        return { origin, std::errc::invalid_argument };
     }
 
     return fastStringResult;
@@ -211,7 +211,7 @@ FromCharsResult
 FromChars(const char* buffer, const char* last, bool& value) noexcept
 {
     if (buffer >= last) {
-        return { buffer, std::errc::invalid_argument }
+        return { buffer, std::errc::invalid_argument };
     }
 
     if (buffer[0] == '0') {

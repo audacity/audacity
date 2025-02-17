@@ -376,7 +376,7 @@ void XMLFileWriter::PostCommit()
     if (!wxRenameFile(tempPath, mOutputPath)) {
         throw FileException{
                   FileException::Cause::Rename, tempPath, mCaption, mOutputPath
-        }
+        };
     }
 
     mCommitted = true;

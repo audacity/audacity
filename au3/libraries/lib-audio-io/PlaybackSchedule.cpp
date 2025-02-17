@@ -123,16 +123,15 @@ PlaybackPolicy::AdvancedTrackTime(PlaybackSchedule& schedule,
     }
 
     if (schedule.mEnvelope) {
-        trackTime
-            =schedule.SolveWarpedLength(trackTime, realDuration);
+        trackTime = schedule.SolveWarpedLength(trackTime, realDuration);
     } else {
         trackTime += realDuration;
     }
 
     if (trackTime >= schedule.mT1) {
-        return { schedule.mT1, std::numeric_limits<double>::infinity() }
+        return { schedule.mT1, std::numeric_limits<double>::infinity() };
     } else {
-        return { trackTime, trackTime }
+        return { trackTime, trackTime };
     }
 }
 

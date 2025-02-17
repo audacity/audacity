@@ -819,7 +819,7 @@ std::pair<float, float> WaveClip::GetMinMax(size_t ii,
     }
 
     if (t0 == t1) {
-        return{ 0.f, 0.f }
+        return{ 0.f, 0.f };
     }
 
     auto s0 = TimeToSequenceSamples(t0);
@@ -1439,7 +1439,7 @@ auto WaveClip::ClearSequence(double t0, double t1) -> ClearSequenceFinisher
     auto s1 = TimeToSequenceSamples(clip_t1);
 
     if (s0 == s1) {
-        return {}
+        return {};
     }
 
     // use Strong-guarantee
@@ -1793,7 +1793,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog* progress)
                 );
             error = (updateResult != BasicUI::ProgressResult::Success);
             if (error) {
-                throw UserException{}
+                throw UserException{};
             }
         }
     }
@@ -1804,7 +1804,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog* progress)
                   XO("Resampling failed."),
                   XO("Warning"),
                   "Error:_Resampling"
-        }
+        };
     } else {
         // Use No-fail-guarantee in these steps
         mSequences = move(newSequences);

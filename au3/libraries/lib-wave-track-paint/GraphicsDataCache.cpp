@@ -126,7 +126,7 @@ GraphicsDataCacheBase::PerformBaseLookup(
     const ZoomInfo& zoomInfo, double t0, double t1)
 {
     if (bool(t0 > t1) || IsSameSample(mScaledSampleRate, t0, t1)) {
-        return {}
+        return {};
     }
 
     const double pixelsPerSecond = zoomInfo.GetZoom();
@@ -199,7 +199,7 @@ GraphicsDataCacheBase::PerformBaseLookup(
     assert(it != mLookup.end());
 
     if (it == mLookup.end()) {
-        return {}
+        return {};
     }
 
     GraphicsDataCacheElementBase* prevItem = nullptr;
@@ -212,7 +212,7 @@ GraphicsDataCacheBase::PerformBaseLookup(
 
         if (!data->IsComplete && data->LastUpdate != mCacheAccessIndex) {
             if (!UpdateElement(it->Key, *data)) {
-                return {}
+                return {};
             }
 
             needsSmoothing = true;
@@ -252,7 +252,7 @@ GraphicsDataCacheBase::PerformBaseLookup(GraphicsDataCacheKey key)
 
         if (!data->IsComplete && data->LastUpdate != mCacheAccessIndex) {
             if (!UpdateElement(it->Key, *data)) {
-                return {}
+                return {};
             }
         }
 

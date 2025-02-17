@@ -74,7 +74,7 @@ std::optional<Struct> Deserialize(
             settings.begin(), settings.end(), [&values](const auto& setting) {
         return values.find(setting.key) == values.end();
     })) {
-        return {}
+        return {};
     }
 
     for (const auto& setting : settings) {

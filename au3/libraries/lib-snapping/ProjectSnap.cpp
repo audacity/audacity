@@ -75,7 +75,7 @@ Identifier ProjectSnap::GetSnapTo() const
 SnapResult ProjectSnap::SnapTime(double time) const
 {
     if (mSnapMode == SnapMode::SNAP_OFF) {
-        return { time, false }
+        return { time, false };
     }
 
     return SnapFunctionsRegistry::Snap(mSnapTo, mProject, time, mSnapMode == SnapMode::SNAP_NEAREST);
@@ -84,7 +84,7 @@ SnapResult ProjectSnap::SnapTime(double time) const
 SnapResult ProjectSnap::SingleStep(double time, bool upwards) const
 {
     if (mSnapMode == SnapMode::SNAP_OFF) {
-        return { time, false }
+        return { time, false };
     }
 
     return SnapFunctionsRegistry::SingleStep(mSnapTo, mProject, time, upwards);

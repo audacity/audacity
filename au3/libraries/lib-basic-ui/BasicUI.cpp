@@ -84,7 +84,7 @@ std::string FindXDGOpen()
     const char* path = getenv("PATH");
 
     if (!path) {
-        return {}
+        return {};
     }
 
     std::string result;

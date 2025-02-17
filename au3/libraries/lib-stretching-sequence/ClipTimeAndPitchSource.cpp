@@ -22,11 +22,11 @@ sampleCount GetLastReadSample(
     if (direction == PlaybackDirection::forward) {
         return sampleCount {
             clip.GetRate() * durationToDiscard / clip.GetStretchRatio() + .5
-        }
+        };
     } else {
         return clip.GetVisibleSampleCount() - sampleCount {
             clip.GetRate() * durationToDiscard / clip.GetStretchRatio() + .5
-        }
+        };
     }
 }
 } // namespace

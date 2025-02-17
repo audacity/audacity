@@ -67,7 +67,7 @@ wxString BasicSettings::Read(const wxString& key, const char* defaultValue) cons
 {
     wxString value;
     if (!Read(key, &value)) {
-        return { defaultValue }
+        return { defaultValue };
     }
     return value;
 }
@@ -76,7 +76,7 @@ wxString BasicSettings::Read(const wxString& key, const wchar_t* defaultValue) c
 {
     wxString value;
     if (!Read(key, &value)) {
-        return { defaultValue }
+        return { defaultValue };
     }
     return value;
 }

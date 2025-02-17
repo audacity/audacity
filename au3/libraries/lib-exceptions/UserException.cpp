@@ -27,7 +27,7 @@ void UserException::WithCancellableProgress(
     const auto reportProgress = [&](double progressFraction) {
         const auto result = progress->Poll(progressFraction * 1000, 1000);
         if (result != ProgressResult::Success) {
-            throw UserException {}
+            throw UserException {};
         }
     };
     action(reportProgress);

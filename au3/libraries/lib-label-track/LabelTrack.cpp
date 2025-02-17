@@ -170,7 +170,7 @@ size_t LabelTrack::NIntervals() const
 auto LabelTrack::MakeInterval(size_t index) -> std::shared_ptr<Interval>
 {
     if (index >= mLabels.size()) {
-        return {}
+        return {};
     }
     return std::make_shared<Interval>(*this, index);
 }
@@ -413,7 +413,7 @@ static double SubRipTimestampToDouble(const wxString& ts)
     wxDateTime dt;
 
     if (!dt.ParseFormat(ts, wxT("%H:%M:%S,%l"), &end) || end != ts.end()) {
-        throw LabelStruct::BadFormatException{}
+        throw LabelStruct::BadFormatException{};
     }
 
     return dt.GetHour() * 3600 + dt.GetMinute() * 60 + dt.GetSecond()
@@ -443,7 +443,7 @@ LabelStruct LabelStruct::Import(wxTextFile& file, int& index, LabelFormat format
 
             double t0;
             if (!Internat::CompatibleToDouble(token, &t0)) {
-                throw BadFormatException{}
+                throw BadFormatException{};
             }
 
             token = toker.GetNextToken();
@@ -481,19 +481,19 @@ LabelStruct LabelStruct::Import(wxTextFile& file, int& index, LabelFormat format
             wxStringTokenizer toker { file.GetLine(index2++), wxT("\t") };
             auto token = toker.GetNextToken();
             if (token != continuation) {
-                throw BadFormatException{}
+                throw BadFormatException{};
             }
 
             token = toker.GetNextToken();
             double f0;
             if (!Internat::CompatibleToDouble(token, &f0)) {
-                throw BadFormatException{}
+                throw BadFormatException{};
             }
 
             token = toker.GetNextToken();
             double f1;
             if (!Internat::CompatibleToDouble(token, &f1)) {
-                throw BadFormatException{}
+                throw BadFormatException{};
             }
 
             sr.setFrequencies(f0, f1);
@@ -503,13 +503,13 @@ LabelStruct LabelStruct::Import(wxTextFile& file, int& index, LabelFormat format
     case LabelFormat::SUBRIP:
     {
         if ((int)file.GetLineCount() < index + 2) {
-            throw BadFormatException{}
+            throw BadFormatException{};
         }
 
         long identifier;
         // The first line should be a numeric counter; we can ignore it otherwise
         if (!firstLine.ToLong(&identifier)) {
-            throw BadFormatException{}
+            throw BadFormatException{};
         }
 
         wxString timestamp = file.GetLine(index++);
@@ -517,10 +517,10 @@ LabelStruct LabelStruct::Import(wxTextFile& file, int& index, LabelFormat format
         // Assume that the line is in exactly that format, with no extra whitespace
         // and less than 24 hours.
         if (timestamp.length() != 29) {
-            throw BadFormatException{}
+            throw BadFormatException{};
         }
         if (!timestamp.substr(12, 5).IsSameAs(" --> ")) {
-            throw BadFormatException{}
+            throw BadFormatException{};
         }
 
         double t0 = SubRipTimestampToDouble(timestamp.substr(0, 12));

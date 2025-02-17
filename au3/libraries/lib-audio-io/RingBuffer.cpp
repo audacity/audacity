@@ -199,11 +199,11 @@ std::pair<samplePtr, size_t> RingBuffer::GetUnflushed(unsigned iBlock)
     if (iBlock == 0) {
         return {
             size0 ? mBuffer.ptr() + end * SAMPLE_SIZE(mFormat) : nullptr,
-            size0 }
+            size0 };
     } else {
         return {
             size1 ? mBuffer.ptr() : nullptr,
-            size1 }
+            size1 };
     }
 }
 

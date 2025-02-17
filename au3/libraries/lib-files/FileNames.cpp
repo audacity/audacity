@@ -586,7 +586,7 @@ FilePath FileNames::FindDefaultPath(Operation op)
     auto key = PreferenceKey(op, PathType::User);
 
     if (key.empty()) {
-        return wxString{}
+        return wxString{};
     }
 
     // If the user specified a default path, then use that

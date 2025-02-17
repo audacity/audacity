@@ -58,7 +58,7 @@ Identifier EffectDefinitionInterface::GetSquashedName(const Identifier& ident)
     name.Trim(true).Trim(false);
 
     if (name.empty()) {
-        return {}
+        return {};
     }
 
     wxStringTokenizer st(name, wxT(" "));
