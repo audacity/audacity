@@ -1,11 +1,11 @@
 /*!********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file SelectFile.h
- 
+
  Paul Licameli split from FileNames.h
- 
+
  **********************************************************************/
 
 #ifndef __AUDACITY_SELECT_FILE__
@@ -17,25 +17,20 @@ class wxWindow;
 
 class TranslatableString;
 namespace FileNames {
-   enum class Operation;
-   struct FileType;
+enum class Operation;
+struct FileType;
 }
 using FileTypes = std::vector< FileNames::FileType >;
 
 WX_INIT_API FilePath
 SelectFile(FileNames::Operation op,   // op matters only when default_path is empty
-   const TranslatableString& message,
-   const FilePath& default_path,
-   const FilePath& default_filename,
-   const FileExtension& default_extension,
-   const FileTypes& fileTypes,
-   int flags,
-   wxWindow *parent);
+           const TranslatableString& message, const FilePath& default_path, const FilePath& default_filename,
+           const FileExtension& default_extension, const FileTypes& fileTypes, int flags, wxWindow* parent);
 
 /** \brief Protect against Unicode to multi-byte conversion failures
  * on Windows */
 #if defined(__WXMSW__)
-WX_INIT_API char *VerifyFilename(const wxString &s, bool input = true);
+WX_INIT_API char* VerifyFilename(const wxString& s, bool input = true);
 #endif
 
 // Use this macro to wrap all filenames and pathnames that get
@@ -47,11 +42,11 @@ WX_INIT_API char *VerifyFilename(const wxString &s, bool input = true);
 #define OSINPUT(X) VerifyFilename(X, true)
 #define OSOUTPUT(X) VerifyFilename(X, false)
 #elif defined(__WXMAC__)
-#define OSFILENAME(X) ((char *) (const char *)(X).fn_str())
+#define OSFILENAME(X) ((char*)(const char*)(X).fn_str())
 #define OSINPUT(X) OSFILENAME(X)
 #define OSOUTPUT(X) OSFILENAME(X)
 #else
-#define OSFILENAME(X) ((char *) (const char *)(X).mb_str())
+#define OSFILENAME(X) ((char*)(const char*)(X).mb_str())
 #define OSINPUT(X) OSFILENAME(X)
 #define OSOUTPUT(X) OSFILENAME(X)
 #endif

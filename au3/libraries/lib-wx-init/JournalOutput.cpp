@@ -14,55 +14,60 @@
 #include "wxArrayStringEx.h"
 
 namespace Journal {
-
 namespace {
-
 struct FlushingTextFile : wxTextFile {
-   // Flush output when the program quits, even if that makes an incomplete
-   // journal file without an exit
-   ~FlushingTextFile() { if ( IsOpened() ) { Write(); Close(); } }
+    // Flush output when the program quits, even if that makes an incomplete
+    // journal file without an exit
+    ~FlushingTextFile()
+    {
+        if (IsOpened()) {
+            Write();
+            Close();
+        }
+    }
 } sFileOut;
-
 }
 
 bool IsRecording()
 {
-  return sFileOut.IsOpened();
+    return sFileOut.IsOpened();
 }
 
-bool OpenOut( const wxString &fullPath )
+bool OpenOut(const wxString& fullPath)
 {
-   sFileOut.Open( fullPath );
-   if ( sFileOut.IsOpened() )
-      sFileOut.Clear();
-   else {
-      sFileOut.Create();
-      sFileOut.Open( fullPath );
-   }
-   return sFileOut.IsOpened();
+    sFileOut.Open(fullPath);
+    if (sFileOut.IsOpened()) {
+        sFileOut.Clear();
+    } else {
+        sFileOut.Create();
+        sFileOut.Open(fullPath);
+    }
+    return sFileOut.IsOpened();
 }
 
-void Output( const wxString &string )
+void Output(const wxString& string)
 {
-   if ( IsRecording() )
-      sFileOut.AddLine( string );
+    if (IsRecording()) {
+        sFileOut.AddLine(string);
+    }
 }
 
-void Output( const wxArrayString &strings )
+void Output(const wxArrayString& strings)
 {
-   if ( IsRecording() )
-      Output( ::wxJoin( strings, SeparatorCharacter, EscapeCharacter ) );
+    if (IsRecording()) {
+        Output(::wxJoin(strings, SeparatorCharacter, EscapeCharacter));
+    }
 }
 
-void Output( std::initializer_list< const wxString > strings )
+void Output(std::initializer_list< const wxString > strings)
 {
-   return Output( wxArrayStringEx( strings ) );
+    return Output(wxArrayStringEx(strings));
 }
 
-void Comment( const wxString &string )
+void Comment(const wxString& string)
 {
-   if ( IsRecording() )
-      sFileOut.AddLine( CommentCharacter + string );
+    if (IsRecording()) {
+        sFileOut.AddLine(CommentCharacter + string);
+    }
 }
-
 }

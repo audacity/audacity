@@ -14,7 +14,6 @@
 
 *//********************************************************************/
 
-
 #include "ErrorDialog.h"
 
 #include <wx/app.h>
@@ -37,109 +36,108 @@
 #include "HelpSystem.h"
 
 BEGIN_EVENT_TABLE(ErrorDialog, wxDialogWrapper)
-   EVT_COLLAPSIBLEPANE_CHANGED( wxID_ANY, ErrorDialog::OnPane )
-   EVT_BUTTON( wxID_OK, ErrorDialog::OnOk)
-   EVT_BUTTON( wxID_HELP, ErrorDialog::OnHelp)
+EVT_COLLAPSIBLEPANE_CHANGED(wxID_ANY, ErrorDialog::OnPane)
+EVT_BUTTON(wxID_OK, ErrorDialog::OnOk)
+EVT_BUTTON(wxID_HELP, ErrorDialog::OnHelp)
 END_EVENT_TABLE()
 
 ErrorDialog::ErrorDialog(
-   wxWindow *parent,
-   const TranslatableString & dlogTitle,
-   const TranslatableString & message,
-   const ManualPageID & helpPage,
-   const std::wstring & log,
-   const bool Close, const bool modal)
-:  wxDialogWrapper(parent, wxID_ANY, dlogTitle,
-                   wxDefaultPosition, wxDefaultSize,
-                   wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
+    wxWindow* parent,
+    const TranslatableString& dlogTitle,
+    const TranslatableString& message,
+    const ManualPageID& helpPage,
+    const std::wstring& log,
+    const bool Close, const bool modal)
+    :  wxDialogWrapper(parent, wxID_ANY, dlogTitle,
+                       wxDefaultPosition, wxDefaultSize,
+                       wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
-   SetName();
+    SetName();
 
-   long buttonMask;
+    long buttonMask;
 
-   // only add the help button if we have a URL
-   buttonMask = (helpPage.empty()) ? eOkButton : (eHelpButton | eOkButton);
-   dhelpPage = helpPage;
-   dClose = Close;
-   dModal = modal;
+    // only add the help button if we have a URL
+    buttonMask = (helpPage.empty()) ? eOkButton : (eHelpButton | eOkButton);
+    dhelpPage = helpPage;
+    dClose = Close;
+    dModal = modal;
 
-   ShuttleGui S(this, eIsCreating);
+    ShuttleGui S(this, eIsCreating);
 
-   S.SetBorder(2);
-   S.StartHorizontalLay(wxEXPAND, 0);
-   {
-      S.SetBorder(20);
-      wxBitmap bitmap = wxArtProvider::GetBitmap(wxART_WARNING);
-      S.AddWindow(safenew wxStaticBitmap(S.GetParent(), -1, bitmap));
+    S.SetBorder(2);
+    S.StartHorizontalLay(wxEXPAND, 0);
+    {
+        S.SetBorder(20);
+        wxBitmap bitmap = wxArtProvider::GetBitmap(wxART_WARNING);
+        S.AddWindow(safenew wxStaticBitmap(S.GetParent(), -1, bitmap));
 
-      S.SetBorder(20);
-      S.AddFixedText(message, false, 500);
-   }
-   S.EndHorizontalLay();
+        S.SetBorder(20);
+        S.AddFixedText(message, false, 500);
+    }
+    S.EndHorizontalLay();
 
-   S.SetBorder(2);
-   if (!log.empty())
-   {
-      S.StartHorizontalLay(wxEXPAND, 1);
-      {
-         S.SetBorder(5);
+    S.SetBorder(2);
+    if (!log.empty()) {
+        S.StartHorizontalLay(wxEXPAND, 1);
+        {
+            S.SetBorder(5);
 
-         auto pane = safenew wxCollapsiblePane(S.GetParent(),
-                                               wxID_ANY,
-                                               XO("Show &Log...").Translation());
-         S.Style(wxEXPAND | wxALIGN_LEFT);
-         S.Prop(1);
-         S.AddWindow(pane);
+            auto pane = safenew wxCollapsiblePane(S.GetParent(),
+                                                  wxID_ANY,
+                                                  XO("Show &Log...").Translation());
+            S.Style(wxEXPAND | wxALIGN_LEFT);
+            S.Prop(1);
+            S.AddWindow(pane);
 
-         ShuttleGui SI(pane->GetPane(), eIsCreating);
-         auto text = SI.AddTextWindow(log);
-         text->SetInsertionPointEnd();
-         text->ShowPosition(text->GetLastPosition());
-         text->SetMinSize(wxSize(700, 250));
-      }
-      S.EndHorizontalLay();
-   }
+            ShuttleGui SI(pane->GetPane(), eIsCreating);
+            auto text = SI.AddTextWindow(log);
+            text->SetInsertionPointEnd();
+            text->ShowPosition(text->GetLastPosition());
+            text->SetMinSize(wxSize(700, 250));
+        }
+        S.EndHorizontalLay();
+    }
 
-   S.SetBorder(2);
-   S.AddStandardButtons(buttonMask);
+    S.SetBorder(2);
+    S.AddStandardButtons(buttonMask);
 
-   Layout();
-   GetSizer()->Fit(this);
-   SetMinSize(GetSize());
-   Center();
+    Layout();
+    GetSizer()->Fit(this);
+    SetMinSize(GetSize());
+    Center();
 }
 
-void ErrorDialog::OnPane(wxCollapsiblePaneEvent & event)
+void ErrorDialog::OnPane(wxCollapsiblePaneEvent& event)
 {
-   if (!event.GetCollapsed())
-   {
-      Center();
-   }
+    if (!event.GetCollapsed()) {
+        Center();
+    }
 }
 
-void ErrorDialog::OnOk(wxCommandEvent & WXUNUSED(event))
+void ErrorDialog::OnOk(wxCommandEvent& WXUNUSED(event))
 {
-   if (dModal)
-      EndModal(true);
-   else
-      Destroy();
+    if (dModal) {
+        EndModal(true);
+    } else {
+        Destroy();
+    }
 }
 
-void ErrorDialog::OnHelp(wxCommandEvent & WXUNUSED(event))
+void ErrorDialog::OnHelp(wxCommandEvent& WXUNUSED(event))
 {
-   const auto &str = dhelpPage.GET();
-   if( str.StartsWith(wxT("innerlink:")) )
-   {
-      HelpSystem::ShowHtmlText(
-         this,
-         TitleText(str.Mid( 10 ) ),
-         HelpText( str.Mid( 10 )),
-         false,
-         true );
-      return;
-   }
-   HelpSystem::ShowHelp( this, dhelpPage, dClose );
-   //OpenInDefaultBrowser( dhelpURL );
-   if(dClose)
-      EndModal(true);
+    const auto& str = dhelpPage.GET();
+    if (str.StartsWith(wxT("innerlink:"))) {
+        HelpSystem::ShowHtmlText(
+            this,
+            TitleText(str.Mid(10)),
+            HelpText(str.Mid(10)),
+            false,
+            true);
+        return;
+    }
+    HelpSystem::ShowHelp(this, dhelpPage, dClose);
+    //OpenInDefaultBrowser( dhelpURL );
+    if (dClose) {
+        EndModal(true);
+    }
 }

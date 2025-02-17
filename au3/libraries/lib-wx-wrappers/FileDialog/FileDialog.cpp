@@ -18,27 +18,26 @@ custom controls.
 
 FileDialogBase::FileDialogBase()
 {
-   m_creator = NULL;
-   m_userdata = 0;
+    m_creator = NULL;
+    m_userdata = 0;
 }
 
 bool FileDialogBase::HasUserPaneCreator() const
 {
-   return m_creator != NULL;
+    return m_creator != NULL;
 }
 
 void FileDialogBase::SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata)
 {
-   m_creator = creator;
-   m_userdata = userdata;
+    m_creator = creator;
+    m_userdata = userdata;
 }
 
-void FileDialogBase::CreateUserPane(wxWindow *parent)
+void FileDialogBase::CreateUserPane(wxWindow* parent)
 {
-   if (m_creator)
-   {
-      (*m_creator)(parent, m_userdata);
-   }
+    if (m_creator) {
+        (*m_creator)(parent, m_userdata);
+    }
 }
 
 //
@@ -64,7 +63,7 @@ wxString FileSelector(const wxString& title,
                       const wxString& defaultExtension,
                       const wxString& filter,
                       int flags,
-                      wxWindow *parent,
+                      wxWindow* parent,
                       int x, int y)
 {
     // The defaultExtension, if non-empty, is
@@ -79,39 +78,37 @@ wxString FileSelector(const wxString& title,
     // suitable filter.
 
     wxString filter2;
-    if ( !defaultExtension.empty() && filter.empty() )
+    if (!defaultExtension.empty() && filter.empty()) {
         filter2 = wxString(wxT("*.")) + defaultExtension;
-    else if ( !filter.empty() )
+    } else if (!filter.empty()) {
         filter2 = filter;
+    }
 
     FileDialog fileDialog(parent, title, defaultDir,
-                            defaultFileName, filter2,
-                            flags, wxPoint(x, y));
+                          defaultFileName, filter2,
+                          flags, wxPoint(x, y));
 
     // if filter is of form "All files (*)|*|..." set correct filter index
-    if ( !defaultExtension.empty() && filter2.find(wxT('|')) != wxString::npos )
-    {
+    if (!defaultExtension.empty() && filter2.find(wxT('|')) != wxString::npos) {
         int filterIndex = 0;
 
         wxArrayString descriptions, filters;
         // don't care about errors, handled already by FileDialog
         (void)wxParseCommonDialogsFilter(filter2, descriptions, filters);
-        for (size_t n=0; n<filters.GetCount(); n++)
-        {
-            if (filters[n].Contains(defaultExtension))
-            {
+        for (size_t n=0; n < filters.GetCount(); n++) {
+            if (filters[n].Contains(defaultExtension)) {
                 filterIndex = n;
                 break;
             }
         }
 
-        if (filterIndex > 0)
+        if (filterIndex > 0) {
             fileDialog.SetFilterIndex(filterIndex);
+        }
     }
 
     wxString filename;
-    if ( fileDialog.ShowModal() == wxID_OK )
-    {
+    if (fileDialog.ShowModal() == wxID_OK) {
         filename = fileDialog.GetPath();
     }
 
@@ -125,30 +122,28 @@ wxString FileSelector(const wxString& title,
 wxString FileSelectorEx(const wxString& title,
                         const wxString& defaultDir,
                         const wxString& defaultFileName,
-                        int*            defaultFilterIndex,
+                        int* defaultFilterIndex,
                         const wxString& filter,
-                        int             flags,
-                        wxWindow*       parent,
-                        int             x,
-                        int             y)
-
+                        int flags,
+                        wxWindow* parent,
+                        int x,
+                        int y)
 {
     FileDialog fileDialog(parent,
-                            title,
-                            defaultDir,
-                            defaultFileName,
-                            filter,
-                            flags, wxPoint(x, y));
+                          title,
+                          defaultDir,
+                          defaultFileName,
+                          filter,
+                          flags, wxPoint(x, y));
 
     wxString filename;
-    if ( fileDialog.ShowModal() == wxID_OK )
-    {
-        if ( defaultFilterIndex )
+    if (fileDialog.ShowModal() == wxID_OK) {
+        if (defaultFilterIndex) {
             *defaultFilterIndex = fileDialog.GetFilterIndex();
+        }
 
         filename = fileDialog.GetPath();
     }
 
     return filename;
 }
-

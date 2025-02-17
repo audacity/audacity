@@ -22,8 +22,7 @@ namespace WaveClipUtilities {
 /*!
  @param t relative to clip start sample
  */
-WAVE_TRACK_API bool GetFloatAtTime(const WaveClip &clip,
-   double t, size_t iChannel, float& value, bool mayThrow);
+WAVE_TRACK_API bool GetFloatAtTime(const WaveClip& clip, double t, size_t iChannel, float& value, bool mayThrow);
 
 //! Succeed with out-of-bounds requests, only changing what is in bounds.
 //! @{
@@ -38,9 +37,8 @@ WAVE_TRACK_API bool GetFloatAtTime(const WaveClip &clip,
      result:            [d e z]
  */
 // clang-format on
-WAVE_TRACK_API void SetFloatsFromTime(WaveClip &clip,
-   double t, size_t iChannel, const float* buffer, size_t numSamples,
-   sampleFormat effectiveFormat);
+WAVE_TRACK_API void SetFloatsFromTime(WaveClip& clip, double t, size_t iChannel, const float* buffer, size_t numSamples,
+                                      sampleFormat effectiveFormat);
 
 //! used by commands which interact with clips using the keyboard
 /*!
@@ -49,7 +47,7 @@ WAVE_TRACK_API void SetFloatsFromTime(WaveClip &clip,
  be exactly equal due to rounding errors.
  */
 WAVE_TRACK_API bool SharesBoundaryWithNextClip(
-   const WaveTrack::Interval &prev, const WaveTrack::Interval& next);
+    const WaveTrack::Interval& prev, const WaveTrack::Interval& next);
 }
 
 #endif
