@@ -18,68 +18,68 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("file-new",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&New…"),
-             TranslatableString("action", "New…")
+             TranslatableString("action", "&New project"),
+             TranslatableString("action", "Open a new window to create a new project")
              ),
     UiAction("file-open",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&Open…"),
-             TranslatableString("action", "Open…")
+             TranslatableString("action", "&Open"),
+             TranslatableString("action", "Open a project or audio file")
              ),
     UiAction("clear-recent",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Clear recent files"),
-             TranslatableString("action", "Clear recent files")
+             TranslatableString("action", "Empty the list of recently opened files")
              ),
     UiAction("project-import",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Import"),
-             TranslatableString("action", "Import")
+             TranslatableString("action", "Add audio files to the project")
              ),
     UiAction("file-save",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Save project"),
-             TranslatableString("action", "Save project")
+             TranslatableString("action", "Save a project file")
              ),
     UiAction("file-save-as",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Save &as…"),
-             TranslatableString("action", "Save as…")
+             TranslatableString("action", "Save a project file with a new name")
              ),
     UiAction("file-save-backup",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Save backup"),
-             TranslatableString("action", "Save backup")
+             TranslatableString("action", "Save a backup copy of the project")
              ),
     UiAction("export-audio",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Export audio"),
-             TranslatableString("action", "Export audio")
+             TranslatableString("action", "Export a WAV, MP3, or other audio file")
              ),
     UiAction("export-labels",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Export labels"),
-             TranslatableString("action", "Export labels")
+             TranslatableString("action", "Export labels in TXT, SRT, or other formats")
              ),
     UiAction("export-midi",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Export MIDI"),
-             TranslatableString("action", "Export MIDI")
+             TranslatableString("action", "Export MIDI files")
              ),
     UiAction("file-close",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Close project"),
-             TranslatableString("action", "Close project")
+             TranslatableString("action", "Close the current project, but keep Audacity running")
              ),
 
     // edit menu
@@ -87,49 +87,49 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Duplicate"),
-             TranslatableString("action", "Duplicate")
+             TranslatableString("action", "Duplicate the track or selected clips")
              ),
     UiAction("insert",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Insert"),
-             TranslatableString("action", "Insert")
+             TranslatableString("action", "Paste (Insert)"),
+             TranslatableString("action", "Paste and move the following audio to the right")
              ),
     UiAction("rename-clip",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Rename clip"),
-             TranslatableString("action", "Rename clip")
+             TranslatableString("action", "Give a new name to the current clip")
              ),
     UiAction("trim-clip",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Trim clip"),
-             TranslatableString("action", "Trim clip")
+             TranslatableString("action", "Isolate selection"),
+             TranslatableString("action", "Trim the clip to the selection")
              ),
     UiAction("split-into-new-track",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Split into new track"),
-             TranslatableString("action", "Split into new track")
+             TranslatableString("action", "Moves the current selection to a new track")
              ),
     UiAction("silence-audio",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Silence audio"),
-             TranslatableString("action", "Silence audio")
+             TranslatableString("action", "Mutes the selected audio")
              ),
     UiAction("add-label",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Add label"),
-             TranslatableString("action", "Add label")
+             TranslatableString("action", "Add a new label at the cursor")
              ),
     UiAction("paste-new-label",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Paste new label"),
-             TranslatableString("action", "Paste new label")
+             TranslatableString("action", "Paste text to create a new label at the cursor")
              ),
     UiAction("cut-labels",
              au::context::UiCtxAny,
@@ -203,49 +203,49 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Select all"),
-             TranslatableString("action", "Select all")
+             TranslatableString("action", "Select all audio in the project")
              ),
     UiAction("select-none",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Select none"),
-             TranslatableString("action", "Select none")
+             TranslatableString("action", "Unselect everything")
              ),
     UiAction("select-entire-track",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Select entire track"),
-             TranslatableString("action", "Select entire track")
+             TranslatableString("action", "Select all audio in the current track")
              ),
     UiAction("select-from-start-to-cursor",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Select from start to cursor"),
-             TranslatableString("action", "Select from start to cursor")
+             TranslatableString("action", "Select audio from the start of the track to the cursor")
              ),
     UiAction("select-from-cursor-end",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Select from cursor end"),
-             TranslatableString("action", "Select from cursor end")
+             TranslatableString("action", "Select from cursor to end"),
+             TranslatableString("action", "Select audio from the cursor to the end of the track")
              ),
     UiAction("select-previous-item",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Select previous item"),
-             TranslatableString("action", "Select previous item")
+             TranslatableString("action", "Select the clip or label before the current selection")
              ),
     UiAction("select-next-item",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Select next item"),
-             TranslatableString("action", "Select next item")
+             TranslatableString("action", "Select the clip or label after the current selection")
              ),
     UiAction("select-near-zero-crossings",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Select near zero crossings"),
-             TranslatableString("action", "Select near zero crossings")
+             TranslatableString("action", "Move audio selection to the nearest zero crossing")
              ),
 
     // view menu
@@ -253,31 +253,31 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom in"),
-             TranslatableString("action", "Zoom in")
+             TranslatableString("action", "Make clips look larger")
              ),
     UiAction("zoom-out",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom out"),
-             TranslatableString("action", "Zoom out")
+             TranslatableString("action", "Make clips look smaller")
              ),
     UiAction("zoom-to-selection",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom to selection"),
-             TranslatableString("action", "Zoom to selection")
+             TranslatableString("action", "Make the current selection fill the screen")
              ),
     UiAction("zoom-toggle",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom toggle"),
-             TranslatableString("action", "Zoom toggle")
+             TranslatableString("action", "Toggle between two zoom levels")
              ),
     UiAction("zoom-reset",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom reset"),
-             TranslatableString("action", "Zoom reset")
+             TranslatableString("action", "Reset zoom to normal")
              ),
     UiAction("fit-project-to-window",
              au::context::UiCtxAny,
@@ -294,32 +294,32 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("collapse-all-tracks",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Collapse all tracks"),
-             TranslatableString("action", "Collapse all tracks")
+             TranslatableString("action", "Minimize all tracks"),
+             TranslatableString("action", "Make all tracks as small as they go")
              ),
     UiAction("expand-all-tracks",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Expand all tracks"),
-             TranslatableString("action", "Expand all tracks")
+             TranslatableString("action", "Reset track height"),
+             TranslatableString("action", "Return all tracks to the standard height")
              ),
     UiAction("skip-to-selection-start",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Skip to selection start"),
-             TranslatableString("action", "Skip to selection start")
+             TranslatableString("action", "Move view to the left edge of the current selection")
              ),
     UiAction("skip-to-selection-end",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Skip to selection end"),
-             TranslatableString("action", "Skip to selection end")
+             TranslatableString("action", "Move view to the right edge of the current selection")
              ),
     UiAction("toggle-effects",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Show effects"),
-             TranslatableString("action", "Show effects"),
+             TranslatableString("action", "Show realtime effects panel"),
              Checkable::Yes
              ),
     UiAction("toggle-label-editor",
@@ -400,7 +400,7 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Remove tracks"),
-             TranslatableString("action", "Remove tracks")
+             TranslatableString("action", "Remove currently selected tracks")
              ),
     UiAction("mixdown-to",
              au::context::UiCtxAny,
@@ -527,8 +527,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("apply-macros-palette",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Apply macros palette"),
-             TranslatableString("action", "Apply macros palette")
+             TranslatableString("action", "Show macros palette"),
+             TranslatableString("action", "Open a panel containing all macros")
              ),
     UiAction("macro-fade-ends",
              au::context::UiCtxAny,
