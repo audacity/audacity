@@ -1,5 +1,6 @@
 import QtQuick 2.15
 
+import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
@@ -30,6 +31,8 @@ EffectBase {
     component ParamItem: Item {
         id: param
         property alias title: label.text
+        property string toolTipTitle: param.title
+        property string toolTipDescription: param.tooltip
         property real value: 0.0
         property alias min: slider.from
         property alias max: slider.to
@@ -38,6 +41,18 @@ EffectBase {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 8
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            onContainsMouseChanged: {
+                if (containsMouse) {
+                    ui.tooltip.show(label, param.toolTipTitle, param.toolTipDescription)
+                } else {
+                    ui.tooltip.hide(label)
+                }
+            }
+        }
 
         StyledTextLabel {
             id: label
@@ -86,6 +101,7 @@ EffectBase {
             model: reverb.paramsList
             delegate: ParamItem {
                 title: modelData.title
+                toolTipDescription: modelData.tooltip
                 value: modelData.value
                 min: modelData.min
                 max: modelData.max
@@ -97,13 +113,14 @@ EffectBase {
 
     CheckBox {
         id: wetOnly
+        text: qsTrc("effects", "Wet Only")
 
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        text: qsTrc("effects", "Wet Only")
         checked: reverb.wetOnly
         onClicked: reverb.wetOnly = !reverb.wetOnly
+
     }
 }
