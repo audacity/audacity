@@ -18,7 +18,6 @@
 #include <wx/dcmemory.h>
 #include <wx/clipbrd.h>
 
-
 #include "../../RefreshCode.h"
 
 TextEditDelegate::~TextEditDelegate() = default;
@@ -26,19 +25,19 @@ TextEditDelegate::~TextEditDelegate() = default;
 bool TextEditHelper::IsGoodEditKeyCode(int keyCode)
 {
     // Accept everything outside of WXK_START through WXK_COMMAND, plus the keys
-   // within that range that are usually printable, plus the ones we use for
-   // keyboard navigation.
-    return keyCode < WXK_START ||
-        (keyCode >= WXK_END && keyCode < WXK_UP) ||
-        (keyCode == WXK_RIGHT) ||
-        (keyCode >= WXK_NUMPAD0 && keyCode <= WXK_DIVIDE) ||
-        (keyCode >= WXK_NUMPAD_SPACE && keyCode <= WXK_NUMPAD_ENTER) ||
-        (keyCode >= WXK_NUMPAD_HOME && keyCode <= WXK_NUMPAD_END) ||
-        (keyCode >= WXK_NUMPAD_DELETE && keyCode <= WXK_NUMPAD_DIVIDE) ||
+    // within that range that are usually printable, plus the ones we use for
+    // keyboard navigation.
+    return keyCode < WXK_START
+           || (keyCode >= WXK_END && keyCode < WXK_UP)
+           || (keyCode == WXK_RIGHT)
+           || (keyCode >= WXK_NUMPAD0 && keyCode <= WXK_DIVIDE)
+           || (keyCode >= WXK_NUMPAD_SPACE && keyCode <= WXK_NUMPAD_ENTER)
+           || (keyCode >= WXK_NUMPAD_HOME && keyCode <= WXK_NUMPAD_END)
+           || (keyCode >= WXK_NUMPAD_DELETE && keyCode <= WXK_NUMPAD_DIVIDE) ||
 #if defined(__WXMAC__)
-        (keyCode > WXK_RAW_CONTROL) ||
+           (keyCode > WXK_RAW_CONTROL) ||
 #endif
-        (keyCode > WXK_WINDOWS_MENU);
+           (keyCode > WXK_WINDOWS_MENU);
 }
 
 TextEditHelper::TextEditHelper(const std::weak_ptr<TextEditDelegate>& delegate, const wxString& text, const wxFont& font)
@@ -62,14 +61,16 @@ void TextEditHelper::SetTextSelectionColor(const wxColor& textSelectionColor)
 
 void TextEditHelper::Cancel(AudacityProject* project)
 {
-    if (auto lock = mDelegate.lock())
+    if (auto lock = mDelegate.lock()) {
         lock->OnTextEditCancelled(project);
+    }
 }
 
 void TextEditHelper::Finish(AudacityProject* project)
 {
-    if (auto lock = mDelegate.lock())
+    if (auto lock = mDelegate.lock()) {
         lock->OnTextEditFinished(project, mText);
+    }
 }
 
 std::pair<int, int> TextEditHelper::GetSelection() const
@@ -96,40 +97,38 @@ bool TextEditHelper::IsSelectionEmpty()
 
 bool TextEditHelper::CaptureKey(int, int mods)
 {
-   return mods == wxMOD_NONE || mods == wxMOD_SHIFT;
+    return mods == wxMOD_NONE || mods == wxMOD_SHIFT;
 }
 
 bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
 {
     auto delegate = mDelegate.lock();
-    if (!delegate)
+    if (!delegate) {
         return false;
+    }
 
-    if (!CaptureKey(keyCode, mods))
-       return false;
+    if (!CaptureKey(keyCode, mods)) {
+        return false;
+    }
 
     wxUniChar wchar;
     bool more = true;
 
     switch (keyCode) {
-
     case WXK_BACK:
     {
         //IF the label is not blank THEN get rid of a letter or letters according to cursor position
-        if (!mText.empty())
-        {
+        if (!mText.empty()) {
             // IF there are some highlighted letters, THEN DELETE them
-            if (mInitialCursorPos != mCurrentCursorPos)
+            if (mInitialCursorPos != mCurrentCursorPos) {
                 RemoveSelectedText(project);
-            else
-            {
+            } else {
                 // DELETE one codepoint leftwards
                 while ((mCurrentCursorPos > 0) && more) {
                     wchar = mText.at(mCurrentCursorPos - 1);
                     mText.erase(mCurrentCursorPos - 1, 1);
                     mCurrentCursorPos--;
-                    if (((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00)) 
-                    {
+                    if (((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00)) {
                         delegate->OnTextModified(project, mText);
                         more = false;
                     }
@@ -147,19 +146,16 @@ bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
     {
         int len = mText.length();
         //If the label is not blank get rid of a letter according to cursor position
-        if (len > 0)
-        {
+        if (len > 0) {
             // if there are some highlighted letters, DELETE them
-            if (mInitialCursorPos != mCurrentCursorPos)
+            if (mInitialCursorPos != mCurrentCursorPos) {
                 RemoveSelectedText(project);
-            else
-            {
+            } else {
                 // DELETE one codepoint rightwards
                 while ((mCurrentCursorPos < len) && more) {
                     wchar = mText.at(mCurrentCursorPos);
                     mText.erase(mCurrentCursorPos, 1);
-                    if (((int)wchar > 0xDBFF) || ((int)wchar < 0xD800)) 
-                    {
+                    if (((int)wchar > 0xDBFF) || ((int)wchar < 0xD800)) {
                         delegate->OnTextModified(project, mText);
                         more = false;
                     }
@@ -176,61 +172,61 @@ bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
     case WXK_NUMPAD_HOME:
         // Move cursor to beginning of label
         mCurrentCursorPos = 0;
-        if (mods == wxMOD_SHIFT)
-            ;
-        else
+        if (mods == wxMOD_SHIFT) {
+        } else {
             mInitialCursorPos = mCurrentCursorPos;
+        }
         return true;
     case WXK_END:
     case WXK_NUMPAD_END:
         // Move cursor to end of label
         mCurrentCursorPos = (int)mText.length();
-        if (mods == wxMOD_SHIFT)
-            ;
-        else
+        if (mods == wxMOD_SHIFT) {
+        } else {
             mInitialCursorPos = mCurrentCursorPos;
+        }
         return true;
 
     case WXK_LEFT:
     case WXK_NUMPAD_LEFT:
         // Moving cursor left
-       if (mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos)
-          //put cursor to the left edge of selection
-          mInitialCursorPos = mCurrentCursorPos =
-          std::min(mInitialCursorPos, mCurrentCursorPos);
-       else
-       {
-          while ((mCurrentCursorPos > 0) && more) {
-             wchar = mText.at(mCurrentCursorPos - 1);
-             more = !(((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00));
+        if (mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos) {
+            //put cursor to the left edge of selection
+            mInitialCursorPos = mCurrentCursorPos
+                                    =std::min(mInitialCursorPos, mCurrentCursorPos);
+        } else {
+            while ((mCurrentCursorPos > 0) && more) {
+                wchar = mText.at(mCurrentCursorPos - 1);
+                more = !(((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00));
 
-             --mCurrentCursorPos;
-          }
-          if (mods != wxMOD_SHIFT)
-             mInitialCursorPos = mCurrentCursorPos;
-       }
-       return true;
+                --mCurrentCursorPos;
+            }
+            if (mods != wxMOD_SHIFT) {
+                mInitialCursorPos = mCurrentCursorPos;
+            }
+        }
+        return true;
 
     case WXK_RIGHT:
     case WXK_NUMPAD_RIGHT:
-       // Moving cursor right
-       if (mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos)
-          //put cursor to the right edge of selection
-          mInitialCursorPos = mCurrentCursorPos =
-          std::max(mInitialCursorPos, mCurrentCursorPos);
-       else
-       {
-          while ((mCurrentCursorPos < (int)mText.length()) && more) {
-             wchar = mText.at(mCurrentCursorPos);
-             more = !(((int)wchar > 0xDBFF) || ((int)wchar < 0xD800));
+        // Moving cursor right
+        if (mods != wxMOD_SHIFT && mCurrentCursorPos != mInitialCursorPos) {
+            //put cursor to the right edge of selection
+            mInitialCursorPos = mCurrentCursorPos
+                                    =std::max(mInitialCursorPos, mCurrentCursorPos);
+        } else {
+            while ((mCurrentCursorPos < (int)mText.length()) && more) {
+                wchar = mText.at(mCurrentCursorPos);
+                more = !(((int)wchar > 0xDBFF) || ((int)wchar < 0xD800));
 
-             ++mCurrentCursorPos;
-          }
-          if (mods != wxMOD_SHIFT)
-             mInitialCursorPos = mCurrentCursorPos;
-       }
+                ++mCurrentCursorPos;
+            }
+            if (mods != wxMOD_SHIFT) {
+                mInitialCursorPos = mCurrentCursorPos;
+            }
+        }
 
-       return true;
+        return true;
 
     case WXK_ESCAPE:
         delegate->OnTextEditCancelled(project);
@@ -247,16 +243,18 @@ bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
 bool TextEditHelper::OnChar(int charCode, AudacityProject* project)
 {
     auto delegate = mDelegate.lock();
-    if (!delegate)
+    if (!delegate) {
         return false;
+    }
 
     if (charCode == 0 || wxIscntrl(charCode)) {
         return false;
     }
 
     // Test if cursor is in the end of string or not
-    if (mInitialCursorPos != mCurrentCursorPos)
+    if (mInitialCursorPos != mCurrentCursorPos) {
         RemoveSelectedText(project);
+    }
 
     if (mCurrentCursorPos < (int)mText.length()) {
         // Get substring on the righthand side of cursor
@@ -267,10 +265,10 @@ bool TextEditHelper::OnChar(int charCode, AudacityProject* project)
         mText += charCode;
         //append the right part substring
         mText += rightPart;
-    }
-    else
+    } else {
         //append charCode
         mText += charCode;
+    }
 
     delegate->OnTextModified(project, mText);
 
@@ -282,13 +280,10 @@ bool TextEditHelper::OnChar(int charCode, AudacityProject* project)
 
 bool TextEditHelper::OnClick(const wxMouseEvent& event, AudacityProject*)
 {
-    if (event.ButtonDown())
-    {
+    if (event.ButtonDown()) {
         bool result = false;
-        if (mBBox.Contains(event.GetPosition()))
-        {
-            if (event.LeftDown()) 
-            {
+        if (mBBox.Contains(event.GetPosition())) {
+            if (event.LeftDown()) {
                 mRightDragging = false;
                 auto position = FindCursorIndex(event.GetPosition());
                 auto initial = mInitialCursorPos;
@@ -297,22 +292,20 @@ bool TextEditHelper::OnClick(const wxMouseEvent& event, AudacityProject*)
                     // Set the drag anchor at the end of the previous selection
                     // that is farther from the NEW drag end
                     const auto current = mCurrentCursorPos;
-                    if (abs(position - current) > abs(position - initial))
+                    if (abs(position - current) > abs(position - initial)) {
                         initial = current;
+                    }
 #else
                     // initial position remains as before
 #endif
-                }
-                else
+                } else {
                     initial = position;
+                }
 
                 mInitialCursorPos = initial;
                 mCurrentCursorPos = position;
-            }
-            else
-            {
-                if (mInitialCursorPos == mCurrentCursorPos)
-                {
+            } else {
+                if (mInitialCursorPos == mCurrentCursorPos) {
                     auto position = FindCursorIndex(event.GetPosition());
                     mInitialCursorPos = mCurrentCursorPos = position;
                 }
@@ -349,8 +342,9 @@ bool TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
 {
     mBBox = rect;
 
-    if(rect.IsEmpty())
-       return false;
+    if (rect.IsEmpty()) {
+        return false;
+    }
 
     const auto cursorHeight = dc.GetFontMetrics().height;
 
@@ -361,41 +355,40 @@ bool TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
     auto curPosX = 0;
     auto maxOffset = static_cast<int>(mText.Length());
     mOffset = 0;
-    if(maxOffset > 0)
-    {
+    if (maxOffset > 0) {
         const auto rtl = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft;
         {
             auto leftBound = rect.GetLeft();
             auto rightBound = rect.GetRight() + 1;
             GetCharPositionX(mCurrentCursorPos, &curPosX);
 
-            if ((!rtl && curPosX >= rightBound) || (rtl && curPosX < leftBound))
-            {
+            if ((!rtl && curPosX >= rightBound) || (rtl && curPosX < leftBound)) {
                 while (mOffset < maxOffset)
                 {
                     GetCharPositionX(mCurrentCursorPos, &curPosX);
-                    if (curPosX < rightBound && curPosX >= leftBound)
+                    if (curPosX < rightBound && curPosX >= leftBound) {
                         break;
+                    }
                     ++mOffset;
                 }
             }
-            if ((!rtl && curPosX < leftBound) || (rtl && curPosX >= rightBound))
-            {
+            if ((!rtl && curPosX < leftBound) || (rtl && curPosX >= rightBound)) {
                 while (mOffset > 0)
                 {
                     GetCharPositionX(mCurrentCursorPos, &curPosX);
-                    if (curPosX >= leftBound && curPosX < rightBound)
+                    if (curPosX >= leftBound && curPosX < rightBound) {
                         break;
+                    }
                     --mOffset;
                 }
             }
         }
         // Text doesn't fit into rectangle
-        if(mOffset >= maxOffset)
+        if (mOffset >= maxOffset) {
             return false;
+        }
 
-        if (mCurrentCursorPos != mInitialCursorPos)
-        {
+        if (mCurrentCursorPos != mInitialCursorPos) {
             auto left = 0;
             auto right = 0;
             GetCharPositionX(std::min(mCurrentCursorPos, mInitialCursorPos), &left);
@@ -405,20 +398,16 @@ bool TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
             dc.DrawRectangle(wxRect(left, rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2, right - left, cursorHeight));
         }
 
-        
         dc.SetTextBackground(wxTransparentColour);
         dc.SetTextForeground(mTextColor);
         dc.SetFont(wxFont(wxFontInfo()));
         dc.DrawLabel(mText.Mid(mOffset), rect, (rtl ? wxALIGN_RIGHT : wxALIGN_LEFT) | wxALIGN_CENTER_VERTICAL);
-    }
-    else
-    {
-       mCurrentCursorPos = mInitialCursorPos = 0;
-       GetCharPositionX(mCurrentCursorPos, &curPosX);
+    } else {
+        mCurrentCursorPos = mInitialCursorPos = 0;
+        GetCharPositionX(mCurrentCursorPos, &curPosX);
     }
 
-    if (mCurrentCursorPos == mInitialCursorPos)
-    {
+    if (mCurrentCursorPos == mInitialCursorPos) {
         dc.SetPen(mTextColor);
         auto top = rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2;
         dc.DrawLine(curPosX, top, curPosX, top + cursorHeight);
@@ -428,19 +417,14 @@ bool TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
 
 bool TextEditHelper::HandleDragRelease(const wxMouseEvent& event, AudacityProject* project)
 {
-    if (event.Dragging())
-    {
-        if (!mRightDragging)
-        {
+    if (event.Dragging()) {
+        if (!mRightDragging) {
             mCurrentCursorPos = FindCursorIndex(event.GetPosition());
             return true;
         }
-    }
-    else if (event.RightUp() && mBBox.Contains(event.GetPosition()))
-    {
+    } else if (event.RightUp() && mBBox.Contains(event.GetPosition())) {
         auto delegate = mDelegate.lock();
-        if (delegate)
-        {
+        if (delegate) {
             // popup menu for editing
             // TODO: handle context menus via CellularPanel?
             delegate->OnTextContextMenu(project, event.GetPosition());
@@ -453,21 +437,25 @@ bool TextEditHelper::HandleDragRelease(const wxMouseEvent& event, AudacityProjec
 void TextEditHelper::RemoveSelectedText(AudacityProject* project)
 {
     auto delegate = mDelegate.lock();
-    if (!delegate)
+    if (!delegate) {
         return;
+    }
 
     wxString left, right;
 
     int init = mInitialCursorPos;
     int cur = mCurrentCursorPos;
-    if (init > cur)
+    if (init > cur) {
         std::swap(init, cur);
+    }
 
-    if (init > 0)
+    if (init > 0) {
         left = mText.Left(init);
+    }
 
-    if (cur < (int)mText.length())
+    if (cur < (int)mText.length()) {
         right = mText.Mid(cur);
+    }
 
     mText = left + right;
 
@@ -480,8 +468,9 @@ int TextEditHelper::FindCursorIndex(const wxPoint& point)
 {
     int result = -1;
     wxMemoryDC dc;
-    if (mFont.Ok())
+    if (mFont.Ok()) {
         dc.SetFont(mFont);
+    }
 
     // A bool indicator to see if set the cursor position or not
     bool finished = false;
@@ -492,8 +481,9 @@ int TextEditHelper::FindCursorIndex(const wxPoint& point)
     wxString subString;
 
     auto offsetX = 0;
-    if (mOffset > 0)
+    if (mOffset > 0) {
         offsetX = dc.GetTextExtent(mText.Left(mOffset)).GetWidth();
+    }
 
     const auto layout = wxTheApp->GetLayoutDirection();
 
@@ -511,64 +501,60 @@ int TextEditHelper::FindCursorIndex(const wxPoint& point)
 
         // Get the width of the last character
         dc.GetTextExtent(subString.Right(1), &oneWidth, NULL);
-        
-        if (layout == wxLayout_RightToLeft)
-        {
+
+        if (layout == wxLayout_RightToLeft) {
             auto bound = mBBox.GetRight() - partWidth + offsetX + oneWidth / 2;
-            if (point.x >= bound)
-            {
+            if (point.x >= bound) {
                 result = charIndex - 1;
                 finished = true;
             }
-        }
-        else
-        {
+        } else {
             auto bound = mBBox.GetLeft() + partWidth - offsetX - oneWidth / 2;
-            if (point.x <= bound)
-            {
+            if (point.x <= bound) {
                 result = charIndex - 1;
                 finished = true;
             }
         }
-        if (!finished)
+        if (!finished) {
             ++charIndex;
-        else
+        } else {
             break;
+        }
     }
-    if (!finished)
+    if (!finished) {
         // Cursor should be in the last position
         result = length;
+    }
 
     return result;
 }
 
 bool TextEditHelper::GetCharPositionX(int index, int* outX)
 {
-    if (!mFont.Ok())
+    if (!mFont.Ok()) {
         return false;
+    }
 
     wxMemoryDC dc;
     dc.SetFont(mFont);
 
     int offsetX{ 0 };
-    if (mOffset > 0)
-    {
+    if (mOffset > 0) {
         offsetX = dc.GetTextExtent(mText.Left(mOffset)).GetWidth();
     }
 
-    if (wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft)
-    {
-        if (index <= 0)
+    if (wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft) {
+        if (index <= 0) {
             *outX = mBBox.GetRight() + offsetX;
-        else
+        } else {
             *outX = mBBox.GetRight() - dc.GetTextExtent(mText.Left(index)).GetWidth() + offsetX;
-    }
-    else
-    {
-        if (index <= 0)
+        }
+    } else {
+        if (index <= 0) {
             *outX = mBBox.GetLeft() - offsetX;
-        else
+        } else {
             *outX = mBBox.GetLeft() + dc.GetTextExtent(mText.Left(index)).GetWidth() - offsetX;
+        }
     }
 
     return true;
@@ -584,28 +570,33 @@ const wxRect& TextEditHelper::GetBBox() const
 bool TextEditHelper::CutSelectedText(AudacityProject& project)
 {
     auto delegate = mDelegate.lock();
-    if (!delegate)
+    if (!delegate) {
         return false;
+    }
 
-    if (mCurrentCursorPos == mInitialCursorPos)
+    if (mCurrentCursorPos == mInitialCursorPos) {
         return false;
+    }
 
     int init = mInitialCursorPos;
     int cur = mCurrentCursorPos;
-    if (init > cur)
+    if (init > cur) {
         std::swap(init, cur);
+    }
 
     wxString left, right;
     // data for cutting
     wxString data = mText.Mid(init, cur - init);
 
     // get left-remaining text
-    if (init > 0)
+    if (init > 0) {
         left = mText.Left(init);
+    }
 
     // get right-remaining text
-    if (cur < (int)mText.length())
+    if (cur < (int)mText.length()) {
         right = mText.Mid(cur);
+    }
 
     // set title to the combination of the two remainders
     mText = left + right;
@@ -628,16 +619,19 @@ bool TextEditHelper::CutSelectedText(AudacityProject& project)
 ///  @return true if text is selected in text box, false otherwise
 bool TextEditHelper::CopySelectedText(AudacityProject& project)
 {
-    if (mCurrentCursorPos == mInitialCursorPos)
+    if (mCurrentCursorPos == mInitialCursorPos) {
         return false;
+    }
 
     int init = mInitialCursorPos;
     int cur = mCurrentCursorPos;
-    if (init > cur)
+    if (init > cur) {
         std::swap(init, cur);
+    }
 
-    if (init == cur)
+    if (init == cur) {
         return false;
+    }
 
     // data for copying
     wxString data = mText.Mid(init, cur - init);
@@ -658,14 +652,14 @@ bool TextEditHelper::CopySelectedText(AudacityProject& project)
 bool TextEditHelper::PasteSelectedText(AudacityProject& project)
 {
     auto delegate = mDelegate.lock();
-    if (!delegate)
+    if (!delegate) {
         return false;
+    }
 
     wxString text, left, right;
 
     // if text data is available
-    if (wxTheClipboard->IsSupported(wxDF_UNICODETEXT))
-    {
+    if (wxTheClipboard->IsSupported(wxDF_UNICODETEXT)) {
         if (wxTheClipboard->Open()) {
             wxTextDataObject data;
             wxTheClipboard->GetData(data);
@@ -682,12 +676,14 @@ bool TextEditHelper::PasteSelectedText(AudacityProject& project)
     }
 
     int cur = mCurrentCursorPos, init = mInitialCursorPos;
-    if (init > cur)
+    if (init > cur) {
         std::swap(init, cur);
+    }
 
     left = mText.Left(init);
-    if (cur < (int)mText.length())
+    if (cur < (int)mText.length()) {
         right = mText.Mid(cur);
+    }
 
     mText = left + text + right;
 

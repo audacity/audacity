@@ -7,55 +7,60 @@
 #include "NoteTrack.h"
 #include "ViewInfo.h"
 
-class NoteTrackShifter final : public TrackShifter {
+class NoteTrackShifter final : public TrackShifter
+{
 public:
-   NoteTrackShifter( NoteTrack &track )
-      : mpTrack{ track.SharedPointer<NoteTrack>() }
-   {
-      InitIntervals();
-   }
-   ~NoteTrackShifter() override {}
-   Track &GetTrack() const override { return *mpTrack; }
-   
-   HitTestResult HitTest(
-      double time, const ViewInfo &viewInfo, HitTestParams* ) override
-   {
-      UnfixAll();
-      auto t0 = viewInfo.selectedRegion.t0();
-      auto t1 = viewInfo.selectedRegion.t1();
-      if ( mpTrack->IsSelected() && time >= t0 && time < t1 )
-         return HitTestResult::Selection;
-      else
-         return HitTestResult::Intervals;
-   }
+    NoteTrackShifter(NoteTrack& track)
+        : mpTrack{track.SharedPointer<NoteTrack>()}
+    {
+        InitIntervals();
+    }
 
-   void SelectInterval(TimeInterval interval) override
-   {
-      CommonSelectInterval(interval);
-   }
+    ~NoteTrackShifter() override {}
+    Track& GetTrack() const override { return *mpTrack; }
 
-   bool SyncLocks() override { return true; }
+    HitTestResult HitTest(
+        double time, const ViewInfo& viewInfo, HitTestParams*) override
+    {
+        UnfixAll();
+        auto t0 = viewInfo.selectedRegion.t0();
+        auto t1 = viewInfo.selectedRegion.t1();
+        if (mpTrack->IsSelected() && time >= t0 && time < t1) {
+            return HitTestResult::Selection;
+        } else {
+            return HitTestResult::Intervals;
+        }
+    }
 
-   // Ensure that t0 is still within the data.
-   // This corrects for any rounding errors.
-   double AdjustT0(double t0) const override
-   {
-      auto& track = GetTrack();
-      if (t0 < track.GetStartTime())
-         t0 = track.GetStartTime();
-      if (t0 > track.GetEndTime())
-         t0 = track.GetEndTime();
+    void SelectInterval(TimeInterval interval) override
+    {
+        CommonSelectInterval(interval);
+    }
 
-      return t0;
-   }
+    bool SyncLocks() override { return true; }
+
+    // Ensure that t0 is still within the data.
+    // This corrects for any rounding errors.
+    double AdjustT0(double t0) const override
+    {
+        auto& track = GetTrack();
+        if (t0 < track.GetStartTime()) {
+            t0 = track.GetStartTime();
+        }
+        if (t0 > track.GetEndTime()) {
+            t0 = track.GetEndTime();
+        }
+
+        return t0;
+    }
 
 private:
-   const std::shared_ptr<NoteTrack> mpTrack;
+    const std::shared_ptr<NoteTrack> mpTrack;
 };
 
 using MakeNoteTrackShifter = MakeTrackShifter::Override<NoteTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(MakeNoteTrackShifter) {
-   return [](NoteTrack &track, AudacityProject&) {
-      return std::make_unique<NoteTrackShifter>(track);
-   };
+    return [](NoteTrack& track, AudacityProject&) {
+        return std::make_unique<NoteTrackShifter>(track);
+    };
 }

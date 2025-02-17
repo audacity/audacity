@@ -16,13 +16,10 @@ Paul Licameli split from TrackPanel.cpp
 class Ruler;
 class WaveTrack;
 
-namespace WaveChannelVRulerControls
-{
-   AUDACITY_DLL_API Ruler &ScratchRuler();
+namespace WaveChannelVRulerControls {
+AUDACITY_DLL_API Ruler& ScratchRuler();
 
-   AUDACITY_DLL_API void DoDraw(ChannelVRulerControls &controls,
-      TrackPanelDrawingContext &context,
-      const wxRect &rect, unsigned iPass);
-};
+AUDACITY_DLL_API void DoDraw(ChannelVRulerControls& controls, TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass);
+}
 
 #endif

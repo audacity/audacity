@@ -25,21 +25,22 @@
 HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe, bool moving)
 {
     static wxCursor arrowCursor{ wxCURSOR_ARROW };
-    static auto handOpenCursor =
-        MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
-    static auto handClosedCursor =
-        MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
+    static auto handOpenCursor
+        =MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
+    static auto handClosedCursor
+        =MakeCursor(wxCURSOR_HAND, RearrangingCursorXpm, 16, 16);
     // i18n-hint Appears on hovering mouse over clip affordance
-    auto message = XO("Drag clips to reposition them."\
-        " Hold Shift and drag to move all clips on the same track.");
+    auto message = XO("Drag clips to reposition them." \
+                      " Hold Shift and drag to move all clips on the same track.");
 
-    if (unsafe)
-        return { message, &arrowCursor };
+    if (unsafe) {
+        return { message, &arrowCursor }
+    }
     return {
         message,
         (moving
-        ? &*handClosedCursor
-        : &*handOpenCursor)
+         ? &*handClosedCursor
+         : &*handOpenCursor)
     };
 }
 
@@ -69,15 +70,13 @@ UIHandle::Result AffordanceHandle::Click(const TrackPanelMouseEvent& evt, Audaci
 
 UIHandle::Result AffordanceHandle::Drag(const TrackPanelMouseEvent& event, AudacityProject* pProject)
 {
-    if(!mMoving)
-    {
-        if(std::abs(mClickPosition.x - event.event.m_x) >= MoveThreshold ||
-           std::abs(mClickPosition.y - event.event.m_y) >= MoveThreshold)
-        {
+    if (!mMoving) {
+        if (std::abs(mClickPosition.x - event.event.m_x) >= MoveThreshold
+            || std::abs(mClickPosition.y - event.event.m_y) >= MoveThreshold) {
             mMoving = true;
-        }
-        else
+        } else {
             return RefreshCode::RefreshNone;
+        }
     }
     return TimeShiftHandle::Drag(event, pProject);
 }
@@ -85,8 +84,9 @@ UIHandle::Result AffordanceHandle::Drag(const TrackPanelMouseEvent& event, Audac
 UIHandle::Result AffordanceHandle::Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent)
 {
     auto result = TimeShiftHandle::Release(event, pProject, pParent);
-    if (!WasMoved())
+    if (!WasMoved()) {
         result |= UpdateTrackSelection(event, pProject);
+    }
     return result;
 }
 
@@ -94,8 +94,7 @@ UIHandle::Result AffordanceHandle::UpdateTrackSelection(const TrackPanelMouseEve
 {
     auto& trackList = TrackList::Get(*pProject);
 
-    if(const auto track = trackList.Lock<Track>(GetTrack()))
-    {
+    if (const auto track = trackList.Lock<Track>(GetTrack())) {
         auto& selectionState = SelectionState::Get(*pProject);
         selectionState.SelectNone(trackList);
         selectionState.SelectTrack(*track, true, true);

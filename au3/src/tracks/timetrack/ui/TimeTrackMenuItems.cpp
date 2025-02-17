@@ -24,39 +24,38 @@ Paul Licameli split from TrackMenus.cpp
 namespace {
 using namespace MenuRegistry;
 
-void OnNewTimeTrack(const CommandContext &context)
+void OnNewTimeTrack(const CommandContext& context)
 {
-   auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
+    auto& project = context.project;
+    auto& tracks = TrackList::Get(project);
 
-   auto t = tracks.AddToHead(std::make_shared<TimeTrack>());
+    auto t = tracks.AddToHead(std::make_shared<TimeTrack>());
 
-   SelectUtilities::SelectNone( project );
+    SelectUtilities::SelectNone(project);
 
-   t->SetSelected(true);
+    t->SetSelected(true);
 
-   ProjectHistory::Get( project )
-      .PushState(XO("Created new time track"), XO("New Track"));
+    ProjectHistory::Get(project)
+    .PushState(XO("Created new time track"), XO("New Track"));
 
-   TrackFocus::Get(project).Set(t);
-   Viewport::Get(project).ShowTrack(*t);
+    TrackFocus::Get(project).Set(t);
+    Viewport::Get(project).ShowTrack(*t);
 }
 
-const ReservedCommandFlag &TimeTrackDoesNotExistFlag()
+const ReservedCommandFlag& TimeTrackDoesNotExistFlag()
 {
-   static ReservedCommandFlag flag{
-      [](const AudacityProject &project){
-         return TrackList::Get(project).Any<const TimeTrack>().empty();
-      }
-   };
-   return flag;
+    static ReservedCommandFlag flag{
+        [](const AudacityProject& project){
+            return TrackList::Get(project).Any<const TimeTrack>().empty();
+        }
+    };
+    return flag;
 }
 
 AttachedItem sAttachment{
-   Command( wxT("NewTimeTrack"), XXO("&Time Track"),
-        OnNewTimeTrack, AudioIONotBusyFlag() | TimeTrackDoesNotExistFlag()
-   ),
-   wxT("Tracks/Add/Add")
+    Command(wxT("NewTimeTrack"), XXO("&Time Track"),
+            OnNewTimeTrack, AudioIONotBusyFlag() | TimeTrackDoesNotExistFlag()
+            ),
+    wxT("Tracks/Add/Add")
 };
-
 }

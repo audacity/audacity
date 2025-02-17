@@ -19,39 +19,33 @@ class EnvelopeHandle;
 
 class WaveformView final : public WaveChannelSubView
 {
-   WaveformView(const WaveformView&) = delete;
-   WaveformView &operator=(const WaveformView&) = delete;
+    WaveformView(const WaveformView&) = delete;
+    WaveformView& operator=(const WaveformView&) = delete;
 
 public:
-   using WaveChannelSubView::WaveChannelSubView;
-   ~WaveformView() override;
+    using WaveChannelSubView::WaveChannelSubView;
+    ~WaveformView() override;
 
-   const Type &SubViewType() const override;
+    const Type& SubViewType() const override;
 
-   std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
-
+    std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
 private:
-   // TrackPanelDrawable implementation
-   void Draw(
-      TrackPanelDrawingContext &context,
-      const wxRect &rect, unsigned iPass ) override;
-   static void DoDraw(TrackPanelDrawingContext &context,
-      const WaveChannel &channel,
-      const WaveTrack::Interval* selectedClip,
-      const wxRect & rect,
-      bool muted);
+    // TrackPanelDrawable implementation
+    void Draw(
+        TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
+    static void DoDraw(TrackPanelDrawingContext& context, const WaveChannel& channel, const WaveTrack::Interval* selectedClip,
+                       const wxRect& rect, bool muted);
 
-   std::vector<UIHandlePtr> DetailedHitTest(
-      const TrackPanelMouseState &state,
-      const AudacityProject *pProject, int currentTool, bool bMultiTool )
-      override;
+    std::vector<UIHandlePtr> DetailedHitTest(
+        const TrackPanelMouseState& state, const AudacityProject* pProject, int currentTool, bool bMultiTool)
+    override;
 
 protected:
-   void DoSetMinimized( bool minimized ) override;
+    void DoSetMinimized(bool minimized) override;
 
-   std::weak_ptr<SampleHandle> mSampleHandle;
-   std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
+    std::weak_ptr<SampleHandle> mSampleHandle;
+    std::weak_ptr<EnvelopeHandle> mEnvelopeHandle;
 };
 
 #endif

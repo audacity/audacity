@@ -24,82 +24,79 @@
 #include <wx/dc.h>
 #include <wx/event.h>
 
-namespace
-{
+namespace {
 void SelectInterval(
-   AudacityProject& project, const WaveTrack::Interval& interval)
+    AudacityProject& project, const WaveTrack::Interval& interval)
 {
-   auto& viewInfo = ViewInfo::Get(project);
-   viewInfo.selectedRegion.setTimes(
-      interval.GetPlayStartTime(), interval.GetPlayEndTime());
-   ProjectHistory::Get(project).ModifyState(false);
+    auto& viewInfo = ViewInfo::Get(project);
+    viewInfo.selectedRegion.setTimes(
+        interval.GetPlayStartTime(), interval.GetPlayEndTime());
+    ProjectHistory::Get(project).ModifyState(false);
 }
 } // namespace
 
 ClipOverflowButtonHandle::ClipOverflowButtonHandle(
-   const std::shared_ptr<WaveTrack>& track,
-   const std::shared_ptr<WaveTrack::Interval>& clip,
-   std::weak_ptr<TrackPanelCell> cell)
-    : HighlitClipButtonHandle { ClipButtonId::Overflow, track, clip }
-    , mCell { std::move(cell) }
+    const std::shared_ptr<WaveTrack>& track,
+    const std::shared_ptr<WaveTrack::Interval>& clip,
+    std::weak_ptr<TrackPanelCell> cell)
+    : HighlitClipButtonHandle{ClipButtonId::Overflow, track, clip}
+    , mCell{std::move(cell)}
 {
 }
 
 void ClipOverflowButtonHandle::DoDraw(const wxRect& rect, wxDC& dc)
 {
-   const ClipInterface& clip = *mClip;
-   ClipButtonDrawingArgs args { rect, clip, dc };
-   ClipButtonSpecializations<ClipButtonId::Overflow>::DrawOnClip(args);
+    const ClipInterface& clip = *mClip;
+    ClipButtonDrawingArgs args { rect, clip, dc };
+    ClipButtonSpecializations<ClipButtonId::Overflow>::DrawOnClip(args);
 }
 
 UIHandle::Result ClipOverflowButtonHandle::DoRelease(
-   const TrackPanelMouseEvent& event, AudacityProject* pProject,
-   wxWindow* pParent)
+    const TrackPanelMouseEvent& event, AudacityProject* pProject,
+    wxWindow* pParent)
 {
-   if (const auto cell = mCell.lock())
-   {
-      SelectInterval(*pProject, *mClip);
-      const wxPoint point { event.event.GetPosition() };
-      return cell->DoContextMenu(event.rect, pParent, &point, pProject);
-   }
-   return RefreshCode::RefreshNone;
+    if (const auto cell = mCell.lock()) {
+        SelectInterval(*pProject, *mClip);
+        const wxPoint point { event.event.GetPosition() };
+        return cell->DoContextMenu(event.rect, pParent, &point, pProject);
+    }
+    return RefreshCode::RefreshNone;
 }
 
 HitTestPreview ClipOverflowButtonHandle::Preview(
-   const TrackPanelMouseState& state, AudacityProject* pProject)
+    const TrackPanelMouseState& state, AudacityProject* pProject)
 {
-   return { XO("Click to open clip context menu."), nullptr };
+    return { XO("Click to open clip context menu."), nullptr };
 }
 
 int ClipButtonSpecializations<ClipButtonId::Overflow>::GetWidth(
-   const ClipInterface&)
+    const ClipInterface&)
 {
-   return 30;
+    return 30;
 }
 
 bool ClipButtonSpecializations<ClipButtonId::Overflow>::NeedsDrawing(
-   const ClipInterface&)
+    const ClipInterface&)
 {
-   return true;
+    return true;
 }
 
 void ClipButtonSpecializations<ClipButtonId::Overflow>::DrawOnClip(
-   ClipButtonDrawingArgs& args)
+    ClipButtonDrawingArgs& args)
 {
-   auto& dc = args.dc;
-   const auto& rect = args.rect;
-   constexpr auto penWidth = 0;
-   wxDCPenChanger pen { args.dc, { wxPenInfo { theTheme.Colour(clrClipNameText), penWidth } } };
-   wxDCBrushChanger brush { dc, theTheme.Colour(clrClipNameText) };
-   constexpr auto numDots = 3;
-   constexpr auto radius = 1;
-   constexpr auto spacing = 4;
-   constexpr auto totalWidth = numDots * 2 * radius + 2 * spacing;
-   const auto dotY = rect.y + (rect.height + 1 - radius) / 2;
-   for (auto i = 0; i < numDots; ++i)
-   {
-      const auto dotX = rect.x + (rect.width + 1 - totalWidth) / 2 +
-                        i * (2 * radius + spacing);
-      dc.DrawCircle(dotX, dotY, radius);
-   }
+    auto& dc = args.dc;
+    const auto& rect = args.rect;
+    constexpr auto penWidth = 0;
+    wxDCPenChanger pen { args.dc, { wxPenInfo { theTheme.Colour(clrClipNameText), penWidth } } };
+    wxDCBrushChanger brush { dc, theTheme.Colour(clrClipNameText) };
+    constexpr auto numDots = 3;
+    constexpr auto radius = 1;
+    constexpr auto spacing = 4;
+    constexpr auto totalWidth = numDots * 2 * radius + 2 * spacing;
+    const auto dotY = rect.y + (rect.height + 1 - radius) / 2;
+    for (auto i = 0; i < numDots; ++i) {
+        const auto dotX = rect.x + (rect.width + 1 - totalWidth) / 2
+                          + i * (2 * radius + spacing);
+        dc.DrawCircle(dotX, dotY, radius);
+    }
 }

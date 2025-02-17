@@ -20,32 +20,30 @@ class TimeTrackVZoomHandle;
 // types, but it does nothing.
 class TimeTrackVRulerControls final : public ChannelVRulerControls
 {
-   TimeTrackVRulerControls(const TimeTrackVRulerControls&) = delete;
-   TimeTrackVRulerControls &operator=(const TimeTrackVRulerControls&) = delete;
+    TimeTrackVRulerControls(const TimeTrackVRulerControls&) = delete;
+    TimeTrackVRulerControls& operator=(const TimeTrackVRulerControls&) = delete;
 
 public:
-   explicit
-   TimeTrackVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
-      : ChannelVRulerControls{ pChannelView } {}
-   ~TimeTrackVRulerControls();
+    explicit
+    TimeTrackVRulerControls(const std::shared_ptr<ChannelView>& pChannelView)
+        : ChannelVRulerControls{pChannelView} {}
+    ~TimeTrackVRulerControls();
 
-   std::shared_ptr<TimeTrack> FindTimeTrack();
+    std::shared_ptr<TimeTrack> FindTimeTrack();
 
-   std::vector<UIHandlePtr> HitTest(
-      const TrackPanelMouseState &state,
-      const AudacityProject *) override;
+    std::vector<UIHandlePtr> HitTest(
+        const TrackPanelMouseState& state, const AudacityProject*) override;
 
 private:
 
-   // TrackPanelDrawable implementation
-   void Draw(
-      TrackPanelDrawingContext &context,
-      const wxRect &rect, unsigned iPass) override;
+    // TrackPanelDrawable implementation
+    void Draw(
+        TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
 
-   // ChannelVRulerControls implementation
-   void UpdateRuler(const wxRect &rect) override;
+    // ChannelVRulerControls implementation
+    void UpdateRuler(const wxRect& rect) override;
 
-   std::weak_ptr<TimeTrackVZoomHandle> mVZoomHandle;
+    std::weak_ptr<TimeTrackVZoomHandle> mVZoomHandle;
 };
 
 #endif

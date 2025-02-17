@@ -19,7 +19,6 @@
 #include "tracks/ui/CommonTrackPanelCell.h"
 #include "tracks/ui/TextEditHelper.h"
 
-
 struct TrackListEvent;
 
 class AffordanceHandle;
@@ -35,9 +34,7 @@ class TrackList;
 
 //Handles clip movement, selection, navigation and
 //allow name change
-class AUDACITY_DLL_API WaveTrackAffordanceControls :
-    public CommonTrackCell,
-    public TextEditDelegate,
+class AUDACITY_DLL_API WaveTrackAffordanceControls : public CommonTrackCell, public TextEditDelegate,
     public std::enable_shared_from_this<WaveTrackAffordanceControls>
 {
     using IntervalIterator = ChannelGroup::IntervalIterator<WaveTrack::Interval>;
@@ -69,18 +66,13 @@ public:
 
     IntervalIterator GetSelectedInterval() const;
 
-    unsigned CaptureKey
-    (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
-        AudacityProject* project) override;
+    unsigned CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project) override;
 
-    unsigned KeyDown (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
-        AudacityProject* project) override;
+    unsigned KeyDown(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project) override;
 
-    unsigned Char
-    (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
-        AudacityProject* project) override;
+    unsigned Char(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, AudacityProject* project) override;
 
-    unsigned LoseFocus(AudacityProject *project) override;
+    unsigned LoseFocus(AudacityProject* project) override;
 
     void OnTextEditFinished(AudacityProject* project, const wxString& text) override;
     void OnTextEditCancelled(AudacityProject* project) override;
@@ -101,7 +93,7 @@ public:
     void OnRenderClipStretching(AudacityProject& project) const;
 
     std::vector<MenuItem> GetMenuItems(
-       const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
+        const wxRect& rect, const wxPoint* pPosition, AudacityProject* pProject)
     override;
 private:
 
