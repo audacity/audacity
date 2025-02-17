@@ -23,11 +23,8 @@
 #include "../CookiesList.h"
 #include "../HeadersList.h"
 
-namespace audacity
-{
-namespace network_manager
-{
-
+namespace audacity {
+namespace network_manager {
 class CurlHandleManager final
 {
 public:
@@ -39,21 +36,21 @@ public:
         Handle (Handle&& rhs) noexcept;
         ~Handle () noexcept;
 
-        Handle& operator = (Handle&& rhs) noexcept;
+        Handle& operator =(Handle&& rhs) noexcept;
 
-        template<typename... Args>
-        CURLcode setOption (CURLoption option, Args... value) noexcept
+        template<typename ... Args>
+        CURLcode setOption(CURLoption option, Args... value) noexcept
         {
-            return curl_easy_setopt (mHandle, option, value...);
+            return curl_easy_setopt(mHandle, option, value ...);
         }
 
-        CURLcode setOption (CURLoption option, const std::string& value) noexcept;
+        CURLcode setOption(CURLoption option, const std::string& value) noexcept;
 
-        CURLcode appendCookie (const Cookie& cookie) noexcept;
-        CURLcode appendCookies (const CookiesList& cookie) noexcept;
+        CURLcode appendCookie(const Cookie& cookie) noexcept;
+        CURLcode appendCookies(const CookiesList& cookie) noexcept;
 
-        void appendHeader (const Header& header);
-        void appendHeaders (const HeadersList& headers);
+        void appendHeader(const Header& header);
+        void appendHeaders(const HeadersList& headers);
 
         struct Result final
         {
@@ -61,15 +58,15 @@ public:
             std::string Message;
         };
 
-        Result perform ();
+        Result perform();
 
-        void markKeepAlive ();
+        void markKeepAlive();
 
-        bool isHandleFromCache () const noexcept;
+        bool isHandleFromCache() const noexcept;
 
-        unsigned getHTTPCode () const noexcept;
+        unsigned getHTTPCode() const noexcept;
 
-        void reset () noexcept;
+        void reset() noexcept;
 
         CURL* getCurlHandle() const noexcept;
 
@@ -92,15 +89,15 @@ public:
     CurlHandleManager ();
     ~CurlHandleManager ();
 
-    void setProxy (std::string proxy);
+    void setProxy(std::string proxy);
 
-    Handle getHandle (RequestVerb verb, const std::string& url);
+    Handle getHandle(RequestVerb verb, const std::string& url);
 private:
     using RequestClock = std::chrono::steady_clock;
     using RequestTimePoint = RequestClock::time_point;
-    
-    static constexpr std::chrono::milliseconds KEEP_ALIVE_IDLE { std::chrono::seconds (120) };
-    static constexpr std::chrono::milliseconds KEEP_ALIVE_PROBE { std::chrono::seconds (60) };
+
+    static constexpr std::chrono::milliseconds KEEP_ALIVE_IDLE { std::chrono::seconds(120) };
+    static constexpr std::chrono::milliseconds KEEP_ALIVE_PROBE { std::chrono::seconds(60) };
 
     struct CachedHandle final
     {
@@ -112,14 +109,14 @@ private:
         RequestTimePoint RequestTime;
     };
 
-    std::string getUserAgent () const;
+    std::string getUserAgent() const;
 
-    CURL* getCurlHandleFromCache (RequestVerb verb, const std::string& url);
-    void cacheHandle (Handle& handle);
+    CURL* getCurlHandleFromCache(RequestVerb verb, const std::string& url);
+    void cacheHandle(Handle& handle);
 
-    void cleanupHandlesCache ();
+    void cleanupHandlesCache();
 
-    static std::string GetSchemeAndDomain (const std::string& url);
+    static std::string GetSchemeAndDomain(const std::string& url);
 
     std::string mProxy;
     std::string mUserAgent;
@@ -127,6 +124,5 @@ private:
     std::mutex mHandleCacheLock;
     std::vector<CachedHandle> mHandleCache;
 };
-
 }
 }

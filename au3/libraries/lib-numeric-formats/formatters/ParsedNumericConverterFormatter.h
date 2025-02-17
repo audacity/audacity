@@ -20,5 +20,4 @@ class FormatterContext;
 
 NUMERIC_FORMATS_API std::unique_ptr<NumericConverterFormatter>
 CreateParsedNumericConverterFormatter(
-   const FormatterContext& context, NumericConverterType type,
-   const TranslatableString& format);
+    const FormatterContext& context, NumericConverterType type, const TranslatableString& format);

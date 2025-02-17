@@ -13,7 +13,7 @@
 #include "Identifier.h"
 
 using NumericConverterType = Identifier;
- 
+
 NUMERIC_FORMATS_API const NumericConverterType& NumericConverterType_TIME();
 NUMERIC_FORMATS_API const NumericConverterType& NumericConverterType_DURATION();
 NUMERIC_FORMATS_API const NumericConverterType& NumericConverterType_FREQUENCY();

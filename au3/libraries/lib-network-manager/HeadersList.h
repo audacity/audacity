@@ -15,13 +15,9 @@
 
 #include "NetworkManagerApi.h"
 
-namespace audacity
-{
-namespace network_manager
-{
-
-namespace common_headers
-{
+namespace audacity {
+namespace network_manager {
+namespace common_headers {
 extern NETWORK_MANAGER_API const std::string Accept;
 extern NETWORK_MANAGER_API const std::string AcceptEncoding;
 extern NETWORK_MANAGER_API const std::string AcceptLanguage;
@@ -41,8 +37,7 @@ extern NETWORK_MANAGER_API const std::string IfNoneMatch;
 extern NETWORK_MANAGER_API const std::string IfModifiedSince;
 } // namespace common_headers
 
-namespace common_content_types
-{
+namespace common_content_types {
 extern NETWORK_MANAGER_API const std::string ApplicationJson;
 extern NETWORK_MANAGER_API const std::string ApplicationXml;
 extern NETWORK_MANAGER_API const std::string ApplicationXWwwFormUrlencoded;
@@ -55,10 +50,10 @@ struct NETWORK_MANAGER_API Header final
     std::string Name;
     std::string Value;
 
-    bool hasSameName (const Header& header) const;
-    bool hasSameName (const std::string& name) const;
+    bool hasSameName(const Header& header) const;
+    bool hasSameName(const std::string& name) const;
 
-    static Header Parse (const std::string& header);
+    static Header Parse(const std::string& header);
 };
 
 class NETWORK_MANAGER_API HeadersList final
@@ -68,32 +63,31 @@ public:
     using HeadersIterator = HeadersStorageType::iterator;
     using HeadersConstIterator = HeadersStorageType::const_iterator;
 
-    void setHeader (const Header& header);
-    void setHeader (const std::string& headerName, std::string headerValue);
+    void setHeader(const Header& header);
+    void setHeader(const std::string& headerName, std::string headerValue);
 
-    void addHeader (Header header);
-    void addHeader (std::string headerName, std::string headerValue);
+    void addHeader(Header header);
+    void addHeader(std::string headerName, std::string headerValue);
 
-    bool hasHeader (const std::string& headerName) const noexcept;
+    bool hasHeader(const std::string& headerName) const noexcept;
 
-    std::string getHeaderValue (const std::string& headerName) const;
+    std::string getHeaderValue(const std::string& headerName) const;
 
-    const Header* getHeader (size_t idx) const noexcept;
-    const Header* getHeader (const std::string& name) const noexcept;
+    const Header* getHeader(size_t idx) const noexcept;
+    const Header* getHeader(const std::string& name) const noexcept;
 
-    size_t getHeadersCount () const noexcept;
+    size_t getHeadersCount() const noexcept;
 
-    HeadersIterator begin () noexcept;
-    HeadersIterator end () noexcept;
+    HeadersIterator begin() noexcept;
+    HeadersIterator end() noexcept;
 
-    HeadersConstIterator begin () const noexcept;
-    HeadersConstIterator end () const noexcept;
+    HeadersConstIterator begin() const noexcept;
+    HeadersConstIterator end() const noexcept;
 private:
-    Header* getHeader (size_t idx) noexcept;
-    Header* getHeader (const std::string& headerName) noexcept;
+    Header* getHeader(size_t idx) noexcept;
+    Header* getHeader(const std::string& headerName) noexcept;
 
     HeadersStorageType mHeaders;
 };
-
 }
 }
