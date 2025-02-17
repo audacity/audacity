@@ -10,18 +10,17 @@
 
 #pragma once
 
-	
 #include "wxPanelWrapper.h"
 
 /// An error dialog about unwritable location, that allows to navigate to settings quickly
 class UnwritableLocationErrorDialog final : public wxDialogWrapper
 {
 public:
-   explicit UnwritableLocationErrorDialog(wxWindow* parent, const wxString& path);
-   virtual ~UnwritableLocationErrorDialog();
+    explicit UnwritableLocationErrorDialog(wxWindow* parent, const wxString& path);
+    virtual ~UnwritableLocationErrorDialog();
 
-   void OnOk(wxCommandEvent& event);
-   void OnError(wxCommandEvent& event);
+    void OnOk(wxCommandEvent& event);
+    void OnError(wxCommandEvent& event);
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };

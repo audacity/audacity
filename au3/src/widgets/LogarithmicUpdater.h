@@ -14,19 +14,18 @@
 
 #include "GeneratedUpdater.h"
 
-class LogarithmicUpdater final : public GeneratedUpdater {
+class LogarithmicUpdater final : public GeneratedUpdater
+{
 public:
-   static const LogarithmicUpdater &Instance();
+    static const LogarithmicUpdater& Instance();
 
-   ~LogarithmicUpdater() override;
+    ~LogarithmicUpdater() override;
 
-   void Update(
-      wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs, const RulerStruct& context
-   ) const override;
+    void Update(
+        wxDC& dc, const Envelope* envelope, UpdateOutputs& allOutputs, const RulerStruct& context) const override;
 
 private:
-   LogarithmicUpdater() = default;
+    LogarithmicUpdater() = default;
 };
 
 #endif

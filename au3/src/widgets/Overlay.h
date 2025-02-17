@@ -9,8 +9,6 @@
 #ifndef __AUDACITY_OVERLAY__
 #define __AUDACITY_OVERLAY__
 
-
-
 #include <utility>
 
 class OverlayPanel;
@@ -93,29 +91,29 @@ AdornedRulerPanel.
 class AUDACITY_DLL_API Overlay
 {
 public:
-   Overlay() = default;
-   Overlay( const Overlay & ) = delete;
-   Overlay &operator=( const Overlay & ) = delete;
-   virtual ~Overlay() = 0;
+    Overlay() = default;
+    Overlay(const Overlay&) = delete;
+    Overlay& operator=(const Overlay&) = delete;
+    virtual ~Overlay() = 0;
 
-   ///\brief This number determines an ordering of overlays, so that those
-   /// with higher numbers overpaint those with lower numbers that intersect
-   virtual unsigned SequenceNumber() const = 0;
+    ///\brief This number determines an ordering of overlays, so that those
+    /// with higher numbers overpaint those with lower numbers that intersect
+    virtual unsigned SequenceNumber() const = 0;
 
-   // nonvirtual wrapper
-   std::pair<wxRect, bool> GetRectangle(wxSize size);
+    // nonvirtual wrapper
+    std::pair<wxRect, bool> GetRectangle(wxSize size);
 
-   // size passes the dimensions of the backing dc
-   // First member of pair is the rectangle that would be erased
-   // Second member of pair indicates whether the overlay is out of date
-   virtual std::pair<wxRect, bool> DoGetRectangle(wxSize size) = 0;
+    // size passes the dimensions of the backing dc
+    // First member of pair is the rectangle that would be erased
+    // Second member of pair indicates whether the overlay is out of date
+    virtual std::pair<wxRect, bool> DoGetRectangle(wxSize size) = 0;
 
-   // Default implementation blits from backing store over GetRectangle().first
-   virtual void Erase(wxDC &dc, wxDC &src);
+    // Default implementation blits from backing store over GetRectangle().first
+    virtual void Erase(wxDC& dc, wxDC& src);
 
-   // Draw; dc.GetSize() tells you the total dimensions, and the panel is supplied
-   // as context
-   virtual void Draw(OverlayPanel &panel, wxDC &dc) = 0;
+    // Draw; dc.GetSize() tells you the total dimensions, and the panel is supplied
+    // as context
+    virtual void Draw(OverlayPanel& panel, wxDC& dc) = 0;
 };
 
 #endif

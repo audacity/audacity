@@ -16,29 +16,28 @@
 
 class ZoomInfo;
 
-class LinearUpdater final : public GeneratedUpdater {
+class LinearUpdater final : public GeneratedUpdater
+{
 public:
-   LinearUpdater() = default;
+    LinearUpdater() = default;
 
-   // Always has default data values
-   static const LinearUpdater &Instance();
+    // Always has default data values
+    static const LinearUpdater& Instance();
 
-   ~LinearUpdater() override;
+    ~LinearUpdater() override;
 
-   void Update(
-      wxDC& dc, const Envelope* envelope,
-      UpdateOutputs& allOutputs, const RulerStruct& context
-   ) const override;
+    void Update(
+        wxDC& dc, const Envelope* envelope, UpdateOutputs& allOutputs, const RulerStruct& context) const override;
 
-   void SetData(const ZoomInfo *pZoomInfo = nullptr, int leftOffset = 0)
-   {
-      mpZoomInfo = pZoomInfo;
-      mLeftOffset = 0;
-   }
+    void SetData(const ZoomInfo* pZoomInfo = nullptr, int leftOffset = 0)
+    {
+        mpZoomInfo = pZoomInfo;
+        mLeftOffset = 0;
+    }
 
 private:
-   const ZoomInfo *mpZoomInfo{};
-   int mLeftOffset{};
+    const ZoomInfo* mpZoomInfo{};
+    int mLeftOffset{};
 };
 
 #endif

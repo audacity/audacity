@@ -19,22 +19,23 @@ class wxPaintEvent;
 class AUDACITY_DLL_API auStaticText : public wxWindow
 {
 public:
-   auStaticText(wxWindow* parent, wxString text);
-   void OnPaint(wxPaintEvent & evt);
-   bool AcceptsFocus() const override { return false; }
-   void OnErase(wxEraseEvent& event) {
-      static_cast<void>(event);
-   };
+    auStaticText(wxWindow* parent, wxString text);
+    void OnPaint(wxPaintEvent& evt);
+    bool AcceptsFocus() const override { return false; }
+    void OnErase(wxEraseEvent& event)
+    {
+        static_cast<void>(event);
+    }
 
-   //! @pre scale > 0. Function is a no-op if scale is not positive.
-   void ScaleFont(double scale);
+    //! @pre scale > 0. Function is a no-op if scale is not positive.
+    void ScaleFont(double scale);
 
-   void SetSelected(bool selected);
-   bool GetSelected() const noexcept;
+    void SetSelected(bool selected);
+    bool GetSelected() const noexcept;
 
 private:
-   bool mIsSelected { false };
-   DECLARE_EVENT_TABLE();
+    bool mIsSelected { false };
+    DECLARE_EVENT_TABLE();
 };
 
 #endif

@@ -14,22 +14,20 @@
 
 #include "RulerFormat.h"
 
-class LinearDBFormat final : public RulerFormat {
+class LinearDBFormat final : public RulerFormat
+{
 public:
-   static const LinearDBFormat &Instance();
-   ~LinearDBFormat() override;
+    static const LinearDBFormat& Instance();
+    ~LinearDBFormat() override;
 
-   void SetTickSizes(
-      double units, double& major, double& minor, double& minorMinor,
-      int& mDigits
-   ) const override;
+    void SetTickSizes(
+        double units, double& major, double& minor, double& minorMinor, int& mDigits) const override;
 
-   void SetLabelString(
-      wxString& s, double d, double units, double minor, int mDigits, TickType tickType
-   ) const override;
+    void SetLabelString(
+        wxString& s, double d, double units, double minor, int mDigits, TickType tickType) const override;
 
 private:
-   using RulerFormat::RulerFormat;
+    using RulerFormat::RulerFormat;
 };
 
 #endif

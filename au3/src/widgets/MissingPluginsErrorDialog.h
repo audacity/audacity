@@ -14,10 +14,10 @@
 class MissingPluginsErrorDialog final : public wxDialogWrapper
 {
 public:
-   explicit MissingPluginsErrorDialog(wxWindow* parent);
-   virtual ~MissingPluginsErrorDialog();
+    explicit MissingPluginsErrorDialog(wxWindow* parent);
+    virtual ~MissingPluginsErrorDialog();
 
-   void OnOk(wxCommandEvent& event);
+    void OnOk(wxCommandEvent& event);
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };

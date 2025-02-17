@@ -15,24 +15,23 @@
 #include "RulerFormat.h"
 
 // Unified what was formerly RealFormat and RealLogFormat
-class RealFormat final : public RulerFormat {
+class RealFormat final : public RulerFormat
+{
 public:
-   static const RealFormat &LinearInstance();
-   static const RealFormat &LogInstance();
-   ~RealFormat() override;
+    static const RealFormat& LinearInstance();
+    static const RealFormat& LogInstance();
+    ~RealFormat() override;
 
-   void SetTickSizes(
-      double units, double& major, double& minor, double& minorMinor,
-      int& mDigits
-   ) const override;
+    void SetTickSizes(
+        double units, double& major, double& minor, double& minorMinor, int& mDigits) const override;
 
-   void SetLabelString(
-      wxString& s, double d, double units, double minor, int mDigits, TickType tickType
-   ) const override;
+    void SetLabelString(
+        wxString& s, double d, double units, double minor, int mDigits, TickType tickType) const override;
 
 private:
-   RealFormat(bool log) : mLog{ log } {}
-   const bool mLog;
+    RealFormat(bool log)
+        : mLog{log} {}
+    const bool mLog;
 };
 
 #endif

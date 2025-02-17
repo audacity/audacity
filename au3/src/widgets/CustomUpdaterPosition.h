@@ -14,17 +14,15 @@
 
 #include "CustomUpdater.h"
 
-class CustomUpdaterPosition final : public CustomUpdater {
+class CustomUpdaterPosition final : public CustomUpdater
+{
 public:
-   static const CustomUpdaterPosition &Instance();
-   CustomUpdaterPosition() = default;
-   ~CustomUpdaterPosition() override;
+    static const CustomUpdaterPosition& Instance();
+    CustomUpdaterPosition() = default;
+    ~CustomUpdaterPosition() override;
 
 protected:
-   bool TickCustom(wxDC& dc, int labelIdx, wxFont font,
-      TickOutputs outputs,
-      const RulerStruct& context
-   ) const override;
+    bool TickCustom(wxDC& dc, int labelIdx, wxFont font, TickOutputs outputs, const RulerStruct& context) const override;
 };
 
 #endif
