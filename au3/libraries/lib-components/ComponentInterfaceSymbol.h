@@ -26,58 +26,58 @@ that internal string is not broken.
 class ComponentInterfaceSymbol
 {
 public:
-   ComponentInterfaceSymbol() = default;
-   
-   // Allows implicit construction from a msgid re-used as an internal string
-   ComponentInterfaceSymbol( const TranslatableString &msgid )
-      : mInternal{ msgid.MSGID().GET(), }, mMsgid{ msgid }
-   {}
+    ComponentInterfaceSymbol() = default;
 
-   // Allows implicit construction from an internal string re-used as a msgid
-   ComponentInterfaceSymbol( const wxString &internal )
-      : mInternal{ internal }, mMsgid{ internal, {} }
-   {}
+    // Allows implicit construction from a msgid re-used as an internal string
+    ComponentInterfaceSymbol(const TranslatableString& msgid)
+        : mInternal{msgid.MSGID().GET(), }, mMsgid{msgid}
+    {}
 
-   // Allows implicit construction from an internal string re-used as a msgid
-   ComponentInterfaceSymbol( const wxChar *msgid )
-      : mInternal{ msgid }, mMsgid{ msgid, {} }
-   {}
+    // Allows implicit construction from an internal string re-used as a msgid
+    ComponentInterfaceSymbol(const wxString& internal)
+        : mInternal{internal}, mMsgid{internal, {}}
+    {}
 
-   // Two-argument version distinguishes internal from translatable string
-   // such as when the first squeezes spaces out
-   ComponentInterfaceSymbol( const Identifier &internal,
-                         const TranslatableString &msgid )
-      : mInternal{ internal.GET() }
-      // Do not permit non-empty msgid with empty internal
-      , mMsgid{ internal.empty() ? TranslatableString{} : msgid }
-   {}
+    // Allows implicit construction from an internal string re-used as a msgid
+    ComponentInterfaceSymbol(const wxChar* msgid)
+        : mInternal{msgid}, mMsgid{msgid, {}}
+    {}
 
-   const wxString &Internal() const { return mInternal; }
-   const TranslatableString &Msgid() const { return mMsgid; }
-   const TranslatableString Stripped() const { return mMsgid.Stripped(); }
-   const wxString Translation() const { return mMsgid.Translation(); }
-   const wxString StrippedTranslation() const
-      { return Stripped().Translation(); }
+    // Two-argument version distinguishes internal from translatable string
+    // such as when the first squeezes spaces out
+    ComponentInterfaceSymbol(const Identifier& internal,
+                             const TranslatableString& msgid)
+        : mInternal{internal.GET()}
+        // Do not permit non-empty msgid with empty internal
+        , mMsgid{internal.empty() ? TranslatableString {} : msgid}
+    {}
 
-   bool empty() const { return mInternal.empty(); }
+    const wxString& Internal() const { return mInternal; }
+    const TranslatableString& Msgid() const { return mMsgid; }
+    const TranslatableString Stripped() const { return mMsgid.Stripped(); }
+    const wxString Translation() const { return mMsgid.Translation(); }
+    const wxString StrippedTranslation() const
+    { return Stripped().Translation(); }
 
-   //! Comparator for such as find_if, using internal name only
-   friend inline bool operator == (
-      const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
-   { return a.mInternal == b.mInternal; }
+    bool empty() const { return mInternal.empty(); }
 
-   friend inline bool operator != (
-      const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
-   { return !( a == b ); }
+    //! Comparator for such as find_if, using internal name only
+    friend inline bool operator ==(
+        const ComponentInterfaceSymbol& a, const ComponentInterfaceSymbol& b)
+    { return a.mInternal == b.mInternal; }
 
-   //! Comparator for use in ordered containers, using internal name only
-   friend inline bool operator < (
-      const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )
-   { return a.mInternal < b.mInternal; }
+    friend inline bool operator !=(
+        const ComponentInterfaceSymbol& a, const ComponentInterfaceSymbol& b)
+    { return !(a == b); }
+
+    //! Comparator for use in ordered containers, using internal name only
+    friend inline bool operator <(
+        const ComponentInterfaceSymbol& a, const ComponentInterfaceSymbol& b)
+    { return a.mInternal < b.mInternal; }
 
 private:
-   wxString mInternal;
-   TranslatableString mMsgid;
+    wxString mInternal;
+    TranslatableString mMsgid;
 };
 
 // TODO: real type distinctions for these aliases, and move them elsewhere
