@@ -20,18 +20,18 @@ class ShuttleGui;
 
 class ApplicationPrefs final : public PrefsPanel
 {
- public:
-   ApplicationPrefs(wxWindow * parent, wxWindowID winid);
-   ~ApplicationPrefs();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+public:
+    ApplicationPrefs(wxWindow* parent, wxWindowID winid);
+    ~ApplicationPrefs();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   ManualPageID HelpPageName() override;
+    bool Commit() override;
+    ManualPageID HelpPageName() override;
 
- private:
-   void Populate();
-   void PopulateOrExchange(ShuttleGui & S) override;
+private:
+    void Populate();
+    void PopulateOrExchange(ShuttleGui& S) override;
 };
 
 #endif

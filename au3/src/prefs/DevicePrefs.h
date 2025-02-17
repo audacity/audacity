@@ -20,61 +20,60 @@ class wxChoice;
 class wxTextCtrl;
 class ShuttleGui;
 
-#define DEVICE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Device") }
+#define DEVICE_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol { XO("Device") }
 
 class DevicePrefs final : public PrefsPanel
 {
- public:
-   DevicePrefs(wxWindow * parent, wxWindowID winid, AudacityProject* project);
-   virtual ~DevicePrefs();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+public:
+    DevicePrefs(wxWindow* parent, wxWindowID winid, AudacityProject* project);
+    virtual ~DevicePrefs();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   ManualPageID HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+    bool Commit() override;
+    ManualPageID HelpPageName() override;
+    void PopulateOrExchange(ShuttleGui& S) override;
 
- private:
-   void Populate();
-   void GetNamesAndLabels();
-    
+private:
+    void Populate();
+    void GetNamesAndLabels();
 
-   void OnHost(wxCommandEvent & e);
-   void OnDevice(wxCommandEvent & e);
-   void OnDefaultSampleRateChoice(wxCommandEvent& e);
-   void OnProjectSampleRateChoice(wxCommandEvent& e);
+    void OnHost(wxCommandEvent& e);
+    void OnDevice(wxCommandEvent& e);
+    void OnDefaultSampleRateChoice(wxCommandEvent& e);
+    void OnProjectSampleRateChoice(wxCommandEvent& e);
 
-   AudacityProject* mProject;
+    AudacityProject* mProject;
 
-   TranslatableStrings mHostNames;
-   wxArrayStringEx mHostLabels;
+    TranslatableStrings mHostNames;
+    wxArrayStringEx mHostLabels;
 
-   wxString mPlayDevice;
-   wxString mRecordDevice;
-   wxString mRecordSource;
-   long mRecordChannels;
+    wxString mPlayDevice;
+    wxString mRecordDevice;
+    wxString mRecordSource;
+    long mRecordChannels;
 
-   wxChoice *mHost;
-   wxChoice *mPlay;
-   wxChoice *mRecord;
-   wxChoice *mChannels;
+    wxChoice* mHost;
+    wxChoice* mPlay;
+    wxChoice* mRecord;
+    wxChoice* mChannels;
 
-   wxChoice* mProjectSampleRates { nullptr };
-   wxTextCtrl* mOtherProjectSampleRate { nullptr };
-   
-   int mProjectSampleRateIndex;
-   int mOtherProjectSampleRateValue;
+    wxChoice* mProjectSampleRates { nullptr };
+    wxTextCtrl* mOtherProjectSampleRate { nullptr };
 
-   wxChoice *mDefaultSampleRates;
-   wxTextCtrl *mOtherDefaultSampleRate;
-   int mOtherDefaultSampleRateValue;
+    int mProjectSampleRateIndex;
+    int mOtherProjectSampleRateValue;
 
-   TranslatableStrings mSampleRateNames;
-   std::vector<int> mSampleRateValues;
+    wxChoice* mDefaultSampleRates;
+    wxTextCtrl* mOtherDefaultSampleRate;
+    int mOtherDefaultSampleRateValue;
 
-   DECLARE_EVENT_TABLE()
+    TranslatableStrings mSampleRateNames;
+    std::vector<int> mSampleRateValues;
+
+    DECLARE_EVENT_TABLE()
 };
 
-PrefsPanel *DevicePrefsFactory(wxWindow *parent, wxWindowID winid, AudacityProject *);
+PrefsPanel* DevicePrefsFactory(wxWindow* parent, wxWindowID winid, AudacityProject*);
 
 #endif

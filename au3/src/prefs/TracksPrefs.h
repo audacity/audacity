@@ -22,37 +22,37 @@
 
 class ShuttleGui;
 
-#define TRACKS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Tracks") }
+#define TRACKS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol { XO("Tracks") }
 
 class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
 {
- public:
-   static BoolSetting TracksFitVerticallyZoomed;
+public:
+    static BoolSetting TracksFitVerticallyZoomed;
 
-   TracksPrefs(wxWindow * parent, wxWindowID winid);
-   ~TracksPrefs();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+    TracksPrefs(wxWindow* parent, wxWindowID winid);
+    ~TracksPrefs();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   ManualPageID HelpPageName() override;
+    bool Commit() override;
+    ManualPageID HelpPageName() override;
 
-   static bool GetPinnedHeadPreference();
-   static void SetPinnedHeadPreference(bool value, bool flush = false);
+    static bool GetPinnedHeadPreference();
+    static void SetPinnedHeadPreference(bool value, bool flush = false);
 
-   static double GetPinnedHeadPositionPreference();
-   static void SetPinnedHeadPositionPreference(double value, bool flush = false);
+    static double GetPinnedHeadPositionPreference();
+    static void SetPinnedHeadPositionPreference(double value, bool flush = false);
 
-   static WaveChannelViewConstants::Display ViewModeChoice();
-   static WaveChannelViewConstants::SampleDisplay SampleViewChoice();
-   static WaveChannelViewConstants::ZoomPresets Zoom1Choice();
-   static WaveChannelViewConstants::ZoomPresets Zoom2Choice();
+    static WaveChannelViewConstants::Display ViewModeChoice();
+    static WaveChannelViewConstants::SampleDisplay SampleViewChoice();
+    static WaveChannelViewConstants::ZoomPresets Zoom1Choice();
+    static WaveChannelViewConstants::ZoomPresets Zoom2Choice();
 
- private:
-   void Populate();
-   void PopulateOrExchange(ShuttleGui & S) override;
+private:
+    void Populate();
+    void PopulateOrExchange(ShuttleGui& S) override;
 
-   static int iPreferencePinned;
+    static int iPreferencePinned;
 };
 
 #endif

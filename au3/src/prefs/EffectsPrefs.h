@@ -22,27 +22,27 @@ class PluginProvider;
 class ShuttleGui;
 class EffectsLocationPanel;
 
-#define EFFECTS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Effects") }
+#define EFFECTS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol { XO("Effects") }
 
 class EffectsPrefs final : public PrefsPanel
 {
- public:
-   EffectsPrefs(wxWindow * parent, wxWindowID winid);
-   ~EffectsPrefs();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+public:
+    EffectsPrefs(wxWindow* parent, wxWindowID winid);
+    ~EffectsPrefs();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   ManualPageID HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+    bool Commit() override;
+    ManualPageID HelpPageName() override;
+    void PopulateOrExchange(ShuttleGui& S) override;
 
- private:
-   void Populate();
+private:
+    void Populate();
 
-   std::vector<std::pair<PluginProvider*, EffectsLocationPanel*>> mLocations;
+    std::vector<std::pair<PluginProvider*, EffectsLocationPanel*> > mLocations;
 };
 
-AUDACITY_DLL_API extern BoolSetting   SkipEffectsScanAtStartup;
+AUDACITY_DLL_API extern BoolSetting SkipEffectsScanAtStartup;
 AUDACITY_DLL_API extern ChoiceSetting EffectsGroupBy;
 AUDACITY_DLL_API extern ChoiceSetting RealtimeEffectsGroupBy;
 #endif

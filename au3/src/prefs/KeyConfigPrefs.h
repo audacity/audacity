@@ -27,90 +27,86 @@ class KeyView;
 struct NormalizedKeyString;
 enum ViewByType : int;
 
-#define KEY_CONFIG_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Key Config") }
+#define KEY_CONFIG_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol { XO("Key Config") }
 
 class KeyConfigPrefs final : public PrefsPanel
 {
 public:
-   KeyConfigPrefs(wxWindow * parent, wxWindowID winid,
-      AudacityProject *pProject,
-      const CommandID &name);
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+    KeyConfigPrefs(wxWindow* parent, wxWindowID winid, AudacityProject* pProject, const CommandID& name);
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   void Cancel() override;
-   ManualPageID HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+    bool Commit() override;
+    void Cancel() override;
+    ManualPageID HelpPageName() override;
+    void PopulateOrExchange(ShuttleGui& S) override;
 
 private:
-   void Populate();
-   void RefreshBindings(bool bSort);
-   void RefreshKeyInfo();
-   void ClearAllKeys();
-   bool ContainsIllegalDups(TranslatableString & fMatching, 
-      TranslatableString & sMatching) const;
-   TranslatableString MergeWithExistingKeys(
-      const std::vector<NormalizedKeyString> &toAdd);
-   void FilterKeys( std::vector<NormalizedKeyString> & arr );
-   CommandID NameFromKey(const NormalizedKeyString & key);
-   void SetKeyForSelected(const NormalizedKeyString & key);
+    void Populate();
+    void RefreshBindings(bool bSort);
+    void RefreshKeyInfo();
+    void ClearAllKeys();
+    bool ContainsIllegalDups(TranslatableString& fMatching, TranslatableString& sMatching) const;
+    TranslatableString MergeWithExistingKeys(
+        const std::vector<NormalizedKeyString>& toAdd);
+    void FilterKeys(std::vector<NormalizedKeyString>& arr);
+    CommandID NameFromKey(const NormalizedKeyString& key);
+    void SetKeyForSelected(const NormalizedKeyString& key);
 
-   // See bug #2315 for discussion. This should be reviewed
-   // and (possibly) removed after wx3.1.3.
-   void OnShow(wxShowEvent & e);
+    // See bug #2315 for discussion. This should be reviewed
+    // and (possibly) removed after wx3.1.3.
+    void OnShow(wxShowEvent& e);
 
-   void OnViewBy(wxCommandEvent & e);
-   void OnDefaults(wxCommandEvent & e);
-   void OnImportDefaults(wxCommandEvent & e);
-   void OnImport(wxCommandEvent & e);
-   void OnExport(wxCommandEvent & e);
-   void OnSet(wxCommandEvent & e);
-   void OnClear(wxCommandEvent & e);
-   void OnSelected(wxCommandEvent & e);
+    void OnViewBy(wxCommandEvent& e);
+    void OnDefaults(wxCommandEvent& e);
+    void OnImportDefaults(wxCommandEvent& e);
+    void OnImport(wxCommandEvent& e);
+    void OnExport(wxCommandEvent& e);
+    void OnSet(wxCommandEvent& e);
+    void OnClear(wxCommandEvent& e);
+    void OnSelected(wxCommandEvent& e);
 
-   void OnHotkeyKeyDown(wxKeyEvent & e);
-   void OnHotkeyChar(wxEvent & e);
-   void OnHotkeyKillFocus(wxEvent & e);
-   void OnHotkeyContext(wxEvent & e);
+    void OnHotkeyKeyDown(wxKeyEvent& e);
+    void OnHotkeyChar(wxEvent& e);
+    void OnHotkeyKillFocus(wxEvent& e);
+    void OnHotkeyContext(wxEvent& e);
 
-   void OnFilterTimer(wxTimerEvent & e);
-   void OnFilterKeyDown(wxKeyEvent & e);
-   void OnFilterChar(wxEvent & e);
+    void OnFilterTimer(wxTimerEvent& e);
+    void OnFilterKeyDown(wxKeyEvent& e);
+    void OnFilterChar(wxEvent& e);
 
-   KeyView *mView;
-   wxTextCtrl *mKey;
-   wxButton *mSet;
-   wxButton *mClear;
+    KeyView* mView;
+    wxTextCtrl* mKey;
+    wxButton* mSet;
+    wxButton* mClear;
 
-   wxTextCtrl *mFilter;
-   wxStaticText *mFilterLabel;
-   wxTimer mFilterTimer;
-   bool mFilterPending;
+    wxTextCtrl* mFilter;
+    wxStaticText* mFilterLabel;
+    wxTimer mFilterTimer;
+    bool mFilterPending;
 
-   ViewByType mViewType;
-   wxRadioButton *mViewByTree;
-   wxRadioButton *mViewByName;
-   wxRadioButton *mViewByKey;
+    ViewByType mViewType;
+    wxRadioButton* mViewByTree;
+    wxRadioButton* mViewByName;
+    wxRadioButton* mViewByKey;
 
-   AudacityProject *mProject{};
+    AudacityProject* mProject{};
 
-   CommandManager *mManager;
-   int mCommandSelected;
+    CommandManager* mManager;
+    int mCommandSelected;
 
-   CommandIDs mNames;
-   std::vector<NormalizedKeyString> mDefaultKeys; // The full set.
-   std::vector<NormalizedKeyString> mStandardDefaultKeys; // The reduced set.
-   std::vector<NormalizedKeyString> mKeys;
-   std::vector<NormalizedKeyString> mNewKeys; // Used for work in progress.
+    CommandIDs mNames;
+    std::vector<NormalizedKeyString> mDefaultKeys; // The full set.
+    std::vector<NormalizedKeyString> mStandardDefaultKeys; // The reduced set.
+    std::vector<NormalizedKeyString> mKeys;
+    std::vector<NormalizedKeyString> mNewKeys; // Used for work in progress.
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
-
 
 /// A PrefsPanel::Factory that creates one KeyConfigPrefs panel.
 /// This factory can be parametrized by name, which specifies a command to be
 /// focused initially
 extern PrefsPanel::Factory KeyConfigPrefsFactory(
-   const CommandID &name = {} );
+    const CommandID& name = {});
 #endif
