@@ -15,7 +15,7 @@ struct VersionPatch final
 {
     using UpdateDataFormat = std::string;
 
-    VersionPatch() = default;	
+    VersionPatch() = default;
 
     VersionId version;
     wxArrayString changelog;

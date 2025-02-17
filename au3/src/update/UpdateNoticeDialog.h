@@ -19,13 +19,13 @@ class wxWindow;
 //! Dialog, that notifies the users about automatic updates checking
 class UpdateNoticeDialog final : public wxDialogWrapper
 {
-    DECLARE_DYNAMIC_CLASS (AboutDialog)
+    DECLARE_DYNAMIC_CLASS(AboutDialog)
 public:
     explicit UpdateNoticeDialog (wxWindow* parent);
 
- private:
-    void OnOk (wxCommandEvent&);
+private:
+    void OnOk(wxCommandEvent&);
     void OnSize(wxSizeEvent&);
 
-    DECLARE_EVENT_TABLE ()
+    DECLARE_EVENT_TABLE()
 };
