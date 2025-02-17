@@ -13,5 +13,5 @@ AudioGraph::Source::~Source() = default;
 
 bool AudioGraph::Source::Terminates() const
 {
-   return true;
+    return true;
 }
