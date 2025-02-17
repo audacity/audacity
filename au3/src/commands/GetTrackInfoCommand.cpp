@@ -16,7 +16,6 @@
 
 *//*******************************************************************/
 
-
 #include "GetTrackInfoCommand.h"
 
 #include "LoadCommands.h"
@@ -33,44 +32,42 @@ const ComponentInterfaceSymbol GetTrackInfoCommand::Symbol
 const int nTypes =3;
 static const EnumValueSymbol kTypes[nTypes] =
 {
-   { XO("Tracks") },
-   { XO("Clips") },
-   { XO("Labels") },
+    { XO("Tracks") },
+    { XO("Clips") },
+    { XO("Labels") },
 };
-
 
 GetTrackInfoCommand::GetTrackInfoCommand()
 {
-   mInfoType = 0;
+    mInfoType = 0;
 }
 
 template<bool Const>
-bool GetTrackInfoCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
-   S.DefineEnum( mInfoType, wxT("Type"), 0, kTypes, nTypes );
-   
-   return true;
+bool GetTrackInfoCommand::VisitSettings(SettingsVisitorBase<Const>& S)
+{
+    S.DefineEnum(mInfoType, wxT("Type"), 0, kTypes, nTypes);
+
+    return true;
 }
 
-bool GetTrackInfoCommand::VisitSettings( SettingsVisitor & S )
-   { return VisitSettings<false>(S); }
+bool GetTrackInfoCommand::VisitSettings(SettingsVisitor& S)
+{ return VisitSettings<false>(S); }
 
-bool GetTrackInfoCommand::VisitSettings( ConstSettingsVisitor & S )
-   { return VisitSettings<true>(S); }
+bool GetTrackInfoCommand::VisitSettings(ConstSettingsVisitor& S)
+{ return VisitSettings<true>(S); }
 
-void GetTrackInfoCommand::PopulateOrExchange(ShuttleGui & S)
+void GetTrackInfoCommand::PopulateOrExchange(ShuttleGui& S)
 {
-   S.AddSpace(0, 5);
+    S.AddSpace(0, 5);
 
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S.TieChoice( XXO("Types:"), mInfoType, Msgids( kTypes, nTypes ));
-   }
-   S.EndMultiColumn();
+    S.StartMultiColumn(2, wxALIGN_CENTER);
+    {
+        S.TieChoice(XXO("Types:"), mInfoType, Msgids(kTypes, nTypes));
+    }
+    S.EndMultiColumn();
 }
 
-
-
-bool GetTrackInfoCommand::Apply(const CommandContext &context)
+bool GetTrackInfoCommand::Apply(const CommandContext& context)
 {
-   return false;
+    return false;
 }

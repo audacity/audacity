@@ -14,7 +14,6 @@
 
 *//*******************************************************************/
 
-
 #include "ImportExportCommands.h"
 
 #include "CommandDispatch.h"
@@ -35,125 +34,128 @@
 #include "ExportPluginRegistry.h"
 #include "ExportProgressUI.h"
 
-
 const ComponentInterfaceSymbol ImportCommand::Symbol
 { XO("Import2") };
 
-namespace{ BuiltinCommandsModule::Registration< ImportCommand > reg; }
-
-template<bool Const>
-bool ImportCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
-   S.Define( mFileName, wxT("Filename"), wxString{} );
-   return true;
-}
-
-bool ImportCommand::VisitSettings( SettingsVisitor & S )
-   { return VisitSettings<false>(S); }
-
-bool ImportCommand::VisitSettings( ConstSettingsVisitor & S )
-   { return VisitSettings<true>(S); }
-
-void ImportCommand::PopulateOrExchange(ShuttleGui & S)
-{
-   S.AddSpace(0, 5);
-
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S.TieTextBox(XXO("File Name:"),mFileName);
-   }
-   S.EndMultiColumn();
-}
-
-bool ImportCommand::Apply(const CommandContext & context)
-{
-   bool wasEmpty = TrackList::Get(context.project).empty();
-   const bool success =
-      ProjectFileManager::Get(context.project).Import(mFileName, false);
-
-   if (success && wasEmpty)
-      SelectUtilities::SelectAllIfNone( context.project );
-
-   return success;
+namespace {
+BuiltinCommandsModule::Registration< ImportCommand > reg;
 }
 
 template<bool Const>
-bool ExportCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
-   wxFileName fn = FileNames::FindDefaultPath(FileNames::Operation::Export);
-   fn.SetName("exported.wav");
-   S.Define(mFileName, wxT("Filename"), fn.GetFullPath());
-   S.Define( mnChannels, wxT("NumChannels"),  1 );
-   return true;
+bool ImportCommand::VisitSettings(SettingsVisitorBase<Const>& S)
+{
+    S.Define(mFileName, wxT("Filename"), wxString {});
+    return true;
 }
 
-bool ExportCommand::VisitSettings( SettingsVisitor & S )
-   { return VisitSettings<false>(S); }
+bool ImportCommand::VisitSettings(SettingsVisitor& S)
+{ return VisitSettings<false>(S); }
 
-bool ExportCommand::VisitSettings( ConstSettingsVisitor & S )
-   { return VisitSettings<true>(S); }
+bool ImportCommand::VisitSettings(ConstSettingsVisitor& S)
+{ return VisitSettings<true>(S); }
+
+void ImportCommand::PopulateOrExchange(ShuttleGui& S)
+{
+    S.AddSpace(0, 5);
+
+    S.StartMultiColumn(2, wxALIGN_CENTER);
+    {
+        S.TieTextBox(XXO("File Name:"), mFileName);
+    }
+    S.EndMultiColumn();
+}
+
+bool ImportCommand::Apply(const CommandContext& context)
+{
+    bool wasEmpty = TrackList::Get(context.project).empty();
+    const bool success
+        =ProjectFileManager::Get(context.project).Import(mFileName, false);
+
+    if (success && wasEmpty) {
+        SelectUtilities::SelectAllIfNone(context.project);
+    }
+
+    return success;
+}
+
+template<bool Const>
+bool ExportCommand::VisitSettings(SettingsVisitorBase<Const>& S)
+{
+    wxFileName fn = FileNames::FindDefaultPath(FileNames::Operation::Export);
+    fn.SetName("exported.wav");
+    S.Define(mFileName, wxT("Filename"), fn.GetFullPath());
+    S.Define(mnChannels, wxT("NumChannels"),  1);
+    return true;
+}
+
+bool ExportCommand::VisitSettings(SettingsVisitor& S)
+{ return VisitSettings<false>(S); }
+
+bool ExportCommand::VisitSettings(ConstSettingsVisitor& S)
+{ return VisitSettings<true>(S); }
 
 const ComponentInterfaceSymbol ExportCommand::Symbol
 { XO("Export2") };
 
-namespace{ BuiltinCommandsModule::Registration< ExportCommand > reg2; }
-
-void ExportCommand::PopulateOrExchange(ShuttleGui & S)
-{
-   S.AddSpace(0, 5);
-
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S.TieTextBox(XXO("File Name:"),mFileName);
-      S.TieTextBox(XXO("Number of Channels:"),mnChannels);
-   }
-   S.EndMultiColumn();
+namespace {
+BuiltinCommandsModule::Registration< ExportCommand > reg2;
 }
 
-bool ExportCommand::Apply(const CommandContext & context)
+void ExportCommand::PopulateOrExchange(ShuttleGui& S)
 {
-   double t0, t1;
-   auto &selectedRegion = ViewInfo::Get( context.project ).selectedRegion;
-   t0 = selectedRegion.t0();
-   t1 = selectedRegion.t1();
+    S.AddSpace(0, 5);
 
-   // Find the extension and check it's valid
-   int splitAt = mFileName.Find(wxUniChar('.'), true);
-   if (splitAt < 0)
-   {
-      context.Error(wxT("Export filename must have an extension!"));
-      return false;
-   }
-   wxString extension = mFileName.Mid(splitAt+1).MakeUpper();
+    S.StartMultiColumn(2, wxALIGN_CENTER);
+    {
+        S.TieTextBox(XXO("File Name:"), mFileName);
+        S.TieTextBox(XXO("Number of Channels:"), mnChannels);
+    }
+    S.EndMultiColumn();
+}
 
-   auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(extension);
+bool ExportCommand::Apply(const CommandContext& context)
+{
+    double t0, t1;
+    auto& selectedRegion = ViewInfo::Get(context.project).selectedRegion;
+    t0 = selectedRegion.t0();
+    t1 = selectedRegion.t1();
 
-   if(plugin != nullptr)
-   {
-      auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
-      editor->Load(*gPrefs);
+    // Find the extension and check it's valid
+    int splitAt = mFileName.Find(wxUniChar('.'), true);
+    if (splitAt < 0) {
+        context.Error(wxT("Export filename must have an extension!"));
+        return false;
+    }
+    wxString extension = mFileName.Mid(splitAt + 1).MakeUpper();
 
-      auto builder = ExportTaskBuilder{}
-         .SetParameters(ExportUtils::ParametersFromEditor(*editor))
-         .SetNumChannels(std::max(0, mnChannels))
-         .SetSampleRate(ProjectRate::Get(context.project).GetRate())
-         .SetPlugin(plugin)
-         .SetFileName(mFileName)
-         .SetRange(t0, t1, true);
+    auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(extension);
 
-      auto result = ExportResult::Error;
-      ExportProgressUI::ExceptionWrappedCall([&]
-      {
-         result = ExportProgressUI::Show(builder.Build(context.project));
-      });
-      if (result == ExportResult::Success || result == ExportResult::Stopped)
-      {
-         context.Status(wxString::Format(wxT("Exported to %s format: %s"),
-                                         extension, mFileName));
-         return true;
-      }
-   }
+    if (plugin != nullptr) {
+        auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
+        editor->Load(*gPrefs);
 
-   context.Error(wxString::Format(wxT("Could not export to %s format!"), extension));
-   return false;
+        auto builder = ExportTaskBuilder{}
+        .SetParameters(ExportUtils::ParametersFromEditor(*editor))
+        .SetNumChannels(std::max(0, mnChannels))
+        .SetSampleRate(ProjectRate::Get(context.project).GetRate())
+        .SetPlugin(plugin)
+        .SetFileName(mFileName)
+        .SetRange(t0, t1, true);
+
+        auto result = ExportResult::Error;
+        ExportProgressUI::ExceptionWrappedCall([&]
+        {
+            result = ExportProgressUI::Show(builder.Build(context.project));
+        });
+        if (result == ExportResult::Success || result == ExportResult::Stopped) {
+            context.Status(wxString::Format(wxT("Exported to %s format: %s"),
+                                            extension, mFileName));
+            return true;
+        }
+    }
+
+    context.Error(wxString::Format(wxT("Could not export to %s format!"), extension));
+    return false;
 }
 
 namespace {
@@ -162,16 +164,16 @@ using namespace MenuRegistry;
 // Register menu items
 
 AttachedItem sAttachment{
-   Items( wxT(""),
-      // Note that the PLUGIN_SYMBOL must have a space between words,
-      // whereas the short-form used here must not.
-      // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
-      // you would have to use "CompareAudio" here.)
-      Command( wxT("Import2"), XXO("Import..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() ),
-      Command( wxT("Export2"), XXO("Export..."),
-         CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag() )
-   ),
-   wxT("Optional/Extra/Part2/Scriptables2")
+    Items(wxT(""),
+          // Note that the PLUGIN_SYMBOL must have a space between words,
+          // whereas the short-form used here must not.
+          // (So if you did write "Compare Audio" for the PLUGIN_SYMBOL name, then
+          // you would have to use "CompareAudio" here.)
+          Command(wxT("Import2"), XXO("Import..."),
+                  CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag()),
+          Command(wxT("Export2"), XXO("Export..."),
+                  CommandDispatch::OnAudacityCommand, AudioIONotBusyFlag())
+          ),
+    wxT("Optional/Extra/Part2/Scriptables2")
 };
 }

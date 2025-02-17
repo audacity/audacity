@@ -16,7 +16,6 @@
 
 *//*******************************************************************/
 
-
 #include "CommandHandler.h"
 
 #include "../ActiveProject.h"
@@ -35,22 +34,22 @@ CommandHandler::~CommandHandler()
 {
 }
 
-void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
+void CommandHandler::OnReceiveCommand(AppCommandEvent& event)
 {
-   // First retrieve the actual command from the event 'envelope'.
-   OldStyleCommandPointer cmd = event.GetCommand();
+    // First retrieve the actual command from the event 'envelope'.
+    OldStyleCommandPointer cmd = event.GetCommand();
 
-   if (const auto pProject = GetActiveProject().lock()) {
-      // Then apply it to current application & project.  Note that the
-      // command may change the context - for example, switching to a
-      // different project.
-      CommandContext context{ *pProject };
-      auto result = GuardedCall<bool>( [&] {
-         return cmd->Apply( context );
-      });
-      wxUnusedVar(result);
+    if (const auto pProject = GetActiveProject().lock()) {
+        // Then apply it to current application & project.  Note that the
+        // command may change the context - for example, switching to a
+        // different project.
+        CommandContext context{ *pProject };
+        auto result = GuardedCall<bool>([&] {
+            return cmd->Apply(context);
+        });
+        wxUnusedVar(result);
 
-      // Redraw the project
-      Viewport::Get(context.project).Redraw();
-   }
+        // Redraw the project
+        Viewport::Get(context.project).Redraw();
+    }
 }

@@ -23,36 +23,35 @@
 class SetProjectCommand : public AudacityCommand
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   SetProjectCommand();
-   // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Sets various values for a project.");};
-   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
-   bool VisitSettings( SettingsVisitor & S ) override;
-   bool VisitSettings( ConstSettingsVisitor & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+    SetProjectCommand();
+    // ComponentInterface overrides
+    ComponentInterfaceSymbol GetSymbol() const override { return Symbol; }
+    TranslatableString GetDescription() const override { return XO("Sets various values for a project."); }
+    template<bool Const> bool VisitSettings(SettingsVisitorBase<Const>& S);
+    bool VisitSettings(SettingsVisitor& S) override;
+    bool VisitSettings(ConstSettingsVisitor& S) override;
+    void PopulateOrExchange(ShuttleGui& S) override;
 
-   // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_project";}
+    // AudacityCommand overrides
+    ManualPageID ManualPage() override { return L"Extra_Menu:_Scriptables_I#set_project"; }
 
-   bool Apply(const CommandContext & context) override;
+    bool Apply(const CommandContext& context) override;
 
 public:
 
-   wxString mName;
-   int mPosX;
-   int mPosY;
-   int mWidth;
-   int mHeight;
-   double mRate;
+    wxString mName;
+    int mPosX;
+    int mPosY;
+    int mWidth;
+    int mHeight;
+    double mRate;
 
 // For tracking optional parameters.
-   bool bHasName;
-   bool bHasSizing;
-   bool bHasRate;
+    bool bHasName;
+    bool bHasSizing;
+    bool bHasRate;
 };
-
 
 #endif /* End of include guard: __SETTRACKINFOCOMMAND__ */

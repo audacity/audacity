@@ -17,11 +17,10 @@ Also acts as a factory.
 
 *//*******************************************************************/
 
-
 #include "CommandType.h"
 
 OldStyleCommandType::OldStyleCommandType()
-   : mSignature{}
+    : mSignature{}
 {
 }
 
@@ -31,33 +30,31 @@ OldStyleCommandType::~OldStyleCommandType()
 
 ComponentInterfaceSymbol OldStyleCommandType::GetSymbol() const
 {
-   return BuildName();
+    return BuildName();
 }
 
-CommandSignature &OldStyleCommandType::GetSignature()
+CommandSignature& OldStyleCommandType::GetSignature()
 {
-   if (!mSignature)
-   {
-      mSignature.emplace();
-      BuildSignature(*mSignature);
-   }
-   return *mSignature;
+    if (!mSignature) {
+        mSignature.emplace();
+        BuildSignature(*mSignature);
+    }
+    return *mSignature;
 }
 
 wxString OldStyleCommandType::Describe()
 {
-   // PRL: Is this intended for end-user visibility or just debugging?  It did not
-   // use _(""), so I assume it is meant to use internal strings
-   wxString desc = GetSymbol().Internal() + wxT("\nParameters:");
-   GetSignature();
-   ParamValueMap::iterator iter;
-   ParamValueMap defaults = mSignature->GetDefaults();
-   for (iter = defaults.begin(); iter != defaults.end(); ++iter)
-   {
-      desc += wxT("\n") + iter->first + wxT(": ")
-         + mSignature->GetValidator(iter->first).GetDescription()
-         + wxT(" (default: ")
-         + iter->second.MakeString() + wxT(")");
-   }
-   return desc;
+    // PRL: Is this intended for end-user visibility or just debugging?  It did not
+    // use _(""), so I assume it is meant to use internal strings
+    wxString desc = GetSymbol().Internal() + wxT("\nParameters:");
+    GetSignature();
+    ParamValueMap::iterator iter;
+    ParamValueMap defaults = mSignature->GetDefaults();
+    for (iter = defaults.begin(); iter != defaults.end(); ++iter) {
+        desc += wxT("\n") + iter->first + wxT(": ")
+                + mSignature->GetValidator(iter->first).GetDescription()
+                + wxT(" (default: ")
+                + iter->second.MakeString() + wxT(")");
+    }
+    return desc;
 }

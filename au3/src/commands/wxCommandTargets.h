@@ -44,16 +44,16 @@ class wxStatusBar;
 class GUIProgressTarget final : public CommandProgressTarget
 {
 private:
-   ProgressDialog &mProgress;
+    ProgressDialog& mProgress;
 public:
-   GUIProgressTarget(ProgressDialog &pd)
-      : mProgress(pd)
-   {}
-   ~GUIProgressTarget() override;
-   void Update(double completed) override
-   {
-      mProgress.Update(completed);
-   }
+    GUIProgressTarget(ProgressDialog& pd)
+        : mProgress(pd)
+    {}
+    ~GUIProgressTarget() override;
+    void Update(double completed) override
+    {
+        mProgress.Update(completed);
+    }
 };
 #endif
 
@@ -61,13 +61,13 @@ public:
 class AUDACITY_DLL_API StatusBarTarget final : public CommandMessageTarget
 {
 private:
-   wxStatusBar &mStatus;
+    wxStatusBar& mStatus;
 public:
-   StatusBarTarget(wxStatusBar &sb)
-      : mStatus(sb)
-   {}
-   ~StatusBarTarget() override;
-   void Update(const wxString &message) override;
+    StatusBarTarget(wxStatusBar& sb)
+        : mStatus(sb)
+    {}
+    ~StatusBarTarget() override;
+    void Update(const wxString& message) override;
 };
 
 #endif /* End of include guard: __COMMANDTARGETS__ */

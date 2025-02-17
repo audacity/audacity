@@ -20,7 +20,7 @@
 #include <wx/thread.h>
 
 ResponseQueue::ResponseQueue()
-   : mCondition(mMutex)
+    : mCondition(mMutex)
 { }
 
 ResponseQueue::~ResponseQueue()
@@ -28,20 +28,19 @@ ResponseQueue::~ResponseQueue()
 
 void ResponseQueue::AddResponse(Response response)
 {
-   wxMutexLocker locker(mMutex);
-   mResponses.push(response);
-   mCondition.Signal();
+    wxMutexLocker locker(mMutex);
+    mResponses.push(response);
+    mCondition.Signal();
 }
 
 Response ResponseQueue::WaitAndGetResponse()
 {
-   wxMutexLocker locker(mMutex);
-   if (mResponses.empty())
-   {
-      mCondition.Wait();
-   }
-   wxASSERT(!mResponses.empty());
-   Response msg = mResponses.front();
-   mResponses.pop();
-   return msg;
+    wxMutexLocker locker(mMutex);
+    if (mResponses.empty()) {
+        mCondition.Wait();
+    }
+    wxASSERT(!mResponses.empty());
+    Response msg = mResponses.front();
+    mResponses.pop();
+    return msg;
 }

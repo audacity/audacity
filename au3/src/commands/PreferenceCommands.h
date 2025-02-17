@@ -29,21 +29,21 @@
 class GetPreferenceCommand final : public AudacityCommand
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Gets the value of a single preference.");};
-   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
-   bool VisitSettings( SettingsVisitor & S ) override;
-   bool VisitSettings( ConstSettingsVisitor & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override;
+    // ComponentInterface overrides
+    ComponentInterfaceSymbol GetSymbol() const override { return Symbol; }
+    TranslatableString GetDescription() const override { return XO("Gets the value of a single preference."); }
+    template<bool Const> bool VisitSettings(SettingsVisitorBase<Const>& S);
+    bool VisitSettings(SettingsVisitor& S) override;
+    bool VisitSettings(ConstSettingsVisitor& S) override;
+    void PopulateOrExchange(ShuttleGui& S) override;
+    bool Apply(const CommandContext& context) override;
 
-   // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#get_preference";}
+    // AudacityCommand overrides
+    ManualPageID ManualPage() override { return L"Extra_Menu:_Scriptables_I#get_preference"; }
 
-   wxString mName;
+    wxString mName;
 };
 
 // SetPreference
@@ -51,24 +51,24 @@ public:
 class SetPreferenceCommand final : public AudacityCommand
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Sets the value of a single preference.");};
-   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
-   bool VisitSettings( SettingsVisitor & S ) override;
-   bool VisitSettings( ConstSettingsVisitor & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override;
+    // ComponentInterface overrides
+    ComponentInterfaceSymbol GetSymbol() const override { return Symbol; }
+    TranslatableString GetDescription() const override { return XO("Sets the value of a single preference."); }
+    template<bool Const> bool VisitSettings(SettingsVisitorBase<Const>& S);
+    bool VisitSettings(SettingsVisitor& S) override;
+    bool VisitSettings(ConstSettingsVisitor& S) override;
+    void PopulateOrExchange(ShuttleGui& S) override;
+    bool Apply(const CommandContext& context) override;
 
-   // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_I#set_preference";}
+    // AudacityCommand overrides
+    ManualPageID ManualPage() override { return L"Extra_Menu:_Scriptables_I#set_preference"; }
 
-   wxString mName;
-   wxString mValue;
-   bool mbReload;
-   bool bHasReload;
+    wxString mName;
+    wxString mValue;
+    bool mbReload;
+    bool bHasReload;
 };
 
 #endif /* End of include guard: __PREFERENCE_COMMANDS__ */

@@ -28,13 +28,13 @@ DEFINE_EVENT_TYPE(wxEVT_APP_COMMAND_RECEIVED)
 IMPLEMENT_DYNAMIC_CLASS(AppCommandEvent, wxEvent)
 
 AppCommandEvent::AppCommandEvent(wxEventType commandType, int id)
-: wxCommandEvent(commandType, id)
+    : wxCommandEvent(commandType, id)
 { }
 
 // Copy constructor
-AppCommandEvent::AppCommandEvent(const AppCommandEvent &event)
-   : wxCommandEvent(event)
-   , mCommand(event.mCommand)
+AppCommandEvent::AppCommandEvent(const AppCommandEvent& event)
+    : wxCommandEvent(event)
+    , mCommand(event.mCommand)
 {
 }
 
@@ -43,19 +43,19 @@ AppCommandEvent::~AppCommandEvent()
 }
 
 // Clone is required by wxwidgets; implemented via copy constructor
-wxEvent *AppCommandEvent::Clone() const
+wxEvent* AppCommandEvent::Clone() const
 {
-   return safenew AppCommandEvent(*this);
+    return safenew AppCommandEvent(*this);
 }
 
 /// Store a pointer to a command object
-void AppCommandEvent::SetCommand(const OldStyleCommandPointer &cmd)
+void AppCommandEvent::SetCommand(const OldStyleCommandPointer& cmd)
 {
-   wxASSERT(!mCommand);
-   mCommand = cmd;
+    wxASSERT(!mCommand);
+    mCommand = cmd;
 }
 
 OldStyleCommandPointer AppCommandEvent::GetCommand()
 {
-   return mCommand;
+    return mCommand;
 }
