@@ -12,16 +12,15 @@
 
 #include "AudioComDialogBase.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class UploadCanceledDialog final : public AudioComDialogBase
 {
 public:
-   explicit UploadCanceledDialog(const AudacityProject* project);
+    explicit UploadCanceledDialog(const AudacityProject* project);
 
-   static DialogButtonIdentifier OkButtonIdentifier();
+    static DialogButtonIdentifier OkButtonIdentifier();
 
 private:
-   bool HasSeparator() const override;
+    bool HasSeparator() const override;
 };
 } // namespace audacity::cloud::audiocom::sync

@@ -34,9 +34,7 @@
 #include "CodeConversions.h"
 #include "FromChars.h"
 
-namespace
-{
-
+namespace {
 const auto exts = { wxT("mp3"), wxT("mp2"), wxT("mpa") };
 
 // ID2V2 genre can be quite complex:
@@ -49,134 +47,141 @@ const auto exts = { wxT("mp3"), wxT("mp2"), wxT("mpa") };
 // genre, so we just skip ( a parse the number afterwards.
 wxString GetId3v2Genre(Tags& tags, const char* genre)
 {
-   if (genre == nullptr)
-      return {};
+    if (genre == nullptr) {
+        return {}
+    }
 
-   // It was observed, however, that Genre can use a different format
-   if (genre[0] != '(')
-      // We consider the string to be a genre name
-      return audacity::ToWXString(genre);
+    // It was observed, however, that Genre can use a different format
+    if (genre[0] != '(') {
+        // We consider the string to be a genre name
+        return audacity::ToWXString(genre);
+    }
 
-   auto it = genre;
-   auto end = it + std::strlen(it);
+    auto it = genre;
+    auto end = it + std::strlen(it);
 
-   while (*it == '(')
-   {
-      int tagValue;
-      auto result = FromChars(++it, end, tagValue);
+    while (*it == '(')
+    {
+        int tagValue;
+        auto result = FromChars(++it, end, tagValue);
 
-      // Parsing failed, consider it to be the genre
-      if (result.ec != std::errc {})
-         break;
+        // Parsing failed, consider it to be the genre
+        if (result.ec != std::errc {}) {
+            break;
+        }
 
-      const auto parsedGenre = tags.GetGenre(tagValue);
+        const auto parsedGenre = tags.GetGenre(tagValue);
 
-      if (!parsedGenre.empty())
-         return parsedGenre;
+        if (!parsedGenre.empty()) {
+            return parsedGenre;
+        }
 
-      it = result.ptr;
+        it = result.ptr;
 
-      // Nothing left to parse
-      if (it == end)
-         break;
+        // Nothing left to parse
+        if (it == end) {
+            break;
+        }
 
-      // Unexpected symbol in the tag
-      if (*it != ')')
-         break;
+        // Unexpected symbol in the tag
+        if (*it != ')') {
+            break;
+        }
 
-      ++it;
-   }
+        ++it;
+    }
 
-   if (it != end)
-      return audacity::ToWXString(it);
+    if (it != end) {
+        return audacity::ToWXString(it);
+    }
 
-   return audacity::ToWXString(genre);
+    return audacity::ToWXString(genre);
 }
 
 class MP3ImportPlugin final : public ImportPlugin
 {
 public:
-   MP3ImportPlugin()
-       : ImportPlugin(
+    MP3ImportPlugin()
+        : ImportPlugin(
             FileExtensions(exts.begin(), exts.end()))
-   {
+    {
 #if MPG123_API_VERSION < 46
-      // Newer versions of the library don't need that anymore, but it is safe
-      // to have the no-op call present for compatibility with old versions.
-      mpg123_init();
+        // Newer versions of the library don't need that anymore, but it is safe
+        // to have the no-op call present for compatibility with old versions.
+        mpg123_init();
 #endif
-   }
+    }
 
-   wxString GetPluginStringID() override
-   {
-      return wxT("libmpg123");
-   }
+    wxString GetPluginStringID() override
+    {
+        return wxT("libmpg123");
+    }
 
-   TranslatableString GetPluginFormatDescription() override
-   {
-      return DESC;
-   }
+    TranslatableString GetPluginFormatDescription() override
+    {
+        return DESC;
+    }
 
-   std::unique_ptr<ImportFileHandle> Open(const FilePath &Filename, AudacityProject*) override;
+    std::unique_ptr<ImportFileHandle> Open(const FilePath& Filename, AudacityProject*) override;
 }; // class MP3ImportPlugin
 
 class MP3ImportFileHandle final : public ImportFileHandleEx
 {
 public:
-   MP3ImportFileHandle(const FilePath &filename);
-   ~MP3ImportFileHandle();
+    MP3ImportFileHandle(const FilePath& filename);
+    ~MP3ImportFileHandle();
 
-   TranslatableString GetFileDescription() override;
-   ByteCount GetFileUncompressedBytes() override;
-   void Import(
-      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
-      TrackHolders& outTracks, Tags* tags,
-      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
+    TranslatableString GetFileDescription() override;
+    ByteCount GetFileUncompressedBytes() override;
+    void Import(
+        ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
+        std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
 
-   bool SetupOutputFormat();
+    bool SetupOutputFormat();
 
-   void ReadTags(Tags* tags);
+    void ReadTags(Tags* tags);
 
-   wxInt32 GetStreamCount() override;
-   const TranslatableStrings &GetStreamInfo() override;
-   void SetStreamUsage(wxInt32 StreamID, bool Use) override;
-
-private:
-   bool Open();
+    wxInt32 GetStreamCount() override;
+    const TranslatableStrings& GetStreamInfo() override;
+    void SetStreamUsage(wxInt32 StreamID, bool Use) override;
 
 private:
-   static ptrdiff_t ReadCallback(void* handle, void* buffer, size_t size);
-   static off_t SeekCallback(void* handle, off_t offset, int whence);
+    bool Open();
 
-   wxFile mFile;
-   wxFileOffset mFileLen { 0 };
+private:
+    static ptrdiff_t ReadCallback(void* handle, void* buffer, size_t size);
+    static off_t SeekCallback(void* handle, off_t offset, int whence);
 
-   WaveTrackFactory* mTrackFactory { nullptr };
-   WaveTrack::Holder mTrack;
-   unsigned mNumChannels { 0 };
+    wxFile mFile;
+    wxFileOffset mFileLen { 0 };
 
-   mpg123_handle* mHandle { nullptr };
+    WaveTrackFactory* mTrackFactory { nullptr };
+    WaveTrack::Holder mTrack;
+    unsigned mNumChannels { 0 };
 
-   bool mFloat64Output {};
+    mpg123_handle* mHandle { nullptr };
 
-   friend MP3ImportPlugin;
+    bool mFloat64Output {};
+
+    friend MP3ImportPlugin;
 }; // class MP3ImportFileHandle
 
 std::unique_ptr<ImportFileHandle> MP3ImportPlugin::Open(
-   const FilePath &Filename, AudacityProject *)
+    const FilePath& Filename, AudacityProject*)
 {
-   auto handle = std::make_unique<MP3ImportFileHandle>(Filename);
+    auto handle = std::make_unique<MP3ImportFileHandle>(Filename);
 
-   if (!handle->Open())
-      return nullptr;
+    if (!handle->Open()) {
+        return nullptr;
+    }
 
-   return handle;
+    return handle;
 }
 
 static Importer::RegisteredImportPlugin registered
 {
-   "MP3",
-   std::make_unique<MP3ImportPlugin>()
+    "MP3",
+    std::make_unique<MP3ImportPlugin>()
 };
 
 // ============================================================================
@@ -186,74 +191,71 @@ static Importer::RegisteredImportPlugin registered
 MP3ImportFileHandle::MP3ImportFileHandle(const FilePath& filename)
     : ImportFileHandleEx(filename)
 {
-   int errorCode = MPG123_OK;
-   mHandle = mpg123_new(nullptr, &errorCode);
+    int errorCode = MPG123_OK;
+    mHandle = mpg123_new(nullptr, &errorCode);
 
-   if (errorCode != MPG123_OK)
-   {
-      wxLogError(
-         "Failed to create MPG123 handle: %s",
-         mpg123_plain_strerror(errorCode));
+    if (errorCode != MPG123_OK) {
+        wxLogError(
+            "Failed to create MPG123 handle: %s",
+            mpg123_plain_strerror(errorCode));
 
-      mHandle = nullptr;
+        mHandle = nullptr;
 
-      return;
-   }
+        return;
+    }
 
-   errorCode = mpg123_replace_reader_handle(
-      mHandle, ReadCallback, SeekCallback, nullptr);
+    errorCode = mpg123_replace_reader_handle(
+        mHandle, ReadCallback, SeekCallback, nullptr);
 
-   if (errorCode != MPG123_OK)
-   {
-      wxLogError(
-         "Failed to set reader on the MPG123 handle: %s",
-         mpg123_plain_strerror(errorCode));
+    if (errorCode != MPG123_OK) {
+        wxLogError(
+            "Failed to set reader on the MPG123 handle: %s",
+            mpg123_plain_strerror(errorCode));
 
-      mpg123_delete(mHandle);
-      mHandle = nullptr;
-   }
+        mpg123_delete(mHandle);
+        mHandle = nullptr;
+    }
 
-   // We force mpg123 to decode into floats
-   mpg123_param(mHandle, MPG123_FLAGS, MPG123_GAPLESS | MPG123_FORCE_FLOAT, 0.0);
+    // We force mpg123 to decode into floats
+    mpg123_param(mHandle, MPG123_FLAGS, MPG123_GAPLESS | MPG123_FORCE_FLOAT, 0.0);
 
-   if (errorCode != MPG123_OK)
-   {
-      wxLogError(
-         "Failed to set options on the MPG123 handle",
-         mpg123_plain_strerror(errorCode));
+    if (errorCode != MPG123_OK) {
+        wxLogError(
+            "Failed to set options on the MPG123 handle",
+            mpg123_plain_strerror(errorCode));
 
-      mpg123_delete(mHandle);
-      mHandle = nullptr;
-   }
+        mpg123_delete(mHandle);
+        mHandle = nullptr;
+    }
 }
 
 MP3ImportFileHandle::~MP3ImportFileHandle()
 {
-   // nullptr is a valid input for the mpg123_delete
-   mpg123_delete(mHandle);
+    // nullptr is a valid input for the mpg123_delete
+    mpg123_delete(mHandle);
 }
 
 TranslatableString MP3ImportFileHandle::GetFileDescription()
 {
-   return DESC;
+    return DESC;
 }
 
 auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
-   // We have to parse the file first using mpg123_scan,
-   // we do not want to do that before the import starts.
-   return 0;
+    // We have to parse the file first using mpg123_scan,
+    // we do not want to do that before the import starts.
+    return 0;
 }
 
 wxInt32 MP3ImportFileHandle::GetStreamCount()
 {
-   return 1;
+    return 1;
 }
 
-const TranslatableStrings &MP3ImportFileHandle::GetStreamInfo()
+const TranslatableStrings& MP3ImportFileHandle::GetStreamInfo()
 {
-   static TranslatableStrings empty;
-   return empty;
+    static TranslatableStrings empty;
+    return empty;
 }
 
 void MP3ImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use))
@@ -261,272 +263,268 @@ void MP3ImportFileHandle::SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUS
 }
 
 void MP3ImportFileHandle::Import(
-   ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
-   TrackHolders& outTracks, Tags* tags,
-   std::optional<LibFileFormats::AcidizerTags>&)
+    ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+    TrackHolders& outTracks, Tags* tags,
+    std::optional<LibFileFormats::AcidizerTags>&)
 {
-   BeginImport();
+    BeginImport();
 
-   auto finalAction = finally([handle = mHandle]() { mpg123_close(handle); });
+    auto finalAction = finally([handle = mHandle]() { mpg123_close(handle); });
 
-   outTracks.clear();
-   mTrackFactory = trackFactory;
+    outTracks.clear();
+    mTrackFactory = trackFactory;
 
-   long long framesCount = mpg123_framelength(mHandle);
+    long long framesCount = mpg123_framelength(mHandle);
 
-   if (!SetupOutputFormat())
-   {
-      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
-      return;
-   }
+    if (!SetupOutputFormat()) {
+        progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+        return;
+    }
 
-   off_t frameIndex { 0 };
-   unsigned char* data { nullptr };
-   size_t dataSize { 0 };
+    off_t frameIndex { 0 };
+    unsigned char* data { nullptr };
+    size_t dataSize { 0 };
 
-   std::vector<float> conversionBuffer;
+    std::vector<float> conversionBuffer;
 
-   int ret = MPG123_OK;
+    int ret = MPG123_OK;
 
-   while ((ret = mpg123_decode_frame(mHandle, &frameIndex, &data, &dataSize)) ==
-                 MPG123_OK)
-   {
-      if(framesCount > 0)
-         progressListener.OnImportProgress(static_cast<double>(frameIndex) / static_cast<double>(framesCount));
+    while ((ret = mpg123_decode_frame(mHandle, &frameIndex, &data, &dataSize))
+           == MPG123_OK)
+    {
+        if (framesCount > 0) {
+            progressListener.OnImportProgress(static_cast<double>(frameIndex) / static_cast<double>(framesCount));
+        }
 
-      if(IsCancelled())
-      {
-         progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
-         return;
-      }
-      //VS: doesn't implement Stop behavior...
+        if (IsCancelled()) {
+            progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
+            return;
+        }
+        //VS: doesn't implement Stop behavior...
 
-      constSamplePtr samples = reinterpret_cast<constSamplePtr>(data);
-      const size_t samplesCount = dataSize / sizeof(float) / mNumChannels;
+        constSamplePtr samples = reinterpret_cast<constSamplePtr>(data);
+        const size_t samplesCount = dataSize / sizeof(float) / mNumChannels;
 
-      // libmpg123 picks up the format based on some "internal" precision.
-      // This case is not expected to happen
-      if (mFloat64Output)
-      {
-         conversionBuffer.resize(samplesCount * mNumChannels);
+        // libmpg123 picks up the format based on some "internal" precision.
+        // This case is not expected to happen
+        if (mFloat64Output) {
+            conversionBuffer.resize(samplesCount * mNumChannels);
 
-         for (size_t sampleIndex = 0; sampleIndex < conversionBuffer.size();
-              ++sampleIndex)
-         {
-            conversionBuffer[sampleIndex] = static_cast<float>(
-               reinterpret_cast<const double*>(data)[sampleIndex]);
-         }
+            for (size_t sampleIndex = 0; sampleIndex < conversionBuffer.size();
+                 ++sampleIndex) {
+                conversionBuffer[sampleIndex] = static_cast<float>(
+                    reinterpret_cast<const double*>(data)[sampleIndex]);
+            }
 
-         samples = reinterpret_cast<constSamplePtr>(conversionBuffer.data());
-      }
-      // Just copy the interleaved data to the channels
-      unsigned chn = 0;
-      ImportUtils::ForEachChannel(*mTrack, [&](auto& channel)
-      {
-         channel.AppendBuffer(
-            samples + sizeof(float) * chn,
-            floatSample, samplesCount,
-            mNumChannels,
-            floatSample);
-         ++chn;
-      });
-   }
+            samples = reinterpret_cast<constSamplePtr>(conversionBuffer.data());
+        }
+        // Just copy the interleaved data to the channels
+        unsigned chn = 0;
+        ImportUtils::ForEachChannel(*mTrack, [&](auto& channel)
+        {
+            channel.AppendBuffer(
+                samples + sizeof(float) * chn,
+                floatSample, samplesCount,
+                mNumChannels,
+                floatSample);
+            ++chn;
+        });
+    }
 
-   if (ret != MPG123_DONE)
-   {
-      wxLogError(
-         "Failed to decode MP3 file: %s", mpg123_plain_strerror(ret));
+    if (ret != MPG123_DONE) {
+        wxLogError(
+            "Failed to decode MP3 file: %s", mpg123_plain_strerror(ret));
 
-      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
-      return;
-   }
+        progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+        return;
+    }
 
-   ImportUtils::FinalizeImport(outTracks, *mTrack);
+    ImportUtils::FinalizeImport(outTracks, *mTrack);
 
-   ReadTags(tags);
+    ReadTags(tags);
 
-   progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
+    progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
 }
 
 bool MP3ImportFileHandle::SetupOutputFormat()
 {
-   long rate;
-   int channels;
-   int encoding = MPG123_ENC_FLOAT_32;
-   mpg123_getformat(mHandle, &rate, &channels, &encoding);
+    long rate;
+    int channels;
+    int encoding = MPG123_ENC_FLOAT_32;
+    mpg123_getformat(mHandle, &rate, &channels, &encoding);
 
-   mNumChannels = channels == MPG123_MONO ? 1 : 2;
+    mNumChannels = channels == MPG123_MONO ? 1 : 2;
 
-   if (encoding != MPG123_ENC_FLOAT_32 && encoding != MPG123_ENC_FLOAT_64)
-   {
-      wxLogError("MPG123 returned unexpected encoding");
+    if (encoding != MPG123_ENC_FLOAT_32 && encoding != MPG123_ENC_FLOAT_64) {
+        wxLogError("MPG123 returned unexpected encoding");
 
-      return false;
-   }
+        return false;
+    }
 
-   mFloat64Output = encoding == MPG123_ENC_FLOAT_64;
+    mFloat64Output = encoding == MPG123_ENC_FLOAT_64;
 
-   mTrack = ImportUtils::NewWaveTrack(
-      *mTrackFactory,
-      mNumChannels,
-      floatSample,
-      rate);
+    mTrack = ImportUtils::NewWaveTrack(
+        *mTrackFactory,
+        mNumChannels,
+        floatSample,
+        rate);
 
-   return true;
+    return true;
 }
 
 void MP3ImportFileHandle::ReadTags(Tags* tags)
 {
-   mpg123_id3v1* v1;
-   mpg123_id3v2* v2;
-   int meta;
+    mpg123_id3v1* v1;
+    mpg123_id3v2* v2;
+    int meta;
 
-   meta = mpg123_meta_check(mHandle);
+    meta = mpg123_meta_check(mHandle);
 
-   if (meta & MPG123_ID3 && mpg123_id3(mHandle, &v1, &v2) == MPG123_OK)
-   {
-      if (v2 != nullptr && v2->title != nullptr && v2->title->fill > 0)
-         tags->SetTag(TAG_TITLE, audacity::ToWXString(v2->title->p));
-      else if (v1 != nullptr && v1->title[0] != '\0')
-         tags->SetTag(TAG_TITLE, audacity::ToWXString(v1->title));
+    if (meta & MPG123_ID3 && mpg123_id3(mHandle, &v1, &v2) == MPG123_OK) {
+        if (v2 != nullptr && v2->title != nullptr && v2->title->fill > 0) {
+            tags->SetTag(TAG_TITLE, audacity::ToWXString(v2->title->p));
+        } else if (v1 != nullptr && v1->title[0] != '\0') {
+            tags->SetTag(TAG_TITLE, audacity::ToWXString(v1->title));
+        }
 
-      if (v2 != nullptr && v2->artist != nullptr && v2->artist->fill > 0)
-         tags->SetTag(TAG_ARTIST, audacity::ToWXString(v2->artist->p));
-      else if (v1 != nullptr && v1->artist[0] != '\0')
-         tags->SetTag(TAG_ARTIST, audacity::ToWXString(v1->artist));
+        if (v2 != nullptr && v2->artist != nullptr && v2->artist->fill > 0) {
+            tags->SetTag(TAG_ARTIST, audacity::ToWXString(v2->artist->p));
+        } else if (v1 != nullptr && v1->artist[0] != '\0') {
+            tags->SetTag(TAG_ARTIST, audacity::ToWXString(v1->artist));
+        }
 
-      if (v2 != nullptr && v2->album != nullptr && v2->album->fill > 0)
-         tags->SetTag(TAG_ALBUM, audacity::ToWXString(v2->album->p));
-      else if (v1 != nullptr && v1->album[0] != '\0')
-         tags->SetTag(TAG_ALBUM, audacity::ToWXString(v1->album));
+        if (v2 != nullptr && v2->album != nullptr && v2->album->fill > 0) {
+            tags->SetTag(TAG_ALBUM, audacity::ToWXString(v2->album->p));
+        } else if (v1 != nullptr && v1->album[0] != '\0') {
+            tags->SetTag(TAG_ALBUM, audacity::ToWXString(v1->album));
+        }
 
-      if (v2 != nullptr && v2->year != nullptr && v2->year->fill > 0)
-         tags->SetTag(TAG_YEAR, audacity::ToWXString(v2->year->p));
-      else if (v1 != nullptr && v1->year[0] != '\0')
-         tags->SetTag(TAG_YEAR, audacity::ToWXString(std::string(v1->year, 4)));
+        if (v2 != nullptr && v2->year != nullptr && v2->year->fill > 0) {
+            tags->SetTag(TAG_YEAR, audacity::ToWXString(v2->year->p));
+        } else if (v1 != nullptr && v1->year[0] != '\0') {
+            tags->SetTag(TAG_YEAR, audacity::ToWXString(std::string(v1->year, 4)));
+        }
 
-      if (v2 != nullptr && v2->genre != nullptr && v2->genre->fill > 0)
-         tags->SetTag(TAG_GENRE, GetId3v2Genre(*tags, v2->genre->p));
-      else if (v1 != nullptr)
-         tags->SetTag(TAG_GENRE, tags->GetGenre(v1->genre));
+        if (v2 != nullptr && v2->genre != nullptr && v2->genre->fill > 0) {
+            tags->SetTag(TAG_GENRE, GetId3v2Genre(*tags, v2->genre->p));
+        } else if (v1 != nullptr) {
+            tags->SetTag(TAG_GENRE, tags->GetGenre(v1->genre));
+        }
 
-      if (v2 != nullptr && v2->comment != nullptr && v2->comment->fill > 0)
-         tags->SetTag(TAG_COMMENTS, audacity::ToWXString(v2->comment->p));
-      else if (v1 != nullptr && v1->comment[0] != '\0')
-         tags->SetTag(TAG_COMMENTS, audacity::ToWXString(v1->comment));
+        if (v2 != nullptr && v2->comment != nullptr && v2->comment->fill > 0) {
+            tags->SetTag(TAG_COMMENTS, audacity::ToWXString(v2->comment->p));
+        } else if (v1 != nullptr && v1->comment[0] != '\0') {
+            tags->SetTag(TAG_COMMENTS, audacity::ToWXString(v1->comment));
+        }
 
-      if (v2 != nullptr)
-      {
-         for (size_t i = 0; i < v2->comments; ++i)
-         {
-            if (v2->comment_list[i].text.fill == 0)
-               continue;
+        if (v2 != nullptr) {
+            for (size_t i = 0; i < v2->comments; ++i) {
+                if (v2->comment_list[i].text.fill == 0) {
+                    continue;
+                }
 
-            tags->SetTag(
-               audacity::ToWXString(std::string(v2->comment_list[i].id, 4)),
-               audacity::ToWXString(v2->comment_list[i].text.p));
-         }
-
-         for (size_t i = 0; i < v2->extras; ++i)
-         {
-            if (v2->extra[i].text.fill == 0)
-               continue;
-
-            tags->SetTag(
-               audacity::ToWXString(std::string(v2->extra[i].id, 4)),
-               audacity::ToWXString(v2->extra[i].text.p));
-         }
-
-         // libmpg123 does not parse TRCK tag, we have to do it ourselves
-         for (size_t i = 0; i < v2->texts; ++i)
-         {
-            if (memcmp(v2->text[i].id, "TRCK", 4) == 0)
-            {
-               tags->SetTag(
-                  TAG_TRACK, audacity::ToWXString(v2->text[i].text.p));
+                tags->SetTag(
+                    audacity::ToWXString(std::string(v2->comment_list[i].id, 4)),
+                    audacity::ToWXString(v2->comment_list[i].text.p));
             }
-         }
-      }
-   }
+
+            for (size_t i = 0; i < v2->extras; ++i) {
+                if (v2->extra[i].text.fill == 0) {
+                    continue;
+                }
+
+                tags->SetTag(
+                    audacity::ToWXString(std::string(v2->extra[i].id, 4)),
+                    audacity::ToWXString(v2->extra[i].text.p));
+            }
+
+            // libmpg123 does not parse TRCK tag, we have to do it ourselves
+            for (size_t i = 0; i < v2->texts; ++i) {
+                if (memcmp(v2->text[i].id, "TRCK", 4) == 0) {
+                    tags->SetTag(
+                        TAG_TRACK, audacity::ToWXString(v2->text[i].text.p));
+                }
+            }
+        }
+    }
 }
 
 bool MP3ImportFileHandle::Open()
 {
-   if (mHandle == nullptr)
-      return false;
+    if (mHandle == nullptr) {
+        return false;
+    }
 
-   // Open the file
-   if (!mFile.Open(GetFilename()))
-   {
-      return false;
-   }
+    // Open the file
+    if (!mFile.Open(GetFilename())) {
+        return false;
+    }
 
-   // Get the length of the file
-   mFileLen = mFile.Seek(0, wxFromEnd);
+    // Get the length of the file
+    mFileLen = mFile.Seek(0, wxFromEnd);
 
-   if (mFileLen == wxInvalidOffset || mFile.Error())
-   {
-      mFile.Close();
-      return false;
-   }
+    if (mFileLen == wxInvalidOffset || mFile.Error()) {
+        mFile.Close();
+        return false;
+    }
 
-   if (mFile.Seek(0, wxFromStart) == wxInvalidOffset || mFile.Error())
-   {
-      mFile.Close();
-      return false;
-   }
+    if (mFile.Seek(0, wxFromStart) == wxInvalidOffset || mFile.Error()) {
+        mFile.Close();
+        return false;
+    }
 
-   // Check if file is an MP3
-   auto errorCode = mpg123_open_handle(mHandle, this);
+    // Check if file is an MP3
+    auto errorCode = mpg123_open_handle(mHandle, this);
 
-   if (errorCode != MPG123_OK)
-      return false;
+    if (errorCode != MPG123_OK) {
+        return false;
+    }
 
-   // Scan the file
-   errorCode = mpg123_scan(mHandle);
+    // Scan the file
+    errorCode = mpg123_scan(mHandle);
 
-   if (errorCode != MPG123_OK)
-      return false;
+    if (errorCode != MPG123_OK) {
+        return false;
+    }
 
-   // Read the output format
-   errorCode = mpg123_decode_frame(mHandle, nullptr, nullptr, nullptr);
+    // Read the output format
+    errorCode = mpg123_decode_frame(mHandle, nullptr, nullptr, nullptr);
 
-   // First decode should read the format
-   if (errorCode != MPG123_NEW_FORMAT)
-      return false;
+    // First decode should read the format
+    if (errorCode != MPG123_NEW_FORMAT) {
+        return false;
+    }
 
-   return true;
+    return true;
 }
 
 ptrdiff_t MP3ImportFileHandle::ReadCallback(
-   void* handle, void* buffer, size_t size)
+    void* handle, void* buffer, size_t size)
 {
-   return static_cast<MP3ImportFileHandle*>(handle)->mFile.Read(buffer, size);
+    return static_cast<MP3ImportFileHandle*>(handle)->mFile.Read(buffer, size);
 }
 
 wxSeekMode GetWXSeekMode(int whence)
 {
-   switch (whence)
-   {
-   case SEEK_SET:
-      return wxFromStart;
-   case SEEK_CUR:
-      return wxFromCurrent;
-   case SEEK_END:
-      return wxFromEnd;
-   default:
-      // We have covered all the lseek whence modes defined by POSIX
-      // so this branch should not be reachable
-      assert(false);
-      return wxFromStart;
-   }
+    switch (whence) {
+    case SEEK_SET:
+        return wxFromStart;
+    case SEEK_CUR:
+        return wxFromCurrent;
+    case SEEK_END:
+        return wxFromEnd;
+    default:
+        // We have covered all the lseek whence modes defined by POSIX
+        // so this branch should not be reachable
+        assert(false);
+        return wxFromStart;
+    }
 }
 
 off_t MP3ImportFileHandle::SeekCallback(
-   void* handle, off_t offset, int whence)
+    void* handle, off_t offset, int whence)
 {
-   return static_cast<MP3ImportFileHandle*>(handle)->mFile.Seek(
-      offset, GetWXSeekMode(whence));
+    return static_cast<MP3ImportFileHandle*>(handle)->mFile.Seek(
+        offset, GetWXSeekMode(whence));
 }
-
 } // namespace

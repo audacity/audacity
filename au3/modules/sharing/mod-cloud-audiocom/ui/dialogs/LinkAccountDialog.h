@@ -12,19 +12,15 @@
 
 #include "AudioComDialogBase.h"
 
-namespace audacity::cloud::audiocom::sync
-{
-
+namespace audacity::cloud::audiocom::sync {
 class LinkAccountDialog final : public AudioComDialogBase
 {
 public:
-   LinkAccountDialog(
-      const AudacityProject* project,
-      const TranslatableString& alternativeButtonText = {});
-   ~LinkAccountDialog() override = default;
+    LinkAccountDialog(
+        const AudacityProject* project, const TranslatableString& alternativeButtonText = {});
+    ~LinkAccountDialog() override = default;
 
-   static DialogButtonIdentifier AlternativeButtonIdentifier();
-   static DialogButtonIdentifier SignInButtonIdentifier();
+    static DialogButtonIdentifier AlternativeButtonIdentifier();
+    static DialogButtonIdentifier SignInButtonIdentifier();
 }; // class LinkAccountDialog
-
 } // namespace audacity::cloud::audiocom::sync

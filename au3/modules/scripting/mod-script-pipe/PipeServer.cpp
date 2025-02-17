@@ -7,103 +7,102 @@
 
 const int nBuff = 1024;
 
-extern "C" int DoSrv( char * pIn );
-extern "C" int DoSrvMore( char * pOut, size_t nMax );
+extern "C" int DoSrv(char* pIn);
+extern "C" int DoSrvMore(char* pOut, size_t nMax);
 
 void PipeServer()
 {
-   HANDLE hPipeToSrv;
-   HANDLE hPipeFromSrv;
+    HANDLE hPipeToSrv;
+    HANDLE hPipeFromSrv;
 
-   static const TCHAR pipeNameToSrv[] = _T("\\\\.\\pipe\\ToSrvPipe");
+    static const TCHAR pipeNameToSrv[] = _T("\\\\.\\pipe\\ToSrvPipe");
 
-   hPipeToSrv = CreateNamedPipe( 
-      pipeNameToSrv ,
-      PIPE_ACCESS_DUPLEX,
-      PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS,
-      PIPE_UNLIMITED_INSTANCES,
-      nBuff,
-      nBuff,
-      50,//Timeout - always send straight away.
-      NULL);
-   if( hPipeToSrv == INVALID_HANDLE_VALUE)
-      return;
+    hPipeToSrv = CreateNamedPipe(
+        pipeNameToSrv,
+        PIPE_ACCESS_DUPLEX,
+        PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS,
+        PIPE_UNLIMITED_INSTANCES,
+        nBuff,
+        nBuff,
+        50,//Timeout - always send straight away.
+        NULL);
+    if (hPipeToSrv == INVALID_HANDLE_VALUE) {
+        return;
+    }
 
-   static const TCHAR pipeNameFromSrv[] = __T("\\\\.\\pipe\\FromSrvPipe");
+    static const TCHAR pipeNameFromSrv[] = __T("\\\\.\\pipe\\FromSrvPipe");
 
-   hPipeFromSrv = CreateNamedPipe( 
-      pipeNameFromSrv ,
-      PIPE_ACCESS_DUPLEX,
-      PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS,
-      PIPE_UNLIMITED_INSTANCES,
-      nBuff,
-      nBuff,
-      50,//Timeout - always send straight away.
-      NULL);
-   if( hPipeFromSrv == INVALID_HANDLE_VALUE)
-      return;
+    hPipeFromSrv = CreateNamedPipe(
+        pipeNameFromSrv,
+        PIPE_ACCESS_DUPLEX,
+        PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS,
+        PIPE_UNLIMITED_INSTANCES,
+        nBuff,
+        nBuff,
+        50,//Timeout - always send straight away.
+        NULL);
+    if (hPipeFromSrv == INVALID_HANDLE_VALUE) {
+        return;
+    }
 
-   BOOL bConnected;
-   BOOL bSuccess;
-   DWORD cbBytesRead;
-   DWORD cbBytesWritten;
-   CHAR chRequest[ nBuff ];
-   CHAR chResponse[ nBuff ];
+    BOOL bConnected;
+    BOOL bSuccess;
+    DWORD cbBytesRead;
+    DWORD cbBytesWritten;
+    CHAR chRequest[ nBuff ];
+    CHAR chResponse[ nBuff ];
 
-   int jj=0;
+    int jj=0;
 
-   for(;;)
-   {
-      // open to (incoming) pipe first.  
-      printf( "Obtaining pipe\n" );
-      bConnected = ConnectNamedPipe(hPipeToSrv, NULL) ? 
-         TRUE : (GetLastError()==ERROR_PIPE_CONNECTED );
-      printf( "Obtained to-srv %i\n", bConnected );
+    for (;;) {
+        // open to (incoming) pipe first.
+        printf("Obtaining pipe\n");
+        bConnected = ConnectNamedPipe(hPipeToSrv, NULL)
+                     ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+        printf("Obtained to-srv %i\n", bConnected);
 
-      // open from (outgoing) pipe second.  This could block if there is no reader.
-      bConnected = ConnectNamedPipe(hPipeFromSrv, NULL) ? 
-         TRUE : (GetLastError()==ERROR_PIPE_CONNECTED );
-      printf( "Obtained from-srv %i\n", bConnected );
+        // open from (outgoing) pipe second.  This could block if there is no reader.
+        bConnected = ConnectNamedPipe(hPipeFromSrv, NULL)
+                     ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+        printf("Obtained from-srv %i\n", bConnected);
 
-      if( bConnected )
-      {
-         for(;;)
-         {
-            printf( "About to read\n" );
-            bSuccess = ReadFile( hPipeToSrv, chRequest, nBuff, &cbBytesRead, NULL);
+        if (bConnected) {
+            for (;;) {
+                printf("About to read\n");
+                bSuccess = ReadFile(hPipeToSrv, chRequest, nBuff, &cbBytesRead, NULL);
 
-            chRequest[ cbBytesRead] = '\0'; 
+                chRequest[ cbBytesRead] = '\0';
 
-            if( !bSuccess || cbBytesRead==0 )
-               break;
+                if (!bSuccess || cbBytesRead == 0) {
+                    break;
+                }
 
-            printf( "Rxd %s\n", chRequest );
+                printf("Rxd %s\n", chRequest);
 
-            DoSrv( chRequest );
-            jj++;
-            while( true )
-            {
-               int nWritten = DoSrvMore( chResponse, nBuff );
-               if( nWritten <= 1 )
-                  break;
-               WriteFile( hPipeFromSrv, chResponse, nWritten-1, &cbBytesWritten, NULL);
+                DoSrv(chRequest);
+                jj++;
+                while (true)
+                {
+                    int nWritten = DoSrvMore(chResponse, nBuff);
+                    if (nWritten <= 1) {
+                        break;
+                    }
+                    WriteFile(hPipeFromSrv, chResponse, nWritten - 1, &cbBytesWritten, NULL);
+                }
+                //FlushFileBuffers( hPipeFromSrv );
             }
-            //FlushFileBuffers( hPipeFromSrv );
-         }
-         FlushFileBuffers( hPipeToSrv );
-         DisconnectNamedPipe( hPipeToSrv );
-         FlushFileBuffers( hPipeFromSrv );
-         DisconnectNamedPipe( hPipeFromSrv );
-         break;
-      }
-      else
-      {
-         CloseHandle( hPipeToSrv );
-         CloseHandle( hPipeFromSrv );
-      }
-   }
-   CloseHandle( hPipeToSrv );
-   CloseHandle( hPipeFromSrv );
+            FlushFileBuffers(hPipeToSrv);
+            DisconnectNamedPipe(hPipeToSrv);
+            FlushFileBuffers(hPipeFromSrv);
+            DisconnectNamedPipe(hPipeFromSrv);
+            break;
+        } else {
+            CloseHandle(hPipeToSrv);
+            CloseHandle(hPipeFromSrv);
+        }
+    }
+    CloseHandle(hPipeToSrv);
+    CloseHandle(hPipeFromSrv);
 }
 
 #else
@@ -118,89 +117,88 @@ const char fifotmpl[] = "/tmp/audacity_script_pipe.%s.%d";
 
 const int nBuff = 1024;
 
-extern "C" int DoSrv( char * pIn );
-extern "C" int DoSrvMore( char * pOut, size_t nMax );
+extern "C" int DoSrv(char* pIn);
+extern "C" int DoSrvMore(char* pOut, size_t nMax);
 
 void PipeServer()
 {
-   FILE *fromFifo = NULL;
-   FILE *toFifo = NULL;
-   int rc;
-   char buf[nBuff];
-   char toFifoName[nBuff];
-   char fromFifoName[nBuff];
+    FILE* fromFifo = NULL;
+    FILE* toFifo = NULL;
+    int rc;
+    char buf[nBuff];
+    char toFifoName[nBuff];
+    char fromFifoName[nBuff];
 
-   sprintf(toFifoName, fifotmpl, "to", getuid());
-   sprintf(fromFifoName, fifotmpl, "from", getuid());
+    sprintf(toFifoName, fifotmpl, "to", getuid());
+    sprintf(fromFifoName, fifotmpl, "from", getuid());
 
-   unlink(toFifoName);
-   unlink(fromFifoName);
+    unlink(toFifoName);
+    unlink(fromFifoName);
 
-   // TODO avoid symlink security issues?
+    // TODO avoid symlink security issues?
 
-   rc = mkfifo(fromFifoName, S_IRWXU) & mkfifo(toFifoName, S_IRWXU);
-   if (rc < 0)
-   {
-      perror("Unable to create fifos");
-      printf("Ignoring...");
+    rc = mkfifo(fromFifoName, S_IRWXU) & mkfifo(toFifoName, S_IRWXU);
+    if (rc < 0) {
+        perror("Unable to create fifos");
+        printf("Ignoring...");
 //      return;
-   }
+    }
 
-   // open to (incoming) pipe first.  
-   toFifo = fopen(toFifoName, "r");
-   if (toFifo == NULL)
-   {
-      perror("Unable to open fifo to server from script");
-      if (fromFifo != NULL)
-         fclose(fromFifo);
-      return;
-   }
+    // open to (incoming) pipe first.
+    toFifo = fopen(toFifoName, "r");
+    if (toFifo == NULL) {
+        perror("Unable to open fifo to server from script");
+        if (fromFifo != NULL) {
+            fclose(fromFifo);
+        }
+        return;
+    }
 
-   // open from (outgoing) pipe second.  This could block if there is no reader.
-   fromFifo = fopen(fromFifoName, "w");
-   if (fromFifo == NULL)
-   {
-      perror("Unable to open fifo from server to script");
-      return;
-   }
+    // open from (outgoing) pipe second.  This could block if there is no reader.
+    fromFifo = fopen(fromFifoName, "w");
+    if (fromFifo == NULL) {
+        perror("Unable to open fifo from server to script");
+        return;
+    }
 
-   while (fgets(buf, sizeof(buf), toFifo) != NULL)
-   {
-      int len = strlen(buf);
-      if (len <= 1)
-      {
-         continue;
-      }
+    while (fgets(buf, sizeof(buf), toFifo) != NULL)
+    {
+        int len = strlen(buf);
+        if (len <= 1) {
+            continue;
+        }
 
-      buf[len - 1] = '\0';
+        buf[len - 1] = '\0';
 
-      printf("Server received %s\n", buf);
-      DoSrv(buf);
+        printf("Server received %s\n", buf);
+        DoSrv(buf);
 
-      while (true)
-      {
-         len = DoSrvMore(buf, nBuff);
-         if (len <= 1)
-         {
-            break;
-         }
-         printf("Server sending %s",buf);
+        while (true)
+        {
+            len = DoSrvMore(buf, nBuff);
+            if (len <= 1) {
+                break;
+            }
+            printf("Server sending %s", buf);
 
-         // len - 1 because we do not send the null character
-         fwrite(buf, 1, len - 1, fromFifo);
-      }
-      fflush(fromFifo);
-   }
+            // len - 1 because we do not send the null character
+            fwrite(buf, 1, len - 1, fromFifo);
+        }
+        fflush(fromFifo);
+    }
 
-   printf("Read failed on fifo, quitting\n");
+    printf("Read failed on fifo, quitting\n");
 
-   if (toFifo != NULL)
-      fclose(toFifo);
+    if (toFifo != NULL) {
+        fclose(toFifo);
+    }
 
-   if (fromFifo != NULL)
-      fclose(fromFifo);
+    if (fromFifo != NULL) {
+        fclose(fromFifo);
+    }
 
-   unlink(toFifoName);
-   unlink(fromFifoName);
+    unlink(toFifoName);
+    unlink(fromFifoName);
 }
+
 #endif

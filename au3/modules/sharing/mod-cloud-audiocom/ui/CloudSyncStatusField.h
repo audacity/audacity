@@ -22,52 +22,50 @@ class AudacityProject;
 
 class wxRect;
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class ProjectCloudExtension;
 class CloudStatusChangedMessage;
 
-class CloudSyncStatusField final :
-    public ClientData::Base
+class CloudSyncStatusField final : public ClientData::Base
 {
 public:
-   explicit CloudSyncStatusField(AudacityProject& project);
-   ~CloudSyncStatusField() override;
+    explicit CloudSyncStatusField(AudacityProject& project);
+    ~CloudSyncStatusField() override;
 
-   static CloudSyncStatusField& Get(AudacityProject& project);
-   static const CloudSyncStatusField& Get(const AudacityProject& project);
+    static CloudSyncStatusField& Get(AudacityProject& project);
+    static const CloudSyncStatusField& Get(const AudacityProject& project);
 
-   int GetWidth() const;
-   void OnSize(const wxRect& rect);
-   bool IsVisible() const;
+    int GetWidth() const;
+    void OnSize(const wxRect& rect);
+    bool IsVisible() const;
 
-   TranslatableString GetText() const;
+    TranslatableString GetText() const;
 
 private:
-   class StatusWidget;
+    class StatusWidget;
 
-   void MarkDirty();
-   void OnCloudStatusChanged(const CloudStatusChangedMessage& extension);
+    void MarkDirty();
+    void OnCloudStatusChanged(const CloudStatusChangedMessage& extension);
 
-   StatusWidget& GetStatusWidget();
-   const StatusWidget& GetStatusWidget() const;
+    StatusWidget& GetStatusWidget();
+    const StatusWidget& GetStatusWidget() const;
 
-   AudacityProject& mProject;
-   ProjectCloudExtension& mCloudExtension;
+    AudacityProject& mProject;
+    ProjectCloudExtension& mCloudExtension;
 
-   enum class State
-   {
-      Hidden,
-      Dirty,
-      Synced,
-      Failed,
-      Uploading,
-   } mState { State::Hidden };
+    enum class State
+    {
+        Hidden,
+        Dirty,
+        Synced,
+        Failed,
+        Uploading,
+    } mState { State::Hidden };
 
-   int mProgress { 0 }; // Progress, 0-100
+    int mProgress { 0 }; // Progress, 0-100
 
-   wxWeakRef<StatusWidget> mStatusWidget;
+    wxWeakRef<StatusWidget> mStatusWidget;
 
-   Observer::Subscription mCloudStatusChangedSubscription;
+    Observer::Subscription mCloudStatusChangedSubscription;
 }; // class CloudSyncStatusField
 } // namespace audacity::cloud::audiocom::sync

@@ -26,191 +26,186 @@ class wxFileName;
 // NyqTextCtrl
 //----------------------------------------------------------------------------
 
-class NyqTextCtrl:public wxTextCtrl
+class NyqTextCtrl : public wxTextCtrl
 {
- public:
-   NyqTextCtrl(wxWindow *parent,
-               wxWindowID id,
-               const wxString & value,
-               const wxPoint & pos,
-               const wxSize & size,
-               int style = 0);
+public:
+    NyqTextCtrl(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size, int style = 0);
 
-   void SetFocusFromKbd();
-   void MarkDirty();
+    void SetFocusFromKbd();
+    void MarkDirty();
 
-   void GoMatch();
-   void GoTop();
-   void GoUp();
-   void GoPrev();
-   void GoNext();
+    void GoMatch();
+    void GoTop();
+    void GoUp();
+    void GoPrev();
+    void GoNext();
 
- private:
+private:
 #if defined(__WXMAC__REMOVED_UNTIL_ITS_PROVEN_THAT_IT_IS_STILL_NEEDED)
-   void OnKeyDown(wxKeyEvent & e);
+    void OnKeyDown(wxKeyEvent& e);
 #endif
-   void OnKeyUp(wxKeyEvent & e);
-   void OnChar(wxKeyEvent & e);
-   void OnUpdate(wxUpdateUIEvent & e);
+    void OnKeyUp(wxKeyEvent& e);
+    void OnChar(wxKeyEvent& e);
+    void OnUpdate(wxUpdateUIEvent& e);
 
-   void MoveCursor(long first, long second);
-   void Colorize(long left, long right);
-   void FindParens();
+    void MoveCursor(long first, long second);
+    void Colorize(long left, long right);
+    void FindParens();
 
- private:
-   wxLongToLongHashMap mLeftParens;
-   wxLongToLongHashMap mRightParens;
+private:
+    wxLongToLongHashMap mLeftParens;
+    wxLongToLongHashMap mRightParens;
 
-   long mLeftParen;
-   long mRightParen;
+    long mLeftParen;
+    long mRightParen;
 
-   long mLastCaretPos;
+    long mLastCaretPos;
 
-   wxTextAttr mOn;
-   wxTextAttr mOff;
+    wxTextAttr mOn;
+    wxTextAttr mOff;
 
-   DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE();
 };
 
 //----------------------------------------------------------------------------
 // NyqRedirector
 //----------------------------------------------------------------------------
 
-class NyqRedirector:wxSTD streambuf
+class NyqRedirector : wxSTD streambuf
 {
- public:
-   NyqRedirector(NyqTextCtrl *text);
-   virtual ~NyqRedirector();
+public:
+    NyqRedirector(NyqTextCtrl* text);
+    virtual ~NyqRedirector();
 
-   int overflow(int c);
+    int overflow(int c);
 
- private:
-   void AppendText();
+private:
+    void AppendText();
 
-   std::string s;
-   std::streambuf *mOld;
-   NyqTextCtrl *mText;
+    std::string s;
+    std::streambuf* mOld;
+    NyqTextCtrl* mText;
 };
 
 //----------------------------------------------------------------------------
 // NyqBench
 //----------------------------------------------------------------------------
 
-class NyqBench:public wxFrame
+class NyqBench : public wxFrame
 {
- public:
-   NyqBench(wxWindow *parent);
-   virtual ~NyqBench();
+public:
+    NyqBench(wxWindow* parent);
+    virtual ~NyqBench();
 
-   virtual bool Validate();
+    virtual bool Validate();
 
-   void ShowNyqBench(const CommandContext&);
+    void ShowNyqBench(const CommandContext&);
 
-   static NyqBench *GetBench();
-   void SavePrefs();
+    static NyqBench* GetBench();
+    void SavePrefs();
 
- private:
-   void PopulateOrExchange(ShuttleGui & S);
+private:
+    void PopulateOrExchange(ShuttleGui& S);
 
-   void OnClose(wxCloseEvent & e);
-   void OnMove(wxMoveEvent & e);
-   void OnSize(wxSizeEvent & e);
+    void OnClose(wxCloseEvent& e);
+    void OnMove(wxMoveEvent& e);
+    void OnSize(wxSizeEvent& e);
 
-   void OnNew(wxCommandEvent & e);
-   void OnOpen(wxCommandEvent & e);
-   void OnSave(wxCommandEvent & e);
-   void OnSaveAs(wxCommandEvent & e);
-   void OnRevert(wxCommandEvent & e);
-   void OnAutoLoad(wxCommandEvent & e);
-   void OnCloseWindow(wxCommandEvent & e);
+    void OnNew(wxCommandEvent& e);
+    void OnOpen(wxCommandEvent& e);
+    void OnSave(wxCommandEvent& e);
+    void OnSaveAs(wxCommandEvent& e);
+    void OnRevert(wxCommandEvent& e);
+    void OnAutoLoad(wxCommandEvent& e);
+    void OnCloseWindow(wxCommandEvent& e);
 
-   void OnUndo(wxCommandEvent & e);
-   void OnRedo(wxCommandEvent & e);
-   void OnCut(wxCommandEvent & e);
-   void OnCopy(wxCommandEvent & e);
-   void OnPaste(wxCommandEvent & e);
-   void OnClear(wxCommandEvent & e);
-   void OnSelectAll(wxCommandEvent & e);
-   void OnFind(wxCommandEvent & e);
-   void OnGoMatch(wxCommandEvent & e);
-   void OnGoTop(wxCommandEvent & e);
-   void OnGoUp(wxCommandEvent & e);
-   void OnGoPrev(wxCommandEvent & e);
-   void OnGoNext(wxCommandEvent & e);
-   void OnAutoWrap(wxCommandEvent & e);
+    void OnUndo(wxCommandEvent& e);
+    void OnRedo(wxCommandEvent& e);
+    void OnCut(wxCommandEvent& e);
+    void OnCopy(wxCommandEvent& e);
+    void OnPaste(wxCommandEvent& e);
+    void OnClear(wxCommandEvent& e);
+    void OnSelectAll(wxCommandEvent& e);
+    void OnFind(wxCommandEvent& e);
+    void OnGoMatch(wxCommandEvent& e);
+    void OnGoTop(wxCommandEvent& e);
+    void OnGoUp(wxCommandEvent& e);
+    void OnGoPrev(wxCommandEvent& e);
+    void OnGoNext(wxCommandEvent& e);
+    void OnAutoWrap(wxCommandEvent& e);
 
-   void OnFont(wxCommandEvent & e);
-   void OnSplitV(wxCommandEvent & e);
-   void OnSplitH(wxCommandEvent & e);
-   void OnToggleCode(wxCommandEvent & e);
-   void OnToggleOutput(wxCommandEvent & e);
-   void OnSmallIcons(wxCommandEvent & e);
-   void OnLargeIcons(wxCommandEvent & e);
+    void OnFont(wxCommandEvent& e);
+    void OnSplitV(wxCommandEvent& e);
+    void OnSplitH(wxCommandEvent& e);
+    void OnToggleCode(wxCommandEvent& e);
+    void OnToggleOutput(wxCommandEvent& e);
+    void OnSmallIcons(wxCommandEvent& e);
+    void OnLargeIcons(wxCommandEvent& e);
 
-   void OnGo(wxCommandEvent & e);
-   void OnStop(wxCommandEvent & e);
+    void OnGo(wxCommandEvent& e);
+    void OnStop(wxCommandEvent& e);
 
-   void OnAbout(wxCommandEvent & e);
+    void OnAbout(wxCommandEvent& e);
 
-   void OnFindDialog(wxFindDialogEvent & e);
+    void OnFindDialog(wxFindDialogEvent& e);
 
-   void OnTextUpdate(wxCommandEvent & e);
+    void OnTextUpdate(wxCommandEvent& e);
 
-   void OnMenuUpdate(wxUpdateUIEvent & e);
- 
-   void OnUndoUpdate(wxUpdateUIEvent & e);
-   void OnRedoUpdate(wxUpdateUIEvent & e);
-   void OnCutUpdate(wxUpdateUIEvent & e);
-   void OnCopyUpdate(wxUpdateUIEvent & e);
-   void OnPasteUpdate(wxUpdateUIEvent & e);
-   void OnClearUpdate(wxUpdateUIEvent & e);
+    void OnMenuUpdate(wxUpdateUIEvent& e);
 
-   void OnViewUpdate(wxUpdateUIEvent & e);
+    void OnUndoUpdate(wxUpdateUIEvent& e);
+    void OnRedoUpdate(wxUpdateUIEvent& e);
+    void OnCutUpdate(wxUpdateUIEvent& e);
+    void OnCopyUpdate(wxUpdateUIEvent& e);
+    void OnPasteUpdate(wxUpdateUIEvent& e);
+    void OnClearUpdate(wxUpdateUIEvent& e);
 
-   void OnRunUpdate(wxUpdateUIEvent & e);
+    void OnViewUpdate(wxUpdateUIEvent& e);
 
-   void OnScriptUpdate(wxUpdateUIEvent & e);
-   void OnOutputUpdate(wxUpdateUIEvent & e);
+    void OnRunUpdate(wxUpdateUIEvent& e);
 
-   void SetWindowTitle();
+    void OnScriptUpdate(wxUpdateUIEvent& e);
+    void OnOutputUpdate(wxUpdateUIEvent& e);
 
-   void RecreateToolbar(bool large = false);
+    void SetWindowTitle();
 
-   void LoadFile();
+    void RecreateToolbar(bool large = false);
 
- private:
-   wxStaticBox *mScriptBox;
-   wxStaticBox *mOutputBox;
-   NyqTextCtrl *mScript;
-   NyqTextCtrl *mOutput;
-   wxSplitterWindow *mSplitter;
+    void LoadFile();
 
-   wxFindReplaceDialog *mFindDlg;
-   wxFindReplaceData mFindData;
-   NyqTextCtrl *mFindText;
+private:
+    wxStaticBox* mScriptBox;
+    wxStaticBox* mOutputBox;
+    NyqTextCtrl* mScript;
+    NyqTextCtrl* mOutput;
+    wxSplitterWindow* mSplitter;
 
-   NyquistEffect *mEffect;
+    wxFindReplaceDialog* mFindDlg;
+    wxFindReplaceData mFindData;
+    NyqTextCtrl* mFindText;
 
-   wxFont mScriptFont;
-   wxFont mOutputFont;
+    NyquistEffect* mEffect;
 
-   wxBitmap mPics[20];
+    wxFont mScriptFont;
+    wxFont mOutputFont;
 
-   int mSplitMode;
-   bool mShowCode;
-   bool mShowOutput;
+    wxBitmap mPics[20];
 
-   bool mLargeIcons;
+    int mSplitMode;
+    bool mShowCode;
+    bool mShowOutput;
 
-   bool mRunning;
+    bool mLargeIcons;
 
-   wxFileName mPath;
-   bool mAutoLoad;
-   bool mAutoWrap;
+    bool mRunning;
 
-   wxRect mLastSize;
+    wxFileName mPath;
+    bool mAutoLoad;
+    bool mAutoWrap;
 
-   DECLARE_EVENT_TABLE();
+    wxRect mLastSize;
+
+    DECLARE_EVENT_TABLE();
 };
 
 #endif

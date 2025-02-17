@@ -30,7 +30,7 @@ class AVCodecWrapper;
 class FFMPEG_SUPPORT_API AVFormatContextWrapper
 {
 public:
-    using StreamsList = std::vector<std::unique_ptr<AVStreamWrapper>>;
+    using StreamsList = std::vector<std::unique_ptr<AVStreamWrapper> >;
 
     AVFormatContextWrapper(const AVFormatContextWrapper&) = delete;
     AVFormatContextWrapper& operator=(AVFormatContextWrapper&) = delete;

@@ -14,4 +14,4 @@ class wxDynamicLibrary;
 struct AVUtilFunctions;
 
 bool LoadAVUtilFunctions(
-   const wxDynamicLibrary& lib, AVUtilFunctions& functions);
+    const wxDynamicLibrary& lib, AVUtilFunctions& functions);

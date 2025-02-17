@@ -22,8 +22,7 @@ class AudacityProject;
 
 class wxBoxSizer;
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 struct DialogIdentifierTag
 {
 };
@@ -37,56 +36,54 @@ using DialogButtonIdentifier = TaggedIdentifier<DialogButtonIdentifierTag>;
 class AudioComDialogBase : wxDialogWrapper
 {
 public:
-   DialogButtonIdentifier
-   ShowDialog(std::function<DialogButtonIdentifier()> poller = {});
+    DialogButtonIdentifier
+    ShowDialog(std::function<DialogButtonIdentifier()> poller = {});
 
-   static DialogButtonIdentifier CancelButtonIdentifier();
+    static DialogButtonIdentifier CancelButtonIdentifier();
 
 protected:
-   enum class DialogMode
-   {
-      Opening,
-      Saving,
-   };
+    enum class DialogMode
+    {
+        Opening,
+        Saving,
+    };
 
-   AudioComDialogBase(
-      const AudacityProject* project,
-      const DialogIdentifier& optionalPrefsIdentifier = {},
-      DialogMode dialogMode                           = DialogMode::Saving);
+    AudioComDialogBase(
+        const AudacityProject* project, const DialogIdentifier& optionalPrefsIdentifier = {},
+        DialogMode dialogMode                           = DialogMode::Saving);
 
-   virtual ~AudioComDialogBase() = default;
+    virtual ~AudioComDialogBase() = default;
 
-   void AddTitle(const TranslatableString& title);
-   void AddParagraph(const TranslatableString& paragraph);
+    void AddTitle(const TranslatableString& title);
+    void AddParagraph(const TranslatableString& paragraph);
 
-   enum ButtonType
-   {
-      None          = 0,
-      DefaultButton = 1,
-      EscButton     = 2,
-   };
+    enum ButtonType
+    {
+        None          = 0,
+        DefaultButton = 1,
+        EscButton     = 2,
+    };
 
-   void AddButton(
-      DialogButtonIdentifier identifier, const TranslatableString& text,
-      int type = None);
+    void AddButton(
+        DialogButtonIdentifier identifier, const TranslatableString& text, int type = None);
 
-   void SetDialogTitle(const TranslatableString& dialog);
+    void SetDialogTitle(const TranslatableString& dialog);
 
-   virtual bool HasSeparator() const;
+    virtual bool HasSeparator() const;
 
-   void EndDialog(DialogButtonIdentifier identifier);
+    void EndDialog(DialogButtonIdentifier identifier);
 
 private:
-   const AudacityProject* mProject;
-   DialogIdentifier mOptionalPrefsIdentifier;
+    const AudacityProject* mProject;
+    DialogIdentifier mOptionalPrefsIdentifier;
 
-   wxBoxSizer* mDialogSizer;
-   wxBoxSizer* mButtonSizer;
+    wxBoxSizer* mDialogSizer;
+    wxBoxSizer* mButtonSizer;
 
-   DialogButtonIdentifier mEscButtonIdentifier { CancelButtonIdentifier() };
-   DialogButtonIdentifier mResultButtonIdentifier;
+    DialogButtonIdentifier mEscButtonIdentifier { CancelButtonIdentifier() };
+    DialogButtonIdentifier mResultButtonIdentifier;
 }; // class AudioComDialogBase
 
 void ShowDialogOn(
-   std::function<bool()> condition, std::function<void()> dialogFactory);
+    std::function<bool()> condition, std::function<void()> dialogFactory);
 } // namespace audacity::cloud::audiocom::sync

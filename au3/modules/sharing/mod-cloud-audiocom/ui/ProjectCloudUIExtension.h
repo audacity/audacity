@@ -17,39 +17,37 @@
 
 class AudacityProject;
 
-namespace BasicUI
-{
+namespace BasicUI {
 class ProgressDialog;
 }
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 struct CloudStatusChangedMessage;
 
 class ProjectCloudUIExtension final : public ClientData::Base
 {
 public:
-   explicit ProjectCloudUIExtension(AudacityProject& project);
-   ~ProjectCloudUIExtension() override;
+    explicit ProjectCloudUIExtension(AudacityProject& project);
+    ~ProjectCloudUIExtension() override;
 
-   static ProjectCloudUIExtension& Get(AudacityProject& project);
-   static const ProjectCloudUIExtension& Get(const AudacityProject& project);
+    static ProjectCloudUIExtension& Get(AudacityProject& project);
+    static const ProjectCloudUIExtension& Get(const AudacityProject& project);
 
-   bool AllowClosing();
+    bool AllowClosing();
 
 private:
-   void SetUploadProgress(double progress);
-   void OnCloudStatusChanged(const CloudStatusChangedMessage& message);
+    void SetUploadProgress(double progress);
+    void OnCloudStatusChanged(const CloudStatusChangedMessage& message);
 
-   AudacityProject& mProject;
+    AudacityProject& mProject;
 
-   std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
+    std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 
-   double mProgress { 0.0 };
+    double mProgress { 0.0 };
 
-   std::atomic<bool> mInSync { false };
-   bool mClosingCancelled { false };
+    std::atomic<bool> mInSync { false };
+    bool mClosingCancelled { false };
 
-   Observer::Subscription mCloudStatusChangedSubscription;
+    Observer::Subscription mCloudStatusChangedSubscription;
 };
 } // namespace audacity::cloud::audiocom::sync

@@ -39,163 +39,159 @@
 
 #include "HelpSystem.h"
 
-namespace audacity::cloud::audiocom
-{
-
-namespace
-{
+namespace audacity::cloud::audiocom {
+namespace {
 const wxSize avatarSize  = { 32, 32 };
 const auto notLinkedText = XO("Account not linked");
 const auto anonymousText = XO("Anonymous");
 } // namespace
 
 UserPanel::UserPanel(
-   const ServiceConfig& serviceConfig, OAuthService& authService,
-   UserService& userService, LinkMode linkMode, AudiocomTrace trace,
-   wxWindow* parent, const wxPoint& pos, const wxSize& size)
-    : wxPanelWrapper { parent, wxID_ANY, pos, size }
-    , mServiceConfig { serviceConfig }
-    , mAuthService { authService }
-    , mUserService { userService }
-    , mAudiocomTrace { trace }
-    , mUserDataChangedSubscription { userService.Subscribe(
-         [this](const auto&) { UpdateUserData(); }) }
-    , mLinkMode { linkMode }
+    const ServiceConfig& serviceConfig, OAuthService& authService, UserService& userService, LinkMode linkMode, AudiocomTrace trace,
+    wxWindow* parent, const wxPoint& pos, const wxSize& size)
+    : wxPanelWrapper{parent, wxID_ANY, pos, size}
+    , mServiceConfig{serviceConfig}
+    , mAuthService{authService}
+    , mUserService{userService}
+    , mAudiocomTrace{trace}
+    , mUserDataChangedSubscription{userService.Subscribe(
+                                       [this](const auto&) { UpdateUserData(); })},
+    mLinkMode { linkMode }
 {
-   mUserImage = safenew UserImage(this, avatarSize);
-   mUserImage->SetLabel( mLinkMode == LinkMode::Link ? 
-                         notLinkedText : anonymousText );      // for screen readers
-   mUserName = safenew wxStaticText(
-      this,
-      wxID_ANY,
-      ( mLinkMode == LinkMode::Link ? 
-        notLinkedText : anonymousText).Translation() );
+    mUserImage = safenew UserImage(this, avatarSize);
+    mUserImage->SetLabel(mLinkMode == LinkMode::Link
+                         ? notLinkedText : anonymousText);     // for screen readers
+    mUserName = safenew wxStaticText(
+        this,
+        wxID_ANY,
+        (mLinkMode == LinkMode::Link
+         ? notLinkedText : anonymousText).Translation());
 
-   mLinkButton =
-      safenew wxButton(this, wxID_ANY, XXO("&Link Account").Translation());
-   mLinkButton->Bind(wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
-   
-   mLinkButton->Show(mLinkMode == LinkMode::Link);
+    mLinkButton
+        =safenew wxButton(this, wxID_ANY, XXO("&Link Account").Translation());
+    mLinkButton->Bind(wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
 
-   auto sizer = safenew wxBoxSizer { wxHORIZONTAL };
+    mLinkButton->Show(mLinkMode == LinkMode::Link);
 
-   sizer->Add(mUserImage, 0, wxALIGN_CENTER_VERTICAL);
-   sizer->AddSpacer(8);
-   sizer->Add(mUserName, 0, wxALIGN_CENTER_VERTICAL);
-   sizer->AddStretchSpacer();
-   sizer->Add(mLinkButton, 0, wxALIGN_CENTER_VERTICAL);
+    auto sizer = safenew wxBoxSizer { wxHORIZONTAL };
 
-   SetSizerAndFit(sizer);
-   UpdateUserData();
+    sizer->Add(mUserImage, 0, wxALIGN_CENTER_VERTICAL);
+    sizer->AddSpacer(8);
+    sizer->Add(mUserName, 0, wxALIGN_CENTER_VERTICAL);
+    sizer->AddStretchSpacer();
+    sizer->Add(mLinkButton, 0, wxALIGN_CENTER_VERTICAL);
+
+    SetSizerAndFit(sizer);
+    UpdateUserData();
 }
 
 UserPanel::~UserPanel() = default;
 
 bool UserPanel::IsAuthorized() const
 {
-   return mIsAuthorized;
+    return mIsAuthorized;
 }
 
 void UserPanel::OnStateChanged(bool isAuthorized)
 {
-   if (mIsAuthorized == isAuthorized)
-      return;
+    if (mIsAuthorized == isAuthorized) {
+        return;
+    }
 
-   mIsAuthorized = isAuthorized;
-   Publish(UserPanelStateChangedMessage { isAuthorized });
+    mIsAuthorized = isAuthorized;
+    Publish(UserPanelStateChangedMessage { isAuthorized });
 }
 
 void UserPanel::UpdateUserData()
 {
-   Freeze();
+    Freeze();
 
-   auto layoutUpdater = finally(
-      [this]()
-      {
-         mLinkButton->Fit();
+    auto layoutUpdater = finally(
+        [this]()
+    {
+        mLinkButton->Fit();
 
-         Layout();
-         Thaw();
+        Layout();
+        Thaw();
 
-         auto parent = GetParent();
+        auto parent = GetParent();
 
-         if (parent != nullptr)
+        if (parent != nullptr) {
             parent->Refresh();
-         else
+        } else {
             Refresh();
-      });
+        }
+    });
 
-   auto& oauthService = GetOAuthService();
+    auto& oauthService = GetOAuthService();
 
-   if (!oauthService.HasRefreshToken())
-   {
-      SetAnonymousState();
-      return;
-   }
+    if (!oauthService.HasRefreshToken()) {
+        SetAnonymousState();
+        return;
+    }
 
-   if (!oauthService.HasAccessToken())
-      oauthService.ValidateAuth({}, mAudiocomTrace, true);
+    if (!oauthService.HasAccessToken()) {
+        oauthService.ValidateAuth({}, mAudiocomTrace, true);
+    }
 
-   auto& userService = GetUserService();
+    auto& userService = GetUserService();
 
-   if (userService.GetUserSlug().empty())
-   {
-      SetAnonymousState();
-      return;
-   }
+    if (userService.GetUserSlug().empty()) {
+        SetAnonymousState();
+        return;
+    }
 
-   const auto displayName = userService.GetDisplayName();
+    const auto displayName = userService.GetDisplayName();
 
-   if (!displayName.empty()) {
-      mUserName->SetLabel(displayName);
-      mUserImage->wxPanel::SetLabel(displayName);  // for screen readers
-   }
+    if (!displayName.empty()) {
+        mUserName->SetLabel(displayName);
+        mUserImage->wxPanel::SetLabel(displayName); // for screen readers
+    }
 
-   const auto avatarPath = userService.GetAvatarPath();
+    const auto avatarPath = userService.GetAvatarPath();
 
-   if (!avatarPath.empty())
-      mUserImage->SetBitmap(avatarPath);
-   else
-      mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
+    if (!avatarPath.empty()) {
+        mUserImage->SetBitmap(avatarPath);
+    } else {
+        mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
+    }
 
-   mLinkButton->SetLabel(( mLinkMode == LinkMode::Link ? 
-     XXO("&Unlink Account") :
-     XXO("&Sign Out") ).Translation());
-   mLinkButton->Show();
+    mLinkButton->SetLabel((mLinkMode == LinkMode::Link
+                           ? XXO("&Unlink Account")
+                           : XXO("&Sign Out")).Translation());
+    mLinkButton->Show();
 
-   OnStateChanged(true);
+    OnStateChanged(true);
 }
 
 void UserPanel::OnLinkButtonPressed()
 {
-   auto& oauthService = GetOAuthService();
+    auto& oauthService = GetOAuthService();
 
-   if (oauthService.HasAccessToken())
-      oauthService.UnlinkAccount(mAudiocomTrace);
-   else
-   {
-      OpenInDefaultBrowser({ audacity::ToWXString(
-         mServiceConfig.GetOAuthLoginPage(mAudiocomTrace)) });
+    if (oauthService.HasAccessToken()) {
+        oauthService.UnlinkAccount(mAudiocomTrace);
+    } else {
+        OpenInDefaultBrowser({ audacity::ToWXString(
+                                   mServiceConfig.GetOAuthLoginPage(mAudiocomTrace)) });
 
 #ifdef HAS_CUSTOM_URL_HANDLING
-      if (!URLSchemesRegistry::Get().IsURLHandlingSupported())
+        if (!URLSchemesRegistry::Get().IsURLHandlingSupported())
 #endif
-      {
-         LinkWithTokenDialog dlg(mAudiocomTrace, this);
-         dlg.ShowModal();
-      }
-   }
+        {
+            LinkWithTokenDialog dlg(mAudiocomTrace, this);
+            dlg.ShowModal();
+        }
+    }
 }
 
 void UserPanel::SetAnonymousState()
 {
-   mUserName->SetLabel(anonymousText.Translation());
-   mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
-   mUserImage->SetLabel(anonymousText);   // for screen readers
-   mLinkButton->SetLabel(XXO("&Link Account").Translation());
-   mLinkButton->Show(mLinkMode == LinkMode::Link);
+    mUserName->SetLabel(anonymousText.Translation());
+    mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
+    mUserImage->SetLabel(anonymousText);  // for screen readers
+    mLinkButton->SetLabel(XXO("&Link Account").Translation());
+    mLinkButton->Show(mLinkMode == LinkMode::Link);
 
-   OnStateChanged(false);
+    OnStateChanged(false);
 }
-
 } // namespace audacity::cloud::audiocom

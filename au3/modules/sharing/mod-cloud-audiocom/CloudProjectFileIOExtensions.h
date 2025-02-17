@@ -19,19 +19,16 @@
 
 class AudacityProject;
 
-namespace audacity::cloud::audiocom::sync
-{
-
+namespace audacity::cloud::audiocom::sync {
 struct OnCloseHook : GlobalHook<OnCloseHook, bool(AudacityProject&)>
 {
 };
 
 struct CreateSnapshotResponse;
-using CreateSnapshotCallback = std::function<void(const CreateSnapshotResponse&)>;
+using CreateSnapshotCallback = std::function<void (const CreateSnapshotResponse&)>;
 
 void SaveToCloud(
-   AudacityProject& project, UploadMode mode,
-   CreateSnapshotCallback snapshotCallback = {});
+    AudacityProject& project, UploadMode mode, CreateSnapshotCallback snapshotCallback = {});
 
 bool ResaveLocally(AudacityProject& project);
 } // namespace audacity::cloud::audiocom::sync

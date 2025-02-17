@@ -14,14 +14,11 @@
 
 enum class AudiocomTrace;
 
-namespace audacity::cloud::audiocom
-{
+namespace audacity::cloud::audiocom {
 class LinkFailedDialog final : public wxDialogWrapper
 {
 public:
-   LinkFailedDialog(wxWindow* parent, AudiocomTrace trace);
-   ~LinkFailedDialog() override;
-
-
+    LinkFailedDialog(wxWindow* parent, AudiocomTrace trace);
+    ~LinkFailedDialog() override;
 }; // class LinkFailedDialog
 } // namespace audacity::cloud::audiocom

@@ -5,10 +5,9 @@
 class wxBitmap;
 
 extern "C" void bin2c_init_CLOUDIMAGES_HPP(void);
-extern wxBitmap *bin2c_SaveLocally_png;
-extern wxBitmap *bin2c_SaveRemote_png;
-extern wxBitmap *bin2c_ExportLocally_png;
-extern wxBitmap *bin2c_ExportRemote_png;
-
+extern wxBitmap* bin2c_SaveLocally_png;
+extern wxBitmap* bin2c_SaveRemote_png;
+extern wxBitmap* bin2c_ExportLocally_png;
+extern wxBitmap* bin2c_ExportRemote_png;
 
 #endif /* CLOUDIMAGES_HPP */

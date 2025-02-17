@@ -16,14 +16,12 @@
 
 class AudacityProject;
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class UploadUrls;
 enum class MixdownState : uint32_t;
 
 bool HandleMixdownLink(std::string_view link);
 
 void UploadMixdown(
-   AudacityProject& project,
-   std::function<void(AudacityProject&, MixdownState)> onComplete);
+    AudacityProject& project, std::function<void(AudacityProject&, MixdownState)> onComplete);
 } // namespace audacity::cloud::audiocom::sync

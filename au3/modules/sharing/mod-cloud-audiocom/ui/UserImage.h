@@ -14,19 +14,18 @@
 
 #include <wx/bitmap.h>
 
-namespace audacity::cloud::audiocom
-{
+namespace audacity::cloud::audiocom {
 class UserImage final : public wxPanelWrapper
 {
 public:
-   UserImage(wxWindow* parent, const wxSize& size);
+    UserImage(wxWindow* parent, const wxSize& size);
 
-   void SetBitmap(const wxBitmap& bitmap);
-   void SetBitmap(const wxString& path);
+    void SetBitmap(const wxBitmap& bitmap);
+    void SetBitmap(const wxString& path);
 
 private:
-   void OnPaint();
+    void OnPaint();
 
-   wxBitmap mBitmap;
+    wxBitmap mBitmap;
 }; // class UserImage
 } // namespace audacity::cloud::audiocom

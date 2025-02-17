@@ -21,33 +21,31 @@
 
 #include "HelpSystem.h"
 
-namespace audacity::cloud::audiocom::sync
-{
-
+namespace audacity::cloud::audiocom::sync {
 LinkAccountDialog::LinkAccountDialog(
-   const AudacityProject* project, const TranslatableString& alternativeButtonText)
-    : AudioComDialogBase { project }
+    const AudacityProject* project, const TranslatableString& alternativeButtonText)
+    : AudioComDialogBase{project}
 {
-   AddTitle(XO("You are not signed in"));
-   AddParagraph(XO("Log in to audio.com to proceed."));
-   AddButton(
-      CancelButtonIdentifier(), XO("Cancel"), AudioComDialogBase::EscButton);
+    AddTitle(XO("You are not signed in"));
+    AddParagraph(XO("Log in to audio.com to proceed."));
+    AddButton(
+        CancelButtonIdentifier(), XO("Cancel"), AudioComDialogBase::EscButton);
 
-   if (!alternativeButtonText.empty())
-      AddButton(AlternativeButtonIdentifier(), alternativeButtonText);
+    if (!alternativeButtonText.empty()) {
+        AddButton(AlternativeButtonIdentifier(), alternativeButtonText);
+    }
 
-   AddButton(
-      SignInButtonIdentifier(), XO("Sign in"), AudioComDialogBase::DefaultButton);
+    AddButton(
+        SignInButtonIdentifier(), XO("Sign in"), AudioComDialogBase::DefaultButton);
 }
 
 DialogButtonIdentifier LinkAccountDialog::AlternativeButtonIdentifier()
 {
-   return { L"alternative" };
+    return { L"alternative" };
 }
 
 DialogButtonIdentifier LinkAccountDialog::SignInButtonIdentifier()
 {
-   return { L"signin" };
+    return { L"signin" };
 }
-
 } // namespace audacity::cloud::audiocom::sync
