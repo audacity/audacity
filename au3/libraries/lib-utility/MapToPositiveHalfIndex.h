@@ -11,14 +11,16 @@
  */
 constexpr auto MapToPositiveHalfIndex(int index, int fullSize)
 {
-   assert(fullSize > 0 && fullSize % 2 == 0);
-   if (index >= 0)
-      index = index % fullSize;
-   else
-      index = fullSize - (-index % fullSize);
-   if (index > fullSize / 2)
-      index = fullSize - index;
-   return index;
+    assert(fullSize > 0 && fullSize % 2 == 0);
+    if (index >= 0) {
+        index = index % fullSize;
+    } else {
+        index = fullSize - (-index % fullSize);
+    }
+    if (index > fullSize / 2) {
+        index = fullSize - index;
+    }
+    return index;
 }
 
 static_assert(MapToPositiveHalfIndex(-3, 4) == 1);
