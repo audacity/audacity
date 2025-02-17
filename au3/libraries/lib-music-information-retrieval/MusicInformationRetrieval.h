@@ -19,22 +19,21 @@
 #include <unordered_map>
 #include <vector>
 
-namespace MIR
-{
+namespace MIR {
 class MirAudioReader;
 class ProjectInterface;
 
 struct LoopClassifierSettings
 {
-   /*!
-    * False positive rate allowed for the classifier.
-    */
-   const double allowedFalsePositiveRate;
+    /*!
+     * False positive rate allowed for the classifier.
+     */
+    const double allowedFalsePositiveRate;
 
-   /*!
-    * Classifier score threshold above which the analyzed audio file can be
-    */
-   const double threshold;
+    /*!
+     * Classifier score threshold above which the analyzed audio file can be
+     */
+    const double threshold;
 };
 
 /*!
@@ -46,20 +45,20 @@ struct LoopClassifierSettings
  * there.
  */
 static const std::unordered_map<FalsePositiveTolerance, LoopClassifierSettings>
-   loopClassifierSettings {
-      { FalsePositiveTolerance::Strict, { .04, 0.8679721717368254 } },
-      { FalsePositiveTolerance::Lenient, { .1, 0.7129778875046098 } },
-   };
+loopClassifierSettings {
+    { FalsePositiveTolerance::Strict, { .04, 0.8679721717368254 } },
+    { FalsePositiveTolerance::Lenient, { .1, 0.7129778875046098 } },
+};
 
 struct ProjectSyncInfoInput
 {
-   const MirAudioReader& source;
-   std::string filename;
-   std::optional<LibFileFormats::AcidizerTags> tags;
-   std::function<void(double progress)> progressCallback;
-   double projectTempo = 120.;
-   bool projectWasEmpty = false;
-   bool viewIsBeatsAndMeasures = false;
+    const MirAudioReader& source;
+    std::string filename;
+    std::optional<LibFileFormats::AcidizerTags> tags;
+    std::function<void(double progress)> progressCallback;
+    double projectTempo = 120.;
+    bool projectWasEmpty = false;
+    bool viewIsBeatsAndMeasures = false;
 };
 
 std::optional<ProjectSyncInfo> MUSIC_INFORMATION_RETRIEVAL_API
@@ -71,12 +70,9 @@ GetBpmFromFilename(const std::string& filename);
 
 MUSIC_INFORMATION_RETRIEVAL_API std::optional<MusicalMeter>
 GetMusicalMeterFromSignal(
-   const MirAudioReader& source, FalsePositiveTolerance tolerance,
-   const std::function<void(double)>& progressCallback,
-   QuantizationFitDebugOutput* debugOutput = nullptr);
+    const MirAudioReader& source, FalsePositiveTolerance tolerance, const std::function<void(double)>& progressCallback,
+    QuantizationFitDebugOutput* debugOutput = nullptr);
 
 MUSIC_INFORMATION_RETRIEVAL_API void SynchronizeProject(
-   const std::vector<std::shared_ptr<AnalyzedAudioClip>>& clips,
-   ProjectInterface& project, bool projectWasEmpty);
-
+    const std::vector<std::shared_ptr<AnalyzedAudioClip> >& clips, ProjectInterface& project, bool projectWasEmpty);
 } // namespace MIR

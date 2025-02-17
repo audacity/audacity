@@ -13,8 +13,7 @@
 #include <vector>
 #include "PowerSpectrumGetter.h"
 
-namespace MIR
-{
+namespace MIR {
 class MirAudioReader;
 
 /*!
@@ -28,20 +27,20 @@ class MirAudioReader;
 class MUSIC_INFORMATION_RETRIEVAL_API StftFrameProvider
 {
 public:
-   StftFrameProvider(const MirAudioReader& source);
-   bool GetNextFrame(PffftFloatVector& frame);
-   int GetNumFrames() const;
-   int GetSampleRate() const;
-   double GetFrameRate() const;
-   int GetFftSize() const;
+    StftFrameProvider(const MirAudioReader& source);
+    bool GetNextFrame(PffftFloatVector& frame);
+    int GetNumFrames() const;
+    int GetSampleRate() const;
+    double GetFrameRate() const;
+    int GetFftSize() const;
 
 private:
-   const MirAudioReader& mAudio;
-   const int mFftSize;
-   const double mHopSize;
-   const std::vector<float> mWindow;
-   const int mNumFrames;
-   const long long mNumSamples;
-   int mNumFramesProvided = 0;
+    const MirAudioReader& mAudio;
+    const int mFftSize;
+    const double mHopSize;
+    const std::vector<float> mWindow;
+    const int mNumFrames;
+    const long long mNumSamples;
+    int mNumFramesProvided = 0;
 };
 } // namespace MIR

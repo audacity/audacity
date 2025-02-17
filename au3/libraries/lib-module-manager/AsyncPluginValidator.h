@@ -19,7 +19,6 @@
 
 class PluginDescriptor;
 
-
 /**
  * \brief Starts and communicates with a dedicated process to perform
  * plugin validation. Once instantiated, client should call
@@ -30,44 +29,44 @@ class PluginDescriptor;
  */
 class MODULE_MANAGER_API AsyncPluginValidator final
 {
-   class Impl;
-   std::shared_ptr<Impl> mImpl;
+    class Impl;
+    std::shared_ptr<Impl> mImpl;
 public:
-   /**
-    * \brief Used to talk back to calling side
-    */
-   class MODULE_MANAGER_API Delegate
-   {
-   public:
-      virtual ~Delegate();
+    /**
+     * \brief Used to talk back to calling side
+     */
+    class MODULE_MANAGER_API Delegate
+    {
+    public:
+        virtual ~Delegate();
 
-      ///Called for each plugin instance found inside module
-      virtual void OnPluginFound(const PluginDescriptor& plugin) = 0;
-      virtual void OnPluginValidationFailed(const wxString& providerId, const wxString& path) = 0;
-      ///Called when module processing finished
-      virtual void OnValidationFinished() = 0;
-      ///Called on error, further processing is not possible.
-      virtual void OnInternalError(const wxString& msg) = 0;
-   };
+        ///Called for each plugin instance found inside module
+        virtual void OnPluginFound(const PluginDescriptor& plugin) = 0;
+        virtual void OnPluginValidationFailed(const wxString& providerId, const wxString& path) = 0;
+        ///Called when module processing finished
+        virtual void OnValidationFinished() = 0;
+        ///Called on error, further processing is not possible.
+        virtual void OnInternalError(const wxString& msg) = 0;
+    };
 
-   AsyncPluginValidator(AsyncPluginValidator&) = delete;
-   AsyncPluginValidator(AsyncPluginValidator&&) = delete;
-   AsyncPluginValidator& operator=(AsyncPluginValidator&) = delete;
-   AsyncPluginValidator& operator=(AsyncPluginValidator&&) = delete;
+    AsyncPluginValidator(AsyncPluginValidator&) = delete;
+    AsyncPluginValidator(AsyncPluginValidator&&) = delete;
+    AsyncPluginValidator& operator=(AsyncPluginValidator&) = delete;
+    AsyncPluginValidator& operator=(AsyncPluginValidator&&) = delete;
 
-   explicit AsyncPluginValidator(Delegate& delegate);
-   ~AsyncPluginValidator();
+    explicit AsyncPluginValidator(Delegate& delegate);
+    ~AsyncPluginValidator();
 
-   void SetDelegate(Delegate* delegate);
+    void SetDelegate(Delegate* delegate);
 
-   std::chrono::system_clock::time_point InactiveSince() const noexcept;
+    std::chrono::system_clock::time_point InactiveSince() const noexcept;
 
-   /**
-    * \brief Each call to Validate should result in appropriate call
-    * OnValidationFinished, until then it's not allowed to call this
-    * method again. May fail with exception.
-    * \param providerId ID of the provider that should be used for validation
-    * \param pluginPath path to the plugin module
-    */
-   void Validate(const wxString& providerId, const wxString& pluginPath);
+    /**
+     * \brief Each call to Validate should result in appropriate call
+     * OnValidationFinished, until then it's not allowed to call this
+     * method again. May fail with exception.
+     * \param providerId ID of the provider that should be used for validation
+     * \param pluginPath path to the plugin module
+     */
+    void Validate(const wxString& providerId, const wxString& pluginPath);
 };

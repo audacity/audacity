@@ -10,7 +10,6 @@
 
 /* Version 1.1 */
 
-
 /*============================================================================
 **	On Intel Pentium processors (especially PIII and probably P4), converting
 **	from float to int is very slow. To meet the C specs, the code produced by
@@ -40,123 +39,128 @@
 **	the config.h file.
 */
 #if (defined (WIN32) || defined (_WIN32)) && defined(_MSC_VER) && defined(_M_IX86)
-	// As of Visual Studio 2019 16.9, these functions have been made intrinsic and the build
-	// will fail. Unfortunately, the intrinsic versions run a LOT slower than the ones
-   // below, so force the compiler to use ours instead.
-	#pragma function( lrint, lrintf )
+// As of Visual Studio 2019 16.9, these functions have been made intrinsic and the build
+// will fail. Unfortunately, the intrinsic versions run a LOT slower than the ones
+// below, so force the compiler to use ours instead.
+      #pragma function( lrint, lrintf )
 
-   // Including math.h allows us to use the inline assembler versions without
-   // producing errors in newer Visual Studio versions.
-   // Without the include, we get different linkage error messages.
-   // Without the inline assembler versions, these functions are VERY slow.
-   // I also see that the include was part of the original source for this file:
-   //    http://www.mega-nerd.com/FPcast/
-   
+// Including math.h allows us to use the inline assembler versions without
+// producing errors in newer Visual Studio versions.
+// Without the include, we get different linkage error messages.
+// Without the inline assembler versions, these functions are VERY slow.
+// I also see that the include was part of the original source for this file:
+//    http://www.mega-nerd.com/FPcast/
+
    #include <math.h>
 
-   /*	Win32 doesn't seem to have these functions.
+/*	Win32 doesn't seem to have these functions.
 	**	Therefore implement inline versions of these functions here.
 	*/
-	__inline long int
-	lrint (double flt)
-	{	int intgr;
+__inline long int
+lrint(double flt)
+{
+    int intgr;
 
-		_asm
-		{	fld flt
-			fistp intgr
-			} ;
+    _asm
+    { fld flt
+      fistp intgr
+    };
 
-		return intgr ;
-	}
+    return intgr;
+}
 
-	__inline long int
-	lrintf (float flt)
-	{	int intgr;
+__inline long int
+lrintf(float flt)
+{
+    int intgr;
 
-		_asm
-		{	fld flt
-			fistp intgr
-			} ;
+    _asm
+    { fld flt
+      fistp intgr
+    };
 
-		return intgr ;
-	}
+    return intgr;
+}
 
-	__inline long long int
-	llrint (double flt)
-	{	long long int intgr;
+__inline long long int
+llrint(double flt)
+{
+    long long int intgr;
 
-		_asm
-		{	fld flt
-			fistp intgr
-			} ;
+    _asm
+    { fld flt
+      fistp intgr
+    };
 
-		return intgr ;
-	}
+    return intgr;
+}
 
-	__inline long long int
-	llrintf (float flt)
-	{	long long int intgr;
+__inline long long int
+llrintf(float flt)
+{
+    long long int intgr;
 
-		_asm
-		{	fld flt
-			fistp intgr
-			} ;
+    _asm
+    { fld flt
+      fistp intgr
+    };
 
-		return intgr ;
-	}
+    return intgr;
+}
+
 #elif (defined (WIN32) || defined (_WIN32)) && defined(_M_X64)
 
-	#include <math.h>
-	#include <immintrin.h>
-	#include <emmintrin.h>
+      #include <math.h>
+      #include <immintrin.h>
+      #include <emmintrin.h>
 
-	#ifdef _MSC_VER
-		#pragma function(lrint, lrintf)
-	#endif
+      #ifdef _MSC_VER
+            #pragma function(lrint, lrintf)
+      #endif
 
-	__inline 
-	long int lrint(double flt)
-	{
-       return _mm_cvtsd_si32(_mm_set_sd(flt));
-    }
+__inline
+long int lrint(double flt)
+{
+    return _mm_cvtsd_si32(_mm_set_sd(flt));
+}
 
-	__inline 
-	long int lrintf (float flt)
-	{
-		return _mm_cvtss_si32(_mm_set_ss(flt));
-	}
+__inline
+long int lrintf(float flt)
+{
+    return _mm_cvtss_si32(_mm_set_ss(flt));
+}
 
-	__inline 
-	long long int llrint(double flt)
-    {
-        return _mm_cvtsd_si64(_mm_set_sd(flt));
-    }
+__inline
+long long int llrint(double flt)
+{
+    return _mm_cvtsd_si64(_mm_set_sd(flt));
+}
 
-    __inline 
-    long long int llrintf(float flt)
-    {
-       return _mm_cvtss_si64(_mm_set_ss(flt));
-    }
+__inline
+long long int llrintf(float flt)
+{
+    return _mm_cvtss_si64(_mm_set_ss(flt));
+}
 
 #elif (HAVE_LRINT && HAVE_LRINTF)
 
-	/*	These defines enable functionality introduced with the 1999 ISO C
+/*	These defines enable functionality introduced with the 1999 ISO C
 	**	standard. They must be defined before the inclusion of math.h to
 	**	engage them. If optimisation is enabled, these functions will be
 	**	inlined. With optimisation switched off, you have to link in the
 	**	maths library using -lm.
 	*/
 
-	#define	_ISOC9X_SOURCE 1
-	#define  _ISOC99_SOURCE 1
+      #define     _ISOC9X_SOURCE 1
+      #define  _ISOC99_SOURCE 1
 
-	#define	__USE_ISOC9X   1
-	#define	__USE_ISOC99   1
+      #define     __USE_ISOC9X   1
+      #define     __USE_ISOC99   1
 
-	#include	<math.h>
+      #include    <math.h>
 #else
 
-   /* dmazzoni: modified these to do a proper rounding, even though
+/* dmazzoni: modified these to do a proper rounding, even though
     * it's slower.  Correctness and consistency is more important
     * than speed, especially since lrint/lrintf are certainly not
     * available everywhere.
@@ -164,9 +168,9 @@
     * MM: Now uses internal math.h rint() function
     */
 
-   #include	<math.h>
+   #include <math.h>
 
-   #define	lrint(dbl)		((int)rint(dbl))
-   #define	lrintf(flt)		((int)rint(flt))
+   #define  lrint(dbl)        ((int)rint(dbl))
+   #define  lrintf(flt)       ((int)rint(flt))
 
 #endif

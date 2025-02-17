@@ -32,50 +32,50 @@ class Matrix;
 
 class Vector
 {
- public:
-   Vector();
-   Vector(const Vector& copyFrom);
-   Vector(unsigned len, double *data=NULL);
-   Vector(unsigned len, float *data);
-   Vector& operator=(const Vector &other);
-   ~Vector();
+public:
+    Vector();
+    Vector(const Vector& copyFrom);
+    Vector(unsigned len, double* data=NULL);
+    Vector(unsigned len, float* data);
+    Vector& operator=(const Vector& other);
+    ~Vector();
 
-   void Reinit(unsigned len);
-   void Swap(Vector &that);
+    void Reinit(unsigned len);
+    void Swap(Vector& that);
 
-   inline double& operator[](unsigned i) { return mData[i]; }
-   inline double operator[](unsigned i) const { return mData[i]; }
-   inline unsigned Len() const { return mN; }
+    inline double& operator[](unsigned i) { return mData[i]; }
+    inline double operator[](unsigned i) const { return mData[i]; }
+    inline unsigned Len() const { return mN; }
 
-   double Sum() const;
+    double Sum() const;
 
- private:
-   unsigned mN{ 0 };
-   Doubles mData;
+private:
+    unsigned mN{ 0 };
+    Doubles mData;
 };
 
 class Matrix
 {
- public:
-   Matrix(const Matrix& copyFrom);
-   Matrix(unsigned rows, unsigned cols, double **data=NULL);
-   ~Matrix();
+public:
+    Matrix(const Matrix& copyFrom);
+    Matrix(unsigned rows, unsigned cols, double** data=NULL);
+    ~Matrix();
 
-   Matrix& operator=(const Matrix& other);
+    Matrix& operator=(const Matrix& other);
 
-   inline Vector& operator[](unsigned i) { return mRowVec[i]; }
-   inline Vector& operator[](unsigned i) const { return mRowVec[i]; }
-   inline unsigned Rows() const { return mRows; }
-   inline unsigned Cols() const { return mCols; }
+    inline Vector& operator[](unsigned i) { return mRowVec[i]; }
+    inline Vector& operator[](unsigned i) const { return mRowVec[i]; }
+    inline unsigned Rows() const { return mRows; }
+    inline unsigned Cols() const { return mCols; }
 
-   void SwapRows(unsigned i, unsigned j);
+    void SwapRows(unsigned i, unsigned j);
 
- private:
-   void CopyFrom(const Matrix& other);
+private:
+    void CopyFrom(const Matrix& other);
 
-   unsigned mRows;
-   unsigned mCols;
-   ArrayOf<Vector> mRowVec;
+    unsigned mRows;
+    unsigned mCols;
+    ArrayOf<Vector> mRowVec;
 };
 
 bool InvertMatrix(const Matrix& input, Matrix& Minv);
@@ -84,27 +84,25 @@ Matrix TransposeMatrix(const Matrix& M);
 
 Matrix IdentityMatrix(unsigned N);
 
-Vector operator+(const Vector &left, const Vector &right);
-Vector operator-(const Vector &left, const Vector &right);
-Vector operator*(const Vector &left, const Vector &right);
-Vector operator*(const Vector &left, double right);
+Vector operator+(const Vector& left, const Vector& right);
+Vector operator-(const Vector& left, const Vector& right);
+Vector operator*(const Vector& left, const Vector& right);
+Vector operator*(const Vector& left, double right);
 
-Vector VectorSubset(const Vector &other, unsigned start, unsigned len);
+Vector VectorSubset(const Vector& other, unsigned start, unsigned len);
 Vector VectorConcatenate(const Vector& left, const Vector& right);
 
-Vector operator*(const Vector &left, const Matrix &right);
-Vector operator*(const Matrix &left, const Vector &right);
+Vector operator*(const Vector& left, const Matrix& right);
+Vector operator*(const Matrix& left, const Vector& right);
 
-Matrix operator+(const Matrix &left, const Matrix &right);
-Matrix operator*(const Matrix &left, const double right);
+Matrix operator+(const Matrix& left, const Matrix& right);
+Matrix operator*(const Matrix& left, const double right);
 
 // No operator* on matrices due to ambiguity
-Matrix ScalarMultiply(const Matrix &left, const Matrix &right);
-Matrix MatrixMultiply(const Matrix &left, const Matrix &right);
+Matrix ScalarMultiply(const Matrix& left, const Matrix& right);
+Matrix MatrixMultiply(const Matrix& left, const Matrix& right);
 
-Matrix MatrixSubset(const Matrix &M,
-                    unsigned startRow, unsigned numRows,
-                    unsigned startCol, unsigned numCols);
+Matrix MatrixSubset(const Matrix& M, unsigned startRow, unsigned numRows, unsigned startCol, unsigned numCols);
 
 Matrix MatrixConcatenateCols(const Matrix& left, const Matrix& right);
 

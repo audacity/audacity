@@ -18,8 +18,7 @@
 #include <functional>
 #include <vector>
 
-namespace MIR
-{
+namespace MIR {
 class MirAudioReader;
 struct QuantizationFitDebugOutput;
 
@@ -35,7 +34,5 @@ struct QuantizationFitDebugOutput;
 std::vector<float> GetNormalizedCircularAutocorr(const std::vector<float>& x);
 
 std::vector<float> GetOnsetDetectionFunction(
-   const MirAudioReader& audio,
-   const std::function<void(double)>& progressCallback,
-   QuantizationFitDebugOutput* debugInfo);
+    const MirAudioReader& audio, const std::function<void(double)>& progressCallback, QuantizationFitDebugOutput* debugInfo);
 } // namespace MIR

@@ -34,36 +34,36 @@
  */
 class MODULE_MANAGER_API PluginHost final : public IPCChannelStatusCallback
 {
-   static constexpr auto HostArgument =  "--host";
+    static constexpr auto HostArgument =  "--host";
 
-   std::unique_ptr<IPCClient> mClient;
-   IPCChannel* mChannel{nullptr};
-   detail::InputMessageReader mInputMessageReader;
-   std::mutex mSync;
-   std::condition_variable mRequestCondition;
-   std::optional<wxString> mRequest;
+    std::unique_ptr<IPCClient> mClient;
+    IPCChannel* mChannel{ nullptr };
+    detail::InputMessageReader mInputMessageReader;
+    std::mutex mSync;
+    std::condition_variable mRequestCondition;
+    std::optional<wxString> mRequest;
 
-   bool mRunning{true};
+    bool mRunning{ true };
 
-   void Stop() noexcept;
+    void Stop() noexcept;
 
 public:
-   /**
-    * \brief Attempts to start a host application (should be called from
-    * the main application)
-    * \return true if host has started successfully
-    */
-   static bool Start(int connectPort);
+    /**
+     * \brief Attempts to start a host application (should be called from
+     * the main application)
+     * \return true if host has started successfully
+     */
+    static bool Start(int connectPort);
 
-   ///Returns true if current process is considered to be a plugin host process
-   static bool IsHostProcess();
+    ///Returns true if current process is considered to be a plugin host process
+    static bool IsHostProcess();
 
-   explicit PluginHost(int connectPort);
+    explicit PluginHost(int connectPort);
 
-   void OnConnect(IPCChannel& channel) noexcept override;
-   void OnDisconnect() noexcept override;
-   void OnConnectionError() noexcept override;
-   void OnDataAvailable(const void* data, size_t size) noexcept override;
+    void OnConnect(IPCChannel& channel) noexcept override;
+    void OnDisconnect() noexcept override;
+    void OnConnectionError() noexcept override;
+    void OnDataAvailable(const void* data, size_t size) noexcept override;
 
-   bool Serve();
+    bool Serve();
 };
