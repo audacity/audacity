@@ -14,22 +14,20 @@
 
 #include "RulerFormat.h"
 
-class TimeFormat final : public RulerFormat {
+class TimeFormat final : public RulerFormat
+{
 public:
-   static const TimeFormat &Instance();
-   ~TimeFormat() override;
+    static const TimeFormat& Instance();
+    ~TimeFormat() override;
 
-   void SetTickSizes(
-      double units, double& major, double& minor, double& minorMinor,
-      int& mDigits
-   ) const override;
+    void SetTickSizes(
+        double units, double& major, double& minor, double& minorMinor, int& mDigits) const override;
 
-   void SetLabelString(
-      wxString& s, double d, double units, double minor, int mDigits, TickType tickType
-   ) const override;
+    void SetLabelString(
+        wxString& s, double d, double units, double minor, int mDigits, TickType tickType) const override;
 
 private:
-   using RulerFormat::RulerFormat;
+    using RulerFormat::RulerFormat;
 };
 
 #endif

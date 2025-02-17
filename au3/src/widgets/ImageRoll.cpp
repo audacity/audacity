@@ -94,7 +94,6 @@
 
 *//*******************************************************************/
 
-
 #include "ImageRoll.h"
 
 #include <wx/bitmap.h>
@@ -102,321 +101,327 @@
 #include <wx/dcclient.h>
 
 ImageRoll::ImageRoll(const ImageRoll&) = default;
-ImageRoll &ImageRoll::operator =(const ImageRoll&) = default;
+ImageRoll& ImageRoll::operator =(const ImageRoll&) = default;
 ImageRoll::~ImageRoll() = default;
 
 // static
-ImageArray ImageRoll::SplitH(const wxImage &src, wxColour magicColor)
+ImageArray ImageRoll::SplitH(const wxImage& src, wxColour magicColor)
 {
-   ImageArray result;
+    ImageArray result;
 
-   int width = src.GetWidth();
-   int height = src.GetHeight();
-   unsigned char *data = src.GetData();
-   unsigned char *ptr = data;
-   unsigned char magicRed = magicColor.Red();
-   unsigned char magicGreen = magicColor.Green();
-   unsigned char magicBlue = magicColor.Blue();
-   bool cur, prev;
-   int i, j, start;
+    int width = src.GetWidth();
+    int height = src.GetHeight();
+    unsigned char* data = src.GetData();
+    unsigned char* ptr = data;
+    unsigned char magicRed = magicColor.Red();
+    unsigned char magicGreen = magicColor.Green();
+    unsigned char magicBlue = magicColor.Blue();
+    bool cur, prev;
+    int i, j, start;
 
-   // Sanity check...
-   if (width<=0 || height<=0 || data==NULL)
-      return result;
+    // Sanity check...
+    if (width <= 0 || height <= 0 || data == NULL) {
+        return result;
+    }
 
-   prev = false;
-   start = 0;
-   for(i=0; i<width+1; i++) {
-      if (i < width) {
-         unsigned char *ptr2 = ptr;
-         cur = true;
-         for(j=0; j<height && cur; j++) {
-            if (!(ptr2[0] == magicRed &&
-                  ptr2[1] == magicGreen &&
-                  ptr2[2] == magicBlue))
-               cur = false;
-            ptr2 += 3 * width;
-         }
-      }
-      else
-         cur = !prev;
+    prev = false;
+    start = 0;
+    for (i=0; i < width + 1; i++) {
+        if (i < width) {
+            unsigned char* ptr2 = ptr;
+            cur = true;
+            for (j=0; j < height && cur; j++) {
+                if (!(ptr2[0] == magicRed
+                      && ptr2[1] == magicGreen
+                      && ptr2[2] == magicBlue)) {
+                    cur = false;
+                }
+                ptr2 += 3 * width;
+            }
+        } else {
+            cur = !prev;
+        }
 
-      if ((cur && !prev)) {
-         wxRect subRect(start, 0, i-start, height);
-         wxImage subImage;
-         if (subRect.width > 0)
-            subImage = src.GetSubImage(subRect);
-         else
-            subImage = wxImage(subRect.width, subRect.height);
-         result.push_back(subImage);
-      }
-      else if (!cur && prev) {
-         start = i;
-      }
+        if ((cur && !prev)) {
+            wxRect subRect(start, 0, i - start, height);
+            wxImage subImage;
+            if (subRect.width > 0) {
+                subImage = src.GetSubImage(subRect);
+            } else {
+                subImage = wxImage(subRect.width, subRect.height);
+            }
+            result.push_back(subImage);
+        } else if (!cur && prev) {
+            start = i;
+        }
 
-      prev = cur;
-      ptr += 3;
-   }
+        prev = cur;
+        ptr += 3;
+    }
 
-   return result;
+    return result;
 }
 
 // static
-ImageArray ImageRoll::SplitV(const wxImage &src, wxColour magicColor)
+ImageArray ImageRoll::SplitV(const wxImage& src, wxColour magicColor)
 {
-   ImageArray result;
-   int width = src.GetWidth();
-   int height = src.GetHeight();
-   unsigned char *data = src.GetData();
-   unsigned char *ptr = data;
-   unsigned char magicRed = magicColor.Red();
-   unsigned char magicGreen = magicColor.Green();
-   unsigned char magicBlue = magicColor.Blue();
-   bool cur, prev;
-   int i, j, start;
+    ImageArray result;
+    int width = src.GetWidth();
+    int height = src.GetHeight();
+    unsigned char* data = src.GetData();
+    unsigned char* ptr = data;
+    unsigned char magicRed = magicColor.Red();
+    unsigned char magicGreen = magicColor.Green();
+    unsigned char magicBlue = magicColor.Blue();
+    bool cur, prev;
+    int i, j, start;
 
-   // Sanity check...
-   if (width<=0 || height<=0 || data==NULL)
-      return result;
+    // Sanity check...
+    if (width <= 0 || height <= 0 || data == NULL) {
+        return result;
+    }
 
-   prev = false;
-   start = 0;
-   for(i=0; i<height+1; i++) {
-      if (i < height) {
-         unsigned char *ptr2 = ptr;
-         cur = true;
-         for(j=0; j<width && cur; j++) {
-            if (!(ptr2[0] == magicRed &&
-                  ptr2[1] == magicGreen &&
-                  ptr2[2] == magicBlue))
-               cur = false;
-            ptr2 += 3;
-         }
-      }
-      else
-         cur = !prev;
+    prev = false;
+    start = 0;
+    for (i=0; i < height + 1; i++) {
+        if (i < height) {
+            unsigned char* ptr2 = ptr;
+            cur = true;
+            for (j=0; j < width && cur; j++) {
+                if (!(ptr2[0] == magicRed
+                      && ptr2[1] == magicGreen
+                      && ptr2[2] == magicBlue)) {
+                    cur = false;
+                }
+                ptr2 += 3;
+            }
+        } else {
+            cur = !prev;
+        }
 
-      if ((cur && !prev)) {
-         wxRect subRect(0, start, width, i-start);
-         wxImage subImage;
-         if (subRect.width > 0)
-            subImage = src.GetSubImage(subRect);
-         else
-            subImage = wxImage(subRect.width, subRect.height);
-         result.push_back(subImage);
-      }
-      else if (!cur && prev) {
-         start = i;
-      }
+        if ((cur && !prev)) {
+            wxRect subRect(0, start, width, i - start);
+            wxImage subImage;
+            if (subRect.width > 0) {
+                subImage = src.GetSubImage(subRect);
+            } else {
+                subImage = wxImage(subRect.width, subRect.height);
+            }
+            result.push_back(subImage);
+        } else if (!cur && prev) {
+            start = i;
+        }
 
-      prev = cur;
-      ptr += 3*width;
-   }
+        prev = cur;
+        ptr += 3 * width;
+    }
 
-   return result;
+    return result;
 }
 
-void ImageRoll::Init(RollType type, const wxImage &src, wxColour magicColor)
+void ImageRoll::Init(RollType type, const wxImage& src, wxColour magicColor)
 {
-   ImageArray images;
-   int i;
+    ImageArray images;
+    int i;
 
-   mType = type;
+    mType = type;
 
-   switch(mType) {
-   case HorizontalRoll:
-      images = SplitH(src, magicColor);
+    switch (mType) {
+    case HorizontalRoll:
+        images = SplitH(src, magicColor);
 
-      mMinSize.x = 0;
-      mMinSize.y = src.GetHeight();
-      mMaxSize.x = 9999;
-      mMaxSize.y = src.GetHeight();
+        mMinSize.x = 0;
+        mMinSize.y = src.GetHeight();
+        mMaxSize.x = 9999;
+        mMaxSize.y = src.GetHeight();
 
-      for(i = 0; i < (int)images.size(); i++) {
-         if (images[i].Ok()) {
-            mPieces.push_back(wxBitmap(images[i]));
-            mMinSize.x += mPieces[i].GetWidth();
-         }
-         else
-            mPieces.push_back(wxBitmap());
-      }
-      break;
+        for (i = 0; i < (int)images.size(); i++) {
+            if (images[i].Ok()) {
+                mPieces.push_back(wxBitmap(images[i]));
+                mMinSize.x += mPieces[i].GetWidth();
+            } else {
+                mPieces.push_back(wxBitmap());
+            }
+        }
+        break;
 
-   case VerticalRoll:
-      images = SplitV(src, magicColor);
+    case VerticalRoll:
+        images = SplitV(src, magicColor);
 
-      mMinSize.x = src.GetWidth();
-      mMinSize.y = 0;
-      mMaxSize.x = src.GetWidth();
-      mMaxSize.y = 9999;
+        mMinSize.x = src.GetWidth();
+        mMinSize.y = 0;
+        mMaxSize.x = src.GetWidth();
+        mMaxSize.y = 9999;
 
-      for(i = 0; i < (int)images.size(); i++) {
-         if (images[i].Ok()) {
-            mPieces.push_back(wxBitmap(images[i]));
-            mMinSize.y += mPieces[i].GetHeight();
-         }
-         else
-            mPieces.push_back(wxBitmap());
-      }
-      break;
+        for (i = 0; i < (int)images.size(); i++) {
+            if (images[i].Ok()) {
+                mPieces.push_back(wxBitmap(images[i]));
+                mMinSize.y += mPieces[i].GetHeight();
+            } else {
+                mPieces.push_back(wxBitmap());
+            }
+        }
+        break;
 
-   case FixedImage:
-      mPieces.push_back(wxBitmap(src));
-      mMinSize.x = src.GetWidth();
-      mMinSize.y = src.GetHeight();
-      mMaxSize.x = src.GetWidth();
-      mMaxSize.y = src.GetHeight();
-      break;
+    case FixedImage:
+        mPieces.push_back(wxBitmap(src));
+        mMinSize.x = src.GetWidth();
+        mMinSize.y = src.GetHeight();
+        mMaxSize.x = src.GetWidth();
+        mMaxSize.y = src.GetHeight();
+        break;
 
-   /* Adding these shuts up some GCC warnings. It is functionally what was
-    * implicit here before - Richard */
-   case Uninitialized:
-   break;
+    /* Adding these shuts up some GCC warnings. It is functionally what was
+     * implicit here before - Richard */
+    case Uninitialized:
+        break;
 
-   case Frame:
-   break;
-
-   } // switch
+    case Frame:
+        break;
+    } // switch
 }
 
 ImageRoll::ImageRoll()
 {
-   mType = Uninitialized;
+    mType = Uninitialized;
 }
 
-ImageRoll::ImageRoll(RollType type, const wxImage &src, wxColour magicColor)
+ImageRoll::ImageRoll(RollType type, const wxImage& src, wxColour magicColor)
 {
-   Init(type, src, magicColor);
+    Init(type, src, magicColor);
 }
 
-ImageRoll::ImageRoll(const wxImage &src)
+ImageRoll::ImageRoll(const wxImage& src)
 {
-   Init(FixedImage, src, *wxWHITE);
+    Init(FixedImage, src, *wxWHITE);
 }
 
 bool ImageRoll::Ok() const
 {
-   return (mType != Uninitialized);
+    return mType != Uninitialized;
 }
 
-void ImageRoll::DrawBitmap(wxDC &dc, wxBitmap &bitmap,
+void ImageRoll::DrawBitmap(wxDC& dc, wxBitmap& bitmap,
                            int x, int y, int logicalFunc)
 {
-   auto func = static_cast< wxRasterOperationMode >( logicalFunc );
-   if (func == wxCOPY)
-      dc.DrawBitmap(bitmap, x, y);
-   else {
-      wxMemoryDC memDC;
-      memDC.SelectObject(bitmap);
-      dc.Blit(x, y, bitmap.GetWidth(), bitmap.GetHeight(),
-              &memDC, 0, 0, func);
-   }
+    auto func = static_cast< wxRasterOperationMode >(logicalFunc);
+    if (func == wxCOPY) {
+        dc.DrawBitmap(bitmap, x, y);
+    } else {
+        wxMemoryDC memDC;
+        memDC.SelectObject(bitmap);
+        dc.Blit(x, y, bitmap.GetWidth(), bitmap.GetHeight(),
+                &memDC, 0, 0, func);
+    }
 }
 
-void ImageRoll::Draw(wxDC &dc, wxRect rect)
+void ImageRoll::Draw(wxDC& dc, wxRect rect)
 {
-   Draw( dc, rect, wxCOPY );
+    Draw(dc, rect, wxCOPY);
 }
 
-void ImageRoll::Draw(wxDC &dc, wxRect rect, int WXUNUSED(logicalFunc))
+void ImageRoll::Draw(wxDC& dc, wxRect rect, int WXUNUSED(logicalFunc))
 {
-   auto func = wxCOPY;
-   int width = rect.width;
-   int height = rect.height;
-   int num = (int)mPieces.size();
-   int i, j;
+    auto func = wxCOPY;
+    int width = rect.width;
+    int height = rect.height;
+    int num = (int)mPieces.size();
+    int i, j;
 
-   switch(mType) {
-   case HorizontalRoll: {
-      // The pieces alternate fixed, rolling, fixed, rolling...
+    switch (mType) {
+    case HorizontalRoll: {
+        // The pieces alternate fixed, rolling, fixed, rolling...
 
-      int fixedWidth = 0;
-      for(i=0; i<num; i+=2)
-         fixedWidth += (mPieces[i].Ok() ? mPieces[i].GetWidth() : 0);
+        int fixedWidth = 0;
+        for (i=0; i < num; i+=2) {
+            fixedWidth += (mPieces[i].Ok() ? mPieces[i].GetWidth() : 0);
+        }
 
-      int rollingSpace = width - fixedWidth;
-      int numRolling = num / 2;
-      int x = 0;
+        int rollingSpace = width - fixedWidth;
+        int numRolling = num / 2;
+        int x = 0;
 
-      for(i=0; i<num; i++) {
-         int w = (mPieces[i].Ok() ? mPieces[i].GetWidth() : 0);
+        for (i=0; i < num; i++) {
+            int w = (mPieces[i].Ok() ? mPieces[i].GetWidth() : 0);
 
-         if (i%2==0) {
-            // fixed
+            if (i % 2 == 0) {
+                // fixed
 
-            if (mPieces[i].Ok())
-               DrawBitmap(dc, mPieces[i], rect.x + x, rect.y, func);
-            x += w;
-         }
-         else {
-            // rolling
+                if (mPieces[i].Ok()) {
+                    DrawBitmap(dc, mPieces[i], rect.x + x, rect.y, func);
+                }
+                x += w;
+            } else {
+                // rolling
 
-            int space =
-               ((1+(i/2))*rollingSpace / numRolling) -
-               ((i/2)*rollingSpace / numRolling);
+                int space
+                    =((1 + (i / 2)) * rollingSpace / numRolling)
+                      - ((i / 2) * rollingSpace / numRolling);
 
-            j = 0;
-            while(j < space) {
-               if (mPieces[i].Ok())
-                  DrawBitmap(dc, mPieces[i], rect.x + x + j, rect.y, func);
-               j += w;
+                j = 0;
+                while (j < space) {
+                    if (mPieces[i].Ok()) {
+                        DrawBitmap(dc, mPieces[i], rect.x + x + j, rect.y, func);
+                    }
+                    j += w;
+                }
+
+                x += space;
             }
+        }
+    } break; // case HorizontalRoll
 
-            x += space;
-         }
-      }
-   } break; // case HorizontalRoll
+    case VerticalRoll: {
+        // The pieces alternate fixed, rolling, fixed, rolling...
 
-   case VerticalRoll: {
-      // The pieces alternate fixed, rolling, fixed, rolling...
+        int fixedHeight = 0;
+        for (i=0; i < num; i+=2) {
+            fixedHeight += (mPieces[i].Ok() ? mPieces[i].GetHeight() : 0);
+        }
 
-      int fixedHeight = 0;
-      for(i=0; i<num; i+=2)
-         fixedHeight += (mPieces[i].Ok() ? mPieces[i].GetHeight() : 0);
+        int rollingSpace = height - fixedHeight;
+        int numRolling = num / 2;
+        int y = 0;
 
-      int rollingSpace = height - fixedHeight;
-      int numRolling = num / 2;
-      int y = 0;
+        for (i=0; i < num; i++) {
+            int h = (mPieces[i].Ok() ? mPieces[i].GetHeight() : 0);
 
-      for(i=0; i<num; i++) {
-         int h = (mPieces[i].Ok() ? mPieces[i].GetHeight() : 0);
+            if (i % 2 == 0) {
+                // fixed
 
-         if (i%2==0) {
-            // fixed
+                if (mPieces[i].Ok()) {
+                    DrawBitmap(dc, mPieces[i], rect.x, rect.y + y, func);
+                }
+                y += h;
+            } else {
+                // rolling
 
-            if (mPieces[i].Ok())
-               DrawBitmap(dc, mPieces[i], rect.x, rect.y + y, func);
-            y += h;
-         }
-         else {
-            // rolling
+                int space
+                    =((1 + (i / 2)) * rollingSpace / numRolling)
+                      - ((i / 2) * rollingSpace / numRolling);
 
-            int space =
-               ((1+(i/2))*rollingSpace / numRolling) -
-               ((i/2)*rollingSpace / numRolling);
+                j = 0;
+                while (j < space) {
+                    if (mPieces[i].Ok()) {
+                        DrawBitmap(dc, mPieces[i], rect.x, rect.y + y + j, func);
+                    }
+                    j += h;
+                }
 
-            j = 0;
-            while(j < space) {
-               if (mPieces[i].Ok())
-                  DrawBitmap(dc, mPieces[i], rect.x, rect.y + y + j, func);
-               j += h;
+                y += space;
             }
+        }
+    } break; // case VerticalRoll
 
-            y += space;
-         }
-      }
-   } break; // case VerticalRoll
+    case FixedImage:
+        DrawBitmap(dc, mPieces[0], rect.x, rect.y, func);
+        break;
+    /* the other possible cases don't really make sense, but not having them
+     * listed gives a GCC warning */
+    case Uninitialized:
+        break;
 
-   case FixedImage:
-      DrawBitmap(dc, mPieces[0], rect.x, rect.y, func);
-      break;
-   /* the other possible cases don't really make sense, but not having them
-    * listed gives a GCC warning */
-   case Uninitialized:
-   break;
-
-   case Frame:
-   break;
-
-   } // switch
+    case Frame:
+        break;
+    } // switch
 }

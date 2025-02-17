@@ -18,51 +18,50 @@
 
 #include <wx/dcclient.h>
 
-FreqGauge::FreqGauge(wxWindow * parent, wxWindowID winid)
-:  wxStatusBar(parent, winid, wxST_SIZEGRIP)
+FreqGauge::FreqGauge(wxWindow* parent, wxWindowID winid)
+    :  wxStatusBar(parent, winid, wxST_SIZEGRIP)
 {
-   mRange = 0;
+    mRange = 0;
 }
 
 void FreqGauge::SetRange(int range, int bar, int gap)
 {
-   mRange = range;
-   mBar = bar;
-   mGap = gap;
+    mRange = range;
+    mBar = bar;
+    mGap = gap;
 
-   GetFieldRect(0, mRect);
-   mRect.Inflate(-1);
+    GetFieldRect(0, mRect);
+    mRect.Inflate(-1);
 
-   mInterval = mRange / (mRect.width / (mBar + mGap));
-   mRect.width = mBar;
-   mMargin = mRect.x;
-   mLast = -1;
+    mInterval = mRange / (mRect.width / (mBar + mGap));
+    mRect.width = mBar;
+    mMargin = mRect.x;
+    mLast = -1;
 
-   Update();
+    Update();
 }
 
 void FreqGauge::SetValue(int value)
 {
-   mCur = value / mInterval;
+    mCur = value / mInterval;
 
-   if (mCur != mLast)
-   {
-      wxClientDC dc(this);
-      dc.SetPen(*wxTRANSPARENT_PEN);
-      dc.SetBrush(wxColour(100, 100, 220));
+    if (mCur != mLast) {
+        wxClientDC dc(this);
+        dc.SetPen(*wxTRANSPARENT_PEN);
+        dc.SetBrush(wxColour(100, 100, 220));
 
-      while (mLast < mCur)
-      {
-         mLast++;
-         mRect.x = mMargin + mLast * (mBar + mGap);
-         dc.DrawRectangle(mRect);
-      }
-      Update();
-   }
+        while (mLast < mCur)
+        {
+            mLast++;
+            mRect.x = mMargin + mLast * (mBar + mGap);
+            dc.DrawRectangle(mRect);
+        }
+        Update();
+    }
 }
 
 void FreqGauge::Reset()
 {
-   mRange = 0;
-   Refresh(true);
+    mRange = 0;
+    Refresh(true);
 }

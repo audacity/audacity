@@ -62,339 +62,294 @@ class TipWindow;
 
 class AUDACITY_DLL_API LWSlider
 {
-   friend class ASlider;
-   friend class ASliderAx;
+    friend class ASlider;
+    friend class ASliderAx;
 
- public:
+public:
 
-   // MM: Construct customizable slider
-   LWSlider(wxWindow * parent,
-            const TranslatableString &name,
-            const wxPoint &pos,
-            const wxSize &size,
-            float minValue,
-            float maxValue,
-            float stepValue,
-            bool canUseShift,
-            int style,
-            bool showlabels=true,
-            bool drawticks=true,
-            bool drawtrack=true,
-            bool alwayshidetip=false,
-            bool heavyweight=false,
-            bool popup=true,
-            int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
+    // MM: Construct customizable slider
+    LWSlider(wxWindow* parent, const TranslatableString& name, const wxPoint& pos, const wxSize& size, float minValue, float maxValue,
+             float stepValue, bool canUseShift, int style, bool showlabels=true, bool drawticks=true, bool drawtrack=true,
+             bool alwayshidetip=false, bool heavyweight=false, bool popup=true, int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 
-   // Construct predefined slider
-   LWSlider(wxWindow * parent,
-            const TranslatableString &name,
-            const wxPoint &pos,
-            const wxSize &size,
-            int style,
-            bool showlabels=true,
-            bool drawticks=true,
-            bool drawtrack=true,
-            bool alwayshidetip=false,
-            bool heavyweight=false,
-            bool popup=true,
-            int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
-
-   void Init(wxWindow * parent,
-             const TranslatableString &name,
-             const wxPoint &pos,
-             const wxSize &size,
-             float minValue,
-             float maxValue,
-             float stepValue,
-             bool canUseShift,
-             int style,
-             bool showlabels,
-             bool drawticks,
-             bool drawtrack,
-             bool alwayshidetip,
-             bool heavyweight,
-             bool popup,
-             float speed,
+    // Construct predefined slider
+    LWSlider(wxWindow* parent, const TranslatableString& name, const wxPoint& pos, const wxSize& size, int style, bool showlabels=true,
+             bool drawticks=true, bool drawtrack=true, bool alwayshidetip=false, bool heavyweight=false, bool popup=true,
              int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 
-   virtual ~LWSlider();
+    void Init(wxWindow* parent, const TranslatableString& name, const wxPoint& pos, const wxSize& size, float minValue, float maxValue,
+              float stepValue, bool canUseShift, int style, bool showlabels, bool drawticks, bool drawtrack, bool alwayshidetip,
+              bool heavyweight, bool popup, float speed, int orientation = wxHORIZONTAL); // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 
-   wxWindowID GetId();
-   void SetId(wxWindowID id);
+    virtual ~LWSlider();
 
-   void SetName(const TranslatableString& name);
+    wxWindowID GetId();
+    void SetId(wxWindowID id);
 
-   void SetDefaultValue(float value);
-   void SetDefaultShortcut(bool value);
+    void SetName(const TranslatableString& name);
 
-   void GetScroll(float & line, float & page);
-   void SetScroll(float line, float page);
+    void SetDefaultValue(float value);
+    void SetDefaultShortcut(bool value);
 
-   void ShowTip(bool show);
-   void SetToolTipTemplate(const TranslatableString & tip);
+    void GetScroll(float& line, float& page);
+    void SetScroll(float line, float page);
 
-   float Get(bool convert = true);
-   void Set(float value);
+    void ShowTip(bool show);
+    void SetToolTipTemplate(const TranslatableString& tip);
 
-   void Increase(float steps);
-   void Decrease(float steps);
+    float Get(bool convert = true);
+    void Set(float value);
 
-   // If set to less than 1.0, moving the mouse one pixel will move
-   // the slider by less than 1 unit
-   void SetSpeed(float speed);
+    void Increase(float steps);
+    void Decrease(float steps);
 
-   void Move(const wxPoint &newpos);
+    // If set to less than 1.0, moving the mouse one pixel will move
+    // the slider by less than 1 unit
+    void SetSpeed(float speed);
 
-   void AdjustSize(const wxSize & sz);
+    void Move(const wxPoint& newpos);
 
-   void OnPaint(wxDC &dc, bool highlighted);
-   void OnSize(wxSizeEvent & event);
-   void OnMouseEvent(wxMouseEvent & event);
-   void OnKeyDown(wxKeyEvent & event);
-   void Refresh();
-   void Redraw();
+    void AdjustSize(const wxSize& sz);
 
-   bool ShowDialog();
-   bool ShowDialog(wxPoint pos);
+    void OnPaint(wxDC& dc, bool highlighted);
+    void OnSize(wxSizeEvent& event);
+    void OnMouseEvent(wxMouseEvent& event);
+    void OnKeyDown(wxKeyEvent& event);
+    void Refresh();
+    void Redraw();
 
-   void SetEnabled(bool enabled);
-   bool GetEnabled() const;
+    bool ShowDialog();
+    bool ShowDialog(wxPoint pos);
 
-   float GetMinValue() const;
-   float GetMaxValue() const;
+    void SetEnabled(bool enabled);
+    bool GetEnabled() const;
 
-   void SetParent(wxWindow *parent);
-   void SendUpdate(float newValue);
+    float GetMinValue() const;
+    float GetMaxValue() const;
 
-   wxString GetStringValue() const;
+    void SetParent(wxWindow* parent);
+    void SendUpdate(float newValue);
 
-   void OnKillFocus();
+    wxString GetStringValue() const;
 
- private:
+    void OnKillFocus();
 
-   TranslatableString GetTip(float value) const;
-   TranslatableStrings GetWidestTips() const;
-   void FormatPopWin();
-   void SetPopWinPosition();
-   void CreatePopWin();
-   void DrawToBitmap(wxDC & dc);
+private:
 
-   bool DoShowDialog(wxPoint pos);
+    TranslatableString GetTip(float value) const;
+    TranslatableStrings GetWidestTips() const;
+    void FormatPopWin();
+    void SetPopWinPosition();
+    void CreatePopWin();
+    void DrawToBitmap(wxDC& dc);
 
+    bool DoShowDialog(wxPoint pos);
 
-   int ValueToPosition(float val);
-   float DragPositionToValue(int fromPos, bool shiftDown);
-   float ClickPositionToValue(int fromPos, bool shiftDown);
+    int ValueToPosition(float val);
+    float DragPositionToValue(int fromPos, bool shiftDown);
+    float ClickPositionToValue(int fromPos, bool shiftDown);
 
-   wxWindow *mParent;
+    wxWindow* mParent;
 
-   int mStyle;
-   int mOrientation; // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
+    int mStyle;
+    int mOrientation; // wxHORIZONTAL or wxVERTICAL. wxVERTICAL is currently only for DB_SLIDER.
 
-   bool mShowLabels;
-   bool mDrawTicks;
-   bool mDrawTrack;
+    bool mShowLabels;
+    bool mDrawTicks;
+    bool mDrawTrack;
 
-   bool mAlwaysHideTip;
+    bool mAlwaysHideTip;
 
-   bool mHW; // is it really heavyweight (in a window)
-   bool mPopup; // should display dialog on double click
+    bool mHW; // is it really heavyweight (in a window)
+    bool mPopup; // should display dialog on double click
 
-   int mLeft;
-   int mTop;
+    int mLeft;
+    int mTop;
 
-   int mWidth;                  //In pixels
-   int mHeight;                 //In pixels
+    int mWidth;                 //In pixels
+    int mHeight;                //In pixels
 
-   // for (mOrientation == wxHORIZONTAL)
-   int mCenterY;
+    // for (mOrientation == wxHORIZONTAL)
+    int mCenterY;
 
-   int mLeftX;
-   int mRightX;
-   int mWidthX;
+    int mLeftX;
+    int mRightX;
+    int mWidthX;
 
-   // for (mOrientation == wxVERTICAL) //v Vertical PAN_SLIDER currently not handled, forced to horizontal.
-   int mCenterX;
+    // for (mOrientation == wxVERTICAL) //v Vertical PAN_SLIDER currently not handled, forced to horizontal.
+    int mCenterX;
 
-   int mTopY;
-   int mBottomY; // low values at bottom
-   int mHeightY;
+    int mTopY;
+    int mBottomY; // low values at bottom
+    int mHeightY;
 
+    int mThumbWidth;            //In pixels
+    int mThumbHeight;           //In pixels
 
-   int mThumbWidth;             //In pixels
-   int mThumbHeight;            //In pixels
+    float mClickValue;
+    int mClickPos; // position in x if (mOrientation == wxHORIZONTAL), else in y
 
-   float mClickValue;
-   int mClickPos; // position in x if (mOrientation == wxHORIZONTAL), else in y
+    float mMinValue;
+    float mMaxValue;
+    float mStepValue;
+    float mSpeed;
 
-   float mMinValue;
-   float mMaxValue;
-   float mStepValue;
-   float mSpeed;
+    float mScrollLine;
+    float mScrollPage;
 
-   float mScrollLine;
-   float mScrollPage;
+    float mCurrentValue;
 
-   float mCurrentValue;
+    bool mDefaultShortcut;
+    float mDefaultValue;
 
-   bool mDefaultShortcut;
-   float mDefaultValue;
+    bool mCanUseShift;
 
-   bool mCanUseShift;
+    wxWindowID mID;
 
-   wxWindowID mID;
+    wxWeakRef<TipWindow> mTipPanel;
+    TranslatableString mTipTemplate;
 
-   wxWeakRef<TipWindow> mTipPanel;
-   TranslatableString mTipTemplate;
+    bool mIsDragging;
 
-   bool mIsDragging;
+    std::unique_ptr<wxBitmap> mBitmap, mThumbBitmap, mThumbBitmapHilited;
 
-   std::unique_ptr<wxBitmap> mBitmap, mThumbBitmap, mThumbBitmapHilited;
+    TranslatableString mName;
 
-   TranslatableString mName;
-
-   bool mEnabled;
+    bool mEnabled;
 };
 
 class AUDACITY_DLL_API ASlider /* not final */ : public wxPanel
 {
-   friend class ASliderAx;
-
- public:
-   struct Options {
-      Options() {}
-
-      int style{ FRAC_SLIDER };
-      wxOrientation orientation{ wxHORIZONTAL };
-      bool showLabels{ true };
-      bool drawTicks{ true };
-      bool drawTrack{ true };
-      bool alwaysHideTip{ false };
-      bool popup{ true };
-      bool canUseShift{ true };
-      float stepValue{ STEP_CONTINUOUS };
-
-      float line{ 1.0 };
-      float page{ 5.0 };
-
-      Options& Style( int s ) { style = s; return *this; }
-      Options& Orientation( wxOrientation o )
-         { orientation = o; return *this; }
-      Options& ShowLabels( bool l ) { showLabels = l; return *this; }
-      Options& DrawTicks( bool t ) { drawTicks = t; return *this; }
-      Options& DrawTrack( bool t ) { drawTrack = t; return *this; }
-      Options& AlwayHideTip( bool t) { alwaysHideTip = t; return * this; }
-      Options& Popup( bool p ) { popup = p; return *this; }
-      Options& CanUseShift( bool c ) { canUseShift = c; return *this; }
-      Options& StepValue( float v ) { stepValue = v; return *this; }
-
-      Options& Line( float l ) { line = l; return *this; }
-      Options& Page( float p ) { page = p; return *this; }
-   };
-
-   ASlider( wxWindow * parent,
-            wxWindowID id,
-            const TranslatableString &name,
-            const wxPoint & pos,
-            const wxSize & size,
-            const Options &options = Options{});
-   virtual ~ASlider();
-
-   bool AcceptsFocus() const override { return s_AcceptsFocus; }
-   bool AcceptsFocusFromKeyboard() const override { return true; }
-
-   void SetFocusFromKbd() override;
-
-   bool SetBackgroundColour(const wxColour& colour) override;
-
-   void GetScroll(float & line, float & page);
-   void SetScroll(float line, float page);
-
-   void SetToolTipTemplate(const TranslatableString & tip);
-
-   float Get( bool convert = true );
-   void Set(float value);
-
-   void Increase(float steps);
-   void Decrease(float steps);
-   bool ShowDialog(wxPoint pos = wxPoint(-1, -1));
-
-   void SetSpeed(float speed);
-
-   void OnErase(wxEraseEvent & event);
-   void OnPaint(wxPaintEvent & event);
-   void OnSize(wxSizeEvent & event);
-   void OnMouseEvent(wxMouseEvent & event);
-   void OnCaptureLost(wxMouseCaptureLostEvent & event);
-   void OnKeyDown(wxKeyEvent &event);
-   void OnSlider(wxCommandEvent &event);
-   void OnSetFocus(wxFocusEvent & event);
-   void OnKillFocus(wxFocusEvent & event);
-   void OnTimer(wxTimerEvent & event);
-
-   // Overrides of the wxWindow functions with the same semantics
-   bool Enable(bool enable = true) override;
-   bool IsEnabled() const;
-
-private:
-   static bool s_AcceptsFocus;
-   struct Resetter { void operator () (bool *p) const { if(p) *p = false; } };
-   using TempAllowFocus = std::unique_ptr<bool, Resetter>;
+    friend class ASliderAx;
 
 public:
-   static TempAllowFocus TemporarilyAllowFocus();
+    struct Options {
+        Options() {}
 
- private:
-   std::unique_ptr<LWSlider> mLWSlider;
-   bool mSliderIsFocused;
-   wxTimer mTimer;
+        int style{ FRAC_SLIDER };
+        wxOrientation orientation{ wxHORIZONTAL };
+        bool showLabels{ true };
+        bool drawTicks{ true };
+        bool drawTrack{ true };
+        bool alwaysHideTip{ false };
+        bool popup{ true };
+        bool canUseShift{ true };
+        float stepValue{ STEP_CONTINUOUS };
 
- protected:
-   int mStyle;
+        float line{ 1.0 };
+        float page{ 5.0 };
 
- public:
+        Options& Style(int s) { style = s; return *this; }
+        Options& Orientation(wxOrientation o)
+        { orientation = o; return *this; }
+        Options& ShowLabels(bool l) { showLabels = l; return *this; }
+        Options& DrawTicks(bool t) { drawTicks = t; return *this; }
+        Options& DrawTrack(bool t) { drawTrack = t; return *this; }
+        Options& AlwayHideTip(bool t) { alwaysHideTip = t; return *this; }
+        Options& Popup(bool p) { popup = p; return *this; }
+        Options& CanUseShift(bool c) { canUseShift = c; return *this; }
+        Options& StepValue(float v) { stepValue = v; return *this; }
+
+        Options& Line(float l) { line = l; return *this; }
+        Options& Page(float p) { page = p; return *this; }
+    };
+
+    ASlider(wxWindow* parent, wxWindowID id, const TranslatableString& name, const wxPoint& pos, const wxSize& size,
+            const Options& options = Options {});
+    virtual ~ASlider();
+
+    bool AcceptsFocus() const override { return s_AcceptsFocus; }
+    bool AcceptsFocusFromKeyboard() const override { return true; }
+
+    void SetFocusFromKbd() override;
+
+    bool SetBackgroundColour(const wxColour& colour) override;
+
+    void GetScroll(float& line, float& page);
+    void SetScroll(float line, float page);
+
+    void SetToolTipTemplate(const TranslatableString& tip);
+
+    float Get(bool convert = true);
+    void Set(float value);
+
+    void Increase(float steps);
+    void Decrease(float steps);
+    bool ShowDialog(wxPoint pos = wxPoint(-1, -1));
+
+    void SetSpeed(float speed);
+
+    void OnErase(wxEraseEvent& event);
+    void OnPaint(wxPaintEvent& event);
+    void OnSize(wxSizeEvent& event);
+    void OnMouseEvent(wxMouseEvent& event);
+    void OnCaptureLost(wxMouseCaptureLostEvent& event);
+    void OnKeyDown(wxKeyEvent& event);
+    void OnSlider(wxCommandEvent& event);
+    void OnSetFocus(wxFocusEvent& event);
+    void OnKillFocus(wxFocusEvent& event);
+    void OnTimer(wxTimerEvent& event);
+
+    // Overrides of the wxWindow functions with the same semantics
+    bool Enable(bool enable = true) override;
+    bool IsEnabled() const;
+
+private:
+    static bool s_AcceptsFocus;
+    struct Resetter {
+        void operator ()(bool* p) const
+        {
+            if (p) {
+                *p = false;
+            }
+        }
+    };
+    using TempAllowFocus = std::unique_ptr<bool, Resetter>;
+
+public:
+    static TempAllowFocus TemporarilyAllowFocus();
+
+private:
+    std::unique_ptr<LWSlider> mLWSlider;
+    bool mSliderIsFocused;
+    wxTimer mTimer;
+
+protected:
+    int mStyle;
+
+public:
     DECLARE_EVENT_TABLE()
 };
 
-
-
 #define SLIDER_DIALOG_TEXTCTRL 100
-
 
 // This is a modal dialog that contains an ASlider
 // and a text-entry box which can be used to set the
 // value of a slider.
 class SliderDialog final : public wxDialogWrapper
 {
- public:
-   SliderDialog(wxWindow * parent, wxWindowID id,
-                const TranslatableString & title,
-                wxPoint position,
-                wxSize size,
-                int style,
-                float value,
-                float line,
-                float page,
-                LWSlider * pSlider=nullptr);
-   ~SliderDialog();
+public:
+    SliderDialog(wxWindow* parent, wxWindowID id, const TranslatableString& title, wxPoint position, wxSize size, int style, float value,
+                 float line, float page, LWSlider* pSlider=nullptr);
+    ~SliderDialog();
 
-   float Get();
+    float Get();
 
- private:
-   bool TransferDataToWindow() override;
-   bool TransferDataFromWindow() override;
+private:
+    bool TransferDataToWindow() override;
+    bool TransferDataFromWindow() override;
 
-   void OnSlider(wxCommandEvent &event);
-   void OnTextChange(wxCommandEvent &event);  
+    void OnSlider(wxCommandEvent& event);
+    void OnTextChange(wxCommandEvent& event);
 
-   ASlider * mSlider;
-   wxTextCtrl * mTextCtrl;
-   int mStyle;
-   LWSlider * mpOrigin;
-   float mValue;
+    ASlider* mSlider;
+    wxTextCtrl* mTextCtrl;
+    int mStyle;
+    LWSlider* mpOrigin;
+    float mValue;
 
- public:
-   DECLARE_EVENT_TABLE()
+public:
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

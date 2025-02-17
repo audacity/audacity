@@ -14,32 +14,31 @@ Paul Licameli
 
 #include "BasicUIPoint.h"
 
-namespace BasicUI{ class WindowPlacement; }
+namespace BasicUI {
+class WindowPlacement;
+}
 
 class wxMenu; // To be removed
 
 namespace BasicMenu {
-
 using Point = BasicUI::Point;
 
 class AUDACITY_DLL_API Handle
 {
 public:
 
-   explicit Handle( wxMenu *pMenu ) : mpMenu{ pMenu } {}
+    explicit Handle(wxMenu* pMenu)
+        : mpMenu{pMenu} {}
 
-   Handle( const Handle &other ) = delete;
-   Handle &operator =( const Handle &other ) = delete;
+    Handle(const Handle& other) = delete;
+    Handle& operator =(const Handle& other) = delete;
 
-   //! Display the menu at pos, invoke at most one action, then hide it
-   void Popup( const BasicUI::WindowPlacement &window,
-      const Point &pos = {} );
+    //! Display the menu at pos, invoke at most one action, then hide it
+    void Popup(const BasicUI::WindowPlacement& window, const Point& pos = {});
 
 private:
-   wxMenu *mpMenu;
+    wxMenu* mpMenu;
 };
-
 }
 
 #endif
-

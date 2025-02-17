@@ -39,7 +39,6 @@
 
 *//******************************************************************/
 
-
 #include "Ruler.h"
 
 #include <wx/dcclient.h>
@@ -63,563 +62,585 @@ using std::max;
 // Ruler
 //
 
-Ruler::Ruler(const RulerUpdater &updater, const RulerFormat &format)
+Ruler::Ruler(const RulerUpdater& updater, const RulerFormat& format)
 {
-   mbTicksOnly = true;
-   mbTicksAtExtremes = false;
-   mTickColour = wxColour( theTheme.Colour( clrTrackPanelText ));
-   mPen.SetColour(mTickColour);
+    mbTicksOnly = true;
+    mbTicksAtExtremes = false;
+    mTickColour = wxColour(theTheme.Colour(clrTrackPanelText));
+    mPen.SetColour(mTickColour);
 
-   // Note: the font size is now adjusted automatically whenever
-   // Invalidate is called on a horizontal Ruler, unless the user
-   // calls SetFonts manually.  So the defaults here are not used
-   // often.
+    // Note: the font size is now adjusted automatically whenever
+    // Invalidate is called on a horizontal Ruler, unless the user
+    // calls SetFonts manually.  So the defaults here are not used
+    // often.
 
-   int fontSize = 10;
+    int fontSize = 10;
 #ifdef __WXMSW__
-   fontSize = 8;
+    fontSize = 8;
 #endif
 
-   mbMinor = true;
+    mbMinor = true;
 
-   mTwoTone = false;
+    mTwoTone = false;
 
-   SetUpdater(&updater);
-   SetFormat(&format);
+    SetUpdater(&updater);
+    SetFormat(&format);
 
-   mTickLengths = { 4, 2, 2 };
+    mTickLengths = { 4, 2, 2 };
 }
 
 Ruler::~Ruler()
 {
-   // DV: Why?
-   // Invalidate();  // frees up our arrays
+    // DV: Why?
+    // Invalidate();  // frees up our arrays
 }
 
 void Ruler::SetTwoTone(bool twoTone)
 {
-   mTwoTone = twoTone;
+    mTwoTone = twoTone;
 }
 
-void Ruler::SetFormat(const RulerFormat *pFormat)
+void Ruler::SetFormat(const RulerFormat* pFormat)
 {
-   if (mRulerStruct.mpRulerFormat != pFormat) {
-      mRulerStruct.mpRulerFormat = pFormat;
-      Invalidate();
-   }
+    if (mRulerStruct.mpRulerFormat != pFormat) {
+        mRulerStruct.mpRulerFormat = pFormat;
+        Invalidate();
+    }
 }
 
-void Ruler::SetUpdater(const RulerUpdater *pUpdater)
+void Ruler::SetUpdater(const RulerUpdater* pUpdater)
 {
-   if (mpUpdater != pUpdater) {
-      mpUpdater = pUpdater;
-      Invalidate();
-   }
+    if (mpUpdater != pUpdater) {
+        mpUpdater = pUpdater;
+        Invalidate();
+    }
 }
 
-void Ruler::SetUnits(const TranslatableString &units)
+void Ruler::SetUnits(const TranslatableString& units)
 {
-   // Specify the name of the units (like "dB") if you
-   // want numbers like "1.6" formatted as "1.6 dB".
+    // Specify the name of the units (like "dB") if you
+    // want numbers like "1.6" formatted as "1.6 dB".
 
-   if (mRulerStruct.mUnits != units) {
-      mRulerStruct.mUnits = units;
+    if (mRulerStruct.mUnits != units) {
+        mRulerStruct.mUnits = units;
 
-      Invalidate();
-   }
+        Invalidate();
+    }
 }
 
-void Ruler::SetDbMirrorValue( const double d )
+void Ruler::SetDbMirrorValue(const double d)
 {
-   if (mRulerStruct.mDbMirrorValue != d) {
-      mRulerStruct.mDbMirrorValue = d;
+    if (mRulerStruct.mDbMirrorValue != d) {
+        mRulerStruct.mDbMirrorValue = d;
 
-      Invalidate();
-   }
+        Invalidate();
+    }
 }
 
 void Ruler::SetOrientation(int orient)
 {
-   // wxHORIZONTAL || wxVERTICAL
+    // wxHORIZONTAL || wxVERTICAL
 
-   if (mRulerStruct.mOrientation != orient) {
-      mRulerStruct.mOrientation = orient;
+    if (mRulerStruct.mOrientation != orient) {
+        mRulerStruct.mOrientation = orient;
 
-      Invalidate();
-   }
+        Invalidate();
+    }
 }
 
 void Ruler::SetRange(double min, double max)
 {
-   SetRange(min, max, min, max);
+    SetRange(min, max, min, max);
 }
 
 void Ruler::SetRange
-   (double min, double max, double hiddenMin, double hiddenMax)
+    (double min, double max, double hiddenMin, double hiddenMax)
 {
-   // For a horizontal ruler,
-   // min is the value in the center of pixel "left",
-   // max is the value in the center of pixel "right".
+    // For a horizontal ruler,
+    // min is the value in the center of pixel "left",
+    // max is the value in the center of pixel "right".
 
-   // In the special case of a time ruler,
-   // hiddenMin and hiddenMax are values that would be shown with the fisheye
-   // turned off.  In other cases they equal min and max respectively.
+    // In the special case of a time ruler,
+    // hiddenMin and hiddenMax are values that would be shown with the fisheye
+    // turned off.  In other cases they equal min and max respectively.
 
-   if (mRulerStruct.mMin != min || mRulerStruct.mMax != max ||
-      mRulerStruct.mHiddenMin != hiddenMin || mRulerStruct.mHiddenMax != hiddenMax) {
-      mRulerStruct.mMin = min;
-      mRulerStruct.mMax = max;
-      mRulerStruct.mHiddenMin = hiddenMin;
-      mRulerStruct.mHiddenMax = hiddenMax;
+    if (mRulerStruct.mMin != min || mRulerStruct.mMax != max
+        || mRulerStruct.mHiddenMin != hiddenMin || mRulerStruct.mHiddenMax != hiddenMax) {
+        mRulerStruct.mMin = min;
+        mRulerStruct.mMax = max;
+        mRulerStruct.mHiddenMin = hiddenMin;
+        mRulerStruct.mHiddenMax = hiddenMax;
 
-      Invalidate();
-   }
+        Invalidate();
+    }
 }
 
 void Ruler::SetLabelEdges(bool labelEdges)
 {
-   // If this is true, the edges of the ruler will always
-   // receive a label.  If not, the nearest round number is
-   // labeled (which may or may not be the edge).
+    // If this is true, the edges of the ruler will always
+    // receive a label.  If not, the nearest round number is
+    // labeled (which may or may not be the edge).
 
-   if (mRulerStruct.mLabelEdges != labelEdges) {
-      mRulerStruct.mLabelEdges = labelEdges;
+    if (mRulerStruct.mLabelEdges != labelEdges) {
+        mRulerStruct.mLabelEdges = labelEdges;
 
-      Invalidate();
-   }
+        Invalidate();
+    }
 }
 
 void Ruler::SetFlip(bool flip)
 {
-   // If this is true, the orientation of the tick marks
-   // is reversed from the default; eg. above the line
-   // instead of below
+    // If this is true, the orientation of the tick marks
+    // is reversed from the default; eg. above the line
+    // instead of below
 
-   if (mRulerStruct.mFlip != flip) {
-      mRulerStruct.mFlip = flip;
+    if (mRulerStruct.mFlip != flip) {
+        mRulerStruct.mFlip = flip;
 
-      Invalidate();
-   }
+        Invalidate();
+    }
 }
 
 void Ruler::SetMinor(bool value)
 {
-   mbMinor = value;
+    mbMinor = value;
 }
 
 namespace {
 void FindFontHeights(
-   wxCoord &height, wxCoord &lead, wxDC &dc, const wxFont &font )
+    wxCoord& height, wxCoord& lead, wxDC& dc, const wxFont& font)
 {
-   wxCoord strW, strH, strD, strL;
-   static const wxString exampleText = wxT("0.9");   //ignored for height calcs on all platforms
-   dc.SetFont( font );
-   dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
-   height = strH - strD - strL;
-   lead = strL;
+    wxCoord strW, strH, strD, strL;
+    static const wxString exampleText = wxT("0.9");  //ignored for height calcs on all platforms
+    dc.SetFont(font);
+    dc.GetTextExtent(exampleText, &strW, &strH, &strD, &strL);
+    height = strH - strD - strL;
+    lead = strL;
 }
 
 void FindFontHeights(
-   wxCoord &height, wxCoord &lead,
-   wxDC &dc, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL )
+    wxCoord& height, wxCoord& lead,
+    wxDC& dc, int fontSize, wxFontWeight weight = wxFONTWEIGHT_NORMAL)
 {
-   const wxFont font{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, weight };
-   FindFontHeights( height, lead, dc, font );
+    const wxFont font{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, weight };
+    FindFontHeights(height, lead, dc, font);
 }
 }
 
-void Ruler::SetFonts(const wxFont &minorFont, const wxFont &majorFont, const wxFont &minorMinorFont)
+void Ruler::SetFonts(const wxFont& minorFont, const wxFont& majorFont, const wxFont& minorMinorFont)
 {
-   // Won't override these fonts
+    // Won't override these fonts
 
-   mpUserFonts = std::make_unique<RulerStruct::Fonts>(
-      RulerStruct::Fonts{ majorFont, minorFont, minorMinorFont, 0 } );
+    mpUserFonts = std::make_unique<RulerStruct::Fonts>(
+        RulerStruct::Fonts { majorFont, minorFont, minorMinorFont, 0 });
 
-   wxScreenDC dc;
-   wxCoord height;
-   FindFontHeights( height, mpUserFonts->lead, dc, majorFont );
+    wxScreenDC dc;
+    wxCoord height;
+    FindFontHeights(height, mpUserFonts->lead, dc, majorFont);
 
-   mRulerStruct.mpFonts.reset();
-   mRulerStruct.mpFonts.reset();
-   Invalidate();
+    mRulerStruct.mpFonts.reset();
+    mRulerStruct.mpFonts.reset();
+    Invalidate();
 }
 
-void Ruler::SetNumberScale(const NumberScale &scale)
+void Ruler::SetNumberScale(const NumberScale& scale)
 {
-   if ( mRulerStruct.mNumberScale != scale ) {
-      mRulerStruct.mNumberScale = scale;
-      Invalidate();
-   }
+    if (mRulerStruct.mNumberScale != scale) {
+        mRulerStruct.mNumberScale = scale;
+        Invalidate();
+    }
 }
 
 void Ruler::SetTickLengths(const TickLengths& tLengths)
 {
-   bool inv = false;
-   if (mTickLengths.majorLength != tLengths.majorLength) {
-      mTickLengths.majorLength = tLengths.majorLength;
-      inv = true;
-   }
-   if (mTickLengths.minorLength != tLengths.minorLength) {
-      mTickLengths.minorLength = tLengths.minorLength;
-      inv = true;
-   }
-   if (mTickLengths.minorMinorLength != tLengths.minorMinorLength) {
-      mTickLengths.minorMinorLength = tLengths.minorMinorLength;
-      inv = true;
-   }
+    bool inv = false;
+    if (mTickLengths.majorLength != tLengths.majorLength) {
+        mTickLengths.majorLength = tLengths.majorLength;
+        inv = true;
+    }
+    if (mTickLengths.minorLength != tLengths.minorLength) {
+        mTickLengths.minorLength = tLengths.minorLength;
+        inv = true;
+    }
+    if (mTickLengths.minorMinorLength != tLengths.minorMinorLength) {
+        mTickLengths.minorMinorLength = tLengths.minorMinorLength;
+        inv = true;
+    }
 
-   if (inv) Invalidate();
+    if (inv) {
+        Invalidate();
+    }
 }
 
 void Ruler::OfflimitsPixels(int start, int end)
 {
-   int length = mRulerStruct.mLength;
-   if (mRulerStruct.mOrientation == wxHORIZONTAL)
-      length = mRulerStruct.mRight - mRulerStruct.mLeft;
-   else
-      length = mRulerStruct.mBottom - mRulerStruct.mTop;
-   if( length < 0 )
-      return;
+    int length = mRulerStruct.mLength;
+    if (mRulerStruct.mOrientation == wxHORIZONTAL) {
+        length = mRulerStruct.mRight - mRulerStruct.mLeft;
+    } else {
+        length = mRulerStruct.mBottom - mRulerStruct.mTop;
+    }
+    if (length < 0) {
+        return;
+    }
 
-   auto size = static_cast<size_t>( length + 1 );
-   if ( mUserBits.size() < size ) {
-      mRulerStruct.mLength = length;
-      mUserBits.resize( size, false );
-   }
+    auto size = static_cast<size_t>(length + 1);
+    if (mUserBits.size() < size) {
+        mRulerStruct.mLength = length;
+        mUserBits.resize(size, false);
+    }
 
-   if (end < start)
-      std::swap( start, end );
+    if (end < start) {
+        std::swap(start, end);
+    }
 
-   if (start < 0)
-      start = 0;
-   if (end > mRulerStruct.mLength)
-      end = mRulerStruct.mLength;
+    if (start < 0) {
+        start = 0;
+    }
+    if (end > mRulerStruct.mLength) {
+        end = mRulerStruct.mLength;
+    }
 
-   for(int i = start; i <= end; i++)
-      mUserBits[i] = true;
+    for (int i = start; i <= end; i++) {
+        mUserBits[i] = true;
+    }
 
-   Invalidate();
+    Invalidate();
 }
 
 void Ruler::SetBounds(int left, int top, int right, int bottom)
 {
-   if (mRulerStruct.mLeft != left || mRulerStruct.mTop != top ||
-      mRulerStruct.mRight != right || mRulerStruct.mBottom != bottom) {
-      mRulerStruct.mLeft = left;
-      mRulerStruct.mTop = top;
-      mRulerStruct.mRight = right;
-      mRulerStruct.mBottom = bottom;
+    if (mRulerStruct.mLeft != left || mRulerStruct.mTop != top
+        || mRulerStruct.mRight != right || mRulerStruct.mBottom != bottom) {
+        mRulerStruct.mLeft = left;
+        mRulerStruct.mTop = top;
+        mRulerStruct.mRight = right;
+        mRulerStruct.mBottom = bottom;
 
-      Invalidate();
-   }
+        Invalidate();
+    }
 }
 
 void Ruler::Invalidate()
 {
-   if (mRulerStruct.mOrientation == wxHORIZONTAL)
-      mRulerStruct.mLength = mRulerStruct.mRight-mRulerStruct.mLeft;
-   else
-      mRulerStruct.mLength = mRulerStruct.mBottom-mRulerStruct.mTop;
+    if (mRulerStruct.mOrientation == wxHORIZONTAL) {
+        mRulerStruct.mLength = mRulerStruct.mRight - mRulerStruct.mLeft;
+    } else {
+        mRulerStruct.mLength = mRulerStruct.mBottom - mRulerStruct.mTop;
+    }
 
-   mpCache.reset();
-   // Bug 2316 we must preserve off-limit pixels.
-   // mUserBits.clear();
+    mpCache.reset();
+    // Bug 2316 we must preserve off-limit pixels.
+    // mUserBits.clear();
 
-   Publish(RulerInvalidatedMessage {});
+    Publish(RulerInvalidatedMessage {});
 }
 
 struct Ruler::Cache {
-   RulerUpdater::Bits mBits;
-   RulerUpdater::Labels mMajorLabels, mMinorLabels, mMinorMinorLabels;
-   wxRect mRect;
+    RulerUpdater::Bits mBits;
+    RulerUpdater::Labels mMajorLabels, mMinorLabels, mMinorMinorLabels;
+    wxRect mRect;
 };
 
 static constexpr int MinPixelHeight =
 #ifdef __WXMSW__
-   12;
+    12;
 #else
-   10;
+    10;
 #endif
 
 static constexpr int MaxPixelHeight =
 #ifdef __WXMSW__
-   14;
+    14;
 #elif __WXMAC__
-   10;
+    10;
 #else
-   12;
+    12;
 #endif
 
-
-void Ruler::ChooseFonts( wxDC &dc ) const
+void Ruler::ChooseFonts(wxDC& dc) const
 {
-   const RulerStruct::Fonts* pUserFonts = mpUserFonts.get();
-   int desiredPixelHeight = mRulerStruct.mOrientation == wxHORIZONTAL
-      ? mRulerStruct.mBottom - mRulerStruct.mTop - 5 // height less ticks and 1px gap
-      : MaxPixelHeight;
+    const RulerStruct::Fonts* pUserFonts = mpUserFonts.get();
+    int desiredPixelHeight = mRulerStruct.mOrientation == wxHORIZONTAL
+                             ? mRulerStruct.mBottom - mRulerStruct.mTop - 5 // height less ticks and 1px gap
+                             : MaxPixelHeight;
 
-   if (mRulerStruct.mpFonts)
-      return;
+    if (mRulerStruct.mpFonts) {
+        return;
+    }
 
-   if (pUserFonts) {
-      mRulerStruct.mpFonts = std::make_unique<RulerStruct::Fonts>(*pUserFonts);
-      return;
-   }
+    if (pUserFonts) {
+        mRulerStruct.mpFonts = std::make_unique<RulerStruct::Fonts>(*pUserFonts);
+        return;
+    }
 
-   mRulerStruct.mpFonts = std::make_unique<RulerStruct::Fonts>(RulerStruct::Fonts{ {}, {}, {}, 0 });
-   auto& fonts = *(mRulerStruct.mpFonts);
+    mRulerStruct.mpFonts = std::make_unique<RulerStruct::Fonts>(RulerStruct::Fonts { {}, {}, {}, 0 });
+    auto& fonts = *(mRulerStruct.mpFonts);
 
-   int fontSize = 4;
+    int fontSize = 4;
 
-   desiredPixelHeight =
-      std::max(MinPixelHeight, std::min(MaxPixelHeight, -desiredPixelHeight));
+    desiredPixelHeight
+        =std::max(MinPixelHeight, std::min(MaxPixelHeight, -desiredPixelHeight));
 
-   // Keep making the font bigger until it's too big, then subtract one.
-   wxCoord height;
-   FindFontHeights(height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD);
-   while (height <= desiredPixelHeight && fontSize < 40) {
-      fontSize++;
-      FindFontHeights(height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD);
-   }
-   fontSize--;
-   FindFontHeights(height, fonts.lead, dc, fontSize);
+    // Keep making the font bigger until it's too big, then subtract one.
+    wxCoord height;
+    FindFontHeights(height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD);
+    while (height <= desiredPixelHeight && fontSize < 40) {
+        fontSize++;
+        FindFontHeights(height, fonts.lead, dc, fontSize, wxFONTWEIGHT_BOLD);
+    }
+    fontSize--;
+    FindFontHeights(height, fonts.lead, dc, fontSize);
 
-   fonts.major = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
-   fonts.minor = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
-   fonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
-   
+    fonts.major = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD };
+    fonts.minor = wxFont{ fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
+    fonts.minorMinor = wxFont{ fontSize - 1, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL };
 }
 
 void Ruler::UpdateCache(
-   wxDC &dc, const Envelope* envelope )
-   const // Envelope *speedEnv, long minSpeed, long maxSpeed )
+    wxDC& dc, const Envelope* envelope)
+const    // Envelope *speedEnv, long minSpeed, long maxSpeed )
 {
-   if ( mpCache )
-      return;
+    if (mpCache) {
+        return;
+    }
 
-   // This gets called when something has been changed
-   // (i.e. we've been invalidated).  Recompute all
-   // tick positions and font size.
+    // This gets called when something has been changed
+    // (i.e. we've been invalidated).  Recompute all
+    // tick positions and font size.
 
-   ChooseFonts( dc );
-   mpCache = std::make_unique< Cache >();
-   auto &cache = *mpCache;
+    ChooseFonts(dc);
+    mpCache = std::make_unique< Cache >();
+    auto& cache = *mpCache;
 
-   // If ruler is being resized, we could end up with it being too small.
-   // Values of mLength of zero or below cause bad array allocations and
-   // division by zero.  So...
-   // IF too small THEN bail out and don't draw.
-   if( mRulerStruct.mLength <= 0 )
-      return;
+    // If ruler is being resized, we could end up with it being too small.
+    // Values of mLength of zero or below cause bad array allocations and
+    // division by zero.  So...
+    // IF too small THEN bail out and don't draw.
+    if (mRulerStruct.mLength <= 0) {
+        return;
+    }
 
-   if (mRulerStruct.mOrientation == wxHORIZONTAL)
-      cache.mRect = { 0, 0, mRulerStruct.mLength, 0 };
-   else
-      cache.mRect = { 0, 0, 0, mRulerStruct.mLength };
+    if (mRulerStruct.mOrientation == wxHORIZONTAL) {
+        cache.mRect = { 0, 0, mRulerStruct.mLength, 0 }
+    } else {
+        cache.mRect = { 0, 0, 0, mRulerStruct.mLength }
+    }
 
-   cache.mBits = mUserBits;
-   cache.mBits.resize( static_cast<size_t>(mRulerStruct.mLength + 1), false );
-   
-   RulerUpdater::UpdateOutputs allOutputs{
-      cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
-      cache.mBits, cache.mRect
-   };
-   if (mpUpdater)
-      mpUpdater->Update(dc, envelope, allOutputs, mRulerStruct);
+    cache.mBits = mUserBits;
+    cache.mBits.resize(static_cast<size_t>(mRulerStruct.mLength + 1), false);
+
+    RulerUpdater::UpdateOutputs allOutputs{
+        cache.mMajorLabels, cache.mMinorLabels, cache.mMinorMinorLabels,
+        cache.mBits, cache.mRect
+    };
+    if (mpUpdater) {
+        mpUpdater->Update(dc, envelope, allOutputs, mRulerStruct);
+    }
 }
 
 auto Ruler::GetFonts() const -> RulerStruct::Fonts
 {
-   if ( !mRulerStruct.mpFonts ) {
-      wxScreenDC dc;
-      ChooseFonts( dc );
-   }
+    if (!mRulerStruct.mpFonts) {
+        wxScreenDC dc;
+        ChooseFonts(dc);
+    }
 
-   return *(mRulerStruct.mpFonts);
+    return *(mRulerStruct.mpFonts);
 }
 
 void Ruler::Draw(wxDC& dc) const
 {
-   Draw( dc, NULL);
+    Draw(dc, NULL);
 }
 
 void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
 {
-   if(mRulerStruct.mLength <=0 )
-      return;
+    if (mRulerStruct.mLength <= 0) {
+        return;
+    }
 
-   UpdateCache( dc, envelope );
-   auto &cache = *mpCache;
+    UpdateCache(dc, envelope);
+    auto& cache = *mpCache;
 
-   dc.SetTextForeground( mTickColour );
-   dc.SetPen(mPen);
+    dc.SetTextForeground(mTickColour);
+    dc.SetPen(mPen);
 
-   // Draws a long line the length of the ruler.
-   if( !mbTicksOnly )
-   {
-      if (mRulerStruct.mOrientation == wxHORIZONTAL) {
-         if (mRulerStruct.mFlip)
-            AColor::Line(dc, mRulerStruct.mLeft, mRulerStruct.mTop, mRulerStruct.mRight, mRulerStruct.mTop);
-         else
-            AColor::Line(dc, mRulerStruct.mLeft, mRulerStruct.mBottom, mRulerStruct.mRight, mRulerStruct.mBottom);
-      }
-      else {
-         if (mRulerStruct.mFlip)
-            AColor::Line(dc, mRulerStruct.mLeft, mRulerStruct.mTop, mRulerStruct.mLeft, mRulerStruct.mBottom);
-         else
-         {
-            // These calculations appear to be wrong, and to never have been used (so not tested) prior to MixerBoard.
-            //    AColor::Line(dc, mRect.x-mRect.width, mTop, mRect.x-mRect.width, mBottom);
-            const int nLineX = mRulerStruct.mRight - 1;
-            AColor::Line(dc, nLineX, mRulerStruct.mTop, nLineX, mRulerStruct.mBottom);
-         }
-      }
-   }
+    // Draws a long line the length of the ruler.
+    if (!mbTicksOnly) {
+        if (mRulerStruct.mOrientation == wxHORIZONTAL) {
+            if (mRulerStruct.mFlip) {
+                AColor::Line(dc, mRulerStruct.mLeft, mRulerStruct.mTop, mRulerStruct.mRight, mRulerStruct.mTop);
+            } else {
+                AColor::Line(dc, mRulerStruct.mLeft, mRulerStruct.mBottom, mRulerStruct.mRight, mRulerStruct.mBottom);
+            }
+        } else {
+            if (mRulerStruct.mFlip) {
+                AColor::Line(dc, mRulerStruct.mLeft, mRulerStruct.mTop, mRulerStruct.mLeft, mRulerStruct.mBottom);
+            } else {
+                // These calculations appear to be wrong, and to never have been used (so not tested) prior to MixerBoard.
+                //    AColor::Line(dc, mRect.x-mRect.width, mTop, mRect.x-mRect.width, mBottom);
+                const int nLineX = mRulerStruct.mRight - 1;
+                AColor::Line(dc, nLineX, mRulerStruct.mTop, nLineX, mRulerStruct.mBottom);
+            }
+        }
+    }
 
-   dc.SetFont( mRulerStruct.mpFonts->major );
+    dc.SetFont(mRulerStruct.mpFonts->major);
 
-   // We may want to not show the ticks at the extremes,
-   // though still showing the labels.
-   // This gives a better look when the ruler is on a bevelled
-   // button, since otherwise the tick is drawn on the bevel.
-   int iMaxPos = (mRulerStruct.mOrientation==wxHORIZONTAL)? mRulerStruct.mRight : mRulerStruct.mBottom-5;
+    // We may want to not show the ticks at the extremes,
+    // though still showing the labels.
+    // This gives a better look when the ruler is on a bevelled
+    // button, since otherwise the tick is drawn on the bevel.
+    int iMaxPos = (mRulerStruct.mOrientation == wxHORIZONTAL) ? mRulerStruct.mRight : mRulerStruct.mBottom - 5;
 
-   auto drawLabel = [this, iMaxPos, &dc]( const RulerUpdater::Label &label, int length ){
-      int pos = label.pos;
+    auto drawLabel = [this, iMaxPos, &dc]( const RulerUpdater::Label& label, int length ){
+        int pos = label.pos;
 
-      if( mbTicksAtExtremes || ((pos!=0)&&(pos!=iMaxPos)))
-      {
-         if (mRulerStruct.mOrientation == wxHORIZONTAL) {
-            if (mRulerStruct.mFlip)
-               AColor::Line(dc, mRulerStruct.mLeft + pos, mRulerStruct.mTop,
-                             mRulerStruct.mLeft + pos, mRulerStruct.mTop + length);
-            else
-               AColor::Line(dc, mRulerStruct.mLeft + pos, mRulerStruct.mBottom - length,
-                             mRulerStruct.mLeft + pos, mRulerStruct.mBottom);
-         }
-         else {
-            if (mRulerStruct.mFlip)
-               AColor::Line(dc, mRulerStruct.mLeft, mRulerStruct.mTop + pos,
-                             mRulerStruct.mLeft + length, mRulerStruct.mTop + pos);
-            else
-               AColor::Line(dc, mRulerStruct.mRight - length, mRulerStruct.mTop + pos,
-                             mRulerStruct.mRight, mRulerStruct.mTop + pos);
-         }
-      }
+        if (mbTicksAtExtremes || ((pos != 0) && (pos != iMaxPos))) {
+            if (mRulerStruct.mOrientation == wxHORIZONTAL) {
+                if (mRulerStruct.mFlip) {
+                    AColor::Line(dc, mRulerStruct.mLeft + pos, mRulerStruct.mTop,
+                                 mRulerStruct.mLeft + pos, mRulerStruct.mTop + length);
+                } else {
+                    AColor::Line(dc, mRulerStruct.mLeft + pos, mRulerStruct.mBottom - length,
+                                 mRulerStruct.mLeft + pos, mRulerStruct.mBottom);
+                }
+            } else {
+                if (mRulerStruct.mFlip) {
+                    AColor::Line(dc, mRulerStruct.mLeft, mRulerStruct.mTop + pos,
+                                 mRulerStruct.mLeft + length, mRulerStruct.mTop + pos);
+                } else {
+                    AColor::Line(dc, mRulerStruct.mRight - length, mRulerStruct.mTop + pos,
+                                 mRulerStruct.mRight, mRulerStruct.mTop + pos);
+                }
+            }
+        }
 
-      label.Draw(dc, mTwoTone, mTickColour, mRulerStruct.mpFonts);
-   };
+        label.Draw(dc, mTwoTone, mTickColour, mRulerStruct.mpFonts);
+    };
 
-   for( const auto &label : cache.mMajorLabels )
-      drawLabel( label, mTickLengths.majorLength );
+    for ( const auto& label : cache.mMajorLabels ) {
+        drawLabel(label, mTickLengths.majorLength);
+    }
 
-   if( mbMinor ) {
-      dc.SetFont( mRulerStruct.mpFonts->minor );
-      for( const auto &label : cache.mMinorLabels )
-         drawLabel( label, mTickLengths.minorLength );
-   }
+    if (mbMinor) {
+        dc.SetFont(mRulerStruct.mpFonts->minor);
+        for ( const auto& label : cache.mMinorLabels ) {
+            drawLabel(label, mTickLengths.minorLength);
+        }
+    }
 
-   dc.SetFont( mRulerStruct.mpFonts->minorMinor );
+    dc.SetFont(mRulerStruct.mpFonts->minorMinor);
 
-   for( const auto &label : cache.mMinorMinorLabels )
-      if ( label.text )
-         drawLabel( label, mTickLengths.minorMinorLength );
+    for ( const auto& label : cache.mMinorMinorLabels ) {
+        if (label.text) {
+            drawLabel(label, mTickLengths.minorMinorLength);
+        }
+    }
 }
 
 // ********** Draw grid ***************************
 void Ruler::DrawGrid(wxDC& dc,
-   const int gridLineLength,
-   const bool minorGrid, const bool majorGrid, int xOffset, int yOffset)
-   const
+                     const int gridLineLength,
+                     const bool minorGrid, const bool majorGrid, int xOffset, int yOffset)
+const
 {
-   UpdateCache( dc, nullptr );
-   auto &cache = *mpCache;
+    UpdateCache(dc, nullptr);
+    auto& cache = *mpCache;
 
-   int gridPos;
-   wxPen gridPen;
+    int gridPos;
+    wxPen gridPen;
 
-   if(mbMinor && (minorGrid && (gridLineLength != 0 ))) {
-      gridPen.SetColour(178, 178, 178); // very light grey
-      dc.SetPen(gridPen);
-      for( const auto &label : cache.mMinorLabels ) {
-         gridPos = label.pos;
-         if(mRulerStruct.mOrientation == wxHORIZONTAL) {
-            if((gridPos != 0) && (gridPos != gridLineLength))
-               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
-         }
-         else {
-            if((gridPos != 0) && (gridPos != gridLineLength))
-               AColor::Line(dc, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
-         }
-      }
-   }
+    if (mbMinor && (minorGrid && (gridLineLength != 0))) {
+        gridPen.SetColour(178, 178, 178); // very light grey
+        dc.SetPen(gridPen);
+        for ( const auto& label : cache.mMinorLabels ) {
+            gridPos = label.pos;
+            if (mRulerStruct.mOrientation == wxHORIZONTAL) {
+                if ((gridPos != 0) && (gridPos != gridLineLength)) {
+                    AColor::Line(dc, gridPos + xOffset, yOffset, gridPos + xOffset, gridLineLength - 1 + yOffset);
+                }
+            } else {
+                if ((gridPos != 0) && (gridPos != gridLineLength)) {
+                    AColor::Line(dc, xOffset, gridPos + yOffset, gridLineLength - 1 + xOffset, gridPos + yOffset);
+                }
+            }
+        }
+    }
 
-   if(majorGrid && (gridLineLength != 0 )) {
-      gridPen.SetColour(127, 127, 127); // light grey
-      dc.SetPen(gridPen);
-      for( const auto &label : cache.mMajorLabels ) {
-         gridPos = label.pos;
-         if(mRulerStruct.mOrientation == wxHORIZONTAL) {
-            if((gridPos != 0) && (gridPos != gridLineLength))
-               AColor::Line(dc, gridPos+xOffset, yOffset, gridPos+xOffset, gridLineLength-1+yOffset);
-         }
-         else {
-            if((gridPos != 0) && (gridPos != gridLineLength))
-               AColor::Line(dc, xOffset, gridPos+yOffset, gridLineLength-1+xOffset, gridPos+yOffset);
-         }
-      }
+    if (majorGrid && (gridLineLength != 0)) {
+        gridPen.SetColour(127, 127, 127); // light grey
+        dc.SetPen(gridPen);
+        for ( const auto& label : cache.mMajorLabels ) {
+            gridPos = label.pos;
+            if (mRulerStruct.mOrientation == wxHORIZONTAL) {
+                if ((gridPos != 0) && (gridPos != gridLineLength)) {
+                    AColor::Line(dc, gridPos + xOffset, yOffset, gridPos + xOffset, gridLineLength - 1 + yOffset);
+                }
+            } else {
+                if ((gridPos != 0) && (gridPos != gridLineLength)) {
+                    AColor::Line(dc, xOffset, gridPos + yOffset, gridLineLength - 1 + xOffset, gridPos + yOffset);
+                }
+            }
+        }
 
-      int zeroPosition = GetZeroPosition();
-      if(zeroPosition > 0) {
-         // Draw 'zero' grid line in black
-         dc.SetPen(*wxBLACK_PEN);
-         if(mRulerStruct.mOrientation == wxHORIZONTAL) {
-            if(zeroPosition != gridLineLength)
-               AColor::Line(dc, zeroPosition+xOffset, yOffset, zeroPosition+xOffset, gridLineLength-1+yOffset);
-         }
-         else {
-            if(zeroPosition != gridLineLength)
-               AColor::Line(dc, xOffset, zeroPosition+yOffset, gridLineLength-1+xOffset, zeroPosition+yOffset);
-         }
-      }
-   }
+        int zeroPosition = GetZeroPosition();
+        if (zeroPosition > 0) {
+            // Draw 'zero' grid line in black
+            dc.SetPen(*wxBLACK_PEN);
+            if (mRulerStruct.mOrientation == wxHORIZONTAL) {
+                if (zeroPosition != gridLineLength) {
+                    AColor::Line(dc, zeroPosition + xOffset, yOffset, zeroPosition + xOffset, gridLineLength - 1 + yOffset);
+                }
+            } else {
+                if (zeroPosition != gridLineLength) {
+                    AColor::Line(dc, xOffset, zeroPosition + yOffset, gridLineLength - 1 + xOffset, zeroPosition + yOffset);
+                }
+            }
+        }
+    }
 }
 
-int Ruler::FindZero( const RulerUpdater::Labels &labels ) const
+int Ruler::FindZero(const RulerUpdater::Labels& labels) const
 {
-   auto begin = labels.begin(), end = labels.end(),
-      iter = std::find_if( begin, end, []( const RulerUpdater::Label &label ){
-         return label.value == 0.0;
-      } );
+    auto begin = labels.begin(), end = labels.end(),
+         iter = std::find_if(begin, end, []( const RulerUpdater::Label& label ){
+        return label.value == 0.0;
+    });
 
-   if ( iter == end )
-      return -1;
-   else
-      return iter->pos;
+    if (iter == end) {
+        return -1;
+    } else {
+        return iter->pos;
+    }
 }
 
 int Ruler::GetZeroPosition() const
 {
-   wxASSERT( mpCache );
-   auto &cache = *mpCache;
-   int zero;
-   if( (zero = FindZero( cache.mMajorLabels ) ) < 0)
-      zero = FindZero( cache.mMinorLabels );
-   // PRL: don't consult minor minor??
-   return zero;
+    wxASSERT(mpCache);
+    auto& cache = *mpCache;
+    int zero;
+    if ((zero = FindZero(cache.mMajorLabels)) < 0) {
+        zero = FindZero(cache.mMinorLabels);
+    }
+    // PRL: don't consult minor minor??
+    return zero;
 }
 
-void Ruler::GetMaxSize(wxCoord *width, wxCoord *height)
+void Ruler::GetMaxSize(wxCoord* width, wxCoord* height)
 {
-   if ( !mpCache ) {
-      wxScreenDC sdc;
-      UpdateCache( sdc, nullptr );
-   }
+    if (!mpCache) {
+        wxScreenDC sdc;
+        UpdateCache(sdc, nullptr);
+    }
 
-   auto &cache = *mpCache;
-   if (width)
-      *width = cache.mRect.GetWidth();
+    auto& cache = *mpCache;
+    if (width) {
+        *width = cache.mRect.GetWidth();
+    }
 
-   if (height)
-      *height = cache.mRect.GetHeight();
+    if (height) {
+        *height = cache.mRect.GetHeight();
+    }
 }
