@@ -18,67 +18,68 @@ class WaveChannel;
 class BUILTIN_EFFECTS_API AutoDuckBase : public StatefulEffect
 {
 public:
-   static inline AutoDuckBase* FetchParameters(AutoDuckBase& e, EffectSettings&)
-   {
-      return &e;
-   }
-   static const ComponentInterfaceSymbol Symbol;
+    static inline AutoDuckBase* FetchParameters(AutoDuckBase& e, EffectSettings&)
+    {
+        return &e;
+    }
 
-   AutoDuckBase();
-   virtual ~AutoDuckBase();
+    static const ComponentInterfaceSymbol Symbol;
 
-   // ComponentInterface implementation
+    AutoDuckBase();
+    virtual ~AutoDuckBase();
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
+    // ComponentInterface implementation
 
-   // EffectDefinitionInterface implementation
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
+    ManualPageID ManualPage() const override;
 
-   EffectType GetType() const override;
+    // EffectDefinitionInterface implementation
 
-   // Effect implementation
+    EffectType GetType() const override;
 
-   bool Init() override;
-   bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    // Effect implementation
+
+    bool Init() override;
+    bool Process(EffectInstance& instance, EffectSettings& settings) override;
 
 private:
-   // AutoDuckBase implementation
+    // AutoDuckBase implementation
 
-   bool ApplyDuckFade(int trackNum, WaveChannel& track, double t0, double t1);
+    bool ApplyDuckFade(int trackNum, WaveChannel& track, double t0, double t1);
 
 protected:
-   double mDuckAmountDb;
-   double mInnerFadeDownLen;
-   double mInnerFadeUpLen;
-   double mOuterFadeDownLen;
-   double mOuterFadeUpLen;
-   double mThresholdDb;
-   double mMaximumPause;
+    double mDuckAmountDb;
+    double mInnerFadeDownLen;
+    double mInnerFadeUpLen;
+    double mOuterFadeDownLen;
+    double mOuterFadeUpLen;
+    double mThresholdDb;
+    double mMaximumPause;
 
-   const WaveTrack* mControlTrack {};
+    const WaveTrack* mControlTrack {};
 
-   const EffectParameterMethods& Parameters() const override;
+    const EffectParameterMethods& Parameters() const override;
 
-   static constexpr EffectParameter DuckAmountDb {
-      &AutoDuckBase::mDuckAmountDb, L"DuckAmountDb", -12.0, -24.0, 0.0, 1
-   };
-   static constexpr EffectParameter InnerFadeDownLen {
-      &AutoDuckBase::mInnerFadeDownLen, L"InnerFadeDownLen", 0.0, 0.0, 3.0, 1
-   };
-   static constexpr EffectParameter InnerFadeUpLen {
-      &AutoDuckBase::mInnerFadeUpLen, L"InnerFadeUpLen", 0.0, 0.0, 3.0, 1
-   };
-   static constexpr EffectParameter OuterFadeDownLen {
-      &AutoDuckBase::mOuterFadeDownLen, L"OuterFadeDownLen", 0.5, 0.0, 3.0, 1
-   };
-   static constexpr EffectParameter OuterFadeUpLen {
-      &AutoDuckBase::mOuterFadeUpLen, L"OuterFadeUpLen", 0.5, 0.0, 3.0, 1
-   };
-   static constexpr EffectParameter ThresholdDb {
-      &AutoDuckBase::mThresholdDb, L"ThresholdDb", -30.0, -100.0, 0.0, 1
-   };
-   static constexpr EffectParameter MaximumPause {
-      &AutoDuckBase::mMaximumPause, L"MaximumPause", 1.0, 0.0, DBL_MAX, 1
-   };
+    static constexpr EffectParameter DuckAmountDb {
+        &AutoDuckBase::mDuckAmountDb, L"DuckAmountDb", -12.0, -24.0, 0.0, 1
+    };
+    static constexpr EffectParameter InnerFadeDownLen {
+        &AutoDuckBase::mInnerFadeDownLen, L"InnerFadeDownLen", 0.0, 0.0, 3.0, 1
+    };
+    static constexpr EffectParameter InnerFadeUpLen {
+        &AutoDuckBase::mInnerFadeUpLen, L"InnerFadeUpLen", 0.0, 0.0, 3.0, 1
+    };
+    static constexpr EffectParameter OuterFadeDownLen {
+        &AutoDuckBase::mOuterFadeDownLen, L"OuterFadeDownLen", 0.5, 0.0, 3.0, 1
+    };
+    static constexpr EffectParameter OuterFadeUpLen {
+        &AutoDuckBase::mOuterFadeUpLen, L"OuterFadeUpLen", 0.5, 0.0, 3.0, 1
+    };
+    static constexpr EffectParameter ThresholdDb {
+        &AutoDuckBase::mThresholdDb, L"ThresholdDb", -30.0, -100.0, 0.0, 1
+    };
+    static constexpr EffectParameter MaximumPause {
+        &AutoDuckBase::mMaximumPause, L"MaximumPause", 1.0, 0.0, DBL_MAX, 1
+    };
 };

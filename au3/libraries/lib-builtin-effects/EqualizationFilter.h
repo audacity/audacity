@@ -23,40 +23,40 @@ using Floats = ArrayOf<float>;
 //! from a curve or from frequency band slider positions
 struct BUILTIN_EFFECTS_API EqualizationFilter : EqualizationParameters
 {
-   // Low frequency of the FFT.  20Hz is the
-   // low range of human hearing
-   static constexpr int loFreqI = 20;
+    // Low frequency of the FFT.  20Hz is the
+    // low range of human hearing
+    static constexpr int loFreqI = 20;
 
-   // Number of samples in an FFT window
-   // MJS - work out the optimum for this at run time?
-   // Have a dialog box for it?
-   static constexpr size_t windowSize = 16384u;
+    // Number of samples in an FFT window
+    // MJS - work out the optimum for this at run time?
+    // Have a dialog box for it?
+    static constexpr size_t windowSize = 16384u;
 
-   explicit EqualizationFilter(const EffectSettingsManager &manager);
+    explicit EqualizationFilter(const EffectSettingsManager& manager);
 
-   //! Adjust given coefficients so there is a finite impulse response in time
-   //! domain
-   bool CalcFilter();
+    //! Adjust given coefficients so there is a finite impulse response in time
+    //! domain
+    bool CalcFilter();
 
-   //! Transform a given buffer of time domain signal, which should be zero
-   //! padded left and right for the tails
-   void Filter(size_t len, float *buffer) const;
+    //! Transform a given buffer of time domain signal, which should be zero
+    //! padded left and right for the tails
+    void Filter(size_t len, float* buffer) const;
 
-   const Envelope &ChooseEnvelope() const
-   { return mLin ? mLinEnvelope : mLogEnvelope; }
-   Envelope &ChooseEnvelope()
-   { return mLin ? mLinEnvelope : mLogEnvelope; }
+    const Envelope& ChooseEnvelope() const
+    { return mLin ? mLinEnvelope : mLogEnvelope; }
+    Envelope& ChooseEnvelope()
+    { return mLin ? mLinEnvelope : mLogEnvelope; }
 
-   // If sliders show, always use the log envelope
-   const Envelope &ChooseEnvelopeToPaint() const
-   { return IsLinear() ? mLinEnvelope : mLogEnvelope; }
+    // If sliders show, always use the log envelope
+    const Envelope& ChooseEnvelopeToPaint() const
+    { return IsLinear() ? mLinEnvelope : mLogEnvelope; }
 
-   Envelope mLinEnvelope, mLogEnvelope;
-   HFFT hFFT{ GetFFT(windowSize) };
-   Floats mFFTBuffer{ windowSize };
-   Floats mFilterFuncR{ windowSize }, mFilterFuncI{ windowSize };
-   double mLoFreq{ loFreqI };
-   double mHiFreq{ mLoFreq };
-   size_t mWindowSize{ windowSize };
+    Envelope mLinEnvelope, mLogEnvelope;
+    HFFT hFFT{ GetFFT(windowSize) };
+    Floats mFFTBuffer{ windowSize };
+    Floats mFilterFuncR{ windowSize }, mFilterFuncI{ windowSize };
+    double mLoFreq{ loFreqI };
+    double mHiFreq{ mLoFreq };
+    size_t mWindowSize{ windowSize };
 };
 #endif

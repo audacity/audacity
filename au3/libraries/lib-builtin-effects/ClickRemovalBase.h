@@ -18,52 +18,53 @@ class WaveChannel;
 class BUILTIN_EFFECTS_API ClickRemovalBase : public StatefulEffect
 {
 public:
-   static inline ClickRemovalBase*
-   FetchParameters(ClickRemovalBase& e, EffectSettings&)
-   {
-      return &e;
-   }
-   static const ComponentInterfaceSymbol Symbol;
+    static inline ClickRemovalBase*
+    FetchParameters(ClickRemovalBase& e, EffectSettings&)
+    {
+        return &e;
+    }
 
-   ClickRemovalBase();
-   virtual ~ClickRemovalBase();
+    static const ComponentInterfaceSymbol Symbol;
 
-   // ComponentInterface implementation
+    ClickRemovalBase();
+    virtual ~ClickRemovalBase();
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
+    // ComponentInterface implementation
 
-   // EffectDefinitionInterface implementation
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
+    ManualPageID ManualPage() const override;
 
-   EffectType GetType() const override;
+    // EffectDefinitionInterface implementation
 
-   // Effect implementation
+    EffectType GetType() const override;
 
-   bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
-   bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    // Effect implementation
+
+    bool CheckWhetherSkipEffect(const EffectSettings& settings) const override;
+    bool Process(EffectInstance& instance, EffectSettings& settings) override;
 
 private:
-   bool ProcessOne(
-      int count, WaveChannel& track, sampleCount start, sampleCount len);
+    bool ProcessOne(
+        int count, WaveChannel& track, sampleCount start, sampleCount len);
 
-   bool RemoveClicks(size_t len, float* buffer);
+    bool RemoveClicks(size_t len, float* buffer);
 
 protected:
-   Envelope* mEnvelope;
+    Envelope* mEnvelope;
 
-   bool mbDidSomething; // This effect usually does nothing on real-world data.
-   size_t windowSize;
-   int mThresholdLevel;
-   int mClickWidth;
-   int sep;
+    bool mbDidSomething; // This effect usually does nothing on real-world data.
+    size_t windowSize;
+    int mThresholdLevel;
+    int mClickWidth;
+    int sep;
 
-   const EffectParameterMethods& Parameters() const override;
+    const EffectParameterMethods& Parameters() const override;
 
-   static constexpr EffectParameter Threshold {
-      &ClickRemovalBase::mThresholdLevel, L"Threshold", 200, 0, 900, 1
-   };
-   static constexpr EffectParameter Width {
-      &ClickRemovalBase::mClickWidth, L"Width", 20, 0, 40, 1
-   };
+    static constexpr EffectParameter Threshold {
+        &ClickRemovalBase::mThresholdLevel, L"Threshold", 200, 0, 900, 1
+    };
+    static constexpr EffectParameter Width {
+        &ClickRemovalBase::mClickWidth, L"Width", 20, 0, 40, 1
+    };
 };

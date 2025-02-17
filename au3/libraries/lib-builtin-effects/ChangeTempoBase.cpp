@@ -24,25 +24,25 @@
 
 const EffectParameterMethods& ChangeTempoBase::Parameters() const
 {
-   static CapturedParameters<ChangeTempoBase, Percentage, UseSBSMS> parameters;
-   return parameters;
+    static CapturedParameters<ChangeTempoBase, Percentage, UseSBSMS> parameters;
+    return parameters;
 }
 
 const ComponentInterfaceSymbol ChangeTempoBase::Symbol { XO("Change Tempo") };
 
 ChangeTempoBase::ChangeTempoBase()
 {
-   // mUseSBSMS always defaults to false and its value is used only if USE_SBSMS
-   // is defined
-   Parameters().Reset(*this);
-   m_FromBPM = 0.0; // indicates not yet set
-   m_ToBPM = 0.0;   // indicates not yet set
-   m_FromLength = 0.0;
-   m_ToLength = 0.0;
+    // mUseSBSMS always defaults to false and its value is used only if USE_SBSMS
+    // is defined
+    Parameters().Reset(*this);
+    m_FromBPM = 0.0; // indicates not yet set
+    m_ToBPM = 0.0;  // indicates not yet set
+    m_FromLength = 0.0;
+    m_ToLength = 0.0;
 
-   m_bLoopDetect = false;
+    m_bLoopDetect = false;
 
-   SetLinearEffectFlag(true);
+    SetLinearEffectFlag(true);
 }
 
 ChangeTempoBase::~ChangeTempoBase()
@@ -53,83 +53,82 @@ ChangeTempoBase::~ChangeTempoBase()
 
 ComponentInterfaceSymbol ChangeTempoBase::GetSymbol() const
 {
-   return Symbol;
+    return Symbol;
 }
 
 TranslatableString ChangeTempoBase::GetDescription() const
 {
-   return XO("Changes the tempo of a selection without changing its pitch");
+    return XO("Changes the tempo of a selection without changing its pitch");
 }
 
 ManualPageID ChangeTempoBase::ManualPage() const
 {
-   return L"Change_Tempo";
+    return L"Change_Tempo";
 }
 
 // EffectDefinitionInterface implementation
 
 EffectType ChangeTempoBase::GetType() const
 {
-   return EffectTypeProcess;
+    return EffectTypeProcess;
 }
 
 bool ChangeTempoBase::SupportsAutomation() const
 {
-   return true;
+    return true;
 }
 
 // Effect implementation
 
 double ChangeTempoBase::CalcPreviewInputLength(
-   const EffectSettings&, double previewLength) const
+    const EffectSettings&, double previewLength) const
 {
-   return previewLength * (100.0 + m_PercentChange) / 100.0;
+    return previewLength * (100.0 + m_PercentChange) / 100.0;
 }
 
 bool ChangeTempoBase::CheckWhetherSkipEffect(const EffectSettings&) const
 {
-   return (m_PercentChange == 0.0);
+    return m_PercentChange == 0.0;
 }
 
 bool ChangeTempoBase::Init()
 {
-   // The selection might have changed since the last time ChangeTempoBase
-   // was invoked, so recalculate the Length parameters.
-   m_FromLength = mT1 - mT0;
-   m_ToLength = (m_FromLength * 100.0) / (100.0 + m_PercentChange);
+    // The selection might have changed since the last time ChangeTempoBase
+    // was invoked, so recalculate the Length parameters.
+    m_FromLength = mT1 - mT0;
+    m_ToLength = (m_FromLength * 100.0) / (100.0 + m_PercentChange);
 
-   return true;
+    return true;
 }
 
 bool ChangeTempoBase::Process(EffectInstance&, EffectSettings& settings)
 {
-   bool success = false;
+    bool success = false;
 
 #if USE_SBSMS
-   if (mUseSBSMS)
-   {
-      double tempoRatio = 1.0 + m_PercentChange / 100.0;
-      SBSMSBase proxy;
-      proxy.mProxyEffectName = XO("High Quality Tempo Change");
-      proxy.setParameters(tempoRatio, 1.0);
-      //! Already processing; don't make a dialog
-      success = Delegate(proxy, settings);
-   }
-   else
+    if (mUseSBSMS) {
+        double tempoRatio = 1.0 + m_PercentChange / 100.0;
+        SBSMSBase proxy;
+        proxy.mProxyEffectName = XO("High Quality Tempo Change");
+        proxy.setParameters(tempoRatio, 1.0);
+        //! Already processing; don't make a dialog
+        success = Delegate(proxy, settings);
+    } else
 #endif
-   {
-      auto initer = [&](soundtouch::SoundTouch* soundtouch) {
-         soundtouch->setTempoChange(m_PercentChange);
-      };
-      double mT1Dashed = mT0 + (mT1 - mT0) / (m_PercentChange / 100.0 + 1.0);
-      RegionTimeWarper warper {
-         mT0, mT1, std::make_unique<LinearTimeWarper>(mT0, mT0, mT1, mT1Dashed)
-      };
-      success = SoundTouchBase::ProcessWithTimeWarper(initer, warper, false);
-   }
+    {
+        auto initer = [&](soundtouch::SoundTouch* soundtouch) {
+            soundtouch->setTempoChange(m_PercentChange);
+        };
+        double mT1Dashed = mT0 + (mT1 - mT0) / (m_PercentChange / 100.0 + 1.0);
+        RegionTimeWarper warper {
+            mT0, mT1, std::make_unique<LinearTimeWarper>(mT0, mT0, mT1, mT1Dashed)
+        };
+        success = SoundTouchBase::ProcessWithTimeWarper(initer, warper, false);
+    }
 
-   if (success)
-      mT1 = mT0 + (mT1 - mT0) / (m_PercentChange / 100 + 1.);
+    if (success) {
+        mT1 = mT0 + (mT1 - mT0) / (m_PercentChange / 100 + 1.);
+    }
 
-   return success;
+    return success;
 }

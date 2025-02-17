@@ -19,22 +19,22 @@ class AudacityProject;
 class BUILTIN_EFFECTS_API PlotSpectrumBase
 {
 public:
-   PlotSpectrumBase(AudacityProject& project);
+    PlotSpectrumBase(AudacityProject& project);
 
 protected:
-   bool GetAudio();
+    bool GetAudio();
 
-   AudacityProject* mProject;
-   std::unique_ptr<SpectrumAnalyst> mAnalyst;
+    AudacityProject* mProject;
+    std::unique_ptr<SpectrumAnalyst> mAnalyst;
 
-   bool mDrawGrid;
-   int mSize;
-   SpectrumAnalyst::Algorithm mAlg;
-   int mFunc;
-   int mAxis;
-   int dBRange;
-   double mRate;
-   size_t mDataLen;
-   ArrayOf<float> mData;
-   size_t mWindowSize;
+    bool mDrawGrid;
+    int mSize;
+    SpectrumAnalyst::Algorithm mAlg;
+    int mFunc;
+    int mAxis;
+    int dBRange;
+    double mRate;
+    size_t mDataLen;
+    ArrayOf<float> mData;
+    size_t mWindowSize;
 };

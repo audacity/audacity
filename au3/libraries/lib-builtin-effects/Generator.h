@@ -11,7 +11,6 @@
 
 **********************************************************************/
 
-
 #ifndef __AUDACITY_GENERATOR__
 #define __AUDACITY_GENERATOR__
 
@@ -24,23 +23,23 @@ class TrackList;
 class BUILTIN_EFFECTS_API Generator /* not final */ : public StatefulEffect
 {
 public:
-   Generator() { }
+    Generator() { }
 
 protected:
-   //! GenerateTrack() must be overridden by the actual generator class
-   /*!
-    @pre `mDuration > 0.0`
-    @post `tmp` is filled with data
-    */
-   virtual bool GenerateTrack(const EffectSettings &settings, WaveTrack &tmp)
-      = 0;
+    //! GenerateTrack() must be overridden by the actual generator class
+    /*!
+     @pre `mDuration > 0.0`
+     @post `tmp` is filled with data
+     */
+    virtual bool GenerateTrack(const EffectSettings& settings, WaveTrack& tmp)
+    = 0;
 
-   // Precondition:
-   // mDuration is set to the amount of time to generate in seconds
-   // Postcondition:
-   // If mDuration was valid (>= 0), then the tracks are replaced by the
-   // generated results and true is returned. Otherwise, return false.
-   bool Process(EffectInstance &instance, EffectSettings &settings) override;
+    // Precondition:
+    // mDuration is set to the amount of time to generate in seconds
+    // Postcondition:
+    // If mDuration was valid (>= 0), then the tracks are replaced by the
+    // generated results and true is returned. Otherwise, return false.
+    bool Process(EffectInstance& instance, EffectSettings& settings) override;
 };
 
 #endif
