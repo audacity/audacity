@@ -106,6 +106,11 @@ Item {
                 clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
                 })
+
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
+                })
+
                 clipsContainerMouseArea.hoverEnabled = true
                 e.accepted = false
             }
@@ -120,6 +125,10 @@ Item {
             onPositionChanged: function(e) {
                 clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
+                })
+
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
                 })
             }
         }

@@ -5,6 +5,7 @@
 #include "Envelope.h"
 #include "WaveClip.h"
 #include "WaveClipUtilities.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 #include "WaveformScale.h"
 #include "WaveformSettings.h"
@@ -289,8 +290,8 @@ void interpolatePoints(std::vector<QPoint>& container, const QPoint& previousPos
 }
 
 void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
-                     const trackedit::ClipKey& clipKey, const std::optional<QPoint>& lastPosition, const QPoint& currentPosition,
-                     const IWavePainter::Params& params, bool enableMultiSampleEdit)
+                     const trackedit::ClipKey& clipKey, const QPoint& lastPosition, const QPoint& currentPosition,
+                     const IWavePainter::Params& params)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
@@ -303,12 +304,21 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         return;
     }
 
+    const auto waveChannels = track->Channels();
+    if (currentChannel >= waveChannels.size()) {
+        return;
+    }
+
+    auto it = waveChannels.begin();
+    std::advance(it, currentChannel);
+    const auto waveChannel = *it;
+
     std::vector<QPoint> points;
     points.push_back(currentPosition);
 
-    if (enableMultiSampleEdit && lastPosition) {
-        if (std::abs(lastPosition.value().x() - currentPosition.x()) > 1) {
-            interpolatePoints(points, lastPosition.value(), currentPosition);
+    if (currentPosition != lastPosition) {
+        if (std::abs(lastPosition.x() - currentPosition.x()) > 1) {
+            interpolatePoints(points, lastPosition, currentPosition);
         }
     }
 
@@ -324,12 +334,17 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
     for (const auto& point : points) {
         const auto time = zoomInfo.PositionToTime(point.x());
-        const auto sampleOffset = waveClip->TimeToSamples(time);
-        const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
+        const auto clip = WaveChannelUtilities::GetClipAtTime(*waveChannel, time + waveClip->GetPlayStartTime());
+        if (!clip) {
+            continue;
+        }
+
+        const auto sampleOffset = clip->TimeToSamples(time);
+        const auto adjustedTime = clip->SamplesToTime(sampleOffset);
 
         float oneSample;
-        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime, currentChannel, oneSample, false)) {
-            return;
+        if (!WaveClipUtilities::GetFloatAtTime(clip->GetClip(), adjustedTime, currentChannel, oneSample, false)) {
+            continue;
         }
 
         auto& settings = WaveformSettings::Get(*track);
@@ -346,8 +361,8 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
         float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
 
-        auto const samplesFormat = waveClip->GetSampleFormats();
-        WaveClipUtilities::SetFloatsFromTime(*waveClip, adjustedTime, currentChannel, &newValue, 1, samplesFormat.Effective());
+        auto const samplesFormat = clip->GetClip().GetSampleFormats();
+        WaveClipUtilities::SetFloatsFromTime(clip->GetClip(), adjustedTime, currentChannel, &newValue, 1, samplesFormat.Effective());
     }
 }
 }

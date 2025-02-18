@@ -20,6 +20,6 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
 std::optional<int> isNearSample(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
                                 const QPoint& position, const IWavePainter::Params& params);
 void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
-                     const trackedit::ClipKey& clipKey, const std::optional<QPoint>& lastPosition, const QPoint& currentPosition,
-                     const IWavePainter::Params& params, bool enableMultiSampleEdit);
+                     const trackedit::ClipKey& clipKey, const QPoint& lastPosition, const QPoint& currentPosition,
+                     const IWavePainter::Params& params);
 }

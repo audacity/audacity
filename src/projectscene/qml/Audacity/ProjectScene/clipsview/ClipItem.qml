@@ -80,6 +80,7 @@ Rectangle {
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
     property bool headerHovered: headerDragArea.containsMouse
+    property var lastSample: undefined
 
     onHeaderHoveredChanged: {
         root.clipHeaderHoveredChanged(headerHovered)
@@ -105,17 +106,20 @@ Rectangle {
     }
 
     function mousePressAndHold(x, y) {
-        waveView.setLastClickPos(x, y - header.height, root.multiSampleEdit)
+        waveView.setLastClickPos(x, y - header.height, x, y - header.height)
         waveView.update()
     }
 
     function mouseReleased() {
-        waveView.isNearSample = false
     }
 
     function mouseClicked(x, y) {
-        waveView.setLastClickPos(x, y - header.height, root.multiSampleEdit)
+        waveView.setLastClickPos(x, y - header.height, x, y - header.height)
         waveView.update()
+    }
+
+    function setLastSample(x, y) {
+        lastSample = {x: x, y: y - header.height}
     }
 
     ClipContextMenuModel {
@@ -539,7 +543,9 @@ Rectangle {
 
             function onWaveViewPositionChanged(x, y) {
                 if (root.multiSampleEdit) {
-                    waveView.setLastClickPos(x, y, root.multiSampleEdit)
+                    var lastX = root.lastSample.x
+                    var lastY = root.lastSample.y
+                    waveView.setLastClickPos(lastX, lastY, x, y)
                     waveView.update()
                 } else {
                     waveView.setLastMousePos(x, y)
@@ -570,7 +576,7 @@ Rectangle {
                 anchors.fill: parent
 
                 onClicked: function(e) {
-                    waveView.setLastClickPos(e.x, e.y, root.multiSampleEdit)
+                    waveView.setLastClickPos(e.x, e.y, e.x, e.y)
                     waveView.update()
                 }
 

@@ -51,7 +51,7 @@ public:
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
-    Q_INVOKABLE void setLastClickPos(const unsigned int x, const unsigned int y, bool multiSampleEdit);
+    Q_INVOKABLE void setLastClickPos(unsigned lastX, unsigned lastY, unsigned int x, const unsigned int y);
 
     void paint(QPainter* painter) override;
 
@@ -63,7 +63,6 @@ signals:
     void clipSelectedChanged();
     void channelHeightRatioChanged();
     void isNearSampleChanged();
-    void enableMultiSampleEditChanged();
 
 private:
 
@@ -79,8 +78,6 @@ private:
     ClipTime m_clipTime;
     bool m_isNearSample = false;
 
-    //std::optional<Snap> m_snap;
     std::optional<int> m_currentChannel;
-    std::optional<QPoint> m_lastPosition;
 };
 }
