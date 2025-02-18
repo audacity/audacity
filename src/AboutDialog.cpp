@@ -62,7 +62,7 @@ hold information about one contributor to Audacity.
 #endif
 
 #ifdef REV_LONG
-#define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME 
+#define REV_IDENT wxString( "[[https://github.com/audacity/audacity/commit/" )+ REV_LONG + "|" + wxString( REV_LONG ).Left(6) + "]] of " +  REV_TIME
 #else
 #define REV_IDENT (XO("No revision identifier was provided").Translation())
 #endif
@@ -142,8 +142,8 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Leo Wattenberg"), designerFormat, roleTeamMember);
    AddCredit(wxT("Jessica Williamson"), designerFormat, roleTeamMember);
    AddCredit(wxT("Grzegorz Wojciechowski"), developerFormat, roleTeamMember);
-   
-   
+
+
    // Emeritus: people who were "lead developers" or made an
    // otherwise distinguished contribution, but who are no
    // longer active.
@@ -522,7 +522,7 @@ void AboutDialog::PopulateInformationPage( ShuttleGui & S )
 
    /* this builds up the list of information to go in the window in the string
     * informationStr */
- 
+
    informationStr
       << wxT("<h3>")
    /* i18n-hint: Information about when audacity was compiled follows */
@@ -792,7 +792,7 @@ void AboutDialog::PopulateLicensePage( ShuttleGui & S )
 #else
    S.StartNotebookPage(XO("GPL License"));
 #endif
-   
+
 #if defined(HAS_PRIVACY_POLICY)
    S.Prop(0).StartPanel();
    {
@@ -810,7 +810,7 @@ void AboutDialog::PopulateLicensePage( ShuttleGui & S )
       privacyPolicy.FormatLink(
          /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
          wxT("%s"), XO("our Privacy Policy"),
-         "https://www.audacityteam.org/about/desktop-privacy-notice/");
+         "https://www.audacityteam.org/desktop-privacy-notice/");
 
       privacyPolicy.Populate(S);
    }
