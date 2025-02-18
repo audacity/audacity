@@ -63,7 +63,7 @@ class run_m_script(run_m_script_base):
 @TaskGen.feature('run_m_script')
 @TaskGen.before_method('process_source')
 def apply_run_m_script(tg):
-	"""Task generator customizing the options etc. to call Matlab in batch
+	"""Task generator customising the options etc. to call Matlab in batch
 	mode for running a m-script.
 	"""
 
