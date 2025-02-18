@@ -47,6 +47,9 @@ void RealtimeEffectListItemMenuModel::doPopulateMenu()
 
     for (const auto& entry : menuCategories) {
         MenuItem* const menu = makeMenu(muse::TranslatableString::untranslatable(entry.first), entry.second);
+        auto action = menu->action();
+        action.checkable = muse::ui::Checkable::Yes;
+        menu->setAction(action);
         items << menu;
     }
 
