@@ -47,6 +47,7 @@ void RealtimeEffectListItemMenuModel::doPopulateMenu()
 
     for (const auto& entry : menuCategories) {
         MenuItem* const menu = makeMenu(muse::TranslatableString::untranslatable(entry.first), entry.second);
+        menu->setCheckable(true);
         items << menu;
     }
 
@@ -99,17 +100,13 @@ void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
 {
     const MenuItemList& itemList = items();
     const auto myEffectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
-    for (MenuItem* item : itemList) {
-        auto selected = false;
-        for (MenuItem* subItem : item->subitems()) {
+    for (MenuItem* category : itemList) {
+        auto categoryChecked = false;
+        for (MenuItem* subItem : category->subitems()) {
             const auto effectId = subItem->args().arg<effects::EffectId>(0);
-            auto state = subItem->state();
-            state.checked = myEffectId == effectId;
-            selected |= state.checked;
-            subItem->setState(std::move(state));
+            categoryChecked |= myEffectId == effectId;
+            subItem->setChecked(myEffectId == effectId);
         }
-        auto state = item->state();
-        state.checked = selected;
-        item->setState(std::move(state));
+        category->setChecked(categoryChecked);
     }
 }
