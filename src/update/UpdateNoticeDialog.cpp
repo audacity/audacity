@@ -24,7 +24,7 @@
 
 static const auto windowTitle =
    /* i18n-hint: Window title of the app update notice dialog. */
-   XO("Stay Updated & Anonymous Usage Info");
+   XO("App updates & usage info");
 
 static const auto title =
    /* i18n-hint: First line of the app update notice dialog. */
@@ -36,12 +36,14 @@ static const auto firstParagraph =
 
 static const auto subTitle =
    /* i18n-hint: Subtitle of the app update notice dialog. */
-   XO("Anonymous usage info (UUID)");
+   XO("Usage info");
 
 static const auto secondParagraph =
    /* i18n-hint: The second paragraph of app update notice dialog */
-   XO("To help us understand how often people use Audacity, we generate a random, anonymous ID (UUID). "
-      "This helps us improve features and plan for the future. No personal data is collected.");
+   XO("To help us understand how often people use Audacity, "
+      "we generate a random ID (UUID) for each installation. "
+      "This helps us improve features and plan for future updates. "
+      "This ID does not contain any personally identifiable information.");
 
 static const auto preferencesPage =
    /* i18n-hint: a page in the Preferences dialog; use same name */
@@ -49,13 +51,13 @@ static const auto preferencesPage =
 
 static const auto preferencesPageLinkA =
    /* i18n-hint:  %s is replaced with "Preferences > Application" link */
-   XO("You can disable this anytime in %s.");
+   XO("You can turn this off anytime in %s.");
 
 static const auto preferencesPageLinkB =
    /* i18n-hint:  %s is replaced with "Preferences > Application" link */
-   XO("You can turn this off anytime in %s.");
+   XO("You can disable this anytime in %s.");
 
-static const std::string privacyPolicyUrl = "https://www.audacityteam.org/about/desktop-privacy-notice/";
+static const std::string privacyPolicyUrl = "https://www.audacityteam.org/desktop-privacy-notice/";
 
 enum {
    ViewPrivacyPolicyID = 10000,

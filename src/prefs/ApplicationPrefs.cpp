@@ -72,7 +72,7 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartScroller();
 
    /* i18n-hint: Title for the panel in the application preferences dialog. */
-   S.StartStatic(XO("Network communications"));
+   S.StartStatic(XO("Update notifications"));
    {
       S.StartVerticalLay();
       {
@@ -82,26 +82,38 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
             *DefaultUpdatesCheckingFlag);
 
          S.AddFixedText(
-            XO("Requires network access."),
+            XO("App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."),
             false, 470);
 
          S.AddSpace(20);
+         /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+         AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
 
+         privacyPolicy.FormatLink(
+            /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
+            wxT("%s"), XO("our Privacy Policy"),
+            "https://www.audacityteam.org/about/desktop-privacy-notice/");
+
+         privacyPolicy.Populate(S);
+         S.AddSpace(10);
+      }
+      S.EndVerticalLay();
+   }
+   S.EndStatic();
+   S.StartStatic(XO("UUID"));
+   {
+      S.StartVerticalLay();
+      {
          S.TieCheckBox(
             /* i18n-hint: Check-box title that enables anonymous usage info. */
-            XXC("&Send anonymous usage info", "application preferences"),
+            XXC("&Usage info (UUID)", "application preferences"),
             *SendAnonymousUsageInfo
          );
 
          S.AddFixedText(XO(
-            "We create a random ID to track how often Audacity is used."),
-            false, 470);
-
-         S.AddSpace(20);
-
-         S.AddFixedText(XO(
-            "In order to protect your privacy, "
-            "Audacity does not collect any personally identifiable information about you."),
+            "To help us understand how often people use Audacity, we generate a random ID (UUID) "
+            "for each installation. This helps us improve features and plan for future updates. "
+            "This ID does not contain any personally identifiable information."),
             false, 470);
 
          S.AddSpace(20);
