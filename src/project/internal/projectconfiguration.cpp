@@ -1,7 +1,14 @@
-#include "projectconfiguration.h"
-
 #include "global/settings.h"
 #include "translation.h"
+
+#include <QDir>
+
+#include "FileNames.h"
+#include "Prefs.h"
+
+#include "au3wrap/internal/wxtypes_convert.h"
+
+#include "projectconfiguration.h"
 
 using namespace au::project;
 
@@ -11,6 +18,7 @@ static const muse::Settings::Key COMPAT_RECENT_FILES_DATA(module_name, "project/
 static const muse::Settings::Key USER_PROJECTS_PATH(module_name, "project/paths/myprojects");
 static const muse::Settings::Key LAST_OPENED_PROJECTS_PATH(module_name, "project/paths/lastprojects");
 static const muse::Settings::Key LAST_SAVED_PROJECTS_PATH(module_name, "application/paths/lastSavedProjectsPath");
+static const muse::Settings::Key TEMPORARY_FILES_PATH(module_name, "project/temporaryFilesPath");
 static const muse::Settings::Key LAST_USED_SAVE_LOCATION_TYPE(module_name, "project/lastUsedSaveLocationType");
 static const muse::Settings::Key SHOULD_ASK_SAVE_LOCATION_TYPE(module_name, "project/shouldAskSaveLocationType");
 static const muse::Settings::Key HOME_PROJECTS_PAGE_VIEW_TYPE(module_name, "project/homeProjectsPageViewType");
@@ -36,6 +44,8 @@ void ProjectConfiguration::init()
     muse::settings()->valueChanged(AUTOSAVE_INTERVAL_KEY).onReceive(nullptr, [this](const muse::Val& val) {
         m_autoSaveIntervalChanged.send(val.toInt());
     });
+
+    initTempDir();
 }
 
 muse::io::path_t ProjectConfiguration::recentFilesJsonPath() const
@@ -93,7 +103,7 @@ void ProjectConfiguration::setLastSavedProjectsPath(const muse::io::path_t& path
 
 muse::io::path_t ProjectConfiguration::newProjectTemporaryPath() const
 {
-    return globalConfiguration()->userAppDataPath() + "/new_project" + DEFAULT_FILE_SUFFIX;
+    return temporaryDir() + "/new_project" + DEFAULT_FILE_SUFFIX;
 }
 
 muse::io::path_t ProjectConfiguration::defaultSavingFilePath(IAudacityProjectPtr project, const std::string& filenameAddition,
@@ -177,6 +187,24 @@ void ProjectConfiguration::setShouldAskSaveLocationType(bool shouldAsk)
     muse::settings()->setSharedValue(SHOULD_ASK_SAVE_LOCATION_TYPE, muse::Val(shouldAsk));
 }
 
+muse::io::path_t ProjectConfiguration::temporaryDir() const
+{
+    return muse::settings()->value(TEMPORARY_FILES_PATH).toPath();
+}
+
+void ProjectConfiguration::setTemporaryDir(const muse::io::path_t& path)
+{
+    muse::settings()->setSharedValue(TEMPORARY_FILES_PATH, muse::Val(path));
+    UpdateDefaultPath(FileNames::Operation::Temp, au3::wxFromString(path.toString()));
+
+    m_temporaryDirChanged.send(path);
+}
+
+muse::async::Channel<muse::io::path_t> ProjectConfiguration::temporaryDirChanged() const
+{
+    return m_temporaryDirChanged;
+}
+
 int ProjectConfiguration::homeProjectsPageTabIndex() const
 {
     return m_homeProjectsPageTabIndex;
@@ -225,4 +253,16 @@ void ProjectConfiguration::setAutoSaveInterval(int minutes)
 muse::async::Channel<int> ProjectConfiguration::autoSaveIntervalChanged() const
 {
     return m_autoSaveIntervalChanged;
+}
+
+void ProjectConfiguration::initTempDir()
+{
+    QString appDataLocation = (globalConfiguration()->userAppDataPath() + "/SessionData").toQString();
+    QDir dir(appDataLocation);
+    if (!dir.exists()) {
+        if (!dir.mkpath(".")) {
+            //! TODO AU4: failed to create directory, should exit the app?
+        }
+    }
+    muse::settings()->setDefaultValue(TEMPORARY_FILES_PATH, muse::Val(appDataLocation));
 }

@@ -24,8 +24,8 @@
 
 #include <QAbstractItemModel>
 
-#include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
+#include "modularity/ioc.h"
 #include "ui/iuiactionsregister.h"
 #include "ui/view/iconcodes.h"
 
