@@ -57,9 +57,9 @@ private:
 
    struct LookupHelper;
 
-   WavePaintParameters mPaintParamters;
+   WavePaintParameters mPaintParameters;
 
-   struct   
+   struct
    {
       int64_t FirstPixel { -1 };
       int64_t LastPixel { -1 };
@@ -69,7 +69,7 @@ private:
          return FirstPixel < LastPixel;
       }
    } mSelection;
- 
+
    std::unique_ptr<LookupHelper> mLookupHelper;
 
    const Envelope* mEnvelope { nullptr };
