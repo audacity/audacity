@@ -4,15 +4,15 @@
 #include "realtimeeffectlistmodel.h"
 #include "realtimeeffectlistitemmodel.h"
 #include "global/defer.h"
+#include "global/types/translatablestring.h"
 #include "log.h"
 
 using namespace muse;
 using namespace au::projectscene;
-using namespace muse::uicomponents;
 using namespace au::effects;
 
 RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
-    : RealtimeEffectMenuModelBase(parent)
+    : QAbstractListModel(parent)
 {
 }
 
@@ -36,13 +36,34 @@ void RealtimeEffectListModel::onProjectChanged()
     });
 }
 
-bool RealtimeEffectListModel::belongsWithMe(effects::TrackId trackId) const
+bool RealtimeEffectListModel::prop_isMasterTrack() const
 {
-    return isMasterTrack() == (trackId == IRealtimeEffectService::masterTrackId);
+    return m_isMasterTrack;
 }
 
-void RealtimeEffectListModel::doLoad()
+void RealtimeEffectListModel::prop_setIsMasterTrack(bool isMasterTrack)
 {
+    if (m_isMasterTrack == isMasterTrack) {
+        return;
+    }
+    m_isMasterTrack = isMasterTrack;
+    emit isMasterTrackChanged();
+}
+
+bool RealtimeEffectListModel::belongsWithMe(effects::TrackId trackId) const
+{
+    return m_isMasterTrack == (trackId == IRealtimeEffectService::masterTrackId);
+}
+
+void RealtimeEffectListModel::load()
+{
+    trackSelection()->selectedTrackIdChanged().onNotify(this, [this]
+    {
+        beginResetModel();
+        endResetModel();
+        onSelectedTrackIdChanged();
+    });
+
     //! Note: we listen to the individual effect-list changes because `onChanged` and its layout change reset the scrollbar position. Unless ...
     //! the RealtimeEffectListItem.qml listens to layoutAboutToBeChanged and layoutChanged signals and saves and restores the `contentY` property.
     //! At the time of writing, we actually do this (see RealtimeEffectListItem.qml), but it may have some unexpected drawback, so for now we call less drastic
@@ -91,8 +112,6 @@ void RealtimeEffectListModel::doLoad()
         onProjectChanged();
     });
     onProjectChanged();
-
-    doPopulateMenu();
 }
 
 void RealtimeEffectListModel::onAdded(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& newState)
@@ -135,7 +154,7 @@ void RealtimeEffectListModel::onRemoved(effects::TrackId trackId, const Realtime
 
     const auto& list = it->second;
     const auto it2 = std::find_if(list.begin(), list.end(), [state](const RealtimeEffectListItemModelPtr& item) {
-        return item->effectStateId == state;
+        return item->effectState() == state;
     });
     IF_ASSERT_FAILED(it2 != list.end()) {
         return;
@@ -185,67 +204,6 @@ void RealtimeEffectListModel::onMoved(effects::TrackId trackId, effects::EffectC
     emit layoutChanged();
 }
 
-void RealtimeEffectListModel::handleMenuItemWithState(const QString& itemId, const RealtimeEffectListItemModel* item)
-{
-    TRACEFUNC;
-
-    const auto tId = trackId();
-    IF_ASSERT_FAILED(tId.has_value()) {
-        return;
-    }
-
-    const MenuItem& menuItem = findItem(itemId);
-
-    if (itemId == "realtimeeffect-remove") {
-        realtimeEffectService()->removeRealtimeEffect(*tId, item->effectStateId);
-        return;
-    }
-
-    if (itemId == "realtimeeffect-replace") {
-        const auto& list = m_trackEffectLists.at(*tId);
-        const auto it = std::find_if(list.begin(), list.end(), [item](const RealtimeEffectListItemModelPtr& listItem) {
-            return listItem.get() == item;
-        });
-        IF_ASSERT_FAILED(it != list.end()) {
-            return;
-        }
-        const int itemIndex = it - list.begin();
-        const auto effectId = menuItem.args().arg<effects::EffectId>(0);
-        if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, itemIndex, effectId)) {
-            effectsProvider()->showEffect(newState);
-        }
-        return;
-    }
-}
-
-void RealtimeEffectListModel::doPopulateMenu()
-{
-    MenuItemList items;
-
-    const auto categoryList = effectsProvider()->effectsCategoryList();
-    std::unordered_map<String, MenuItemList> menuCategories;
-
-    items << makeMenuItem("realtimeeffect-remove", muse::TranslatableString("projectscene", "No effect"));
-
-    // Populate with available realtime effect.
-    for (const effects::EffectMeta& meta : effectsProvider()->effectMetaList()) {
-        if (!meta.isRealtimeCapable) {
-            continue;
-        }
-        MenuItem* item = makeMenuItem("realtimeeffect-replace", muse::TranslatableString::untranslatable(meta.title));
-        item->setArgs(actions::ActionData::make_arg1(effects::EffectId { meta.id }));
-        menuCategories[meta.categoryId].push_back(item);
-    }
-
-    for (const auto& entry : menuCategories) {
-        items << makeMenu(muse::TranslatableString::untranslatable(entry.first), entry.second);
-    }
-
-    setItems(items);
-
-    emit availableEffectsChanged();
-}
-
 void RealtimeEffectListModel::onChanged(effects::TrackId trackId)
 {
     const std::optional<std::vector<RealtimeEffectStatePtr> > newStack = realtimeEffectService()->effectStack(trackId);
@@ -265,7 +223,7 @@ void RealtimeEffectListModel::onChanged(effects::TrackId trackId)
         for (auto i = 0; i < static_cast<int>(newStack->size()); ++i) {
             const auto& state = newStack->at(i);
             const auto it = std::find_if(oldList.begin(), oldList.end(), [state](const RealtimeEffectListItemModelPtr& item) {
-                return item->effectStateId == state;
+                return item->effectState() == state;
             });
             if (it != oldList.end()) {
                 newList[i] = *it;
@@ -277,11 +235,6 @@ void RealtimeEffectListModel::onChanged(effects::TrackId trackId)
     }
 
     emit layoutChanged();
-}
-
-QVariantList RealtimeEffectListModel::availableEffects()
-{
-    return menuItemListToVariantList(items());
 }
 
 int RealtimeEffectListModel::count() const
@@ -308,7 +261,7 @@ void RealtimeEffectListModel::moveRow(int from, int to)
         return;
     }
 
-    realtimeEffectService()->moveRealtimeEffect(list[from]->effectStateId, to);
+    realtimeEffectService()->moveRealtimeEffect(list[from]->effectState(), to);
 }
 
 void RealtimeEffectListModel::onSelectedTrackIdChanged()
@@ -317,11 +270,16 @@ void RealtimeEffectListModel::onSelectedTrackIdChanged()
     emit trackEffectsActiveChanged();
 }
 
+std::optional<au::effects::TrackId> RealtimeEffectListModel::trackId() const
+{
+    return m_isMasterTrack ? IRealtimeEffectService::masterTrackId : trackSelection()->selectedTrackId();
+}
+
 QString RealtimeEffectListModel::prop_trackName() const
 {
     if (!trackId().has_value()) {
         return QString();
-    } else if (isMasterTrack()) {
+    } else if (m_isMasterTrack) {
         return muse::TranslatableString("projectScene", "Master").translated().toQString();
     }
 

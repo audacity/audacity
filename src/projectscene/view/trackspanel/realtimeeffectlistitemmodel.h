@@ -24,7 +24,7 @@ public:
     RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState);
     ~RealtimeEffectListItemModel();
 
-    const effects::RealtimeEffectStatePtr effectStateId;
+    Q_INVOKABLE effects::RealtimeEffectStatePtr effectState() const;
     Q_INVOKABLE QString effectName() const;
     Q_INVOKABLE void toggleDialog();
 
@@ -34,6 +34,9 @@ public:
 
 signals:
     void isActiveChanged();
+
+private:
+    const effects::RealtimeEffectStatePtr m_effectState;
 };
 
 using RealtimeEffectListItemModelPtr = std::shared_ptr<RealtimeEffectListItemModel>;

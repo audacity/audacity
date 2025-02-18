@@ -7,12 +7,12 @@
 #include "realtimeeffectmenumodelbase.h"
 
 namespace au::projectscene {
-class RealtimeEffectMenuModel : public RealtimeEffectMenuModelBase
+class AddEffectMenuModel : public RealtimeEffectMenuModelBase
 {
     Q_OBJECT
 
 public:
-    explicit RealtimeEffectMenuModel(QObject* parent = nullptr);
+    explicit AddEffectMenuModel(QObject* parent = nullptr);
 
 private:
     void handleMenuItem(const QString& itemId) override;

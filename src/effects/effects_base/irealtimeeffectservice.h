@@ -29,6 +29,8 @@ public:
     virtual RealtimeEffectStatePtr addRealtimeEffect(TrackId trackId, const EffectId& effectId) = 0;
     virtual void removeRealtimeEffect(TrackId trackId, const RealtimeEffectStatePtr& state) = 0;
     virtual RealtimeEffectStatePtr replaceRealtimeEffect(TrackId trackId, int effectListIndex, const EffectId& newEffectId) = 0;
+    virtual RealtimeEffectStatePtr replaceRealtimeEffect(TrackId trackId, const RealtimeEffectStatePtr& state,
+                                                         const EffectId& newEffectId) = 0;
     virtual void moveRealtimeEffect(const RealtimeEffectStatePtr& state, int newIndex) = 0;
 
     virtual muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectAdded() const = 0;

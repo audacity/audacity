@@ -3,6 +3,7 @@ ProjectToolBar 1.0 toolbars/ProjectToolBar.qml
 UndoRedoToolBar 1.0 toolbars/UndoRedoToolBar.qml
 PlaybackToolBar 1.0 toolbars/PlaybackToolBar.qml
 RealtimeEffectListItem 1.0 trackspanel/RealtimeEffectListItem.qml
+RealtimeEffectListItemButtonBackground 1.0 trackspanel/RealtimeEffectListItemButtonBackground.qml
 TracksPanel 1.0 trackspanel/TracksPanel.qml
 TrackEffectList 1.0 trackspanel/TrackEffectList.qml
 TrackEffectsSection 1.0 trackspanel/TrackEffectsSection.qml

@@ -104,7 +104,7 @@ Rectangle {
 
             text: qsTrc("projectscene", "Add effect")
 
-            RealtimeEffectMenuModel {
+            AddEffectMenuModel {
                 id: menuModel
                 isMasterTrack: effectList.isMasterTrack
             }

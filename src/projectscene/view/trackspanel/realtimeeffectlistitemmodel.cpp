@@ -4,12 +4,12 @@
 #include "realtimeeffectlistitemmodel.h"
 
 namespace au::projectscene {
-RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectStateId)
-    : QObject{parent}, effectStateId{std::move(effectStateId)}
+RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState)
+    : QObject{parent}, m_effectState{std::move(effectState)}
 {
-    realtimeEffectService()->isActiveChanged().onReceive(this, [this](effects::RealtimeEffectStatePtr stateId)
+    realtimeEffectService()->isActiveChanged().onReceive(this, [this](effects::RealtimeEffectStatePtr state)
     {
-        if (stateId == this->effectStateId) {
+        if (state == this->m_effectState) {
             emit isActiveChanged();
         }
     });
@@ -17,31 +17,36 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
 
 RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
 {
-    effectsProvider()->hideEffect(effectStateId);
+    effectsProvider()->hideEffect(m_effectState);
 }
 
 bool RealtimeEffectListItemModel::prop_isMasterEffect() const
 {
-    return realtimeEffectService()->trackId(effectStateId) == effects::IRealtimeEffectService::masterTrackId;
+    return realtimeEffectService()->trackId(m_effectState) == effects::IRealtimeEffectService::masterTrackId;
 }
 
 QString RealtimeEffectListItemModel::effectName() const
 {
-    return QString::fromStdString(effectsProvider()->effectName(*effectStateId));
+    return QString::fromStdString(effectsProvider()->effectName(*m_effectState));
+}
+
+effects::RealtimeEffectStatePtr RealtimeEffectListItemModel::effectState() const
+{
+    return m_effectState;
 }
 
 void RealtimeEffectListItemModel::toggleDialog()
 {
-    effectsProvider()->toggleShowEffect(effectStateId);
+    effectsProvider()->toggleShowEffect(m_effectState);
 }
 
 bool RealtimeEffectListItemModel::prop_isActive() const
 {
-    return realtimeEffectService()->isActive(effectStateId);
+    return realtimeEffectService()->isActive(m_effectState);
 }
 
 void RealtimeEffectListItemModel::prop_setIsActive(bool isActive)
 {
-    realtimeEffectService()->setIsActive(effectStateId, isActive);
+    realtimeEffectService()->setIsActive(m_effectState, isActive);
 }
 }

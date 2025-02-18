@@ -48,7 +48,7 @@ KDDW.TitleBarBase {
             Layout.preferredHeight: root.implicitHeight
 
             StyledTextLabel {
-                text: qsTr("Effects")
+                text: qsTrc("projectscene", "Realtime effects")
                 anchors.fill: parent
                 padding: effectsTitleBar.padding
                 horizontalAlignment: Text.AlignLeft
