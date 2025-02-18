@@ -33,6 +33,8 @@ StyledDialogView {
     contentWidth: Math.max(viewer.implicitWidth, 600)
     contentHeight: viewer.implicitHeight + bbox.implicitHeight + 16
 
+    alwaysOnTop: true
+
     VstViewer {
         id: viewer
         width: root.contentWidth
