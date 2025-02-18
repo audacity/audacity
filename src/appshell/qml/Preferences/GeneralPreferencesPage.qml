@@ -23,7 +23,7 @@ import QtQuick 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Preferences 1.0
+import Audacity.Preferences 1.0
 
 import "internal"
 
@@ -65,59 +65,39 @@ PreferencesPage {
             }
         }
 
-        SeparatorLine { }
+        NumberFormatSection {
+            id: numberFormatSection
 
-        ProgramStartSection {
-            startupModes: preferencesModel.startupModes
-            scorePathFilter: preferencesModel.scorePathFilter()
-
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 2
-
-            onCurrentStartupModesChanged: function(index) {
-                preferencesModel.setCurrentStartupMode(index)
-            }
-
-            onStartupScorePathChanged: function(path) {
-                preferencesModel.setStartupScorePath(path)
-            }
-        }
-
-        /*
-         * TODO: https://github.com/musescore/MuseScore/issues/9807
-        KeyboardLayoutsSection {
-            keyboardLayouts: preferencesModel.keyboardLayouts
-            currentKeyboardLayout: preferencesModel.currentKeyboardLayout
+            numberFormats: ["System (English)"] //TODO: implement formats model
+            currentNumberFormatCode: "System (English)"
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2
 
-            onKeyboardLayoutSelected: function(keyboardLayout) {
-                preferencesModel.currentKeyboardLayout = keyboardLayout
+            onNumberFormatSelected: function(numberFormatCode) {
+                preferencesModel.setNumberFormat(numberFormatCode)
             }
         }
 
         SeparatorLine { }
-        */
 
-        /*
-         * TODO: https://github.com/musescore/MuseScore/issues/9807
-        SeparatorLine { }
-
-        RemoteControlSection {
-            isOSCRemoteControl: preferencesModel.isOSCRemoteControl
-            oscPort: preferencesModel.oscPort
+        TemporaryFilesSection {
+            id: temporaryFilesSection
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 4
+            navigation.order: root.navigationOrderStart + 3
 
-            onRemoteControlChanged: function(control) {
-                preferencesModel.isOSCRemoteControl = control
-            }
+            temporaryPath: preferencesModel.temporaryDir
 
-            onPortChanged: function(port) {
-                preferencesModel.oscPort = port
+            onTemporaryFilesLocationChanged: function(path) {
+                preferencesModel.setTemporaryDir(path)
             }
-        }*/
+        }
+
+        FreeSpaceSection {
+            id: freeSpaceSection
+
+            availableSpace: preferencesModel.availableSpace
+        }
     }
 }
