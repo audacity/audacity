@@ -35,28 +35,44 @@ static const std::string musehubEffectUtmMediumPrefix = "utm_medium=";
 static const std::string musehubEffectUtmCampaignPrefix = "utm_campaign=au-app-get-fx-mh-";
 
 static const std::string getEffectsQuery = R"(
-   query EffectsQuery($locale: String!) {
-      product_pages_configuration {
-         audacityPageSections {
-            ... on ProductPageSectionDynamic {
-               title(locale: { locale: $locale })
-               productCards {
-                  ... on ProductCardRegular {
-                     iconImageUrl
-                     product(locale: { locale: $locale }) {
-                        ... on ProductPlugin {
-                           code
-                           title
-                           subtitle
-                           category
+query EffectsQuery($locale: String!) {
+         product_pages_configuration {
+            audacityPageSections {
+               ... on ProductPageSectionDynamic {
+                  title(locale: { locale: $locale })
+                  productCards {
+                     ... on ProductCardRegular {
+                        iconImageUrl
+                        product(locale: { locale: $locale }) {
+                           ... on ProductPlugin {
+                              code
+                              title
+                              subtitle
+                              category
+                           }
                         }
                      }
                   }
                }
+               ... on ProductPageSectionRegular {
+                  title(locale: { locale: $locale })
+                  productCards {
+                     ... on ProductCardRegular {
+                        iconImageUrl
+                        product(locale: { locale: $locale }) {
+                           ... on ProductPlugin {
+                              code
+                              title
+                              subtitle
+                              category
+                           }
+                        }
+                     }
+                  }
+              }
             }
          }
       }
-   }
 )";
 
 static std::optional<EffectInfo> parseEffect(const rapidjson::Value& effectObj) {
