@@ -22,8 +22,6 @@ public:
     virtual bool save(const muse::io::path_t& fileName) = 0;
     virtual void close() = 0;
 
-    virtual bool import(const muse::io::path_t& filePath) = 0;
-
     virtual std::string title() const = 0;
 
     // internal

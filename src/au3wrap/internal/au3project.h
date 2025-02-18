@@ -25,8 +25,6 @@ public:
     bool save(const muse::io::path_t& fileName) override;
     void close() override;
 
-    bool import(const muse::io::path_t& filePath) override;
-
     std::string title() const override;
 
     // internal
@@ -34,7 +32,6 @@ public:
 
 private:
     void updateSavedState();
-    void addImportedTracks(const muse::io::path_t&, TrackHolders&& newTracks);
 
     const std::shared_ptr<Au3ProjectData> m_data;
     Observer::Subscription mTrackListSubstription;
