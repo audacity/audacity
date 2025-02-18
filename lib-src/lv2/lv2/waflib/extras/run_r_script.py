@@ -62,7 +62,7 @@ class run_r_script(run_r_script_base):
 @TaskGen.feature('run_r_script')
 @TaskGen.before_method('process_source')
 def apply_run_r_script(tg):
-	"""Task generator customizing the options etc. to call R in batch
+	"""Task generator customising the options etc. to call R in batch
 	mode for running a R script.
 	"""
 
