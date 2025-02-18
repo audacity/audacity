@@ -85,7 +85,7 @@ namespace
             &response,
             NULL,
             &error);
-            
+
         return success;
     }
 }
@@ -179,9 +179,9 @@ namespace
         google_breakpad::MinidumpProcessor minidumpProcessor(nullptr, &resolver);
         google_breakpad::MinidumpThreadList::set_max_threads(std::numeric_limits<uint32_t>::max());
         google_breakpad::MinidumpMemoryList::set_max_regions(std::numeric_limits<uint32_t>::max());
-        
+
         google_breakpad::ProcessState processState;
-        
+
         if (minidumpProcessor.Process(&minidump, &processState) != google_breakpad::PROCESS_OK)
         {
             printf("Failed to process minidump");
@@ -209,7 +209,7 @@ namespace
         fseek(stream, 0, SEEK_SET);
         fread(&bytes[0], 1, length, stream);
         fclose(stream);
-        
+
 #if _WIN32
         _wremove(temp.wc_str());
 #else
@@ -250,14 +250,14 @@ namespace
         static constexpr int MaxUserCommentLength = 2000;
 
         auto dialog = new wxDialog(
-            nullptr, 
-            wxID_ANY, 
+            nullptr,
+            wxID_ANY,
             _("Problem Report for Audacity"),
-            wxDefaultPosition, 
-            wxDefaultSize, 
+            wxDefaultPosition,
+            wxDefaultSize,
             wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX)//disable frame resize
         );
-        
+
         //fixes focus issue with Windows build-in screen reader, but breaks VoiceOver
 #if defined(__WXMSW__)
         dialog->SetFocus();
@@ -288,7 +288,7 @@ namespace
         mainLayout->Add(dumpTextCtrl, wxSizerFlags().Border(wxALL).Expand());
 
         auto buttonsLayout = new wxBoxSizer(wxHORIZONTAL);
-        
+
         wxTextCtrl* commentCtrl = nullptr;
 
         if (onSend != nullptr && CrashReportAppHasUserComment)
@@ -324,7 +324,7 @@ namespace
                 privacyPolicyLayout->Add(
                    new wxHyperlinkCtrl(
                       dialog, wxID_ANY, translatedLink,
-                      "https://www.audacityteam.org/about/desktop-privacy-notice/"),
+                      "https://www.audacityteam.org/desktop-privacy-notice/"),
                    wxSizerFlags().Proportion(0).Border(wxUP | wxDOWN));
 
                 if (placeholderPosition + 2 < translatedText.Length())
@@ -351,8 +351,8 @@ namespace
             sendButton->Bind(wxEVT_BUTTON, [dialog, commentCtrl, onSend](wxCommandEvent&)
                 {
                     const wxString comment =
-                        commentCtrl != nullptr ? 
-                            commentCtrl->GetValue() : 
+                        commentCtrl != nullptr ?
+                            commentCtrl->GetValue() :
                             wxString {};
 
                     if (onSend(comment))
@@ -381,7 +381,7 @@ namespace
         dialog->Bind(wxEVT_CLOSE_WINDOW, [dialog](wxCloseEvent&) {
             dialog->Destroy();
         });
-            
+
         dialog->Show(true);
     }
 }
@@ -391,7 +391,7 @@ bool CrashReportApp::OnInit()
 {
     if (!wxApp::OnInit())
         return false;
-    
+
     if (mSilent)
     {
         if (!mURL.empty())
@@ -410,7 +410,7 @@ bool CrashReportApp::OnInit()
 #endif
         sLocale->AddCatalog("audacity");
         sLocale->AddCatalog("wxstd");
-        
+
         google_breakpad::Minidump minidump(mMinidumpPath.ToStdString(), false);
         if (minidump.Read())
         {
@@ -446,7 +446,7 @@ void CrashReportApp::OnInitCmdLine(wxCmdLineParser& parser)
     };
 
     parser.SetDesc(cmdLineEntryDesc);
-    
+
     wxApp::OnInitCmdLine(parser);
 }
 
@@ -472,7 +472,7 @@ bool CrashReportApp::OnCmdLineParsed(wxCmdLineParser& parser)
     }
     mMinidumpPath = parser.GetParam(0);
     mSilent = parser.Found("s");
-    
+
     return wxApp::OnCmdLineParsed(parser);
 }
 

@@ -139,7 +139,7 @@ ErrorReportDialog::ErrorReportDialog(
                /* i18n-hint: %s is replaced with "here" */
                AccessibleLinksFormatter errorpage(
                   XO("More information about this error may be available %s."));
-               
+
                errorpage.FormatLink(
                   /* i18n-hint: Title of hyperlink to audacityteam.org/errors. */
                   wxT("%s"),
@@ -162,7 +162,7 @@ ErrorReportDialog::ErrorReportDialog(
                   /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
                   wxT("%s"),
                   XO("our Privacy Policy"),
-                  "https://www.audacityteam.org/about/desktop-privacy-notice/");
+                  "https://www.audacityteam.org/desktop-privacy-notice/");
 
                privacyPolicy.Populate(S);
             }
@@ -223,7 +223,7 @@ ErrorReportDialog::ErrorReportDialog(
                helpButton->SetToolTip(XO("Help").Translation());
                helpButton->SetLabel(XO("Help").Translation());
             }
-            
+
             S.AddSpace(0, 0, 1);
 
             S.Id(wxID_NO).AddButton(XC("&Don't send", "crash reporter button"));
@@ -262,9 +262,9 @@ void ErrorReportDialog::OnSend(wxCommandEvent& event)
       mReport->AddUserComment(audacity::ToUTF8(mCommentsControl->GetValue()));
 
    mReport->Send(
-      [this](int code, std::string body) { 
-         CallAfter([this]() { 
-             EndModal(true); 
+      [this](int code, std::string body) {
+         CallAfter([this]() {
+             EndModal(true);
          });
    });
 }
