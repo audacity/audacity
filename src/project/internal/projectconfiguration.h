@@ -41,6 +41,10 @@ public:
     bool shouldAskSaveLocationType() const override;
     void setShouldAskSaveLocationType(bool shouldAsk) override;
 
+    muse::io::path_t temporaryDir() const override;
+    void setTemporaryDir(const muse::io::path_t& path) override;
+    muse::async::Channel<muse::io::path_t> temporaryDirChanged() const override;
+
     muse::io::path_t newProjectTemporaryPath() const override;
 
     int homeProjectsPageTabIndex() const override;
@@ -58,7 +62,10 @@ public:
     muse::async::Channel<int> autoSaveIntervalChanged() const override;
 
 private:
+    void initTempDir();
+
     muse::async::Channel<muse::io::path_t> m_userProjectsPathChanged;
+    muse::async::Channel<muse::io::path_t> m_temporaryDirChanged;
 
     int m_homeProjectsPageTabIndex = 0;
     muse::async::Notification m_homeProjectsPageTabIndexChanged;

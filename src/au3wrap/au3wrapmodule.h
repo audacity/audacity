@@ -3,8 +3,11 @@
 */
 #pragma once
 
-#include "iglobalconfiguration.h"
 #include "modularity/imodulesetup.h"
+
+#include "iglobalconfiguration.h"
+
+#include "project/iprojectconfiguration.h"
 
 class Au3BasicUI;
 
@@ -16,6 +19,7 @@ class Au3AudioDevicesProvider;
 class Au3WrapModule : public muse::modularity::IModuleSetup
 {
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::Inject<au::project::IProjectConfiguration> projectConfiguration;
 public:
 
     std::string moduleName() const override;

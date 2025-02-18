@@ -73,8 +73,8 @@ set(MODULE_SRC
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/canvaspreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/saveandpublishpreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/saveandpublishpreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.cpp

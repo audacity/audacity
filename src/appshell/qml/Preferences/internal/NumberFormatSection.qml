@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2025 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -30,24 +30,16 @@ BaseSection {
 
     navigation.direction: NavigationPanel.Horizontal
 
-    property alias languages: dropdown.model
-    property string currentLanguageCode: ""
-    property bool isNeedRestart: false
+    property alias numberFormats: dropdown.model
+    property string currentNumberFormatCode: ""
 
-    signal languageSelected(string languageCode)
-    signal checkForUpdateRequested()
-
-    function setUpdateProgress(current, total, status) {
-        progressBtn.to = total
-        progressBtn.value = current
-        progressBtn.progressStatus = status
-    }
+    signal numberFormatSelected(string formatCode)
 
     Column {
         spacing: 12
 
         StyledTextLabel {
-            text: qsTrc("appshell/preferences", "Language")
+            text: qsTrc("appshell/preferences", "Number format")
         }
 
         StyledDropdown {
@@ -58,23 +50,22 @@ BaseSection {
             textRole: "name"
             valueRole: "code"
 
-            popupItemsCount: 11
-            currentIndex: dropdown.indexOfValue(root.currentLanguageCode)
+            currentIndex: dropdown.indexOfValue(root.currentNumberFormatCode)
 
-            navigation.name: "LanguagesBox"
+            navigation.name: "NumberFormatBox"
             navigation.panel: root.navigation
             navigation.column: 1
 
             indeterminateText: ""
 
             onActivated: function(index, value) {
-                root.languageSelected(value)
+                root.numberFormatSelected(value)
             }
         }
-    }
 
-    StyledTextLabel {
-        text: qsTrc("appshell/preferences", "Restart required")
-        visible: root.isNeedRestart
+        StyledTextLabel {
+            text: qsTrc("appshell/preferences", "Example: 1,000,000.99")
+            color: ui.theme.fontSecondaryColor
+        }
     }
 }
