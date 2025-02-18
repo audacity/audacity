@@ -11,6 +11,7 @@
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditclipboard.h"
 #include "trackedit/itrackeditproject.h"
+#include "importexport/import/iimporter.h"
 
 namespace au::au3 {
 class Au3ProjectAccessor;
@@ -49,6 +50,7 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
     muse::Inject<IThumbnailCreator> thumbnailCreator;
+    muse::Inject<importexport::IImporter> importer;
 
 public:
     Audacity4Project();

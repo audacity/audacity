@@ -121,7 +121,7 @@ Ret Audacity4Project::doImport(const muse::io::path_t& path, bool forceMode)
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    m_au3Project->import(path);
+    importer()->import(path);
     m_trackeditProject->reload();
 
     return muse::make_ret(Ret::Code::Ok);

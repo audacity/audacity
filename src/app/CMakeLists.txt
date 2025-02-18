@@ -94,6 +94,7 @@ set(LINK_LIB
     effects_base
     effects_builtin
     effects_nyquist
+    importer
 )
 
 if (AU_MODULE_EFFECTS_VST)
