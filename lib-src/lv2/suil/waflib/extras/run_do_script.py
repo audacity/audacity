@@ -114,7 +114,7 @@ class run_do_script(run_do_script_base):
 @TaskGen.feature('run_do_script')
 @TaskGen.before_method('process_source')
 def apply_run_do_script(tg):
-	"""Task generator customizing the options etc. to call Stata in batch
+	"""Task generator customising the options etc. to call Stata in batch
 	mode for running a do-script.
 	"""
 
