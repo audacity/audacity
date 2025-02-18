@@ -15,7 +15,7 @@ This plugin intends to outline the basics for building visualization plugins
 that rely on atom communication.  The UI looks like an oscilloscope, but is not
 a real oscilloscope implementation:
 
-- There is no display synchronization, results will depend on LV2 host.
+- There is no display synchronisation, results will depend on LV2 host.
 - It displays raw audio samples, which a proper scope must not do.
 - The display itself just connects min/max line segments.
 - No triggering or synchronization.

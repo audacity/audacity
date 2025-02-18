@@ -1,6 +1,6 @@
 == Metronome ==
 
-This plugin demonstrates tempo synchronization by clicking on every beat.  The
+This plugin demonstrates tempo synchronisation by clicking on every beat.  The
 host sends this information to the plugin as events, so an event with new time
 and tempo information will be received whenever there is a change.
 
