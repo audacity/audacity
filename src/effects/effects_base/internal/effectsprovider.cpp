@@ -7,7 +7,7 @@
 #include "global/translation.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "au3wrap/mocks/progressdialog.h"
+#include "au3wrap/internal/progressdialog.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
