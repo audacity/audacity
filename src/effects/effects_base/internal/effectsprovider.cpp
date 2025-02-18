@@ -7,6 +7,7 @@
 #include "global/translation.h"
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "au3wrap/internal/progressdialog.h"
 
 #include "libraries/lib-effects/Effect.h"
 #include "libraries/lib-components/EffectInterface.h"
@@ -303,17 +304,17 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
         if (skipFlag == false) {
             using namespace BasicUI;
             auto name = effect->GetName();
-            auto progress = MakeProgress(
-                name,
-                XO("Applying %s...").Format(name),
-                ProgressShowCancel
-                );
-            auto vr = valueRestorer(effect->mProgress, progress.get());
+            ::ProgressDialog progress{};
+            auto vr = valueRestorer<BasicUI::ProgressDialog*>(effect->mProgress, &progress);
 
             assert(pInstanceEx); // null check above
             try {
                 if (pInstanceEx->Process(settings) == false) {
-                    success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
+                    if (progress.cancelled()) {
+                        success = make_ret(Err::EffectProcessCancelled);
+                    } else {
+                        success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
+                    }
                 }
             } catch (::AudacityException& e) {
                 success = make_ret(Err::EffectProcessFailed);

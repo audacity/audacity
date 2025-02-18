@@ -32,6 +32,11 @@ public:
 
     void SetMessage(const TranslatableString& message) override;
 
+    bool cancelled() const
+    {
+        return m_cancelled;
+    }
+
 private:
     mutable muse::Progress m_progress;
     bool m_cancelled = false;
