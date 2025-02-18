@@ -332,6 +332,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
     const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
+    double lastAdjustedTime = 0;
     for (const auto& point : points) {
         const auto time = zoomInfo.PositionToTime(point.x());
         const auto clip = WaveChannelUtilities::GetClipAtTime(*waveChannel, time + waveClip->GetPlayStartTime());
@@ -341,6 +342,11 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
         const auto sampleOffset = clip->TimeToSamples(time);
         const auto adjustedTime = clip->SamplesToTime(sampleOffset);
+
+        if (adjustedTime == lastAdjustedTime) {
+            continue;
+        }
+        lastAdjustedTime = adjustedTime;
 
         float oneSample;
         if (!WaveClipUtilities::GetFloatAtTime(clip->GetClip(), adjustedTime, currentChannel, oneSample, false)) {
