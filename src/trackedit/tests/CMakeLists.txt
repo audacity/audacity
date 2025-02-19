@@ -7,6 +7,8 @@ set(MODULE_TEST trackedit_tests)
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/selectioncontrollermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditprojectmock.h
+    ${CMAKE_CURRENT_LIST_DIR}../../../project/internal/audacityproject.cpp
+
     ${CMAKE_CURRENT_LIST_DIR}/au3interaction_tests.cpp
     )
 

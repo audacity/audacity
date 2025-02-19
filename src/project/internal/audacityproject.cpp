@@ -1,8 +1,8 @@
 #include "audacityproject.h"
 
 #include "au3wrap/iau3project.h"
-#include "iprojectautosaver.h"
-#include "projecterrors.h"
+#include "project/iprojectautosaver.h"
+#include "project/projecterrors.h"
 #include "global/io/ioretcodes.h"
 
 #include "log.h"
