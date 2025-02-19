@@ -68,7 +68,7 @@ PreferencesPage {
         NumberFormatSection {
             id: numberFormatSection
 
-            numberFormats: ["System (English)"] //TODO: implement formats model
+            numberFormats: ["System (English)"] //! TODO AU4: implement formats model
             currentNumberFormatCode: "System (English)"
 
             navigation.section: root.navigationSection
