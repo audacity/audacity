@@ -17,12 +17,18 @@ using namespace au::effects;
 
 EffectMetaList VstEffectsRepository::effectMetaList() const
 {
+    using namespace muse::audioplugins;
+    using namespace muse::audio;
+
     EffectMetaList effects;
 
-    //! TODO Add filter by VST
-    std::vector<muse::audioplugins::AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
+    std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
-    for (const muse::audioplugins::AudioPluginInfo& info : allEffects) {
+    for (const AudioPluginInfo& info : allEffects) {
+        if (!(info.type == AudioPluginType::Fx && info.meta.type == AudioResourceType::VstPlugin)) {
+            continue;
+        }
+
         bool ok = registerPlugin(info.path);
         if (!ok) {
             continue;
