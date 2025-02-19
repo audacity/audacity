@@ -14,6 +14,7 @@
 
 #include "trackedit/trackedittypes.h"
 #include "trackedit/dom/track.h"
+#include "trackedit/iprojecthistory.h"
 
 namespace au::projectscene {
 class TrackItem : public QObject, public muse::async::Asyncable
@@ -39,6 +40,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     TrackItem(QObject* parent = nullptr);
@@ -81,7 +83,9 @@ public slots:
     void setRightChannelPressure(float rightChannelPressure);
 
     void setVolumeLevel(float volumeLevel);
+    void commitVolumeLevel();
     void setBalance(int balance);
+    void commitBalance();
     void setSolo(bool solo);
     void setMuted(bool mute);
 

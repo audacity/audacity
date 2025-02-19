@@ -8,6 +8,7 @@
 
 #include "playback/playbacktypes.h"
 
+#include "global/types/translatablestring.h"
 #include "log.h"
 
 using namespace au::projectscene;
@@ -217,6 +218,13 @@ void TrackItem::setVolumeLevel(float volumeLevel)
     emit outputParamsChanged(m_outParams);
 }
 
+void TrackItem::commitVolumeLevel()
+{
+    projectHistory()->pushHistoryState(muse::TranslatableString("playback", "Moved volume slider").translated().toStdString(),
+                                       muse::TranslatableString("playback",
+                                                                "Volume").translated().toStdString(), trackedit::UndoPushType::CONSOLIDATE);
+}
+
 void TrackItem::setBalance(int balance)
 {
     if (m_outParams.balance * BALANCE_SCALING_FACTOR == balance) {
@@ -228,6 +236,13 @@ void TrackItem::setBalance(int balance)
     m_outParams.balance = balance / BALANCE_SCALING_FACTOR;
     emit balanceChanged(balance);
     emit outputParamsChanged(m_outParams);
+}
+
+void TrackItem::commitBalance()
+{
+    projectHistory()->pushHistoryState(muse::TranslatableString("playback", "Moved pan dial").translated().toStdString(),
+                                       muse::TranslatableString("playback",
+                                                                "Pan").translated().toStdString(), trackedit::UndoPushType::CONSOLIDATE);
 }
 
 void TrackItem::setSolo(bool solo)

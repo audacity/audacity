@@ -15,6 +15,8 @@ KnobControl {
     to: 100
     stepSize: 1
 
+    signal released()
+
     BalanceTooltip {
         id: tooltip
         value: root.value
@@ -30,5 +32,9 @@ KnobControl {
 
     onMouseExited: {
         tooltip.hide(true)
+    }
+
+    onMouseReleased: {
+        root.released()
     }
 }
