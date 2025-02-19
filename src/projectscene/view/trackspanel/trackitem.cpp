@@ -46,6 +46,8 @@ void TrackItem::init(const trackedit::Track& track)
     if (m_trackType != trackedit::TrackType::Label) {
         m_outParams.volume = trackPlaybackControl()->volume(m_trackId);
         m_outParams.balance = trackPlaybackControl()->balance(m_trackId);
+        m_outParams.solo = trackPlaybackControl()->solo(m_trackId);
+        m_outParams.muted = trackPlaybackControl()->muted(m_trackId);
     }
 }
 
@@ -251,6 +253,7 @@ void TrackItem::setSolo(bool solo)
         return;
     }
 
+    trackPlaybackControl()->setSolo(trackId(), solo);
     m_outParams.solo = solo;
 
     // project::IProjectSoloMuteState::SoloMuteState soloMuteState;
@@ -263,6 +266,8 @@ void TrackItem::setSolo(bool solo)
     if (solo && m_outParams.muted) {
         setMuted(false);
     }
+
+    projectHistory()->modifyState(true);
 }
 
 void TrackItem::setMuted(bool mute)
@@ -271,6 +276,7 @@ void TrackItem::setMuted(bool mute)
         return;
     }
 
+    trackPlaybackControl()->setMuted(trackId(), mute);
     m_outParams.muted = mute;
 
     // project::IProjectSoloMuteState::SoloMuteState soloMuteState;
@@ -283,6 +289,8 @@ void TrackItem::setMuted(bool mute)
     if (mute && m_outParams.solo) {
         setSolo(false);
     }
+
+    projectHistory()->modifyState(true);
 }
 
 void TrackItem::setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue)
