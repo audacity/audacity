@@ -10,9 +10,9 @@
 #include "WaveTrack.h"
 
 #include "iinteractive.h"
-#include "iprojecthistory.h"
-#include "iselectioncontroller.h"
-#include "itrackeditclipboard.h"
+#include "trackedit/iprojecthistory.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditclipboard.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
