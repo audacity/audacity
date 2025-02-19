@@ -199,16 +199,16 @@ ListItemBlank {
                 BalanceKnob {
                     value: root.item.balance
 
-                    onNewValueRequested: function(newValue) {
-                        root.item.balance = newValue
+                    onNewBalanceRequested: function(newValue, completed) {
+                        root.item.setBalance(newValue, completed)
                     }
                 }
 
                 VolumeSlider {
                     value: root.item.volumeLevel
 
-                    onValueChanged: {
-                        root.item.volumeLevel = value
+                    onNewVolumeRequested: function(newValue, completed) {
+                        root.item.setVolumeLevel(newValue, completed)
                     }
                 }
 
