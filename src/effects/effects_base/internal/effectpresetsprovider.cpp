@@ -94,7 +94,6 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
 
     // try apply user
     if (!isApplied) {
-        isApplied = true;
         OptionalMessage msg;
         access->ModifySettings([&](EffectSettings& settings) {
             msg = sm.LoadUserPreset(UserPresetsGroup(wxString(presetId)), settings);
@@ -111,6 +110,14 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
     }
 
     return ret;
+}
+
+bool EffectPresetsProvider::hasUserPresetWithName(const EffectId& effectId, const std::string& presetName) const
+{
+    //! NOTE At the moment, the preset ID and name are the same thing.
+    PresetId presetId = presetName;
+    PresetIdList presets = userPresets(effectId);
+    return muse::contains(presets, presetId);
 }
 
 Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId, const std::string& presetName)
