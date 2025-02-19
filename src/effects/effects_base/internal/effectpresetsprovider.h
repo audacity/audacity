@@ -26,6 +26,7 @@ public:
     muse::async::Channel<EffectId> userPresetsChanged() const override;
 
     muse::Ret applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
+    bool hasUserPresetWithName(const EffectId& effectId, const std::string& presetName) const override;
     muse::Ret saveCurrentAsPreset(const EffectInstanceId& effectInstanceId, const std::string& presetName) override;
     muse::Ret deletePreset(const EffectId& effectId, const PresetId& presetId) override;
     muse::Ret importPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath) override;

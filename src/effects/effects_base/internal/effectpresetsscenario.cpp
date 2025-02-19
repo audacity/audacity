@@ -41,6 +41,21 @@ void EffectPresetsScenario::saveCurrentAsPreset(const EffectInstanceId& effectIn
         showError(rv.ret);
     }
 
+    EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    bool alreadyExists = presetsProvider()->hasUserPresetWithName(effectId, name);
+    if (alreadyExists) {
+        IInteractive::Result res = interactive()->question(
+            muse::trc("effects", "Save Preset"),
+            muse::mtrc("effects", "Preset \"%1\" already exists, replace?")
+            .arg(String::fromStdString(name)).toStdString(),
+            { IInteractive::Button::Cancel, IInteractive::Button::Yes });
+
+        if (res.button() == (int)muse::IInteractive::Button::Cancel) {
+            LOGD() << "cancel, not replace existing preset";
+            return;
+        }
+    }
+
     Ret ret = presetsProvider()->saveCurrentAsPreset(effectInstanceId, name);
     if (!ret) {
         showError(ret);
