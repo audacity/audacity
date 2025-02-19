@@ -16,6 +16,7 @@ Item {
     property bool isDataSelected: false
     property bool isTrackSelected: false
     property bool isMultiSelectionActive: false
+    property bool isTrackAudible: true
     property bool isStereo: clipsModel.isStereo
     property double channelHeightRatio: isStereo ? 0.5 : 1
     property bool moveActive: false
@@ -125,7 +126,7 @@ Item {
             onDoubleClicked: function(e) {
                 e.accepted = false
             }
-            
+
             onPressAndHold: function(e) {
                 if (clipsContainer.isNearSample) {
                     clipsContainer.multiSampleEdit = true
@@ -229,6 +230,7 @@ Item {
                 isMultiSelectionActive: root.isMultiSelectionActive
                 isDataSelected: root.isDataSelected
                 moveActive: root.moveActive
+                isAudible: root.isTrackAudible
                 multiSampleEdit: clipsContainer.multiSampleEdit
                 altPressed: root.altPressed
 

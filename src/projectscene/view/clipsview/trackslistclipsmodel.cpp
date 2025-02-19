@@ -26,6 +26,10 @@ void TracksListClipsModel::load()
 
     setIsVerticalRulersVisible(configuration()->isVerticalRulersVisible());
 
+    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long) {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackAudibleRole });
+    });
+
     beginResetModel();
 
     m_trackList = prj->trackList();
@@ -165,6 +169,18 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     case IsMultiSelectionActiveRole: {
         return selectionController()->selectedClips().size() > 1;
     }
+    case IsTrackAudibleRole: {
+        if (trackPlaybackControl()->muted(track.id)) {
+            assert(!trackPlaybackControl()->solo(track.id));
+            return false;
+        } else if (trackPlaybackControl()->solo(track.id)) {
+            return true;
+        } else {
+            return std::none_of(m_trackList.begin(), m_trackList.end(), [this](const au::trackedit::Track& t) {
+                    return trackPlaybackControl()->solo(t.id);
+                });
+        }
+    }
     default:
         break;
     }
@@ -180,7 +196,8 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
         { TrackIdRole, "trackId" },
         { IsDataSelectedRole, "isDataSelected" },
         { IsTrackSelectedRole, "isTrackSelected" },
-        { IsMultiSelectionActiveRole, "isMultiSelectionActive" }
+        { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
+        { IsTrackAudibleRole, "isTrackAudible" },
     };
     return roles;
 }

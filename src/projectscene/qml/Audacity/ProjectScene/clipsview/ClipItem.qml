@@ -31,6 +31,7 @@ Rectangle {
     property bool isMultiSelectionActive: false
     property bool multiClipsSelected: root.isMultiSelectionActive && root.clipSelected
     property bool moveActive: false
+    property bool isAudible: true
     property real selectionStart: 0
     property real selectionWidth: 0
 
@@ -77,7 +78,7 @@ Rectangle {
     radius: 4
     color: clipSelected ? "white" : clipColor
     border.color: "#000000"
-    opacity: root.moveActive && clipSelected ? 0.5 : 1.0
+    opacity: root.moveActive && clipSelected ? 0.5 : isAudible ? 1.0 : 0.3
 
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse

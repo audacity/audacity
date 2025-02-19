@@ -15,6 +15,12 @@ KnobControl {
     to: 100
     stepSize: 1
 
+    signal newBalanceRequested(real volume, bool completed)
+
+    onNewValueRequested: function(value) {
+        newBalanceRequested(value, false)
+    }
+
     BalanceTooltip {
         id: tooltip
         value: root.value
@@ -30,5 +36,13 @@ KnobControl {
 
     onMouseExited: {
         tooltip.hide(true)
+    }
+
+    onMouseReleased: {
+        newBalanceRequested(root.value, true)
+    }
+
+    mouseArea.onDoubleClicked: {
+        newBalanceRequested(root.value = 0, true)
     }
 }

@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
+#include "playback/itrackplaybackcontrol.h"
 
 #include "trackedit/dom/track.h"
 
@@ -26,6 +27,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
 
 public:
 
@@ -57,7 +59,8 @@ private:
         TrackIdRole,
         IsDataSelectedRole,
         IsTrackSelectedRole,
-        IsMultiSelectionActiveRole
+        IsMultiSelectionActiveRole,
+        IsTrackAudibleRole,
     };
 
     void updateTotalTracksHeight();
