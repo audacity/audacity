@@ -249,6 +249,9 @@ bool SBSMSBase::Process(EffectInstance &, EffectSettings &)
          if (!track.GetSelected())
             return fallthrough();
 
+         if (!track.NIntervals())
+            return fallthrough();
+
          // Process only if the right marker is to the right of the left marker
          if (mT1 > mT0) {
             const auto start = track.TimeToLongSamples(mT0);
