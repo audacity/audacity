@@ -22,4 +22,6 @@ std::optional<int> isNearSample(std::shared_ptr<au::project::IAudacityProject> p
 void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
                      const trackedit::ClipKey& clipKey, const QPoint& lastPosition, const QPoint& currentPosition,
                      const IWavePainter::Params& params);
+void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
+                        const trackedit::ClipKey& clipKey, const QPoint& currentPosition, const IWavePainter::Params& params);
 }
