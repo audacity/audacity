@@ -35,15 +35,16 @@
 #include "view/clipsview/clipslistmodel.h"
 #include "view/clipsview/cliplistitem.h"
 #include "view/clipsview/waveview.h"
-#include "view/clipsview/au3/au3wavepainter.h"
 #include "view/clipsview/clipcontextmenumodel.h"
 #include "view/clipsview/multiclipcontextmenumodel.h"
 #include "view/clipsview/canvascontextmenumodel.h"
 #include "view/clipsview/selectioncontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
 #include "view/clipsview/pitchandspeedchangemodel.h"
-#include "view/clipsview/samplespainter.h"
-#include "view/clipsview/minmaxrmspainter.h"
+#include "view/clipsview/wavepainterproxy.h"
+#include "view/clipsview/au3/connectingdotspainter.h"
+#include "view/clipsview/au3/minmaxrmspainter.h"
+#include "view/clipsview/au3/samplespainter.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -89,10 +90,11 @@ void ProjectSceneModule::registerExports()
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
-    ioc()->registerExport<IWavePainter>(moduleName(), new Au3WavePainter());
-    ioc()->registerExport<ISamplesPainter>(moduleName(), new SamplesPainter());
-    ioc()->registerExport<IRMSPainter>(moduleName(), new MinMaxRMSPainter());
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(moduleName(), m_realtimeEffectPanelTrackSelection);
+    ioc()->registerExport<IWavePainter>(moduleName(), new WavePainterProxy());
+    ioc()->registerExport<IConnectingDotsPainter>(moduleName(), new ConnectingDotsPainter());
+    ioc()->registerExport<IMinMaxRMSPainter>(moduleName(), new MinMaxRMSPainter());
+    ioc()->registerExport<ISamplesPainter>(moduleName(), new SamplesPainter());
 }
 
 void ProjectSceneModule::resolveImports()

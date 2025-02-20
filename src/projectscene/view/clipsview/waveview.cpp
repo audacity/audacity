@@ -7,10 +7,11 @@
 #include <QElapsedTimer>
 
 #include "draw/types/color.h"
-
-#include "../timeline/timelinecontext.h"
-
 #include "log.h"
+
+#include "au3/wavepainterutils.h"
+#include "au3/samplespainterutils.h"
+#include "../timeline/timelinecontext.h"
 
 using namespace au::projectscene;
 
@@ -46,11 +47,8 @@ void WaveView::setClipKey(const ClipKey& newClipKey)
     update();
 }
 
-void WaveView::paint(QPainter* painter)
+IWavePainter::Params WaveView::getWavePainterParams() const
 {
-    // QElapsedTimer timer;
-    // timer.start();
-
     IWavePainter::Params params;
     params.geometry.height = height();
     params.geometry.width = width();
@@ -62,13 +60,6 @@ void WaveView::paint(QPainter* painter)
     params.selectionStartTime = m_clipTime.selectionStartTime;
     params.selectionEndTime = m_clipTime.selectionEndTime;
     params.channelHeightRatio = m_channelHeightRatio;
-
-    // LOGDA() << " geometry.height: " << params.geometry.height
-    //         << " geometry.width: " << params.geometry.width
-    //         << " geometry.left: " << params.geometry.left
-    //         << " zoom: " << params.zoom
-    //         << " fromTime: " << params.fromTime
-    //         << " toTime: " << params.toTime;
 
     if (m_clipSelected) {
         params.style.blankBrush = muse::draw::blendQColors(BACKGROUND_COLOR, m_clipColor, 0.8);
@@ -96,9 +87,12 @@ void WaveView::paint(QPainter* painter)
                                                                      SAMPLE_STALK_DATA_SELECTED_ALPHA);
     }
 
-    wavePainter()->paint(*painter, m_clipKey.key, params);
+    return params;
+}
 
-    //LOGDA() << timer.elapsed() << " ms";
+void WaveView::paint(QPainter* painter)
+{
+    wavePainter()->paint(*painter, m_clipKey.key, getWavePainterParams());
 }
 
 ClipKey WaveView::clipKey() const
@@ -197,6 +191,21 @@ void WaveView::setChannelHeightRatio(double channelHeightRatio)
     update();
 }
 
+bool WaveView::isNearSample() const
+{
+    return m_isNearSample;
+}
+
+void WaveView::setIsNearSample(bool isNearSample)
+{
+    if (m_isNearSample == isNearSample) {
+        return;
+    }
+
+    m_isNearSample = isNearSample;
+    emit isNearSampleChanged();
+}
+
 QColor WaveView::transformColor(const QColor& originalColor) const
 {
     int r = originalColor.red();
@@ -212,4 +221,38 @@ QColor WaveView::transformColor(const QColor& originalColor) const
     int newBlue = qBound(0, b + deltaBlue, 255);
 
     return QColor(newRed, newGreen, newBlue);
+}
+
+void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)
+{
+    if (wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                      m_context->zoom()) != IWavePainter::PlotType::Stem) {
+        return;
+    }
+
+    const auto params = getWavePainterParams();
+    m_currentChannel =  samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, QPoint(x, y), params);
+    setIsNearSample(m_currentChannel.has_value());
+}
+
+void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const unsigned int x, const unsigned int y)
+{
+    if (wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                      m_context->zoom()) != IWavePainter::PlotType::Stem) {
+        return;
+    }
+
+    const auto currentPosition = QPoint(x, y);
+    const auto lastPosition = QPoint(lastX, lastY);
+
+    const auto params = getWavePainterParams();
+
+    if (!m_currentChannel.has_value()) {
+        m_currentChannel = samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+        return;
+    }
+
+    samplespainterutils::setLastClickPos(
+        m_currentChannel.value(),
+        globalContext()->currentProject(), m_clipKey.key, lastPosition, currentPosition, params);
 }

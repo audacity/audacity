@@ -19,6 +19,7 @@ Item {
     property bool isStereo: clipsModel.isStereo
     property double channelHeightRatio: isStereo ? 0.5 : 1
     property bool moveActive: false
+    property bool underSelection: false
 
     signal interactionStarted()
     signal interactionEnded()
@@ -62,10 +63,75 @@ Item {
     }
 
     Item {
-        id: clipsContaner
+        id: clipsContainer
         anchors.fill: parent
         anchors.bottomMargin: sep.height
         z: 1
+
+        property bool isNearSample: false
+        property bool multiSampleEdit: false
+
+        function mapToAllClips(e, f) {
+            for (let i = 0; i < repeator.count; i++) {
+                let clipLoader = repeator.itemAt(i)
+                if (clipLoader && clipLoader.item) {
+                    let clipPos = clipLoader.mapFromItem(this, e.x, e.y)
+                    f(clipLoader.item, {button: e.button, modifiers: e.modifiers, x: clipPos.x, y: clipPos.y})
+                }
+            }
+        }
+
+        MouseArea {
+            id: clipsContainerMouseArea
+            propagateComposedEvents: true
+            hoverEnabled: false
+            pressAndHoldInterval: 100
+            enabled: !root.underSelection && clipsContainer.isNearSample
+
+            anchors.fill: parent
+
+            onClicked: function(e) {
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.mouseClicked(mouseEvent.x, mouseEvent.y)
+                })
+                e.accepted = false
+            }
+
+            onDoubleClicked: function(e) {
+                e.accepted = false
+            }
+            
+            onPressAndHold: function(e) {
+                clipsContainer.multiSampleEdit = true
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
+                })
+
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
+                })
+
+                clipsContainerMouseArea.hoverEnabled = true
+                e.accepted = false
+            }
+
+            onReleased: function(e) {
+                clipsContainer.multiSampleEdit = false
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
+                })
+            }
+
+            onPositionChanged: function(e) {
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
+                })
+
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
+                })
+            }
+        }
 
         Repeater {
             id: repeator
@@ -86,7 +152,7 @@ Item {
                         return null
                     }
 
-                    if (clipItem.x > (clipsContaner.width + clipsModel.cacheBufferPx)) {
+                    if (clipItem.x > (clipsContainer.width + clipsModel.cacheBufferPx)) {
                         return null
                     }
 
@@ -130,6 +196,7 @@ Item {
                 isMultiSelectionActive: root.isMultiSelectionActive
                 isDataSelected: root.isDataSelected
                 moveActive: root.moveActive
+                multiSampleEdit: clipsContainer.multiSampleEdit
 
                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
@@ -154,6 +221,10 @@ Item {
                         return -1
                     }
                     return rightNeighbor.x - (clipItem.x + clipItem.width)
+                }
+
+                onIsNearSampleChanged: function(isNearSample) {
+                    clipsContainer.isNearSample = isNearSample
                 }
 
                 onClipHeaderHoveredChanged: function(headerHovered) {

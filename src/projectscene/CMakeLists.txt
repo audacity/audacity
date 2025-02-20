@@ -75,6 +75,29 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/snaptoolbaritem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/snaptoolbaritem.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/isamplespainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainterutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainterutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iminmaxrmspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/minmaxrmspainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/minmaxrmspainter.h 
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iconnectingdotspainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/connectingdotspainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/connectingdotspainter.h 
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iau3wavepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/sampledata.h 
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformSettings.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformSettings.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformPainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformPainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveMetrics.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/wavepainterutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/wavepainterutils.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/cliplistitem.cpp
@@ -85,24 +108,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/multiclipcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/wavepainterproxy.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/wavepainterproxy.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/iwavepainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/isamplespainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/samplespainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/samplespainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/irmspainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/minmaxrmspainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/minmaxrmspainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/au3wavepainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/au3wavepainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformSettings.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformSettings.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformPainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformPainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveMetrics.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectionviewcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectionviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/pitchandspeedchangemodel.cpp

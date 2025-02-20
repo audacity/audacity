@@ -20,7 +20,7 @@ enum class sampleFormat : unsigned;
 
 namespace WaveClipUtilities {
 /*!
- @param t relative to clip start sample
+ @param t absolute time
  */
 WAVE_TRACK_API bool GetFloatAtTime(const WaveClip& clip, double t, size_t iChannel, float& value, bool mayThrow);
 

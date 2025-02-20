@@ -6,7 +6,7 @@
 
 using namespace au::projectscene;
 
-CustomCursor::CustomCursor(QQuickItem* parent)
+CustomCursor::CustomCursor(QQuickItem*)
 {
     auto changeCursor = [this](){
         if (m_active) {
@@ -14,7 +14,7 @@ CustomCursor::CustomCursor(QQuickItem* parent)
 
             QPixmap pixmap(m_source);
             if (!pixmap.isNull()) {
-                m_cursor = QCursor(pixmap.scaled(26, 26, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                m_cursor = QCursor(pixmap.scaled(m_size, m_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
                 QGuiApplication::setOverrideCursor(m_cursor);
             } else {
                 qWarning() << "Failed to load bitmap from source:" << m_source;
@@ -26,6 +26,7 @@ CustomCursor::CustomCursor(QQuickItem* parent)
 
     connect(this, &CustomCursor::activeChanged, changeCursor);
     connect(this, &CustomCursor::sourceChanged, changeCursor);
+    connect(this, &CustomCursor::sizeChanged, changeCursor);
 }
 
 bool CustomCursor::active() const
@@ -36,6 +37,11 @@ bool CustomCursor::active() const
 QString CustomCursor::source() const
 {
     return m_source;
+}
+
+int CustomCursor::size() const
+{
+    return m_size;
 }
 
 void CustomCursor::setActive(bool active)
@@ -56,4 +62,14 @@ void CustomCursor::setSource(QString source)
 
     m_source = source;
     emit sourceChanged();
+}
+
+void CustomCursor::setSize(int size)
+{
+    if (m_size == size) {
+        return;
+    }
+
+    m_size = size;
+    emit sizeChanged();
 }
