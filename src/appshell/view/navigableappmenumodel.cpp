@@ -55,6 +55,8 @@ QSet<int> possibleKeys(const QChar& keySymbol)
 NavigableAppMenuModel::NavigableAppMenuModel(QObject* parent)
     : AppMenuModel(parent)
 {
+    //! NOTE: We do not move focus to the app menu when the Alt key is released so we can use it easily on other components
+    m_moveFocusToApppMenyuOnAltRelease = false;
 }
 
 void NavigableAppMenuModel::load()
@@ -314,7 +316,11 @@ bool NavigableAppMenuModel::processEventForAppMenu(QEvent* event)
         } else {
             if (m_needActivateHighlight) {
                 saveMUNavigationSystemState();
+                if (!m_moveFocusToApppMenyuOnAltRelease) {
+                    break;
+                }
                 navigateToFirstMenu();
+                break;
             } else {
                 m_needActivateHighlight = true;
             }
