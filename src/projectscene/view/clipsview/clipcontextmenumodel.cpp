@@ -37,7 +37,7 @@ void ClipContextMenuModel::load()
     MenuItemList items {
         makeItemWithArg("clip-properties"),
         makeItemWithArg("clip-rename"),
-        makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems),
+        makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems, "colorMenu"),
         makeSeparator(),
         makeItemWithArg("clip-copy"),
         makeItemWithArg("duplicate"),
@@ -57,6 +57,7 @@ void ClipContextMenuModel::load()
     setItems(items);
 
     updateColorCheckedState();
+    updateColorMenu();
 }
 
 ClipKey ClipContextMenuModel::clipKey() const
@@ -124,6 +125,18 @@ void ClipContextMenuModel::updateColorCheckedState()
             state.checked = false;
             item.setState(state);
         }
+    }
+}
+
+void ClipContextMenuModel::updateColorMenu()
+{
+    ClipStyles::Style clipStyle = projectSceneConfiguration()->clipStyle();
+    MenuItem& colorMenu = findMenu("colorMenu");
+
+    if (clipStyle == ClipStyles::Style::CLASSIC) {
+        colorMenu.setState(muse::ui::UiActionState::make_disabled());
+    } else {
+        colorMenu.setState(muse::ui::UiActionState::make_enabled());
     }
 }
 

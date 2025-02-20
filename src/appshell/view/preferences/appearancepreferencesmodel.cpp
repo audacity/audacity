@@ -51,6 +51,11 @@ void AppearancePreferencesModel::init()
         emit currentFontIndexChanged();
         emit bodyTextSizeChanged();
     });
+
+    projectSceneConfiguration()->clipStyleChanged().onReceive(this, [this](const ClipStyles::Style& style){
+        Q_UNUSED(style);
+        emit clipStyleChanged();
+    });
 }
 
 bool AppearancePreferencesModel::isFollowSystemThemeAvailable() const
@@ -137,6 +142,20 @@ void AppearancePreferencesModel::setNewColor(const QColor& newColor, ColorType c
 QStringList AppearancePreferencesModel::allFonts() const
 {
     return uiConfiguration()->possibleFontFamilies();
+}
+
+ClipStyles::Style AppearancePreferencesModel::clipStyle() const
+{
+    return projectSceneConfiguration()->clipStyle();
+}
+
+void AppearancePreferencesModel::setClipStyle(ClipStyles::Style style)
+{
+    if (projectSceneConfiguration()->clipStyle() == style) {
+        return;
+    }
+
+    projectSceneConfiguration()->setClipStyle(style);
 }
 
 void AppearancePreferencesModel::setHighContrastEnabled(bool enabled)

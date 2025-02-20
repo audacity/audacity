@@ -34,5 +34,9 @@ public:
     virtual void setIsEffectsPanelVisible(bool visible) = 0;
 
     virtual const std::vector<std::pair<std::string, std::string> >& clipColors() const = 0;
+
+    virtual ClipStyles::Style clipStyle() const = 0;
+    virtual void setClipStyle(ClipStyles::Style style) = 0;
+    virtual muse::async::Channel<ClipStyles::Style> clipStyleChanged() const = 0;
 };
 }

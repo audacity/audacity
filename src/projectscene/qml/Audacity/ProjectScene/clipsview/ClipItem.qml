@@ -21,6 +21,10 @@ Rectangle {
     property alias channelHeightRatio: channelSplitter.channelHeightRatio
     property var canvas: null
     property color clipColor: "#677CE4"
+    property color currentClipHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
+    readonly property color classicHeaderColor: "#C3C8EC"
+    readonly property color classicHeaderSelectedColor: "#ACC3F0"
+    property int currentClipStyle: ClipStyle.COLORFUL
     property int groupId: -1
     property bool clipSelected: false
     property bool isDataSelected: false
@@ -349,7 +353,7 @@ Rectangle {
                 anchors.top: header.top
                 anchors.bottom: header.bottom
 
-                color: waveView.transformColor(clipColor)
+                color: currentClipStyle == ClipStyle.COLORFUL ? waveView.transformColor(clipColor) : classicHeaderSelectedColor
                 visible: root.isDataSelected
             }
 
@@ -676,7 +680,7 @@ Rectangle {
         State {
             name: "NORMAL"
             when: !root.clipSelected && !headerDragArea.containsMouse
-            PropertyChanges { target: header; color: root.clipColor }
+            PropertyChanges { target: header; color: root.currentClipHeaderColor}
             PropertyChanges { target: titleLabel; color: "#000000"}
             PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
@@ -686,7 +690,7 @@ Rectangle {
         State {
             name: "SELECTED"
             when: root.clipSelected && !headerDragArea.containsMouse
-            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.3) }
+            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.currentClipHeaderColor, 0.3) }
             PropertyChanges { target: titleLabel; color: "#000000" }
             PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
@@ -696,17 +700,17 @@ Rectangle {
         State {
             name: "NORMAL_HEADER_HOVERED"
             when: !root.clipSelected && headerDragArea.containsMouse
-            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.8)}
-            PropertyChanges { target: titleLabel; color: "#ffffff"}
-            PropertyChanges { target: pitchBtn; textColor: "#ffffff"; iconColor: "#ffffff" }
-            PropertyChanges { target: speedBtn; textColor: "#ffffff"; iconColor: "#ffffff" }
-            PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
+            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.currentClipHeaderColor, 0.8)}
+            PropertyChanges { target: titleLabel; color: "#000000"}
+            PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
+            PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
+            PropertyChanges { target: menuBtn; iconColor: "#000000"}
         },
 
         State {
             name: "SELECTED_HEADER_HOVERED"
             when: root.clipSelected && headerDragArea.containsMouse
-            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.2) }
+            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.currentClipHeaderColor, 0.2) }
             PropertyChanges { target: titleLabel; color: "#000000"}
             PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }

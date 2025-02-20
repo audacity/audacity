@@ -29,6 +29,7 @@ class WaveView : public QQuickPaintedItem
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::projectscene::IWavePainter> wavePainter;
+    muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
     WaveView(QQuickItem* parent = nullptr);
@@ -68,6 +69,8 @@ private:
 
     void updateView();
     IWavePainter::Params getWavePainterParams() const;
+    void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, bool selected) const;
+    void applyClassicStyle(IWavePainter::Params& params, bool selected) const;
 
     TimelineContext* m_context = nullptr;
     ClipKey m_clipKey;

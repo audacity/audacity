@@ -117,6 +117,7 @@ void ProjectSceneModule::registerUiTypes()
     // types
     qmlRegisterUncreatableType<TrackTypes>("Audacity.ProjectScene", 1, 0, "TrackType", "Not creatable from QML");
     qmlRegisterUncreatableType<ClipKey>("Audacity.ProjectScene", 1, 0, "ClipKey", "Not creatable from QML");
+    qmlRegisterUncreatableType<ClipStyles>("Audacity.ProjectScene", 1, 0, "ClipStyle", "Not creatable from QML");
 
     // common
     qmlRegisterType<TracksViewStateModel>("Audacity.ProjectScene", 1, 0, "TracksViewStateModel");
