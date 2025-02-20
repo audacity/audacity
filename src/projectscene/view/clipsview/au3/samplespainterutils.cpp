@@ -281,8 +281,8 @@ void interpolatePoints(std::vector<QPoint>& container, const QPoint& previousPos
                 cnt++;
             }
         } else {
-            for (auto i = previousPosition.x(); i >= finalPosition.x(); i--) {
-                container.push_back(QPoint(i, previousPosition.y() + (rate * cnt)));
+            for (auto i = finalPosition.x(); i <= previousPosition.x(); i++) {
+                container.push_back(QPoint(i, finalPosition.y() + (-rate * cnt)));
                 cnt++;
             }
         }
@@ -314,12 +314,11 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
     const auto waveChannel = *it;
 
     std::vector<QPoint> points;
-    points.push_back(currentPosition);
-
-    if (currentPosition != lastPosition) {
-        if (std::abs(lastPosition.x() - currentPosition.x()) > 1) {
-            interpolatePoints(points, lastPosition, currentPosition);
-        }
+    if (std::abs(lastPosition.x() - currentPosition.x()) > 1) {
+        points.reserve(std::abs(lastPosition.x() - currentPosition.x()));
+        interpolatePoints(points, lastPosition, currentPosition);
+    } else {
+        points.push_back(currentPosition);
     }
 
     const std::vector<double> channelHeight {
@@ -327,12 +326,24 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         params.geometry.height * (1 - params.channelHeightRatio),
     };
 
+    auto& settings = WaveformSettings::Get(*track);
+    const float dBRange = settings.dBRange;
+    const bool dB = !settings.isLinear();
+
+    float zoomMin, zoomMax;
+    auto& cache = WaveformScale::Get(*track);
+    cache.GetDisplayBounds(zoomMin, zoomMax);
+
     auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
     waveMetrics.height = channelHeight[currentChannel];
 
     const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
+    const auto startTime = zoomInfo.PositionToTime(points[0].x());
+
     double lastAdjustedTime = 0;
+    std::vector<float> samples;
+    samples.reserve(points.size());
     for (const auto& point : points) {
         const auto time = zoomInfo.PositionToTime(point.x());
         const auto clip = WaveChannelUtilities::GetClipAtTime(*waveChannel, time + waveClip->GetPlayStartTime());
@@ -353,22 +364,15 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
             continue;
         }
 
-        auto& settings = WaveformSettings::Get(*track);
-        const float dBRange = settings.dBRange;
-        const bool dB = !settings.isLinear();
-
-        float zoomMin, zoomMax;
-        auto& cache = WaveformScale::Get(*track);
-        cache.GetDisplayBounds(zoomMin, zoomMax);
-
         const auto y = std::min(
             static_cast<int>(point.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 2));
         const auto yy = std::max(y, 2);
 
         float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
-
-        auto const samplesFormat = clip->GetClip().GetSampleFormats();
-        WaveClipUtilities::SetFloatsFromTime(clip->GetClip(), adjustedTime, currentChannel, &newValue, 1, samplesFormat.Effective());
+        samples.push_back(newValue);
     }
+    WaveChannelUtilities::SetFloatsFromTime(*waveChannel, startTime + waveClip->GetPlayStartTime(), samples.data(),
+                                            samples.size(), floatSample,
+                                            PlaybackDirection::forward);
 }
 }
