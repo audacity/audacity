@@ -22,7 +22,6 @@ public:
     void close() override;
 
     std::string title() const override;
-    bool hasSavedVersion() const override;
 
     // internal
     uintptr_t au3ProjectPtr() const override;
@@ -31,7 +30,6 @@ private:
 
     const std::shared_ptr<Au3ProjectData> m_data;
     Observer::Subscription mTrackListSubstription;
-    bool m_hasSavedVersion = false;
 };
 
 class Au3ProjectCreator : public IAu3ProjectCreator
