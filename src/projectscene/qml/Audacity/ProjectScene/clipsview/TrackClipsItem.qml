@@ -20,6 +20,7 @@ Item {
     property double channelHeightRatio: isStereo ? 0.5 : 1
     property bool moveActive: false
     property bool underSelection: false
+    property bool altPressed: false
 
     signal interactionStarted()
     signal interactionEnded()
@@ -197,6 +198,7 @@ Item {
                 isDataSelected: root.isDataSelected
                 moveActive: root.moveActive
                 multiSampleEdit: clipsContainer.multiSampleEdit
+                altPressed: root.altPressed
 
                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
