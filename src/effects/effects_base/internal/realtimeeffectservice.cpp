@@ -336,6 +336,7 @@ void RealtimeEffectService::setIsActive(const RealtimeEffectStatePtr& stateId, b
         return;
     }
     stateId->SetActive(isActive);
+    projectHistory()->modifyState();
     m_isActiveChanged.send(stateId);
 }
 
@@ -353,8 +354,9 @@ bool RealtimeEffectService::trackEffectsActive(TrackId trackId) const
 void RealtimeEffectService::setTrackEffectsActive(TrackId trackId, bool active)
 {
     const auto list = realtimeEffectList(trackId);
-    if (list) {
+    if (list && list->IsActive() != active) {
         list->SetActive(active);
+        projectHistory()->modifyState();
     }
 }
 

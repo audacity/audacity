@@ -72,6 +72,13 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
     m_isUndoRedoAvailableChanged.notify();
 }
 
+void Au3ProjectHistory::modifyState(bool autoSave)
+{
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).ModifyState(autoSave);
+    ::UndoManager::Get(project).MarkUnsaved();
+}
+
 muse::async::Notification Au3ProjectHistory::isUndoRedoAvailableChanged() const
 {
     return m_isUndoRedoAvailableChanged;
