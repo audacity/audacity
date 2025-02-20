@@ -25,15 +25,20 @@
 #include <QObject>
 
 #include "modularity/ioc.h"
-#include "ui/iuiconfiguration.h"
 #include "async/asyncable.h"
+#include "ui/iuiconfiguration.h"
+
+#include "projectscene/internal/projectsceneconfiguration.h"
+
+using namespace au::projectscene;
 
 namespace au::appshell {
 class AppearancePreferencesModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    INJECT(muse::ui::IUiConfiguration, uiConfiguration)
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::Inject<projectscene::ProjectSceneConfiguration> projectSceneConfiguration;
 
     Q_PROPERTY(bool isFollowSystemThemeAvailable READ isFollowSystemThemeAvailable CONSTANT)
     Q_PROPERTY(bool isFollowSystemTheme READ isFollowSystemTheme WRITE setFollowSystemTheme NOTIFY isFollowSystemThemeChanged)
@@ -48,6 +53,8 @@ class AppearancePreferencesModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(int currentFontIndex READ currentFontIndex WRITE setCurrentFontIndex NOTIFY currentFontIndexChanged)
     Q_PROPERTY(int bodyTextSize READ bodyTextSize WRITE setBodyTextSize NOTIFY bodyTextSizeChanged)
+
+    Q_PROPERTY(ClipStyles::Style clipStyle READ clipStyle NOTIFY clipStyleChanged)
 
 public:
     explicit AppearancePreferencesModel(QObject* parent = nullptr);
@@ -81,6 +88,9 @@ public:
     Q_INVOKABLE void setNewColor(const QColor& newColor, ColorType colorType);
     Q_INVOKABLE QStringList allFonts() const;
 
+    Q_INVOKABLE ClipStyles::Style clipStyle() const;
+    Q_INVOKABLE void setClipStyle(ClipStyles::Style style);
+
 public slots:
     void setFollowSystemTheme(bool enabled);
     void setHighContrastEnabled(bool enabled);
@@ -94,6 +104,7 @@ signals:
     void themesChanged();
     void currentFontIndexChanged();
     void bodyTextSizeChanged();
+    void clipStyleChanged();
 
 private:
     muse::ui::ThemeInfo currentTheme() const;

@@ -16,6 +16,7 @@ static const muse::Settings::Key TIMELINE_RULER_MODE(moduleName, "projectscene/t
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
 static const muse::Settings::Key INSERT_SILENCE_DURATION(moduleName, "projectscene/insertSilenceDuration");
 static const muse::Settings::Key INSERT_SILENCE_DURATION_FORMAT(moduleName, "projectscene/insertSilenceDurationFormat");
+static const muse::Settings::Key CLIP_STYLE(moduleName, "projectscene/clipStyle");
 
 void ProjectSceneConfiguration::init()
 {
@@ -33,6 +34,11 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(TIMELINE_RULER_MODE, muse::Val(TimelineRulerMode::MINUTES_AND_SECONDS));
     muse::settings()->valueChanged(TIMELINE_RULER_MODE).onReceive(nullptr, [this](const muse::Val& val) {
         m_timelineRulerModeChanged.send(val.toEnum<TimelineRulerMode>());
+    });
+
+    muse::settings()->setDefaultValue(CLIP_STYLE, muse::Val(ClipStyles::Style::COLORFUL));
+    muse::settings()->valueChanged(CLIP_STYLE).onReceive(nullptr, [this](const muse::Val& val) {
+        m_clipStyleChanged.send(val.toEnum<ClipStyles::Style>());
     });
 }
 
@@ -129,4 +135,19 @@ const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfigurati
     };
 
     return colors;
+}
+
+ClipStyles::Style ProjectSceneConfiguration::clipStyle() const
+{
+    return muse::settings()->value(CLIP_STYLE).toEnum<ClipStyles::Style>();
+}
+
+void ProjectSceneConfiguration::setClipStyle(ClipStyles::Style style)
+{
+    muse::settings()->setSharedValue(CLIP_STYLE, muse::Val(style));
+}
+
+muse::async::Channel<ClipStyles::Style> ProjectSceneConfiguration::clipStyleChanged() const
+{
+    return m_clipStyleChanged;
 }

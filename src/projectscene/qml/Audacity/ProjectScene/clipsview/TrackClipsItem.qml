@@ -187,6 +187,7 @@ Item {
                 canvas: root.canvas
                 title: clipItem.title
                 clipColor: clipItem.color
+                currentClipStyle: clipsModel.clipStyle
                 groupId: clipItem.groupId
                 clipKey: clipItem.key
                 clipTime: clipItem.time
