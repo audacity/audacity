@@ -111,27 +111,38 @@ PreferencesPage {
 
         SeparatorLine {}
 
-        UiFontSection {
-            allFonts: appearanceModel.allFonts()
-            currentFontIndex: appearanceModel.currentFontIndex
-            bodyTextSize: appearanceModel.bodyTextSize
+        ClipStyleSection {
+            currentClipStyle: appearanceModel.clipStyle
 
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 4
-
-            onFontChangeRequested: function(newFontIndex) {
-                appearanceModel.currentFontIndex = newFontIndex
-            }
-
-            onBodyTextSizeChangeRequested: function(newBodyTextSize) {
-                appearanceModel.bodyTextSize = newBodyTextSize
-            }
-
-            onFocusChanged: {
-                if (activeFocus) {
-                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
-                }
+            onClipStyleChangeRequested: function(clipStyle) {
+                appearanceModel.setClipStyle(clipStyle)
             }
         }
+
+        //! NOTE: hide font settings for now
+        // SeparatorLine {}
+
+        // UiFontSection {
+        //     allFonts: appearanceModel.allFonts()
+        //     currentFontIndex: appearanceModel.currentFontIndex
+        //     bodyTextSize: appearanceModel.bodyTextSize
+
+        //     navigation.section: root.navigationSection
+        //     navigation.order: root.navigationOrderStart + 4
+
+        //     onFontChangeRequested: function(newFontIndex) {
+        //         appearanceModel.currentFontIndex = newFontIndex
+        //     }
+
+        //     onBodyTextSizeChangeRequested: function(newBodyTextSize) {
+        //         appearanceModel.bodyTextSize = newBodyTextSize
+        //     }
+
+        //     onFocusChanged: {
+        //         if (activeFocus) {
+        //             root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+        //         }
+        //     }
+        // }
     }
 }

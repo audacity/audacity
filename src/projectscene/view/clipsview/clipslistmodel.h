@@ -5,18 +5,16 @@
 
 #include <QAbstractListModel>
 
-#include "actions/actionable.h"
-
 #include "modularity/ioc.h"
+#include "actions/actionable.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "global/iinteractive.h"
-#include "trackedit/itrackeditinteraction.h"
-#include "trackedit/iselectioncontroller.h"
-
 #include "global/async/asyncable.h"
-#include "trackedit/trackedittypes.h"
 
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditinteraction.h"
+#include "trackedit/trackedittypes.h"
 #include "../timeline/timelinecontext.h"
 
 #include "cliplistitem.h"
@@ -29,6 +27,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(bool isStereo READ isStereo NOTIFY isStereoChanged FINAL)
+    Q_PROPERTY(ClipStyles::Style clipStyle READ clipStyle NOTIFY clipStyleChanged FINAL)
 
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
@@ -37,6 +36,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
 public:
     ClipsListModel(QObject* parent = nullptr);
@@ -49,6 +49,7 @@ public:
     int selectedClipIdx() const;
     void setSelectedClipIdx(int newSelectedClipIdx);
     bool isStereo() const;
+    ClipStyles::Style clipStyle() const;
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
@@ -89,6 +90,7 @@ signals:
     void timelineContextChanged();
     void selectedClipIdxChanged();
     void isStereoChanged();
+    void clipStyleChanged();
 
     void requestClipTitleEdit(int index);
 
@@ -130,6 +132,7 @@ private:
     QList<ClipListItem*> m_clipList;
     QList<ClipListItem*> m_selectedItems;
     bool m_isStereo = false;
+    ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
 
     QMetaObject::Connection m_autoScrollConnection;
 };

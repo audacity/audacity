@@ -109,6 +109,17 @@ enum class TimelineRulerMode {
     BEATS_AND_MEASURES
 };
 
+class ClipStyles
+{
+    Q_GADGET
+public:
+    enum class Style {
+        COLORFUL = 0,
+        CLASSIC
+    };
+    Q_ENUM(Style)
+};
+
 enum class Direction {
     Left = 0,
     Right

@@ -16,6 +16,7 @@
         <file>qml/shared/AccentColorsList.qml</file>
         <file>qml/shared/ThemeSamplesList.qml</file>
         <file>qml/shared/internal/ThemeSample.qml</file>
+        <file>qml/shared/internal/ClipStyleSample.qml</file>
         <file>qml/FirstLaunchSetup/FirstLaunchSetupDialog.qml</file>
         <file>qml/FirstLaunchSetup/Page.qml</file>
         <file>qml/FirstLaunchSetup/ThemesPage.qml</file>
@@ -41,6 +42,7 @@
         <file>qml/Preferences/internal/PreferencesButtonsPanel.qml</file>
         <file>qml/Preferences/internal/PreferencesMenu.qml</file>
         <file>qml/Preferences/internal/ThemesSection.qml</file>
+        <file>qml/Preferences/internal/ClipStyleSection.qml</file>
         <file>qml/Preferences/internal/AccentColorsSection.qml</file>
         <file>qml/Preferences/internal/UiFontSection.qml</file>
         <file>qml/Preferences/internal/UiColorsSection.qml</file>
@@ -93,6 +95,8 @@
         <file>qml/platform/AppMenuBar.qml</file>
         <file>qml/platform/AppButtonBackground.qml</file>
         <file>resources/LoadingScreen.svg</file>
+        <file>resources/Classic.svg</file>
+        <file>resources/Colorful.svg</file>
         <file>qml/Preferences/BraillePreferencesPage.qml</file>
         <file>qml/Preferences/internal/BrailleSection.qml</file>
         <file>qml/Preferences/internal/BrailleAdvancedSection.qml</file>
