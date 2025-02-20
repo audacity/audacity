@@ -15,6 +15,11 @@ static constexpr auto X_MIN_DISTANCE = 5;
 static constexpr auto Y_MIN_DISTANCE = 5;
 static constexpr auto BASELINE_HIT_AREA_SIZE = 20;
 
+static constexpr auto SMOOTHING_KERNEL_RADIUS = 3;
+static constexpr auto SMOOTHING_BRUSH_RADIUS = 5;
+static constexpr double SMOOTHING_PROPORTION_MAX = 0.7;
+static constexpr double SMOOTHING_PROPORTION_MIN = 0.0;
+
 namespace au::projectscene::samplespainterutils {
 float FromDB(float value, double dBRange)
 {
@@ -230,6 +235,7 @@ std::optional<int> isNearSample(std::shared_ptr<au::project::IAudacityProject> p
 
         // It not on the baseline hit area check if it is closer enough to x position
         if (std::abs(adjustedPosition - position.x()) > X_MIN_DISTANCE) {
+            top += static_cast<int>(waveMetrics.height);
             continue;
         }
 
@@ -374,5 +380,111 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
     WaveChannelUtilities::SetFloatsFromTime(*waveChannel, startTime + waveClip->GetPlayStartTime(), samples.data(),
                                             samples.size(), narrowestSampleFormat,
                                             PlaybackDirection::forward);
+}
+
+void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
+                        const trackedit::ClipKey& clipKey, const QPoint& currentPosition, const IWavePainter::Params& params)
+{
+    //  Smoothing works like this:  There is a smoothing kernel radius constant that
+    //  determines how wide the averaging window is.  Plus, there is a smoothing brush radius,
+    //  which determines how many pixels wide around the selected pixel this smoothing is applied.
+    //
+    //  Samples will be replaced by a mixture of the original points and the smoothed points,
+    //  with a triangular mixing probability whose value at the center point is
+    //  SMOOTHING_PROPORTION_MAX and at the far bounds is SMOOTHING_PROPORTION_MIN
+
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
+    if (!track) {
+        return;
+    }
+
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    if (!waveClip) {
+        return;
+    }
+
+    const auto channels = track->Channels();
+    if (currentChannel >= channels.size()) {
+        return;
+    }
+
+    auto it = channels.begin();
+    std::advance(it, currentChannel);
+
+    auto channel = *it;
+
+    auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
+    const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
+
+    const auto time = zoomInfo.PositionToTime(currentPosition.x());
+    const auto sampleOffset = waveClip->TimeToSamples(time);
+    const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
+
+    //Get the region of samples around the selected point
+    size_t sampleRegionSize = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
+    Floats sampleRegion{ sampleRegionSize };
+    Floats newSampleRegion{ 1 + 2 * (size_t)SMOOTHING_BRUSH_RADIUS };
+
+    //Get a sample from the clip to do some tricks on.
+    constexpr auto mayThrow = false;
+    const auto sampleRegionRange = WaveChannelUtilities::GetFloatsCenteredAroundTime(*channel,
+                                                                                     adjustedTime + waveClip->GetPlayStartTime(),
+                                                                                     sampleRegion.get(),
+                                                                                     SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS,
+                                                                                     mayThrow);
+
+    //Go through each point of the smoothing brush and apply a smoothing operation.
+    for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
+        float sumOfSamples = 0;
+        for (auto ii = -SMOOTHING_KERNEL_RADIUS; ii <= SMOOTHING_KERNEL_RADIUS; ++ii) {
+            //Go through each point of the smoothing kernel and find the average
+            const auto sampleRegionIndex
+                =ii + jj + SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS;
+            const auto inRange = sampleRegionRange.first <= sampleRegionIndex
+                                 && sampleRegionIndex < sampleRegionRange.second;
+            if (!inRange) {
+                continue;
+            }
+            //The average is a weighted average, scaled by a weighting kernel that is simply triangular
+            // A triangular kernel across N items, with a radius of R ( 2 R + 1 points), if the farthest:
+            // points have a probability of a, the entire triangle has total probability of (R + 1)^2.
+            //      For sample number ii and middle brush sample M,  (R + 1 - abs(M-ii))/ ((R+1)^2) gives a
+            //   legal distribution whose total probability is 1.
+            //
+            //
+            //                weighting factor                       value
+            sumOfSamples += (SMOOTHING_KERNEL_RADIUS + 1 - abs(ii))
+                            * sampleRegion[sampleRegionIndex];
+        }
+        newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS]
+            =sumOfSamples
+              / ((SMOOTHING_KERNEL_RADIUS + 1) * (SMOOTHING_KERNEL_RADIUS + 1));
+    }
+
+    // Now that the NEW sample levels are determined, go through each and mix it appropriately
+    // with the original point, according to a 2-part linear function whose center has probability
+    // SMOOTHING_PROPORTION_MAX and extends out SMOOTHING_BRUSH_RADIUS, at which the probability is
+    // SMOOTHING_PROPORTION_MIN.  _MIN and _MAX specify how much of the smoothed curve make it through.
+
+    float prob;
+
+    for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
+        prob
+            =SMOOTHING_PROPORTION_MAX
+              - (float)abs(jj) / SMOOTHING_BRUSH_RADIUS
+              * (SMOOTHING_PROPORTION_MAX - SMOOTHING_PROPORTION_MIN);
+
+        newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS]
+            =newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS] * prob
+              + sampleRegion[SMOOTHING_BRUSH_RADIUS + SMOOTHING_KERNEL_RADIUS + jj]
+              * (1 - prob);
+    }
+    // Set a range of samples around the mouse event
+    // Don't require dithering later
+    WaveChannelUtilities::SetFloatsCenteredAroundTime(*channel,
+                                                      adjustedTime + waveClip->GetPlayStartTime(),
+                                                      newSampleRegion.get(), SMOOTHING_BRUSH_RADIUS,
+                                                      narrowestSampleFormat);
 }
 }
