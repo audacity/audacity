@@ -449,11 +449,8 @@ void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::p
             //The average is a weighted average, scaled by a weighting kernel that is simply triangular
             // A triangular kernel across N items, with a radius of R ( 2 R + 1 points), if the farthest:
             // points have a probability of a, the entire triangle has total probability of (R + 1)^2.
-            //      For sample number ii and middle brush sample M,  (R + 1 - abs(M-ii))/ ((R+1)^2) gives a
-            //   legal distribution whose total probability is 1.
-            //
-            //
-            //                weighting factor                       value
+            // For sample number ii and middle brush sample M,  (R + 1 - abs(M-ii))/ ((R+1)^2) gives a
+            // legal distribution whose total probability is 1.
             sumOfSamples += (SMOOTHING_KERNEL_RADIUS + 1 - abs(ii))
                             * sampleRegion[sampleRegionIndex];
         }
@@ -466,9 +463,7 @@ void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::p
     // with the original point, according to a 2-part linear function whose center has probability
     // SMOOTHING_PROPORTION_MAX and extends out SMOOTHING_BRUSH_RADIUS, at which the probability is
     // SMOOTHING_PROPORTION_MIN.  _MIN and _MAX specify how much of the smoothed curve make it through.
-
     float prob;
-
     for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
         prob
             =SMOOTHING_PROPORTION_MAX
