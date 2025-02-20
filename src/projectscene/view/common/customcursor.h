@@ -14,6 +14,8 @@ class CustomCursor : public QObject
     Q_PROPERTY(int size READ size WRITE setSize NOTIFY sizeChanged FINAL)
 
 public:
+    static QString s_source;
+
     explicit CustomCursor(QQuickItem* parent = nullptr);
     ~CustomCursor() = default;
 
@@ -32,7 +34,6 @@ signals:
 
 private:
     bool m_active = false;
-    QString m_source;
     QCursor m_cursor;
     int m_size = DEFAULT_CURSOR_SIZE;
 };
