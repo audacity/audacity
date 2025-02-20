@@ -81,6 +81,8 @@ Rectangle {
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
     property bool headerHovered: headerDragArea.containsMouse
     property var lastSample: undefined
+    property bool altPressed: false
+    property alias isStemPlot: waveView.isStemPlot
 
     onHeaderHoveredChanged: {
         root.clipHeaderHoveredChanged(headerHovered)
@@ -91,6 +93,7 @@ Rectangle {
     readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
     readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
+    readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
 
     function editTitle() {
         editLoader.edit(titleLabel.text)
@@ -106,7 +109,9 @@ Rectangle {
     }
 
     function mousePressAndHold(x, y) {
-        waveView.setLastClickPos(x, y - header.height, x, y - header.height)
+        root.altPressed
+            ? waveView.smoothLastClickPos(x, y - header.height)
+            : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
         waveView.update()
     }
 
@@ -114,7 +119,9 @@ Rectangle {
     }
 
     function mouseClicked(x, y) {
-        waveView.setLastClickPos(x, y - header.height, x, y - header.height)
+        root.altPressed
+            ? waveView.smoothLastClickPos(x, y - header.height)
+            : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
         waveView.update()
     }
 
@@ -178,20 +185,30 @@ Rectangle {
     }
 
     CustomCursor {
+        //! TODO AU4: We should move it to the parent level at least
+        //!      to avoid multiple clips concurrently change the cursor
         id: customCursor
-        active: (waveView.isNearSample || leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
+        active: {
+            return ((waveView.isStemPlot && root.altPressed) || waveView.isNearSample || leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
             || leftTrimStretchEdgeHover.pressedButtons || rightTrimStretchEdgeHover.pressedButtons)
+        }
         source: {
+            if (waveView.isStemPlot && root.altPressed) {
+                return smoothShape
+            }
             if (waveView.isNearSample) {
                 return pencilShape
             }
+
             return leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
         }
-        size: waveView.isNearSample ? 36 : 26
+        size: (waveView.isNearSample && !root.altPressed) ? 36 : 26
     }
 
     MouseArea {
         id: leftTrimStretchEdgeHover
+
+        enabled: !(root.isStemPlot && root.altPressed) 
 
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
@@ -254,6 +271,8 @@ Rectangle {
 
     MouseArea {
         id: rightTrimStretchEdgeHover
+
+        enabled: !(root.isStemPlot && root.altPressed)
 
         x: root.width - 5
         z: headerDragArea.z + 1
@@ -356,6 +375,8 @@ Rectangle {
             MouseArea {
                 id: headerDragArea
                 anchors.fill: parent
+
+                enabled:  !(root.isStemPlot && root.altPressed)
 
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
@@ -542,7 +563,7 @@ Rectangle {
             clipSelected: root.clipSelected
 
             function onWaveViewPositionChanged(x, y) {
-                if (root.multiSampleEdit) {
+                if (root.multiSampleEdit && !root.altPressed) {
                     var lastX = root.lastSample.x
                     var lastY = root.lastSample.y
                     waveView.setLastClickPos(lastX, lastY, x, y)
@@ -568,7 +589,7 @@ Rectangle {
             MouseArea {
                 id: waveViewArea
                 cursorShape: Qt.IBeamCursor
-                enabled: waveView.isNearSample
+                enabled: waveView.isNearSample || (waveView.isStemPlot && root.altPressed)
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
                 propagateComposedEvents: true
@@ -576,7 +597,9 @@ Rectangle {
                 anchors.fill: parent
 
                 onClicked: function(e) {
-                    waveView.setLastClickPos(e.x, e.y, e.x, e.y)
+                    root.altPressed
+                        ? waveView.smoothLastClickPos(e.x, e.y)
+                        : waveView.setLastClickPos(e.x, e.y, e.x, e.y)
                     waveView.update()
                 }
 
@@ -604,7 +627,10 @@ Rectangle {
 
             onIsNearSampleChanged: {
                 root.isNearSampleChanged(isNearSample)
-            }    
+                if(isNearSample) {
+                    waveView.forceActiveFocus()
+                }
+            }
         }
 
         RoundedRectangle {
