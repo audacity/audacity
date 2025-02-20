@@ -115,6 +115,9 @@ bool SoundTouchBase::ProcessWithTimeWarper(InitFunction initer,
          if (!orig.GetSelected())
             return fallthrough();
 
+         if (!orig.NIntervals())
+            return fallthrough();
+
          // Process only if the right marker is to the right of the left marker
          if (mT1 > mT0) {
             //Transform the marker timepoints to samples
