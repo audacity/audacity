@@ -342,6 +342,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectManager.h
     ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectState.cpp
     ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectState.h
+    ${AU3_LIBRARIES}/lib-realtime-effects/SavedMasterEffectList.cpp
+    ${AU3_LIBRARIES}/lib-realtime-effects/SavedMasterEffectList.h
 
     ${AU3_LIBRARIES}/lib-mixer/Mix.cpp
     ${AU3_LIBRARIES}/lib-mixer/Mix.h

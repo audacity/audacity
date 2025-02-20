@@ -11,6 +11,7 @@
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 #include "libraries/lib-project-history/ProjectHistory.h"
+#include "libraries/lib-realtime-effects/SavedMasterEffectList.h"
 #include "domconverter.h"
 #include "TempoChange.h"
 
@@ -93,7 +94,7 @@ bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
         pTrack->LinkConsistencyFix();
     }
 
-    m_hasSavedVersion = true;
+    SavedMasterEffectList::Get(project).UpdateCopy();
 
     return true;
 }
@@ -102,6 +103,7 @@ bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
 {
     auto& project = m_data->projectRef();
 
+    SavedMasterEffectList::Get(project).UpdateCopy();
 
     auto& projectFileIO = ProjectFileIO::Get(project);
     auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), &TrackList::Get(project));
