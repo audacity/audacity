@@ -315,10 +315,10 @@ bool NavigableAppMenuModel::processEventForAppMenu(QEvent* event)
             restoreMUNavigationSystemState();
         } else {
             if (m_needActivateHighlight) {
-                saveMUNavigationSystemState();
                 if (!m_moveFocusToApppMenyuOnAltRelease) {
                     break;
                 }
+                saveMUNavigationSystemState();
                 navigateToFirstMenu();
                 break;
             } else {
