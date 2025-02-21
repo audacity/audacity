@@ -72,6 +72,9 @@
         <file>resources/win_opengl_buglist.json</file>
         <file>qml/Preferences/internal/BaseSection.qml</file>
         <file>qml/Preferences/internal/LanguagesSection.qml</file>
+        <file>qml/Preferences/internal/NumberFormatSection.qml</file>
+        <file>qml/Preferences/internal/TemporaryFilesSection.qml</file>
+        <file>qml/Preferences/internal/FreeSpaceSection.qml</file>
         <file>qml/Preferences/internal/AutoSaveSection.qml</file>
         <file>qml/Preferences/internal/RemoteControlSection.qml</file>
         <file>qml/Preferences/internal/ProgramStartSection.qml</file>

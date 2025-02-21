@@ -24,7 +24,7 @@ include(FetchContent)
 FetchContent_Declare(
   muse_framework
   GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u250219
+  GIT_TAG        u250220
 )
 
 FetchContent_GetProperties(muse_framework)
@@ -170,6 +170,7 @@ endif()
 
 add_subdirectory(${muse_framework_SOURCE_DIR}/framework ${muse_framework_BINARY_DIR})
 add_subdirectory(src)
+add_subdirectory(share)
 
 if (MSVC)
     # Now that the `audacity` target is defined, we can set it as the startup project in Visual Studio.
