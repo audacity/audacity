@@ -917,12 +917,12 @@ bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool opt
 bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
     muse::Concurrent::run([this, clipKey]() {
-        m_progress->started.notify();
+        m_progress->start();
 
         muse::ProgressResult result;
 
         DEFER {
-            m_progress->finished.send(result);
+            m_progress->finish(result);
         };
 
         WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
@@ -936,7 +936,7 @@ bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
         }
 
         auto progressCallBack = [this](double progressFraction) {
-            m_progress->progressChanged.send(progressFraction * 1000, 1000, "");
+            m_progress->progress(progressFraction * 1000, 1000, "");
         };
 
         waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
