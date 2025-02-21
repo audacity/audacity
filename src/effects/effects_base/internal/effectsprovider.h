@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include "async/asyncable.h"
+#include "global/async/asyncable.h"
 #include "modularity/ioc.h"
 #include "global/iinteractive.h"
 #include "context/iglobalcontext.h"
@@ -55,14 +55,15 @@ public:
     muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                             EffectSettings& settings) override;
 
-    muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings) override;
+    muse::Ret previewEffect(au3::Au3Project& project, Effect* effect, EffectSettings& settings,
+                            muse::ProgressPtr playProgress = nullptr) override;
 
 private:
 
     bool isVstSupported() const;
     bool isNyquistSupported() const;
 
-    muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);
+    muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings, muse::ProgressPtr playProgress);
 
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
