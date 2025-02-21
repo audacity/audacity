@@ -8,6 +8,10 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/selectioncontrollermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditprojectmock.h
     ${CMAKE_CURRENT_LIST_DIR}../../../project/internal/audacityproject.cpp
+    ${CMAKE_CURRENT_LIST_DIR}../../../../au3/tests/MockedPrefs.cpp
+    #${CMAKE_CURRENT_LIST_DIR}../../../../au3/tests/MockedAudio.cpp
+    ${CMAKE_CURRENT_LIST_DIR}../../../project/internal/audacityproject.cpp
+    ${CMAKE_CURRENT_LIST_DIR}../../../projectscene/internal/projectsceneconfiguration.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/au3interaction_tests.cpp
     )

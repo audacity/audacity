@@ -3,7 +3,7 @@
 */
 #include "projectsceneconfiguration.h"
 #include "NumericConverterFormats.h"
-#include "types/projectscenetypes.h"
+#include "projectscene/types/projectscenetypes.h"
 
 #include "settings.h"
 
