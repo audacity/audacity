@@ -73,6 +73,11 @@ QString ProjectPageModel::tracksPanelName() const
     return TRACKS_PANEL_NAME;
 }
 
+QString ProjectPageModel::historyPanelName() const
+{
+    return HISTORY_PANEL_NAME;
+}
+
 QString ProjectPageModel::instrumentsPanelName() const
 {
     return INSTRUMENTS_PANEL_NAME;
