@@ -7,10 +7,6 @@
 
 #include "global/async/async.h"
 
-Au3BasicUI::~Au3BasicUI()
-{
-}
-
 void Au3BasicUI::DoCallAfter(const BasicUI::Action& action)
 {
     muse::async::Async::call(this, action);

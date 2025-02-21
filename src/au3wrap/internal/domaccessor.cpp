@@ -26,6 +26,21 @@ const Au3Track* DomAccessor::findTrack(const Au3Project& prj, const Au3TrackId& 
     return track;
 }
 
+const Au3Track* DomAccessor::findTrackByIndex(const Au3Project& prj, size_t index)
+{
+    const Au3Track* track = nullptr;
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
+    size_t i = 0;
+    for (const Au3Track* t : tracks) {
+        if (i == index) {
+            track = t;
+            break;
+        }
+    }
+
+    return track;
+}
+
 Au3WaveTrack* DomAccessor::findWaveTrack(Au3Project& prj, const Au3TrackId& au3trackId)
 {
     return const_cast<Au3WaveTrack*>(findWaveTrack(const_cast<const Au3Project&>(prj), au3trackId));
@@ -36,10 +51,27 @@ const Au3WaveTrack* DomAccessor::findWaveTrack(const Au3Project& prj, const Au3T
     return dynamic_cast<const Au3WaveTrack*>(findTrack(prj, au3trackId));
 }
 
+const Au3WaveTrack* DomAccessor::findWaveTrackByIndex(const Au3Project& prj, size_t index)
+{
+    return dynamic_cast<const Au3WaveTrack*>(findTrackByIndex(prj, index));
+}
+
 std::shared_ptr<Au3WaveClip> DomAccessor::findWaveClip(Au3WaveTrack* track, int64_t au3ClipId)
 {
     for (const std::shared_ptr<Au3WaveClip>& interval : track->Intervals()) {
         if (interval->GetId() == au3ClipId) {
+            return interval;
+        }
+    }
+
+    return nullptr;
+}
+
+std::shared_ptr<Au3WaveClip> DomAccessor::findWaveClip(Au3WaveTrack* track, size_t index)
+{
+    int i = 0;
+    for (const std::shared_ptr<Au3WaveClip>& interval : track->Intervals()) {
+        if (i == index) {
             return interval;
         }
     }
