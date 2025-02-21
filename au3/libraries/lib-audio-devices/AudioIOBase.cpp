@@ -726,7 +726,6 @@ int AudioIOBase::getPlayDevIndex(const wxString& devNameArg)
     //      And I can't imagine how far we'll get specifying an "invalid" index later
     //      on...are we certain "0" even exists?
     if (deviceNum < 0) {
-        assert(false);
         deviceNum = 0;
     }
 

@@ -5,19 +5,14 @@
 
 #include "../../itrackeditinteraction.h"
 
-#include "Track.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-
-#include "iinteractive.h"
-#include "iprojecthistory.h"
-#include "iselectioncontroller.h"
-#include "itrackeditclipboard.h"
 #include "modularity/ioc.h"
+#include "iinteractive.h"
 #include "context/iglobalcontext.h"
+#include "../../iprojecthistory.h"
+#include "../../iselectioncontroller.h"
+#include "../../itrackeditclipboard.h"
 
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/trackcolor.h"
 
 namespace au::trackedit {
 class Au3Interaction : public ITrackeditInteraction
@@ -105,9 +100,11 @@ public:
     muse::ProgressPtr progress() const override;
 
 private:
+    friend class Au3InteractionTests;
+
     au3::Au3Project& projectRef() const;
     TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
-    au3::Au3Track::Holder createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
+    std::shared_ptr<au3::Au3Track> createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                               size_t clipboardTracksSize) const;
     TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,

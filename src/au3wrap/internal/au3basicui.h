@@ -10,9 +10,6 @@
 
 class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable
 {
-public:
-    ~Au3BasicUI() override;
-
 protected:
     void DoCallAfter(const BasicUI::Action& action) override;
     void DoYield() override;

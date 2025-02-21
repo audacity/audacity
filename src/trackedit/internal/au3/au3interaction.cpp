@@ -68,7 +68,7 @@ TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<TrackData>& tra
     return tracksIdsPastedInto;
 }
 
-Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track> track, Au3TrackList& list, secs_t begin)
+std::shared_ptr<au::au3::Au3Track> Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track> track, Au3TrackList& list, secs_t begin)
 {
     auto& trackFactory = WaveTrackFactory::Get(projectRef());
     auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
