@@ -9,6 +9,7 @@
 #include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
 #include "playback/iplayback.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -28,7 +29,8 @@ class PlaybackToolBarTimeItem : public muse::uicomponents::ToolBarItem
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<playback::IPlayback> playback;
+    muse::Inject<IPlayback> playback;
+    muse::Inject<IPlaybackConfiguration> configuration;
 
 public:
     explicit PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
@@ -54,7 +56,5 @@ signals:
 
 private:
     context::IPlaybackStatePtr playbackState() const;
-
-    int m_currentFormat = 0;
 };
 }

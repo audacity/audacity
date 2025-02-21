@@ -7,5 +7,6 @@
         <file>configs/high_contrast_white.cfg</file>
         <file>configs/shortcuts.cfg</file>
         <file>configs/data/shortcuts.xml</file>
+        <file>configs/workspaces.cfg</file>
     </qresource>
 </RCC>

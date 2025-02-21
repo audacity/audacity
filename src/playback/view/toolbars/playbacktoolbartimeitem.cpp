@@ -7,6 +7,8 @@
 
 #include "playback/iaudiooutput.h"
 
+static const int INVALID_FORMAT = -1;
+
 using namespace au::playback;
 using namespace au::audio;
 
@@ -30,21 +32,28 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
 
         emit timeSignatureChanged();
     });
+
+    configuration()->playbackTimeItemFormatChanged().onNotify(this, [this](){
+        emit currentFormatChanged();
+    });
 }
 
 int PlaybackToolBarTimeItem::currentFormat() const
 {
-    return m_currentFormat; // from settings
+    return static_cast<int>(configuration()->playbackTimeItemFormat());
 }
 
 void PlaybackToolBarTimeItem::setCurrentFormat(int format)
 {
-    if (m_currentFormat == format) {
+    if (format == INVALID_FORMAT) {
         return;
     }
 
-    m_currentFormat = format;
-    emit currentFormatChanged();
+    if (currentFormat() == format) {
+        return;
+    }
+
+    configuration()->setPlaybackTimeItemFormat(static_cast<TimecodeFormatType>(format));
 }
 
 double PlaybackToolBarTimeItem::currentValue() const

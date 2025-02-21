@@ -119,13 +119,37 @@ DockPage {
             alignment: DockToolBarAlignment.Center
             contentBottomPadding: 2
 
-            compactPriorityOrder: 1
+            compactPriorityOrder: 2
 
             ProjectToolBar {
                 isCompactMode: projectToolBar.isCompact
 
                 navigationPanel.section: root.topToolKeyNavSec
                 navigationPanel.order: 2
+            }
+        },
+
+        DockToolBar {
+            id: workspacesToolBar
+
+            objectName: pageModel.workspacesToolBarName()
+            title: qsTrc("appshell", "Workspaces toolbar")
+
+            floatable: false
+            closable: false
+            resizable: false
+            separatorsVisible: false
+
+            alignment: DockToolBarAlignment.Right
+            contentBottomPadding: 2
+
+            compactPriorityOrder: 1
+
+            WorkspacesToolBar {
+                isCompactMode: workspacesToolBar.isCompact
+
+                navigationPanel.section: root.topToolKeyNavSec
+                navigationPanel.order: 3
             }
         },
 
@@ -145,7 +169,7 @@ DockPage {
 
             UndoRedoToolBar {
                 navigationPanel.section: root.topToolKeyNavSec
-                navigationPanel.order: 3
+                navigationPanel.order: 4
             }
         }
     ]
@@ -155,7 +179,7 @@ DockPage {
             id: playbackToolBar
 
             objectName: pageModel.playbackToolBarName()
-            title: qsTrc("appshell", "Play Tool Bar")
+            title: qsTrc("appshell", "Play toolbar")
 
             dropDestinations: [
                 root.toolBarTopDropDestination,
@@ -184,22 +208,12 @@ DockPage {
     panels: [
         DockPanel {
             id: tracksPanel
+
             readonly property int effectsSectionWidth: 240
             property bool showEffectsSection: false
             property int titleBarHeight: 39
 
-            // For some reason, I cannot refer to `tp` from anywhere other than `tp` itself
-            // without getting a "tp is not defined" error. Maybe because this `DockPanel`
-            // is within that array thingy ?
-            signal effectsSectionVisibilityChanged(show: bool)
-
-            onShowEffectsSectionChanged: {
-                const newWidth = root.verticalPanelDefaultWidth + (tracksPanel.showEffectsSection ? tracksPanel.effectsSectionWidth : 0)
-                tracksPanel.width = newWidth
-                tracksPanel.minimumWidth = newWidth
-                tracksPanel.maximumWidth = newWidth
-                effectsSectionVisibilityChanged(showEffectsSection)
-            }
+            property int panelWidth: root.verticalPanelDefaultWidth + (showEffectsSection ? effectsSectionWidth : 0)
 
             signal add(type: int)
 
@@ -208,17 +222,17 @@ DockPage {
 
             navigationSection: root.navigationPanelSec(tracksPanel.location)
 
-            width: root.verticalPanelDefaultWidth + (showEffectsSection ? effectsSectionWidth : 0)
-            minimumWidth: width
-            maximumWidth: width
+            width: panelWidth
+            minimumWidth: panelWidth
+            maximumWidth: panelWidth
 
             groupName: root.verticalPanelsGroup
 
             dropDestinations: root.verticalPanelDropDestinations
 
             titleBar: TracksTitleBar {
+                id: trackstitleBarItem
 
-                id: titleBarItem
                 effectsSectionWidth: tracksPanel.effectsSectionWidth
                 showEffectsSection: tracksPanel.showEffectsSection
                 implicitHeight: tracksPanel.titleBarHeight
@@ -227,35 +241,34 @@ DockPage {
                     tracksPanel.add(type)
                 }
 
-                onEffectsSectionCloseButtonClicked: {
+                onEffectsSectionCloseRequested: {
                     tracksPanel.showEffectsSection = false
                 }
             }
 
             TracksPanel {
-                id: tp
+                id: tracksPanelContent
+
                 navigationSection: tracksPanel.navigationSection
                 effectsSectionWidth: tracksPanel.effectsSectionWidth
 
-                Component.onCompleted: {
-                    tracksPanel.effectsSectionVisibilityChanged.connect(function(show) {
-                        tp.showEffectsSection = show
-                    })
+                onOpenEffectsRequested: {
+                    tracksPanel.showEffectsSection = true
                 }
 
                 onShowEffectsSectionChanged: {
                     tracksPanel.showEffectsSection = showEffectsSection
                 }
 
-                onOpenEffectsRequested: {
-                    tracksPanel.showEffectsSection = true
-                }
-
                 Connections {
                     target: tracksPanel
 
                     function onAdd(type) {
-                        tp.tracksModel.addTrack(type)
+                        tracksPanelContent.tracksModel.addTrack(type)
+                    }
+
+                    function onShowEffectsSectionChanged() {
+                        tracksPanelContent.showEffectsSection = tracksPanel.showEffectsSection
                     }
                 }
             }

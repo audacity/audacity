@@ -115,6 +115,8 @@ private:
     muse::uicomponents::MenuItemList makeEffectsItems();
 
     void setItemIsChecked(const QString& itemId, bool checked);
+
+    std::shared_ptr<muse::uicomponents::AbstractMenuModel> m_workspacesMenuModel;
 };
 }
 

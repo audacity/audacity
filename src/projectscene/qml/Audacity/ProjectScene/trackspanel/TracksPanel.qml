@@ -53,37 +53,43 @@ Item {
         spacing: 0
 
         ColumnLayout {
+            id: effectColumn
+
+            Layout.preferredWidth: root.effectsSectionWidth
+            Layout.maximumWidth: root.effectsSectionWidth
+            Layout.minimumWidth: root.effectsSectionWidth
+            Layout.fillHeight: true
+
+            visible: effectSectionModel.showEffectsSection
+            spacing: 0
 
             RealtimeEffectSectionModel {
                 id: effectSectionModel
             }
 
-            id: effectColumn
-            Layout.preferredWidth: root.effectsSectionWidth
-            Layout.maximumWidth: root.effectsSectionWidth
-            Layout.minimumWidth: root.effectsSectionWidth
-            Layout.fillHeight: true
-            visible: effectSectionModel.showEffectsSection
-            spacing: 0
-
             SeparatorLine { }
 
             TrackEffectsSection {
                 id: trackEffectsSection
-                isMasterTrack: false
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.minimumHeight: trackEffectsSection.minimumHeight
+
+                isMasterTrack: false
             }
 
             SeparatorLine {
                 id: separator
+
                 MouseArea {
                     id: mouseArea
+
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     height: 10
+
                     cursorShape: Qt.SizeVerCursor
 
                     property real startY: 0
@@ -104,10 +110,12 @@ Item {
 
             TrackEffectsSection {
                 id: masterEffectsSection
-                isMasterTrack: true
+
                 Layout.fillWidth: true
                 Layout.preferredHeight: 300
                 Layout.minimumHeight: masterEffectsSection.minimumHeight
+
+                isMasterTrack: true
             }
         }
 
@@ -124,6 +132,7 @@ Item {
 
             StyledListView {
                 id: view
+
                 Layout.topMargin: 1
                 Layout.fillWidth: true
                 Layout.fillHeight: true

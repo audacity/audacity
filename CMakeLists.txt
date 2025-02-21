@@ -24,7 +24,7 @@ include(FetchContent)
 FetchContent_Declare(
   muse_framework
   GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u250219
+  GIT_TAG        u250221
 )
 
 FetchContent_GetProperties(muse_framework)
@@ -98,7 +98,7 @@ set(MUSE_MODULE_SHORTCUTS ON)
 set(MUSE_MODULE_UI ON)
 set(MUSE_MODULE_UI_TESTS OFF)
 set(MUSE_MODULE_UPDATE OFF)
-set(MUSE_MODULE_WORKSPACE OFF)
+set(MUSE_MODULE_WORKSPACE ON)
 
 # Modules (alphabetical order please)
 option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
@@ -168,6 +168,7 @@ if (MUSE_ENABLE_UNIT_TESTS)
     message(STATUS "Enabled testing")
 endif()
 
+add_subdirectory(share)
 add_subdirectory(${muse_framework_SOURCE_DIR}/framework ${muse_framework_BINARY_DIR})
 add_subdirectory(src)
 
