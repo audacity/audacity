@@ -37,6 +37,7 @@ std::string Au3WrapModule::moduleName() const
 void Au3WrapModule::registerExports()
 {
     m_audioDevicesProvider = std::make_shared<Au3AudioDevicesProvider>();
+    m_au3BasicUi = std::make_shared<Au3BasicUI>();
 
     ioc()->registerExport<IAu3ProjectCreator>(moduleName(), new Au3ProjectCreator());
     ioc()->registerExport<playback::IAudioDevicesProvider>(moduleName(), m_audioDevicesProvider);
@@ -70,12 +71,14 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     muse::String tempDir = globalConfiguration()->userAppDataPath().toString();
     UpdateDefaultPath(FileNames::Operation::Temp, wxFromString(tempDir));
 
-    static Au3BasicUI uiServices;
-    (void)BasicUI::Install(&uiServices);
+    (void)BasicUI::Install(m_au3BasicUi.get());
 }
 
 void Au3WrapModule::onDeinit()
 {
+    AudioIO::Deinit();
+    (void)BasicUI::Install(nullptr);
+
     wxLog::SetActiveTarget(nullptr);
     delete m_wxLog;
 }

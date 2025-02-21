@@ -21,6 +21,10 @@ TrackColor& TrackColor::Get(const Track* track)
 TrackColor::TrackColor(Track& track)
     : mTrack{track.shared_from_this()}
 {
+    if (!projectSceneConfiguration()) {
+        return;
+    }
+
     auto clipColors = projectSceneConfiguration()->clipColors();
     std::vector<muse::draw::Color> colors;
     for (const auto& color : clipColors) {

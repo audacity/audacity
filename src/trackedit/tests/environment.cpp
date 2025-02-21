@@ -6,8 +6,8 @@
 
 #include "au3wrap/au3wrapmodule.h"
 
-static muse::testing::SuiteEnvironment playback_se
+static muse::testing::SuiteEnvironment trackedit_se
     = muse::testing::SuiteEnvironment()
-      .setDependencyModules({ new au::au3::Au3WrapModule() })
+      .setDependencyModules({ new au::au3::Au3WrapModule(), })
       .setPostInit([]() {
 });
