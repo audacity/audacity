@@ -110,7 +110,7 @@ private:
     bool m_needActivateHighlight = true;
     std::optional<MUNavigationSystemState> m_lastActiveMUNavigationState;
     bool m_needActivateLastMUNavigationControl = false;
-    bool m_moveFocusToApppMenyuOnAltRelease = true;
+    bool m_moveFocusToAppMenuOnAltRelease = true;
 
     QWindow* m_appWindow = nullptr;
     QRect m_appMenuAreaRect;
