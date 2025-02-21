@@ -416,5 +416,26 @@ muse::Ret EffectExecutionScenario::previewEffect(const EffectInstanceId& effectI
     au3::Au3Project& project = projectRef();
     EffectId effectId = effectInstancesRegister()->effectIdByInstanceId(effectInstanceId);
     Effect* effect = effectsProvider()->effect(effectId);
-    return effectsProvider()->previewEffect(project, effect, settings);
+
+    IF_ASSERT_FAILED(!m_currentPreviewProgress) {
+        m_currentPreviewProgress = nullptr;
+    }
+
+    //! NOTE We don't show the progress itself, it's only used for cancellation.
+    m_currentPreviewProgress = std::make_shared<muse::Progress>();
+
+    return effectsProvider()->previewEffect(project, effect, settings, m_currentPreviewProgress);
+}
+
+void EffectExecutionScenario::stopPreviewEffect(const EffectInstanceId& effectInstanceId)
+{
+    //! NOTE at the moment only one effect at a time can play preview
+    UNUSED(effectInstanceId);
+
+    IF_ASSERT_FAILED(m_currentPreviewProgress) {
+        return;
+    }
+
+    m_currentPreviewProgress->cancel();
+    m_currentPreviewProgress = nullptr;
 }

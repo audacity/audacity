@@ -3,6 +3,8 @@
 */
 #include "abstracteffectmodel.h"
 
+#include "global/async/async.h"
+
 #include "log.h"
 
 using namespace au::effects;
@@ -76,14 +78,22 @@ EffectId AbstractEffectModel::effectId() const
     return instancesRegister()->effectIdByInstanceId(this->instanceId());
 }
 
-void AbstractEffectModel::preview()
+void AbstractEffectModel::togglePreview()
 {
-    if (EffectSettingsAccess* access = this->settingsAccess()) {
-        access->ModifySettings([this](EffectSettings& settings) {
-            executionScenario()->previewEffect(instanceId(), settings);
-            return nullptr;
+    if (m_isPreviewing) {
+        executionScenario()->stopPreviewEffect(instanceId());
+    } else {
+        muse::async::Async::call(this, [this](){
+            if (EffectSettingsAccess* access = this->settingsAccess()) {
+                access->ModifySettings([this](EffectSettings& settings) {
+                    executionScenario()->previewEffect(instanceId(), settings);
+                    return nullptr;
+                });
+            }
         });
     }
+
+    setIsPreviewing(!m_isPreviewing);
 }
 
 void AbstractEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
@@ -122,4 +132,18 @@ QString AbstractEffectModel::effectId_prop() const
     }
 
     return instancesRegister()->effectIdByInstanceId(id);
+}
+
+bool AbstractEffectModel::isPreviewing() const
+{
+    return m_isPreviewing;
+}
+
+void AbstractEffectModel::setIsPreviewing(bool newIsPreviewing)
+{
+    if (m_isPreviewing == newIsPreviewing) {
+        return;
+    }
+    m_isPreviewing = newIsPreviewing;
+    emit isPreviewingChanged();
 }

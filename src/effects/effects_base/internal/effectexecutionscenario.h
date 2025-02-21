@@ -42,6 +42,7 @@ public:
     muse::Ret repeatLastProcessor() override;
 
     muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) override;
+    void stopPreviewEffect(const EffectInstanceId& effectInstanceId = -1) override;
 
 private:
 
@@ -63,5 +64,6 @@ private:
     muse::async::Notification m_lastProcessorIsAvailableChanged;
     muse::async::Channel<EffectId> m_lastProcessorIdChanged;
     std::optional<EffectId> m_lastProcessorId;
+    muse::ProgressPtr m_currentPreviewProgress;
 };
 }
