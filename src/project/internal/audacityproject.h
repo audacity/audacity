@@ -41,7 +41,6 @@ namespace au::project {
 //! * Thanks to this wrapper we will see exactly what we are using from AU3
 class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
 {
-    muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
     muse::Inject<trackedit::ITrackeditProjectCreator> trackeditProjectCreator;
     muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
@@ -51,6 +50,8 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
     muse::Inject<IThumbnailCreator> thumbnailCreator;
 
 public:
+    muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
+
     Audacity4Project();
 
     muse::Ret createNew() override;
