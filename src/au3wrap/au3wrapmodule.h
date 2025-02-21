@@ -6,6 +6,8 @@
 #include "iglobalconfiguration.h"
 #include "modularity/imodulesetup.h"
 
+class Au3BasicUI;
+
 namespace au::au3 {
 class WxLogWrap;
 class Au3Playback;
@@ -26,5 +28,6 @@ private:
     WxLogWrap* m_wxLog = nullptr;
 
     std::shared_ptr<Au3AudioDevicesProvider> m_audioDevicesProvider;
+    std::shared_ptr<Au3BasicUI> m_au3BasicUi;
 };
 }
