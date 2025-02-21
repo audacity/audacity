@@ -88,6 +88,7 @@ public:
     bool canUndo() override;
     bool redo() override;
     bool canRedo() override;
+    bool undoRedoToIndex(size_t index) override;
 
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 

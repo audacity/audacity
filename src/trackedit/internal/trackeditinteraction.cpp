@@ -279,6 +279,11 @@ bool TrackeditInteraction::canRedo()
     return m_interaction->canRedo();
 }
 
+bool TrackeditInteraction::undoRedoToIndex(size_t index)
+{
+    return m_interaction->undoRedoToIndex(index);
+}
+
 bool TrackeditInteraction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
 {
     return withPlaybackStop(&ITrackeditInteraction::insertSilence, trackIds, begin, end, duration);

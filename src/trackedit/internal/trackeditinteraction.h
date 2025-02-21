@@ -66,10 +66,12 @@ private:
     bool duplicateTracks(const TrackIdList& trackIds) override;
     void moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction) override;
     void moveTracksTo(const TrackIdList& trackIds, int to) override;
+
     bool undo() override;
     bool canUndo() override;
     bool redo() override;
     bool canRedo() override;
+    bool undoRedoToIndex(size_t index) override;
 
     bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 

@@ -61,6 +61,8 @@
 #include "view/toolbars/playbacktoolbarcustomisemodel.h"
 #include "view/toolbars/playbacktoolbarcustomiseitem.h"
 
+#include "view/historypanel/historypanelmodel.h"
+
 using namespace au::projectscene;
 using namespace muse::modularity;
 using namespace muse::ui;
@@ -167,6 +169,9 @@ void ProjectSceneModule::registerUiTypes()
 
     // status bar
     qmlRegisterType<SelectionStatusModel>("Audacity.ProjectScene", 1, 0, "SelectionStatusModel");
+
+    // history panel
+    qmlRegisterType<HistoryPanelModel>("Audacity.ProjectScene", 1, 0, "HistoryPanelModel");
 }
 
 void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)

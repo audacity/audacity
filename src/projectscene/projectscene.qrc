@@ -55,5 +55,6 @@
         <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/GeneralSection.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/pitchandspeed/SpeedSection.qml</file>
         <file>qml/Audacity/ProjectScene/common/InsertSilence.qml</file>
+        <file>qml/Audacity/ProjectScene/historypanel/HistoryPanel.qml</file>
     </qresource>
 </RCC>

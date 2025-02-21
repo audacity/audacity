@@ -47,6 +47,7 @@ public:
     Q_INVOKABLE QString noteInputBarName() const;
 
     Q_INVOKABLE QString tracksPanelName() const;
+    Q_INVOKABLE QString historyPanelName() const;
 
     Q_INVOKABLE QString instrumentsPanelName() const;
     Q_INVOKABLE QString inspectorPanelName() const;

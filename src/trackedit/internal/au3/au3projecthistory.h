@@ -11,8 +11,6 @@
 
 #include "au3wrap/au3types.h"
 
-#include "libraries/lib-utility/Observer.h"
-
 namespace au::trackedit {
 class Au3ProjectHistory : public IProjectHistory
 {
@@ -21,9 +19,9 @@ class Au3ProjectHistory : public IProjectHistory
 public:
     void init() override;
 
-    bool undoAvailable() override;
+    bool undoAvailable() const override;
     void undo() override;
-    bool redoAvailable() override;
+    bool redoAvailable() const override;
     void redo() override;
     void pushHistoryState(
         const std::string& longDescription, const std::string& shortDescription) override;
@@ -34,13 +32,27 @@ public:
     void markUnsaved() override;
     void startUserInteraction() override;
     void endUserInteraction() override;
-    muse::async::Notification isUndoRedoAvailableChanged() const override;
+
+    void undoRedoToIndex(size_t index) override;
+
+    const muse::TranslatableString topMostUndoActionName() const override;
+    const muse::TranslatableString topMostRedoActionName() const override;
+    size_t undoRedoActionCount() const override;
+    size_t currentStateIndex() const override;
+    const muse::TranslatableString lastActionNameAtIdx(size_t idx) const override;
+
+    muse::async::Notification historyChanged() const override;
 
 private:
-    au3::Au3Project& projectRef();
+    au3::Au3Project& projectRef() const;
+
+    void doUndo();
+    void doRedo();
+
+    void notifyAboutHistoryChanged();
+
+    muse::async::Notification m_historyChanged;
 
     bool m_interactionOngoing = false;
-    muse::async::Notification m_isUndoRedoAvailableChanged;
-    ::Observer::Subscription m_undoRedoMessageSubscription;
 };
 }
