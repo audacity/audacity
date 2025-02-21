@@ -84,10 +84,12 @@ public:
     virtual bool duplicateTracks(const TrackIdList& trackIds) = 0;
     virtual void moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;
     virtual void moveTracksTo(const TrackIdList& trackIds, int pos) = 0;
+
     virtual bool undo() = 0;
     virtual bool canUndo() = 0;
     virtual bool redo() = 0;
     virtual bool canRedo() = 0;
+    virtual bool undoRedoToIndex(size_t index) = 0;
 
     virtual bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) = 0;
 

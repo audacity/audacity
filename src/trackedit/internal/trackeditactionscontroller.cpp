@@ -202,7 +202,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
     dispatcher()->reg(this, CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
 
-    projectHistory()->isUndoRedoAvailableChanged().onNotify(this, [this]() {
+    projectHistory()->historyChanged().onNotify(this, [this]() {
         notifyActionEnabledChanged(UNDO);
         notifyActionEnabledChanged(REDO);
     });

@@ -2323,6 +2323,20 @@ bool Au3Interaction::canRedo()
     return projectHistory()->redoAvailable();
 }
 
+bool Au3Interaction::undoRedoToIndex(size_t index)
+{
+    auto trackeditProject = globalContext()->currentProject()->trackeditProject();
+
+    projectHistory()->undoRedoToIndex(index);
+
+    // Redo removes all tracks from current state and
+    // inserts tracks from the previous state so we need
+    // to reload whole model
+    trackeditProject->reload();
+
+    return true;
+}
+
 bool Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));

@@ -33,6 +33,7 @@ static const DockName TRACKS_PANEL_NAME("tracksPanel");
 static const DockName INSTRUMENTS_PANEL_NAME("instrumentsPanel");
 static const DockName INSPECTOR_PANEL_NAME("inspectorPanel");
 static const DockName SELECTION_FILTERS_PANEL_NAME("selectionFiltersPanel");
+static const DockName HISTORY_PANEL_NAME("historyPanel");
 
 static const DockName NOTATION_NAVIGATOR_PANEL_NAME("notationNavigatorPanel");
 static const DockName NOTATION_BRAILLE_PANEL_NAME("notationBraillePanel");

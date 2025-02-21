@@ -328,6 +328,7 @@ const QMap<muse::actions::ActionCode, DockName>& ApplicationUiActions::toggleDoc
         { "toggle-instruments", INSTRUMENTS_PANEL_NAME },
         { "inspector", INSPECTOR_PANEL_NAME },
         { "toggle-selection-filter", SELECTION_FILTERS_PANEL_NAME },
+        { "toggle-history", HISTORY_PANEL_NAME },
 
         { TOGGLE_NAVIGATOR_ACTION_CODE, NOTATION_NAVIGATOR_PANEL_NAME },
         { TOGGLE_BRAILLE_ACTION_CODE, NOTATION_BRAILLE_PANEL_NAME },

@@ -336,11 +336,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Show metadata editor"),
              Checkable::Yes
              ),
-    UiAction("toggle-undo-history",
+    UiAction("toggle-history",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Show undo history"),
-             TranslatableString("action", "Show undo history"),
+             TranslatableString("action", "Show history"),
+             TranslatableString("action", "Show history"),
              Checkable::Yes
              ),
     UiAction("toggle-clipping-in-waveform",

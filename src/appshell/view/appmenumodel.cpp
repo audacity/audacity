@@ -134,6 +134,10 @@ void AppMenuModel::setupConnections()
         MenuItem& effectsItem = findMenu("menu-effect");
         effectsItem.setSubitems(makeEffectsItems());
     });
+
+    projectHistory()->historyChanged().onNotify(this, [this]() {
+        updateUndoRedoItems();
+    });
 }
 
 void AppMenuModel::setItemIsChecked(const QString& itemId, bool checked)
@@ -142,6 +146,21 @@ void AppMenuModel::setItemIsChecked(const QString& itemId, bool checked)
     auto state = item.state();
     state.checked = checked;
     item.setState(state);
+}
+
+void AppMenuModel::updateUndoRedoItems()
+{
+    MenuItem& undoItem = findItem(ActionCode("undo"));
+    const TranslatableString undoActionName = projectHistory()->topMostUndoActionName();
+    undoItem.setTitle(undoActionName.isEmpty()
+                      ? TranslatableString("action", "Undo")
+                      : TranslatableString("action", "Undo ‘%1’").arg(undoActionName));
+
+    MenuItem& redoItem = findItem(ActionCode("redo"));
+    const TranslatableString redoActionName = projectHistory()->topMostRedoActionName();
+    redoItem.setTitle(redoActionName.isEmpty()
+                      ? TranslatableString("action", "Redo")
+                      : TranslatableString("action", "Redo ‘%1’").arg(redoActionName));
 }
 
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)
@@ -255,7 +274,7 @@ MenuItem* AppMenuModel::makeViewMenu()
         makeSeparator(),
         makeMenuItem("toggle-label-editor"),
         makeMenuItem("toggle-metadata-editor"),
-        makeMenuItem("toggle-undo-history"),
+        makeMenuItem("toggle-history"),
         makeSeparator(),
 #ifndef Q_OS_MAC
         makeMenuItem("fullscreen"),
