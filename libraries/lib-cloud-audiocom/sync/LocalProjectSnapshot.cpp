@@ -339,7 +339,12 @@ void LocalProjectSnapshot::DataUploadFailed(
       }
    }
 
-   UploadFailed({ errorType, {} });
+   std::string errorMessage;
+   for (const auto& error : uploadResult.UploadErrors) {
+      errorMessage += std::to_string(static_cast<int>(error.Code)) + " : " + error.Content + "\n";
+   }
+
+   UploadFailed({ errorType, errorMessage });
 }
 
 void LocalProjectSnapshot::UpdateProjectSnapshot()
