@@ -40,6 +40,7 @@ Q_MOC_INCLUDE(< QWindow >)
 #include "internal/iappmenumodelhook.h"
 #include "global/iglobalconfiguration.h"
 #include "effects/effects_base/ieffectsprovider.h"
+#include "trackedit/iprojecthistory.h"
 
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
@@ -53,21 +54,22 @@ class AppMenuModel : public muse::uicomponents::AbstractMenuModel
     Q_OBJECT
 
 public:
-    INJECT(muse::ui::IMainWindow, mainWindow)
-    INJECT(muse::ui::IUiActionsRegister, uiActionsRegister)
-    INJECT(muse::ui::INavigationController, navigationController)
-    INJECT(muse::ui::IUiConfiguration, uiConfiguration)
-    INJECT(muse::actions::IActionsDispatcher, actionsDispatcher)
-    INJECT(muse::IGlobalConfiguration, globalConfiguration)
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(IAppMenuModelHook, appMenuModelHook)
-    INJECT(effects::IEffectsProvider, effectsProvider);
+    muse::Inject<muse::ui::IMainWindow> mainWindow = { this };
+    muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister = { this };
+    muse::Inject<muse::ui::INavigationController> navigationController = { this };
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration = { this };
+    muse::Inject<muse::actions::IActionsDispatcher> actionsDispatcher = { this };
+    muse::Inject<muse::IGlobalConfiguration> globalConfiguration = { this };
+    muse::Inject<IAppShellConfiguration> configuration = { this };
+    muse::Inject<IAppMenuModelHook> appMenuModelHook = { this };
+    muse::Inject<effects::IEffectsProvider> effectsProvider = { this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory = { this };
 
-//! TODO AU4
-    // INJECT(workspace::IWorkspaceManager, workspacesManager)
-    INJECT(au::project::IRecentFilesController, recentFilesController)
-    // INJECT(extensions::IExtensionsProvider, extensionsProvider)
-    // INJECT(update::IUpdateConfiguration, updateConfiguration)
+    //! TODO AU4
+    // muse::Inject<workspace::IWorkspaceManager> workspacesManager = { this };
+    muse::Inject<au::project::IRecentFilesController> recentFilesController = { this };
+    // muse::Inject<extensions::IExtensionsProvider> extensionsProvider = { this };
+    // muse::Inject<update::IUpdateConfiguration> updateConfiguration = { this };
 
 public:
     explicit AppMenuModel(QObject* parent = nullptr);
@@ -115,6 +117,8 @@ private:
     muse::uicomponents::MenuItemList makeEffectsItems();
 
     void setItemIsChecked(const QString& itemId, bool checked);
+
+    void updateUndoRedoItems();
 };
 }
 
