@@ -16,6 +16,7 @@ Rectangle {
     property var hoveredClipKey: null
     property bool tracksHovered: false
     property bool underSelection: false
+    property bool altPressed: false
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -116,6 +117,19 @@ Rectangle {
         // Let's make sure that everything is loaded and initialized before this,
         // to avoid double loading at the beginning, when some parameters are initialized.
         Qt.callLater(tracksModel.load)
+    }
+
+
+    Keys.onPressed: (event) => {
+        if (event.key === Qt.Key_Alt) {
+            root.altPressed = true
+        }
+    }
+
+    Keys.onReleased: (event) => {
+        if (event.key === Qt.Key_Alt) {
+            root.altPressed = false
+        }
     }
 
     Rectangle {
@@ -228,6 +242,10 @@ Rectangle {
             }
 
             onPressed: function(e) {
+                if (root.altPressed) {
+                    return
+                }
+
                 if (e.button === Qt.LeftButton) {
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
@@ -398,6 +416,7 @@ Rectangle {
                     isMultiSelectionActive: model.isMultiSelectionActive
                     moveActive: tracksClipsView.moveActive
                     underSelection: root.underSelection
+                    altPressed: root.altPressed
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack

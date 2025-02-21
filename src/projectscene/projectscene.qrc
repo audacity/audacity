@@ -45,6 +45,7 @@
         <file>images/customCursorShapes/ClipTrimRight.png</file>
         <file>images/customCursorShapes/IBeamCursor.png</file>
         <file>images/customCursorShapes/Pencil.png</file>
+        <file>images/customCursorShapes/Smooth.png</file>
         <file>images/customCursorShapes/SelectionLeft.png</file>
         <file>images/customCursorShapes/SelectionRight.png</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipItemPropertyButton.qml</file>
