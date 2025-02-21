@@ -4,6 +4,7 @@
 #pragma once
 
 #include "global/types/ret.h"
+#include "global/progress.h"
 
 #include "async/notification.h"
 #include "async/channel.h"
@@ -25,6 +26,6 @@ public:
     virtual muse::async::Channel<EffectId> lastProcessorIdChanged() const = 0;
     virtual muse::Ret repeatLastProcessor() = 0;
 
-    virtual muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) = 0;
+    virtual muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings, muse::ProgressPtr playProgress) = 0;
 };
 }

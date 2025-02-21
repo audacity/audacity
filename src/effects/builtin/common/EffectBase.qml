@@ -13,6 +13,8 @@ Rectangle {
 
     property AbstractEffectModel model: null
 
+    property bool isPreviewing: root.model ? root.model.isPreviewing : false
+
     color: ui.theme.backgroundPrimaryColor
 
     function manage(parent) {
@@ -23,8 +25,8 @@ Rectangle {
         menuLoader.show(pos, manageMenuModel)
     }
 
-    function preview() {
-        root.model.preview()
+    function togglePreview() {
+        root.model.togglePreview()
     }
 
     Component.onCompleted: {

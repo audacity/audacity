@@ -360,7 +360,7 @@ void restoreEffectStateHack(EffectBase& effect)
 }
 }
 
-muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& settings)
+muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& settings, ProgressPtr playProgress)
 {
     const bool isNyquist = effect.GetFamily() == NYQUISTEFFECTS_FAMILY;
     const bool isGenerator = effect.GetType() == EffectTypeGenerate;
@@ -539,32 +539,52 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
             return ret;
         }
 
-        using namespace BasicUI;
+        if (playProgress) {
+            playProgress->start();
+        }
 
-        // The progress dialog must be deleted before stopping the stream
-        // to allow events to flow to the app during StopStream processing.
-        // The progress dialog blocks these events.
-        {
-            auto progress = MakeProgress(effect.GetName(), XO("Previewing"), ProgressShowStop);
-            while (player->isRunning()) {
+        while (player->isRunning()) {
+            if (playProgress) {
                 using namespace std::chrono;
                 std::this_thread::sleep_for(100ms);
                 muse::secs_t playPos = player->playbackPosition() - startOffset;
-                auto previewing = progress->Poll(playPos, newCtx.t1);
 
-                if (previewing != BasicUI::ProgressResult::Success || player->reachedEnd().val) {
+                playProgress->progress(playPos * 100.0, newCtx.t1 * 100.0, "");
+
+                //! NOTE This method is synchronous, we are at this point until the playback ends...
+                //! But we need to change the state of the UI, we need to be able to press the button to cancel, etc.
+                //! Therefore, we need to call processEvents here.
+                //!
+                //! It would be great to make this method asynchronous.
+                //! To do this, we need to save all the state
+                //! (the original effect context, the various cleanup functors, the effect instance itself, the player),
+                //! subscribe to the end of playback or to cancellation,
+                //! or use a timer to periodically check the state...,
+                //! and after completion, perform all the actions
+                //! that are currently being performed upon completion of this method.
+                QCoreApplication::processEvents();
+
+                if (playProgress->isCanceled()) {
                     break;
                 }
             }
 
-            player->stop();
+            if (player->reachedEnd().val) {
+                break;
+            }
         }
+
+        if (playProgress) {
+            playProgress->finish(muse::make_ok());
+        }
+
+        player->stop();
     }
 
     return muse::make_ok();
 }
 
-muse::Ret EffectsProvider::previewEffect(au3::Au3Project&, Effect* effect, EffectSettings& settings)
+muse::Ret EffectsProvider::previewEffect(au3::Au3Project&, Effect* effect, EffectSettings& settings, muse::ProgressPtr playProgress)
 {
-    return doEffectPreview(*effect, settings);
+    return doEffectPreview(*effect, settings, playProgress);
 }

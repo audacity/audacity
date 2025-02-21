@@ -3,6 +3,8 @@
 */
 #include "abstracteffectmodel.h"
 
+#include "global/async/async.h"
+
 #include "log.h"
 
 using namespace au::effects;
@@ -10,6 +12,11 @@ using namespace au::effects;
 AbstractEffectModel::AbstractEffectModel(QObject* parent)
     : QObject(parent)
 {
+    //! NOTE We don't show the progress itself, it's only used for cancellation.
+    m_currentPreviewProgress = std::make_shared<muse::Progress>();
+    m_currentPreviewProgress->finished().onReceive(this, [this](auto) {
+        setIsPreviewing(false);
+    });
 }
 
 void AbstractEffectModel::init()
@@ -76,12 +83,22 @@ EffectId AbstractEffectModel::effectId() const
     return instancesRegister()->effectIdByInstanceId(this->instanceId());
 }
 
-void AbstractEffectModel::preview()
+void AbstractEffectModel::togglePreview()
 {
-    if (EffectSettingsAccess* access = this->settingsAccess()) {
-        access->ModifySettings([this](EffectSettings& settings) {
-            executionScenario()->previewEffect(instanceId(), settings);
-            return nullptr;
+    if (m_isPreviewing) {
+        m_currentPreviewProgress->cancel();
+    } else {
+        //! NOTE We set the preview immediately
+        //! so that can't run the preview several times in a row.
+        setIsPreviewing(true);
+
+        muse::async::Async::call(this, [this](){
+            if (EffectSettingsAccess* access = this->settingsAccess()) {
+                access->ModifySettings([this](EffectSettings& settings) {
+                    executionScenario()->previewEffect(instanceId(), settings, m_currentPreviewProgress);
+                    return nullptr;
+                });
+            }
         });
     }
 }
@@ -122,4 +139,18 @@ QString AbstractEffectModel::effectId_prop() const
     }
 
     return instancesRegister()->effectIdByInstanceId(id);
+}
+
+bool AbstractEffectModel::isPreviewing() const
+{
+    return m_isPreviewing;
+}
+
+void AbstractEffectModel::setIsPreviewing(bool newIsPreviewing)
+{
+    if (m_isPreviewing == newIsPreviewing) {
+        return;
+    }
+    m_isPreviewing = newIsPreviewing;
+    emit isPreviewingChanged();
 }

@@ -20,6 +20,7 @@ class AbstractEffectModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QString instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
 
     Q_PROPERTY(QString effectId READ effectId_prop NOTIFY effectIdChanged FINAL)
+    Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
 public:
     muse::Inject<IEffectInstancesRegister> instancesRegister;
@@ -31,9 +32,10 @@ public:
     QString instanceId_prop() const;
     void setInstanceId_prop(const QString& newInstanceId);
     QString effectId_prop() const;
+    bool isPreviewing() const;
 
     Q_INVOKABLE void init();
-    Q_INVOKABLE void preview();
+    Q_INVOKABLE void togglePreview();
 
     EffectInstanceId instanceId() const;
     EffectId effectId() const;
@@ -42,6 +44,7 @@ public:
 signals:
     void instanceIdChanged();
     void effectIdChanged();
+    void isPreviewingChanged();
 
 protected:
 
@@ -64,11 +67,15 @@ protected:
         return *st;
     }
 
+    void setIsPreviewing(bool newIsPreviewing);
+
 protected:
     bool m_inited = false;
 
 private:
     EffectSettingsAccess* settingsAccess() const;
     QString m_instanceId;
+    bool m_isPreviewing = false;
+    muse::ProgressPtr m_currentPreviewProgress;
 };
 }
