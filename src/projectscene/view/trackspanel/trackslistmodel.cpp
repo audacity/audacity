@@ -285,8 +285,6 @@ void TracksListModel::clear()
 
 void TracksListModel::deleteItems()
 {
-    m_selectionModel->clear();
-
     for (TrackItem* trackItem : m_trackList) {
         trackItem->deleteLater();
     }
