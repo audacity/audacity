@@ -232,11 +232,6 @@ static ProjectFileIORegistry::ObjectReaderEntry projectAccessor {
     [](AudacityProject& project) { return &RealtimeEffectList::Get(project); }
 };
 
-static ProjectFileIORegistry::ObjectWriterEntry projectWriter {
-    [](const AudacityProject& project, XMLWriter& xmlFile){
-        RealtimeEffectList::Get(project).WriteXML(xmlFile);
-    } };
-
 static WaveTrackIORegistry::ObjectReaderEntry waveTrackAccessor {
     RealtimeEffectList::XMLTag(),
     [](WaveTrack& track) { return &RealtimeEffectList::Get(track); }

@@ -18,22 +18,21 @@ RealtimeEffectListModel::RealtimeEffectListModel(QObject* parent)
 
 void RealtimeEffectListModel::onProjectChanged()
 {
-    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
-    if (!project) {
+    if (const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject()) {
+        project->trackChanged().onReceive(this, [this](au::trackedit::Track track)
+        {
+            if (trackId() == track.id) {
+                emit trackNameChanged();
+            }
+        });
+    } else {
         beginResetModel();
         m_trackEffectLists.clear();
         endResetModel();
-        emit trackNameChanged();
-        emit trackEffectsActiveChanged();
-        return;
     }
 
-    project->trackChanged().onReceive(this, [this](au::trackedit::Track track)
-    {
-        if (trackId() == track.id) {
-            emit trackNameChanged();
-        }
-    });
+    emit trackNameChanged();
+    emit trackEffectsActiveChanged();
 }
 
 bool RealtimeEffectListModel::prop_isMasterTrack() const

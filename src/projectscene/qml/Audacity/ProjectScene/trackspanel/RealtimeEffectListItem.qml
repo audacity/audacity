@@ -190,6 +190,7 @@ ListItemBlank {
             RealtimeEffectListItemMenuModel {
                 id: menuModel
                 effectState: root.item ? root.item.effectState() : null
+                isMasterTrack: root.item && root.item.isMasterEffect
             }
 
             onClicked: {

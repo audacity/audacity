@@ -23,7 +23,6 @@ public:
     virtual void close() = 0;
 
     virtual std::string title() const = 0;
-    virtual bool hasSavedVersion() const = 0;
 
     // internal
     virtual uintptr_t au3ProjectPtr() const = 0;
