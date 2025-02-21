@@ -962,8 +962,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
         return make_ret(trackedit::Err::TrackEmpty);
     }
 
-    const auto newGroupId = determineGroupId({});
-    auto copiedData = clipboard()->trackDataCopy(newGroupId);
+    auto copiedData = clipboard()->trackDataCopy();
 
     TrackIdList selectedTracks = selectionController()->selectedTracks();
     if (selectedTracks.empty()) {
@@ -2270,7 +2269,7 @@ void Au3Interaction::setClipGroupId(const ClipKey& clipKey, int64_t id)
 
 void Au3Interaction::groupClips(const ClipKeyList& clipKeyList)
 {
-    const auto newGroupId = determineGroupId(clipKeyList);
+    const auto newGroupId = determineNewGroupId(clipKeyList);
 
     for (const auto& clipKey : clipKeyList) {
         setClipGroupId(clipKey, newGroupId);
@@ -2288,10 +2287,12 @@ void Au3Interaction::ungroupClips(const ClipKeyList& clipKeyList)
     projectHistory()->pushHistoryState("Clips ungrouped", "Clips ungrouped");
 }
 
-int64_t Au3Interaction::determineGroupId(const ClipKeyList& clipKeyList) const
+int64_t Au3Interaction::determineNewGroupId(const ClipKeyList& clipKeyList) const
 {
     if (!clipKeyList.empty()) {
-        //! NOTE: check if any clip already belongs to a group
+        //! NOTE: Check if any clip already belongs to a group.
+        //        If there are multiple groups, the first group is used.
+
         for (const auto& selectedClip : clipKeyList) {
             if (clipGroupId(selectedClip) != -1) {
                 return clipGroupId(selectedClip);
