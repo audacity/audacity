@@ -15,11 +15,6 @@ static constexpr auto X_MIN_DISTANCE = 5;
 static constexpr auto Y_MIN_DISTANCE = 5;
 static constexpr auto BASELINE_HIT_AREA_SIZE = 20;
 
-static constexpr auto SMOOTHING_KERNEL_RADIUS = 3;
-static constexpr auto SMOOTHING_BRUSH_RADIUS = 5;
-static constexpr double SMOOTHING_PROPORTION_MAX = 0.7;
-static constexpr double SMOOTHING_PROPORTION_MIN = 0.0;
-
 namespace au::projectscene::samplespainterutils {
 float FromDB(float value, double dBRange)
 {
@@ -177,8 +172,8 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     return SampleData(ypos, xpos);
 }
 
-std::optional<int> isNearSample(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
-                                const QPoint& position, const IWavePainter::Params& params)
+std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
+                                   const QPoint& position, const IWavePainter::Params& params)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
@@ -385,6 +380,15 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
                         const trackedit::ClipKey& clipKey, const QPoint& currentPosition, const IWavePainter::Params& params)
 {
+    static constexpr int SMOOTHING_KERNEL_RADIUS = 3;
+    static constexpr int SMOOTHING_BRUSH_RADIUS = 5;
+
+    // Get the region size around the selected point (one central sample plus some kernel radius on both sides)
+    static constexpr size_t SAMPLE_REGION_SIZE = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
+    static constexpr size_t NEW_SAMPLE_REGION_SIZE = 1 + 2 * (SMOOTHING_BRUSH_RADIUS);
+    static constexpr double SMOOTHING_PROPORTION_MAX = 0.7;
+    static constexpr double SMOOTHING_PROPORTION_MIN = 0.0;
+
     //  Smoothing works like this:  There is a smoothing kernel radius constant that
     //  determines how wide the averaging window is.  Plus, there is a smoothing brush radius,
     //  which determines how many pixels wide around the selected pixel this smoothing is applied.
@@ -421,10 +425,8 @@ void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::p
     const auto sampleOffset = waveClip->TimeToSamples(time);
     const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
 
-    //Get the region of samples around the selected point
-    size_t sampleRegionSize = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
-    Floats sampleRegion{ sampleRegionSize };
-    Floats newSampleRegion{ 1 + 2 * (size_t)SMOOTHING_BRUSH_RADIUS };
+    Floats sampleRegion{ SAMPLE_REGION_SIZE };
+    Floats newSampleRegion{ NEW_SAMPLE_REGION_SIZE };
 
     //Get a sample from the clip to do some tricks on.
     constexpr auto mayThrow = false;

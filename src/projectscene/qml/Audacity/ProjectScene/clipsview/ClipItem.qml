@@ -82,7 +82,7 @@ Rectangle {
     property bool headerHovered: headerDragArea.containsMouse
     property var lastSample: undefined
     property bool altPressed: false
-    property alias isStemPlot: waveView.isStemPlot
+    property bool isBrush: waveView.isStemPlot && root.altPressed
 
     onHeaderHoveredChanged: {
         root.clipHeaderHoveredChanged(headerHovered)
@@ -189,7 +189,7 @@ Rectangle {
         //!      to avoid multiple clips concurrently change the cursor
         id: customCursor
         active: {
-            return ((waveView.isStemPlot && root.altPressed) || waveView.isNearSample || leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
+            return (root.isBrush || waveView.isNearSample || leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
             || leftTrimStretchEdgeHover.pressedButtons || rightTrimStretchEdgeHover.pressedButtons)
         }
         source: {
@@ -208,7 +208,7 @@ Rectangle {
     MouseArea {
         id: leftTrimStretchEdgeHover
 
-        enabled: !(root.isStemPlot && root.altPressed) 
+        enabled: !root.isBrush
 
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
@@ -272,7 +272,7 @@ Rectangle {
     MouseArea {
         id: rightTrimStretchEdgeHover
 
-        enabled: !(root.isStemPlot && root.altPressed)
+        enabled: !root.isBrush
 
         x: root.width - 5
         z: headerDragArea.z + 1
@@ -376,7 +376,7 @@ Rectangle {
                 id: headerDragArea
                 anchors.fill: parent
 
-                enabled:  !(root.isStemPlot && root.altPressed)
+                enabled:  !root.isBrush
 
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
@@ -589,7 +589,7 @@ Rectangle {
             MouseArea {
                 id: waveViewArea
                 cursorShape: Qt.IBeamCursor
-                enabled: waveView.isNearSample || (waveView.isStemPlot && root.altPressed)
+                enabled: waveView.isNearSample || root.isBrush
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
                 propagateComposedEvents: true
