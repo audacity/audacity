@@ -48,7 +48,6 @@ void Register()
 }
 
 const bool registered = ([]() {
-    qDebug() << "avformat 61 is being compiled and executed";
     FFmpegAPIResolver::Get().AddAVFormatFactories(61, {
             &CreateAVFormatContextWrapper,
             &CreateAVInputFormatWrapper,

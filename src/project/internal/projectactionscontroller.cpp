@@ -28,7 +28,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::openProject);
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
-    dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importProject);
+    dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importFile);
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
@@ -169,9 +169,11 @@ void ProjectActionsController::openProject(const muse::actions::ActionData& args
     openProject(ProjectFile(url, displayNameOverride));
 }
 
-void ProjectActionsController::importProject()
+void ProjectActionsController::importFile()
 {
-    NOT_IMPLEMENTED;
+    muse::io::path_t askedPath = selectImportFile();
+    IAudacityProjectPtr project = globalContext()->currentProject();
+    project->import(askedPath);
 }
 
 bool ProjectActionsController::isUrlSupported(const QUrl& url) const
@@ -300,6 +302,38 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
                                       trc("project", "Uncompressed MuseScore folders (experimental)") + " (*.mscx)",
                                       trc("project", "MuseScore developer files") + " (*.mscs)",
                                       trc("project", "MuseScore backup files") + " (*.mscz~)" };
+
+    io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
+
+    if (defaultDir.empty()) {
+        defaultDir = configuration()->userProjectsPath();
+    }
+
+    if (defaultDir.empty()) {
+        defaultDir = configuration()->defaultUserProjectsPath();
+    }
+
+    io::path_t filePath = interactive()->selectOpeningFile(qtrc("project", "Open"), defaultDir, filter);
+
+    if (!filePath.empty()) {
+        configuration()->setLastOpenedProjectsPath(io::dirpath(filePath));
+    }
+
+    return filePath;
+}
+
+io::path_t ProjectActionsController::selectImportFile()
+{
+    std::string allExt = "*.4xm *.MTV *.roq *.aac *.ac3 *.aif *.aiff *.afc *.aifc *.al *.amr *.apc *.ape *.apl *.mac "
+                         "*.asf *.wmv *.wma *.au *.avi *.avs *.bethsoftvid *.c93 *.302 *.daud *.dsicin *.dts *.dv *.dxa "
+                         "*.ea *.cdata *.ffm *.film_cpk *.flac *.flic *.flv *.gif *.gxf *.idcin *.image2 *.image2pipe "
+                         "*.cgi *.ipmovie *.nut *.lmlm4 *.m4v *.mkv *.mm *.mmf *.mov *.mp4 *.m4a *.m4r *.3gp *.3g2 *.mj2 "
+                         "*.mp3 *.mpc *.mpc8 *.mpg *.mpeg *.ts *.mpegtsraw *.mpegvideo *.msnwctcp *.ul *.mxf *.nsv *.nuv "
+                         "*.ogg *.opus *.psxstr *.pva *.redir *.rl2 *.rm *.ra *.rv *.rtsp *.s16be *.sw *.s8 *.sb *.sdp "
+                         "*.shn *.siff *.vb *.son *.smk *.sol *.swf *.thp *.tiertexseq *.tta *.txd *.u16be *.uw *.ub *.u8 "
+                         "*.vfwcap *.vmd *.voc *.wav *.wc3movie *.wsaud *.wsvqa *.wv";
+
+    std::vector<std::string> filter { trc("project", "All supported files") + " (" + allExt + ")" };
 
     io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
 
