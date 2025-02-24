@@ -4,6 +4,7 @@
 
 #include "au3trackeditclipboard.h"
 
+#include "Track.h"
 #include "containers.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
