@@ -49,9 +49,9 @@ void drawSampleStalk(const au::projectscene::SampleData& samples, int yZero, con
 
     const size_t slen = samples.size();
     for (size_t s = 0; s < slen; s++) {
-        painter.drawLine(
-            metrics.left + samples.x[s], metrics.top + samples.y[s],
-            metrics.left + samples.x[s], yZero);
+        QPointF p1(metrics.left + samples.x[s], metrics.top + samples.y[s]);
+        QPointF p2(metrics.left + samples.x[s], yZero);
+        painter.drawLine(p1, p2);
     }
 }
 }

@@ -56,6 +56,21 @@ auto ZoomInfo::TimeToPosition(double projectTime,
     return t;
 }
 
+auto ZoomInfo::TimeToPositionF(double projectTime,
+                               int64 origin,
+                               bool // ignoreFisheye
+                               ) const -> double
+{
+    double t = zoom * (projectTime - hpos) + origin;
+    if (t < INT64_MIN) {
+        return INT64_MIN;
+    }
+    if (t > INT64_MAX) {
+        return INT64_MAX;
+    }
+    return t;
+}
+
 // This always ignores the fisheye.  Use with caution!
 // You should prefer to call TimeToPosition twice, for endpoints, and take the difference!
 double ZoomInfo::TimeRangeToPixelWidth(double timeRange) const

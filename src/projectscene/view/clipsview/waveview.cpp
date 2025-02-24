@@ -92,10 +92,11 @@ IWavePainter::Params WaveView::getWavePainterParams() const
 
 void WaveView::paint(QPainter* painter)
 {
-    IWavePainter::PlotType plotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, m_context->zoom());
-    setIsStemPlot(plotType == IWavePainter::PlotType::Stem);
+    IWavePainter::Params params = getWavePainterParams();
+    IWavePainter::PlotType pType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, params.zoom);
+    setAntialiasing(pType == IWavePainter::PlotType::Stem);
 
-    wavePainter()->paint(*painter, m_clipKey.key, getWavePainterParams(), plotType);
+    wavePainter()->paint(*painter, m_clipKey.key, params, pType);
 }
 
 ClipKey WaveView::clipKey() const
