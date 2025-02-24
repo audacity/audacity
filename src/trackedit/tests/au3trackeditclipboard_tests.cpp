@@ -40,6 +40,13 @@ public:
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_currentProject));
 
+        // The testClipboard.aup3 project contains two groups, 0 and 1
+        m_oldGroupIds.push_back((0));
+        m_oldGroupIds.push_back((1));
+
+        ON_CALL(*m_trackEditProject, groupsIdsList())
+        .WillByDefault(Return(m_oldGroupIds));
+
         initTestProject();
     }
 
@@ -64,6 +71,48 @@ public:
         m_au3ProjectAccessor->close();
     }
 
+    std::vector<TrackData> buildTrackData()
+    {
+        std::vector<TrackData> trackDataBefore;
+
+        Au3Project& project = projectRef();
+        auto& trackFactory = WaveTrackFactory::Get(projectRef());
+        auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+
+        //! Ensuring TrackData list is populated with the loaded model.
+
+        for (int i = 0; i < m_numberOfTracks; ++i) {
+            const auto au3Track = DomAccessor::findTrackByIndex(project, i);
+            TrackId trackId = au3Track->GetId();
+            Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+
+            auto clipboardTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+
+            auto waveClips = DomAccessor::waveClipsAsList(waveTrack);
+
+            ClipKeyList selectedTrackClips;
+            for (auto& clip : waveClips) {
+                selectedTrackClips.push_back({ trackId, clip->GetId() });
+            }
+
+            std::vector<std::shared_ptr<Au3WaveClip> > intervals;
+            for (const auto& clipKey : selectedTrackClips) {
+                std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+                clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
+            }
+
+            TrackData trackData { clipboardTrack, ClipKey() };  // (Dummy ClipKey)
+            trackDataBefore.push_back(trackData);
+
+            m_au3TrackEditClipboard->addTrackData(trackData);
+            m_au3TrackEditClipboard->setMultiSelectionCopy(true);
+        }
+
+        return trackDataBefore;
+    }
+
+    const int m_numberOfTracks = 2; // The number of tracks in testClipboard.aup3
+
     std::unique_ptr<Au3TrackeditClipboard> m_au3TrackEditClipboard;
 
     std::shared_ptr<au::context::GlobalContextMock> m_globalContext;
@@ -71,6 +120,8 @@ public:
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;
 
     std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor;
+
+    std::vector<int64_t> m_oldGroupIds;
 };
 
 TEST_F(au3TrackEditClipboardTests, trackDataCopy)
@@ -78,42 +129,48 @@ TEST_F(au3TrackEditClipboardTests, trackDataCopy)
     //! [GIVEN] There is a project with two tracks, and five clips grouped as follows:
     //          2x2, 1. The first group spans two tracks, the second one.
 
-    int numberOfTracks = 2;
+    std::vector<TrackData> trackDataBefore = buildTrackData();
 
-    Au3Project& project = projectRef();
-    auto& trackFactory = WaveTrackFactory::Get(projectRef());
-    auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+    auto trackDataAfter = m_au3TrackEditClipboard->trackDataCopy();
 
-    //! Ensuring TrackData list is populated with the loaded model.
+    EXPECT_EQ(trackDataBefore.size(), trackDataAfter.size());
 
-    for (int i = 0; i < numberOfTracks; ++i) {
-        const auto au3Track = DomAccessor::findTrackByIndex(project, i);
-        TrackId trackId = au3Track->GetId();
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    int ungrouped = 0;
 
-        auto clipboardTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+    //! Iterates over returned TrackData list and compares to the original one.
+    //  Ensures that the same number of clips and tracks are present,
+    //  and that the groupID's are new.
 
-        auto waveClips = DomAccessor::waveClipsAsList(waveTrack);
+    auto tracksBeforeIter = trackDataBefore.begin();
+    auto tracksAfterIter = trackDataAfter.begin();
+    for (; tracksBeforeIter != trackDataBefore.end() && tracksAfterIter != trackDataAfter.end();
+         ++tracksBeforeIter, ++tracksAfterIter) {
+        auto waveTrackBefore = dynamic_cast<au3::Au3WaveTrack*>((*tracksBeforeIter).track.get());
+        auto waveTrackAfter = dynamic_cast<au3::Au3WaveTrack*>((*tracksAfterIter).track.get());
 
-        ClipKeyList selectedTrackClips;
-        for (auto& clip : waveClips) {
-            selectedTrackClips.push_back({trackId, clip->GetId()});
+        auto clipsBefore = waveTrackBefore->Intervals();
+        auto clipsAfter = waveTrackAfter->Intervals();
+
+        int clipCountBefore = clipsBefore.size();
+        int clipCountAfter = clipsAfter.size();
+        EXPECT_EQ(clipCountBefore, clipCountAfter);
+
+        auto clipsBeforeIter = clipsBefore.begin();
+        auto clipsAfterIter = clipsAfter.begin();
+        for (; clipsBeforeIter != clipsBefore.end() && clipsAfterIter != clipsAfter.end();
+             ++clipsBeforeIter, ++clipsAfterIter) {
+            int64_t idBefore = (*clipsBeforeIter).get()->GetGroupId();
+            int64_t idAfter = (*clipsAfterIter).get()->GetGroupId();
+
+            if (idBefore == -1 || idAfter == -1) {
+                ungrouped++;
+            } else {
+                EXPECT_TRUE(idBefore != idAfter);
+            }
         }
-
-        std::vector<std::shared_ptr<Au3WaveClip> > intervals;
-        for (const auto& clipKey : selectedTrackClips) {
-             std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-             clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
-        }
-
-        m_au3TrackEditClipboard->addTrackData({clipboardTrack, ClipKey()}); // (Dummy ClipKey)
-
-        m_au3TrackEditClipboard->setMultiSelectionCopy(true);
     }
 
-    auto result = m_au3TrackEditClipboard->trackDataCopy();
-
-    muse::Ret ret;
-    EXPECT_EQ(ret, make_ret(muse::Ret::Code::Ok));
+    // The project file contains exactly one ungrouped clip
+    EXPECT_EQ(ungrouped, 1);
 }
 }
