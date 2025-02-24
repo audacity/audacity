@@ -29,6 +29,7 @@
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "GradientButton.h"
+#include "WindowAccessible.h"
 
 namespace audacity::musehub
 {
@@ -195,6 +196,12 @@ void GetEffectsDialog::AddBecomeAPartnerPage() {
    button->Bind(wxEVT_BUTTON, [](auto) {
       BasicUI::OpenInDefaultBrowser(GetBecomeAPartnerUrl());
    });
+#if wxUSE_ACCESSIBILITY
+   safenew WindowAccessible(button);
+   button->SetName(becomeAPartnerTitle.Translation() + wxT(", ")
+      + becomeAPartnerDescription.Translation() + wxT(", ")
+      + becomeAPartnerButtonText.Translation());
+#endif
 
    sizer->AddSpacer(35);
    sizer->Add(title, 0, wxLEFT, 25);
@@ -284,6 +291,11 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
       });
       button->SetNormalColor(musehubButtonNormal);
       button->SetPressedColor(musehubButtonPressed);
+#if wxUSE_ACCESSIBILITY
+      safenew WindowAccessible(button);
+      button->SetName(elem.title + wxT(", ") + elem.subtitle + wxT(", ")
+         + getItOnMusehubButtonText.Translation());
+#endif
 
       wxBoxSizer* vSizer = safenew wxBoxSizer(wxVERTICAL);
 
