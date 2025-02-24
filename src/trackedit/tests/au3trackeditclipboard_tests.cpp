@@ -71,15 +71,16 @@ public:
         m_au3ProjectAccessor->close();
     }
 
+    /**
+     *  Populates a TrackData vector from the loaded project's model.
+     */
     std::vector<TrackData> buildTrackData()
     {
-        std::vector<TrackData> trackDataBefore;
+        std::vector<TrackData> trackDataList;
 
         Au3Project& project = projectRef();
         auto& trackFactory = WaveTrackFactory::Get(projectRef());
         auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-
-        //! Ensuring TrackData list is populated with the loaded model.
 
         for (int i = 0; i < m_numberOfTracks; ++i) {
             const auto au3Track = DomAccessor::findTrackByIndex(project, i);
@@ -102,13 +103,13 @@ public:
             }
 
             TrackData trackData { clipboardTrack, ClipKey() };  // (Dummy ClipKey)
-            trackDataBefore.push_back(trackData);
+            trackDataList.push_back(trackData);
 
             m_au3TrackEditClipboard->addTrackData(trackData);
             m_au3TrackEditClipboard->setMultiSelectionCopy(true);
         }
 
-        return trackDataBefore;
+        return trackDataList;
     }
 
     const int m_numberOfTracks = 2; // The number of tracks in testClipboard.aup3
@@ -124,14 +125,19 @@ public:
     std::vector<int64_t> m_oldGroupIds;
 };
 
-TEST_F(au3TrackEditClipboardTests, trackDataCopy)
+TEST_F(au3TrackEditClipboardTests, groupedTrackDataCopy)
 {
     //! [GIVEN] There is a project with two tracks, and five clips grouped as follows:
-    //          2x2, 1. The first group spans two tracks, the second one.
+    //          2x2, 1. The first group spans two tracks, the second group one track.
+    //          And the first track has four clips, the second track one clip (in the first group).
+
+    EXPECT_TRUE(m_au3TrackEditClipboard->trackDataEmpty());
 
     std::vector<TrackData> trackDataBefore = buildTrackData();
 
     auto trackDataAfter = m_au3TrackEditClipboard->trackDataCopy();
+
+    EXPECT_FALSE(m_au3TrackEditClipboard->trackDataEmpty());
 
     EXPECT_EQ(trackDataBefore.size(), trackDataAfter.size());
 
@@ -170,7 +176,25 @@ TEST_F(au3TrackEditClipboardTests, trackDataCopy)
         }
     }
 
-    // The project file contains exactly one ungrouped clip
+    //! The project file contains exactly one ungrouped clip
     EXPECT_EQ(ungrouped, 1);
+
+    //! NOTE:: The following should ideally be in their own unit-test,
+    //         but given how trivial they are it's better to call them here,
+    //         instead of doing all the SetUp and project-loading just to check that
+    //         accessors, and clearing a vector, work as expected.
+
+    EXPECT_FALSE(m_au3TrackEditClipboard->trackDataEmpty());
+
+    EXPECT_EQ(m_au3TrackEditClipboard->trackDataSize(), 2);
+
+    EXPECT_TRUE(m_au3TrackEditClipboard->isMultiSelectionCopy());
+
+    m_au3TrackEditClipboard->clearTrackData();
+
+    EXPECT_EQ(m_au3TrackEditClipboard->trackDataSize(), 0);
+
+    EXPECT_TRUE(m_au3TrackEditClipboard->trackDataEmpty());
+    EXPECT_FALSE(m_au3TrackEditClipboard->isMultiSelectionCopy());
 }
 }
