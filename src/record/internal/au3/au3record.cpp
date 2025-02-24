@@ -405,7 +405,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         wxString name;
         for (auto i = 1;; ++i) {
             //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
-            name = XC("%s #%d", "clip name template")
+            name = (::TranslatableString{ wxT("%s #%d"), {} }.Context("clip name template"))
                    .Format(track.GetName(), i).Translation();
             if (!track.HasClipNamed(name)) {
                 break;

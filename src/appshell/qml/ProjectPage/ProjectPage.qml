@@ -259,6 +259,31 @@ DockPage {
                     }
                 }
             }
+        },
+
+        DockPanel {
+            id: historyPanel
+
+            objectName: root.pageModel.historyPanelName()
+            title: qsTrc("appshell", "History")
+
+            navigationSection: root.navigationPanelSec(historyPanel.location)
+
+            width: root.verticalPanelDefaultWidth
+            minimumWidth: root.verticalPanelDefaultWidth
+            maximumWidth: root.verticalPanelDefaultWidth
+
+            groupName: root.verticalPanelsGroup
+
+            //! NOTE: hidden by default
+            visible: false
+
+            dropDestinations: root.verticalPanelDropDestinations
+
+            HistoryPanel {
+                navigationSection: historyPanel.navigationSection
+                navigationOrderStart: historyPanel.contentNavigationPanelOrderStart
+            }
         }
     ]
 
