@@ -5,13 +5,17 @@
 
 #include "global/defer.h"
 
-#include "libraries/lib-project/Project.h"
-#include "libraries/lib-project-file-io/ProjectFileIO.h"
-#include "libraries/lib-wave-track/WaveTrack.h"
-#include "libraries/lib-wave-track/WaveClip.h"
-#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
-#include "domconverter.h"
 #include "TempoChange.h"
+#include "libraries/lib-file-formats/AcidizerTags.h"
+#include "libraries/lib-import-export/Import.h"
+#include "libraries/lib-import-export/ImportPlugin.h"
+#include "libraries/lib-import-export/ImportProgressListener.h"
+#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
+#include "libraries/lib-project-file-io/ProjectFileIO.h"
+#include "libraries/lib-project/Project.h"
+#include "libraries/lib-tags/Tags.h"
+#include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 
 //! HACK
 //! Static variable is not initialized
@@ -21,6 +25,7 @@
 
 #include "wxtypes_convert.h"
 #include "../au3types.h"
+#include "domconverter.h"
 
 #include "log.h"
 

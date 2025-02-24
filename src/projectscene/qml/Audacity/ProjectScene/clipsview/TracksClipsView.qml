@@ -518,4 +518,14 @@ Rectangle {
             visible: tracksModel.isVerticalRulersVisible
         }
     }
+
+    DropArea {
+        anchors.fill: parent
+        onDropped: (drop) => {
+            let urls = drop.urls.concat([]); // Forces conversion to a compatible array
+            tracksModel.handleDroppedFiles(urls);
+
+            drop.acceptProposedAction()
+        }
+    }
 }

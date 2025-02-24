@@ -53,4 +53,6 @@ if (AU_BUILD_EFFECTS_MODULE)
     add_subdirectory(effects)
 endif()
 
+add_subdirectory(importexport/import)
+
 # ...

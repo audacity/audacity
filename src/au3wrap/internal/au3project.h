@@ -6,7 +6,10 @@
 #include <memory>
 
 #include "../iau3project.h"
+#include "Track.h"
 #include "libraries/lib-utility/Observer.h"
+
+using TrackHolders = std::vector<std::shared_ptr<Track> >;
 
 namespace au::au3 {
 struct Au3ProjectData;
@@ -28,7 +31,6 @@ public:
     uintptr_t au3ProjectPtr() const override;
 
 private:
-
     const std::shared_ptr<Au3ProjectData> m_data;
     Observer::Subscription mTrackListSubstription;
     bool m_hasSavedVersion = false;
