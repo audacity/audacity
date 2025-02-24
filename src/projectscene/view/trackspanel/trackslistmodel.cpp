@@ -97,10 +97,16 @@ void TracksListModel::load()
 
     listenTracksSelectionChanged();
 
+    loadTracks(prj->trackList());
+
+    emit isEmptyChanged();
+    emit isAddingAvailableChanged(true);
+}
+
+void TracksListModel::loadTracks(const std::vector<Track>& tracks)
+{
     beginResetModel();
     deleteItems();
-
-    std::vector<Track> tracks = prj->trackList();
 
     for (const Track& track : tracks) {
         m_trackList.push_back(buildTrackItem(track));
@@ -108,9 +114,6 @@ void TracksListModel::load()
 
     endResetModel();
     onSelectedTracks(selectionController()->selectedTracks());
-
-    emit isEmptyChanged();
-    emit isAddingAvailableChanged(true);
 }
 
 void TracksListModel::addTrack(TrackTypes::Type type)
@@ -567,7 +570,11 @@ void TracksListModel::onTracksChanged(const std::vector<au::trackedit::Track>& t
 {
     Q_UNUSED(tracks);
     muse::async::Async::call(this, [this]() {
-        load();
+        if (const auto prj = globalContext()->currentTrackeditProject()) {
+            loadTracks(prj->trackList());
+            emit isEmptyChanged();
+            emit isAddingAvailableChanged(true);
+        }
     });
 }
 
