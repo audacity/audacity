@@ -2,12 +2,12 @@
 
 namespace au::projectscene {
 struct SampleData {
-    std::vector<int> y {};
-    std::vector<int> x {};
+    std::vector<double> y {};
+    std::vector<double> x {};
 
     SampleData() = default;
 
-    SampleData(std::vector<int> pY, std::vector<int> pX)
+    SampleData(std::vector<double> pY, std::vector<double> pX)
         : y(std::move(pY)), x(std::move(pX)) {}
 
     size_t size() const { return x.size(); }
