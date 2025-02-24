@@ -66,21 +66,10 @@ void TracksListModel::load()
 
     TRACEFUNC;
 
-    beginResetModel();
-    deleteItems();
-
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
-
-    std::vector<Track> tracks = prj->trackList();
-
-    for (const Track& track : tracks) {
-        m_trackList.push_back(buildTrackItem(track));
-    }
-
-    onSelectedTracks(selectionController()->selectedTracks());
 
     prj->tracksChanged().onReceive(this, [this](std::vector<au::trackedit::Track> tracks) {
         onTracksChanged(tracks);
@@ -106,9 +95,19 @@ void TracksListModel::load()
         onTrackMoved(track, pos);
     });
 
-    endResetModel();
-
     listenTracksSelectionChanged();
+
+    beginResetModel();
+    deleteItems();
+
+    std::vector<Track> tracks = prj->trackList();
+
+    for (const Track& track : tracks) {
+        m_trackList.push_back(buildTrackItem(track));
+    }
+
+    endResetModel();
+    onSelectedTracks(selectionController()->selectedTracks());
 
     emit isEmptyChanged();
     emit isAddingAvailableChanged(true);
@@ -285,8 +284,6 @@ void TracksListModel::clear()
 
 void TracksListModel::deleteItems()
 {
-    m_selectionModel->clear();
-
     for (TrackItem* trackItem : m_trackList) {
         trackItem->deleteLater();
     }
