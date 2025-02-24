@@ -372,7 +372,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         samples.push_back(newValue);
     }
     WaveChannelUtilities::SetFloatsFromTime(*waveChannel, startTime + waveClip->GetPlayStartTime(), samples.data(),
-                                            samples.size(), floatSample,
+                                            samples.size(), narrowestSampleFormat,
                                             PlaybackDirection::forward);
 }
 }
