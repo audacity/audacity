@@ -15,6 +15,8 @@
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
+struct ClipAndTimeSelection;
+
 class Au3SelectionController : public ISelectionController, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -75,6 +77,7 @@ public:
 
 private:
     void updateSelectionController();
+    void restoreSelection(const ClipAndTimeSelection& selection);
 
     au3::Au3Project& projectRef() const;
     Observer::Subscription m_tracksSubc;
