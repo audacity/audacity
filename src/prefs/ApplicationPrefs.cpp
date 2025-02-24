@@ -20,11 +20,13 @@
 
 #include <wx/defs.h>
 #include <wx/hyperlink.h>
+#include <wx/checkbox.h>
 
 #include "Prefs.h"
 #include "ShuttleGui.h"
 
 #include "AccessibleLinksFormatter.h"
+#include "WindowAccessible.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -76,14 +78,18 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay();
       {
-         S.TieCheckBox(
-            /* i18n-hint: Check-box title that configures periodic updates checking. */
-            XXC("&Check for updates", "application preferences"),
-            *DefaultUpdatesCheckingFlag);
+         /* i18n-hint: Check-box title that configures periodic updates checking. */
+         const auto checkBoxLabel = XXC("&Check for updates", "application preferences");
+         const auto checkBoxDescription =
+            XO("App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information.");
 
-         S.AddFixedText(
-            XO("App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."),
-            false, 470);
+         wxCheckBox* checkBox = S.Name(checkBoxLabel + Verbatim(", ") + checkBoxDescription)
+            .TieCheckBox(checkBoxLabel, *DefaultUpdatesCheckingFlag);
+#if wxUSE_ACCESSIBILITY
+         safenew WindowAccessible(checkBox);
+#endif
+
+         S.AddFixedText(checkBoxDescription, false, 470);
 
          S.AddSpace(20);
          /* i18n-hint: %s will be replaced with "our Privacy Policy" */
@@ -104,17 +110,20 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    {
       S.StartVerticalLay();
       {
-         S.TieCheckBox(
-            /* i18n-hint: Check-box title that enables anonymous usage info. */
-            XXC("&Usage info (UUID)", "application preferences"),
-            *SendAnonymousUsageInfo
-         );
-
-         S.AddFixedText(XO(
+         /* i18n-hint: Check-box title that enables anonymous usage info. */
+         const auto checkBoxLabel = XXC("&Usage info (UUID)", "application preferences");
+         const auto checkBoxDescription = XO(
             "To help us understand how often people use Audacity, we generate a random ID (UUID) "
             "for each installation. This helps us improve features and plan for future updates. "
-            "This ID does not contain any personally identifiable information."),
-            false, 470);
+            "This ID does not contain any personally identifiable information.");
+
+         wxCheckBox* checkBox = S.Name(checkBoxLabel + Verbatim(", ") + checkBoxDescription)
+            .TieCheckBox(checkBoxLabel, *SendAnonymousUsageInfo);
+#if wxUSE_ACCESSIBILITY
+         safenew WindowAccessible(checkBox);
+#endif
+
+         S.AddFixedText(checkBoxDescription, false, 470);
 
          S.AddSpace(20);
 
