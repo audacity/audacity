@@ -6,6 +6,7 @@ set(MODULE_TEST au_project_tests)
 
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/audacityprojectmock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/projectconfigurationmock.h
 )
 
 set(MODULE_TEST_LINK
