@@ -106,8 +106,9 @@ public:
             trackDataList.push_back(trackData);
 
             m_au3TrackEditClipboard->addTrackData(trackData);
-            m_au3TrackEditClipboard->setMultiSelectionCopy(true);
         }
+
+        m_au3TrackEditClipboard->setMultiSelectionCopy(true);
 
         return trackDataList;
     }
