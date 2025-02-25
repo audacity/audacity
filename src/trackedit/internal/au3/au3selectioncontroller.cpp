@@ -53,7 +53,6 @@ void Au3SelectionController::init()
             restorer.selectionSetter = [this](const ClipAndTimeSelection& selection) {
                 restoreSelection(selection);
             };
-
         } else {
             m_tracksSubc.Reset();
         }
@@ -261,6 +260,7 @@ void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool 
         selectedTracks.push_back(key.trackId);
     }
     setSelectedTracks(selectedTracks, complete);
+    projectHistory()->modifyState();
 }
 
 std::optional<au::trackedit::ClipId> Au3SelectionController::setSelectedClip(trackedit::TrackId trackId, secs_t time)

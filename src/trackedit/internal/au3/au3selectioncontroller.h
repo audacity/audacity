@@ -4,6 +4,7 @@
 #pragma once
 
 #include "../../iselectioncontroller.h"
+#include "../../iprojecthistory.h"
 
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
@@ -21,6 +22,7 @@ class Au3SelectionController : public ISelectionController, public muse::async::
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::playback::IPlayback> playback;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     Au3SelectionController() = default;
