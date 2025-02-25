@@ -72,13 +72,24 @@ GetEffectsDialog::GetEffectsDialog(wxWindow *parent) :
    wxBoxSizer* vSizer = new wxBoxSizer(wxVERTICAL);
    vSizer->Add(m_treebook, 1, wxEXPAND);
 
+   // Needed so that when the tree is the focus, pressing the Enter key
+   // does close the dialog, in accordance with the OK button being
+   // the default button.
+   m_treebook->Bind(wxEVT_TREE_KEY_DOWN, [this](wxTreeEvent& event) {
+      if (event.GetKeyCode() == WXK_RETURN)
+         EndModal(wxID_OK);
+      else
+         event.Skip();
+      });
+
    wxPanel* bottomPanel = new wxPanel(this, wxID_ANY);
    wxBoxSizer* hSizer = new wxBoxSizer(wxHORIZONTAL);
 
    hSizer->AddStretchSpacer(1);
 
-   auto* okButton = new GradientButton(bottomPanel, wxID_OK, XO("OK").Translation());
+   auto* okButton = new wxButton(bottomPanel, wxID_OK, XO("OK").Translation());
    hSizer->Add(okButton, 0, wxALL, 10);
+   okButton->SetDefault();
 
    bottomPanel->SetSizer(hSizer);
    vSizer->Add(bottomPanel, 0, wxEXPAND | wxBOTTOM | wxLEFT | wxRIGHT, 0);
