@@ -132,6 +132,10 @@ TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)
     //          2x2, 1. The first group spans two tracks, the second group one track.
     //          And the first track has four clips, the second track one clip (in the first group).
 
+    EXPECT_CALL(*m_currentProject, createNewGroupID(_))
+    .WillOnce(Return(2))
+    .WillOnce(Return(3));
+
     EXPECT_TRUE(m_au3TrackEditClipboard->trackDataEmpty());
 
     std::vector<TrackData> trackDataBefore = buildTrackData();
@@ -152,8 +156,8 @@ TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)
     auto tracksAfterIter = trackDataAfter.begin();
     for (; tracksBeforeIter != trackDataBefore.end() && tracksAfterIter != trackDataAfter.end();
          ++tracksBeforeIter, ++tracksAfterIter) {
-        auto waveTrackBefore = dynamic_cast<au3::Au3WaveTrack*>((*tracksBeforeIter).track.get());
-        auto waveTrackAfter = dynamic_cast<au3::Au3WaveTrack*>((*tracksAfterIter).track.get());
+        auto waveTrackBefore = dynamic_cast<au3::Au3WaveTrack*>(tracksBeforeIter->track.get());
+        auto waveTrackAfter = dynamic_cast<au3::Au3WaveTrack*>(tracksAfterIter->track.get());
 
         auto clipsBefore = waveTrackBefore->Intervals();
         auto clipsAfter = waveTrackAfter->Intervals();

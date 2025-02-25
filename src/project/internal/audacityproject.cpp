@@ -437,3 +437,13 @@ uintptr_t Audacity4Project::au3ProjectPtr() const
 {
     return m_au3Project->au3ProjectPtr();
 }
+
+int64_t Audacity4Project::createNewGroupID(int64_t startingID) const
+{
+    auto groupsList = m_trackeditProject->groupsIdsList();
+    while (muse::contains(groupsList, startingID)) {
+        startingID++;
+    }
+
+    return startingID;
+}
