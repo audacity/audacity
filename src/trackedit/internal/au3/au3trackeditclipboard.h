@@ -28,7 +28,7 @@ public:
 private:
     friend class au3TrackEditClipboardTests;
 
-    static std::set<int64_t> getGroupIDs(std::vector<TrackData>& tracksData);
+    static std::set<int64_t> getGroupIDs(const std::vector<TrackData>& tracksData);
     std::vector<int64_t> createNewGroupIDs(const std::set<int64_t>& groupIDs) const;
     static void updateTracksDataWithIDs(const std::vector<TrackData>& tracksData, const std::set<int64_t>& groupIDs,
                                         const std::vector<int64_t>& newGroupIDs);

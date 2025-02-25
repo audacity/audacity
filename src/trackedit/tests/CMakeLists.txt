@@ -15,8 +15,8 @@ set(MODULE_TEST_SRC
 )
 
 set(MODULE_TEST_LINK
-        trackedit
-au3wrap
+    trackedit
+    au3wrap
     )
 
 set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})

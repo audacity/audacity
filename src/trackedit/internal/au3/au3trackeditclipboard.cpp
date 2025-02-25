@@ -76,11 +76,11 @@ bool Au3TrackeditClipboard::isMultiSelectionCopy() const
     return m_isMultiSelectionCopy;
 }
 
-std::set<int64_t> Au3TrackeditClipboard::getGroupIDs(std::vector<TrackData>& tracksData)
+std::set<int64_t> Au3TrackeditClipboard::getGroupIDs(const std::vector<TrackData>& tracksData)
 {
     std::set<int64_t> groupIds;
 
-    for (auto& data : tracksData) {
+    for (const auto& data : tracksData) {
         auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data.track.get());
         auto clips = waveTrack->Intervals();
 
