@@ -2,14 +2,15 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectlistitemmodel.h"
+#include "log.h"
 
 namespace au::projectscene {
 RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState)
-    : QObject{parent}, m_effectState{std::move(effectState)}
+    : QObject{parent}, m_effectState{effectState}
 {
     realtimeEffectService()->isActiveChanged().onReceive(this, [this](effects::RealtimeEffectStatePtr state)
     {
-        if (state == this->m_effectState) {
+        if (state == m_effectState.lock()) {
             emit isActiveChanged();
         }
     });
@@ -17,36 +18,57 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
 
 RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
 {
-    effectsProvider()->hideEffect(m_effectState);
+    const auto state = m_effectState.lock();
+    IF_ASSERT_FAILED(state) {
+        // Effect state lifetime is expected to span more than this.
+        return;
+    }
+    effectsProvider()->hideEffect(state);
 }
 
 bool RealtimeEffectListItemModel::prop_isMasterEffect() const
 {
-    return realtimeEffectService()->trackId(m_effectState) == effects::IRealtimeEffectService::masterTrackId;
+    const auto state = m_effectState.lock();
+    IF_ASSERT_FAILED(state) {
+        return false;
+    }
+    return realtimeEffectService()->trackId(state) == effects::IRealtimeEffectService::masterTrackId;
 }
 
 QString RealtimeEffectListItemModel::effectName() const
 {
-    return QString::fromStdString(effectsProvider()->effectName(*m_effectState));
+    const auto state = m_effectState.lock();
+    IF_ASSERT_FAILED(state) {
+        return QString();
+    }
+    return QString::fromStdString(effectsProvider()->effectName(*state));
 }
 
 effects::RealtimeEffectStatePtr RealtimeEffectListItemModel::effectState() const
 {
-    return m_effectState;
+    return m_effectState.lock();
 }
 
 void RealtimeEffectListItemModel::toggleDialog()
 {
-    effectsProvider()->toggleShowEffect(m_effectState);
+    effectsProvider()->toggleShowEffect(m_effectState.lock());
 }
 
 bool RealtimeEffectListItemModel::prop_isActive() const
 {
-    return realtimeEffectService()->isActive(m_effectState);
+    const auto state = m_effectState.lock();
+    IF_ASSERT_FAILED(state) {
+        return false;
+    }
+    return realtimeEffectService()->isActive(state);
 }
 
 void RealtimeEffectListItemModel::prop_setIsActive(bool isActive)
 {
-    realtimeEffectService()->setIsActive(m_effectState, isActive);
+    const auto state = m_effectState.lock();
+    IF_ASSERT_FAILED(state) {
+        return;
+    }
+    realtimeEffectService()->setIsActive(state, isActive);
 }
 }

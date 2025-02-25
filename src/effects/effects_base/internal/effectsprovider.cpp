@@ -193,6 +193,9 @@ muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInst
 
 void EffectsProvider::showEffect(const RealtimeEffectStatePtr& state) const
 {
+    IF_ASSERT_FAILED(state) {
+        return;
+    }
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
@@ -225,6 +228,9 @@ void EffectsProvider::showEffect(const RealtimeEffectStatePtr& state) const
 
 void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
 {
+    IF_ASSERT_FAILED(state) {
+        return;
+    }
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
@@ -243,6 +249,9 @@ void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
 
 void EffectsProvider::toggleShowEffect(const RealtimeEffectStatePtr& state) const
 {
+    IF_ASSERT_FAILED(state) {
+        return;
+    }
     const auto effectId = state->GetID().ToStdString();
     const auto type = muse::String::fromStdString(effectSymbol(effectId));
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
