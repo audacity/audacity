@@ -21,7 +21,7 @@ using namespace au::au3;
 using namespace au::trackedit;
 
 namespace au::trackedit {
-class au3TrackEditClipboardTests : public ::testing::Test
+class Au3TrackEditClipboardTests : public ::testing::Test
 {
 public:
     void SetUp() override
@@ -125,7 +125,7 @@ public:
     std::vector<int64_t> m_oldGroupIds;
 };
 
-TEST_F(au3TrackEditClipboardTests, groupedTrackDataCopy)
+TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)
 {
     //! [GIVEN] There is a project with two tracks, and five clips grouped as follows:
     //          2x2, 1. The first group spans two tracks, the second group one track.

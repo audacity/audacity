@@ -26,7 +26,7 @@ public:
     bool isMultiSelectionCopy() const override;
 
 private:
-    friend class au3TrackEditClipboardTests;
+    friend class Au3TrackEditClipboardTests;
 
     static std::set<int64_t> getGroupIDs(const std::vector<TrackData>& tracksData);
     std::vector<int64_t> createNewGroupIDs(const std::set<int64_t>& groupIDs) const;
