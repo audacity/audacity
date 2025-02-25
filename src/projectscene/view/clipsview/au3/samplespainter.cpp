@@ -25,7 +25,7 @@ void drawSampleHead(const au::projectscene::SampleData& samples, const au::proje
 
     painter.setBrush(style.sampleBrush);
 
-    auto pr = QRect(0, 0, SAMPLE_TICK_SIZE, SAMPLE_TICK_SIZE);
+    auto pr = QRectF(0, 0, SAMPLE_TICK_SIZE, SAMPLE_TICK_SIZE);
     for (size_t s = 0; s < slen; s++) {
         if (samples.y[s] >= 0 && samples.y[s] < metrics.height) {
             if (selectedStartPosition <= samples.x[s] && samples.x[s] <= selectedEndPosition) {
