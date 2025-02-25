@@ -181,13 +181,13 @@ Rectangle {
         }
     }
 
-    CustomCursor {
-        id: customCursor
-        active: (leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
-            || leftTrimStretchEdgeHover.pressedButtons || rightTrimStretchEdgeHover.pressedButtons)
-        source: leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
-        size: 26
-    }
+    // CustomCursor {
+    //     id: customCursor
+    //     active: (leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
+    //         || leftTrimStretchEdgeHover.pressedButtons || rightTrimStretchEdgeHover.pressedButtons)
+    //     source: leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
+    //     size: 26
+    // }
 
     MouseArea {
         id: leftTrimStretchEdgeHover

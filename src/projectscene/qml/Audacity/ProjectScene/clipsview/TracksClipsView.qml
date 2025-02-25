@@ -18,6 +18,9 @@ Rectangle {
     property bool underSelection: false
     property bool altPressed: false
 
+    readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
+    readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
+
     color: ui.theme.backgroundPrimaryColor
 
     clip:true
@@ -214,6 +217,18 @@ Rectangle {
         }
     }
 
+    CustomCursor {
+        id: customCursor
+        active: (content.isBrush || content.isNearSample)
+        source: {
+            if (content.isBrush) {
+                return smoothShape
+            }
+            return pencilShape
+        }
+        size: !content.isBrush ? 36 : 26
+    }
+
     Rectangle {
         id: content
         objectName: "clipsView"
@@ -222,6 +237,9 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+
+        property bool isBrush: false
+        property bool isNearSample: false
 
         GridLines {
             timelineRuler: timeline.ruler
@@ -354,6 +372,15 @@ Rectangle {
                 property real lockedVerticalScrollPosition
                 property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
 
+                function checkIfAnyTrack(f) {
+                    for (let i = 0; i < tracksClipsView.count; i++) {
+                        if (f(tracksClipsView.itemAtIndex(i))) {
+                            return true
+                        }
+                    }
+                    return false
+                }
+
                 signal clipMoveRequested(var clipKey, bool completed)
                 signal clipStartEditRequested(var clipKey)
                 signal startAutoScroll()
@@ -471,6 +498,18 @@ Rectangle {
 
                     onInteractionEnded: {
                         tracksViewState.requestVerticalScrollUnlock()
+                    }
+
+                    onIsBrushChanged: function() {
+                        content.isBrush = tracksClipsView.checkIfAnyTrack(function(track) {
+                            return track.isBrush
+                        })
+                    }
+
+                    onIsNearSampleChanged: function() {
+                        content.isNearSample = tracksClipsView.checkIfAnyTrack(function(track){
+                            return track.isNearSample
+                        })
                     }
                 }
 

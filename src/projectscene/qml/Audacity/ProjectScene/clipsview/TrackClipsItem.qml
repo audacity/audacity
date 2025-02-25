@@ -21,9 +21,8 @@ Item {
     property bool moveActive: false
     property bool underSelection: false
     property bool altPressed: false
-
-    readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
-    readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
+    property alias isNearSample: clipsContainer.isNearSample
+    property alias isBrush: clipsContainer.isBrush
 
     signal interactionStarted()
     signal interactionEnded()
@@ -90,7 +89,7 @@ Item {
             for (let i = 0; i < repeator.count; i++) {
                 let clipLoader = repeator.itemAt(i)
                 if (clipLoader && clipLoader.item) {
-                    if (f(clipLoader.item) == true) {
+                    if (f(clipLoader.item)) {
                         return true
                     }
                 }
@@ -98,24 +97,12 @@ Item {
             return false
         }
 
-        CustomCursor {
-            id: customCursor
-            active: (clipsContainer.isBrush || clipsContainer.isNearSample)
-            source: {
-                if (clipsContainer.isBrush) {
-                    return smoothShape
-                }
-                return pencilShape
-            }
-            size: !clipsContainer.isBrush ? 36 : 26
-        }
-
         MouseArea {
             id: clipsContainerMouseArea
             propagateComposedEvents: true
             hoverEnabled: false
             pressAndHoldInterval: 100
-            enabled: !root.underSelection && clipsContainer.isNearSample
+            enabled: !root.underSelection && (clipsContainer.isNearSample || clipsContainer.isBrush)
 
             anchors.fill: parent
 
@@ -253,13 +240,13 @@ Item {
                     return rightNeighbor.x - (clipItem.x + clipItem.width)
                 }
 
-                onIsNearSampleChanged: function(isNearSample) {
+                onIsNearSampleChanged: function() {
                     clipsContainer.isNearSample = clipsContainer.checkIfAnyClip(function(clipItem) {
                         return clipItem.isNearSample
                     })
                 }
 
-                onIsBrushChanged: function(isBrush) {
+                onIsBrushChanged: function() {
                     clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
                         return clipItem.isBrush
                     })
