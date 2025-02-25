@@ -11,9 +11,9 @@
 namespace au::trackedit {
 class Au3TrackeditClipboard : public ITrackeditClipboard
 {
-public:
     muse::Inject<au::context::IGlobalContext> globalContext;
 
+public:
     std::vector<TrackData> trackDataSource() const override;
     std::vector<TrackData> trackDataCopy() const override;
     TrackData trackData(size_t i) const override;
