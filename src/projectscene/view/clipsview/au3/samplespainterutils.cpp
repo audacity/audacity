@@ -153,13 +153,13 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     Floats buffer{ slen };
     clip.GetSamples(channelIndex, (samplePtr)buffer.get(), floatSample, s0, slen, false);
 
-    auto xpos = std::vector<int>(slen);
-    auto ypos = std::vector<int>(slen);
+    auto xpos = std::vector<double>(slen);
+    auto ypos = std::vector<double>(slen);
     const auto invRate = 1.0 / rate;
 
     for (size_t s = 0; s < slen; s++) {
         const double time = (s + s0).as_double() / rate;
-        const int xx = std::max(-10000, std::min(10000, static_cast<int>(zoomInfo.TimeToPosition(time))));
+        const double xx = zoomInfo.TimeToPositionF(time);
         xpos[s] = xx;
 
         const double value = clip.GetEnvelope().GetValue(time, invRate);
