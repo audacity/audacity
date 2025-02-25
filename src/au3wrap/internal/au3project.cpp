@@ -94,7 +94,7 @@ bool Au3ProjectAccessor::load(const muse::io::path_t& filePath)
         pTrack->LinkConsistencyFix();
     }
 
-    SavedMasterEffectList::Get(project).UpdateCopy();
+    updateSavedState();
 
     return true;
 }
@@ -103,7 +103,8 @@ bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
 {
     auto& project = m_data->projectRef();
 
-    SavedMasterEffectList::Get(project).UpdateCopy();
+    // Update saved state before SaveProject serializes the project.
+    updateSavedState();
 
     auto& projectFileIO = ProjectFileIO::Get(project);
     auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), &TrackList::Get(project));
@@ -114,10 +115,21 @@ bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
     return result;
 }
 
+void Au3ProjectAccessor::updateSavedState()
+{
+    auto& project = m_data->projectRef();
+
+    SavedMasterEffectList::Get(project).UpdateCopy();
+
+    m_lastSavedTracks = TrackList::Create(nullptr);
+    for (auto t : TrackList::Get(project).Any<WaveTrack>()) {
+        m_lastSavedTracks->Add(t->Duplicate(Track::DuplicateOptions {}.Backup()), TrackList::DoAssignId::No);
+    }
+}
+
 void Au3ProjectAccessor::close()
 {
     auto& project = m_data->projectRef();
-    auto& tracks = TrackList::Get(project);
 
     //! ============================================================================
     //! NOTE Step 1 - Go back to the last saved state if needed
@@ -137,25 +149,27 @@ void Au3ProjectAccessor::close()
     //! ============================================================================
     auto& projectFileIO = ProjectFileIO::Get(project);
 
-    // Lock all blocks in all tracks of the last saved version, so that
-    // the sample blocks aren't deleted from the database when we destroy the
-    // sample block objects in memory.
-    for (auto wt : tracks.Any<WaveTrack>()) {
-        WaveTrackUtilities::CloseLock(*wt);
-    }
+    if (m_lastSavedTracks) {
+        // Lock all blocks in all tracks of the last saved version, so that
+        // the sample blocks aren't deleted from the database when we destroy the
+        // sample block objects in memory.
+        for (auto wt : m_lastSavedTracks->Any<WaveTrack>()) {
+            WaveTrackUtilities::CloseLock(*wt);
+        }
 
-    // Attempt to compact the project
-    projectFileIO.Compact({ &tracks });
+        // Attempt to compact the project
+        projectFileIO.Compact({ m_lastSavedTracks.get() });
 
-    if (
-        !projectFileIO.WasCompacted() && undoManager.UnsavedChanges()) {
-        // If compaction failed, we must do some work in case of close
-        // without save.  Don't leave the document blob from the last
-        // push of undo history, when that undo state may get purged
-        // with deletion of some new sample blocks.
-        // REVIEW: UpdateSaved() might fail too.  Do we need to test
-        // for that and report it?
-        projectFileIO.UpdateSaved(&tracks);
+        if (
+            !projectFileIO.WasCompacted() && undoManager.UnsavedChanges()) {
+            // If compaction failed, we must do some work in case of close
+            // without save.  Don't leave the document blob from the last
+            // push of undo history, when that undo state may get purged
+            // with deletion of some new sample blocks.
+            // REVIEW: UpdateSaved() might fail too.  Do we need to test
+            // for that and report it?
+            projectFileIO.UpdateSaved(m_lastSavedTracks.get());
+        }
     }
 
     //! ============================================================================
@@ -171,7 +185,7 @@ void Au3ProjectAccessor::close()
     undoManager.ClearStates();
 
     // Delete all the tracks to free up memory
-    tracks.Clear();
+    TrackList::Get(project).Clear();
 
     projectFileIO.CloseProject();
 }
