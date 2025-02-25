@@ -2300,8 +2300,7 @@ int64_t Au3Interaction::determineNewGroupId(const ClipKeyList& clipKeyList) cons
         }
     }
 
-    auto prj = globalContext()->currentProject();
-    return prj->createNewGroupID();
+    return globalContext()->currentProject()->createNewGroupID();
 }
 
 ClipKeyList Au3Interaction::clipsInGroup(int64_t id) const

@@ -105,7 +105,7 @@ std::vector<int64_t> Au3TrackeditClipboard::createNewGroupIDs(const std::set<int
     int64_t startingID = 0;
     for (auto id : groupIDs) {
         newGroupIds.push_back(prj->createNewGroupID(startingID));
-        startingID++;
+        startingID = newGroupIds.back() + 1; // + 1 or it would return the same repeatedly.
     }
 
     return newGroupIds;
