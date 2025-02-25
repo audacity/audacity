@@ -81,7 +81,7 @@ std::set<int64_t> Au3TrackeditClipboard::getGroupIDs(const std::vector<TrackData
 {
     std::set<int64_t> groupIds;
 
-    for (const auto& data : tracksData) {
+    for (const TrackData& data : tracksData) {
         auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data.track.get());
         auto clips = waveTrack->Intervals();
 
@@ -120,7 +120,7 @@ void Au3TrackeditClipboard::updateTracksDataWithIDs(const std::vector<TrackData>
 {
     IF_ASSERT_FAILED(groupIDs.size() == newGroupIDs.size());
 
-    for (auto& data : tracksData) {
+    for (const TrackData& data : tracksData) {
         auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data.track.get());
         auto clips = waveTrack->Intervals();
 
