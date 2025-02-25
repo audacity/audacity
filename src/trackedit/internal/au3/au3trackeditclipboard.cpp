@@ -4,8 +4,9 @@
 
 #include "au3trackeditclipboard.h"
 
-#include "Track.h"
 #include "containers.h"
+
+#include "Track.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 
@@ -102,7 +103,6 @@ std::vector<int64_t> Au3TrackeditClipboard::createNewGroupIDs(const std::set<int
     auto prj = globalContext()->currentTrackeditProject();
     auto groupsList = prj->groupsIdsList();
     int64_t newGroupId = 0;
-
     for (auto id : groupIDs) {
         while (muse::contains(groupsList, newGroupId)) {
             newGroupId++;
@@ -118,7 +118,7 @@ void Au3TrackeditClipboard::updateTracksDataWithIDs(const std::vector<TrackData>
                                                     const std::set<int64_t>& groupIDs,
                                                     const std::vector<int64_t>& newGroupIDs)
 {
-    assert(groupIDs.size() == newGroupIDs.size());
+    IF_ASSERT_FAILED(groupIDs.size() == newGroupIDs.size());
 
     for (auto& data : tracksData) {
         auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data.track.get());
@@ -133,7 +133,7 @@ void Au3TrackeditClipboard::updateTracksDataWithIDs(const std::vector<TrackData>
 
                 // This private method should only be called from the same context as getGroupIDs and createGroupIDs
                 // Or the data will not match.
-                assert(index >= 0);
+                IF_ASSERT_FAILED(index >= 0);
 
                 (*it).get()->SetGroupId(newGroupIDs[index]);
             }
