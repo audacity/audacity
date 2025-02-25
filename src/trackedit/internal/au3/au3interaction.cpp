@@ -2300,16 +2300,8 @@ int64_t Au3Interaction::determineNewGroupId(const ClipKeyList& clipKeyList) cons
         }
     }
 
-    //! NOTE: none of the clips is grouped, find unique id for them
-    auto prj = globalContext()->currentTrackeditProject();
-    auto groupsList = prj->groupsIdsList();
-
-    int64_t newGroupId = 0;
-    while (muse::contains(groupsList, newGroupId)) {
-        newGroupId++;
-    }
-
-    return newGroupId;
+    auto prj = globalContext()->currentProject();
+    return prj->createNewGroupID();
 }
 
 ClipKeyList Au3Interaction::clipsInGroup(int64_t id) const

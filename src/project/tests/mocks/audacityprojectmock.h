@@ -39,5 +39,7 @@ public:
     MOCK_METHOD(projectscene::IProjectViewStatePtr, viewState, (), (const, override));
 
     MOCK_METHOD(uintptr_t, au3ProjectPtr, (), (const, override));
+
+    MOCK_METHOD(int64_t, createNewGroupID, (int64_t startingId), (const, override));
 };
 }
