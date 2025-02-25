@@ -23,6 +23,10 @@ Item {
     property bool altPressed: false
     property alias isNearSample: clipsContainer.isNearSample
     property alias isBrush: clipsContainer.isBrush
+    property alias leftTrimContainsMouse: clipsContainer.leftTrimContainsMouse
+    property alias rightTrimContainsMouse: clipsContainer.rightTrimContainsMouse
+    property alias leftTrimPressedButtons: clipsContainer.leftTrimPressedButtons
+    property alias rightTrimPressedButtons: clipsContainer.rightTrimPressedButtons
 
     signal interactionStarted()
     signal interactionEnded()
@@ -74,6 +78,10 @@ Item {
         property bool isNearSample: false
         property bool multiSampleEdit: false
         property bool isBrush: false
+        property bool leftTrimContainsMouse: false
+        property bool rightTrimContainsMouse: false
+        property bool leftTrimPressedButtons: false
+        property bool rightTrimPressedButtons: false
 
         function mapToAllClips(e, f) {
             for (let i = 0; i < repeator.count; i++) {
@@ -100,7 +108,7 @@ Item {
         MouseArea {
             id: clipsContainerMouseArea
             propagateComposedEvents: true
-            hoverEnabled: false
+            hoverEnabled: true
             pressAndHoldInterval: 100
             enabled: !root.underSelection && (clipsContainer.isNearSample || clipsContainer.isBrush)
 
@@ -145,6 +153,12 @@ Item {
 
                 clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
+                })
+            }
+
+            onContainsMouseChanged: function() {
+                clipsContainer.mapToAllClips({x: mouseX, y: mouseY}, function(clipItem, mouseEvent) {
+                    clipItem.containsMouseChanged(containsMouse)
                 })
             }
         }
@@ -249,6 +263,30 @@ Item {
                 onIsBrushChanged: function() {
                     clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
                         return clipItem.isBrush
+                    })
+                }
+
+                onLeftTrimContainsMouseChanged: function() {
+                    clipsContainer.leftTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem.leftTrimContainsMouse
+                    })
+                }
+
+                onRightTrimContainsMouseChanged: function() {
+                    clipsContainer.rightTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem.rightTrimContainsMouse
+                    })
+                }
+
+                onLeftTrimPressedButtonsChanged: function() {
+                    clipsContainer.leftTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem.leftTrimPressedButtons
+                    })
+                }
+
+                onRightTrimPressedButtonsChanged: function() {
+                    clipsContainer.rightTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem.rightTrimPressedButtons
                     })
                 }
 

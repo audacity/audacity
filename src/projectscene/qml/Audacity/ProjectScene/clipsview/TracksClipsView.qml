@@ -20,6 +20,10 @@ Rectangle {
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
+    readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
+    readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
+    readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
+    readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -219,14 +223,20 @@ Rectangle {
 
     CustomCursor {
         id: customCursor
-        active: (content.isBrush || content.isNearSample)
+        active: (content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
+            || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
         source: {
             if (content.isBrush) {
                 return smoothShape
             }
-            return pencilShape
+
+            if (content.isNearSample) {
+                return pencilShape
+            }
+
+            return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
         }
-        size: !content.isBrush ? 36 : 26
+        size: !content.isBrush && content.isNearSample ? 36 : 26
     }
 
     Rectangle {
@@ -240,6 +250,10 @@ Rectangle {
 
         property bool isBrush: false
         property bool isNearSample: false
+        property bool leftTrimContainsMouse: false
+        property bool rightTrimContainsMouse: false
+        property bool leftTrimPressedButtons: false
+        property bool rightTrimPressedButtons: false
 
         GridLines {
             timelineRuler: timeline.ruler
@@ -509,6 +523,30 @@ Rectangle {
                     onIsNearSampleChanged: function() {
                         content.isNearSample = tracksClipsView.checkIfAnyTrack(function(track){
                             return track.isNearSample
+                        })
+                    }
+
+                    onLeftTrimContainsMouseChanged: function() {
+                        content.leftTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
+                            return track.leftTrimContainsMouse
+                        })
+                    }
+
+                    onRightTrimContainsMouseChanged: function() {
+                        content.rightTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
+                            return track.rightTrimContainsMouse
+                        })
+                    }
+
+                    onLeftTrimPressedButtonsChanged: function() {
+                        content.leftTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
+                            return track.leftTrimPressedButtons
+                        })
+                    }
+
+                    onRightTrimPressedButtonsChanged: function() {
+                        content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
+                            return track.rightTrimPressedButtons
                         })
                     }
                 }

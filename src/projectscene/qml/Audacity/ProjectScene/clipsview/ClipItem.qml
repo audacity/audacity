@@ -82,15 +82,14 @@ Rectangle {
     property bool altPressed: false
     property bool isBrush: waveView.isStemPlot && root.altPressed
     property alias isNearSample: waveView.isNearSample
+    property alias leftTrimContainsMouse: leftTrimStretchEdgeHover.containsMouse
+    property alias rightTrimContainsMouse: rightTrimStretchEdgeHover.containsMouse
+    property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
+    property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
 
     onHeaderHoveredChanged: {
         root.clipHeaderHoveredChanged(headerHovered)
     }
-
-    readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
-    readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
-    readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
-    readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
 
     function editTitle() {
         editLoader.edit(titleLabel.text)
@@ -124,6 +123,12 @@ Rectangle {
 
     function setLastSample(x, y) {
         lastSample = {x: x, y: y - header.height}
+    }
+
+    function containsMouseChanged(containsMouse) {
+        if (!containsMouse && !root.multiSampleEdit) {
+            waveView.isNearSample = false
+        }
     }
 
     ClipContextMenuModel {
@@ -179,15 +184,11 @@ Rectangle {
             // propagate mouse position to the wave view adjusting the y position
             waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
         }
-    }
 
-    // CustomCursor {
-    //     id: customCursor
-    //     active: (leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
-    //         || leftTrimStretchEdgeHover.pressedButtons || rightTrimStretchEdgeHover.pressedButtons)
-    //     source: leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
-    //     size: 26
-    // }
+        onContainsMouseChanged: {
+            root.containsMouseChanged(containsMouse)
+        }
+    }
 
     MouseArea {
         id: leftTrimStretchEdgeHover
@@ -236,16 +237,10 @@ Rectangle {
             clipItemMousePositionChanged(mousePos.x, mousePos.y)
 
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
-                if (customCursor.source !== leftStretchShape) {
-                    customCursor.source = leftStretchShape
-                }
                 if (pressed) {
                     root.clipLeftStretchRequested(false)
                 }
             } else {
-                if (customCursor.source !== leftTrimShape) {
-                    customCursor.source = leftTrimShape
-                }
                 if (pressed) {
                     root.clipLeftTrimRequested(false)
                 }
@@ -300,16 +295,10 @@ Rectangle {
             clipItemMousePositionChanged(mousePos.x, mousePos.y)
 
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
-                if (customCursor.source !== rightStretchShape) {
-                    customCursor.source = rightStretchShape
-                }
                 if (pressed) {
                     root.clipRightStretchRequested(false)
                 }
             } else {
-                if (customCursor.source !== rightTrimShape) {
-                    customCursor.source = rightTrimShape
-                }
                 if (pressed) {
                     root.clipRightTrimRequested(false)
                 }
@@ -570,47 +559,8 @@ Rectangle {
                 }
             }
 
-            MouseArea {
-                id: waveViewArea
-                cursorShape: Qt.IBeamCursor
-                enabled: waveView.isNearSample || root.isBrush
-                acceptedButtons: Qt.LeftButton
-                hoverEnabled: true
-                propagateComposedEvents: true
-
-                anchors.fill: parent
-
-                onClicked: function(e) {
-                    root.altPressed
-                        ? waveView.smoothLastClickPos(e.x, e.y)
-                        : waveView.setLastClickPos(e.x, e.y, e.x, e.y)
-                    waveView.update()
-                }
-
-                onPressed: function(e) {
-                    e.accepted = false
-                }
-
-                onPressAndHold: function(e) {
-                    e.accepted = false
-                }
-
-                onPositionChanged: function (e) {
-                    // propagate mouse position to the clip item ajusting the y position
-                    clipItemMousePositionChanged(e.x, e.y - header.height)
-
-                    waveView.onWaveViewPositionChanged(e.x, e.y)
-                }
-
-                onContainsMouseChanged: {
-                    if (!containsMouse && !root.multiSampleEdit) {
-                        waveView.isNearSample = false
-                    }
-                }
-            }
-
             onIsNearSampleChanged: {
-                if(isNearSample) {
+                if(root.isNearSample) {
                     waveView.forceActiveFocus()
                 }
             }
