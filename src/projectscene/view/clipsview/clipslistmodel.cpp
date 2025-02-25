@@ -746,6 +746,8 @@ void ClipsListModel::selectClip(const ClipKey& key)
 {
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
+    constexpr auto complete = true;
+    constexpr auto modifyState = true;
     const auto clipGroupId = trackeditInteraction()->clipGroupId(key.key);
     if (clipGroupId != -1) {
         //! NOTE: clip belongs to a group, select the whole group
@@ -754,7 +756,7 @@ void ClipsListModel::selectClip(const ClipKey& key)
                 selectionController()->addSelectedClip(key);
             }
         } else {
-            selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId));
+            selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete, modifyState);
         }
     } else {
         if (modifiers.testFlag(Qt::ShiftModifier)) {
@@ -763,7 +765,7 @@ void ClipsListModel::selectClip(const ClipKey& key)
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
                 return;
             }
-            selectionController()->setSelectedClips(ClipKeyList({ key.key }));
+            selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete, modifyState);
         }
     }
 }

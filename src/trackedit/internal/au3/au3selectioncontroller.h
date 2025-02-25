@@ -4,6 +4,7 @@
 #pragma once
 
 #include "../../iselectioncontroller.h"
+#include "../../iprojecthistory.h"
 
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
@@ -21,6 +22,7 @@ class Au3SelectionController : public ISelectionController, public muse::async::
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::playback::IPlayback> playback;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     Au3SelectionController() = default;
@@ -30,7 +32,7 @@ public:
     // track selection
     void resetSelectedTracks() override;
     trackedit::TrackIdList selectedTracks() const override;
-    void setSelectedTracks(const trackedit::TrackIdList& trackIds, bool complete = true) override;
+    void setSelectedTracks(const trackedit::TrackIdList& trackIds, bool complete) override;
     void addSelectedTrack(const trackedit::TrackId& trackId) override;
     muse::async::Channel<trackedit::TrackIdList> tracksSelected() const override;
     std::optional<TrackId> determinePointedTrack(double y) const override;
@@ -41,8 +43,7 @@ public:
     bool hasSelectedClips() const override;
     ClipKeyList selectedClips() const override;
     ClipKeyList selectedClipsInTrackOrder() const override;
-    void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true) override;
-    std::optional<trackedit::ClipId> setSelectedClip(trackedit::TrackId trackId, secs_t time) override;
+    void setSelectedClips(const ClipKeyList& clipKeys, bool complete, bool modifyState) override;
     void addSelectedClip(const ClipKey& clipKey) override;
     void removeClipSelection(const ClipKey& clipKey) override;
     muse::async::Channel<ClipKeyList> clipsSelected() const override;

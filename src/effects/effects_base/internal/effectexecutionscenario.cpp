@@ -341,7 +341,12 @@ std::optional<au::trackedit::ClipId> EffectExecutionScenario::performEffectOnSin
     // It is possible that the backend decides to replace the processed clip with a new one.
     // Since the selection spans only one clip, we want the originally selected clip to remain selected in appearance.
     // Look for the clip on that track at that time - we should find the new one.
-    return selectionController()->setSelectedClip(trackId, effect.mT0);
+    const auto waveClip = au3::DomAccessor::findWaveClip(project, trackId, effect.mT0);
+    IF_ASSERT_FAILED(waveClip) {
+        return std::nullopt;
+    }
+    selectionController()->setSelectedClips({ trackedit::ClipKey { trackId, waveClip->GetId() } });
+    return waveClip->GetId();
 }
 
 muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Project& project, Effect& effect,
