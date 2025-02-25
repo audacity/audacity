@@ -22,6 +22,9 @@ Item {
     property bool underSelection: false
     property bool altPressed: false
 
+    readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
+    readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
+
     signal interactionStarted()
     signal interactionEnded()
     // mouse position event is not propagated on overlapping mouse areas
@@ -71,6 +74,7 @@ Item {
 
         property bool isNearSample: false
         property bool multiSampleEdit: false
+        property bool isBrush: false
 
         function mapToAllClips(e, f) {
             for (let i = 0; i < repeator.count; i++) {
@@ -80,6 +84,30 @@ Item {
                     f(clipLoader.item, {button: e.button, modifiers: e.modifiers, x: clipPos.x, y: clipPos.y})
                 }
             }
+        }
+
+        function checkIfAnyClip(f) {
+            for (let i = 0; i < repeator.count; i++) {
+                let clipLoader = repeator.itemAt(i)
+                if (clipLoader && clipLoader.item) {
+                    if (f(clipLoader.item) == true) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        CustomCursor {
+            id: customCursor
+            active: (clipsContainer.isBrush || clipsContainer.isNearSample)
+            source: {
+                if (clipsContainer.isBrush) {
+                    return smoothShape
+                }
+                return pencilShape
+            }
+            size: !clipsContainer.isBrush ? 36 : 26
         }
 
         MouseArea {
@@ -226,7 +254,15 @@ Item {
                 }
 
                 onIsNearSampleChanged: function(isNearSample) {
-                    clipsContainer.isNearSample = isNearSample
+                    clipsContainer.isNearSample = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem.isNearSample
+                    })
+                }
+
+                onIsBrushChanged: function(isBrush) {
+                    clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        return clipItem.isBrush
+                    })
                 }
 
                 onClipHeaderHoveredChanged: function(headerHovered) {

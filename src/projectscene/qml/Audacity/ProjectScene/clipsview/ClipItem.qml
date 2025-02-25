@@ -70,8 +70,6 @@ Rectangle {
     signal clipItemMousePositionChanged(real x, real y)
     signal clipHeaderHoveredChanged(bool value)
 
-    signal isNearSampleChanged(bool value)
-
     radius: 4
     color: clipSelected ? "white" : clipColor
     border.color: "#000000"
@@ -83,6 +81,7 @@ Rectangle {
     property var lastSample: undefined
     property bool altPressed: false
     property bool isBrush: waveView.isStemPlot && root.altPressed
+    property alias isNearSample: waveView.isNearSample
 
     onHeaderHoveredChanged: {
         root.clipHeaderHoveredChanged(headerHovered)
@@ -92,8 +91,6 @@ Rectangle {
     readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
     readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
     readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
-    readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
-    readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
 
     function editTitle() {
         editLoader.edit(titleLabel.text)
@@ -185,24 +182,11 @@ Rectangle {
     }
 
     CustomCursor {
-        //! TODO AU4: We should move it to the parent level at least
-        //!      to avoid multiple clips concurrently change the cursor
         id: customCursor
-        active: {
-            return (root.isBrush || waveView.isNearSample || leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
+        active: (leftTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.containsMouse
             || leftTrimStretchEdgeHover.pressedButtons || rightTrimStretchEdgeHover.pressedButtons)
-        }
-        source: {
-            if (waveView.isStemPlot && root.altPressed) {
-                return smoothShape
-            }
-            if (waveView.isNearSample) {
-                return pencilShape
-            }
-
-            return leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
-        }
-        size: (waveView.isNearSample && !root.altPressed) ? 36 : 26
+        source: leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons ? leftTrimShape : rightTrimShape
+        size: 26
     }
 
     MouseArea {
@@ -626,7 +610,6 @@ Rectangle {
             }
 
             onIsNearSampleChanged: {
-                root.isNearSampleChanged(isNearSample)
                 if(isNearSample) {
                     waveView.forceActiveFocus()
                 }

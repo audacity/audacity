@@ -6,20 +6,18 @@
 
 using namespace au::projectscene;
 
-QString CustomCursor::s_source = "";
-
 CustomCursor::CustomCursor(QQuickItem*)
 {
     auto changeCursor = [this](){
         if (m_active) {
             QGuiApplication::restoreOverrideCursor();
 
-            QPixmap pixmap(s_source);
+            QPixmap pixmap(m_source);
             if (!pixmap.isNull()) {
                 m_cursor = QCursor(pixmap.scaled(m_size, m_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
                 QGuiApplication::setOverrideCursor(m_cursor);
             } else {
-                qWarning() << "Failed to load bitmap from source:" << s_source;
+                qWarning() << "Failed to load bitmap from source:" << m_source;
             }
         } else {
             QGuiApplication::restoreOverrideCursor();
@@ -38,7 +36,7 @@ bool CustomCursor::active() const
 
 QString CustomCursor::source() const
 {
-    return s_source;
+    return m_source;
 }
 
 int CustomCursor::size() const
@@ -58,11 +56,11 @@ void CustomCursor::setActive(bool active)
 
 void CustomCursor::setSource(QString source)
 {
-    if (s_source == source) {
+    if (m_source == source) {
         return;
     }
 
-    s_source = source;
+    m_source = source;
     emit sourceChanged();
 }
 

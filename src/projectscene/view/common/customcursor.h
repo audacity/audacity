@@ -31,8 +31,8 @@ signals:
     void sizeChanged();
 
 private:
-    static QString s_source;
     bool m_active = false;
+    QString m_source;
     QCursor m_cursor;
     int m_size = DEFAULT_CURSOR_SIZE;
 };

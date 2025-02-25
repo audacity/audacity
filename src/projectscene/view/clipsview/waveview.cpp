@@ -201,6 +201,10 @@ bool WaveView::isNearSample() const
 
 void WaveView::setIsNearSample(bool isNearSample)
 {
+    if (m_isNearSample == isNearSample) {
+        return;
+    }
+
     m_isNearSample = isNearSample;
     emit isNearSampleChanged();
 }
