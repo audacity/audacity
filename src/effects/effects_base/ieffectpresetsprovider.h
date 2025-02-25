@@ -23,6 +23,7 @@ public:
     virtual muse::async::Channel<EffectId> userPresetsChanged() const = 0;
 
     virtual muse::Ret applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) = 0;
+    virtual bool hasUserPresetWithName(const EffectId& effectId, const std::string& presetName) const = 0;
     virtual muse::Ret saveCurrentAsPreset(const EffectInstanceId& effectInstanceId, const std::string& presetName) = 0;
     virtual muse::Ret deletePreset(const EffectId& effectId, const PresetId& presetId) = 0;
     virtual muse::Ret importPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath) = 0;
