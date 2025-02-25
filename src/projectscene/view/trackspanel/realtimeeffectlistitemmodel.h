@@ -36,7 +36,7 @@ signals:
     void isActiveChanged();
 
 private:
-    const effects::RealtimeEffectStatePtr m_effectState;
+    std::weak_ptr<RealtimeEffectState> m_effectState;
 };
 
 using RealtimeEffectListItemModelPtr = std::shared_ptr<RealtimeEffectListItemModel>;

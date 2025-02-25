@@ -48,7 +48,7 @@ class REALTIME_EFFECTS_API RealtimeEffectList final
 public:
     //! Should be called (for pushing undo states) only from main thread, to
     //! avoid races
-    //! These methods to not publish messages.
+    //! These methods do not publish messages.
     RealtimeEffectList(const RealtimeEffectList&);
     RealtimeEffectList& operator=(const RealtimeEffectList&);
     std::unique_ptr<ClientData::Cloneable<> > Clone() const override;

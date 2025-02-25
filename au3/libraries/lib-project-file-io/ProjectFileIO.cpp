@@ -40,6 +40,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "XMLFileReader.h"
 #include "SentryHelper.h"
 #include "MemoryX.h"
+#include "SavedMasterEffectList.h"
 
 #include "ProjectFileIOExtension.h"
 #include "ProjectFormatVersion.h"
@@ -1702,6 +1703,8 @@ void ProjectFileIO::WriteXML(XMLWriter& xmlFile,
         }
         useTrack->WriteXML(xmlFile);
     });
+
+    SavedMasterEffectList::Get(proj).List().WriteXML(xmlFile);
 
     xmlFile.EndTag(wxT("project"));
 

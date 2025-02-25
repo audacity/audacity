@@ -41,8 +41,8 @@ public:
                                                            > {};
 
     explicit RealtimeEffectState(const PluginID& id);
-    RealtimeEffectState(const RealtimeEffectState& other) = delete;
-    RealtimeEffectState& operator =(const RealtimeEffectState& other) = delete;
+    RealtimeEffectState(const RealtimeEffectState& other);
+    RealtimeEffectState& operator =(const RealtimeEffectState& other);
     ~RealtimeEffectState();
 
     //! May be called with nonempty id at most once in the lifetime of a state
