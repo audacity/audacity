@@ -158,9 +158,12 @@ private:
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
     int trackPositionOffsetMin() const;
-    bool canMoveClipsToTrack(int trackPositionOffset) const;
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
+
+    using ProgressCb = std::function<void(double)>;
+    using CancelCb = std::function<bool()>;
+    muse::Ret withProgress(const std::string& title, const std::function<bool(ProgressCb, CancelCb)>& action) const;
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 

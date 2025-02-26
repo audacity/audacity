@@ -92,6 +92,12 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
     m_isUndoRedoAvailableChanged.notify();
 }
 
+void au::trackedit::Au3ProjectHistory::rollbackState()
+{
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).RollbackState();
+}
+
 muse::async::Notification Au3ProjectHistory::isUndoRedoAvailableChanged() const
 {
     return m_isUndoRedoAvailableChanged;

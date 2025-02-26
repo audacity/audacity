@@ -572,7 +572,16 @@ void WaveClip::MakeStereo(WaveClip&& other, bool mustAlign)
     }
 }
 
-bool WaveClip::MakeMono(const std::function<bool(double)>& progress)
+void WaveClip::MakeStereo()
+{
+    if (NChannels() == 2) {
+        return;
+    }
+    constexpr auto mustAlign = true; // Since they're the same ...
+    MakeStereo(WaveClip(*this, GetFactory(), true, CreateToken {}), mustAlign);
+}
+
+bool WaveClip::MakeMono(const std::function<void(double)>& progress, const std::function<bool()>& cancel)
 {
     if (NChannels() == 1) {
         return true;
@@ -602,7 +611,8 @@ bool WaveClip::MakeMono(const std::function<bool(double)>& progress)
             reinterpret_cast<constSamplePtr>(buffer.data()), floatSample, len, 1,
             floatSample);
         n += len;
-        if (!progress(n / nSamples.as_double())) {
+        progress(n / nSamples.as_double());
+        if (cancel()) {
             return false;
         }
     }

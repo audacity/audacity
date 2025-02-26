@@ -451,7 +451,7 @@ void TrackList::PermutationEvent(TrackNodePointer node)
 
 void TrackList::DeletionEvent(std::weak_ptr<Track> node, bool duringReplace)
 {
-    QueueEvent(
+    Publish(
         { TrackListEvent::DELETION, std::move(node), duringReplace ? 1 : 0 });
 }
 

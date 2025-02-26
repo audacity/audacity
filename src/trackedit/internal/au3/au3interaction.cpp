@@ -1016,23 +1016,15 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
         if (trackToPaste->NChannels() == 1 && dstWaveTrack->NChannels() == 2) {
             trackToPaste->MonoToStereo();
         } else if (trackToPaste->NChannels() == 2 && dstWaveTrack->NChannels() == 1) {
-            muse::Progress progress;
-            interactive()->showProgress(muse::trc("trackedit", "Mixing down to mono"), &progress);
-            progress.started();
-
-            auto progressFn = [&](double progressFraction)
+            const auto result = withProgress(
+                muse::trc("trackedit", "Mixing down to mono"),
+                [&](ProgressCb progressCb, CancelCb cancelCb)
             {
-                progress.progress(progressFraction * 1000, 1000, "");
-                QCoreApplication::processEvents();
-                return !progress.isCanceled();
-            };
-
-            if (!trackToPaste->MixDownToMono(std::move(progressFn))) {
-                progress.finish(muse::make_ret(muse::Ret::Code::Cancel));
-                return make_ret(muse::Ret::Code::Cancel);
+                return trackToPaste->MixDownToMono(progressCb, cancelCb);
+            });
+            if (!result) {
+                return result;
             }
-
-            progress.finish(muse::make_ok());
         }
 
         if (clipboard()->isMultiSelectionCopy()) {
@@ -1297,8 +1289,7 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
 
     int boundary = trackPositionOffsetMin();
     trackPositionOffset = std::max(trackPositionOffset, boundary);
-    bool canMoveClips = (trackPositionOffset != 0) ? canMoveClipsToTrack(trackPositionOffset)
-                        : false;
+    const bool canMoveClips = trackPositionOffset != 0;
 
     for (const auto& selectedClip : selectionController()->selectedClipsInTrackOrder()) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
@@ -1313,7 +1304,7 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
 
         changeClipStartTime(selectedClip, clip->GetPlayStartTime() + timePositionOffset, completed);
 
-        if (trackPositionOffset == 0 || !canMoveClips) {
+        if (!canMoveClips) {
             continue;
         }
 
@@ -1349,7 +1340,42 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
     if (completed) {
         //! TODO AU4: later when having keyboard arrow shortcut for moving clips
         //! make use of UndoPush::CONSOLIDATE arg in UndoManager
-        projectHistory()->pushHistoryState("Clip moved", "Move clip");
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        const auto trackIds = prj->trackIdList();
+
+        const auto result = withProgress(
+            muse::trc("trackedit", "Rendering clips"),
+            [&](ProgressCb progressCb, CancelCb cancelCb)
+        {
+            const auto selectedTracks = selectionController()->selectedTracks();
+            const ProgressCb trackProgressCb = [&](double progressFraction) { progressCb(progressFraction / selectedTracks.size()); };
+            for (const trackedit::TrackId track : selectedTracks) {
+                Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track));
+                IF_ASSERT_FAILED(waveTrack) {
+                    continue;
+                }
+
+                const auto copy
+                    =std::static_pointer_cast<WaveTrack>(waveTrack->Duplicate(::Track::DuplicateOptions {}.Backup()));
+
+                if (!copy->FixClipChannels(progressCb, cancelCb)) {
+                    return false;
+                }
+
+                auto& trackList = ::TrackList::Get(projectRef());
+                auto tmpTrackList = ::TrackList::Temporary(trackList.GetOwner());
+                tmpTrackList->Add(copy, ::TrackList::DoAssignId::No);
+                trackList.ReplaceOne(*waveTrack, std::move(*tmpTrackList));
+                prj->notifyAboutTrackChanged(DomConverter::track(copy.get()));
+            }
+            return true;
+        });
+
+        if (result) {
+            projectHistory()->pushHistoryState("Clip moved", "Move clip");
+        } else {
+            projectHistory()->rollbackState();
+        }
     }
 
     m_busy = false;
@@ -2025,52 +2051,6 @@ int Au3Interaction::trackPositionOffsetMin() const
     return minOffset;
 }
 
-bool Au3Interaction::canMoveClipsToTrack(int trackPositionOffset) const
-{
-    if (trackPositionOffset == 0) {
-        return false;
-    }
-
-    for (const auto& selectedClip : selectionController()->selectedClipsInTrackOrder()) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            continue;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
-        IF_ASSERT_FAILED(clip) {
-            continue;
-        }
-
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        auto trackIds = prj->trackIdList();
-
-        int destinationTrackIdx = -1.0;
-        TrackId dstTrackId = -1.0;
-        for (int i = 0; i < trackIds.size(); ++i) {
-            if (trackIds.at(i) == selectedClip.trackId) {
-                destinationTrackIdx = i + trackPositionOffset;
-                if (destinationTrackIdx >= trackIds.size()) {
-                    return true;
-                } else {
-                    dstTrackId = trackIds.at(destinationTrackIdx);
-
-                    Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTrackId));
-                    IF_ASSERT_FAILED(waveTrack) {
-                        continue;
-                    }
-
-                    if (dstWaveTrack->NChannels() != waveTrack->NChannels()) {
-                        return false;
-                    }
-                }
-                break;
-            }
-        }
-    }
-    return true;
-}
-
 std::optional<secs_t> Au3Interaction::getLeftmostClipStartTime(const ClipKeyList& clipKeys) const
 {
     std::optional<secs_t> leftmostClipStartTime;
@@ -2448,4 +2428,30 @@ bool Au3Interaction::doChangeClipSpeed(const ClipKey& clipKey, double speed)
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
     return true;
+}
+
+muse::Ret Au3Interaction::withProgress(const std::string& title, const std::function<bool(ProgressCb, CancelCb)>& action) const
+{
+    muse::Progress progress;
+    interactive()->showProgress(title, &progress);
+    progress.started();
+
+    ProgressCb progressCb = [&](double progressFraction)
+    {
+        progress.progress(progressFraction * 1000, 1000, "");
+        QCoreApplication::processEvents();
+        return !progress.isCanceled();
+    };
+
+    CancelCb cancelCb = [&progress] { return progress.isCanceled(); };
+
+    const bool result = action(std::move(progressCb), std::move(cancelCb));
+
+    if (progress.isCanceled()) {
+        return muse::make_ret(muse::Ret::Code::Cancel);
+    }
+
+    progress.finish(muse::make_ok());
+
+    return result;
 }

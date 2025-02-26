@@ -369,7 +369,10 @@ public:
      * No care is taken to restore the initial state if convertion gets interrupted between clips,
      * in which case `false` is returned and the track should be disposed of.
      */
-    bool MixDownToMono(const std::function<bool(double)>& progress);
+    bool MixDownToMono(const std::function<void(double)>& progress, const std::function<bool()>& cancel);
+
+    bool FixClipChannels(
+        const std::function<void(double)>& progress, const std::function<bool()>& cancel);
 
     /*!
      @pre `!GetOwner()`

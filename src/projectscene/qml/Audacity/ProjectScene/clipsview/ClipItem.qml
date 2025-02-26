@@ -175,6 +175,10 @@ Rectangle {
             // propagate mouse position to the wave view adjusting the y position
             waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
         }
+
+        onReleased: {
+            console.log("Yo, released")
+        }
     }
 
     CustomCursor {
@@ -604,7 +608,7 @@ Rectangle {
 
             onIsNearSampleChanged: {
                 root.isNearSampleChanged(isNearSample)
-            }    
+            }
         }
 
         RoundedRectangle {
