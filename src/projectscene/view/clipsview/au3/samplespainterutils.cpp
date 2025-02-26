@@ -15,6 +15,91 @@ static constexpr auto X_MIN_DISTANCE = 5;
 static constexpr auto Y_MIN_DISTANCE = 5;
 static constexpr auto BASELINE_HIT_AREA_SIZE = 20;
 
+namespace {
+static constexpr int SMOOTHING_KERNEL_RADIUS = 3;
+static constexpr int SMOOTHING_BRUSH_RADIUS = 5;
+static constexpr double SMOOTHING_PROPORTION_MAX = 0.7;
+static constexpr double SMOOTHING_PROPORTION_MIN = 0.0;
+void applySmoothingKernel(const Floats& sampleRegion, Floats& newSampleRegion, const std::pair<int, int> sampleRegionRange)
+{
+    for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
+        float sumOfSamples = 0;
+        for (auto ii = -SMOOTHING_KERNEL_RADIUS; ii <= SMOOTHING_KERNEL_RADIUS; ++ii) {
+            const auto sampleRegionIndex
+                =ii + jj + SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS;
+            const auto inRange = sampleRegionRange.first <= sampleRegionIndex
+                                 && sampleRegionIndex < sampleRegionRange.second;
+            if (!inRange) {
+                continue;
+            }
+            //The average is a weighted average, scaled by a weighting kernel that is simply triangular
+            // A triangular kernel across N items, with a radius of R ( 2 R + 1 points), if the farthest:
+            // points have a probability of a, the entire triangle has total probability of (R + 1)^2.
+            // For sample number ii and middle brush sample M,  (R + 1 - abs(M-ii))/ ((R+1)^2) gives a
+            // legal distribution whose total probability is 1.
+            sumOfSamples += (SMOOTHING_KERNEL_RADIUS + 1 - abs(ii))
+                            * sampleRegion[sampleRegionIndex];
+        }
+        newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS]
+            =sumOfSamples
+              / ((SMOOTHING_KERNEL_RADIUS + 1) * (SMOOTHING_KERNEL_RADIUS + 1));
+    }
+}
+
+void mixSmoothingSamples(const Floats& sampleRegion, Floats& newSampleRegion)
+{
+    // Now that the NEW sample levels are determined, go through each and mix it appropriately
+    // with the original point, according to a 2-part linear function whose center has probability
+    // SMOOTHING_PROPORTION_MAX and extends out SMOOTHING_BRUSH_RADIUS, at which the probability is
+    // SMOOTHING_PROPORTION_MIN.  _MIN and _MAX specify how much of the smoothed curve make it through.
+    float prob;
+    for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
+        prob
+            =SMOOTHING_PROPORTION_MAX
+              - static_cast<float>(abs(jj)) / SMOOTHING_BRUSH_RADIUS
+              * (SMOOTHING_PROPORTION_MAX - SMOOTHING_PROPORTION_MIN);
+
+        newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS]
+            =newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS] * prob
+              + sampleRegion[SMOOTHING_BRUSH_RADIUS + SMOOTHING_KERNEL_RADIUS + jj]
+              * (1 - prob);
+    }
+}
+
+std::vector<QPoint> interpolatePoints(const QPoint& previousPosition, const QPoint& finalPosition)
+{
+    std::vector<QPoint> container;
+    if (previousPosition.x() == finalPosition.x()) {
+        container.push_back(finalPosition);
+        return std::move(container);
+    }
+
+    container.reserve(std::abs(previousPosition.x() - finalPosition.x()));
+
+    // We do a simple linear interpolation if the move more than 1 pixel to avoid missing point due mouse fast movement
+    if (std::abs(previousPosition.x() - finalPosition.x()) > 1) {
+        const auto xdiff = std::abs(finalPosition.x() - previousPosition.x());
+        const auto ydiff = finalPosition.y() - previousPosition.y();
+        const auto rate = static_cast<double>(ydiff) / xdiff;
+
+        auto cnt = 0;
+        if (previousPosition.x() < finalPosition.x()) {
+            for (auto i = previousPosition.x(); i <= finalPosition.x(); i++) {
+                container.push_back(QPoint(i, previousPosition.y() + (rate * cnt)));
+                cnt++;
+            }
+        } else {
+            for (auto i = finalPosition.x(); i <= previousPosition.x(); i++) {
+                container.push_back(QPoint(i, finalPosition.y() + (-rate * cnt)));
+                cnt++;
+            }
+        }
+    }
+
+    return std::move(container);
+}
+}
+
 namespace au::projectscene::samplespainterutils {
 float FromDB(float value, double dBRange)
 {
@@ -267,29 +352,6 @@ std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject
     return (*it).first;
 }
 
-void interpolatePoints(std::vector<QPoint>& container, const QPoint& previousPosition, const QPoint& finalPosition)
-{
-    // We do a simple linear interpolation if the move more than 1 pixel to avoid missing point due mouse fast movement
-    if (std::abs(previousPosition.x() - finalPosition.x()) > 1) {
-        const auto xdiff = std::abs(finalPosition.x() - previousPosition.x());
-        const auto ydiff = finalPosition.y() - previousPosition.y();
-        const auto rate = static_cast<double>(ydiff) / xdiff;
-
-        auto cnt = 0;
-        if (previousPosition.x() < finalPosition.x()) {
-            for (auto i = previousPosition.x(); i <= finalPosition.x(); i++) {
-                container.push_back(QPoint(i, previousPosition.y() + (rate * cnt)));
-                cnt++;
-            }
-        } else {
-            for (auto i = finalPosition.x(); i <= previousPosition.x(); i++) {
-                container.push_back(QPoint(i, finalPosition.y() + (-rate * cnt)));
-                cnt++;
-            }
-        }
-    }
-}
-
 void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
                      const trackedit::ClipKey& clipKey, const QPoint& lastPosition, const QPoint& currentPosition,
                      const IWavePainter::Params& params)
@@ -314,13 +376,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
     std::advance(it, currentChannel);
     const auto waveChannel = *it;
 
-    std::vector<QPoint> points;
-    if (std::abs(lastPosition.x() - currentPosition.x()) > 1) {
-        points.reserve(std::abs(lastPosition.x() - currentPosition.x()));
-        interpolatePoints(points, lastPosition, currentPosition);
-    } else {
-        points.push_back(currentPosition);
-    }
+    const std::vector<QPoint> points = interpolatePoints(lastPosition, currentPosition);
 
     const std::vector<double> channelHeight {
         params.geometry.height * params.channelHeightRatio,
@@ -393,14 +449,9 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
                         const trackedit::ClipKey& clipKey, const QPoint& currentPosition, const IWavePainter::Params& params)
 {
-    static constexpr int SMOOTHING_KERNEL_RADIUS = 3;
-    static constexpr int SMOOTHING_BRUSH_RADIUS = 5;
-
     // Get the region size around the selected point (one central sample plus some kernel radius on both sides)
     static constexpr size_t SAMPLE_REGION_SIZE = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
     static constexpr size_t NEW_SAMPLE_REGION_SIZE = 1 + 2 * (SMOOTHING_BRUSH_RADIUS);
-    static constexpr double SMOOTHING_PROPORTION_MAX = 0.7;
-    static constexpr double SMOOTHING_PROPORTION_MIN = 0.0;
 
     //  Smoothing works like this:  There is a smoothing kernel radius constant that
     //  determines how wide the averaging window is.  Plus, there is a smoothing brush radius,
@@ -449,47 +500,9 @@ void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::p
                                                                                      SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS,
                                                                                      mayThrow);
 
-    //Go through each point of the smoothing brush and apply a smoothing operation.
-    for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
-        float sumOfSamples = 0;
-        for (auto ii = -SMOOTHING_KERNEL_RADIUS; ii <= SMOOTHING_KERNEL_RADIUS; ++ii) {
-            //Go through each point of the smoothing kernel and find the average
-            const auto sampleRegionIndex
-                =ii + jj + SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS;
-            const auto inRange = sampleRegionRange.first <= sampleRegionIndex
-                                 && sampleRegionIndex < sampleRegionRange.second;
-            if (!inRange) {
-                continue;
-            }
-            //The average is a weighted average, scaled by a weighting kernel that is simply triangular
-            // A triangular kernel across N items, with a radius of R ( 2 R + 1 points), if the farthest:
-            // points have a probability of a, the entire triangle has total probability of (R + 1)^2.
-            // For sample number ii and middle brush sample M,  (R + 1 - abs(M-ii))/ ((R+1)^2) gives a
-            // legal distribution whose total probability is 1.
-            sumOfSamples += (SMOOTHING_KERNEL_RADIUS + 1 - abs(ii))
-                            * sampleRegion[sampleRegionIndex];
-        }
-        newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS]
-            =sumOfSamples
-              / ((SMOOTHING_KERNEL_RADIUS + 1) * (SMOOTHING_KERNEL_RADIUS + 1));
-    }
+    applySmoothingKernel(sampleRegion, newSampleRegion, sampleRegionRange);
+    mixSmoothingSamples(sampleRegion, newSampleRegion);
 
-    // Now that the NEW sample levels are determined, go through each and mix it appropriately
-    // with the original point, according to a 2-part linear function whose center has probability
-    // SMOOTHING_PROPORTION_MAX and extends out SMOOTHING_BRUSH_RADIUS, at which the probability is
-    // SMOOTHING_PROPORTION_MIN.  _MIN and _MAX specify how much of the smoothed curve make it through.
-    float prob;
-    for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
-        prob
-            =SMOOTHING_PROPORTION_MAX
-              - (float)abs(jj) / SMOOTHING_BRUSH_RADIUS
-              * (SMOOTHING_PROPORTION_MAX - SMOOTHING_PROPORTION_MIN);
-
-        newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS]
-            =newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS] * prob
-              + sampleRegion[SMOOTHING_BRUSH_RADIUS + SMOOTHING_KERNEL_RADIUS + jj]
-              * (1 - prob);
-    }
     // Set a range of samples around the mouse event
     // Don't require dithering later
     WaveChannelUtilities::SetFloatsCenteredAroundTime(*channel,
