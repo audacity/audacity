@@ -23,11 +23,13 @@
 
 #include "languages/languageserrors.h"
 
+#include <QStorageInfo>
+
 #include "log.h"
 #include "translation.h"
 
 using namespace au::appshell;
-using namespace mu::languages;
+using namespace muse::languages;
 
 GeneralPreferencesModel::GeneralPreferencesModel(QObject* parent)
     : QObject(parent)
@@ -52,13 +54,13 @@ void GeneralPreferencesModel::checkUpdateForCurrentLanguage()
 
     m_languageUpdateProgress = languagesService()->update(languageCode);
 
-    m_languageUpdateProgress.progressChanged.onReceive(this, [this](int64_t current, int64_t total, const std::string& status) {
+    m_languageUpdateProgress.progressChanged().onReceive(this, [this](int64_t current, int64_t total, const std::string& status) {
         emit receivingUpdateForCurrentLanguage(current, total, QString::fromStdString(status));
     });
 
-    m_languageUpdateProgress.finished.onReceive(this, [this, languageCode](const ProgressResult& res) {
+    m_languageUpdateProgress.finished().onReceive(this, [this, languageCode](const muse::ProgressResult& res) {
         if (res.ret.code() == static_cast<int>(Err::AlreadyUpToDate)) {
-            QString msg = mu::qtrc("appshell/preferences", "Your version of %1 is up to date.")
+            QString msg = muse::qtrc("appshell/preferences", "Your version of %1 is up to date.")
                           .arg(languagesService()->language(languageCode).name);
             interactive()->info(msg.toStdString(), std::string());
         }
@@ -91,7 +93,7 @@ QVariantList GeneralPreferencesModel::languages() const
 
     QVariantMap systemLanguageObj;
     systemLanguageObj["code"] = SYSTEM_LANGUAGE_CODE;
-    systemLanguageObj["name"] = mu::qtrc("appshell/preferences", "System default");
+    systemLanguageObj["name"] = muse::qtrc("appshell/preferences", "System default");
     result.prepend(systemLanguageObj);
 
     return result;
@@ -160,6 +162,17 @@ bool GeneralPreferencesModel::isNeedRestart() const
     return m_isNeedRestart;
 }
 
+QString GeneralPreferencesModel::availableSpace() const
+{
+    QString path = projectConfiguration()->temporaryDir().toQString();
+    QStorageInfo storage(path);
+
+    QString msg = muse::qtrc("appshell/preferences", "%1 GB")
+                  .arg(QString::number(storage.bytesAvailable() / (1024 * 1024 * 1024)));
+
+    return msg;
+}
+
 void GeneralPreferencesModel::setIsNeedRestart(bool newIsNeedRestart)
 {
     if (m_isNeedRestart == newIsNeedRestart) {
@@ -169,80 +182,27 @@ void GeneralPreferencesModel::setIsNeedRestart(bool newIsNeedRestart)
     emit isNeedRestartChanged();
 }
 
-QVariantList GeneralPreferencesModel::startupModes() const
+QString GeneralPreferencesModel::temporaryDir() const
 {
-    QVariantList result;
-
-    for (const StartMode& mode: allStartupModes()) {
-        QVariantMap obj;
-        obj["title"] = mode.title;
-        obj["checked"] = mode.checked;
-        obj["canSelectScorePath"] = mode.canSelectScorePath;
-        obj["scorePath"] = mode.scorePath;
-
-        result << obj;
-    }
-
-    return result;
+    return projectConfiguration()->temporaryDir().toQString();
 }
 
-GeneralPreferencesModel::StartModeList GeneralPreferencesModel::allStartupModes() const
+void GeneralPreferencesModel::setTemporaryDir(const QString& path)
 {
-    static const QMap<StartupModeType, QString> modeTitles {
-        { StartupModeType::StartEmpty,  qtrc("appshell/preferences", "Start empty") },
-        { StartupModeType::ContinueLastSession, qtrc("appshell/preferences", "Continue last session") },
-        { StartupModeType::StartWithNewScore, qtrc("appshell/preferences", "Start with new score") },
-        { StartupModeType::StartWithScore, qtrc("appshell/preferences", "Start with score:") }
-    };
-
-    StartModeList modes;
-
-    for (StartupModeType type : modeTitles.keys()) {
-        bool canSelectScorePath = (type == StartupModeType::StartWithScore);
-
-        StartMode mode;
-        mode.type = type;
-        mode.title = modeTitles[type];
-        mode.checked = configuration()->startupModeType() == type;
-        mode.scorePath = canSelectScorePath ? configuration()->startupScorePath().toQString() : QString();
-        mode.canSelectScorePath = canSelectScorePath;
-
-        modes << mode;
-    }
-
-    return modes;
-}
-
-QStringList GeneralPreferencesModel::scorePathFilter() const
-{
-    return { qtrc("appshell/preferences", "MuseScore file") + " (*.mscz)",
-             qtrc("appshell/preferences", "All") + " (*)" };
-}
-
-void GeneralPreferencesModel::setCurrentStartupMode(int modeIndex)
-{
-    StartModeList modes = allStartupModes();
-
-    if (modeIndex < 0 || modeIndex >= modes.size()) {
+    if (path == projectConfiguration()->temporaryDir().toQString()) {
         return;
     }
 
-    StartupModeType selectedType = modes[modeIndex].type;
-    if (selectedType == configuration()->startupModeType()) {
-        return;
-    }
+    auto newPath = muse::io::path_t(path);
+    projectConfiguration()->setTemporaryDir(newPath);
 
-    configuration()->setStartupModeType(selectedType);
-    emit startupModesChanged();
+    QString title = muse::qtrc("appshell/preferences", "Temp directory update");
+    QString msg = muse::qtrc("appshell/preferences", "Changes to temporary directory will not take effect until Audacity is restarted");
+    interactive()->info(title.toStdString(), msg.toStdString());
 }
 
-void GeneralPreferencesModel::setStartupScorePath(const QString& scorePath)
+void GeneralPreferencesModel::setNumberFormat(int format)
 {
-    if (scorePath.isEmpty() || scorePath == configuration()->startupScorePath().toQString()) {
-        return;
-    }
-
-    configuration()->setStartupScorePath(scorePath);
-
-    emit startupModesChanged();
+    Q_UNUSED(format);
+    NOT_IMPLEMENTED;
 }

@@ -67,8 +67,7 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
     Importer::Get().Initialize();
 
-    //! TODO AU4: we probably want to have preferences for temporary directory later
-    muse::String tempDir = globalConfiguration()->userAppDataPath().toString();
+    muse::String tempDir = projectConfiguration()->temporaryDir().toString();
     UpdateDefaultPath(FileNames::Operation::Temp, wxFromString(tempDir));
 
     (void)BasicUI::Install(m_au3BasicUi.get());

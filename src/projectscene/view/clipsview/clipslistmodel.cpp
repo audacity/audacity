@@ -61,6 +61,12 @@ void ClipsListModel::init()
         updateItemsMetrics();
     });
 
+    projectSceneConfiguration()->clipStyleChanged().onReceive(this, [this](const ClipStyles::Style& style) {
+        Q_UNUSED(style);
+        emit clipStyleChanged();
+        update();
+    });
+
     reload();
 }
 
@@ -837,6 +843,11 @@ void ClipsListModel::setTrackId(const QVariant& _newTrackId)
 bool ClipsListModel::isStereo() const
 {
     return m_isStereo;
+}
+
+ClipStyles::Style ClipsListModel::clipStyle() const
+{
+    return projectSceneConfiguration()->clipStyle();
 }
 
 TimelineContext* ClipsListModel::timelineContext() const
