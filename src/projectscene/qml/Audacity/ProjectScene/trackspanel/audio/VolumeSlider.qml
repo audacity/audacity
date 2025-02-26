@@ -13,6 +13,8 @@ StyledSlider {
     property double snapPoint: 0.0
     property double snapRange: 2.0
 
+    signal newValueRequested(double newValue, bool complete)
+
     from: -60.0
     to: 12.0
 
@@ -29,6 +31,10 @@ StyledSlider {
 
         parent: root.handle
         volume: root.value
+    }
+
+    onValueChanged: {
+        newValueRequested(root.value, false)
     }
 
     // We have to reimplement dragging to allow the tooltip
@@ -51,6 +57,7 @@ StyledSlider {
             if (!containsMouse) {
                 tooltip.hide(true)
             }
+            newValueRequested(root.value, true)
         }
 
         onEntered: {

@@ -8,6 +8,7 @@
 
 #include "playback/playbacktypes.h"
 
+#include "global/types/translatablestring.h"
 #include "log.h"
 
 using namespace au::projectscene;
@@ -45,6 +46,8 @@ void TrackItem::init(const trackedit::Track& track)
     if (m_trackType != trackedit::TrackType::Label) {
         m_outParams.volume = trackPlaybackControl()->volume(m_trackId);
         m_outParams.balance = trackPlaybackControl()->balance(m_trackId);
+        m_outParams.solo = trackPlaybackControl()->solo(m_trackId);
+        m_outParams.muted = trackPlaybackControl()->muted(m_trackId);
     }
 }
 
@@ -204,14 +207,13 @@ void TrackItem::setRightChannelPressure(float rightChannelPressure)
     emit rightChannelPressureChanged(m_rightChannelPressure);
 }
 
-void TrackItem::setVolumeLevel(float volumeLevel)
+void TrackItem::setVolumeLevel(float volumeLevel, bool completed)
 {
+    trackPlaybackControl()->setVolume(trackId(), volumeLevel, completed);
+
     if (qFuzzyCompare(m_outParams.volume, volumeLevel)) {
         return;
     }
-
-    trackPlaybackControl()->setVolume(trackId(), volumeLevel);
-
     m_outParams.volume = volumeLevel;
     emit volumeLevelChanged(m_outParams.volume);
     emit outputParamsChanged(m_outParams);
@@ -230,24 +232,29 @@ void TrackItem::setBalance(int balance)
     emit outputParamsChanged(m_outParams);
 }
 
+void TrackItem::commitBalance()
+{
+    projectHistory()->pushHistoryState(muse::TranslatableString("playback", "Moved pan dial").translated().toStdString(),
+                                       muse::TranslatableString("playback",
+                                                                "Pan").translated().toStdString(), trackedit::UndoPushType::CONSOLIDATE);
+}
+
 void TrackItem::setSolo(bool solo)
 {
     if (m_outParams.solo == solo) {
         return;
     }
 
+    trackPlaybackControl()->setSolo(trackId(), solo);
     m_outParams.solo = solo;
 
-    // project::IProjectSoloMuteState::SoloMuteState soloMuteState;
-    // soloMuteState.mute = m_outParams.muted;
-    // soloMuteState.solo = m_outParams.solo;
-
-    // emit soloMuteStateChanged(soloMuteState);
     emit soloChanged();
 
     if (solo && m_outParams.muted) {
         setMuted(false);
     }
+
+    projectHistory()->modifyState(true);
 }
 
 void TrackItem::setMuted(bool mute)
@@ -256,6 +263,7 @@ void TrackItem::setMuted(bool mute)
         return;
     }
 
+    trackPlaybackControl()->setMuted(trackId(), mute);
     m_outParams.muted = mute;
 
     // project::IProjectSoloMuteState::SoloMuteState soloMuteState;
@@ -268,6 +276,8 @@ void TrackItem::setMuted(bool mute)
     if (mute && m_outParams.solo) {
         setSolo(false);
     }
+
+    projectHistory()->modifyState(true);
 }
 
 void TrackItem::setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue)

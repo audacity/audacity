@@ -12,7 +12,7 @@ Au3Project& Au3TrackPlaybackControl::projectRef() const
     return *project;
 }
 
-volume_dbfs_t Au3TrackPlaybackControl::volume(long trackId)
+volume_dbfs_t Au3TrackPlaybackControl::volume(long trackId) const
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {
@@ -22,7 +22,7 @@ volume_dbfs_t Au3TrackPlaybackControl::volume(long trackId)
     return LINEAR_TO_DB(track->GetVolume());
 }
 
-void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol)
+void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol, bool completed)
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {
@@ -30,10 +30,14 @@ void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol)
     }
 
     track->SetVolume(vol > -60 ? DB_TO_LINEAR(vol) : 0);
+
+    if (completed) {
+        projectHistory()->pushHistoryState("playback", "Moved volume slider", trackedit::UndoPushType::CONSOLIDATE);
+    }
     return;
 }
 
-balance_t Au3TrackPlaybackControl::balance(long trackId)
+balance_t Au3TrackPlaybackControl::balance(long trackId) const
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {
@@ -51,5 +55,44 @@ void Au3TrackPlaybackControl::setBalance(long trackId, balance_t balance)
     }
 
     track->SetPan(balance);
-    return;
+}
+
+void Au3TrackPlaybackControl::setSolo(long trackId, bool solo)
+{
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    IF_ASSERT_FAILED(track) {
+        return;
+    }
+
+    track->SetSolo(solo);
+}
+
+bool Au3TrackPlaybackControl::solo(long trackId) const
+{
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    IF_ASSERT_FAILED(track) {
+        return false;
+    }
+
+    return track->GetSolo();
+}
+
+void Au3TrackPlaybackControl::setMuted(long trackId, bool mute)
+{
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    IF_ASSERT_FAILED(track) {
+        return;
+    }
+
+    track->SetMute(mute);
+}
+
+bool Au3TrackPlaybackControl::muted(long trackId) const
+{
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    IF_ASSERT_FAILED(track) {
+        return false;
+    }
+
+    return track->GetMute();
 }

@@ -202,13 +202,17 @@ ListItemBlank {
                     onNewValueRequested: function(newValue) {
                         root.item.balance = newValue
                     }
+
+                    onReleased: {
+                        root.item.commitBalance()
+                    }
                 }
 
                 VolumeSlider {
                     value: root.item.volumeLevel
 
-                    onValueChanged: {
-                        root.item.volumeLevel = value
+                    onNewValueRequested: function(newValue, complete) {
+                        root.item.setVolumeLevel(newValue, complete)
                     }
                 }
 
