@@ -340,28 +340,36 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
     const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
-    const auto startTime = zoomInfo.PositionToTime(points[0].x());
+    double startTime = -1.0;
+    double clip_duration = waveClip->GetPlayDuration();
+    double lastAdjustedTime = -1.0;
 
-    double lastAdjustedTime = 0;
     std::vector<float> samples;
     samples.reserve(points.size());
     for (const auto& point : points) {
         const auto time = zoomInfo.PositionToTime(point.x());
-        const auto clip = WaveChannelUtilities::GetClipAtTime(*waveChannel, time + waveClip->GetPlayStartTime());
-        if (!clip) {
+
+        if (time < 0 || time > clip_duration) {
+            //We do not process points from other clips
             continue;
         }
 
-        const auto sampleOffset = clip->TimeToSamples(time);
-        const auto adjustedTime = clip->SamplesToTime(sampleOffset);
+        if (startTime < 0 || startTime > clip_duration) {
+            //Adjust clip duration to the first valid point
+            startTime = time;
+        }
+
+        const auto sampleOffset = waveClip->TimeToSamples(time);
+        const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
 
         if (adjustedTime == lastAdjustedTime) {
+            //Remove points on the same sample
             continue;
         }
         lastAdjustedTime = adjustedTime;
 
         float oneSample;
-        if (!WaveClipUtilities::GetFloatAtTime(clip->GetClip(), adjustedTime, currentChannel, oneSample, false)) {
+        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime, currentChannel, oneSample, false)) {
             continue;
         }
 
@@ -372,6 +380,11 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
         samples.push_back(newValue);
     }
+
+    if (startTime < 0) {
+        return;
+    }
+
     WaveChannelUtilities::SetFloatsFromTime(*waveChannel, startTime + waveClip->GetPlayStartTime(), samples.data(),
                                             samples.size(), narrowestSampleFormat,
                                             PlaybackDirection::forward);
