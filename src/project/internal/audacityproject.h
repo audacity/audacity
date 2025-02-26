@@ -83,8 +83,6 @@ public:
 
     uintptr_t au3ProjectPtr() const override;
 
-    int64_t createNewGroupID(int64_t startingId = 0) const override;
-
 private:
     void setPath(const muse::io::path_t& path);
 

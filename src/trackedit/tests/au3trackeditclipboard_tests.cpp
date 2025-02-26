@@ -132,7 +132,7 @@ TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)
     //          2x2, 1. The first group spans two tracks, the second group one track.
     //          And the first track has four clips, the second track one clip (in the first group).
 
-    EXPECT_CALL(*m_currentProject, createNewGroupID(_))
+    EXPECT_CALL(*m_trackEditProject, createNewGroupID(_))
     .WillOnce(Return(2))
     .WillOnce(Return(3));
 

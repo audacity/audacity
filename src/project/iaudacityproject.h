@@ -45,8 +45,6 @@ public:
     virtual projectscene::IProjectViewStatePtr viewState() const = 0;
 
     virtual uintptr_t au3ProjectPtr() const = 0;
-
-    virtual int64_t createNewGroupID(int64_t startingId = 0) const = 0;
 };
 
 using IAudacityProjectPtr = std::shared_ptr<IAudacityProject>;
