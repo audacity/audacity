@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2025 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -42,8 +42,17 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     Q_PROPERTY(QString currentInputDeviceId READ currentInputDeviceId NOTIFY currentInputDeviceIdChanged)
     Q_PROPERTY(QVariantList inputDeviceList READ inputDeviceList NOTIFY inputDeviceListChanged)
 
-    Q_PROPERTY(unsigned int bufferSize READ bufferSize NOTIFY bufferSizeChanged)
-    Q_PROPERTY(QList<unsigned int> bufferSizeList READ bufferSizeList NOTIFY bufferSizeListChanged)
+    Q_PROPERTY(double bufferLength READ bufferLength NOTIFY bufferLengthChanged)
+    Q_PROPERTY(double latencyCompensation READ latencyCompensation NOTIFY latencyCompensationChanged)
+
+    Q_PROPERTY(QString currentInputChannels READ currentInputChannels NOTIFY currentInputChannelsChanged)
+    Q_PROPERTY(QVariantList inputChannelsList READ inputChannelsList NOTIFY inputChannelsListChanged)
+
+    Q_PROPERTY(uint64_t defaultSampleRate READ defaultSampleRate NOTIFY defaultSampleRateChanged)
+    Q_PROPERTY(QVariantList defaultSampleRateList READ defaultSampleRateList NOTIFY defaultSampleRateListChanged)
+
+    Q_PROPERTY(QString defaultSampleFormat READ defaultSampleFormat NOTIFY defaultSampleFormatChanged)
+    Q_PROPERTY(QVariantList defaultSampleFormatList READ defaultSampleFormatList NOTIFY defaultSampleFormatListChanged)
 
     // INJECT(muse::audio::IAudioConfiguration, audioConfiguration)
     // INJECT(muse::audio::IAudioDriver, audioDriver)
@@ -62,9 +71,23 @@ public:
     QVariantList inputDeviceList() const;
     Q_INVOKABLE void inputDeviceSelected(const QString& deviceId);
 
-    unsigned int bufferSize() const;
-    QList<unsigned int> bufferSizeList() const;
-    Q_INVOKABLE void bufferSizeSelected(const QString& bufferSizeStr);
+    double bufferLength() const;
+    Q_INVOKABLE void bufferLengthSelected(const QString& bufferLengthStr);
+
+    double latencyCompensation() const;
+    Q_INVOKABLE void latencyCompensationSelected(const QString& latencyCompensationStr);
+
+    QString currentInputChannels() const;
+    QVariantList inputChannelsList() const;
+    Q_INVOKABLE void inputChannelsSelected(const QString& channelsStr);
+
+    uint64_t defaultSampleRate() const;
+    QVariantList defaultSampleRateList() const;
+    Q_INVOKABLE void defaultSampleRateSelected(uint64_t rate);
+
+    QString defaultSampleFormat() const;
+    QVariantList defaultSampleFormatList() const;
+    Q_INVOKABLE void defaultSampleFormatSelected(const QString& format);
 
 signals:
     void currentOutputDeviceIdChanged();
@@ -73,8 +96,17 @@ signals:
     void currentInputDeviceIdChanged();
     void inputDeviceListChanged();
 
-    void bufferSizeChanged();
-    void bufferSizeListChanged();
+    void bufferLengthChanged();
+    void latencyCompensationChanged();
+
+    void currentInputChannelsChanged();
+    void inputChannelsListChanged();
+
+    void defaultSampleRateChanged();
+    void defaultSampleRateListChanged();
+
+    void defaultSampleFormatChanged();
+    void defaultSampleFormatListChanged();
 };
 }
 

@@ -23,7 +23,7 @@ import QtQuick 2.15
 
 import Muse.UiComponents 1.0
 
-Row {
+Column {
     id: root
 
     property alias title: titleLabel.text
@@ -47,7 +47,6 @@ Row {
         id: titleLabel
 
         width: root.columnWidth
-        anchors.verticalCenter: parent.verticalCenter
 
         horizontalAlignment: Qt.AlignLeft
         wrapMode: Text.WordWrap
