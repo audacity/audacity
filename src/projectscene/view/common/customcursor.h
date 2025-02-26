@@ -35,6 +35,5 @@ private:
     QString m_source;
     QCursor m_cursor;
     int m_size = DEFAULT_CURSOR_SIZE;
-    int m_cursorCnt = 0;
 };
 }

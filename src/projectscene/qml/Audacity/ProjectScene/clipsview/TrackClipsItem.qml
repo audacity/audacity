@@ -126,17 +126,19 @@ Item {
             }
             
             onPressAndHold: function(e) {
-                clipsContainer.multiSampleEdit = true
-                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
-                    clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
-                })
+                if (clipsContainer.isNearSample) {
+                    clipsContainer.multiSampleEdit = true
+                    clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                        clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
+                    })
 
-                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
-                    clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
-                })
+                    clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                        clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
+                    })
 
-                clipsContainerMouseArea.hoverEnabled = true
-                e.accepted = false
+                    clipsContainerMouseArea.hoverEnabled = true
+                    e.accepted = false
+                }
             }
 
             onReleased: function(e) {

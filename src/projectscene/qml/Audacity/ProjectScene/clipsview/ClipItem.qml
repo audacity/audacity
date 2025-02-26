@@ -112,6 +112,8 @@ Rectangle {
     }
 
     function mouseReleased() {
+        waveView.isNearSample = false
+        waveView.onWaveViewPositionChanged(lastSample.x, lastSample.y)
     }
 
     function mouseClicked(x, y) {

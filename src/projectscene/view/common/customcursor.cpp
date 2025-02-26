@@ -16,15 +16,11 @@ CustomCursor::CustomCursor(QQuickItem*)
             if (!pixmap.isNull()) {
                 m_cursor = QCursor(pixmap.scaled(m_size, m_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
                 QGuiApplication::setOverrideCursor(m_cursor);
-                m_cursorCnt++;
             } else {
                 qWarning() << "Failed to load bitmap from source:" << m_source;
             }
         } else {
-            while (m_cursorCnt > 0) {
-                QGuiApplication::restoreOverrideCursor();
-                m_cursorCnt--;
-            }
+            QGuiApplication::restoreOverrideCursor();
         }
     };
 
