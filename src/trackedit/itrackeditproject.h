@@ -63,7 +63,7 @@ class ITrackeditProjectCreator : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(ITrackeditProjectCreator)
 public:
-    virtual ~ITrackeditProjectCreator() = default;
+    ~ITrackeditProjectCreator() override = default;
 
     virtual ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const = 0;
 };

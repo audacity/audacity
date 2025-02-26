@@ -2,7 +2,7 @@
 
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
-#include "libraries/lib-project-history/ProjectHistory.h"
+
 #include "libraries/lib-stretching-sequence/TempoChange.h"
 
 #include "au3wrap/iau3project.h"
@@ -88,9 +88,9 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
     return au4trackIds;
 }
 
-std::vector<au::trackedit::Track> Au3TrackeditProject::trackList() const
+au::trackedit::TrackList Au3TrackeditProject::trackList() const
 {
-    std::vector<au::trackedit::Track> au4tracks;
+    au::trackedit::TrackList au4tracks;
 
     for (const Au3Track* t : *m_impl->trackList) {
         Track au4t = DomConverter::track(t);
@@ -167,6 +167,25 @@ void Au3TrackeditProject::onProjectTempoChange(double newTempo)
         TrackId trackId = track->GetId();
         onTrackDataChanged(trackId);
     }
+}
+
+// TODO: Merge the two methods before PR!
+
+au::trackedit::Clips Au3TrackeditProject::getClips(const TrackId& trackId) const
+{
+    au::trackedit::Clips clips;
+
+    const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return clips;
+    }
+
+    for (const std::shared_ptr<const Au3WaveClip>& interval : waveTrack->Intervals()) {
+        au::trackedit::Clip clip = DomConverter::clip(waveTrack, interval.get());
+        clips.push_back(std::move(clip));
+    }
+
+    return clips;
 }
 
 muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
@@ -333,6 +352,20 @@ muse::async::Channel<au::trackedit::Track, int> Au3TrackeditProject::trackMoved(
 secs_t Au3TrackeditProject::totalTime() const
 {
     return m_impl->trackList->GetEndTime();
+}
+
+TracksAndClips Au3TrackeditProject::buildTracksAndClips()
+{
+    std::pair<TrackList, std::vector<trackedit::Clips> > newCache;
+
+    newCache.first = std::move(trackList());
+
+    for (const auto& track : newCache.first) {
+        trackedit::Clips clips = getClips(track.id);
+        newCache.second.push_back(std::move(clips));
+    }
+
+    return newCache;
 }
 
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
