@@ -40,7 +40,7 @@ BaseSection {
     property int imgRadius: 5
     property int currentClipStyle: ClipStyle.COLORFUL
 
-    navigation.direction: NavigationPanel.Both
+    navigation.direction: NavigationPanel.Horizontal
 
     signal clipStyleChangeRequested(int style)
 
@@ -68,6 +68,10 @@ BaseSection {
 
                 checked: root.currentClipStyle == ClipStyle.COLORFUL
 
+                navigation.name: "ColorfulBox"
+                navigation.panel: root.navigation
+                navigation.row: 0
+
                 onToggled: {
                     root.clipStyleChangeRequested(ClipStyle.COLORFUL)
                 }
@@ -94,6 +98,10 @@ BaseSection {
                 text: qsTrc("appshell/preferences", "Classic")
 
                 checked: root.currentClipStyle == ClipStyle.CLASSIC
+
+                navigation.name: "ClassicBox"
+                navigation.panel: root.navigation
+                navigation.row: 1
 
                 onToggled: {
                     root.clipStyleChangeRequested(ClipStyle.CLASSIC)

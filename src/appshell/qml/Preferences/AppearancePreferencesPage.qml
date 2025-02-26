@@ -30,6 +30,8 @@ import "internal"
 PreferencesPage {
     id: root
 
+    property int navigationOrderStart: 0
+
     AppearancePreferencesModel {
         id: appearanceModel
     }
@@ -54,7 +56,7 @@ PreferencesPage {
             currentAccentColorIndex: appearanceModel.currentAccentColorIndex
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 1
+            navigation.order: root.navigationOrderStart
 
             onThemeChangeRequested: function(newThemeCode) {
                 appearanceModel.currentThemeCode = newThemeCode
@@ -95,8 +97,7 @@ PreferencesPage {
             visible: appearanceModel.highContrastEnabled
 
             navigation.section: root.navigationSection
-            //! NOTE: 3 because ThemesSection have two panels
-            navigation.order: root.navigationOrderStart + 3
+            navigation.order: root.navigationOrderStart + 1
 
             onColorChangeRequested: function(newColor, propertyType) {
                 appearanceModel.setNewColor(newColor, propertyType)
@@ -113,6 +114,9 @@ PreferencesPage {
 
         ClipStyleSection {
             currentClipStyle: appearanceModel.clipStyle
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 2
 
             onClipStyleChangeRequested: function(clipStyle) {
                 appearanceModel.setClipStyle(clipStyle)

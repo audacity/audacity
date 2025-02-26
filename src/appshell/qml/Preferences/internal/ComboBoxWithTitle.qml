@@ -23,7 +23,7 @@ import QtQuick 2.15
 
 import Muse.UiComponents 1.0
 
-Row {
+Column {
     id: root
 
     property alias title: titleLabel.text
@@ -39,7 +39,7 @@ Row {
 
     signal valueEdited(int newIndex, var newValue)
 
-    spacing: 12
+    spacing: 6
 
     function indexOfValue(value) {
         return comboBox.indexOfValue(value)
@@ -49,7 +49,6 @@ Row {
         id: titleLabel
 
         width: root.columnWidth
-        anchors.verticalCenter: parent.verticalCenter
 
         horizontalAlignment: Qt.AlignLeft
         wrapMode: Text.WordWrap

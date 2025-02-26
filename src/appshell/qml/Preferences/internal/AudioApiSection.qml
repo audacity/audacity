@@ -27,10 +27,13 @@ import Audacity.Playback 1.0
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Audio settings")
+    title: qsTrc("appshell/preferences", "Inputs and outputs")
+    spacing: 16
 
     property int currentAudioApiIndex: -1
     property var audioApiList: null
+    property var apiModel: null
+    property var playbackModel: null
 
     signal currentAudioApiIndexChangeRequested(int newIndex)
 
@@ -43,12 +46,12 @@ BaseSection {
     ComboBoxWithTitle {
         id: apiComboBox
 
-        title: qsTrc("appshell/preferences", "Audio API:")
+        title: qsTrc("appshell/preferences", "Host")
         columnWidth: root.columnWidth
 
-        enabled: !(playbackState.isPaused() || playbackState.isPlaying())
+        enabled: !playbackState.isPlaying()
 
-        currentIndex: root.currentAudioApiIndex
+        currentIndex: playbackModel.currentAudioApiIndex
         model: root.audioApiList
 
         navigation.name: "AudioApiBox"
@@ -62,11 +65,13 @@ BaseSection {
     // */
 
     CommonAudioApiConfiguration {
-        columnWidth: root.columnWidth
+        columnWidth: Math.max(apiModel.longestDeviceNameLength, root.columnWidth)
 
-        enabled: !(playbackState.isPaused() || playbackState.isPlaying())
+        enabled: !playbackState.isPlaying()
 
         navigation: root.navigation
         navigationOrderStart: 2
+
+        apiModel: root.apiModel
     }
 }
