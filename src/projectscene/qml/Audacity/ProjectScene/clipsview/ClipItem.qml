@@ -82,6 +82,7 @@ Rectangle {
     property bool altPressed: false
     property bool isBrush: waveView.isStemPlot && root.altPressed
     property alias isNearSample: waveView.isNearSample
+    property alias currentChannel: waveView.currentChannel
     property alias leftTrimContainsMouse: leftTrimStretchEdgeHover.containsMouse
     property alias rightTrimContainsMouse: rightTrimStretchEdgeHover.containsMouse
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons

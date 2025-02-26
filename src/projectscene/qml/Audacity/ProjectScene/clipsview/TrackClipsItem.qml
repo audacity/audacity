@@ -78,6 +78,7 @@ Item {
         property bool isNearSample: false
         property bool multiSampleEdit: false
         property bool isBrush: false
+        property int currentChannel: 0
         property bool leftTrimContainsMouse: false
         property bool rightTrimContainsMouse: false
         property bool leftTrimPressedButtons: false
@@ -128,12 +129,12 @@ Item {
             onPressAndHold: function(e) {
                 if (clipsContainer.isNearSample) {
                     clipsContainer.multiSampleEdit = true
-                    clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
-                        clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
-                    })
 
                     clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                        clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
                         clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
+                        clipItem.multiSampleEdit = true
+                        clipItem.currentChannel = clipsContainer.currentChannel
                     })
 
                     clipsContainerMouseArea.hoverEnabled = true
@@ -143,7 +144,9 @@ Item {
 
             onReleased: function(e) {
                 clipsContainer.multiSampleEdit = false
+
                 clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.multiSampleEdit = false
                     clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
                 })
             }
@@ -151,9 +154,6 @@ Item {
             onPositionChanged: function(e) {
                 clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
-                })
-
-                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
                 })
             }
@@ -258,6 +258,9 @@ Item {
 
                 onIsNearSampleChanged: function() {
                     clipsContainer.isNearSample = clipsContainer.checkIfAnyClip(function(clipItem) {
+                        if (clipItem.isNearSample) {
+                            clipsContainer.currentChannel = clipItem.currentChannel
+                        }
                         return clipItem.isNearSample
                     })
                 }

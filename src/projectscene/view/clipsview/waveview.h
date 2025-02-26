@@ -27,6 +27,7 @@ class WaveView : public QQuickPaintedItem
 
     Q_PROPERTY(bool isNearSample READ isNearSample WRITE setIsNearSample NOTIFY isNearSampleChanged FINAL)
     Q_PROPERTY(bool isStemPlot READ isStemPlot WRITE setIsStemPlot NOTIFY isStemPlotChanged FINAL)
+    Q_PROPERTY(int currentChannel READ currentChannel WRITE setCurrentChannel FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::projectscene::IWavePainter> wavePainter;
@@ -51,6 +52,8 @@ public:
     void setIsNearSample(bool isNearSample);
     bool isStemPlot() const;
     void setIsStemPlot(bool isStemPlot);
+    int currentChannel() const;
+    void setCurrentChannel(int currentChannel);
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);

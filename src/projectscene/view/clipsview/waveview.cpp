@@ -229,6 +229,16 @@ void WaveView::setIsStemPlot(bool isStemPlot)
     emit isStemPlotChanged();
 }
 
+int WaveView::currentChannel() const
+{
+    return m_currentChannel.value_or(0);
+}
+
+void WaveView::setCurrentChannel(int currentChannel)
+{
+    m_currentChannel = currentChannel;
+}
+
 QColor WaveView::transformColor(const QColor& originalColor) const
 {
     int r = originalColor.red();
