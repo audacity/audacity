@@ -3,50 +3,36 @@
 */
 
 #include "au3trackeditclipboard.h"
+
+#include "containers.h"
+
+#include "Track.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 
 using namespace au::trackedit;
 
-std::vector<au::trackedit::TrackData> Au3TrackeditClipboard::trackDataSource() const
+std::vector<TrackData> Au3TrackeditClipboard::trackDataSource() const
 {
     return m_tracksData;
 }
 
-std::vector<TrackData> Au3TrackeditClipboard::trackDataCopy(int64_t newGroupId = -1) const
+std::vector<TrackData> Au3TrackeditClipboard::trackDataCopy() const
 {
     std::vector<TrackData> deepCopiedTracksData;
+    deepCopiedTracksData.reserve(m_tracksData.size());
 
-    for (int i = 0; i < m_tracksData.size(); ++i) {
-        deepCopiedTracksData.push_back(TrackData { m_tracksData.at(i).track->Duplicate(), m_tracksData.at(i).clipKey });
+    for (const auto& i : m_tracksData) {
+        deepCopiedTracksData.push_back(TrackData { i.track->Duplicate(), i.clipKey });
     }
 
-    //! NOTE:: check if copied data has the same group ID
-    std::optional<int64_t> copiedGroupId;
-    for (auto& data : deepCopiedTracksData) {
-        au3::Au3WaveTrack* waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data.track.get());
-        auto clips = waveTrack->Intervals();
-        for (auto it = clips.begin(); it != clips.end(); ++it) {
-            if ((*it).get()->GetGroupId() == -1) {
-                newGroupId = -1;
-                break;
-            } else if (!copiedGroupId.has_value()) {
-                copiedGroupId = (*it).get()->GetGroupId();
-            } else if ((*it).get()->GetGroupId() != copiedGroupId.value()) {
-                newGroupId = -1;
-                break;
-            }
-        }
-    }
+    //! NOTE:: Checking if the copied data has group ID's,
+    //         creating new ID's for the ones found,
+    //         and updating the copied data with these.
 
-    //! NOTE: data copied to clipboard belongs to group, it has to have new group ID
-    for (auto& data : deepCopiedTracksData) {
-        au3::Au3WaveTrack* waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data.track.get());
-        auto clips = waveTrack->Intervals();
-        for (auto it = clips.begin(); it != clips.end(); ++it) {
-            (*it).get()->SetGroupId(newGroupId);
-        }
-    }
+    auto copiedGroupIds = getGroupIDs(deepCopiedTracksData);
+    auto newGroupIds = createNewGroupIDs(copiedGroupIds);
+    updateTracksDataWithIDs(deepCopiedTracksData, copiedGroupIds, newGroupIds);
 
     return deepCopiedTracksData;
 }
@@ -89,4 +75,65 @@ void Au3TrackeditClipboard::setMultiSelectionCopy(bool newValue)
 bool Au3TrackeditClipboard::isMultiSelectionCopy() const
 {
     return m_isMultiSelectionCopy;
+}
+
+std::set<int64_t> Au3TrackeditClipboard::getGroupIDs(const std::vector<TrackData>& tracksData)
+{
+    std::set<int64_t> groupIds;
+
+    for (const TrackData& data : tracksData) {
+        auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data.track.get());
+        auto clips = waveTrack->Intervals();
+
+        for (auto it = clips.begin(); it != clips.end(); ++it) {
+            auto currentID = (*it).get()->GetGroupId();
+            if (currentID != -1) {
+                groupIds.emplace(currentID);
+            }
+        }
+    }
+
+    return groupIds;
+}
+
+std::vector<int64_t> Au3TrackeditClipboard::createNewGroupIDs(const std::set<int64_t>& groupIDs) const
+{
+    std::vector<int64_t> newGroupIds;
+
+    auto prj = globalContext()->currentTrackeditProject();
+
+    int64_t startingID = 0;
+    for (auto id : groupIDs) {
+        newGroupIds.push_back(prj->createNewGroupID(startingID));
+        startingID = newGroupIds.back() + 1; // + 1 or it would return the same repeatedly.
+    }
+
+    return newGroupIds;
+}
+
+void Au3TrackeditClipboard::updateTracksDataWithIDs(const std::vector<TrackData>& tracksData,
+                                                    const std::set<int64_t>& groupIDs,
+                                                    const std::vector<int64_t>& newGroupIDs)
+{
+    IF_ASSERT_FAILED(groupIDs.size() == newGroupIDs.size());
+
+    for (const TrackData& data : tracksData) {
+        auto waveTrack = dynamic_cast<au3::Au3WaveTrack*>(data.track.get());
+        auto clips = waveTrack->Intervals();
+
+        for (auto it = clips.begin(); it != clips.end(); ++it) {
+            auto currentID = (*it).get()->GetGroupId();
+
+            if (currentID != -1) {
+                auto currentIDIterator = groupIDs.find(currentID);
+                auto index = std::distance(groupIDs.begin(), currentIDIterator);
+
+                // This private method should only be called from the same context as getGroupIDs and createGroupIDs
+                // Or the data will not match.
+                IF_ASSERT_FAILED(index >= 0);
+
+                (*it).get()->SetGroupId(newGroupIDs[index]);
+            }
+        }
+    }
 }
