@@ -1074,6 +1074,27 @@ void WaveTrack::MakeMono()
     EraseChannelAttachments(1);
 }
 
+bool WaveTrack::MixDownToMono(const std::function<bool(double)>& progress)
+{
+    if (NChannels() == 1) {
+        return true;
+    }
+
+    auto i = 0u;
+    const auto clipProgress = [&](double p)
+    { return progress((p + i) / mClips.size()); };
+    for (; i < mClips.size(); ++i) {
+        if (!mClips[i]->MakeMono(clipProgress)) {
+            return false;
+        }
+    }
+
+    mRightChannel.reset();
+    EraseChannelAttachments(1);
+
+    return true;
+}
+
 auto WaveTrack::MonoToStereo() -> Holder
 {
     assert(!GetOwner());

@@ -137,10 +137,6 @@ muse::Ret Au3Interaction::canPasteTrackData(const TrackIdList& dstTracksIds, con
         IF_ASSERT_FAILED(dstWaveTrack) {
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
-
-        if (dstWaveTrack->NChannels() == 1 && clipboard()->trackData(i).track.get()->NChannels() == 2) {
-            return make_ret(trackedit::Err::StereoClipIntoMonoTrack);
-        }
     }
 
     return muse::make_ok();
@@ -1019,6 +1015,24 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
         // repeatedly into a stereo track
         if (trackToPaste->NChannels() == 1 && dstWaveTrack->NChannels() == 2) {
             trackToPaste->MonoToStereo();
+        } else if (trackToPaste->NChannels() == 2 && dstWaveTrack->NChannels() == 1) {
+            muse::Progress progress;
+            interactive()->showProgress(muse::trc("trackedit", "Mixing down to mono"), &progress);
+            progress.started();
+
+            auto progressFn = [&](double progressFraction)
+            {
+                progress.progress(progressFraction * 1000, 1000, "");
+                QCoreApplication::processEvents();
+                return !progress.isCanceled();
+            };
+
+            if (!trackToPaste->MixDownToMono(std::move(progressFn))) {
+                progress.finish(muse::make_ret(muse::Ret::Code::Cancel));
+                return make_ret(muse::Ret::Code::Cancel);
+            }
+
+            progress.finish(muse::make_ok());
         }
 
         if (clipboard()->isMultiSelectionCopy()) {
