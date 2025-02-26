@@ -75,6 +75,7 @@ void PlaybackPreferencesModel::setCurrentAudioApiIndex(int index)
 
 void PlaybackPreferencesModel::init()
 {
+    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() { emit currentAudioApiIndexChanged(); });
     // midiInPort()->availableDevicesChanged().onNotify(this, [this]() {
     //     emit midiInputDevicesChanged();
     // });

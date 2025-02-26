@@ -91,7 +91,7 @@ public slots:
     // void setMuteHiddenInstruments(bool mute);
 
 signals:
-    void currentAudioApiIndexChanged(int index);
+    void currentAudioApiIndexChanged();
     // void midiInputDeviceIdChanged();
     // void midiOutputDeviceIdChanged();
 

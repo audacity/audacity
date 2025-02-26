@@ -5,16 +5,22 @@
 #ifndef AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 #define AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 
-#include <wx/arrstr.h>
+#include "modularity/ioc.h"
+
+#include "context/iglobalcontext.h"
 #include "global/types/string.h"
 
-#include "libraries/lib-utility/IteratorX.h"
 #include "libraries/lib-strings/wxArrayStringEx.h"
+#include "libraries/lib-utility/IteratorX.h"
+
+#include <wx/arrstr.h>
+
 #include "playback/iaudiodevicesprovider.h"
 
 namespace au::au3 {
 class Au3AudioDevicesProvider : public playback::IAudioDevicesProvider
 {
+    muse::Inject<context::IGlobalContext> globalContext;
 public:
     void init();
 
@@ -35,10 +41,36 @@ public:
     void setAudioApi(const std::string& audioApi) override;
     muse::async::Notification audioApiChanged() const override;
 
+    std::vector<std::string> inputChannelsList() const override;
+    std::string currentInputChannels() const override;
+    void setInputChannels(const std::string& channels) override;
+    muse::async::Notification inputChannelsChanged() const override;
+    muse::async::Notification inputChannelsListChanged() const override;
+
+    double bufferLength() const override;
+    void setBufferLength(double newBufferLength) override;
+    muse::async::Notification bufferLengthChanged() const override;
+
+    double latencyCompensation() const override;
+    void setLatencyCompensation(double newLatencyCompensation) override;
+    muse::async::Notification latencyCompensationChanged() const override;
+
+    std::vector<uint64_t> availableSampleRateList() const override;
+    uint64_t defaultSampleRate() const override;
+    void setDefaultSampleRate(uint64_t newRate) override;
+    muse::async::Notification defaultSampleRateChanged() const override;
+
+    std::vector<std::string> defaultSampleFormatList() const override;
+    std::string defaultSampleFormat() const override;
+    void setDefaultSampleFormat(const std::string& format) override;
+    muse::async::Notification defaultSampleFormatChanged() const override;
+
 private:
     void initHosts();
     void initHostDevices();
     void initInputChannels();
+
+    void updateInputOutputDevices();
 
     class Choices
     {
@@ -111,6 +143,12 @@ private:
     muse::async::Notification m_audioOutputDeviceChanged;
     muse::async::Notification m_audioInputDeviceChanged;
     muse::async::Notification m_audioApiChanged;
+    muse::async::Notification m_inputChannelsChanged;
+    muse::async::Notification m_inputChannelsListChanged;
+    muse::async::Notification m_bufferLengthChanged;
+    muse::async::Notification m_latencyCompensationChanged;
+    muse::async::Notification m_defaultSampleRateChanged;
+    muse::async::Notification m_defaultSampleFormatChanged;
 };
 }
 
