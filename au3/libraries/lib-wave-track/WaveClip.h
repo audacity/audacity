@@ -902,6 +902,11 @@ public:
      */
     void MakeStereo(WaveClip&& other, bool mustAlign);
 
+    /*!
+     * @brief Returns true if the clip is already mono or if it was successfully made mono.
+     */
+    bool MakeMono(const std::function<bool(double)>& progress);
+
     // These return a nonnegative number of samples meant to size a memory buffer
     size_t GetBestBlockSize(sampleCount t) const;
     size_t GetMaxBlockSize() const;
