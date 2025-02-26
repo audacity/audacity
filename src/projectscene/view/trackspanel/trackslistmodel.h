@@ -37,7 +37,7 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
-    TracksListModel(QObject* parent = nullptr);
+    explicit TracksListModel(QObject* parent = nullptr);
     ~TracksListModel() override;
 
     Q_INVOKABLE void load();

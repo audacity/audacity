@@ -184,7 +184,7 @@ void ClipsListModel::update()
     m_clipList.clear();
 
     for (const au::trackedit::Clip& c : m_allClipList) {
-        ClipListItem* item = new ClipListItem(this);
+        auto* item = new ClipListItem(this);
         item->setClip(c);
         m_clipList.append(item);
         isStereo |= c.stereo;
@@ -864,7 +864,7 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     emit timelineContextChanged();
 }
 
-int ClipsListModel::cacheBufferPx() const
+int ClipsListModel::cacheBufferPx()
 {
     return CACHE_BUFFER_PX;
 }
