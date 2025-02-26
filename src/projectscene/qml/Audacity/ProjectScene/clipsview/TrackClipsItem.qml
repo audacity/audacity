@@ -110,7 +110,7 @@ Item {
             id: clipsContainerMouseArea
             propagateComposedEvents: true
             hoverEnabled: true
-            pressAndHoldInterval: 50
+            pressAndHoldInterval: 0
             enabled: !root.underSelection && (clipsContainer.isNearSample || clipsContainer.isBrush)
 
             anchors.fill: parent
