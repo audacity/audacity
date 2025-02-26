@@ -37,15 +37,16 @@
 #include "project/iprojectconfiguration.h"
 
 namespace au::appshell {
-class GeneralPreferencesModel : public QObject, public async::Asyncable
+class GeneralPreferencesModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(IInteractive, interactive)
-    INJECT(languages::ILanguagesConfiguration, languagesConfiguration)
-    INJECT(languages::ILanguagesService, languagesService)
-    INJECT(shortcuts::IShortcutsConfiguration, shortcutsConfiguration)
+    muse::Inject<IAppShellConfiguration> configuration;
+    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::languages::ILanguagesConfiguration> languagesConfiguration;
+    muse::Inject<muse::languages::ILanguagesService> languagesService;
+    muse::Inject<muse::shortcuts::IShortcutsConfiguration> shortcutsConfiguration;
+    muse::Inject<au::project::IProjectConfiguration> projectConfiguration;
 
     Q_PROPERTY(QVariantList languages READ languages NOTIFY languagesChanged)
     Q_PROPERTY(QString currentLanguageCode READ currentLanguageCode WRITE setCurrentLanguageCode NOTIFY currentLanguageCodeChanged)
@@ -58,7 +59,8 @@ class GeneralPreferencesModel : public QObject, public async::Asyncable
 
     Q_PROPERTY(bool isNeedRestart READ isNeedRestart WRITE setIsNeedRestart NOTIFY isNeedRestartChanged)
 
-    Q_PROPERTY(QVariantList startupModes READ startupModes NOTIFY startupModesChanged)
+    Q_PROPERTY(QString temporaryDir READ temporaryDir NOTIFY temporaryDirChanged)
+    Q_PROPERTY(QString availableSpace READ availableSpace NOTIFY availableSpaceChanged)
 
 public:
     explicit GeneralPreferencesModel(QObject* parent = nullptr);
@@ -66,10 +68,10 @@ public:
     Q_INVOKABLE void load();
     Q_INVOKABLE void checkUpdateForCurrentLanguage();
 
-    Q_INVOKABLE void setCurrentStartupMode(int modeIndex);
-    Q_INVOKABLE void setStartupScorePath(const QString& scorePath);
+    Q_INVOKABLE void setNumberFormat(int format);
 
-    Q_INVOKABLE QStringList scorePathFilter() const;
+    QString temporaryDir() const;
+    Q_INVOKABLE void setTemporaryDir(const QString& path);
 
     QVariantList languages() const;
     QString currentLanguageCode() const;
@@ -77,11 +79,11 @@ public:
     QStringList keyboardLayouts() const;
     QString currentKeyboardLayout() const;
 
-    QVariantList startupModes() const;
-
     bool isOSCRemoteControl() const;
     int oscPort() const;
     bool isNeedRestart() const;
+
+    QString availableSpace() const;
 
 public slots:
     void setCurrentLanguageCode(const QString& currentLanguageCode);
@@ -100,25 +102,13 @@ signals:
     void receivingUpdateForCurrentLanguage(int current, int total, QString status);
     void isNeedRestartChanged();
 
-    void startupModesChanged();
+    void temporaryDirChanged();
+    void availableSpaceChanged();
 
 private:
-    mu::Progress m_languageUpdateProgress;
+    muse::Progress m_languageUpdateProgress;
 
     bool m_isNeedRestart = false;
-
-    struct StartMode
-    {
-        StartupModeType type = StartupModeType::StartWithNewScore;
-        QString title;
-        bool checked = false;
-        bool canSelectScorePath = false;
-        QString scorePath;
-    };
-
-    using StartModeList = QList<StartMode>;
-
-    StartModeList allStartupModes() const;
 };
 }
 

@@ -149,7 +149,8 @@ void PreferencesModel::load(const QString& currentPageId)
 
     //! TODO AU4
     QList<PreferencePageItem*> items {
-        makeItem("general", QT_TRANSLATE_NOOP("appshell/preferences", "General"), IconCode::Code::SETTINGS_COG, ""),
+        makeItem("general", QT_TRANSLATE_NOOP("appshell/preferences", "General"), IconCode::Code::SETTINGS_COG,
+                 "Preferences/GeneralPreferencesPage.qml"),
 
         makeItem("appearance", QT_TRANSLATE_NOOP("appshell/preferences", "Interface"), IconCode::Code::BRUSH,
                  "Preferences/AppearancePreferencesPage.qml"),
