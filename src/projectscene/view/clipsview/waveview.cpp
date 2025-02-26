@@ -94,7 +94,11 @@ void WaveView::paint(QPainter* painter)
 {
     IWavePainter::Params params = getWavePainterParams();
     IWavePainter::PlotType pType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, params.zoom);
-    setAntialiasing(pType == IWavePainter::PlotType::Stem);
+
+    bool isStemPlot = pType == IWavePainter::PlotType::Stem;
+
+    setIsStemPlot(isStemPlot);
+    setAntialiasing(isStemPlot);
 
     wavePainter()->paint(*painter, m_clipKey.key, params, pType);
 }
