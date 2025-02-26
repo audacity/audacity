@@ -38,8 +38,6 @@ void ClipsListModel::init()
         return;
     }
 
-    dispatcher()->reg(this, "clip-rename", this, &ClipsListModel::onClipRenameAction);
-
     onSelectedClips(selectionController()->selectedClips());
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList& keyList) {
         if (keyList.empty()) {
@@ -376,22 +374,6 @@ void ClipsListModel::clearSelectedItems()
         selectedItem->setSelected(false);
     }
     m_selectedItems.clear();
-}
-
-void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() > 0) {
-        return;
-    }
-
-    trackedit::ClipKey key = args.arg<trackedit::ClipKey>(0);
-    int idx = indexByKey(key);
-
-    IF_ASSERT_FAILED(idx != -1) {
-        return;
-    }
-
-    emit requestClipTitleEdit(idx);
 }
 
 bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
