@@ -106,9 +106,9 @@ Rectangle {
     }
 
     function mousePressAndHold(x, y) {
-        root.altPressed
-            ? waveView.smoothLastClickPos(x, y - header.height)
-            : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
+        if (!root.altPressed) {
+            waveView.setLastClickPos(x, y - header.height, x, y - header.height)
+        }
         waveView.update()
     }
 
