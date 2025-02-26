@@ -114,7 +114,6 @@ private:
     void positionViewAtClip(const trackedit::Clip& clip);
     void onSelectedClip(const trackedit::ClipKey& k);
     void onSelectedClips(const trackedit::ClipKeyList& keyList);
-    void onClipRenameAction(const muse::actions::ActionData& args);
     ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
     int indexByKey(const trackedit::ClipKey& k) const;
     QVariant neighbor(const ClipKey& key, int offset) const;

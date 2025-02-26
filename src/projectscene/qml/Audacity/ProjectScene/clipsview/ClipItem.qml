@@ -125,6 +125,10 @@ Rectangle {
     ClipContextMenuModel {
         id: singleClipContextMenuModel
         clipKey: root.clipKey
+
+        onClipTitleEditRequested: {
+            root.editTitle()
+        }
     }
 
     ContextMenuLoader {
