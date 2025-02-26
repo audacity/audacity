@@ -30,7 +30,6 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
 
-    Q_PROPERTY(float volumeLevel READ volumeLevel WRITE setVolumeLevel NOTIFY volumeLevelChanged)
     Q_PROPERTY(int balance READ balance WRITE setBalance NOTIFY balanceChanged)
     Q_PROPERTY(bool solo READ solo WRITE setSolo NOTIFY soloChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
@@ -57,7 +56,9 @@ public:
     float leftChannelPressure() const;
     float rightChannelPressure() const;
 
-    float volumeLevel() const;
+    Q_INVOKABLE float volumeLevel() const;
+    Q_INVOKABLE void setVolumeLevel(float volumeLevel, bool completed);
+
     int balance() const;
     bool solo() const;
     bool muted() const;
@@ -82,8 +83,6 @@ public slots:
     void setLeftChannelPressure(float leftChannelPressure);
     void setRightChannelPressure(float rightChannelPressure);
 
-    void setVolumeLevel(float volumeLevel);
-    void commitVolumeLevel();
     void setBalance(int balance);
     void commitBalance();
     void setSolo(bool solo);

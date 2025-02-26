@@ -15,7 +15,7 @@ class ITrackPlaybackControl : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ITrackPlaybackControl() = default;
 
-    virtual void setVolume(long trackId, au::audio::volume_dbfs_t volume) = 0;
+    virtual void setVolume(long trackId, au::audio::volume_dbfs_t volume, bool completed) = 0;
     virtual au::audio::volume_dbfs_t volume(long trackId) const = 0;
 
     virtual void setBalance(long trackId, au::audio::balance_t balance) = 0;

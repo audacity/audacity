@@ -22,7 +22,7 @@ volume_dbfs_t Au3TrackPlaybackControl::volume(long trackId) const
     return LINEAR_TO_DB(track->GetVolume());
 }
 
-void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol)
+void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol, bool completed)
 {
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {
@@ -30,6 +30,10 @@ void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol)
     }
 
     track->SetVolume(vol > -60 ? DB_TO_LINEAR(vol) : 0);
+
+    if (completed) {
+        projectHistory()->pushHistoryState("playback", "Moved volume slider", trackedit::UndoPushType::CONSOLIDATE);
+    }
     return;
 }
 

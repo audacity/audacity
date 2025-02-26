@@ -207,24 +207,16 @@ void TrackItem::setRightChannelPressure(float rightChannelPressure)
     emit rightChannelPressureChanged(m_rightChannelPressure);
 }
 
-void TrackItem::setVolumeLevel(float volumeLevel)
+void TrackItem::setVolumeLevel(float volumeLevel, bool completed)
 {
+    trackPlaybackControl()->setVolume(trackId(), volumeLevel, completed);
+
     if (qFuzzyCompare(m_outParams.volume, volumeLevel)) {
         return;
     }
-
-    trackPlaybackControl()->setVolume(trackId(), volumeLevel);
-
     m_outParams.volume = volumeLevel;
     emit volumeLevelChanged(m_outParams.volume);
     emit outputParamsChanged(m_outParams);
-}
-
-void TrackItem::commitVolumeLevel()
-{
-    projectHistory()->pushHistoryState(muse::TranslatableString("playback", "Moved volume slider").translated().toStdString(),
-                                       muse::TranslatableString("playback",
-                                                                "Volume").translated().toStdString(), trackedit::UndoPushType::CONSOLIDATE);
 }
 
 void TrackItem::setBalance(int balance)
@@ -256,11 +248,6 @@ void TrackItem::setSolo(bool solo)
     trackPlaybackControl()->setSolo(trackId(), solo);
     m_outParams.solo = solo;
 
-    // project::IProjectSoloMuteState::SoloMuteState soloMuteState;
-    // soloMuteState.mute = m_outParams.muted;
-    // soloMuteState.solo = m_outParams.solo;
-
-    // emit soloMuteStateChanged(soloMuteState);
     emit soloChanged();
 
     if (solo && m_outParams.muted) {

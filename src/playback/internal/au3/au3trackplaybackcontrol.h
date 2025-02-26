@@ -22,7 +22,7 @@ class Au3TrackPlaybackControl : public ITrackPlaybackControl
 public:
     Au3TrackPlaybackControl() = default;
     volume_dbfs_t volume(long trackId) const override;
-    void setVolume(long trackId, volume_dbfs_t vol) override;
+    void setVolume(long trackId, volume_dbfs_t vol, bool completed) override;
 
     balance_t balance(long trackId) const override;
     void setBalance(long trackId, balance_t balance) override;
