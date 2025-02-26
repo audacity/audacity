@@ -75,11 +75,11 @@ StyledDialogView {
 
         FlatButton {
             id: previewBtn
-            text: qsTrc("effects", "Preview")
+            text: viewer.isPreviewing ? qsTrc("effects", "Stop preview") : qsTrc("effects", "Preview")
             buttonRole: ButtonBoxModel.CustomRole
             buttonId: ButtonBoxModel.CustomButton + 2
             isLeftSide: true
-            onClicked: viewer.preview()
+            onClicked: viewer.togglePreview()
         }
 
         FlatButton {
