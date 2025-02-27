@@ -22,6 +22,7 @@
 #include "CloudProjectsDatabase.h"
 #include "DataUploader.h"
 #include "MixdownUploader.h"
+#include "NetworkUtils.h"
 #include "ProjectCloudExtension.h"
 
 #include "ExportUtils.h"
@@ -580,6 +581,7 @@ void LocalProjectSnapshot::MarkSnapshotSynced()
       mCreateSnapshotResponse->Snapshot.Id));
 
    SetCommonHeaders(request);
+   SetOptionalHeaders(request);
 
    auto response = NetworkManager::GetInstance().doPost(request, nullptr, 0);
 
