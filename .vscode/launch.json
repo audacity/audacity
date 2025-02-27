@@ -4,7 +4,7 @@
             "name": "run audacity",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/install/bin/audacity.exe",
+            "program": "${config:cmake.installPrefix}/bin/audacity.exe",
             "preLaunchTask": "CMake: install",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
