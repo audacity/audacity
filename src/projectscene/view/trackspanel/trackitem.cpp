@@ -127,11 +127,6 @@ bool TrackItem::muted() const
     return m_outParams.muted;
 }
 
-bool TrackItem::forceMute() const
-{
-    return m_outParams.forceMute;
-}
-
 void TrackItem::loadOutputParams(const audio::AudioOutputParams& newParams)
 {
     if (!muse::RealIsEqual(m_outParams.volume, newParams.volume)) {
@@ -152,11 +147,6 @@ void TrackItem::loadOutputParams(const audio::AudioOutputParams& newParams)
     if (m_outParams.muted != newParams.muted) {
         m_outParams.muted = newParams.muted;
         emit mutedChanged();
-    }
-
-    if (m_outParams.forceMute != newParams.forceMute) {
-        m_outParams.forceMute = newParams.forceMute;
-        emit forceMuteChanged();
     }
 }
 
