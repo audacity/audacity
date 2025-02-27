@@ -33,7 +33,6 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(int balance READ balance NOTIFY balanceChanged)
     Q_PROPERTY(bool solo READ solo WRITE setSolo NOTIFY soloChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
-    Q_PROPERTY(bool forceMute READ forceMute NOTIFY forceMuteChanged)
 
     Q_PROPERTY(bool isSelected READ isSelected NOTIFY isSelectedChanged)
 
@@ -63,7 +62,6 @@ public:
 
     bool solo() const;
     bool muted() const;
-    bool forceMute() const;
 
     void loadOutputParams(const audio::AudioOutputParams& newParams);
 
@@ -97,7 +95,6 @@ signals:
     void balanceChanged(int balance);
     void soloChanged();
     void mutedChanged();
-    void forceMuteChanged();
 
     void outputParamsChanged(const audio::AudioOutputParams& params);
 
