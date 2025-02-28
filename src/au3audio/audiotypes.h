@@ -26,15 +26,13 @@ struct AudioOutputParams {
     balance_t balance = 0.f;
     bool solo = false;
     bool muted = false;
-    bool forceMute = false;
 
     bool operator ==(const AudioOutputParams& other) const
     {
         return muse::RealIsEqual(volume, other.volume)
                && muse::RealIsEqual(balance, other.balance)
                && solo == other.solo
-               && muted == other.muted
-               && forceMute == other.forceMute;
+               && muted == other.muted;
     }
 };
 }

@@ -42,10 +42,32 @@ void TrackItem::init(const trackedit::Track& track)
     m_trackId = track.id;
     m_trackType = track.type;
     m_title = track.title;
+    const auto ctrl = trackPlaybackControl();
     if (m_trackType != trackedit::TrackType::Label) {
-        m_outParams.volume = trackPlaybackControl()->volume(m_trackId);
-        m_outParams.balance = trackPlaybackControl()->balance(m_trackId);
+        m_outParams.volume = ctrl->volume(m_trackId);
+        m_outParams.balance = ctrl->balance(m_trackId);
+        m_outParams.solo = ctrl->solo(m_trackId);
+        m_outParams.muted = ctrl->muted(m_trackId);
     }
+    ctrl->muteOrSoloChanged().onReceive(this, [this](long trackId) {
+        if (trackId != m_trackId) {
+            return;
+        }
+        auto paramChanged = false;
+        if (m_outParams.solo != trackPlaybackControl()->solo(m_trackId)) {
+            m_outParams.solo = !m_outParams.solo;
+            paramChanged = true;
+            emit soloChanged();
+        }
+        if (m_outParams.muted != trackPlaybackControl()->muted(m_trackId)) {
+            m_outParams.muted = !m_outParams.muted;
+            paramChanged = true;
+            emit mutedChanged();
+        }
+        if (paramChanged) {
+            emit outputParamsChanged(m_outParams);
+        }
+    });
 }
 
 au::trackedit::TrackId TrackItem::trackId() const
@@ -105,11 +127,6 @@ bool TrackItem::muted() const
     return m_outParams.muted;
 }
 
-bool TrackItem::forceMute() const
-{
-    return m_outParams.forceMute;
-}
-
 void TrackItem::loadOutputParams(const audio::AudioOutputParams& newParams)
 {
     if (!muse::RealIsEqual(m_outParams.volume, newParams.volume)) {
@@ -131,25 +148,7 @@ void TrackItem::loadOutputParams(const audio::AudioOutputParams& newParams)
         m_outParams.muted = newParams.muted;
         emit mutedChanged();
     }
-
-    if (m_outParams.forceMute != newParams.forceMute) {
-        m_outParams.forceMute = newParams.forceMute;
-        emit forceMuteChanged();
-    }
 }
-
-// void TrackItem::loadSoloMuteState(const project::IProjectSoloMuteState::SoloMuteState& newState)
-// {
-//     if (m_outParams.muted != newState.mute) {
-//         m_outParams.muted = newState.mute;
-//         emit mutedChanged();
-//     }
-
-//     if (m_outParams.solo != newState.solo) {
-//         m_outParams.solo = newState.solo;
-//         emit soloChanged();
-//     }
-// }
 
 // void TrackItem::subscribeOnAudioSignalChanges(AudioSignalChanges&& audioSignalChanges)
 // {
@@ -204,70 +203,39 @@ void TrackItem::setRightChannelPressure(float rightChannelPressure)
     emit rightChannelPressureChanged(m_rightChannelPressure);
 }
 
-void TrackItem::setVolumeLevel(float volumeLevel)
+void TrackItem::setVolumeLevel(float volumeLevel, bool completed)
 {
-    if (qFuzzyCompare(m_outParams.volume, volumeLevel)) {
+    trackPlaybackControl()->setVolume(trackId(), volumeLevel, completed);
+
+    if (m_outParams.volume == volumeLevel) {
         return;
     }
-
-    trackPlaybackControl()->setVolume(trackId(), volumeLevel);
-
     m_outParams.volume = volumeLevel;
     emit volumeLevelChanged(m_outParams.volume);
     emit outputParamsChanged(m_outParams);
 }
 
-void TrackItem::setBalance(int balance)
+void TrackItem::setBalance(int balance, bool completed)
 {
-    if (m_outParams.balance * BALANCE_SCALING_FACTOR == balance) {
+    const float scaled = balance / BALANCE_SCALING_FACTOR;
+    trackPlaybackControl()->setBalance(trackId(), scaled, completed);
+
+    if (m_outParams.balance == scaled) {
         return;
     }
-
-    trackPlaybackControl()->setBalance(trackId(), balance / BALANCE_SCALING_FACTOR);
-
-    m_outParams.balance = balance / BALANCE_SCALING_FACTOR;
+    m_outParams.balance = scaled;
     emit balanceChanged(balance);
     emit outputParamsChanged(m_outParams);
 }
 
 void TrackItem::setSolo(bool solo)
 {
-    if (m_outParams.solo == solo) {
-        return;
-    }
-
-    m_outParams.solo = solo;
-
-    // project::IProjectSoloMuteState::SoloMuteState soloMuteState;
-    // soloMuteState.mute = m_outParams.muted;
-    // soloMuteState.solo = m_outParams.solo;
-
-    // emit soloMuteStateChanged(soloMuteState);
-    emit soloChanged();
-
-    if (solo && m_outParams.muted) {
-        setMuted(false);
-    }
+    trackPlaybackControl()->setSolo(trackId(), solo);
 }
 
 void TrackItem::setMuted(bool mute)
 {
-    if (m_outParams.muted == mute) {
-        return;
-    }
-
-    m_outParams.muted = mute;
-
-    // project::IProjectSoloMuteState::SoloMuteState soloMuteState;
-    // soloMuteState.mute = m_outParams.muted;
-    // soloMuteState.solo = m_outParams.solo;
-
-    // emit soloMuteStateChanged(soloMuteState);
-    emit mutedChanged();
-
-    if (mute && m_outParams.solo) {
-        setSolo(false);
-    }
+    trackPlaybackControl()->setMuted(trackId(), mute);
 }
 
 void TrackItem::setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue)
