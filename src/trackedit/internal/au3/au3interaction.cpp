@@ -2168,25 +2168,110 @@ bool Au3Interaction::undo()
         return false;
     }
 
-    // TODO: 1: Cache
-
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
     trackeditProject->cacheTracksAndClips();
 
     projectHistory()->undo();
 
-    // TODO: 2: Build new list
-
-    auto afterUndo = trackeditProject->buildTracksAndClips();
-
-    // TODO: 3: Compare cache and new list. Store the difference. Somehow.
-
+    auto afterUndo = trackeditProject->buildTracksAndClips(); // I could just call this twice and NOT have a cache.
     auto beforeUndo = trackeditProject->getCachedTracksAndClips();
 
-    // TODO: 4: Reload only what has changed!
+    // TODO: List of possible changes:
+    //  Tracks:
+    //  1. Track added
+    //  2. Track changed(!?) When is this called?
+    //  3. Track removed
+    //  4. Track inserted
+    //     - Called after duplicateTracks. Only.
+    //  5. Track moved
+    //  Clips:
+    //  1. Clip changed
+    //  2. Clip added
+    //  3. Clip removed
 
-    trackeditProject->reload();
+    /** TODO:
+     *   Algorithm:
+     *   Compare tracks lists.
+     *   Iterate over the biggest.
+     *   For each track,
+     *      Check if it exists in the smallest.
+     *          If not, call removed / added / inserted, depending on which the biggest list is.
+     *          If yes, compare their indexes.
+     *              If different, call moved.
+     *   IS it possible to BOTH move, AND add/delete, in the same action? I assume not.
+     *   IS it possible to BOTH add/move/insert/delete a TRACK, AND separately a CLIP? I assume not.
+     *   IS it possible to MOVE MANY TRACKS? Yes.
+     **/
+
+    IF_ASSERT_FAILED(beforeUndo.has_value())
+    {
+        trackeditProject->reload();
+        return false;
+    }
+
+    if (beforeUndo->first.size() < afterUndo.first.size()) {
+        //! Before undo is smaller than after.
+        //  Something had been deleted.
+        //  Find and notify that it's added.
+        for (int i = 0; i < afterUndo.first.size(); i++) {
+            auto after = afterUndo.first[i];
+            // auto name = after.title;
+            // std::cout << name.toStdString() << std::endl;
+            auto iter = std::find_if(beforeUndo->first.begin(),
+                                     beforeUndo->first.end(),
+                                     [&] (const auto& track) {
+                                         return track.id == after.id;
+                                     });
+
+            if (iter == beforeUndo->first.end()) {
+                // Found one. Could be more.
+                // std::cout << after.id << std::endl;
+                // Inserted, because maybe it wasn't at the end:
+                trackeditProject->trackInserted().send(afterUndo.first[i], i);
+            }
+        }
+    }
+    else if (beforeUndo->first.size() > afterUndo.first.size()) {
+        //! After undo is smaller than before.
+        //  Something had been added.
+        //  Find and notify that it's removed.
+        for (int i = 0; i < beforeUndo->first.size(); i++) {
+            auto before = beforeUndo->first[i];
+            auto name = before.title;
+            std::cout << name.toStdString() << std::endl;
+
+            auto iter = std::find_if(afterUndo.first.begin(),
+                                    afterUndo.first.end(),
+                                    [&] (const auto& track) {
+                                        return track.id == before.id;
+                                    });
+
+            if (iter == afterUndo.first.end()) {
+                // Found one. Could be more.
+                std::cout << before.id << std::endl;
+                trackeditProject->trackRemoved().send(beforeUndo->first[i]);
+            }
+        }
+    }
+
+    // TODO: Moving multiple with preserved indexes is hard. How did I do in TWO?
+    // if (beforeUndo->first.size() == afterUndo.first.size()) {
+    //     for (int i = 0; i < beforeUndo->first.size(); i++) {
+    //         auto& before = beforeUndo->first[i];
+    //         auto& after = afterUndo.first[i];
+    //         if (before.id != after.id) {
+    //             for (int j = i; j < beforeUndo->first.size(); j++) {
+    //                 auto& after2 = afterUndo.first[j];
+    //                 if (before.id == after2.id) {
+    //                     // Copying Track since it's an async notification
+    //                     trackeditProject->trackMoved().send(afterUndo.first[j], j);
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     return true;
 }

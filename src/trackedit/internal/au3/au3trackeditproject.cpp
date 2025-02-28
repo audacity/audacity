@@ -220,10 +220,7 @@ std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId
 
 void Au3TrackeditProject::reload()
 {
-    // TODO: Unused. Should skip passing this entirely.
-    auto currentTracks = trackList();
-
-    m_tracksChanged.send(currentTracks);
+    m_tracksChanged.send(trackList());
 }
 
 void Au3TrackeditProject::notifyAboutTrackAdded(const Track& track)
