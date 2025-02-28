@@ -411,10 +411,11 @@ muse::async::Channel<EffectId> EffectExecutionScenario::lastProcessorIdChanged()
     return m_lastProcessorIdChanged;
 }
 
-muse::Ret EffectExecutionScenario::previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings)
+muse::Ret EffectExecutionScenario::previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings,
+                                                 ProgressPtr playProgress)
 {
     au3::Au3Project& project = projectRef();
     EffectId effectId = effectInstancesRegister()->effectIdByInstanceId(effectInstanceId);
     Effect* effect = effectsProvider()->effect(effectId);
-    return effectsProvider()->previewEffect(project, effect, settings);
+    return effectsProvider()->previewEffect(project, effect, settings, playProgress);
 }
