@@ -3,11 +3,14 @@
 */
 #include "clipcontextmenumodel.h"
 
+#include "translation.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
 static const ActionCode ENABLE_STRETCH_CODE("stretch-clip-to-match-tempo");
+static const ActionCode CLIP_REQUEST_TITLE_EDIT_CODE("clip-title-edit");
 
 namespace {
 //! NOTE: can be moved to the framework
@@ -29,6 +32,20 @@ void ClipContextMenuModel::load()
         return item;
     };
 
+    auto makeInternalItem = [this](const ActionCode& actionCode) {
+        muse::ui::UiAction action;
+        action.code = actionCode;
+        action.title = muse::TranslatableString("action", "Rename clip");
+
+        MenuItem* item = new MenuItem(action, this);
+
+        muse::ui::UiActionState state;
+        state.enabled = true;
+        item->setState(state);
+
+        return item;
+    };
+
     auto enableStretchItem = makeItemWithArg(ENABLE_STRETCH_CODE);
     updateStretchEnabledState(*enableStretchItem);
 
@@ -36,7 +53,7 @@ void ClipContextMenuModel::load()
 
     MenuItemList items {
         makeItemWithArg("clip-properties"),
-        makeItemWithArg("clip-rename"),
+        makeInternalItem(CLIP_REQUEST_TITLE_EDIT_CODE),
         makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems),
         makeSeparator(),
         makeItemWithArg("clip-copy"),
@@ -57,6 +74,16 @@ void ClipContextMenuModel::load()
     setItems(items);
 
     updateColorCheckedState();
+}
+
+void ClipContextMenuModel::handleMenuItem(const QString& itemId)
+{
+    if (itemId.toStdString() == CLIP_REQUEST_TITLE_EDIT_CODE) {
+        emit clipTitleEditRequested();
+        return;
+    }
+
+    AbstractMenuModel::handleMenuItem(itemId);
 }
 
 ClipKey ClipContextMenuModel::clipKey() const
