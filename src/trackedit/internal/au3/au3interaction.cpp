@@ -2170,12 +2170,12 @@ bool Au3Interaction::undo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    trackeditProject->cacheTracksAndClips();
+    auto beforeUndo = trackeditProject->buildTracksAndClips();
 
     projectHistory()->undo();
 
-    auto afterUndo = trackeditProject->buildTracksAndClips(); // I could just call this twice and NOT have a cache.
-    auto beforeUndo = trackeditProject->getCachedTracksAndClips();
+    auto afterUndo = trackeditProject->buildTracksAndClips();
+
 
     // TODO: List of possible changes:
     //  Tracks:
@@ -2204,42 +2204,35 @@ bool Au3Interaction::undo()
      *   IS it possible to MOVE MANY TRACKS? Yes.
      **/
 
-    IF_ASSERT_FAILED(beforeUndo.has_value())
-    {
-        trackeditProject->reload();
-        return false;
-    }
+    // TODO: The below can be templateized and extracted to a single method.
 
-    if (beforeUndo->first.size() < afterUndo.first.size()) {
+    if (beforeUndo.first.size() < afterUndo.first.size()) {
         //! Before undo is smaller than after.
         //  Something had been deleted.
         //  Find and notify that it's added.
         for (int i = 0; i < afterUndo.first.size(); i++) {
             auto after = afterUndo.first[i];
-            // auto name = after.title;
-            // std::cout << name.toStdString() << std::endl;
-            auto iter = std::find_if(beforeUndo->first.begin(),
-                                     beforeUndo->first.end(),
+            auto iter = std::find_if(beforeUndo.first.begin(),
+                                     beforeUndo.first.end(),
                                      [&] (const auto& track) {
                                          return track.id == after.id;
                                      });
 
-            if (iter == beforeUndo->first.end()) {
+            if (iter == beforeUndo.first.end()) {
                 // Found one. Could be more.
-                // std::cout << after.id << std::endl;
                 // Inserted, because maybe it wasn't at the end:
                 trackeditProject->trackInserted().send(afterUndo.first[i], i);
             }
         }
     }
-    else if (beforeUndo->first.size() > afterUndo.first.size()) {
+    else if (beforeUndo.first.size() > afterUndo.first.size()) {
         //! After undo is smaller than before.
         //  Something had been added.
         //  Find and notify that it's removed.
-        for (int i = 0; i < beforeUndo->first.size(); i++) {
-            auto before = beforeUndo->first[i];
-            auto name = before.title;
-            std::cout << name.toStdString() << std::endl;
+        for (int i = 0; i < beforeUndo.first.size(); i++) {
+            auto before = beforeUndo.first[i];
+            // auto name = before.title;
+            // std::cout << name.toStdString() << std::endl;
 
             auto iter = std::find_if(afterUndo.first.begin(),
                                     afterUndo.first.end(),
@@ -2250,7 +2243,7 @@ bool Au3Interaction::undo()
             if (iter == afterUndo.first.end()) {
                 // Found one. Could be more.
                 std::cout << before.id << std::endl;
-                trackeditProject->trackRemoved().send(beforeUndo->first[i]);
+                trackeditProject->trackRemoved().send(beforeUndo.first[i]);
             }
         }
     }

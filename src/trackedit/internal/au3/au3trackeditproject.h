@@ -57,8 +57,6 @@ public:
     secs_t totalTime() const override;
 
     TracksAndClips buildTracksAndClips() override;
-    void cacheTracksAndClips() override;
-    std::optional<TracksAndClips> getCachedTracksAndClips() const override;
 
 private:
     void onTrackListEvent(const TrackListEvent& e);
@@ -79,8 +77,6 @@ private:
     mutable muse::async::Channel<trackedit::Track> m_trackRemoved;
     mutable muse::async::Channel<trackedit::Track, int> m_trackInserted;
     mutable muse::async::Channel<trackedit::Track, int> m_trackMoved;
-
-    std::optional<TracksAndClips> m_cache;
 };
 
 class Au3TrackeditProjectCreator : public ITrackeditProjectCreator

@@ -44,7 +44,5 @@ public:
     MOCK_METHOD(secs_t, totalTime, (), (const, override));
 
     MOCK_METHOD(TracksAndClips, buildTracksAndClips, (), (override));
-    MOCK_METHOD(void, cacheTracksAndClips, (), (override));
-    MOCK_METHOD(std::optional<TracksAndClips>, getCachedTracksAndClips, (), (const override));
 };
 }

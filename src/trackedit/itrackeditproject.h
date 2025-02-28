@@ -60,8 +60,6 @@ public:
     virtual secs_t totalTime() const = 0;
 
     virtual TracksAndClips buildTracksAndClips() = 0;
-    virtual void cacheTracksAndClips() = 0;
-    virtual std::optional<TracksAndClips> getCachedTracksAndClips() const = 0;
 };
 
 using ITrackeditProjectPtr = std::shared_ptr<ITrackeditProject>;
