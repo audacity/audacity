@@ -82,7 +82,7 @@ void TracksListModel::load()
 
     onSelectedTracks(selectionController()->selectedTracks());
 
-    prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track>& tr) {
+    prj->tracksChanged().onReceive(this, [this](std::vector<au::trackedit::Track> tr) {
         onTracksChanged(tr);
     });
 

@@ -19,6 +19,9 @@ class IAu3Project;
 }
 
 namespace au::trackedit {
+
+using TracksAndClips = std::pair<trackedit::TrackList, std::vector<trackedit::Clips>>;
+
 class ITrackeditProject
 {
 public:
@@ -55,6 +58,10 @@ public:
     virtual muse::async::Channel<trackedit::Track, int> trackMoved() const = 0;
 
     virtual secs_t totalTime() const = 0;
+
+    virtual TracksAndClips buildTracksAndClips() = 0;
+    virtual void cacheTracksAndClips() = 0;
+    virtual std::optional<TracksAndClips> getCachedTracksAndClips() const = 0;
 };
 
 using ITrackeditProjectPtr = std::shared_ptr<ITrackeditProject>;
@@ -63,7 +70,7 @@ class ITrackeditProjectCreator : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(ITrackeditProjectCreator)
 public:
-    virtual ~ITrackeditProjectCreator() = default;
+    ~ITrackeditProjectCreator() override = default;
 
     virtual ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const = 0;
 };

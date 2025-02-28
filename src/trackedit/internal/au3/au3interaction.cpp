@@ -2168,13 +2168,24 @@ bool Au3Interaction::undo()
         return false;
     }
 
+    // TODO: 1: Cache
+
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
+
+    trackeditProject->cacheTracksAndClips();
 
     projectHistory()->undo();
 
-    // Undo removes all tracks from current state and
-    // inserts tracks from the previous state so we need
-    // to reload whole model
+    // TODO: 2: Build new list
+
+    auto afterUndo = trackeditProject->buildTracksAndClips();
+
+    // TODO: 3: Compare cache and new list. Store the difference. Somehow.
+
+    auto beforeUndo = trackeditProject->getCachedTracksAndClips();
+
+    // TODO: 4: Reload only what has changed!
+
     trackeditProject->reload();
 
     return true;
@@ -2192,6 +2203,8 @@ bool Au3Interaction::redo()
     }
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
+
+    /// TODO: Replicate also for redo!
 
     projectHistory()->redo();
 
