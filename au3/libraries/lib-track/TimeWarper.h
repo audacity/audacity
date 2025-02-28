@@ -61,159 +61,149 @@ of the warped region.
 class TRACK_API TimeWarper /* not final */
 {
 public:
-   virtual ~TimeWarper();
-   virtual double Warp(double originalTime) const = 0;
+    virtual ~TimeWarper();
+    virtual double Warp(double originalTime) const = 0;
 };
 
 class TRACK_API IdentityTimeWarper final : public TimeWarper
 {
 public:
-   double Warp(double originalTime) const override;
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API ShiftTimeWarper final : public TimeWarper
 {
 private:
-   std::unique_ptr<TimeWarper> mWarper;
-   double mShift;
+    std::unique_ptr<TimeWarper> mWarper;
+    double mShift;
 public:
-   ShiftTimeWarper(std::unique_ptr<TimeWarper> &&warper, double shiftAmount)
-      : mWarper(std::move(warper)), mShift(shiftAmount) { }
-   virtual ~ShiftTimeWarper() {}
-   double Warp(double originalTime) const override;
+    ShiftTimeWarper(std::unique_ptr<TimeWarper>&& warper, double shiftAmount)
+        : mWarper(std::move(warper)), mShift(shiftAmount) { }
+    virtual ~ShiftTimeWarper() {}
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API LinearTimeWarper final : public TimeWarper
 {
 private:
-   double mScale;
-   double mShift;
+    double mScale;
+    double mShift;
 public:
-   LinearTimeWarper(double tBefore0, double tAfter0,
-                    double tBefore1, double tAfter1)
-      : mScale((tAfter1 - tAfter0)/(tBefore1 - tBefore0)),
-        mShift(tAfter0 - mScale*tBefore0)
-   { }
-   double Warp(double originalTime) const override;
+    LinearTimeWarper(double tBefore0, double tAfter0,
+                     double tBefore1, double tAfter1)
+        : mScale((tAfter1 - tAfter0) / (tBefore1 - tBefore0)),
+        mShift(tAfter0 - mScale * tBefore0)
+    { }
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API LinearInputRateTimeWarper final : public TimeWarper
 {
 private:
-   LinearTimeWarper mRateWarper;
-   double mRStart;
-   double mTStart;
-   double mScale;
+    LinearTimeWarper mRateWarper;
+    double mRStart;
+    double mTStart;
+    double mScale;
 public:
-   LinearInputRateTimeWarper(double tStart, double tEnd,
-                             double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+    LinearInputRateTimeWarper(double tStart, double tEnd, double rStart, double rEnd);
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API LinearOutputRateTimeWarper final : public TimeWarper
 {
 private:
-   LinearTimeWarper mTimeWarper;
-   double mRStart;
-   double mTStart;
-   double mScale;
-   double mC1;
-   double mC2;
+    LinearTimeWarper mTimeWarper;
+    double mRStart;
+    double mTStart;
+    double mScale;
+    double mC1;
+    double mC2;
 public:
-   LinearOutputRateTimeWarper(double tStart, double tEnd,
-                              double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+    LinearOutputRateTimeWarper(double tStart, double tEnd, double rStart, double rEnd);
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API LinearInputStretchTimeWarper final : public TimeWarper
 {
 private:
-   LinearTimeWarper mTimeWarper;
-   double mTStart;
-   double mC1;
-   double mC2;
+    LinearTimeWarper mTimeWarper;
+    double mTStart;
+    double mC1;
+    double mC2;
 public:
-   LinearInputStretchTimeWarper(double tStart, double tEnd,
-                                double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+    LinearInputStretchTimeWarper(double tStart, double tEnd, double rStart, double rEnd);
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API LinearOutputStretchTimeWarper final : public TimeWarper
 {
 private:
-   LinearTimeWarper mTimeWarper;
-   double mTStart;
-   double mC1;
-   double mC2;
+    LinearTimeWarper mTimeWarper;
+    double mTStart;
+    double mC1;
+    double mC2;
 public:
-   LinearOutputStretchTimeWarper(double tStart, double tEnd,
-                                 double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+    LinearOutputStretchTimeWarper(double tStart, double tEnd, double rStart, double rEnd);
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API GeometricInputTimeWarper final : public TimeWarper
 {
 private:
-   LinearTimeWarper mTimeWarper;
-   double mTStart;
-   double mScale;
-   double mRatio;
+    LinearTimeWarper mTimeWarper;
+    double mTStart;
+    double mScale;
+    double mRatio;
 public:
-   GeometricInputTimeWarper(double tStart, double tEnd,
-                            double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+    GeometricInputTimeWarper(double tStart, double tEnd, double rStart, double rEnd);
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API GeometricOutputTimeWarper final : public TimeWarper
 {
 private:
-   LinearTimeWarper mTimeWarper;
-   double mTStart;
-   double mScale;
-   double mC0;
+    LinearTimeWarper mTimeWarper;
+    double mTStart;
+    double mScale;
+    double mC0;
 public:
-   GeometricOutputTimeWarper(double tStart, double tEnd,
-                             double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+    GeometricOutputTimeWarper(double tStart, double tEnd, double rStart, double rEnd);
+    double Warp(double originalTime) const override;
 };
 
 class TRACK_API PasteTimeWarper final : public TimeWarper
 {
 private:
-   const double mOldT1, mNewT1;
+    const double mOldT1, mNewT1;
 public:
-   PasteTimeWarper(double oldT1, double newT1);
-   double Warp(double originalTime) const override;
+    PasteTimeWarper(double oldT1, double newT1);
+    double Warp(double originalTime) const override;
 };
-
 
 // Note: this assumes that tStart is a fixed point of warper->warp()
 class TRACK_API RegionTimeWarper final : public TimeWarper
 {
 private:
-   std::unique_ptr<TimeWarper> mWarper;
-   double mTStart;
-   double mTEnd;
-   double mOffset;
+    std::unique_ptr<TimeWarper> mWarper;
+    double mTStart;
+    double mTEnd;
+    double mOffset;
 public:
-   RegionTimeWarper(double tStart, double tEnd, std::unique_ptr<TimeWarper> &&warper)
-      : mWarper(std::move(warper)), mTStart(tStart), mTEnd(tEnd),
-         mOffset(mWarper->Warp(mTEnd)-mTEnd)
-   { }
-   virtual ~RegionTimeWarper() {}
-   double Warp(double originalTime) const override
-   {
-      if (originalTime < mTStart)
-      {
-         return originalTime;
-      } else if (originalTime < mTEnd)
-      {
-         return mWarper->Warp(originalTime);
-      } else
-      {
-         return mOffset + originalTime;
-      }
-   }
+    RegionTimeWarper(double tStart, double tEnd, std::unique_ptr<TimeWarper>&& warper)
+        : mWarper(std::move(warper)), mTStart(tStart), mTEnd(tEnd),
+        mOffset(mWarper->Warp(mTEnd) - mTEnd)
+    { }
+    virtual ~RegionTimeWarper() {}
+    double Warp(double originalTime) const override
+    {
+        if (originalTime < mTStart) {
+            return originalTime;
+        } else if (originalTime < mTEnd) {
+            return mWarper->Warp(originalTime);
+        } else {
+            return mOffset + originalTime;
+        }
+    }
 };
 
 #endif /* End of include guard: __TIMEWARPER__ */

@@ -23,95 +23,95 @@
 #include "widgets/TimeFormat.h"
 
 static const AttachedProjectObjects::RegisteredFactory key {
-   [](AudacityProject& project) { return std::make_shared<ProjectTimeRuler>(project); }
+    [](AudacityProject& project) { return std::make_shared<ProjectTimeRuler>(project); }
 };
 
 ProjectTimeRuler& ProjectTimeRuler::Get(AudacityProject& project)
 {
-   return project.AttachedObjects::Get<ProjectTimeRuler&>(key);
+    return project.AttachedObjects::Get<ProjectTimeRuler&>(key);
 }
 
 const ProjectTimeRuler& ProjectTimeRuler::Get(const AudacityProject& project)
 {
-   return Get(const_cast<AudacityProject&>(project));
+    return Get(const_cast<AudacityProject&>(project));
 }
 
 struct ProjectTimeRuler::Impl final
 {
-   explicit Impl(AudacityProject& project)
-       : beatsFormat { ProjectTimeSignature::Get(project) }
-       , projectTimeSignatureChanged { ProjectTimeSignature::Get(project)
-                                          .Subscribe([this](const auto& msg) {
-                                             beatsFormat.SetData(
-                                                msg.newTempo,
-                                                msg.newUpperTimeSignature,
-                                                msg.newLowerTimeSignature);
+    explicit Impl(AudacityProject& project)
+        : beatsFormat{ProjectTimeSignature::Get(project)}
+        , projectTimeSignatureChanged{ProjectTimeSignature::Get(project)
+                                      .Subscribe([this](const auto& msg) {
+            beatsFormat.SetData(
+                msg.newTempo,
+                msg.newUpperTimeSignature,
+                msg.newLowerTimeSignature);
 
-                                             ruler.Invalidate();
-                                          }) }
-       , timeDisplayModeChanged { TimeDisplayModePreference.Subscribe(
-            [this](TimeDisplayMode newMode) {
-               switch (newMode)
-               {
-               case TimeDisplayMode::BeatsAndMeasures:
-                  ruler.SetFormat(&beatsFormat);
-                  break;
-               case TimeDisplayMode::MinutesAndSeconds:
-                  ruler.SetFormat(&TimeFormat::Instance());
-                  break;
-               default:
-                  assert(false);
-                  break;
-               }
-            }) }
-   {
-      if (mode == TimeDisplayMode::BeatsAndMeasures)
-         ruler.SetFormat(&beatsFormat);
-   }
+            ruler.Invalidate();
+        })},
+        timeDisplayModeChanged { TimeDisplayModePreference.Subscribe(
+                                     [this](TimeDisplayMode newMode) {
+            switch (newMode) {
+                case TimeDisplayMode::BeatsAndMeasures:
+                    ruler.SetFormat(&beatsFormat);
+                    break;
+                case TimeDisplayMode::MinutesAndSeconds:
+                    ruler.SetFormat(&TimeFormat::Instance());
+                    break;
+                default:
+                    assert(false);
+                    break;
+            }
+        }) }
+    {
+        if (mode == TimeDisplayMode::BeatsAndMeasures) {
+            ruler.SetFormat(&beatsFormat);
+        }
+    }
 
-   TimeDisplayMode mode { TimeDisplayModePreference.ReadEnum() };
+    TimeDisplayMode mode { TimeDisplayModePreference.ReadEnum() };
 
-   BeatsFormat beatsFormat;
-   LinearUpdater updater;
+    BeatsFormat beatsFormat;
+    LinearUpdater updater;
 
-   Ruler ruler { updater, TimeFormat::Instance() };
+    Ruler ruler { updater, TimeFormat::Instance() };
 
 private:
-   Observer::Subscription projectTimeSignatureChanged;
-   Observer::Subscription timeDisplayModeChanged;
+    Observer::Subscription projectTimeSignatureChanged;
+    Observer::Subscription timeDisplayModeChanged;
 };
 
 ProjectTimeRuler::ProjectTimeRuler(AudacityProject& project)
-    : mImpl { std::make_unique<Impl>(project) }
+    : mImpl{std::make_unique<Impl>(project)}
 {
 }
 
 LinearUpdater& ProjectTimeRuler::GetUpdater()
 {
-   return mImpl->updater;
+    return mImpl->updater;
 }
 
 const LinearUpdater& ProjectTimeRuler::GetUpdater() const
 {
-   return mImpl->updater;
+    return mImpl->updater;
 }
 
 BeatsFormat& ProjectTimeRuler::GetBeatsFormat()
 {
-   return mImpl->beatsFormat;
+    return mImpl->beatsFormat;
 }
 
 const BeatsFormat& ProjectTimeRuler::GetBeatsFormat() const
 {
-   return mImpl->beatsFormat;
+    return mImpl->beatsFormat;
 }
 
 Ruler& ProjectTimeRuler::GetRuler()
 {
-   return mImpl->ruler;
+    return mImpl->ruler;
 }
 
 const Ruler& ProjectTimeRuler::GetRuler() const
 {
-   return mImpl->ruler;
+    return mImpl->ruler;
 }

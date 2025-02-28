@@ -15,12 +15,11 @@
 
 class FormatterContext;
 
-namespace NumericConverterFormats
-{
+namespace NumericConverterFormats {
 struct DefaultFormatRegistrator final
 {
-   explicit DefaultFormatRegistrator(
-      const NumericConverterType& type, const NumericFormatSymbol& symbol);
+    explicit DefaultFormatRegistrator(
+        const NumericConverterType& type, const NumericFormatSymbol& symbol);
 };
 
 //! Returns the default format for the type or empty symbol, if no default symbol is registered
@@ -28,8 +27,7 @@ NUMERIC_FORMATS_API NumericFormatSymbol Default(const NumericConverterType& type
 
 //! Looks up the format, returns Default for the type if the format is not registered
 NUMERIC_FORMATS_API NumericFormatSymbol Lookup(
-   const FormatterContext& context, const NumericConverterType& type,
-   const NumericFormatID& formatIdentifier);
+    const FormatterContext& context, const NumericConverterType& type, const NumericFormatID& formatIdentifier);
 
 NUMERIC_FORMATS_API NumericFormatSymbol DefaultSelectionFormat();
 NUMERIC_FORMATS_API NumericFormatSymbol TimeAndSampleFormat();

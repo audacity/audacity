@@ -10,8 +10,8 @@
 
 #include <wx/arrstr.h>
 
- /// A class, that supports base manipulation with version number.
- /**
+/// A class, that supports base manipulation with version number.
+/**
      By default initialized by zero version number (Version = 0, Release = 0, Revision = 0, Patch = 0),
      that not allow us to update.
  */
@@ -30,11 +30,11 @@ public:
     /// Make string with version by MakeString() from instance values.
     wxString GetString() const;
 
-    bool operator== (const VersionId& other);
-    bool operator!= (const VersionId& other);
+    bool operator==(const VersionId& other);
+    bool operator!=(const VersionId& other);
 
-    bool operator< (const VersionId& other);
-    bool operator> (const VersionId& other);
+    bool operator<(const VersionId& other);
+    bool operator>(const VersionId& other);
 
 private:
     int mVersion{ 0 };
@@ -46,6 +46,6 @@ private:
 /// Return version (VersionId) object with current Audacity build version.
 static inline VersionId CurrentBuildVersion()
 {
-   return VersionId { AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION,
-                      AUDACITY_MODLEVEL };
+    return VersionId { AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION,
+                       AUDACITY_MODLEVEL };
 }

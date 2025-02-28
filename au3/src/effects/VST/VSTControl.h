@@ -18,32 +18,32 @@
 class VSTControlBase /* not final */ : public wxControl
 {
 public:
-   VSTControlBase()
-   {
-      mParent = NULL;
-      mLink = NULL;
-   }
+    VSTControlBase()
+    {
+        mParent = NULL;
+        mLink = NULL;
+    }
 
-   virtual ~VSTControlBase()
-   {
-   }
+    virtual ~VSTControlBase()
+    {
+    }
 
-   virtual bool Create(wxWindow *parent, VSTLink *link)
-   {
-      mParent = parent;
-      mLink = link;
+    virtual bool Create(wxWindow* parent, VSTLink* link)
+    {
+        mParent = parent;
+        mLink = link;
 
-      if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER | wxTAB_TRAVERSAL, wxDefaultValidator, wxEmptyString))
-      {
-         return false;
-      }
+        if (!wxControl::Create(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER | wxTAB_TRAVERSAL, wxDefaultValidator,
+                               wxEmptyString)) {
+            return false;
+        }
 
-      return true;
-   }
-   
+        return true;
+    }
+
 protected:
-   wxWindow *mParent;
-   VSTLink *mLink;
+    wxWindow* mParent;
+    VSTLink* mLink;
 };
 
 #endif

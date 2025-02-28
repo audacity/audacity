@@ -12,14 +12,12 @@
 
 #include <vector>
 
-namespace Journal
-{
-namespace Events
-{
-   //\brief Whether events are being recorded to the journal
-   bool IsWatching();
+namespace Journal {
+namespace Events {
+//\brief Whether events are being recorded to the journal
+bool IsWatching();
 
-   //\brief Stop watching events, and give the user an error message
-   void FailedEventSerialization();
+//\brief Stop watching events, and give the user an error message
+void FailedEventSerialization();
 }
 }

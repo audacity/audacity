@@ -11,26 +11,27 @@
 #include "TimeDisplayMode.h"
 
 TimeDisplayModeSetting TimeDisplayModePreference {
-   // Keep for the compatibility with old Audacity versions
-   L"/GUI/RulerType",
-   {
-      { wxT("MinutesAndSeconds"), XO("Minutes and Seconds") },
-      { wxT("BeatsAndMeasures"), XO("Beats and Measures") },
-   },
+    // Keep for the compatibility with old Audacity versions
+    L"/GUI/RulerType",
+    {
+        { wxT("MinutesAndSeconds"), XO("Minutes and Seconds") },
+        { wxT("BeatsAndMeasures"), XO("Beats and Measures") },
+    },
 
-   0, // minutes and seconds
-   {
-      TimeDisplayMode::MinutesAndSeconds,
-      TimeDisplayMode::BeatsAndMeasures,
-   }
+    0, // minutes and seconds
+    {
+        TimeDisplayMode::MinutesAndSeconds,
+        TimeDisplayMode::BeatsAndMeasures,
+    }
 };
 
 bool TimeDisplayModeSetting::WriteEnum(TimeDisplayMode value)
 {
-   if (!EnumSetting::WriteEnum(value))
-      return false;
+    if (!EnumSetting::WriteEnum(value)) {
+        return false;
+    }
 
-   Publish(value);
+    Publish(value);
 
-   return true;
+    return true;
 }

@@ -19,84 +19,81 @@ class EnumValueSymbols;
 class WaveChannel;
 class WaveTrack;
 
-class WAVE_TRACK_SETTINGS_API WaveformSettings
-   : public PrefsListener
-   , public ClientData::Cloneable<>
+class WAVE_TRACK_SETTINGS_API WaveformSettings : public PrefsListener, public ClientData::Cloneable<>
 {
 public:
-   //! Create waveform settings for the track on demand
-   //! Mutative access to attachment even if the track argument is const
-   static WaveformSettings &Get(const WaveTrack &track);
+    //! Create waveform settings for the track on demand
+    //! Mutative access to attachment even if the track argument is const
+    static WaveformSettings& Get(const WaveTrack& track);
 
-   /*!
-    @copydoc Get(const WaveTrack &);
-    */
-   static WaveformSettings &Get(const WaveChannel &channel);
+    /*!
+     @copydoc Get(const WaveTrack &);
+     */
+    static WaveformSettings& Get(const WaveChannel& channel);
 
-   //! Guarantee independence of settings, then assign
-   static void Set(
-      WaveChannel &channel, std::unique_ptr<WaveformSettings> pSettings );
+    //! Guarantee independence of settings, then assign
+    static void Set(
+        WaveChannel& channel, std::unique_ptr<WaveformSettings> pSettings);
 
-   // Singleton for settings that are not per-track
-   class WAVE_TRACK_SETTINGS_API Globals
-   {
-   public:
-      static Globals &Get();
-      void SavePrefs();
+    // Singleton for settings that are not per-track
+    class WAVE_TRACK_SETTINGS_API Globals
+    {
+    public:
+        static Globals& Get();
+        void SavePrefs();
 
-   private:
-      Globals();
-      void LoadPrefs();
-   };
+    private:
+        Globals();
+        void LoadPrefs();
+    };
 
-   static WaveformSettings &defaults();
+    static WaveformSettings& defaults();
 
-   WaveformSettings();
-   WaveformSettings(const WaveformSettings &other);
-   WaveformSettings& operator= (const WaveformSettings &other);
-   ~WaveformSettings() override;
+    WaveformSettings();
+    WaveformSettings(const WaveformSettings& other);
+    WaveformSettings& operator=(const WaveformSettings& other);
+    ~WaveformSettings() override;
 
-   PointerType Clone() const override;
+    PointerType Clone() const override;
 
-   bool IsDefault() const
-   {
-      return this == &defaults();
-   }
+    bool IsDefault() const
+    {
+        return this == &defaults();
+    }
 
-   bool Validate(bool quiet);
-   void LoadPrefs();
-   void SavePrefs();
-   void Update();
+    bool Validate(bool quiet);
+    void LoadPrefs();
+    void SavePrefs();
+    void Update();
 
-   void UpdatePrefs() override;
+    void UpdatePrefs() override;
 
-   void ConvertToEnumeratedDBRange();
-   void ConvertToActualDBRange();
-   void NextLowerDBRange();
-   void NextHigherDBRange();
+    void ConvertToEnumeratedDBRange();
+    void ConvertToActualDBRange();
+    void NextLowerDBRange();
+    void NextHigherDBRange();
 
-   typedef int ScaleType;
-   enum ScaleTypeValues : int {
-      stLinearAmp,
-      stLogarithmicDb,
-      stLinearDb,
+    typedef int ScaleType;
+    enum ScaleTypeValues : int {
+        stLinearAmp,
+        stLogarithmicDb,
+        stLinearDb,
 
-      stNumScaleTypes,
-   };
+        stNumScaleTypes,
+    };
 
-   static const EnumValueSymbols &GetScaleNames();
-   static void GetRangeChoices(
-      TranslatableStrings* pChoices, wxArrayStringEx* pCodes,
-      int* pDefaultRangeIndex = nullptr);
+    static const EnumValueSymbols& GetScaleNames();
+    static void GetRangeChoices(
+        TranslatableStrings* pChoices, wxArrayStringEx* pCodes, int* pDefaultRangeIndex = nullptr);
 
-   static const wxString waveformScaleKey;
-   static const wxString dbLogValueString;
-   static const wxString dbLinValueString;
-   static EnumSetting<ScaleTypeValues> waveformScaleSetting;
+    static const wxString waveformScaleKey;
+    static const wxString dbLogValueString;
+    static const wxString dbLinValueString;
+    static EnumSetting<ScaleTypeValues> waveformScaleSetting;
 
-   ScaleType scaleType;
-   int dBRange;
+    ScaleType scaleType;
+    int dBRange;
 
-   // Convenience
-   bool isLinear() const { return scaleType == stLinearAmp || scaleType == stLinearDb; }
+    // Convenience
+    bool isLinear() const { return scaleType == stLinearAmp || scaleType == stLinearDb; }
 };

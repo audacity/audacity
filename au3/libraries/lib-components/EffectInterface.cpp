@@ -8,10 +8,10 @@
 #include "EffectInterface.h"
 #include <wx/tokenzr.h>
 
-const RegistryPath &EffectSettingsExtra::DurationKey()
+const RegistryPath& EffectSettingsExtra::DurationKey()
 {
-   static wxString key("LastUsedDuration");
-   return key;
+    static wxString key("LastUsedDuration");
+    return key;
 }
 
 EffectSettingsAccess::~EffectSettingsAccess() = default;
@@ -22,15 +22,15 @@ EffectOutputs::~EffectOutputs() = default;
 
 EffectSettingsAccess::Message::~Message() = default;
 
-const EffectSettings &SimpleEffectSettingsAccess::Get()
+const EffectSettings& SimpleEffectSettingsAccess::Get()
 {
-   return mSettings;
+    return mSettings;
 }
 
-void SimpleEffectSettingsAccess::Set(EffectSettings &&settings,
-   std::unique_ptr<Message>)
+void SimpleEffectSettingsAccess::Set(EffectSettings&& settings,
+                                     std::unique_ptr<Message>)
 {
-   mSettings = std::move(settings);
+    mSettings = std::move(settings);
 }
 
 void SimpleEffectSettingsAccess::Set(std::unique_ptr<Message>)
@@ -42,91 +42,93 @@ void SimpleEffectSettingsAccess::Flush()
 }
 
 bool SimpleEffectSettingsAccess::IsSameAs(
-   const EffectSettingsAccess &other) const
+    const EffectSettingsAccess& other) const
 {
-   if (auto pOther =
-      dynamic_cast<const SimpleEffectSettingsAccess*>(&other))
-      return &this->mSettings == &pOther->mSettings;
-   return false;
+    if (auto pOther
+            =dynamic_cast<const SimpleEffectSettingsAccess*>(&other)) {
+        return &this->mSettings == &pOther->mSettings;
+    }
+    return false;
 }
 
-Identifier EffectDefinitionInterface::GetSquashedName(const Identifier &ident)
+Identifier EffectDefinitionInterface::GetSquashedName(const Identifier& ident)
 {
-   // Get rid of leading and trailing white space
-   auto name = ident.GET();
-   name.Trim(true).Trim(false);
+    // Get rid of leading and trailing white space
+    auto name = ident.GET();
+    name.Trim(true).Trim(false);
 
-   if (name.empty())
-      return {};
+    if (name.empty()) {
+        return {};
+    }
 
-   wxStringTokenizer st(name, wxT(" "));
-   wxString id;
+    wxStringTokenizer st(name, wxT(" "));
+    wxString id;
 
-   // CamelCase the name
-   while (st.HasMoreTokens()) {
-      wxString tok = st.GetNextToken();
-      id += tok.Left(1).MakeUpper() + tok.Mid(1).MakeLower();
-   }
+    // CamelCase the name
+    while (st.HasMoreTokens()) {
+        wxString tok = st.GetNextToken();
+        id += tok.Left(1).MakeUpper() + tok.Mid(1).MakeLower();
+    }
 
-   return id;
+    return id;
 }
 
 EffectDefinitionInterface::~EffectDefinitionInterface() = default;
 
 EffectType EffectDefinitionInterface::GetClassification() const
 {
-   return GetType();
+    return GetType();
 }
 
 bool EffectDefinitionInterface::EnablesDebug() const
 {
-   return false;
+    return false;
 }
 
 ManualPageID EffectDefinitionInterface::ManualPage() const
 {
-   return {};
+    return {};
 }
 
 FilePath EffectDefinitionInterface::HelpPage() const
 {
-   return {};
+    return {};
 }
 
 bool EffectDefinitionInterface::IsHiddenFromMenus() const
 {
-   return false;
+    return false;
 }
 
 EffectSettingsManager::~EffectSettingsManager() = default;
 
 bool EffectSettingsManager::VisitSettings(
-   SettingsVisitor &, EffectSettings &)
+    SettingsVisitor&, EffectSettings&)
 {
-   return false;
+    return false;
 }
 
 bool EffectSettingsManager::VisitSettings(
-   ConstSettingsVisitor &, const EffectSettings &) const
+    ConstSettingsVisitor&, const EffectSettings&) const
 {
-   return false;
+    return false;
 }
 
 auto EffectSettingsManager::MakeSettings() const -> EffectSettings
 {
-   return {};
+    return {};
 }
 
 auto EffectSettingsManager::MakeOutputs() const
-   -> std::unique_ptr<EffectOutputs>
+-> std::unique_ptr<EffectOutputs>
 {
-   return nullptr;
+    return nullptr;
 }
 
 bool EffectSettingsManager::CopySettingsContents(
-   const EffectSettings &, EffectSettings &) const
+    const EffectSettings&, EffectSettings&) const
 {
-   return true;
+    return true;
 }
 
 EffectInstance::~EffectInstance() = default;
@@ -134,118 +136,119 @@ EffectInstance::~EffectInstance() = default;
 static int s_lastId = 0;
 EffectInstance::EffectInstance()
 {
-   m_id = ++s_lastId;
+    m_id = ++s_lastId;
 }
 
 int EffectInstance::id() const
 {
-   return m_id;
+    return m_id;
 }
 
-bool EffectInstance::RealtimeInitialize(EffectSettings &, double)
+bool EffectInstance::RealtimeInitialize(EffectSettings&, double)
 {
-   return false;
+    return false;
 }
 
 bool EffectInstance::RealtimeAddProcessor(
-   EffectSettings &, EffectOutputs *, unsigned, float)
+    EffectSettings&, EffectOutputs*, unsigned, float)
 {
-   return true;
+    return true;
 }
 
 bool EffectInstance::RealtimeSuspend()
 {
-   return true;
+    return true;
 }
 
 bool EffectInstance::RealtimeResume()
 {
-   return true;
+    return true;
 }
 
 auto EffectInstance::MakeMessage() const -> std::unique_ptr<Message>
 {
-   return nullptr;
+    return nullptr;
 }
 
 bool EffectInstance::UsesMessages() const noexcept
 {
-   return false;
+    return false;
 }
 
-bool EffectInstance::RealtimeProcessStart(MessagePackage &)
+bool EffectInstance::RealtimeProcessStart(MessagePackage&)
 {
-   return true;
+    return true;
 }
 
-size_t EffectInstance::RealtimeProcess(size_t, EffectSettings &,
-   const float *const *, float *const *, size_t)
+size_t EffectInstance::RealtimeProcess(size_t, EffectSettings&,
+                                       const float* const*, float* const*, size_t)
 {
-   return 0;
+    return 0;
 }
 
 void EffectInstance::RealtimePassThrough(
-   size_t group, EffectSettings& settings, const float* const* inBuf,
-   size_t numSamples)
+    size_t group, EffectSettings& settings, const float* const* inBuf,
+    size_t numSamples)
 {
 }
 
-bool EffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
+bool EffectInstance::RealtimeProcessEnd(EffectSettings&) noexcept
 {
-   return true;
+    return true;
 }
 
-bool EffectInstance::RealtimeFinalize(EffectSettings &) noexcept
+bool EffectInstance::RealtimeFinalize(EffectSettings&) noexcept
 {
-   return true;
+    return true;
 }
 
 size_t EffectInstance::GetTailSize() const
 {
-   return 0;
+    return 0;
 }
 
-auto EffectInstance::GetLatency(const EffectSettings &, double) const
-   -> SampleCount
+auto EffectInstance::GetLatency(const EffectSettings&, double) const
+-> SampleCount
 {
-   return 0;
+    return 0;
 }
 
 bool EffectInstance::NeedsDither() const
 {
-   return true;
+    return true;
 }
 
 EffectInstanceWithBlockSize::~EffectInstanceWithBlockSize() = default;
 
 size_t EffectInstanceWithBlockSize::GetBlockSize() const
 {
-   return mBlockSize;
+    return mBlockSize;
 }
 
 size_t EffectInstanceWithBlockSize::SetBlockSize(size_t maxBlockSize)
 {
-   return (mBlockSize = maxBlockSize);
+    return mBlockSize = maxBlockSize;
 }
 
 EffectInstanceFactory::~EffectInstanceFactory() = default;
 
-const RegistryPath &CurrentSettingsGroup()
+const RegistryPath& CurrentSettingsGroup()
 {
-   static RegistryPath id{ "CurrentSettings" };
-   return id;
+    static RegistryPath id{ "CurrentSettings" };
+    return id;
 }
 
-const RegistryPath &FactoryDefaultsGroup()
+const RegistryPath& FactoryDefaultsGroup()
 {
-   static RegistryPath id{ "FactoryDefaults" };
-   return id;
+    static RegistryPath id{ "FactoryDefaults" };
+    return id;
 }
 
-RegistryPath UserPresetsGroup(const RegistryPath & name)
+RegistryPath UserPresetsGroup(const RegistryPath& name)
 {
-   RegistryPath group = wxT("UserPresets");
-   if (!name.empty())
-      group += wxCONFIG_PATH_SEPARATOR + name;
-   return group;
+    RegistryPath group = wxT("UserPresets");
+    if (!name.empty()) {
+        group += wxCONFIG_PATH_SEPARATOR + name;
+    }
+    return group;
 }

@@ -16,18 +16,19 @@ WaveformDisplay::WaveformDisplay(int w)
 }
 
 void WaveformDisplay::AppendColumns(
-   const WaveDisplayColumn* begin, const WaveDisplayColumn* end)
+    const WaveDisplayColumn* begin, const WaveDisplayColumn* end)
 {
-   ownColums.insert(ownColums.end(), begin, end);
-   columns = ownColums.data();
+    ownColums.insert(ownColums.end(), begin, end);
+    columns = ownColums.data();
 }
 
 void WaveformDisplay::Allocate()
 {
-   ownColums.reserve(width);
+    ownColums.reserve(width);
 
-   if (width > 0)
-      columns = ownColums.data();
+    if (width > 0) {
+        columns = ownColums.data();
+    }
 }
 
 WaveformDisplay::~WaveformDisplay() = default;

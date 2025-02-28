@@ -8,6 +8,8 @@
 #include "../iau3project.h"
 #include "libraries/lib-utility/Observer.h"
 
+class TrackList;
+
 namespace au::au3 {
 struct Au3ProjectData;
 class Au3ProjectAccessor : public IAu3Project
@@ -22,16 +24,16 @@ public:
     void close() override;
 
     std::string title() const override;
-    bool hasSavedVersion() const override;
 
     // internal
     uintptr_t au3ProjectPtr() const override;
 
 private:
+    void updateSavedState();
 
     const std::shared_ptr<Au3ProjectData> m_data;
     Observer::Subscription mTrackListSubstription;
-    bool m_hasSavedVersion = false;
+    std::shared_ptr<TrackList> m_lastSavedTracks;
 };
 
 class Au3ProjectCreator : public IAu3ProjectCreator

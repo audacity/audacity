@@ -22,23 +22,23 @@ custom controls.
 class WX_WRAPPERS_API FileDialogBase : public wxFileDialogBase
 {
 public:
-   FileDialogBase();
-   virtual ~FileDialogBase() {};
+    FileDialogBase();
+    virtual ~FileDialogBase() {}
 
-   // FileDialogBase
+    // FileDialogBase
 
-   typedef void (*UserPaneCreatorFunction)(wxWindow *parent, wxUIntPtr userdata);
+    typedef void (* UserPaneCreatorFunction)(wxWindow* parent, wxUIntPtr userdata);
 
-   virtual bool HasUserPaneCreator() const;
-   virtual void SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata);
+    virtual bool HasUserPaneCreator() const;
+    virtual void SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata);
 
-   virtual void SetFileExtension(const wxString& extension) {};
+    virtual void SetFileExtension(const wxString& extension) {}
 
 protected:
-   void CreateUserPane(wxWindow *parent);
+    void CreateUserPane(wxWindow* parent);
 
-   UserPaneCreatorFunction m_creator;
-   wxUIntPtr m_userdata;
+    UserPaneCreatorFunction m_creator;
+    wxUIntPtr m_userdata;
 };
 
 #if defined(__WXGTK__)
@@ -69,24 +69,16 @@ protected:
 //----------------------------------------------------------------------------
 
 WX_WRAPPERS_API wxString
-FileSelector(const wxString& message = wxFileSelectorPromptStr,
-             const wxString& default_path = wxEmptyString,
-             const wxString& default_filename = wxEmptyString,
-             const wxString& default_extension = wxEmptyString,
-             const wxString& wildcard = wxFileSelectorDefaultWildcardStr,
-             int flags = 0,
-             wxWindow *parent = NULL,
-             int x = wxDefaultCoord, int y = wxDefaultCoord);
+FileSelector(const wxString& message = wxFileSelectorPromptStr, const wxString& default_path = wxEmptyString,
+             const wxString& default_filename = wxEmptyString, const wxString& default_extension = wxEmptyString,
+             const wxString& wildcard = wxFileSelectorDefaultWildcardStr, int flags = 0, wxWindow* parent = NULL, int x = wxDefaultCoord,
+             int y = wxDefaultCoord);
 
 // An extended version of FileSelector
 WX_WRAPPERS_API wxString
-FileSelectorEx(const wxString& message = wxFileSelectorPromptStr,
-               const wxString& default_path = wxEmptyString,
-               const wxString& default_filename = wxEmptyString,
-               int *indexDefaultExtension = NULL,
-               const wxString& wildcard = wxFileSelectorDefaultWildcardStr,
-               int flags = 0,
-               wxWindow *parent = NULL,
-               int x = wxDefaultCoord, int y = wxDefaultCoord);
+FileSelectorEx(const wxString& message = wxFileSelectorPromptStr, const wxString& default_path = wxEmptyString,
+               const wxString& default_filename = wxEmptyString, int* indexDefaultExtension = NULL,
+               const wxString& wildcard = wxFileSelectorDefaultWildcardStr, int flags = 0, wxWindow* parent = NULL, int x = wxDefaultCoord,
+               int y = wxDefaultCoord);
 
 #endif

@@ -18,54 +18,49 @@
 
 FilePaths ActiveProjects::GetAll()
 {
-   FilePaths files;
-   
-   const auto activeProjectsGroup = gPrefs->BeginGroup("/ActiveProjects");
-   for(const auto& key : gPrefs->GetChildKeys())
-   {
-      wxFileName path = gPrefs->Read(key, wxT(""));
-      files.Add(path.GetFullPath());
-   }
-   
-   return files;
+    FilePaths files;
+
+    const auto activeProjectsGroup = gPrefs->BeginGroup("/ActiveProjects");
+    for (const auto& key : gPrefs->GetChildKeys()) {
+        wxFileName path = gPrefs->Read(key, wxT(""));
+        files.Add(path.GetFullPath());
+    }
+
+    return files;
 }
 
-void ActiveProjects::Add(const FilePath &path)
+void ActiveProjects::Add(const FilePath& path)
 {
-   wxString key = Find(path);
+    wxString key = Find(path);
 
-   if (key.empty())
-   {
-      int i = 0;
-      do
-      {
-         key.Printf(wxT("/ActiveProjects/%d"), ++i);
-      } while (gPrefs->HasEntry(key));
+    if (key.empty()) {
+        int i = 0;
+        do{
+            key.Printf(wxT("/ActiveProjects/%d"), ++i);
+        } while (gPrefs->HasEntry(key));
 
-      gPrefs->Write(key, path);
-      gPrefs->Flush();
-   }
+        gPrefs->Write(key, path);
+        gPrefs->Flush();
+    }
 }
 
-void ActiveProjects::Remove(const FilePath &path)
+void ActiveProjects::Remove(const FilePath& path)
 {
-   wxString key = Find(path);
+    wxString key = Find(path);
 
-   if (!key.empty())
-   {
-      gPrefs->DeleteEntry(wxT("/ActiveProjects/" + key));
-      gPrefs->Flush();
-   }
+    if (!key.empty()) {
+        gPrefs->DeleteEntry(wxT("/ActiveProjects/" + key));
+        gPrefs->Flush();
+    }
 }
 
-wxString ActiveProjects::Find(const FilePath &path)
+wxString ActiveProjects::Find(const FilePath& path)
 {
-   const auto activeProjectsGroup = gPrefs->BeginGroup("/ActiveProjects");
-   for(const auto& key : gPrefs->GetChildKeys())
-   {
-      if(gPrefs->Read(key, wxT("")).IsSameAs(path))
-         return key;
-   }
-   return {};
+    const auto activeProjectsGroup = gPrefs->BeginGroup("/ActiveProjects");
+    for (const auto& key : gPrefs->GetChildKeys()) {
+        if (gPrefs->Read(key, wxT("")).IsSameAs(path)) {
+            return key;
+        }
+    }
+    return {};
 }
-

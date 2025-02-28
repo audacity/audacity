@@ -16,17 +16,17 @@ Paul Licameli split from GUIPrefs.cpp
 
 #include <wx/app.h>
 
-wxString GUISettings::SetLang( const wxString & lang )
+wxString GUISettings::SetLang(const wxString& lang)
 {
-   auto result = Languages::SetLang(FileNames::AudacityPathList(), lang);
-   if (!(lang.empty() || lang == L"System") && result != lang)
-      ::AudacityMessageBox(
-         XO("Language \"%s\" is unknown").Format( lang ) );
+    auto result = Languages::SetLang(FileNames::AudacityPathList(), lang);
+    if (!(lang.empty() || lang == L"System") && result != lang) {
+        ::AudacityMessageBox(
+            XO("Language \"%s\" is unknown").Format(lang));
+    }
 
 #ifdef __WXMAC__
-      wxApp::s_macHelpMenuTitleName = _("&Help");
+    wxApp::s_macHelpMenuTitleName = _("&Help");
 #endif
 
-   return result;
+    return result;
 }
-

@@ -17,44 +17,37 @@
 
 #include "WaveClip.h"
 
-
 enum FadeType
 {
-   FT_MIX,
-   FT_TRIANGULAR,
-   FT_EXPONENTIAL
+    FT_MIX,
+    FT_TRIANGULAR,
+    FT_EXPONENTIAL
 };
 
 class CrossFader
 {
+public:
+    CrossFader();
+    ~CrossFader();
 
- public:
-  CrossFader();
-  ~CrossFader();
+    //This sets a crossfade mode where the overlapping
+    //tracks are simply mixed equally.
+    void SetMixCrossFade() { mType = FT_MIX; }
+    void SetTriangularCrossFade() { mType = FT_TRIANGULAR; }
+    void SetExponentialCrossFade() { mType = FT_EXPONENTIAL; }
 
-  //This sets a crossfade mode where the overlapping
-  //tracks are simply mixed equally.
-  void SetMixCrossFade(){mType = FT_MIX;};
-  void SetTriangularCrossFade(){mType = FT_TRIANGULAR;};
-  void SetExponentialCrossFade(){mType = FT_EXPONENTIAL;};
+    void ClearClips();
+    //Produces samples according to crossfading rules.
+    bool  GetSamples(samplePtr buffer, sampleFormat format, sampleCount start, size_t len);
 
-  void ClearClips();
-  //Produces samples according to crossfading rules.
-  bool  GetSamples(samplePtr buffer, sampleFormat format,
-                   sampleCount start, size_t len);
+protected:
+    WaveClipHolders mClips;
 
- protected:
-  WaveClipHolders mClips;
+private:
 
- private:
+    bool CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, size_t len);
 
-  bool CrossFadeMix(samplePtr buffer, sampleFormat format, sampleCount start, size_t len);
-
-  FadeType mType;
-
-
+    FadeType mType;
 };
-
-
 
 #endif

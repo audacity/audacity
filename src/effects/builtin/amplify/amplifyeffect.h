@@ -81,14 +81,14 @@ private:
 
 protected:
     static constexpr EffectParameter Ratio {
-        & AmplifyEffect::mRatio, L"Ratio", 0.9f, 0.003162f, 316.227766f, 1.0f
+        &AmplifyEffect::mRatio, L"Ratio", 0.9f, 0.003162f, 316.227766f, 1.0f
     };
     // Amp is not saved in settings!
     static constexpr EffectParameter Amp {
-        & AmplifyEffect::mAmp, L"", -0.91515f, -50.0f, 50.0f, 10.0f
+        &AmplifyEffect::mAmp, L"", -0.91515f, -50.0f, 50.0f, 10.0f
     };
     static constexpr EffectParameter Clipping {
-        & AmplifyEffect::mCanClip, L"AllowClipping", false, false, true, 1
+        &AmplifyEffect::mCanClip, L"AllowClipping", false, false, true, 1
     };
 };
 }

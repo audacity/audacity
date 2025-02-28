@@ -24,14 +24,14 @@
 #include <wx/stattext.h>
 #endif
 
-namespace
-{    
+namespace {
 size_t OffsetPosition(size_t position, size_t length)
 {
-   if (position == wxString::npos)
-      return wxString::npos;
+    if (position == wxString::npos) {
+        return wxString::npos;
+    }
 
-   return position + length;
+    return position + length;
 }
 }
 
@@ -41,185 +41,180 @@ AccessibleLinksFormatter::AccessibleLinksFormatter(TranslatableString message)
 }
 
 AccessibleLinksFormatter& AccessibleLinksFormatter::FormatLink(
-   wxString placeholder, TranslatableString value, std::string targetURL)
+    wxString placeholder, TranslatableString value, std::string targetURL)
 {
-   mFormatArguments.push_back({ 
-       std::move(placeholder), 
-       std::move(value), 
-       {}, 
-       std::move(targetURL)
-   });
+    mFormatArguments.push_back({
+        std::move(placeholder),
+        std::move(value),
+        {},
+        std::move(targetURL)
+    });
 
-   return *this;
+    return *this;
 }
 
 AccessibleLinksFormatter& AccessibleLinksFormatter::FormatLink(
-   wxString placeholder, TranslatableString value,
-   LinkClickedHandler handler)
+    wxString placeholder, TranslatableString value,
+    LinkClickedHandler handler)
 {
-   mFormatArguments.push_back({ 
-       std::move(placeholder), 
-       std::move(value), 
-       std::move(handler), 
-       {} 
-   });
+    mFormatArguments.push_back({
+        std::move(placeholder),
+        std::move(value),
+        std::move(handler),
+        {}
+    });
 
-   return *this;
+    return *this;
 }
 
 void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
 {
-   // Just add the text, if there are no links to format
-   if (mFormatArguments.empty())
-   {
-      S.AddFixedText(mMessage);
-      return;
-   }
+    // Just add the text, if there are no links to format
+    if (mFormatArguments.empty()) {
+        S.AddFixedText(mMessage);
+        return;
+    }
 
 #ifdef __WXGTK__
-   // Non empty label is required, as wxHyperlinkCtrl would assert otherwise
-   std::unique_ptr<wxHyperlinkCtrl> tempHyperlink
-       = std::make_unique<wxHyperlinkCtrl>(S.GetParent(), wxID_ANY, wxT("temp"), wxString());
+    // Non empty label is required, as wxHyperlinkCtrl would assert otherwise
+    std::unique_ptr<wxHyperlinkCtrl> tempHyperlink
+        = std::make_unique<wxHyperlinkCtrl>(S.GetParent(), wxID_ANY, wxT("temp"), wxString());
 
-   const wxColour hyperlinkColour = tempHyperlink->GetNormalColour();
+    const wxColour hyperlinkColour = tempHyperlink->GetNormalColour();
 
-   tempHyperlink.reset();
+    tempHyperlink.reset();
 #endif
 
-   wxString translated = mMessage.Translation();
+    wxString translated = mMessage.Translation();
 
-   std::vector<ProcessedArgument> processedArguments =
-      ProcessArguments(translated);
+    std::vector<ProcessedArgument> processedArguments
+        =ProcessArguments(translated);
 
-   if (processedArguments.empty())
-   {
-      S.AddFixedText(mMessage);
-      return;
-   }
+    if (processedArguments.empty()) {
+        S.AddFixedText(mMessage);
+        return;
+    }
 
-   const int borderSize = S.GetBorder();
+    const int borderSize = S.GetBorder();
 
-   S.StartHorizontalLay(wxEXPAND);
-   {
-      S.SetBorder(0);
-      S.AddSpace(borderSize);
+    S.StartHorizontalLay(wxEXPAND);
+    {
+        S.SetBorder(0);
+        S.AddSpace(borderSize);
 
-      S.StartWrapLay(wxEXPAND, 1);
-      {
-         size_t currentPosition = 0;
+        S.StartWrapLay(wxEXPAND, 1);
+        {
+            size_t currentPosition = 0;
 
-         for (const ProcessedArgument& processedArgument : processedArguments)
-         {
-            const FormatArgument* argument = processedArgument.Argument;
+            for (const ProcessedArgument& processedArgument : processedArguments) {
+                const FormatArgument* argument = processedArgument.Argument;
 
-            // Add everything between currentPosition and PlaceholderPosition
+                // Add everything between currentPosition and PlaceholderPosition
 
-            if (currentPosition != processedArgument.PlaceholderPosition)
-            {
-               const size_t substrLength =
-                  processedArgument.PlaceholderPosition - currentPosition;
+                if (currentPosition != processedArgument.PlaceholderPosition) {
+                    const size_t substrLength
+                        =processedArgument.PlaceholderPosition - currentPosition;
 
-               S.Prop(0).AddFixedText(
-                  Verbatim(translated.substr(currentPosition, substrLength)));
-            }
+                    S.Prop(0).AddFixedText(
+                        Verbatim(translated.substr(currentPosition, substrLength)));
+                }
 
-            // Add hyperlink
+                // Add hyperlink
 #ifndef __WXGTK__
-            const auto value = argument->Value.Translation();
-            // On macOS wx refuses to create wxHyperlinkCtrl with an empty value
-            if (!value.empty())
-            {
-               wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
-                  S.GetParent(), wxID_ANY, argument->Value.Translation(),
-                  argument->TargetURL);
+                const auto value = argument->Value.Translation();
+                // On macOS wx refuses to create wxHyperlinkCtrl with an empty value
+                if (!value.empty()) {
+                    wxHyperlinkCtrl* hyperlink = safenew wxHyperlinkCtrl(
+                        S.GetParent(), wxID_ANY, argument->Value.Translation(),
+                        argument->TargetURL);
 
-               hyperlink->Bind(
-                  wxEVT_HYPERLINK,
-                  [handler = argument->Handler,
-                   url = argument->TargetURL](wxHyperlinkEvent& evt)
-                  {
-                     if (handler)
-                        handler();
-                     else if (!url.empty())
-                        BasicUI::OpenInDefaultBrowser(url);
-                     
-                  });
-               
+                    hyperlink->Bind(
+                        wxEVT_HYPERLINK,
+                        [handler = argument->Handler,
+                         url = argument->TargetURL](wxHyperlinkEvent& evt)
+                    {
+                        if (handler) {
+                            handler();
+                        } else if (!url.empty()) {
+                            BasicUI::OpenInDefaultBrowser(url);
+                        }
+                    });
 
-               S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
-            }
+                    S.AddWindow(hyperlink, wxALIGN_TOP | wxALIGN_LEFT);
+                }
 #else
-            wxStaticText* hyperlink = S.AddVariableText(argument->Value);
+                wxStaticText* hyperlink = S.AddVariableText(argument->Value);
 
-            hyperlink->SetFont(hyperlink->GetFont().Underlined());
-            hyperlink->SetForegroundColour(hyperlinkColour);
-            hyperlink->SetCursor(wxCURSOR_HAND);
+                hyperlink->SetFont(hyperlink->GetFont().Underlined());
+                hyperlink->SetForegroundColour(hyperlinkColour);
+                hyperlink->SetCursor(wxCURSOR_HAND);
 
-            hyperlink->Bind(wxEVT_LEFT_UP, [handler = argument->Handler, url = argument->TargetURL](wxEvent&) {
-                if (handler)
-                    handler();
-                else if (!url.empty())
-                     BasicUI::OpenInDefaultBrowser(url);
-            });
+                hyperlink->Bind(wxEVT_LEFT_UP, [handler = argument->Handler, url = argument->TargetURL](wxEvent&) {
+                    if (handler) {
+                        handler();
+                    } else if (!url.empty()) {
+                        BasicUI::OpenInDefaultBrowser(url);
+                    }
+                });
 #endif
-            // Update the currentPostion to the first symbol after the
-            // Placeholder
+                // Update the currentPostion to the first symbol after the
+                // Placeholder
 
-            currentPosition = OffsetPosition(
-               processedArgument.PlaceholderPosition,
-               argument->Placeholder.Length());
+                currentPosition = OffsetPosition(
+                    processedArgument.PlaceholderPosition,
+                    argument->Placeholder.Length());
 
-            if (currentPosition >= translated.Length())
-               break;
-         }
+                if (currentPosition >= translated.Length()) {
+                    break;
+                }
+            }
 
-         if (currentPosition < translated.Length())
-            S.AddFixedText(Verbatim(translated.substr(currentPosition)));
-      }
-      S.EndWrapLay();
-   }
-   S.EndHorizontalLay();
+            if (currentPosition < translated.Length()) {
+                S.AddFixedText(Verbatim(translated.substr(currentPosition)));
+            }
+        }
+        S.EndWrapLay();
+    }
+    S.EndHorizontalLay();
 
-   S.SetBorder(borderSize);
+    S.SetBorder(borderSize);
 }
 
 std::vector<AccessibleLinksFormatter::ProcessedArgument>
 AccessibleLinksFormatter::ProcessArguments(wxString translatedMessage) const
 {
-   std::vector<ProcessedArgument> result;
-   result.reserve(mFormatArguments.size());
-   // Arguments with the same placeholder are processed left-to-right.
-   // Lets track the last known position of the placeholder
-   std::unordered_map<wxString, size_t> knownPlaceholderPosition;
+    std::vector<ProcessedArgument> result;
+    result.reserve(mFormatArguments.size());
+    // Arguments with the same placeholder are processed left-to-right.
+    // Lets track the last known position of the placeholder
+    std::unordered_map<wxString, size_t> knownPlaceholderPosition;
 
-   for (const FormatArgument& argument : mFormatArguments)
-   {
-      auto it = knownPlaceholderPosition.find(argument.Placeholder);
+    for (const FormatArgument& argument : mFormatArguments) {
+        auto it = knownPlaceholderPosition.find(argument.Placeholder);
 
-      const size_t startingPosition =
-         it != knownPlaceholderPosition.end() ?
-            OffsetPosition(it->second, argument.Placeholder.length()) :
-            0;
+        const size_t startingPosition
+            =it != knownPlaceholderPosition.end()
+              ? OffsetPosition(it->second, argument.Placeholder.length())
+              : 0;
 
-      const size_t placeholderPosition =
-         startingPosition == wxString::npos ?
-            wxString::npos :
-            translatedMessage.find(argument.Placeholder, startingPosition);
+        const size_t placeholderPosition
+            =startingPosition == wxString::npos
+              ? wxString::npos
+              : translatedMessage.find(argument.Placeholder, startingPosition);
 
-      knownPlaceholderPosition[argument.Placeholder] = placeholderPosition;
+        knownPlaceholderPosition[argument.Placeholder] = placeholderPosition;
 
-      if (placeholderPosition != wxString::npos)
-      {
-         result.emplace_back(
-            ProcessedArgument { &argument, placeholderPosition });
-      }
-   }
+        if (placeholderPosition != wxString::npos) {
+            result.emplace_back(
+                ProcessedArgument { &argument, placeholderPosition });
+        }
+    }
 
-   std::sort(
-      result.begin(), result.end(),
-      [](const ProcessedArgument& lhs, const ProcessedArgument& rhs) {
-         return lhs.PlaceholderPosition < rhs.PlaceholderPosition;
-      });
+    std::sort(
+        result.begin(), result.end(),
+        [](const ProcessedArgument& lhs, const ProcessedArgument& rhs) {
+        return lhs.PlaceholderPosition < rhs.PlaceholderPosition;
+    });
 
-   return result;
+    return result;
 }

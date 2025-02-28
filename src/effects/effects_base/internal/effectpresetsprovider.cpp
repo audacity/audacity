@@ -117,6 +117,8 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     const EffectSettingsManager& sm = settingsManager(effectId);
+
+    instancesRegister()->requestUpdateSettings(effectInstanceId);
     const EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
     IF_ASSERT_FAILED(settings) {
         return make_ret(Err::InternalError);

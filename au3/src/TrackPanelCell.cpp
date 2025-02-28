@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  TrackPanelCell.cpp
- 
+
  Paul Licameli split from TrackPanel.cpp
- 
+
  **********************************************************************/
 
 #include "TrackPanelCell.h"
@@ -35,52 +35,52 @@ TrackPanelCell::~TrackPanelCell()
 }
 
 HitTestPreview TrackPanelCell::DefaultPreview
-(const TrackPanelMouseState &, const AudacityProject *)
+    (const TrackPanelMouseState&, const AudacityProject*)
 {
-   return {};
+    return {};
 }
 
 unsigned TrackPanelCell::HandleWheelRotation
-(const TrackPanelMouseEvent &, AudacityProject *)
+    (const TrackPanelMouseEvent&, AudacityProject*)
 {
-   return RefreshCode::Cancelled;
+    return RefreshCode::Cancelled;
 }
 
 unsigned TrackPanelCell::DoContextMenu
-   (const wxRect &, wxWindow*, const wxPoint *, AudacityProject*)
+    (const wxRect&, wxWindow*, const wxPoint*, AudacityProject*)
 {
-   return RefreshCode::RefreshNone;
+    return RefreshCode::RefreshNone;
 }
 
 unsigned TrackPanelCell::CaptureKey(
-   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
+    wxKeyEvent& event, ViewInfo&, wxWindow*, AudacityProject*)
 {
-   event.Skip();
-   return RefreshCode::RefreshNone;
+    event.Skip();
+    return RefreshCode::RefreshNone;
 }
 
 unsigned TrackPanelCell::KeyDown(
-   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
+    wxKeyEvent& event, ViewInfo&, wxWindow*, AudacityProject*)
 {
-   event.Skip();
-   return RefreshCode::RefreshNone;
+    event.Skip();
+    return RefreshCode::RefreshNone;
 }
 
 unsigned TrackPanelCell::KeyUp(
-   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
+    wxKeyEvent& event, ViewInfo&, wxWindow*, AudacityProject*)
 {
-   event.Skip();
-   return RefreshCode::RefreshNone;
+    event.Skip();
+    return RefreshCode::RefreshNone;
 }
 
 unsigned TrackPanelCell::Char(
-   wxKeyEvent &event, ViewInfo &, wxWindow *, AudacityProject *)
+    wxKeyEvent& event, ViewInfo&, wxWindow*, AudacityProject*)
 {
-   event.Skip();
-   return RefreshCode::RefreshNone;
+    event.Skip();
+    return RefreshCode::RefreshNone;
 }
 
-unsigned TrackPanelCell::LoseFocus(AudacityProject *)
+unsigned TrackPanelCell::LoseFocus(AudacityProject*)
 {
-   return RefreshCode::RefreshNone;
+    return RefreshCode::RefreshNone;
 }

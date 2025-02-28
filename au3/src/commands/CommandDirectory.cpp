@@ -9,11 +9,10 @@
 ******************************************************************//**
 
 \file CommandDirectory.cpp
-\brief A dictionary of supported scripting commands, including 
+\brief A dictionary of supported scripting commands, including
 functions to look up a command by name.
 
 *//*******************************************************************/
-
 
 #include "CommandDirectory.h"
 
@@ -21,19 +20,18 @@ std::unique_ptr<CommandDirectory> CommandDirectory::mInstance;
 
 CommandDirectory::CommandDirectory()
 {
-   // Create the command map.
-   // First we have commands which return information
-   //AddCommand(std::make_unique<MessageCommandType>());
+    // Create the command map.
+    // First we have commands which return information
+    //AddCommand(std::make_unique<MessageCommandType>());
 
 //   AddCommand(std::make_unique<BatchEvalCommandType>());
 
+    // Legacy adapter commands that previously was needed to
+    // access menu items.
+    //AddCommand(std::make_unique<ExecMenuCommandType>());
 
-   // Legacy adapter commands that previously was needed to 
-   // access menu items.
-   //AddCommand(std::make_unique<ExecMenuCommandType>());
-
-   // Not needed.  Sets selected/solo/mute on multiple tracks.
-   //AddCommand(std::make_unique<SetProjectInfoCommandType>());
+    // Not needed.  Sets selected/solo/mute on multiple tracks.
+    //AddCommand(std::make_unique<SetProjectInfoCommandType>());
 
 //   Moved to AudacityCommand
 //   AddCommand(std::make_unique<OpenProjectCommandType>());
@@ -56,44 +54,43 @@ CommandDirectory::CommandDirectory()
 //   AddCommand(std::make_unique<ScreenshotCommandType>());
 //   AddCommand(std::make_unique<SelectCommandType>());
 //   AddCommand(std::make_unique<SetTrackInfoCommandType>());
-
 }
 
 CommandDirectory::~CommandDirectory()
 {
 }
 
-OldStyleCommandType *CommandDirectory::LookUp(const wxString &cmdName) const
+OldStyleCommandType* CommandDirectory::LookUp(const wxString& cmdName) const
 {
-   auto iter = sCmdMap().find(cmdName);
-   if (iter == sCmdMap().end())
-   {
-      return nullptr;
-   }
-   return iter->second.get();
+    auto iter = sCmdMap().find(cmdName);
+    if (iter == sCmdMap().end()) {
+        return nullptr;
+    }
+    return iter->second.get();
 }
 
-CommandMap &CommandDirectory::sCmdMap()
+CommandMap& CommandDirectory::sCmdMap()
 {
-   static CommandMap theMap;
-   return theMap;
+    static CommandMap theMap;
+    return theMap;
 }
 
 void CommandDirectory::AddCommand(std::unique_ptr<OldStyleCommandType> type)
 {
-   wxASSERT(type != NULL);
-   // Internal string is shown but only in assertion message
-   auto cmdName = type->GetSymbol().Internal();
-   wxASSERT_MSG(sCmdMap().find(cmdName) == sCmdMap().end()
-         , wxT("A command named ") + cmdName
-         + wxT(" already exists."));
+    wxASSERT(type != NULL);
+    // Internal string is shown but only in assertion message
+    auto cmdName = type->GetSymbol().Internal();
+    wxASSERT_MSG(sCmdMap().find(cmdName) == sCmdMap().end(),
+                 wxT("A command named ") + cmdName
+                 + wxT(" already exists."));
 
-   sCmdMap()[cmdName] = std::move(type);
+    sCmdMap()[cmdName] = std::move(type);
 }
 
-CommandDirectory *CommandDirectory::Get()
+CommandDirectory* CommandDirectory::Get()
 {
-   if (!mInstance)
-      mInstance.reset(safenew CommandDirectory());
-   return mInstance.get();
+    if (!mInstance) {
+        mInstance.reset(safenew CommandDirectory());
+    }
+    return mInstance.get();
 }

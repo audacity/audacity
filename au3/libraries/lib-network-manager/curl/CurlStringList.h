@@ -14,11 +14,8 @@
 
 struct curl_slist;
 
-namespace audacity
-{
-namespace network_manager
-{
-
+namespace audacity {
+namespace network_manager {
 class CurlStringList final
 {
 public:
@@ -27,16 +24,15 @@ public:
 
     ~CurlStringList () noexcept;
 
-    CurlStringList& operator = (CurlStringList&& rhs) noexcept;
+    CurlStringList& operator =(CurlStringList&& rhs) noexcept;
 
-    void append (const std::string& string) noexcept;
-    void append (const char* string) noexcept;
+    void append(const std::string& string) noexcept;
+    void append(const char* string) noexcept;
 
-    curl_slist* getCurlList () const noexcept;
+    curl_slist* getCurlList() const noexcept;
 
 private:
     curl_slist* mList { nullptr };
 };
-
 }
 }

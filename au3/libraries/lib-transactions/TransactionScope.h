@@ -27,39 +27,40 @@ class TransactionScopeImpl;
 class TRANSACTIONS_API TransactionScope
 {
 public:
-   //! Type of function supplying implementation of steps
-   struct TRANSACTIONS_API Factory : GlobalHook<Factory,
-      std::unique_ptr<TransactionScopeImpl>(AudacityProject &)
-   > {};
+    //! Type of function supplying implementation of steps
+    struct TRANSACTIONS_API Factory : GlobalHook<Factory,
+                                                 std::unique_ptr<TransactionScopeImpl>(AudacityProject&)
+                                                 > {};
 
-   //! Construct from a project
-   /*!
-    If no implementation factory is installed, or the factory returns null,
-    then this object does nothing */
-   TransactionScope(AudacityProject &project, const char *name);
+    //! Construct from a project
+    /*!
+     If no implementation factory is installed, or the factory returns null,
+     then this object does nothing */
+    TransactionScope(AudacityProject& project, const char* name);
 
-   //! Rollback transaction if it was not yet committed
-   ~TransactionScope();
+    //! Rollback transaction if it was not yet committed
+    ~TransactionScope();
 
-   //! Commit the transaction
-   bool Commit();
+    //! Commit the transaction
+    bool Commit();
 
 private:
-   std::unique_ptr<TransactionScopeImpl> mpImpl;
-   bool mInTrans;
-   wxString mName;
+    std::unique_ptr<TransactionScopeImpl> mpImpl;
+    bool mInTrans;
+    wxString mName;
 };
 
 //! Abstract base class for implementation of steps of TransactionScope
-class TRANSACTIONS_API TransactionScopeImpl {
+class TRANSACTIONS_API TransactionScopeImpl
+{
 public:
-   virtual ~TransactionScopeImpl();
-   //! @return success; if false, TransactionScope ctor throws
-   virtual bool TransactionStart(const wxString &name) = 0;
-   //! @return success
-   virtual bool TransactionCommit(const wxString &name) = 0;
-   //! @return success
-   virtual bool TransactionRollback(const wxString &name) = 0;
+    virtual ~TransactionScopeImpl();
+    //! @return success; if false, TransactionScope ctor throws
+    virtual bool TransactionStart(const wxString& name) = 0;
+    //! @return success
+    virtual bool TransactionCommit(const wxString& name) = 0;
+    //! @return success
+    virtual bool TransactionRollback(const wxString& name) = 0;
 };
 
 #endif

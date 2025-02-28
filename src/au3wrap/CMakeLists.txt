@@ -27,14 +27,13 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3types.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3project.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/progressdialog.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/progressdialog.h
-
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxtypes_convert.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/domconverter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/domconverter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/progressdialog.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/progressdialog.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.cpp
@@ -343,6 +342,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectManager.h
     ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectState.cpp
     ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectState.h
+    ${AU3_LIBRARIES}/lib-realtime-effects/SavedMasterEffectList.cpp
+    ${AU3_LIBRARIES}/lib-realtime-effects/SavedMasterEffectList.h
 
     ${AU3_LIBRARIES}/lib-mixer/Mix.cpp
     ${AU3_LIBRARIES}/lib-mixer/Mix.h

@@ -12,110 +12,108 @@ struct FormatInfo;
 
 class IMPORT_EXPORT_API ExportPluginRegistry final
 {
-   struct ExportPluginRegistryItem;
+    struct ExportPluginRegistryItem;
 
-   ExportPluginRegistry();
+    ExportPluginRegistry();
 
 public:
 
-   std::vector<bool>::const_iterator a;
+    std::vector<bool>::const_iterator a;
 
-   using ExportPlugins = std::vector<std::unique_ptr<ExportPlugin>>;
-   
-   class IMPORT_EXPORT_API ConstIterator final
-   {
-      ExportPlugins::const_iterator mPluginIt;
-      int mFormatIndex;
-   public:
-      using value_type = const std::tuple<ExportPlugin*, int>;//proxy type
-      
-      struct ProxyPtr final
-      {
-         explicit ProxyPtr(std::remove_const_t<value_type> value) : mValue(std::move(value)) { }
-         value_type* operator->() const { return &mValue; }
-      private:
-         value_type mValue;
-      };
+    using ExportPlugins = std::vector<std::unique_ptr<ExportPlugin> >;
 
-      using iterator_category = std::input_iterator_tag;
-      using difference_type = int;
-      using pointer = ProxyPtr;
-      using reference = value_type;
+    class IMPORT_EXPORT_API ConstIterator final
+    {
+        ExportPlugins::const_iterator mPluginIt;
+        int mFormatIndex;
+    public:
+        using value_type = const std::tuple<ExportPlugin*, int>;//proxy type
 
-      ConstIterator(ExportPlugins::const_iterator pluginIt, int formatIndex)
-         : mPluginIt(std::move(pluginIt)), mFormatIndex(formatIndex) { }
+        struct ProxyPtr final
+        {
+            explicit ProxyPtr(std::remove_const_t<value_type> value)
+                : mValue(std::move(value)) { }
+            value_type* operator->() const { return &mValue; }
+        private:
+            value_type mValue;
+        };
 
-      reference operator*() const { return std::make_tuple(mPluginIt->get(), mFormatIndex); }
+        using iterator_category = std::input_iterator_tag;
+        using difference_type = int;
+        using pointer = ProxyPtr;
+        using reference = value_type;
 
-      pointer operator->() const { return ProxyPtr { std::make_tuple(mPluginIt->get(), mFormatIndex) }; }
+        ConstIterator(ExportPlugins::const_iterator pluginIt, int formatIndex)
+            : mPluginIt(std::move(pluginIt)), mFormatIndex(formatIndex) { }
 
-      ConstIterator& operator++();
+        reference operator*() const { return std::make_tuple(mPluginIt->get(), mFormatIndex); }
 
-      ConstIterator operator++(int)
-      {
-         auto prev = *this;
-         ++*this;
-         return prev;
-      }
-      
-      friend bool operator==(const ConstIterator& a, const ConstIterator& b)
-      {
-         return a.mPluginIt == b.mPluginIt && a.mFormatIndex == b.mFormatIndex;
-      }
+        pointer operator->() const { return ProxyPtr { std::make_tuple(mPluginIt->get(), mFormatIndex) }; }
 
-      friend bool operator!=(const ConstIterator& a, const ConstIterator& b)
-      {
-         return a.mPluginIt != b.mPluginIt || a.mFormatIndex != b.mFormatIndex;
-      }
-   };
+        ConstIterator& operator++();
 
-   using Factory =
-      std::function< std::unique_ptr< ExportPlugin >() >;
+        ConstIterator operator++(int)
+        {
+            auto prev = *this;
+            ++*this;
+            return prev;
+        }
 
-   ExportPluginRegistry(ExportPluginRegistry&) = delete;
-   ExportPluginRegistry(ExportPluginRegistry&&) = delete;
+        friend bool operator==(const ConstIterator& a, const ConstIterator& b)
+        {
+            return a.mPluginIt == b.mPluginIt && a.mFormatIndex == b.mFormatIndex;
+        }
 
-   ~ExportPluginRegistry();
+        friend bool operator!=(const ConstIterator& a, const ConstIterator& b)
+        {
+            return a.mPluginIt != b.mPluginIt || a.mFormatIndex != b.mFormatIndex;
+        }
+    };
 
-   // Objects of this type are statically constructed in files implementing
-   // subclasses of ExportPlugin
-   // Register factories, not plugin objects themselves, which allows them
-   // to have some fresh state variables each time export begins again
-   // and to compute translated strings for the current locale
-   struct IMPORT_EXPORT_API RegisteredPlugin
-      : Registry::RegisteredItem<ExportPluginRegistryItem>
-   {
-      RegisteredPlugin(
-         const Identifier &id, // an internal string naming the plug-in
-         const Factory&,
-         const Registry::Placement &placement = { wxEmptyString, {} } );
-   };
+    using Factory
+        =std::function< std::unique_ptr< ExportPlugin >() >;
 
-   static ExportPluginRegistry& Get();
+    ExportPluginRegistry(ExportPluginRegistry&) = delete;
+    ExportPluginRegistry(ExportPluginRegistry&&) = delete;
 
-   void Initialize();
+    ~ExportPluginRegistry();
 
-   ConstIterator cbegin() const noexcept { return { mPlugins.begin(), 0 }; }
-   ConstIterator cend() const noexcept { return { mPlugins.end(), 0 }; } 
-   ConstIterator begin() const noexcept { return cbegin(); }
-   ConstIterator end() const noexcept { return cend(); }
+    // Objects of this type are statically constructed in files implementing
+    // subclasses of ExportPlugin
+    // Register factories, not plugin objects themselves, which allows them
+    // to have some fresh state variables each time export begins again
+    // and to compute translated strings for the current locale
+    struct IMPORT_EXPORT_API RegisteredPlugin : Registry::RegisteredItem<ExportPluginRegistryItem>
+    {
+        RegisteredPlugin(
+            const Identifier& id, // an internal string naming the plug-in
+            const Factory&, const Registry::Placement& placement = { wxEmptyString, {} });
+    };
 
-   /**
-    * \brief Returns first pair of [exportPlugin, formatIndex], such that:
-    * `exportPlugin->GetFormatInfo(formatIndex).format == format`
-    */
-   std::tuple<ExportPlugin*, int> FindFormat(const wxString& format, bool compareWithCase = false) const;
+    static ExportPluginRegistry& Get();
+
+    void Initialize();
+
+    ConstIterator cbegin() const noexcept { return { mPlugins.begin(), 0 }; }
+    ConstIterator cend() const noexcept { return { mPlugins.end(), 0 }; }
+    ConstIterator begin() const noexcept { return cbegin(); }
+    ConstIterator end() const noexcept { return cend(); }
+
+    /**
+     * \brief Returns first pair of [exportPlugin, formatIndex], such that:
+     * `exportPlugin->GetFormatInfo(formatIndex).format == format`
+     */
+    std::tuple<ExportPlugin*, int> FindFormat(const wxString& format, bool compareWithCase = false) const;
 
 private:
-   struct Traits : Registry::DefaultTraits {
-      using LeafTypes = List<ExportPluginRegistryItem>;
-   };
-   struct IMPORT_EXPORT_API ExportPluginRegistryItem final : Registry::SingleItem {
-      static Registry::GroupItem<Traits> &Registry();
-      ExportPluginRegistryItem(const Identifier &id, Factory factory );
-      Factory mFactory;
-   };
+    struct Traits : Registry::DefaultTraits {
+        using LeafTypes = List<ExportPluginRegistryItem>;
+    };
+    struct IMPORT_EXPORT_API ExportPluginRegistryItem final : Registry::SingleItem {
+        static Registry::GroupItem<Traits>& Registry();
+        ExportPluginRegistryItem(const Identifier& id, Factory factory);
+        Factory mFactory;
+    };
 
-   ExportPlugins mPlugins;
+    ExportPlugins mPlugins;
 };
-

@@ -20,21 +20,20 @@
 class ClipInterface;
 using ChannelSampleViews = std::vector<AudioSegmentSampleView>;
 
-class STRETCHING_SEQUENCE_API ClipTimeAndPitchSource final :
-    public TimeAndPitchSource
+class STRETCHING_SEQUENCE_API ClipTimeAndPitchSource final : public TimeAndPitchSource
 {
 public:
-   ClipTimeAndPitchSource(
-      const ClipInterface&, double durationToDiscard, PlaybackDirection);
+    ClipTimeAndPitchSource(
+        const ClipInterface&, double durationToDiscard, PlaybackDirection);
 
-   // TimeAndPitchSource
-   void Pull(float* const*, size_t samplesPerChannel) override;
+    // TimeAndPitchSource
+    void Pull(float* const*, size_t samplesPerChannel) override;
 
-   size_t NChannels() const;
+    size_t NChannels() const;
 
 private:
-   const ClipInterface& mClip;
-   sampleCount mLastReadSample = 0;
-   const PlaybackDirection mPlaybackDirection;
-   ChannelSampleViews mChannelSampleViews;
+    const ClipInterface& mClip;
+    sampleCount mLastReadSample = 0;
+    const PlaybackDirection mPlaybackDirection;
+    ChannelSampleViews mChannelSampleViews;
 };

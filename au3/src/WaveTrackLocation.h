@@ -17,40 +17,39 @@ Paul Licameli -- split from WaveTrack.h
 class WaveTrack;
 
 struct WaveTrackLocation {
+    WaveTrackLocation() = default;
 
-   WaveTrackLocation() = default;
+    WaveTrackLocation(double pos, int clipidx1 = -1, int clipidx2 = -1)
+        : pos{pos}
+        , clipidx1{clipidx1}
+        , clipidx2{clipidx2}
+    {}
 
-   WaveTrackLocation(double pos, int clipidx1 = -1, int clipidx2 = -1)
-       : pos { pos }
-       , clipidx1 { clipidx1 }
-       , clipidx2 { clipidx2 }
-   {}
+    // Position of track location
+    double pos{ 0.0 };
 
-   // Position of track location
-   double pos{ 0.0 };
-
-   // Only for typ==locationMergePoint
-   int clipidx1{ -1 }; // first clip (left one)
-   int clipidx2{ -1 }; // second clip (right one)
+    // Only for typ==locationMergePoint
+    int clipidx1{ -1 }; // first clip (left one)
+    int clipidx2{ -1 }; // second clip (right one)
 };
 
 inline
-bool operator == (const WaveTrackLocation &a, const WaveTrackLocation &b)
+bool operator ==(const WaveTrackLocation& a, const WaveTrackLocation& b)
 {
-   return a.pos == b.pos &&
-   a.clipidx1 == b.clipidx1 &&
-   a.clipidx2 == b.clipidx2;
+    return a.pos == b.pos
+           && a.clipidx1 == b.clipidx1
+           && a.clipidx2 == b.clipidx2;
 }
 
 inline
-bool operator != (const WaveTrackLocation &a, const WaveTrackLocation &b)
+bool operator !=(const WaveTrackLocation& a, const WaveTrackLocation& b)
 {
-   return !( a == b );
+    return !(a == b);
 }
 
 using WaveTrackLocations = std::vector<WaveTrackLocation>;
 
 AUDACITY_DLL_API
-WaveTrackLocations FindWaveTrackLocations(const WaveTrack &track);
+WaveTrackLocations FindWaveTrackLocations(const WaveTrack& track);
 
 #endif

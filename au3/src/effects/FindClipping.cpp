@@ -20,55 +20,56 @@
 #include "../widgets/valnum.h"
 #include "AudacityMessageBox.h"
 
-namespace{ BuiltinEffectsModule::Registration< EffectFindClipping > reg; }
+namespace {
+BuiltinEffectsModule::Registration< EffectFindClipping > reg;
+}
 
 std::unique_ptr<EffectEditor> EffectFindClipping::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *)
+    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
+    const EffectOutputs*)
 {
-   mUIParent = S.GetParent();
-   DoPopulateOrExchange(S, access);
-   return nullptr;
+    mUIParent = S.GetParent();
+    DoPopulateOrExchange(S, access);
+    return nullptr;
 }
 
 void EffectFindClipping::DoPopulateOrExchange(
-   ShuttleGui & S, EffectSettingsAccess &access)
+    ShuttleGui& S, EffectSettingsAccess& access)
 {
-   mpAccess = access.shared_from_this();
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S
-         .Validator<IntegerValidator<int>>(
+    mpAccess = access.shared_from_this();
+    S.StartMultiColumn(2, wxALIGN_CENTER);
+    {
+        S
+        .Validator<IntegerValidator<int> >(
             &mStart, NumValidatorStyle::DEFAULT, Start.min)
-         .TieTextBox(XXO("&Start threshold (samples):"), mStart, 10);
+        .TieTextBox(XXO("&Start threshold (samples):"), mStart, 10);
 
-      S
-         .Validator<IntegerValidator<int>>(
+        S
+        .Validator<IntegerValidator<int> >(
             &mStop, NumValidatorStyle::DEFAULT, Stop.min)
-         .TieTextBox(XXO("St&op threshold (samples):"), mStop, 10);
-   }
-   S.EndMultiColumn();
+        .TieTextBox(XXO("St&op threshold (samples):"), mStop, 10);
+    }
+    S.EndMultiColumn();
 }
 
-bool EffectFindClipping::TransferDataToWindow(const EffectSettings &)
+bool EffectFindClipping::TransferDataToWindow(const EffectSettings&)
 {
-   ShuttleGui S(mUIParent, eIsSettingToDialog);
-   // To do: eliminate this and just use validators for controls
-   DoPopulateOrExchange(S, *mpAccess);
+    ShuttleGui S(mUIParent, eIsSettingToDialog);
+    // To do: eliminate this and just use validators for controls
+    DoPopulateOrExchange(S, *mpAccess);
 
-   return true;
+    return true;
 }
 
-bool EffectFindClipping::TransferDataFromWindow(EffectSettings &)
+bool EffectFindClipping::TransferDataFromWindow(EffectSettings&)
 {
-   if (!mUIParent->Validate())
-   {
-      return false;
-   }
+    if (!mUIParent->Validate()) {
+        return false;
+    }
 
-   ShuttleGui S(mUIParent, eIsGettingFromDialog);
-   // To do: eliminate this and just use validators for controls
-   DoPopulateOrExchange(S, *mpAccess);
+    ShuttleGui S(mUIParent, eIsGettingFromDialog);
+    // To do: eliminate this and just use validators for controls
+    DoPopulateOrExchange(S, *mpAccess);
 
-   return true;
+    return true;
 }

@@ -36,5 +36,5 @@ protected:
 
 private:
     Result UpdateTrackSelection(
-       const TrackPanelMouseEvent& event, AudacityProject* pProject);
+        const TrackPanelMouseEvent& event, AudacityProject* pProject);
 };

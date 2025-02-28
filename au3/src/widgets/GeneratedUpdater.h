@@ -14,22 +14,19 @@
 
 #include "RulerUpdater.h"
 
-class GeneratedUpdater : public RulerUpdater {
+class GeneratedUpdater : public RulerUpdater
+{
 public:
-   using RulerUpdater::RulerUpdater;
-   virtual ~GeneratedUpdater() override = 0;
+    using RulerUpdater::RulerUpdater;
+    virtual ~GeneratedUpdater() override = 0;
 
 protected:
-   bool Tick(wxDC& dc,
-      int pos, double d, const TickSizes& tickSizes, wxFont font,
-      TickOutputs outputs,
-      const RulerStruct& context
-   ) const;
+    bool Tick(wxDC& dc, int pos, double d, const TickSizes& tickSizes, wxFont font, TickOutputs outputs, const RulerStruct& context) const;
 
-   double ComputeWarpedLength(const Envelope& env, double t0, double t1) const
-   {
-      return env.IntegralOfInverse(t0, t1);
-   }
+    double ComputeWarpedLength(const Envelope& env, double t0, double t1) const
+    {
+        return env.IntegralOfInverse(t0, t1);
+    }
 };
 
 #endif

@@ -20,24 +20,22 @@
 #include <unordered_set>
 
 class WaveTrack;
-using ProgressReporter = std::function<void(double)>;
+using ProgressReporter = std::function<void (double)>;
 
 namespace TimeStretching {
-
 //! Whether any clips, whose play regions intersect the interval, have non-unit
 //! stretch ratio
 WAVE_TRACK_API
-bool HasPitchOrSpeed(const WaveTrack &track, double t0, double t1);
+bool HasPitchOrSpeed(const WaveTrack& track, double t0, double t1);
 
 extern WAVE_TRACK_API const TranslatableString defaultStretchRenderingTitle;
 
 // Calls UserException::WithCancellableProgress supplying title and caption
 WAVE_TRACK_API void WithClipRenderingProgress(
-   std::function<void(const ProgressReporter&)> action,
-   TranslatableString title = defaultStretchRenderingTitle);
+    std::function<void(const ProgressReporter&)> action, TranslatableString title = defaultStretchRenderingTitle);
 
 WAVE_TRACK_API bool SetClipStretchRatio(
-   const WaveTrack& track, WaveTrack::Interval& interval, double stretchRatio);
+    const WaveTrack& track, WaveTrack::Interval& interval, double stretchRatio);
 }
 
 #endif

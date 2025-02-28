@@ -47,6 +47,14 @@ public:
         Style style;
     };
 
-    virtual void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params) = 0;
+    enum class PlotType
+    {
+        MinMaxRMS,
+        ConnectingDots,
+        Stem
+    };
+
+    virtual void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params,
+                       std::optional<PlotType> plotType = std::nullopt) = 0;
 };
 }

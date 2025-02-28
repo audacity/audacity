@@ -11,8 +11,7 @@
 #include <mutex>
 #include <vector>
 
-namespace audacity::concurrency
-{
+namespace audacity::concurrency {
 class ICancellable;
 
 class CancellationContext;
@@ -20,29 +19,29 @@ using CancellationContextPtr = std::shared_ptr<CancellationContext>;
 
 class CONCURRENCY_API CancellationContext final
 {
-   struct Tag final
-   {
-   };
+    struct Tag final
+    {
+    };
 
 public:
-   explicit CancellationContext(Tag);
+    explicit CancellationContext(Tag);
 
-   CancellationContext(const CancellationContext&)            = delete;
-   CancellationContext(CancellationContext&&)                 = delete;
-   CancellationContext& operator=(const CancellationContext&) = delete;
-   CancellationContext& operator=(CancellationContext&&)      = delete;
+    CancellationContext(const CancellationContext&)            = delete;
+    CancellationContext(CancellationContext&&)                 = delete;
+    CancellationContext& operator=(const CancellationContext&) = delete;
+    CancellationContext& operator=(CancellationContext&&)      = delete;
 
-   [[nodiscard]] static CancellationContextPtr Create();
+    [[nodiscard]] static CancellationContextPtr Create();
 
-   void Cancel();
+    void Cancel();
 
-   using CancellableWPtr = std::weak_ptr<ICancellable>;
-   void OnCancelled(CancellableWPtr cancellable);
+    using CancellableWPtr = std::weak_ptr<ICancellable>;
+    void OnCancelled(CancellableWPtr cancellable);
 
 private:
-   std::atomic<bool> mCancelled { false };
+    std::atomic<bool> mCancelled { false };
 
-   std::mutex mCancellableObjectsMutex;
-   std::vector<CancellableWPtr> mCancellableObjects;
+    std::mutex mCancellableObjectsMutex;
+    std::vector<CancellableWPtr> mCancellableObjects;
 }; // struct CancellationContext
 } // namespace audacity::concurrency

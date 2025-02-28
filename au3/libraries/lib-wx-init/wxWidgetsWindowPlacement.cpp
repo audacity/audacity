@@ -17,13 +17,14 @@ wxWidgetsWindowPlacement::~wxWidgetsWindowPlacement() = default;
 
 wxWidgetsWindowPlacement::operator bool() const
 {
-   return pWindow != nullptr;
+    return pWindow != nullptr;
 }
 
-wxWindow *wxWidgetsWindowPlacement::GetParent(const WindowPlacement &placement)
+wxWindow* wxWidgetsWindowPlacement::GetParent(const WindowPlacement& placement)
 {
-   if (auto *pPlacement =
-       dynamic_cast<const wxWidgetsWindowPlacement*>(&placement))
-      return pPlacement->pWindow;
-   return nullptr;
+    if (auto* pPlacement
+            =dynamic_cast<const wxWidgetsWindowPlacement*>(&placement)) {
+        return pPlacement->pWindow;
+    }
+    return nullptr;
 }

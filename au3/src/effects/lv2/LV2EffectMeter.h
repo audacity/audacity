@@ -22,28 +22,27 @@
 class LV2EffectMeter final : public wxWindow
 {
 public:
-   LV2EffectMeter(wxWindow *parent,
-      const LV2ControlPortPtr ctrl, const float &value);
-   virtual ~LV2EffectMeter();
-   void Disconnect()
-   {
-      // Stop using mValue, it may be dangling
-      mConnected = false;
-   }
+    LV2EffectMeter(wxWindow* parent, const LV2ControlPortPtr ctrl, const float& value);
+    virtual ~LV2EffectMeter();
+    void Disconnect()
+    {
+        // Stop using mValue, it may be dangling
+        mConnected = false;
+    }
 
 private:
-   void OnErase(wxEraseEvent &evt);
-   void OnPaint(wxPaintEvent &evt);
-   void OnIdle(wxIdleEvent &evt);
-   void OnSize(wxSizeEvent &evt);
+    void OnErase(wxEraseEvent& evt);
+    void OnPaint(wxPaintEvent& evt);
+    void OnIdle(wxIdleEvent& evt);
+    void OnSize(wxSizeEvent& evt);
 
 private:
-   bool mConnected{ true };
-   const LV2ControlPortPtr mControlPort;
-   const float &mValue;
-   float mLastValue;
+    bool mConnected{ true };
+    const LV2ControlPortPtr mControlPort;
+    const float& mValue;
+    float mLastValue;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -20,61 +20,61 @@
 // PaulstretchBase
 //
 
-namespace{ BuiltinEffectsModule::Registration< EffectPaulstretch > reg; }
+namespace {
+BuiltinEffectsModule::Registration< EffectPaulstretch > reg;
+}
 
 BEGIN_EVENT_TABLE(EffectPaulstretch, wxEvtHandler)
-    EVT_TEXT(wxID_ANY, EffectPaulstretch::OnText)
+EVT_TEXT(wxID_ANY, EffectPaulstretch::OnText)
 END_EVENT_TABLE()
 
 std::unique_ptr<EffectEditor> EffectPaulstretch::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
-   const EffectOutputs *)
+    ShuttleGui& S, EffectInstance&, EffectSettingsAccess&,
+    const EffectOutputs*)
 {
-   mUIParent = S.GetParent();
-   S.StartMultiColumn(2, wxALIGN_CENTER);
-   {
-      S
-         .Validator<FloatingPointValidator<float>>(
+    mUIParent = S.GetParent();
+    S.StartMultiColumn(2, wxALIGN_CENTER);
+    {
+        S
+        .Validator<FloatingPointValidator<float> >(
             1, &mAmount, NumValidatorStyle::DEFAULT, Amount.min)
-         /* i18n-hint: This is how many times longer the sound will be, e.g. applying
-          * the effect to a 1-second sample, with the default Stretch Factor of 10.0
-          * will give an (approximately) 10 second sound
-          */
-         .AddTextBox(XXO("&Stretch Factor:"), wxT(""), 10);
+        /* i18n-hint: This is how many times longer the sound will be, e.g. applying
+         * the effect to a 1-second sample, with the default Stretch Factor of 10.0
+         * will give an (approximately) 10 second sound
+         */
+        .AddTextBox(XXO("&Stretch Factor:"), wxT(""), 10);
 
-      S
-         .Validator<FloatingPointValidator<float>>(
+        S
+        .Validator<FloatingPointValidator<float> >(
             3, &mTime_resolution, NumValidatorStyle::ONE_TRAILING_ZERO, Time.min)
-         .AddTextBox(XXO("&Time Resolution (seconds):"), L"", 10);
-   }
-   S.EndMultiColumn();
-   return nullptr;
-};
-
-bool EffectPaulstretch::TransferDataToWindow(const EffectSettings &)
-{
-   if (!mUIParent->TransferDataToWindow())
-   {
-      return false;
-   }
-
-   return true;
+        .AddTextBox(XXO("&Time Resolution (seconds):"), L"", 10);
+    }
+    S.EndMultiColumn();
+    return nullptr;
 }
 
-bool EffectPaulstretch::TransferDataFromWindow(EffectSettings &)
+bool EffectPaulstretch::TransferDataToWindow(const EffectSettings&)
 {
-   if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow())
-   {
-      return false;
-   }
+    if (!mUIParent->TransferDataToWindow()) {
+        return false;
+    }
 
-   return true;
+    return true;
+}
+
+bool EffectPaulstretch::TransferDataFromWindow(EffectSettings&)
+{
+    if (!mUIParent->Validate() || !mUIParent->TransferDataFromWindow()) {
+        return false;
+    }
+
+    return true;
 }
 
 // EffectPaulstretch implementation
 
-void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
+void EffectPaulstretch::OnText(wxCommandEvent& WXUNUSED(evt))
 {
-   EffectEditor::EnableApply(
-      mUIParent, mUIParent->TransferDataFromWindow());
+    EffectEditor::EnableApply(
+        mUIParent, mUIParent->TransferDataFromWindow());
 }

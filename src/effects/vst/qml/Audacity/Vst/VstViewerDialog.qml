@@ -33,9 +33,11 @@ StyledDialogView {
     contentWidth: Math.max(viewer.implicitWidth, 600)
     contentHeight: viewer.implicitHeight + bbox.implicitHeight + 16
 
+    alwaysOnTop: true
+
     VstViewer {
         id: viewer
-        width: implicitWidth
+        width: root.contentWidth
         height: implicitHeight
     }
 
@@ -62,15 +64,14 @@ StyledDialogView {
             // bbox.buttonById(ButtonBoxModel.Apply).enabled = false
         }
 
-        //! NOTE Not implemented
-        // FlatButton {
-        //     id: manageBtn
-        //     text: qsTrc("effects", "Manage")
-        //     buttonRole: ButtonBoxModel.CustomRole
-        //     buttonId: ButtonBoxModel.CustomButton + 1
-        //     isLeftSide: true
-        //     onClicked: viewer.manage(manageBtn)
-        // }
+        FlatButton {
+            id: manageBtn
+            text: qsTrc("effects", "Manage")
+            buttonRole: ButtonBoxModel.CustomRole
+            buttonId: ButtonBoxModel.CustomButton + 1
+            isLeftSide: true
+            onClicked: viewer.manage(manageBtn)
+        }
 
         FlatButton {
             id: previewBtn
@@ -93,10 +94,7 @@ StyledDialogView {
             buttonRole: ButtonBoxModel.AcceptRole
             buttonId: ButtonBoxModel.Apply
             accentButton: true
-            onClicked: {
-                viewer.onApply()
-                root.accept()
-            }
+            onClicked: root.accept()
         }
     }
 }

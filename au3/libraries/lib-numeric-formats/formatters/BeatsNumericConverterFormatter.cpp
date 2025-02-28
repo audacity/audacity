@@ -22,14 +22,13 @@
 #include "Project.h"
 #include "ProjectTimeSignature.h"
 
-namespace
-{
+namespace {
 // This function will return 10^pow
 // No overflow checks are performed, it is assumed that 10^pow
 // does not overflow
-constexpr size_t Get10Pow (size_t pow)
+constexpr size_t Get10Pow(size_t pow)
 {
-   return pow > 0 ? 10 * Get10Pow(pow - 1) : 1;
+    return pow > 0 ? 10 * Get10Pow(pow - 1) : 1;
 }
 
 /* i18n-hint: The music theory "bar" */
@@ -37,382 +36,383 @@ const auto BarString = XO("bar");
 /* i18n-hint: The music theory "beat" */
 const auto BeatString = XO("beat");
 
-class BeatsFormatter final :
-    public NumericConverterFormatter,
-    public PrefsListener
+class BeatsFormatter final : public NumericConverterFormatter, public PrefsListener
 {
 public:
-   static constexpr std::array<size_t, 3> MIN_DIGITS { 3, 2, 2 };
-   static constexpr std::array<size_t, 3> UPPER_BOUNDS {
-      Get10Pow(MIN_DIGITS[0] - 1) + 1, Get10Pow(MIN_DIGITS[1] - 1) + 1,
-      Get10Pow(MIN_DIGITS[2] - 1) + 1
-   };
-   
-   BeatsFormatter(const FormatterContext& context, int fracPart, bool timeFormat)
-       : mContext { context }
-       , mFracPart { fracPart }
-       , mFieldValueOffset { timeFormat ? 1 : 0 }
-   {
-      auto project = mContext.GetProject();
+    static constexpr std::array<size_t, 3> MIN_DIGITS { 3, 2, 2 };
+    static constexpr std::array<size_t, 3> UPPER_BOUNDS {
+        Get10Pow(MIN_DIGITS[0] - 1) + 1, Get10Pow(MIN_DIGITS[1] - 1) + 1,
+        Get10Pow(MIN_DIGITS[2] - 1) + 1
+    };
 
-      if (!project)
-         return;
+    BeatsFormatter(const FormatterContext& context, int fracPart, bool timeFormat)
+        : mContext{context}
+        , mFracPart{fracPart}
+        , mFieldValueOffset{timeFormat ? 1 : 0}
+    {
+        auto project = mContext.GetProject();
 
-      mBarString = BarString.Translation();
-      mBeatString = BeatString.Translation();
+        if (!project) {
+            return;
+        }
 
-      UpdateFormat(*project);
+        mBarString = BarString.Translation();
+        mBeatString = BeatString.Translation();
 
-      // Subscribing requires non-const reference
-      mTimeSignatureChangedSubscription =
-         const_cast<ProjectTimeSignature&>(ProjectTimeSignature::Get(*project))
-            .Subscribe(
-               [this](const auto&)
-               {
-                  // Receiving this message means that project is
-                  // alive and well
-                  UpdateFormat(*mContext.GetProject());
-                  Publish({});
-               });
-   }
+        UpdateFormat(*project);
 
-   //! Check that field exists and has enough digits to fit the value
-   bool CheckField(size_t fieldIndex, int value) const noexcept
-   {
-      if (fieldIndex >= mFields.size())
-         return false;
+        // Subscribing requires non-const reference
+        mTimeSignatureChangedSubscription
+            =const_cast<ProjectTimeSignature&>(ProjectTimeSignature::Get(*project))
+              .Subscribe(
+                  [this](const auto&)
+        {
+            // Receiving this message means that project is
+            // alive and well
+            UpdateFormat(*mContext.GetProject());
+            Publish({});
+        });
+    }
 
-      const auto digitsCount = mFields[fieldIndex].digits;
+    //! Check that field exists and has enough digits to fit the value
+    bool CheckField(size_t fieldIndex, int value) const noexcept
+    {
+        if (fieldIndex >= mFields.size()) {
+            return false;
+        }
 
-      // Format always allows at least two digits
-      const auto lowerRange =
-         digitsCount > MIN_DIGITS[fieldIndex] ? Get10Pow(digitsCount - 1) : 0;
+        const auto digitsCount = mFields[fieldIndex].digits;
 
-      const auto upperRange = Get10Pow(digitsCount);
+        // Format always allows at least two digits
+        const auto lowerRange
+            =digitsCount > MIN_DIGITS[fieldIndex] ? Get10Pow(digitsCount - 1) : 0;
 
-      return value >= int(lowerRange) && value < int(upperRange);
-   }
+        const auto upperRange = Get10Pow(digitsCount);
 
-   bool CheckFracField (int newLts) const noexcept
-   {
-      if (mFracPart > newLts)
-         return CheckField(2, mFracPart / mLowerTimeSignature);
-      else
-         return mFields.size() == 2;
-   }
+        return value >= int(lowerRange) && value < int(upperRange);
+    }
 
-   void UpdateFields (size_t barsDigits)
-   {
-      mFields.clear();
-      mDigits.clear();
+    bool CheckFracField(int newLts) const noexcept
+    {
+        if (mFracPart > newLts) {
+            return CheckField(2, mFracPart / mLowerTimeSignature);
+        } else {
+            return mFields.size() == 2;
+        }
+    }
 
-      // Range is assumed to allow 999 bars.
-      auto& barsField =
-         mFields.emplace_back(NumericField::WithDigits(barsDigits));
+    void UpdateFields(size_t barsDigits)
+    {
+        mFields.clear();
+        mDigits.clear();
 
-      barsField.label = L" " + mBarString + L" ";
+        // Range is assumed to allow 999 bars.
+        auto& barsField
+            =mFields.emplace_back(NumericField::WithDigits(barsDigits));
 
-      // Beats format is 1 based. For the time point "0" the expected output is
-      // "1 bar 1 beat [1]" For this reason we use (uts + 1) as the "range". On
-      // top of that, we want at least two digits to be shown. NumericField
-      // accepts range as in [0, range), so add 1.
+        barsField.label = L" " + mBarString + L" ";
 
-      auto& beatsField = mFields.emplace_back(NumericField::ForRange(
-         std::max<size_t>(UPPER_BOUNDS[1], mUpperTimeSignature + 1)));
+        // Beats format is 1 based. For the time point "0" the expected output is
+        // "1 bar 1 beat [1]" For this reason we use (uts + 1) as the "range". On
+        // top of that, we want at least two digits to be shown. NumericField
+        // accepts range as in [0, range), so add 1.
 
-      beatsField.label = L" " + mBeatString;
+        auto& beatsField = mFields.emplace_back(NumericField::ForRange(
+                                                    std::max<size_t>(UPPER_BOUNDS[1], mUpperTimeSignature + 1)));
 
-      const auto hasFracPart = mFracPart > mLowerTimeSignature;
+        beatsField.label = L" " + mBeatString;
 
-      if (hasFracPart)
-      {
-         beatsField.label += L" ";
-         // See the reasoning above about the range
-         auto& fracField = mFields.emplace_back(NumericField::ForRange(
-            std::max(11, mFracPart / mLowerTimeSignature + 1)));
-      }
+        const auto hasFracPart = mFracPart > mLowerTimeSignature;
 
-      // Fill the aux mDigits structure
-      size_t pos = 0;
-      for (size_t i = 0; i < mFields.size(); i++)
-      {
-         mFields[i].pos = pos;
+        if (hasFracPart) {
+            beatsField.label += L" ";
+            // See the reasoning above about the range
+            auto& fracField = mFields.emplace_back(NumericField::ForRange(
+                                                       std::max(11, mFracPart / mLowerTimeSignature + 1)));
+        }
 
-         for (size_t j = 0; j < mFields[i].digits; j++)
-         {
-            mDigits.push_back(DigitInfo { i, j, pos });
-            pos++;
-         }
+        // Fill the aux mDigits structure
+        size_t pos = 0;
+        for (size_t i = 0; i < mFields.size(); i++) {
+            mFields[i].pos = pos;
 
-         pos += mFields[i].label.length();
-      }
-   }
+            for (size_t j = 0; j < mFields[i].digits; j++) {
+                mDigits.push_back(DigitInfo { i, j, pos });
+                pos++;
+            }
 
-   void UpdateFormat(const AudacityProject& project)
-   {
-      auto& timeSignature = ProjectTimeSignature::Get(project);
+            pos += mFields[i].label.length();
+        }
+    }
 
-      const double newTempo = timeSignature.GetTempo();
-      const int newUts = timeSignature.GetUpperTimeSignature();
-      const int newLts = timeSignature.GetLowerTimeSignature();
+    void UpdateFormat(const AudacityProject& project)
+    {
+        auto& timeSignature = ProjectTimeSignature::Get(project);
 
-      if (newTempo == mTempo && newUts == mUpperTimeSignature && newLts == mLowerTimeSignature)
-         return ;
+        const double newTempo = timeSignature.GetTempo();
+        const int newUts = timeSignature.GetUpperTimeSignature();
+        const int newLts = timeSignature.GetLowerTimeSignature();
 
-      const bool formatOk = CheckField(1, newUts) && CheckFracField(newLts);
-      
-      mTempo = newTempo;
-      mUpperTimeSignature = newUts;
-      mLowerTimeSignature = newLts;
+        if (newTempo == mTempo && newUts == mUpperTimeSignature && newLts == mLowerTimeSignature) {
+            return;
+        }
 
-      // 1/4 = BPM is used for now
-      const auto quarterLength = 60.0 / mTempo;
-      const auto beatLength = quarterLength * 4.0 / mLowerTimeSignature;
-      const auto barLength = mUpperTimeSignature * beatLength;
+        const bool formatOk = CheckField(1, newUts) && CheckFracField(newLts);
 
-      mFieldLengths[0] = barLength;
-      mFieldLengths[1] = beatLength;
+        mTempo = newTempo;
+        mUpperTimeSignature = newUts;
+        mLowerTimeSignature = newLts;
 
-      const auto hasFracPart = mFracPart > mLowerTimeSignature;
+        // 1/4 = BPM is used for now
+        const auto quarterLength = 60.0 / mTempo;
+        const auto beatLength = quarterLength * 4.0 / mLowerTimeSignature;
+        const auto barLength = mUpperTimeSignature * beatLength;
 
-      if (hasFracPart)
-      {
-         const auto fracLength = beatLength * mLowerTimeSignature / mFracPart;
-         mFieldLengths[2] = fracLength;
-      }
+        mFieldLengths[0] = barLength;
+        mFieldLengths[1] = beatLength;
 
-      if (formatOk)
-         return ;
-      
-      UpdateFields(MIN_DIGITS[0]);
-   }
+        const auto hasFracPart = mFracPart > mLowerTimeSignature;
 
-   void UpdateFormatForValue(double value, bool canShrink) override
-   {
-      // Beats formatter does not support negative values
-      value = std::max(0.0, value);
+        if (hasFracPart) {
+            const auto fracLength = beatLength * mLowerTimeSignature / mFracPart;
+            mFieldLengths[2] = fracLength;
+        }
 
-      // ForRange has a preserved weird behavior
-      const auto barsCount =
-         // Range is not inclusive
-         1 +
-         // Bars can start from 1
-         mFieldValueOffset +
-         static_cast<int>(std::floor(value / mFieldLengths[0]));
+        if (formatOk) {
+            return;
+        }
 
-      const auto barsField = NumericField::ForRange(
-         barsCount, true, MIN_DIGITS[0]);
+        UpdateFields(MIN_DIGITS[0]);
+    }
 
-      const auto oldDigits = mFields[0].digits;
+    void UpdateFormatForValue(double value, bool canShrink) override
+    {
+        // Beats formatter does not support negative values
+        value = std::max(0.0, value);
 
-      const bool updateNeeded = canShrink ? oldDigits != barsField.digits :
-                                            oldDigits < barsField.digits;
+        // ForRange has a preserved weird behavior
+        const auto barsCount
+            =// Range is not inclusive
+              1
+              +// Bars can start from 1
+              mFieldValueOffset
+              + static_cast<int>(std::floor(value / mFieldLengths[0]));
 
-      if (!updateNeeded)
-         return;
+        const auto barsField = NumericField::ForRange(
+            barsCount, true, MIN_DIGITS[0]);
 
-      UpdateFields(barsField.digits);
-      Publish({ value, oldDigits > mFields[0].digits });
-   }
+        const auto oldDigits = mFields[0].digits;
 
-   void UpdateResultString(ConversionResult& result) const
-   {
-      for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex)
-      {
-         result.valueString +=
-            result.fieldValueStrings[fieldIndex] + mFields[fieldIndex].label;
-      }
-   }
+        const bool updateNeeded = canShrink ? oldDigits != barsField.digits
+                                  : oldDigits < barsField.digits;
 
-   ConversionResult ValueToString(double value, bool) const override
-   {
-      ConversionResult result;
-      result.fieldValueStrings.resize(mFields.size());
+        if (!updateNeeded) {
+            return;
+        }
 
-      if (value < 0)
-      {
-         for (size_t fieldIndex = 0; fieldIndex < mFields.size (); ++fieldIndex)
-         {
-            const auto digitsCount = mFields[fieldIndex].digits;
-            auto& fieldValue = result.fieldValueStrings[fieldIndex];
-            for (int digitIndex = 0; digitIndex < digitsCount; ++digitIndex)
-               fieldValue += L"-";
-         }
+        UpdateFields(barsField.digits);
+        Publish({ value, oldDigits > mFields[0].digits });
+    }
 
-         UpdateResultString(result);
+    void UpdateResultString(ConversionResult& result) const
+    {
+        for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex) {
+            result.valueString
+                +=result.fieldValueStrings[fieldIndex] + mFields[fieldIndex].label;
+        }
+    }
 
-         return result;
-      }
+    ConversionResult ValueToString(double value, bool) const override
+    {
+        ConversionResult result;
+        result.fieldValueStrings.resize(mFields.size());
 
-      // Calculate the epsilon only once, so the total loss of precision is addressed.
-      // This is a "multiplicative" epsilon, so there is no need to calculate 1 + eps every time.
-      const auto eps =
-         1.0 + std::max(1.0, value) * std::numeric_limits<double>::epsilon();
+        if (value < 0) {
+            for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex) {
+                const auto digitsCount = mFields[fieldIndex].digits;
+                auto& fieldValue = result.fieldValueStrings[fieldIndex];
+                for (int digitIndex = 0; digitIndex < digitsCount; ++digitIndex) {
+                    fieldValue += L"-";
+                }
+            }
 
-      for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex)
-      {
-         const auto fieldLength = mFieldLengths[fieldIndex];
-         const auto fieldValue = std::max(
-            0, static_cast<int>(std::floor(value * eps / fieldLength)));
+            UpdateResultString(result);
 
-         result.fieldValueStrings[fieldIndex] = wxString::Format(
-            mFields[fieldIndex].formatStr, fieldValue + mFieldValueOffset);
+            return result;
+        }
 
-         value = value - fieldValue * fieldLength;
-      }
+        // Calculate the epsilon only once, so the total loss of precision is addressed.
+        // This is a "multiplicative" epsilon, so there is no need to calculate 1 + eps every time.
+        const auto eps
+            =1.0 + std::max(1.0, value) * std::numeric_limits<double>::epsilon();
 
-      UpdateResultString(result);
-      return result;
-   }
+        for (size_t fieldIndex = 0; fieldIndex < mFields.size(); ++fieldIndex) {
+            const auto fieldLength = mFieldLengths[fieldIndex];
+            const auto fieldValue = std::max(
+                0, static_cast<int>(std::floor(value * eps / fieldLength)));
 
-   std::optional<double> StringToValue(const wxString& valueString) const override
-   {
-      if (
-         mFields.size() > 0 &&
-         valueString.Mid(mFields[0].pos, 1) == wxChar('-'))
-         return std::nullopt;
+            result.fieldValueStrings[fieldIndex] = wxString::Format(
+                mFields[fieldIndex].formatStr, fieldValue + mFieldValueOffset);
 
-      double t = 0.0;
-      size_t lastIndex = 0;
-      
-      for (size_t i = 0; i < mFields.size(); i++)
-      {
-         const auto& field = mFields[i];
+            value = value - fieldValue * fieldLength;
+        }
 
-         const size_t labelIndex = field.label.empty() ?
-                                      wxString::npos :
-                                      valueString.find(field.label, lastIndex); 
-            
-         long val;
+        UpdateResultString(result);
+        return result;
+    }
 
-         const auto fieldStringValue = valueString.Mid(
-            lastIndex,
-            labelIndex == wxString::npos ? labelIndex : labelIndex - lastIndex);
-
-         if (!fieldStringValue.ToLong(&val))
+    std::optional<double> StringToValue(const wxString& valueString) const override
+    {
+        if (
+            mFields.size() > 0
+            && valueString.Mid(mFields[0].pos, 1) == wxChar('-')) {
             return std::nullopt;
+        }
 
-         t += (val - mFieldValueOffset) * mFieldLengths[i];
+        double t = 0.0;
+        size_t lastIndex = 0;
 
-         lastIndex = labelIndex + field.label.Length();
-      }
+        for (size_t i = 0; i < mFields.size(); i++) {
+            const auto& field = mFields[i];
 
-      return t;
-   }
+            const size_t labelIndex = field.label.empty()
+                                      ? wxString::npos
+                                      : valueString.find(field.label, lastIndex);
 
-   double SingleStep(double value, int digitIndex, bool upwards) const override
-   {
-      if (digitIndex < 0 || size_t(digitIndex) >= mDigits.size())
-         return value;
+            long val;
 
-      const auto& digit = mDigits[digitIndex];
-      const auto& fieldIndex = digit.field;
-      const auto& field = mFields[fieldIndex];
+            const auto fieldStringValue = valueString.Mid(
+                lastIndex,
+                labelIndex == wxString::npos ? labelIndex : labelIndex - lastIndex);
 
-      const auto stepSize = mFieldLengths[fieldIndex] *
-                            std::pow(10, field.digits - digit.index - 1);
+            if (!fieldStringValue.ToLong(&val)) {
+                return std::nullopt;
+            }
 
-      return upwards ? value + stepSize : value - stepSize;
-   }
+            t += (val - mFieldValueOffset) * mFieldLengths[i];
 
-   void UpdatePrefs() override
-   {
-      auto project = mContext.GetProject();
+            lastIndex = labelIndex + field.label.Length();
+        }
 
-      if (!project)
-         return;
+        return t;
+    }
 
-      auto barString = BarString.Translation();
-      auto beatString = BeatString.Translation();
+    double SingleStep(double value, int digitIndex, bool upwards) const override
+    {
+        if (digitIndex < 0 || size_t(digitIndex) >= mDigits.size()) {
+            return value;
+        }
 
-      if (barString == mBarString && beatString == mBeatString)
-         return;
+        const auto& digit = mDigits[digitIndex];
+        const auto& fieldIndex = digit.field;
+        const auto& field = mFields[fieldIndex];
 
-      mBarString = barString;
-      mBeatString = beatString;
-      
-      UpdateFormat(*project);
-   }
+        const auto stepSize = mFieldLengths[fieldIndex]
+                              * std::pow(10, field.digits - digit.index - 1);
+
+        return upwards ? value + stepSize : value - stepSize;
+    }
+
+    void UpdatePrefs() override
+    {
+        auto project = mContext.GetProject();
+
+        if (!project) {
+            return;
+        }
+
+        auto barString = BarString.Translation();
+        auto beatString = BeatString.Translation();
+
+        if (barString == mBarString && beatString == mBeatString) {
+            return;
+        }
+
+        mBarString = barString;
+        mBeatString = beatString;
+
+        UpdateFormat(*project);
+    }
 
 private:
-   const FormatterContext mContext;
+    const FormatterContext mContext;
 
-   Observer::Subscription mTimeSignatureChangedSubscription;
-   
-   double mTempo { 0.0 };
+    Observer::Subscription mTimeSignatureChangedSubscription;
 
-   int mUpperTimeSignature { 0 };
-   int mLowerTimeSignature { 0 };
-   
-   const int mFracPart;
+    double mTempo { 0.0 };
 
-   const int mFieldValueOffset;
+    int mUpperTimeSignature { 0 };
+    int mLowerTimeSignature { 0 };
 
-   std::array<double, 3> mFieldLengths {};
+    const int mFracPart;
 
-   wxString mBarString;
-   wxString mBeatString;
+    const int mFieldValueOffset;
+
+    std::array<double, 3> mFieldLengths {};
+
+    wxString mBarString;
+    wxString mBeatString;
 };
 
-class BeatsNumericConverterFormatterFactory final :
-    public NumericConverterFormatterFactory
+class BeatsNumericConverterFormatterFactory final : public NumericConverterFormatterFactory
 {
 public:
-   BeatsNumericConverterFormatterFactory (int fracPart, bool timeFormat)
-       : mFracPart { fracPart }
-       , mTimeFormat { timeFormat }
-   {
-   }
+    BeatsNumericConverterFormatterFactory (int fracPart, bool timeFormat)
+        : mFracPart{fracPart}
+        , mTimeFormat{timeFormat}
+    {
+    }
 
-   std::unique_ptr<NumericConverterFormatter>
-   Create(const FormatterContext& context) const override
-   {
-      if (!IsAcceptableInContext(context))
-         return {};
+    std::unique_ptr<NumericConverterFormatter>
+    Create(const FormatterContext& context) const override
+    {
+        if (!IsAcceptableInContext(context)) {
+            return {}
+        }
 
-      return std::make_unique<BeatsFormatter>(context, mFracPart, mTimeFormat);
-   }
+        return std::make_unique<BeatsFormatter>(context, mFracPart, mTimeFormat);
+    }
 
-   bool IsAcceptableInContext(const FormatterContext& context) const override
-   {
-      return context.HasProject();
-   }
+    bool IsAcceptableInContext(const FormatterContext& context) const override
+    {
+        return context.HasProject();
+    }
 
 private:
-   const int mFracPart;
-   const bool mTimeFormat;
+    const int mFracPart;
+    const bool mTimeFormat;
 };
 
 auto BuildBeatsGroup(bool timeFormat)
 {
-   return NumericConverterFormatterGroup(
-      timeFormat ? "beatsTime" : "beatsDuration",
-      timeFormat ? NumericConverterType_TIME() : NumericConverterType_DURATION(),
-      NumericConverterFormatterItem(
-         /* i18n-hint: "bar" and "beat" are musical notation elements. */
-         "beats", XO("bar:beat"),
-         std::make_unique<BeatsNumericConverterFormatterFactory>(0, timeFormat)),
-      NumericConverterFormatterItem(
-         /* i18n-hint: "bar" and "beat" are musical notation elements. "tick"
-            corresponds to a 16th note.  */
-         "beats16", XO("bar:beat:tick"),
-         std::make_unique<BeatsNumericConverterFormatterFactory>(16, timeFormat)));
+    return NumericConverterFormatterGroup(
+        timeFormat ? "beatsTime" : "beatsDuration",
+        timeFormat ? NumericConverterType_TIME() : NumericConverterType_DURATION(),
+        NumericConverterFormatterItem(
+            /* i18n-hint: "bar" and "beat" are musical notation elements. */
+            "beats", XO("bar:beat"),
+            std::make_unique<BeatsNumericConverterFormatterFactory>(0, timeFormat)),
+        NumericConverterFormatterItem(
+            /* i18n-hint: "bar" and "beat" are musical notation elements. "tick"
+               corresponds to a 16th note.  */
+            "beats16", XO("bar:beat:tick"),
+            std::make_unique<BeatsNumericConverterFormatterFactory>(16, timeFormat)));
 }
 
 NumericConverterItemRegistrator beatsTime {
-   BuildBeatsGroup(true),
-   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedTime" } }
+    BuildBeatsGroup(true),
+    Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedTime" } }
 };
 
 NumericConverterItemRegistrator beatsDuration {
-   BuildBeatsGroup(false),
-   Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedDuration" } }
+    BuildBeatsGroup(false),
+    Registry::Placement { "parsed", { Registry::OrderingHint::After, L"parsedDuration" } }
 };
 } // namespace
 
 std::unique_ptr<NumericConverterFormatter> CreateBeatsNumericConverterFormatter(
-   const FormatterContext& context, int fracPart /*= 0*/,
-   bool timeFormat /*= true*/)
+    const FormatterContext& context, int fracPart /*= 0*/,
+    bool timeFormat /*= true*/)
 {
-   return std::make_unique<BeatsFormatter>(context, fracPart, timeFormat);
+    return std::make_unique<BeatsFormatter>(context, fracPart, timeFormat);
 }

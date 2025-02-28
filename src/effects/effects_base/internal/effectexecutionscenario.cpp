@@ -230,6 +230,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
             EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, pInstanceEx, access);
             muse::Ret ret = effectsProvider()->showEffect(effectId, instanceId);
+            effectInstancesRegister()->requestUpdateSettings(instanceId);
             effectInstancesRegister()->unregInstance(instanceId);
             if (ret) {
                 effect->SaveUserPreset(CurrentSettingsGroup(), *settings);

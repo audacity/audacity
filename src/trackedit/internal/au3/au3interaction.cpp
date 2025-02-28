@@ -68,7 +68,7 @@ TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<TrackData>& tra
     return tracksIdsPastedInto;
 }
 
-Au3Track::Holder Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track> track, Au3TrackList& list, secs_t begin)
+std::shared_ptr<au::au3::Au3Track> Au3Interaction::createNewTrackAndPaste(std::shared_ptr<Au3Track> track, Au3TrackList& list, secs_t begin)
 {
     auto& trackFactory = WaveTrackFactory::Get(projectRef());
     auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
@@ -427,6 +427,15 @@ secs_t Au3Interaction::clampLeftTrimDelta(const ClipKeyList& clipKeys,
         if (!muse::RealIsEqualOrLess(deltaSec, duration.value())
             || (muse::RealIsEqualOrLess(deltaSec, 0.0) && anyLeftFullyUntrimmed(clipKeys))) {
             return 0.0;
+        }
+
+        //! NOTE: check that no clip in selection extends beyond its track start
+        std::optional<secs_t> leftmostClipStartTime = getLeftmostClipStartTime(selectionController()->selectedClips());
+
+        if (leftmostClipStartTime.has_value()) {
+            if (muse::RealIsEqualOrLess(leftmostClipStartTime.value() + deltaSec, 0.0)) {
+                return 0.0;
+            }
         }
     }
 
@@ -908,12 +917,12 @@ bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool opt
 bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
     muse::Concurrent::run([this, clipKey]() {
-        m_progress->started.notify();
+        m_progress->start();
 
         muse::ProgressResult result;
 
         DEFER {
-            m_progress->finished.send(result);
+            m_progress->finish(result);
         };
 
         WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
@@ -927,7 +936,7 @@ bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
         }
 
         auto progressCallBack = [this](double progressFraction) {
-            m_progress->progressChanged.send(progressFraction * 1000, 1000, "");
+            m_progress->progress(progressFraction * 1000, 1000, "");
         };
 
         waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
@@ -2254,6 +2263,9 @@ void Au3Interaction::setClipGroupId(const ClipKey& clipKey, int64_t id)
     }
 
     clip->SetGroupId(id);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 }
 
 void Au3Interaction::groupClips(const ClipKeyList& clipKeyList)

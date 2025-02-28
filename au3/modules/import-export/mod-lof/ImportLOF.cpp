@@ -90,84 +90,81 @@
 #define DESC XO("List of Files in basic text format")
 
 static const auto exts = {
-   wxT("lof")
+    wxT("lof")
 };
 
 class LOFImportPlugin final : public ImportPlugin
 {
 public:
-   LOFImportPlugin()
-   :  ImportPlugin( FileExtensions( exts.begin(), exts.end() ) )
-   {
-   }
+    LOFImportPlugin()
+        :  ImportPlugin(FileExtensions(exts.begin(), exts.end()))
+    {
+    }
 
-   ~LOFImportPlugin() { }
+    ~LOFImportPlugin() { }
 
-   wxString GetPluginStringID() override { return wxT("lof"); }
-   TranslatableString GetPluginFormatDescription() override;
-   std::unique_ptr<ImportFileHandle> Open(
-      const FilePath &Filename, AudacityProject *pProject) override;
+    wxString GetPluginStringID() override { return wxT("lof"); }
+    TranslatableString GetPluginFormatDescription() override;
+    std::unique_ptr<ImportFileHandle> Open(
+        const FilePath& Filename, AudacityProject* pProject) override;
 };
-
 
 class LOFImportFileHandle final : public ImportFileHandle
 {
 public:
-   LOFImportFileHandle( AudacityProject *pProject,
-      const FilePath & name, std::unique_ptr<wxTextFile> &&file);
-   ~LOFImportFileHandle();
+    LOFImportFileHandle(AudacityProject* pProject, const FilePath& name, std::unique_ptr<wxTextFile>&& file);
+    ~LOFImportFileHandle();
 
-   TranslatableString GetFileDescription() override;
-   ByteCount GetFileUncompressedBytes() override;
-   void Import(
-      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
-      TrackHolders& outTracks, Tags* tags,
-      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
+    TranslatableString GetFileDescription() override;
+    ByteCount GetFileUncompressedBytes() override;
+    void Import(
+        ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
+        std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
 
-   FilePath GetFilename() const override;
+    FilePath GetFilename() const override;
 
-   void Cancel() override;
+    void Cancel() override;
 
-   void Stop() override;
+    void Stop() override;
 
-   wxInt32 GetStreamCount() override { return 1; }
+    wxInt32 GetStreamCount() override { return 1; }
 
-   const TranslatableStrings &GetStreamInfo() override
-   {
-      static TranslatableStrings empty;
-      return empty;
-   }
+    const TranslatableStrings& GetStreamInfo() override
+    {
+        static TranslatableStrings empty;
+        return empty;
+    }
 
-   void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
-   {}
+    void SetStreamUsage(wxInt32 WXUNUSED(StreamID), bool WXUNUSED(Use)) override
+    {}
 
 private:
-   // Takes a line of text in lof file and interprets it and opens files
-   void lofOpenFiles(wxString* ln);
-   void doDurationAndScrollOffset();
+    // Takes a line of text in lof file and interprets it and opens files
+    void lofOpenFiles(wxString* ln);
+    void doDurationAndScrollOffset();
 
-   std::unique_ptr<wxTextFile> mTextFile;
-   const wxFileName mLOFFileName;  /**< The name of the LOF file, which is used to
+    std::unique_ptr<wxTextFile> mTextFile;
+    const wxFileName mLOFFileName; /**< The name of the LOF file, which is used to
                                 interpret relative paths in it */
-   AudacityProject *mProject{};
+    AudacityProject* mProject{};
 
-   // In order to know whether or not to create a NEW window
-   int nFilesInGroup{ 0 };
+    // In order to know whether or not to create a NEW window
+    int nFilesInGroup{ 0 };
 
-   // In order to zoom in, it must be done after files are opened
-   bool              callDurationFactor{ false };
-   double            durationFactor{ 1 };
+    // In order to zoom in, it must be done after files are opened
+    bool callDurationFactor{ false };
+    double durationFactor{ 1 };
 
-   // In order to offset scrollbar, it must be done after files are opened
-   bool              callScrollOffset{ false };
-   double            scrollOffset{ 0 };
+    // In order to offset scrollbar, it must be done after files are opened
+    bool callScrollOffset{ false };
+    double scrollOffset{ 0 };
 };
 
-LOFImportFileHandle::LOFImportFileHandle( AudacityProject *pProject,
-   const FilePath & name, std::unique_ptr<wxTextFile> &&file)
-:  mTextFile(std::move(file))
-   , mLOFFileName{name}
-   , mProject{ pProject }
+LOFImportFileHandle::LOFImportFileHandle(AudacityProject* pProject,
+                                         const FilePath& name, std::unique_ptr<wxTextFile>&& file)
+    :  mTextFile(std::move(file))
+    , mLOFFileName{name}
+    , mProject{pProject}
 {
 }
 
@@ -177,162 +174,158 @@ TranslatableString LOFImportPlugin::GetPluginFormatDescription()
 }
 
 std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(
-   const FilePath &filename, AudacityProject *pProject)
+    const FilePath& filename, AudacityProject* pProject)
 {
-   // Check if it is a text file.
-   {
-      wxFile binaryFile;
-      if (!binaryFile.Open(filename))
-         return nullptr; // File not found
+    // Check if it is a text file.
+    {
+        wxFile binaryFile;
+        if (!binaryFile.Open(filename)) {
+            return nullptr; // File not found
+        }
+        char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
+        int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
 
-      char buf[BINARY_FILE_CHECK_BUFFER_SIZE];
-      int count = binaryFile.Read(buf, BINARY_FILE_CHECK_BUFFER_SIZE);
+        bool isTextFile = false;
+        const std::string lofToken("file");
 
-      bool isTextFile = false;
-      const std::string lofToken("file");
+        // At least we should get a size more than: <token> + <space> + <filename>.
+        if (count > (lofToken.length() + sizeof(' ') + 1)) {
+            // Audacity can import list from LOF only with BOM or ASCII,
+            // each other text (like unicode without BOM, bin, etc) can't be recognized.
 
-      // At least we should get a size more than: <token> + <space> + <filename>.
-      if (count > (lofToken.length() + sizeof(' ') + 1))
-      {
-          // Audacity can import list from LOF only with BOM or ASCII,
-          // each other text (like unicode without BOM, bin, etc) can't be recognized.
+            // UTF-16 BOM checker.
+            auto IsUtf16_BE = [](const char* str) -> bool
+            {
+                return str[0] == static_cast<char>(0xFE) && str[1] == static_cast<char>(0xFF);
+            };
+            auto IsUtf16_LE = [](const char* str) -> bool
+            {
+                return str[0] == static_cast<char>(0xFF) && str[1] == static_cast<char>(0xFE);
+            };
 
-          // UTF-16 BOM checker.
-          auto IsUtf16_BE = [](const char* str) -> bool
-          {
-              return str[0] == static_cast<char>(0xFE) && str[1] == static_cast<char>(0xFF);
-          };
-          auto IsUtf16_LE = [](const char* str) -> bool
-          {
-              return str[0] == static_cast<char>(0xFF) && str[1] == static_cast<char>(0xFE);
-          };
+            // UTF-32 BOM checker.
+            auto IsUtf32_BE = [](const char* str) -> bool
+            {
+                return str[0] == static_cast<char>(0x00)
+                       && str[1] == static_cast<char>(0x00)
+                       && str[2] == static_cast<char>(0xFE)
+                       && str[3] == static_cast<char>(0xFF);
+            };
+            auto IsUtf32_LE = [](const char* str) -> bool
+            {
+                return str[0] == static_cast<char>(0xFF)
+                       && str[1] == static_cast<char>(0xFE)
+                       && str[2] == static_cast<char>(0x00)
+                       && str[3] == static_cast<char>(0x00);
+            };
 
-          // UTF-32 BOM checker.
-          auto IsUtf32_BE = [](const char* str) -> bool
-          {
-              return str[0] == static_cast<char>(0x00) &&
-                     str[1] == static_cast<char>(0x00) &&
-                     str[2] == static_cast<char>(0xFE) &&
-                     str[3] == static_cast<char>(0xFF);
-          };
-          auto IsUtf32_LE = [](const char* str) -> bool
-          {
-              return str[0] == static_cast<char>(0xFF) &&
-                     str[1] == static_cast<char>(0xFE) &&
-                     str[2] == static_cast<char>(0x00) &&
-                     str[3] == static_cast<char>(0x00);
-          };
+            // Is unicode text file.
+            if (IsUtf16_BE(buf) || IsUtf16_LE(buf) || IsUtf32_BE(buf) || IsUtf32_LE(buf)) {
+                isTextFile = true;
+            }
+            // Try parse as ASCII and UTF-8 text as ASCII too.
+            else {
+                buf[sizeof(buf) - 1] = '\0';
 
-          // Is unicode text file.
-          if (IsUtf16_BE(buf) || IsUtf16_LE(buf) || IsUtf32_BE(buf) || IsUtf32_LE(buf))
-          {
-              isTextFile = true;
-          }
-          // Try parse as ASCII and UTF-8 text as ASCII too.
-          else
-          {
-              buf[sizeof(buf) - 1] = '\0';
+                std::string importedText(buf);
 
-              std::string importedText(buf);
+                if (importedText.find(lofToken) != std::string::npos) {
+                    isTextFile = true;
+                }
+            }
+        }
 
-              if (importedText.find(lofToken) != std::string::npos)
-                  isTextFile = true;
-          }
-      }
+        if (!isTextFile) {
+            binaryFile.Close();
+            return nullptr;
+        }
+    }
 
-      if (!isTextFile)
-      {
-          binaryFile.Close();
-          return nullptr;
-      }
-   }
+    // Now open the file again as text file
+    auto file = std::make_unique<wxTextFile>(filename);
+    file->Open();
 
-   // Now open the file again as text file
-   auto file = std::make_unique<wxTextFile>(filename);
-   file->Open();
+    if (!file->IsOpened()) {
+        return nullptr;
+    }
 
-   if (!file->IsOpened())
-      return nullptr;
-
-   return std::make_unique<LOFImportFileHandle>(
-      pProject, filename, std::move(file));
+    return std::make_unique<LOFImportFileHandle>(
+        pProject, filename, std::move(file));
 }
 
 TranslatableString LOFImportFileHandle::GetFileDescription()
 {
-   return DESC;
+    return DESC;
 }
 
 auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
-   return 0;
+    return 0;
 }
 
 void LOFImportFileHandle::Import(
-   ImportProgressListener& progressListener, WaveTrackFactory*,
-   TrackHolders& outTracks, Tags*, std::optional<LibFileFormats::AcidizerTags>&)
+    ImportProgressListener& progressListener, WaveTrackFactory*,
+    TrackHolders& outTracks, Tags*, std::optional<LibFileFormats::AcidizerTags>&)
 {
-   // Unlike other ImportFileHandle subclasses, this one never gives any tracks
-   // back to the caller.
-   // Instead, it recursively calls AudacityProject::Import for each file listed
-   // in the .lof file.
-   // Each importation creates a NEW undo state.
-   // If there is an error or exception during one of them, only that one's
-   // side effects are rolled back, and the rest of the import list is skipped.
-   // The file may have "window" directives that cause NEW AudacityProjects
-   // to be created, and the undo states are pushed onto the latest project.
-   // If a project is created but the first file import into it fails, destroy
-   // the project.
+    // Unlike other ImportFileHandle subclasses, this one never gives any tracks
+    // back to the caller.
+    // Instead, it recursively calls AudacityProject::Import for each file listed
+    // in the .lof file.
+    // Each importation creates a NEW undo state.
+    // If there is an error or exception during one of them, only that one's
+    // side effects are rolled back, and the rest of the import list is skipped.
+    // The file may have "window" directives that cause NEW AudacityProjects
+    // to be created, and the undo states are pushed onto the latest project.
+    // If a project is created but the first file import into it fails, destroy
+    // the project.
 
-   outTracks.clear();
+    outTracks.clear();
 
-   wxASSERT(mTextFile->IsOpened());
+    wxASSERT(mTextFile->IsOpened());
 
-   if(mTextFile->Eof())
-   {
-      mTextFile->Close();
-      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
-      return;
-   }
+    if (mTextFile->Eof()) {
+        mTextFile->Close();
+        progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+        return;
+    }
 
-   wxString line = mTextFile->GetFirstLine();
+    wxString line = mTextFile->GetFirstLine();
 
-   while (!mTextFile->Eof())
-   {
-      lofOpenFiles(&line);
-      line = mTextFile->GetNextLine();
-   }
+    while (!mTextFile->Eof())
+    {
+        lofOpenFiles(&line);
+        line = mTextFile->GetNextLine();
+    }
 
-   // for last line
-   lofOpenFiles(&line);
+    // for last line
+    lofOpenFiles(&line);
 
-   if(!mTextFile->Close())
-   {
-      progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
-      return;
-   }
-   // set any duration/offset factors for last window, as all files were called
-   doDurationAndScrollOffset();
-   progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
+    if (!mTextFile->Close()) {
+        progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+        return;
+    }
+    // set any duration/offset factors for last window, as all files were called
+    doDurationAndScrollOffset();
+    progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
 }
 
 FilePath LOFImportFileHandle::GetFilename() const
 {
-   return mLOFFileName.GetFullPath();
+    return mLOFFileName.GetFullPath();
 }
 
 void LOFImportFileHandle::Cancel()
 {
-   //LOFImport delegates import to other plugins
+    //LOFImport delegates import to other plugins
 }
 
 void LOFImportFileHandle::Stop()
 {
-   //LOFImport delegates import to other plugins
+    //LOFImport delegates import to other plugins
 }
 
 static Importer::RegisteredImportPlugin registered{ "LOF",
-   std::make_unique< LOFImportPlugin >()
+                                                    std::make_unique< LOFImportPlugin >()
 };
 
 /** @brief Processes a single line from a LOF text file, doing whatever is
@@ -343,192 +336,174 @@ static Importer::RegisteredImportPlugin registered{ "LOF",
  */
 void LOFImportFileHandle::lofOpenFiles(wxString* ln)
 {
-   wxStringTokenizer tok(*ln, wxT(" "));
-   wxStringTokenizer temptok1(*ln, wxT("\""));
-   wxStringTokenizer temptok2(*ln, wxT(" "));
-   int tokenplace = 0;
+    wxStringTokenizer tok(*ln, wxT(" "));
+    wxStringTokenizer temptok1(*ln, wxT("\""));
+    wxStringTokenizer temptok2(*ln, wxT(" "));
+    int tokenplace = 0;
 
-   wxString targetfile;
-   wxString tokenholder = tok.GetNextToken();
+    wxString targetfile;
+    wxString tokenholder = tok.GetNextToken();
 
+    if (tokenholder.IsSameAs(wxT("window"), false)) {
+        // set any duration/offset factors for last window, as all files were called
+        doDurationAndScrollOffset();
 
-   if (tokenholder.IsSameAs(wxT("window"), false))
-   {
-      // set any duration/offset factors for last window, as all files were called
-      doDurationAndScrollOffset();
+        if (nFilesInGroup > 0) {
+            // Cause a project to be created with the next import
+            mProject = nullptr;
+        }
 
-      if (nFilesInGroup > 0 )
-         // Cause a project to be created with the next import
-         mProject = nullptr;
+        nFilesInGroup = 0;
 
-      nFilesInGroup = 0;
+        while (tok.HasMoreTokens())
+        {
+            tokenholder = tok.GetNextToken();
 
-      while (tok.HasMoreTokens())
-      {
-         tokenholder = tok.GetNextToken();
+            if (tokenholder.IsSameAs(wxT("offset"), false)) {
+                if (tok.HasMoreTokens()) {
+                    tokenholder = tok.GetNextToken();
+                }
 
-         if (tokenholder.IsSameAs(wxT("offset"), false))
-         {
-            if (tok.HasMoreTokens())
-               tokenholder = tok.GetNextToken();
+                if (Internat::CompatibleToDouble(tokenholder, &scrollOffset)) {
+                    callScrollOffset = true;
+                } else {
+                    ImportUtils::ShowMessageBox(
+                        /* i18n-hint: You do not need to translate "LOF" */
+                        XO("Invalid window offset in LOF file."));
+                }
 
-            if (Internat::CompatibleToDouble(tokenholder, &scrollOffset))
-            {
-               callScrollOffset = true;
+                if (tok.HasMoreTokens()) {
+                    tokenholder = tok.GetNextToken();
+                }
             }
-            else
-            {
-               ImportUtils::ShowMessageBox(
-                  /* i18n-hint: You do not need to translate "LOF" */
-                  XO("Invalid window offset in LOF file."));
+
+            if (tokenholder.IsSameAs(wxT("duration"), false)) {
+                if (tok.HasMoreTokens()) {
+                    tokenholder = tok.GetNextToken();
+                }
+
+                if (Internat::CompatibleToDouble(tokenholder, &durationFactor)) {
+                    callDurationFactor = true;
+                } else {
+                    ImportUtils::ShowMessageBox(
+                        /* i18n-hint: You do not need to translate "LOF" */
+                        XO("Invalid duration in LOF file."));
+                }
+            }  // End if statement
+
+            if (tokenholder == wxT("#")) {
+                // # indicates comments; ignore line
+                tok = wxStringTokenizer(wxT(""), wxT(" "));
+            }
+        }   // End while loop
+    }       // End if statement handling "window" lines
+    else if (tokenholder.IsSameAs(wxT("file"), false)) {
+        nFilesInGroup++;
+        // To identify filename and open it
+        tokenholder = temptok1.GetNextToken();
+        wxString targettoken = temptok1.GetNextToken();
+        targetfile = targettoken;
+
+        // If path is relative, make absolute path from LOF path
+        if (!wxIsAbsolutePath(targetfile)) {
+            wxFileName fName(targetfile);
+            fName.Normalize(wxPATH_NORM_ALL, mLOFFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
+            if (fName.FileExists()) {
+                targetfile = fName.GetFullPath();
+            }
+        }
+
+        // Do recursive call to import
+        mProject = ProjectManager::OpenProject(mProject, targetfile,
+                                               true /* addtohistory */, true /* reuseNonemptyProject */);
+
+        // Set tok to right after filename
+        temptok2.SetString(targettoken);
+        tokenplace = temptok2.CountTokens();
+
+        for (int i = 0; i < tokenplace; i++) {
+            tokenholder = tok.GetNextToken();
+        }
+
+        if (tok.HasMoreTokens()) {
+            tokenholder = tok.GetNextToken();
+
+            if (tokenholder == wxT("#")) {
+                // # indicates comments; ignore line
+                tok = wxStringTokenizer(wxT(""), wxT(" "));
             }
 
-            if (tok.HasMoreTokens())
-               tokenholder = tok.GetNextToken();
-         }
+            if (tokenholder.IsSameAs(wxT("offset"), false)) {
+                if (tok.HasMoreTokens()) {
+                    tokenholder = tok.GetNextToken();
+                }
+                double offset;
 
-         if (tokenholder.IsSameAs(wxT("duration"), false))
-         {
-            if (tok.HasMoreTokens())
-               tokenholder = tok.GetNextToken();
+                // handle an "offset" specifier
+                if (!mProject) {
+                    // there was an import error,
+                    // presumably with its own error message
+                } else if (Internat::CompatibleToDouble(tokenholder, &offset)) {
+                    auto& tracks = TrackList::Get(*mProject);
+                    auto t = *tracks.rbegin();
 
-            if (Internat::CompatibleToDouble(tokenholder, &durationFactor))
-            {
-               callDurationFactor = true;
-            }
-            else
-            {
-               ImportUtils::ShowMessageBox(
-                  /* i18n-hint: You do not need to translate "LOF" */
-                  XO("Invalid duration in LOF file."));
-            }
-         }     // End if statement
-
-         if (tokenholder == wxT("#"))
-         {
-            // # indicates comments; ignore line
-            tok = wxStringTokenizer(wxT(""), wxT(" "));
-         }
-      }     // End while loop
-   }        // End if statement handling "window" lines
-
-   else if (tokenholder.IsSameAs(wxT("file"), false))
-   {
-      nFilesInGroup++;
-      // To identify filename and open it
-      tokenholder = temptok1.GetNextToken();
-      wxString targettoken = temptok1.GetNextToken();
-      targetfile = targettoken;
-
-      // If path is relative, make absolute path from LOF path
-      if(!wxIsAbsolutePath(targetfile)) {
-         wxFileName fName(targetfile);
-         fName.Normalize(wxPATH_NORM_ALL, mLOFFileName.GetPath(wxPATH_GET_VOLUME | wxPATH_GET_SEPARATOR));
-         if(fName.FileExists()) {
-            targetfile = fName.GetFullPath();
-         }
-      }
-
-      // Do recursive call to import
-      mProject = ProjectManager::OpenProject( mProject, targetfile,
-         true /* addtohistory */, true /* reuseNonemptyProject */ );
-
-      // Set tok to right after filename
-      temptok2.SetString(targettoken);
-      tokenplace = temptok2.CountTokens();
-
-      for (int i = 0; i < tokenplace; i++)
-         tokenholder = tok.GetNextToken();
-
-      if (tok.HasMoreTokens())
-      {
-         tokenholder = tok.GetNextToken();
-
-         if (tokenholder == wxT("#"))
-         {
-            // # indicates comments; ignore line
-            tok = wxStringTokenizer(wxT(""), wxT(" "));
-         }
-
-         if (tokenholder.IsSameAs(wxT("offset"), false))
-         {
-            if (tok.HasMoreTokens())
-               tokenholder = tok.GetNextToken();
-            double offset;
-
-            // handle an "offset" specifier
-            if (!mProject)
-               // there was an import error,
-               // presumably with its own error message
-               ;
-            else if (Internat::CompatibleToDouble(tokenholder, &offset))
-            {
-               auto &tracks = TrackList::Get( *mProject );
-               auto t = *tracks.rbegin();
-
-               // t is now the last track in the project, unless the import of
-               // all tracks failed, in which case it will be null. In that
-               // case we return because we cannot offset a non-existent track.
-               if (t == NULL)
-                  return;
+                    // t is now the last track in the project, unless the import of
+                    // all tracks failed, in which case it will be null. In that
+                    // case we return because we cannot offset a non-existent track.
+                    if (t == NULL) {
+                        return;
+                    }
 #ifdef USE_MIDI
-               if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false) ||
-                   targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false))
-               {
-                  ImportUtils::ShowMessageBox(XO("MIDI tracks cannot be offset individually, only audio files can be."));
-               }
-               else
+                    if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false)
+                        || targetfile.AfterLast(wxT('.')).IsSameAs(wxT("midi"), false)) {
+                        ImportUtils::ShowMessageBox(XO("MIDI tracks cannot be offset individually, only audio files can be."));
+                    } else
 #endif
-               t->MoveTo(offset);
+                    t->MoveTo(offset);
 
-               // Amend the undo transaction made by import
-               ProjectHistory::Get( *mProject ).ModifyState(false);
-            } // end of converting "offset" argument
-            else
-            {
-               ImportUtils::ShowMessageBox(
-                  /* i18n-hint: You do not need to translate "LOF" */
-                  XO("Invalid track offset in LOF file."));
-            }
-         }     // End if statement for "offset" parameters
-      }     // End if statement (more tokens after file name)
-   }     // End if statement "file" lines
-
-   else if (tokenholder == wxT("#"))
-   {
-      // # indicates comments; ignore line
-      tok = wxStringTokenizer(wxT(""), wxT(" "));
-   }
-   else
-   {
-      // Couldn't parse a line
-   }
+                    // Amend the undo transaction made by import
+                    ProjectHistory::Get(*mProject).ModifyState(false);
+                } // end of converting "offset" argument
+                else {
+                    ImportUtils::ShowMessageBox(
+                        /* i18n-hint: You do not need to translate "LOF" */
+                        XO("Invalid track offset in LOF file."));
+                }
+            }  // End if statement for "offset" parameters
+        }   // End if statement (more tokens after file name)
+    }    // End if statement "file" lines
+    else if (tokenholder == wxT("#")) {
+        // # indicates comments; ignore line
+        tok = wxStringTokenizer(wxT(""), wxT(" "));
+    } else {
+        // Couldn't parse a line
+    }
 }
 
 void LOFImportFileHandle::doDurationAndScrollOffset()
 {
-   if (!mProject)
-      return;
+    if (!mProject) {
+        return;
+    }
 
-   callScrollOffset = callScrollOffset && (scrollOffset != 0);
-   bool doSomething = callDurationFactor || callScrollOffset;
+    callScrollOffset = callScrollOffset && (scrollOffset != 0);
+    bool doSomething = callDurationFactor || callScrollOffset;
 
-   if (callDurationFactor)
-   {
-      double longestDuration = TrackList::Get(*mProject).GetEndTime();
-      Viewport::Get(*mProject).ZoomBy(longestDuration / durationFactor);
-      callDurationFactor = false;
-   }
+    if (callDurationFactor) {
+        double longestDuration = TrackList::Get(*mProject).GetEndTime();
+        Viewport::Get(*mProject).ZoomBy(longestDuration / durationFactor);
+        callDurationFactor = false;
+    }
 
-   if (callScrollOffset)
-   {
-      Viewport::Get(*mProject).SetHorizontalThumb(scrollOffset);
-      callScrollOffset = false;
-   }
+    if (callScrollOffset) {
+        Viewport::Get(*mProject).SetHorizontalThumb(scrollOffset);
+        callScrollOffset = false;
+    }
 
-   if (doSomething)
-      // Amend last undo state
-      ProjectHistory::Get( *mProject ).ModifyState(false);
+    if (doSomething) {
+        // Amend last undo state
+        ProjectHistory::Get(*mProject).ModifyState(false);
+    }
 }
 
 LOFImportFileHandle::~LOFImportFileHandle()

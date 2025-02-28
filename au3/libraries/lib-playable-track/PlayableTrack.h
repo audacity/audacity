@@ -20,17 +20,17 @@
 class PLAYABLE_TRACK_API AudioTrack /* not final */ : public Track
 {
 public:
-   AudioTrack();
-   AudioTrack(const Track &orig, ProtectedCreationArg &&a);
+    AudioTrack();
+    AudioTrack(const Track& orig, ProtectedCreationArg&& a);
 
-   static const TypeInfo &ClassTypeInfo();
+    static const TypeInfo& ClassTypeInfo();
 
-   // Serialize, not with tags of its own, but as attributes within a tag.
-   void WriteXMLAttributes(XMLWriter &WXUNUSED(xmlFile)) const {}
+    // Serialize, not with tags of its own, but as attributes within a tag.
+    void WriteXMLAttributes(XMLWriter& WXUNUSED(xmlFile)) const {}
 
-   // Return true iff the attribute is recognized.
-   bool HandleXMLAttribute(const std::string_view & /*attr*/, const XMLAttributeValueView &/*value*/)
-   { return false; }
+    // Return true iff the attribute is recognized.
+    bool HandleXMLAttribute(const std::string_view& /*attr*/, const XMLAttributeValueView& /*value*/)
+    { return false; }
 };
 
 ENUMERATE_TRACK_TYPE(AudioTrack);
@@ -39,36 +39,36 @@ ENUMERATE_TRACK_TYPE(AudioTrack);
 class PLAYABLE_TRACK_API PlayableTrack /* not final */ : public AudioTrack
 {
 public:
-   PlayableTrack();
-   PlayableTrack(const PlayableTrack &orig, ProtectedCreationArg&&);
+    PlayableTrack();
+    PlayableTrack(const PlayableTrack& orig, ProtectedCreationArg&&);
 
-   static const TypeInfo &ClassTypeInfo();
+    static const TypeInfo& ClassTypeInfo();
 
-   bool GetMute    () const { return DoGetMute();     }
-   bool GetSolo    () const { return DoGetSolo();     }
-   bool GetNotMute () const { return !DoGetMute();     }
-   bool GetNotSolo () const { return !DoGetSolo();     }
-   void SetMute    (bool m);
-   void SetSolo    (bool s);
+    bool GetMute() const { return DoGetMute(); }
+    bool GetSolo() const { return DoGetSolo(); }
+    bool GetNotMute() const { return !DoGetMute(); }
+    bool GetNotSolo() const { return !DoGetSolo(); }
+    void SetMute(bool m);
+    void SetSolo(bool s);
 
-   // Serialize, not with tags of its own, but as attributes within a tag.
-   void WriteXMLAttributes(XMLWriter &xmlFile) const;
+    // Serialize, not with tags of its own, but as attributes within a tag.
+    void WriteXMLAttributes(XMLWriter& xmlFile) const;
 
-   // Return true iff the attribute is recognized.
-   bool HandleXMLAttribute(const std::string_view &attr, const XMLAttributeValueView &value);
+    // Return true iff the attribute is recognized.
+    bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& value);
 
 protected:
-   bool DoGetMute() const;
-   void DoSetMute(bool value);
-   bool DoGetSolo() const;
-   void DoSetSolo(bool value);
+    bool DoGetMute() const;
+    void DoSetMute(bool value);
+    bool DoGetSolo() const;
+    void DoSetSolo(bool value);
 };
 
 ENUMERATE_TRACK_TYPE(PlayableTrack);
 
 enum SoloBehavior {
-   SoloBehaviorSimple,
-   SoloBehaviorMulti
+    SoloBehaviorSimple,
+    SoloBehaviorMulti
 };
 
 extern PLAYABLE_TRACK_API EnumSetting<SoloBehavior> TracksBehaviorsSolo;

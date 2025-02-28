@@ -16,54 +16,54 @@ UIHandle::~UIHandle()
 {
 }
 
-void UIHandle::Enter(bool, AudacityProject *)
+void UIHandle::Enter(bool, AudacityProject*)
 {
 }
 
 bool UIHandle::HasRotation() const
 {
-   return false;
+    return false;
 }
 
 bool UIHandle::Rotate(bool)
 {
-   return false;
+    return false;
 }
 
-bool UIHandle::HasEscape(AudacityProject *) const
+bool UIHandle::HasEscape(AudacityProject*) const
 {
-   return false;
+    return false;
 }
 
-bool UIHandle::Escape(AudacityProject *)
+bool UIHandle::Escape(AudacityProject*)
 {
-   return false;
+    return false;
 }
 
 bool UIHandle::HandlesRightClick()
 {
-   return false;
+    return false;
 }
 
 bool UIHandle::StopsOnKeystroke()
 {
-   return false;
+    return false;
 }
 
-void UIHandle::OnProjectChange(AudacityProject *)
+void UIHandle::OnProjectChange(AudacityProject*)
 {
 }
 
 bool UIHandle::IsDragging() const
 {
-   return false;
+    return false;
 }
 
 std::shared_ptr<const Track>
-UIHandle::TrackFromChannel(const std::shared_ptr<const Channel> &pChannel)
+UIHandle::TrackFromChannel(const std::shared_ptr<const Channel>& pChannel)
 {
-   return pChannel
-      ? static_cast<const Track &>(pChannel->GetChannelGroup())
-         .shared_from_this()
-      : nullptr;
+    return pChannel
+           ? static_cast<const Track&>(pChannel->GetChannelGroup())
+           .shared_from_this()
+           : nullptr;
 }

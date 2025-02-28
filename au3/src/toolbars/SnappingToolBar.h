@@ -27,40 +27,40 @@ class wxSizeEvent;
 
 class AudacityProject;
 
-class SnappingToolBar final : public ToolBar {
+class SnappingToolBar final : public ToolBar
+{
+public:
+    static Identifier ID();
 
- public:
-   static Identifier ID();
+    SnappingToolBar(AudacityProject& project);
+    virtual ~SnappingToolBar();
 
-   SnappingToolBar(AudacityProject& project);
-   virtual ~SnappingToolBar();
+    bool ShownByDefault() const override;
+    DockID DefaultDockID() const override;
 
-   bool ShownByDefault() const override;
-   DockID DefaultDockID() const override;
+    static SnappingToolBar& Get(AudacityProject& project);
+    static const SnappingToolBar& Get(const AudacityProject& project);
 
-   static SnappingToolBar& Get(AudacityProject& project);
-   static const SnappingToolBar& Get(const AudacityProject& project);
+    void Create(wxWindow* parent) override;
 
-   void Create(wxWindow *parent) override;
+    void Populate() override;
+    void Repaint(wxDC* WXUNUSED(dc)) override {}
+    void EnableDisableButtons() override {}
+    void UpdatePrefs() override;
 
-   void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
-   void EnableDisableButtons() override {};
-   void UpdatePrefs() override;
-   
-   void RegenerateTooltips() override;
+    void RegenerateTooltips() override;
 
- private:
-   void OnSize(wxSizeEvent &evt);
-   void OnSnapModeChanged();
+private:
+    void OnSize(wxSizeEvent& evt);
+    void OnSnapModeChanged();
 
-   wxWeakRef<wxCheckBox> mSnapModeCheckBox;
-   wxWeakRef<wxComboCtrl> mSnapToCombo;
-   
-   Observer::Subscription mSnappingModeChangedSubscription;
+    wxWeakRef<wxCheckBox> mSnapModeCheckBox;
+    wxWeakRef<wxComboCtrl> mSnapToCombo;
 
- public:
+    Observer::Subscription mSnappingModeChangedSubscription;
 
-   DECLARE_CLASS(SelectionBar)
-   DECLARE_EVENT_TABLE()
+public:
+
+    DECLARE_CLASS(SelectionBar)
+    DECLARE_EVENT_TABLE()
 };

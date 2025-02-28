@@ -18,39 +18,39 @@ struct LimiterSettings;
 
 struct DynamicRangeProcessorParameterAttributes
 {
-   const TranslatableString caption;
-   const bool exponentialSlider = false;
+    const TranslatableString caption;
+    const bool exponentialSlider = false;
 };
 
 static const DynamicRangeProcessorParameterAttributes
-   compressorThresholdDbAttributes { XXO("&Threshold (dB)") };
+    compressorThresholdDbAttributes { XXO("&Threshold (dB)") };
 
 static const DynamicRangeProcessorParameterAttributes
-   compressorMakupGainDbAttributes { XXO("&Make-up gain (dB)") };
+    compressorMakupGainDbAttributes { XXO("&Make-up gain (dB)") };
 
 static const DynamicRangeProcessorParameterAttributes
-   limiterThresholdDbAttributes { XXO("&Threshold (dB)") };
+    limiterThresholdDbAttributes { XXO("&Threshold (dB)") };
 
 static const DynamicRangeProcessorParameterAttributes
-   limiterMakeupTargetDbAttributes { XXO("&Make-up target (dB)") };
+    limiterMakeupTargetDbAttributes { XXO("&Make-up target (dB)") };
 
 static const DynamicRangeProcessorParameterAttributes kneeWidthDbAttributes {
-   XXO("Knee &width (dB)")
+    XXO("Knee &width (dB)")
 };
 
 static const DynamicRangeProcessorParameterAttributes
-   compressionRatioAttributes { XXO("Rati&o:"), true };
+    compressionRatioAttributes { XXO("Rati&o:"), true };
 
 static const DynamicRangeProcessorParameterAttributes lookaheadMsAttributes {
-   XXO("&Lookahead (ms)"), true
+    XXO("&Lookahead (ms)"), true
 };
 
 static const DynamicRangeProcessorParameterAttributes attackMsAttributes {
-   XXO("Attac&k (ms)"), true
+    XXO("Attac&k (ms)"), true
 };
 
 static const DynamicRangeProcessorParameterAttributes releaseMsAttributes {
-   XXO("&Release (ms)"), true
+    XXO("&Release (ms)"), true
 };
 
 //! Abstracts different parameter types (CompressorParameter and
@@ -59,97 +59,96 @@ static const DynamicRangeProcessorParameterAttributes releaseMsAttributes {
 class DynamicRangeProcessorParameter
 {
 public:
-   virtual ~DynamicRangeProcessorParameter() = default;
-   virtual double Min() const = 0;
-   virtual double Max() const = 0;
-   virtual double SliderMin() const = 0;
-   virtual double SliderMax() const = 0;
-   virtual double TextToSlider() const = 0;
+    virtual ~DynamicRangeProcessorParameter() = default;
+    virtual double Min() const = 0;
+    virtual double Max() const = 0;
+    virtual double SliderMin() const = 0;
+    virtual double SliderMax() const = 0;
+    virtual double TextToSlider() const = 0;
 };
 
 enum class ControllerCategory
 {
-   CompressionCurve,
-   TimeSmoothing,
+    CompressionCurve,
+    TimeSmoothing,
 };
 
 struct ExtendedCompressorParameter
 {
-   double& value;
-   const DynamicRangeProcessorParameterAttributes& attributes;
-   const std::shared_ptr<DynamicRangeProcessorParameter> param;
-   const ControllerCategory category;
-   wxTextCtrl* text = nullptr;
-   wxSlider* slider = nullptr;
+    double& value;
+    const DynamicRangeProcessorParameterAttributes& attributes;
+    const std::shared_ptr<DynamicRangeProcessorParameter> param;
+    const ControllerCategory category;
+    wxTextCtrl* text = nullptr;
+    wxSlider* slider = nullptr;
 };
 
 class DynamicRangeProcessorEditor : public EffectEditor
 {
 public:
-   DynamicRangeProcessorEditor(
-      wxWindow* parent, CompressorInstance& instance, bool isRealtime,
-      const EffectUIServices& services, EffectSettingsAccess& access);
+    DynamicRangeProcessorEditor(
+        wxWindow* parent, CompressorInstance& instance, bool isRealtime, const EffectUIServices& services, EffectSettingsAccess& access);
 
 protected:
-   /*
-    * \pre `parameters` are sorted by categoy, `CompressionCurve` first and then
-    * `TimeSmoothing`.
-    */
-   void Initialize(std::vector<ExtendedCompressorParameter> parameters);
-   static constexpr auto dbStep = 0.1;
+    /*
+     * \pre `parameters` are sorted by categoy, `CompressionCurve` first and then
+     * `TimeSmoothing`.
+     */
+    void Initialize(std::vector<ExtendedCompressorParameter> parameters);
+    static constexpr auto dbStep = 0.1;
 
 public:
-   void PopulateOrExchange(ShuttleGui& S);
+    void PopulateOrExchange(ShuttleGui& S);
 
 private:
-   void AddCompressionCurvePanel(ShuttleGui& S, const CompressorSettings&);
-   void AddSliderPanel(ShuttleGui& S);
-   void AddCheckboxPanel(
-      ShuttleGui& S, const DynamicRangeProcessorSettings& settings);
-   void AddClipIndicator(ShuttleGui& S);
+    void AddCompressionCurvePanel(ShuttleGui& S, const CompressorSettings&);
+    void AddSliderPanel(ShuttleGui& S);
+    void AddCheckboxPanel(
+        ShuttleGui& S, const DynamicRangeProcessorSettings& settings);
+    void AddClipIndicator(ShuttleGui& S);
 
-   virtual const CompressorSettings* GetCompressorSettings() const
-   {
-      return nullptr;
-   }
+    virtual const CompressorSettings* GetCompressorSettings() const
+    {
+        return nullptr;
+    }
 
-   virtual const LimiterSettings* GetLimiterSettings() const
-   {
-      return nullptr;
-   }
+    virtual const LimiterSettings* GetLimiterSettings() const
+    {
+        return nullptr;
+    }
 
-   CompressorSettings* GetCompressorSettings()
-   {
-      return const_cast<CompressorSettings*>(
-         const_cast<const DynamicRangeProcessorEditor&>(*this)
+    CompressorSettings* GetCompressorSettings()
+    {
+        return const_cast<CompressorSettings*>(
+            const_cast<const DynamicRangeProcessorEditor&>(*this)
             .GetCompressorSettings());
-   }
+    }
 
-   LimiterSettings* GetLimiterSettings()
-   {
-      return const_cast<LimiterSettings*>(
-         const_cast<const DynamicRangeProcessorEditor&>(*this)
+    LimiterSettings* GetLimiterSettings()
+    {
+        return const_cast<LimiterSettings*>(
+            const_cast<const DynamicRangeProcessorEditor&>(*this)
             .GetLimiterSettings());
-   }
+    }
 
-   void AddTextboxAndSlider(ShuttleGui& S, ExtendedCompressorParameter& param);
+    void AddTextboxAndSlider(ShuttleGui& S, ExtendedCompressorParameter& param);
 
-   bool ValidateUI() final override;
-   bool UpdateUI() final override;
-   void OnCheckbox(
-      bool newVal, double& setting,
-      void (DynamicRangeProcessorHistoryPanel::*)(bool));
+    bool ValidateUI() final override;
+    bool UpdateUI() final override;
+    void OnCheckbox(
+        bool newVal, double& setting,
+        void (DynamicRangeProcessorHistoryPanel::*)(bool));
 
-   struct HistoryPanels
-   {
-      DynamicRangeProcessorHistoryPanel* historyPanel;
-      RulerPanel* rulerPanel;
-   };
+    struct HistoryPanels
+    {
+        DynamicRangeProcessorHistoryPanel* historyPanel;
+        RulerPanel* rulerPanel;
+    };
 
-   wxWeakRef<wxWindow> mUIParent;
-   std::vector<ExtendedCompressorParameter> mParameters;
-   wxDialog& mTopLevelParent;
-   CompressorInstance& mCompressorInstance;
-   const bool mIsRealtime;
-   int mFullHeight { 0 };
+    wxWeakRef<wxWindow> mUIParent;
+    std::vector<ExtendedCompressorParameter> mParameters;
+    wxDialog& mTopLevelParent;
+    CompressorInstance& mCompressorInstance;
+    const bool mIsRealtime;
+    int mFullHeight { 0 };
 };

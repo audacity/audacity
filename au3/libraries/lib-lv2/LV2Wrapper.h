@@ -43,88 +43,77 @@ LV2_DISABLE_DEPRECATION_WARNINGS
 //! Manager of a handle to an LV2 plug-in instantiation
 class LV2_API LV2Wrapper final
 {
-   //! To compel use of the factory
-   struct CreateToken{};
+    //! To compel use of the factory
+    struct CreateToken {};
 public:
-   struct LV2Work {
-      uint32_t size{};
-      const void *data{};
-   };
+    struct LV2Work {
+        uint32_t size{};
+        const void* data{};
+    };
 
 public:
-   //! Factory
-   static std::unique_ptr<LV2Wrapper> Create(
-      LV2InstanceFeaturesList &baseFeatures,
-      const LV2Ports &ports, LV2PortStates &portStates,
-      const LV2EffectSettings &settings, float sampleRate,
-      EffectOutputs *pOutputs);
+    //! Factory
+    static std::unique_ptr<LV2Wrapper> Create(
+        LV2InstanceFeaturesList& baseFeatures, const LV2Ports& ports, LV2PortStates& portStates, const LV2EffectSettings& settings,
+        float sampleRate, EffectOutputs* pOutputs);
 
-   //! Constructor may spawn a thread
-   LV2Wrapper(CreateToken&&,
-      LV2InstanceFeaturesList &baseFeatures,
-      const LilvPlugin &plugin, float sampleRate);
+    //! Constructor may spawn a thread
+    LV2Wrapper(CreateToken&&, LV2InstanceFeaturesList& baseFeatures, const LilvPlugin& plugin, float sampleRate);
 
-   //! If a thread was started, joins it
-   ~LV2Wrapper();
+    //! If a thread was started, joins it
+    ~LV2Wrapper();
 
-   void ConnectControlPorts(const LV2Ports &ports,
-      const LV2EffectSettings &settings, EffectOutputs *pOutputs);
-   void ConnectPorts(const LV2Ports &ports,
-      LV2PortStates &portStates, const LV2EffectSettings &settings,
-      EffectOutputs *pOutputs);
-   void Activate();
-   void Deactivate();
-   LilvInstance &GetInstance() const;
-   LV2_Handle GetHandle() const;
-   float GetLatency() const;
-   void SetFreeWheeling(bool enable);
-   void SendBlockSize();
-   void ConsumeResponses();
-   static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle,
-                                          uint32_t size,
-                                          const void *data);
-   LV2_Worker_Status ScheduleWork(uint32_t size, const void *data);
-   static LV2_Worker_Status respond(LV2_Worker_Respond_Handle handle,
-                                    uint32_t size,
-                                    const void *data);
-   LV2_Worker_Status Respond(uint32_t size, const void *data);
+    void ConnectControlPorts(const LV2Ports& ports, const LV2EffectSettings& settings, EffectOutputs* pOutputs);
+    void ConnectPorts(const LV2Ports& ports, LV2PortStates& portStates, const LV2EffectSettings& settings, EffectOutputs* pOutputs);
+    void Activate();
+    void Deactivate();
+    LilvInstance& GetInstance() const;
+    LV2_Handle GetHandle() const;
+    float GetLatency() const;
+    void SetFreeWheeling(bool enable);
+    void SendBlockSize();
+    void ConsumeResponses();
+    static LV2_Worker_Status schedule_work(LV2_Worker_Schedule_Handle handle, uint32_t size, const void* data);
+    LV2_Worker_Status ScheduleWork(uint32_t size, const void* data);
+    static LV2_Worker_Status respond(LV2_Worker_Respond_Handle handle, uint32_t size, const void* data);
+    LV2_Worker_Status Respond(uint32_t size, const void* data);
 
-   LV2WrapperFeaturesList &GetFeatures() { return mFeaturesList; }
-   const LV2WrapperFeaturesList &GetFeatures() const { return mFeaturesList; }
+    LV2WrapperFeaturesList& GetFeatures() { return mFeaturesList; }
+    const LV2WrapperFeaturesList& GetFeatures() const { return mFeaturesList; }
 
 private:
-   void ThreadFunction();
+    void ThreadFunction();
 
-   // Another object with an explicit virtual function table
-   LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
+    // Another object with an explicit virtual function table
+    LV2_Worker_Schedule mWorkerSchedule{ this, LV2Wrapper::schedule_work };
 
-   LV2WrapperFeaturesList mFeaturesList;
+    LV2WrapperFeaturesList mFeaturesList;
 
-   //! @invariant not null
-   const LilvInstancePtr mInstance;
-   const LV2_Handle mHandle;
+    //! @invariant not null
+    const LilvInstancePtr mInstance;
+    const LV2_Handle mHandle;
 
-   // Pointers to extension interfaces that the foreign plug-in instance
-   // may expose:
-   // Options extension
-   const LV2_Options_Interface *const mOptionsInterface;
-   // State extension
-   const LV2_State_Interface *const mStateInterface;
-   // Worker extension
-   const LV2_Worker_Interface *const mWorkerInterface;
+    // Pointers to extension interfaces that the foreign plug-in instance
+    // may expose:
+    // Options extension
+    const LV2_Options_Interface* const mOptionsInterface;
+    // State extension
+    const LV2_State_Interface* const mStateInterface;
+    // Worker extension
+    const LV2_Worker_Interface* const mWorkerInterface;
 
-   std::thread mThread;
-   wxMessageQueue<LV2Work> mRequests;
-   wxMessageQueue<LV2Work> mResponses;
-   float mLatency{ 0.0 };
+    std::thread mThread;
+    wxMessageQueue<LV2Work> mRequests;
+    wxMessageQueue<LV2Work> mResponses;
+    float mLatency{ 0.0 };
 
-   //! If true, do not spawn extra worker threads
-   bool mFreeWheeling{ false };
+    //! If true, do not spawn extra worker threads
+    bool mFreeWheeling{ false };
 
-   //! Written by main thread, read by worker, but atomic isn't needed because
-   //! mRequests provides synchronization
-   bool mStopWorker{ false };
-   bool mActivated{ false };
+    //! Written by main thread, read by worker, but atomic isn't needed because
+    //! mRequests provides synchronization
+    bool mStopWorker{ false };
+    bool mActivated{ false };
 };
 
 #endif

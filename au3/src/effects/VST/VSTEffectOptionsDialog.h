@@ -22,20 +22,20 @@ class ShuttleGui;
 class VSTEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
-   explicit VSTEffectOptionsDialog(const EffectDefinitionInterface &effect);
-   virtual ~VSTEffectOptionsDialog();
+    explicit VSTEffectOptionsDialog(const EffectDefinitionInterface& effect);
+    virtual ~VSTEffectOptionsDialog();
 
-   void PopulateOrExchange(ShuttleGui & S);
+    void PopulateOrExchange(ShuttleGui& S);
 
-   void OnOk(wxCommandEvent & evt);
+    void OnOk(wxCommandEvent& evt);
 
 private:
-   const EffectDefinitionInterface &mEffect;
-   int mBufferSize;
-   bool mUseLatency;
-   bool mUseGUI;
+    const EffectDefinitionInterface& mEffect;
+    int mBufferSize;
+    bool mUseLatency;
+    bool mUseGUI;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

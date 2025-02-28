@@ -14,7 +14,6 @@
 #ifndef __AUDACITY_APP__
 #define __AUDACITY_APP__
 
-
 #include "Identifier.h"
 #include "Observer.h"
 #include "Theme.h"
@@ -36,66 +35,64 @@ class CommandHandler;
 class AppCommandEvent;
 class AudacityProject;
 
-class AudacityApp final
-   : public wxApp
-   , private AppEvents::ProviderBase
+class AudacityApp final : public wxApp, private AppEvents::ProviderBase
 {
- public:
-   AudacityApp();
-   ~AudacityApp();
-   
-   bool Initialize(int& argc, wxChar** argv) override;
+public:
+    AudacityApp();
+    ~AudacityApp();
+
+    bool Initialize(int& argc, wxChar** argv) override;
 #ifdef __WXMAC__
-   bool OSXIsGUIApplication() override;
+    bool OSXIsGUIApplication() override;
 #endif
-   
-   void CleanUp() override;
-   bool OnInit() override;
-   bool InitPart2();
-   int OnRun() override;
-   int OnExit(void) override;
-   void OnFatalException() override;
-   bool OnExceptionInMainLoop() override;
 
-   void OnIdle( wxIdleEvent & );
+    void CleanUp() override;
+    bool OnInit() override;
+    bool InitPart2();
+    int OnRun() override;
+    int OnExit(void) override;
+    void OnFatalException() override;
+    bool OnExceptionInMainLoop() override;
 
-   // These are currently only used on Mac OS, where it's
-   // possible to have a menu bar but no windows open.  It doesn't
-   // hurt any other platforms, though.
-   void OnMenuAbout(wxCommandEvent & event);
-   void OnMenuNew(wxCommandEvent & event);
-   void OnMenuOpen(wxCommandEvent & event);
-   void OnMenuPreferences(wxCommandEvent & event);
-   void OnMenuExit(wxCommandEvent & event);
+    void OnIdle(wxIdleEvent&);
 
-   void OnQueryEndSession(wxCloseEvent & event);
-   void OnEndSession(wxCloseEvent & event);
+    // These are currently only used on Mac OS, where it's
+    // possible to have a menu bar but no windows open.  It doesn't
+    // hurt any other platforms, though.
+    void OnMenuAbout(wxCommandEvent& event);
+    void OnMenuNew(wxCommandEvent& event);
+    void OnMenuOpen(wxCommandEvent& event);
+    void OnMenuPreferences(wxCommandEvent& event);
+    void OnMenuExit(wxCommandEvent& event);
 
-   // Most Recently Used File support (for all platforms).
-   void OnMRUClear(wxCommandEvent &event);
-   void OnMRUFile(wxCommandEvent &event);
-   // Backend for above - returns true for success, false for failure
-   bool MRUOpen(const FilePath &fileName);
-   // A wrapper of the above that does not throw
-   bool SafeMRUOpen(const wxString &fileName);
+    void OnQueryEndSession(wxCloseEvent& event);
+    void OnEndSession(wxCloseEvent& event);
 
-   void OnReceiveCommand(AppCommandEvent &event);
+    // Most Recently Used File support (for all platforms).
+    void OnMRUClear(wxCommandEvent& event);
+    void OnMRUFile(wxCommandEvent& event);
+    // Backend for above - returns true for success, false for failure
+    bool MRUOpen(const FilePath& fileName);
+    // A wrapper of the above that does not throw
+    bool SafeMRUOpen(const wxString& fileName);
 
-   void OnKeyDown(wxKeyEvent &event);
+    void OnReceiveCommand(AppCommandEvent& event);
 
-   void OnTimer(wxTimerEvent & event);
+    void OnKeyDown(wxKeyEvent& event);
 
-   // IPC communication
-   void OnServerEvent(wxSocketEvent & evt);
-   void OnSocketEvent(wxSocketEvent & evt);
+    void OnTimer(wxTimerEvent& event);
+
+    // IPC communication
+    void OnServerEvent(wxSocketEvent& evt);
+    void OnSocketEvent(wxSocketEvent& evt);
 
    #ifdef __WXMAC__
     // In response to Apple Events
-    void MacOpenFile(const wxString &fileName)  override;
-    void MacPrintFile(const wxString &fileName)  override;
+    void MacOpenFile(const wxString& fileName)  override;
+    void MacPrintFile(const wxString& fileName)  override;
     void MacNewFile()  override;
    #ifdef HAS_CUSTOM_URL_HANDLING
-    void MacOpenURL(const wxString &url) override;
+    void MacOpenURL(const wxString& url) override;
    #endif
    #endif
 
@@ -103,45 +100,44 @@ class AudacityApp final
     void AssociateFileTypes();
    #endif
 
-   static void OnThemeChange(struct ThemeChangeMessage);
+    static void OnThemeChange(struct ThemeChangeMessage);
 
 #ifdef __WXMAC__
-   void MacActivateApp();
-   void MacFinishLaunching();
+    void MacActivateApp();
+    void MacFinishLaunching();
 #endif
 
+private:
+    void OnInit0();
+    Observer::Subscription mThemeChangeSubscription;
 
- private:
-   void OnInit0();
-   Observer::Subscription mThemeChangeSubscription;
+    std::unique_ptr<CommandHandler> mCmdHandler;
 
-   std::unique_ptr<CommandHandler> mCmdHandler;
+    std::unique_ptr<wxSingleInstanceChecker> mChecker;
 
-   std::unique_ptr<wxSingleInstanceChecker> mChecker;
+    wxTimer mTimer;
+    wxTimer mSplashTimer;
+    std::unique_ptr<wxSplashScreen> mSplashScreen;
 
-   wxTimer mTimer;
-   wxTimer mSplashTimer;
-   std::unique_ptr<wxSplashScreen> mSplashScreen;
+    void InitCommandHandler();
 
-   void InitCommandHandler();
+    bool InitTempDir();
+    bool CreateSingleInstanceChecker(const wxString& dir);
+    void ShowSplashScreen();
+    void HideSplashScreen(bool fadeOut=true);
 
-   bool InitTempDir();
-   bool CreateSingleInstanceChecker(const wxString &dir);
-   void ShowSplashScreen();
-   void HideSplashScreen(bool fadeOut=true);
-
-   std::unique_ptr<wxCmdLineParser> ParseCommandLine();
+    std::unique_ptr<wxCmdLineParser> ParseCommandLine();
 
 #if defined(__WXMSW__)
-   std::unique_ptr<IPCServ> mIPCServ;
+    std::unique_ptr<IPCServ> mIPCServ;
 #else
-   std::unique_ptr<wxSocketServer> mIPCServ;
+    std::unique_ptr<wxSocketServer> mIPCServ;
 #endif
 
- public:
+public:
     DECLARE_EVENT_TABLE()
 };
 
-extern AudacityApp & wxGetApp();
+extern AudacityApp& wxGetApp();
 
 #endif

@@ -14,4 +14,4 @@ class wxDynamicLibrary;
 struct AVFormatFunctions;
 
 bool LoadAVFormatFunctions(
-   const wxDynamicLibrary& lib, AVFormatFunctions& functions);
+    const wxDynamicLibrary& lib, AVFormatFunctions& functions);

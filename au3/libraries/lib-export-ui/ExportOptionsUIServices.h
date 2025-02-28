@@ -15,9 +15,9 @@ class ShuttleGui;
 class EXPORT_UI_API ExportOptionsUIServices
 {
 public:
-   
-   virtual ~ExportOptionsUIServices();
 
-   virtual void PopulateUI(ShuttleGui&) = 0;
-   virtual bool TransferDataFromWindow() = 0;
+    virtual ~ExportOptionsUIServices();
+
+    virtual void PopulateUI(ShuttleGui&) = 0;
+    virtual bool TransferDataFromWindow() = 0;
 };

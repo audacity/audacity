@@ -18,45 +18,45 @@
 
 std::string PlatformCompatibility::GetUserDataDir()
 {
-   return wxStandardPaths::Get().GetUserDataDir().ToStdString();
+    return wxStandardPaths::Get().GetUserDataDir().ToStdString();
 }
 
 std::string PlatformCompatibility::GetUserLocalDataDir()
 {
-   return wxStandardPaths::Get().GetUserLocalDataDir().ToStdString();
+    return wxStandardPaths::Get().GetUserLocalDataDir().ToStdString();
 }
 
 std::string PlatformCompatibility::GetResourcesDir()
 {
-   return wxStandardPaths::Get().GetResourcesDir().ToStdString();
+    return wxStandardPaths::Get().GetResourcesDir().ToStdString();
 }
 
 std::string PlatformCompatibility::GetDataDir()
 {
-   return wxStandardPaths::Get().GetDataDir().ToStdString();
+    return wxStandardPaths::Get().GetDataDir().ToStdString();
 }
 
 std::string PlatformCompatibility::GetPluginsDir()
 {
-   return wxStandardPaths::Get().GetPluginsDir().ToStdString();
+    return wxStandardPaths::Get().GetPluginsDir().ToStdString();
 }
 
 std::string PlatformCompatibility::GetDocumentsDir()
 {
-   return wxStandardPaths::Get().GetDocumentsDir().ToStdString();
+    return wxStandardPaths::Get().GetDocumentsDir().ToStdString();
 }
 
 std::string PlatformCompatibility::GetExecutablePath()
 {
-   return wxStandardPaths::Get().GetExecutablePath().ToStdString();
+    return wxStandardPaths::Get().GetExecutablePath().ToStdString();
 }
 
 std::string PlatformCompatibility::GetTempDir()
 {
-   return wxStandardPaths::Get().GetTempDir().ToStdString();
+    return wxStandardPaths::Get().GetTempDir().ToStdString();
 }
 
 std::string PlatformCompatibility::GetHomeDir()
 {
-   return wxGetHomeDir().ToStdString();
+    return wxGetHomeDir().ToStdString();
 }

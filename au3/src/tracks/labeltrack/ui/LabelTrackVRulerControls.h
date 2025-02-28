@@ -17,26 +17,24 @@ Paul Licameli split from TrackPanel.cpp
 // types, but it does nothing.
 class LabelTrackVRulerControls final : public ChannelVRulerControls
 {
-   LabelTrackVRulerControls(const LabelTrackVRulerControls&) = delete;
-   LabelTrackVRulerControls &operator=(const LabelTrackVRulerControls&)
-      = delete;
+    LabelTrackVRulerControls(const LabelTrackVRulerControls&) = delete;
+    LabelTrackVRulerControls& operator=(const LabelTrackVRulerControls&)
+    = delete;
 
 public:
-   explicit
-   LabelTrackVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
-      : ChannelVRulerControls{ pChannelView } {}
-   ~LabelTrackVRulerControls();
+    explicit
+    LabelTrackVRulerControls(const std::shared_ptr<ChannelView>& pChannelView)
+        : ChannelVRulerControls{pChannelView} {}
+    ~LabelTrackVRulerControls();
 
 private:
 
-   // TrackPanelDrawable implementation
-   void Draw(
-      TrackPanelDrawingContext &context,
-      const wxRect &rect, unsigned iPass ) override;
+    // TrackPanelDrawable implementation
+    void Draw(
+        TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
 
-   // ChannelVRulerControls implementation
-   void UpdateRuler( const wxRect &rect ) override;
-
+    // ChannelVRulerControls implementation
+    void UpdateRuler(const wxRect& rect) override;
 };
 
 #endif

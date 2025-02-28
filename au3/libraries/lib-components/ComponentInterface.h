@@ -6,7 +6,7 @@
 
    Leland Lucius
 
-   Copyright (c) 2014, Audacity Team 
+   Copyright (c) 2014, Audacity Team
    All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
-   
+
 **********************************************************************/
 
 #ifndef __AUDACITY_COMPONENT_INTERFACE_H__
@@ -59,25 +59,25 @@ effects and (soon) preference pagess that define parameters.
 class COMPONENTS_API ComponentInterface /* not final */
 {
 public:
-   virtual ~ComponentInterface();
+    virtual ~ComponentInterface();
 
-   // These should return an untranslated value
-   virtual PluginPath GetPath() const = 0;
+    // These should return an untranslated value
+    virtual PluginPath GetPath() const = 0;
 
-   // The internal string persists in configuration files
-   // So config compatibility will break if it is changed across Audacity versions
-   virtual ComponentInterfaceSymbol GetSymbol() const = 0;
+    // The internal string persists in configuration files
+    // So config compatibility will break if it is changed across Audacity versions
+    virtual ComponentInterfaceSymbol GetSymbol() const = 0;
 
-   virtual VendorSymbol GetVendor() const = 0;
+    virtual VendorSymbol GetVendor() const = 0;
 
-   virtual wxString GetVersion() const = 0;
+    virtual wxString GetVersion() const = 0;
 
-   // This returns a translated string
-   // Any verb should be present tense indicative, not imperative
-   virtual TranslatableString GetDescription() const = 0;
+    // This returns a translated string
+    // Any verb should be present tense indicative, not imperative
+    virtual TranslatableString GetDescription() const = 0;
 
-   // non-virtual convenience function
-   TranslatableString GetName() const;
+    // non-virtual convenience function
+    TranslatableString GetName() const;
 };
 
 #endif // __AUDACITY_IDENTINTERFACE_H__

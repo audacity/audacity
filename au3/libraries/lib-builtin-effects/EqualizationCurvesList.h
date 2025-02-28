@@ -20,24 +20,24 @@ struct EqualizationFilter;
 
 //! Maintains a list of preset curves for Equalization effects
 struct BUILTIN_EFFECTS_API EqualizationCurvesList {
-   explicit EqualizationCurvesList(EqualizationFilter &params)
-      : mParameters{ params }
-   {}
+    explicit EqualizationCurvesList(EqualizationFilter& params)
+        : mParameters{params}
+    {}
 
-   void EnvelopeUpdated();
-   void EnvelopeUpdated(const Envelope &env, bool lin);
-   void Select(int sel);
+    void EnvelopeUpdated();
+    void EnvelopeUpdated(const Envelope& env, bool lin);
+    void Select(int sel);
 
-   void ForceRecalc() { mRecalcRequired = true; }
+    void ForceRecalc() { mRecalcRequired = true; }
 
-   void setCurve(int currentCurve);
-   void setCurve(const wxString& curveName);
+    void setCurve(int currentCurve);
+    void setCurve(const wxString& curveName);
 
-   EQCurveArray mCurves;
-   EqualizationFilter &mParameters;
-   bool mRecalcRequired{ false };
+    EQCurveArray mCurves;
+    EqualizationFilter& mParameters;
+    bool mRecalcRequired{ false };
 
 private:
-   void setCurve();
+    void setCurve();
 };
 #endif

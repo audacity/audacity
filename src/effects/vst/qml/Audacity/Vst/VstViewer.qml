@@ -24,9 +24,12 @@ import QtQuick 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
+import Audacity.Effects 1.0
 import Audacity.Vst 1.0
 
 Rectangle {
+
+    id: root
 
     // in
     property alias instanceId: view.instanceId
@@ -40,15 +43,34 @@ Rectangle {
     implicitHeight: view.implicitHeight
 
     Component.onCompleted: {
+        viewModel.init()
         view.init()
-    }
-
-    function onApply() {
-        viewModel.onApply()
+        Qt.callLater(manageMenuModel.load)
     }
 
     function preview() {
        viewModel.preview()
+    }
+
+    function manage(parent) {
+        var px = parent.x
+        var py = parent.y + parent.height
+        var pos = mapFromItem(parent, px, py)
+
+        menuLoader.show(pos, manageMenuModel)
+    }
+
+    EffectManageMenu {
+        id: manageMenuModel
+        instanceId: view.instanceId
+    }
+
+    ContextMenuLoader {
+        id: menuLoader
+
+        onHandleMenuItem: function(itemId) {
+            manageMenuModel.handleMenuItem(itemId)
+        }
     }
 
     VstViewModel {
@@ -58,6 +80,8 @@ Rectangle {
 
     VstView {
         id: view
-        anchors.fill: parent
+        width: implicitWidth
+        height: implicitHeight
+        x: (root.width - view.width) / 2
     }
 }

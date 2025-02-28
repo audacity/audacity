@@ -30,24 +30,23 @@
 class EffectDefinitionInterface;
 class ShuttleGui;
 
-
 class LV2PreferencesDialog final : public wxDialogWrapper
 {
 public:
-   explicit LV2PreferencesDialog(const EffectDefinitionInterface &effect);
-   virtual ~LV2PreferencesDialog();
+    explicit LV2PreferencesDialog(const EffectDefinitionInterface& effect);
+    virtual ~LV2PreferencesDialog();
 
-   void PopulateOrExchange(ShuttleGui &S);
+    void PopulateOrExchange(ShuttleGui& S);
 
-   void OnOk(wxCommandEvent &evt);
+    void OnOk(wxCommandEvent& evt);
 
 private:
-   const EffectDefinitionInterface &mEffect;
-   int mBufferSize{};
-   bool mUseLatency{};
-   bool mUseGUI{};
+    const EffectDefinitionInterface& mEffect;
+    int mBufferSize{};
+    bool mUseLatency{};
+    bool mUseGUI{};
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

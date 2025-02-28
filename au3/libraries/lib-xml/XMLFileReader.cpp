@@ -25,53 +25,52 @@
 
 XMLFileReader::XMLFileReader()
 {
-   mParser = XML_ParserCreate(NULL);
-   XML_SetUserData(mParser, (void *)this);
-   XML_SetElementHandler(mParser, startElement, endElement);
-   XML_SetCharacterDataHandler(mParser, charHandler);
-   mBaseHandler = NULL;
-   mHandler.reserve(128);
+    mParser = XML_ParserCreate(NULL);
+    XML_SetUserData(mParser, (void*)this);
+    XML_SetElementHandler(mParser, startElement, endElement);
+    XML_SetCharacterDataHandler(mParser, charHandler);
+    mBaseHandler = NULL;
+    mHandler.reserve(128);
 }
 
 XMLFileReader::~XMLFileReader()
 {
-   XML_ParserFree(mParser);
+    XML_ParserFree(mParser);
 }
 
-bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
-                          const FilePath &fname)
+bool XMLFileReader::Parse(XMLTagHandler* baseHandler,
+                          const FilePath& fname)
 {
-   wxFFile theXMLFile(fname, wxT("rb"));
-   if (!theXMLFile.IsOpened()) {
-      mErrorStr = XO("Could not open file: \"%s\"").Format( fname );
-      return false;
-   }
+    wxFFile theXMLFile(fname, wxT("rb"));
+    if (!theXMLFile.IsOpened()) {
+        mErrorStr = XO("Could not open file: \"%s\"").Format(fname);
+        return false;
+    }
 
-   mBaseHandler = baseHandler;
+    mBaseHandler = baseHandler;
 
-   const size_t bufferSize = 16384;
-   char buffer[16384];
-   int done = 0;
-   do {
-      size_t len = fread(buffer, 1, bufferSize, theXMLFile.fp());
-      done = (len < bufferSize);
-      if (!XML_Parse(mParser, buffer, len, done)) {
+    const size_t bufferSize = 16384;
+    char buffer[16384];
+    int done = 0;
+    do {
+        size_t len = fread(buffer, 1, bufferSize, theXMLFile.fp());
+        done = (len < bufferSize);
+        if (!XML_Parse(mParser, buffer, len, done)) {
+            // Embedded error string from expat doesn't translate (yet)
+            // We could make a table of XOs if we wanted so that it could
+            // If we do, uncomment the second constructor argument so it's not
+            // a verbatim string
+            mLibraryErrorStr = Verbatim(
+                XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
+                );
 
-         // Embedded error string from expat doesn't translate (yet)
-         // We could make a table of XOs if we wanted so that it could
-         // If we do, uncomment the second constructor argument so it's not
-         // a verbatim string
-         mLibraryErrorStr = Verbatim(
-            XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
-         );
+            mErrorStr = XO("Error: %s at line %lu").Format(
+                mLibraryErrorStr,
+                (long unsigned int)XML_GetCurrentLineNumber(mParser)
+                );
 
-         mErrorStr = XO("Error: %s at line %lu").Format(
-            mLibraryErrorStr,
-            (long unsigned int)XML_GetCurrentLineNumber(mParser)
-         );
-
-         theXMLFile.Close();
-         return false;
+            theXMLFile.Close();
+            return false;
 
 // If we did want to handle every single parse error, these are they....
 /*
@@ -116,163 +115,164 @@ bool XMLFileReader::Parse(XMLTagHandler *baseHandler,
     XML_L("reserved prefix (xmlns) must not be declared or undeclared"),
     XML_L("prefix must not be bound to one of the reserved namespace names")
 */
-      }
-   } while (!done);
+        }
+    } while (!done);
 
-   theXMLFile.Close();
+    theXMLFile.Close();
 
-   // Even though there were no parse errors, we only succeed if
-   // the first-level handler actually got called, and didn't
-   // return false.
-   if (mBaseHandler)
-      return true;
-   else {
-      mErrorStr = XO("Could not load file: \"%s\"").Format( fname );
-      return false;
-   }
+    // Even though there were no parse errors, we only succeed if
+    // the first-level handler actually got called, and didn't
+    // return false.
+    if (mBaseHandler) {
+        return true;
+    } else {
+        mErrorStr = XO("Could not load file: \"%s\"").Format(fname);
+        return false;
+    }
 }
 
-bool XMLFileReader::ParseString(XMLTagHandler *baseHandler,
-                                const wxString &xmldata)
+bool XMLFileReader::ParseString(XMLTagHandler* baseHandler,
+                                const wxString& xmldata)
 {
-   auto utf8 = xmldata.ToUTF8();
-   const char *buffer = utf8.data();
-   int len = utf8.length();
+    auto utf8 = xmldata.ToUTF8();
+    const char* buffer = utf8.data();
+    int len = utf8.length();
 
-   mBaseHandler = baseHandler;
+    mBaseHandler = baseHandler;
 
-   if (!ParseBuffer(baseHandler, utf8.data(), utf8.length(), true))
-      return false;
+    if (!ParseBuffer(baseHandler, utf8.data(), utf8.length(), true)) {
+        return false;
+    }
 
-   // Even though there were no parse errors, we only succeed if
-   // the first-level handler actually got called, and didn't
-   // return false.
-   if (!mBaseHandler)
-   {
-      mErrorStr = XO("Could not parse XML");
-      return false;
-   }
+    // Even though there were no parse errors, we only succeed if
+    // the first-level handler actually got called, and didn't
+    // return false.
+    if (!mBaseHandler) {
+        mErrorStr = XO("Could not parse XML");
+        return false;
+    }
 
-   return true;
+    return true;
 }
 
 bool XMLFileReader::ParseMemoryStream(
-   XMLTagHandler* baseHandler, const MemoryStream& xmldata)
+    XMLTagHandler* baseHandler, const MemoryStream& xmldata)
 {
-   mBaseHandler = baseHandler;
+    mBaseHandler = baseHandler;
 
-   for (auto chunk : xmldata)
-   {
-      if (!ParseBuffer(baseHandler, static_cast<const char*>(chunk.first), chunk.second, false))
-         return false;
-   }
+    for (auto chunk : xmldata) {
+        if (!ParseBuffer(baseHandler, static_cast<const char*>(chunk.first), chunk.second, false)) {
+            return false;
+        }
+    }
 
-   if (!ParseBuffer(baseHandler, nullptr, 0, true))
-      return false;
+    if (!ParseBuffer(baseHandler, nullptr, 0, true)) {
+        return false;
+    }
 
-   if (!mBaseHandler)
-   {
-      mErrorStr = XO("Could not parse XML");
-      return false;
-   }
+    if (!mBaseHandler) {
+        mErrorStr = XO("Could not parse XML");
+        return false;
+    }
 
-   return true;
+    return true;
 }
 
-const TranslatableString &XMLFileReader::GetErrorStr() const
+const TranslatableString& XMLFileReader::GetErrorStr() const
 {
-   return mErrorStr;
+    return mErrorStr;
 }
 
-const TranslatableString &XMLFileReader::GetLibraryErrorStr() const
+const TranslatableString& XMLFileReader::GetLibraryErrorStr() const
 {
-   return mLibraryErrorStr;
-}
-
-// static
-void XMLFileReader::startElement(void *userData, const char *name,
-                                 const char **atts)
-{
-   XMLFileReader *This = (XMLFileReader *)userData;
-   Handlers &handlers = This->mHandler;
-
-   if (handlers.empty()) {
-      handlers.push_back(This->mBaseHandler);
-   }
-   else {
-      if (XMLTagHandler *const handler = handlers.back())
-         handlers.push_back(handler->ReadXMLChild(name));
-      else
-         handlers.push_back(NULL);
-   }
-
-   if (XMLTagHandler *& handler = handlers.back()) {
-      This->mCurrentTagAttributes.clear();
-
-      while(*atts)
-      {
-         const char* name = *atts++;
-         const char* value = *atts++;
-
-         This->mCurrentTagAttributes.emplace_back(
-            std::string_view(name), XMLAttributeValueView(std::string_view(value)));
-      }
-
-      if (!handler->HandleXMLTag(name, This->mCurrentTagAttributes)) {
-         handler = nullptr;
-         if (handlers.size() == 1)
-            This->mBaseHandler = nullptr;
-      }
-   }
+    return mLibraryErrorStr;
 }
 
 // static
-void XMLFileReader::endElement(void *userData, const char *name)
+void XMLFileReader::startElement(void* userData, const char* name,
+                                 const char** atts)
 {
-   XMLFileReader *This = (XMLFileReader *)userData;
-   Handlers &handlers = This->mHandler;
+    XMLFileReader* This = (XMLFileReader*)userData;
+    Handlers& handlers = This->mHandler;
 
-   if (XMLTagHandler *const handler = handlers.back())
-      handler->ReadXMLEndTag(name);
+    if (handlers.empty()) {
+        handlers.push_back(This->mBaseHandler);
+    } else {
+        if (XMLTagHandler* const handler = handlers.back()) {
+            handlers.push_back(handler->ReadXMLChild(name));
+        } else {
+            handlers.push_back(NULL);
+        }
+    }
 
-   handlers.pop_back();
+    if (XMLTagHandler*& handler = handlers.back()) {
+        This->mCurrentTagAttributes.clear();
+
+        while (*atts)
+        {
+            const char* name = *atts++;
+            const char* value = *atts++;
+
+            This->mCurrentTagAttributes.emplace_back(
+                std::string_view(name), XMLAttributeValueView(std::string_view(value)));
+        }
+
+        if (!handler->HandleXMLTag(name, This->mCurrentTagAttributes)) {
+            handler = nullptr;
+            if (handlers.size() == 1) {
+                This->mBaseHandler = nullptr;
+            }
+        }
+    }
 }
 
 // static
-void XMLFileReader::charHandler(void *userData, const char *s, int len)
+void XMLFileReader::endElement(void* userData, const char* name)
 {
-   XMLFileReader *This = (XMLFileReader *)userData;
-   Handlers &handlers = This->mHandler;
+    XMLFileReader* This = (XMLFileReader*)userData;
+    Handlers& handlers = This->mHandler;
 
-   if (XMLTagHandler *const handler = handlers.back())
-      handler->ReadXMLContent(s, len);
+    if (XMLTagHandler* const handler = handlers.back()) {
+        handler->ReadXMLEndTag(name);
+    }
+
+    handlers.pop_back();
+}
+
+// static
+void XMLFileReader::charHandler(void* userData, const char* s, int len)
+{
+    XMLFileReader* This = (XMLFileReader*)userData;
+    Handlers& handlers = This->mHandler;
+
+    if (XMLTagHandler* const handler = handlers.back()) {
+        handler->ReadXMLContent(s, len);
+    }
 }
 
 bool XMLFileReader::ParseBuffer(
-   XMLTagHandler* baseHandler, const char* buffer, size_t len, bool isFinal)
+    XMLTagHandler* baseHandler, const char* buffer, size_t len, bool isFinal)
 {
-   if (!XML_Parse(mParser, buffer, len, isFinal))
-   {
+    if (!XML_Parse(mParser, buffer, len, isFinal)) {
+        // Embedded error string from expat doesn't translate (yet)
+        // We could make a table of XOs if we wanted so that it could
+        // If we do, uncomment the second constructor argument so it's not
+        // a verbatim string
+        mLibraryErrorStr
+            =Verbatim(XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
+                      );
 
-      // Embedded error string from expat doesn't translate (yet)
-      // We could make a table of XOs if we wanted so that it could
-      // If we do, uncomment the second constructor argument so it's not
-      // a verbatim string
-      mLibraryErrorStr =
-         Verbatim(XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
-         );
+        mErrorStr = XO("Error: %s at line %lu")
+                    .Format(
+            mLibraryErrorStr,
+            (long unsigned int)XML_GetCurrentLineNumber(mParser));
 
-      mErrorStr = XO("Error: %s at line %lu")
-                     .Format(
-                        mLibraryErrorStr,
-                        (long unsigned int)XML_GetCurrentLineNumber(mParser));
+        wxLogMessage(
+            wxT("ParseString error: %s\n===begin===%s\n===end==="),
+            mErrorStr.Debug(), buffer);
 
-      wxLogMessage(
-         wxT("ParseString error: %s\n===begin===%s\n===end==="),
-         mErrorStr.Debug(), buffer);
+        return false;
+    }
 
-      return false;
-   }
-
-   return true;
+    return true;
 }

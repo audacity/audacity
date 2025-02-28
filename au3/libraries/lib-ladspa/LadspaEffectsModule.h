@@ -20,47 +20,46 @@
 class LadspaEffectsModule final : public PluginProvider
 {
 public:
-   struct LADSPA_API Factory : DefaultedGlobalHook<Factory,
-      Callable::UniquePtrFactory<LadspaEffectBase, const wxString &, int>
-         ::Function
-   >{};
+    struct LADSPA_API Factory : DefaultedGlobalHook<Factory,
+                                                    Callable::UniquePtrFactory<LadspaEffectBase, const wxString&, int>
+                                                    ::Function
+                                                    > {};
 
-   LadspaEffectsModule();
-   virtual ~LadspaEffectsModule();
+    LadspaEffectsModule();
+    virtual ~LadspaEffectsModule();
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   PluginPath GetPath() const override;
-   ComponentInterfaceSymbol GetSymbol() const override;
-   VendorSymbol GetVendor() const override;
-   wxString GetVersion() const override;
-   TranslatableString GetDescription() const override;
+    PluginPath GetPath() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    VendorSymbol GetVendor() const override;
+    wxString GetVersion() const override;
+    TranslatableString GetDescription() const override;
 
-   // PluginProvider implementation
+    // PluginProvider implementation
 
-   bool Initialize() override;
-   void Terminate() override;
-   bool SupportsCustomModulePaths() const override;
-   EffectFamilySymbol GetOptionalFamilySymbol() override;
+    bool Initialize() override;
+    void Terminate() override;
+    bool SupportsCustomModulePaths() const override;
+    EffectFamilySymbol GetOptionalFamilySymbol() override;
 
-   const FileExtensions &GetFileExtensions() override;
-   FilePath InstallPath() override;
+    const FileExtensions& GetFileExtensions() override;
+    FilePath InstallPath() override;
 
-   void AutoRegisterPlugins(PluginManagerInterface & pm) override;
-   PluginPaths FindModulePaths(PluginManagerInterface & pm) override;
-   unsigned DiscoverPluginsAtPath(
-      const PluginPath & path, TranslatableString &errMsg,
-      const RegistrationCallback &callback)
-         override;
-   
-   bool CheckPluginExist(const PluginPath& path) const override;
+    void AutoRegisterPlugins(PluginManagerInterface& pm) override;
+    PluginPaths FindModulePaths(PluginManagerInterface& pm) override;
+    unsigned DiscoverPluginsAtPath(
+        const PluginPath& path, TranslatableString& errMsg, const RegistrationCallback& callback)
+    override;
 
-   std::unique_ptr<ComponentInterface>
-      LoadPlugin(const PluginPath & path) override;
+    bool CheckPluginExist(const PluginPath& path) const override;
 
-   // LadspaEffectModule implementation
+    std::unique_ptr<ComponentInterface>
+    LoadPlugin(const PluginPath& path) override;
 
-   FilePaths GetSearchPaths(PluginManagerInterface& pluginManager);
+    // LadspaEffectModule implementation
+
+    FilePaths GetSearchPaths(PluginManagerInterface& pluginManager);
 };
 
 #endif

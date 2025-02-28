@@ -13,4 +13,3 @@
 ExportOptionsEditor::~ExportOptionsEditor() = default;
 
 ExportOptionsEditor::Listener::~Listener() = default;
-

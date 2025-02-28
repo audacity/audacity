@@ -363,18 +363,17 @@ Time (in seconds, = total_sample_count / sample_rate)
 #include <porttime.h>
 #include <thread>
 
-#define ROUND(x) (int) ((x)+0.5)
+#define ROUND(x) (int)((x) + 0.5)
 
 class NoteTrack;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 namespace {
-
 /*
  Adapt and rename the implementation of PaUtil_GetTime from commit
  c5d2c51bd6fe354d0ee1119ba932bfebd3ebfacc of portaudio
  */
-#if defined( __APPLE__ )
+#if defined(__APPLE__)
 
 #include <mach/mach_time.h>
 
@@ -382,19 +381,23 @@ namespace {
 static double machSecondsConversionScaler_ = 0.0;
 
 /* Initialize it */
-static struct InitializeTime { InitializeTime() {
-   mach_timebase_info_data_t info;
-   kern_return_t err = mach_timebase_info( &info );
-   if( err == 0  )
-       machSecondsConversionScaler_ = 1e-9 * (double) info.numer / (double) info.denom;
-} } initializeTime;
+static struct InitializeTime {
+    InitializeTime()
+    {
+        mach_timebase_info_data_t info;
+        kern_return_t err = mach_timebase_info(&info);
+        if (err == 0) {
+            machSecondsConversionScaler_ = 1e-9 * (double)info.numer / (double)info.denom;
+        }
+    }
+} initializeTime;
 
-static PaTime util_GetTime( void )
+static PaTime util_GetTime(void)
 {
-   return mach_absolute_time() * machSecondsConversionScaler_;
+    return mach_absolute_time() * machSecondsConversionScaler_;
 }
 
-#elif defined( __WXMSW__ )
+#elif defined(__WXMSW__)
 
 #include "profileapi.h"
 #include "sysinfoapi.h"
@@ -403,26 +406,25 @@ static PaTime util_GetTime( void )
 static int usePerformanceCounter_;
 static double secondsPerTick_;
 
-static struct InitializeTime { InitializeTime() {
-    LARGE_INTEGER ticksPerSecond;
-
-    if( QueryPerformanceFrequency( &ticksPerSecond ) != 0 )
+static struct InitializeTime {
+    InitializeTime()
     {
-        usePerformanceCounter_ = 1;
-        secondsPerTick_ = 1.0 / (double)ticksPerSecond.QuadPart;
-    }
-    else
-    {
-        usePerformanceCounter_ = 0;
-    }
-} } initializeTime;
+        LARGE_INTEGER ticksPerSecond;
 
-static double util_GetTime( void )
+        if (QueryPerformanceFrequency(&ticksPerSecond) != 0) {
+            usePerformanceCounter_ = 1;
+            secondsPerTick_ = 1.0 / (double)ticksPerSecond.QuadPart;
+        } else {
+            usePerformanceCounter_ = 0;
+        }
+    }
+} initializeTime;
+
+static double util_GetTime(void)
 {
     LARGE_INTEGER time;
 
-    if( usePerformanceCounter_ )
-    {
+    if (usePerformanceCounter_) {
         /*
             Note: QueryPerformanceCounter has a known issue where it can skip forward
             by a few seconds (!) due to a hardware bug on some PCI-ISA bridge hardware.
@@ -436,16 +438,14 @@ static double util_GetTime( void )
 
             For now we just use QueryPerformanceCounter(). It's good, most of the time.
         */
-        QueryPerformanceCounter( &time );
+        QueryPerformanceCounter(&time);
         return time.QuadPart * secondsPerTick_;
-    }
-    else
-    {
-	#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
+    } else {
+      #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
         return GetTickCount64() * .001;
-	#else
+      #else
         return timeGetTime() * .001;
-	#endif
+      #endif
     }
 }
 
@@ -453,7 +453,7 @@ static double util_GetTime( void )
 
 #include <time.h>
 
-static PaTime util_GetTime( void )
+static PaTime util_GetTime(void)
 {
     struct timespec tp;
     clock_gettime(CLOCK_REALTIME, &tp);
@@ -464,20 +464,20 @@ static PaTime util_GetTime( void )
 
 #include <sys/time.h>
 
-static PaTime util_GetTime( void )
+static PaTime util_GetTime(void)
 {
     struct timeval tv;
-    gettimeofday( &tv, NULL );
-    return (PaTime) tv.tv_usec * 1e-6 + tv.tv_sec;
+    gettimeofday(&tv, NULL);
+    return (PaTime)tv.tv_usec * 1e-6 + tv.tv_sec;
 }
 
 #endif
 
 enum {
-   // This is the least positive latency we can
-   // specify to Pm_OpenOutput, 1 ms, which prevents immediate
-   // scheduling of events:
-   MIDI_MINIMAL_LATENCY_MS = 1
+    // This is the least positive latency we can
+    // specify to Pm_OpenOutput, 1 ms, which prevents immediate
+    // scheduling of events:
+    MIDI_MINIMAL_LATENCY_MS = 1
 };
 
 // return the system time as a double
@@ -486,128 +486,131 @@ static double streamStartTime = 0; // bias system time to small number
 static double SystemTime(bool usingAlsa)
 {
 #ifdef __WXGTK__
-   if (usingAlsa) {
-      struct timespec now;
-      // CLOCK_MONOTONIC_RAW is unaffected by NTP or adj-time
+    if (usingAlsa) {
+        struct timespec now;
+        // CLOCK_MONOTONIC_RAW is unaffected by NTP or adj-time
 #if defined(CLOCK_MONOTONIC_RAW)
-      clock_gettime(CLOCK_MONOTONIC_RAW, &now);
+        clock_gettime(CLOCK_MONOTONIC_RAW, &now);
 #else
-      clock_gettime(CLOCK_REALTIME, &now);
+        clock_gettime(CLOCK_REALTIME, &now);
 #endif
-      //return now.tv_sec + now.tv_nsec * 0.000000001;
-      return (now.tv_sec + now.tv_nsec * 0.000000001) - streamStartTime;
-   }
+        //return now.tv_sec + now.tv_nsec * 0.000000001;
+        return (now.tv_sec + now.tv_nsec * 0.000000001) - streamStartTime;
+    }
 #else
-   static_cast<void>(usingAlsa);//compiler food.
+    static_cast<void>(usingAlsa);//compiler food.
 #endif
 
-   return util_GetTime() - streamStartTime;
+    return util_GetTime() - streamStartTime;
 }
 
 bool MIDIPlay::mMidiStreamActive = false;
 bool MIDIPlay::mMidiOutputComplete = true;
 
 AudioIOExt::RegisteredFactory sMIDIPlayFactory{
-   [](const auto &playbackSchedule){
-      return std::make_unique<MIDIPlay>(playbackSchedule);
-   }
+    [](const auto& playbackSchedule){
+        return std::make_unique<MIDIPlay>(playbackSchedule);
+    }
 };
 
-MIDIPlay::MIDIPlay(const PlaybackSchedule &schedule)
-   : mPlaybackSchedule{ schedule }
+MIDIPlay::MIDIPlay(const PlaybackSchedule& schedule)
+    : mPlaybackSchedule{schedule}
 {
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
-   // Pre-allocate with a likely sufficient size, exceeding probable number of
-   // channels
-   mPendingNotesOff.reserve(64);
+    // Pre-allocate with a likely sufficient size, exceeding probable number of
+    // channels
+    mPendingNotesOff.reserve(64);
 #endif
 
-   PmError pmErr = Pm_Initialize();
+    PmError pmErr = Pm_Initialize();
 
-   if (pmErr != pmNoError) {
-      auto errStr =
-              XO("There was an error initializing the midi i/o layer.\n");
-      errStr += XO("You will not be able to play midi.\n\n");
-      wxString pmErrStr = LAT1CTOWX(Pm_GetErrorText(pmErr));
-      if (!pmErrStr.empty())
-         errStr += XO("Error: %s").Format( pmErrStr );
-      // XXX: we are in libaudacity, popping up dialogs not allowed!  A
-      // long-term solution will probably involve exceptions
-      using namespace BasicUI;
-      ShowMessageBox(
-         errStr,
-         MessageBoxOptions{}
+    if (pmErr != pmNoError) {
+        auto errStr
+            =XO("There was an error initializing the midi i/o layer.\n");
+        errStr += XO("You will not be able to play midi.\n\n");
+        wxString pmErrStr = LAT1CTOWX(Pm_GetErrorText(pmErr));
+        if (!pmErrStr.empty()) {
+            errStr += XO("Error: %s").Format(pmErrStr);
+        }
+        // XXX: we are in libaudacity, popping up dialogs not allowed!  A
+        // long-term solution will probably involve exceptions
+        using namespace BasicUI;
+        ShowMessageBox(
+            errStr,
+            MessageBoxOptions {}
             .Caption(XO("Error Initializing Midi"))
             .ButtonStyle(Button::Ok)
             .IconStyle(Icon::Error));
 
-      // Same logic for PortMidi as described above for PortAudio
-   }
+        // Same logic for PortMidi as described above for PortAudio
+    }
 }
 
 MIDIPlay::~MIDIPlay()
 {
-   Pm_Terminate();
+    Pm_Terminate();
 }
 
-bool MIDIPlay::StartOtherStream(const TransportSequences &tracks,
-   const PaStreamInfo* info, double, double rate)
+bool MIDIPlay::StartOtherStream(const TransportSequences& tracks,
+                                const PaStreamInfo* info, double, double rate)
 {
-   mMidiPlaybackTracks.clear();
-   for (const auto &pSequence : tracks.otherPlayableSequences)
-      if (const auto pNoteTrack =
-         dynamic_cast<const NoteTrack *>(pSequence.get())
-      )
-         mMidiPlaybackTracks.push_back(
-            pNoteTrack->SharedPointer<const NoteTrack>());
+    mMidiPlaybackTracks.clear();
+    for (const auto& pSequence : tracks.otherPlayableSequences) {
+        if (const auto pNoteTrack
+                =dynamic_cast<const NoteTrack*>(pSequence.get())
+                ) {
+            mMidiPlaybackTracks.push_back(
+                pNoteTrack->SharedPointer<const NoteTrack>());
+        }
+    }
 
-   streamStartTime = 0;
-   streamStartTime = SystemTime(mUsingAlsa);
+    streamStartTime = 0;
+    streamStartTime = SystemTime(mUsingAlsa);
 
-   mNumFrames = 0;
-   // we want this initial value to be way high. It should be
-   // sufficient to assume AudioTime is zero and therefore
-   // mSystemMinusAudioTime is SystemTime(), but we'll add 1000s
-   // for good measure. On the first callback, this should be
-   // reduced to SystemTime() - mT0, and note that mT0 is always
-   // positive.
-   mSystemMinusAudioTimePlusLatency =
-      mSystemMinusAudioTime = SystemTime(mUsingAlsa) + 1000;
-   mAudioOutLatency = 0.0; // set when stream is opened
-   mCallbackCount = 0;
-   mAudioFramesPerBuffer = 0;
+    mNumFrames = 0;
+    // we want this initial value to be way high. It should be
+    // sufficient to assume AudioTime is zero and therefore
+    // mSystemMinusAudioTime is SystemTime(), but we'll add 1000s
+    // for good measure. On the first callback, this should be
+    // reduced to SystemTime() - mT0, and note that mT0 is always
+    // positive.
+    mSystemMinusAudioTimePlusLatency
+        =mSystemMinusAudioTime = SystemTime(mUsingAlsa) + 1000;
+    mAudioOutLatency = 0.0; // set when stream is opened
+    mCallbackCount = 0;
+    mAudioFramesPerBuffer = 0;
 
-   // We use audio latency to estimate how far ahead of DACS we are writing
-   if (info) {
-      // this is an initial guess, but for PA/Linux/ALSA it's wrong and will be
-      // updated with a better value:
-      mAudioOutLatency = info->outputLatency;
-      mSystemMinusAudioTimePlusLatency += mAudioOutLatency;
-   }
+    // We use audio latency to estimate how far ahead of DACS we are writing
+    if (info) {
+        // this is an initial guess, but for PA/Linux/ALSA it's wrong and will be
+        // updated with a better value:
+        mAudioOutLatency = info->outputLatency;
+        mSystemMinusAudioTimePlusLatency += mAudioOutLatency;
+    }
 
-   // TODO: it may be that midi out will not work unless audio in or out is
-   // active -- this would be a bug and may require a change in the
-   // logic here.
+    // TODO: it may be that midi out will not work unless audio in or out is
+    // active -- this would be a bug and may require a change in the
+    // logic here.
 
-   bool successMidi = true;
+    bool successMidi = true;
 
-   if(!mMidiPlaybackTracks.empty()){
-      successMidi = StartPortMidiStream(rate);
-   }
+    if (!mMidiPlaybackTracks.empty()) {
+        successMidi = StartPortMidiStream(rate);
+    }
 
-   // On the other hand, if MIDI cannot be opened, we will not complain
-   // return successMidi;
-   return true;
+    // On the other hand, if MIDI cannot be opened, we will not complain
+    // return successMidi;
+    return true;
 }
 
 void MIDIPlay::AbortOtherStream()
 {
-   mMidiPlaybackTracks.clear();
+    mMidiPlaybackTracks.clear();
 }
 
-PmTimestamp MidiTime(void *pInfo)
+PmTimestamp MidiTime(void* pInfo)
 {
-   return static_cast<MIDIPlay*>(pInfo)->MidiTime();
+    return static_cast<MIDIPlay*>(pInfo)->MidiTime();
 }
 
 // Set up state to iterate NoteTrack events in sequence.
@@ -616,421 +619,438 @@ PmTimestamp MidiTime(void *pInfo)
 // looping (each iteration is delayed more).
 void MIDIPlay::PrepareMidiIterator(bool send, double startTime, double offset)
 {
-   mIterator.emplace(mPlaybackSchedule, *this,
-      mMidiPlaybackTracks, startTime, offset, send);
+    mIterator.emplace(mPlaybackSchedule, *this,
+                      mMidiPlaybackTracks, startTime, offset, send);
 }
 
 Iterator::Iterator(
-   const PlaybackSchedule &schedule, MIDIPlay &midiPlay,
-   NoteTrackConstArray &midiPlaybackTracks,
-   double startTime, double offset, bool send )
-   : mPlaybackSchedule{ schedule }
-   , mMIDIPlay{ midiPlay }
+    const PlaybackSchedule& schedule, MIDIPlay& midiPlay,
+    NoteTrackConstArray& midiPlaybackTracks,
+    double startTime, double offset, bool send)
+    : mPlaybackSchedule{schedule}
+    , mMIDIPlay{midiPlay}
 {
-   // instead of initializing with an Alg_seq, we use begin_seq()
-   // below to add ALL Alg_seq's.
-   // Iterator not yet initialized, must add each track...
-   for (auto &t : midiPlaybackTracks) {
-      Alg_seq_ptr seq = &t->GetSeq();
-      // mark sequence tracks as "in use" since we're handing this
-      // off to another thread and want to make sure nothing happens
-      // to the data until playback finishes. This is just a sanity check.
-      seq->set_in_use(true);
-      const void *cookie = t.get();
-      it.begin_seq(seq,
-         // casting away const, but allegro just uses the pointer opaquely
-         const_cast<void*>(cookie), t->GetStartTime() + offset);
-   }
-   Prime(send, startTime + offset);
+    // instead of initializing with an Alg_seq, we use begin_seq()
+    // below to add ALL Alg_seq's.
+    // Iterator not yet initialized, must add each track...
+    for (auto& t : midiPlaybackTracks) {
+        Alg_seq_ptr seq = &t->GetSeq();
+        // mark sequence tracks as "in use" since we're handing this
+        // off to another thread and want to make sure nothing happens
+        // to the data until playback finishes. This is just a sanity check.
+        seq->set_in_use(true);
+        const void* cookie = t.get();
+        it.begin_seq(seq,
+                     // casting away const, but allegro just uses the pointer opaquely
+                     const_cast<void*>(cookie), t->GetStartTime() + offset);
+    }
+    Prime(send, startTime + offset);
 }
 
 Iterator::~Iterator()
 {
-   it.end();
+    it.end();
 }
 
 void Iterator::Prime(bool send, double startTime)
 {
-   GetNextEvent(); // prime the pump for FillOtherBuffers
+    GetNextEvent(); // prime the pump for FillOtherBuffers
 
-   // Start MIDI from current cursor position
-   while (mNextEvent &&
-          GetNextEventTime() < startTime) {
-      if (send)
-         /*
-          hasSolo argument doesn't matter because midiStateOnly is true.
-          "Fast-forward" all update events from the start of track to the given
-          play start time so the notes sound with correct timbre whenever
-          turned on.
-          */
-         OutputEvent(0, true, false);
-      GetNextEvent();
-   }
+    // Start MIDI from current cursor position
+    while (mNextEvent
+           && GetNextEventTime() < startTime) {
+        if (send) {
+            /*
+             hasSolo argument doesn't matter because midiStateOnly is true.
+             "Fast-forward" all update events from the start of track to the given
+             play start time so the notes sound with correct timbre whenever
+             turned on.
+             */
+            OutputEvent(0, true, false);
+        }
+        GetNextEvent();
+    }
 }
 
 double Iterator::GetNextEventTime() const
 {
-   if (mNextEvent == &gAllNotesOff)
-      return mNextEventTime - ALG_EPS;
-   return mNextEventTime;
+    if (mNextEvent == &gAllNotesOff) {
+        return mNextEventTime - ALG_EPS;
+    }
+    return mNextEventTime;
 }
 
 bool MIDIPlay::StartPortMidiStream(double rate)
 {
 #ifdef __WXGTK__
-   // Duplicating a bit of AudioIO::StartStream
-   // Detect whether ALSA is the chosen host, and do the various involved MIDI
-   // timing compensations only then.
-   mUsingAlsa = (AudioIOHost.Read() == L"ALSA");
+    // Duplicating a bit of AudioIO::StartStream
+    // Detect whether ALSA is the chosen host, and do the various involved MIDI
+    // timing compensations only then.
+    mUsingAlsa = (AudioIOHost.Read() == L"ALSA");
 #endif
 
-   int i;
-   int nTracks = mMidiPlaybackTracks.size();
-   // Only start MIDI stream if there is an open track
-   if (nTracks == 0)
-      return false;
+    int i;
+    int nTracks = mMidiPlaybackTracks.size();
+    // Only start MIDI stream if there is an open track
+    if (nTracks == 0) {
+        return false;
+    }
 
-   //wxPrintf("StartPortMidiStream: mT0 %g mTime %g\n",
-   //       mT0, mTime);
+    //wxPrintf("StartPortMidiStream: mT0 %g mTime %g\n",
+    //       mT0, mTime);
 
-   /* get midi playback device */
-   PmDeviceID playbackDevice = Pm_GetDefaultOutputDeviceID();
-   auto playbackDeviceName = MIDIPlaybackDevice.Read();
-   mSynthLatency = MIDISynthLatency_ms.Read();
-   if (wxStrcmp(playbackDeviceName, wxT("")) != 0) {
-      for (i = 0; i < Pm_CountDevices(); i++) {
-         const PmDeviceInfo *info = Pm_GetDeviceInfo(i);
-         if (!info) continue;
-         if (!info->output) continue;
-         wxString interf = wxSafeConvertMB2WX(info->interf);
-         wxString name = wxSafeConvertMB2WX(info->name);
-         interf.Append(wxT(": ")).Append(name);
-         if (wxStrcmp(interf, playbackDeviceName) == 0) {
-            playbackDevice = i;
-         }
-      }
-   } // (else playback device has Pm_GetDefaultOuputDeviceID())
+    /* get midi playback device */
+    PmDeviceID playbackDevice = Pm_GetDefaultOutputDeviceID();
+    auto playbackDeviceName = MIDIPlaybackDevice.Read();
+    mSynthLatency = MIDISynthLatency_ms.Read();
+    if (wxStrcmp(playbackDeviceName, wxT("")) != 0) {
+        for (i = 0; i < Pm_CountDevices(); i++) {
+            const PmDeviceInfo* info = Pm_GetDeviceInfo(i);
+            if (!info) {
+                continue;
+            }
+            if (!info->output) {
+                continue;
+            }
+            wxString interf = wxSafeConvertMB2WX(info->interf);
+            wxString name = wxSafeConvertMB2WX(info->name);
+            interf.Append(wxT(": ")).Append(name);
+            if (wxStrcmp(interf, playbackDeviceName) == 0) {
+                playbackDevice = i;
+            }
+        }
+    } // (else playback device has Pm_GetDefaultOuputDeviceID())
 
-   if (playbackDevice < 0)
-      return false;
+    if (playbackDevice < 0) {
+        return false;
+    }
 
-   /* open output device */
-   mLastPmError = Pm_OpenOutput(&mMidiStream,
-                                playbackDevice,
-                                NULL,
-                                0,
-                                &::MidiTime,
-                                this, // supplies pInfo argument to MidiTime
-                                MIDI_MINIMAL_LATENCY_MS);
-   if (mLastPmError == pmNoError) {
-      mMidiStreamActive = true;
-      mMidiPaused = false;
-      mMidiLoopPasses = 0;
-      mMidiOutputComplete = false;
-      mMaxMidiTimestamp = 0;
-      PrepareMidiIterator(true, mPlaybackSchedule.mT0, 0);
+    /* open output device */
+    mLastPmError = Pm_OpenOutput(&mMidiStream,
+                                 playbackDevice,
+                                 NULL,
+                                 0,
+                                 &::MidiTime,
+                                 this, // supplies pInfo argument to MidiTime
+                                 MIDI_MINIMAL_LATENCY_MS);
+    if (mLastPmError == pmNoError) {
+        mMidiStreamActive = true;
+        mMidiPaused = false;
+        mMidiLoopPasses = 0;
+        mMidiOutputComplete = false;
+        mMaxMidiTimestamp = 0;
+        PrepareMidiIterator(true, mPlaybackSchedule.mT0, 0);
 
-      // It is ok to call this now, but do not send timestamped midi
-      // until after the first audio callback, which provides necessary
-      // data for MidiTime().
-      Pm_Synchronize(mMidiStream); // start using timestamps
-   }
-   return (mLastPmError == pmNoError);
+        // It is ok to call this now, but do not send timestamped midi
+        // until after the first audio callback, which provides necessary
+        // data for MidiTime().
+        Pm_Synchronize(mMidiStream); // start using timestamps
+    }
+    return mLastPmError == pmNoError;
 }
 
 void MIDIPlay::StopOtherStream()
 {
-   if (mMidiStream && mMidiStreamActive) {
-      /* Stop Midi playback */
-      mMidiStreamActive = false;
+    if (mMidiStream && mMidiStreamActive) {
+        /* Stop Midi playback */
+        mMidiStreamActive = false;
 
-      mMidiOutputComplete = true;
+        mMidiOutputComplete = true;
 
-      // now we can assume "ownership" of the mMidiStream
-      // if output in progress, send all off, etc.
-      AllNotesOff();
-      // AllNotesOff() should be sufficient to stop everything, but
-      // in Linux, if you Pm_Close() immediately, it looks like
-      // messages are dropped. ALSA then seems to send All Sound Off
-      // and Reset All Controllers messages, but not all synthesizers
-      // respond to these messages. This is probably a bug in PortMidi
-      // if the All Off messages do not get out, but for security,
-      // delay a bit so that messages can be delivered before closing
-      // the stream. Add 2ms of "padding" to avoid any rounding errors.
-      while (mMaxMidiTimestamp + 2 > MidiTime()) {
-         using namespace std::chrono;
-         std::this_thread::sleep_for(1ms); // deliver the all-off messages
-      }
-      Pm_Close(mMidiStream);
-      mMidiStream = NULL;
-      mIterator.reset();
+        // now we can assume "ownership" of the mMidiStream
+        // if output in progress, send all off, etc.
+        AllNotesOff();
+        // AllNotesOff() should be sufficient to stop everything, but
+        // in Linux, if you Pm_Close() immediately, it looks like
+        // messages are dropped. ALSA then seems to send All Sound Off
+        // and Reset All Controllers messages, but not all synthesizers
+        // respond to these messages. This is probably a bug in PortMidi
+        // if the All Off messages do not get out, but for security,
+        // delay a bit so that messages can be delivered before closing
+        // the stream. Add 2ms of "padding" to avoid any rounding errors.
+        while (mMaxMidiTimestamp + 2 > MidiTime()) {
+            using namespace std::chrono;
+            std::this_thread::sleep_for(1ms); // deliver the all-off messages
+        }
+        Pm_Close(mMidiStream);
+        mMidiStream = NULL;
+        mIterator.reset();
 
-      // set in_use flags to false
-      int nTracks = mMidiPlaybackTracks.size();
-      for (int i = 0; i < nTracks; i++) {
-         const auto t = mMidiPlaybackTracks[i].get();
-         Alg_seq_ptr seq = &t->GetSeq();
-         seq->set_in_use(false);
-      }
-   }
+        // set in_use flags to false
+        int nTracks = mMidiPlaybackTracks.size();
+        for (int i = 0; i < nTracks; i++) {
+            const auto t = mMidiPlaybackTracks[i].get();
+            Alg_seq_ptr seq = &t->GetSeq();
+            seq->set_in_use(false);
+        }
+    }
 
-   mMidiPlaybackTracks.clear();
+    mMidiPlaybackTracks.clear();
 }
 
 double Iterator::UncorrectedMidiEventTime(double pauseTime)
 {
-   double time;
-   if (mPlaybackSchedule.mEnvelope)
-      time =
-         mPlaybackSchedule.RealDuration(
-            GetNextEventTime() - mMIDIPlay.MidiLoopOffset())
-         + mPlaybackSchedule.mT0 +
-           (mMIDIPlay.mMidiLoopPasses * mPlaybackSchedule.mWarpedLength);
-   else
-      time = GetNextEventTime();
+    double time;
+    if (mPlaybackSchedule.mEnvelope) {
+        time
+            =mPlaybackSchedule.RealDuration(
+                  GetNextEventTime() - mMIDIPlay.MidiLoopOffset())
+              + mPlaybackSchedule.mT0
+              + (mMIDIPlay.mMidiLoopPasses * mPlaybackSchedule.mWarpedLength);
+    } else {
+        time = GetNextEventTime();
+    }
 
-   return time + pauseTime;
+    return time + pauseTime;
 }
 
 bool Iterator::Unmuted(bool hasSolo) const
 {
-   int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
-   if (!mNextEventTrack->IsVisibleChan(channel))
-      return false;
-   const bool channelIsMute = hasSolo
-      ? !mNextEventTrack->GetSolo()
-      : mNextEventTrack->GetMute();
-   return !channelIsMute;
+    int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
+    if (!mNextEventTrack->IsVisibleChan(channel)) {
+        return false;
+    }
+    const bool channelIsMute = hasSolo
+                               ? !mNextEventTrack->GetSolo()
+                               : mNextEventTrack->GetMute();
+    return !channelIsMute;
 }
 
 bool Iterator::OutputEvent(double pauseTime, bool midiStateOnly, bool hasSolo)
 {
-   int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
-   int command = -1;
-   int data1 = -1;
-   int data2 = -1;
+    int channel = (mNextEvent->chan) & 0xF; // must be in [0..15]
+    int command = -1;
+    int data1 = -1;
+    int data2 = -1;
 
-   double eventTime = UncorrectedMidiEventTime(pauseTime);
+    double eventTime = UncorrectedMidiEventTime(pauseTime);
 
-   // 0.0005 is for rounding
-   double time = eventTime + 0.0005 -
-                 (mMIDIPlay.mSynthLatency * 0.001);
+    // 0.0005 is for rounding
+    double time = eventTime + 0.0005
+                  - (mMIDIPlay.mSynthLatency * 0.001);
 
-   time += 1; // MidiTime() has a 1s offset
-   // state changes have to go out without delay because the
-   // midi stream time gets reset when playback starts, and
-   // we don't want to leave any control changes scheduled for later
-   if (time < 0 || midiStateOnly)
-      time = 0;
-   PmTimestamp timestamp = (PmTimestamp) (time * 1000); /* s to ms */
+    time += 1; // MidiTime() has a 1s offset
+    // state changes have to go out without delay because the
+    // midi stream time gets reset when playback starts, and
+    // we don't want to leave any control changes scheduled for later
+    if (time < 0 || midiStateOnly) {
+        time = 0;
+    }
+    PmTimestamp timestamp = (PmTimestamp)(time * 1000); /* s to ms */
 
-   // The special event gAllNotesOff means "end of playback, send
-   // all notes off on all channels"
-   if (mNextEvent == &gAllNotesOff) {
-      bool looping = mPlaybackSchedule.GetPolicy().Looping(mPlaybackSchedule);
-      mMIDIPlay.AllNotesOff(looping);
-      return true;
-   }
+    // The special event gAllNotesOff means "end of playback, send
+    // all notes off on all channels"
+    if (mNextEvent == &gAllNotesOff) {
+        bool looping = mPlaybackSchedule.GetPolicy().Looping(mPlaybackSchedule);
+        mMIDIPlay.AllNotesOff(looping);
+        return true;
+    }
 
-   // (RBD)
-   // if mNextEvent's channel is visible, play it, visibility can
-   // be updated while playing.
-   
-   // Be careful: if we have a note-off,
-   // then we must not pay attention to the channel selection
-   // or mute/solo buttons because we must turn the note off
-   // even if the user changed something after the note began.
+    // (RBD)
+    // if mNextEvent's channel is visible, play it, visibility can
+    // be updated while playing.
 
-   // Note that because multiple tracks can output to the same
-   // MIDI channels, it is not a good idea to send "All Notes Off"
-   // when the user presses the mute button. We have no easy way
-   // to know what notes are sounding on any given muted track, so
-   // we'll just wait for the note-off events to happen.
+    // Be careful: if we have a note-off,
+    // then we must not pay attention to the channel selection
+    // or mute/solo buttons because we must turn the note off
+    // even if the user changed something after the note began.
 
-   // (PRL)
-   // Does that mean, try to get right results when playing to the same SET
-   // of MIDI channels, but tracks play to different channels?  In the
-   // case that two unrelated tracks try to merge events, for notes that
-   // overlap in time, to the same channel -- then one track still turns off
-   // a note that another turned on.  Maybe the prevention of this case belongs
-   // to higher levels of the program, and should just be assumed here.
+    // Note that because multiple tracks can output to the same
+    // MIDI channels, it is not a good idea to send "All Notes Off"
+    // when the user presses the mute button. We have no easy way
+    // to know what notes are sounding on any given muted track, so
+    // we'll just wait for the note-off events to happen.
 
-   // (RBD)
-   // Also note that note-offs are only sent when we call
-   // mIterator->request_note_off(), so notes that are not played
-   // will not generate random note-offs. There is the interesting
-   // case that if the playback is paused, all-notes-off WILL be sent
-   // and if playback resumes, the pending note-off events WILL also
-   // be sent (but if that is a problem, there would also be a problem
-   // in the non-pause case.
-   const bool sendIt = [&]{
-      const bool isNote = mNextEvent->is_note();
-      if (!(isNote && mNextIsNoteOn))
-         // Regardless of channel visibility state,
-         // always send note-off events,
-         // and update events (program change, control change, pressure, bend)
-         // in case the user changes the muting during play
-         return true;
-      return Unmuted(hasSolo);
-   }();
-   if (sendIt) {
-      // Note event
-      if (mNextEvent->is_note() && !midiStateOnly) {
-         // Pitch and velocity
-         data1 = mNextEvent->get_pitch();
-         if (mNextIsNoteOn) {
-            data2 = mNextEvent->get_loud(); // get velocity
-            int offset = mNextEventTrack->GetVelocity();
-            data2 += offset; // offset comes from per-track slider
-            // clip velocity to insure a legal note-on value
-            data2 = (data2 < 1 ? 1 : (data2 > 127 ? 127 : data2));
-            // since we are going to play this note, we need to get a note_off
-            it.request_note_off();
+    // (PRL)
+    // Does that mean, try to get right results when playing to the same SET
+    // of MIDI channels, but tracks play to different channels?  In the
+    // case that two unrelated tracks try to merge events, for notes that
+    // overlap in time, to the same channel -- then one track still turns off
+    // a note that another turned on.  Maybe the prevention of this case belongs
+    // to higher levels of the program, and should just be assumed here.
+
+    // (RBD)
+    // Also note that note-offs are only sent when we call
+    // mIterator->request_note_off(), so notes that are not played
+    // will not generate random note-offs. There is the interesting
+    // case that if the playback is paused, all-notes-off WILL be sent
+    // and if playback resumes, the pending note-off events WILL also
+    // be sent (but if that is a problem, there would also be a problem
+    // in the non-pause case.
+    const bool sendIt = [&]{
+        const bool isNote = mNextEvent->is_note();
+        if (!(isNote && mNextIsNoteOn)) {
+            // Regardless of channel visibility state,
+            // always send note-off events,
+            // and update events (program change, control change, pressure, bend)
+            // in case the user changes the muting during play
+            return true;
+        }
+        return Unmuted(hasSolo);
+    }();
+    if (sendIt) {
+        // Note event
+        if (mNextEvent->is_note() && !midiStateOnly) {
+            // Pitch and velocity
+            data1 = mNextEvent->get_pitch();
+            if (mNextIsNoteOn) {
+                data2 = mNextEvent->get_loud(); // get velocity
+                int offset = mNextEventTrack->GetVelocity();
+                data2 += offset; // offset comes from per-track slider
+                // clip velocity to insure a legal note-on value
+                data2 = (data2 < 1 ? 1 : (data2 > 127 ? 127 : data2));
+                // since we are going to play this note, we need to get a note_off
+                it.request_note_off();
 
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
-            mMIDIPlay.mPendingNotesOff.push_back(std::make_pair(channel, data1));
+                mMIDIPlay.mPendingNotesOff.push_back(std::make_pair(channel, data1));
 #endif
-         }
-         else {
-            data2 = 0; // 0 velocity means "note off"
-#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
-            auto end = mMIDIPlay.mPendingNotesOff.end();
-            auto iter = std::find(
-               mMIDIPlay.mPendingNotesOff.begin(), end, std::make_pair(channel, data1) );
-            if (iter != end)
-               mMIDIPlay.mPendingNotesOff.erase(iter);
-#endif
-         }
-         command = 0x90; // MIDI NOTE ON (or OFF when velocity == 0)
-      // Update event
-      } else if (mNextEvent->is_update()) {
-         // this code is based on allegrosmfwr.cpp -- it could be improved
-         // by comparing attribute pointers instead of string compares
-         Alg_update_ptr update = static_cast<Alg_update_ptr>(mNextEvent);
-         const char *name = update->get_attribute();
-
-         if (!strcmp(name, "programi")) {
-            // Instrument change
-            data1 = update->parameter.i;
-            data2 = 0;
-            command = 0xC0; // MIDI PROGRAM CHANGE
-         } else if (!strncmp(name, "control", 7)) {
-            // Controller change
-
-            // The number of the controller being changed is embedded
-            // in the parameter name.
-            data1 = atoi(name + 7);
-            // Allegro normalizes controller values
-            data2 = ROUND(update->parameter.r * 127);
-            command = 0xB0;
-         } else if (!strcmp(name, "bendr")) {
-            // Bend change
-
-            // Reverse Allegro's post-processing of bend values
-            int temp = ROUND(0x2000 * (update->parameter.r + 1));
-            if (temp > 0x3fff) temp = 0x3fff; // 14 bits maximum
-            if (temp < 0) temp = 0;
-            data1 = temp & 0x7f; // low 7 bits
-            data2 = temp >> 7;   // high 7 bits
-            command = 0xE0; // MIDI PITCH BEND
-         } else if (!strcmp(name, "pressurer")) {
-            // Pressure change
-            data1 = (int) (update->parameter.r * 127);
-            if (update->get_identifier() < 0) {
-               // Channel pressure
-               data2 = 0;
-               command = 0xD0; // MIDI CHANNEL PRESSURE
             } else {
-               // Key pressure
-               data2 = data1;
-               data1 = update->get_identifier();
-               command = 0xA0; // MIDI POLY PRESSURE
+                data2 = 0; // 0 velocity means "note off"
+#ifdef AUDIO_IO_GB_MIDI_WORKAROUND
+                auto end = mMIDIPlay.mPendingNotesOff.end();
+                auto iter = std::find(
+                    mMIDIPlay.mPendingNotesOff.begin(), end, std::make_pair(channel, data1));
+                if (iter != end) {
+                    mMIDIPlay.mPendingNotesOff.erase(iter);
+                }
+#endif
             }
-         }
-      }
-      if (command != -1) {
-         // keep track of greatest timestamp used
-         if (timestamp > mMIDIPlay.mMaxMidiTimestamp) {
-            mMIDIPlay.mMaxMidiTimestamp = timestamp;
-         }
-         Pm_WriteShort(mMIDIPlay.mMidiStream, timestamp,
-                    Pm_Message((int) (command + channel),
-                                  (long) data1, (long) data2));
-         /* wxPrintf("Pm_WriteShort %lx (%p) @ %d, advance %d\n",
-                Pm_Message((int) (command + channel),
-                           (long) data1, (long) data2),
-                           mNextEvent, timestamp, timestamp - Pt_Time()); */
-      }
-   }
-   return false;
+            command = 0x90; // MIDI NOTE ON (or OFF when velocity == 0)
+            // Update event
+        } else if (mNextEvent->is_update()) {
+            // this code is based on allegrosmfwr.cpp -- it could be improved
+            // by comparing attribute pointers instead of string compares
+            Alg_update_ptr update = static_cast<Alg_update_ptr>(mNextEvent);
+            const char* name = update->get_attribute();
+
+            if (!strcmp(name, "programi")) {
+                // Instrument change
+                data1 = update->parameter.i;
+                data2 = 0;
+                command = 0xC0; // MIDI PROGRAM CHANGE
+            } else if (!strncmp(name, "control", 7)) {
+                // Controller change
+
+                // The number of the controller being changed is embedded
+                // in the parameter name.
+                data1 = atoi(name + 7);
+                // Allegro normalizes controller values
+                data2 = ROUND(update->parameter.r * 127);
+                command = 0xB0;
+            } else if (!strcmp(name, "bendr")) {
+                // Bend change
+
+                // Reverse Allegro's post-processing of bend values
+                int temp = ROUND(0x2000 * (update->parameter.r + 1));
+                if (temp > 0x3fff) {
+                    temp = 0x3fff;            // 14 bits maximum
+                }
+                if (temp < 0) {
+                    temp = 0;
+                }
+                data1 = temp & 0x7f; // low 7 bits
+                data2 = temp >> 7; // high 7 bits
+                command = 0xE0; // MIDI PITCH BEND
+            } else if (!strcmp(name, "pressurer")) {
+                // Pressure change
+                data1 = (int)(update->parameter.r * 127);
+                if (update->get_identifier() < 0) {
+                    // Channel pressure
+                    data2 = 0;
+                    command = 0xD0; // MIDI CHANNEL PRESSURE
+                } else {
+                    // Key pressure
+                    data2 = data1;
+                    data1 = update->get_identifier();
+                    command = 0xA0; // MIDI POLY PRESSURE
+                }
+            }
+        }
+        if (command != -1) {
+            // keep track of greatest timestamp used
+            if (timestamp > mMIDIPlay.mMaxMidiTimestamp) {
+                mMIDIPlay.mMaxMidiTimestamp = timestamp;
+            }
+            Pm_WriteShort(mMIDIPlay.mMidiStream, timestamp,
+                          Pm_Message((int)(command + channel),
+                                     (long)data1, (long)data2));
+            /* wxPrintf("Pm_WriteShort %lx (%p) @ %d, advance %d\n",
+                   Pm_Message((int) (command + channel),
+                              (long) data1, (long) data2),
+                              mNextEvent, timestamp, timestamp - Pt_Time()); */
+        }
+    }
+    return false;
 }
 
 void Iterator::GetNextEvent()
 {
-   mNextEventTrack = nullptr; // clear it just to be safe
-   // now get the next event and the track from which it came
-   double nextOffset;
-   auto midiLoopOffset = mMIDIPlay.MidiLoopOffset();
-   mNextEvent = it.next(&mNextIsNoteOn,
-      // Allegro retrieves the "cookie" for the event, which is a NoteTrack
-      reinterpret_cast<void **>(&mNextEventTrack),
-      &nextOffset, mPlaybackSchedule.mT1 + midiLoopOffset);
+    mNextEventTrack = nullptr; // clear it just to be safe
+    // now get the next event and the track from which it came
+    double nextOffset;
+    auto midiLoopOffset = mMIDIPlay.MidiLoopOffset();
+    mNextEvent = it.next(&mNextIsNoteOn,
+                         // Allegro retrieves the "cookie" for the event, which is a NoteTrack
+                         reinterpret_cast<void**>(&mNextEventTrack),
+                         &nextOffset, mPlaybackSchedule.mT1 + midiLoopOffset);
 
-   mNextEventTime  = mPlaybackSchedule.mT1 + midiLoopOffset + 1;
-   if (mNextEvent) {
-      mNextEventTime = (mNextIsNoteOn ? mNextEvent->time :
-                              mNextEvent->get_end_time()) + nextOffset;;
-   }
-   if (mNextEventTime > (mPlaybackSchedule.mT1 + midiLoopOffset)){ // terminate playback at mT1
-      mNextEvent = &gAllNotesOff;
-      mNextEventTime = mPlaybackSchedule.mT1 + midiLoopOffset;
-      mNextIsNoteOn = true; // do not look at duration
-   }
+    mNextEventTime  = mPlaybackSchedule.mT1 + midiLoopOffset + 1;
+    if (mNextEvent) {
+        mNextEventTime = (mNextIsNoteOn ? mNextEvent->time
+                          : mNextEvent->get_end_time()) + nextOffset;
+    }
+    if (mNextEventTime > (mPlaybackSchedule.mT1 + midiLoopOffset)) { // terminate playback at mT1
+        mNextEvent = &gAllNotesOff;
+        mNextEventTime = mPlaybackSchedule.mT1 + midiLoopOffset;
+        mNextIsNoteOn = true; // do not look at duration
+    }
 }
 
 void MIDIPlay::FillOtherBuffers(
-   double rate, unsigned long pauseFrames, bool paused, bool hasSolo)
+    double rate, unsigned long pauseFrames, bool paused, bool hasSolo)
 {
-   if (!mMidiStream)
-      return;
+    if (!mMidiStream) {
+        return;
+    }
 
-   // If not paused, fill buffers.
-   if (paused)
-      return;
+    // If not paused, fill buffers.
+    if (paused) {
+        return;
+    }
 
-   // If we compute until GetNextEventTime() > current audio time,
-   // we would have a built-in compute-ahead of mAudioOutLatency, and
-   // it's probably good to compute MIDI when we compute audio (so when
-   // we stop, both stop about the same time).
-   double time = AudioTime(rate); // compute to here
-   // But if mAudioOutLatency is very low, we might need some extra
-   // compute-ahead to deal with mSynthLatency or even this thread.
-   double actual_latency  = (MIDI_MINIMAL_LATENCY_MS + mSynthLatency) * 0.001;
-   if (actual_latency > mAudioOutLatency) {
-       time += actual_latency - mAudioOutLatency;
-   }
-   while (mIterator &&
-          mIterator->mNextEvent &&
-          mIterator->UncorrectedMidiEventTime(PauseTime(rate, pauseFrames)) < time) {
-      if (mIterator->OutputEvent(PauseTime(rate, pauseFrames), false, hasSolo)) {
-         if (mPlaybackSchedule.GetPolicy().Looping(mPlaybackSchedule)) {
-            // jump back to beginning of loop
-            ++mMidiLoopPasses;
-            PrepareMidiIterator(false, mPlaybackSchedule.mT0, MidiLoopOffset());
-         }
-         else
-            mIterator.reset();
-      }
-      else if (mIterator)
-         mIterator->GetNextEvent();
-   }
+    // If we compute until GetNextEventTime() > current audio time,
+    // we would have a built-in compute-ahead of mAudioOutLatency, and
+    // it's probably good to compute MIDI when we compute audio (so when
+    // we stop, both stop about the same time).
+    double time = AudioTime(rate); // compute to here
+    // But if mAudioOutLatency is very low, we might need some extra
+    // compute-ahead to deal with mSynthLatency or even this thread.
+    double actual_latency  = (MIDI_MINIMAL_LATENCY_MS + mSynthLatency) * 0.001;
+    if (actual_latency > mAudioOutLatency) {
+        time += actual_latency - mAudioOutLatency;
+    }
+    while (mIterator
+           && mIterator->mNextEvent
+           && mIterator->UncorrectedMidiEventTime(PauseTime(rate, pauseFrames)) < time) {
+        if (mIterator->OutputEvent(PauseTime(rate, pauseFrames), false, hasSolo)) {
+            if (mPlaybackSchedule.GetPolicy().Looping(mPlaybackSchedule)) {
+                // jump back to beginning of loop
+                ++mMidiLoopPasses;
+                PrepareMidiIterator(false, mPlaybackSchedule.mT0, MidiLoopOffset());
+            } else {
+                mIterator.reset();
+            }
+        } else if (mIterator) {
+            mIterator->GetNextEvent();
+        }
+    }
 }
 
 double MIDIPlay::PauseTime(double rate, unsigned long pauseFrames)
 {
-   return pauseFrames / rate;
+    return pauseFrames / rate;
 }
-
 
 // MidiTime() is an estimate in milliseconds of the current audio
 // output (DAC) time + 1s. In other words, what audacity track time
@@ -1038,186 +1058,181 @@ double MIDIPlay::PauseTime(double rate, unsigned long pauseFrames)
 //
 PmTimestamp MIDIPlay::MidiTime()
 {
-   // note: the extra 0.0005 is for rounding. Round down by casting to
-   // unsigned long, then convert to PmTimeStamp (currently signed)
+    // note: the extra 0.0005 is for rounding. Round down by casting to
+    // unsigned long, then convert to PmTimeStamp (currently signed)
 
-   // PRL: the time correction is really Midi latency achieved by different
-   // means than specifying it to Pm_OpenStream.  The use of the accumulated
-   // sample count generated by the audio callback (in AudioTime()) might also
-   // have the virtue of keeping the Midi output synched with audio.
+    // PRL: the time correction is really Midi latency achieved by different
+    // means than specifying it to Pm_OpenStream.  The use of the accumulated
+    // sample count generated by the audio callback (in AudioTime()) might also
+    // have the virtue of keeping the Midi output synched with audio.
 
-   PmTimestamp ts;
-   // subtract latency here because mSystemMinusAudioTime gets us
-   // to the current *write* time, but we're writing ahead by audio output
-   // latency (mAudioOutLatency).
-   double now = SystemTime(mUsingAlsa);
-   ts = (PmTimestamp) ((unsigned long)
-         (1000 * (now + 1.0005 -
-                  mSystemMinusAudioTimePlusLatency)));
-   // wxPrintf("AudioIO::MidiTime() %d time %g sys-aud %g\n",
-   //        ts, now, mSystemMinusAudioTime);
-   return ts + MIDI_MINIMAL_LATENCY_MS;
+    PmTimestamp ts;
+    // subtract latency here because mSystemMinusAudioTime gets us
+    // to the current *write* time, but we're writing ahead by audio output
+    // latency (mAudioOutLatency).
+    double now = SystemTime(mUsingAlsa);
+    ts = (PmTimestamp)((unsigned long)
+                       (1000 * (now + 1.0005
+                                - mSystemMinusAudioTimePlusLatency)));
+    // wxPrintf("AudioIO::MidiTime() %d time %g sys-aud %g\n",
+    //        ts, now, mSystemMinusAudioTime);
+    return ts + MIDI_MINIMAL_LATENCY_MS;
 }
-
 
 void MIDIPlay::AllNotesOff(bool looping)
 {
 #ifdef __WXGTK__
-   bool doDelay = !looping;
+    bool doDelay = !looping;
 #else
-   bool doDelay = false;
-   static_cast<void>(looping);// compiler food.
+    bool doDelay = false;
+    static_cast<void>(looping);// compiler food.
 #endif
 
-   // to keep track of when MIDI should all be delivered,
-   // update mMaxMidiTimestamp to now:
-   PmTimestamp now = MidiTime();
-   if (mMaxMidiTimestamp < now) {
-       mMaxMidiTimestamp = now;
-   }
+    // to keep track of when MIDI should all be delivered,
+    // update mMaxMidiTimestamp to now:
+    PmTimestamp now = MidiTime();
+    if (mMaxMidiTimestamp < now) {
+        mMaxMidiTimestamp = now;
+    }
 #ifdef AUDIO_IO_GB_MIDI_WORKAROUND
-   // PRL:
-   // Send individual note-off messages for each note-on not yet paired.
+    // PRL:
+    // Send individual note-off messages for each note-on not yet paired.
 
-   // RBD:
-   // Even this did not work as planned. My guess is ALSA does not use
-   // a "stable sort" for timed messages, so that when a note-off is
-   // added later at the same time as a future note-on, the order is
-   // not respected, and the note-off can go first, leaving a stuck note.
-   // The workaround here is to use mMaxMidiTimestamp to ensure that
-   // note-offs come at least 1ms later than any previous message
+    // RBD:
+    // Even this did not work as planned. My guess is ALSA does not use
+    // a "stable sort" for timed messages, so that when a note-off is
+    // added later at the same time as a future note-on, the order is
+    // not respected, and the note-off can go first, leaving a stuck note.
+    // The workaround here is to use mMaxMidiTimestamp to ensure that
+    // note-offs come at least 1ms later than any previous message
 
-   // PRL:
-   // I think we should do that only when stopping or pausing, not when looping
-   // Note that on Linux, MIDI always uses ALSA, no matter whether portaudio
-   // uses some other host api.
+    // PRL:
+    // I think we should do that only when stopping or pausing, not when looping
+    // Note that on Linux, MIDI always uses ALSA, no matter whether portaudio
+    // uses some other host api.
 
-   mMaxMidiTimestamp += 1;
-   for (const auto &pair : mPendingNotesOff) {
-      Pm_WriteShort(mMidiStream,
-                    (doDelay ? mMaxMidiTimestamp : 0),
-                    Pm_Message(
-         0x90 + pair.first, pair.second, 0));
-      mMaxMidiTimestamp++; // allow 1ms per note-off
-   }
-   mPendingNotesOff.clear();
+    mMaxMidiTimestamp += 1;
+    for (const auto& pair : mPendingNotesOff) {
+        Pm_WriteShort(mMidiStream,
+                      (doDelay ? mMaxMidiTimestamp : 0),
+                      Pm_Message(
+                          0x90 + pair.first, pair.second, 0));
+        mMaxMidiTimestamp++; // allow 1ms per note-off
+    }
+    mPendingNotesOff.clear();
 
-   // Proceed to do the usual messages too.
+    // Proceed to do the usual messages too.
 #endif
 
-   for (int chan = 0; chan < 16; chan++) {
-      Pm_WriteShort(mMidiStream,
-                    (doDelay ? mMaxMidiTimestamp : 0),
-                    Pm_Message(0xB0 + chan, 0x7B, 0));
-      mMaxMidiTimestamp++; // allow 1ms per all-notes-off
-   }
+    for (int chan = 0; chan < 16; chan++) {
+        Pm_WriteShort(mMidiStream,
+                      (doDelay ? mMaxMidiTimestamp : 0),
+                      Pm_Message(0xB0 + chan, 0x7B, 0));
+        mMaxMidiTimestamp++; // allow 1ms per all-notes-off
+    }
 }
 
 void MIDIPlay::ComputeOtherTimings(double rate, bool paused,
-   const PaStreamCallbackTimeInfo *timeInfo,
-   unsigned long framesPerBuffer
-   )
+                                   const PaStreamCallbackTimeInfo* timeInfo,
+                                   unsigned long framesPerBuffer)
 {
-   if (mCallbackCount++ == 0) {
-       // This is effectively mSystemMinusAudioTime when the buffer is empty:
-       mStartTime = SystemTime(mUsingAlsa) - mPlaybackSchedule.mT0;
-       // later, mStartTime - mSystemMinusAudioTime will tell us latency
-   }
+    if (mCallbackCount++ == 0) {
+        // This is effectively mSystemMinusAudioTime when the buffer is empty:
+        mStartTime = SystemTime(mUsingAlsa) - mPlaybackSchedule.mT0;
+        // later, mStartTime - mSystemMinusAudioTime will tell us latency
+    }
 
-   /* for Linux, estimate a smooth audio time as a slowly-changing
-      offset from system time */
-   // rnow is system time as a double to simplify math
-   double rnow = SystemTime(mUsingAlsa);
-   // anow is next-sample-to-be-computed audio time as a double
-   double anow = AudioTime(rate);
+    /* for Linux, estimate a smooth audio time as a slowly-changing
+       offset from system time */
+    // rnow is system time as a double to simplify math
+    double rnow = SystemTime(mUsingAlsa);
+    // anow is next-sample-to-be-computed audio time as a double
+    double anow = AudioTime(rate);
 
-   if (mUsingAlsa) {
-      // timeInfo's fields are not all reliable.
+    if (mUsingAlsa) {
+        // timeInfo's fields are not all reliable.
 
-      // enow is audio time estimated from our clock synchronization protocol,
-      //   which produces mSystemMinusAudioTime. But we want the estimate
-      //   to drift low, so we steadily increase mSystemMinusAudioTime to
-      //   simulate a fast system clock or a slow audio clock. If anow > enow,
-      //   we'll update mSystemMinusAudioTime to keep in sync. (You might think
-      //   we could just use anow as the "truth", but it has a lot of jitter,
-      //   so we are using enow to smooth out this jitter, in fact to < 1ms.)
-      // Add worst-case clock drift using previous framesPerBuffer:
-      const auto increase =
-         mAudioFramesPerBuffer * 0.0002 / rate;
-      mSystemMinusAudioTime += increase;
-      mSystemMinusAudioTimePlusLatency += increase;
-      double enow = rnow - mSystemMinusAudioTime;
+        // enow is audio time estimated from our clock synchronization protocol,
+        //   which produces mSystemMinusAudioTime. But we want the estimate
+        //   to drift low, so we steadily increase mSystemMinusAudioTime to
+        //   simulate a fast system clock or a slow audio clock. If anow > enow,
+        //   we'll update mSystemMinusAudioTime to keep in sync. (You might think
+        //   we could just use anow as the "truth", but it has a lot of jitter,
+        //   so we are using enow to smooth out this jitter, in fact to < 1ms.)
+        // Add worst-case clock drift using previous framesPerBuffer:
+        const auto increase
+            =mAudioFramesPerBuffer * 0.0002 / rate;
+        mSystemMinusAudioTime += increase;
+        mSystemMinusAudioTimePlusLatency += increase;
+        double enow = rnow - mSystemMinusAudioTime;
 
+        // now, use anow instead if it is ahead of enow
+        if (anow > enow) {
+            mSystemMinusAudioTime = rnow - anow;
+            // Update our mAudioOutLatency estimate during the first 20 callbacks.
+            // During this period, the buffer should fill. Once we have a good
+            // estimate of mSystemMinusAudioTime (expected in fewer than 20 callbacks)
+            // we want to stop the updating in case there is clock drift, which would
+            // cause the mAudioOutLatency estimation to drift as well. The clock drift
+            // in the first 20 callbacks should be negligible, however.
+            if (mCallbackCount < 20) {
+                mAudioOutLatency = mStartTime
+                                   - mSystemMinusAudioTime;
+            }
+            mSystemMinusAudioTimePlusLatency
+                =mSystemMinusAudioTime + mAudioOutLatency;
+        }
+    } else {
+        // If not using Alsa, rely on timeInfo to have meaningful values that are
+        // more precise than the output latency value reported at stream start.
+        mSystemMinusAudioTime = rnow - anow;
+        mSystemMinusAudioTimePlusLatency
+            =mSystemMinusAudioTime
+              + (timeInfo->outputBufferDacTime - timeInfo->currentTime);
+    }
 
-      // now, use anow instead if it is ahead of enow
-      if (anow > enow) {
-         mSystemMinusAudioTime = rnow - anow;
-         // Update our mAudioOutLatency estimate during the first 20 callbacks.
-         // During this period, the buffer should fill. Once we have a good
-         // estimate of mSystemMinusAudioTime (expected in fewer than 20 callbacks)
-         // we want to stop the updating in case there is clock drift, which would
-         // cause the mAudioOutLatency estimation to drift as well. The clock drift
-         // in the first 20 callbacks should be negligible, however.
-         if (mCallbackCount < 20) {
-            mAudioOutLatency = mStartTime -
-               mSystemMinusAudioTime;
-         }
-         mSystemMinusAudioTimePlusLatency =
-            mSystemMinusAudioTime + mAudioOutLatency;
-      }
-   }
-   else {
-      // If not using Alsa, rely on timeInfo to have meaningful values that are
-      // more precise than the output latency value reported at stream start.
-      mSystemMinusAudioTime = rnow - anow;
-      mSystemMinusAudioTimePlusLatency =
-         mSystemMinusAudioTime +
-            (timeInfo->outputBufferDacTime - timeInfo->currentTime);
-   }
+    mAudioFramesPerBuffer = framesPerBuffer;
+    mNumFrames += framesPerBuffer;
 
-   mAudioFramesPerBuffer = framesPerBuffer;
-   mNumFrames += framesPerBuffer;
-
-   // Keep track of time paused.
-   if (paused) {
-      if (!mMidiPaused) {
-         mMidiPaused = true;
-         AllNotesOff(); // to avoid hanging notes during pause
-      }
-   }
-   else if (mMidiPaused)
-      mMidiPaused = false;
+    // Keep track of time paused.
+    if (paused) {
+        if (!mMidiPaused) {
+            mMidiPaused = true;
+            AllNotesOff(); // to avoid hanging notes during pause
+        }
+    } else if (mMidiPaused) {
+        mMidiPaused = false;
+    }
 }
 
 unsigned MIDIPlay::CountOtherSolo() const
 {
-   return std::count_if(
-      mMidiPlaybackTracks.begin(), mMidiPlaybackTracks.end(),
-      [](const auto &pTrack){ return pTrack->GetSolo(); } );
+    return std::count_if(
+        mMidiPlaybackTracks.begin(), mMidiPlaybackTracks.end(),
+        [](const auto& pTrack){ return pTrack->GetSolo(); });
 }
 
 void MIDIPlay::SignalOtherCompletion()
 {
-   mMidiOutputComplete = true;
+    mMidiOutputComplete = true;
 }
 }
 
 bool MIDIPlay::IsActive()
 {
-   return ( mMidiStreamActive && !mMidiOutputComplete );
+    return mMidiStreamActive && !mMidiOutputComplete;
 }
 
 bool MIDIPlay::IsOtherStreamActive() const
 {
-   return IsActive();
+    return IsActive();
 }
 
 AudioIODiagnostics MIDIPlay::Dump() const
 {
-   return {
-      wxT("mididev.txt"),
-      GetMIDIDeviceInfo(),
-      wxT("MIDI Device Info")
-   };
+    return {
+        wxT("mididev.txt"),
+        GetMIDIDeviceInfo(),
+        wxT("MIDI Device Info")
+    };
 }
-

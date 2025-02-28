@@ -30,100 +30,97 @@ class wxTextCtrl;
 class wxRadioButton;
 enum class AudiocomTrace;
 
-namespace audacity::cloud::audiocom
-{
+namespace audacity::cloud::audiocom {
 class UserPanel;
 
 struct UploadFailedPayload;
 struct UploadSuccessfulPayload;
 
-class ShareAudioDialog final :
-    public wxDialogWrapper
+class ShareAudioDialog final : public wxDialogWrapper
 {
 public:
-   ShareAudioDialog(
-      AudacityProject& project, AudiocomTrace, wxWindow* parent = nullptr);
-   ~ShareAudioDialog() override;
+    ShareAudioDialog(
+        AudacityProject& project, AudiocomTrace, wxWindow* parent = nullptr);
+    ~ShareAudioDialog() override;
 
 private:
-   void Populate(ShuttleGui& s);
+    void Populate(ShuttleGui& s);
 
-   void OnCancel();
-   void OnContinue();
+    void OnCancel();
+    void OnContinue();
 
-   wxString ExportProject();
+    wxString ExportProject();
 
-   void StartUploadProcess();
-   void HandleUploadSucceeded(const UploadSuccessfulPayload& payload);
-   void HandleUploadFailed(const UploadFailedPayload& payload);
-   void HandleExportFailure();
+    void StartUploadProcess();
+    void HandleUploadSucceeded(const UploadSuccessfulPayload& payload);
+    void HandleUploadFailed(const UploadFailedPayload& payload);
+    void HandleExportFailure();
 
-   void ResetProgress();
-   void UpdateProgress(uint64_t current, uint64_t total);
+    void ResetProgress();
+    void UpdateProgress(uint64_t current, uint64_t total);
 
-   AudacityProject& mProject;
+    AudacityProject& mProject;
 
-   struct InitialStatePanel final
-   {
-      explicit InitialStatePanel(ShareAudioDialog& parent);
+    struct InitialStatePanel final
+    {
+        explicit InitialStatePanel(ShareAudioDialog& parent);
 
-      ShareAudioDialog& parent;
+        ShareAudioDialog& parent;
 
-      wxWindow* root { nullptr };
+        wxWindow* root { nullptr };
 
-      UserPanel* userPanel { nullptr };
-      wxPanel* anonInfoPanel { nullptr };
-      wxPanel* authorizedInfoPanel { nullptr };
-      wxTextCtrl* trackTitle { nullptr };
+        UserPanel* userPanel { nullptr };
+        wxPanel* anonInfoPanel { nullptr };
+        wxPanel* authorizedInfoPanel { nullptr };
+        wxTextCtrl* trackTitle { nullptr };
 
-      Observer::Subscription mUserDataChangedSubscription;
+        Observer::Subscription mUserDataChangedSubscription;
 
-      void PopulateInitialStatePanel(ShuttleGui& s);
+        void PopulateInitialStatePanel(ShuttleGui& s);
 
-      void UpdateUserData(bool authorized);
+        void UpdateUserData(bool authorized);
 
-      wxString GetTrackTitle() const;
-      bool HasValidTitle() const;
-   } mInitialStatePanel;
+        wxString GetTrackTitle() const;
+        bool HasValidTitle() const;
+    } mInitialStatePanel;
 
-   struct ProgressPanel final
-   {
-      wxWindow* root { nullptr };
+    struct ProgressPanel final
+    {
+        wxWindow* root { nullptr };
 
-      wxStaticText* title { nullptr };
-      wxGauge* progress { nullptr };
+        wxStaticText* title { nullptr };
+        wxGauge* progress { nullptr };
 
-      wxWindow* timePanel { nullptr };
-      wxStaticText* elapsedTime { nullptr };
-      wxStaticText* remainingTime { nullptr };
+        wxWindow* timePanel { nullptr };
+        wxStaticText* elapsedTime { nullptr };
+        wxStaticText* remainingTime { nullptr };
 
-      wxStaticText* info { nullptr };
+        wxStaticText* info { nullptr };
 
-      void PopulateProgressPanel(ShuttleGui& s);
+        void PopulateProgressPanel(ShuttleGui& s);
+    } mProgressPanel;
 
-   } mProgressPanel;
+    wxButton* mContinueButton { nullptr };
+    wxButton* mCancelButton { nullptr };
 
-   wxButton* mContinueButton { nullptr };
-   wxButton* mCancelButton { nullptr };
+    struct Services;
+    std::unique_ptr<Services> mServices;
+    const AudiocomTrace mAudiocomTrace;
 
-   struct Services;
-   std::unique_ptr<Services> mServices;
-   const AudiocomTrace mAudiocomTrace;
+    class ExportProgressUpdater;
+    std::unique_ptr<ExportProgressUpdater> mExportProgressUpdater;
 
-   class ExportProgressUpdater;
-   std::unique_ptr<ExportProgressUpdater> mExportProgressUpdater;
+    using Clock = std::chrono::steady_clock;
 
-   using Clock = std::chrono::steady_clock;
+    Clock::time_point mStageStartTime;
+    Clock::time_point mLastUIUpdateTime;
+    int mLastProgressValue { 0 };
 
-   Clock::time_point mStageStartTime;
-   Clock::time_point mLastUIUpdateTime;
-   int mLastProgressValue { 0 };
+    wxString mFilePath;
 
-   wxString mFilePath;
+    std::function<void()> mContinueAction;
 
-   std::function<void()> mContinueAction;
-
-   bool mIsAuthorised { false };
-   bool mInProgress { false };
+    bool mIsAuthorised { false };
+    bool mInProgress { false };
 };
 } // namespace audacity::cloud::audiocom

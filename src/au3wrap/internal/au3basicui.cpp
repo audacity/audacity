@@ -3,13 +3,9 @@
 */
 
 #include "au3basicui.h"
-#include "mocks/progressdialog.h"
+#include "progressdialog.h"
 
 #include "global/async/async.h"
-
-Au3BasicUI::~Au3BasicUI()
-{
-}
 
 void Au3BasicUI::DoCallAfter(const BasicUI::Action& action)
 {

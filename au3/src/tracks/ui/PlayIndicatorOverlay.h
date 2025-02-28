@@ -18,45 +18,42 @@ Paul Licameli split from TrackPanel.cpp
 
 class AudacityProject;
 
-
 // Common class for overlaying track panel or ruler
-class PlayIndicatorOverlayBase
-   : public Overlay
-   , public ClientData::Base
+class PlayIndicatorOverlayBase : public Overlay, public ClientData::Base
 {
 public:
-   PlayIndicatorOverlayBase(AudacityProject *project, bool isMaster);
-   virtual ~PlayIndicatorOverlayBase();
+    PlayIndicatorOverlayBase(AudacityProject* project, bool isMaster);
+    virtual ~PlayIndicatorOverlayBase();
 
-   void Update(int newIndicatorX) { mNewIndicatorX = newIndicatorX; }
+    void Update(int newIndicatorX) { mNewIndicatorX = newIndicatorX; }
 
 private:
-   unsigned SequenceNumber() const override;
-   std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
-   void Draw(OverlayPanel &panel, wxDC &dc) override;
+    unsigned SequenceNumber() const override;
+    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
+    void Draw(OverlayPanel& panel, wxDC& dc) override;
 
 protected:
 
-   AudacityProject *const mProject;
-   const bool mIsMaster;
-   int mLastIndicatorX { -1 };
-   int mNewIndicatorX { -1 };
-   bool mNewIsCapturing { false };
-   bool mLastIsCapturing { false };
+    AudacityProject* const mProject;
+    const bool mIsMaster;
+    int mLastIndicatorX { -1 };
+    int mNewIndicatorX { -1 };
+    bool mNewIsCapturing { false };
+    bool mLastIsCapturing { false };
 };
 
 // Master object for track panel, creates the other object for the ruler
 class PlayIndicatorOverlay final : public PlayIndicatorOverlayBase
 {
 public:
-   explicit
-   PlayIndicatorOverlay(AudacityProject *project);
+    explicit
+    PlayIndicatorOverlay(AudacityProject* project);
 
 private:
-   void OnTimer(Observer::Message);
+    void OnTimer(Observer::Message);
 
-   std::shared_ptr<PlayIndicatorOverlayBase> mPartner;
-   Observer::Subscription mSubscription;
+    std::shared_ptr<PlayIndicatorOverlayBase> mPartner;
+    Observer::Subscription mSubscription;
 };
 
 #endif

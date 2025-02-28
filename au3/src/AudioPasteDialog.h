@@ -17,22 +17,22 @@ class ShuttleGui;
 
 class AudioPasteDialog final : public wxDialogWrapper
 {
-   wxCheckBox* mDontShowAgain { nullptr };
-   wxULongLong mCopiedBytesNum {};
+    wxCheckBox* mDontShowAgain { nullptr };
+    wxULongLong mCopiedBytesNum {};
 public:
-   
-   DECLARE_EVENT_TABLE()
-   
+
+    DECLARE_EVENT_TABLE()
+
 public:
-   enum DialogResult {
-      KEEP = wxID_HIGHEST + 1,
-      DISCARD
-   };
-   
-   AudioPasteDialog(wxWindow* parent, wxULongLong nCopiedBytes, int winid = wxID_ANY);
-   
+    enum DialogResult {
+        KEEP = wxID_HIGHEST + 1,
+        DISCARD
+    };
+
+    AudioPasteDialog(wxWindow* parent, wxULongLong nCopiedBytes, int winid = wxID_ANY);
+
 private:
-   void PopulateOrExchange(ShuttleGui& S);
-   void OnContinue(wxCommandEvent&);
-   void OnCancel(wxCommandEvent&);
+    void PopulateOrExchange(ShuttleGui& S);
+    void OnContinue(wxCommandEvent&);
+    void OnCancel(wxCommandEvent&);
 };

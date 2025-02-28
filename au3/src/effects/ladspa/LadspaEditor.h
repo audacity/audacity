@@ -27,57 +27,55 @@ class wxCheckBox;
 class LadspaEffectMeter;
 
 struct LadspaEditor : EffectEditor {
-   //! Assume settings originated from MakeSettings() and copies thereof
-   static inline LadspaEffectSettings &GetSettings(EffectSettings &settings)
-   {
-      auto pSettings = settings.cast<LadspaEffectSettings>();
-      assert(pSettings);
-      return *pSettings;
-   }
-   //! Assume settings originated from MakeSettings() and copies thereof
-   static inline const LadspaEffectSettings &
-   GetSettings(const EffectSettings &settings)
-   {
-      return GetSettings(const_cast<EffectSettings &>(settings));
-   }
+    //! Assume settings originated from MakeSettings() and copies thereof
+    static inline LadspaEffectSettings& GetSettings(EffectSettings& settings)
+    {
+        auto pSettings = settings.cast<LadspaEffectSettings>();
+        assert(pSettings);
+        return *pSettings;
+    }
 
-   LadspaEditor(const EffectUIServices &effect,
-      const LadspaInstance &instance,
-      unsigned numInputControls, unsigned numOutputControls,
-      EffectSettingsAccess &access, double sampleRate, EffectType type,
-      const LadspaEffectOutputs *pOutputs);
+    //! Assume settings originated from MakeSettings() and copies thereof
+    static inline const LadspaEffectSettings&
+    GetSettings(const EffectSettings& settings)
+    {
+        return GetSettings(const_cast<EffectSettings&>(settings));
+    }
 
-   bool UpdateUI() override;
-   bool ValidateUI() override;
-   void Disconnect() override;
+    LadspaEditor(const EffectUIServices& effect, const LadspaInstance& instance, unsigned numInputControls, unsigned numOutputControls,
+                 EffectSettingsAccess& access, double sampleRate, EffectType type, const LadspaEffectOutputs* pOutputs);
 
-   void PopulateUI(ShuttleGui &S);
+    bool UpdateUI() override;
+    bool ValidateUI() override;
+    void Disconnect() override;
 
-   void OnCheckBox(wxCommandEvent & evt);
-   void OnSlider(wxCommandEvent & evt);
-   void OnTextCtrl(wxCommandEvent & evt);
-   void RefreshControls();
+    void PopulateUI(ShuttleGui& S);
 
-   void UpdateControl(int index, float value, float epsilon);
-   void UpdateControls(const LadspaEffectSettings& src);
+    void OnCheckBox(wxCommandEvent& evt);
+    void OnSlider(wxCommandEvent& evt);
+    void OnTextCtrl(wxCommandEvent& evt);
+    void RefreshControls();
 
-   const LadspaInstance &mInstance;
-   const unsigned mNumInputControls;
-   const unsigned mNumOutputControls;
+    void UpdateControl(int index, float value, float epsilon);
+    void UpdateControls(const LadspaEffectSettings& src);
 
-   const double mSampleRate;
-   const EffectType mType;
-   LadspaEffectSettings mSettings;
-   const LadspaEffectOutputs *const mpOutputs;
+    const LadspaInstance& mInstance;
+    const unsigned mNumInputControls;
+    const unsigned mNumOutputControls;
 
-   NumericTextCtrl *mDuration{};
-   wxWeakRef<wxDialog> mDialog;
-   wxWindow *mParent{};
-   ArrayOf<wxSlider*> mSliders;
-   ArrayOf<wxTextCtrl*> mFields;
-   ArrayOf<wxStaticText*> mLabels;
-   ArrayOf<wxCheckBox*> mToggles;
-   std::vector<LadspaEffectMeter *> mMeters;
+    const double mSampleRate;
+    const EffectType mType;
+    LadspaEffectSettings mSettings;
+    const LadspaEffectOutputs* const mpOutputs;
+
+    NumericTextCtrl* mDuration{};
+    wxWeakRef<wxDialog> mDialog;
+    wxWindow* mParent{};
+    ArrayOf<wxSlider*> mSliders;
+    ArrayOf<wxTextCtrl*> mFields;
+    ArrayOf<wxStaticText*> mLabels;
+    ArrayOf<wxCheckBox*> mToggles;
+    std::vector<LadspaEffectMeter*> mMeters;
 };
 
 #endif

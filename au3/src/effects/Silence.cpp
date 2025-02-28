@@ -19,49 +19,51 @@
 #include "ShuttleGui.h"
 #include "../widgets/NumericTextCtrl.h"
 
-namespace{ BuiltinEffectsModule::Registration< EffectSilence > reg; }
+namespace {
+BuiltinEffectsModule::Registration< EffectSilence > reg;
+}
 
 // Effect implementation
 
 std::unique_ptr<EffectEditor> EffectSilence::PopulateOrExchange(
-   ShuttleGui & S, EffectInstance &, EffectSettingsAccess &access,
-   const EffectOutputs *)
+    ShuttleGui& S, EffectInstance&, EffectSettingsAccess& access,
+    const EffectOutputs*)
 {
-   S.StartVerticalLay();
-   {
-      S.StartHorizontalLay();
-      {
-         S.AddPrompt(XXO("&Duration:"));
-         auto &extra = access.Get().extra;
-         mDurationT = safenew
-            NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
-                              S.GetParent(), wxID_ANY,
-                              NumericConverterType_TIME(),
-                              extra.GetDurationFormat(),
-                              extra.GetDuration(),
-                               NumericTextCtrl::Options{}
-                                  .AutoPos(true));
-         S.Name(XO("Duration"))
+    S.StartVerticalLay();
+    {
+        S.StartHorizontalLay();
+        {
+            S.AddPrompt(XXO("&Duration:"));
+            auto& extra = access.Get().extra;
+            mDurationT = safenew
+                             NumericTextCtrl(FormatterContext::SampleRateContext(mProjectRate),
+                                             S.GetParent(), wxID_ANY,
+                                             NumericConverterType_TIME(),
+                                             extra.GetDurationFormat(),
+                                             extra.GetDuration(),
+                                             NumericTextCtrl::Options{}
+                                             .AutoPos(true));
+            S.Name(XO("Duration"))
             .Position(wxALIGN_CENTER | wxALL)
             .AddWindow(mDurationT);
-      }
-      S.EndHorizontalLay();
-   }
-   S.EndVerticalLay();
+        }
+        S.EndHorizontalLay();
+    }
+    S.EndVerticalLay();
 
-   return nullptr;
+    return nullptr;
 }
 
-bool EffectSilence::TransferDataToWindow(const EffectSettings &settings)
+bool EffectSilence::TransferDataToWindow(const EffectSettings& settings)
 {
-   mDurationT->SetValue(settings.extra.GetDuration());
+    mDurationT->SetValue(settings.extra.GetDuration());
 
-   return true;
+    return true;
 }
 
-bool EffectSilence::TransferDataFromWindow(EffectSettings &settings)
+bool EffectSilence::TransferDataFromWindow(EffectSettings& settings)
 {
-   settings.extra.SetDuration(mDurationT->GetValue());
+    settings.extra.SetDuration(mDurationT->GetValue());
 
-   return true;
+    return true;
 }

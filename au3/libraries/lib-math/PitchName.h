@@ -14,7 +14,6 @@
 
 *//*******************************************************************/
 
-
 #ifndef __AUDACITY_PITCHNAME__
 #define __AUDACITY_PITCHNAME__
 
@@ -40,20 +39,20 @@ UTILITY_API unsigned int PitchIndex(const double dMIDInote);
 // MIDI note number 0 is C-1 in Scientific pitch notation.
 UTILITY_API int PitchOctave(const double dMIDInote);
 
-enum class PitchNameChoice { Sharps, Flats, Both };
+enum class PitchNameChoice {
+    Sharps, Flats, Both
+};
 
 // PitchName takes dMIDInote (per result from
 // FreqToMIDInote) and returns a standard pitch/note name [C, C#, etc.).
 UTILITY_API TranslatableString PitchName(
-   const double dMIDInote,
-   const PitchNameChoice choice = PitchNameChoice::Sharps );
+    const double dMIDInote, const PitchNameChoice choice = PitchNameChoice::Sharps);
 
 // PitchName_Absolute does the same thing as PitchName, but appends
 // the octave number, e.g., instead of "C" it will return "C4"
 // if the dMIDInote corresponds to middle C, i.e., is 60.
 UTILITY_API TranslatableString PitchName_Absolute(
-   const double dMIDInote,
-   const PitchNameChoice choice = PitchNameChoice::Sharps);
+    const double dMIDInote, const PitchNameChoice choice = PitchNameChoice::Sharps);
 
 UTILITY_API
 double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave);
@@ -61,4 +60,4 @@ double PitchToMIDInote(const unsigned int nPitchIndex, const int nPitchOctave);
 UTILITY_API
 double PitchToFreq(const unsigned int nPitchIndex, const int nPitchOctave);
 
-#endif	// __AUDACITY_PITCHNAME__
+#endif      // __AUDACITY_PITCHNAME__

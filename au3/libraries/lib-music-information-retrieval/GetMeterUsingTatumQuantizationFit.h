@@ -61,8 +61,7 @@ was faster than all others""
 #include <functional>
 #include <optional>
 
-namespace MIR
-{
+namespace MIR {
 class MirAudioReader;
 
 /*!
@@ -70,8 +69,6 @@ class MirAudioReader;
  * method.
  */
 std::optional<MusicalMeter> GetMeterUsingTatumQuantizationFit(
-   const MirAudioReader& audio, FalsePositiveTolerance tolerance,
-   const std::function<void(double)>& progressCallback,
-   QuantizationFitDebugOutput* debugOutput);
-
+    const MirAudioReader& audio, FalsePositiveTolerance tolerance, const std::function<void(double)>& progressCallback,
+    QuantizationFitDebugOutput* debugOutput);
 } // namespace MIR

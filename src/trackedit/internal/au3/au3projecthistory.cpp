@@ -54,26 +54,6 @@ void au::trackedit::Au3ProjectHistory::redo()
     m_isUndoRedoAvailableChanged.notify();
 }
 
-void au::trackedit::Au3ProjectHistory::undoUnsaved()
-{
-    auto& project = projectRef();
-    auto& undoManager = UndoManager::Get(project);
-    while (undoManager.UnsavedChanges())
-    {
-        undoManager.Undo(
-            [&]( const UndoStackElem& elem ){
-            ::ProjectHistory::Get(project).PopState(elem.state);
-        });
-    }
-}
-
-void au::trackedit::Au3ProjectHistory::clearUnsaved()
-{
-    auto& project = projectRef();
-    auto& undoManager = UndoManager::Get(project);
-    undoManager.ClearStates();
-}
-
 void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
 {
     auto& project = projectRef();
@@ -90,6 +70,13 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
                                              undoFlags);
 
     m_isUndoRedoAvailableChanged.notify();
+}
+
+void Au3ProjectHistory::modifyState(bool autoSave)
+{
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).ModifyState(autoSave);
+    ::UndoManager::Get(project).MarkUnsaved();
 }
 
 muse::async::Notification Au3ProjectHistory::isUndoRedoAvailableChanged() const

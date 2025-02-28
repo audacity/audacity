@@ -34,7 +34,6 @@ and get deterministic behaviour.
 
 *//*******************************************************************/
 
-
 #include "Dither.h"
 
 #include "Internat.h"
@@ -70,7 +69,7 @@ struct State {
     float mBuffer[8 /* = BUF_SIZE */];
 } mState;
 
-using Ditherer = float (*)(State &, float);
+using Ditherer = float (*)(State&, float);
 
 // This is supposed to produce white noise and no dc
 static inline float DITHER_NOISE()
@@ -79,16 +78,16 @@ static inline float DITHER_NOISE()
 }
 
 // Defines for sample conversion
-constexpr auto CONVERT_DIV16 = float(1<<15);
-constexpr auto CONVERT_DIV24 = float(1<<23);
+constexpr auto CONVERT_DIV16 = float(1 << 15);
+constexpr auto CONVERT_DIV24 = float(1 << 23);
 
 // Dereference sample pointer and convert to float sample
-static inline float FROM_INT16(const short *ptr)
+static inline float FROM_INT16(const short* ptr)
 {
     return *ptr / CONVERT_DIV16;
 }
 
-static inline float FROM_INT24(const int *ptr)
+static inline float FROM_INT24(const int* ptr)
 {
     return *ptr / CONVERT_DIV24;
 }
@@ -96,93 +95,95 @@ static inline float FROM_INT24(const int *ptr)
 // For float, we internally allow values greater than 1.0, which
 // would blow up the dithering to int values.  FROM_FLOAT is
 // only used to dither to int, so clip here.
-static inline float FROM_FLOAT(const float *ptr)
+static inline float FROM_FLOAT(const float* ptr)
 {
     return *((float*)(ptr)) > 1.0
-        ?  1.0 :
-        *((float*)(ptr)) < -1.0
-            ? -1.0 :
-            *((float*)(ptr));
+           ? 1.0
+           : *((float*)(ptr)) < -1.0
+           ? -1.0
+           : *((float*)(ptr));
 }
 
 // Store float sample 'sample' into pointer 'ptr', clip it, if necessary
 template<typename dst_type>
 static inline void IMPLEMENT_STORE(
-    dst_type *ptr, float sample, dst_type min_bound, dst_type max_bound)
+    dst_type* ptr, float sample, dst_type min_bound, dst_type max_bound)
 {
     int x = lrintf(sample);
-    if (x > max_bound)
+    if (x > max_bound) {
         *ptr = max_bound;
-    else if (x<(min_bound))
+    } else if (x < (min_bound)) {
         *ptr = min_bound;
-    else
+    } else {
         *ptr = static_cast<dst_type>(x);
+    }
 }
 
 // Dither single float 'sample' and store it in pointer 'dst', using 'dither' as algorithm
-static inline void DITHER_TO_INT16(Ditherer dither, State &state,
-   short *dst, float sample)
+static inline void DITHER_TO_INT16(Ditherer dither, State& state,
+                                   short* dst, float sample)
 {
     IMPLEMENT_STORE<short>(dst,
-        dither(state, sample * CONVERT_DIV16),
-        short(-32768), short(32767));
+                           dither(state, sample * CONVERT_DIV16),
+                           short(-32768), short(32767));
 }
 
 // Dither single float 'sample' and store it in pointer 'dst', using 'dither' as algorithm
-static inline void DITHER_TO_INT24(Ditherer dither, State &state,
-   int *dst, float sample)
+static inline void DITHER_TO_INT24(Ditherer dither, State& state,
+                                   int* dst, float sample)
 {
     IMPLEMENT_STORE<int>(dst,
-        dither(state, sample * CONVERT_DIV24), -8388608, 8388607);
+                         dither(state, sample * CONVERT_DIV24), -8388608, 8388607);
 }
 
 // Implement one single dither step
 
 // Implement a dithering loop
 template<typename srcType, typename dstType>
-static inline void DITHER_LOOP( Ditherer dither, State &state,
-    void (*store)(Ditherer, State &, dstType *, float),
-    float (*load)(const srcType *),
-    samplePtr dst, sampleFormat dstFormat, size_t dstStride,
-    constSamplePtr src, sampleFormat srcFormat, size_t srcStride, size_t len)
+static inline void DITHER_LOOP(Ditherer dither, State& state,
+                               void (*store)(Ditherer, State&, dstType*, float),
+                               float (*load)(const srcType*),
+                               samplePtr dst, sampleFormat dstFormat, size_t dstStride,
+                               constSamplePtr src, sampleFormat srcFormat, size_t srcStride, size_t len)
 {
-    char *d;
-    const char *s;
+    char* d;
+    const char* s;
     unsigned int ii;
     for (d = (char*)dst, s = (char*)src, ii = 0;
-        ii < len;
-        ii++, d += SAMPLE_SIZE(dstFormat) * dstStride,
-        s += SAMPLE_SIZE(srcFormat) * srcStride) {
-            store(dither, state, reinterpret_cast<dstType *>(d), load(reinterpret_cast<const srcType *>(s)));
-        }
+         ii < len;
+         ii++, d += SAMPLE_SIZE(dstFormat) * dstStride,
+         s += SAMPLE_SIZE(srcFormat) * srcStride) {
+        store(dither, state, reinterpret_cast<dstType*>(d), load(reinterpret_cast<const srcType*>(s)));
+    }
 }
 
 // Implement a dither. There are only 3 cases where we must dither,
 // in all other cases, no dithering is necessary.
-static inline void DITHER( Ditherer dither, State &state,
-   samplePtr dst, sampleFormat dstFormat, size_t dstStride,
-   constSamplePtr src, sampleFormat srcFormat, size_t srcStride, size_t len)
+static inline void DITHER(Ditherer dither, State& state,
+                          samplePtr dst, sampleFormat dstFormat, size_t dstStride,
+                          constSamplePtr src, sampleFormat srcFormat, size_t srcStride, size_t len)
 {
-    if (srcFormat == int24Sample && dstFormat == int16Sample)
+    if (srcFormat == int24Sample && dstFormat == int16Sample) {
         DITHER_LOOP<int, short>(dither, state,
-            DITHER_TO_INT16, FROM_INT24, dst,
-            int16Sample, dstStride, src, int24Sample, srcStride, len);
-    else if (srcFormat == floatSample && dstFormat == int16Sample)
+                                DITHER_TO_INT16, FROM_INT24, dst,
+                                int16Sample, dstStride, src, int24Sample, srcStride, len);
+    } else if (srcFormat == floatSample && dstFormat == int16Sample) {
         DITHER_LOOP<float, short>(dither, state,
-            DITHER_TO_INT16, FROM_FLOAT, dst,
-            int16Sample, dstStride, src, floatSample, srcStride, len);
-    else if (srcFormat == floatSample && dstFormat == int24Sample)
+                                  DITHER_TO_INT16, FROM_FLOAT, dst,
+                                  int16Sample, dstStride, src, floatSample, srcStride, len);
+    } else if (srcFormat == floatSample && dstFormat == int24Sample) {
         DITHER_LOOP<float, int>(dither, state,
-            DITHER_TO_INT24, FROM_FLOAT, dst,
-            int24Sample, dstStride, src, floatSample, srcStride, len);
-    else { wxASSERT(false); }
+                                DITHER_TO_INT24, FROM_FLOAT, dst,
+                                int24Sample, dstStride, src, floatSample, srcStride, len);
+    } else {
+        wxASSERT(false);
+    }
 }
 
-
-static inline float NoDither(State &, float sample);
-static inline float RectangleDither(State &, float sample);
-static inline float TriangleDither(State &state, float sample);
-static inline float ShapedDither(State &state, float sample);
+static inline float NoDither(State&, float sample);
+static inline float RectangleDither(State&, float sample);
+static inline float TriangleDither(State& state, float sample);
+static inline float ShapedDither(State& state, float sample);
 
 Dither::Dither()
 {
@@ -233,78 +234,68 @@ void Dither::Apply(enum DitherType ditherType,
     wxASSERT(sourceStride > 0);
     wxASSERT(destStride > 0);
 
-    if (len == 0)
+    if (len == 0) {
         return; // nothing to do
-
-    if (destFormat == sourceFormat)
-    {
+    }
+    if (destFormat == sourceFormat) {
         // No need to dither, because source and destination
         // format are the same. Just copy samples.
-        if (destStride == 1 && sourceStride == 1)
+        if (destStride == 1 && sourceStride == 1) {
             memcpy(dest, source, len * SAMPLE_SIZE(destFormat));
-        else
-        {
-            if (sourceFormat == floatSample)
-            {
+        } else {
+            if (sourceFormat == floatSample) {
                 auto d = (float*)dest;
                 auto s = (const float*)source;
 
-                for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+                for (i = 0; i < len; i++, d += destStride, s += sourceStride) {
                     *d = *s;
-            } else
-            if (sourceFormat == int24Sample)
-            {
+                }
+            } else if (sourceFormat == int24Sample) {
                 auto d = (int*)dest;
                 auto s = (const int*)source;
 
-                for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+                for (i = 0; i < len; i++, d += destStride, s += sourceStride) {
                     *d = *s;
-            } else
-            if (sourceFormat == int16Sample)
-            {
+                }
+            } else if (sourceFormat == int16Sample) {
                 auto d = (short*)dest;
                 auto s = (const short*)source;
 
-                for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+                for (i = 0; i < len; i++, d += destStride, s += sourceStride) {
                     *d = *s;
+                }
             } else {
                 wxASSERT(false); // source format unknown
             }
         }
-    } else
-    if (destFormat == floatSample)
-    {
+    } else if (destFormat == floatSample) {
         // No need to dither, just convert samples to float.
         // No clipping should be necessary.
         auto d = (float*)dest;
 
-        if (sourceFormat == int16Sample)
-        {
+        if (sourceFormat == int16Sample) {
             auto s = (const short*)source;
-            for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+            for (i = 0; i < len; i++, d += destStride, s += sourceStride) {
                 *d = FROM_INT16(s);
-        } else
-        if (sourceFormat == int24Sample)
-        {
+            }
+        } else if (sourceFormat == int24Sample) {
             auto s = (const int*)source;
-            for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+            for (i = 0; i < len; i++, d += destStride, s += sourceStride) {
                 *d = FROM_INT24(s);
+            }
         } else {
             wxASSERT(false); // source format unknown
         }
-    } else
-    if (destFormat == int24Sample && sourceFormat == int16Sample)
-    {
+    } else if (destFormat == int24Sample && sourceFormat == int16Sample) {
         // Special case when promoting 16 bit to 24 bit
         auto d = (int*)dest;
         auto s = (const short*)source;
-        for (i = 0; i < len; i++, d += destStride, s += sourceStride)
+        for (i = 0; i < len; i++, d += destStride, s += sourceStride) {
             *d = ((int)*s) << 8;
-    } else
-    {
+        }
+    } else {
         // We must do dithering
-        switch (ditherType)
-        {
+        switch (ditherType) {
         case DitherType::none:
             DITHER(NoDither, mState, dest, destFormat, destStride, source, sourceFormat, sourceStride, len);
             break;
@@ -328,19 +319,19 @@ void Dither::Apply(enum DitherType ditherType,
 // Dither implementations
 
 // No dither, just return sample
-inline float NoDither(State &, float sample)
+inline float NoDither(State&, float sample)
 {
     return sample;
 }
 
 // Rectangle dithering, apply one-step noise
-inline float RectangleDither(State &, float sample)
+inline float RectangleDither(State&, float sample)
 {
     return sample - DITHER_NOISE();
 }
 
 // Triangle dither - high pass filtered
-inline float TriangleDither(State &state, float sample)
+inline float TriangleDither(State& state, float sample)
 {
     float r = DITHER_NOISE();
     float result = sample + r - state.mTriangleState;
@@ -350,19 +341,19 @@ inline float TriangleDither(State &state, float sample)
 }
 
 // Shaped dither
-inline float ShapedDither(State &state, float sample)
+inline float ShapedDither(State& state, float sample)
 {
     // Generate triangular dither, +-1 LSB, flat psd
     float r = DITHER_NOISE() + DITHER_NOISE();
-    if(sample != sample)  // test for NaN
-       sample = 0; // and do the best we can with it
-
+    if (sample != sample) { // test for NaN
+        sample = 0; // and do the best we can with it
+    }
     // Run FIR
     float xe = sample + state.mBuffer[state.mPhase] * SHAPED_BS[0]
-        + state.mBuffer[(state.mPhase - 1) & BUF_MASK] * SHAPED_BS[1]
-        + state.mBuffer[(state.mPhase - 2) & BUF_MASK] * SHAPED_BS[2]
-        + state.mBuffer[(state.mPhase - 3) & BUF_MASK] * SHAPED_BS[3]
-        + state.mBuffer[(state.mPhase - 4) & BUF_MASK] * SHAPED_BS[4];
+               + state.mBuffer[(state.mPhase - 1) & BUF_MASK] * SHAPED_BS[1]
+               + state.mBuffer[(state.mPhase - 2) & BUF_MASK] * SHAPED_BS[2]
+               + state.mBuffer[(state.mPhase - 3) & BUF_MASK] * SHAPED_BS[3]
+               + state.mBuffer[(state.mPhase - 4) & BUF_MASK] * SHAPED_BS[4];
 
     // Accumulate FIR and triangular noise
     float result = xe + r;
@@ -375,44 +366,44 @@ inline float ShapedDither(State &state, float sample)
 }
 
 static const std::initializer_list<EnumValueSymbol> choicesDither{
-   { XO("None") },
-   { XO("Rectangle") },
-   { XC("Triangle", "dither") },
-   { XO("Shaped") },
+    { XO("None") },
+    { XO("Rectangle") },
+    { XC("Triangle", "dither") },
+    { XO("Shaped") },
 };
 static auto intChoicesDither = {
-   DitherType::none,
-   DitherType::rectangle,
-   DitherType::triangle,
-   DitherType::shaped,
+    DitherType::none,
+    DitherType::rectangle,
+    DitherType::triangle,
+    DitherType::shaped,
 };
 
 EnumSetting< DitherType > Dither::FastSetting{
-   wxT("Quality/DitherAlgorithmChoice"),
-   choicesDither,
-   0, // none
+    wxT("Quality/DitherAlgorithmChoice"),
+    choicesDither,
+    0, // none
 
-   // for migrating old preferences:
-   intChoicesDither,
-   wxT("Quality/DitherAlgorithm")
+    // for migrating old preferences:
+    intChoicesDither,
+    wxT("Quality/DitherAlgorithm")
 };
 
 EnumSetting< DitherType > Dither::BestSetting{
-   wxT("Quality/HQDitherAlgorithmChoice"),
-   choicesDither,
-   3, // shaped
+    wxT("Quality/HQDitherAlgorithmChoice"),
+    choicesDither,
+    3, // shaped
 
-   // for migrating old preferences:
-   intChoicesDither,
-   wxT("Quality/HQDitherAlgorithm")
+    // for migrating old preferences:
+    intChoicesDither,
+    wxT("Quality/HQDitherAlgorithm")
 };
 
 DitherType Dither::FastDitherChoice()
 {
-   return (DitherType) FastSetting.ReadEnum();
+    return (DitherType)FastSetting.ReadEnum();
 }
 
 DitherType Dither::BestDitherChoice()
 {
-   return (DitherType) BestSetting.ReadEnum();
+    return (DitherType)BestSetting.ReadEnum();
 }

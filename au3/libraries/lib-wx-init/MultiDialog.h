@@ -23,11 +23,7 @@ class wxString;
 
 // Display a dialog with radio buttons.
 // Return the zero-based index of the chosen button.
-int ShowMultiDialog(const TranslatableString &message,
-                    const TranslatableString &title,
-                    const TranslatableStrings &buttons,
-                    const ManualPageID & helpPage,
-                    const TranslatableString &boxMsg,
-                    bool log);
+int ShowMultiDialog(const TranslatableString& message, const TranslatableString& title, const TranslatableStrings& buttons,
+                    const ManualPageID& helpPage, const TranslatableString& boxMsg, bool log);
 
 #endif // __AUDACITY_MULTIDIALOG__

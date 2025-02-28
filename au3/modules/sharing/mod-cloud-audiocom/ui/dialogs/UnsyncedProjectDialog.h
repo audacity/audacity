@@ -12,14 +12,13 @@
 
 #include "AudioComDialogBase.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class UnsyncedProjectDialog final : public AudioComDialogBase
 {
 public:
-   UnsyncedProjectDialog(const AudacityProject* project, bool hasValidSnapshot);
+    UnsyncedProjectDialog(const AudacityProject* project, bool hasValidSnapshot);
 
-   static DialogButtonIdentifier VisitAudioComButtonIdentifier();
-   static DialogButtonIdentifier LoadLatestButtonIdentifier();
+    static DialogButtonIdentifier VisitAudioComButtonIdentifier();
+    static DialogButtonIdentifier LoadLatestButtonIdentifier();
 };
 } // namespace audacity::cloud::audiocom::sync

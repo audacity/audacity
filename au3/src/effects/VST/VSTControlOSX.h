@@ -22,35 +22,35 @@
 
 class VSTControlImpl final : public wxWidgetCocoaImpl
 {
-public :
-   VSTControlImpl(wxWindowMac *peer, NSView *view);
-   ~VSTControlImpl();
+public:
+    VSTControlImpl(wxWindowMac* peer, NSView* view);
+    ~VSTControlImpl();
 };
 
 class VSTControl : public VSTControlBase
 {
 public:
-   VSTControl();
-   ~VSTControl();
+    VSTControl();
+    ~VSTControl();
 
-   bool Create(wxWindow *parent, VSTLink *link);
-   void Close();
+    bool Create(wxWindow* parent, VSTLink* link);
+    void Close();
 
 private:
-   void CreateCocoa();
+    void CreateCocoa();
 
 #if !defined(_LP64)
-   void CreateCarbon();
-   void OnSize(wxSizeEvent & evt);
+    void CreateCarbon();
+    void OnSize(wxSizeEvent& evt);
 #endif
 
 private:
-   NSView *mVSTView;
-   NSView *mView;
+    NSView* mVSTView;
+    NSView* mView;
 
 #if !defined(_LP64)
-   WindowRef mWindowRef;
-   HIViewRef mHIView;
+    WindowRef mWindowRef;
+    HIViewRef mHIView;
 #endif
 };
 

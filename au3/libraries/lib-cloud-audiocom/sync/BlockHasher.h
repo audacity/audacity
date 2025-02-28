@@ -19,35 +19,34 @@
 
 #include "CloudSyncDTO.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class BlockHashCache /* not final */
 {
 public:
-   virtual ~BlockHashCache() = default;
+    virtual ~BlockHashCache() = default;
 
-   virtual bool GetHash(int64_t blockId, std::string& hash) const = 0;
-   virtual void UpdateHash(int64_t blockId, const std::string& hash) = 0;
+    virtual bool GetHash(int64_t blockId, std::string& hash) const = 0;
+    virtual void UpdateHash(int64_t blockId, const std::string& hash) = 0;
 };
 
 class BlockHasher final
 {
 public:
-   BlockHasher();
-   ~BlockHasher();
+    BlockHasher();
+    ~BlockHasher();
 
-   BlockHasher(const BlockHasher&) = delete;
-   BlockHasher(BlockHasher&&) = delete;
-   BlockHasher& operator=(const BlockHasher&) = delete;
-   BlockHasher& operator=(BlockHasher&&) = delete;
+    BlockHasher(const BlockHasher&) = delete;
+    BlockHasher(BlockHasher&&) = delete;
+    BlockHasher& operator=(const BlockHasher&) = delete;
+    BlockHasher& operator=(BlockHasher&&) = delete;
 
-   bool ComputeHashes(BlockHashCache& cache, std::vector<LockedBlock> blocks, std::function<void()> onComplete);
-   bool IsReady() const;
+    bool ComputeHashes(BlockHashCache& cache, std::vector<LockedBlock> blocks, std::function<void()> onComplete);
+    bool IsReady() const;
 
-   std::vector<std::pair<int64_t, std::string>> TakeResult();
+    std::vector<std::pair<int64_t, std::string> > TakeResult();
 
 private:
-   class Workers;
-   std::unique_ptr<Workers> mWorkers;
+    class Workers;
+    std::unique_ptr<Workers> mWorkers;
 };
 } // namespace audacity::cloud::audiocom::sync

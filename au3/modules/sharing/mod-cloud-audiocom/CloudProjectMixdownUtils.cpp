@@ -22,114 +22,120 @@
 #include "sync/MixdownUploader.h"
 #include "sync/ProjectCloudExtension.h"
 
-namespace audacity::cloud::audiocom::sync
-{
-
+namespace audacity::cloud::audiocom::sync {
 bool HandleMixdownLink(std::string_view uri)
 {
-   ASSERT_MAIN_THREAD();
+    ASSERT_MAIN_THREAD();
 
-   const auto parsedUri = ParseUri(uri);
+    const auto parsedUri = ParseUri(uri);
 
-   if (parsedUri.Scheme != "audacity" || parsedUri.Host != "generate-audio")
-      return false;
+    if (parsedUri.Scheme != "audacity" || parsedUri.Host != "generate-audio") {
+        return false;
+    }
 
-   const auto queryParameters = ParseUriQuery(parsedUri.Query);
+    const auto queryParameters = ParseUriQuery(parsedUri.Query);
 
-   if (queryParameters.empty())
-      return false;
+    if (queryParameters.empty()) {
+        return false;
+    }
 
-   const auto projectId = queryParameters.find("projectId");
+    const auto projectId = queryParameters.find("projectId");
 
-   if (projectId == queryParameters.end())
-      return false;
+    if (projectId == queryParameters.end()) {
+        return false;
+    }
 
-   auto openedProject = GetOpenedProject(projectId->second);
+    auto openedProject = GetOpenedProject(projectId->second);
 
-   const auto hasOpenProject = openedProject != nullptr;
+    const auto hasOpenProject = openedProject != nullptr;
 
-   const auto project = hasOpenProject ?
-                           openedProject :
-                           OpenProjectFromCloud(
-                              GetPotentialTarget(), projectId->second,
-                              std::string_view {}, false);
+    const auto project = hasOpenProject
+                         ? openedProject
+                         : OpenProjectFromCloud(
+        GetPotentialTarget(), projectId->second,
+        std::string_view {}, false);
 
-   if (project == nullptr)
-      return false;
+    if (project == nullptr) {
+        return false;
+    }
 
-   UploadMixdown(
-      *project,
-      [hasOpenProject](AudacityProject& project, MixdownState state)
-      {
-         if (!hasOpenProject)
+    UploadMixdown(
+        *project,
+        [hasOpenProject](AudacityProject& project, MixdownState state)
+    {
+        if (!hasOpenProject) {
             ProjectWindow::Get(project).Close(true);
-      });
+        }
+    });
 
-   return true;
+    return true;
 }
 
 void UploadMixdown(
-   AudacityProject& project,
-   std::function<void(AudacityProject&, MixdownState)> onComplete)
+    AudacityProject& project,
+    std::function<void(AudacityProject&, MixdownState)> onComplete)
 {
-   SaveToCloud(
-      project, UploadMode::Normal,
-      [&project, onComplete = std::move(onComplete)](const auto& response)
-      {
-         auto cancellationContext = concurrency::CancellationContext::Create();
+    SaveToCloud(
+        project, UploadMode::Normal,
+        [&project, onComplete = std::move(onComplete)](const auto& response)
+    {
+        auto cancellationContext = concurrency::CancellationContext::Create();
 
-         auto progressDialog = BasicUI::MakeProgress(
+        auto progressDialog = BasicUI::MakeProgress(
             XO("Save to audio.com"), XO("Generating audio preview..."),
             BasicUI::ProgressShowCancel);
 
-         auto mixdownUploader = MixdownUploader::Upload(
+        auto mixdownUploader = MixdownUploader::Upload(
             cancellationContext, GetServiceConfig(), project,
             [progressDialog = progressDialog.get(),
              cancellationContext](auto progress)
-            {
-               if (
-                  progressDialog->Poll(
-                     static_cast<unsigned>(progress * 10000), 10000) !=
-                  BasicUI::ProgressResult::Success)
-                  cancellationContext->Cancel();
-            });
+        {
+            if (
+                progressDialog->Poll(
+                    static_cast<unsigned>(progress * 10000), 10000)
+                != BasicUI::ProgressResult::Success) {
+                cancellationContext->Cancel();
+            }
+        });
 
-         mixdownUploader->SetUrls(response.SyncState.MixdownUrls);
+        mixdownUploader->SetUrls(response.SyncState.MixdownUrls);
 
-         BasicUI::CallAfter(
+        BasicUI::CallAfter(
             [&project,
              progressDialog = std::shared_ptr { std::move(progressDialog) },
              mixdownUploader, cancellationContext, onComplete]() mutable
+        {
+            auto& projectCloudExtension
+                =ProjectCloudExtension::Get(project);
+
+            auto subscription = projectCloudExtension.SubscribeStatusChanged(
+                [progressDialog = progressDialog.get(), mixdownUploader,
+                 cancellationContext](
+                    const CloudStatusChangedMessage& message)
             {
-               auto& projectCloudExtension =
-                  ProjectCloudExtension::Get(project);
+                if (message.Status != ProjectSyncStatus::Failed) {
+                    return;
+                }
 
-               auto subscription = projectCloudExtension.SubscribeStatusChanged(
-                  [progressDialog = progressDialog.get(), mixdownUploader,
-                   cancellationContext](
-                     const CloudStatusChangedMessage& message)
-                  {
-                     if (message.Status != ProjectSyncStatus::Failed)
-                        return;
+                cancellationContext->Cancel();
+            },
+                true);
 
-                     cancellationContext->Cancel();
-                  },
-                  true);
+            auto future = mixdownUploader->GetResultFuture();
 
-               auto future = mixdownUploader->GetResultFuture();
+            while (future.wait_for(std::chrono::milliseconds(50))
+                   != std::future_status::ready) {
+                BasicUI::Yield();
+            }
 
-               while (future.wait_for(std::chrono::milliseconds(50)) !=
-                      std::future_status::ready)
-                  BasicUI::Yield();
+            auto result = future.get();
 
-               auto result = future.get();
+            progressDialog.reset();
 
-               progressDialog.reset();
-
-               if (onComplete)
-                  onComplete(project, result.State);
-            });
-      });
+            if (onComplete) {
+                onComplete(project, result.State);
+            }
+        });
+    });
 }
-
 } // namespace audacity::cloud::audiocom::sync

@@ -6,7 +6,7 @@
 
    Leland Lucius
 
-   Copyright (c) 2014, Audacity Team 
+   Copyright (c) 2014, Audacity Team
    All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
@@ -53,74 +53,65 @@ class EffectDefinitionInterface;
 #include "PluginInterface.h"
 
 namespace PluginSettings {
+MODULE_MANAGER_API bool HasConfigGroup(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group);
+MODULE_MANAGER_API bool GetConfigSubgroups(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group,
+                                           RegistryPaths& subgroups);
 
-MODULE_MANAGER_API bool HasConfigGroup( const EffectDefinitionInterface &ident,
-   ConfigurationType type, const RegistryPath & group);
-MODULE_MANAGER_API bool GetConfigSubgroups( const EffectDefinitionInterface &ident,
-   ConfigurationType type, const RegistryPath & group,
-   RegistryPaths & subgroups);
+MODULE_MANAGER_API bool GetConfigValue(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group,
+                                       const RegistryPath& key, ConfigReference var, ConfigConstReference value);
 
-MODULE_MANAGER_API bool GetConfigValue(const EffectDefinitionInterface &ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key, ConfigReference var, ConfigConstReference value);
-
-MODULE_MANAGER_API bool HasConfigValue( const EffectDefinitionInterface &ident,
-   ConfigurationType type,
-   const RegistryPath & group, const RegistryPath & key);
+MODULE_MANAGER_API bool HasConfigValue(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group,
+                                       const RegistryPath& key);
 
 // GetConfig with default value
 template<typename Value>
-inline bool GetConfig( const EffectDefinitionInterface& ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key, Value &var, const Value &defval)
-{ return GetConfigValue(ident, type, group, key,
-   std::ref(var), std::cref(defval)); }
+inline bool GetConfig(const EffectDefinitionInterface& ident,
+                      ConfigurationType type, const RegistryPath& group,
+                      const RegistryPath& key, Value& var, const Value& defval)
+{
+    return GetConfigValue(ident, type, group, key,
+                          std::ref(var), std::cref(defval));
+}
 
 // GetConfig with implicitly converted default value
 template<typename Value, typename ConvertibleToValue>
-inline bool GetConfig( const EffectDefinitionInterface& ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key, Value &var, ConvertibleToValue defval)
+inline bool GetConfig(const EffectDefinitionInterface& ident,
+                      ConfigurationType type, const RegistryPath& group,
+                      const RegistryPath& key, Value& var, ConvertibleToValue defval)
 { return GetConfig(ident, type, group, key, var, static_cast<Value>(defval)); }
 
 // Deleted overloads for const Value as destination
 template<typename Value>
-inline bool GetConfig( const EffectDefinitionInterface& ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key, const Value &var, const Value &defval) = delete;
+inline bool GetConfig(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group, const RegistryPath& key,
+                      const Value& var, const Value& defval) = delete;
 template<typename Value, typename ConvertibleToValue>
-inline bool GetConfig( const EffectDefinitionInterface& ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key, const Value &var, ConvertibleToValue defval)
-      = delete;
+inline bool GetConfig(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group, const RegistryPath& key,
+                      const Value& var, ConvertibleToValue defval)
+= delete;
 
 // GetConfig with default value assumed to be Value{}
-template <typename Value>
-inline bool GetConfig( const EffectDefinitionInterface& ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key, Value &var)
+template<typename Value>
+inline bool GetConfig(const EffectDefinitionInterface& ident,
+                      ConfigurationType type, const RegistryPath& group,
+                      const RegistryPath& key, Value& var)
 {
-   return GetConfig(ident, type, group, key, var, Value{});
+    return GetConfig(ident, type, group, key, var, Value {});
 }
 
-MODULE_MANAGER_API bool SetConfigValue(const EffectDefinitionInterface &ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key, ConfigConstReference value);
+MODULE_MANAGER_API bool SetConfigValue(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group,
+                                       const RegistryPath& key, ConfigConstReference value);
 
-template <typename Value>
-inline bool SetConfig( const EffectDefinitionInterface& ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key, const Value &value)
+template<typename Value>
+inline bool SetConfig(const EffectDefinitionInterface& ident,
+                      ConfigurationType type, const RegistryPath& group,
+                      const RegistryPath& key, const Value& value)
 {
-   return SetConfigValue(ident, type, group, key, std::cref(value));
+    return SetConfigValue(ident, type, group, key, std::cref(value));
 }
 
-MODULE_MANAGER_API bool RemoveConfigSubgroup( const EffectDefinitionInterface &ident,
-   ConfigurationType type, const RegistryPath & group);
-MODULE_MANAGER_API bool RemoveConfig( const EffectDefinitionInterface &ident,
-   ConfigurationType type, const RegistryPath & group,
-   const RegistryPath & key);
-
+MODULE_MANAGER_API bool RemoveConfigSubgroup(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group);
+MODULE_MANAGER_API bool RemoveConfig(const EffectDefinitionInterface& ident, ConfigurationType type, const RegistryPath& group,
+                                     const RegistryPath& key);
 }
 
 #endif // __AUDACITY_CONFIGINTERFACE_H__

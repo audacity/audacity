@@ -22,52 +22,42 @@ class ZoomInfo;
 class AUDACITY_DLL_API EnvelopeEditor
 {
 public:
-   static void DrawPoints(
-      const Envelope &env,
-      TrackPanelDrawingContext &context,
-      const wxRect & r,
-      bool dB, double dBRange,
-      float zoomMin, float zoomMax, bool mirrored, int origin = 0);
+    static void DrawPoints(
+        const Envelope& env, TrackPanelDrawingContext& context, const wxRect& r, bool dB, double dBRange, float zoomMin, float zoomMax,
+        bool mirrored, int origin = 0);
 
-   EnvelopeEditor(Envelope &envelope, bool mirrored);
-   ~EnvelopeEditor();
+    EnvelopeEditor(Envelope& envelope, bool mirrored);
+    ~EnvelopeEditor();
 
-   // Event Handlers
-   // Each of these returns true if the envelope needs to be redrawn
-   bool MouseEvent(const wxMouseEvent & event, wxRect & r,
-      const ZoomInfo &zoomInfo, bool dB, double dBRange,
-      float zoomMin = -1.0, float zoomMax = 1.0);
+    // Event Handlers
+    // Each of these returns true if the envelope needs to be redrawn
+    bool MouseEvent(const wxMouseEvent& event, wxRect& r, const ZoomInfo& zoomInfo, bool dB, double dBRange, float zoomMin = -1.0,
+                    float zoomMax = 1.0);
 
 private:
-   bool HandleMouseButtonDown(const wxMouseEvent & event, wxRect & r,
-      const ZoomInfo &zoomInfo, bool dB, double dBRange,
-      float zoomMin = -1.0, float zoomMax = 1.0);
-   bool HandleDragging(const wxMouseEvent & event, wxRect & r,
-      const ZoomInfo &zoomInfo, bool dB, double dBRange,
-      float zoomMin = -1.0, float zoomMax = 1.0, float eMin = 0., float eMax = 2.);
-   bool HandleMouseButtonUp();
+    bool HandleMouseButtonDown(const wxMouseEvent& event, wxRect& r, const ZoomInfo& zoomInfo, bool dB, double dBRange,
+                               float zoomMin = -1.0, float zoomMax = 1.0);
+    bool HandleDragging(const wxMouseEvent& event, wxRect& r, const ZoomInfo& zoomInfo, bool dB, double dBRange, float zoomMin = -1.0,
+                        float zoomMax = 1.0, float eMin = 0., float eMax = 2.);
+    bool HandleMouseButtonUp();
 
 private:
-   float ValueOfPixel(int y, int height, bool upper,
-      bool dB, double dBRange,
-      float zoomMin, float zoomMax);
-   void MoveDragPoint(const wxMouseEvent & event, wxRect & r,
-      const ZoomInfo &zoomInfo, bool dB, double dBRange,
-      float zoomMin, float zoomMax);
+    float ValueOfPixel(int y, int height, bool upper, bool dB, double dBRange, float zoomMin, float zoomMax);
+    void MoveDragPoint(const wxMouseEvent& event, wxRect& r, const ZoomInfo& zoomInfo, bool dB, double dBRange, float zoomMin,
+                       float zoomMax);
 
-   Envelope &mEnvelope;
-   const bool mMirrored;
+    Envelope& mEnvelope;
+    const bool mMirrored;
 
-   /** \brief Number of pixels contour is from the true envelope. */
-   int mContourOffset;
+    /** \brief Number of pixels contour is from the true envelope. */
+    int mContourOffset;
 
-   // double mInitialVal;
+    // double mInitialVal;
 
-   // int mInitialY;
-   bool mUpper;
-   int mButton;
-   bool mDirty;
+    // int mInitialY;
+    bool mUpper;
+    int mButton;
+    bool mDirty;
 };
-
 
 #endif

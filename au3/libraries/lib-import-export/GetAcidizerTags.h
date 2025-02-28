@@ -18,13 +18,11 @@
 // making forward declarations impossible.
 #include <sndfile.h>
 
-namespace LibFileFormats
-{
+namespace LibFileFormats {
 struct AcidizerTags;
 }
 
-namespace LibImportExport
-{
+namespace LibImportExport {
 /*!
  * @brief Get the Acidizer tags from a file if from a trusted
  * distributor.
@@ -36,5 +34,5 @@ namespace LibImportExport
  * "DistributedBy" RIFF info tag (https://exiftool.org/TagNames/RIFF.html#Info).
  */
 std::optional<LibFileFormats::AcidizerTags> IMPORT_EXPORT_API GetAcidizerTags(
-   SNDFILE& file, const std::vector<std::string>& trustedDistributors);
+    SNDFILE& file, const std::vector<std::string>& trustedDistributors);
 } // namespace LibImportExport

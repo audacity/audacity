@@ -26,96 +26,92 @@
 class NativeWindow : public wxWindow
 {
 public:
-   NativeWindow()
-   {
-   }
+    NativeWindow()
+    {
+    }
 
 #if defined(__WXMSW__)
 
-   virtual ~NativeWindow()
-   {
-      UnsubclassWin();
-   }
+    virtual ~NativeWindow()
+    {
+        UnsubclassWin();
+    }
 
-   bool Create(wxWindow* parent, WXWidget hwnd)
-   {
-       const wxRect r = wxRectFromRECT(wxGetWindowRect((HWND)hwnd));
+    bool Create(wxWindow* parent, WXWidget hwnd)
+    {
+        const wxRect r = wxRectFromRECT(wxGetWindowRect((HWND)hwnd));
 
-       // Skip wxWindow::Create() which would try to create a new HWND, we don't
-       // want this as we already have one.
-       if (!CreateBase(parent,
-                       wxID_ANY,
-                       r.GetPosition(),
-                       r.GetSize(),
-                       0,
-                       wxDefaultValidator,
-                       wxS("nativewindow")))
-      {
-         return false;
-      }
+        // Skip wxWindow::Create() which would try to create a new HWND, we don't
+        // want this as we already have one.
+        if (!CreateBase(parent,
+                        wxID_ANY,
+                        r.GetPosition(),
+                        r.GetSize(),
+                        0,
+                        wxDefaultValidator,
+                        wxS("nativewindow"))) {
+            return false;
+        }
 
-      parent->AddChild(this);
+        parent->AddChild(this);
 
-      SubclassWin(hwnd);
+        SubclassWin(hwnd);
 
-      
-      InheritAttributes();
+        InheritAttributes();
 
-      return true;
-   }
+        return true;
+    }
 
 #elif defined(__WXMAC__)
 
-   virtual ~NativeWindow()
-   {
-      GetPeer()->RemoveFromParent();
-      SetPeer( nullptr );
-   }
+    virtual ~NativeWindow()
+    {
+        GetPeer()->RemoveFromParent();
+        SetPeer(nullptr);
+    }
 
-   bool Create(wxWindow* parent, WXWidget view)
-   {
-      DontCreatePeer();
+    bool Create(wxWindow* parent, WXWidget view)
+    {
+        DontCreatePeer();
 
-      if (!wxWindow::Create(parent, wxID_ANY))
-      {
-         return false;
-      }
+        if (!wxWindow::Create(parent, wxID_ANY)) {
+            return false;
+        }
 
-      SetPeer(new wxWidgetCocoaImpl(this, view));
+        SetPeer(new wxWidgetCocoaImpl(this, view));
 
-      return true;
-   }
+        return true;
+    }
 
 #elif defined(__WXGTK__)
 
-   virtual ~NativeWindow()
-   {
-   }
+    virtual ~NativeWindow()
+    {
+    }
 
-   bool Create(wxWindow* parent, WXWidget widget)
-   {
-      if (!CreateBase(parent, wxID_ANY))
-      {
-         return false;
-      }
+    bool Create(wxWindow* parent, WXWidget widget)
+    {
+        if (!CreateBase(parent, wxID_ANY)) {
+            return false;
+        }
 
-      m_widget = widget;
-      g_object_ref(m_widget);
+        m_widget = widget;
+        g_object_ref(m_widget);
 
-      parent->DoAddChild(this);
+        parent->DoAddChild(this);
 
-      PostCreation();
+        PostCreation();
 
-      // Ensure that the best (and minimal) size is set to fully display the
-      // widget.
-      GtkRequisition req;
-      gtk_widget_size_request(widget, &req);
-      SetInitialSize(wxSize(req.width, req.height));
+        // Ensure that the best (and minimal) size is set to fully display the
+        // widget.
+        GtkRequisition req;
+        gtk_widget_size_request(widget, &req);
+        SetInitialSize(wxSize(req.width, req.height));
 
-      return true;
-   }
+        return true;
+    }
+
 #endif
 };
 
 #endif
-

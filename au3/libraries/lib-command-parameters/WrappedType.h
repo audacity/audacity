@@ -14,12 +14,12 @@
 
 enum teWrappedType
 {
-   eWrappedNotSet,
-   eWrappedString,
-   eWrappedInt,
-   eWrappedDouble,
-   eWrappedBool,
-   eWrappedEnum
+    eWrappedNotSet,
+    eWrappedString,
+    eWrappedInt,
+    eWrappedDouble,
+    eWrappedBool,
+    eWrappedEnum
 };
 
 class wxString;
@@ -28,42 +28,41 @@ class COMMAND_PARAMETERS_API WrappedType
 {
 public:
 
-   explicit WrappedType( wxString & InStr )
-      : eWrappedType{ eWrappedString }, mpStr{ &InStr }
-   {}
-   explicit WrappedType( int & InInt )
-      : eWrappedType{ eWrappedInt }, mpInt{ &InInt }
-   {}
-   explicit WrappedType( double & InDouble )
-      : eWrappedType{ eWrappedDouble }, mpDouble{ &InDouble }
-   {}
-   explicit WrappedType( bool & InBool )
-      : eWrappedType{ eWrappedBool }, mpBool{ &InBool }
-   {}
-   explicit WrappedType()
-      : eWrappedType{ eWrappedNotSet }
-   {}
+    explicit WrappedType(wxString& InStr)
+        : eWrappedType{eWrappedString}, mpStr{&InStr}
+    {}
+    explicit WrappedType(int& InInt)
+        : eWrappedType{eWrappedInt}, mpInt{&InInt}
+    {}
+    explicit WrappedType(double& InDouble)
+        : eWrappedType{eWrappedDouble}, mpDouble{&InDouble}
+    {}
+    explicit WrappedType(bool& InBool)
+        : eWrappedType{eWrappedBool}, mpBool{&InBool}
+    {}
+    explicit WrappedType()
+        : eWrappedType{eWrappedNotSet}
+    {}
 
-   bool IsString();
+    bool IsString();
 
-   wxString ReadAsString();
-   int ReadAsInt();
-   double ReadAsDouble();
-   bool ReadAsBool();
+    wxString ReadAsString();
+    int ReadAsInt();
+    double ReadAsDouble();
+    bool ReadAsBool();
 
-   void WriteToAsString( const wxString & InStr);
-   void WriteToAsInt( const int InInt);
-   void WriteToAsDouble( const double InDouble);
-   void WriteToAsBool( const bool InBool);
+    void WriteToAsString(const wxString& InStr);
+    void WriteToAsInt(const int InInt);
+    void WriteToAsDouble(const double InDouble);
+    void WriteToAsBool(const bool InBool);
 
-public :
+public:
 
-   const teWrappedType eWrappedType;
-   wxString *const mpStr {};
-   int *const mpInt {};
-   double *const mpDouble {};
-   bool *const mpBool {};
-
+    const teWrappedType eWrappedType;
+    wxString* const mpStr {};
+    int* const mpInt {};
+    double* const mpDouble {};
+    bool* const mpBool {};
 };
 
 #endif

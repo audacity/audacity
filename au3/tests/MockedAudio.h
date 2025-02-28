@@ -12,11 +12,11 @@
 
 struct MockedAudio final
 {
-   MockedAudio();
-   ~MockedAudio();
+    MockedAudio();
+    ~MockedAudio();
 
-   MockedAudio(const MockedAudio&) = delete;
-   MockedAudio& operator=(const MockedAudio&) = delete;
-   MockedAudio(MockedAudio&&) = delete;
-   MockedAudio& operator=(MockedAudio&&) = delete;
+    MockedAudio(const MockedAudio&) = delete;
+    MockedAudio& operator=(const MockedAudio&) = delete;
+    MockedAudio(MockedAudio&&) = delete;
+    MockedAudio& operator=(MockedAudio&&) = delete;
 };

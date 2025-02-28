@@ -27,26 +27,24 @@ internally, not ints, allowing for (external) control of zooming.
 
 *//*******************************************************************/
 
-
 #include "AttachableScrollBar.h"
 
 #include <wx/wxprec.h>
 #include "ViewInfo.h"
 
-
 BEGIN_EVENT_TABLE(AttachableScrollBar, wxScrollBar)
-   EVT_SCROLL(AttachableScrollBar::OnScroll)
+EVT_SCROLL(AttachableScrollBar::OnScroll)
 END_EVENT_TABLE()
 
 AttachableScrollBar::AttachableScrollBar(
-   wxWindow* parent,
-   wxWindowID id,
-   const wxPoint& pos,
-   const wxSize& size,
-   long style) :
-   wxScrollBar( parent, id, pos, size, style )
+    wxWindow* parent,
+    wxWindowID id,
+    const wxPoint& pos,
+    const wxSize& size,
+    long style)
+    : wxScrollBar(parent, id, pos, size, style)
 {
-   mpViewInfo = NULL;
+    mpViewInfo = NULL;
 }
 
 AttachableScrollBar::~AttachableScrollBar(void)
@@ -56,49 +54,49 @@ AttachableScrollBar::~AttachableScrollBar(void)
 // Essentially a float to int conversion.
 void AttachableScrollBar::SetScrollBarFromViewInfo()
 {
-   // FIXME: PRL Aug 2015: Screen Width in Viewinfo Not needed?
+    // FIXME: PRL Aug 2015: Screen Width in Viewinfo Not needed?
 #if 0
-   ViewInfo & mViewInfo = *mpViewInfo;
+    ViewInfo& mViewInfo = *mpViewInfo;
 
-   mViewInfo.sbarTotal = (int) (mViewInfo.GetTotalWidth());
-   mViewInfo.sbarScreen = (int) (mViewInfo.GetScreenWidth());
-   mViewInfo.sbarH = (int) (mViewInfo.GetBeforeScreenWidth());
+    mViewInfo.sbarTotal = (int)(mViewInfo.GetTotalWidth());
+    mViewInfo.sbarScreen = (int)(mViewInfo.GetScreenWidth());
+    mViewInfo.sbarH = (int)(mViewInfo.GetBeforeScreenWidth());
 
-   SetScrollbar(mViewInfo.sbarH, mViewInfo.sbarScreen,
-                        mViewInfo.sbarTotal, mViewInfo.sbarScreen, TRUE);
+    SetScrollbar(mViewInfo.sbarH, mViewInfo.sbarScreen,
+                 mViewInfo.sbarTotal, mViewInfo.sbarScreen, TRUE);
 #endif
 }
 
 // Essentially an int to float conversion.
 void AttachableScrollBar::SetViewInfoFromScrollBar()
 {
-   // FIXME: PRL Aug 2015: Screen Width in Viewinfo Not needed? 
+    // FIXME: PRL Aug 2015: Screen Width in Viewinfo Not needed?
 #if 0
-   ViewInfo & mViewInfo = *mpViewInfo;
+    ViewInfo& mViewInfo = *mpViewInfo;
 
-   int hlast = mViewInfo.sbarH;
+    int hlast = mViewInfo.sbarH;
 
-   mViewInfo.sbarH = GetThumbPosition();
+    mViewInfo.sbarH = GetThumbPosition();
 
-   if (mViewInfo.sbarH != hlast)
-     mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH);
+    if (mViewInfo.sbarH != hlast) {
+        mViewInfo.SetBeforeScreenWidth(mViewInfo.sbarH);
+    }
 #endif
 }
 
 // Used to associated a ViewInfo structure with a scrollbar.
-void AttachableScrollBar::SetViewInfo( ViewInfo * view )
+void AttachableScrollBar::SetViewInfo(ViewInfo* view)
 {
-   mpViewInfo = view;
-   SetScrollBarFromViewInfo();
+    mpViewInfo = view;
+    SetScrollBarFromViewInfo();
 }
 
-void AttachableScrollBar::OnScroll(wxScrollEvent & event)
+void AttachableScrollBar::OnScroll(wxScrollEvent& event)
 {
-   if( mpViewInfo == NULL )
-   {
-      event.Skip();
-      return;
-   }
-   SetViewInfoFromScrollBar();
-   event.Skip(); // This is so that the parent control can refresh whatever it needs to...
+    if (mpViewInfo == NULL) {
+        event.Skip();
+        return;
+    }
+    SetViewInfoFromScrollBar();
+    event.Skip(); // This is so that the parent control can refresh whatever it needs to...
 }

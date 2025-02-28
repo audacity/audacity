@@ -79,23 +79,23 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
             return;
         }
         switch (msg.type) {
-        case RealtimeEffectListMessage::Type::Insert:
-            m_realtimeEffectAdded.send(trackId, msg.affectedState);
-            return;
-        case RealtimeEffectListMessage::Type::Remove:
-            m_realtimeEffectRemoved.send(trackId, msg.affectedState);
-            return;
-        case RealtimeEffectListMessage::Type::DidReplace: {
-            const auto newState = effect(trackId, msg.srcIndex);
-            IF_ASSERT_FAILED(newState) {
+            case RealtimeEffectListMessage::Type::Insert:
+                m_realtimeEffectAdded.send(trackId, msg.affectedState);
                 return;
+            case RealtimeEffectListMessage::Type::Remove:
+                m_realtimeEffectRemoved.send(trackId, msg.affectedState);
+                return;
+            case RealtimeEffectListMessage::Type::DidReplace: {
+                const auto newState = effect(trackId, msg.srcIndex);
+                IF_ASSERT_FAILED(newState) {
+                    return;
+                }
+                m_realtimeEffectReplaced.send(trackId, msg.srcIndex, newState);
             }
-            m_realtimeEffectReplaced.send(trackId, msg.srcIndex, newState);
-        }
-            return;
-        case RealtimeEffectListMessage::Type::Move:
-            m_realtimeEffectMoved.send(trackId, msg.srcIndex, msg.dstIndex);
-            return;
+                return;
+            case RealtimeEffectListMessage::Type::Move:
+                m_realtimeEffectMoved.send(trackId, msg.srcIndex, msg.dstIndex);
+                return;
         }
     });
 
@@ -292,6 +292,16 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
     return nullptr;
 }
 
+RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trackId, const RealtimeEffectStatePtr& state,
+                                                                    const muse::String& newEffectId)
+{
+    const auto index = utils::effectIndex(globalContext()->currentProject(), state);
+    if (!index.has_value()) {
+        return nullptr;
+    }
+    return replaceRealtimeEffect(trackId, *index, newEffectId);
+}
+
 void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& state, int newIndex)
 {
     const auto tId = trackId(state);
@@ -326,6 +336,7 @@ void RealtimeEffectService::setIsActive(const RealtimeEffectStatePtr& stateId, b
         return;
     }
     stateId->SetActive(isActive);
+    projectHistory()->modifyState();
     m_isActiveChanged.send(stateId);
 }
 
@@ -343,8 +354,9 @@ bool RealtimeEffectService::trackEffectsActive(TrackId trackId) const
 void RealtimeEffectService::setTrackEffectsActive(TrackId trackId, bool active)
 {
     const auto list = realtimeEffectList(trackId);
-    if (list) {
+    if (list && list->IsActive() != active) {
         list->SetActive(active);
+        projectHistory()->modifyState();
     }
 }
 

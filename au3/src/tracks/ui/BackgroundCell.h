@@ -19,52 +19,45 @@ class AudacityProject;
 class BackgroundHandle;
 class ZoomHandle;
 
-
 /// \brief Class representing the background of a Track.  It
 /// provides the hit test function that tells us what was hit.
-class BackgroundCell final
-   : public CommonTrackPanelCell
-   , public ClientData::Base
+class BackgroundCell final : public CommonTrackPanelCell, public ClientData::Base
 {
 public:
-   static BackgroundCell &Get( AudacityProject &project );
-   static const BackgroundCell &Get( const AudacityProject &project );
+    static BackgroundCell& Get(AudacityProject& project);
+    static const BackgroundCell& Get(const AudacityProject& project);
 
-   explicit
-   BackgroundCell(AudacityProject *pProject)
-      : mpProject(pProject)
-   {}
+    explicit
+    BackgroundCell(AudacityProject* pProject)
+        : mpProject(pProject)
+    {}
 
-   virtual ~BackgroundCell();
+    virtual ~BackgroundCell();
 
 protected:
-   std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *) override;
+    std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state, const AudacityProject*) override;
 
-   std::shared_ptr<Track> DoFindTrack() override;
+    std::shared_ptr<Track> DoFindTrack() override;
 
 private:
-   // TrackPanelDrawable implementation
-   void Draw(
-      TrackPanelDrawingContext &context,
-      const wxRect &rect, unsigned iPass ) override;
+    // TrackPanelDrawable implementation
+    void Draw(
+        TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
 
-   wxRect DrawingArea(
-      TrackPanelDrawingContext &,
-      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
+    wxRect DrawingArea(
+        TrackPanelDrawingContext&, const wxRect& rect, const wxRect& panelRect, unsigned iPass) override;
 
-   std::vector<MenuItem> GetMenuItems(
-      const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
-   override;
-   
-   AudacityProject *mpProject;
+    std::vector<MenuItem> GetMenuItems(
+        const wxRect& rect, const wxPoint* pPosition, AudacityProject* pProject)
+    override;
 
-   std::weak_ptr<BackgroundHandle> mHandle;
+    AudacityProject* mpProject;
+
+    std::weak_ptr<BackgroundHandle> mHandle;
 
 public:
-   // For want of a better place...
-   mutable std::weak_ptr<ZoomHandle> mZoomHandle;
+    // For want of a better place...
+    mutable std::weak_ptr<ZoomHandle> mZoomHandle;
 };
 
 #endif

@@ -6,13 +6,12 @@
 
 #pragma once
 
-namespace audacity::concurrency
-{
+namespace audacity::concurrency {
 class CONCURRENCY_API ICancellable
 {
 public:
-   virtual ~ICancellable() = default;
+    virtual ~ICancellable() = default;
 
-   virtual void Cancel() = 0;
+    virtual void Cancel() = 0;
 };
 } // namespace audacity::concurrency

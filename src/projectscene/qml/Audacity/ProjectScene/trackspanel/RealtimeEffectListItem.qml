@@ -6,6 +6,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.ProjectScene
 
 ListItemBlank {
     id: root
@@ -13,7 +14,6 @@ ListItemBlank {
     property var item: null
     property var listView: null
     property var availableEffects: null
-    property var handleMenuItemWithState: null
     property int index: -1
     property int scrollOffset: 0
     property int topMargin: 0
@@ -28,6 +28,10 @@ ListItemBlank {
     clip: false // should be true?
     background.color: "transparent"
     hoverHitColor: "transparent"
+
+    Component.onCompleted: {
+        menuModel.load()
+    }
 
     Behavior on y {
         NumberAnimation {
@@ -68,7 +72,8 @@ ListItemBlank {
 
             visible: true
             transparent: true
-            hoverHitColor: ui.theme.buttonColor
+            hoverHitColor: normalColor
+            accentColor: normalColor
             mouseArea.cursorShape: Qt.SizeAllCursor
 
             mouseArea.drag.target: content
@@ -145,68 +150,58 @@ ListItemBlank {
             }
         }
 
-        // Wrappinng a FlatButton in a Rectangle because of two bad reasons:
-        // * I don't find a `border` property for `FlatButton`
-        // * Somehow, the button's color is a bit darkened it direct child of the RowLayout
-        Rectangle {
-            id: effectNameRect
+        FlatButton {
+            id: effectNameButton
 
-            border.color: ui.theme.strokeColor
-            border.width: 1
-            radius: effectNameButton.backgroundRadius
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredWidth: 148
 
-            FlatButton {
-                id: effectNameButton
+            backgroundItem: RealtimeEffectListItemButtonBackground {
+                mouseArea: effectNameButton.mouseArea
+            }
 
+            StyledTextLabel {
                 anchors.fill: parent
-                normalColor: ui.theme.backgroundPrimaryColor
+                anchors.leftMargin: 6
+                anchors.rightMargin: 6
+                id: trackNameLabel
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                text: root.item ? root.item.effectName() : ""
+            }
 
-                StyledTextLabel {
-                    anchors.fill: parent
-                    anchors.leftMargin: 6
-                    anchors.rightMargin: 6
-                    id: trackNameLabel
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    text: root.item ? root.item.effectName() : ""
-                }
-
-                onClicked: {
-                    root.item.toggleDialog()
-                }
+            onClicked: {
+                root.item.toggleDialog()
             }
         }
 
-        // Wrapping a FlatButton for the same reasons as above.
-        Rectangle {
-            id: chooseEffectRect
+        FlatButton {
+            id: chooseEffectDropdown
 
-            border.color: ui.theme.strokeColor
-            border.width: 1
-            radius: effectNameButton.backgroundRadius
             Layout.fillHeight: true
             Layout.preferredWidth: height
 
-            FlatButton {
-                id: chooseEffectDropdown
+            icon: IconCode.SMALL_ARROW_DOWN
+            backgroundItem: RealtimeEffectListItemButtonBackground {
+                mouseArea: chooseEffectDropdown.mouseArea
+            }
 
-                anchors.fill: parent
-                normalColor: ui.theme.backgroundPrimaryColor
-                icon: IconCode.SMALL_ARROW_DOWN
+            RealtimeEffectListItemMenuModel {
+                id: menuModel
+                effectState: root.item ? root.item.effectState() : null
+                isMasterTrack: root.item && root.item.isMasterEffect
+            }
 
-                onClicked: {
-                    effectMenuLoader.toggleOpened(root.availableEffects)
-                }
+            onClicked: {
+                effectMenuLoader.toggleOpened(menuModel.availableEffects)
+            }
 
-                StyledMenuLoader {
-                    id: effectMenuLoader
+            StyledMenuLoader {
+                id: effectMenuLoader
 
-                    onHandleMenuItem: function(menuItem) {
-                        root.handleMenuItemWithState(menuItem, root.item)
-                    }
+                onHandleMenuItem: function(menuItem) {
+                    menuModel.handleMenuItem(menuItem)
                 }
             }
         }

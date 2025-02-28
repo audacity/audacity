@@ -14,92 +14,95 @@
 
 enum NoiseReductionChoice
 {
-   NRC_REDUCE_NOISE,
-   NRC_ISOLATE_NOISE,
-   NRC_LEAVE_RESIDUE,
+    NRC_REDUCE_NOISE,
+    NRC_ISOLATE_NOISE,
+    NRC_LEAVE_RESIDUE,
 };
 
 class BUILTIN_EFFECTS_API NoiseReductionBase : public StatefulEffect
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   NoiseReductionBase();
-   virtual ~NoiseReductionBase();
+    NoiseReductionBase();
+    virtual ~NoiseReductionBase();
 
-   using Effect::TrackProgress;
+    using Effect::TrackProgress;
 
-   // ComponentInterface implementation
+    // ComponentInterface implementation
 
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   // EffectDefinitionInterface implementation
+    // EffectDefinitionInterface implementation
 
-   EffectType GetType() const override;
+    EffectType GetType() const override;
 
-   // Effect implementation
+    // Effect implementation
 
-   bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    bool Process(EffectInstance& instance, EffectSettings& settings) override;
 
-   // This object is the memory of the effect between uses
-   // (other than noise profile statistics)
-   class BUILTIN_EFFECTS_API Settings
-   {
-   public:
-      Settings();
-      ~Settings()
-      {
-      }
+    // This object is the memory of the effect between uses
+    // (other than noise profile statistics)
+    class BUILTIN_EFFECTS_API Settings
+    {
+    public:
+        Settings();
+        ~Settings()
+        {
+        }
 
-      bool PrefsIO(bool read);
-      bool Validate(NoiseReductionBase* effect) const;
+        bool PrefsIO(bool read);
+        bool Validate(NoiseReductionBase* effect) const;
 
-      size_t WindowSize() const
-      {
-         return 1u << (3 + mWindowSizeChoice);
-      }
-      unsigned StepsPerWindow() const
-      {
-         return 1u << (1 + mStepsPerWindowChoice);
-      }
-      size_t SpectrumSize() const
-      {
-         return 1 + WindowSize() / 2;
-      }
-      size_t StepSize() const
-      {
-         return WindowSize() / StepsPerWindow();
-      }
+        size_t WindowSize() const
+        {
+            return 1u << (3 + mWindowSizeChoice);
+        }
 
-      bool mDoProfile;
+        unsigned StepsPerWindow() const
+        {
+            return 1u << (1 + mStepsPerWindowChoice);
+        }
 
-      // Stored in preferences:
+        size_t SpectrumSize() const
+        {
+            return 1 + WindowSize() / 2;
+        }
 
-      // Basic:
-      double mNewSensitivity;     // - log10 of a probability... yeah.
-      double mFreqSmoothingBands; // really an integer
-      double mNoiseGain;          // in dB, positive
-      double mAttackTime;         // in secs
-      double mReleaseTime;        // in secs
+        size_t StepSize() const
+        {
+            return WindowSize() / StepsPerWindow();
+        }
 
-      // Advanced:
-      double mOldSensitivity; // in dB, plus or minus
+        bool mDoProfile;
 
-      // Basic:
-      int mNoiseReductionChoice;
+        // Stored in preferences:
 
-      // Advanced:
-      int mWindowTypes;
-      int mWindowSizeChoice;
-      int mStepsPerWindowChoice;
-      int mMethod;
-   };
+        // Basic:
+        double mNewSensitivity;   // - log10 of a probability... yeah.
+        double mFreqSmoothingBands; // really an integer
+        double mNoiseGain;        // in dB, positive
+        double mAttackTime;       // in secs
+        double mReleaseTime;      // in secs
 
-   class Statistics;
-   class Worker;
+        // Advanced:
+        double mOldSensitivity; // in dB, plus or minus
+
+        // Basic:
+        int mNoiseReductionChoice;
+
+        // Advanced:
+        int mWindowTypes;
+        int mWindowSizeChoice;
+        int mStepsPerWindowChoice;
+        int mMethod;
+    };
+
+    class Statistics;
+    class Worker;
 
 protected:
-   std::unique_ptr<Settings> mSettings;
-   std::unique_ptr<Statistics> mStatistics;
+    std::unique_ptr<Settings> mSettings;
+    std::unique_ptr<Statistics> mStatistics;
 };

@@ -24,22 +24,16 @@ extern template class WXDLLIMPEXP_CORE wxNavigationEnabled<wxWindow>;
 class ListNavigationPanel : public ListNavigationEnabled<wxWindow>
 {
 public:
-   ListNavigationPanel() = default;
+    ListNavigationPanel() = default;
 
-   ListNavigationPanel(wxWindow* parent,
-                wxWindowID id,
-                const wxPoint& pos = wxDefaultPosition,
-                const wxSize& size = wxDefaultSize,
-                const wxString& name = wxPanelNameStr);
+    ListNavigationPanel(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
+                        const wxString& name = wxPanelNameStr);
 
-   void Create(wxWindow* parent,
-                wxWindowID id,
-                const wxPoint& pos = wxDefaultPosition,
-                const wxSize& size = wxDefaultSize,
+    void Create(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
                 const wxString& name = wxPanelNameStr);
 private:
-   
-   void OnChangeFocus(wxFocusEvent& evt);
 
-   void OnPaint(wxPaintEvent& evt);
+    void OnChangeFocus(wxFocusEvent& evt);
+
+    void OnPaint(wxPaintEvent& evt);
 };

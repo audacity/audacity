@@ -49,6 +49,8 @@ if (OS_IS_WIN)
         ${VST3_SDK_PATH}/public.sdk/source/common/threadchecker_win32.cpp
         ${VST3_SDK_PATH}/public.sdk/source/common/systemclipboard_win32.cpp
         ${VST3_SDK_PATH}/public.sdk/source/common/systemclipboard.h
+        ${VST3_SDK_PATH}/public.sdk/source/common/commonstringconvert.cpp
+        ${VST3_SDK_PATH}/public.sdk/source/common/commonstringconvert.h
         )
 elseif(OS_IS_LIN)
     set(PLATFORM_SRC

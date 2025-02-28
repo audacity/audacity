@@ -17,18 +17,16 @@
 class Identifier;
 class wxWindow;
 
-namespace Journal
-{
-namespace WindowPaths
-{
-   using Path = Identifier;
+namespace Journal {
+namespace WindowPaths {
+using Path = Identifier;
 
-   // When recording, find a string to identify the window in the journal
-   Path FindPath( const wxWindow &window );
+// When recording, find a string to identify the window in the journal
+Path FindPath(const wxWindow& window);
 
-   // When playing, find a window by path, corresponding to the window that had the
-   // same path in a previous run
-   wxWindow *FindByPath( const Path &path );
+// When playing, find a window by path, corresponding to the window that had the
+// same path in a previous run
+wxWindow* FindByPath(const Path& path);
 }
 }
 

@@ -12,4 +12,4 @@
 
 class wxWindow;
 
-WX_WRAPPERS_API void SetupAccessibility(wxWindow *window);
+WX_WRAPPERS_API void SetupAccessibility(wxWindow* window);

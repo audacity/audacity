@@ -15,12 +15,12 @@
 //! Result of the conversion, similar to std::from_chars_result
 struct STRING_UTILS_API FromCharsResult final
 {
-   const char* ptr; //! A pointer to the first character not matching the pattern
+    const char* ptr; //! A pointer to the first character not matching the pattern
 
-   //! std::errc::invalid_argument, if there is no pattern match,
-   //! std::errc::result_out_of_range if the value parsed is too large,
-   //! std::errc() on success
-   std::errc ec; 
+    //! std::errc::invalid_argument, if there is no pattern match,
+    //! std::errc::result_out_of_range if the value parsed is too large,
+    //! std::errc() on success
+    std::errc ec;
 };
 
 //! Parse a string into a single precision floating point value, always uses the dot as decimal

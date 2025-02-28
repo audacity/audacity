@@ -22,68 +22,71 @@ class TranslatableString;
 class BUILTIN_EFFECTS_API EQPoint
 {
 public:
-   EQPoint( const double f, const double d ) { Freq = f; dB = d; }
+    EQPoint(const double f, const double d) { Freq = f; dB = d; }
 
-   bool operator < (const EQPoint &p1) const
-   {
-      return Freq < p1.Freq;
-   }
+    bool operator <(const EQPoint& p1) const
+    {
+        return Freq < p1.Freq;
+    }
 
-   double Freq;
-   double dB;
+    double Freq;
+    double dB;
 };
 
 //! One curve in a list
 class BUILTIN_EFFECTS_API EQCurve
 {
 public:
-   EQCurve( const wxString & name = {} ) { Name = name; }
-   EQCurve( const wxChar * name ) { Name = name; }
+    EQCurve(const wxString& name = {}) { Name = name; }
+    EQCurve(const wxChar* name) { Name = name; }
 
-   bool operator < (const EQCurve &that) const
-   {
-      return Name.CmpNoCase(that.Name) < 0;
-   }
+    bool operator <(const EQCurve& that) const
+    {
+        return Name.CmpNoCase(that.Name) < 0;
+    }
 
-   wxString Name;
-   std::vector<EQPoint> points;
+    wxString Name;
+    std::vector<EQPoint> points;
 };
 
 using EQCurveArray = std::vector<EQCurve>;
 
 //! Serializer of curves into XML files
-class BUILTIN_EFFECTS_API EQCurveWriter {
+class BUILTIN_EFFECTS_API EQCurveWriter
+{
 public:
-   explicit EQCurveWriter(const EQCurveArray &curves) : mCurves{ curves } {}
-   void SaveCurves(const wxString &fileName = {});
+    explicit EQCurveWriter(const EQCurveArray& curves)
+        : mCurves{curves} {}
+    void SaveCurves(const wxString& fileName = {});
 
 private:
-   void WriteXML(XMLWriter &xmlFile) const;
-   const EQCurveArray &mCurves;
+    void WriteXML(XMLWriter& xmlFile) const;
+    const EQCurveArray& mCurves;
 };
 
 //! Deserializer of curves from XML files
-class BUILTIN_EFFECTS_API EQCurveReader : public XMLTagHandler {
+class BUILTIN_EFFECTS_API EQCurveReader : public XMLTagHandler
+{
 public:
-   EQCurveReader(
-      EQCurveArray &curves, const TranslatableString &name, int options)
-      : mCurves{ curves }, mName{ name }, mOptions{ options } {}
+    EQCurveReader(
+        EQCurveArray& curves, const TranslatableString& name, int options)
+        : mCurves{curves}, mName{name}, mOptions{options} {}
 
-   // XMLTagHandler callback methods for loading and saving
-   bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
-   XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
+    // XMLTagHandler callback methods for loading and saving
+    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
+    XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
 
-   void LoadCurves(const wxString &fileName = {}, bool append = false);
+    void LoadCurves(const wxString& fileName = {}, bool append = false);
 
 private:
-   bool GetDefaultFileName(wxFileName &fileName);
-   wxString GetPrefsPrefix();
-   // Merge NEW curves only or update all factory presets.
-   // Uses EQCurveWriter
-   void UpdateDefaultCurves(bool updateAll = false);
-   EQCurveArray &mCurves;
-   const TranslatableString mName;
-   const int mOptions;
+    bool GetDefaultFileName(wxFileName& fileName);
+    wxString GetPrefsPrefix();
+    // Merge NEW curves only or update all factory presets.
+    // Uses EQCurveWriter
+    void UpdateDefaultCurves(bool updateAll = false);
+    EQCurveArray& mCurves;
+    const TranslatableString mName;
+    const int mOptions;
 };
 
 #endif

@@ -24,8 +24,9 @@
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/toolbars/undoredotoolbarmodel.h"
 
-#include "view/trackspanel/realtimeeffectmenumodel.h"
+#include "view/trackspanel/addeffectmenumodel.h"
 #include "view/trackspanel/realtimeeffectlistmodel.h"
+#include "view/trackspanel/realtimeeffectlistitemmenumodel.h"
 #include "view/trackspanel/realtimeeffectsectionmodel.h"
 #include "view/trackspanel/trackslistmodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
@@ -34,15 +35,16 @@
 #include "view/clipsview/clipslistmodel.h"
 #include "view/clipsview/cliplistitem.h"
 #include "view/clipsview/waveview.h"
-#include "view/clipsview/au3/au3wavepainter.h"
 #include "view/clipsview/clipcontextmenumodel.h"
 #include "view/clipsview/multiclipcontextmenumodel.h"
 #include "view/clipsview/canvascontextmenumodel.h"
 #include "view/clipsview/selectioncontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
 #include "view/clipsview/pitchandspeedchangemodel.h"
-#include "view/clipsview/samplespainter.h"
-#include "view/clipsview/minmaxrmspainter.h"
+#include "view/clipsview/wavepainterproxy.h"
+#include "view/clipsview/au3/connectingdotspainter.h"
+#include "view/clipsview/au3/minmaxrmspainter.h"
+#include "view/clipsview/au3/samplespainter.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -88,10 +90,11 @@ void ProjectSceneModule::registerExports()
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
-    ioc()->registerExport<IWavePainter>(moduleName(), new Au3WavePainter());
-    ioc()->registerExport<ISamplesPainter>(moduleName(), new SamplesPainter());
-    ioc()->registerExport<IRMSPainter>(moduleName(), new MinMaxRMSPainter());
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(moduleName(), m_realtimeEffectPanelTrackSelection);
+    ioc()->registerExport<IWavePainter>(moduleName(), new WavePainterProxy());
+    ioc()->registerExport<IConnectingDotsPainter>(moduleName(), new ConnectingDotsPainter());
+    ioc()->registerExport<IMinMaxRMSPainter>(moduleName(), new MinMaxRMSPainter());
+    ioc()->registerExport<ISamplesPainter>(moduleName(), new SamplesPainter());
 }
 
 void ProjectSceneModule::resolveImports()
@@ -130,8 +133,9 @@ void ProjectSceneModule::registerUiTypes()
                                                              "Cannot create");
 
     // tracks panel
-    qmlRegisterType<RealtimeEffectMenuModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectMenuModel");
+    qmlRegisterType<AddEffectMenuModel>("Audacity.ProjectScene", 1, 0, "AddEffectMenuModel");
     qmlRegisterType<RealtimeEffectListModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectListModel");
+    qmlRegisterType<RealtimeEffectListItemMenuModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectListItemMenuModel");
     qmlRegisterType<RealtimeEffectSectionModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectSectionModel");
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
     qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");

@@ -30,63 +30,59 @@ code out of ModuleManager.
 #include <thread>
 
 /// This is the function which actually obeys one command.
-static int ExecCommand(wxString *pIn, wxString *pOut, bool fromMain)
+static int ExecCommand(wxString* pIn, wxString* pOut, bool fromMain)
 {
-   if (auto pProject = ::GetActiveProject().lock()) {
-      CommandBuilder builder(*pProject, *pIn);
-      if (builder.WasValid())
-      {
-         OldStyleCommandPointer cmd = builder.GetCommand();
+    if (auto pProject = ::GetActiveProject().lock()) {
+        CommandBuilder builder(*pProject, *pIn);
+        if (builder.WasValid()) {
+            OldStyleCommandPointer cmd = builder.GetCommand();
 
-         AppCommandEvent ev;
-         ev.SetCommand(cmd);
+            AppCommandEvent ev;
+            ev.SetCommand(cmd);
 
-         if (fromMain)
-         {
-            // Use SafelyProcessEvent, which stops exceptions, because this is
-            // expected to be reached from within the XLisp runtime
-            wxTheApp->SafelyProcessEvent(ev);
-         }
-         else
-         {
-            // Send the event to the main thread
-            wxTheApp->AddPendingEvent(ev);
-         }
-      }
+            if (fromMain) {
+                // Use SafelyProcessEvent, which stops exceptions, because this is
+                // expected to be reached from within the XLisp runtime
+                wxTheApp->SafelyProcessEvent(ev);
+            } else {
+                // Send the event to the main thread
+                wxTheApp->AddPendingEvent(ev);
+            }
+        }
 
-      // Wait for and retrieve the response
-      *pOut = builder.GetResponse();
-   }
-   else
-      *pOut = wxString{};
+        // Wait for and retrieve the response
+        *pOut = builder.GetResponse();
+    } else {
+        *pOut = wxString{}
+    }
 
-   return 0;
+    return 0;
 }
 
 /// Executes a command in the worker (script) thread
-static int ExecFromWorker(wxString *pIn, wxString *pOut)
+static int ExecFromWorker(wxString* pIn, wxString* pOut)
 {
-   return ExecCommand(pIn, pOut, false);
+    return ExecCommand(pIn, pOut, false);
 }
 
 /// Executes a command on the main (GUI) thread.
-int ExecFromMain(wxString *pIn, wxString *pOut)
+int ExecFromMain(wxString* pIn, wxString* pOut)
 {
-   return ExecCommand(pIn, pOut, true);
+    return ExecCommand(pIn, pOut, true);
 }
 
 /// Starts the script server
 void ScriptCommandRelay::StartScriptServer(tpRegScriptServerFunc scriptFn)
 {
-   wxASSERT(scriptFn != NULL);
+    wxASSERT(scriptFn != NULL);
 
-   auto server = [](tpRegScriptServerFunc function)
-   {
-      while (true)
-      {
-         function(ExecFromWorker);
-      }
-   };
+    auto server = [](tpRegScriptServerFunc function)
+    {
+        while (true)
+        {
+            function(ExecFromWorker);
+        }
+    };
 
-   std::thread(server, scriptFn).detach();
+    std::thread(server, scriptFn).detach();
 }

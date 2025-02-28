@@ -40,7 +40,8 @@ static UiActionList STATIC_ACTIONS = {
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Replace realtime effect"),
-             TranslatableString("action", "Replace realtime effect")
+             TranslatableString("action", "Replace realtime effect"),
+             muse::ui::Checkable::Yes
              ),
 
     UiAction("action://effects/presets/apply",

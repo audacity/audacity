@@ -80,13 +80,22 @@ RetVal<AudioResourceMetaList> Vst3PluginsMetaReader::readMeta(const io::path_t& 
     }
 
     AudioResourceMetaList metaList;
-    for (const PluginDescriptor& descriptor : descriptors) {
+    for (const PluginDescriptor& desc : descriptors) {
+        //! NOTE At the moment AU only supports Fx and Fx|Generator,
+        //! see VST3EffectBase::GetType
+        muse::String type;
+        if (desc.GetEffectType() == EffectType::EffectTypeProcess || desc.GetEffectType() == EffectType::EffectTypeGenerate) {
+            type = u"Fx";
+        } else {
+            type = u"None";
+        }
+
         muse::audio::AudioResourceMeta meta;
-        meta.id = descriptor.GetID();
+        meta.id = desc.GetID();
         meta.type = muse::audio::AudioResourceType::VstPlugin;
-        // meta.attributes.emplace(muse::audio::CATEGORIES_ATTRIBUTE, String::fromStdString(descriptor.));
-        meta.vendor = descriptor.GetVendor();
-        // meta.hasNativeEditorSupport = hasNativeEditorSupport();
+        meta.attributes.emplace(muse::audio::CATEGORIES_ATTRIBUTE, type);
+        meta.vendor = desc.GetVendor();
+        meta.hasNativeEditorSupport = true;
 
         metaList.emplace_back(std::move(meta));
     }

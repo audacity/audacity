@@ -18,71 +18,60 @@ class WaveTrack;
 
 class VolumeSliderHandle final : public SliderHandle
 {
-   VolumeSliderHandle(const VolumeSliderHandle&) = delete;
+    VolumeSliderHandle(const VolumeSliderHandle&) = delete;
 
-   std::shared_ptr<WaveTrack> GetWaveTrack() const;
+    std::shared_ptr<WaveTrack> GetWaveTrack() const;
 
 public:
-   explicit VolumeSliderHandle
-      ( SliderFn sliderFn, const wxRect &rect,
-        const std::shared_ptr<Track> &pTrack );
+    explicit VolumeSliderHandle(SliderFn sliderFn, const wxRect& rect, const std::shared_ptr<Track>& pTrack);
 
-   VolumeSliderHandle &operator=(const VolumeSliderHandle&) = default;
+    VolumeSliderHandle& operator=(const VolumeSliderHandle&) = default;
 
-   virtual ~VolumeSliderHandle();
+    virtual ~VolumeSliderHandle();
 
 protected:
-   float GetValue() override;
-   Result SetValue
-      (AudacityProject *pProject, float newValue) override;
-   Result CommitChanges
-      (const wxMouseEvent &event, AudacityProject *pProject) override;
+    float GetValue() override;
+    Result SetValue(AudacityProject* pProject, float newValue) override;
+    Result CommitChanges(const wxMouseEvent& event, AudacityProject* pProject) override;
 
-   TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &) const override;
+    TranslatableString Tip(
+        const wxMouseState& state, AudacityProject&) const override;
 
-   bool StopsOnKeystroke () override { return true; }
+    bool StopsOnKeystroke() override { return true; }
 
 public:
-   static UIHandlePtr HitTest
-      (std::weak_ptr<VolumeSliderHandle> &holder,
-       const wxMouseState &state, const wxRect &rect,
-       const std::shared_ptr<Track> &pTrack);
+    static UIHandlePtr HitTest(std::weak_ptr<VolumeSliderHandle>& holder, const wxMouseState& state, const wxRect& rect,
+                               const std::shared_ptr<Track>& pTrack);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
 class PanSliderHandle final : public SliderHandle
 {
-   PanSliderHandle(const PanSliderHandle&) = delete;
+    PanSliderHandle(const PanSliderHandle&) = delete;
 
-   std::shared_ptr<WaveTrack> GetWaveTrack() const;
+    std::shared_ptr<WaveTrack> GetWaveTrack() const;
 
 public:
-   explicit PanSliderHandle
-      ( SliderFn sliderFn, const wxRect &rect,
-        const std::shared_ptr<Track> &pTrack );
+    explicit PanSliderHandle(SliderFn sliderFn, const wxRect& rect, const std::shared_ptr<Track>& pTrack);
 
-   PanSliderHandle &operator=(const PanSliderHandle&) = default;
+    PanSliderHandle& operator=(const PanSliderHandle&) = default;
 
-   virtual ~PanSliderHandle();
+    virtual ~PanSliderHandle();
 
 protected:
-   float GetValue() override;
-   Result SetValue(AudacityProject *pProject, float newValue) override;
-   Result CommitChanges
-      (const wxMouseEvent &event, AudacityProject *pProject) override;
+    float GetValue() override;
+    Result SetValue(AudacityProject* pProject, float newValue) override;
+    Result CommitChanges(const wxMouseEvent& event, AudacityProject* pProject) override;
 
-   TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &) const override;
+    TranslatableString Tip(
+        const wxMouseState& state, AudacityProject&) const override;
 
-   bool StopsOnKeystroke () override { return true; }
+    bool StopsOnKeystroke() override { return true; }
 
 public:
-   static UIHandlePtr HitTest
-      (std::weak_ptr<PanSliderHandle> &holder,
-       const wxMouseState &state, const wxRect &rect,
-       const std::shared_ptr<Track> &pTrack);
+    static UIHandlePtr HitTest(std::weak_ptr<PanSliderHandle>& holder, const wxMouseState& state, const wxRect& rect,
+                               const std::shared_ptr<Track>& pTrack);
 };
 
 #endif

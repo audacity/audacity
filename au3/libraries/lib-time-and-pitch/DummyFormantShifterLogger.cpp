@@ -25,17 +25,17 @@ void DummyFormantShifterLogger::Log(int value, const char* name) const
 }
 
 void DummyFormantShifterLogger::Log(
-   const float* samples, size_t size, const char* name) const
+    const float* samples, size_t size, const char* name) const
 {
 }
 
 void DummyFormantShifterLogger::Log(
-   const std::complex<float>* samples, size_t size, const char* name,
-   const std::function<float(const std::complex<float>&)>& transform) const
+    const std::complex<float>* samples, size_t size, const char* name,
+    const std::function<float(const std::complex<float>&)>& transform) const
 {
 }
 
 void DummyFormantShifterLogger::ProcessFinished(
-   std::complex<float>* spectrum, size_t fftSize)
+    std::complex<float>* spectrum, size_t fftSize)
 {
 }

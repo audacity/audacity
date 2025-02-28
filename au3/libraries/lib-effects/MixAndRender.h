@@ -40,19 +40,15 @@ class WaveTrackFactory;
  * mono channel or a stereo pair); else the unique track's name is copied
  */
 EFFECTS_API Track::Holder MixAndRender(
-   const TrackIterRange<const WaveTrack> &trackRange,
-   const Mixer::WarpOptions &warpOptions,
-   const wxString &newTrackName,
-   WaveTrackFactory *factory,
-   double rate, sampleFormat format,
-   double startTime, double endTime);
+    const TrackIterRange<const WaveTrack>& trackRange, const Mixer::WarpOptions& warpOptions, const wxString& newTrackName,
+    WaveTrackFactory* factory, double rate, sampleFormat format, double startTime, double endTime);
 
 enum ChannelName : int;
-using ChannelNames = const ChannelName *;
+using ChannelNames = const ChannelName*;
 
 EFFECTS_API
 std::vector<MixerOptions::StageSpecification>
-GetEffectStages(const WaveTrack &track);
+GetEffectStages(const WaveTrack& track);
 
 EFFECTS_API
 std::vector<MixerOptions::StageSpecification>

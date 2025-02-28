@@ -16,20 +16,17 @@
 class ClipOverflowButtonHandle final : public HighlitClipButtonHandle
 {
 public:
-   ClipOverflowButtonHandle(
-      const std::shared_ptr<WaveTrack>& track,
-      const std::shared_ptr<WaveTrack::Interval>& clip,
-      std::weak_ptr<TrackPanelCell> cell);
+    ClipOverflowButtonHandle(
+        const std::shared_ptr<WaveTrack>& track, const std::shared_ptr<WaveTrack::Interval>& clip, std::weak_ptr<TrackPanelCell> cell);
 
 private:
-   Result DoRelease(
-      const TrackPanelMouseEvent& event, AudacityProject* pProject,
-      wxWindow* pParent) override;
+    Result DoRelease(
+        const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent) override;
 
-   HitTestPreview Preview(
-      const TrackPanelMouseState& state, AudacityProject* pProject) override;
+    HitTestPreview Preview(
+        const TrackPanelMouseState& state, AudacityProject* pProject) override;
 
-   void DoDraw(const wxRect& rect, wxDC& dc) override;
+    void DoDraw(const wxRect& rect, wxDC& dc) override;
 
-   std::weak_ptr<TrackPanelCell> mCell;
+    std::weak_ptr<TrackPanelCell> mCell;
 };

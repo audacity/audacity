@@ -1,11 +1,11 @@
 /*!********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file DarkThemeAsCeeCode.cpp
- 
+
  Paul Licameli split from Theme.cpp
- 
+
  **********************************************************************/
 
 #include <vector>
@@ -17,5 +17,5 @@ static const std::vector<unsigned char> ImageCacheAsData {
 };
 
 static ThemeBase::RegisteredTheme theme{
-   { "dark", XO("Dark") }, PreferredSystemAppearance::Dark, ImageCacheAsData
+    { "dark", XO("Dark") }, PreferredSystemAppearance::Dark, ImageCacheAsData
 };

@@ -21,5 +21,5 @@ struct FFmpegFunctions;
 class FFmpegLog
 {
 public:
-   virtual ~FFmpegLog() = default;
+    virtual ~FFmpegLog() = default;
 };

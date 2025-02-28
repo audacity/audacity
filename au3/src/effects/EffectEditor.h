@@ -24,73 +24,72 @@ class wxWindow;
 //! Message sent by EffectEditor when a setting is changed by the user
 struct EffectSettingChanged final
 {
-   size_t index { size_t(-1) };
-   float newValue {};
+    size_t index { size_t(-1) };
+    float newValue {};
 };
 
-class AUDACITY_DLL_API EffectEditor /* not final */
-    : public Observer::Publisher<EffectSettingChanged>
+class AUDACITY_DLL_API EffectEditor /* not final */ : public Observer::Publisher<EffectSettingChanged>
 {
 public:
-   EffectEditor(
-      const EffectUIServices &services, EffectSettingsAccess &access);
+    EffectEditor(
+        const EffectUIServices& services, EffectSettingsAccess& access);
 
-   virtual ~EffectEditor();
+    virtual ~EffectEditor();
 
-   //! Get settings data from the panel; may make error dialogs and return false
-   /*!
-    @return true only if panel settings are acceptable
+    //! Get settings data from the panel; may make error dialogs and return false
+    /*!
+     @return true only if panel settings are acceptable
+     */
+    virtual bool ValidateUI() = 0;
+
+    //! Update appearance of the panel for changes in settings
+    /*!
+     Default implementation does nothing, returns true
+
+     @return true if successful
+     */
+    virtual bool UpdateUI();
+
+    /*!
+     Default implementation returns false
+     @return true if using a native plug-in UI, not widgets
+     */
+    virtual bool IsGraphicalUI();
+
+    //! On the first call only, may disconnect from further event handling
+    /*!
+     Default implemantation does nothing
+     */
+    virtual void Disconnect();
+
+    /*!
+     Handle the UI OnClose event.
+     Default implementation calls mUIServices.CloseUI()
     */
-   virtual bool ValidateUI() = 0;
+    virtual void OnClose();
 
-   //! Update appearance of the panel for changes in settings
-   /*!
-    Default implementation does nothing, returns true
+    //! Enable or disable the Apply button of the dialog that contains parent
+    static bool EnableApply(wxWindow* parent, bool enable = true);
 
-    @return true if successful
-    */
-   virtual bool UpdateUI();
+    // id that should be used by preview play button of effect dialog
+    static constexpr int kPlayID = 20102;
 
-   /*!
-    Default implementation returns false
-    @return true if using a native plug-in UI, not widgets
-    */
-   virtual bool IsGraphicalUI();
+    //! Enable or disable the preview play button of the dialog that contains
+    //! parent
+    static bool EnablePreview(wxWindow* parent, bool enable = true);
 
-   //! On the first call only, may disconnect from further event handling
-   /*!
-    Default implemantation does nothing
-    */
-   virtual void Disconnect();
+protected:
+    // Convenience function template for binding event handler functions
+    template<typename EventTag, typename Class, typename Event>
+    void BindTo(
+        wxEvtHandler& src, const EventTag& eventType, void (Class::*pmf)(Event&))
+    {
+        src.Bind(eventType, pmf, static_cast<Class*>(this));
+    }
 
-   /*!
-    Handle the UI OnClose event.
-    Default implementation calls mUIServices.CloseUI()
-   */
-   virtual void OnClose();
+    const EffectUIServices& mUIServices;
+    EffectSettingsAccess& mAccess;
 
-   //! Enable or disable the Apply button of the dialog that contains parent
-   static bool EnableApply(wxWindow *parent, bool enable = true);
-
-   // id that should be used by preview play button of effect dialog
-   static constexpr int kPlayID = 20102;
-
-   //! Enable or disable the preview play button of the dialog that contains
-   //! parent
-   static bool EnablePreview(wxWindow *parent, bool enable = true);
-
- protected:
-   // Convenience function template for binding event handler functions
-   template<typename EventTag, typename Class, typename Event>
-   void BindTo(
-      wxEvtHandler &src, const EventTag& eventType, void (Class::*pmf)(Event &))
-   {
-      src.Bind(eventType, pmf, static_cast<Class *>(this));
-   }
-
-   const EffectUIServices &mUIServices;
-   EffectSettingsAccess &mAccess;
-
-   bool mUIClosed { false };
+    bool mUIClosed { false };
 };
 #endif

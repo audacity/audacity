@@ -14,9 +14,6 @@ the ability to not see similar warnings again for this session.
 
 *//********************************************************************/
 
-
-
-
 #include "Warning.h"
 
 #include "ShuttleGui.h"
@@ -29,82 +26,80 @@ the ability to not see similar warnings again for this session.
 
 class WarningDialog final : public wxDialogWrapper
 {
- public:
-   // constructors and destructors
-   WarningDialog(wxWindow *parent,
-                 const TranslatableString &message,
-                 const TranslatableString &footer,
-                 bool showCancelButton);
+public:
+    // constructors and destructors
+    WarningDialog(wxWindow* parent, const TranslatableString& message, const TranslatableString& footer, bool showCancelButton);
 
- private:
-   void OnOK(wxCommandEvent& event);
+private:
+    void OnOK(wxCommandEvent& event);
 
-   wxCheckBox *mCheckBox;
+    wxCheckBox* mCheckBox;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(WarningDialog, wxDialogWrapper)
-   EVT_BUTTON(wxID_OK, WarningDialog::OnOK)
+EVT_BUTTON(wxID_OK, WarningDialog::OnOK)
 END_EVENT_TABLE()
 
-const TranslatableString &DefaultWarningFooter()
+const TranslatableString& DefaultWarningFooter()
 {
-   static auto result = XXO("Don't show this warning again");
-   return result;
+    static auto result = XXO("Don't show this warning again");
+    return result;
 }
 
-WarningDialog::WarningDialog(wxWindow *parent, const TranslatableString &message,
-                             const TranslatableString &footer,
+WarningDialog::WarningDialog(wxWindow* parent, const TranslatableString& message,
+                             const TranslatableString& footer,
                              bool showCancelButton)
-:  wxDialogWrapper(parent, wxID_ANY, XO("Warning"),
-            wxDefaultPosition, wxDefaultSize,
-            (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
+    :  wxDialogWrapper(parent, wxID_ANY, XO("Warning"),
+                       wxDefaultPosition, wxDefaultSize,
+                       (showCancelButton ? wxDEFAULT_DIALOG_STYLE : wxCAPTION | wxSYSTEM_MENU)) // Unlike wxDEFAULT_DIALOG_STYLE, no wxCLOSE_BOX.
 {
-   SetName();
+    SetName();
 
-   SetIcon(wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX));
-   ShuttleGui S(this, eIsCreating);
+    SetIcon(wxArtProvider::GetIcon(wxART_WARNING, wxART_MESSAGE_BOX));
+    ShuttleGui S(this, eIsCreating);
 
-   S.SetBorder(10);
-   S.StartVerticalLay(false);
-   {
-      S.AddFixedText(message);
-      mCheckBox = S.AddCheckBox(footer, false);
-   }
-   S.EndVerticalLay();
+    S.SetBorder(10);
+    S.StartVerticalLay(false);
+    {
+        S.AddFixedText(message);
+        mCheckBox = S.AddCheckBox(footer, false);
+    }
+    S.EndVerticalLay();
 
-   S.SetBorder(0);
-   S.AddStandardButtons(showCancelButton ? eOkButton | eCancelButton : eOkButton);
+    S.SetBorder(0);
+    S.AddStandardButtons(showCancelButton ? eOkButton | eCancelButton : eOkButton);
 
-   Layout();
-   GetSizer()->Fit(this);
-   CentreOnParent();
+    Layout();
+    GetSizer()->Fit(this);
+    CentreOnParent();
 }
 
 void WarningDialog::OnOK(wxCommandEvent& WXUNUSED(event))
 {
-   EndModal(mCheckBox->GetValue() ? wxID_NO : wxID_YES); // return YES, if message should be shown again
+    EndModal(mCheckBox->GetValue() ? wxID_NO : wxID_YES); // return YES, if message should be shown again
 }
 
-int ShowWarningDialog(wxWindow *parent,
-                      const wxString &internalDialogName,
-                      const TranslatableString &message,
+int ShowWarningDialog(wxWindow* parent,
+                      const wxString& internalDialogName,
+                      const TranslatableString& message,
                       bool showCancelButton,
-                      const TranslatableString &footer)
+                      const TranslatableString& footer)
 {
-   auto key = WarningDialogKey(internalDialogName);
-   if (!gPrefs->Read(key, (long) true)) {
-      return wxID_OK;
-   }
+    auto key = WarningDialogKey(internalDialogName);
+    if (!gPrefs->Read(key, (long)true)) {
+        return wxID_OK;
+    }
 
-   WarningDialog dlog(parent, message, footer, showCancelButton);
+    WarningDialog dlog(parent, message, footer, showCancelButton);
 
-   int retCode = dlog.ShowModal();
-   if (retCode == wxID_CANCEL)
-      return retCode;
+    int retCode = dlog.ShowModal();
+    if (retCode == wxID_CANCEL) {
+        return retCode;
+    }
 
-   gPrefs->Write(key, (retCode == wxID_YES));
-   gPrefs->Flush();
-   return wxID_OK;
+    gPrefs->Write(key, (retCode == wxID_YES));
+    gPrefs->Flush();
+    return wxID_OK;
 }

@@ -9,16 +9,16 @@
 ProgressDialog::ProgressDialog()
 {
     muse::Ret ret = interactive()->showProgress(std::string(), &m_progress);
-    m_progress.started.notify();
+    m_progress.started();
 
-    m_progress.cancelRequested.onNotify(this, [this]() {
+    m_progress.canceled().onNotify(this, [this]() {
         m_cancelled = true;
     });
 }
 
 ProgressDialog::~ProgressDialog()
 {
-    m_progress.finished.send(muse::make_ok());
+    m_progress.finish(muse::make_ok());
 }
 
 void ProgressDialog::Reinit()
@@ -32,7 +32,7 @@ void ProgressDialog::SetDialogTitle(const TranslatableString& title)
 
 ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long long denominator, const TranslatableString& message)
 {
-    m_progress.progressChanged.send(numerator, denominator, message.Translation().ToStdString());
+    m_progress.progress(numerator, denominator, message.Translation().ToStdString());
     QCoreApplication::processEvents();
 
     if (m_cancelled) {

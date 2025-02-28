@@ -22,41 +22,37 @@ class ZoomInfo;
 class AUDACITY_DLL_API CommonChannelView /* not final */ : public ChannelView
 {
 public:
-   using ChannelView::ChannelView;
+    using ChannelView::ChannelView;
 
-   // Delegates the handling to the related TCP cell
-   std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override;
+    // Delegates the handling to the related TCP cell
+    std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override;
 
-   // Cause certain overriding tool modes (Zoom; future ones?) to behave
-   // uniformly in all tracks, disregarding track contents.
-   // Do not further override this...
-   std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &, const AudacityProject *pProject)
-   final;
+    // Cause certain overriding tool modes (Zoom; future ones?) to behave
+    // uniformly in all tracks, disregarding track contents.
+    // Do not further override this...
+    std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState&, const AudacityProject* pProject)
+    final;
 
-   void TimeShiftHitTest();
+    void TimeShiftHitTest();
 
-   virtual int GetMinimizedHeight() const override;
+    virtual int GetMinimizedHeight() const override;
 
-   /** \brief Get many envelope points for pixel columns at once,
-    * but don't assume uniform time per pixel.
-   */
-   static void GetEnvelopeValues(const Envelope &env,
-      double aligned_time, double sampleDur,
-      double *buffer, int bufferLen, int leftOffset,
-      const ZoomInfo &zoomInfo);
+    /** \brief Get many envelope points for pixel columns at once,
+     * but don't assume uniform time per pixel.
+    */
+    static void GetEnvelopeValues(const Envelope& env, double aligned_time, double sampleDur, double* buffer, int bufferLen, int leftOffset,
+                                  const ZoomInfo& zoomInfo);
 
 protected:
-   // Rather override this for subclasses:
-   virtual std::vector<UIHandlePtr> DetailedHitTest
-      (const TrackPanelMouseState &,
-       const AudacityProject *pProject, int currentTool, bool bMultiTool)
-      = 0;
+    // Rather override this for subclasses:
+    virtual std::vector<UIHandlePtr> DetailedHitTest(const TrackPanelMouseState&, const AudacityProject* pProject, int currentTool,
+                                                     bool bMultiTool)
+    = 0;
 
-   std::weak_ptr<SelectHandle> mSelectHandle;
+    std::weak_ptr<SelectHandle> mSelectHandle;
 
 public:
-   std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;
+    std::weak_ptr<TimeShiftHandle> mTimeShiftHandle;
 };
 
 #endif

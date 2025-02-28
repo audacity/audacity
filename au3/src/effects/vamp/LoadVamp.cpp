@@ -8,8 +8,6 @@
 
 **********************************************************************/
 
-
-
 #if defined(USE_VAMP)
 #include "LoadVamp.h"
 #include "ModuleManager.h"
@@ -37,9 +35,9 @@ using namespace Vamp::HostExt;
 // ============================================================================
 DECLARE_PROVIDER_ENTRY(AudacityModule)
 {
-   // Create and register the importer
-   // Trust the module manager not to leak this
-   return std::make_unique<VampEffectsModule>();
+    // Create and register the importer
+    // Trust the module manager not to leak this
+    return std::make_unique<VampEffectsModule>();
 }
 
 // ============================================================================
@@ -67,28 +65,28 @@ VampEffectsModule::~VampEffectsModule()
 
 PluginPath VampEffectsModule::GetPath() const
 {
-   return {};
+    return {};
 }
 
 ComponentInterfaceSymbol VampEffectsModule::GetSymbol() const
 {
-   return XO("Vamp Effects");
+    return XO("Vamp Effects");
 }
 
 VendorSymbol VampEffectsModule::GetVendor() const
 {
-   return XO("The Audacity Team");
+    return XO("The Audacity Team");
 }
 
 wxString VampEffectsModule::GetVersion() const
 {
-   // This "may" be different if this were to be maintained as a separate DLL
-   return VAMPEFFECTS_VERSION;
+    // This "may" be different if this were to be maintained as a separate DLL
+    return VAMPEFFECTS_VERSION;
 }
 
 TranslatableString VampEffectsModule::GetDescription() const
 {
-   return XO("Provides Vamp Effects support to Audacity");
+    return XO("Provides Vamp Effects support to Audacity");
 }
 
 // ============================================================================
@@ -97,231 +95,221 @@ TranslatableString VampEffectsModule::GetDescription() const
 
 bool VampEffectsModule::Initialize()
 {
-   // Nothing to do here
-   return true;
+    // Nothing to do here
+    return true;
 }
 
 void VampEffectsModule::Terminate()
 {
-   // Nothing to do here
-   return;
+    // Nothing to do here
+    return;
 }
 
 EffectFamilySymbol VampEffectsModule::GetOptionalFamilySymbol()
 {
 #if USE_VAMP
-   return VAMPEFFECTS_FAMILY;
+    return VAMPEFFECTS_FAMILY;
 #else
-   return {};
+    return {};
 #endif
 }
 
-const FileExtensions &VampEffectsModule::GetFileExtensions()
+const FileExtensions& VampEffectsModule::GetFileExtensions()
 {
-   static FileExtensions empty;
-   return empty;
+    static FileExtensions empty;
+    return empty;
 }
 
-void VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
+void VampEffectsModule::AutoRegisterPlugins(PluginManagerInterface&)
 {
 }
 
-PluginPaths VampEffectsModule::FindModulePaths(PluginManagerInterface &)
+PluginPaths VampEffectsModule::FindModulePaths(PluginManagerInterface&)
 {
-   PluginPaths names;
+    PluginPaths names;
 
-   PluginLoader *loader = PluginLoader::getInstance();
+    PluginLoader* loader = PluginLoader::getInstance();
 
-   PluginLoader::PluginKeyList keys = loader->listPlugins();
+    PluginLoader::PluginKeyList keys = loader->listPlugins();
 
-   for (PluginLoader::PluginKeyList::iterator i = keys.begin(); i != keys.end(); ++i)
-   {
-      std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(*i, 48000) }; // rate doesn't matter here
-      if (!vp)
-      {
-         continue;
-      }
+    for (PluginLoader::PluginKeyList::iterator i = keys.begin(); i != keys.end(); ++i) {
+        std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(*i, 48000) }; // rate doesn't matter here
+        if (!vp) {
+            continue;
+        }
 
-      // We limit the listed plugin outputs to those whose results can
-      // readily be displayed in an Audacity label track.
-      //
-      // - Any output whose features have no values (time instants only),
-      //   with or without duration, is fine
-      //
-      // - Any output whose features have more than one value, or an
-      //   unknown or variable number of values, is right out
-      //
-      // - Any output whose features have exactly one value, with
-      //   variable sample rate or with duration, should be OK --
-      //   this implies a sparse feature, of which the time and/or
-      //   duration are significant aspects worth displaying
-      //
-      // - An output whose features have exactly one value, with
-      //   fixed sample rate and no duration, cannot be usefully
-      //   displayed -- the value is the only significant piece of
-      //   data there and we have no good value plot
+        // We limit the listed plugin outputs to those whose results can
+        // readily be displayed in an Audacity label track.
+        //
+        // - Any output whose features have no values (time instants only),
+        //   with or without duration, is fine
+        //
+        // - Any output whose features have more than one value, or an
+        //   unknown or variable number of values, is right out
+        //
+        // - Any output whose features have exactly one value, with
+        //   variable sample rate or with duration, should be OK --
+        //   this implies a sparse feature, of which the time and/or
+        //   duration are significant aspects worth displaying
+        //
+        // - An output whose features have exactly one value, with
+        //   fixed sample rate and no duration, cannot be usefully
+        //   displayed -- the value is the only significant piece of
+        //   data there and we have no good value plot
 
-      Plugin::OutputList outputs = vp->getOutputDescriptors();
+        Plugin::OutputList outputs = vp->getOutputDescriptors();
 
-      int output = 0;
+        int output = 0;
 
-      for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); ++j)
-      {
-         if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate ||
-               j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep ||
-               !j->hasFixedBinCount ||
-               j->binCount > 1)
-         {
-            // All of these qualities disqualify (see notes above)
+        for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); ++j) {
+            if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate
+                || j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep
+                || !j->hasFixedBinCount
+                || j->binCount > 1) {
+                // All of these qualities disqualify (see notes above)
+
+                ++output;
+                continue;
+            }
+
+            wxString name = wxString::FromUTF8(vp->getName().c_str());
+
+            if (outputs.size() > 1) {
+                // This is not the plugin's only output.
+                // Use "plugin name: output name" as the effect name,
+                // unless the output name is the same as the plugin name
+                wxString outputName = wxString::FromUTF8(j->name.c_str());
+                if (outputName != name) {
+                    name = wxString::Format(wxT("%s: %s"),
+                                            name, outputName);
+                }
+            }
+
+            wxString path = wxString::FromUTF8(i->c_str()) + wxT("/") + name;
+            names.push_back(path);
 
             ++output;
-            continue;
-         }
+        }
+    }
 
-         wxString name = wxString::FromUTF8(vp->getName().c_str());
-
-         if (outputs.size() > 1)
-         {
-            // This is not the plugin's only output.
-            // Use "plugin name: output name" as the effect name,
-            // unless the output name is the same as the plugin name
-            wxString outputName = wxString::FromUTF8(j->name.c_str());
-            if (outputName != name)
-            {
-               name = wxString::Format(wxT("%s: %s"),
-                                       name, outputName);
-            }
-         }
-
-         wxString path = wxString::FromUTF8(i->c_str()) + wxT("/") + name;
-         names.push_back(path);
-
-         ++output;
-      }
-   }
-
-   return names;
+    return names;
 }
 
 unsigned VampEffectsModule::DiscoverPluginsAtPath(
-   const PluginPath & path, TranslatableString &errMsg,
-   const RegistrationCallback &callback)
+    const PluginPath& path, TranslatableString& errMsg,
+    const RegistrationCallback& callback)
 {
-   errMsg = {};
-   int output;
-   bool hasParameters;
+    errMsg = {};
+    int output;
+    bool hasParameters;
 
-   auto vp = FindPlugin(path, output, hasParameters);
-   if (vp)
-   {
-      VampEffect effect(std::move(vp), path, output, hasParameters);
-      if (callback)
-         callback( this, &effect );
+    auto vp = FindPlugin(path, output, hasParameters);
+    if (vp) {
+        VampEffect effect(std::move(vp), path, output, hasParameters);
+        if (callback) {
+            callback(this, &effect);
+        }
 
-      return 1;
-   }
+        return 1;
+    }
 
-   errMsg = XO("Could not load the library");
-   return 0;
+    errMsg = XO("Could not load the library");
+    return 0;
 }
 
 std::unique_ptr<ComponentInterface>
-VampEffectsModule::LoadPlugin(const PluginPath & path)
+VampEffectsModule::LoadPlugin(const PluginPath& path)
 {
-   // Acquires a resource for the application.
-   int output;
-   bool hasParameters;
+    // Acquires a resource for the application.
+    int output;
+    bool hasParameters;
 
-   if (auto vp = FindPlugin(path, output, hasParameters))
-      return std::make_unique<VampEffect>(std::move(vp), path, output, hasParameters);
-   return nullptr;
+    if (auto vp = FindPlugin(path, output, hasParameters)) {
+        return std::make_unique<VampEffect>(std::move(vp), path, output, hasParameters);
+    }
+    return nullptr;
 }
 
 bool VampEffectsModule::CheckPluginExist(const PluginPath& path) const
 {
-   PluginLoader::PluginKey key = path.BeforeFirst(wxT('/')).ToUTF8().data();
-   const auto libraryPathUTF8 = PluginLoader::getInstance()->getLibraryPathForPlugin(key);
-   if(!libraryPathUTF8.empty())
-      return wxFileName::FileExists(wxString::FromUTF8(libraryPathUTF8));
-   return wxFileName::FileExists(path);
+    PluginLoader::PluginKey key = path.BeforeFirst(wxT('/')).ToUTF8().data();
+    const auto libraryPathUTF8 = PluginLoader::getInstance()->getLibraryPathForPlugin(key);
+    if (!libraryPathUTF8.empty()) {
+        return wxFileName::FileExists(wxString::FromUTF8(libraryPathUTF8));
+    }
+    return wxFileName::FileExists(path);
 }
 
 // VampEffectsModule implementation
 
-std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const PluginPath & path,
-                                      int & output,
-                                      bool & hasParameters)
+std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const PluginPath& path,
+                                                            int& output,
+                                                            bool& hasParameters)
 {
-   PluginLoader::PluginKey key = path.BeforeFirst(wxT('/')).ToUTF8().data();
+    PluginLoader::PluginKey key = path.BeforeFirst(wxT('/')).ToUTF8().data();
 
-   std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(key, 48000) }; // rate doesn't matter here
-   if (!vp)
-   {
-      return nullptr;
-   }
+    std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(key, 48000) }; // rate doesn't matter here
+    if (!vp) {
+        return nullptr;
+    }
 
-   // We limit the listed plugin outputs to those whose results can
-   // readily be displayed in an Audacity label track.
-   //
-   // - Any output whose features have no values (time instants only),
-   //   with or without duration, is fine
-   //
-   // - Any output whose features have more than one value, or an
-   //   unknown or variable number of values, is right out
-   //
-   // - Any output whose features have exactly one value, with
-   //   variable sample rate or with duration, should be OK --
-   //   this implies a sparse feature, of which the time and/or
-   //   duration are significant aspects worth displaying
-   //
-   // - An output whose features have exactly one value, with
-   //   fixed sample rate and no duration, cannot be usefully
-   //   displayed -- the value is the only significant piece of
-   //   data there and we have no good value plot
+    // We limit the listed plugin outputs to those whose results can
+    // readily be displayed in an Audacity label track.
+    //
+    // - Any output whose features have no values (time instants only),
+    //   with or without duration, is fine
+    //
+    // - Any output whose features have more than one value, or an
+    //   unknown or variable number of values, is right out
+    //
+    // - Any output whose features have exactly one value, with
+    //   variable sample rate or with duration, should be OK --
+    //   this implies a sparse feature, of which the time and/or
+    //   duration are significant aspects worth displaying
+    //
+    // - An output whose features have exactly one value, with
+    //   fixed sample rate and no duration, cannot be usefully
+    //   displayed -- the value is the only significant piece of
+    //   data there and we have no good value plot
 
-   Plugin::OutputList outputs = vp->getOutputDescriptors();
+    Plugin::OutputList outputs = vp->getOutputDescriptors();
 
-   output = 0;
+    output = 0;
 
-   hasParameters = !vp->getParameterDescriptors().empty();
+    hasParameters = !vp->getParameterDescriptors().empty();
 
-   for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); ++j)
-   {
-      if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate ||
-            j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep ||
-            !j->hasFixedBinCount ||
-            j->binCount > 1)
-      {
-         // All of these qualities disqualify (see notes above)
+    for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); ++j) {
+        if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate
+            || j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep
+            || !j->hasFixedBinCount
+            || j->binCount > 1) {
+            // All of these qualities disqualify (see notes above)
 
-         ++output;
-         continue;
-      }
+            ++output;
+            continue;
+        }
 
-      wxString name = wxString::FromUTF8(vp->getName().c_str());
+        wxString name = wxString::FromUTF8(vp->getName().c_str());
 
-      if (outputs.size() > 1)
-      {
-         // This is not the plugin's only output.
-         // Use "plugin name: output name" as the effect name,
-         // unless the output name is the same as the plugin name
-         wxString outputName = wxString::FromUTF8(j->name.c_str());
-         if (outputName != name)
-         {
-            name = wxString::Format(wxT("%s: %s"),
-                                    name, outputName);
-         }
-      }
+        if (outputs.size() > 1) {
+            // This is not the plugin's only output.
+            // Use "plugin name: output name" as the effect name,
+            // unless the output name is the same as the plugin name
+            wxString outputName = wxString::FromUTF8(j->name.c_str());
+            if (outputName != name) {
+                name = wxString::Format(wxT("%s: %s"),
+                                        name, outputName);
+            }
+        }
 
-      if (wxString::FromUTF8(key.c_str()) + wxT("/") + name == path)
-      {
-         return vp;
-      }
+        if (wxString::FromUTF8(key.c_str()) + wxT("/") + name == path) {
+            return vp;
+        }
 
-      ++output;
-   }
+        ++output;
+    }
 
-   return {};
+    return {};
 }
 
 #endif

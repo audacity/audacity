@@ -18,22 +18,19 @@ class wxString;
 #include "StatefulEffectUIServices.h"
 #include <wx/weakref.h>
 
-class EffectFindClipping :
-    public FindClippingBase,
-    public StatefulEffectUIServices
+class EffectFindClipping : public FindClippingBase, public StatefulEffectUIServices
 {
 public:
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
-      const EffectOutputs* pOutputs) override;
-   void DoPopulateOrExchange(
-      ShuttleGui & S, EffectSettingsAccess &access);
-   bool TransferDataToWindow(const EffectSettings& settings) override;
-   bool TransferDataFromWindow(EffectSettings& settings) override;
+    std::unique_ptr<EffectEditor> PopulateOrExchange(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;
+    void DoPopulateOrExchange(
+        ShuttleGui& S, EffectSettingsAccess& access);
+    bool TransferDataToWindow(const EffectSettings& settings) override;
+    bool TransferDataFromWindow(EffectSettings& settings) override;
 
 private:
-   wxWeakRef<wxWindow> mUIParent;
-   EffectSettingsAccessPtr mpAccess;
+    wxWeakRef<wxWindow> mUIParent;
+    EffectSettingsAccessPtr mpAccess;
 };
 
 #endif // __AUDACITY_EFFECT_FINDCLIPPING__

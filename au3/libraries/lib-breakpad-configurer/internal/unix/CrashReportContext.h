@@ -1,5 +1,5 @@
 /*!********************************************************************
-* 
+*
  Audacity: A Digital Audio Editor
 
  CrashReportContext.h

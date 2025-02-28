@@ -24,61 +24,60 @@ Paul Licameli split from TrackMenus.cpp
 namespace {
 using namespace MenuRegistry;
 
-void OnNewWaveTrack(const CommandContext &context)
+void OnNewWaveTrack(const CommandContext& context)
 {
-   auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &trackFactory = WaveTrackFactory::Get( project );
+    auto& project = context.project;
+    auto& tracks = TrackList::Get(project);
+    auto& trackFactory = WaveTrackFactory::Get(project);
 
-   auto defaultFormat = QualitySettings::SampleFormatChoice();
+    auto defaultFormat = QualitySettings::SampleFormatChoice();
 
-   auto rate = ProjectRate::Get(project).GetRate();
+    auto rate = ProjectRate::Get(project).GetRate();
 
-   auto track = trackFactory.Create(defaultFormat, rate);
-   track->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
-   tracks.Add(track);
-   SelectUtilities::SelectNone( project );
+    auto track = trackFactory.Create(defaultFormat, rate);
+    track->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+    tracks.Add(track);
+    SelectUtilities::SelectNone(project);
 
-   track->SetSelected(true);
+    track->SetSelected(true);
 
-   ProjectHistory::Get( project )
-      .PushState(XO("Created new audio track"), XO("New Track"));
+    ProjectHistory::Get(project)
+    .PushState(XO("Created new audio track"), XO("New Track"));
 
-   TrackFocus::Get(project).Set(track.get());
-   Viewport::Get(project).ShowTrack(*track);
+    TrackFocus::Get(project).Set(track.get());
+    Viewport::Get(project).ShowTrack(*track);
 }
 
-void OnNewStereoTrack(const CommandContext &context)
+void OnNewStereoTrack(const CommandContext& context)
 {
-   auto &project = context.project;
-   auto &tracks = TrackList::Get( project );
-   auto &trackFactory = WaveTrackFactory::Get( project );
+    auto& project = context.project;
+    auto& tracks = TrackList::Get(project);
+    auto& trackFactory = WaveTrackFactory::Get(project);
 
-   auto defaultFormat = QualitySettings::SampleFormatChoice();
-   auto rate = ProjectRate::Get(project).GetRate();
+    auto defaultFormat = QualitySettings::SampleFormatChoice();
+    auto rate = ProjectRate::Get(project).GetRate();
 
-   SelectUtilities::SelectNone( project );
+    SelectUtilities::SelectNone(project);
 
-   tracks.Add(trackFactory.Create(2, defaultFormat, rate));
-   auto &newTrack = **tracks.rbegin();
-   newTrack.SetSelected(true);
-   newTrack.SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+    tracks.Add(trackFactory.Create(2, defaultFormat, rate));
+    auto& newTrack = **tracks.rbegin();
+    newTrack.SetSelected(true);
+    newTrack.SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
 
-   ProjectHistory::Get( project )
-      .PushState(XO("Created new stereo audio track"), XO("New Track"));
+    ProjectHistory::Get(project)
+    .PushState(XO("Created new stereo audio track"), XO("New Track"));
 
-   TrackFocus::Get(project).Set(&newTrack);
-   Viewport::Get(project).ShowTrack(newTrack);
+    TrackFocus::Get(project).Set(&newTrack);
+    Viewport::Get(project).ShowTrack(newTrack);
 }
 
 AttachedItem sAttachment{
-   Items( "",
-      Command( wxT("NewMonoTrack"), XXO("&Mono Track"), OnNewWaveTrack,
-         AudioIONotBusyFlag(), wxT("Ctrl+Shift+N") ),
-      Command( wxT("NewStereoTrack"), XXO("&Stereo Track"),
-         OnNewStereoTrack, AudioIONotBusyFlag() )
-   ),
-   wxT("Tracks/Add/Add")
+    Items("",
+          Command(wxT("NewMonoTrack"), XXO("&Mono Track"), OnNewWaveTrack,
+                  AudioIONotBusyFlag(), wxT("Ctrl+Shift+N")),
+          Command(wxT("NewStereoTrack"), XXO("&Stereo Track"),
+                  OnNewStereoTrack, AudioIONotBusyFlag())
+          ),
+    wxT("Tracks/Add/Add")
 };
-
 }

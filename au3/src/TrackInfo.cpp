@@ -9,7 +9,6 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #include "TrackInfo.h"
 
 #include <wx/app.h>
@@ -31,51 +30,52 @@ Paul Licameli split from TrackPanel.cpp
 
 // Subscribe to preference changes to update static variables
 struct Settings : PrefsListener {
-   wxFont gFont;
+    wxFont gFont;
 
-   bool mInitialized{ false };
+    bool mInitialized{ false };
 
-   void UpdatePrefs() override
-   {
+    void UpdatePrefs() override
+    {
 #if defined __WXMAC__
-      int fontSize = 12;
+        int fontSize = 12;
 #else
-      int fontSize = 10;
+        int fontSize = 10;
 #endif
-      gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+        gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
-      mInitialized = true;
-   }
+        mInitialized = true;
+    }
 };
 
-static Settings &settings()
+static Settings& settings()
 {
-   static Settings theSettings;
-   if ( !theSettings.mInitialized )
-      theSettings.UpdatePrefs();
-   return theSettings;
+    static Settings theSettings;
+    if (!theSettings.mInitialized) {
+        theSettings.UpdatePrefs();
+    }
+    return theSettings;
 }
 
 // return y value and height
 std::pair< int, int >
-TrackInfo::CalcItemY( const TCPLines &lines, unsigned iItem )
+TrackInfo::CalcItemY(const TCPLines& lines, unsigned iItem)
 {
-   int y = 0;
-   auto pLines = lines.begin();
-   while ( pLines != lines.end() &&
-           0 == (pLines->items & iItem) ) {
-      y += pLines->height + pLines->extraSpace;
-      ++pLines;
-   }
-   int height = 0;
-   if ( pLines != lines.end() )
-      height = pLines->height;
-   return { y, height };
+    int y = 0;
+    auto pLines = lines.begin();
+    while (pLines != lines.end()
+           && 0 == (pLines->items & iItem)) {
+        y += pLines->height + pLines->extraSpace;
+        ++pLines;
+    }
+    int height = 0;
+    if (pLines != lines.end()) {
+        height = pLines->height;
+    }
+    return { y, height };
 }
 
 /// \todo Probably should move to 'Utils.cpp'.
-void TrackInfo::SetTrackInfoFont(wxDC * dc)
+void TrackInfo::SetTrackInfoFont(wxDC* dc)
 {
-   dc->SetFont(settings().gFont);
+    dc->SetFont(settings().gFont);
 }
-

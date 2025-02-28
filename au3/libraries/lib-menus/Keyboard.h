@@ -22,16 +22,14 @@ using NormalizedKeyStringBase = TaggedIdentifier<NormalizedKeyStringTag, false>;
 
 struct MENUS_API NormalizedKeyString : NormalizedKeyStringBase
 {
-   NormalizedKeyString() = default;
-   explicit NormalizedKeyString( const wxString &key );
+    NormalizedKeyString() = default;
+    explicit NormalizedKeyString(const wxString& key);
 
-   wxString Display(bool usesSpecialChars = false) const;
+    wxString Display(bool usesSpecialChars = false) const;
 };
 
-namespace std
-{
-   template<> struct hash< NormalizedKeyString >
-      : hash< NormalizedKeyStringBase > {};
+namespace std {
+template<> struct hash< NormalizedKeyString >: hash< NormalizedKeyStringBase > {};
 }
 
 #endif

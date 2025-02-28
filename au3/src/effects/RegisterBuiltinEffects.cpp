@@ -19,8 +19,7 @@ void RegisterBuiltinEffects()
 {
 }
 
-namespace
-{
+namespace {
 BuiltinEffectsModule::Registration<FadeIn> fadeIn;
 BuiltinEffectsModule::Registration<FadeOut> fadeOut;
 BuiltinEffectsModule::Registration<Reverse> reverse;

@@ -1,13 +1,13 @@
 /*!********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file CFResources.h
 
  @brief Wrap resource pointers from Apple Core SDK for RAII
- 
+
  Paul Licameli
- 
+
  **********************************************************************/
 
 #ifndef __AUDACITY_CFRESOURCES__
@@ -21,8 +21,14 @@
 #include <utility>
 #include <CoreFoundation/CFBase.h>
 
-template<typename T = void *> struct CFReleaser{
-   void operator () (T p) const noexcept { if (p) CFRelease(p); } };
+template<typename T = void*> struct CFReleaser {
+    void operator ()(T p) const noexcept
+    {
+        if (p) {
+            CFRelease(p);
+        }
+    }
+};
 
 //! Smart pointer to a resource requiring CFRelease to clean up
 /*!
@@ -37,8 +43,8 @@ template<typename T = void *> struct CFReleaser{
  Parametrizing this way lets you avoid mention of the pointee typedef names
  which begin with __ and shouldn't really be mentioned by client code.
  */
-template<typename T> using CF_ptr =
-   std::unique_ptr<std::remove_pointer_t<T>, CFReleaser<T>>;
+template<typename T> using CF_ptr
+    =std::unique_ptr<std::remove_pointer_t<T>, CFReleaser<T> >;
 
 extern template struct CFReleaser<>;
 

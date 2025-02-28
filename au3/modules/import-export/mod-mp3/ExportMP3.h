@@ -16,10 +16,10 @@
 #include <memory>
 
 enum MP3RateMode : unsigned {
-   MODE_SET = 0,
-   MODE_VBR,
-   MODE_ABR,
-   MODE_CBR,
+    MODE_SET = 0,
+    MODE_VBR,
+    MODE_ABR,
+    MODE_CBR,
 };
 
 #if defined(__WXMSW__) || defined(__WXMAC__)
@@ -32,7 +32,6 @@ class wxWindow;
 //----------------------------------------------------------------------------
 // Get MP3 library version
 //----------------------------------------------------------------------------
-TranslatableString GetMP3Version(wxWindow *parent, bool prompt);
+TranslatableString GetMP3Version(wxWindow* parent, bool prompt);
 
 #endif
-

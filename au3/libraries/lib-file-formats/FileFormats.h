@@ -11,8 +11,6 @@
 #ifndef __AUDACITY_FILE_FORMATS__
 #define __AUDACITY_FILE_FORMATS__
 
-
-
 #include "Identifier.h"
 #include "SampleFormat.h"
 
@@ -100,7 +98,7 @@ wxString sf_encoding_name(int encoding_num);
 //
 
 int sf_num_simple_formats();
-SF_FORMAT_INFO *sf_simple_format(int i);
+SF_FORMAT_INFO* sf_simple_format(int i);
 
 //
 // other utility functions
@@ -120,37 +118,38 @@ sampleFormat sf_subtype_to_effective_format(unsigned int format);
 FILE_FORMATS_API
 extern FileExtensions sf_get_all_extensions();
 
-wxString sf_normalize_name(const char *name);
-
+wxString sf_normalize_name(const char* name);
 
 // This function wrapper uses a mutex to serialize calls to the SndFile library.
 // PRL: Keeping this in a comment, but with Unitary, the only remaining uses
 // of libsndfile should be in import/export and so are on the main thread only
 //extern std::mutex libSndFileMutex;
 
-template<typename R, typename F, typename... Args>
+template<typename R, typename F, typename ... Args>
 inline R SFCall(F fun, Args&&... args)
 {
-   //std::lock_guard<std::mutex> guard{ libSndFileMutex };
-   return fun(std::forward<Args>(args)...);
+    //std::lock_guard<std::mutex> guard{ libSndFileMutex };
+    return fun(std::forward<Args>(args)...);
 }
 
 //RAII for SNDFILE*
-struct FILE_FORMATS_API SFFileCloser { int operator () (SNDFILE*) const; };
+struct FILE_FORMATS_API SFFileCloser {
+    int operator ()(SNDFILE*) const;
+};
 struct SFFile : public std::unique_ptr<SNDFILE, ::SFFileCloser>
 {
-   SFFile() = default;
-   SFFile( SFFile &&that )
-   : std::unique_ptr<SNDFILE, ::SFFileCloser>( std::move( that ) )
-   {}
+    SFFile() = default;
+    SFFile(SFFile&& that)
+        : std::unique_ptr<SNDFILE, ::SFFileCloser>(std::move(that))
+    {}
 
-   // Close explicitly, not ignoring return values.
-   int close()
-   {
-      auto result = get_deleter() ( get() );
-      release();
-      return result;
-   }
+    // Close explicitly, not ignoring return values.
+    int close()
+    {
+        auto result = get_deleter() (get());
+        release();
+        return result;
+    }
 };
 
 #endif

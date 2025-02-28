@@ -15,21 +15,19 @@
 #include "sync/CloudSyncError.h"
 #include "NetworkUtils.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class SyncFailedDialog final : public AudioComDialogBase
 {
 public:
 
-   static void OnOpen(const CloudSyncError& error);
-   static void OnSave(const CloudSyncError& error);
+    static void OnOpen(const CloudSyncError& error);
+    static void OnSave(const CloudSyncError& error);
 
-   static void OnOpen(const ResponseResult& error);
-   static void OnSave(const ResponseResult& error);
+    static void OnOpen(const ResponseResult& error);
+    static void OnSave(const ResponseResult& error);
 
 private:
-   SyncFailedDialog(
-      const AudacityProject* project,
-      const TranslatableString& message, const std::string& log, DialogMode dialogMode);
+    SyncFailedDialog(
+        const AudacityProject* project, const TranslatableString& message, const std::string& log, DialogMode dialogMode);
 };
 } // namespace audacity::cloud::audiocom::sync

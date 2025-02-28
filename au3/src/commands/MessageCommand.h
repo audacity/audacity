@@ -27,22 +27,21 @@
 class MessageCommand : public AudacityCommand
 {
 public:
-   static const ComponentInterfaceSymbol Symbol;
+    static const ComponentInterfaceSymbol Symbol;
 
-   // ComponentInterface overrides
-   ComponentInterfaceSymbol GetSymbol() const override {return Symbol;};
-   TranslatableString GetDescription() const override {return XO("Echos a message.");};
-   template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
-   bool VisitSettings( SettingsVisitor & S ) override;
-   bool VisitSettings( ConstSettingsVisitor & S ) override;
-   void PopulateOrExchange(ShuttleGui & S) override;
-   bool Apply(const CommandContext & context) override;
+    // ComponentInterface overrides
+    ComponentInterfaceSymbol GetSymbol() const override { return Symbol; }
+    TranslatableString GetDescription() const override { return XO("Echos a message."); }
+    template<bool Const> bool VisitSettings(SettingsVisitorBase<Const>& S);
+    bool VisitSettings(SettingsVisitor& S) override;
+    bool VisitSettings(ConstSettingsVisitor& S) override;
+    void PopulateOrExchange(ShuttleGui& S) override;
+    bool Apply(const CommandContext& context) override;
 
-   // AudacityCommand overrides
-   ManualPageID ManualPage() override {return L"Extra_Menu:_Scriptables_II#message";}
+    // AudacityCommand overrides
+    ManualPageID ManualPage() override { return L"Extra_Menu:_Scriptables_II#message"; }
 public:
-   wxString mMessage;
+    wxString mMessage;
 };
-
 
 #endif /* End of include guard: __MESSAGECOMMAND__ */

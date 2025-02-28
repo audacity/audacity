@@ -19,11 +19,10 @@
 
 struct WavFileIO
 {
-   static bool Read(
-      const std::string& path, std::vector<std::vector<float>>&, AudioFileInfo&,
-      const std::optional<std::chrono::seconds>& upTo = std::nullopt);
+    static bool Read(
+        const std::string& path, std::vector<std::vector<float> >&, AudioFileInfo&,
+        const std::optional<std::chrono::seconds>& upTo = std::nullopt);
 
-   static bool Write(
-      const std::string& path, const std::vector<std::vector<float>>&,
-      int sampleRate);
+    static bool Write(
+        const std::string& path, const std::vector<std::vector<float> >&, int sampleRate);
 };

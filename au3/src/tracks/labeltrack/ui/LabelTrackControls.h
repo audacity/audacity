@@ -15,20 +15,18 @@ Paul Licameli split from TrackPanel.cpp
 
 class LabelTrackControls final : public CommonTrackControls
 {
-   LabelTrackControls(const LabelTrackControls&) = delete;
-   LabelTrackControls &operator=(const LabelTrackControls&) = delete;
+    LabelTrackControls(const LabelTrackControls&) = delete;
+    LabelTrackControls& operator=(const LabelTrackControls&) = delete;
 
 public:
-   explicit
-   LabelTrackControls( std::shared_ptr<Track> pTrack )
-      : CommonTrackControls( pTrack ) {}
-   ~LabelTrackControls();
+    explicit
+    LabelTrackControls(std::shared_ptr<Track> pTrack)
+        : CommonTrackControls(pTrack) {}
+    ~LabelTrackControls();
 
-   std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &state,
-       const AudacityProject *pProject) override;
+    std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state, const AudacityProject* pProject) override;
 
-   PopupMenuTable *GetMenuExtension(Track *pTrack) override;
+    PopupMenuTable* GetMenuExtension(Track* pTrack) override;
 };
 
 #endif

@@ -18,43 +18,41 @@
 class AudacityProject;
 enum class AudiocomTrace;
 
-namespace audacity::cloud::audiocom
-{
+namespace audacity::cloud::audiocom {
 struct AuthStateChangedMessage;
 
 class AuthorizationHandler final
 {
 public:
-   AuthorizationHandler();
+    AuthorizationHandler();
 
-   void PushSuppressDialogs();
-   void PopSuppressDialogs();
+    void PushSuppressDialogs();
+    void PopSuppressDialogs();
 
 private:
-   void OnAuthStateChanged(const AuthStateChangedMessage& message);
+    void OnAuthStateChanged(const AuthStateChangedMessage& message);
 
-   Observer::Subscription mAuthStateChangedSubscription;
+    Observer::Subscription mAuthStateChangedSubscription;
 
-   size_t mSuppressed {};
+    size_t mSuppressed {};
 }; // class AuthorizationHandler
 
 AuthorizationHandler& GetAuthorizationHandler();
 
 struct AuthResult final
 {
-   enum class Status
-   {
-      Authorised,
-      Cancelled,
-      UseAlternative,
-      Failure
-   };
+    enum class Status
+    {
+        Authorised,
+        Cancelled,
+        UseAlternative,
+        Failure
+    };
 
-   Status Result { Status::Cancelled };
-   std::string ErrorMessage;
+    Status Result { Status::Cancelled };
+    std::string ErrorMessage;
 };
 
 AuthResult PerformBlockingAuth(
-   AudacityProject* project, AudiocomTrace trace,
-   const TranslatableString& alternativeActionLabel = {});
+    AudacityProject* project, AudiocomTrace trace, const TranslatableString& alternativeActionLabel = {});
 } // namespace audacity::cloud::audiocom

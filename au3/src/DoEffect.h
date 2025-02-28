@@ -15,7 +15,6 @@
 class AudacityProject;
 using PluginID = wxString;
 
-namespace EffectUI
-{
+namespace EffectUI {
 bool DoEffect(const PluginID& ID, AudacityProject& project, unsigned flags);
 }

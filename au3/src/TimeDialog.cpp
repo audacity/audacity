@@ -13,7 +13,6 @@
 
 *//*******************************************************************/
 
-
 #include "TimeDialog.h"
 
 #include <wx/defs.h>
@@ -23,96 +22,95 @@
 #include "Project.h"
 
 BEGIN_EVENT_TABLE(TimeDialog, wxDialogWrapper)
-   EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, TimeDialog::OnUpdate)
+EVT_COMMAND(wxID_ANY, EVT_TIMETEXTCTRL_UPDATED, TimeDialog::OnUpdate)
 END_EVENT_TABLE()
 
-TimeDialog::TimeDialog(wxWindow *parent,
-                       const TranslatableString &title,
-                       const NumericFormatID &format,
-                       const AudacityProject &project,
+TimeDialog::TimeDialog(wxWindow* parent,
+                       const TranslatableString& title,
+                       const NumericFormatID& format,
+                       const AudacityProject& project,
                        double time,
-                       const TranslatableString &prompt)
-:  wxDialogWrapper(parent, wxID_ANY, title),
-   mPrompt(prompt),
-   mFormat(format),
-   mProject(project),
-   mTime(time),
-   mTimeCtrl(NULL)
+                       const TranslatableString& prompt)
+    :  wxDialogWrapper(parent, wxID_ANY, title),
+    mPrompt(prompt),
+    mFormat(format),
+    mProject(project),
+    mTime(time),
+    mTimeCtrl(NULL)
 {
-   SetName();
-   ShuttleGui S(this, eIsCreating);
-   PopulateOrExchange(S);
+    SetName();
+    ShuttleGui S(this, eIsCreating);
+    PopulateOrExchange(S);
 }
 
-void TimeDialog::PopulateOrExchange(ShuttleGui &S)
+void TimeDialog::PopulateOrExchange(ShuttleGui& S)
 {
-   S.SetBorder(5);
-   S.StartVerticalLay(true);
-   {
-      S.StartStatic(mPrompt, true);
-      {
-         mTimeCtrl = safenew
-            NumericTextCtrl(
-                         FormatterContext::ProjectContext(mProject),
-                         S.GetParent(), wxID_ANY,
-                         NumericConverterType_TIME(),
-                         mFormat,
-                         mTime,
-                         NumericTextCtrl::Options{}
-                            .AutoPos(true));
-         S.AddWindow(mTimeCtrl);
-      }
-      S.EndStatic();
-   }
-   S.EndVerticalLay();
-   S.AddStandardButtons();
+    S.SetBorder(5);
+    S.StartVerticalLay(true);
+    {
+        S.StartStatic(mPrompt, true);
+        {
+            mTimeCtrl = safenew
+                            NumericTextCtrl(
+                FormatterContext::ProjectContext(mProject),
+                S.GetParent(), wxID_ANY,
+                NumericConverterType_TIME(),
+                mFormat,
+                mTime,
+                NumericTextCtrl::Options{}
+                .AutoPos(true));
+            S.AddWindow(mTimeCtrl);
+        }
+        S.EndStatic();
+    }
+    S.EndVerticalLay();
+    S.AddStandardButtons();
 
-   TransferDataToWindow();
+    TransferDataToWindow();
 
-   Layout();
-   Fit();
-   SetMinSize(GetSize());
-   Center();
+    Layout();
+    Fit();
+    SetMinSize(GetSize());
+    Center();
 }
 
 bool TimeDialog::TransferDataToWindow()
 {
-   mTimeCtrl->SetFormatName(mFormat);
-   mTimeCtrl->SetValue(mTime);
-   mTimeCtrl->SetFocus();
+    mTimeCtrl->SetFormatName(mFormat);
+    mTimeCtrl->SetValue(mTime);
+    mTimeCtrl->SetFocus();
 
-   return true;
+    return true;
 }
 
 bool TimeDialog::TransferDataFromWindow()
 {
-   mTime = mTimeCtrl->GetValue();
+    mTime = mTimeCtrl->GetValue();
 
-   return true;
+    return true;
 }
 
 const double TimeDialog::GetTimeValue()
 {
-   return mTime;
+    return mTime;
 }
 
-void TimeDialog::SetFormatString(const NumericFormatID &formatString)
+void TimeDialog::SetFormatString(const NumericFormatID& formatString)
 {
-   mFormat = formatString;
-   TransferDataToWindow();
+    mFormat = formatString;
+    TransferDataToWindow();
 }
-
 
 void TimeDialog::SetTimeValue(double newTime)
 {
-   mTime = newTime;
-   TransferDataToWindow();
+    mTime = newTime;
+    TransferDataToWindow();
 }
 
-void TimeDialog::OnUpdate(wxCommandEvent &event)
+void TimeDialog::OnUpdate(wxCommandEvent& event)
 {
-   Layout();
-   Refresh();
+    Layout();
+    Refresh();
 
-   event.Skip(false);
+    event.Skip(false);
 }

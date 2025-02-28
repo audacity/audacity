@@ -20,46 +20,46 @@ class ShuttleGui;
 
 #include "PrefsPanel.h"
 
-#define MIDI_IO_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Midi IO") }
+#define MIDI_IO_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol { XO("Midi IO") }
 
 class MidiIOPrefs final : public PrefsPanel
 {
- public:
-   MidiIOPrefs(wxWindow * parent, wxWindowID winid);
-   virtual ~MidiIOPrefs();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+public:
+    MidiIOPrefs(wxWindow* parent, wxWindowID winid);
+    virtual ~MidiIOPrefs();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   bool Validate() override;
-   ManualPageID HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+    bool Commit() override;
+    bool Validate() override;
+    ManualPageID HelpPageName() override;
+    void PopulateOrExchange(ShuttleGui& S) override;
 
- private:
-   void Populate();
-   void GetNamesAndLabels();
+private:
+    void Populate();
+    void GetNamesAndLabels();
 
-   void OnHost(wxCommandEvent & e);
+    void OnHost(wxCommandEvent& e);
 //   void OnDevice(wxCommandEvent & e);
 
-   TranslatableStrings mHostNames;
-   wxArrayStringEx mHostLabels;
+    TranslatableStrings mHostNames;
+    wxArrayStringEx mHostLabels;
 
-   wxString mPlayDevice;
+    wxString mPlayDevice;
 #ifdef EXPERIMENTAL_MIDI_IN
-   wxString mRecordDevice;
+    wxString mRecordDevice;
 #endif
 //   long mRecordChannels;
 
-   wxChoice *mHost;
-   wxChoice *mPlay;
-   wxTextCtrl *mLatency;
+    wxChoice* mHost;
+    wxChoice* mPlay;
+    wxTextCtrl* mLatency;
 #ifdef EXPERIMENTAL_MIDI_IN
-   wxChoice *mRecord;
+    wxChoice* mRecord;
 #endif
 //   wxChoice *mChannels;
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

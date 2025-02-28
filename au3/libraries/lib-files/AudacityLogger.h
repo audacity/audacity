@@ -17,45 +17,44 @@
 class wxFrame;
 class wxTextCtrl;
 
-class FILES_API AudacityLogger final : public wxEvtHandler,
-                             public wxLog
+class FILES_API AudacityLogger final : public wxEvtHandler, public wxLog
 {
- public:
+public:
 
-   ~AudacityLogger() override;
- 
-   // Get the singleton instance or null
-   static AudacityLogger *Get();
+    ~AudacityLogger() override;
 
-   bool SaveLog(const wxString &fileName) const;
-   bool ClearLog();
+    // Get the singleton instance or null
+    static AudacityLogger* Get();
 
-   //! Retrieve all or some of the lines since most recent ClearLog or start of program
-   /*! If `count == 0` or is more than the number of lines, return all; else return the last `count` lines */
-   wxString GetLog(int count = 0);
+    bool SaveLog(const wxString& fileName) const;
+    bool ClearLog();
 
-   //! Get all the accumulated text since program start or last ClearLog()
-   const wxString &GetBuffer() const { return mBuffer; }
+    //! Retrieve all or some of the lines since most recent ClearLog or start of program
+    /*! If `count == 0` or is more than the number of lines, return all; else return the last `count` lines */
+    wxString GetLog(int count = 0);
 
-   void Flush() override;
+    //! Get all the accumulated text since program start or last ClearLog()
+    const wxString& GetBuffer() const { return mBuffer; }
 
-   //! Type of function called by Flush
-   /*! @return true if flush completed
-    */
-   using Listener = std::function< bool() >;
+    void Flush() override;
 
-   //! Set the unique listener, returning any previous one
-   Listener SetListener(Listener listener);
+    //! Type of function called by Flush
+    /*! @return true if flush completed
+     */
+    using Listener = std::function< bool () >;
+
+    //! Set the unique listener, returning any previous one
+    Listener SetListener(Listener listener);
 
 protected:
-   void DoLogText(const wxString & msg) override;
+    void DoLogText(const wxString& msg) override;
 
- private:
-   AudacityLogger();
+private:
+    AudacityLogger();
 
-   Listener mListener;
-   wxString mBuffer;
-   bool mUpdated;
+    Listener mListener;
+    wxString mBuffer;
+    bool mUpdated;
 };
 
 #endif

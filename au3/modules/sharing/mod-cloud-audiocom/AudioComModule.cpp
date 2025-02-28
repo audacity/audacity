@@ -17,12 +17,13 @@
 DEFINE_VERSION_CHECK
 extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
 {
-   static auto cloudImages = []
-   {
-      if(!PluginHost::IsHostProcess())
-         bin2c_init_CLOUDIMAGES_HPP();
-      return true;
-   }();
+    static auto cloudImages = []
+    {
+        if (!PluginHost::IsHostProcess()) {
+            bin2c_init_CLOUDIMAGES_HPP();
+        }
+        return true;
+    }();
 
-   return 1;
+    return 1;
 }

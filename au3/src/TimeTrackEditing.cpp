@@ -14,12 +14,13 @@
 
 using OnTimeTrackProjectTempoChange = OnProjectTempoChange::Override<TimeTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(OnTimeTrackProjectTempoChange) {
-   return [](TimeTrack &track,
-      const std::optional<double> &oldTempo, double newTempo)
-   {
-      if (!oldTempo.has_value())
-         return;
-      const auto ratio = *oldTempo / newTempo;
-      track.GetEnvelope()->RescaleTimesBy(ratio);
-   };
+    return [](TimeTrack& track,
+              const std::optional<double>& oldTempo, double newTempo)
+    {
+        if (!oldTempo.has_value()) {
+            return;
+        }
+        const auto ratio = *oldTempo / newTempo;
+        track.GetEnvelope()->RescaleTimesBy(ratio);
+    };
 }

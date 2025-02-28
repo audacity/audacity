@@ -19,28 +19,18 @@
 // FileDialog
 //-------------------------------------------------------------------------
 
-class WXDLLIMPEXP_CORE FileDialog: public FileDialogBase
+class WXDLLIMPEXP_CORE FileDialog : public FileDialogBase
 {
 public:
     FileDialog() { }
 
-    FileDialog(wxWindow *parent,
-               const wxString& message = wxFileSelectorPromptStr,
-               const wxString& defaultDir = wxEmptyString,
-               const wxString& defaultFile = wxEmptyString,
-               const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
-               long style = wxFD_DEFAULT_STYLE,
-               const wxPoint& pos = wxDefaultPosition,
-               const wxSize& sz = wxDefaultSize,
+    FileDialog(wxWindow* parent, const wxString& message = wxFileSelectorPromptStr, const wxString& defaultDir = wxEmptyString,
+               const wxString& defaultFile = wxEmptyString, const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+               long style = wxFD_DEFAULT_STYLE, const wxPoint& pos = wxDefaultPosition, const wxSize& sz = wxDefaultSize,
                const wxString& name = wxFileDialogNameStr);
-    bool Create(wxWindow *parent,
-                const wxString& message = wxFileSelectorPromptStr,
-                const wxString& defaultDir = wxEmptyString,
-                const wxString& defaultFile = wxEmptyString,
-                const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
-                long style = wxFD_DEFAULT_STYLE,
-                const wxPoint& pos = wxDefaultPosition,
-                const wxSize& sz = wxDefaultSize,
+    bool Create(wxWindow* parent, const wxString& message = wxFileSelectorPromptStr, const wxString& defaultDir = wxEmptyString,
+                const wxString& defaultFile = wxEmptyString, const wxString& wildCard = wxFileSelectorDefaultWildcardStr,
+                long style = wxFD_DEFAULT_STYLE, const wxPoint& pos = wxDefaultPosition, const wxSize& sz = wxDefaultSize,
                 const wxString& name = wxFileDialogNameStr);
     virtual ~FileDialog();
 
@@ -68,21 +58,17 @@ public:
     void GTKFolderChanged();
     void GTKFilterChanged();
 
-
 protected:
     // override this from wxTLW since the native
     // form doesn't have any m_wxwindow
-    virtual void DoSetSize(int x, int y,
-                           int width, int height,
-                           int sizeFlags = wxSIZE_AUTO);
-
+    virtual void DoSetSize(int x, int y, int width, int height, int sizeFlags = wxSIZE_AUTO);
 
 private:
-    void OnFakeOk( wxCommandEvent &event );
+    void OnFakeOk(wxCommandEvent& event);
     void OnSize(wxSizeEvent&);
     virtual void AddChildGTK(wxWindowGTK* child);
 
-    wxGtkFileChooser    m_fc;
+    wxGtkFileChooser m_fc;
 
     DECLARE_DYNAMIC_CLASS(FileDialog)
     DECLARE_EVENT_TABLE()

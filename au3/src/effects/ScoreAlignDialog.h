@@ -22,31 +22,24 @@
 // Stub definitions
 struct ScoreAlignParams
 {
-   int mStatus;
-   double mMidiStart, mMidiEnd;
-   double mAudioStart, mAudioEnd;
-   float mFramePeriod;
-   float mWindowSize;
-   float mSilenceThreshold;
-   float mForceFinalAlignment;
-   float mIgnoreSilence;
-   float mPresmoothTime;
-   float mLineTime;
-   float mSmoothTime;
+    int mStatus;
+    double mMidiStart, mMidiEnd;
+    double mAudioStart, mAudioEnd;
+    float mFramePeriod;
+    float mWindowSize;
+    float mSilenceThreshold;
+    float mForceFinalAlignment;
+    float mIgnoreSilence;
+    float mPresmoothTime;
+    float mLineTime;
+    float mSmoothTime;
 };
 class SAProgress;
 class Alg_seq;
 
 extern int scorealign(
-   void *data,
-   long (*process)(void *data, float **buffer, long n),
-   unsigned channels,
-   double rate,
-   double endTime,
-   Alg_seq *seq,
-   SAProgress *progress,
-   ScoreAlignParams params
-);
+    void* data, long (*process)(void* data, float** buffer,
+                                long n), unsigned channels, double rate, double endTime, Alg_seq* seq, SAProgress* progress, ScoreAlignParams params);
 
 #endif
 
@@ -66,65 +59,64 @@ void CloseScoreAlignDialog();
 class ScoreAlignDialog final : public wxDialogWrapper
 {
 public:
-   ScoreAlignParams p;
+    ScoreAlignParams p;
 
-   wxStaticText *mFramePeriodLabel;
-   wxSlider *mFramePeriodSlider;
-   wxStaticText *mFramePeriodText;
+    wxStaticText* mFramePeriodLabel;
+    wxSlider* mFramePeriodSlider;
+    wxStaticText* mFramePeriodText;
 
-   wxStaticText *mWindowSizeLabel;
-   wxSlider *mWindowSizeSlider;
-   wxStaticText *mWindowSizeText;
+    wxStaticText* mWindowSizeLabel;
+    wxSlider* mWindowSizeSlider;
+    wxStaticText* mWindowSizeText;
 
-   wxStaticText *mSilenceThresholdLabel;
-   wxSlider *mSilenceThresholdSlider;
-   wxStaticText *mSilenceThresholdText;
+    wxStaticText* mSilenceThresholdLabel;
+    wxSlider* mSilenceThresholdSlider;
+    wxStaticText* mSilenceThresholdText;
 
-   wxCheckBox *mForceFinalAlignmentCheckBox;
-   wxCheckBox *mIgnoreSilenceCheckBox;
+    wxCheckBox* mForceFinalAlignmentCheckBox;
+    wxCheckBox* mIgnoreSilenceCheckBox;
 
-   wxStaticText *mPresmoothLabel;
-   wxSlider *mPresmoothSlider;
-   wxStaticText *mPresmoothText;
+    wxStaticText* mPresmoothLabel;
+    wxSlider* mPresmoothSlider;
+    wxStaticText* mPresmoothText;
 
-   wxStaticText *mLineTimeLabel;
-   wxSlider *mLineTimeSlider;
-   wxStaticText *mLineTimeText;
+    wxStaticText* mLineTimeLabel;
+    wxSlider* mLineTimeSlider;
+    wxStaticText* mLineTimeText;
 
-   wxStaticText *mSmoothTimeLabel;
-   wxSlider *mSmoothTimeSlider;
-   wxStaticText *mSmoothTimeText;
+    wxStaticText* mSmoothTimeLabel;
+    wxSlider* mSmoothTimeSlider;
+    wxStaticText* mSmoothTimeText;
 
-   wxButton *mDefaultButton;
+    wxButton* mDefaultButton;
 
-   // constructors and destructors
-   ScoreAlignDialog(ScoreAlignParams &params);
-   ~ScoreAlignDialog();
+    // constructors and destructors
+    ScoreAlignDialog(ScoreAlignParams& params);
+    ~ScoreAlignDialog();
 
-   bool TransferDataFromWindow() override;
+    bool TransferDataFromWindow() override;
 
 private:
-   enum {
-     ID_BASE = 10000,
-     ID_PRESMOOTH,
-     ID_WINDOWSIZE,
-     ID_FRAMEPERIOD,
-     ID_LINETIME,
-     ID_SMOOTHTIME,
-     ID_SILENCETHRESHOLD,
-     ID_FORCEFINALALIGNMENT,
-     ID_IGNORESILENCE,
-     ID_DEFAULT
-   };
+    enum {
+        ID_BASE = 10000,
+        ID_PRESMOOTH,
+        ID_WINDOWSIZE,
+        ID_FRAMEPERIOD,
+        ID_LINETIME,
+        ID_SMOOTHTIME,
+        ID_SILENCETHRESHOLD,
+        ID_FORCEFINALALIGNMENT,
+        ID_IGNORESILENCE,
+        ID_DEFAULT
+    };
 
-   // handlers
-   void OnOK(wxCommandEvent & event);
-   void OnCancel(wxCommandEvent & event);
-   void OnSlider(wxCommandEvent & event);
-   void OnDefault(wxCommandEvent & event);
+    // handlers
+    void OnOK(wxCommandEvent& event);
+    void OnCancel(wxCommandEvent& event);
+    void OnSlider(wxCommandEvent& event);
+    void OnDefault(wxCommandEvent& event);
 
-   DECLARE_EVENT_TABLE()
-
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

@@ -17,30 +17,30 @@
 class MachineEndianness
 {
 public:
-   typedef enum
-   {
-      Little = 0,
-      Big
-   } EndiannessT;
+    typedef enum
+    {
+        Little = 0,
+        Big
+    } EndiannessT;
 
-   MachineEndianness();
-   ~MachineEndianness()
-   {}
+    MachineEndianness();
+    ~MachineEndianness()
+    {}
 
-   int IsLittle()
-   {
-      return (mFlag == MachineEndianness::Little) ? 1 : 0;
-   }
+    int IsLittle()
+    {
+        return (mFlag == MachineEndianness::Little) ? 1 : 0;
+    }
 
-   int IsBig()
-   {
-      return (mFlag == MachineEndianness::Big) ? 1 : 0;
-   }
-   
-   EndiannessT Which()
-   {
-      return mFlag;
-   }
+    int IsBig()
+    {
+        return (mFlag == MachineEndianness::Big) ? 1 : 0;
+    }
+
+    EndiannessT Which()
+    {
+        return mFlag;
+    }
 
 private:
     EndiannessT mFlag;
@@ -48,37 +48,33 @@ private:
 
 class MultiFormatReader
 {
-   FILE* mpFid;   
-   MachineEndianness mEnd;
-   uint8_t mSwapBuffer[8];
+    FILE* mpFid;
+    MachineEndianness mEnd;
+    uint8_t mSwapBuffer[8];
 
 public:
-   typedef enum
-   {
-      Int8 = 0,
-      Int16,
-      Int32,
-      Uint8,
-      Uint16,
-      Uint32,
-      Float,
-      Double
-   } FormatT;
-   
-   MultiFormatReader(const char* filename);
-   ~MultiFormatReader();
+    typedef enum
+    {
+        Int8 = 0,
+        Int16,
+        Int32,
+        Uint8,
+        Uint16,
+        Uint32,
+        Float,
+        Double
+    } FormatT;
 
-   void Reset();
-   size_t ReadSamples(void* buffer, size_t len,
-                    MultiFormatReader::FormatT format,
-                    MachineEndianness::EndiannessT end);
-   size_t ReadSamples(void* buffer, size_t len, size_t stride,
-                    MultiFormatReader::FormatT format,
-                    MachineEndianness::EndiannessT end);
-   
+    MultiFormatReader(const char* filename);
+    ~MultiFormatReader();
+
+    void Reset();
+    size_t ReadSamples(void* buffer, size_t len, MultiFormatReader::FormatT format, MachineEndianness::EndiannessT end);
+    size_t ReadSamples(void* buffer, size_t len, size_t stride, MultiFormatReader::FormatT format, MachineEndianness::EndiannessT end);
+
 private:
-   size_t Read(void* buffer, size_t size, size_t len, size_t stride);
-   void SwapBytes(void* buffer, size_t size, size_t len);
+    size_t Read(void* buffer, size_t size, size_t len, size_t stride);
+    void SwapBytes(void* buffer, size_t size, size_t len);
 };
 
 #endif

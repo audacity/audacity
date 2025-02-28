@@ -24,43 +24,43 @@
 class AUControl final : public wxControl
 {
 public:
-   AUControl();
-   ~AUControl();
+    AUControl();
+    ~AUControl();
 
-   void Close();
+    void Close();
 
-   bool Create(wxWindow *parent, AudioComponent comp, AudioUnit unit, bool custom);
-   void CreateCocoa();
-   void CreateGeneric();
-   void CocoaViewResized();
-   void ForceRedraw();
+    bool Create(wxWindow* parent, AudioComponent comp, AudioUnit unit, bool custom);
+    void CreateCocoa();
+    void CreateGeneric();
+    void CocoaViewResized();
+    void ForceRedraw();
 
-   void OnSize(wxSizeEvent & evt);
+    void OnSize(wxSizeEvent& evt);
 
 #if !defined(_LP64)
-   void CreateCarbon();
-   void CreateCarbonOverlay();
-   void CarbonViewResized();
-   static pascal OSStatus ControlEventHandlerCallback(EventHandlerCallRef handler,
+    void CreateCarbon();
+    void CreateCarbonOverlay();
+    void CarbonViewResized();
+    static pascal OSStatus ControlEventHandlerCallback(EventHandlerCallRef handler,
 #endif
 
 private:
-   AudioComponent mComponent{};
-   AudioUnit mUnit{};
+    AudioComponent mComponent{};
+    AudioUnit mUnit{};
 
-   NSView *mAUView{};
-   NSView *mView{};
+    NSView* mAUView{};
+    NSView* mView{};
 
-   wxSize mLastMin{};
-   bool mSettingSize{ false };
+    wxSize mLastMin{};
+    bool mSettingSize{ false };
 
 #if !defined(_LP64)
-   AudioComponentInstance mInstance{};
-   WindowRef mWindowRef{};
-   HIViewRef mHIView{};
+    AudioComponentInstance mInstance {}
+    WindowRef mWindowRef{};
+    HIViewRef mHIView{};
 #endif
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
 #endif

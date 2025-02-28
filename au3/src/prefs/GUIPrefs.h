@@ -21,29 +21,29 @@ class ChoiceSetting;
 class BoolSetting;
 class ShuttleGui;
 
-#define GUI_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("GUI") }
+#define GUI_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol { XO("GUI") }
 
 class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
 {
- public:
-   GUIPrefs(wxWindow * parent, wxWindowID winid);
-   ~GUIPrefs();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
+public:
+    GUIPrefs(wxWindow* parent, wxWindowID winid);
+    ~GUIPrefs();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
 
-   bool Commit() override;
-   ManualPageID HelpPageName() override;
-   void PopulateOrExchange(ShuttleGui & S) override;
+    bool Commit() override;
+    ManualPageID HelpPageName() override;
+    void PopulateOrExchange(ShuttleGui& S) override;
 
- private:
-   void Populate();
+private:
+    void Populate();
 
-   wxArrayStringEx mLangCodes;
-   TranslatableStrings mLangNames;
+    wxArrayStringEx mLangCodes;
+    TranslatableStrings mLangNames;
 
-   wxArrayStringEx mRangeCodes;
-   TranslatableStrings mRangeChoices;
-   int mDefaultRangeIndex;
+    wxArrayStringEx mRangeCodes;
+    TranslatableStrings mRangeChoices;
+    int mDefaultRangeIndex;
 };
 
 AUDACITY_DLL_API BoolSetting& ShowRMSPref();

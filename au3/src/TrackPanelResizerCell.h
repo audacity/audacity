@@ -17,38 +17,34 @@
 class Channel;
 class TrackPanelResizeHandle;
 
-class TrackPanelResizerCell
-   : public CommonChannelCell
-   , public std::enable_shared_from_this< TrackPanelResizerCell >
+class TrackPanelResizerCell : public CommonChannelCell, public std::enable_shared_from_this< TrackPanelResizerCell >
 {
-   TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
-   TrackPanelResizerCell &operator= (const TrackPanelResizerCell&) = delete;
+    TrackPanelResizerCell(const TrackPanelResizerCell&) = delete;
+    TrackPanelResizerCell& operator=(const TrackPanelResizerCell&) = delete;
 public:
 
-   /*!
-    @pre `dynamic_cast<Track*>(&channel.GetChannelGroup()) != nullptr`
-    */
-   static TrackPanelResizerCell &Get(Channel &channel);
-   static const TrackPanelResizerCell &Get(const Channel &channel);
+    /*!
+     @pre `dynamic_cast<Track*>(&channel.GetChannelGroup()) != nullptr`
+     */
+    static TrackPanelResizerCell& Get(Channel& channel);
+    static const TrackPanelResizerCell& Get(const Channel& channel);
 
-   std::vector<UIHandlePtr> HitTest
-      (const TrackPanelMouseState &, const AudacityProject *) override;
+    std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState&, const AudacityProject*) override;
 
-   explicit TrackPanelResizerCell(const std::shared_ptr<Channel> &channel);
+    explicit TrackPanelResizerCell(const std::shared_ptr<Channel>& channel);
 
 private:
-   /*!
-    @pre `iChannel < group.NChannels()`
-    */
-   static TrackPanelResizerCell &GetFromChannelGroup(
-      ChannelGroup &group, size_t iChannel);
+    /*!
+     @pre `iChannel < group.NChannels()`
+     */
+    static TrackPanelResizerCell& GetFromChannelGroup(
+        ChannelGroup& group, size_t iChannel);
 
-   // TrackPanelDrawable implementation
-   void Draw(
-      TrackPanelDrawingContext &context,
-      const wxRect &rect, unsigned iPass ) override;
+    // TrackPanelDrawable implementation
+    void Draw(
+        TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
 
-   std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
+    std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
 };
 
 #endif

@@ -20,7 +20,6 @@ but it will probably work fine if you use it on a high level.
 
 *//*******************************************************************/
 
-
 #include "Profiler.h"
 
 #include <string.h>
@@ -29,94 +28,92 @@ but it will probably work fine if you use it on a high level.
 ///write to a profile at the end of the test.
 Profiler::~Profiler()
 {
-   if(mTasks.size())
-   {
-      //print everything out.  append to a log.
-      FILE* log = fopen("AudacityProfilerLog.txt", "a");
-      time_t now;
+    if (mTasks.size()) {
+        //print everything out.  append to a log.
+        FILE* log = fopen("AudacityProfilerLog.txt", "a");
+        time_t now;
 
-      time(&now);
-      wxFprintf(log,"Audacity Profiler Run, Ended at ");
-      wxFprintf(log,"%s",ctime(&now));
-      wxFprintf(log,"****************************************\n");
-      //print out the tasks
-      for(int i=0;i<(int)mTasks.size();i++)
-      {
-         if(mTasks[i]->mNumHits>0)
-         {
-            wxFprintf(log,"Task: %s\n(begins at line %d in %s)\n\n",mTasks[i]->mDescription.get(), mTasks[i]->mLine, mTasks[i]->mFileName.get());
-            wxFprintf(log,"Number of times run: %d\n",mTasks[i]->mNumHits);
-            wxFprintf(log,"Total run time (seconds): %f\n", (double)mTasks[i]->mCumTime/CLOCKS_PER_SEC);
-            wxFprintf(log,"Average run time (seconds): %f\n",mTasks[i]->ComputeAverageRunTime());
+        time(&now);
+        wxFprintf(log, "Audacity Profiler Run, Ended at ");
+        wxFprintf(log, "%s", ctime(&now));
+        wxFprintf(log, "****************************************\n");
+        //print out the tasks
+        for (int i=0; i < (int)mTasks.size(); i++) {
+            if (mTasks[i]->mNumHits > 0) {
+                wxFprintf(log, "Task: %s\n(begins at line %d in %s)\n\n",
+                          mTasks[i]->mDescription.get(), mTasks[i]->mLine, mTasks[i]->mFileName.get());
+                wxFprintf(log, "Number of times run: %d\n", mTasks[i]->mNumHits);
+                wxFprintf(log, "Total run time (seconds): %f\n", (double)mTasks[i]->mCumTime / CLOCKS_PER_SEC);
+                wxFprintf(log, "Average run time (seconds): %f\n", mTasks[i]->ComputeAverageRunTime());
 
-            if(i < ((int)mTasks.size()) -1)
-               wxFprintf(log,"----------------------------\n");
-         }
-      }
-      wxFprintf(log,"\n****************************************\n\n\n");
+                if (i < ((int)mTasks.size()) - 1) {
+                    wxFprintf(log, "----------------------------\n");
+                }
+            }
+        }
+        wxFprintf(log, "\n****************************************\n\n\n");
 
-      fclose(log);
-   }
+        fclose(log);
+    }
 }
 
 ///start the task timer.
 void Profiler::Begin(const char* fileName, int lineNum, const char* taskDescription)
 {
-   std::lock_guard<std::mutex> guard{ mTasksMutex };
-   GetOrCreateTaskProfile(fileName,lineNum)->Begin(fileName,lineNum,taskDescription);
+    std::lock_guard<std::mutex> guard{ mTasksMutex };
+    GetOrCreateTaskProfile(fileName, lineNum)->Begin(fileName, lineNum, taskDescription);
 }
 
 ///end the task timer.
 void Profiler::End(const char* fileName, int lineNum, const char* taskDescription)
 {
-   std::lock_guard<std::mutex> guard{ mTasksMutex };
-   TaskProfile* tp;
-   tp=GetTaskProfileByDescription(taskDescription);
-   if(tp)
-      tp->End(fileName,lineNum,taskDescription);
+    std::lock_guard<std::mutex> guard{ mTasksMutex };
+    TaskProfile* tp;
+    tp=GetTaskProfileByDescription(taskDescription);
+    if (tp) {
+        tp->End(fileName, lineNum, taskDescription);
+    }
 }
 
 ///Gets the singleton instance
 Profiler* Profiler::Instance()
 {
-   static Profiler pro;
-   //this isn't 100% threadsafe but I think Okay for this purpose.
+    static Profiler pro;
+    //this isn't 100% threadsafe but I think Okay for this purpose.
 
-   return &pro;
+    return &pro;
 }
 
 ///find a taskProfile for the given task, otherwise create
 TaskProfile* Profiler::GetOrCreateTaskProfile(const char* fileName, int lineNum)
 {
-   for(int i=0;i<(int)mTasks.size();i++)
-   {
-      if(strcmp(fileName, mTasks[i]->mFileName.get())==0 && lineNum == mTasks[i]->mLine)
-         return mTasks[i].get();
-   }
+    for (int i=0; i < (int)mTasks.size(); i++) {
+        if (strcmp(fileName, mTasks[i]->mFileName.get()) == 0 && lineNum == mTasks[i]->mLine) {
+            return mTasks[i].get();
+        }
+    }
 
-   auto tp = std::make_unique<TaskProfile>();
-   mTasks.push_back(std::move(tp));
-   return mTasks.back().get();
+    auto tp = std::make_unique<TaskProfile>();
+    mTasks.push_back(std::move(tp));
+    return mTasks.back().get();
 }
 
 TaskProfile* Profiler::GetTaskProfileByDescription(const char* description)
 {
-   for(int i=0;i<(int)mTasks.size();i++)
-   {
-      if(strcmp(description, mTasks[i]->mDescription.get())==0)
-         return mTasks[i].get();
-   }
+    for (int i=0; i < (int)mTasks.size(); i++) {
+        if (strcmp(description, mTasks[i]->mDescription.get()) == 0) {
+            return mTasks[i].get();
+        }
+    }
 
-   return NULL;
-
+    return NULL;
 }
-
 
 ///Task Profile
 TaskProfile::TaskProfile()
 {
-   mCumTime=0;
-   mNumHits=0;
+    mCumTime=0;
+    mNumHits=0;
 }
 
 TaskProfile::~TaskProfile()
@@ -126,30 +123,29 @@ TaskProfile::~TaskProfile()
 ///start the task timer.
 void TaskProfile::Begin(const char* fileName, int lineNum, const char* taskDescription)
 {
-   if(!mFileName)
-   {
-      mFileName.reinit( strlen(fileName) + 1 );
-      strcpy(mFileName.get(), fileName);
-      mDescription.reinit( strlen(taskDescription) + 1 );
-      strcpy(mDescription.get(), taskDescription);
-      mLine = lineNum;
-   }
+    if (!mFileName) {
+        mFileName.reinit(strlen(fileName) + 1);
+        strcpy(mFileName.get(), fileName);
+        mDescription.reinit(strlen(taskDescription) + 1);
+        strcpy(mDescription.get(), taskDescription);
+        mLine = lineNum;
+    }
 
-   mLastTime = clock();
-
+    mLastTime = clock();
 }
 
 ///end the task timer.
 void TaskProfile::End(const char* WXUNUSED(fileName), int WXUNUSED(lineNum), const char* WXUNUSED(taskDescription))
 {
-   mCumTime += clock() - mLastTime;
-   mNumHits++;
+    mCumTime += clock() - mLastTime;
+    mNumHits++;
 }
 
 double TaskProfile::ComputeAverageRunTime()
 {
-   if(mNumHits)
-      return (double) ((double)mCumTime/CLOCKS_PER_SEC)/mNumHits;
-   else
-      return 0.0;
+    if (mNumHits) {
+        return (double)((double)mCumTime / CLOCKS_PER_SEC) / mNumHits;
+    } else {
+        return 0.0;
+    }
 }

@@ -34,9 +34,7 @@ public:
     virtual void OnTextEditCancelled(AudacityProject* project) = 0;
     virtual void OnTextModified(AudacityProject* project, const wxString& text) = 0;
     virtual void OnTextContextMenu(AudacityProject* project, const wxPoint& position) = 0;
-
 };
-
 
 //Used as a helper object for drawing, editing
 //and text navigation in TrackPanel
@@ -65,10 +63,10 @@ public:
     static bool IsGoodEditKeyCode(int keyCode);
 
     TextEditHelper(const std::weak_ptr<TextEditDelegate>& delegate, const wxString& text, const wxFont& font);
-   
-   ~TextEditHelper()
-   {
-   }
+
+    ~TextEditHelper()
+    {
+    }
 
     void SetTextColor(const wxColor& textColor);
     void SetTextSelectionColor(const wxColor& textSelectionColor);
@@ -105,5 +103,4 @@ protected:
 
     void RemoveSelectedText(AudacityProject* project);
     int FindCursorIndex(const wxPoint& point);
-    
 };

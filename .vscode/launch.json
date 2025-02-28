@@ -4,10 +4,24 @@
             "name": "run audacity",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/install/bin/audacity.exe",
+            "program": "${config:cmake.installPrefix}/bin/audacity.exe",
             "preLaunchTask": "CMake: install",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "QTDIR",
+                    "value": "C:/Qt/6.2.4/msvc2019_64"
+                }
+            ],
+            "sourceFileMap": {
+                "C:/work/build/qt5_workdir/w/s": "${env:QTDIR}/../Src",
+                "C:/Users/qt/worwk/install": "${env:QTDIR}/../Src",
+                "C:/Users/qt/work/qt": "${env:QTDIR}/../Src",
+                "Q:/qt_workdir/w/s": "${env:QTDIR}/../Src",
+            },
+            "symbolSearchPath": "${env:QTDIR}/bin",
+            "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
         }
     ]
 }

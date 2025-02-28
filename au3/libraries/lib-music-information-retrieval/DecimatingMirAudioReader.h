@@ -14,8 +14,7 @@
 
 #include <vector>
 
-namespace MIR
-{
+namespace MIR {
 /*!
  * @brief Our MIR operations do not need the full 44.1 or 48kHz resolution
  * typical of audio files. It may change in the future, if we start looking at
@@ -29,16 +28,16 @@ namespace MIR
 class DecimatingMirAudioReader : public MirAudioReader
 {
 public:
-   explicit DecimatingMirAudioReader(const MirAudioReader& reader);
+    explicit DecimatingMirAudioReader(const MirAudioReader& reader);
 
-   double GetSampleRate() const override;
-   long long GetNumSamples() const override;
-   void
-   ReadFloats(float* buffer, long long start, size_t numFrames) const override;
+    double GetSampleRate() const override;
+    long long GetNumSamples() const override;
+    void
+    ReadFloats(float* buffer, long long start, size_t numFrames) const override;
 
 private:
-   const MirAudioReader& mReader;
-   const int mDecimationFactor;
-   mutable std::vector<float> mBuffer;
+    const MirAudioReader& mReader;
+    const int mDecimationFactor;
+    mutable std::vector<float> mBuffer;
 };
 } // namespace MIR

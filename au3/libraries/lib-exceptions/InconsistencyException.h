@@ -16,51 +16,51 @@
   even in production code.  These may be violations of function preconditions
   or the results of logical errors internal to functions.  These conditions
   are supposed to be deducible statically as never happening.
- 
+
   The error message identifies source file and line number, possibly the function too (depending on
   the compiler), and suggests that the user inform the development team.
  */
 class EXCEPTIONS_API InconsistencyException final : public MessageBoxException
 {
 public:
-   InconsistencyException () 
-       : MessageBoxException{ ExceptionType::Internal, XO ("Internal Error") } 
-   {}
+    InconsistencyException ()
+        : MessageBoxException{ExceptionType::Internal, XO("Internal Error")}
+    {}
 
-   //! Don't call this directly but use @ref CONSTRUCT_INCONSISTENCY_EXCEPTION or @ref THROW_INCONSISTENCY_EXCEPTION
-   explicit InconsistencyException(
-      const char *fn, //!< file name supplied by preprocessor
-      const char *f, //!< function name supplied by preprocessor
-      unsigned l //!< line number supplied by preprocessor
-   )
-       : MessageBoxException { ExceptionType::Internal, XO("Internal Error") }
-       , func { fn }, file { f }, line { l }
-   {}
+    //! Don't call this directly but use @ref CONSTRUCT_INCONSISTENCY_EXCEPTION or @ref THROW_INCONSISTENCY_EXCEPTION
+    explicit InconsistencyException(
+        const char* fn, //!< file name supplied by preprocessor
+        const char* f, //!< function name supplied by preprocessor
+        unsigned l //!< line number supplied by preprocessor
+        )
+        : MessageBoxException{ExceptionType::Internal, XO("Internal Error")}
+        , func{fn}, file{f}, line{l}
+    {}
 
-   InconsistencyException(const InconsistencyException& that)
-      : MessageBoxException(that)
-      , func{ that.func }
-      , file{ that.file }
-      , line{ that.line }
-   {}
+    InconsistencyException(const InconsistencyException& that)
+        : MessageBoxException(that)
+        , func{that.func}
+        , file{that.file}
+        , line{that.line}
+    {}
 
-   ~InconsistencyException() override;
+    ~InconsistencyException() override;
 
-   unsigned GetLine() const { return line; }
+    unsigned GetLine() const { return line; }
 
 private:
-   // Format a default, internationalized error message for this exception.
-   TranslatableString ErrorMessage() const override;
+    // Format a default, internationalized error message for this exception.
+    TranslatableString ErrorMessage() const override;
 
-   const char *func {};
-   const char *file {};
-   unsigned line {};
+    const char* func {};
+    const char* file {};
+    unsigned line {};
 };
 
 #ifdef __func__
 
 #define CONSTRUCT_INCONSISTENCY_EXCEPTION \
-   InconsistencyException( __func__, __FILE__ , __LINE__ )
+    InconsistencyException(__func__, __FILE__, __LINE__)
 
 #else
 
@@ -69,7 +69,7 @@ private:
 
 For cases where the exception object is not immediately thrown */
 #define CONSTRUCT_INCONSISTENCY_EXCEPTION \
-   InconsistencyException( "", __FILE__ , __LINE__ )
+    InconsistencyException("", __FILE__, __LINE__)
 
 #endif
 

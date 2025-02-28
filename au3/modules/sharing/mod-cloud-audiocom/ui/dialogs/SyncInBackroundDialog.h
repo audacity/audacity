@@ -12,13 +12,12 @@
 
 #include "AudioComDialogBase.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class SyncInBackroundDialog final : public AudioComDialogBase
 {
 public:
-   explicit SyncInBackroundDialog(const AudacityProject* project);
+    explicit SyncInBackroundDialog(const AudacityProject* project);
 
-   static DialogButtonIdentifier OkIdentifier();
+    static DialogButtonIdentifier OkIdentifier();
 };
 } // namespace audacity::cloud::audiocom::sync

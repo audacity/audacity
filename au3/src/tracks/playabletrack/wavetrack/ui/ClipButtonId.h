@@ -12,7 +12,7 @@
 
 enum class ClipButtonId
 {
-   Overflow,
-   Speed,
-   Pitch,
+    Overflow,
+    Speed,
+    Pitch,
 };

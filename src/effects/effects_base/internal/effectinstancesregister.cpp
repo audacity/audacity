@@ -57,6 +57,25 @@ EffectId EffectInstancesRegister::effectIdByInstanceId(const EffectInstanceId& i
     return EffectId();
 }
 
+void EffectInstancesRegister::requestUpdateSettings(const EffectInstanceId& instanceId)
+{
+    auto it = m_data.find(instanceId);
+    if (it != m_data.end()) {
+        it->second.updateSettingsRequest.notify();
+    }
+}
+
+muse::async::Notification EffectInstancesRegister::updateSettingsRequested(const EffectInstanceId& instanceId) const
+{
+    auto it = m_data.find(instanceId);
+    if (it != m_data.end()) {
+        return it->second.updateSettingsRequest;
+    }
+
+    static muse::async::Notification null;
+    return null;
+}
+
 const EffectSettings* EffectInstancesRegister::settingsById(const EffectInstanceId& instanceId) const
 {
     if (const auto access = settingsAccessById(instanceId)) {

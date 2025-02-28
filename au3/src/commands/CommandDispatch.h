@@ -21,13 +21,12 @@ using PluginID = wxString;
 
 namespace CommandDispatch {
 AUDACITY_DLL_API bool HandleTextualCommand(
-   const CommandID & Str,
-   const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
+    const CommandID& Str, const CommandContext& context, CommandFlag flags, bool alwaysEnabled);
 
 AUDACITY_DLL_API bool DoAudacityCommand(
-   const PluginID & ID, const CommandContext & context, unsigned flags );
+    const PluginID& ID, const CommandContext& context, unsigned flags);
 
-AUDACITY_DLL_API void OnAudacityCommand(const CommandContext & ctx);
+AUDACITY_DLL_API void OnAudacityCommand(const CommandContext& ctx);
 }
 
 #endif

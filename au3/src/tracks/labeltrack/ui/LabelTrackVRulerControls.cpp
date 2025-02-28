@@ -8,7 +8,6 @@ Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
 
-
 #include "LabelTrackVRulerControls.h"
 
 #include "../../../HitTestResult.h"
@@ -22,14 +21,14 @@ LabelTrackVRulerControls::~LabelTrackVRulerControls()
 }
 
 void LabelTrackVRulerControls::Draw(
-   TrackPanelDrawingContext &context,
-   const wxRect &rect_, unsigned iPass )
+    TrackPanelDrawingContext& context,
+    const wxRect& rect_, unsigned iPass)
 {
-   ChannelVRulerControls::Draw(context, rect_, iPass);
+    ChannelVRulerControls::Draw(context, rect_, iPass);
 }
 
-void LabelTrackVRulerControls::UpdateRuler( const wxRect &rect )
+void LabelTrackVRulerControls::UpdateRuler(const wxRect& rect)
 {
-   // Label tracks do not have a vruler
-   // do nothing
+    // Label tracks do not have a vruler
+    // do nothing
 }

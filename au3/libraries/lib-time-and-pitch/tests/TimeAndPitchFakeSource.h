@@ -14,7 +14,7 @@
 
 struct TimeAndPitchFakeSource final : public TimeAndPitchSource
 {
-   void Pull(float* const* buffer, size_t numSamples) override
-   {
-   }
+    void Pull(float* const* buffer, size_t numSamples) override
+    {
+    }
 };

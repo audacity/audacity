@@ -24,12 +24,12 @@ class CommandContext;
 
 class CommandHandler
 {
-   public:
-      CommandHandler();
-      ~CommandHandler();
+public:
+    CommandHandler();
+    ~CommandHandler();
 
-      // Whenever a command is received, process it.
-      void OnReceiveCommand(AppCommandEvent &event);
+    // Whenever a command is received, process it.
+    void OnReceiveCommand(AppCommandEvent& event);
 };
 
 #endif /* End of include guard: __COMMANDHANDLER__ */

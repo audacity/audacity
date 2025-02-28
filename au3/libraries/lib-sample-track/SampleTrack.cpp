@@ -14,55 +14,55 @@ Paul Licameli split from WaveTrack.cpp
 
 SampleTrack::SampleTrack() = default;
 
-SampleTrack::SampleTrack(const SampleTrack &other, ProtectedCreationArg &&a)
-   : PlayableTrack(other, std::move(a))
+SampleTrack::SampleTrack(const SampleTrack& other, ProtectedCreationArg&& a)
+    : PlayableTrack(other, std::move(a))
 {
 }
 
 SampleTrack::~SampleTrack() = default;
 
-static const Track::TypeInfo &typeInfo()
+static const Track::TypeInfo& typeInfo()
 {
-   static const Track::TypeInfo info{
-      { "sample", "sample", XO("Sample Track") },
-      true, &PlayableTrack::ClassTypeInfo() };
-   return info;
+    static const Track::TypeInfo info{
+        { "sample", "sample", XO("Sample Track") },
+        true, &PlayableTrack::ClassTypeInfo() };
+    return info;
 }
 
-auto SampleTrack::ClassTypeInfo() -> const TypeInfo &
+auto SampleTrack::ClassTypeInfo() -> const TypeInfo&
 {
-   return typeInfo();
+    return typeInfo();
 }
 
-auto SampleTrack::GetTypeInfo() const -> const TypeInfo &
+auto SampleTrack::GetTypeInfo() const -> const TypeInfo&
 {
-   return typeInfo();
+    return typeInfo();
 }
 
 WritableSampleTrack::WritableSampleTrack() = default;
 
 WritableSampleTrack::WritableSampleTrack(
-   const WritableSampleTrack &other, ProtectedCreationArg &&a
-)  : SampleTrack(other, std::move(a))
+    const WritableSampleTrack& other, ProtectedCreationArg&& a)
+    : SampleTrack(other, std::move(a))
 {
 }
 
 WritableSampleTrack::~WritableSampleTrack() = default;
 
-static const Track::TypeInfo &typeInfo2()
+static const Track::TypeInfo& typeInfo2()
 {
-   static const Track::TypeInfo info{
-      { "writable-sample", "writable-sample", XO("Writable Sample Track") },
-      true, &SampleTrack::ClassTypeInfo() };
-   return info;
+    static const Track::TypeInfo info{
+        { "writable-sample", "writable-sample", XO("Writable Sample Track") },
+        true, &SampleTrack::ClassTypeInfo() };
+    return info;
 }
 
-auto WritableSampleTrack::ClassTypeInfo() -> const TypeInfo &
+auto WritableSampleTrack::ClassTypeInfo() -> const TypeInfo&
 {
-   return typeInfo2();
+    return typeInfo2();
 }
 
-auto WritableSampleTrack::GetTypeInfo() const -> const TypeInfo &
+auto WritableSampleTrack::GetTypeInfo() const -> const TypeInfo&
 {
-   return typeInfo2();
+    return typeInfo2();
 }

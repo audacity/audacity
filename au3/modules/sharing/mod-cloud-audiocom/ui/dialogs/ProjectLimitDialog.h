@@ -12,15 +12,13 @@
 
 #include "AudioComDialogBase.h"
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 class ProjectLimitDialog final : public AudioComDialogBase
 {
 public:
-   ProjectLimitDialog(const AudacityProject* project);
+    ProjectLimitDialog(const AudacityProject* project);
 
-   static DialogButtonIdentifier SaveLocallyButtonIdentifier();
-   static DialogButtonIdentifier VisitAudioComIdentifier();
-
+    static DialogButtonIdentifier SaveLocallyButtonIdentifier();
+    static DialogButtonIdentifier VisitAudioComIdentifier();
 };
 } // namespace audacity::cloud::audiocom::sync

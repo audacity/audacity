@@ -27,6 +27,11 @@ public:
     virtual std::shared_ptr<EffectInstance> instanceById(const EffectInstanceId& instanceId) const = 0;
     virtual EffectId effectIdByInstanceId(const EffectInstanceId& instanceId) const = 0;
 
+    //! NOTE Some plugins (like built-in ones) change their settings directly.
+    //! Other plugins (like VST) change their internal settings and we need to get them at some point.
+    virtual void requestUpdateSettings(const EffectInstanceId& instanceId) = 0;
+    virtual muse::async::Notification updateSettingsRequested(const EffectInstanceId& instanceId) const = 0;
+
     virtual const EffectSettings* settingsById(const EffectInstanceId& instanceId) const = 0;
     virtual EffectSettingsAccess* settingsAccessById(const EffectInstanceId& instanceId) const = 0;
     virtual void notifyAboutSettingsChanged(const EffectInstanceId& instanceId) = 0;

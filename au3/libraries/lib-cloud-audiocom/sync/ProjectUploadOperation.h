@@ -19,28 +19,27 @@
 
 class TrackList;
 
-namespace audacity::cloud::audiocom::sync
-{
+namespace audacity::cloud::audiocom::sync {
 enum class UploadMode
 {
-   Normal,
-   CreateNew,
-   ForceOverwrite,
+    Normal,
+    CreateNew,
+    ForceOverwrite,
 };
 
 struct ProjectUploadData final
 {
-   std::vector<uint8_t> ProjectSnapshot;
-   std::shared_ptr<TrackList> Tracks;
+    std::vector<uint8_t> ProjectSnapshot;
+    std::shared_ptr<TrackList> Tracks;
 };
 
 class ProjectUploadOperation /* not final */ : public concurrency::ICancellable
 {
 public:
-   virtual ~ProjectUploadOperation() = default;
+    virtual ~ProjectUploadOperation() = default;
 
-   virtual void Start()                                      = 0;
-   virtual void SetUploadData(const ProjectUploadData& data) = 0;
-   virtual bool IsCompleted() const                          = 0;
+    virtual void Start()                                      = 0;
+    virtual void SetUploadData(const ProjectUploadData& data) = 0;
+    virtual bool IsCompleted() const = 0;
 }; // class AsynchronousOperation
 } // namespace audacity::cloud::audiocom::sync

@@ -19,26 +19,15 @@
 #include <optional>
 #include <atomic>
 
-typedef intptr_t (*dispatcherFn)(AEffect * effect,
-                                 int opCode,
-                                 int index,
-                                 intptr_t value,
-                                 void *ptr,
-                                 float opt);
+typedef intptr_t (* dispatcherFn)(AEffect* effect, int opCode, int index, intptr_t value, void* ptr, float opt);
 
-typedef void (*processFn)(AEffect * effect,
-                          float **inputs,
-                          float **outputs,
-                          int sampleframes);
+typedef void (* processFn)(AEffect* effect, float** inputs, float** outputs, int sampleframes);
 
-typedef void (*setParameterFn)(AEffect * effect,
-                               int index,
-                               float parameter);
+typedef void (* setParameterFn)(AEffect* effect, int index, float parameter);
 
-typedef float (*getParameterFn)(AEffect * effect,
-                                int index);
+typedef float (* getParameterFn)(AEffect* effect, int index);
 
-typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
+typedef AEffect*(* vstPluginMain)(audioMasterCallback audioMaster);
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -46,41 +35,35 @@ typedef AEffect *(*vstPluginMain)(audioMasterCallback audioMaster);
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-
 class VSTEditor;
 
-class VSTEffect final
-   : public StatelessEffectUIServices
-   , public VSTEffectBase
+class VSTEffect final : public StatelessEffectUIServices, public VSTEffectBase
 {
 public:
-   using VSTEffectBase::VSTEffectBase;
-   ~VSTEffect() override;
+    using VSTEffectBase::VSTEffectBase;
+    ~VSTEffect() override;
 
 private:
-   int ShowClientInterface(const EffectPlugin &plugin, wxWindow &parent,
-      wxDialog &dialog, EffectEditor *pEditor, bool forceModal)
-   const override;
+    int ShowClientInterface(const EffectPlugin& plugin, wxWindow& parent, wxDialog& dialog, EffectEditor* pEditor, bool forceModal)
+    const override;
 
-   std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin &plugin,
-      ShuttleGui &S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const override;
+    std::unique_ptr<EffectEditor> PopulateUI(const EffectPlugin& plugin, ShuttleGui& S, EffectInstance& instance,
+                                             EffectSettingsAccess& access, const EffectOutputs* pOutputs) const override;
 
-   void ExportPresets(
-      const EffectPlugin &plugin, const EffectSettings &settings)
-   const override;
+    void ExportPresets(
+        const EffectPlugin& plugin, const EffectSettings& settings)
+    const override;
 
-   OptionalMessage ImportPresets(
-      const EffectPlugin &plugin, EffectSettings &settings) const override;
+    OptionalMessage ImportPresets(
+        const EffectPlugin& plugin, EffectSettings& settings) const override;
 
-   // Non-const and non-virtual function:
-   OptionalMessage ImportPresetsNC(EffectSettings &settings);
-   void ShowOptions(const EffectPlugin &plugin) const override;
+    // Non-const and non-virtual function:
+    OptionalMessage ImportPresetsNC(EffectSettings& settings);
+    void ShowOptions(const EffectPlugin& plugin) const override;
 
-   //! Will never be called
-   virtual std::unique_ptr<EffectEditor> MakeEditor(
-      ShuttleGui & S, EffectInstance &instance, EffectSettingsAccess &access,
-      const EffectOutputs *pOutputs) const final;
+    //! Will never be called
+    virtual std::unique_ptr<EffectEditor> MakeEditor(
+        ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) const final;
 };
 
 #endif

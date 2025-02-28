@@ -24,20 +24,20 @@ Paul Licameli split from TrackMenus.cpp
 #include "NoteTrack.h"
 
 namespace {
-void OnMidiDeviceInfo(const CommandContext &context)
+void OnMidiDeviceInfo(const CommandContext& context)
 {
-   auto &project = context.project;
-   auto gAudioIO = AudioIOBase::Get();
-   auto info = GetMIDIDeviceInfo();
-   ShowDiagnostics( project, info,
-      XO("MIDI Device Info"), wxT("midideviceinfo.txt") );
+    auto& project = context.project;
+    auto gAudioIO = AudioIOBase::Get();
+    auto info = GetMIDIDeviceInfo();
+    ShowDiagnostics(project, info,
+                    XO("MIDI Device Info"), wxT("midideviceinfo.txt"));
 }
 
 using namespace MenuRegistry;
 AttachedItem sAttachment{
-   Command( wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
-      OnMidiDeviceInfo, AudioIONotBusyFlag() ),
-   { wxT("Help/Other/Diagnostics"),
+    Command(wxT("MidiDeviceInfo"), XXO("&MIDI Device Info..."),
+            OnMidiDeviceInfo, AudioIONotBusyFlag()),
+    { wxT("Help/Other/Diagnostics"),
       { OrderingHint::After, wxT("DeviceInfo") } }
 };
 }

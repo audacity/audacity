@@ -23,10 +23,10 @@ class OldStyleCommand;
 
 /**************************************************************//**
 
-\class OldStyleCommand 
+\class OldStyleCommand
 \brief OldStyleCommand is the key class that allows us to carry
 a converted (not textual) command from a non-GUI place to the GUI
-thread.  It contains the command AND the context that will be used 
+thread.  It contains the command AND the context that will be used
 for its output.
 
 \class OldStyleCommandPointer
@@ -44,28 +44,28 @@ class wxString;
 class AUDACITY_DLL_API OldStyleCommandType : public AudacityCommand
 {
 private:
-   std::optional<CommandSignature> mSignature;
+    std::optional<CommandSignature> mSignature;
 
 public:
-   OldStyleCommandType();
-   virtual ~OldStyleCommandType();
-   ComponentInterfaceSymbol GetSymbol() const override;
-   CommandSignature &GetSignature();
-   wxString Describe(); // for debugging only ?
+    OldStyleCommandType();
+    virtual ~OldStyleCommandType();
+    ComponentInterfaceSymbol GetSymbol() const override;
+    CommandSignature& GetSignature();
+    wxString Describe(); // for debugging only ?
 
-   // Subclasses should override the following:
-   // =========================================
+    // Subclasses should override the following:
+    // =========================================
 
-   // Return the name of the command type
-   virtual ComponentInterfaceSymbol BuildName() const = 0;
+    // Return the name of the command type
+    virtual ComponentInterfaceSymbol BuildName() const = 0;
 
-   /// Postcondition: signature is a 'signature' map containing parameter
-   // names, validators and default values.
-   virtual void BuildSignature(CommandSignature &signature) = 0;
+    /// Postcondition: signature is a 'signature' map containing parameter
+    // names, validators and default values.
+    virtual void BuildSignature(CommandSignature& signature) = 0;
 
-   // Create a command instance with the specified output target
-   virtual OldStyleCommandPointer Create(
-      AudacityProject &project, std::unique_ptr<CommandOutputTargets> &&target) = 0;
+    // Create a command instance with the specified output target
+    virtual OldStyleCommandPointer Create(
+        AudacityProject& project, std::unique_ptr<CommandOutputTargets>&& target) = 0;
 };
 
 #endif /* End of include guard: __COMMANDTYPE__ */

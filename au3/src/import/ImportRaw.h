@@ -21,9 +21,9 @@ class wxWindow;
 
 #include <vector>
 
-using TrackHolders = std::vector<std::shared_ptr<Track>>;
+using TrackHolders = std::vector<std::shared_ptr<Track> >;
 
-void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString &fileName,
-   WaveTrackFactory *trackFactory, TrackHolders &outTracks);
+void ImportRaw(const AudacityProject& project, wxWindow* parent, const wxString& fileName, WaveTrackFactory* trackFactory,
+               TrackHolders& outTracks);
 
 #endif

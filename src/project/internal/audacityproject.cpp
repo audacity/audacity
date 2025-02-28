@@ -92,21 +92,8 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
 void Audacity4Project::close()
 {
     m_aboutCloseBegin.notify();
-
-    const auto history = projectHistory();
-    history->undoUnsaved();
-    history->clearUnsaved();
-    // Do not save a project that has never explicitly been saved.
-    if (m_au3Project->hasSavedVersion()) {
-        //! Important!
-        //! If some unsaved changes were made and we don't save the project after having cleared the history,
-        //! the project will be corrupted and can't be opened again.
-        save();
-    }
-
     clipboard()->clearTrackData();
     m_au3Project->close();
-
     m_aboutCloseEnd.notify();
 }
 

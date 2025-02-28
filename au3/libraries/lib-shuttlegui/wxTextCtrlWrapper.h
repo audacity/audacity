@@ -20,54 +20,52 @@
 class wxTextCtrlWrapper final : public wxTextCtrl
 {
 public:
-   wxTextCtrlWrapper(wxWindow * parent, wxWindowID id,
-      const wxString  &value = {},
-      const wxPoint &pos = wxDefaultPosition,
-      const wxSize &size = wxDefaultSize,
-      long  style = 0,
-      const wxValidator &validator = wxDefaultValidator,
-      const wxString &name = wxTextCtrlNameStr)
-   :  wxTextCtrl(parent, id, value, pos, size, style, validator, name)
-   {
-      mReadOnly = false;
+    wxTextCtrlWrapper(wxWindow* parent, wxWindowID id,
+                      const wxString& value = {},
+                      const wxPoint& pos = wxDefaultPosition,
+                      const wxSize& size = wxDefaultSize,
+                      long style = 0,
+                      const wxValidator& validator = wxDefaultValidator,
+                      const wxString& name = wxTextCtrlNameStr)
+        :  wxTextCtrl(parent, id, value, pos, size, style, validator, name)
+    {
+        mReadOnly = false;
 
-      Bind(wxEVT_KEY_DOWN, [&](wxKeyEvent &event)
-      {
-         auto keyCode = event.GetKeyCode();
-         if (mReadOnly)
-         {
-            if (keyCode >= WXK_SPACE || keyCode == WXK_DELETE || keyCode == WXK_BACK)
-            {
-               event.Skip(false);
-               return;
+        Bind(wxEVT_KEY_DOWN, [&](wxKeyEvent& event)
+        {
+            auto keyCode = event.GetKeyCode();
+            if (mReadOnly) {
+                if (keyCode >= WXK_SPACE || keyCode == WXK_DELETE || keyCode == WXK_BACK) {
+                    event.Skip(false);
+                    return;
+                }
             }
-         }
 
-         event.Skip();
-      });
-   };
+            event.Skip();
+        });
+    }
 
-   ~wxTextCtrlWrapper()
-   {
-   };
+    ~wxTextCtrlWrapper()
+    {
+    }
 
-   virtual bool AcceptsFocusFromKeyboard() const override
-   {
-      return true;
-   }
+    virtual bool AcceptsFocusFromKeyboard() const override
+    {
+        return true;
+    }
 
-   bool IsReadOnly()
-   {
-      return mReadOnly;
-   }
+    bool IsReadOnly()
+    {
+        return mReadOnly;
+    }
 
-   void SetReadOnly(bool readonly = true)
-   {
-      mReadOnly = readonly;
-   }
+    void SetReadOnly(bool readonly = true)
+    {
+        mReadOnly = readonly;
+    }
 
 private:
-   bool mReadOnly;
+    bool mReadOnly;
 };
 
 #endif // __AUDACITY_WXTEXTCTRLWRAPPER__

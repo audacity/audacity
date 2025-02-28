@@ -51,7 +51,7 @@ class TranslatableString;
 #include <wx/wxchar.h>
 
 #ifndef M_PI
-#define	M_PI		3.14159265358979323846  /* pi */
+#define     M_PI        3.14159265358979323846  /* pi */
 #endif
 
 /*
@@ -64,7 +64,7 @@ class TranslatableString;
  */
 
 FFT_API
-void PowerSpectrum(size_t NumSamples, const float *In, float *Out);
+void PowerSpectrum(size_t NumSamples, const float* In, float* Out);
 
 /*
  * Computes an FFT when the input data is real but you still
@@ -74,8 +74,7 @@ void PowerSpectrum(size_t NumSamples, const float *In, float *Out);
  */
 
 FFT_API
-void RealFFT(size_t NumSamples,
-             const float *RealIn, float *RealOut, float *ImagOut);
+void RealFFT(size_t NumSamples, const float* RealIn, float* RealOut, float* ImagOut);
 
 /*
  * Computes an Inverse FFT when the input data is conjugate symmetric
@@ -83,8 +82,7 @@ void RealFFT(size_t NumSamples,
  * two.
  */
 FFT_API
-void InverseRealFFT(size_t NumSamples,
-		    const float *RealIn, const float *ImagIn, float *RealOut);
+void InverseRealFFT(size_t NumSamples, const float* RealIn, const float* ImagIn, float* RealOut);
 
 /*
  * Computes a FFT of complex input and returns complex output.
@@ -93,9 +91,7 @@ void InverseRealFFT(size_t NumSamples,
  */
 
 FFT_API
-void FFT(size_t NumSamples,
-         bool InverseTransform,
-         const float *RealIn, const float *ImagIn, float *RealOut, float *ImagOut);
+void FFT(size_t NumSamples, bool InverseTransform, const float* RealIn, const float* ImagIn, float* RealOut, float* ImagOut);
 
 /*
  * Multiply values in data by values of the chosen function
@@ -108,21 +104,21 @@ void FFT(size_t NumSamples,
 
 enum eWindowFunctions : int
 {
-   eWinFuncRectangular,
-   eWinFuncBartlett,
-   eWinFuncHamming,
-   eWinFuncHann,
-   eWinFuncBlackman,
-   eWinFuncBlackmanHarris,
-   eWinFuncWelch,
-   eWinFuncGaussian25,
-   eWinFuncGaussian35,
-   eWinFuncGaussian45,
-   eWinFuncCount
+    eWinFuncRectangular,
+    eWinFuncBartlett,
+    eWinFuncHamming,
+    eWinFuncHann,
+    eWinFuncBlackman,
+    eWinFuncBlackmanHarris,
+    eWinFuncWelch,
+    eWinFuncGaussian25,
+    eWinFuncGaussian35,
+    eWinFuncGaussian45,
+    eWinFuncCount
 };
 
 FFT_API
-void WindowFunc(int whichFunction, size_t NumSamples, float *data);
+void WindowFunc(int whichFunction, size_t NumSamples, float* data);
 
 /*
  * Multiply values in data by values of the chosen function
@@ -131,7 +127,7 @@ void WindowFunc(int whichFunction, size_t NumSamples, float *data);
  * All functions have 0 in data[0] except Rectangular, Hamming and Gaussians
  */
 FFT_API
-void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float *data);
+void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float* data);
 
 /*
  * Multiply values in data by derivative of the chosen function, assuming
@@ -141,7 +137,7 @@ void NewWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float
  * All functions have 0 in data[0] except Rectangular, Hamming and Gaussians
  */
 FFT_API
-void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float *data);
+void DerivativeOfWindowFunc(int whichFunction, size_t NumSamples, bool extraSample, float* data);
 
 /*
  * Returns the name of the windowing function (for UI display)

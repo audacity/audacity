@@ -19,8 +19,7 @@
 
 struct AudioFileIO
 {
-   static bool Read(
-      const std::string& path, std::vector<std::vector<float>>& audio,
-      AudioFileInfo& info,
-      const std::optional<std::chrono::seconds>& upTo = std::nullopt);
+    static bool Read(
+        const std::string& path, std::vector<std::vector<float> >& audio, AudioFileInfo& info,
+        const std::optional<std::chrono::seconds>& upTo = std::nullopt);
 };

@@ -22,8 +22,8 @@ enum class PlaybackDirection;
 class STRETCHING_SEQUENCE_API AudioSegmentFactoryInterface
 {
 public:
-   virtual ~AudioSegmentFactoryInterface();
+    virtual ~AudioSegmentFactoryInterface();
 
-   virtual std::vector<std::shared_ptr<AudioSegment>>
-   CreateAudioSegmentSequence(double playbackStartTime, PlaybackDirection) = 0;
+    virtual std::vector<std::shared_ptr<AudioSegment> >
+    CreateAudioSegmentSequence(double playbackStartTime, PlaybackDirection) = 0;
 };

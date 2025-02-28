@@ -40,6 +40,7 @@ public:
 
     RealtimeEffectStatePtr addRealtimeEffect(TrackId, const EffectId&) override;
     void removeRealtimeEffect(TrackId, const RealtimeEffectStatePtr&) override;
+    RealtimeEffectStatePtr replaceRealtimeEffect(TrackId, const RealtimeEffectStatePtr&, const EffectId& newEffectId) override;
     RealtimeEffectStatePtr replaceRealtimeEffect(TrackId, int effectListIndex, const EffectId& newEffectId) override;
     void moveRealtimeEffect(const RealtimeEffectStatePtr& state, int newIndex) override;
 
