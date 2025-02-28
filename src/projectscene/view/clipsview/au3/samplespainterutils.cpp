@@ -71,7 +71,7 @@ std::vector<QPoint> interpolatePoints(const QPoint& previousPosition, const QPoi
     std::vector<QPoint> container;
     if (previousPosition.x() == finalPosition.x()) {
         container.push_back(finalPosition);
-        return std::move(container);
+        return container;
     }
 
     container.reserve(std::abs(previousPosition.x() - finalPosition.x()));
@@ -96,7 +96,7 @@ std::vector<QPoint> interpolatePoints(const QPoint& previousPosition, const QPoi
         }
     }
 
-    return std::move(container);
+    return container;
 }
 }
 
@@ -214,19 +214,19 @@ void drawBaseLine(QPainter& painter, const au::projectscene::WaveMetrics& metric
 }
 
 SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, const au::projectscene::WaveMetrics& metrics,
-                         bool dB, float dBRange, float zoomMax, float zoomMin)
+                         bool dB, float dBRange, float zoomMax, float zoomMin, int windowSize)
 {
     const ZoomInfo zoomInfo{ metrics.fromTime, metrics.zoom };
     double rate = clip.GetRate() / clip.GetStretchRatio();
     const double t0 = metrics.fromTime;
-    const auto s0 = sampleCount(floor(t0 * rate));
+    const auto s0 = sampleCount(std::max(static_cast<int>(floor(t0 * rate)) - static_cast<int>(windowSize / 2), 0));
     const auto snSamples = clip.GetVisibleSampleCount();
     if (s0 > snSamples) {
         return SampleData();
     }
 
     const double t1 = metrics.toTime;
-    const auto s1 = sampleCount(ceil(t1 * rate));
+    const auto s1 = std::min(sampleCount(ceil(t1 * rate) + windowSize / 2), snSamples - 1);
 
     // Assume size_t will not overflow, else we wouldn't be here drawing the
     // few individual samples

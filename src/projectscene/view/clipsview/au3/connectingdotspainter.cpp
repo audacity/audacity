@@ -58,7 +58,7 @@ void ConnectingDotsPainter::paint(QPainter& painter, const trackedit::ClipKey& c
         waveMetrics.height = channelHeight[index];
         samplespainterutils::drawBackground(painter, waveMetrics, params.style, trimLeft);
         samplespainterutils::drawBaseLine(painter, waveMetrics, params.style);
-        const auto samples = samplespainterutils::getSampleData(*waveClip, index, waveMetrics, dB, dBRange, zoomMax, zoomMin);
+        const auto samples = samplespainterutils::getSampleData(*waveClip, index, waveMetrics, dB, dBRange, zoomMax, zoomMin, 0);
         if (samples.size() == 0) {
             continue;
         }
