@@ -13,12 +13,21 @@ using namespace muse::actions;
 
 static const ActionCode COPY_CODE("copy");
 static const ActionCode CUT_CODE("cut");
+static const ActionCode PASTE_CODE("paste");
 static const ActionCode DELETE_CODE("delete");
-static const ActionCode SPLIT_CUT_CODE("split-cut");
-static const ActionCode SPLIT_DELETE_CODE("split-delete");
 static const ActionCode SPLIT_CODE("split");
 static const ActionCode JOIN_CODE("join");
 static const ActionCode DUPLICATE_CODE("duplicate");
+
+static const ActionCode CUT_LEAVE_GAP_CODE("split-cut");
+static const ActionCode CUT_PER_CLIP_RIPPLE_CODE("cut-per-clip-ripple");
+static const ActionCode CUT_PER_TRACK_RIPPLE_CODE("cut-per-track-ripple");
+static const ActionCode CUT_ALL_TRACKS_RIPPLE_CODE("cut-all-tracks-ripple");
+
+static const ActionCode DELETE_LEAVE_GAP_CODE("split-delete");
+static const ActionCode DELETE_PER_CLIP_RIPPLE_CODE("delete-per-clip-ripple");
+static const ActionCode DELETE_PER_TRACK_RIPPLE_CODE("delete-per-track-ripple");
+static const ActionCode DELETE_ALL_TRACKS_RIPPLE_CODE("delete-all-tracks-ripple");
 
 static const ActionCode CLIP_CUT_CODE("clip-cut");
 static const ActionCode MULTI_CLIP_CUT_CODE("multi-clip-cut");
@@ -28,12 +37,15 @@ static const ActionCode CLIP_COPY_CODE("clip-copy");
 static const ActionCode MULTI_CLIP_COPY_CODE("multi-clip-copy");
 static const ActionCode RANGE_SELECTION_COPY_CODE("clip-copy-selected");
 
+static const ActionCode PASTE_REPLACE_CODE("paste-replace");
+static const ActionCode PASTE_INSERT_CODE("paste-insert");
+static const ActionCode PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE("paste-insert-all-tracks-ripple");
+
 static const ActionCode CLIP_DELETE_CODE("clip-delete");
 static const ActionCode MULTI_CLIP_DELETE_CODE("multi-clip-delete");
 static const ActionCode RANGE_SELECTION_DELETE_CODE("clip-delete-selected");
 
 static const ActionCode CLIP_RENDER_PITCH_AND_SPEED_CODE("clip-render-pitch-speed");
-static const ActionCode PASTE("paste");
 static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
 static const ActionCode MERGE_SELECTED_ON_TRACK("merge-selected-on-tracks");
@@ -70,9 +82,13 @@ static const ActionQuery CHANGE_COLOR_QUERY("action://trackedit/clip/change-colo
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
     CUT_CODE,
+    CUT_LEAVE_GAP_CODE,
+    CUT_PER_CLIP_RIPPLE_CODE,
+    CUT_PER_TRACK_RIPPLE_CODE,
     DELETE_CODE,
-    SPLIT_CUT_CODE,
-    SPLIT_DELETE_CODE,
+    DELETE_PER_CLIP_RIPPLE_CODE,
+    DELETE_PER_TRACK_RIPPLE_CODE,
+    DELETE_ALL_TRACKS_RIPPLE_CODE,
     SPLIT_CODE,
     JOIN_CODE,
     DUPLICATE_CODE,
@@ -83,7 +99,10 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     MULTI_CLIP_DELETE_CODE,
     RANGE_SELECTION_DELETE_CODE,
     CLIP_RENDER_PITCH_AND_SPEED_CODE,
-    PASTE,
+    PASTE_CODE,
+    PASTE_INSERT_CODE,
+    PASTE_REPLACE_CODE,
+    PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE,
     TRACK_SPLIT,
     TRACK_SPLIT_AT,
     MERGE_SELECTED_ON_TRACK,
@@ -112,11 +131,24 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
     dispatcher()->reg(this, CUT_CODE, this, &TrackeditActionsController::doGlobalCut);
     dispatcher()->reg(this, DELETE_CODE, this, &TrackeditActionsController::doGlobalDelete);
-    dispatcher()->reg(this, SPLIT_CUT_CODE, this, &TrackeditActionsController::doGlobalSplitCut);
-    dispatcher()->reg(this, SPLIT_DELETE_CODE, this, &TrackeditActionsController::doGlobalSplitDelete);
     dispatcher()->reg(this, SPLIT_CODE, this, &TrackeditActionsController::doGlobalSplit);
     dispatcher()->reg(this, JOIN_CODE, this, &TrackeditActionsController::doGlobalJoin);
     dispatcher()->reg(this, DUPLICATE_CODE, this, &TrackeditActionsController::doGlobalDuplicate);
+
+    dispatcher()->reg(this, CUT_LEAVE_GAP_CODE, this, &TrackeditActionsController::doGlobalCutLeaveGap);
+    dispatcher()->reg(this, CUT_PER_CLIP_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutPerClipRipple);
+    dispatcher()->reg(this, CUT_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutPerTrackRipple);
+    dispatcher()->reg(this, CUT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutAllTracksRipple);
+
+    dispatcher()->reg(this, PASTE_CODE, this, &TrackeditActionsController::paste);
+    dispatcher()->reg(this, PASTE_REPLACE_CODE, this, &TrackeditActionsController::pasteReplace);
+    dispatcher()->reg(this, PASTE_INSERT_CODE, this, &TrackeditActionsController::pasteInsert);
+    dispatcher()->reg(this, PASTE_INSERT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::pasteInsertRipple);
+
+    dispatcher()->reg(this, DELETE_LEAVE_GAP_CODE, this, &TrackeditActionsController::doGlobalDeleteLeaveGap);
+    dispatcher()->reg(this, DELETE_PER_CLIP_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerClipRipple);
+    dispatcher()->reg(this, DELETE_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerTrackRipple);
+    dispatcher()->reg(this, DELETE_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeleteAllTracksRipple);
 
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
     dispatcher()->reg(this, MULTI_CLIP_CUT_CODE, this, &TrackeditActionsController::multiClipCut);
@@ -131,7 +163,6 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, RANGE_SELECTION_DELETE_CODE, this, &TrackeditActionsController::rangeSelectionDelete);
 
     dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
-    dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
     dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::tracksSplitAt);
     dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
@@ -227,33 +258,10 @@ void TrackeditActionsController::doGlobalCopy()
 
 void TrackeditActionsController::doGlobalCut()
 {
-    if (selectionController()->timeSelectionIsNotEmpty()) {
-        dispatcher()->dispatch(RANGE_SELECTION_CUT_CODE);
-        return;
-    }
-
-    if (selectionController()->selectedClips().empty()) {
-        return;
-    }
-
-    dispatcher()->dispatch(MULTI_CLIP_CUT_CODE);
+    dispatcher()->dispatch(CUT_LEAVE_GAP_CODE);
 }
 
-void TrackeditActionsController::doGlobalDelete()
-{
-    if (selectionController()->timeSelectionIsNotEmpty()) {
-        dispatcher()->dispatch(RANGE_SELECTION_DELETE_CODE);
-        return;
-    }
-
-    if (selectionController()->selectedClips().empty()) {
-        return;
-    }
-
-    dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE);
-}
-
-void TrackeditActionsController::doGlobalSplitCut()
+void TrackeditActionsController::doGlobalCutLeaveGap()
 {
     if (selectionController()->timeSelectionIsNotEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
@@ -277,10 +285,69 @@ void TrackeditActionsController::doGlobalSplitCut()
             dispatcher()->dispatch(CLIP_SPLIT_CUT, ActionData::make_arg1<trackedit::ClipKey>(selectedClipKey));
             return;
         }
+    } else {
+        dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, ActionData::make_arg1(false));
     }
 }
 
-void TrackeditActionsController::doGlobalSplitDelete()
+void TrackeditActionsController::doGlobalCutPerClipRipple()
+{
+    auto moveClips = ActionData::make_arg1(false);
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        dispatcher()->dispatch(RANGE_SELECTION_CUT_CODE, moveClips);
+        return;
+    }
+
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, moveClips);
+}
+
+void TrackeditActionsController::doGlobalCutPerTrackRipple()
+{
+    auto moveClips = ActionData::make_arg1(true);
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        dispatcher()->dispatch(RANGE_SELECTION_CUT_CODE, moveClips);
+        return;
+    }
+
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, moveClips);
+}
+
+void TrackeditActionsController::doGlobalCutAllTracksRipple()
+{
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        project::IAudacityProjectPtr project = globalContext()->currentProject();
+        auto tracks = project->trackeditProject()->trackIdList();
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+        trackeditInteraction()->clearClipboard();
+        trackeditInteraction()->cutClipDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true);
+
+        selectionController()->resetDataSelection();
+        return;
+    }
+
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, ActionData::make_arg1(true));
+}
+
+void TrackeditActionsController::doGlobalDelete()
+{
+    dispatcher()->dispatch(DELETE_LEAVE_GAP_CODE);
+}
+
+void TrackeditActionsController::doGlobalDeleteLeaveGap()
 {
     if (selectionController()->timeSelectionIsNotEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
@@ -305,6 +372,61 @@ void TrackeditActionsController::doGlobalSplitDelete()
             return;
         }
     }
+}
+
+void TrackeditActionsController::doGlobalDeletePerClipRipple()
+{
+    auto moveClips = ActionData::make_arg1(false);
+
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        dispatcher()->dispatch(RANGE_SELECTION_DELETE_CODE, moveClips);
+        return;
+    }
+
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
+}
+
+void TrackeditActionsController::doGlobalDeletePerTrackRipple()
+{
+    auto moveClips = ActionData::make_arg1(true);
+
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        dispatcher()->dispatch(RANGE_SELECTION_DELETE_CODE, moveClips);
+        return;
+    }
+
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
+}
+
+void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
+{
+    auto moveClips = ActionData::make_arg1(true);
+
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        project::IAudacityProjectPtr project = globalContext()->currentProject();
+        auto tracks = project->trackeditProject()->trackIdList();
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+        trackeditInteraction()->removeTracksData(tracks, selectedStartTime, selectedEndTime, true);
+
+        selectionController()->resetDataSelection();
+        return;
+    }
+
+    if (selectionController()->selectedClips().empty()) {
+        return;
+    }
+
+    dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
 }
 
 void TrackeditActionsController::doGlobalSplit()
@@ -405,8 +527,14 @@ void TrackeditActionsController::clipDelete(const ActionData& args)
     trackeditInteraction()->removeClip(clipKey);
 }
 
-void TrackeditActionsController::multiClipDelete()
+void TrackeditActionsController::multiClipDelete(const ActionData& args)
 {
+    bool moveClips = false;
+
+    if (args.count() >= 1) {
+        moveClips = args.arg<bool>(0);
+    }
+
     ClipKeyList selectedClipKeys = selectionController()->selectedClips();
     if (selectedClipKeys.empty()) {
         return;
@@ -414,11 +542,17 @@ void TrackeditActionsController::multiClipDelete()
 
     selectionController()->resetSelectedClips();
 
-    trackeditInteraction()->removeClips(selectedClipKeys);
+    trackeditInteraction()->removeClips(selectedClipKeys, moveClips);
 }
 
-void TrackeditActionsController::multiClipCut()
+void TrackeditActionsController::multiClipCut(const ActionData& args)
 {
+    bool moveClips = false;
+
+    if (args.count() >= 1) {
+        moveClips = args.arg<bool>(0);
+    }
+
     auto selectedClips = selectionController()->selectedClips();
     if (selectedClips.empty()) {
         return;
@@ -427,18 +561,25 @@ void TrackeditActionsController::multiClipCut()
     trackeditInteraction()->clearClipboard();
     multiClipCopy();
     selectionController()->resetSelectedClips();
-    trackeditInteraction()->removeClips(selectedClips);
+
+    trackeditInteraction()->removeClips(selectedClips, moveClips);
 }
 
-void TrackeditActionsController::rangeSelectionCut()
+void TrackeditActionsController::rangeSelectionCut(const ActionData& args)
 {
+    bool moveClips = false;
+
+    if (args.count() >= 1) {
+        moveClips = args.arg<bool>(0);
+    }
+
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto selectedTracks = selectionController()->selectedTracks();
     secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
     secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
     trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->cutClipDataIntoClipboard(selectedTracks, selectedStartTime, selectedEndTime);
+    trackeditInteraction()->cutClipDataIntoClipboard(selectedTracks, selectedStartTime, selectedEndTime, moveClips);
 
     selectionController()->resetDataSelection();
 }
@@ -493,8 +634,14 @@ void TrackeditActionsController::rangeSelectionCopy()
     }
 }
 
-void TrackeditActionsController::rangeSelectionDelete()
+void TrackeditActionsController::rangeSelectionDelete(const ActionData& args)
 {
+    bool moveClips = false;
+
+    if (args.count() >= 1) {
+        moveClips = args.arg<bool>(0);
+    }
+
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto selectedTracks = selectionController()->selectedTracks();
     auto selectedStartTime = selectionController()->dataSelectedStartTime();
@@ -504,19 +651,52 @@ void TrackeditActionsController::rangeSelectionDelete()
         return;
     }
 
-    trackeditInteraction()->removeTracksData(selectedTracks, selectedStartTime, selectedEndTime);
+    trackeditInteraction()->removeTracksData(selectedTracks, selectedStartTime, selectedEndTime, moveClips);
 
     selectionController()->resetDataSelection();
 }
 
 void TrackeditActionsController::paste()
 {
+    dispatcher()->dispatch(PASTE_REPLACE_CODE);
+}
+
+void TrackeditActionsController::pasteReplace()
+{
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
     double selectedStartTime = globalContext()->playbackState()->playbackPosition();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
-        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime);
+        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false);
+        if (!ret && !ret.text().empty()) {
+            interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
+        }
+    }
+}
+
+void TrackeditActionsController::pasteInsert()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto tracks = project->trackeditProject()->trackList();
+    double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+
+    if (!tracks.empty() && selectedStartTime >= 0) {
+        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, true);
+        if (!ret && !ret.text().empty()) {
+            interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
+        }
+    }
+}
+
+void TrackeditActionsController::pasteInsertRipple()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto tracks = project->trackeditProject()->trackList();
+    double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+
+    if (!tracks.empty() && selectedStartTime >= 0) {
+        auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, true, true);
         if (!ret && !ret.text().empty()) {
             interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
         }

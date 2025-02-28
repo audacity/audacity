@@ -17,7 +17,6 @@
 #include "BasicUI.h"
 #include "Project.h"
 #include "Prefs.h"
-#include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 
@@ -29,7 +28,7 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
 
     // Set up mOutputTracks.
     // This effect needs all for sync-lock grouping.
-    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } }, true };
+    EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
 
     // Iterate over the tracks
     bool bGoodResult = true;
@@ -41,12 +40,10 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
             if (!track.GetSelected()) {
                 return fallthrough();
             }
-            bool editClipCanMove = GetEditClipsCanMove();
 
             //if we can't move clips, and we're generating into an empty space,
             //make sure there's room.
-            if (!editClipCanMove
-                && track.IsEmpty(mT0, mT1 + 1.0 / track.GetRate())
+            if (    track.IsEmpty(mT0, mT1 + 1.0 / track.GetRate())
                 && !track.IsEmpty(mT0,
                                   mT0 + duration - (mT1 - mT0) - 1.0 / track.GetRate())) {
                 using namespace BasicUI;
@@ -85,18 +82,13 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
             } else {
                 // If the duration is zero, there's no need to actually
                 // generate anything
-                track.Clear(mT0, mT1);
+                bool moveClips = false;
+                track.Clear(mT0, mT1, moveClips);
             }
 
             ntrack++;
         };
-    },
-                                   [&](Track& t) {
-        if (SyncLock::IsSyncLockSelected(t)) {
-            t.SyncLockAdjust(mT1, mT0 + duration);
-        }
-    }
-                                   );
+    });
 
     if (bGoodResult) {
         outputs.Commit();

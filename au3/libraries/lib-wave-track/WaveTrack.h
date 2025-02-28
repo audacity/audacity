@@ -337,7 +337,7 @@ public:
     // High-level editing
     //
 
-    Track::Holder Cut(double t0, double t1) override;
+    Track::Holder Cut(double t0, double t1, bool moveClips) override;
 
     //! Make another track copying format, rate, etc. but containing no
     //! clips; with the specified number of channels.
@@ -384,8 +384,8 @@ public:
     Track::Holder Copy(double t0, double t1, bool forClipboard = true)
     const override;
 
-    void Clear(double t0, double t1) override;
-    void Paste(double t0, const Track& src) override;
+    void Clear(double t0, double t1, bool moveClips) override;
+    void Paste(double t0, const Track& src, bool moveClips) override;
     using Track::Paste; // Get the non-virtual overload too
 
     /*!
@@ -433,8 +433,6 @@ public:
      */
     void ApplyPitchAndSpeed(
         std::optional<TimeInterval> interval, ProgressReporter reportProgress);
-
-    void SyncLockAdjust(double oldT1, double newT1) override;
 
     /** @brief Returns true if there are no WaveClips in the specified region
      *
@@ -718,8 +716,7 @@ public:
 
 private:
     // May assume precondition: t0 <= t1
-    void HandleClear(
-        double t0, double t1, bool addCutLines, bool split, bool clearByTrimming = false);
+    void HandleClear(double t0, double t1, bool addCutLines, bool split, const bool moveClips, bool clearByTrimming = false);
 
     /*
      * @brief Copy/Paste operations must preserve beat durations, but time
@@ -785,7 +782,7 @@ private:
     /*
      @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
      */
-    void PasteWaveTrack(double t0, const WaveTrack& other, bool merge);
+    void PasteWaveTrack(double t0, const WaveTrack& other, bool merge, bool moveClips);
     /*
      * @copybrief ClearAndPasteAtSameTempo
      * @pre Preconditions of `PasteWaveTrack`
@@ -793,7 +790,7 @@ private:
      * other.GetProjectTempo()`
      */
     void
-    PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, bool merge);
+    PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, bool merge, bool moveClips);
 
     //! Whether all clips of an unzipped leader track have a common rate
     bool RateConsistencyCheck() const;
@@ -941,13 +938,7 @@ private:
     SampleBlockFactoryPtr mpFactory;
 };
 
-extern WAVE_TRACK_API BoolSetting
-    EditClipsCanMove
-;
-
 extern WAVE_TRACK_API StringSetting AudioTrackNameSetting;
-
-WAVE_TRACK_API bool GetEditClipsCanMove();
 
 // Generate a registry for serialized data
 #include "XMLMethodRegistry.h"
