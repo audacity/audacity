@@ -258,6 +258,16 @@ void OnSave(const CommandContext &context )
    projectFileManager.Save();
 }
 
+void OnDeleteTrack(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &projectTrackManager = ProjectTrackManager::Get(project);
+   projectTrackManager.DeleteTrack();
+}
+
+Command( wxT("DeleteTrack"), XXO("&Delete Track"), OnDeleteTrack,
+   AudioIONotBusyFlag(), wxT("Delete") ),
+   
 void OnSaveAs(const CommandContext &context )
 {
    auto &project = context.project;

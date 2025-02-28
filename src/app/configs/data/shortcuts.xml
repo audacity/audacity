@@ -300,6 +300,10 @@
         <seq>Ctrl+S</seq>
     </SC>
     <SC>
+        <key>track-delete</key>
+        <seq>Delete</seq>
+    </SC>
+    <SC>
         <key>file-save-as</key>
     </SC>
     <SC>

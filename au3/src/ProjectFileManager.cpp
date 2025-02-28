@@ -307,6 +307,18 @@ bool ProjectFileManager::Save()
    return DoSave(projectFileIO.GetFileName(), false);
 }
 
+bool ProjectTrackManager::DeleteTrack()
+{
+   auto &trackList = TrackList::Get(mProject);
+
+   if (trackList.IsEmpty())
+      return false;  // No tracks to delete
+   // Remove selected track
+   trackList.RemoveSelectedTrack();
+
+   return true;
+}
+
 #if 0
 // I added this to "fix" bug #334.  At that time, we were on wxWidgets 2.8.12 and
 // there was a window between the closing of the "Save" progress dialog and the
