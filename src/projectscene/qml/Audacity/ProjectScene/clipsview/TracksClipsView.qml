@@ -16,14 +16,6 @@ Rectangle {
     property var hoveredClipKey: null
     property bool tracksHovered: false
     property bool underSelection: false
-    property bool altPressed: false
-
-    readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
-    readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
-    readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
-    readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
-    readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
-    readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -126,19 +118,6 @@ Rectangle {
         Qt.callLater(tracksModel.load)
     }
 
-
-    Keys.onPressed: (event) => {
-        if (event.key === Qt.Key_Alt) {
-            root.altPressed = true
-        }
-    }
-
-    Keys.onReleased: (event) => {
-        if (event.key === Qt.Key_Alt) {
-            root.altPressed = false
-        }
-    }
-
     Rectangle {
         id: timelineIndent
         anchors.top: parent.top
@@ -221,24 +200,6 @@ Rectangle {
         }
     }
 
-    CustomCursor {
-        id: customCursor
-        active: (content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
-            || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
-        source: {
-            if (content.isBrush) {
-                return smoothShape
-            }
-
-            if (content.isNearSample) {
-                return pencilShape
-            }
-
-            return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
-        }
-        size: !content.isBrush && content.isNearSample ? 36 : 26
-    }
-
     Rectangle {
         id: content
         objectName: "clipsView"
@@ -247,13 +208,6 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-
-        property bool isBrush: false
-        property bool isNearSample: false
-        property bool leftTrimContainsMouse: false
-        property bool rightTrimContainsMouse: false
-        property bool leftTrimPressedButtons: false
-        property bool rightTrimPressedButtons: false
 
         GridLines {
             timelineRuler: timeline.ruler
@@ -274,10 +228,6 @@ Rectangle {
             }
 
             onPressed: function(e) {
-                if (root.altPressed) {
-                    return
-                }
-
                 if (e.button === Qt.LeftButton) {
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
@@ -386,15 +336,6 @@ Rectangle {
                 property real lockedVerticalScrollPosition
                 property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
 
-                function checkIfAnyTrack(f) {
-                    for (let i = 0; i < tracksClipsView.count; i++) {
-                        if (f(tracksClipsView.itemAtIndex(i))) {
-                            return true
-                        }
-                    }
-                    return false
-                }
-
                 signal clipMoveRequested(var clipKey, bool completed)
                 signal clipStartEditRequested(var clipKey)
                 signal startAutoScroll()
@@ -457,7 +398,6 @@ Rectangle {
                     isMultiSelectionActive: model.isMultiSelectionActive
                     moveActive: tracksClipsView.moveActive
                     underSelection: root.underSelection
-                    altPressed: root.altPressed
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack
@@ -512,42 +452,6 @@ Rectangle {
 
                     onInteractionEnded: {
                         tracksViewState.requestVerticalScrollUnlock()
-                    }
-
-                    onIsBrushChanged: function() {
-                        content.isBrush = tracksClipsView.checkIfAnyTrack(function(track) {
-                            return track.isBrush
-                        })
-                    }
-
-                    onIsNearSampleChanged: function() {
-                        content.isNearSample = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.isNearSample
-                        })
-                    }
-
-                    onLeftTrimContainsMouseChanged: function() {
-                        content.leftTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.leftTrimContainsMouse
-                        })
-                    }
-
-                    onRightTrimContainsMouseChanged: function() {
-                        content.rightTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.rightTrimContainsMouse
-                        })
-                    }
-
-                    onLeftTrimPressedButtonsChanged: function() {
-                        content.leftTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.leftTrimPressedButtons
-                        })
-                    }
-
-                    onRightTrimPressedButtonsChanged: function() {
-                        content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.rightTrimPressedButtons
-                        })
                     }
                 }
 

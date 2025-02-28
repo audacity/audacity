@@ -130,15 +130,7 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
 
 void WaveView::paint(QPainter* painter)
 {
-    IWavePainter::Params params = getWavePainterParams();
-    IWavePainter::PlotType pType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, params.zoom);
-
-    bool isStemPlot = pType == IWavePainter::PlotType::Stem;
-
-    setIsStemPlot(isStemPlot);
-    setAntialiasing(isStemPlot);
-
-    wavePainter()->paint(*painter, m_clipKey.key, params, pType);
+    wavePainter()->paint(*painter, m_clipKey.key, getWavePainterParams());
 }
 
 ClipKey WaveView::clipKey() const
@@ -252,31 +244,6 @@ void WaveView::setIsNearSample(bool isNearSample)
     emit isNearSampleChanged();
 }
 
-bool WaveView::isStemPlot() const
-{
-    return m_isStemPlot;
-}
-
-void WaveView::setIsStemPlot(bool isStemPlot)
-{
-    if (m_isStemPlot == isStemPlot) {
-        return;
-    }
-
-    m_isStemPlot = isStemPlot;
-    emit isStemPlotChanged();
-}
-
-int WaveView::currentChannel() const
-{
-    return m_currentChannel.value_or(0);
-}
-
-void WaveView::setCurrentChannel(int currentChannel)
-{
-    m_currentChannel = currentChannel;
-}
-
 QColor WaveView::transformColor(const QColor& originalColor) const
 {
     int r = originalColor.red();
@@ -302,7 +269,7 @@ void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)
     }
 
     const auto params = getWavePainterParams();
-    m_currentChannel =  samplespainterutils::hitChannelIndex(globalContext()->currentProject(), m_clipKey.key, QPoint(x, y), params);
+    m_currentChannel =  samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, QPoint(x, y), params);
     setIsNearSample(m_currentChannel.has_value());
 }
 
@@ -319,30 +286,11 @@ void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const
     const auto params = getWavePainterParams();
 
     if (!m_currentChannel.has_value()) {
-        m_currentChannel = samplespainterutils::hitChannelIndex(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+        m_currentChannel = samplespainterutils::isNearSample(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
         return;
     }
 
     samplespainterutils::setLastClickPos(
         m_currentChannel.value(),
         globalContext()->currentProject(), m_clipKey.key, lastPosition, currentPosition, params);
-}
-
-void WaveView::smoothLastClickPos(unsigned int x, const unsigned int y)
-{
-    if (!m_isStemPlot) {
-        return;
-    }
-
-    const auto currentPosition = QPoint(x, y);
-    const auto params = getWavePainterParams();
-
-    if (!m_currentChannel.has_value()) {
-        m_currentChannel = samplespainterutils::hitChannelIndex(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
-        return;
-    }
-
-    samplespainterutils::smoothLastClickPos(
-        m_currentChannel.value(),
-        globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
 }

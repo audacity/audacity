@@ -25,7 +25,7 @@ void drawSampleHead(const au::projectscene::SampleData& samples, const au::proje
 
     painter.setBrush(style.sampleBrush);
 
-    auto pr = QRectF(0, 0, SAMPLE_TICK_SIZE, SAMPLE_TICK_SIZE);
+    auto pr = QRect(0, 0, SAMPLE_TICK_SIZE, SAMPLE_TICK_SIZE);
     for (size_t s = 0; s < slen; s++) {
         if (samples.y[s] >= 0 && samples.y[s] < metrics.height) {
             if (selectedStartPosition <= samples.x[s] && samples.x[s] <= selectedEndPosition) {
@@ -49,9 +49,9 @@ void drawSampleStalk(const au::projectscene::SampleData& samples, int yZero, con
 
     const size_t slen = samples.size();
     for (size_t s = 0; s < slen; s++) {
-        QPointF p1(metrics.left + samples.x[s], metrics.top + samples.y[s]);
-        QPointF p2(metrics.left + samples.x[s], yZero);
-        painter.drawLine(p1, p2);
+        painter.drawLine(
+            metrics.left + samples.x[s], metrics.top + samples.y[s],
+            metrics.left + samples.x[s], yZero);
     }
 }
 }

@@ -70,8 +70,6 @@ public:
     // origin specifies the pixel corresponding to time h
     int64 TimeToPosition(double time, int64 origin = 0, bool ignoreFisheye = false) const;
 
-    double TimeToPositionF(double time, int64 origin = 0, bool ignoreFisheye = false) const;
-
     // This always ignores the fisheye.  Use with caution!
     // You should prefer to call TimeToPosition twice, for endpoints, and take the difference!
     double TimeRangeToPixelWidth(double timeRange) const;

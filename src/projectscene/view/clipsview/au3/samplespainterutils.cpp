@@ -15,91 +15,6 @@ static constexpr auto X_MIN_DISTANCE = 5;
 static constexpr auto Y_MIN_DISTANCE = 5;
 static constexpr auto BASELINE_HIT_AREA_SIZE = 20;
 
-namespace {
-static constexpr int SMOOTHING_KERNEL_RADIUS = 3;
-static constexpr int SMOOTHING_BRUSH_RADIUS = 5;
-static constexpr double SMOOTHING_PROPORTION_MAX = 0.7;
-static constexpr double SMOOTHING_PROPORTION_MIN = 0.0;
-void applySmoothingKernel(const Floats& sampleRegion, Floats& newSampleRegion, const std::pair<int, int> sampleRegionRange)
-{
-    for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
-        float sumOfSamples = 0;
-        for (auto ii = -SMOOTHING_KERNEL_RADIUS; ii <= SMOOTHING_KERNEL_RADIUS; ++ii) {
-            const auto sampleRegionIndex
-                =ii + jj + SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS;
-            const auto inRange = sampleRegionRange.first <= sampleRegionIndex
-                                 && sampleRegionIndex < sampleRegionRange.second;
-            if (!inRange) {
-                continue;
-            }
-            //The average is a weighted average, scaled by a weighting kernel that is simply triangular
-            // A triangular kernel across N items, with a radius of R ( 2 R + 1 points), if the farthest:
-            // points have a probability of a, the entire triangle has total probability of (R + 1)^2.
-            // For sample number ii and middle brush sample M,  (R + 1 - abs(M-ii))/ ((R+1)^2) gives a
-            // legal distribution whose total probability is 1.
-            sumOfSamples += (SMOOTHING_KERNEL_RADIUS + 1 - abs(ii))
-                            * sampleRegion[sampleRegionIndex];
-        }
-        newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS]
-            =sumOfSamples
-              / ((SMOOTHING_KERNEL_RADIUS + 1) * (SMOOTHING_KERNEL_RADIUS + 1));
-    }
-}
-
-void mixSmoothingSamples(const Floats& sampleRegion, Floats& newSampleRegion)
-{
-    // Now that the NEW sample levels are determined, go through each and mix it appropriately
-    // with the original point, according to a 2-part linear function whose center has probability
-    // SMOOTHING_PROPORTION_MAX and extends out SMOOTHING_BRUSH_RADIUS, at which the probability is
-    // SMOOTHING_PROPORTION_MIN.  _MIN and _MAX specify how much of the smoothed curve make it through.
-    float prob;
-    for (auto jj = -SMOOTHING_BRUSH_RADIUS; jj <= SMOOTHING_BRUSH_RADIUS; ++jj) {
-        prob
-            =SMOOTHING_PROPORTION_MAX
-              - static_cast<float>(abs(jj)) / SMOOTHING_BRUSH_RADIUS
-              * (SMOOTHING_PROPORTION_MAX - SMOOTHING_PROPORTION_MIN);
-
-        newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS]
-            =newSampleRegion[jj + SMOOTHING_BRUSH_RADIUS] * prob
-              + sampleRegion[SMOOTHING_BRUSH_RADIUS + SMOOTHING_KERNEL_RADIUS + jj]
-              * (1 - prob);
-    }
-}
-
-std::vector<QPoint> interpolatePoints(const QPoint& previousPosition, const QPoint& finalPosition)
-{
-    std::vector<QPoint> container;
-    if (previousPosition.x() == finalPosition.x()) {
-        container.push_back(finalPosition);
-        return std::move(container);
-    }
-
-    container.reserve(std::abs(previousPosition.x() - finalPosition.x()));
-
-    // We do a simple linear interpolation if the move more than 1 pixel to avoid missing point due mouse fast movement
-    if (std::abs(previousPosition.x() - finalPosition.x()) > 1) {
-        const auto xdiff = std::abs(finalPosition.x() - previousPosition.x());
-        const auto ydiff = finalPosition.y() - previousPosition.y();
-        const auto rate = static_cast<double>(ydiff) / xdiff;
-
-        auto cnt = 0;
-        if (previousPosition.x() < finalPosition.x()) {
-            for (auto i = previousPosition.x(); i <= finalPosition.x(); i++) {
-                container.push_back(QPoint(i, previousPosition.y() + (rate * cnt)));
-                cnt++;
-            }
-        } else {
-            for (auto i = finalPosition.x(); i <= previousPosition.x(); i++) {
-                container.push_back(QPoint(i, finalPosition.y() + (-rate * cnt)));
-                cnt++;
-            }
-        }
-    }
-
-    return std::move(container);
-}
-}
-
 namespace au::projectscene::samplespainterutils {
 float FromDB(float value, double dBRange)
 {
@@ -238,13 +153,13 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     Floats buffer{ slen };
     clip.GetSamples(channelIndex, (samplePtr)buffer.get(), floatSample, s0, slen, false);
 
-    auto xpos = std::vector<double>(slen);
-    auto ypos = std::vector<double>(slen);
+    auto xpos = std::vector<int>(slen);
+    auto ypos = std::vector<int>(slen);
     const auto invRate = 1.0 / rate;
 
     for (size_t s = 0; s < slen; s++) {
         const double time = (s + s0).as_double() / rate;
-        const double xx = zoomInfo.TimeToPositionF(time);
+        const int xx = std::max(-10000, std::min(10000, static_cast<int>(zoomInfo.TimeToPosition(time))));
         xpos[s] = xx;
 
         const double value = clip.GetEnvelope().GetValue(time, invRate);
@@ -257,8 +172,8 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     return SampleData(ypos, xpos);
 }
 
-std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
-                                   const QPoint& position, const IWavePainter::Params& params)
+std::optional<int> isNearSample(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
+                                const QPoint& position, const IWavePainter::Params& params)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
@@ -315,7 +230,6 @@ std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject
 
         // It not on the baseline hit area check if it is closer enough to x position
         if (std::abs(adjustedPosition - position.x()) > X_MIN_DISTANCE) {
-            top += static_cast<int>(waveMetrics.height);
             continue;
         }
 
@@ -352,6 +266,29 @@ std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject
     return (*it).first;
 }
 
+void interpolatePoints(std::vector<QPoint>& container, const QPoint& previousPosition, const QPoint& finalPosition)
+{
+    // We do a simple linear interpolation if the move more than 1 pixel to avoid missing point due mouse fast movement
+    if (std::abs(previousPosition.x() - finalPosition.x()) > 1) {
+        const auto xdiff = std::abs(finalPosition.x() - previousPosition.x());
+        const auto ydiff = finalPosition.y() - previousPosition.y();
+        const auto rate = static_cast<double>(ydiff) / xdiff;
+
+        auto cnt = 0;
+        if (previousPosition.x() < finalPosition.x()) {
+            for (auto i = previousPosition.x(); i <= finalPosition.x(); i++) {
+                container.push_back(QPoint(i, previousPosition.y() + (rate * cnt)));
+                cnt++;
+            }
+        } else {
+            for (auto i = finalPosition.x(); i <= previousPosition.x(); i++) {
+                container.push_back(QPoint(i, finalPosition.y() + (-rate * cnt)));
+                cnt++;
+            }
+        }
+    }
+}
+
 void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
                      const trackedit::ClipKey& clipKey, const QPoint& lastPosition, const QPoint& currentPosition,
                      const IWavePainter::Params& params)
@@ -376,7 +313,13 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
     std::advance(it, currentChannel);
     const auto waveChannel = *it;
 
-    const std::vector<QPoint> points = interpolatePoints(lastPosition, currentPosition);
+    std::vector<QPoint> points;
+    if (std::abs(lastPosition.x() - currentPosition.x()) > 1) {
+        points.reserve(std::abs(lastPosition.x() - currentPosition.x()));
+        interpolatePoints(points, lastPosition, currentPosition);
+    } else {
+        points.push_back(currentPosition);
+    }
 
     const std::vector<double> channelHeight {
         params.geometry.height * params.channelHeightRatio,
@@ -396,36 +339,28 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
 
     const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
 
-    double startTime = -1.0;
-    double clip_duration = waveClip->GetPlayDuration();
-    double lastAdjustedTime = -1.0;
+    const auto startTime = zoomInfo.PositionToTime(points[0].x());
 
+    double lastAdjustedTime = 0;
     std::vector<float> samples;
     samples.reserve(points.size());
     for (const auto& point : points) {
         const auto time = zoomInfo.PositionToTime(point.x());
-
-        if (time < 0 || time > clip_duration) {
-            //We do not process points from other clips
+        const auto clip = WaveChannelUtilities::GetClipAtTime(*waveChannel, time + waveClip->GetPlayStartTime());
+        if (!clip) {
             continue;
         }
 
-        if (startTime < 0 || startTime > clip_duration) {
-            //Adjust clip duration to the first valid point
-            startTime = time;
-        }
-
-        const auto sampleOffset = waveClip->TimeToSamples(time);
-        const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
+        const auto sampleOffset = clip->TimeToSamples(time);
+        const auto adjustedTime = clip->SamplesToTime(sampleOffset);
 
         if (adjustedTime == lastAdjustedTime) {
-            //Remove points on the same sample
             continue;
         }
         lastAdjustedTime = adjustedTime;
 
         float oneSample;
-        if (!WaveClipUtilities::GetFloatAtTime(*waveClip, adjustedTime, currentChannel, oneSample, false)) {
+        if (!WaveClipUtilities::GetFloatAtTime(clip->GetClip(), adjustedTime, currentChannel, oneSample, false)) {
             continue;
         }
 
@@ -436,78 +371,8 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
         float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
         samples.push_back(newValue);
     }
-
-    if (startTime < 0) {
-        return;
-    }
-
     WaveChannelUtilities::SetFloatsFromTime(*waveChannel, startTime + waveClip->GetPlayStartTime(), samples.data(),
                                             samples.size(), narrowestSampleFormat,
                                             PlaybackDirection::forward);
-}
-
-void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
-                        const trackedit::ClipKey& clipKey, const QPoint& currentPosition, const IWavePainter::Params& params)
-{
-    // Get the region size around the selected point (one central sample plus some kernel radius on both sides)
-    static constexpr size_t SAMPLE_REGION_SIZE = 1 + 2 * (SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS);
-    static constexpr size_t NEW_SAMPLE_REGION_SIZE = 1 + 2 * (SMOOTHING_BRUSH_RADIUS);
-
-    //  Smoothing works like this:  There is a smoothing kernel radius constant that
-    //  determines how wide the averaging window is.  Plus, there is a smoothing brush radius,
-    //  which determines how many pixels wide around the selected pixel this smoothing is applied.
-    //
-    //  Samples will be replaced by a mixture of the original points and the smoothed points,
-    //  with a triangular mixing probability whose value at the center point is
-    //  SMOOTHING_PROPORTION_MAX and at the far bounds is SMOOTHING_PROPORTION_MIN
-
-    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
-    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
-    if (!track) {
-        return;
-    }
-
-    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
-    if (!waveClip) {
-        return;
-    }
-
-    const auto channels = track->Channels();
-    if (currentChannel >= channels.size()) {
-        return;
-    }
-
-    auto it = channels.begin();
-    std::advance(it, currentChannel);
-
-    auto channel = *it;
-
-    auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
-    const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
-
-    const auto time = zoomInfo.PositionToTime(currentPosition.x());
-    const auto sampleOffset = waveClip->TimeToSamples(time);
-    const auto adjustedTime = waveClip->SamplesToTime(sampleOffset);
-
-    Floats sampleRegion{ SAMPLE_REGION_SIZE };
-    Floats newSampleRegion{ NEW_SAMPLE_REGION_SIZE };
-
-    //Get a sample from the clip to do some tricks on.
-    constexpr auto mayThrow = false;
-    const auto sampleRegionRange = WaveChannelUtilities::GetFloatsCenteredAroundTime(*channel,
-                                                                                     adjustedTime + waveClip->GetPlayStartTime(),
-                                                                                     sampleRegion.get(),
-                                                                                     SMOOTHING_KERNEL_RADIUS + SMOOTHING_BRUSH_RADIUS,
-                                                                                     mayThrow);
-
-    applySmoothingKernel(sampleRegion, newSampleRegion, sampleRegionRange);
-    mixSmoothingSamples(sampleRegion, newSampleRegion);
-
-    // Set a range of samples around the mouse event
-    // Don't require dithering later
-    WaveChannelUtilities::SetFloatsCenteredAroundTime(*channel,
-                                                      adjustedTime + waveClip->GetPlayStartTime(),
-                                                      newSampleRegion.get(), SMOOTHING_BRUSH_RADIUS,
-                                                      narrowestSampleFormat);
 }
 }
