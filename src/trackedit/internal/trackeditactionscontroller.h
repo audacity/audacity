@@ -49,25 +49,36 @@ private:
     void doGlobalCopy();
     void doGlobalCut();
     void doGlobalDelete();
-    void doGlobalSplitCut();
-    void doGlobalSplitDelete();
+    void paste();
     void doGlobalSplit();
     void doGlobalJoin();
     void doGlobalDuplicate();
 
+    void doGlobalCutLeaveGap();
+    void doGlobalCutPerClipRipple();
+    void doGlobalCutPerTrackRipple();
+    void doGlobalCutAllTracksRipple();
+
+    void pasteReplace();
+    void pasteInsert();
+    void pasteInsertRipple();
+
+    void doGlobalDeleteLeaveGap();
+    void doGlobalDeletePerClipRipple();
+    void doGlobalDeletePerTrackRipple();
+    void doGlobalDeleteAllTracksRipple();
+
     void clipCut(const muse::actions::ActionData& args);
-    void multiClipCut();
-    void rangeSelectionCut();
+    void multiClipCut(const muse::actions::ActionData& args);
+    void rangeSelectionCut(const muse::actions::ActionData& args);
 
     void clipCopy(const muse::actions::ActionData& args);
     void multiClipCopy();
     void rangeSelectionCopy();
 
     void clipDelete(const muse::actions::ActionData& args);
-    void multiClipDelete();
-    void rangeSelectionDelete();
-
-    void paste();
+    void multiClipDelete(const muse::actions::ActionData& args);
+    void rangeSelectionDelete(const muse::actions::ActionData& args);
 
     void trackSplit(const muse::actions::ActionData& args);
     void tracksSplitAt(const muse::actions::ActionData& args);
