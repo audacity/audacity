@@ -56,7 +56,10 @@ private:
     /// Scheduling update time for avoiding multiplying update notifications.
     bool IsTimeForUpdatesChecking();
 
+    void SendOptOutRequest() const;
+
     std::string GetUpdatesUrl() const;
+    std::string GetOptOutUrl() const;
 
     std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 

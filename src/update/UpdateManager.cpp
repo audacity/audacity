@@ -16,16 +16,22 @@
 
 #include "AudioIO.h"
 #include "BasicUI.h"
+#include "HeadersList.h"
 #include "NetworkManager.h"
 #include "IResponse.h"
 #include "Request.h"
 #include "Uuid.h"
 
+#include <wx/log.h>
 #include <wx/utils.h>
 #include <wx/frame.h>
 #include <wx/app.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 #include <cstdint>
 
@@ -337,6 +343,41 @@ std::string UpdateManager::GetUpdatesUrl() const
    else return url;
 }
 
+std::string UpdateManager::GetOptOutUrl() const {
+   const std::string url = "https://api.audio.com/analytics/audacity-uuid/opt-out";
+   return url;
+}
+
+void UpdateManager::SendOptOutRequest() const {
+   using namespace rapidjson;
+   using namespace audacity::network_manager;
+
+   std::string uuid = InstanceId->Read().ToStdString();
+
+   Document document;
+   document.SetObject().AddMember("uuid",
+      Value(uuid.c_str(), document.GetAllocator()),
+      document.GetAllocator());
+
+   StringBuffer buffer;
+   Writer<StringBuffer> writer(buffer);
+   document.Accept(writer);
+
+   Request request(GetOptOutUrl());
+
+   request.setHeader(common_headers::ContentType, common_content_types::ApplicationJson);
+   request.setHeader(common_headers::Accept, common_content_types::ApplicationJson);
+
+   auto response = NetworkManager::GetInstance().doPost(request, buffer.GetString(), buffer.GetSize());
+
+   response->setRequestFinishedCallback([response](auto) {
+      if (response->getHTTPCode() != HttpCode::OK) {
+         wxLogWarning(wxT("Failed to communicate with Audio.com. Error code: %d."), response->getHTTPCode());
+         wxLogWarning(wxT("Server response: %s"), response->readAll<std::string>());
+      }
+   });
+}
+
 void UpdateManager::UpdatePrefs()
 {
    //! Create the instance id if the user allowed it and it was not created before
@@ -345,5 +386,8 @@ void UpdateManager::UpdatePrefs()
          InstanceId->Write(audacity::Uuid::Generate().ToHexString());
          gPrefs->Flush();
       }
+   }
+   else {
+      SendOptOutRequest();
    }
 }
