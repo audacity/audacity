@@ -169,7 +169,7 @@ void GetEffectsDialog::FetchImage(RoundedStaticBitmap* bitmap, const std::string
 void GetEffectsDialog::AddLoadingPage() {
    wxPanel* page = safenew wxPanel();
    page->Hide();
-   page->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
+   page->Create(m_treebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
 
    wxBoxSizer* sizer = safenew wxBoxSizer(wxVERTICAL);
    page->SetSizer(sizer);
@@ -187,7 +187,7 @@ void GetEffectsDialog::AddLoadingPage() {
 void GetEffectsDialog::AddBecomeAPartnerPage() {
    wxPanel* page = safenew wxPanel();
    page->Hide();
-   page->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
+   page->Create(m_treebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
 
    wxBoxSizer* sizer = safenew wxBoxSizer(wxVERTICAL);
 
@@ -227,7 +227,7 @@ void GetEffectsDialog::AddBecomeAPartnerPage() {
 void GetEffectsDialog::AddLoadingErrorPage() {
    wxPanel* page = safenew wxPanel();
    page->Hide();
-   page->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
+   page->Create(m_treebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE);
 
    wxBoxSizer* sizer = safenew wxBoxSizer(wxVERTICAL);
 
