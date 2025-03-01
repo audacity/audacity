@@ -5,7 +5,7 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2024
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025
 #
 #, fuzzy
 msgid ""
@@ -13,14 +13,15 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-02-13 19:07+0300\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2024\n"
+"PO-Revision-Date: 2025-03-01 02:41+0100\n"
+"Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
 "Language: co\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.5.2\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -129,12 +130,12 @@ msgstr "Cumportu d’attesa altu di lettura : %g\n"
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Playback Rates:\n"
-msgstr ""
+msgstr "Cadenze di lettura accettate :\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Capture Rates:\n"
-msgstr ""
+msgstr "Cadenze di cattura accettate :\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -554,12 +555,12 @@ msgstr "Limitatore forte 1413"
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Saturazione forte -12dB, guadagnu di cumpensazione di 80%"
+msgstr "Saturazione forte -12dB, guadagnu di cumpensu di 80%"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 #, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "Saturazione dolce -12dB, guadagnu di cumpensazione di 80%"
+msgstr "Saturazione dolce -12dB, guadagnu di cumpensu di 80%"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Fuzz Box"
@@ -819,7 +820,7 @@ msgstr "Rivolteghja i campioni audio à l’arritrosa inververtiscendu e so pula
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr ""
+msgstr "Cumpressore anzianu"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -942,15 +943,15 @@ msgstr "Definisce l’ampiitutine di piccu d’una o parechje traccie"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr "Cacciatura di u spustamentu DC è nurmalizazione…\n"
+msgstr "Cacciatura di u spustime DC è nurmalizazione…\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Removing DC offset...\n"
-msgstr "Cacciatura di u spustamentu DC…\n"
+msgstr "Cacciatura di u spustime DC…\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr "Nurmalizazione senza cacciatura di u spustamentu DC…\n"
+msgstr "Nurmalizazione senza cacciatura di u spustime DC…\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Not doing anything...\n"
@@ -2619,7 +2620,7 @@ msgstr "misura:palpitu"
 #. corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr "misura:palitu:16esimu"
+msgstr "misura:palpitu:16esimu"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -2984,6 +2985,9 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
+"Per impiegà l’effetti spettrale, attivate « Selezzione spettrale »\n"
+"in i parametri di spettrogrammu di a traccia è selezziunate a\n"
+"gamma di frequenze induve l’effettu deve agisce."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -3258,12 +3262,11 @@ msgstr ""
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
 msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
-msgstr ""
+msgstr "Stu prughjettu hè statu creatu da una versione più vechja d’Audacity. Quand’ellu serà arregistratu, u prughjettu puderà esse apertu solu cù Audacity versione %s o più recente."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-#, fuzzy
 msgid "Project update required"
-msgstr "U prughjettu hè statu ricuperatu"
+msgstr "Messa à livellu richiesta di u prughjettu"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4725,31 +4728,31 @@ msgstr "Sbagliu internu in l’impurtadore… etichetta micca ricunnisciuta"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
-msgstr "Attributu di prughjettu « vpos » inaccettevule."
+msgstr "L’attributu « vpos » di u prughjettu hè inaccettevule."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'h' attribute."
-msgstr "Attributu di prughjettu « h » inaccettevule."
+msgstr "L’attributu « h » di u prughjettu hè inaccettevule."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'zoom' attribute."
-msgstr "Attributu di prughjettu « zoom » inaccettevule."
+msgstr "L’attributu « zoom » di u prughjettu hè inaccettevule."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel0' attribute."
-msgstr "Attributu di prughjettu « sel0 » inaccettevule."
+msgstr "L’attributu « sel0 » di u prughjettu hè inaccettevule."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel1' attribute."
-msgstr "Attributu di prughjettu « sel1 » inaccettevule."
+msgstr "L’attributu « sel1 » di u prughjettu hè inaccettevule."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selLow' attribute."
-msgstr "Attributu di prughjettu « selLow » inaccettevule."
+msgstr "L’attributu « selLow » di u prughjettu hè inaccettevule."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selHigh' attribute."
-msgstr "Attributu di prughjettu « selHigh » inaccettevule."
+msgstr "L’attributu « selHigh » di u prughjettu hè inaccettevule."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
@@ -4757,9 +4760,8 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Ùn si pò micca truvà u cartulare di dati di prughjettu : « %s »"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid project 'rate' attribute."
-msgstr "Attributu di prughjettu « h » inaccettevule."
+msgstr "L’attributu « rate » di u prughjettu hè inaccettevule."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -5961,7 +5963,7 @@ msgstr "Lista di i schedarii in furmatu di testu"
 #. i18n-hint: You do not need to translate "LOF"
 #: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid window offset in LOF file."
-msgstr "Spustamentu di finestra inaccettevule in u schedariu LOF."
+msgstr "Spustime di finestra inaccettevule in u schedariu LOF."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: modules/import-export/mod-lof/ImportLOF.cpp
@@ -5975,7 +5977,7 @@ msgstr "E traccie MIDI ùn ponu micca esse cumpensate individualmente, solu i sc
 #. i18n-hint: You do not need to translate "LOF"
 #: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid track offset in LOF file."
-msgstr "Spustamentu di traccia inaccettevule in u schedariu LOF."
+msgstr "Spustime di traccia inaccettevule in u schedariu LOF."
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Version"
@@ -6057,7 +6059,7 @@ msgstr "45-85 kbps (i più chjuchi schedarii)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive, 320 kbps"
-msgstr ""
+msgstr "Eccessivu, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -6073,7 +6075,7 @@ msgstr "Medianu, 145-185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr ""
+msgstr "Eccessivu"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -7289,9 +7291,8 @@ msgstr "Sparte l’audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
 msgid "Get Effects"
-msgstr "Effetti"
+msgstr "Ottinite effetti"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7311,7 +7312,7 @@ msgstr "Cunnettesi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
-msgstr ""
+msgstr "&Scunnettesi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7467,63 +7468,67 @@ msgstr "L&igà u contu audio.com…"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "Creà un contu di nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
-msgstr ""
+msgstr "Cunnittitevi à u nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
+"Umbè ! Pare ch’ella ci sia un prublema cù a vostra stampittera.\n"
+"Assicuratevi chì u vostru indirizzu elettronicu sia currettu è chì a vostra parolla d’intesa cunteni omancu 8 caratteri"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
+"Per disgrazia, pare chì l’indirizzu elettronicu, a parolla d’intesa, o i dui, sianu incurretti.\n"
+"Ci vole à verificà e vostre infurmazioni di cunnessione è pruvà torna."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create an account to save to the cloud"
-msgstr ""
+msgstr "Create un contu per arregistrà in u nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
-msgstr ""
+msgstr "Cunnittitevi per arregistrà in u nivulu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "Cuntinuà cù Google"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "Cuntinuà cù Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "Indirizzu elettronicu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "Parolla d’intesa"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Parolla d’intesa scurdata ?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "Un contu, l’avete dighjà ? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
-msgstr ""
+msgstr "Cunnittitevi quì"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr ""
+msgstr "Bisognu d’un contu ? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -7815,45 +7820,40 @@ msgid "An action on audio.com is required before you can continue. Once you are 
 msgstr "Un’azzione hè richiesta nant’à audio.com nanzu di pudè cuntinuà. Quand’ella serà fatta, fate un cliccu nant’à Pruvà torna"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
 msgid "Loading..."
-msgstr "Ca&ricà…"
+msgstr "Caricamentu…"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
 msgid "Please wait..."
-msgstr "Reini&zià…"
+msgstr "Aspittate per piacè…"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
 msgid "Connection error"
-msgstr "Sbagliu scunnisciutu"
+msgstr "Sbagliu di cunnessione"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
-msgstr ""
+msgstr "Audacity ùn riesce micca à cunnettesi à MuseHub.com. Ci vole à verificà a vostra cunnessione è pruvà torna."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
 msgid "Try again"
-msgstr "&Pruvà torna"
+msgstr "Pruvà torna"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
 msgid "Get it on MuseHub"
-msgstr "Fonti d’arregistramentu dispunibule :\n"
+msgstr "Truvatelu nant’à MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a partner"
-msgstr ""
+msgstr "Diventà un(a) cumpagnu(a)"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a MuseHub partner"
-msgstr ""
+msgstr "Diventate un(a) cumpagnu(a) di MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
-msgstr ""
+msgstr "Pudete raghjunghje milioni creatori di musica publichendu i vostri appiecazioni, effetti è soni nant’à MuseHub. S’è vo site un sviluppatore è interessatu da a publicazione di i vostri prudutti nant’à MuseHub, pudete fane a dumanda oghje."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -9947,7 +9947,7 @@ msgstr "Mischiadore %s d’Audacity"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Volume"
-msgstr ""
+msgstr "Vulume"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9989,7 +9989,7 @@ msgstr "Vu-metru di u signale"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved volume slider"
-msgstr ""
+msgstr "Cursore di vulume dispiazzatu"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10704,15 +10704,15 @@ msgstr "Accende/Spenghje"
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change settings for realtime effect %s on %s"
-msgstr ""
+msgstr "Cambià l’effettu in tempu reale %s nant’à %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #.
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Change realtime effect %s on %s"
-msgstr "Effetti in tempu reale per %s"
+msgstr "Cambià i parametri per l’effettu in tempu reale %s nant’à %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -11536,19 +11536,19 @@ msgstr "Calibrera compia"
 
 #: src/WhatsNewDialog.cpp
 msgid "<font color=\"#000000\">"
-msgstr ""
+msgstr "<font color=\"#000000\">"
 
 #: src/WhatsNewDialog.cpp
 msgid "Sign up to Audacity's cloud saving platform"
-msgstr ""
+msgstr "Cunnittitevi à a piattaforma d’arregistramentu in u nivulu d’Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "and access your projects from anywhere!"
-msgstr ""
+msgstr "è accidite à i vostri prughjetti in ogni locu !"
 
 #: src/WhatsNewDialog.cpp
 msgid "</font>"
-msgstr ""
+msgstr "</font>"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
@@ -11558,12 +11558,12 @@ msgstr "Ciò chì hè novu in Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr ""
+msgstr "Fighjate u [[%s|filmettu di a versione]] o lighjite u [[%s|ghjurnale di i cambiamenti]] per sapene di più annantu à ciò chì no avemu cambiatu in l’ultima versione !</p>"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "You can also read the [[%s|changelog]]</p>"
-msgstr ""
+msgstr "Pudete leghje ancu u [[%s|ghjurnale di i cambiamenti]]</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11576,70 +11576,68 @@ msgstr "<p>Fighjate a nostra [[%s|appiecazione Hub Muse]] per una scelta tamanta
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
+msgstr "Un effettu di trattamentu vucale chì megliureghja a chjarezza è a prufundezza di a voce."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
+msgstr "Un modulu d’estensione pulivalente di riverberazione per effetti sunori spaziosi è naturali."
 
 #: src/WhatsNewDialog.cpp
 msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr ""
+msgstr "Un modulu d’estensione d’amplificazione è di mudellizazione d’effetti per a chitarra chì permette tunalità realiste è soni persunalizavule."
 
 #: src/WhatsNewDialog.cpp
 msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr ""
+msgstr "Un modulu d’estensione reattivu di riverberazione chì s’adatta à a dinamica di a traccia per creà paisagi sunori immersivi."
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr ""
+msgstr "Un modulu d’estensione multieffettu vucale chì megliureghja e traccie di voce per dà un risultatu prufessiunale."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
+msgstr "Un modulu d’estensione d’effettu di bassu cuncepitu per pruvede un sonu di bassu chjaru è percutente."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
+msgstr "Un modulu d’estensione per a perfezzione di u sonu acusticu chì megliureghja u calore è a chjarezza."
 
 #: src/WhatsNewDialog.cpp
 msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr ""
+msgstr "Un modulu d’estensione stunente d’amendamentu di a voce per creà effetti vucali prufessiunali chjari cum’è u cristallu."
 
 #: src/WhatsNewDialog.cpp
 msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
+msgstr "Un attrezzu in tempu reale di staccamentu d’elementi sunori per isulà e voce, a batteria è l’altri istrumenti."
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Scuprite moduli d’estensione numerosi, creati da sviluppatori famosi, dispunibule nant’à [[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr ""
+msgstr "Un cumpressore multibanda chì permette un cuntrollu precisu di e frequenze."
 
 #: src/WhatsNewDialog.cpp
 msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr ""
+msgstr "Ace Studio - U generatore IA di voce cantata n°1 à u mondu."
 
 #: src/WhatsNewDialog.cpp
 msgid "Continue for Cloud Storage"
-msgstr ""
+msgstr "Cuntinuà per l’allucamentu nant’à u nivulu"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Benvenuti in Audacity !"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Watch the release video"
-msgstr "Fighjà u filmettu"
+msgstr "Fighjà u filmettu di a versione"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Available on MuseHub"
-msgstr "Fonti d’arregistramentu dispunibule :\n"
+msgstr "Dispunibule nant’à MuseHub"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12265,7 +12263,7 @@ msgstr "Definisce a traccia audio"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Volume:"
-msgstr ""
+msgstr "Vulume :"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -12465,7 +12463,7 @@ msgstr "&Ligà u cuntrollu di vulume à i cuntrolli di tunalità"
 #: src/effects/ChangePitch.cpp
 #, c-format
 msgid "Estimated Start Pitch: %s%d (%.3f Hz)"
-msgstr "Principiu estimatu d’altezza  : %s%d (%.3f Hz)"
+msgstr "Principiu estimatu d’altezza : %s%d (%.3f Hz)"
 
 #. i18n-hint: (noun) Musical pitch.
 #: src/effects/ChangePitch.cpp
@@ -12974,7 +12972,7 @@ msgstr "Lettore"
 
 #: src/effects/Distortion.cpp
 msgid "Make-up Gain"
-msgstr "Guadagnu di cumpensazione"
+msgstr "Guadagnu di cumpensu"
 
 #: src/effects/Distortion.cpp
 msgid "Clipping threshold"
@@ -13136,11 +13134,11 @@ msgstr "&Sogliu (dB)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Make-up gain (dB)"
-msgstr "&Guadagnu di cumpensazione (dB)"
+msgstr "&Guadagnu di cumpensu (dB)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Make-up target (dB)"
-msgstr "&Destinazione di cumpensazione (dB)"
+msgstr "&Destinazione di cumpensu (dB)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "Knee &width (dB)"
@@ -13510,7 +13508,7 @@ msgstr "&Graficu"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Interpolation type"
-msgstr "Tipu d’interpolazione"
+msgstr "Tipu d’interpulazione"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Linear Frequency Scale"
@@ -13685,7 +13683,7 @@ msgstr "Aumenteghja a sunurità bench’è riducendu a disturzione."
 
 #: src/effects/Loudness.cpp
 msgid "perceived loudness"
-msgstr "intensità percepità"
+msgstr "sunurità risentuta"
 
 #: src/effects/Loudness.cpp src/widgets/MeterPanel.cpp
 msgid "RMS"
@@ -13892,7 +13890,7 @@ msgstr "Metoda di discriminazione :"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
-msgstr "&Caccià u spustamentu DC (centrà nant’à 0.0 verticalmente)"
+msgstr "&Caccià u spustime DC (centrà nant’à 0.0 verticalmente)"
 
 #: src/effects/Normalize.cpp
 msgid "&Normalize peak amplitude to   "
@@ -14246,7 +14244,7 @@ msgstr "Ampiitutine di fine"
 
 #: src/effects/ToneGen.cpp
 msgid "I&nterpolation:"
-msgstr "&Interpolazione :"
+msgstr "&Interpulazione :"
 
 #: src/effects/TruncSilence.cpp
 msgid "Detect Silence"
@@ -14328,11 +14326,11 @@ msgstr "Dimensione di u &stampone (da 8 à 1048576 campioni) :"
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "Latency Compensation"
-msgstr "Cumpensazione di tempu d’attesa"
+msgstr "Cumpensu di tempu d’attesa"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
-msgstr "Durante i so trattamenti, certi effetti VST devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette sta cumpensazione, ma forse ùn funziunerà micca per tutti l’effetti VST."
+msgstr "Durante i so trattamenti, certi effetti VST devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette stu cumpensu, ma forse ùn funziunerà micca per tutti l’effetti VST."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14340,7 +14338,7 @@ msgstr "Durante i so trattamenti, certi effetti VST devenu indusgiulà l’audio
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "Enable &compensation"
-msgstr "Attivà a &cumpensazione"
+msgstr "Attivà a &cumpensu"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14372,7 +14370,7 @@ msgstr "Caricà a prerigatura VST3 :"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
-msgstr "Durante i so trattamenti, certi effetti VST3 devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette sta cumpensazione, ma forse ùn funziunerà micca per tutti l’effetti VST3."
+msgstr "Durante i so trattamenti, certi effetti VST3 devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette stu cumpensu, ma forse ùn funziunerà micca per tutti l’effetti VST3."
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
@@ -14396,7 +14394,7 @@ msgstr "Spustamen&tu di frequenza Wah (%) :"
 
 #: src/effects/Wahwah.cpp
 msgid "Wah frequency offset in percent"
-msgstr "Spustamentu di frequenza Wah in percentuale"
+msgstr "Spustime di frequenza Wah in percentuale"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -14448,7 +14446,7 @@ msgstr "Ozzioni d’effettu « Audio Unit »"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr "Durante i so trattamenti, certi effetti « Audio Unit » devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette sta cumpensazione, ma forse ùn funziunerà micca per tutti l’effetti « Audio Unit »."
+msgstr "Durante i so trattamenti, certi effetti « Audio Unit » devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette stu cumpensu, ma forse ùn funziunerà micca per tutti l’effetti « Audio Unit »."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
@@ -14494,7 +14492,7 @@ msgstr "Ozzioni d’effettu LADSPA"
 
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
 msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
-msgstr "Durante i so trattamenti, certi effetti LADSPA devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette sta cumpensazione, ma forse ùn funziunerà micca per tutti l’effetti LADSPA."
+msgstr "Durante i so trattamenti, certi effetti LADSPA devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette stu cumpensu, ma forse ùn funziunerà micca per tutti l’effetti LADSPA."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -14511,7 +14509,7 @@ msgstr "Dimensione di u stam&pone (da 8 à %d) campioni :"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr "Durante i so trattamenti, certi effetti LV2 devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette sta cumpensazione, ma forse ùn funziunerà micca per tutti l’effetti LV2."
+msgstr "Durante i so trattamenti, certi effetti LV2 devenu indusgiulà l’audio restituitu à Audacity. Quandu stu cumportu ùn hè micca cumpensatu, viderete chì chjuchi silenzii sò stati frametti in l’audio. Attivà st’ozzione per permette stu cumpensu, ma forse ùn funziunerà micca per tutti l’effetti LV2."
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
@@ -14894,7 +14892,7 @@ msgstr "Canali :"
 #. i18n-hint: (noun)
 #: src/import/ImportRaw.cpp
 msgid "Start offset:"
-msgstr "Spustamentu iniziale :"
+msgstr "Spustime iniziale :"
 
 #: src/import/ImportRaw.cpp
 msgid "bytes"
@@ -15096,11 +15094,11 @@ msgstr "Duppià"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut to clipboard and leave gap"
-msgstr ""
+msgstr "Taglià versu u preme’papei è cunserve u spaziu"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
-msgstr ""
+msgstr "Taglià è cunserve u spaziu"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15197,12 +15195,12 @@ msgstr "Cacciatura spe&ziale"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "&Cut and leave gap"
-msgstr ""
+msgstr "&Taglià è cunserve u spaziu"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "&Delete and leave gap"
-msgstr ""
+msgstr "&Squassà è cunserve u spaziu"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15335,7 +15333,7 @@ msgstr "&Dati grossi…"
 
 #: src/menus/FileMenus.cpp
 msgid "&Close Project"
-msgstr ""
+msgstr "&Chjode u prughjettu"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15398,19 +15396,16 @@ msgid "Audio Device Info"
 msgstr "Infurmazione d’apparechju audio"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Help"
-msgstr "Ai&utu prestu…"
+msgstr "Aiutu &prestu"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Manual"
-msgstr "&Manuale…"
+msgstr "&Manuale"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "Audacity &Support"
-msgstr "Dati d’assistenza Audacity"
+msgstr "&Assistenza Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -15464,11 +15459,11 @@ msgstr "Squassà l’audio marcatu"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr ""
+msgstr "Taglià e regioni audio marcate versu u preme’papei è cunserve u spaziu"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio and leave gap"
-msgstr ""
+msgstr "Taglià l’audio marcatu è cunserve u spaziu"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15580,28 +15575,28 @@ msgstr "&Taglià"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr ""
+msgstr "Taglià da l’etichetta"
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by label"
-msgstr ""
+msgstr "Squassà da l’etichetta"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "C&ut and leave gap"
-msgstr ""
+msgstr "Taglià è c&unserve u spaziu"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by labels and leave gap"
-msgstr ""
+msgstr "Taglià da l’etichette è cunserve u spaziu"
 
 #: src/menus/LabelMenus.cpp
 msgid "De&lete and leave gap"
-msgstr ""
+msgstr "Squassà è cunser&ve u spaziu"
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by labels and leave gap"
-msgstr ""
+msgstr "Squassà da l’etichette è cunserve u spaziu"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16713,7 +16708,7 @@ msgstr "Saltà à a fine di a selezzione"
 
 #: src/menus/ViewMenus.cpp
 msgid "E&xtra Menus"
-msgstr ""
+msgstr "&Listini addiziunali"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
@@ -16721,7 +16716,7 @@ msgstr "Affissà a saturazione in a &forma d’onda"
 
 #: src/menus/ViewMenus.cpp
 msgid "Sho&w RMS in Waveform"
-msgstr ""
+msgstr "Affissà a &RMS in a forma d’onda"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -16730,7 +16725,7 @@ msgstr "Preferenze per l’appiecazione"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Network communications"
-msgstr ""
+msgstr "Cumunicazioni di a reta"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16740,22 +16735,21 @@ msgstr "&Cuntrollà e nove versioni"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Requires network access."
-msgstr ""
+msgstr "Richiede un accessu à a reta."
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Send anonymous usage info"
-msgstr ""
+msgstr "&Mandà l’infurmazioni anonime d’aghjovu"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "We create a random ID to track how often Audacity is used."
-msgstr ""
+msgstr "Creemu un’identificazione aleatoria per seguità a frequenza d’impiegu d’Audacity."
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
-msgstr "Per prutege a vostra cunfidenzialità, Audacity ùn culletta alcuna infurmazione persunale. Sarrimanenti, a verificazione di i rinnovi di l’appiecazione richiede l’accessu à a reta."
+msgstr "Per prutege a vostra vita privata, Audacity ùn culletta alcuna infurmazione persunale chì permette d’identificavvi."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -16847,7 +16841,7 @@ msgstr "&Longhezza di stampone :"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "&Latency compensation:"
-msgstr "C&umpensazione di tempu d’attesa :"
+msgstr "C&umpensu di tempu d’attesa :"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "No audio interfaces"
@@ -17253,16 +17247,15 @@ msgstr "Ùn fà &nunda"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Always &match the loop tempo to the project tempo"
-msgstr ""
+msgstr "&Fà currisponde sempre u tempo di a ripetizione à quellu di u prughjettu"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
-msgstr ""
+msgstr "&Fà currisponde u tempo di a ripetizione à quellu di u prughjettu solu quandu a regula affisseghja « Palpiti è misure »"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "&Do nothing"
-msgstr "Ùn fà nunda"
+msgstr "Ùn fà &nunda"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
@@ -17270,11 +17263,11 @@ msgstr "Impurtazioni di musica"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing a music loop into an empty project, Audacity will:"
-msgstr ""
+msgstr "Quandu s’impurteghja una ripetizione musicale in un prughjettu viotu, Audacity appiecherà :"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
-msgstr ""
+msgstr "Quandu s’impurteghja una ripetizione musicale in un prughjettu esistente (non viotu), Audacity appiecherà :"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -19381,27 +19374,27 @@ msgstr "Cambiamentu di culore d’onda"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change Speed Limits"
-msgstr ""
+msgstr "Cambià i limiti di vitezza"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change speed limit (%) to:"
-msgstr ""
+msgstr "Cambià i limiti di vitezza (%) à :"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Lower Speed Limit"
-msgstr ""
+msgstr "Vitezza minimale"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit"
-msgstr ""
+msgstr "Vitezza massimale"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
-msgstr ""
+msgstr "A vitezza massimale deve esse superiore à a vitezza minimale"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Invalid Limits"
-msgstr ""
+msgstr "Limiti inaccettevule"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19427,15 +19420,15 @@ msgstr "Definisce l’affissera lugaritmicu per a traccia di tempo"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track interpolation to linear"
-msgstr "Definisce l’interpolazione lineare per a traccia di tempo"
+msgstr "Definisce l’interpulazione lineare per a traccia di tempo"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set Interpolation"
-msgstr "Definisce l’interpolazione"
+msgstr "Definisce l’interpulazione"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Set time track interpolation to logarithmic"
-msgstr "Definisce l’interpolazione lugaritmica per a traccia di tempo"
+msgstr "Definisce l’interpulazione lugaritmica per a traccia di tempo"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "&Linear scale"
@@ -19451,7 +19444,7 @@ msgstr "&Stesa…"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
-msgstr "&Interpolazione lugaritmica"
+msgstr "&Interpulazione lugaritmica"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -19789,7 +19782,7 @@ msgstr "Scaricamentu di %s"
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Stay Updated & Anonymous Usage Info"
-msgstr ""
+msgstr "State infurmati è infurmazioni anonime d’aghjovu"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19798,45 +19791,42 @@ msgstr "Rinnovi d’appiecazione"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "Audacity notifies you in-app when a new version is available to download."
-msgstr "Per stà à ghjornu, vi riceverete una nutificazione in l’appiecazione quandu si puderà scaricà una nova versione d’Audacity."
+msgstr "Audacity vi manda una nutificazione in l’appiecazione quandu una nova versione hè dispunibule à u scaricamentu."
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Anonymous usage info (UUID)"
-msgstr ""
+msgstr "Infurmazioni anonime d’aghjovu (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/update/UpdateNoticeDialog.cpp
 msgid "To help us understand how often people use Audacity, we generate a random, anonymous ID (UUID). This helps us improve features and plan for the future. No personal data is collected."
-msgstr ""
+msgstr "Per aiutacci à capisce à chì frequenza Audacity hè impiegatu, ingeneremu un’identificazione aleatoria è anonima (UUID). Què ci aiuta à amendà e funzioni di e versioni future. Alcunu datu persunale ùn hè cullettatu."
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can disable this anytime in %s."
-msgstr "Pudete cambià u cartulare in %s."
+msgstr "Pudete disattivà què à ogni mumentu in %s."
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can turn this off anytime in %s."
-msgstr "Pudete disattivà a verificazione di e nove versioni di l’appiecazione à ogni mumentu in %s."
+msgstr "Pudete disattivà st’ozzione à ogni mumentu in %s."
 
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "View privacy policy"
-msgstr "a nostra pulitica di cunfidenzialità"
+msgstr "Affissà a pulitica di cunfidenzialità"
 
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "Disable UUID"
-msgstr "Disattivà"
+msgstr "Disattivà l’UUID"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
-msgstr ""
+msgstr "Accettà è cuntinuà"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -20801,7 +20791,7 @@ msgstr ""
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Legacy Limiter"
-msgstr ""
+msgstr "Limitatore classicu"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -20846,7 +20836,7 @@ msgstr "Mantene (ms)"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
-msgstr "Appiecà un guadagnu di cumpensazione"
+msgstr "Appiecà un guadagnu di cumpensu"
 
 #: plug-ins/lowpass.ny resources/EffectsMenuDefaults.xml
 msgid "Low-Pass Filter"
@@ -21130,7 +21120,7 @@ msgstr "Impiegatu s’è u « Numeru di misure » = 0"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Start time offset"
-msgstr "Spustamentu tempurale di principiu"
+msgstr "Spustime tempurale di principiu"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Silence before first beat"
@@ -21343,7 +21333,7 @@ msgid ""
 msgstr ""
 "~a~%Frequenza di campiunariu : ~a Hz. Valori di campione nant’à a scala ~a. ~a.~%~aLonghezza trattata : ~a ~\n"
 "                  campioni, ~a seconde.~%Ampiitutine di piccu : ~a (lineare) ~a dB.  RMS senza punderatezza : ~a dB.~%~\n"
-"                  Spustamentu DC : ~a~a"
+"                  Spustime DC : ~a~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21390,7 +21380,7 @@ msgstr "<b>RMS</b> (senza punderatezza): &nbsp;&nbsp;~a dB."
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
-msgstr "<b>Spustamentu DC :</b> &nbsp;&nbsp;~a"
+msgstr "<b>Spustime DC :</b> &nbsp;&nbsp;~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21684,7 +21674,7 @@ msgstr "Attrezzi spettrali"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
-msgstr ""
+msgstr "Classicu"
 
 #, fuzzy
 #~ msgid "What's new in Audacity"
