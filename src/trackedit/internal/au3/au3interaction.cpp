@@ -2443,59 +2443,62 @@ bool Au3Interaction::doChangeClipSpeed(const ClipKey& clipKey, double speed)
     return true;
 }
 
+// TODO: Move this up / out
+namespace {
+    template <typename TYPE>
+    void notifier (std::vector<TYPE>& firstList,
+                   std::vector<TYPE>& secondList,
+                   std::function<void (const TYPE& item, int)> notification)
+    {
+        for (int i = 0; i < secondList.size(); i++) {
+            auto second = secondList[i];
+            auto iter = std::find_if(firstList.begin(), firstList.end(), [&](const auto& item) {
+                return item.id == second.id;
+            });
+
+            if (iter == firstList.end()) {
+                notification(secondList[i], i);
+            }
+        }
+    }
+}
+
 void Au3Interaction::notifyOfUndoRedo(TracksAndClips& before, TracksAndClips& after)
 {
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    //! First - Track changes.
+    //! Track changes:
 
-    if (before.first.size() < after.first.size()) {
-        //! Before is smaller than after.
-        //  Something had been deleted.
-        //  Find and notify that it's added.
-        for (int i = 0; i < after.first.size(); i++) {
-            auto trackAfter = after.first[i];
-            auto iter = std::find_if(before.first.begin(), before.first.end(), [&](const auto& track) {
-                return track.id == trackAfter.id;
-            });
+    auto& tracksBefore = before.first;
+    auto& tracksAfter = after.first;
 
-            if (iter == before.first.end()) {
-                trackeditProject->trackInserted().send(after.first[i], i);
-            }
-        }
-
+    if (tracksBefore.size() < tracksAfter.size()) {
+        //! Before is smaller than after. Something had been deleted. Find and notify that it's added.
+        notifier<Track>(tracksBefore, tracksAfter, [&](const Track& track, int index) {
+            trackeditProject->trackInserted().send(track, index);
+        });
         return;
     }
 
-    if (before.first.size() > after.first.size()) {
-        //! After is smaller than before.
-        //  Something had been added.
-        //  Find and notify that it's removed.
-        for (int i = 0; i < before.first.size(); i++) {
-            auto trackBefore = before.first[i];
-            auto iter = std::find_if(after.first.begin(), after.first.end(), [&](const auto& track) {
-                return track.id == trackBefore.id;
-            });
-
-            if (iter == after.first.end()) {
-                trackeditProject->trackRemoved().send(before.first[i]);
-            }
-        }
-
+    if (tracksBefore.size() > tracksAfter.size()) {
+        //! After is smaller than before. Something had been added. Find and notify that it's removed.
+        notifier<Track>(tracksAfter, tracksBefore, [&](const Track& track, int) {
+            trackeditProject->trackRemoved().send(track);
+        });
         return;
     }
 
-    if (before.first.size() == after.first.size()) {
+    if (tracksBefore.size() == tracksAfter.size()) {
         // Reordering is a problem.
-        // I can only detect that tracks are out of order, I cannot detect which has moved.s
+        // I can only detect that tracks are out of order, I cannot detect which has moved.
         // Imagine moving the first track to last. All tracks before it will be flagged as out of order.
         // For now I just reload as before.
         // TODO: I could try to devise an algorithm that finds the minimal difference between the lists.
         //       Later.
 
-        for (int i = 0; i < before.first.size(); i++) {
-            auto& trackBefore = before.first[i];
-            auto& trackAfter = after.first[i];
+        for (int i = 0; i < tracksBefore.size(); i++) {
+            auto& trackBefore = tracksBefore[i];
+            auto& trackAfter = tracksAfter[i];
             if (trackBefore.id != trackAfter.id) {
                 // Detected that there is a reorder.
                 trackeditProject->reload();
@@ -2506,10 +2509,10 @@ void Au3Interaction::notifyOfUndoRedo(TracksAndClips& before, TracksAndClips& af
         // TODO: Implement also for just CHANGING something in a track.
     }
 
-    //! Second - Clip changes.
+    //! Clip changes:
 
     // Assuming tracks are unchanged in that case.
-    IF_ASSERT_FAILED(before.first.size() == after.first.size())
+    IF_ASSERT_FAILED(tracksBefore.size() == tracksAfter.size())
     {
         return;
     }
