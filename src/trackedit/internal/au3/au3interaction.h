@@ -162,6 +162,8 @@ private:
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
+    void notifyOfUndoRedo(TracksAndClips& before, TracksAndClips& after);
+
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
     muse::ProgressPtr m_progress;

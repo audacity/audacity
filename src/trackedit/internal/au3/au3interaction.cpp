@@ -2170,57 +2170,13 @@ bool Au3Interaction::undo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    auto beforeUndo = trackeditProject->buildTracksAndClips();
+    auto before = trackeditProject->buildTracksAndClips();
 
     projectHistory()->undo();
 
-    auto afterUndo = trackeditProject->buildTracksAndClips();
+    auto after = trackeditProject->buildTracksAndClips();
 
-    // TODO: The below can be simplified to reduce duplication, and extracted out.
-
-    if (beforeUndo.first.size() < afterUndo.first.size()) {
-        //! Before undo is smaller than after.
-        //  Something had been deleted.
-        //  Find and notify that it's added.
-        for (int i = 0; i < afterUndo.first.size(); i++) {
-            auto after = afterUndo.first[i];
-            auto iter = std::find_if(beforeUndo.first.begin(),
-                                     beforeUndo.first.end(),
-                                     [&] (const auto& track) {
-                                         return track.id == after.id;
-                                     });
-
-            if (iter == beforeUndo.first.end()) {
-                trackeditProject->trackInserted().send(afterUndo.first[i], i);
-            }
-        }
-    }
-    else if (beforeUndo.first.size() > afterUndo.first.size()) {
-        //! After undo is smaller than before.
-        //  Something had been added.
-        //  Find and notify that it's removed.
-        for (int i = 0; i < beforeUndo.first.size(); i++) {
-            auto before = beforeUndo.first[i];
-
-            auto iter = std::find_if(afterUndo.first.begin(),
-                                    afterUndo.first.end(),
-                                    [&] (const auto& track) {
-                                        return track.id == before.id;
-                                    });
-
-            if (iter == afterUndo.first.end()) {
-                trackeditProject->trackRemoved().send(beforeUndo.first[i]);
-            }
-        }
-    }
-    else if (beforeUndo.first.size() == afterUndo.first.size()) {
-        // Moving is a problem, because I can only detect that tracks are out of order.
-        // I cannot detect which has moved.
-        // Imagine moving the first track to last. All tracks before it will be flagged as out of order.
-        // So for now, just reload as before.
-        // TODO: I could try to devise an algorithm that finds the minimal difference between the lists. Later.
-        trackeditProject->reload();
-    }
+    notifyOfUndoRedo(before, after);
 
     return true;
 }
@@ -2238,9 +2194,13 @@ bool Au3Interaction::redo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    /// TODO: Replicate also for redo!
+    auto before = trackeditProject->buildTracksAndClips();
 
     projectHistory()->redo();
+
+    auto after = trackeditProject->buildTracksAndClips();
+
+    notifyOfUndoRedo(before, after);
 
     // Redo removes all tracks from current state and
     // inserts tracks from the previous state so we need
@@ -2481,4 +2441,88 @@ bool Au3Interaction::doChangeClipSpeed(const ClipKey& clipKey, double speed)
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
     return true;
+}
+
+void Au3Interaction::notifyOfUndoRedo(TracksAndClips& before, TracksAndClips& after)
+{
+    auto trackeditProject = globalContext()->currentProject()->trackeditProject();
+
+    //! First - Track changes.
+
+    if (before.first.size() < after.first.size()) {
+        //! Before is smaller than after.
+        //  Something had been deleted.
+        //  Find and notify that it's added.
+        for (int i = 0; i < after.first.size(); i++) {
+            auto trackAfter = after.first[i];
+            auto iter = std::find_if(before.first.begin(), before.first.end(), [&](const auto& track) {
+                return track.id == trackAfter.id;
+            });
+
+            if (iter == before.first.end()) {
+                trackeditProject->trackInserted().send(after.first[i], i);
+            }
+        }
+
+        return;
+    }
+
+    if (before.first.size() > after.first.size()) {
+        //! After is smaller than before.
+        //  Something had been added.
+        //  Find and notify that it's removed.
+        for (int i = 0; i < before.first.size(); i++) {
+            auto trackBefore = before.first[i];
+            auto iter = std::find_if(after.first.begin(), after.first.end(), [&](const auto& track) {
+                return track.id == trackBefore.id;
+            });
+
+            if (iter == after.first.end()) {
+                trackeditProject->trackRemoved().send(before.first[i]);
+            }
+        }
+
+        return;
+    }
+
+    if (before.first.size() == after.first.size()) {
+        // Reordering is a problem.
+        // I can only detect that tracks are out of order, I cannot detect which has moved.s
+        // Imagine moving the first track to last. All tracks before it will be flagged as out of order.
+        // For now I just reload as before.
+        // TODO: I could try to devise an algorithm that finds the minimal difference between the lists.
+        //       Later.
+
+        for (int i = 0; i < before.first.size(); i++) {
+            auto& trackBefore = before.first[i];
+            auto& trackAfter = after.first[i];
+            if (trackBefore.id != trackAfter.id) {
+                // Detected that there is a reorder.
+                trackeditProject->reload();
+                return;
+            }
+        }
+
+        // TODO: Implement also for just CHANGING something in a track.
+    }
+
+    //! Second - Clip changes.
+
+    // Assuming tracks are unchanged in that case.
+    IF_ASSERT_FAILED(before.first.size() == after.first.size())
+    {
+        return;
+    }
+
+    for (int i = 0; i < before.first.size(); i++) {
+        auto& clipsBefore = before.second[i];
+        auto& clipsAfter = after.second[i];
+
+        // Repeat:
+        // Detect and act on
+        // Addition
+        // Deletion
+        // Reorder
+        // Change
+    }
 }
