@@ -286,7 +286,7 @@
         <key>delete</key>
         <seq>Del</seq>
         <seq>Backspace</seq>
-    </SC>
+    <SC>
         <key>track-delete</key>
         <seq>Delete</seq>
     </SC>
