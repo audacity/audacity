@@ -11,10 +11,8 @@ class Au3ChangeDetection {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
-    Au3ChangeDetection() {
-        
-    }
+    Au3ChangeDetection() = default;
 
-    void notifyOfUndoRedo(TracksAndClips& before, TracksAndClips& after);
+    void notifyOfUndoRedo(const TracksAndClips& before, const TracksAndClips& after);
 };
 }
