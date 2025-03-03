@@ -718,8 +718,11 @@ void TrackeditActionsController::deleteTracks(const muse::actions::ActionData&)
     TrackIdList trackIds = selectionController()->selectedTracks();
 
     if (trackIds.empty()) {
+        std::cout << "❌ No tracks selected for deletion!" << std::endl;
         return;
     }
+
+    std::cout << "🗑️ Deleting " << trackIds.size() << " tracks!" << std::endl;
 
     trackeditInteraction()->deleteTracks(trackIds);
 }

@@ -1725,6 +1725,7 @@ bool Au3Interaction::newLabelTrack()
 
 bool Au3Interaction::deleteTracks(const TrackIdList& trackIds)
 {
+    //wxLogDebug(wxT("Au3Interaction::deleteTracks called with %d tracks"), trackIds.size());
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
 
