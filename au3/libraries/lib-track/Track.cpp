@@ -918,10 +918,10 @@ TrackListHolder TrackList::Temporary(AudacityProject* pProject,
     assert(pTrack == nullptr || pTrack->GetOwner() == nullptr);
     // Make a well formed channel group from these tracks
     auto tempList = Create(pProject);
+    tempList->mAssignsIds = false;
     if (pTrack) {
         tempList->Add(pTrack);
     }
-    tempList->mAssignsIds = false;
     return tempList;
 }
 
