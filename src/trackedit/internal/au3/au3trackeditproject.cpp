@@ -370,15 +370,6 @@ TracksAndClips Au3TrackeditProject::buildTracksAndClips()
     return newCache;
 }
 
-void Au3TrackeditProject::cacheTracksAndClips()
-{
-    m_cache = std::move(buildTracksAndClips());
-}
-
-std::optional<TracksAndClips> Au3TrackeditProject::getCachedTracksAndClips() const
-{
-    return m_cache;
-}
 
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
 {

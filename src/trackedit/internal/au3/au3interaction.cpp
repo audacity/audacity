@@ -2176,35 +2176,7 @@ bool Au3Interaction::undo()
 
     auto afterUndo = trackeditProject->buildTracksAndClips();
 
-
-    // TODO: List of possible changes:
-    //  Tracks:
-    //  1. Track added
-    //  2. Track changed(!?) When is this called?
-    //  3. Track removed
-    //  4. Track inserted
-    //     - Called after duplicateTracks. Only.
-    //  5. Track moved
-    //  Clips:
-    //  1. Clip changed
-    //  2. Clip added
-    //  3. Clip removed
-
-    /** TODO:
-     *   Algorithm:
-     *   Compare tracks lists.
-     *   Iterate over the biggest.
-     *   For each track,
-     *      Check if it exists in the smallest.
-     *          If not, call removed / added / inserted, depending on which the biggest list is.
-     *          If yes, compare their indexes.
-     *              If different, call moved.
-     *   IS it possible to BOTH move, AND add/delete, in the same action? I assume not.
-     *   IS it possible to BOTH add/move/insert/delete a TRACK, AND separately a CLIP? I assume not.
-     *   IS it possible to MOVE MANY TRACKS? Yes.
-     **/
-
-    // TODO: The below can be templateized and extracted to a single method.
+    // TODO: The below can be simplified to reduce duplication, and extracted out.
 
     if (beforeUndo.first.size() < afterUndo.first.size()) {
         //! Before undo is smaller than after.
@@ -2219,8 +2191,6 @@ bool Au3Interaction::undo()
                                      });
 
             if (iter == beforeUndo.first.end()) {
-                // Found one. Could be more.
-                // Inserted, because maybe it wasn't at the end:
                 trackeditProject->trackInserted().send(afterUndo.first[i], i);
             }
         }
@@ -2231,8 +2201,6 @@ bool Au3Interaction::undo()
         //  Find and notify that it's removed.
         for (int i = 0; i < beforeUndo.first.size(); i++) {
             auto before = beforeUndo.first[i];
-            // auto name = before.title;
-            // std::cout << name.toStdString() << std::endl;
 
             auto iter = std::find_if(afterUndo.first.begin(),
                                     afterUndo.first.end(),
@@ -2241,30 +2209,18 @@ bool Au3Interaction::undo()
                                     });
 
             if (iter == afterUndo.first.end()) {
-                // Found one. Could be more.
-                std::cout << before.id << std::endl;
                 trackeditProject->trackRemoved().send(beforeUndo.first[i]);
             }
         }
     }
-
-    // TODO: Moving multiple with preserved indexes is hard. How did I do in TWO?
-    // if (beforeUndo->first.size() == afterUndo.first.size()) {
-    //     for (int i = 0; i < beforeUndo->first.size(); i++) {
-    //         auto& before = beforeUndo->first[i];
-    //         auto& after = afterUndo.first[i];
-    //         if (before.id != after.id) {
-    //             for (int j = i; j < beforeUndo->first.size(); j++) {
-    //                 auto& after2 = afterUndo.first[j];
-    //                 if (before.id == after2.id) {
-    //                     // Copying Track since it's an async notification
-    //                     trackeditProject->trackMoved().send(afterUndo.first[j], j);
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    else if (beforeUndo.first.size() == afterUndo.first.size()) {
+        // Moving is a problem, because I can only detect that tracks are out of order.
+        // I cannot detect which has moved.
+        // Imagine moving the first track to last. All tracks before it will be flagged as out of order.
+        // So for now, just reload as before.
+        // TODO: I could try to devise an algorithm that finds the minimal difference between the lists. Later.
+        trackeditProject->reload();
+    }
 
     return true;
 }
