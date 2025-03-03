@@ -1,13 +1,11 @@
 
 #include "Au3ChangeDetection.h"
 
-// TODO: 2: THINK well - is this equality comparison what's needed?
-//  Because maybe the slightest change then still triggers a refresh?
 namespace {
 template <typename TYPE>
 void notifier (const std::vector<TYPE>& firstList,
                const std::vector<TYPE>& secondList,
-               std::function<void (const TYPE& item, int)> notification)
+               std::function<void (TYPE item, int)> notification)
 {
     for (int i = 0; i < secondList.size(); i++) {
         auto second = secondList[i];
@@ -26,6 +24,8 @@ void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& b
 {
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
+    bool changed = false;
+
     //! Track changes:
 
     auto& tracksBefore = before.first;
@@ -35,23 +35,26 @@ void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& b
         //! Before is smaller than after. Something had been deleted. Find and notify that it's added.
         notifier<Track>(tracksBefore,
                         tracksAfter,
-                        [&](const Track& track, int index) {
-            trackeditProject->trackInserted().send(track, index);
+                        [&](Track track, int index) {
+            trackeditProject->trackInserted().send(std::move(track), index);
         });
+        changed = true;
     }
     else if (tracksBefore.size() > tracksAfter.size()) {
         //! After is smaller than before. Something had been added. Find and notify that it's removed.
         notifier<Track>(tracksAfter,
                         tracksBefore,
-                        [&](const Track& track, int) {
-            trackeditProject->trackRemoved().send(track);
+                        [&](Track track, int) {
+            trackeditProject->trackRemoved().send(std::move(track));
         });
+        changed = true;
     }
     else if (tracksBefore.size() == tracksAfter.size()) {
         // Reordering is a problem.
-        // I can only detect that tracks are out of order, I cannot detect which has moved.
-        // Imagine moving the first track to last. All tracks before it will be flagged as out of order.
-        // For now I just reload as before.
+        // We can only detect that tracks are out of order, we cannot detect which have moved.
+        // Imagine moving the first track to last.
+        // All tracks before it will be flagged as out of order.
+        // So for now we just reload as before.
         // TODO: I could try to devise an algorithm that finds the minimal difference between the lists.
         //       Later.
 
@@ -68,13 +71,21 @@ void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& b
             }
         }
 
-        // TODO: Implement also for just CHANGING something in a track.
+        //! And apart from reorder - can there have been just a change in the track?
+        //  I don't see "autosave" calls being triggered for any such changes though.
+        for (int i = 0; i < tracksBefore.size(); i++) {
+            auto& trackBefore = tracksBefore[i];
+            auto& trackAfter = tracksAfter[i];
+            if (trackBefore != trackAfter) {
+                trackeditProject->trackChanged().send(trackBefore);
+            }
+        }
     }
 
     //! Clip changes:
 
     // Assuming tracks are unchanged in that case.
-    IF_ASSERT_FAILED (tracksBefore.size() == tracksAfter.size()) {
+    IF_ASSERT_FAILED ((tracksBefore.size() == tracksAfter.size()) || changed) {
         return;
     }
 
@@ -86,7 +97,7 @@ void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& b
             //! Before is smaller than after. Something had been deleted. Find and notify that it's added.
             notifier<Clip>(clipsBefore,
                            clipsAfter,
-                           [&](const Clip& clip, int index) {
+                           [&](Clip clip, int) {
                 trackeditProject->notifyAboutClipAdded(clip);
             });
         }
@@ -95,12 +106,11 @@ void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& b
             //! After is smaller than before. Something had been added. Find and notify that it's removed.
             notifier<Clip>(clipsAfter,
                            clipsBefore,
-                           [&](const Clip& clip, int) {
+                           [&](Clip clip, int) {
                 trackeditProject->notifyAboutClipRemoved(clip);
             });
         }
 
-        // TODO: Unfinished. Fix after add/remove is done.
         if (clipsBefore.size() == clipsAfter.size()) {
             // Reordering is a problem, see above
 
@@ -108,15 +118,10 @@ void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& b
                 auto& clipBefore = clipsBefore[c];
                 auto& clipAfter = clipsAfter[c];
 
-                // TODO: Are these ID comparisons enough?
-                if (clipBefore.key.clipId != clipAfter.key.clipId) {
-                    // Detected that there is a reorder.
-                    // trackeditProject->reload();
-                    // TODO: NOTIFY for entire lane only at least.
+                if (clipBefore != clipAfter) {
+                    trackeditProject->notifyAboutClipChanged(clipAfter);
                 }
             }
-
-            // TODO: Implement also for just CHANGING something in a track.
         }
     }
 }
