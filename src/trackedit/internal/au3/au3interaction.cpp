@@ -2453,7 +2453,7 @@ namespace {
         for (int i = 0; i < secondList.size(); i++) {
             auto second = secondList[i];
             auto iter = std::find_if(firstList.begin(), firstList.end(), [&](const auto& item) {
-                return item.id == second.id;
+                return item == second;
             });
 
             if (iter == firstList.end()) {
@@ -2517,15 +2517,53 @@ void Au3Interaction::notifyOfUndoRedo(TracksAndClips& before, TracksAndClips& af
         return;
     }
 
+    // TODO: Deleting within the same lane now works with Undo/Redo.
+    //  But for some reason it doesn't work across lanes.
+    //  FIX.
+
     for (int i = 0; i < before.first.size(); i++) {
         auto& clipsBefore = before.second[i];
         auto& clipsAfter = after.second[i];
 
-        // Repeat:
-        // Detect and act on
-        // Addition
-        // Deletion
-        // Reorder
-        // Change
+        if (clipsBefore.size() < clipsAfter.size()) {
+            //! Before is smaller than after. Something had been deleted. Find and notify that it's added.
+            notifier<Clip>(clipsBefore, clipsAfter, [&](const Clip& clip, int index) {
+                trackeditProject->notifyAboutClipAdded(clip);
+            });
+            return;
+        }
+
+        if (clipsBefore.size() > clipsAfter.size()) {
+            //! After is smaller than before. Something had been added. Find and notify that it's removed.
+            notifier<Clip>(clipsAfter, clipsBefore, [&](const Clip& clip, int) {
+                trackeditProject->notifyAboutClipRemoved(clip);
+            });
+            return;
+        }
+
+        // TODO: Unfinished. Fix after add/remove is done.
+        if (clipsBefore.size() == clipsAfter.size()) {
+            // Reordering is a problem.
+            // I can only detect that tracks are out of order, I cannot detect which has moved.
+            // Imagine moving the first track to last. All tracks before it will be flagged as out of order.
+            // For now I just reload as before.
+            // TODO: I could try to devise an algorithm that finds the minimal difference between the lists.
+            //       Later.
+
+            for (int i = 0; i < clipsBefore.size(); i++) {
+                auto& clipBefore = clipsBefore[i];
+                auto& clipAfter = clipsAfter[i];
+
+                // TODO: Are these ID comparisons enough?
+                if (clipBefore.key.clipId != clipAfter.key.clipId) {
+                    // Detected that there is a reorder.
+                    // trackeditProject->reload();
+                    // TODO: NOTIFY for entire lane only at least.
+                    return;
+                }
+            }
+
+            // TODO: Implement also for just CHANGING something in a track.
+        }
     }
 }
