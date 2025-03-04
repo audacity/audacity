@@ -68,7 +68,7 @@ void TracksListClipsModel::load()
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     });
 
-    prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track>& tracks) {
+    prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
         Q_UNUSED(tracks);
         muse::async::Async::call(this, [this]() {
             load();
