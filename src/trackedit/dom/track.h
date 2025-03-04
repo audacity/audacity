@@ -24,16 +24,6 @@ struct Track {
     muse::String title;
     TrackType type = TrackType::Undefined;
     muse::draw::Color color;
-
-    inline bool operator==(const Track& k) const
-    {
-        return id == k.id &&
-               title == k.title &&
-               type == k.type &&
-               color == k.color;
-    }
-
-    inline bool operator!=(const Track& k) const { return !this->operator==(k); }
 };
 
 using TrackList = std::vector<Track>;

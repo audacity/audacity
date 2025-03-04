@@ -27,24 +27,6 @@ struct Clip {
     bool hasCustomColor = false;
 
     inline bool isValid() const { return key.isValid(); }
-
-    inline bool operator==(const Clip& k) const
-    {
-        return key == k.key &&
-               title == k.title &&
-               color == k.color &&
-               groupId == k.groupId &&
-               startTime == k.startTime &&
-               endTime == k.endTime &&
-               stereo == k.stereo &&
-               pitch == k.pitch &&
-               speed == k.speed &&
-               optimizeForVoice == k.optimizeForVoice &
-               stretchToMatchTempo == k.stretchToMatchTempo &&
-               hasCustomColor == k.hasCustomColor;
-    }
-
-    inline bool operator!=(const Clip& k) const { return !this->operator==(k); }
 };
 
 using Clips = std::vector<Clip>;
