@@ -21,8 +21,10 @@ Item {
     property bool moveActive: false
     property bool underSelection: false
     property bool altPressed: false
+    property bool ctrlPressed: false
     property alias isNearSample: clipsContainer.isNearSample
     property alias isBrush: clipsContainer.isBrush
+    property alias isIsolationMode: clipsContainer.isIsolationMode
     property alias leftTrimContainsMouse: clipsContainer.leftTrimContainsMouse
     property alias rightTrimContainsMouse: clipsContainer.rightTrimContainsMouse
     property alias leftTrimPressedButtons: clipsContainer.leftTrimPressedButtons
@@ -69,6 +71,14 @@ Item {
         clipsModel.resetSelectedClip()
     }
 
+    onCtrlPressedChanged: {
+        if (!root.ctrlPressed) {
+            clipsContainer.mapToAllClips({x: 0, y: 0}, function(clipItem, mouseEvent) {
+                clipItem.isIsolationMode = false
+            })
+        }
+    }
+
     Item {
         id: clipsContainer
         anchors.fill: parent
@@ -78,6 +88,7 @@ Item {
         property bool isNearSample: false
         property bool multiSampleEdit: false
         property bool isBrush: false
+        property bool isIsolationMode: false
         property int currentChannel: 0
         property bool leftTrimContainsMouse: false
         property bool rightTrimContainsMouse: false
@@ -116,6 +127,20 @@ Item {
             anchors.fill: parent
 
             onClicked: function(e) {
+                if (clipsContainer.multiSampleEdit || clipsContainer.isIsolationMode) {
+                    // Handle release for multi sample edit and isolation mode on the next click event
+                    clipsContainer.multiSampleEdit = false
+                    clipsContainer.isIsolationMode = false
+
+                    clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                        clipItem.multiSampleEdit = false
+                        clipItem.isIsolationMode = false
+                        clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
+                    })
+                    //Do not process long press and holds as normal click events
+                    return
+                }
+
                 clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                     clipItem.mouseClicked(mouseEvent.x, mouseEvent.y)
                 })
@@ -128,27 +153,30 @@ Item {
             
             onPressAndHold: function(e) {
                 if (clipsContainer.isNearSample) {
-                    clipsContainer.multiSampleEdit = true
+
+                    if (root.ctrlPressed) {
+                        clipsContainer.isIsolationMode = true
+                    }
+                    else if (!root.altPressed) {
+                        clipsContainer.multiSampleEdit = true
+                    }
 
                     clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
                         clipItem.mousePressAndHold(mouseEvent.x, mouseEvent.y)
                         clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
-                        clipItem.multiSampleEdit = true
+
+                        if (root.ctrlPressed) {
+                            clipItem.isIsolationMode = true
+                        }
+                        else if (!root.altPressed) {
+                            clipItem.multiSampleEdit = true
+                        }
                         clipItem.currentChannel = clipsContainer.currentChannel
                     })
 
                     clipsContainerMouseArea.hoverEnabled = true
                     e.accepted = false
                 }
-            }
-
-            onReleased: function(e) {
-                clipsContainer.multiSampleEdit = false
-
-                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
-                    clipItem.multiSampleEdit = false
-                    clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
-                })
             }
 
             onPositionChanged: function(e) {

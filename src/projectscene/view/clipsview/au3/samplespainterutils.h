@@ -24,4 +24,7 @@ void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::proj
                      const IWavePainter::Params& params);
 void smoothLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
                         const trackedit::ClipKey& clipKey, const QPoint& currentPosition, const IWavePainter::Params& params);
+void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKey& clipKey,
+                      std::shared_ptr<au::project::IAudacityProject> project, const QPoint& isolatedPoint, const QPoint& currentPosition,
+                      const IWavePainter::Params& params);
 }
