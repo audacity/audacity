@@ -49,8 +49,6 @@ public:
         }
     }
 
-    muse::async::Channel<TrackId> realtimeEffectStackChanged;
-
 private:
     const std::unique_ptr<RealtimeEffectList> m_targetList;
 };
