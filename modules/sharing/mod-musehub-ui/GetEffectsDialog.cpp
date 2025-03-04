@@ -48,8 +48,8 @@ static constexpr int effectPanelHeight = effectIconHeight;
 static constexpr int getEffectButtonWidth = 187;
 static constexpr int getEffectButtonHeight = 30;
 
-static const wxColor musehubButtonNormal = wxColor(0x73, 0x73, 0xE5);
-static const wxColor musehubButtonPressed = wxColor(0x63, 0x63, 0xD5);
+static const wxColor musehubButtonNormal = wxColor(0x63, 0x63, 0xd5);
+static const wxColor musehubButtonPressed = wxColor(0x53, 0x53, 0xc5);
 
 static const auto loadingPluginsTabText = XO("Loading...");
 static const auto loadingPluginsText = XO("Please wait...");
