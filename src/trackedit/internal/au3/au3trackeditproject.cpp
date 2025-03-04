@@ -358,7 +358,7 @@ secs_t Au3TrackeditProject::totalTime() const
 
 TracksAndClips Au3TrackeditProject::buildTracksAndClips()
 {
-    std::pair<TrackList, std::vector<trackedit::Clips>> newCache;
+    std::pair<TrackList, std::vector<trackedit::Clips> > newCache;
 
     newCache.first = std::move(trackList());
 
@@ -369,7 +369,6 @@ TracksAndClips Au3TrackeditProject::buildTracksAndClips()
 
     return newCache;
 }
-
 
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
 {
