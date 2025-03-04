@@ -19,8 +19,7 @@ class IAu3Project;
 }
 
 namespace au::trackedit {
-
-using TracksAndClips = std::pair<trackedit::TrackList, std::vector<trackedit::Clips>>;
+using TracksAndClips = std::pair<trackedit::TrackList, std::vector<trackedit::Clips> >;
 
 class ITrackeditProject
 {
