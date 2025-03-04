@@ -32,6 +32,8 @@ public:
     void notifyOfUndoRedo(const TracksAndClips& before, const TracksAndClips& after);
 
 private:
+    friend class Au3ChangeDetectionTests;
+
     /**
      * Searches for, and notifies of, Tracks changes
      * @param before a vector of Tracks before the change
