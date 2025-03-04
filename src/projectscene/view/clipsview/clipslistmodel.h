@@ -39,15 +39,13 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
 public:
-    ClipsListModel(QObject* parent = nullptr);
-    ~ClipsListModel();
+    explicit ClipsListModel(QObject* parent = nullptr);
+    ~ClipsListModel() override;
 
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
     QVariant trackId() const;
     void setTrackId(const QVariant& newTrackId);
-    int selectedClipIdx() const;
-    void setSelectedClipIdx(int newSelectedClipIdx);
     bool isStereo() const;
     ClipStyles::Style clipStyle() const;
 
@@ -83,7 +81,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
 
-    int cacheBufferPx() const;
+    static int cacheBufferPx();
 
 signals:
     void trackIdChanged();

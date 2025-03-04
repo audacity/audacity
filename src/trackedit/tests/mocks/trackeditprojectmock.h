@@ -42,5 +42,7 @@ public:
     MOCK_METHOD((muse::async::Channel<trackedit::Track, int>), trackMoved, (), (const, override));
 
     MOCK_METHOD(secs_t, totalTime, (), (const, override));
+
+    MOCK_METHOD(TracksAndClips, buildTracksAndClips, (), (override));
 };
 }

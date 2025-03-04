@@ -28,8 +28,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
-
-    TracksListClipsModel(QObject* parent = nullptr);
+    explicit TracksListClipsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
 
