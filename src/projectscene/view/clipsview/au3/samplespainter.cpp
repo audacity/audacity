@@ -151,33 +151,35 @@ double sinc(double x)
     return sin(M_PI * x) / (M_PI * x);
 }
 
-au::projectscene::SampleData  sinc_interpolate(const std::vector<double>& y, const std::vector<double>& x, int delta)
+au::projectscene::SampleData  sinc_interpolate(const std::vector<double>& x, const std::vector<double>& tx, int delta)
 {
-    int N = 16;
-    double T = x[1] - x[0];
-    int L = y.size() * delta;
+    constexpr int K = 16;
+    const double T = tx[1] - tx[0];
+    const int Nx = x.size();
+    const int Ny = Nx * delta;
 
-    std::vector<double> yinterpolated;
-    yinterpolated.reserve(L);
-    std::vector<double> t;
-    t.reserve(L);
-    for (int i = 0; i < L; ++i) {
-        t.push_back(x[0] + i * T / delta);
-    }
+    std::vector<double> y(Ny);
+    std::vector<double> ty(Ny);
 
-    for (int i = 0; i < L; ++i) {
-        double sum = 0.0;
-        for (int k = -N; k <= N; ++k) {
-            //int idx = (i / delta) + k;
-            int idx =  (1.0 * i / delta) + k + 0.5;
-            if (idx >= 0 && idx < static_cast<int>(y.size())) {
-                sum += y[idx] * kaiserWindow[N + k] * sinc((t[i] - x[idx]) / T);
+    for (int nx = 0; nx < Nx; ++nx) {
+        const auto ny0 = nx * delta;
+        for (auto ny = ny0; ny < ny0 + delta; ++ny) {
+            ty[ny] = tx[0] + ny * T / delta;
+            const auto k0 = std::max(nx - K, 0) - nx;
+            const auto kEnd = std::min(nx + K, Nx) - nx;
+            auto sum = 0.0;
+            for (auto k = k0; k < kEnd; ++k) {
+                const auto nx2 = nx + k;
+                const auto _s = sinc((ty[ny] - tx[nx2]) / T);
+                const auto _w = kaiserWindow[K + k];
+                const auto _yi = x[nx2];
+                sum += _yi * _w * _s;
             }
+            y[ny] = sum;
         }
-        yinterpolated.push_back(sum);
     }
 
-    return au::projectscene::SampleData(yinterpolated, t);
+    return au::projectscene::SampleData(y, ty);
 }
 
 au::projectscene::SampleData apply_filter(const au::projectscene::SampleData& samples, const std::vector<double>& coefs)
