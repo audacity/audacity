@@ -34,6 +34,9 @@
 namespace audacity::musehub
 {
 
+static constexpr int dialogMinWidth = 920;
+static constexpr int dialogMinHeight = 650;
+
 static constexpr int iconRadius = 12;
 
 static constexpr int effectIconWidth = 118;
@@ -66,7 +69,7 @@ static const auto becomeAPartnerDescription =
       "on MuseHub, you can apply today.");
 
 GetEffectsDialog::GetEffectsDialog(wxWindow *parent) :
-   wxDialogWrapper(parent, wxID_ANY, XO("Get Effects"), wxDefaultPosition, {500, 500}, wxDEFAULT_DIALOG_STYLE)
+   wxDialogWrapper(parent, wxID_ANY, XO("Get Effects"), wxDefaultPosition, wxSize(dialogMinWidth, dialogMinHeight), wxDEFAULT_DIALOG_STYLE)
 {
    m_treebook = new wxTreebook(this, wxID_ANY);
    m_treebook->GetTreeCtrl()->SetIndent(0);
@@ -97,7 +100,7 @@ GetEffectsDialog::GetEffectsDialog(wxWindow *parent) :
 
    SetSizer(vSizer);
 
-   SetSize(920, 650);
+   SetMinSize(wxSize(dialogMinWidth, dialogMinHeight));
    CenterOnParent();
 
    ReloadEffectList();
@@ -127,6 +130,7 @@ void GetEffectsDialog::ReloadEffectList()
          AddBecomeAPartnerPage();
 
          Thaw();
+         Fit();
          Layout();
       });
    });
