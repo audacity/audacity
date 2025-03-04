@@ -91,7 +91,7 @@ class wxWidgetsAudacityDependency:
     override: bool = False
 
     def reference(self, conanfile):
-        return f"{self.name}/3.1.3.6-audacity@audacity/stable"
+        return f"{self.name}/3.1.3.7-audacity@audacity/stable"
 
     def apply_options(self, conanfile, package):
         opts = [
