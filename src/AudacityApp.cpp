@@ -439,11 +439,16 @@ void PopulatePreferences()
 
    if (std::tuple { vMajor, vMinor, vMicro } < std::tuple{ 3, 7, 2 })
    {
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
       // Reset Share Audio width
       if(gPrefs->Exists("/GUI/ToolBars/Share Audio/W"))
          gPrefs->DeleteEntry("/GUI/ToolBars/Share Audio/W");
-      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
-         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+      // Show update and privacy policy dialog
+      if (gPrefs->Exists("/Update/UpdateNoticeShown"))
+         gPrefs->DeleteEntry("/Update/UpdateNoticeShown");
+      if (gPrefs->Exists("/Update/DefaultUpdatesChecking"))
+         gPrefs->DeleteEntry("/Update/DefaultUpdatesChecking");
    }
 
    // write out the version numbers to the prefs file for future checking
