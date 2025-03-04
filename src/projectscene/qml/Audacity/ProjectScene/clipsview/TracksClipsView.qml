@@ -455,6 +455,7 @@ Rectangle {
                     isDataSelected: model.isDataSelected
                     isTrackSelected: model.isTrackSelected
                     isMultiSelectionActive: model.isMultiSelectionActive
+                    isTrackAudible: model.isTrackAudible
                     moveActive: tracksClipsView.moveActive
                     underSelection: root.underSelection
                     altPressed: root.altPressed
