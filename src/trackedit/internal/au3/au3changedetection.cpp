@@ -1,4 +1,4 @@
-#include "Au3ChangeDetection.h"
+#include "au3changedetection.h"
 
 namespace {
 /**
