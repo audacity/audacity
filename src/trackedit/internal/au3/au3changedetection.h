@@ -7,7 +7,6 @@
 #include "context/iglobalcontext.h"
 
 namespace au::trackedit {
-
 /**
  * Au3's Undo/Redo depends on the entire state of the model having been "cached" in the project with the
  * "autosave" table entry.
@@ -16,7 +15,8 @@ namespace au::trackedit {
  * It compares these, and calls the corresponding notifications in AU4,
  * to update as small a GUI section as needed, for reflecting the changes before and after.
  */
-class Au3ChangeDetection {
+class Au3ChangeDetection
+{
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
