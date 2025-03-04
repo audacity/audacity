@@ -277,6 +277,21 @@ void WaveView::setCurrentChannel(int currentChannel)
     m_currentChannel = currentChannel;
 }
 
+bool WaveView::isIsolationMode() const
+{
+    return m_isIsolationMode;
+}
+
+void WaveView::setIsIsolationMode(bool isIsolationMode)
+{
+    if (m_isIsolationMode == isIsolationMode) {
+        return;
+    }
+
+    m_isIsolationMode = isIsolationMode;
+    emit isIsolationModeChanged();
+}
+
 QColor WaveView::transformColor(const QColor& originalColor) const
 {
     int r = originalColor.red();
@@ -326,6 +341,8 @@ void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const
     samplespainterutils::setLastClickPos(
         m_currentChannel.value(),
         globalContext()->currentProject(), m_clipKey.key, lastPosition, currentPosition, params);
+
+    m_lastClickedPoint = currentPosition;
 }
 
 void WaveView::smoothLastClickPos(unsigned int x, const unsigned int y)
@@ -345,4 +362,31 @@ void WaveView::smoothLastClickPos(unsigned int x, const unsigned int y)
     samplespainterutils::smoothLastClickPos(
         m_currentChannel.value(),
         globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+}
+
+void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
+{
+    if (!m_isStemPlot) {
+        return;
+    }
+
+    if (!m_isIsolationMode) {
+        return;
+    }
+
+    if (!m_lastClickedPoint.has_value()) {
+        return;
+    }
+
+    const auto currentPosition = QPoint(x, y);
+    const auto params = getWavePainterParams();
+
+    if (!m_currentChannel.has_value()) {
+        m_currentChannel = samplespainterutils::hitChannelIndex(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+        return;
+    }
+
+    samplespainterutils::setIsolatedPoint(
+        m_currentChannel.value(),
+        m_clipKey.key, globalContext()->currentProject(), m_lastClickedPoint.value(), currentPosition, params);
 }

@@ -352,6 +352,64 @@ std::optional<int> hitChannelIndex(std::shared_ptr<au::project::IAudacityProject
     return (*it).first;
 }
 
+void setIsolatedPoint(const unsigned int currentChannel, const trackedit::ClipKey& clipKey,
+                      std::shared_ptr<au::project::IAudacityProject> project, const QPoint& isolatedPoint,
+                      const QPoint& currentPosition, const IWavePainter::Params& params)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
+    if (!track) {
+        return;
+    }
+
+    std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.clipId);
+    if (!waveClip) {
+        return;
+    }
+
+    const auto waveChannels = track->Channels();
+    if (currentChannel >= waveChannels.size()) {
+        return;
+    }
+
+    auto it = waveChannels.begin();
+    std::advance(it, currentChannel);
+    const auto waveChannel = *it;
+
+    const std::vector<double> channelHeight {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
+
+    auto& settings = WaveformSettings::Get(*track);
+    const float dBRange = settings.dBRange;
+    const bool dB = !settings.isLinear();
+
+    float zoomMin, zoomMax;
+    auto& cache = WaveformScale::Get(*track);
+    cache.GetDisplayBounds(zoomMin, zoomMax);
+
+    auto waveMetrics = wavepainterutils::getWaveMetrics(project, clipKey, params);
+    waveMetrics.height = channelHeight[currentChannel];
+
+    const ZoomInfo zoomInfo { waveMetrics.fromTime, waveMetrics.zoom };
+
+    const auto isolatedPointTime = zoomInfo.PositionToTime(isolatedPoint.x());
+
+    const auto clip = WaveChannelUtilities::GetClipAtTime(*waveChannel, isolatedPointTime + waveClip->GetPlayStartTime());
+    if (!clip) {
+        return;
+    }
+
+    const auto y = std::min(
+        static_cast<int>(currentPosition.y() - (currentChannel * waveMetrics.height)), static_cast<int>(waveMetrics.height - 2));
+    const auto yy = std::max(y, 2);
+
+    float newValue = samplespainterutils::ValueOfPixel(yy, waveMetrics.height, false, dB, dBRange, zoomMin, zoomMax);
+
+    WaveChannelUtilities::SetFloatAtTime(*waveChannel, isolatedPointTime + clip->GetPlayStartTime(), newValue, narrowestSampleFormat);
+}
+
 void setLastClickPos(const unsigned int currentChannel, std::shared_ptr<au::project::IAudacityProject> project,
                      const trackedit::ClipKey& clipKey, const QPoint& lastPosition, const QPoint& currentPosition,
                      const IWavePainter::Params& params)
