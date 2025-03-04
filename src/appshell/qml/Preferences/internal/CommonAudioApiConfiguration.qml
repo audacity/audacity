@@ -33,24 +33,18 @@ Item {
     property NavigationPanel navigation: null
     property int navigationOrderStart: 0
 
+    property var apiModel: null
+
     width: parent.width
     height: content.height
-
-    CommonAudioApiConfigurationModel {
-        id: apiModel
-    }
-
-    Component.onCompleted: {
-        apiModel.load()
-    }
 
     Column {
         id: content
 
-        spacing: 12
+        spacing: 16
 
         ComboBoxWithTitle {
-            title: qsTrc("appshell/preferences", "Playback device:")
+            title: qsTrc("appshell/preferences", "Playback device")
             columnWidth: root.columnWidth
 
             currentIndex: indexOfValue(apiModel.currentOutputDeviceId)
@@ -66,7 +60,7 @@ Item {
         }
 
         ComboBoxWithTitle {
-            title: qsTrc("appshell/preferences", "Recording device:")
+            title: qsTrc("appshell/preferences", "Recording device")
             columnWidth: root.columnWidth
 
             currentIndex: indexOfValue(apiModel.currentInputDeviceId)
@@ -81,22 +75,20 @@ Item {
             }
         }
 
-        // ComboBoxWithTitle {
-        //     id: bufferSize
+        ComboBoxWithTitle {
+            title: qsTrc("appshell/preferences", "Recording channels")
+            columnWidth: root.columnWidth
 
-        //     title: qsTrc("appshell", "Buffer size:")
-        //     columnWidth: root.columnWidth
+            currentIndex: indexOfValue(apiModel.currentInputChannels)
+            model: apiModel.inputChannelsList
 
-        //     currentIndex: indexOfValue(apiModel.bufferSize)
-        //     model: apiModel.bufferSizeList
+            navigation.name: "RecordingChannelsBox"
+            navigation.panel: root.navigation
+            navigation.row: root.navigationOrderStart + 1
 
-        //     navigation.name: "BufferSizeBox"
-        //     navigation.panel: root.navigation
-        //     navigation.row: root.navigationOrderStart + 1
-
-        //     onValueEdited: function(newIndex, newValue) {
-        //         apiModel.bufferSizeSelected(newValue)
-        //     }
-        // }
+            onValueEdited: function(newIndex, newValue) {
+                apiModel.inputChannelsSelected(newValue)
+            }
+        }
     }
 }

@@ -156,7 +156,7 @@ void PreferencesModel::load(const QString& currentPageId)
                  "Preferences/AppearancePreferencesPage.qml"),
 
         makeItem("audio-settings", QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"), IconCode::Code::AUDIO,
-                 "Preferences/PlaybackPreferencesPage.qml"),
+                 "Preferences/AudioPreferencesPage.qml"),
 
         makeItem("playback-recording", QT_TRANSLATE_NOOP("appshell/preferences", "Playback/Recording"), IconCode::Code::MICROPHONE, ""),
 

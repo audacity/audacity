@@ -36,6 +36,12 @@ void CommonAudioApiConfigurationModel::load()
     audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentOutputDeviceIdChanged(); });
     audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
     audioDevicesProvider()->audioApiChanged().onNotify(this, [this](){ emit outputDeviceListChanged(); });
+    audioDevicesProvider()->inputChannelsListChanged().onNotify(this, [this](){ emit inputChannelsListChanged(); });
+    audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this](){ emit currentInputChannelsChanged(); });
+    audioDevicesProvider()->bufferLengthChanged().onNotify(this, [this](){ emit bufferLengthChanged(); });
+    audioDevicesProvider()->latencyCompensationChanged().onNotify(this, [this](){ emit latencyCompensationChanged(); });
+    audioDevicesProvider()->defaultSampleRateChanged().onNotify(this, [this](){ emit defaultSampleRateChanged(); });
+    audioDevicesProvider()->defaultSampleFormatChanged().onNotify(this, [this](){ emit defaultSampleFormatChanged(); });
 }
 
 QString CommonAudioApiConfigurationModel::currentOutputDeviceId() const
@@ -84,28 +90,103 @@ void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device
     audioDevicesProvider()->setAudioInputDevice(deviceId.toStdString());
 }
 
-unsigned int CommonAudioApiConfigurationModel::bufferSize() const
+double CommonAudioApiConfigurationModel::bufferLength() const
 {
-//     // return audioDriver()->outputDeviceBufferSize();
-    return 1024;
+    return audioDevicesProvider()->bufferLength();
 }
 
-QList<unsigned int> CommonAudioApiConfigurationModel::bufferSizeList() const
+void CommonAudioApiConfigurationModel::bufferLengthSelected(const QString& bufferLengthStr)
 {
-    QList<unsigned int> result;
-//     std::vector<unsigned int> bufferSizes = audioDriver()->availableOutputDeviceBufferSizes();
+    if (bufferLengthStr == QString::number(bufferLength())) {
+        return;
+    }
 
-//     for (unsigned int bufferSize : bufferSizes) {
-//         result << bufferSize;
-//     }
+    audioDevicesProvider()->setBufferLength(bufferLengthStr.toDouble());
+}
 
-//     std::sort(result.begin(), result.end());
+double CommonAudioApiConfigurationModel::latencyCompensation() const
+{
+    return audioDevicesProvider()->latencyCompensation();
+}
+
+void CommonAudioApiConfigurationModel::latencyCompensationSelected(
+    const QString& latencyCompensationStr)
+{
+    if (latencyCompensationStr == QString::number(latencyCompensation())) {
+        return;
+    }
+
+    audioDevicesProvider()->setLatencyCompensation(latencyCompensationStr.toDouble());
+}
+
+QString CommonAudioApiConfigurationModel::currentInputChannels() const
+{
+    return QString::fromStdString(audioDevicesProvider()->currentInputChannels());
+}
+
+QVariantList CommonAudioApiConfigurationModel::inputChannelsList() const
+{
+    QVariantList result;
+    for (const auto& channel : audioDevicesProvider()->inputChannelsList()) {
+        result << QString::fromStdString(channel);
+    }
 
     return result;
 }
 
-void CommonAudioApiConfigurationModel::bufferSizeSelected(const QString& bufferSizeStr)
+void CommonAudioApiConfigurationModel::inputChannelsSelected(const QString& channelsStr)
 {
-    UNUSED(bufferSizeStr);
-// audioConfiguration()->setDriverBufferSize(bufferSizeStr.toInt());
+    if (channelsStr == currentInputChannels()) {
+        return;
+    }
+
+    audioDevicesProvider()->setInputChannels(channelsStr.toStdString());
+}
+
+uint64_t CommonAudioApiConfigurationModel::defaultSampleRate() const
+{
+    return audioDevicesProvider()->defaultSampleRate();
+}
+
+QVariantList CommonAudioApiConfigurationModel::defaultSampleRateList() const
+{
+    QVariantList result;
+    for (const auto& rate : audioDevicesProvider()->defaultSampleRateList()) {
+        result << rate;
+    }
+
+    return result;
+}
+
+void CommonAudioApiConfigurationModel::defaultSampleRateSelected(uint64_t rate)
+{
+    if (rate == defaultSampleRate()) {
+        return;
+    }
+
+    audioDevicesProvider()->setDefaultSampleRate(rate);
+}
+
+QString CommonAudioApiConfigurationModel::defaultSampleFormat() const
+{
+    return QString::fromStdString(audioDevicesProvider()->defaultSampleFormat());
+}
+
+QVariantList CommonAudioApiConfigurationModel::defaultSampleFormatList() const
+{
+    QVariantList result;
+    for (const auto& format : audioDevicesProvider()->defaultSampleFormatList()) {
+        result << QString::fromStdString(format);
+    }
+
+    return result;
+}
+
+void CommonAudioApiConfigurationModel::defaultSampleFormatSelected(const QString& format)
+{
+    if (format == defaultSampleFormat()) {
+        return;
+    }
+
+    audioDevicesProvider()->setDefaultSampleFormat(format.toStdString());
 }
