@@ -3,6 +3,7 @@
 #include "WaveTrack.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "global/types/translatablestring.h"
+#include "playbacktypes.h"
 
 using namespace au::playback;
 using namespace au::au3;
@@ -73,10 +74,29 @@ void Au3TrackPlaybackControl::setSolo(long trackId, bool solo)
         return;
     }
 
+    auto& tracks = TrackList::Get(projectRef());
+
     if (track->GetSolo() == solo) {
         return;
     }
-    track->SetSolo(solo);
+
+    bool wasSolo = track->GetSolo();
+
+    if (playbackConfiguration()->currentSoloBehavior() == TracksBehaviors::SoloBehavior::SoloBehaviorMulti) {
+        track->SetSolo(solo);
+    } else {
+        for (auto playable : tracks.Any<PlayableTrack>()) {
+            if (playable->GetId() == trackId) {
+                playable->SetSolo(!wasSolo);
+                playable->SetMute(false);
+            } else {
+                playable->SetSolo(false);
+                playable->SetMute(!wasSolo);
+            }
+            m_muteOrSoloChanged.send(playable->GetId());
+        }
+    }
+
     if (solo == track->GetMute()) {
         track->SetMute(false);
     }

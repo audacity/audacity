@@ -42,6 +42,7 @@ inline muse::Ret make_ret(Err e)
                                                                   "Stereo audio clips cannot be pasted onto mono tracks. "
                                                                   "Please convert the stereo clip to mono before pasting."));
     case Err::FailedToMakeRoomForClip: return muse::Ret(retCode);
+    case Err::DisallowedDuringRecording: return muse::Ret(retCode);
     case Err::NotEnoughDataInClipboard: return muse::Ret(retCode);
     }
 

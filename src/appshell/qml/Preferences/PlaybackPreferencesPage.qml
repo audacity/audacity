@@ -31,35 +31,29 @@ PreferencesPage {
 
     property int navigationOrderStart: 0
 
-    CommonAudioApiConfigurationModel {
-        id: apiModel
+    PlaybackPreferencesModel {
+        id: playbackModel
     }
 
     Component.onCompleted: {
-        apiModel.load()
+        playbackModel.init()
     }
 
     Column {
         width: parent.width
         spacing: root.sectionsSpacing
 
-        AudioApiSection {
-            currentAudioApiIndex: apiModel.currentAudioApiIndex
-            audioApiList: apiModel.audioApiList()
-            apiModel: apiModel
+        PlaybackPerformanceSection {
+            playbackModel: playbackModel
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
-
-            onCurrentAudioApiIndexChangeRequested: function(newIndex) {
-                apiModel.currentAudioApiIndex = newIndex
-            }
         }
 
         SeparatorLine {}
 
-        BufferAndLatencySection {
-            apiModel: apiModel
+        SoloButtonSection {
+            playbackModel: playbackModel
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
@@ -67,8 +61,8 @@ PreferencesPage {
 
         SeparatorLine {}
 
-        SampleRateSection {
-            apiModel: apiModel
+        CursorSection {
+            playbackModel: playbackModel
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2

@@ -20,6 +20,17 @@ enum class PlaybackStatus {
     Running
 };
 
+class TracksBehaviors
+{
+    Q_GADGET
+public:
+    enum class SoloBehavior {
+        SoloBehaviorSimple = 0,
+        SoloBehaviorMulti
+    };
+    Q_ENUM(SoloBehavior)
+};
+
 struct PlaybackRegion
 {
     muse::secs_t start;

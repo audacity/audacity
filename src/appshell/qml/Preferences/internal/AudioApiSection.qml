@@ -33,7 +33,6 @@ BaseSection {
     property int currentAudioApiIndex: -1
     property var audioApiList: null
     property var apiModel: null
-    property var playbackModel: null
 
     signal currentAudioApiIndexChangeRequested(int newIndex)
 
@@ -51,7 +50,7 @@ BaseSection {
 
         enabled: !playbackState.isPlaying()
 
-        currentIndex: playbackModel.currentAudioApiIndex
+        currentIndex: apiModel.currentAudioApiIndex
         model: root.audioApiList
 
         navigation.name: "AudioApiBox"

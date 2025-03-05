@@ -158,7 +158,9 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("audio-settings", QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"), IconCode::Code::AUDIO,
                  "Preferences/AudioPreferencesPage.qml"),
 
-        makeItem("playback-recording", QT_TRANSLATE_NOOP("appshell/preferences", "Playback/Recording"), IconCode::Code::MICROPHONE, ""),
+        makeItem("playback-recording", QT_TRANSLATE_NOOP("appshell/preferences",
+                                                         "Playback/Recording"), IconCode::Code::MICROPHONE,
+                 "Preferences/PlaybackPreferencesPage.qml"),
 
         makeItem("spectral-display", QT_TRANSLATE_NOOP("appshell/preferences", "Spectral display"), IconCode::Code::SPECTROGRAM, ""),
 
