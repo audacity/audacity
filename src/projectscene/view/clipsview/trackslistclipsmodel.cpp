@@ -39,13 +39,17 @@ void TracksListClipsModel::load()
         if (m_trackList.empty()) {
             return;
         }
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsTrackSelectedRole });
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole });
+        emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeys) {
         Q_UNUSED(clipKeys);
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsMultiSelectionActiveRole });
+
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsMultiSelectionActiveRole });
     });
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
@@ -53,7 +57,9 @@ void TracksListClipsModel::load()
         if (m_trackList.empty()) {
             return;
         }
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     });
 
     selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t end) {
@@ -61,7 +67,9 @@ void TracksListClipsModel::load()
         if (m_trackList.empty()) {
             return;
         }
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     });
 
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
@@ -72,7 +80,8 @@ void TracksListClipsModel::load()
     });
 
     prj->trackAdded().onReceive(this, [this](const trackedit::Track& track) {
-        beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
+        const int size = static_cast<int>(m_trackList.size());
+        beginInsertRows(QModelIndex(), size, size);
         m_trackList.push_back(track);
         endInsertRows();
 
@@ -81,7 +90,8 @@ void TracksListClipsModel::load()
     });
 
     prj->trackInserted().onReceive(this, [this](const trackedit::Track& track, const int pos) {
-        int index = pos >= 0 && pos <= static_cast<int>(m_trackList.size()) ? pos : m_trackList.size();
+        const int size = static_cast<int>(m_trackList.size());
+        const int index = ((pos >= 0) && (pos <= size)) ? pos : size;
 
         beginInsertRows(QModelIndex(), index, index);
         m_trackList.insert(m_trackList.begin() + index, track);
@@ -93,17 +103,20 @@ void TracksListClipsModel::load()
     });
 
     prj->trackMoved().onReceive(this, [this](const trackedit::Track& track, const int pos) {
-        auto it = std::find_if(m_trackList.begin(), m_trackList.end(), [&track](const trackedit::Track& it) { return it.id == track.id; });
+        const auto iterator = std::find_if(m_trackList.begin(), m_trackList.end(), [&track](const trackedit::Track& it)
+        {
+            return it.id == track.id;
+        });
 
-        if (it == m_trackList.end()) {
+        if (iterator == m_trackList.end()) {
             return;
         }
 
-        int from = std::distance(m_trackList.begin(), it);
-        int to = std::clamp(pos, 0, static_cast<int>(m_trackList.size()));
+        const int from = static_cast<int>(std::distance(m_trackList.begin(), iterator));
+        const int to = std::clamp(pos, 0, static_cast<int>(m_trackList.size()));
 
         beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to + 1 : to);
-        m_trackList.erase(it);
+        m_trackList.erase(iterator);
         m_trackList.insert(m_trackList.begin() + to, track);
         endMoveRows();
 
@@ -175,7 +188,7 @@ int TracksListClipsModel::rowCount(const QModelIndex&) const
 QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
-        return QVariant();
+        return {};
     }
 
     const au::trackedit::Track& track = m_trackList.at(index.row());
@@ -207,7 +220,7 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
         break;
     }
 
-    return QVariant();
+    return {};
 }
 
 QHash<int, QByteArray> TracksListClipsModel::roleNames() const
@@ -241,8 +254,8 @@ void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisib
 
 void TracksListClipsModel::updateTotalTracksHeight()
 {
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
     if (!viewState) {
         return;
     }
@@ -258,8 +271,8 @@ void TracksListClipsModel::updateTotalTracksHeight()
 
 void TracksListClipsModel::subscribeOnTrackHeightChanges(const trackedit::TrackId trackId)
 {
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
 
     muse::ValCh<int> trackHeightCh = viewState->trackHeight(trackId);
     trackHeightCh.ch.onReceive(this, [this](int) {
@@ -269,8 +282,8 @@ void TracksListClipsModel::subscribeOnTrackHeightChanges(const trackedit::TrackI
 
 void TracksListClipsModel::unsubscribeFromTrackHeightChanges(const trackedit::TrackId trackId)
 {
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
     viewState->trackHeight(trackId).ch.resetOnReceive(this);
 }
 
