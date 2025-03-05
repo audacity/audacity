@@ -222,7 +222,7 @@ void SelectionViewController::resetDataSelection()
     selectionController()->resetDataSelection();
 }
 
-bool SelectionViewController::isLeftSelection(double x)
+bool SelectionViewController::isLeftSelection(double x) const
 {
     if (!isProjectOpened()) {
         return false;

@@ -33,6 +33,7 @@ void au::trackedit::Au3ProjectHistory::undo()
         ::ProjectHistory::Get(project).PopState(elem.state);
     });
 
+    m_interactionOngoing = false;
     m_isUndoRedoAvailableChanged.notify();
 }
 
@@ -51,31 +52,67 @@ void au::trackedit::Au3ProjectHistory::redo()
         ::ProjectHistory::Get(project).PopState(elem.state);
     });
 
+    m_interactionOngoing = false;
     m_isUndoRedoAvailableChanged.notify();
 }
 
 void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
 {
+    LOGD() << "Push history state: " << shortDescription;
+
     auto& project = projectRef();
     ::ProjectHistory::Get(project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} });
 
+    m_interactionOngoing = false;
     m_isUndoRedoAvailableChanged.notify();
 }
 
 void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription, UndoPushType flags)
 {
+    LOGD() << "Push history state: " << shortDescription;
+
     auto& project = projectRef();
     UndoPush undoFlags = static_cast<UndoPush>(flags);
     ::ProjectHistory::Get(project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} },
                                              undoFlags);
 
+    m_interactionOngoing = false;
     m_isUndoRedoAvailableChanged.notify();
+}
+
+void Au3ProjectHistory::startUserInteraction()
+{
+    if (!m_interactionOngoing) {
+        // Please report if you hit this.
+        LOGW() << "An interaction is already ongoing";
+        return;
+    }
+    m_interactionOngoing = true;
+}
+
+void Au3ProjectHistory::endUserInteraction()
+{
+    if (m_interactionOngoing) {
+        m_interactionOngoing = false;
+        // No new history entry was pushed -> update the state.
+        modifyState(false);
+    }
 }
 
 void Au3ProjectHistory::modifyState(bool autoSave)
 {
+    if (m_interactionOngoing) {
+        LOGW() << "Attempt to modify state during undoable action";
+        return;
+    }
+    LOGD() << "Modify state";
     auto& project = projectRef();
     ::ProjectHistory::Get(project).ModifyState(autoSave);
+}
+
+void Au3ProjectHistory::markUnsaved()
+{
+    auto& project = projectRef();
     ::UndoManager::Get(project).MarkUnsaved();
 }
 
