@@ -12,6 +12,7 @@
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
 
+using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Truly;
 using ::testing::_;
@@ -27,14 +28,14 @@ protected:
     {
         m_au3Interaction = std::make_shared<Au3Interaction>();
 
-        m_globalContext = std::make_shared<context::GlobalContextMock>();
+        m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_au3Interaction->globalContext.set(m_globalContext);
 
-        m_trackEditProject = std::make_shared<TrackeditProjectMock>();
+        m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
         ON_CALL(*m_globalContext, currentTrackeditProject())
         .WillByDefault(Return(m_trackEditProject));
 
-        m_currentProject = std::make_shared<project::AudacityProjectMock>();
+        m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_currentProject));
 
