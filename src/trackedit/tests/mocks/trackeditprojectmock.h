@@ -44,5 +44,7 @@ public:
     MOCK_METHOD(secs_t, totalTime, (), (const, override));
 
     MOCK_METHOD(int64_t, createNewGroupID, (int64_t startingId), (const, override));
+
+    MOCK_METHOD(TracksAndClips, buildTracksAndClips, (), (override));
 };
 }

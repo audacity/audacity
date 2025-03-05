@@ -6,7 +6,6 @@
 #include "../../itrackeditproject.h"
 
 #include "UndoManager.h"
-#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 
 #include "iprojecthistory.h"
 #include "modularity/ioc.h"
@@ -53,13 +52,16 @@ public:
 
     secs_t totalTime() const override;
 
+    TracksAndClips buildTracksAndClips() override;
+
     int64_t createNewGroupID(int64_t startingId = 0) const override;
 
 private:
-
     void onTrackListEvent(const TrackListEvent& e);
     void onTrackDataChanged(const TrackId& trackId);
     void onProjectTempoChange(double newTempo);
+
+    au::trackedit::Clips getClips(const TrackId& trackId) const;
 
     struct Au3Impl;
     std::shared_ptr<Au3Impl> m_impl;
