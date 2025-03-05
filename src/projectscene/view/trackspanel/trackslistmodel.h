@@ -10,6 +10,7 @@
 #include "context/iglobalcontext.h"
 #include "types/projectscenetypes.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
 
 #include "trackitem.h"
 
@@ -34,6 +35,7 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
 
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:

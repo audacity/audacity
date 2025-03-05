@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
 #include "playback/itrackplaybackcontrol.h"
 
 #include "trackedit/dom/track.h"
@@ -27,6 +28,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
 
 public:
@@ -34,6 +36,8 @@ public:
     TracksListClipsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
+    Q_INVOKABLE void startUserInteraction();
+    Q_INVOKABLE void endUserInteraction();
     Q_INVOKABLE void handleDroppedFiles(const QStringList& fileUrls);
 
     int rowCount(const QModelIndex& parent) const override;
