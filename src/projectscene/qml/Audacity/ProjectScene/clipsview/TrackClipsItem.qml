@@ -126,29 +126,8 @@ Item {
 
             anchors.fill: parent
 
-            onClicked: function(e) {
-                if (clipsContainer.multiSampleEdit || clipsContainer.isIsolationMode) {
-                    // Handle release for multi sample edit and isolation mode on the next click event
-                    clipsContainer.multiSampleEdit = false
-                    clipsContainer.isIsolationMode = false
-
-                    clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
-                        clipItem.multiSampleEdit = false
-                        clipItem.isIsolationMode = false
-                        clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
-                    })
-                    //Do not process long press and holds as normal click events
-                    return
-                }
-
-                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
-                    clipItem.mouseClicked(mouseEvent.x, mouseEvent.y)
-                })
-                e.accepted = false
-            }
-
             onDoubleClicked: function(e) {
-                e.accepted = false
+                e.accepted = true
             }
             
             onPressAndHold: function(e) {
@@ -177,6 +156,17 @@ Item {
                     clipsContainerMouseArea.hoverEnabled = true
                     e.accepted = false
                 }
+            }
+
+            onReleased: function(e) {
+                clipsContainer.multiSampleEdit = false
+                clipsContainer.isIsolationMode = false
+
+                clipsContainer.mapToAllClips(e, function(clipItem, mouseEvent) {
+                    clipItem.multiSampleEdit = false
+                    clipItem.isIsolationMode = false
+                    clipItem.mouseReleased(mouseEvent.x, mouseEvent.y)
+                })
             }
 
             onPositionChanged: function(e) {
