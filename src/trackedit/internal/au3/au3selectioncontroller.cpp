@@ -2,6 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 #include "au3selectioncontroller.h"
+#include "selectionrestorer.h"
 
 #include "global/containers.h"
 #include "global/realfn.h"
@@ -35,20 +36,37 @@ void Au3SelectionController::init()
         resetDataSelection();
 
         if (prj) {
-            //! NOTE: sync selectionControler with internal project state if trackList changed
-            auto trackList = &Au3TrackList::Get(projectRef());
-            m_tracksSubc = trackList->Subscribe([this](const TrackListEvent&) {
-                updateSelectionController();
-            });
-
             //! NOTE: load project's last saved selection state
             auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
             m_selectedStartTime.set(selectedRegion.t0(), true);
             m_selectedEndTime.set(selectedRegion.t1(), true);
+
+            auto& restorer = SelectionRestorer::Get(projectRef());
+            restorer.selectionGetter = [this] {
+                return ClipAndTimeSelection {
+                    m_selectedClips.val,
+                    m_selectedStartTime.val,
+                    m_selectedEndTime.val
+                };
+            };
+
+            restorer.selectionSetter = [this](const ClipAndTimeSelection& selection) {
+                restoreSelection(selection);
+            };
         } else {
             m_tracksSubc.Reset();
         }
     });
+}
+
+void Au3SelectionController::restoreSelection(const ClipAndTimeSelection& selection)
+{
+    MYLOG() << "restoreSelection";
+
+    m_selectedClips.set(selection.selectedClips, true);
+    m_selectedStartTime.set(selection.dataSelectedStartTime, true);
+    m_selectedEndTime.set(selection.dataSelectedEndTime, true);
+    updateSelectionController();
 }
 
 void Au3SelectionController::resetSelectedTracks()
@@ -228,7 +246,7 @@ ClipKeyList Au3SelectionController::selectedClipsInTrackOrder() const
     return sortedSelectedClips;
 }
 
-void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)
+void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete, bool modifyState)
 {
     m_selectedClips.set(clipKeys, complete);
 
@@ -242,17 +260,9 @@ void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool 
         selectedTracks.push_back(key.trackId);
     }
     setSelectedTracks(selectedTracks, complete);
-}
-
-std::optional<au::trackedit::ClipId> Au3SelectionController::setSelectedClip(trackedit::TrackId trackId, secs_t time)
-{
-    const auto& clip = au3::DomAccessor::findWaveClip(projectRef(), trackId, time);
-    if (!clip) {
-        return std::nullopt;
+    if (complete && modifyState) {
+        projectHistory()->modifyState();
     }
-
-    setSelectedClips({ { trackId, clip->GetId() } }, true);
-    return clip->GetId();
 }
 
 void Au3SelectionController::addSelectedClip(const ClipKey& clipKey)

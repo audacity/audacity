@@ -90,6 +90,7 @@ private:
 
     bool isProjectOpened() const;
 
+    void loadTracks(const std::vector<trackedit::Track>& tracks);
     bool removeRows(int row, int count, const QModelIndex& parent) override;
 
     void onProjectChanged();

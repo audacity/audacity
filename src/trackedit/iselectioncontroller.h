@@ -38,8 +38,8 @@ public:
     virtual bool hasSelectedClips() const = 0;
     virtual ClipKeyList selectedClips() const = 0;
     virtual ClipKeyList selectedClipsInTrackOrder() const = 0;
-    virtual void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true) = 0;
-    virtual std::optional<ClipId> setSelectedClip(trackedit::TrackId trackId, secs_t time) = 0;
+    //! Note: history state gets modified only if both `complete` and `modifyState` are true
+    virtual void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true, bool modifyState = false) = 0;
     virtual void addSelectedClip(const ClipKey& clipKey) = 0;
     virtual void removeClipSelection(const ClipKey& clipKey) = 0;
     virtual muse::async::Channel<ClipKeyList> clipsSelected() const = 0;

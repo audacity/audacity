@@ -24,8 +24,7 @@ public:
     MOCK_METHOD(bool, hasSelectedClips, (), (const, override));
     MOCK_METHOD(ClipKeyList, selectedClips, (), (const, override));
     MOCK_METHOD(ClipKeyList, selectedClipsInTrackOrder, (), (const, override));
-    MOCK_METHOD(void, setSelectedClips, (const ClipKeyList&, bool), (override));
-    MOCK_METHOD(std::optional<ClipId>, setSelectedClip, (trackedit::TrackId, secs_t), (override));
+    MOCK_METHOD(void, setSelectedClips, (const ClipKeyList&, bool, bool), (override));
     MOCK_METHOD(void, addSelectedClip, (const ClipKey& clipKey), (override));
     MOCK_METHOD(muse::async::Channel<ClipKeyList>, clipsSelected, (), (const, override));
     MOCK_METHOD(double, selectedClipStartTime, (), (const, override));
