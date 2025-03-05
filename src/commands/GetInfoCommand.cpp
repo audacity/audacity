@@ -419,7 +419,7 @@ bool GetInfoCommand::SendPreferences(const CommandContext &context)
    // wxCommandEvent Evt;
    //dialog.Show();
    ShuttleGuiGetDefinition S(pWin, *((context.pOutput)->mStatusTarget) );
-    dialog.ShuttleAll( S );
+   dialog.ShuttleAll( S );
    context.EndArray();
    return true;
 }
