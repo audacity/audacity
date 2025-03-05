@@ -5,12 +5,14 @@
 
 #include "../../itrackeditinteraction.h"
 
-#include "modularity/ioc.h"
-#include "iinteractive.h"
-#include "context/iglobalcontext.h"
+#include "au3changedetection.h"
+
 #include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 #include "../../itrackeditclipboard.h"
+#include "context/iglobalcontext.h"
+#include "iinteractive.h"
+#include "modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
 
@@ -161,6 +163,8 @@ private:
     bool canMoveClipsToTrack(int trackPositionOffset) const;
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
+
+    Au3ChangeDetection m_changeDetection;
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 

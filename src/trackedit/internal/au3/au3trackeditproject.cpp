@@ -169,6 +169,25 @@ void Au3TrackeditProject::onProjectTempoChange(double newTempo)
     }
 }
 
+// TODO: Merge the two methods before PR!
+
+au::trackedit::Clips Au3TrackeditProject::getClips(const TrackId& trackId) const
+{
+    au::trackedit::Clips clips;
+
+    const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return clips;
+    }
+
+    for (const std::shared_ptr<const Au3WaveClip>& interval : waveTrack->Intervals()) {
+        au::trackedit::Clip clip = DomConverter::clip(waveTrack, interval.get());
+        clips.push_back(std::move(clip));
+    }
+
+    return clips;
+}
+
 muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
 {
     const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
@@ -333,6 +352,20 @@ muse::async::Channel<au::trackedit::Track, int> Au3TrackeditProject::trackMoved(
 secs_t Au3TrackeditProject::totalTime() const
 {
     return m_impl->trackList->GetEndTime();
+}
+
+TracksAndClips Au3TrackeditProject::buildTracksAndClips()
+{
+    std::pair<TrackList, std::vector<trackedit::Clips> > newCache;
+
+    newCache.first = std::move(trackList());
+
+    for (const auto& track : newCache.first) {
+        trackedit::Clips clips = getClips(track.id);
+        newCache.second.push_back(std::move(clips));
+    }
+
+    return newCache;
 }
 
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
