@@ -56,14 +56,14 @@ void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& b
 
 bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore, const TrackList& tracksAfter)
 {
-    auto trackeditProjectPtr = globalContext()->currentProject()->trackeditProject();
+    auto trackeditProjectPtr = globalContext()->currentTrackeditProject();
 
     bool changed = false;
 
     auto trackComparison = [](const Track& first, const Track& second) {
         return first.id == second.id;
         //! For now these do not result in "autosave",
-        //  and so should not trigger be criteria under undo/redo.
+        //  and so should not be criteria under undo/redo.
         //  This might change in future AU4 versions.
         // first.title == second.title &&
         // first.type == second.type &&
@@ -115,7 +115,9 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
         }
 
         //! Finally - can there just have been a change in the track fields?
-        //  I don't see "autosave" calls being triggered for many such changes though.
+        //  I don't see "autosave" calls being triggered for any such changes currently.
+        //  BUT we have discussed implementing that,
+        //  after which trackComparison will compare more than only the ID.
         for (int i = 0; i < tracksBefore.size(); i++) {
             auto& trackBefore = tracksBefore[i];
             auto& trackAfter = tracksAfter[i];
@@ -131,7 +133,7 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
 
 void au::trackedit::Au3ChangeDetection::_forClips(const std::vector<Clips>& before, const std::vector<Clips>& after)
 {
-    auto trackeditProjectPtr = globalContext()->currentProject()->trackeditProject();
+    auto trackeditProjectPtr = globalContext()->currentTrackeditProject();
 
     IF_ASSERT_FAILED(before.size() == after.size()) {
         return;
@@ -176,7 +178,7 @@ void au::trackedit::Au3ChangeDetection::_forClips(const std::vector<Clips>& befo
                        && first.pitch == second.pitch
                        && first.speed == second.speed;
                 //! For now these do not result in "autosave",
-                //  and so should not trigger be criteria under undo/redo refresh.
+                //  and so should not be criteria under undo/redo refresh.
                 //  This might change in future AU4 versions.
                 // first.title == second.title &&
                 // first.color == second.color &&
