@@ -2319,11 +2319,6 @@ bool Au3Interaction::redo()
 
     m_changeDetection.notifyOfUndoRedo(before, after);
 
-    // Redo removes all tracks from current state and
-    // inserts tracks from the previous state so we need
-    // to reload whole model
-    trackeditProject->reload();
-
     return true;
 }
 
