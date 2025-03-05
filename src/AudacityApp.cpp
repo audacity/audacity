@@ -449,6 +449,9 @@ void PopulatePreferences()
          gPrefs->DeleteEntry("/Update/UpdateNoticeShown");
       if (gPrefs->Exists("/Update/DefaultUpdatesChecking"))
          gPrefs->DeleteEntry("/Update/DefaultUpdatesChecking");
+      // To set the new default to Best Quality
+      if (gPrefs->Exists("/Quality/LibsoxrSampleRateConverterChoice"))
+         gPrefs->DeleteEntry("/Quality/LibsoxrSampleRateConverterChoice");
    }
 
    // write out the version numbers to the prefs file for future checking
