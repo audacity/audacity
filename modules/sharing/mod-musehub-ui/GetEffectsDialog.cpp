@@ -304,6 +304,27 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
       button->Bind(wxEVT_BUTTON, [code = elem.code](auto) {
          BasicUI::OpenInDefaultBrowser(GetEffectUrl(code));
       });
+
+      button->Bind(wxEVT_SET_FOCUS, [page, itemPanel, button](wxFocusEvent& event) {
+         const int pageTop = page->GetScreenPosition().y;
+         const int pageHeight = page->GetClientSize().y;
+         const int buttonTop = button->GetScreenPosition().y;
+
+         const int scrollUpOffset = itemPanel->GetSize().GetHeight();
+         const int scrollDownOffset = button->GetSize().GetHeight() * 2;
+
+         int y, dy;
+         page->GetViewStart(nullptr, &y);
+         page->GetScrollPixelsPerUnit(nullptr, &dy);
+
+         if (dy && buttonTop < pageTop)
+            page->Scroll(0, y - (pageTop - buttonTop + scrollUpOffset) / dy);
+         else if (dy && buttonTop > pageTop + pageHeight)
+            page->Scroll(0, y + (buttonTop - pageTop - pageHeight + scrollDownOffset) / dy);
+
+         event.Skip();
+      });
+
       button->SetNormalColor(musehubButtonNormal);
       button->SetPressedColor(musehubButtonPressed);
 #if wxUSE_ACCESSIBILITY
