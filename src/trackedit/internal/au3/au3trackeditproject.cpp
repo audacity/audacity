@@ -169,14 +169,12 @@ void Au3TrackeditProject::onProjectTempoChange(double newTempo)
     }
 }
 
-// TODO: Merge the two methods before PR!
-
 au::trackedit::Clips Au3TrackeditProject::getClips(const TrackId& trackId) const
 {
     au::trackedit::Clips clips;
 
     const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return clips;
     }
 
@@ -190,21 +188,18 @@ au::trackedit::Clips Au3TrackeditProject::getClips(const TrackId& trackId) const
 
 muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
 {
-    const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
-    if (!waveTrack) {
-        return muse::async::NotifyList<au::trackedit::Clip>();
-    }
+    au::trackedit::Clips clips = getClips(trackId);
+    muse::async::NotifyList<au::trackedit::Clip> clipNotifyList;
 
-    muse::async::NotifyList<au::trackedit::Clip> clips;
-    for (const std::shared_ptr<const Au3WaveClip>& interval : waveTrack->Intervals()) {
-        au::trackedit::Clip clip = DomConverter::clip(waveTrack, interval.get());
-        clips.push_back(std::move(clip));
+    clipNotifyList.reserve(clips.size());
+    for (auto& clip : clips) {
+        clipNotifyList.push_back(std::move(clip));
     }
 
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[trackId];
-    clips.setNotify(notifier.notify());
+    clipNotifyList.setNotify(notifier.notify());
 
-    return clips;
+    return clipNotifyList;
 }
 
 std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId) const
