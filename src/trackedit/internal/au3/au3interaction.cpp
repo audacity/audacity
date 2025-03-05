@@ -16,7 +16,6 @@
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 #include "libraries/lib-wave-track/TimeStretching.h"
-#include "libraries/lib-wave-track/WaveTrackUtilities.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
@@ -48,7 +47,7 @@ TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<TrackData>& tra
 
     TrackIdList tracksIdsPastedInto;
 
-    Au3Track* pFirstNewTrack = NULL;
+    Au3Track* pFirstNewTrack = nullptr;
     for (auto data : tracksData) {
         auto pNewTrack = createNewTrackAndPaste(data.track, tracks, selectedStartTime);
         if (!pFirstNewTrack) {

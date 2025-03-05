@@ -66,7 +66,7 @@ void TracksListModel::load()
 
     TRACEFUNC;
 
-    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
@@ -503,7 +503,7 @@ void TracksListModel::onProjectChanged()
 
 TrackItem* TracksListModel::buildTrackItem(const Track& track)
 {
-    TrackItem* item = new TrackItem(this);
+    auto item = new TrackItem(this);
     item->init(track);
 
     return item;
@@ -582,7 +582,8 @@ void TracksListModel::onTracksChanged(const std::vector<au::trackedit::Track>& t
 
 void TracksListModel::onTrackAdded(const trackedit::Track& track)
 {
-    beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
+    const int size = static_cast<int>(m_trackList.size());
+    beginInsertRows(QModelIndex(), size, size);
     m_trackList.push_back(buildTrackItem(track));
     onTrackChanged(track);
     endInsertRows();
@@ -631,8 +632,8 @@ void TracksListModel::onTrackMoved(const trackedit::Track& track, int pos)
         return;
     }
 
-    int from = m_trackList.indexOf(item);
-    int to = std::clamp(pos, 0, static_cast<int>(m_trackList.size()));
+    const int from = static_cast<int>(m_trackList.indexOf(item));
+    const int to = std::clamp(pos, 0, static_cast<int>(m_trackList.size()));
 
     beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to + 1 : to);
     m_trackList.removeAt(from);
