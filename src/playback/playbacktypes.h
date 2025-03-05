@@ -43,6 +43,17 @@ enum class TimecodeFormatType {
     BarBeatTick
 };
 
+class TracksBehaviors
+{
+    Q_GADGET
+public:
+    enum class SoloBehavior {
+        SoloBehaviorSimple = 0,
+        SoloBehaviorMulti
+    };
+    Q_ENUM(SoloBehavior)
+};
+
 struct PlaybackRegion
 {
     muse::secs_t start;
@@ -62,5 +73,31 @@ struct PlayTracksOptions {
     double mixerEndTime = -1.0;  // Time at which mixer stops producing, maybe > endTime, if not set then == endTime
     double startOffset = 0.0;
     bool isDefaultPolicy = true;
+};
+
+class DitherTypePrefs
+{
+    Q_GADGET
+public:
+    enum class DitherType {
+        None = 0,
+        Rectangle = 1,
+        Triangle = 2,
+        Shaped = 3
+    };
+    Q_ENUM(DitherType)
+};
+
+class PlaybackQualityPrefs
+{
+    Q_GADGET
+public:
+    enum class PlaybackQuality {
+        LowQuality = 0,
+        MediumQuality = 1,
+        HighQuality = 2,
+        BestQuality = 3
+    };
+    Q_ENUM(PlaybackQuality)
 };
 }

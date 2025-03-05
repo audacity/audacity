@@ -3,12 +3,16 @@
 */
 #pragma once
 
-#include "itrackplaybackcontrol.h"
 #include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
-#include "trackedit/iprojecthistory.h"
 
+#include "context/iglobalcontext.h"
+
+#include "trackedit/iprojecthistory.h"
 #include "au3wrap/au3types.h"
+
+#include "iplaybackconfiguration.h"
+
+#include "itrackplaybackcontrol.h"
 
 namespace au::playback {
 using au::audio::volume_dbfs_t;
@@ -18,6 +22,7 @@ class Au3TrackPlaybackControl : public ITrackPlaybackControl
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     Au3TrackPlaybackControl() = default;

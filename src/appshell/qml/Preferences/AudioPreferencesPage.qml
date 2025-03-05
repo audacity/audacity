@@ -31,16 +31,11 @@ PreferencesPage {
 
     property int navigationOrderStart: 0
 
-    PlaybackPreferencesModel {
-        id: playbackModel
-    }
-
     CommonAudioApiConfigurationModel {
         id: apiModel
     }
 
     Component.onCompleted: {
-        playbackModel.init()
         apiModel.load()
     }
 
@@ -49,16 +44,15 @@ PreferencesPage {
         spacing: root.sectionsSpacing
 
         AudioApiSection {
-            currentAudioApiIndex: playbackModel.currentAudioApiIndex
-            audioApiList: playbackModel.audioApiList()
+            currentAudioApiIndex: apiModel.currentAudioApiIndex
+            audioApiList: apiModel.audioApiList()
             apiModel: apiModel
-            playbackModel: playbackModel
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
 
             onCurrentAudioApiIndexChangeRequested: function(newIndex) {
-                playbackModel.currentAudioApiIndex = newIndex
+                apiModel.currentAudioApiIndex = newIndex
             }
         }
 
