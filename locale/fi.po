@@ -1927,7 +1927,7 @@ msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Importing files"
-msgstr "Tiedostojen tuonti"
+msgstr "Tuodaan tiedostoja"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
