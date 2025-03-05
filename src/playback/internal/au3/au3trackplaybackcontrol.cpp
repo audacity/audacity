@@ -83,6 +83,7 @@ void Au3TrackPlaybackControl::setSolo(long trackId, bool solo)
 
     m_muteOrSoloChanged.send(trackId);
     projectHistory()->modifyState();
+    projectHistory()->markUnsaved();
 }
 
 bool Au3TrackPlaybackControl::solo(long trackId) const
@@ -112,6 +113,7 @@ void Au3TrackPlaybackControl::setMuted(long trackId, bool mute)
 
     m_muteOrSoloChanged.send(trackId);
     projectHistory()->modifyState();
+    projectHistory()->markUnsaved();
 }
 
 bool Au3TrackPlaybackControl::muted(long trackId) const
