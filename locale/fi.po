@@ -2,11 +2,11 @@
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Link Winterberg, 2024
 # Heino Keränen, 2025
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -21333,9 +21333,9 @@ msgid ""
 "                 Track sample rate is ~a Hz~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"Virhe:~%~%Ftaajuus (~a Hz) on liian korkea raidan näytetaajuudelle.~%~%~ \n"
-"Raidan näytetaajuus on ~a Hz~%~ \n"
-"Taajuuden on oltava alle ~a Hz."
+"Virhe:~%~%Ftaajuus (~a Hz) on liian korkea raidan näytetaajuudelle.~%~%~\n"
+"                 Raidan näytetaajuus on ~a Hz~%~\n"
+"                 Taajuuden on oltava alle ~a Hz."
 
 #. i18n-hint: Name of effect that labels sounds
 #: plug-ins/label-sounds.ny

@@ -2,11 +2,11 @@
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Link Winterberg, 2024
 # Kfir Pshititsky, 2024
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -21416,9 +21416,9 @@ msgid ""
 "               Track sample rate is ~a Hz.~%~\n"
 "               Frequency must be less than ~a Hz."
 msgstr ""
-"שגיאה:~%~התדירות %F (~a הרץ) גבוהה מדי עבור קצב דגימת הרצועה.~%~%~\n"
-"               קצב דגימת הרצועה הוא ~a הרץ.~%~\n"
-"               התדר חייב להיות פחות מ־~a הרץ."
+"שגיאה:~%~%התדירות (~a הרץ) גבוהה מדי עבור קצב דגימת הרצועה.~%~%~\n"
+"               קצב דגימת הרצועה הוא ~a הרץ~%~\n"
+"               התדר חייב להיות פחות מ-~a הרץ."
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Nyquist Plugin Installer"

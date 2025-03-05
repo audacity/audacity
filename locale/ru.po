@@ -4756,7 +4756,7 @@ msgid ""
 msgstr ""
 "Активный проект уже имеет трек времени, и он был обнаружен в"
 " импортируемом проекте. Не импортируем трек времени."
- 
+
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
 msgstr "Недопустимый атрибут последовательности  'maxsamples'."
@@ -16808,7 +16808,7 @@ msgstr ""
 " пользуетесь Audacity."
 
 #: src/prefs/ApplicationPrefs.cpp
-"In order to protect your privacy, Audacity does not collect any"
+msgid "In order to protect your privacy, Audacity does not collect any"
 " personally identifiable information about you."
 msgstr ""
 "Чтобы защитить вашу конфиденциальность, Audacity не собирает любые ваши"
