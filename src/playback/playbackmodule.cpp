@@ -73,6 +73,9 @@ void PlaybackModule::registerUiTypes()
     qmlRegisterType<TimecodeModel>("Audacity.Playback", 1, 0, "TimecodeModel");
     qmlRegisterType<PlaybackStateModel>("Audacity.Playback", 1, 0, "PlaybackStateModel");
     qmlRegisterType<BPMModel>("Audacity.Playback", 1, 0, "BPMModel");
+    qmlRegisterUncreatableType<TracksBehaviors>("Audacity.Playback", 1, 0, "SoloBehavior", "Not creatable from QML");
+    qmlRegisterUncreatableType<PlaybackQualityPrefs>("Audacity.Playback", 1, 0, "PlaybackQuality", "Not creatable from QML");
+    qmlRegisterUncreatableType<DitherTypePrefs>("Audacity.Playback", 1, 0, "DitherType", "Not creatable from QML");
 }
 
 void PlaybackModule::onInit(const IApplication::RunMode& mode)
@@ -88,6 +91,8 @@ void PlaybackModule::onInit(const IApplication::RunMode& mode)
     }
 
     m_uiActions->init();
+
+    m_configuration->init();
 }
 
 void PlaybackModule::onDeinit()

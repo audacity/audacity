@@ -1,8 +1,11 @@
-#include "au3trackplaybackcontrol.h"
+#include "global/types/translatablestring.h"
+
+#include "au3wrap/internal/domaccessor.h"
+#include "playbacktypes.h"
 
 #include "WaveTrack.h"
-#include "au3wrap/internal/domaccessor.h"
-#include "global/types/translatablestring.h"
+
+#include "au3trackplaybackcontrol.h"
 
 using namespace au::playback;
 using namespace au::au3;
@@ -73,10 +76,35 @@ void Au3TrackPlaybackControl::setSolo(long trackId, bool solo)
         return;
     }
 
+    auto& tracks = TrackList::Get(projectRef());
+
     if (track->GetSolo() == solo) {
         return;
     }
-    track->SetSolo(solo);
+
+    TracksBehaviors::SoloBehavior currentSoloBehavior = playbackConfiguration()->currentSoloBehavior();
+    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
+        if (currentSoloBehavior == TracksBehaviors::SoloBehavior::SoloBehaviorMulti) {
+            currentSoloBehavior = TracksBehaviors::SoloBehavior::SoloBehaviorSimple;
+        } else {
+            currentSoloBehavior = TracksBehaviors::SoloBehavior::SoloBehaviorMulti;
+        }
+    }
+
+    if (currentSoloBehavior == TracksBehaviors::SoloBehavior::SoloBehaviorMulti) {
+        track->SetSolo(solo);
+    } else {
+        for (auto playable : tracks.Any<PlayableTrack>()) {
+            if (playable->GetId() == trackId) {
+                playable->SetSolo(solo);
+            } else {
+                playable->SetSolo(false);
+            }
+            m_muteOrSoloChanged.send(playable->GetId());
+        }
+    }
+
     if (solo == track->GetMute()) {
         track->SetMute(false);
     }

@@ -29,6 +29,7 @@ Column {
     property alias title: titleLabel.text
 
     property real columnWidth: 208
+    property real controlWidth: 96
 
     property alias currentValue: control.currentValue
     property alias minValue: control.minValue
@@ -56,7 +57,7 @@ Column {
     IncrementalPropertyControl {
         id: control
 
-        width: 96
+        width: root.controlWidth
         decimals: 0
         step: 1
 

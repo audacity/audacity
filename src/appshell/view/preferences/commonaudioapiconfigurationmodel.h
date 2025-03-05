@@ -37,6 +37,8 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 {
     Q_OBJECT
 
+    Q_PROPERTY(int currentAudioApiIndex READ currentAudioApiIndex WRITE setCurrentAudioApiIndex NOTIFY currentAudioApiIndexChanged)
+
     Q_PROPERTY(QString currentOutputDeviceId READ currentOutputDeviceId NOTIFY currentOutputDeviceIdChanged)
     Q_PROPERTY(QVariantList outputDeviceList READ outputDeviceList NOTIFY outputDeviceListChanged)
 
@@ -68,6 +70,10 @@ public:
     explicit CommonAudioApiConfigurationModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
+
+    int currentAudioApiIndex() const;
+    Q_INVOKABLE QStringList audioApiList() const;
+    Q_INVOKABLE void setCurrentAudioApiIndex(int index);
 
     QString currentOutputDeviceId() const;
     QVariantList outputDeviceList() const;
@@ -107,6 +113,8 @@ public:
     double longestDeviceNameLength() const;
 
 signals:
+    void currentAudioApiIndexChanged();
+
     void currentOutputDeviceIdChanged();
     void outputDeviceListChanged();
 

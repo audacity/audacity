@@ -42,6 +42,7 @@ CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* pare
 
 void CommonAudioApiConfigurationModel::load()
 {
+    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() { emit currentAudioApiIndexChanged(); });
     audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentOutputDeviceIdChanged(); });
     audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
     audioDevicesProvider()->audioApiChanged().onNotify(this, [this](){
@@ -61,6 +62,36 @@ void CommonAudioApiConfigurationModel::load()
         }
     });
     audioDevicesProvider()->defaultSampleFormatChanged().onNotify(this, [this](){ emit defaultSampleFormatChanged(); });
+}
+
+int CommonAudioApiConfigurationModel::currentAudioApiIndex() const
+{
+    QString currentApi = QString::fromStdString(audioDevicesProvider()->currentAudioApi());
+    return audioApiList().indexOf(currentApi);
+}
+
+void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
+{
+    if (index == currentAudioApiIndex()) {
+        return;
+    }
+
+    std::vector<std::string> apiList = audioDevicesProvider()->audioApiList();
+    if (index < 0 || index >= static_cast<int>(apiList.size())) {
+        return;
+    }
+
+    audioDevicesProvider()->setAudioApi(apiList[index]);
+}
+
+QStringList CommonAudioApiConfigurationModel::audioApiList() const
+{
+    QStringList result;
+    for (const std::string& api: audioDevicesProvider()->audioApiList()) {
+        result.push_back(QString::fromStdString(api));
+    }
+
+    return result;
 }
 
 QString CommonAudioApiConfigurationModel::currentOutputDeviceId() const
