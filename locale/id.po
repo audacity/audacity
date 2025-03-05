@@ -2,11 +2,11 @@
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 # Translators:
-# Catarina Anabela, 2024
 # Link Winterberg, 2024
-#
+# Catarina Anabela, 2025
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -14,12 +14,12 @@ msgstr ""
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-02-13 19:07+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2024\n"
+"Last-Translator: Catarina Anabela, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
-"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
@@ -39,7 +39,7 @@ msgstr "Kesalahan Plugin"
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #, c-format
 msgid "Applied effect: %s"
-msgstr "Efek teraplikasi: %s"
+msgstr "Efek diterapkan: %s"
 
 #. i18n-hint: %s will be the name of the effect which will be
 #. * repeated if this menu item is chosen
@@ -252,8 +252,12 @@ msgid "Out of memory!"
 msgstr "Kehabisan memori!"
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
-msgstr "Perubahan Level Perekam Otomatis dihentikan. Pengoptimalan lebih lanjut tak memungkinkan. Masih terlalu tinggi."
+msgid ""
+"Automated Recording Level Adjustment stopped. It was not possible to "
+"optimize it more. Still too high."
+msgstr ""
+"Perubahan Level Perekam Otomatis dihentikan. Pengoptimalan lebih lanjut tak "
+"memungkinkan. Masih terlalu tinggi."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
@@ -261,8 +265,12 @@ msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr "Perubahan Level Perekam Otomatis menurunkan volume ke %f."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
-msgstr "Perubahan Level Perekam Otomatis dihentikan. Pengoptimalan lebih lanjut tak memungkinkan. Masih terlalu tinggi. Masih terlalu rendah."
+msgid ""
+"Automated Recording Level Adjustment stopped. It was not possible to "
+"optimize it more. Still too low."
+msgstr ""
+"Perubahan Level Perekam Otomatis dihentikan. Pengoptimalan lebih lanjut tak "
+"memungkinkan. Masih terlalu tinggi. Masih terlalu rendah."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
@@ -270,17 +278,29 @@ msgid "Automated Recording Level Adjustment increased the volume to %.2f."
 msgstr "Perubahan Level Perekam Otomatis menaikkan volume ke %.2f."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
-msgstr "Perubahan Level Perekam Otomatis dihentikan. Jumlah total analisis telah terlampau tanpa menemukan volume yang dapat diterima. Masih terlalu tinggi."
+msgid ""
+"Automated Recording Level Adjustment stopped. The total number of analyses "
+"has been exceeded without finding an acceptable volume. Still too high."
+msgstr ""
+"Perubahan Level Perekam Otomatis dihentikan. Jumlah total analisis telah "
+"terlampau tanpa menemukan volume yang dapat diterima. Masih terlalu tinggi."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
-msgstr "Perubahan Level Perekam Otomatis dihentikan. Jumlah total analisis telah terlampau tanpa menemukan volume yang dapat diterima. Masih terlalu rendah."
+msgid ""
+"Automated Recording Level Adjustment stopped. The total number of analyses "
+"has been exceeded without finding an acceptable volume. Still too low."
+msgstr ""
+"Perubahan Level Perekam Otomatis dihentikan. Jumlah total analisis telah "
+"terlampau tanpa menemukan volume yang dapat diterima. Masih terlalu rendah."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
-msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
-msgstr "Perubahan Level Perekam Otomatis dihentikan. %.2f sepertinya volume yang dapat diterima."
+msgid ""
+"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
+"volume."
+msgstr ""
+"Perubahan Level Perekam Otomatis dihentikan. %.2f sepertinya volume yang "
+"dapat diterima."
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
@@ -400,22 +420,34 @@ msgid "Auto Duck"
 msgstr "Benam Otomatis"
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Mengurangi (membenamkan) volume satu atau beberapa trek setiap kali volume trek \"kontrol\" yang ditentukan mencapai level tertentu"
+msgid ""
+"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
+"specified \"control\" track reaches a particular level"
+msgstr ""
+"Mengurangi (membenamkan) volume satu atau beberapa trek setiap kali volume "
+"trek \"kontrol\" yang ditentukan mencapai level tertentu"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
 #. sound on another track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
-msgstr "Anda memilih trek yang tidak ada suaranya. BenamOtomatis hanya dapat memproses trek beraudio."
+msgid ""
+"You selected a track which does not contain audio. AutoDuck can only process"
+" audio tracks."
+msgstr ""
+"Anda memilih trek yang tidak ada suaranya. BenamOtomatis hanya dapat "
+"memproses trek beraudio."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
 #. the volume) of the audio automatically when there is sound on another
 #. track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "Benam Otomatis membutuhkan trek pengendali yang harus ditempatkan di bawah trek terpilih."
+msgid ""
+"Auto Duck needs a control track which must be placed below the selected "
+"track(s)."
+msgstr ""
+"Benam Otomatis membutuhkan trek pengendali yang harus ditempatkan di bawah "
+"trek terpilih."
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
@@ -648,8 +680,12 @@ msgid "DTMF Tones"
 msgstr "Nada DTMF"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
-msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr "Menghasilkan nada dual-tone multi-frekuensi (DTMF) seperti yang dihasilkan oleh tombol pada telepon"
+msgid ""
+"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
+"keypad on telephones"
+msgstr ""
+"Menghasilkan nada dual-tone multi-frekuensi (DTMF) seperti yang dihasilkan "
+"oleh tombol pada telepon"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
 msgid ""
@@ -659,7 +695,8 @@ msgstr ""
 "Sekuens DTMF kosong.\n"
 "Centang SEMUA pengaturan untuk efek ini."
 
-#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
+#: libraries/lib-builtin-effects/EchoBase.cpp
+#: resources/EffectsMenuDefaults.xml
 msgid "Echo"
 msgstr "Gema"
 
@@ -718,8 +755,11 @@ msgid "Treble Cut"
 msgstr "Pengurang Trebel"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
-msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr "Untuk menerapkan Ekualisasi, semua trek yang dipilih harus memiliki laju sampel yang sama."
+msgid ""
+"To apply Equalization, all selected tracks must have the same sample rate."
+msgstr ""
+"Untuk menerapkan Ekualisasi, semua trek yang dipilih harus memiliki laju "
+"sampel yang sama."
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Track sample rate is too low for this effect."
@@ -797,7 +837,6 @@ msgstr "Clipping"
 #. size of a set, the first is the size of a subset, and not
 #. understood as an ordinal (i.e., not meaning "first", or
 #. "second", etc.)
-#.
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 #, c-format
 msgctxt "find clipping"
@@ -897,7 +936,9 @@ msgstr "Reduksi Derau"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr "Menghapus derau latar belakang seperti kipas angin, suara tape, atau dengungan"
+msgstr ""
+"Menghapus derau latar belakang seperti kipas angin, suara tape, atau "
+"dengungan"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Steps per block are too few for the window types."
@@ -909,7 +950,9 @@ msgstr "Langkah per blok tidak boleh melebihi ukuran jendela."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Median method is not implemented for more than four steps per window."
-msgstr "Metode median tidak diimplementasikan untuk lebih dari empat langkah per jendela."
+msgstr ""
+"Metode median tidak diimplementasikan untuk lebih dari empat langkah per "
+"jendela."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "You must specify the same window size for steps 1 and 2."
@@ -924,8 +967,11 @@ msgid "All noise profile data must have the same sample rate."
 msgstr "Semua data profil derau harus memiliki laju sampel yang sama."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
-msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "Laju sampel profil derau harus sesuai dengan suara yang akan diproses."
+msgid ""
+"The sample rate of the noise profile must match that of the sound to be "
+"processed."
+msgstr ""
+"Laju sampel profil derau harus sesuai dengan suara yang akan diproses."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Selected noise profile is too short."
@@ -988,7 +1034,8 @@ msgstr "Paulstretch"
 
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Paulstretch hanya untuk peregangan waktu yang ekstrem atau efek \"stasis\""
+msgstr ""
+"Paulstretch hanya untuk peregangan waktu yang ekstrem atau efek \"stasis\""
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the
 #. Paulstretch effect.
@@ -1000,7 +1047,7 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
-"Seleksi audio terlalu pendek untuk di-preview.\n"
+"Seleksi audio terlalu pendek untuk dipratinjau.\n"
 "\n"
 "Coba pilih audio hingga setidaknya %.1f detik lebih lama,\n"
 "atau kurangi 'Resolusi Waktu' menjadi kurang dari %.1f detik."
@@ -1015,7 +1062,7 @@ msgid ""
 "For the current audio selection, the maximum\n"
 "'Time Resolution' is %.1f seconds."
 msgstr ""
-"Tidak dapat melakukan preview.\n"
+"Tidak dapat melakukan pratinjau.\n"
 "\n"
 "Untuk seleksi audio saat ini,\n"
 "'Resolusi Waktu' maksimum adalah %.1f detik."
@@ -1045,8 +1092,11 @@ msgid "Combines phase-shifted signals with the original signal"
 msgstr "Menggabungkan sinyal yang bergeser fasenya dengan sinyal asli"
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
-msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "Untuk memplot spektrum, semua trek yang dipilih harus mempunyai laju sampel yang sama."
+msgid ""
+"To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr ""
+"Untuk memplot spektrum, semua trek yang dipilih harus mempunyai laju sampel "
+"yang sama."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid ""
@@ -1058,8 +1108,12 @@ msgstr ""
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 #, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "Terlalu banyak audio dipilih. Hanya %.1f detik pertama audio yang akan dianalisis."
+msgid ""
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
+"analyzed."
+msgstr ""
+"Terlalu banyak audio dipilih. Hanya %.1f detik pertama audio yang akan "
+"dianalisis."
 
 #: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
@@ -1071,7 +1125,9 @@ msgstr "Mengatur amplitudo puncak dari satu trek atau lebih"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "Efek Perbaikan tidak dapat diterapkan dalam klip yang diregangkan atau diperkecil"
+msgstr ""
+"Efek Perbaikan tidak dapat diterapkan dalam klip yang diregangkan atau "
+"diperkecil"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid ""
@@ -1257,7 +1313,9 @@ msgstr "Melakukan pemfilteran IIR yang mengemulasi filter analog"
 
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr "Untuk menerapkan filter, semua trek terpilih harus memiliki laju sampel yang sama."
+msgstr ""
+"Untuk menerapkan filter, semua trek terpilih harus memiliki laju sampel yang"
+" sama."
 
 #. i18n-hint: noun
 #: libraries/lib-builtin-effects/SilenceBase.cpp
@@ -1336,12 +1394,20 @@ msgid "Truncate Silence"
 msgstr "Pangkas Keheningan"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "Secara otomatis mengurangi panjang bagian yang volumenya di bawah level tertentu"
+msgid ""
+"Automatically reduces the length of passages where the volume is below a "
+"specified level"
+msgstr ""
+"Secara otomatis mengurangi panjang bagian yang volumenya di bawah level "
+"tertentu"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "Ketika memotong secara mandiri, hanya ada satu trek audio yang dipilih di setiap Grup Trek Sinkronisasi-Terkunci."
+msgid ""
+"When truncating independently, there may only be one selected audio track in"
+" each Sync-Locked Track Group."
+msgstr ""
+"Ketika memotong secara mandiri, hanya ada satu trek audio yang dipilih di "
+"setiap Grup Trek Sinkronisasi-Terkunci."
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1349,14 +1415,19 @@ msgid "Wahwah"
 msgstr "Wahwah"
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
-msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Variasi kualitas nada yang cepat, seperti suara gitar yang begitu populer pada tahun 1970-an"
+msgid ""
+"Rapid tone quality variations, like that guitar sound so popular in the "
+"1970's"
+msgstr ""
+"Variasi kualitas nada yang cepat, seperti suara gitar yang begitu populer "
+"pada tahun 1970-an"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
 msgstr "Tidak dapat melanjutkan proses upload."
 
-#. i18n-hint: database operation has failed because the requested item was not found
+#. i18n-hint: database operation has failed because the requested item was not
+#. found
 #: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "File not found"
@@ -1384,11 +1455,11 @@ msgstr "Ekspor kesalahan"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to attach to the Cloud project database"
-msgstr "Gagal melampirkan ke database proyek Cloud"
+msgstr "Gagal melampirkan ke database proyek Awan"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to decompress the Cloud project block"
-msgstr "Gagal mendekompresi blok proyek Cloud"
+msgstr "Gagal mendekompresi blok proyek Awan"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Local project data was removed before the sync has completed"
@@ -1587,7 +1658,8 @@ msgid "Applying %s..."
 msgstr "Menerapkan %s..."
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
+#. Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: libraries/lib-effects/EffectBase.h
@@ -1685,7 +1757,8 @@ msgstr "Gaussian(a=3.5)"
 msgid "Gaussian(a=4.5)"
 msgstr "Gaussian(a=4.5)"
 
-#. i18n-hint: %s will be the error message from the libsndfile software library
+#. i18n-hint: %s will be the error message from the libsndfile software
+#. library
 #: libraries/lib-file-formats/FileFormats.cpp
 #, c-format
 msgid "Error (file may not have been written): %s"
@@ -1703,8 +1776,10 @@ msgstr "Audacity gagal membaca dari berkas di %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
-msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr "Audacity sukses menulis berkas di %s namun gagal menamai ulang sebagai %s."
+msgid ""
+"Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr ""
+"Audacity sukses menulis berkas di %s namun gagal menamai ulang sebagai %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -1717,7 +1792,7 @@ msgstr ""
 
 #: libraries/lib-files/FileException.h
 msgid "File Error"
-msgstr "Berkas Kesalahan"
+msgstr "Kesalahan Berkas"
 
 #: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
@@ -1801,7 +1876,8 @@ msgstr ""
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
 #: libraries/lib-transactions/TransactionScope.cpp
-#: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
+#: libraries/lib-wave-track/WaveClip.cpp
+#: libraries/lib-wave-track/WaveTrack.cpp
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 #: libraries/lib-wx-init/LogWindow.cpp
 #: modules/import-export/mod-cl/ExportCL.cpp
@@ -1828,7 +1904,7 @@ msgstr "Ekspor"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
 msgid "Export completed with error."
-msgstr "Ekspor selesai dengan kesalahan."
+msgstr "Ekspor yang telah selesai dengan kesalahan."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
@@ -2098,14 +2174,12 @@ msgstr "Satu atau lebih label tersimpan tidak dapat dibaca."
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: libraries/lib-ladspa/LadspaEffectBase.h
 msgid "LADSPA"
 msgstr "LADSPA"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
-#.
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp
 msgid "LADSPA Effects"
 msgstr "Efek LADSPA"
@@ -2246,27 +2320,32 @@ msgstr "A♭"
 msgid "B♭"
 msgstr "B♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: libraries/lib-math/PitchName.cpp
 msgid "C♯/D♭"
 msgstr "C♯/D♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: libraries/lib-math/PitchName.cpp
 msgid "D♯/E♭"
 msgstr "D♯/E♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: libraries/lib-math/PitchName.cpp
 msgid "F♯/G♭"
 msgstr "F♯/G♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: libraries/lib-math/PitchName.cpp
 msgid "G♯/A♭"
 msgstr "G♯/A♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
+#. scale
 #: libraries/lib-math/PitchName.cpp
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
@@ -2439,7 +2518,7 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"Modul \"%s\" tidak menyediakan fungsi apa pun yang dibutuhkan.\n"
+"Modul \"%s\" tidak menyediakan fungsi apa pun yang diperlukan.\n"
 "\n"
 "Modul ini tidak akan dimuat."
 
@@ -2588,9 +2667,10 @@ msgstr "jj:mm:dd + seperseratus"
 #. i18n-hint: Name of display format that shows frequency in hertz
 #. i18n-hint: This is the abbreviation for "Hertz", or
 #. cycles per second.
-#: libraries/lib-numeric-formats/NumericConverterFormats.cpp src/FreqWindow.cpp
-#: src/effects/ChangePitch.cpp src/effects/EqualizationUI.cpp
-#: src/effects/ScienFilter.cpp src/import/ImportRaw.cpp
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
+#: src/FreqWindow.cpp src/effects/ChangePitch.cpp
+#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
+#: src/import/ImportRaw.cpp
 msgid "Hz"
 msgstr "Hz"
 
@@ -2635,7 +2715,8 @@ msgid "seconds + milliseconds"
 msgstr "detik + milidetik"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
-#. * as fractional seconds. Change the comma in the middle to the 1000s separator
+#. * as fractional seconds. Change the comma in the middle to the 1000s
+#. separator
 #. * for your locale, and the 'seconds' on the end to the word for seconds.
 #. * Don't change the numbers. The decimal separator is specified using '<' if
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
@@ -2674,10 +2755,12 @@ msgstr "0100 hari 024 jam 060 mnt 060 dtk"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for
+#. seconds
 #. * (the hundredths are shown as decimal seconds). Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060>0100 s"
@@ -2688,11 +2771,13 @@ msgid "centiseconds"
 msgstr "sentidetik"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to
+#. the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060>01000 s"
@@ -2703,7 +2788,8 @@ msgstr "0100 jam 060 mnt 060>01000 dtk"
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+># samples"
@@ -2712,7 +2798,6 @@ msgstr "0100 jam 060 mnt 060 dtk+># sampel"
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
-#.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: plug-ins/sample-data-export.ny
 msgid "samples"
@@ -2737,7 +2822,8 @@ msgstr "jj:mm:dd: + Bingkai film (24 bpd)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
@@ -2768,7 +2854,8 @@ msgstr "jj:mm:dd: + Bingkai NTSC dengan drop"
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
@@ -2786,7 +2873,8 @@ msgstr "jj:mm:dd: + Bingkai NTSC non-drop"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
@@ -2817,7 +2905,8 @@ msgstr "jj:mm:dd: + Bingkai PAL (25 bpd)"
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
@@ -2848,7 +2937,8 @@ msgstr "jj:mm:dd: + Bingkai CDDA (75 bpd)"
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
@@ -2871,7 +2961,8 @@ msgstr "01000,01000 bingkai|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "010,01000>0100 Hz"
@@ -2888,7 +2979,8 @@ msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000>01000 kHz|0.001"
@@ -2900,7 +2992,8 @@ msgstr "hertz"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "100>01000 octaves|1.442695041"
@@ -2920,7 +3013,8 @@ msgstr "seminada + sen"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ',' or
+#. * The decimal separator is specified using '<' if your language uses a ','
+#. or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
@@ -2958,7 +3052,7 @@ msgstr "Memberikan dukungan Efek Nyquist untuk Audacity"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Applying Nyquist Effect..."
-msgstr "Mengaplikasikan Efek Nyquist..."
+msgstr "Menerapkan Efek Nyquist..."
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist
 #. * Prompt"
@@ -2991,7 +3085,9 @@ msgstr ""
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "kesalahan: Berkas \"%s\" ditentukan di header tetapi tidak ditemukan di jalur plug-in.\n"
+msgstr ""
+"kesalahan: Berkas \"%s\" ditentukan di header tetapi tidak ditemukan di "
+"jalur plug-in.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Audio selection required."
@@ -3052,8 +3148,11 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist menghasilkan audio nihil.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Peringatan: Nyquist mengembalikan string UTF-8 yang tidak valid, dikonversi di sini sebagai Latin-1]"
+msgid ""
+"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr ""
+"[Peringatan: Nyquist mengembalikan string UTF-8 yang tidak valid, dikonversi"
+" di sini sebagai Latin-1]"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -3199,7 +3298,7 @@ msgid ""
 msgstr ""
 "Ruang disk yang tersisa pada %s tinggal sedikit.\n"
 "Mohon pilih lokasi direktori sementara yang lebih besar di\n"
-"Ppustaka Direktori."
+"Pustaka Direktori."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
@@ -3260,13 +3359,17 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
-msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgid ""
+"This project was created using an older Audacity version. Once saved, the "
+"project can only be opened with Audacity version %s or newer."
 msgstr ""
+"Proyek ini dibuat menggunakan versi Audacity yang lebih lama. Setelah "
+"disimpan, proyek hanya dapat dibuka dengan Audacity versi %s atau yang lebih"
+" baru."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-#, fuzzy
 msgid "Project update required"
-msgstr "Proyek telah dikembalikan"
+msgstr "Diperlukan pembaruan proyek"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -3275,7 +3378,8 @@ msgstr "Tidak dapat menginisialisasi berkas proyek"
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr "Tidak dapat menambah fungsi 'inset' (tidak bisa memverifikasi blockids)"
+msgstr ""
+"Tidak dapat menambah fungsi 'inset' (tidak bisa memverifikasi blockids)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -3328,7 +3432,7 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
-"Errror I/O pada disk\n"
+"Kesalahan I/O pada disk\n"
 "(Tidak dapat bekerja dengan blockberkas)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
@@ -3468,8 +3572,12 @@ msgid "Unable to parse project information."
 msgstr "Tidak dapat mengurai informasi proyek."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
-msgstr "Gagal membuka kembali database proyek, mungkin karena keterbatasan ruang pada perangkat penyimpanan."
+msgid ""
+"The project's database failed to reopen, possibly because of limited space "
+"on the storage device."
+msgstr ""
+"Gagal membuka kembali database proyek, mungkin karena keterbatasan ruang "
+"pada perangkat penyimpanan."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Saving project"
@@ -3548,12 +3656,18 @@ msgstr "24-bit"
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr "Grup plug-in di %s telah digabungkan dengan grup yang telah ditentukan sebelumnya"
+msgstr ""
+"Grup plug-in di %s telah digabungkan dengan grup yang telah ditentukan "
+"sebelumnya"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
-msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr "Item plug-in di %s bertentangan dengan item yang telah ditentukan sebelumnya dan dibuang"
+msgid ""
+"Plug-in item at %s conflicts with a previously defined item and was "
+"discarded"
+msgstr ""
+"Item plug-in di %s bertentangan dengan item yang telah ditentukan sebelumnya"
+" dan dibuang"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
@@ -3583,7 +3697,7 @@ msgstr "Bantuan"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
-msgstr "&Preview"
+msgstr "&Pratinjau"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp
 msgid "Dry Previe&w"
@@ -3788,17 +3902,20 @@ msgstr "Drive penuh, gagal menyisipkan"
 msgid "Unable to open the database file"
 msgstr "Tidak dapat membuka berkas database"
 
-#. i18n-hint: database operation has failed because the lock protocol has failed
+#. i18n-hint: database operation has failed because the lock protocol has
+#. failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Database lock protocol error"
 msgstr "Protokol mengunci database kesalahan"
 
-#. i18n-hint: database operation has failed because the database schema has changed
+#. i18n-hint: database operation has failed because the database schema has
+#. changed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database schema changed"
 msgstr "Skema database telah berubah"
 
-#. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
+#. i18n-hint: database operation has failed because the string or BLOB exceeds
+#. size limit
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "String or BLOB exceeds size limit"
 msgstr "String atau BLOB telah melebihi batas ukuran yang diizinkan"
@@ -3818,7 +3935,8 @@ msgstr "Tipe data tidak cocok"
 msgid "Library used incorrectly"
 msgstr "Penyalahgunaan pustaka"
 
-#. i18n-hint: database operation has failed because the large file support is disabled
+#. i18n-hint: database operation has failed because the large file support is
+#. disabled
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The large file support is disabled"
 msgstr "Dukungan berkas besar tidak aktif"
@@ -3833,12 +3951,14 @@ msgstr "Izin ditolak"
 msgid "Not used"
 msgstr "Tidak digunakan"
 
-#. i18n-hint: database operation has failed because the parameter is out of range
+#. i18n-hint: database operation has failed because the parameter is out of
+#. range
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "2nd parameter to sqlite3_bind out of range"
 msgstr "Paremeter kedua untuk sqlite3_bind berada di luar jangkauan"
 
-#. i18n-hint: database operation has failed because the file opened is not a database file
+#. i18n-hint: database operation has failed because the file opened is not a
+#. database file
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "File opened that is not a database file "
 msgstr "Yang dibuka bukanlah berkas database "
@@ -3914,7 +4034,8 @@ msgid "Light"
 msgstr "Terang"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
+#. graphical user interface, including choices of colors, and similarity of
+#. images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: libraries/lib-theme/Theme.cpp
@@ -4027,9 +4148,9 @@ msgid ""
 "  %s\n"
 "were already present. Overwrite?"
 msgstr ""
-"Semua berkas yang dibutuhjkan di:\n"
+"Semua berkas yang diperlukan di:\n"
 "  %s\n"
-"sudah ada. Timpa?"
+"sudah tersedia. Timpa?"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -4084,7 +4205,8 @@ msgstr "Database kesalahan.  Maaf, kami tidak memiliki rincian lebih lanjut."
 msgid "Audio In: %d, Audio Out: %d"
 msgstr "Audio Masuk: %d, Audio Keluar: %d"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
+#. protocol
 #. developed by Steinberg GmbH
 #: libraries/lib-vst/VSTEffectBase.h
 msgid "VST"
@@ -4177,12 +4299,14 @@ msgstr "Gagal menyimpat preset VST3 ke berkas"
 msgid "Mel"
 msgstr "Mel"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for
+#. Heinrich Barkhausen
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Bark"
 msgstr "Bark"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates
+#. Equivalent Rectangular Bandwidth
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "ERB"
 msgstr "ERB"
@@ -4192,7 +4316,8 @@ msgstr "ERB"
 msgid "Period"
 msgstr "Periode"
 
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the
+#. color scheme
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgctxt "spectrum prefs"
 msgid "Color (Roseus)"
@@ -4386,7 +4511,8 @@ msgstr "Kirimkan laporan untuk membantu kami memperbaiki masalah ini?"
 msgid "All reports are anonymous. See %s for more info."
 msgstr "Semua laporan bersifat anonim. Lihat %s untuk info lebih lanjut."
 
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of
+#. "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
@@ -4505,16 +4631,45 @@ msgid "No Local Help"
 msgstr "Tidak Ada Bantuan Lokal"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
-msgstr "Audacity dapat mengimpor berkas yang tidak diproteksi dalam banyak format lain (seperti M4A dan WMA, berkas WAV terkompresi dari perekam portabel, dan audio dari berkas video) jika Anda mengunduh dan memasang [[https://support.audacityteam.org/basics/installing-ffmpeg| Pustaka FFmpeg]] opsional ke komputer Anda."
+msgid ""
+"Audacity can import unprotected files in many other formats (such as M4A and"
+" WMA, compressed WAV files from portable recorders and audio from video "
+"files) if you download and install the optional "
+"[[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg "
+"library]] to your computer."
+msgstr ""
+"Audacity dapat mengimpor berkas yang tidak diproteksi dalam banyak format "
+"lain (seperti M4A dan WMA, berkas WAV terkompresi dari perekam portabel, dan"
+" audio dari berkas video) jika Anda mengunduh dan memasang "
+"[[https://support.audacityteam.org/basics/installing-ffmpeg| Pustaka "
+"FFmpeg]] opsional ke komputer Anda."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
-msgstr "Anda juga dapat membaca bantuan dari kami untuk mengimpor [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|berkas MIDI]] dan trek dari [[https://manual.audacityteam.org/man/faq_opening_and_saving_berkass.html#fromcd| audio CD]]."
+msgid ""
+"You can also read our help on importing "
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
+"files]] and tracks from "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|"
+" audio CDs]]."
+msgstr ""
+"Anda juga dapat membaca bantuan dari kami untuk mengimpor "
+"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|berkas"
+" MIDI]] dan trek dari "
+"[[https://manual.audacityteam.org/man/faq_opening_and_saving_berkass.html#fromcd|"
+" audio CD]]."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Nampaknya Manual belum terpasang. Silakan [[*URL*|lihat Manual secara online]] atau [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download Manual]].<br><br>Untuk selalu melihat Manual secara online, ubah \"Lokasi Manual\" dalam Pustaka Antarmuka menjadi \"Dari Internet\"."
+msgid ""
+"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
+"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html|"
+" download the Manual]].<br><br>To always view the Manual online, change "
+"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr ""
+"Nampaknya Manual belum terpasang. Silakan [[*URL*|lihat Manual secara "
+"online]] atau "
+"[[https://manual.audacityteam.org/man/unzipping_the_manual.html| download "
+"Manual]].<br><br>Untuk selalu melihat Manual secara online, ubah \"Lokasi "
+"Manual\" dalam Pustaka Antarmuka menjadi \"Dari Internet\"."
 
 #: libraries/lib-wx-init/LogWindow.cpp
 msgid "Audacity Log"
@@ -4547,7 +4702,8 @@ msgstr "Tidak dapat menyimpan berkas log: %s"
 msgid "Show Log for Details"
 msgstr "Tampilkan Log untuk Rincian"
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
+#. button.
 #: libraries/lib-wx-init/MultiDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
@@ -4610,8 +4766,11 @@ msgid "Confirm Close"
 msgstr "Konfirmasi Menutup"
 
 #: libraries/lib-wx-init/SelectFile.cpp
-msgid "The specified filename could not be converted due to Unicode character use."
-msgstr "Nama berkas yang dipilih tidak dapat diubah karena penggunaan karakter Unicode."
+msgid ""
+"The specified filename could not be converted due to Unicode character use."
+msgstr ""
+"Nama berkas yang dipilih tidak dapat diubah karena penggunaan karakter "
+"Unicode."
 
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
@@ -4761,17 +4920,24 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Tidak dapat menemukan folder data proyek: \"%s\""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-#, fuzzy
 msgid "Invalid project 'rate' attribute."
-msgstr "Atribut 'h' proyek tidak valid."
+msgstr "Atribut 'rate' proyek tidak valid."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
-msgstr "Trek MIDI ditemukan dalam berkas proyek, tetapi versi Audacity ini tidak mendukung MIDI, mengabaikan trek."
+msgid ""
+"MIDI tracks found in project file, but this build of Audacity does not "
+"include MIDI support, bypassing track."
+msgstr ""
+"Trek MIDI ditemukan dalam berkas proyek, tetapi versi Audacity ini tidak "
+"mendukung MIDI, mengabaikan trek."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
-msgstr "Proyek aktif sudah memiliki trek waktu, mengabaikan trek waktu lainnya yang ditemukan dalam proyek terimpor."
+msgid ""
+"The active project already has a time track and one was encountered in the "
+"project being imported, bypassing imported time track."
+msgstr ""
+"Proyek aktif sudah memiliki trek waktu, mengabaikan trek waktu lainnya yang "
+"ditemukan dalam proyek terimpor."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -4819,7 +4985,8 @@ msgstr ""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
-msgstr "Atribut 'aliasstart' pada pcmalliasblockberkas hilang atau tidak valid."
+msgstr ""
+"Atribut 'aliasstart' pada pcmalliasblockberkas hilang atau tidak valid."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
@@ -4871,12 +5038,16 @@ msgstr "Tampilkan output"
 #. i18n-hint: Some programmer-oriented terminology here:
 #. "Data" refers to the sound to be exported, "piped" means sent,
 #. and "standard in" means the default input stream that the external program,
-#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
+#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually
+#. used
 #. in the program as a format string.  Keep %f unchanged.
 #: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
-msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
-msgstr "Data akan distAndarkan. \"%f\" menguunakan nama berkas pada jendela ekspor."
+msgid ""
+"Data will be piped to standard in. \"%f\" uses the file name in the export "
+"window."
+msgstr ""
+"Data akan distAndarkan. \"%f\" menguunakan nama berkas pada jendela ekspor."
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
@@ -5079,7 +5250,9 @@ msgstr "Codec Saat Ini:"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
-msgstr "FFmpeg : KESALAHAN - Tidak dapat menentukan deskripsi format untuk berkas \"%s\"."
+msgstr ""
+"FFmpeg : KESALAHAN - Tidak dapat menentukan deskripsi format untuk berkas "
+"\"%s\"."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
@@ -5088,17 +5261,25 @@ msgstr "FFmpeg : KESALAHAN - Tidak dapat membuat konteks format output."
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr "FFmpeg : KESALAHAN - Tidak dapat menambahkan audio stream ke berkas output \"%s\"."
+msgstr ""
+"FFmpeg : KESALAHAN - Tidak dapat menambahkan audio stream ke berkas output "
+"\"%s\"."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr "FFmpeg : KESALAHAN - Tidak dapat membuka berkas output \"%s\" untuk ditulis. Kode kesalahan %d."
+msgstr ""
+"FFmpeg : KESALAHAN - Tidak dapat membuka berkas output \"%s\" untuk ditulis."
+" Kode kesalahan %d."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr "FFmpeg : KESALAHAN - Tidak dapat menulis header ke berkas output \"%s\". Kode kesalahan %d."
+msgid ""
+"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is "
+"%d."
+msgstr ""
+"FFmpeg : KESALAHAN - Tidak dapat menulis header ke berkas output \"%s\". "
+"Kode kesalahan %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -5132,11 +5313,14 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr "FFmpeg : KESALAHAN - Tidak dapat mengalokasikan buffer untuk dibaca dari audio FIFO."
+msgstr ""
+"FFmpeg : KESALAHAN - Tidak dapat mengalokasikan buffer untuk dibaca dari "
+"audio FIFO."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
-msgstr "FFmpeg : KESALAHAN - Tidak dapat menulis audio frame ke berkas output."
+msgstr ""
+"FFmpeg : KESALAHAN - Tidak dapat menulis audio frame ke berkas output."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
@@ -5144,7 +5328,8 @@ msgstr "FFmpeg : KESALAHAN - Tidak bisa mendapatkan ukuran buffer sampel"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
-msgstr "FFmpeg : KESALAHAN - Tidak dapat mengalokasikan bytes untuk buffer sampel"
+msgstr ""
+"FFmpeg : KESALAHAN - Tidak dapat mengalokasikan bytes untuk buffer sampel"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
@@ -5168,12 +5353,16 @@ msgid ""
 "You can configure it at Preferences > Libraries."
 msgstr ""
 "FFMpeg yang dikonfigurasi dengan benar diperlukan untuk melanjutkan.\n"
-"Anda dapat mengaturnya di Ppustaka > Pustaka."
+"Anda dapat mengaturnya di Pustaka > Pustaka."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
-msgstr "Mencoba mengekspor %d saluran, tetapi jumlah maksimum saluran untuk format output yang dipilih adalah %d"
+msgid ""
+"Attempted to export %d channels, but maximum number of channels for selected"
+" output format is %d"
+msgstr ""
+"Mencoba mengekspor %d saluran, tetapi jumlah maksimum saluran untuk format "
+"output yang dipilih adalah %d"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -5325,8 +5514,12 @@ msgid "Codec:"
 msgstr "Codec:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
-msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
-msgstr "Tidak semua format dan codec kompatibel satu sama lain. Selain itu, tidak semua kombinasi opsi kompatibel dengan semua codec."
+msgid ""
+"Not all formats and codecs are compatible. Nor are all option combinations "
+"compatible with all codecs."
+msgstr ""
+"Tidak semua format dan codec kompatibel satu sama lain. Selain itu, tidak "
+"semua kombinasi opsi kompatibel dengan semua codec."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
@@ -5623,15 +5816,19 @@ msgstr ""
 "Opsi\n"
 "0 - default"
 
-#. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-#. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
+#. i18n-hint: 'mux' is short for multiplexor, a device that selects between
+#. several inputs
+#. 'Mux Rate' is a parameter that has some bearing on compression ratio for
+#. MPEG
 #. it has a hard to predict effect on the degree of compression
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Mux Rate:"
 msgstr "Tingkat Mux:"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Packet size\n"
@@ -5642,8 +5839,10 @@ msgstr ""
 "Opsi\n"
 "0 - De&fault"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
+#. compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one
+#. piece.
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Packet Size:"
 msgstr "Ukuran Paket:"
@@ -5708,7 +5907,7 @@ msgstr ""
 "FFmpeg terkonfigurasi di Pustaka dan berhasil dimuat sebelumnya\n"
 "tetapi kali ini Audacity gagal memuatnya saat startup.\n"
 "\n"
-"Coba kembali ke Ppustaka > Pustaka dan konfigurasi ulang."
+"Coba kembali ke Pustaka > Pustaka dan konfigurasi ulang."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg startup failed"
@@ -5725,7 +5924,9 @@ msgstr "Temukan FFmpeg"
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr "Audacity memerlukan berkas %s untuk mengekspor dan mengimpor melalui FFmpeg.."
+msgstr ""
+"Audacity memerlukan berkas %s untuk mengekspor dan mengimpor melalui "
+"FFmpeg.."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
@@ -5782,7 +5983,7 @@ msgstr ""
 "Audacity mencoba menggunakan FFmpeg untuk mengimpor berkas audio,\n"
 "tetapi pustaka tidak ditemukan.\n"
 "\n"
-"Untuk menggunakan impor FFmpeg, silakan ke Edit > Ppustaka > Pustaka\n"
+"Untuk menggunakan impor FFmpeg, silakan ke Edit > Pustaka > Pustaka\n"
 "untuk unduh atau temukan pustaka FFMpeg."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
@@ -5868,8 +6069,10 @@ msgstr "Coba instal FFmpeg.\n"
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 #, c-format
-msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr "Indeks[%02x] Codec[%s], Bahasa[%s], Bitlaju[%s], Saluran[%d], Durasi[%d]"
+msgid ""
+"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr ""
+"Indeks[%02x] Codec[%s], Bahasa[%s], Bitlaju[%s], Saluran[%d], Durasi[%d]"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
@@ -5898,7 +6101,8 @@ msgstr "0 (tercepat)"
 msgid "1"
 msgstr "1"
 
-#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "2"
 msgstr "2"
 
@@ -5972,7 +6176,9 @@ msgstr "Durasi berkas LOF tidak valid."
 
 #: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr "Trek MIDI tidak dapat diseimbangkan satu per satu, hanya berkas audio yang bisa."
+msgstr ""
+"Trek MIDI tidak dapat diseimbangkan satu per satu, hanya berkas audio yang "
+"bisa."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: modules/import-export/mod-lof/ImportLOF.cpp
@@ -6120,7 +6326,8 @@ msgstr "Konstan"
 msgid "Quality"
 msgstr "Kualitas"
 
-#. i18n-hint: LAME is the name of an MP3 converter and should not be translated
+#. i18n-hint: LAME is the name of an MP3 converter and should not be
+#. translated
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Locate LAME"
 msgstr "Temukan LAME"
@@ -6144,7 +6351,7 @@ msgstr "Untuk menemukan %s, click di sini -->"
 #. i18n-hint: There is a  button to the right of the arrow.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "To get a free copy of LAME, click here -->"
-msgstr "Untuk mendapatkan salinan Lame gratis, klik di sini -->"
+msgstr "Untuk mendapatkan salinan LAME gratis, klik di sini -->"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
@@ -6274,7 +6481,7 @@ msgstr "(Built-in)"
 
 #: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "LAME MP3 Export Library"
-msgstr "Pustaka Pengeksporan MP3"
+msgstr "Pustaka Pengeksporan MP3 LAME"
 
 #: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "MP3 Library Version:"
@@ -6912,7 +7119,8 @@ msgstr "Skrip"
 
 #. i18n-hint noun
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#: src/effects/BassTreble.cpp
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Output"
 msgstr "Output"
 
@@ -6953,8 +7161,10 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 dari Leland Lucius"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr "Modul Audacity eksternal yang menyediakan IDE sederhana untuk menulis efek."
+msgid ""
+"External Audacity module which provides a simple IDE for writing effects."
+msgstr ""
+"Modul Audacity eksternal yang menyediakan IDE sederhana untuk menulis efek."
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -7147,8 +7357,12 @@ msgid "Waiting for audio.com"
 msgstr "Menunggu audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
-msgid "An action on audio.com is required before you can continue. You can cancel this operation."
-msgstr "Diperlukan tindakan di audio.com sebelum melanjutkan. Anda bisa membatalkan operasi ini."
+msgid ""
+"An action on audio.com is required before you can continue. You can cancel "
+"this operation."
+msgstr ""
+"Diperlukan tindakan di audio.com sebelum melanjutkan. Anda bisa membatalkan "
+"operasi ini."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7159,7 +7373,7 @@ msgstr "Simpan ke audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 msgid "Generating audio preview..."
-msgstr "Membuat preview audio..."
+msgstr "Membuat pratinjau audio..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
@@ -7172,19 +7386,19 @@ msgstr "Menyinkronkan proyek"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Previews can be updated only for Cloud projects"
-msgstr "Preview hanya bisa diperbarui untuk proyek Cloud"
+msgstr "Pratinjau hanya bisa diperbarui untuk proyek Awan"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
-msgstr "Simpan &ke Cloud..."
+msgstr "Simpan &ke Awan..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
-msgstr "&Perbarui Preview Audio Cloud"
+msgstr "&Perbarui Pratinjau Audio Awan"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Fro&m Cloud..."
-msgstr "Buka dar&i Cloud..."
+msgstr "Buka dar&i Awan..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
@@ -7192,7 +7406,7 @@ msgstr "B&agikan Audio..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
-msgstr "Cloud"
+msgstr "Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Account"
@@ -7216,7 +7430,7 @@ msgstr "Selalu &tanya"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always &save to cloud"
-msgstr "Selalu &simpan ke cloud"
+msgstr "Selalu &simpan ke awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always save to the co&mputer"
@@ -7224,7 +7438,7 @@ msgstr "Selalu simpan ke ko&mputer"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Temporary Cloud files directory"
-msgstr "Direktori berkas Cloud sementara"
+msgstr "Direktori berkas Awan sementara"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -7246,7 +7460,7 @@ msgstr "&Hapus berkas sementara setelahnya:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Preferences for Cloud"
-msgstr "Ppustaka untuk Cloud"
+msgstr "Pustaka untuk Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -7273,8 +7487,10 @@ msgid "Syncing to audio.com... (%d%%)"
 msgstr "Menyinkronkan ke audio.com... (%d%%)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr "Sedang menyinkronkan proyek dengan audio.com. Hentikan proses sinkroniasi?"
+msgid ""
+"Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+"Sedang menyinkronkan proyek dengan audio.com. Hentikan proses sinkroniasi?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Waiting for space to free up"
@@ -7282,7 +7498,8 @@ msgstr "Menunggu ruang untuk kosong"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr "Setelah Anda menyediakan ruang penyimpanan di audio.com, klik Coba Lagi."
+msgstr ""
+"Setelah Anda menyediakan ruang penyimpanan di audio.com, klik Coba Lagi."
 
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
@@ -7291,9 +7508,8 @@ msgstr "Bagikan Audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
 msgid "Get Effects"
-msgstr "Efek"
+msgstr "Dapatkan Efek"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7327,15 +7543,21 @@ msgstr "Bagaimana cara Anda ingin menyimpan?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to the Cloud (free)"
-msgstr "Simpan ke Cloud (gratis)"
+msgstr "Simpan ke Awan (gratis)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
-msgstr "Proyek Anda dicadangkan secara pribadi di audio.com. Anda dapat mengakses pekerjaan Anda dari perangkat apa pun dan berkolaborasi dalam proyek Anda dengan orang lain. Penyimpanan cloud gratis untuk jumlah proyek terbatas."
+msgid ""
+"Your project is backed up privately on audio.com. You can access your work "
+"from any device and collaborate on your project with others. Cloud saving is"
+" free for a limited number of projects."
+msgstr ""
+"Proyek Anda dicadangkan secara pribadi di audio.com. Anda dapat mengakses "
+"pekerjaan Anda dari perangkat apa pun dan berkolaborasi dalam proyek Anda "
+"dengan orang lain. Penyimpanan awan gratis untuk jumlah proyek terbatas."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Save to Cloud"
-msgstr "&Simpan ke Cloud"
+msgstr "&Simpan ke Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
@@ -7368,8 +7590,13 @@ msgid "Share to audio.com"
 msgstr "Bagikan ke audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr "Unggah berkas audio tidak terkompresi dan buat tautan yang bisa dibagikan. Tautan ini memungkinkan orang lain mengunduh berkas dalam format .wav atau .mp3."
+msgid ""
+"Uploads an uncompressed audio file and generates a shareable link. This link"
+" allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+"Unggah berkas audio tidak terkompresi dan buat tautan yang bisa dibagikan. "
+"Tautan ini memungkinkan orang lain mengunduh berkas dalam format .wav atau "
+".mp3."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Share to audio.com"
@@ -7415,8 +7642,12 @@ msgid "We encountered an issue syncing your file"
 msgstr "Terdapat masalah saat menyinkronkan berkas Anda"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
-msgstr "Jangan khawatir, perubahan Anda akan disimpan sementara dan akan disinkronkan dengan salinan di Cloud saat koneksi internet Anda kembali."
+msgid ""
+"Don't worry, your changes will be saved to a temporary location and will be "
+"synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+"Jangan khawatir, perubahan Anda akan disimpan sementara dan akan "
+"disinkronkan dengan salinan di Awan saat koneksi internet Anda kembali."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
@@ -7469,11 +7700,11 @@ msgstr "H&ubungkan akun audio.com..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr "Buat akun cloud"
+msgstr "Buat akun awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
-msgstr "Masuk ke cloud"
+msgstr "Masuk ke awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7493,11 +7724,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create an account to save to the cloud"
-msgstr "Buat akun untuk menyimpan ke cloud"
+msgstr "Buat akun untuk menyimpan ke awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
-msgstr "Masuk untuk menyimpan ke cloud"
+msgstr "Masuk untuk menyimpan ke awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
@@ -7539,15 +7770,21 @@ msgstr "Lanjutkan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
-msgstr "Proyek ini tidak lagi disimpan di Cloud"
+msgstr "Proyek ini tidak lagi disimpan di Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
-msgstr "Proyek telah dihapus dari audio.com sehingga tidak dapat disimpan saat ini. "
+msgid ""
+"This project was removed from audio.com and therefore cannot be saved at "
+"this time. "
+msgstr ""
+"Proyek telah dihapus dari audio.com sehingga tidak dapat disimpan saat ini. "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "You can either save it to the Cloud as a new project, or save it to your computer."
-msgstr "Anda bisa menyimpannya di Cloud sebagai proyek baru, atau simpan ke komputer."
+msgid ""
+"You can either save it to the Cloud as a new project, or save it to your "
+"computer."
+msgstr ""
+"Anda bisa menyimpannya di Awan sebagai proyek baru, atau simpan ke komputer."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
@@ -7556,19 +7793,25 @@ msgstr "Simpan ke komputer"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "Save to Cloud"
-msgstr "Simpan ke Cloud"
+msgstr "Simpan ke Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "Your project storage limit has been reached."
 msgstr "Batas penyimpanan proyek sudah dicapai."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
-msgstr "Anda mungkin perlu menghapus proyek lama untuk menyediakan ruang. Untuk opsi lainnya, kunjungi audio.com"
+msgid ""
+"You may need to remove older projects to make space available. For more "
+"options, visit audio.com"
+msgstr ""
+"Anda mungkin perlu menghapus proyek lama untuk menyediakan ruang. Untuk opsi"
+" lainnya, kunjungi audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "You can also save this project locally to avoid losing changes."
-msgstr "Anda juga bisa menyimpan proyek ini secara lokal untuk menghindari kehilangan perubahan."
+msgstr ""
+"Anda juga bisa menyimpan proyek ini secara lokal untuk menghindari "
+"kehilangan perubahan."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
@@ -7580,8 +7823,12 @@ msgid "Project version conflict detected"
 msgstr "Konflik versi proyek terdeteksi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
-msgstr "Ada versi terbaru dari proyek Audacity ini di Audio.com. Menyimpan proyek ini akan menggantikannya sebagai versi terbaru."
+msgid ""
+"There's a newer version of this Audacity project on Audio.com. Saving this "
+"project will replace it as the newest version instead."
+msgstr ""
+"Ada versi terbaru dari proyek Audacity ini di Audio.com. Menyimpan proyek "
+"ini akan menggantikannya sebagai versi terbaru."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Save this project"
@@ -7592,8 +7839,14 @@ msgid "Discard and open latest version"
 msgstr "Buang dan buka versi terbaru"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
-msgstr "Proyek berisi perubahan yang belum disimpan. Ada versi yang lebih baru dari proyek Audacity ini di Audio.com. Membuang perubahan akan membuka versi terbaru."
+msgid ""
+"Project contains unsaved changes. There's a newer version of this Audacity "
+"project on Audio.com. Discarding changes will open the latest version "
+"instead."
+msgstr ""
+"Proyek berisi perubahan yang belum disimpan. Ada versi yang lebih baru dari "
+"proyek Audacity ini di Audio.com. Membuang perubahan akan membuka versi "
+"terbaru."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open local project"
@@ -7601,11 +7854,15 @@ msgstr "Buka proyek lokal"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Cloud project conflict"
-msgstr "Konflik proyek Cloud"
+msgstr "Konflik proyek Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr "Anda mencoba membuka versi aktif baru dari proyek ini ketika sudah ada yang terbuka. Pilih versi mana yang ingin Anda tetap buka."
+msgid ""
+"You are attempting to open a new active version of this project when there "
+"is already one open. Please select which version you wish to remain open."
+msgstr ""
+"Anda mencoba membuka versi aktif baru dari proyek ini ketika sudah ada yang "
+"terbuka. Pilih versi mana yang ingin Anda tetap buka."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
@@ -7617,7 +7874,7 @@ msgstr "Buka versi baru"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open from Cloud"
-msgstr "Buka dari Cloud"
+msgstr "Buka dari Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "less than 1 minute"
@@ -7653,7 +7910,7 @@ msgstr "Gagal mendapatkan daftar proyek"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
-msgstr "Proyek yang disimpan di Cloud"
+msgstr "Proyek yang disimpan di Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Search:"
@@ -7677,8 +7934,12 @@ msgid "Anyone will be able to listen to this audio."
 msgstr "Siapapun dapat mendengarkan audio ini."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Hanya Anda dan orang yang Anda bagikan tautan yang dapat mendengarkan audio ini."
+msgid ""
+"Only you and people you share a link with will be able to listen to this "
+"audio."
+msgstr ""
+"Hanya Anda dan orang yang Anda bagikan tautan yang dapat mendengarkan audio "
+"ini."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Are you sure you want to cancel?"
@@ -7693,8 +7954,12 @@ msgid "Uploading audio..."
 msgstr "Mengunggah audio..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "Tidak dapat mengunggah berkas ini. Silakan coba lagi dan pastikan untuk menghubungkan akun audio.com sebelum mengunggah."
+msgid ""
+"We are unable to upload this file. Please try again and make sure to link to"
+" your audio.com account before uploading."
+msgstr ""
+"Tidak dapat mengunggah berkas ini. Silakan coba lagi dan pastikan untuk "
+"menghubungkan akun audio.com sebelum mengunggah."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
@@ -7730,7 +7995,8 @@ msgid "Audacity had trouble connecting to the server."
 msgstr "Audacity mengalami masalah saat menyambung ke server."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The project is too large to upload. Please save it to your computer instead."
+msgid ""
+"The project is too large to upload. Please save it to your computer instead."
 msgstr "Proyek terlalu besar untuk diunggah. Silakan simpan di komputer Anda."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
@@ -7775,16 +8041,24 @@ msgid "Syncing your project"
 msgstr "Menyinkronkan proyek Anda"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
-msgstr "Proyek akan disinkronkan di latar belakang sementara Anda bekerja. Anda dapat memeriksa status sinkronisasi di sudut kanan bawah Audacity kapan saja"
+msgid ""
+"The project will sync in background while you work. You can check the sync "
+"status on the bottom right corner of Audacity at any time"
+msgstr ""
+"Proyek akan disinkronkan di latar belakang sementara Anda bekerja. Anda "
+"dapat memeriksa status sinkronisasi di sudut kanan bawah Audacity kapan saja"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
 msgstr "Sukses!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
-msgstr "Semua perubahan tersimpan kini akan diperbarui di cloud. Anda dapat mengelola berkas ini di halaman proyek yang diunggah di audio.com"
+msgid ""
+"All saved changes will now update to the cloud. You can manage this file "
+"from your uploaded projects page on audio.com"
+msgstr ""
+"Semua perubahan tersimpan kini akan diperbarui di awan. Anda dapat mengelola"
+" berkas ini di halaman proyek yang diunggah di audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
@@ -7792,19 +8066,27 @@ msgstr "Selesai"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Cloud project incomplete"
-msgstr "Proyek Cloud tidak lengkap"
+msgstr "Proyek Awan tidak lengkap"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
-msgstr "Versi terbaru dari proyek ini tidak sepenuhnya diunggah ke audio.com. Anda dapat memuat versi terakhir yang lengkap sebagai gantinya."
+msgid ""
+"The latest version of this project was not fully uploaded to audio.com. You "
+"can load the last complete version instead."
+msgstr ""
+"Versi terbaru dari proyek ini tidak sepenuhnya diunggah ke audio.com. Anda "
+"dapat memuat versi terakhir yang lengkap sebagai gantinya."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Load latest"
 msgstr "Memuat terbaru"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
-msgstr "Tidak ada versi dari proyek ini yang telah diunggah sepenuhnya ke audio.com. Tidak dapat dimuat."
+msgid ""
+"No version of this project has been fully uploaded to audio.com. It cannot "
+"be loaded."
+msgstr ""
+"Tidak ada versi dari proyek ini yang telah diunggah sepenuhnya ke audio.com."
+" Tidak dapat dimuat."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 msgid "You have canceled this upload to audio.com"
@@ -7815,49 +8097,58 @@ msgid "Retry"
 msgstr "Coba lagi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
-msgstr "Diperlukan tindakan di audio.com sebelum melanjutkan. Setelah Anda selesai melakukannya, klik Coba Lagi"
-
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
-msgid "Loading..."
-msgstr "&Ambil..."
-
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
-msgid "Please wait..."
-msgstr "A&tur ulang..."
-
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
-msgid "Connection error"
-msgstr "Kesalahan tidak diketahui"
-
-#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgid ""
+"An action on audio.com is required before you can continue. Once you are "
+"done with it, click Retry"
 msgstr ""
+"Diperlukan tindakan di audio.com sebelum melanjutkan. Setelah Anda selesai "
+"melakukannya, klik Coba Lagi"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
+msgid "Loading..."
+msgstr "Memuat..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Please wait..."
+msgstr "Mohon tunggu..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Connection error"
+msgstr "Kesalahan sambungan"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid ""
+"Audacity is unable to connect to MuseHub.com. Please check your connection "
+"and try again."
+msgstr ""
+"Audacity tidak dapat terhubung ke MuseHub.com. Periksa koneksi Anda dan coba"
+" lagi."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
-msgstr "&Coba lagi"
+msgstr "Coba lagi"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-#, fuzzy
 msgid "Get it on MuseHub"
-msgstr "Tersedia di [[%s|MuseHub]]."
+msgstr "Dapatkan di MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a partner"
-msgstr ""
+msgstr "Menjadi mitra"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a MuseHub partner"
-msgstr ""
+msgstr "Menjadi mitra MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgid ""
+"You can reach millions of music creators by publishing your apps, effects "
+"and sounds on MuseHub. If you're a developer and interested in publishing "
+"your products on MuseHub, you can apply today."
 msgstr ""
+"Anda dapat menjangkau jutaan kreator musik dengan mempublikasikan aplikasi, "
+"efek, dan suara Anda di MuseHub. Jika Anda seorang pengembang dan tertarik "
+"untuk menerbitkan produk Anda di MuseHub, Anda bisa mendaftar hari ini."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -7947,103 +8238,120 @@ msgstr "&MIDI..."
 msgid "No revision identifier was provided"
 msgstr "ID revisi tidak tersedia"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, system administration"
 msgstr "%s, administrasi sistem"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s, co-founder dan pengembang"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, designer"
 msgstr "%s, desainer"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
 msgstr "%s, pengembang"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer and support"
 msgstr "%s, pengembang dan pendukungnya"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
 msgstr "%s, dokumentasi dan pendukungnya"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, QA tester, documentation and support"
 msgstr "%s, penguji QA, dokumentasi dan pendukungnya"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
 msgstr "%s, dokumentasi dan pendukungnya, Prancis"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
 msgstr "%s, penjaminan kualitas (QA)"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, accessibility advisor"
 msgstr "%s, penasihat aksebilitas"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphic artist"
 msgstr "%s, seniman grafis"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, composer"
 msgstr "%s, komposer"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
 msgstr "%s, penguji"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
 msgstr "%s, plug-in Nyquist"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
 msgstr "%s, pengembang web"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphics"
 msgstr "%s, grafik"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
+#. name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, effects presets"
@@ -8076,8 +8384,11 @@ msgstr "<h3>"
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s the free, open source, cross-platform software for recording and editing sounds."
-msgstr "%s adalah software gratis, lintas platform untuk merekam dan mengedit suara."
+msgid ""
+"%s the free, open source, cross-platform software for recording and editing "
+"sounds."
+msgstr ""
+"%s adalah software gratis, lintas platform untuk merekam dan mengedit suara."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -8237,16 +8548,13 @@ msgid "MP3 Import"
 msgstr "Impor MP3"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
-#.
 #: src/AboutDialog.cpp
 msgid "MP3 Export"
 msgstr "Ekspor MP3"
 
 #. i18n-hint: Opus is the codec name. This name should not be translated
-#.
 #. i18n-hint: Opus is the codec name. This name should not be translated
 #. i18n-hint: Opus is the codec name. This name should not be translated
-#.
 #: src/AboutDialog.cpp
 msgid "Opus Import and Export"
 msgstr "Impor dan Ekspor Opus"
@@ -8311,8 +8619,12 @@ msgid "PRIVACY POLICY"
 msgstr "KEBIJAKAN PRIVASI"
 
 #: src/AboutDialog.cpp
-msgid "App update checking and error reporting require network access. These features are optional."
-msgstr "Pemeriksaan pembaruan dan laporan kesalahan membutuhkan akses ke jaringan. Fitur ini opsional."
+msgid ""
+"App update checking and error reporting require network access. These "
+"features are optional."
+msgstr ""
+"Pemeriksaan pembaruan dan laporan kesalahan membutuhkan akses ke jaringan. "
+"Fitur ini opsional."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
@@ -8326,7 +8638,7 @@ msgstr "Klik dan seret untuk menentukan area pengulangan."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
-msgstr "Tindakan garis waktu tidak aktif selama perekaman"
+msgstr "Tindakan lini masa nonaktif selama perekaman"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
@@ -8340,12 +8652,11 @@ msgstr "Rekaman/Playhead"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
-msgstr "Garis Waktu"
+msgstr "Lini Masa"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
 msgstr "Kik atau seret untuk mulai Cari"
@@ -8353,7 +8664,6 @@ msgstr "Kik atau seret untuk mulai Cari"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
 msgstr "Klik atau seret untuk memulai Scrub"
@@ -8361,7 +8671,6 @@ msgstr "Klik atau seret untuk memulai Scrub"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
 msgstr "Klik dan pindah untuk Scrub. Klik dan seret untuk Cari."
@@ -8369,7 +8678,6 @@ msgstr "Klik dan pindah untuk Scrub. Klik dan seret untuk Cari."
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
 msgstr "Pindahkan untuk Cari"
@@ -8377,7 +8685,6 @@ msgstr "Pindahkan untuk Cari"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
-#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
 msgstr "Pindahkan untuk Scrub"
@@ -8396,7 +8703,7 @@ msgstr "Pindahkan untuk Scrub. Seret untuk Cari."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play disabled"
-msgstr "Putar-Cepat tidak aktif"
+msgstr "Putar-Cepat nonaktif"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play enabled"
@@ -8404,7 +8711,7 @@ msgstr "Putar-Cepat aktif"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline Options"
-msgstr "Opsi Garis Waktu"
+msgstr "Opsi Lini Masa"
 
 #: src/AdornedRulerPanel.cpp src/TimeDisplayMode.cpp
 #: src/menus/TimelineMenus.cpp
@@ -8463,7 +8770,8 @@ msgstr "Audacity sedang memulai..."
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
-msgstr "Pustaka SQLite gagal diinisialisasi.  Audacity tidak bisa dilanjutkan."
+msgstr ""
+"Pustaka SQLite gagal diinisialisasi.  Audacity tidak bisa dilanjutkan."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -8514,8 +8822,12 @@ msgstr ""
 "Tolong masukkan direktori yang sesuai ke dalam dialog pustaka."
 
 #: src/AudacityApp.cpp
-msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
-msgstr "Audacity akan keluar sekarang. Silakan aktifkan Audacity kembali untuk menggunakan direktori berkas sementara yang baru."
+msgid ""
+"Audacity is now going to exit. Please launch Audacity again to use the new "
+"temporary directory."
+msgstr ""
+"Audacity akan keluar sekarang. Silakan aktifkan Audacity kembali untuk "
+"menggunakan direktori berkas sementara yang baru."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -8545,7 +8857,8 @@ msgstr "Kesalahan Mengunci Folder Sementara"
 
 #: src/AudacityApp.cpp
 msgid "The system has detected that another copy of Audacity is running.\n"
-msgstr "Sistem telah mendeteksi bahwa salinan lain dari Audacity sedang berjalan.\n"
+msgstr ""
+"Sistem telah mendeteksi bahwa salinan lain dari Audacity sedang berjalan.\n"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -8782,11 +9095,14 @@ msgstr "Sisipkan audio"
 msgid "How would you like to paste your audio?"
 msgstr "Bagaimana Anda ingin menyisipkan audio ini?"
 
-#. i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.
+#. i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is
+#. an audio clip containing hidden trimmed data.
 #: src/AudioPasteDialog.cpp
 #, c-format
 msgid "The full smart clip is %s. Larger sizes will take longer to paste."
-msgstr "Klip pintar penuh berukuran %s. Ukuran lebih besar akan lebih lama disisipkan."
+msgstr ""
+"Klip pintar penuh berukuran %s. Ukuran lebih besar akan lebih lama "
+"disisipkan."
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
@@ -8907,7 +9223,8 @@ msgstr "Menu Perintah (Dengan Parameter)"
 msgid "Menu Command (No Parameters)"
 msgstr "Menu Perintah (Tanpa Parameter)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove
+#. Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
@@ -9009,7 +9326,7 @@ msgstr "Tidak ada makro yang dipilih"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Applying '%s' to current project"
-msgstr "Mengaplikasikan '%s' ke proyek saat ini"
+msgstr "Menerapkan '%s' ke proyek saat ini"
 
 #: src/BatchProcessDialog.cpp
 msgid "Please save and close the current project first."
@@ -9017,7 +9334,7 @@ msgstr "Mohon simpan dan tutup proyek yang ada dahulu."
 
 #: src/BatchProcessDialog.cpp
 msgid "Select file(s) for batch processing..."
-msgstr "Pilih (beberapa) berkas untuk pemrosesan batch..."
+msgstr "Pilih (beberapa) berkas untuk pemrosesan kumpulan..."
 
 #: src/BatchProcessDialog.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
@@ -9123,7 +9440,8 @@ msgstr "Nama makro baru"
 msgid "Name must not be blank"
 msgstr "Nama tidak boleh kosong"
 
-#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
+#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/'
+#. and '\'.
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
@@ -9338,23 +9656,34 @@ msgstr "TES GAGAL!!!\n"
 msgid "Benchmark completed successfully.\n"
 msgstr "Benchmark berhasil dengan sukses.\n"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-msgstr "Pilih audio untuk %s gunakan (contoh, Cmd + A untuk Pilih Semua) kemudian coba lagi."
+msgid ""
+"Select the audio for %s to use (for example, Cmd + A to Select All) then try"
+" again."
+msgstr ""
+"Pilih audio untuk %s gunakan (contoh, Cmd + A untuk Pilih Semua) kemudian "
+"coba lagi."
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
+#. Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-msgstr "Pilih audio untuk %s gunakan (contoh, Ctrl + A untuk Pilih Semua) kemudian coba lagi."
+msgid ""
+"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
+"try again."
+msgstr ""
+"Pilih audio untuk %s gunakan (contoh, Ctrl + A untuk Pilih Semua) kemudian "
+"coba lagi."
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
 msgstr "Tidak ada audio yang dipilih"
 
-#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
+#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise
+#. Reduction'.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
@@ -9509,7 +9838,9 @@ msgid "Missing"
 msgstr "Hilang"
 
 #: src/Dependencies.cpp
-msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
+msgid ""
+"If you proceed, your project will not be saved to disk. Is this what you "
+"want?"
 msgstr "Proyek tidak akan tersimpan apabila Anda melanjutkan ini. Yakin?"
 
 #: src/Dependencies.cpp
@@ -9686,26 +10017,30 @@ msgstr "Data yang dipilih tidak cukup."
 msgid "s"
 msgstr "s"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %d dB"
 msgstr "%d Hz (%s) = %d dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
 msgstr "%d Hz (%s) = %.1f dB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
 msgstr "%.4f sec (%d Hz) (%s) = %f"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
+#. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
@@ -9812,13 +10147,27 @@ msgstr "Kelola Plugin"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr "Audacity telah menemukan %d plugin yang tidak kompatibel dan tidak dapat dimuat. Kami telah menonaktifkan plugin ini untuk menghindari masalah berhenti atau crash. Jika Anda masih ingin mencoba menggunakan plugin ini, Anda dapat mengaktifkannya menggunakan \"Kelola Plugin\". Jika tidak, pilih \"Lanjutkan\"."
+msgid ""
+"Audacity has found %d incompatible plugins which could not be loaded. We "
+"have disabled these plugins to avoid any stalling or crashes. If you would "
+"still like to attempt to use these plugins, you can enable them using "
+"\"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr ""
+"Audacity telah menemukan %d plugin yang tidak kompatibel dan tidak dapat "
+"dimuat. Kami telah menonaktifkan plugin ini untuk menghindari masalah "
+"berhenti atau crash. Jika Anda masih ingin mencoba menggunakan plugin ini, "
+"Anda dapat mengaktifkannya menggunakan \"Kelola Plugin\". Jika tidak, pilih "
+"\"Lanjutkan\"."
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
-msgstr "Audacity telah menemukan %d plugin yang tidak kompatibel dan tidak dapat dimuat. Kami telah menonaktifkan plugin ini untuk menghindari masalah berhenti atau crash."
+msgid ""
+"Audacity has found %d incompatible plugins which could not be loaded. We "
+"have disabled these plugins to avoid any stalling or crashes."
+msgstr ""
+"Audacity telah menemukan %d plugin yang tidak kompatibel dan tidak dapat "
+"dimuat. Kami telah menonaktifkan plugin ini untuk menghindari masalah "
+"berhenti atau crash."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -9907,8 +10256,11 @@ msgstr "Pilih Bahasa untuk digunakan pada Audacity:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
-msgstr "Bahasa yang Anda gunakan, %s (%s), tidak sama dengan bahasa sistem, %s (%s)."
+msgid ""
+"The language you have chosen, %s (%s), is not the same as the system "
+"language, %s (%s)."
+msgstr ""
+"Bahasa yang Anda gunakan, %s (%s), tidak sama dengan bahasa sistem, %s (%s)."
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -9928,8 +10280,14 @@ msgid "Opening Audacity Project"
 msgstr "Membuka Proyek Audacity"
 
 #: src/MenuCreator.cpp
-msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr "Perintah pintasan berikut telah dihapus, karena pintasan default mereka telah diperbarui atau diubah, dan ini adalah pintasan yang Anda gunakan untuk perintah lain."
+msgid ""
+"The following commands have had their shortcuts removed, because their "
+"default shortcut is new or changed, and is the same shortcut that you have "
+"assigned to another command."
+msgstr ""
+"Perintah pintasan berikut telah dihapus, karena pintasan default mereka "
+"telah diperbarui atau diubah, dan ini adalah pintasan yang Anda gunakan "
+"untuk perintah lain."
 
 #: src/MenuCreator.cpp
 msgid "Shortcuts have been removed"
@@ -9949,7 +10307,8 @@ msgid "Volume"
 msgstr "Volume"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
+#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note
+#. tracks
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10101,7 +10460,9 @@ msgstr ""
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
-msgstr "Seluruh trek yang dipilih untuk perekaman harus memiliki sampling laju yang sama"
+msgstr ""
+"Seluruh trek yang dipilih untuk perekaman harus memiliki sampling laju yang "
+"sama"
 
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
@@ -10122,7 +10483,8 @@ msgstr ""
 msgid "Too Few Compatible Tracks Selected"
 msgstr "Terlalu Sedikit Trek Kompatibel yang Dipilih"
 
-#. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
+#. i18n-hint a numerical suffix added to distinguish otherwise like-named
+#. clips when new record started
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
@@ -10151,8 +10513,14 @@ msgid "Close project immediately with no changes"
 msgstr "Tutup proyek secepatnya tanpa perubahan"
 
 #: src/ProjectFSCK.cpp
-msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
-msgstr "Lanjutkan dengan perbaikan tercatat dalam log, dan periksa kesalahan lainnya. Ini akan menyimpan proyek dalam kondisi saat ini, kecuali jika Anda \"Tutup proyek segera\" pada peringatan kesalahan lebih lanjut."
+msgid ""
+"Continue with repairs noted in log, and check for more errors. This will "
+"save the project in its current state, unless you \"Close project "
+"immediately\" on further error alerts."
+msgstr ""
+"Lanjutkan dengan perbaikan tercatat dalam log, dan periksa kesalahan "
+"lainnya. Ini akan menyimpan proyek dalam kondisi saat ini, kecuali jika Anda"
+" \"Tutup proyek segera\" pada peringatan kesalahan lebih lanjut."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -10382,8 +10750,12 @@ msgstr ""
 "Pilih disk lain yang memiliki lebih banyak ruang kosong."
 
 #: src/ProjectFileManager.cpp
-msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
-msgstr "Proyek ini melebihi ukuran maksimum 4GB ketika menulis ke sistem berkas berformat FAT32."
+msgid ""
+"The project exceeds the maximum size of 4GB when writing to a FAT32 "
+"formatted filesystem."
+msgstr ""
+"Proyek ini melebihi ukuran maksimum 4GB ketika menulis ke sistem berkas "
+"berformat FAT32."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -10516,13 +10888,20 @@ msgstr "Sebuah saluran dari trek stereo tidak ada."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-msgid "This project contained stereo tracks with different sample rates per channel."
-msgstr "Proyek ini berisi trek stereo dengan laju sampel yang berbeda per saluran."
+msgid ""
+"This project contained stereo tracks with different sample rates per "
+"channel."
+msgstr ""
+"Proyek ini berisi trek stereo dengan laju sampel yang berbeda per saluran."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-msgid "This project contained stereo tracks with different sample formats in channels."
-msgstr "Proyek ini berisi trek stereo dengan format sampel yang berbeda dalam saluran."
+msgid ""
+"This project contained stereo tracks with different sample formats in "
+"channels."
+msgstr ""
+"Proyek ini berisi trek stereo dengan format sampel yang berbeda dalam "
+"saluran."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
@@ -10580,7 +10959,8 @@ msgstr "Kesalahan Mengimpor"
 
 #: src/ProjectFileManager.cpp
 msgid "Cannot import AUP3 format.  Use File > Open instead"
-msgstr "Tidak dapat mengimpor format AUP3.  Gunakan Berkas > Buka sebagai gantinya"
+msgstr ""
+"Tidak dapat mengimpor format AUP3.  Gunakan Berkas > Buka sebagai gantinya"
 
 #: src/ProjectFileManager.cpp
 msgid "Compact Project"
@@ -10623,7 +11003,8 @@ msgstr "[Proyek %02i] "
 msgid "Welcome to Audacity version %s"
 msgstr "Selamat datang di Audacity versi %s"
 
-#. i18n-hint: The first %s numbers the project, the second %s is the project name.
+#. i18n-hint: The first %s numbers the project, the second %s is the project
+#. name.
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%sSave changes to %s?"
@@ -10697,19 +11078,17 @@ msgstr "Daya"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
-#.
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change settings for realtime effect %s on %s"
-msgstr ""
+msgstr "Mengubah pengaturan untuk efek realtime %s pada %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
-#.
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Change realtime effect %s on %s"
-msgstr "Efek realtime untuk %s"
+msgstr "Ubah efek realtime %s ke %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -10718,7 +11097,6 @@ msgstr "Ganti efek"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Removed %s from %s"
@@ -10733,7 +11111,6 @@ msgstr "Buang %s"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Replaced %s with %s"
@@ -10763,7 +11140,6 @@ msgstr "Menambahkan efek"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Moved %s up in %s"
@@ -10772,7 +11148,6 @@ msgstr "Memindahkan %s ke atas di %s"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Moved %s down in %s"
@@ -10785,7 +11160,6 @@ msgstr "Mengubah urutan efek"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
-#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Added %s to %s"
@@ -10905,7 +11279,9 @@ msgstr "Genre"
 
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr "Gunakan tombol panah (atau tombol Enter setelah mengedit) untuk menavigasi bidang."
+msgstr ""
+"Gunakan tombol panah (atau tombol Enter setelah mengedit) untuk menavigasi "
+"bidang."
 
 #: src/TagsEditor.cpp
 msgid "Tag"
@@ -10996,14 +11372,18 @@ msgstr "Tag Metadata"
 msgid "&Metadata Editor"
 msgstr "&Editor Metadata"
 
-#. i18n-hint: This string is used to configure the controls which shows the recording
-#. * duration. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls which shows the
+#. recording
+#. * duration. As such it is important that only the alphabetic parts of the
+#. string
 #. * are translated, with the numbers left exactly as they are.
-#. * The string 'days' indicates that the first number in the control will be the number of days,
-#. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
+#. * The string 'days' indicates that the first number in the control will be
+#. the number of days,
+#. * then the 'h' indicates the second number displayed is hours, the 'm'
+#. indicates the third
+#. * number displayed is minutes, and the 's' indicates that the fourth number
+#. displayed is
 #. * seconds.
-#.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
 #: src/effects/VST/VSTEditor.cpp src/effects/VST3/VST3Editor.cpp
@@ -11204,12 +11584,15 @@ msgstr "0100 jam 060 mnt 060 dtk"
 msgid "099 days 024 h 060 m 060 s"
 msgstr "0100 hari 024 jam 060 mnt 060 dtk"
 
-#. i18n-hint: This string is used to configure the controls for times when the recording is
-#. * started and stopped. As such it is important that only the alphabetic parts of the string
+#. i18n-hint: This string is used to configure the controls for times when the
+#. recording is
+#. * started and stopped. As such it is important that only the alphabetic
+#. parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-#. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
-#.
+#. * The 'h' indicates the first number displayed is hours, the 'm' indicates
+#. the second number
+#. * displayed is minutes, and the 's' indicates that the third number
+#. displayed is seconds.
 #: src/TimerRecordDialog.cpp
 msgid "Start Date and Time"
 msgstr "Tanggal dan Waktu Mulai"
@@ -11254,8 +11637,8 @@ msgstr "Aktifkan &Ekspor Otomatis?"
 msgid "Export Project As:"
 msgstr "Proyek Ekspor Sebagai:"
 
-#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
-#: src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp
+#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "Opsi"
 
@@ -11419,8 +11802,12 @@ msgid " Select On"
 msgstr " Seleksi Aktif"
 
 #: src/TrackPanelResizeHandle.cpp
-msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
-msgstr "Klik dan seret untuk menyesuaikan ukuran relatif trek stereo, klik dua kali untuk menyamakan ketinggian"
+msgid ""
+"Click and drag to adjust relative size of stereo tracks, double-click to "
+"make heights equal"
+msgstr ""
+"Klik dan seret untuk menyesuaikan ukuran relatif trek stereo, klik dua kali "
+"untuk menyamakan ketinggian"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -11483,14 +11870,16 @@ msgstr "Pindahkan Trek ke Atas"
 msgid "Move Track Down"
 msgstr "Pindahkan Trek ke bawah"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "Memutar"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
@@ -11511,7 +11900,8 @@ msgstr "Seleksi terlalu kecil untuk menggunakan kunci suara."
 msgid "Calibration Results\n"
 msgstr "Hasil Kalibrasi\n"
 
-#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
+#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard
+#. Deviations'
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
@@ -11533,19 +11923,19 @@ msgstr "Kalibrasi Selesai"
 
 #: src/WhatsNewDialog.cpp
 msgid "<font color=\"#000000\">"
-msgstr ""
+msgstr "<font color=\"#000000\">"
 
 #: src/WhatsNewDialog.cpp
 msgid "Sign up to Audacity's cloud saving platform"
-msgstr ""
+msgstr "Daftarkan diri Anda ke platform penyimpanan awan Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "and access your projects from anywhere!"
-msgstr ""
+msgstr "dan akses proyek Anda dari mana saja!"
 
 #: src/WhatsNewDialog.cpp
 msgid "</font>"
-msgstr ""
+msgstr "</font>"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
@@ -11554,13 +11944,18 @@ msgstr "Apa yang baru di Audacity %s"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "Tonton [[%s|video rilisan]] atau baca [[%s|catatan perubahan]] untuk mengetahui lebih lanjut apa saja yang telah kami sertakan dalam rilisan terbaru!</p>"
+msgid ""
+"Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more "
+"about what we have included in the latest release!</p>"
+msgstr ""
+"Tonton [[%s|video rilisan]] atau baca [[%s|catatan perubahan]] untuk "
+"mengetahui lebih lanjut apa saja yang telah kami sertakan dalam rilisan "
+"terbaru!</p>"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "You can also read the [[%s|changelog]]</p>"
-msgstr ""
+msgstr "Anda juga dapat membaca [[%s|changelog]]</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11568,76 +11963,106 @@ msgstr "Dapatkan plugin & suara gratis"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>Cek [[%s|Aplikasi Muse Hub]] kami untuk berbagai macam plugin audio untuk pengguna Audacity</p>"
+msgid ""
+"<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for "
+"Audacity users</p>"
+msgstr ""
+"<p>Cek [[%s|Aplikasi Muse Hub]] kami untuk berbagai macam plugin audio untuk"
+" pengguna Audacity</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr "Efek pemrosesan vokal yang meningkatkan kejernihan dan kedalaman vokal."
+msgstr ""
+"Efek pemrosesan vokal yang meningkatkan kejernihan dan kedalaman vokal."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr "Plugin reverb serbaguna untuk efek suara yang terdengar luas dan alami."
+msgstr ""
+"Plugin reverb serbaguna untuk efek suara yang terdengar luas dan alami."
 
 #: src/WhatsNewDialog.cpp
-msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr "Plugin pemodelan amp dan efek gitar untuk nada yang realistis dan suara yang dapat disesuaikan."
+msgid ""
+"A guitar amp and effects modelling plugin for realistic tones and "
+"customizable sounds."
+msgstr ""
+"Plugin pemodelan amp dan efek gitar untuk nada yang realistis dan suara yang"
+" dapat disesuaikan."
 
 #: src/WhatsNewDialog.cpp
-msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr "Plugin reverb responsif yang beradaptasi untuk melacak dinamika untuk lanskap suara yang imersif."
+msgid ""
+"A responsive reverb plugin that adapts to track dynamics for immersive "
+"soundscapes."
+msgstr ""
+"Plugin reverb responsif yang beradaptasi untuk melacak dinamika untuk "
+"lanskap suara yang imersif."
 
 #: src/WhatsNewDialog.cpp
-msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr "Plugin multi-efek vokal yang menyempurnakan trek vokal untuk hasil yang profesional."
+msgid ""
+"A vocal multi-effect plugin that enhances vocal tracks for professional "
+"results."
+msgstr ""
+"Plugin multi-efek vokal yang menyempurnakan trek vokal untuk hasil yang "
+"profesional."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr "Plugin efek bass yang didesain untuk menghasilkan suara low-end yang jernih dan tajam."
+msgstr ""
+"Plugin efek bass yang didesain untuk menghasilkan suara low-end yang jernih "
+"dan tajam."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr "Plugin untuk kesempurnaan suara akustik, meningkatkan kehangatan dan kejernihan."
+msgstr ""
+"Plugin untuk kesempurnaan suara akustik, meningkatkan kehangatan dan "
+"kejernihan."
 
 #: src/WhatsNewDialog.cpp
-msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr "Plugin penyempurnaan suara yang mengagumkan untuk efek vokal yang jernih dan profesional."
+msgid ""
+"An amazing voice enhancement plugin for crystal-clear, professional vocal "
+"effects."
+msgstr ""
+"Plugin penyempurnaan suara yang mengagumkan untuk efek vokal yang jernih dan"
+" profesional."
 
 #: src/WhatsNewDialog.cpp
-msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr "Alat pemisah stem real-time untuk mengisolasi vokal, drum, dan instrumen."
+msgid ""
+"A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr ""
+"Alat pemisah stem real-time untuk mengisolasi vokal, drum, dan instrumen."
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "Lihat berbagai plugin dari pengembang terkenal yang tersedia di [[%s|MuseHub]]."
+msgid ""
+"Check out a variety of plugins by well known developers available on "
+"[[%s|MuseHub]]."
+msgstr ""
+"Lihat berbagai plugin dari pengembang terkenal yang tersedia di "
+"[[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr "Kompresor multiband yang menawarkan kontrol yang tepat atas frekuensi."
+msgstr ""
+"Kompresor multiband yang menawarkan kontrol yang tepat atas frekuensi."
 
 #: src/WhatsNewDialog.cpp
 msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr ""
+msgstr "Ace Studio - Penghasil Suara Bernyanyi AI No.1 di Dunia."
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Continue for Cloud Storage"
-msgstr "Lanjutkan dengan Google"
+msgstr "Lanjutkan untuk Penyimpanan Awan"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Selamat datang di Audacity!"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Watch the release video"
-msgstr "Tonton video"
+msgstr "Tonton video rilis"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Available on MuseHub"
-msgstr "Tersedia di [[%s|MuseHub]]."
+msgstr "Tersedia di MuseHub"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11651,7 +12076,8 @@ msgstr "Kunjungi forum kami"
 msgid "Don't show this again at start up"
 msgstr "Jangan tampilkan lagi waktu mulai"
 
-#. i18n-hint: An item name followed by a value, with appropriate separating punctuation
+#. i18n-hint: An item name followed by a value, with appropriate separating
+#. punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
@@ -11778,7 +12204,8 @@ msgid "Preferences"
 msgstr "Preferensi"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
+#. * data associated with a time line, such as sequences of labels, and
+#. musical
 #. * notes
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 #: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
@@ -12402,7 +12829,7 @@ msgstr "&Threshold:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
-msgstr "Preview tidak tersedia"
+msgstr "Pratinjau tidak tersedia"
 
 #: src/effects/BasicEffectUIServices.cpp
 msgid "Presets"
@@ -12560,7 +12987,8 @@ msgstr "78"
 msgid "&Speed Multiplier:"
 msgstr "&Pengganda Kecepatan:"
 
-#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
+#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per
+#. minute".
 #. "vinyl" refers to old-fashioned phonograph records
 #: src/effects/ChangeSpeed.cpp
 msgid "Standard Vinyl rpm:"
@@ -12568,7 +12996,6 @@ msgstr "RPM Vinyl Standar:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
-#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr "Dari rpm"
@@ -12581,7 +13008,6 @@ msgstr "&dari"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
-#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr "Ke rpm"
@@ -12689,12 +13115,18 @@ msgstr "Kompresor"
 
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr "Mengurangi \"rentang dinamis\", atau perbedaan antara bagian nyaring dan sunyi."
+msgstr ""
+"Mengurangi \"rentang dinamis\", atau perbedaan antara bagian nyaring dan "
+"sunyi."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
-msgstr "Penganalisa Kontras, untuk mengukur perbedaan volume RMS antara dua pilihan audio."
+msgid ""
+"Contrast Analyzer, for measuring RMS volume differences between two "
+"selections of audio."
+msgstr ""
+"Penganalisa Kontras, untuk mengukur perbedaan volume RMS antara dua pilihan "
+"audio."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -12819,7 +13251,8 @@ msgstr "Level latar belakang terlalu tinggi"
 msgid "Background higher than foreground"
 msgstr "Latar belakang lebih tinggi daripada latar depan"
 
-#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/
+#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0',
+#. see http://www.w3.org/TR/WCAG20/
 #: src/effects/Contrast.cpp
 msgid "WCAG2 Pass"
 msgstr "WCAG2 Lolos"
@@ -13210,11 +13643,11 @@ msgstr "Default Pabrik"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
-msgstr "Meyiapkan preview"
+msgstr "Meyiapkan pratinjau"
 
 #: src/effects/EffectPreview.cpp
 msgid "Previewing"
-msgstr "Melihat preview"
+msgstr "Melakukan Pratinjau"
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "&Generate"
@@ -13226,11 +13659,11 @@ msgstr "Mengelola preset dan opsi"
 
 #: src/effects/EffectUI.cpp
 msgid "Presets && settings"
-msgstr "Preset & & pengaturan"
+msgstr "Preset && pengaturan"
 
 #: src/effects/EffectUI.cpp
 msgid "Preview effect"
-msgstr "Preview efek"
+msgstr "Pratinjau efek"
 
 #: src/effects/EffectUI.cpp
 msgid "&Apply"
@@ -13336,7 +13769,8 @@ msgstr "%d Hz"
 msgid "%g kHz"
 msgstr "%g kHz"
 
-#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
+#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in
+#. translation.
 #: src/effects/EqualizationBandSliders.cpp
 #, c-format
 msgid "%gk"
@@ -13629,20 +14063,23 @@ msgid "Attack Time"
 msgstr "Waktu Serang"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
+#. where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
 msgid "R&elease Time:"
 msgstr "Waktu P&elepasan:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
+#. where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
 msgid "Release Time"
 msgstr "Waktu Pelepasan"
 
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate
+#. it.
 #: src/effects/LegacyCompressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
 msgstr "Gain Ma&ke-up untuk 0 dB setelah pengompresan"
@@ -13811,7 +14248,8 @@ msgstr "Pe&ngurangan"
 msgid "&Isolate"
 msgstr "&Isolasi"
 
-#. i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !
+#. i18n-hint: Means the difference between effect and original sound.
+#. Translate differently from "Reduce" !
 #: src/effects/NoiseReduction.cpp
 msgid "Resid&ue"
 msgstr "Resid&u"
@@ -13907,7 +14345,6 @@ msgstr "N&ormalkan saluran stereo secara mandiri"
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
-#.
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
 msgstr "&Faktor Peregangan:"
@@ -14048,7 +14485,8 @@ msgstr "H&anya Basah"
 msgid "&Filter Type:"
 msgstr "&Jenis Filter:"
 
-#. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
+#. i18n-hint: 'Order' means the complexity of the filter, and is a number
+#. between 1 and 10.
 #: src/effects/ScienFilter.cpp
 msgid "O&rder:"
 msgstr "T&ingkat:"
@@ -14117,32 +14555,40 @@ msgstr "Threshold Keheningan:"
 msgid "Silence Threshold"
 msgstr "Threshold Keheningan"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time:"
 msgstr "Masa Presmooth:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time"
 msgstr "Masa Presmooth"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time:"
 msgstr "Masa Lini:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -14153,8 +14599,10 @@ msgstr "Masa Lini"
 msgid "Smooth Time:"
 msgstr "Masa Lancar:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than
+#. 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the
+#. user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -14312,8 +14760,17 @@ msgstr "Ukuran Buffer"
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
-msgstr "Ukuran buffer mengontrol jumlah sampel yang dikirim ke efek pada setiap iterasi. Nilai yang lebih kecil akan menyebabkan pemrosesan lebih lambat dan beberapa efek memerlukan 8192 sampel atau kurang agar dapat bekerja dengan baik. Meski demikian, sebagian besar efek dapat menerima buffer yang besar dan menggunakannya akan sangat mengurangi waktu pemrosesan."
+msgid ""
+"The buffer size controls the number of samples sent to the effect on each "
+"iteration. Smaller values will cause slower processing and some effects "
+"require 8192 samples or less to work properly. However most effects can "
+"accept large buffers and using them will greatly reduce processing time."
+msgstr ""
+"Ukuran buffer mengontrol jumlah sampel yang dikirim ke efek pada setiap "
+"iterasi. Nilai yang lebih kecil akan menyebabkan pemrosesan lebih lambat dan"
+" beberapa efek memerlukan 8192 sampel atau kurang agar dapat bekerja dengan "
+"baik. Meski demikian, sebagian besar efek dapat menerima buffer yang besar "
+"dan menggunakannya akan sangat mengurangi waktu pemrosesan."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14329,8 +14786,17 @@ msgid "Latency Compensation"
 msgstr "Kompensasi Latensi"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
-msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
-msgstr "Sebagai bagian dari pemrosesan mereka, beberapa efek VST harus menunda pengembalian audio ke Audacity. Ketika tidak mengompensasi penundaan ini, Anda akan melihat bahwa keheningan kecil telah dimasukkan ke dalam audio. Mengaktifkan opsi ini akan memberikan kompensasi tersebut, tetapi mungkin tidak berfungsi untuk semua efek VST."
+msgid ""
+"As part of their processing, some VST effects must delay returning audio to "
+"Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all VST effects."
+msgstr ""
+"Sebagai bagian dari pemrosesan mereka, beberapa efek VST harus menunda "
+"pengembalian audio ke Audacity. Ketika tidak mengompensasi penundaan ini, "
+"Anda akan melihat bahwa keheningan kecil telah dimasukkan ke dalam audio. "
+"Mengaktifkan opsi ini akan memberikan kompensasi tersebut, tetapi mungkin "
+"tidak berfungsi untuk semua efek VST."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14347,8 +14813,14 @@ msgid "Graphical Mode"
 msgstr "Mode Grafis"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
-msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Sebagian besar efek VST memiliki antarmuka grafis untuk menetapkan nilai parameter. Metode dasar hanya-teks juga tersedia.  Buka kembali efek agar hal ini dapat diterapkan."
+msgid ""
+"Most VST effects have a graphical interface for setting parameter values. A "
+"basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"Sebagian besar efek VST memiliki antarmuka grafis untuk menetapkan nilai "
+"parameter. Metode dasar hanya-teks juga tersedia.  Buka kembali efek agar "
+"hal ini dapat diterapkan."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14369,12 +14841,27 @@ msgid "Load VST3 preset:"
 msgstr "Memuat preset VST3:"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
-msgstr "Sebagai bagian dari pemrosesan mereka, beberapa efek VST3 harus menunda pengembalian audio ke Audacity. Ketika tidak mengkompensasi penundaan ini, Anda akan melihat bahwa keheningan kecil telah disisipkan ke dalam audio. Mengaktifkan opsi ini akan memberikan kompensasi tersebut, tetapi mungkin tidak berfungsi untuk semua efek VST3."
+msgid ""
+"As part of their processing, some VST3 effects must delay returning audio to"
+" Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all VST3 effects."
+msgstr ""
+"Sebagai bagian dari pemrosesan mereka, beberapa efek VST3 harus menunda "
+"pengembalian audio ke Audacity. Ketika tidak mengkompensasi penundaan ini, "
+"Anda akan melihat bahwa keheningan kecil telah disisipkan ke dalam audio. "
+"Mengaktifkan opsi ini akan memberikan kompensasi tersebut, tetapi mungkin "
+"tidak berfungsi untuk semua efek VST3."
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Sebagian besar efek VST3 memiliki antarmuka grafis untuk menetapkan nilai parameter. Metode hanya-teks juga tersedia.  Buka kembali efek agar hal ini dapat diterapkan."
+msgid ""
+"Most VST3 effects have a graphical interface for setting parameter values. A"
+" basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"Sebagian besar efek VST3 memiliki antarmuka grafis untuk menetapkan nilai "
+"parameter. Metode hanya-teks juga tersedia.  Buka kembali efek agar hal ini "
+"dapat diterapkan."
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14445,16 +14932,34 @@ msgid "Audio Unit Effect Options"
 msgstr "Opsi Efek Unit Audio"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr "Sebagai bagian dari pemrosesan mereka, beberapa efek Audio Unit harus menunda pengembalian audio ke Audacity. Ketika tidak mengkompensasi penundaan ini, Anda akan melihat bahwa keheningan kecil telah disisipkan ke dalam audio. Mengaktifkan opsi ini akan memberikan kompensasi tersebut, tetapi mungkin tidak berfungsi untuk semua efek Audio Unit."
+msgid ""
+"As part of their processing, some Audio Unit effects must delay returning "
+"audio to Audacity. When not compensating for this delay, you will notice "
+"that small silences have been inserted into the audio. Enabling this option "
+"will provide that compensation, but it may not work for all Audio Unit "
+"effects."
+msgstr ""
+"Sebagai bagian dari pemrosesan mereka, beberapa efek Audio Unit harus "
+"menunda pengembalian audio ke Audacity. Ketika tidak mengkompensasi "
+"penundaan ini, Anda akan melihat bahwa keheningan kecil telah disisipkan ke "
+"dalam audio. Mengaktifkan opsi ini akan memberikan kompensasi tersebut, "
+"tetapi mungkin tidak berfungsi untuk semua efek Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
 msgstr "Antarmuka Pengguna"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr "Pilih \"Penuh\" untuk menggunakan antarmuka grafis jika disediakan oleh Unit Audio. Pilih \"Generik\" untuk menggunakan antarmuka generik yang disediakan sistem. Pilih \"Basic\" untuk antarmuka dasar hanya-teks. Buka kembali efek untuk penerapan."
+msgid ""
+"Select \"Full\" to use the graphical interface if supplied by the Audio "
+"Unit. Select \"Generic\" to use the system supplied generic interface. "
+"Select \"Basic\" for a basic text-only interface. Reopen the effect for this"
+" to take effect."
+msgstr ""
+"Pilih \"Penuh\" untuk menggunakan antarmuka grafis jika disediakan oleh Unit"
+" Audio. Pilih \"Generik\" untuk menggunakan antarmuka generik yang "
+"disediakan sistem. Pilih \"Basic\" untuk antarmuka dasar hanya-teks. Buka "
+"kembali efek untuk penerapan."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select &interface"
@@ -14473,8 +14978,10 @@ msgstr "Generik"
 msgid "Basic"
 msgstr "Dasar"
 
-#. i18n-hint: An item name introducing a value, which is not part of the string but
-#. appears in a following text box window; translate with appropriate punctuation
+#. i18n-hint: An item name introducing a value, which is not part of the
+#. string but
+#. appears in a following text box window; translate with appropriate
+#. punctuation
 #: src/effects/ladspa/LadspaEditor.cpp src/effects/nyquist/Nyquist.cpp
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
@@ -14491,8 +14998,17 @@ msgid "LADSPA Effect Options"
 msgstr "Opsi Efek LADSPA"
 
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
-msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
-msgstr "Sebagai bagian dari pemrosesan mereka, beberapa efek LADSPA harus menunda pengembalian audio ke Audacity. Apabila tidak mengkompensasi penundaan ini, Anda akan melihat bahwa keheningan kecil telah disisipkan ke dalam audio. Mengaktifkan opsi ini akan memberikan kompensasi tersebut, tetapi mungkin tidak berfungsi untuk semua efek LADSPA."
+msgid ""
+"As part of their processing, some LADSPA effects must delay returning audio "
+"to Audacity. When not compensating for this delay, you will notice that "
+"small silences have been inserted into the audio. Enabling this option will "
+"provide that compensation, but it may not work for all LADSPA effects."
+msgstr ""
+"Sebagai bagian dari pemrosesan mereka, beberapa efek LADSPA harus menunda "
+"pengembalian audio ke Audacity. Apabila tidak mengkompensasi penundaan ini, "
+"Anda akan melihat bahwa keheningan kecil telah disisipkan ke dalam audio. "
+"Mengaktifkan opsi ini akan memberikan kompensasi tersebut, tetapi mungkin "
+"tidak berfungsi untuk semua efek LADSPA."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -14508,12 +15024,27 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&Ukuran Buffer (8 hingga %d) sampel:"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr "Sebagai bagian dari pemrosesan mereka, beberapa efek LV2 harus menunda pengembalian audio ke Audacity. Apabila tidak mengkompensasi penundaan ini, Anda akan melihat bahwa keheningan kecil telah disisipkan ke dalam audio. Mengaktifkan pengaturan ini akan memberikan kompensasi tersebut, tetapi mungkin tidak berfungsi untuk semua efek LV2."
+msgid ""
+"As part of their processing, some LV2 effects must delay returning audio to "
+"Audacity. When not compensating for this delay, you will notice that small "
+"silences have been inserted into the audio. Enabling this setting will "
+"provide that compensation, but it may not work for all LV2 effects."
+msgstr ""
+"Sebagai bagian dari pemrosesan mereka, beberapa efek LV2 harus menunda "
+"pengembalian audio ke Audacity. Apabila tidak mengkompensasi penundaan ini, "
+"Anda akan melihat bahwa keheningan kecil telah disisipkan ke dalam audio. "
+"Mengaktifkan pengaturan ini akan memberikan kompensasi tersebut, tetapi "
+"mungkin tidak berfungsi untuk semua efek LV2."
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "Efek LV2 dapat memiliki antarmuka grafis untuk menetapkan nilai parameter. Metode dasar hanya-teks, juga tersedia.  Buka kembali efek agar hal ini dapat diterapkan."
+msgid ""
+"LV2 effects can have a graphical interface for setting parameter values. A "
+"basic text-only method is also available.  Reopen the effect for this to "
+"take effect."
+msgstr ""
+"Efek LV2 dapat memiliki antarmuka grafis untuk menetapkan nilai parameter. "
+"Metode dasar hanya-teks, juga tersedia.  Buka kembali efek agar hal ini "
+"dapat diterapkan."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -14607,13 +15138,14 @@ msgstr "Maaf, Plug-in Vamp gagal diinstall."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Plugin Settings"
-msgstr "Aturan Plugin"
+msgstr "Pengaturan Plugin"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Program"
 msgstr "Program"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound
+#. analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
@@ -14713,7 +15245,8 @@ msgstr "Ekspor dihentikan setelah mengekspor %lld berkas."
 
 #: src/export/ExportAudioDialog.cpp
 #, c-format
-msgid "Something went really wrong after exporting the following %lld file(s)."
+msgid ""
+"Something went really wrong after exporting the following %lld file(s)."
 msgstr "Ada sesuatu yang fatal setelah mengekspor %lld berkas."
 
 #: src/export/ExportAudioDialog.cpp
@@ -14929,7 +15462,6 @@ msgstr "Ukuran data buruk. Tidak dapat mengimpor audio"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
-#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %s, %d of %d clip %s"
@@ -14953,7 +15485,6 @@ msgstr "akhir"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
-#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
@@ -15074,12 +15605,20 @@ msgid "Pasting clip contents, please wait"
 msgstr "Menempelkan konten klip, harap tunggu"
 
 #: src/menus/EditMenus.cpp
-msgid "The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again."
-msgstr "Konten yang Anda coba tempelkan akan menjangkau lebih banyak trek daripada yang Anda miliki saat ini. Tambahkan lebih banyak trek dan coba lagi."
+msgid ""
+"The content you are trying to paste will span across more tracks than you "
+"currently have available. Add more tracks and try again."
+msgstr ""
+"Konten yang Anda coba tempelkan akan menjangkau lebih banyak trek daripada "
+"yang Anda miliki saat ini. Tambahkan lebih banyak trek dan coba lagi."
 
 #: src/menus/EditMenus.cpp
-msgid "There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again."
-msgstr "Trek yang diseleksi tidak cukup untuk menampung konten tersalin. Lebarkan seleksi trek dan coba lagi."
+msgid ""
+"There are not enough tracks selected to accommodate your copied content. "
+"Select additional tracks and try again."
+msgstr ""
+"Trek yang diseleksi tidak cukup untuk menampung konten tersalin. Lebarkan "
+"seleksi trek dan coba lagi."
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicated"
@@ -15120,7 +15659,8 @@ msgstr "Heningkan"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr "Menggunting trek audio yang dipilih dari %.2f detik menjadi %.2f detik"
+msgstr ""
+"Menggunting trek audio yang dipilih dari %.2f detik menjadi %.2f detik"
 
 #: src/menus/EditMenus.cpp
 msgid "Trim Audio"
@@ -15393,19 +15933,16 @@ msgid "Audio Device Info"
 msgstr "Info Perangkat Audio"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Quick Help"
-msgstr "&Bantuan Cepat..."
+msgstr "&Bantuan Cepat"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "&Manual"
-msgstr "&Manual..."
+msgstr "&Manual"
 
 #: src/menus/HelpMenus.cpp
-#, fuzzy
 msgid "Audacity &Support"
-msgstr "Data Dukungan Audacity"
+msgstr "&Dukungan Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -15772,7 +16309,8 @@ msgstr "Atur Batas Kanan Seleksi"
 
 #: src/menus/SelectMenus.cpp
 msgid "Zero-crossing search regions intersect stretched clip(s)."
-msgstr "Daerah penelusuran simpang-nol berpotongan dengan klip yang diregangkan."
+msgstr ""
+"Daerah penelusuran simpang-nol berpotongan dengan klip yang diregangkan."
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/SelectMenus.cpp
@@ -16010,7 +16548,6 @@ msgstr "Kursor Lompat Pa&njang ke Kanan"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
 msgid "See&k"
 msgstr "Car&i"
@@ -16033,7 +16570,7 @@ msgstr "Penelusuran Panjang ke Ka&nan Selama Pemutaran"
 
 #: src/menus/TimelineMenus.cpp
 msgid "Tim&eline"
-msgstr "Gar&is waktu"
+msgstr "Li&ni Masa"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -16238,8 +16775,12 @@ msgstr "Harap setidaknya seleksi satu trek audio dan satu trek MIDI."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr "Penyelarasan selesai: MIDI dari %.2f hingga %.2f detik, Audio dari %.2f hingga %.2f detik."
+msgid ""
+"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
+"secs."
+msgstr ""
+"Penyelarasan selesai: MIDI dari %.2f hingga %.2f detik, Audio dari %.2f "
+"hingga %.2f detik."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -16247,8 +16788,12 @@ msgstr "Sinkronisasi MIDI dengan Audio"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
-msgstr "Kesalahan penyelarasan: input terlalu pendek: MIDI dari %.2f hingga %.2f detik, Audio dari %.2f hingga %.2f detik."
+msgid ""
+"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
+"%.2f to %.2f secs."
+msgstr ""
+"Kesalahan penyelarasan: input terlalu pendek: MIDI dari %.2f hingga %.2f "
+"detik, Audio dari %.2f hingga %.2f detik."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -16459,7 +17004,6 @@ msgstr "tidak ada label trek pada atau di bawah trek terfokus"
 #. first number gives the position of that label in a sequence
 #. of labels,
 #. and the last number is the total number of labels in the sequence.
-#.
 #: src/menus/TransportMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 #, c-format
 msgid "%s %d of %d"
@@ -16632,7 +17176,7 @@ msgstr "Putar Sebelum da&n Sesudah Seleksi Berakhir"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview"
-msgstr "Putar Preview P&otong"
+msgstr "Putar Pratinjau P&otong"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Pre&vious Label"
@@ -16725,7 +17269,7 @@ msgstr "Preferensi untuk Aplikasi"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Network communications"
-msgstr ""
+msgstr "Komunikasi jaringan"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16735,30 +17279,34 @@ msgstr "&Periksa pembaruan"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Requires network access."
-msgstr ""
+msgstr "Memerlukan akses jaringan."
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Send anonymous usage info"
-msgstr ""
+msgstr "&Kirimkan info penggunaan anonim"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "We create a random ID to track how often Audacity is used."
 msgstr ""
+"Kami membuat ID acak untuk melacak seberapa sering Audacity digunakan."
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
-msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
-msgstr "Untuk melindungi privasi Anda, Audacity tidak mengumpulkan informasi pribadi apa pun. Namun, pemeriksaan pembaruan aplikasi memerlukan akses jaringan."
+msgid ""
+"In order to protect your privacy, Audacity does not collect any personally "
+"identifiable information about you."
+msgstr ""
+"Untuk melindungi privasi Anda, Audacity tidak mengumpulkan informasi tentang"
+" Anda yang dapat diidentifikasi secara pribadi."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
-msgstr "Batch"
+msgstr "Kumpulan"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "Preferences for Batch"
-msgstr "Preferensi untuk Batch"
+msgstr "Preferensi untuk Kumpulan"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -16766,11 +17314,11 @@ msgstr "Kelakuan"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "&Don't apply effects in batch mode"
-msgstr "&Jangan aplikasikan efek pada mode batch"
+msgstr "&Jangan terapkan efek pada mode kumpulan"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Audio Settings"
-msgstr "Audio Settings"
+msgstr "Pengaturan Audio"
 
 #: src/prefs/DevicePrefs.cpp
 #, c-format
@@ -16821,8 +17369,12 @@ msgid "&Project Sample Rate:"
 msgstr "& Laju Sampel Proyek:"
 
 #: src/prefs/DevicePrefs.cpp
-msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
-msgstr "Laju Sampel digunakan ketika merekam trek baru, mixing trek dan untuk pemutaran dalam proyek ini."
+msgid ""
+"Sample Rate used when recording new tracks, mixing down tracks and for "
+"playback in this project."
+msgstr ""
+"Laju Sampel digunakan ketika merekam trek baru, mixing trek dan untuk "
+"pemutaran dalam proyek ini."
 
 #: src/prefs/DevicePrefs.cpp
 msgid "D&efault Sample Rate:"
@@ -16979,8 +17531,11 @@ msgid "Directory %s is not writable"
 msgstr "Direktori %s tidak dapat ditulis"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Changes to temporary directory will not take effect until Audacity is restarted"
-msgstr "Pengubahan direktori temporer tidak berefek sampai Audacity dihidupkan ulang"
+msgid ""
+"Changes to temporary directory will not take effect until Audacity is "
+"restarted"
+msgstr ""
+"Pengubahan direktori temporer tidak berefek sampai Audacity dihidupkan ulang"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -17068,9 +17623,9 @@ msgstr "Set Instruksi"
 msgid "&Use SSE/SSE2/.../AVX"
 msgstr "&Gunakan SSE/SSE2/.../AVX"
 
-#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. i18n-hint: Title of the panel containing user-defined paths where plugins
+#. could be found
 #. * First argument is replaced with plugin type (e.g. "LV2 plugin locations")
-#.
 #: src/prefs/EffectsPrefs.cpp
 #, c-format
 msgid "%s plugin locations"
@@ -17143,8 +17698,16 @@ msgid "Unused filters:"
 msgstr "Filter yang tidak digunakan:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
-msgstr "Terdapat karakter spasi (spasi, baris baru, tab, atau linefeed) di salah satu item. Karakter-karakter tersebut cenderung merusak pencocokan pola. Kecuali jika Anda tahu apa yang Anda lakukan, disarankan untuk menggunting spasi. Apakah Anda ingin Audacity menggunting spasi untuk Anda?"
+msgid ""
+"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
+"the items. They are likely to break the pattern matching. Unless you know "
+"what you are doing, it is recommended to trim spaces. Do you want Audacity "
+"to trim spaces for you?"
+msgstr ""
+"Terdapat karakter spasi (spasi, baris baru, tab, atau linefeed) di salah "
+"satu item. Karakter-karakter tersebut cenderung merusak pencocokan pola. "
+"Kecuali jika Anda tahu apa yang Anda lakukan, disarankan untuk menggunting "
+"spasi. Apakah Anda ingin Audacity menggunting spasi untuk Anda?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -17172,7 +17735,8 @@ msgstr "Antar Muka"
 msgid "Preferences for GUI"
 msgstr "Preferensi untuk GUI"
 
-#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
+#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "Tampilan"
 
@@ -17211,7 +17775,9 @@ msgstr "Pe&rtahankan label jika seleksi menempel ke label"
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
-msgstr "Gunakan sebagian besar tata letak Kiri-ke-Kanan dalam bahasa Kanan-ke-Kiri (RTL)"
+msgstr ""
+"Gunakan sebagian besar tata letak Kiri-ke-Kanan dalam bahasa Kanan-ke-Kiri "
+"(RTL)"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Never use comma as decimal point"
@@ -17236,7 +17802,8 @@ msgstr "Preferensi untuk Ekspor-Impor"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&witch view to Beats and Measures and align with musical grid"
-msgstr "B&eralih tampilan ke Ketukan dan Irama dan sejajarkan dengan kisi musik"
+msgstr ""
+"B&eralih tampilan ke Ketukan dan Irama dan sejajarkan dengan kisi musik"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ask me each time"
@@ -17248,16 +17815,19 @@ msgstr "Tidak melakukan apa pun"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Always &match the loop tempo to the project tempo"
-msgstr ""
+msgstr "Selalu sesuaikan tempo pengulangan dengan tempo proyek"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgid ""
+"&Only match the loop tempo to the project tempo when the ruler displays "
+"\"Beats and Measures\""
 msgstr ""
+"&Hanya cocokkan tempo pengulangan dengan tempo proyek saat penggaris "
+"menampilkan \"Ketukan dan Irama\""
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "&Do nothing"
-msgstr "Tidak melakukan apa pun"
+msgstr "%Tidak melakukan apa pun"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
@@ -17266,10 +17836,15 @@ msgstr "Impor Musik"
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing a music loop into an empty project, Audacity will:"
 msgstr ""
+"Saat mengimpor pengulangan musik ke dalam proyek kosong, Audacity akan:"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgid ""
+"When importing a music loop into an existing (non-empty) project, Audacity "
+"will:"
 msgstr ""
+"Saat mengimpor pengulangan musik ke dalam proyek yang sudah ada (tidak "
+"kosong), Audacity akan:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17285,7 +17860,7 @@ msgstr "Preferensi untuk KeyConfig"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
-msgstr "Ppustaka Papan Ketik sudah tidak ada."
+msgstr "Pustaka Papan Ketik sudah tidak ada."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
@@ -17342,7 +17917,8 @@ msgstr "&Atur"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr "Catatan: Menekan Cmd+Q akan keluar dari aplikasi. Tombol lainnya valid."
+msgstr ""
+"Catatan: Menekan Cmd+Q akan keluar dari aplikasi. Tombol lainnya valid."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -17489,7 +18065,8 @@ msgstr "Latensi MIDI Synth harus berupa bilangan bulat"
 msgid "Midi IO"
 msgstr "Midi IO"
 
-#. i18n-hint: Modules are optional extensions to Audacity that add NEW features.
+#. i18n-hint: Modules are optional extensions to Audacity that add NEW
+#. features.
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Modul"
@@ -17508,7 +18085,8 @@ msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
-msgstr "Perubahan pada pengaturan ini hanya berlaku saat memulai ulang Audacity.\n"
+msgstr ""
+"Perubahan pada pengaturan ini hanya berlaku saat memulai ulang Audacity.\n"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Always ask"
@@ -17524,7 +18102,9 @@ msgstr "Tidak ada pilihan dibuat"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Error: No modules were found. This may indicate a faulty installation."
-msgstr "Kesalahan: Tidak ada modul ditemukan. Hal ini dapat mengindikasikan kesalahan pemasangan."
+msgstr ""
+"Kesalahan: Tidak ada modul ditemukan. Hal ini dapat mengindikasikan "
+"kesalahan pemasangan."
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
@@ -17536,7 +18116,7 @@ msgstr "Preferensi untuk Pemutaran"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
-msgstr "Preview Efek"
+msgstr "Pratinjau Efek"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Length:"
@@ -17545,7 +18125,7 @@ msgstr "&Panjang:"
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr "Preview Potongan"
+msgstr "Pratinjau Potongan"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
@@ -17577,7 +18157,7 @@ msgstr "Selalu scrub yang tak terse&mat"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
-msgstr "Ppustaka Audacity"
+msgstr "Pustaka Audacity"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Category"
@@ -17599,7 +18179,8 @@ msgstr "Konversi Real-time"
 msgid "Sample Rate Con&verter:"
 msgstr "Pengkon&versi Laju Sampel:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable
+#. resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "&Dither:"
 msgstr "&Dither:"
@@ -17612,7 +18193,8 @@ msgstr "Konversi Berkualitas Tinggi"
 msgid "Sample Rate Conver&ter:"
 msgstr "Pen&gkonversi Laju Sampel:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable
+#. resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Dit&her:"
@@ -17637,7 +18219,8 @@ msgstr "&Pemantauan input yang terdengar"
 msgid "Record on a new track"
 msgstr "Rekam di trek baru"
 
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the
+#. recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
 msgstr "Mendeteksi suara yang hilang"
@@ -17822,7 +18405,8 @@ msgstr "Akti&fkan Seleksi Spektral"
 msgid "Show a grid along the &Y-axis"
 msgstr "Lihat batas sepanjang sumbu &Y"
 
-#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
+#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be
+#. translated
 #: src/prefs/SpectrumPrefs.cpp
 msgid "FFT Find Notes"
 msgstr "Penelusuran Nada FFT"
@@ -17884,7 +18468,8 @@ msgid "The maximum number of notes must be in the range 1..128"
 msgstr "Jumlah Nada Maksimum harus berupa angka dan di antara 1..128"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of images
+#. graphical user interface, including choices of colors, and similarity of
+#. images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
@@ -18181,7 +18766,8 @@ msgstr "2 (Stereo) Saluran Perekaman"
 msgid "&Audio Setup Toolbar"
 msgstr "&Toolbar Pengaturan Audio"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
@@ -18228,7 +18814,8 @@ msgstr "Seleksi sampai Akhir"
 msgid "Select to Start"
 msgstr "Seleksi sampai Awal"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether
+#. Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
@@ -18379,12 +18966,14 @@ msgstr " Terklip "
 msgid "Record Meter"
 msgstr "Pengukur Rekaman"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Recording Level"
 msgstr "Level Perekaman"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being
+#. recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -18682,7 +19271,7 @@ msgstr "Putar-pada-Kecepatan &Sekali"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "Putar Potongan Preview-pada-Kecepatan"
+msgstr "Putar Potongan Pratinjau-pada-Kecepatan"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Ad&just Playback Speed..."
@@ -18698,7 +19287,9 @@ msgstr "&Mengurangi Kecepatan Pemutaran"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr "Seret label. Tahan shift dan seret untuk memindahkan semua label pada trek yang sama."
+msgstr ""
+"Seret label. Tahan shift dan seret untuk memindahkan semua label pada trek "
+"yang sama."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -18788,8 +19379,12 @@ msgid "&MIDI Device Info..."
 msgstr "Info Perangkat &MIDI..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
-msgstr "Klik untuk perbesar vertikal. Shift-klik untuk memperkecil. Seret untuk menentukan wilayah zoom."
+msgid ""
+"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom"
+" region."
+msgstr ""
+"Klik untuk perbesar vertikal. Shift-klik untuk memperkecil. Seret untuk "
+"menentukan wilayah zoom."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Zoom Reset"
@@ -18932,7 +19527,9 @@ msgstr "Kik dan dorong untuk mengedit sampel"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr "Untuk emnggunakan Gambar, perbesar sampai Anda melihat sampel berdiri sendiri."
+msgstr ""
+"Untuk emnggunakan Gambar, perbesar sampai Anda melihat sampel berdiri "
+"sendiri."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -18993,16 +19590,22 @@ msgid "Next &Lower Peak Frequency"
 msgstr "Frekuensi Puncak Lebih &Rendah Berikutnya"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
-msgstr "Seret untuk menentukan wilayah zoom. Klik kanan untuk menu. Ctrl+gulir untuk memperbesar."
+msgid ""
+"Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr ""
+"Seret untuk menentukan wilayah zoom. Klik kanan untuk menu. Ctrl+gulir untuk"
+" memperbesar."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid "Right-click for menu. Ctrl+scroll to zoom."
 msgstr "Klik kanan untuk menu. Ctrl+gulir untuk memperbesar."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Klik dan seret untuk menyesuaikan ukuran sub-tampilan, klik dua kali untuk memisahkan secara merata"
+msgid ""
+"Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgstr ""
+"Klik dan seret untuk menyesuaikan ukuran sub-tampilan, klik dua kali untuk "
+"memisahkan secara merata"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -19031,19 +19634,22 @@ msgid "%s, %d of %d clip"
 msgid_plural "%s, %d of %d clips"
 msgstr[0] "%s, %d dari klip %d"
 
-#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
+#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4
+#. seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 #, c-format
 msgid "Adjust left trim by %.02f seconds"
 msgstr "Sesuaikan guntingan kiri sebanyak %.02f detik"
 
-#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown
+#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4s"
+#. is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 #, c-format
 msgid "Trim by %.02fs"
 msgstr "Gunting sebanyak %.02fs"
 
-#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
+#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4
+#. seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 #, c-format
 msgid "Adjust right trim by %.02f seconds"
@@ -19270,7 +19876,7 @@ msgstr ""
 "posisi yang berbeda, atau klip yang tidak cocok. Menggabungkannya\n"
 "akan me-render trek tersebut.\n"
 "\n"
-"Hal ini menyebabkan efek waktu nyata diterapkan ke bentuk gelombang dan\n"
+"Hal ini menyebabkan efek realtime diterapkan ke bentuk gelombang dan\n"
 "data tersembunyi akan dihapus. Selain itu, seluruh trek akan\n"
 "menjadi satu klip besar.\n"
 "\n"
@@ -19462,8 +20068,12 @@ msgstr "Klik kanan untuk menu."
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
-msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
-msgstr "Seret klip untuk mengubah posisinya. Tahan Shift dan seret untuk memindahkan semua klip pada trek yang sama."
+msgid ""
+"Drag clips to reposition them. Hold Shift and drag to move all clips on the "
+"same track."
+msgstr ""
+"Seret klip untuk mengubah posisinya. Tahan Shift dan seret untuk memindahkan"
+" semua klip pada trek yang sama."
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -19542,7 +20152,6 @@ msgstr "Sarung suara disesuaikan."
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "&Scrub"
@@ -19558,7 +20167,6 @@ msgstr "Mencari"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
-#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
 msgstr "&Penggaris Scrub"
@@ -19605,7 +20213,9 @@ msgstr "Klik dan seret untuk memindahkan frekuensi atas seleksi."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr "Klik dan seret untuk memindahkan frekuensi tengah seleksi ke puncak spektral."
+msgstr ""
+"Klik dan seret untuk memindahkan frekuensi tengah seleksi ke puncak "
+"spektral."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
@@ -19620,7 +20230,8 @@ msgstr "Klik dan seret untuk menyesuaikan bandwidth frekuensi."
 msgid "Edit, Preferences..."
 msgstr "Edit, Preferensi..."
 
-#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac
+#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux,
+#. "Command+," for Mac
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
@@ -19634,7 +20245,8 @@ msgstr "Klik dan seret untuk mengatur bandwidth frekuensi."
 msgid "Click and drag to select audio"
 msgstr "Klik dan dorong untuk memilih audio"
 
-#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any
+#. nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
 msgstr "(Menempel)"
@@ -19687,13 +20299,17 @@ msgstr "Perintah+Klik"
 msgid "Ctrl+Click"
 msgstr "Ctrl+Klik"
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
+#. 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr "%s untuk memilih atau membatalkan pilihan trek. Seret ke atas atau ke bawah untuk mengubah urutan trek."
+msgstr ""
+"%s untuk memilih atau membatalkan pilihan trek. Seret ke atas atau ke bawah "
+"untuk mengubah urutan trek."
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
+#. 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track."
@@ -19738,10 +20354,15 @@ msgstr "Periksa Pembaruan"
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
-msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
-msgstr "Jika Anda ingin mengubah preferensi untuk pemeriksaan pembaruan otomatis, Anda dapat menemukannya di %s."
+msgid ""
+"If you want to change your preference for automatic updates checking, you "
+"can find it in %s."
+msgstr ""
+"Jika Anda ingin mengubah preferensi untuk pemeriksaan pembaruan otomatis, "
+"Anda dapat menemukannya di %s."
 
-#. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Application
+#. page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Preferences > Application"
@@ -19784,7 +20405,7 @@ msgstr "Mengunduh %s"
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Stay Updated & Anonymous Usage Info"
-msgstr ""
+msgstr "Tetap Diperbarui & Info Penggunaan Anonim"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19793,45 +20414,52 @@ msgstr "Pembaruan aplikasi"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
-msgid "Audacity notifies you in-app when a new version is available to download."
-msgstr "Agar tetap up-to-date, Anda akan menerima notifikasi dalam aplikasi setiap kali ada versi baru Audacity yang tersedia untuk diunduh."
+msgid ""
+"Audacity notifies you in-app when a new version is available to download."
+msgstr ""
+"Ketika versi baru tersedia untuk diunduh, Audacity akan memberi tahu Anda "
+"intra-aplikasi."
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Anonymous usage info (UUID)"
-msgstr ""
+msgstr "Info penggunaan anonim (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/update/UpdateNoticeDialog.cpp
-msgid "To help us understand how often people use Audacity, we generate a random, anonymous ID (UUID). This helps us improve features and plan for the future. No personal data is collected."
+msgid ""
+"To help us understand how often people use Audacity, we generate a random, "
+"anonymous ID (UUID). This helps us improve features and plan for the future."
+" No personal data is collected."
 msgstr ""
+"Untuk membantu kami memahami seberapa sering orang menggunakan Audacity, "
+"kami membuat ID (UUID) anonim secara acak. Hal ini membantu kami "
+"meningkatkan fitur dan perencanaan di masa mendatang. Tidak ada data pribadi"
+" yang dikumpulkan."
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can disable this anytime in %s."
-msgstr "Anda dapat mengubah direktori di %s."
+msgstr "Anda dapat menonaktifkan ini kapan saja di %s."
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "You can turn this off anytime in %s."
-msgstr "Anda dapat menonaktifkan pemeriksaan pembaruan aplikasi kapan saja di %s."
+msgstr "Anda dapat mematikannya kapan saja di %s."
 
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "View privacy policy"
-msgstr "Kebijakan Privasi kami"
+msgstr "Lihat kebijakan privasi"
 
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "Disable UUID"
-msgstr "Nonaktifan"
+msgstr "Nonaktifkan UUID"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
-msgstr ""
+msgstr "Terima && lanjutkan"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -19867,7 +20495,7 @@ msgstr "Baca lebih lanjut di GitHub"
 
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
-msgstr "(dimatikan)"
+msgstr "(nonaktif)"
 
 #: src/widgets/AButton.cpp src/widgets/MeterPanel.cpp
 msgid "Press"
@@ -19931,7 +20559,7 @@ msgstr "Pengukur"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Disable Silent Monitoring"
-msgstr "Menonaktifkan Pemantauan Senyap"
+msgstr "Nonaktifkan Pemantauan Senyap"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Enable Silent Monitoring"
@@ -20000,8 +20628,12 @@ msgid "Missing Plugins"
 msgstr "Plugin Hilang"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-msgid "This project contains some realtime effect plugins that cannot be found on this system."
-msgstr "Proyek ini berisi beberapa plugin efek realtime yang tidak dapat ditemukan pada sistem ini."
+msgid ""
+"This project contains some realtime effect plugins that cannot be found on "
+"this system."
+msgstr ""
+"Proyek ini berisi beberapa plugin efek realtime yang tidak dapat ditemukan "
+"pada sistem ini."
 
 #. i18n-hint: %s will be replaced with "Learn more"
 #: src/widgets/MissingPluginsErrorDialog.cpp
@@ -20030,8 +20662,12 @@ msgstr "Tidak dapat menulis berkas ke direktori: %s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
-msgstr "Periksa apakah direktori tersebut ada, memiliki izin yang diperlukan, dan drive tidak penuh."
+msgid ""
+"Please check that the directory exists, has the necessary permissions, and "
+"the drive isn't full."
+msgstr ""
+"Periksa apakah direktori tersebut ada, memiliki izin yang diperlukan, dan "
+"drive tidak penuh."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -20039,7 +20675,8 @@ msgstr "Periksa apakah direktori tersebut ada, memiliki izin yang diperlukan, da
 msgid "You can change the directory in %s."
 msgstr "Anda dapat mengubah direktori di %s."
 
-#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories
+#. page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Preferences > Directories"
 msgstr "Preferensi > Direktori"
@@ -20115,8 +20752,8 @@ msgstr "Steve Daulton"
 
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
-#: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
+#: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny
+#: plug-ins/pluck.ny plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr "Lisensi Publik Umum GNU v2.0"
 
@@ -20144,7 +20781,8 @@ msgstr "Jumlah (dB)"
 #: plug-ins/ShelfFilter.ny
 #, lisp-format
 msgid "Error.~%Frequency set too high for selected track."
-msgstr "Kesalahan.~%Frekuensi yang ditetapkan terlalu tinggi untuk trek terpilih."
+msgstr ""
+"Kesalahan.~%Frekuensi yang ditetapkan terlalu tinggi untuk trek terpilih."
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Multi Tool"
@@ -20422,8 +21060,10 @@ msgstr "Kesalahan.~%Pilihan tidak valid.~%Lebih dari 2 klip audio dipilih."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
-msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "Kesalahan.~%Pilihan tidak valid.~%E ruang kosong di awal/akhir pilihan."
+msgid ""
+"Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr ""
+"Kesalahan.~%Pilihan tidak valid.~%E ruang kosong di awal/akhir pilihan."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -20772,7 +21412,9 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr "Terlalu banyak keheningan terdeteksi.~% Hanya 10.000 label pertama yang ditambahkan."
+msgstr ""
+"Terlalu banyak keheningan terdeteksi.~% Hanya 10.000 label pertama yang "
+"ditambahkan."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -20806,7 +21448,8 @@ msgstr "Batasan Lunak"
 msgid "Hard Limit"
 msgstr "Batasan Keras"
 
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into
+#. clips
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Klip Lunak"
@@ -21012,7 +21655,8 @@ msgstr "Peringatan.~%Gagal menyalin beberapa berkas:~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr "Plug-in terpasang.~% (Gunakan Pengelola Plug-in untuk mengaktifkan efek):"
+msgstr ""
+"Plug-in terpasang.~% (Gunakan Pengelola Plug-in untuk mengaktifkan efek):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -21317,8 +21961,10 @@ msgstr "Laju Sampel: ~a Hz.  Nilai sampel pada skala ~a. ~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr "~a   ~a~%~aLaju Sampel: ~a Hz.~%Panjang terproses: ~a sampel ~a detik.~a"
+msgid ""
+"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr ""
+"~a   ~a~%~aLaju Sampel: ~a Hz.~%Panjang terproses: ~a sampel ~a detik.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21375,13 +22021,15 @@ msgstr "<b>Laju Sampel:</b> &nbsp;&nbsp;~a Hz."
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr "<b>Amplitudo Puncak:</b> &nbsp;&nbsp;~a (linier) &nbsp;&nbsp;~a dB."
 
-#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a
+#. signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr "<b>RMS</b> (tidak tertimbang): &nbsp;&nbsp;~a dB."
 
-#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
+#. i18n-hint: DC derives from "direct current" in electronics, really means
+#. the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
@@ -21680,44 +22328,3 @@ msgstr "Alat Spektral"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Terdahulu"
-
-#, fuzzy
-#~ msgid "What's new in Audacity"
-#~ msgstr "Apa yang baru di Audacity %s"
-
-#~ msgid "Update notifications"
-#~ msgstr "Memperbarui pemberitahuan"
-
-#~ msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-#~ msgstr "Pemeriksaan pembaruan aplikasi memerlukan akses jaringan. Untuk melindungi privasi Anda, Audacity tidak menyimpan informasi pribadi apa pun."
-
-#~ msgid "App update checking"
-#~ msgstr "Memeriksa pembaruan aplikasi"
-
-#~ msgid "Open trace audio.com"
-#~ msgstr "Buka jejak audio.com"
-
-#~ msgid "Account not linked"
-#~ msgstr "Akun tidak terhubung"
-
-#~ msgid "Anonymous"
-#~ msgstr "Anonim"
-
-#~ msgid "&Link Account"
-#~ msgstr "&Hubungkan Akun"
-
-#~ msgid "&Unlink Account"
-#~ msgstr "&Putuskan Hubungan Akun"
-
-#, c-format
-#~ msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-#~ msgstr "Membagikan audio memerlukan akun %s gratis terhubung ke Audacity. %%Klik \"Hubungkan akun\" di atas untuk melanjutkan."
-
-#~ msgid "audio.com"
-#~ msgstr "audio.com"
-
-#~ msgid "Press \"Continue\" to upload to audio.com"
-#~ msgstr "Tekan \"Lanjutkan\" untuk mengunggah ke audio.com"
-
-#~ msgid "When Audacity detects music in file imported on empty project"
-#~ msgstr "Ketika Audacity mendeteksi musik dalam berkas yang diimpor pada proyek kosong"
