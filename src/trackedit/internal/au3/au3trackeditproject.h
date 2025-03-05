@@ -13,13 +13,14 @@
 
 struct TrackListEvent;
 namespace au::trackedit {
+
 class Au3TrackeditProject : public ITrackeditProject
 {
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
-    Au3TrackeditProject(const std::shared_ptr<au::au3::IAu3Project>& au3project);
-    ~Au3TrackeditProject();
+    explicit Au3TrackeditProject(const std::shared_ptr<au::au3::IAu3Project>& au3project);
+    ~Au3TrackeditProject() override;
 
     TrackIdList trackIdList() const override;
     std::vector<Track> trackList() const override;
@@ -65,7 +66,7 @@ private:
     mutable std::map<TrackId, muse::async::ChangedNotifier<Clip> > m_clipsChanged;
     mutable muse::async::Channel<au::trackedit::TimeSignature> m_timeSignatureChanged;
 
-    mutable muse::async::Channel<std::vector<trackedit::Track> > m_tracksChanged;
+    mutable muse::async::Channel<trackedit::TrackList> m_tracksChanged;
     mutable muse::async::Channel<trackedit::Track> m_trackAdded;
     mutable muse::async::Channel<trackedit::Track> m_trackChanged;
     mutable muse::async::Channel<trackedit::Track> m_trackRemoved;
@@ -76,7 +77,6 @@ private:
 class Au3TrackeditProjectCreator : public ITrackeditProjectCreator
 {
 public:
-
     Au3TrackeditProjectCreator() = default;
 
     ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const override;

@@ -2,7 +2,7 @@
 
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
-#include "libraries/lib-project-history/ProjectHistory.h"
+
 #include "libraries/lib-stretching-sequence/TempoChange.h"
 
 #include "au3wrap/iau3project.h"
@@ -88,9 +88,9 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
     return au4trackIds;
 }
 
-std::vector<au::trackedit::Track> Au3TrackeditProject::trackList() const
+au::trackedit::TrackList Au3TrackeditProject::trackList() const
 {
-    std::vector<au::trackedit::Track> au4tracks;
+    au::trackedit::TrackList au4tracks;
 
     for (const Au3Track* t : *m_impl->trackList) {
         Track au4t = DomConverter::track(t);
