@@ -4,15 +4,16 @@
 #pragma once
 
 #include "au3interactiontypes.h"
-#include "../../itrackeditinteraction.h"
+#include "au3changedetection.h"
 
-#include "modularity/ioc.h"
-#include "iinteractive.h"
-#include "context/iglobalcontext.h"
+#include "../../itrackeditinteraction.h"
 #include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 #include "../../itrackeditclipboard.h"
 #include "../../itrackeditconfiguration.h"
+#include "context/iglobalcontext.h"
+#include "iinteractive.h"
+#include "modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
 
@@ -170,6 +171,8 @@ private:
     void moveTrackTo(const TrackId trackId, int pos);
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
+
+    Au3ChangeDetection m_changeDetection;
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 

@@ -30,6 +30,8 @@
 #include "trackediterrors.h"
 #include "translation.h"
 
+#include "au3changedetection.h"
+
 using namespace au::trackedit;
 using namespace au::au3;
 
@@ -2285,12 +2287,13 @@ bool Au3Interaction::undo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
+    auto before = trackeditProject->buildTracksAndClips();
+
     projectHistory()->undo();
 
-    // Undo removes all tracks from current state and
-    // inserts tracks from the previous state so we need
-    // to reload whole model
-    trackeditProject->reload();
+    auto after = trackeditProject->buildTracksAndClips();
+
+    m_changeDetection.notifyOfUndoRedo(before, after);
 
     return true;
 }
@@ -2308,7 +2311,13 @@ bool Au3Interaction::redo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
+    auto before = trackeditProject->buildTracksAndClips();
+
     projectHistory()->redo();
+
+    auto after = trackeditProject->buildTracksAndClips();
+
+    m_changeDetection.notifyOfUndoRedo(before, after);
 
     // Redo removes all tracks from current state and
     // inserts tracks from the previous state so we need
