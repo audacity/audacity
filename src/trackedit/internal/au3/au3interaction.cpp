@@ -2293,7 +2293,7 @@ bool Au3Interaction::undo()
 
     TracksAndClips after = trackeditProject->buildTracksAndClips();
 
-    m_changeDetection.notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
 
     return true;
 }
@@ -2317,7 +2317,7 @@ bool Au3Interaction::redo()
 
     TracksAndClips after = trackeditProject->buildTracksAndClips();
 
-    m_changeDetection.notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
 
     return true;
 }

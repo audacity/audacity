@@ -26,18 +26,7 @@ class Au3ChangeDetectionTests : public ::testing::Test
 protected:
     void SetUp() override
     {
-        m_au3ChangeDetection = std::make_shared<Au3ChangeDetection>();
-
-        m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
-        m_au3ChangeDetection->globalContext.set(m_globalContext);
-
         m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
-        ON_CALL(*m_globalContext, currentTrackeditProject())
-        .WillByDefault(Return(m_trackEditProject));
-
-        m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
-        ON_CALL(*m_globalContext, currentProject())
-        .WillByDefault(Return(m_currentProject));
     }
 
     void TearDown() override
@@ -112,11 +101,6 @@ protected:
         }
     }
 
-    // The class tested.
-    std::shared_ptr<Au3ChangeDetection> m_au3ChangeDetection;
-
-    std::shared_ptr<context::GlobalContextMock> m_globalContext;
-    std::shared_ptr<project::AudacityProjectMock> m_currentProject;
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;
 };
 
@@ -138,7 +122,7 @@ TEST_F(Au3ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 ////////////////////////////////////////////////
@@ -163,7 +147,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
@@ -185,7 +169,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
@@ -207,7 +191,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
@@ -232,7 +216,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForReordering)
@@ -255,7 +239,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForReordering)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 ////////////////////////////////////////////////
@@ -278,7 +262,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingOne)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingTwo)
@@ -298,7 +282,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingTwo)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingOne)
@@ -317,7 +301,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingOne)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingTwo)
@@ -337,7 +321,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingTwo)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(2);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStartTime)
@@ -356,7 +340,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStartTime)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeEndTime)
@@ -375,7 +359,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeEndTime)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStereo)
@@ -394,7 +378,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStereo)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangePitch)
@@ -413,7 +397,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangePitch)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeSpeed)
@@ -432,7 +416,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeSpeed)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeGroup)
@@ -452,6 +436,6 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeGroup)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
 
-    m_au3ChangeDetection->notifyOfUndoRedo(before, after);
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 }

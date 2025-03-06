@@ -172,8 +172,6 @@ private:
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
-    Au3ChangeDetection m_changeDetection;
-
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
     muse::ProgressPtr m_progress;
