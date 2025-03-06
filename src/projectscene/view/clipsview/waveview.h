@@ -28,6 +28,7 @@ class WaveView : public QQuickPaintedItem
     Q_PROPERTY(bool isNearSample READ isNearSample WRITE setIsNearSample NOTIFY isNearSampleChanged FINAL)
     Q_PROPERTY(bool isStemPlot READ isStemPlot WRITE setIsStemPlot NOTIFY isStemPlotChanged FINAL)
     Q_PROPERTY(int currentChannel READ currentChannel WRITE setCurrentChannel FINAL)
+    Q_PROPERTY(bool isIsolationMode READ isIsolationMode WRITE setIsIsolationMode NOTIFY isIsolationModeChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::projectscene::IWavePainter> wavePainter;
@@ -55,11 +56,14 @@ public:
     void setIsStemPlot(bool isStemPlot);
     int currentChannel() const;
     void setCurrentChannel(int currentChannel);
+    bool isIsolationMode() const;
+    void setIsIsolationMode(bool isIsolationMode);
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
     Q_INVOKABLE void setLastClickPos(unsigned lastX, unsigned lastY, unsigned int x, const unsigned int y);
     Q_INVOKABLE void smoothLastClickPos(unsigned int x, const unsigned int y);
+    Q_INVOKABLE void setIsolatedPoint(unsigned int x, unsigned int y);
 
     void paint(QPainter* painter) override;
 
@@ -72,6 +76,7 @@ signals:
     void channelHeightRatioChanged();
     void isNearSampleChanged();
     void isStemPlotChanged();
+    void isIsolationModeChanged();
 
 private:
 
@@ -89,7 +94,9 @@ private:
     ClipTime m_clipTime;
     bool m_isNearSample = false;
     bool m_isStemPlot = false;
+    bool m_isIsolationMode = false;
 
     std::optional<int> m_currentChannel;
+    std::optional<QPoint> m_lastClickedPoint;
 };
 }

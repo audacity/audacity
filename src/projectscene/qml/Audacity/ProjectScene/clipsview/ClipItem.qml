@@ -86,6 +86,7 @@ Rectangle {
     property var lastSample: undefined
     property bool altPressed: false
     property bool isBrush: waveView.isStemPlot && root.altPressed
+    property bool isIsolationMode: false
     property alias isNearSample: waveView.isNearSample
     property alias currentChannel: waveView.currentChannel
     property alias leftTrimContainsMouse: leftTrimStretchEdgeHover.containsMouse
@@ -111,22 +112,15 @@ Rectangle {
     }
 
     function mousePressAndHold(x, y) {
-        if (!root.altPressed) {
-            waveView.setLastClickPos(x, y - header.height, x, y - header.height)
-        }
+        root.altPressed
+            ? waveView.smoothLastClickPos(x, y - header.height)
+            : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
         waveView.update()
     }
 
     function mouseReleased() {
         waveView.isNearSample = false
         waveView.onWaveViewPositionChanged(lastSample.x, lastSample.y)
-    }
-
-    function mouseClicked(x, y) {
-        root.altPressed
-            ? waveView.smoothLastClickPos(x, y - header.height)
-            : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
-        waveView.update()
     }
 
     function setLastSample(x, y) {
@@ -542,9 +536,13 @@ Rectangle {
 
             clipColor: root.clipColor
             clipSelected: root.clipSelected
+            isIsolationMode: root.isIsolationMode
 
             function onWaveViewPositionChanged(x, y) {
-                if (root.multiSampleEdit && !root.altPressed) {
+                if (waveView.isIsolationMode) {
+                    waveView.setIsolatedPoint(x,y)
+                    waveView.update()
+                } else if (root.multiSampleEdit && !root.altPressed) {
                     var lastX = root.lastSample.x
                     var lastY = root.lastSample.y
                     waveView.setLastClickPos(lastX, lastY, x, y)
@@ -569,6 +567,12 @@ Rectangle {
 
             onIsNearSampleChanged: {
                 if(root.isNearSample) {
+                    waveView.forceActiveFocus()
+                }
+            }
+
+            onIsIsolationModeChanged: {
+                if (waveView.isIsolationMode) {
                     waveView.forceActiveFocus()
                 }
             }

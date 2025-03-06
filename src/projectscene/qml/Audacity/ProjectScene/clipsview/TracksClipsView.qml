@@ -17,6 +17,7 @@ Rectangle {
     property bool tracksHovered: false
     property bool underSelection: false
     property bool altPressed: false
+    property bool ctrlPressed: false
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
@@ -131,11 +132,17 @@ Rectangle {
         if (event.key === Qt.Key_Alt) {
             root.altPressed = true
         }
+        else if (event.key === Qt.Key_Control) {
+            root.ctrlPressed = true
+        }
     }
 
     Keys.onReleased: (event) => {
         if (event.key === Qt.Key_Alt) {
             root.altPressed = false
+        }
+        else if (event.key === Qt.Key_Control) {
+            root.ctrlPressed = false
         }
     }
 
@@ -223,20 +230,20 @@ Rectangle {
 
     CustomCursor {
         id: customCursor
-        active: (content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
+        active: (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
             || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
         source: {
             if (content.isBrush) {
                 return smoothShape
             }
 
-            if (content.isNearSample) {
+            if (content.isNearSample || content.isIsolationMode) {
                 return pencilShape
             }
 
             return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
         }
-        size: !content.isBrush && content.isNearSample ? 36 : 26
+        size: content.isIsolationMode || (!content.isBrush && content.isNearSample) ? 36 : 26
     }
 
     Rectangle {
@@ -249,6 +256,7 @@ Rectangle {
         anchors.right: parent.right
 
         property bool isBrush: false
+        property bool isIsolationMode: false
         property bool isNearSample: false
         property bool leftTrimContainsMouse: false
         property bool rightTrimContainsMouse: false
@@ -459,6 +467,7 @@ Rectangle {
                     moveActive: tracksClipsView.moveActive
                     underSelection: root.underSelection
                     altPressed: root.altPressed
+                    ctrlPressed: root.ctrlPressed
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack
@@ -518,6 +527,12 @@ Rectangle {
                     onIsBrushChanged: function() {
                         content.isBrush = tracksClipsView.checkIfAnyTrack(function(track) {
                             return track.isBrush
+                        })
+                    }
+
+                    onIsIsolationModeChanged: function() {
+                        content.isIsolationMode = tracksClipsView.checkIfAnyTrack(function(track){
+                            return track.isIsolationMode
                         })
                     }
 
