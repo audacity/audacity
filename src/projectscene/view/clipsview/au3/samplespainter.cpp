@@ -84,7 +84,7 @@ void SamplesPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey,
     const bool dB = !settings.isLinear();
     const double trimLeft = waveClip->GetTrimLeft();
 
-    auto waveMetrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), clipKey, params);
+    auto waveMetrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), clipKey, params, true);
 
     for (size_t index = 0; index < waveClip->NChannels(); index++) {
         waveMetrics.height = channelHeight[index];
