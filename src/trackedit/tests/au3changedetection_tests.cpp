@@ -122,8 +122,8 @@ protected:
 
 TEST_F(Au3ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     //! The above are equal. No change notifications are expected.
 
@@ -147,8 +147,8 @@ TEST_F(Au3ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     addOneTrack(after, after.first.size());
 
@@ -168,8 +168,8 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     addOneTrack(after, after.first.size());
     addOneTrack(after, after.first.size());
@@ -190,8 +190,8 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.first.pop_back();
     after.second.pop_back();
@@ -212,8 +212,8 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.first.pop_back();
     after.second.pop_back();
@@ -237,8 +237,8 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
 
 TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForReordering)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     EXPECT_EQ(before.first.size(), after.first.size());
 
@@ -264,8 +264,8 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForReordering)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingOne)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     addClipToTrack(after, after.first.back().id, after.second.back().size());
 
@@ -283,8 +283,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingOne)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingTwo)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     addClipToTrack(after, after.first.front().id, after.second.front().size());
     addClipToTrack(after, after.first.back().id, after.second.back().size());
@@ -303,8 +303,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingTwo)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingOne)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.second.back().pop_back();
 
@@ -322,8 +322,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingOne)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingTwo)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.second.front().pop_back();
     after.second.back().pop_back();
@@ -342,8 +342,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingTwo)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStartTime)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.second.back().back().startTime += 200;
 
@@ -361,8 +361,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStartTime)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeEndTime)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.second.back().back().endTime += after.second.back().back().startTime + 200;
 
@@ -380,8 +380,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeEndTime)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStereo)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.second.back().back().stereo = !after.second.back().back().stereo;
 
@@ -399,8 +399,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStereo)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangePitch)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.second.back().back().pitch = 100;
 
@@ -418,8 +418,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangePitch)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeSpeed)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.second.back().back().speed = 10.0;
 
@@ -437,8 +437,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeSpeed)
 
 TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeGroup)
 {
-    auto before = buildTracksAndClips();
-    auto after = buildTracksAndClips();
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
 
     after.second.back().back().groupId = 2;
     after.second.back().front().groupId = 2;
