@@ -77,7 +77,7 @@ public:
       {
          S.SetBorder(8);
 
-         if (S.StartStatic(XO("Account")))
+         S.StartStatic(XO("Account"));
          {
             S.SetBorder(8);
             S.AddWindow(
@@ -95,17 +95,15 @@ public:
                XO("S&how 'How would you like to export?' dialog"),
                sync::ExportLocationMode.ReadEnum() ==
                   sync::CloudLocationMode::Ask);
-            if (checkBox)
-            {
-               checkBox->Bind(
-                  wxEVT_CHECKBOX,
-                  [this](auto& event)
-                  {
-                     sync::ExportLocationMode.WriteEnum(
-                        event.IsChecked() ? sync::CloudLocationMode::Ask :
-                                          sync::CloudLocationMode::Local);
-                  });
-            }
+
+            checkBox->Bind(
+               wxEVT_CHECKBOX,
+               [this](auto& event)
+               {
+                  sync::ExportLocationMode.WriteEnum(
+                     event.IsChecked() ? sync::CloudLocationMode::Ask :
+                                         sync::CloudLocationMode::Local);
+               });
          }
          S.EndStatic();
 
@@ -118,8 +116,6 @@ public:
 
             auto BindRadioButton = [](auto* button, auto mode)
             {
-               if (!button)
-                  return;
                button->Bind(
                   wxEVT_RADIOBUTTON,
                   [mode](auto& event)
@@ -159,11 +155,8 @@ public:
                S.SetStretchyCol(1);
 
                mCloudProjectsSavePath = S.TieTextBox(XXO("&Location:"), CloudProjectsSavePath, 30);
-               auto button = S.AddButton(XXO("&Browse..."));
-               if (button)
-               {
-                  button->Bind(wxEVT_BUTTON, [this](auto&) { Browse(); });
-               }
+               S.AddButton(XXO("&Browse..."))
+                  ->Bind(wxEVT_BUTTON, [this](auto&) { Browse(); });
             }
             S.EndMultiColumn();
 

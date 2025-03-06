@@ -100,9 +100,7 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
             wxT("%s"), XO("our Privacy Policy"),
             "https://www.audacityteam.org/desktop-privacy-notice/");
 
-         if (S.GetMode() == eIsCreating)
-            privacyPolicy.Populate(S);
-
+         privacyPolicy.Populate(S);
          S.AddSpace(10);
       }
       S.EndVerticalLay();
@@ -137,8 +135,7 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
             wxT("%s"), XO("our Privacy Policy"),
             "https://www.audacityteam.org/desktop-privacy-notice/");
 
-         if (S.GetMode() == eIsCreating)
-            privacyPolicy.Populate(S);
+         privacyPolicy.Populate(S);
 
          S.AddSpace(10);
       }
