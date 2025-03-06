@@ -13,7 +13,6 @@
 
 struct TrackListEvent;
 namespace au::trackedit {
-
 class Au3TrackeditProject : public ITrackeditProject
 {
     muse::Inject<trackedit::IProjectHistory> projectHistory;
