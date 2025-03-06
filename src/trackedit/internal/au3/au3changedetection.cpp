@@ -1,5 +1,9 @@
 #include "au3changedetection.h"
 
+#include "log.h"
+
+using namespace au::trackedit;
+
 namespace {
 /**
  * @tparam TYPE The type of object that is being compared between the lists,
@@ -18,8 +22,8 @@ namespace {
 template<typename TYPE>
 void notifier(const std::vector<TYPE>& longestList,
               const std::vector<TYPE>& shortestList,
-              std::function<void(TYPE item, int)> notification,
-              std::function<bool(const TYPE& first, const TYPE& second)> comparison)
+              const std::function<void(TYPE item, int)>& notification,
+              const std::function<bool(const TYPE& first, const TYPE& second)>& comparison)
 {
     for (int i = 0; i < shortestList.size(); i++) {
         bool found = false;
@@ -35,29 +39,18 @@ void notifier(const std::vector<TYPE>& longestList,
         }
     }
 }
-}  // namespace
 
-void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& before, const TracksAndClips& after)
+/**
+     * Searches for, and notifies of, Tracks changes
+     * @param before a vector of Tracks before the change
+     * @param after a vector of Tracks after the change
+     * @param trackeditProject a TrackEditProjectPtr expected to be valid
+     * @return true if a change has been detected and notified.
+     */
+bool _forTracks(const TrackList& before,
+                const TrackList& after,
+                au::trackedit::ITrackeditProjectPtr trackeditProject)
 {
-    const TrackList& tracksBefore = before.first;
-    const TrackList& tracksAfter = after.first;
-
-    //! Track changes:
-    bool changed = _forTracks(tracksBefore, tracksAfter);
-
-    //! It cannot be that both clips AND tracks were changed in the same undo/redo action.
-    if (changed) {
-        return;
-    }
-
-    //! Clip changes:
-    _forClips(before.second, after.second);
-}
-
-bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore, const TrackList& tracksAfter)
-{
-    ITrackeditProjectPtr trackeditProjectPtr = globalContext()->currentTrackeditProject();
-
     bool changed = false;
 
     auto trackComparison = [](const Track& first, const Track& second) {
@@ -70,29 +63,29 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
         // first.color == second.color;
     };
 
-    if (tracksBefore.size() < tracksAfter.size()) {
+    if (before.size() < after.size()) {
         //! Before is smaller than after. Something had been deleted. Find and notify that it's added.
 
-        notifier<Track>(tracksBefore,
-                        tracksAfter,
+        notifier<Track>(before,
+                        after,
                         [&](Track track, int index) {
-            trackeditProjectPtr->trackInserted().send(std::move(track), index);
+            trackeditProject->trackInserted().send(std::move(track), index);
         },
                         trackComparison);
 
         changed = true;
-    } else if (tracksBefore.size() > tracksAfter.size()) {
+    } else if (before.size() > after.size()) {
         //! After is smaller than before. Something had been added. Find and notify that it's removed.
 
-        notifier<Track>(tracksAfter,
-                        tracksBefore,
+        notifier<Track>(after,
+                        before,
                         [&](Track track, int) {
-            trackeditProjectPtr->trackRemoved().send(std::move(track));
+            trackeditProject->trackRemoved().send(std::move(track));
         },
                         trackComparison);
 
         changed = true;
-    } else if (tracksBefore.size() == tracksAfter.size()) {
+    } else if (before.size() == after.size()) {
         //! Reordering is a problem:
         //  We can only detect that tracks are out of order, we cannot detect which have moved.
         //  Imagine moving the first track to last.
@@ -102,11 +95,11 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
         // TODO: We could try to devise an algorithm that finds the minimal difference between the lists.
         //       Later.
 
-        for (int i = 0; i < tracksBefore.size(); i++) {
-            const Track& trackBefore = tracksBefore[i];
-            const Track& trackAfter = tracksAfter[i];
+        for (int i = 0; i < before.size(); i++) {
+            const Track& trackBefore = before[i];
+            const Track& trackAfter = after[i];
             if (trackBefore.id != trackAfter.id) {
-                trackeditProjectPtr->reload();
+                trackeditProject->reload();
 
                 //! We've reloaded after detecting reordering!
                 //  So there's no need to carry on with trying to detect minor changes.
@@ -118,11 +111,11 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
         //  I don't see "autosave" calls being triggered for any such changes currently.
         //  BUT we have discussed implementing that,
         //  after which trackComparison will compare more than only the ID.
-        for (int i = 0; i < tracksBefore.size(); i++) {
-            const Track& trackBefore = tracksBefore[i];
-            const Track& trackAfter = tracksAfter[i];
+        for (int i = 0; i < before.size(); i++) {
+            const Track& trackBefore = before[i];
+            const Track& trackAfter = after[i];
             if (!trackComparison(trackBefore, trackAfter)) {
-                trackeditProjectPtr->trackChanged().send(trackBefore);
+                trackeditProject->trackChanged().send(trackBefore);
                 changed = true;
             }
         }
@@ -131,10 +124,17 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
     return changed;
 }
 
-void au::trackedit::Au3ChangeDetection::_forClips(const std::vector<Clips>& before, const std::vector<Clips>& after)
+/**
+ * Searches for, and notifies of, clip changes.
+ * Note that the two lists passed need to have equal length.
+ * @param before a vector of Clips lists before the change
+ * @param after a vector of Clips lists after the change
+ * @param trackeditProjectPtr a TrackEditProjectPtr expected to be valid
+ */
+void _forClips(const std::vector<Clips>& before,
+               const std::vector<Clips>& after,
+               ITrackeditProjectPtr trackeditProjectPtr)
 {
-    ITrackeditProjectPtr trackeditProjectPtr = globalContext()->currentTrackeditProject();
-
     IF_ASSERT_FAILED(before.size() == after.size()) {
         return;
     }
@@ -197,4 +197,26 @@ void au::trackedit::Au3ChangeDetection::_forClips(const std::vector<Clips>& befo
             }
         }
     }
+}
+}  // namespace
+
+namespace au::trackedit::changeDetection {
+void notifyOfUndoRedo(const TracksAndClips& before,
+                      const TracksAndClips& after,
+                      ITrackeditProjectPtr trackeditProject)
+{
+    const TrackList& tracksBefore = before.first;
+    const TrackList& tracksAfter = after.first;
+
+    //! Track changes:
+    bool changed = _forTracks(tracksBefore, tracksAfter, trackeditProject);
+
+    //! It cannot be that both clips AND tracks were changed in the same undo/redo action.
+    if (changed) {
+        return;
+    }
+
+    //! Clip changes:
+    _forClips(before.second, after.second, trackeditProject);
+}
 }
