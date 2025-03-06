@@ -192,7 +192,7 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     muse::async::NotifyList<au::trackedit::Clip> clipNotifyList;
 
     clipNotifyList.reserve(clips.size());
-    for (auto& clip : clips) {
+    for (Clip& clip : clips) {
         clipNotifyList.push_back(std::move(clip));
     }
 
@@ -365,7 +365,7 @@ TracksAndClips Au3TrackeditProject::buildTracksAndClips()
 
     newCache.first = std::move(trackList());
 
-    for (const auto& track : newCache.first) {
+    for (const Track& track : newCache.first) {
         trackedit::Clips clips = getClips(track.id);
         newCache.second.push_back(std::move(clips));
     }
