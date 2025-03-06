@@ -33,6 +33,12 @@
 #include "toolbars/ToolManager.h"
 #include "widgets/AButton.h"
 
+#if !defined(__linux__)
+#define ADD_MUSEHUB_BUTTON 1
+#else
+#define ADD_MUSEHUB_BUTTON 0
+#endif
+
 IMPLEMENT_CLASS(audacity::cloud::ShareAudioToolbar, ToolBar);
 
 namespace audacity::cloud
@@ -108,7 +114,9 @@ void ShareAudioToolbar::Populate()
    MakeButtonBackgroundsSmall();
    SetBackgroundColour(theTheme.Colour(clrMedium));
    MakeShareAudioButton();
+#if ADD_MUSEHUB_BUTTON
    MakeGetEffectsButton();
+#endif
 
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
@@ -157,7 +165,11 @@ void ShareAudioToolbar::ReCreateButtons()
 
 AButton* ShareAudioToolbar::MakeButton(int id, const TranslatableString& label, const wxImage& icon)
 {
+#if ADD_MUSEHUB_BUTTON
    const auto height = 25;
+#else
+   const auto height = (toolbarSingle - toolbarMargin) * 2;
+#endif
 
    auto button = safenew AButton(this, id);
    button->SetLabel(label);
@@ -183,6 +195,10 @@ void ShareAudioToolbar::MakeShareAudioButton()
 {
    mShareAudioButton = MakeButton(ID_SHARE_AUDIO_BUTTON, XO("Share Audio"), theTheme.Image(bmpShareAudio));
 
+#if !ADD_MUSEHUB_BUTTON
+   mShareAudioButton->SetButtonType(AButton::FrameTextVButton);
+#endif
+
    mShareAudioButton->Bind(wxEVT_BUTTON, [this](auto) {
       audiocom::ShareAudioDialog dlg(
          mProject, AudiocomTrace::ShareAudioButton,
@@ -205,18 +221,23 @@ void ShareAudioToolbar::MakeGetEffectsButton()
       });
 
 }
-
 void ShareAudioToolbar::ArrangeButtons()
 {
-
+#if ADD_MUSEHUB_BUTTON
    wxGridSizer *sizer = new wxGridSizer(2, 1, toolbarSpacing, toolbarSpacing);
    Add(sizer, 0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
 
    sizer->Add(mShareAudioButton, 0, wxEXPAND);
    sizer->Add(mGetEffectsButton, 0, wxEXPAND);
+   sizer->Layout();
+#else
+   Add(mShareAudioButton, 0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
+
+   SetMinSize({ std::max(76, GetSizer()->GetMinSize().GetWidth()), -1 });
+   SetMaxSize({ -1, -1 });
+#endif
 
    // Layout the toolbar
-   sizer->Layout();
    Layout();
 }
 
