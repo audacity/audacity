@@ -40,9 +40,11 @@ void TracksListClipsModel::load()
             return;
         }
 
-        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
-        emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole });
-        emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
+        QModelIndex beginIndex = index(0);
+        QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
+
+        emit dataChanged(beginIndex, lastIndex, { IsTrackSelectedRole });
+        emit dataChanged(beginIndex, lastIndex, { IsDataSelectedRole });
     });
 
     selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeys) {
