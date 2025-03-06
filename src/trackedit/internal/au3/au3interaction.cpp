@@ -2171,11 +2171,11 @@ bool Au3Interaction::undo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    auto before = trackeditProject->buildTracksAndClips();
+    TracksAndClips before = trackeditProject->buildTracksAndClips();
 
     projectHistory()->undo();
 
-    auto after = trackeditProject->buildTracksAndClips();
+    TracksAndClips after = trackeditProject->buildTracksAndClips();
 
     m_changeDetection.notifyOfUndoRedo(before, after);
 
@@ -2195,11 +2195,11 @@ bool Au3Interaction::redo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    auto before = trackeditProject->buildTracksAndClips();
+    TracksAndClips before = trackeditProject->buildTracksAndClips();
 
     projectHistory()->redo();
 
-    auto after = trackeditProject->buildTracksAndClips();
+    TracksAndClips after = trackeditProject->buildTracksAndClips();
 
     m_changeDetection.notifyOfUndoRedo(before, after);
 

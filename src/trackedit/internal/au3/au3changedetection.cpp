@@ -39,8 +39,8 @@ void notifier(const std::vector<TYPE>& longestList,
 
 void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& before, const TracksAndClips& after)
 {
-    auto& tracksBefore = before.first;
-    auto& tracksAfter = after.first;
+    const TrackList& tracksBefore = before.first;
+    const TrackList& tracksAfter = after.first;
 
     //! Track changes:
     bool changed = _forTracks(tracksBefore, tracksAfter);
@@ -56,7 +56,7 @@ void au::trackedit::Au3ChangeDetection::notifyOfUndoRedo(const TracksAndClips& b
 
 bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore, const TrackList& tracksAfter)
 {
-    auto trackeditProjectPtr = globalContext()->currentTrackeditProject();
+    ITrackeditProjectPtr trackeditProjectPtr = globalContext()->currentTrackeditProject();
 
     bool changed = false;
 
@@ -99,12 +99,12 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
         //  All tracks in the project will be flagged as out of order.
         //  So for now we just reload as before.
 
-        // TODO: I could try to devise an algorithm that finds the minimal difference between the lists.
+        // TODO: We could try to devise an algorithm that finds the minimal difference between the lists.
         //       Later.
 
         for (int i = 0; i < tracksBefore.size(); i++) {
-            auto& trackBefore = tracksBefore[i];
-            auto& trackAfter = tracksAfter[i];
+            const Track& trackBefore = tracksBefore[i];
+            const Track& trackAfter = tracksAfter[i];
             if (trackBefore.id != trackAfter.id) {
                 trackeditProjectPtr->reload();
 
@@ -119,8 +119,8 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
         //  BUT we have discussed implementing that,
         //  after which trackComparison will compare more than only the ID.
         for (int i = 0; i < tracksBefore.size(); i++) {
-            auto& trackBefore = tracksBefore[i];
-            auto& trackAfter = tracksAfter[i];
+            const Track& trackBefore = tracksBefore[i];
+            const Track& trackAfter = tracksAfter[i];
             if (!trackComparison(trackBefore, trackAfter)) {
                 trackeditProjectPtr->trackChanged().send(trackBefore);
                 changed = true;
@@ -133,15 +133,15 @@ bool au::trackedit::Au3ChangeDetection::_forTracks(const TrackList& tracksBefore
 
 void au::trackedit::Au3ChangeDetection::_forClips(const std::vector<Clips>& before, const std::vector<Clips>& after)
 {
-    auto trackeditProjectPtr = globalContext()->currentTrackeditProject();
+    ITrackeditProjectPtr trackeditProjectPtr = globalContext()->currentTrackeditProject();
 
     IF_ASSERT_FAILED(before.size() == after.size()) {
         return;
     }
 
     for (int i = 0; i < before.size(); i++) {
-        auto& clipsBefore = before[i];
-        auto& clipsAfter = after[i];
+        const Clips& clipsBefore = before[i];
+        const Clips& clipsAfter = after[i];
 
         if (clipsBefore.size() < clipsAfter.size()) {
             //! Before is smaller than after. Something had been deleted. Find and notify that it's added.
@@ -188,8 +188,8 @@ void au::trackedit::Au3ChangeDetection::_forClips(const std::vector<Clips>& befo
             };
 
             for (int c = 0; c < clipsBefore.size(); c++) {
-                auto& clipBefore = clipsBefore[c];
-                auto& clipAfter = clipsAfter[c];
+                const Clip& clipBefore = clipsBefore[c];
+                const Clip& clipAfter = clipsAfter[c];
 
                 if (!clipComparison(clipBefore, clipAfter)) {
                     trackeditProjectPtr->notifyAboutClipChanged(clipAfter);
