@@ -39,6 +39,7 @@
 
 static const char* prefsUpdateScheduledTime = "/Update/UpdateScheduledTime";
 static BoolSetting prefUpdatesNoticeShown(wxT("/Update/UpdateNoticeShown"), false);
+static StringSetting AudioComUserId { L"/cloud/audiocom/userId", "" };
 
 using Clock = std::chrono::system_clock;
 using TimePoint = Clock::time_point;
@@ -329,18 +330,24 @@ bool UpdateManager::IsTimeForUpdatesChecking()
 std::string UpdateManager::GetUpdatesUrl() const
 {
    #if AUDACITY_BUILD_LEVEL == 0
-   const std::string url = "https://updates.audacityteam.org/builds/alpha.xml";
+      std::string url = "https://updates.audacityteam.org/builds/alpha.xml";
    #elif AUDACITY_BUILD_LEVEL == 1
-      const std::string url = "https://updates.audacityteam.org/builds/beta.xml";
+      std::string url = "https://updates.audacityteam.org/builds/beta.xml";
    #else
-      const std::string url = "https://updates.audacityteam.org/feed/latest.xml";
+      std::string url = "https://updates.audacityteam.org/feed/latest.xml";
    #endif
 
    if (SendAnonymousUsageInfo->Read())
    {
-      return url + "?audacity-instance-id=" + InstanceId->Read().ToStdString();
+      url += "?audacity-instance-id=" + InstanceId->Read().ToStdString();
+
+      if (!AudioComUserId.Read().IsEmpty())
+      {
+         url += "&user_id=" + AudioComUserId.Read().ToStdString();
+      }
    }
-   else return url;
+
+   return url;
 }
 
 std::string UpdateManager::GetOptOutUrl() const {
