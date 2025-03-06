@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-02-13 19:07+0300\n"
+"POT-Creation-Date: 2025-03-06 23:50+0300\n"
 "PO-Revision-Date: 2025-02-13 17:55+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
@@ -246,12 +246,8 @@ msgid "Out of memory!"
 msgstr "არასაკმარისი მეხსიერება!"
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too high."
-msgstr ""
-"ავტომატური ჩაწერის დონის გამართვა გაჩერდა. მეტად ოპტიმიზირება შეუძლებელი "
-"იყო. ჯერ კიდევ ძალიან მაღალია."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr "ავტომატური ჩაწერის დონის გამართვა გაჩერდა. მეტად ოპტიმიზირება შეუძლებელი იყო. ჯერ კიდევ ძალიან მაღალია."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
@@ -259,12 +255,8 @@ msgid "Automated Recording Level Adjustment decreased the volume to %f."
 msgstr "ავტომატური ჩაწერის დონის გამართვამ ხმას აუწია %f-მდე."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too low."
-msgstr ""
-"ავტომატური ჩაწერის დონის გამართვა გაჩერდა. მეტად ოპტიმიზირება შეუძლებელი "
-"იყო. ჯერ კიდევ ძალიან დაბალია."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr "ავტომატური ჩაწერის დონის გამართვა გაჩერდა. მეტად ოპტიმიზირება შეუძლებელი იყო. ჯერ კიდევ ძალიან დაბალია."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
@@ -272,26 +264,16 @@ msgid "Automated Recording Level Adjustment increased the volume to %.2f."
 msgstr "ავტომატური ჩაწერის დონის გამართვამ ხმას დაუწია %.2f-მდე."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
-"ავტომატური ჩაწერის დონის გამართვა გაჩერდა. ანალიზების ჯამური რიცხვი უფრო "
-"დიდია, ვიდრე ეს შეიძლება მისაღები იყოს. ჯერ კიდევ ძალიან მაღალია."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
+msgstr "ავტომატური ჩაწერის დონის გამართვა გაჩერდა. ანალიზების ჯამური რიცხვი უფრო დიდია, ვიდრე ეს შეიძლება მისაღები იყოს. ჯერ კიდევ ძალიან მაღალია."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
-"ავტომატური ჩაწერის დონის გამართვა გაჩერდა. ანალიზების ჯამური რიცხვი უფრო "
-"დიდია, ვიდრე ეს შეიძლება მისაღები იყოს. კერ კიდევ ძალიან დაბალია."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
+msgstr "ავტომატური ჩაწერის დონის გამართვა გაჩერდა. ანალიზების ჯამური რიცხვი უფრო დიდია, ვიდრე ეს შეიძლება მისაღები იყოს. კერ კიდევ ძალიან დაბალია."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
-msgid ""
-"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
-"volume."
+msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
 msgstr "ავტომატური ჩაწერის დონის გამართვა გაჩერდა %.2f მისაღები რიცხვია."
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
@@ -412,34 +394,22 @@ msgid "Auto Duck"
 msgstr "ავტო დაკინგი"
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid ""
-"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
-"specified \"control\" track reaches a particular level"
-msgstr ""
-"ამცირებს(დაკავს) ერთი ან რამდენიმე ტრეკის ხმას მაშინ, როცა \"საკონტროლო\" "
-"ბილიკი გარკვეულ დონეს მიაღწევს"
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "ამცირებს(დაკავს) ერთი ან რამდენიმე ტრეკის ხმას მაშინ, როცა \"საკონტროლო\" ბილიკი გარკვეულ დონეს მიაღწევს"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
 #. sound on another track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid ""
-"You selected a track which does not contain audio. AutoDuck can only process "
-"audio tracks."
-msgstr ""
-"მონიშნული გაქვთ ტრეკი, რომელიც არ შეიცავს აუდიოს. AutoDuck-ს მხოლოდ ტრეკის "
-"დამუშავება შეუძლია."
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "მონიშნული გაქვთ ტრეკი, რომელიც არ შეიცავს აუდიოს. AutoDuck-ს მხოლოდ ტრეკის დამუშავება შეუძლია."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
 #. the volume) of the audio automatically when there is sound on another
 #. track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid ""
-"Auto Duck needs a control track which must be placed below the selected "
-"track(s)."
-msgstr ""
-"Auto Duck სჭირდება საკონტროლო ტრეკი, რომელიც მოთავსებული უნდა იყოს მონიშნული "
-"ტრეკ(ებ)ის ქვემოთ."
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Auto Duck სჭირდება საკონტროლო ტრეკი, რომელიც მოთავსებული უნდა იყოს მონიშნული ტრეკ(ებ)ის ქვემოთ."
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
@@ -672,9 +642,7 @@ msgid "DTMF Tones"
 msgstr "DTMF ტონები"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
-msgid ""
-"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
-"keypad on telephones"
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
 msgstr ""
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
@@ -742,8 +710,7 @@ msgid "Treble Cut"
 msgstr "მაღალი სიხშირეების მოჭრა"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
-msgid ""
-"To apply Equalization, all selected tracks must have the same sample rate."
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
 msgstr ""
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
@@ -922,8 +889,7 @@ msgstr "ხმაურის შემცირება"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr ""
-"ფონის ისეთი ხმაურების წაშლა, როგორიცაა ვენტილატორების, ლენტის და ზუზუნის ხმა"
+msgstr "ფონის ისეთი ხმაურების წაშლა, როგორიცაა ვენტილატორების, ლენტის და ზუზუნის ხმა"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Steps per block are too few for the window types."
@@ -950,9 +916,7 @@ msgid "All noise profile data must have the same sample rate."
 msgstr "ყველა ტრეკს სემპლის თანაბარი სიჩქარე უნდა გააჩნდეს."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
-msgid ""
-"The sample rate of the noise profile must match that of the sound to be "
-"processed."
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
 msgstr ""
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
@@ -1016,9 +980,7 @@ msgstr "Paulstretch"
 
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr ""
-"Paulstretch მხოლოდ დროის ექსტრემალურად გაწელვისთვის ან \"შტაზის\" "
-"ეფექტისთვისაა"
+msgstr "Paulstretch მხოლოდ დროის ექსტრემალურად გაწელვისთვის ან \"შტაზის\" ეფექტისთვისაა"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the
 #. Paulstretch effect.
@@ -1063,27 +1025,19 @@ msgid "Combines phase-shifted signals with the original signal"
 msgstr ""
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
-msgid ""
-"To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr ""
-"სპექტრის აგებისთვის ყველა მონიშნული ტრეკს უნდა ჰქონდეს სემპლის თანაბარი "
-"სიჩქარე."
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "სპექტრის აგებისთვის ყველა მონიშნული ტრეკს უნდა ჰქონდეს სემპლის თანაბარი სიჩქარე."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched or pitch-shifted "
-"clip.\n"
-"Try resetting any stretched clips, or mixing and rendering the tracks before "
-"analyzing"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
+"Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 #, c-format
-msgid ""
-"Too much audio was selected. Only the first %.1f seconds of audio will be "
-"analyzed."
-msgstr ""
-"მონიშნული იყო ზედმეტი აუდიო. მოხდება მხოლოდ პირველი %.1f წამის ანალიზი."
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "მონიშნული იყო ზედმეტი აუდიო. მოხდება მხოლოდ პირველი %.1f წამის ანალიზი."
 
 #: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
@@ -1099,13 +1053,11 @@ msgstr ""
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid ""
-"The Repair effect is intended to be used on very short sections of damaged "
-"audio (up to 128 samples).\n"
+"The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n"
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"აღდგენის ეფექტი გათვალისწინებულია დაზიანებული აუდიოს ძალზე მცირე "
-"მონაკვეთებზე (128 ნიმუშამდე).\n"
+"აღდგენის ეფექტი გათვალისწინებულია დაზიანებული აუდიოს ძალზე მცირე მონაკვეთებზე (128 ნიმუშამდე).\n"
 "\n"
 "გაადიდეთ და მონიშნეთ წამის მცირე ფრაქცია აღსადგენად."
 
@@ -1119,8 +1071,7 @@ msgid ""
 msgstr ""
 "აღდგენა მუშაობს მონიშვნის არეს გარეთა უდიო მონაცემების გამოყენებით.\n"
 "\n"
-"გთხოვთ მონიშნოთ არე, რომელსაც გააჩნია აუდიოს შეხება ერთი მისი ერთი გვერდით "
-"მაინც.\n"
+"გთხოვთ მონიშნოთ არე, რომელსაც გააჩნია აუდიოს შეხება ერთი მისი ერთი გვერდით მაინც.\n"
 "\n"
 "რაც მეტია მოცულობითი აუდიო, მით უკეთ მუშაობს."
 
@@ -1363,15 +1314,11 @@ msgid "Truncate Silence"
 msgstr "სიჩუმის ამოჭრა"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-msgid ""
-"Automatically reduces the length of passages where the volume is below a "
-"specified level"
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
 msgstr ""
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-msgid ""
-"When truncating independently, there may only be one selected audio track in "
-"each Sync-Locked Track Group."
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
 msgstr ""
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
@@ -1380,9 +1327,7 @@ msgid "Wahwah"
 msgstr "Wahwah"
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
-msgid ""
-"Rapid tone quality variations, like that guitar sound so popular in the "
-"1970's"
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
 msgstr ""
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
@@ -1610,8 +1555,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"%s: ქვემო პარამეტრების ჩატვირთვის შეცდომა. გამოყენებული იქნება ნაგულისხმები "
-"მნიშვნელობები.\n"
+"%s: ქვემო პარამეტრების ჩატვირთვის შეცდომა. გამოყენებული იქნება ნაგულისხმები მნიშვნელობები.\n"
 "\n"
 "%s"
 
@@ -1738,9 +1682,7 @@ msgstr "Audacity-მა ვერ შეძლო ფაილის წაი�
 #: libraries/lib-files/FileException.cpp
 #, c-format
 msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr ""
-"Audacity-მა წარმატებით ჩაწერა ფაილი %s, მაგრამ სახელის გადარქმევა %sმდე არ "
-"ხერხდება."
+msgstr "Audacity-მა წარმატებით ჩაწერა ფაილი %s, მაგრამ სახელის გადარქმევა %sმდე არ ხერხდება."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -1919,16 +1861,12 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is a playlist file. \n"
-"Audacity cannot open this file because it only contains links to other "
-"files. \n"
-"You may be able to open it in a text editor and download the actual audio "
-"files."
+"Audacity cannot open this file because it only contains links to other files. \n"
+"You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
 "\"%s\" რეპერტუარის ფაილია \n"
-"Audacity-ს არ შეუძლია ამ ფაილია გახსნა, რადგან ის შეიცავს მხოლოდ ბმულებს "
-"სხვა ფაილებზე. \n"
-"მისი გახსნა შეგიძლიათ ტექსტურ რედაქტორში და შემდეგ რეალური აუდიო ფაილების "
-"ჩამოტვირთვა."
+"Audacity-ს არ შეუძლია ამ ფაილია გახსნა, რადგან ის შეიცავს მხოლოდ ბმულებს სხვა ფაილებზე. \n"
+"მისი გახსნა შეგიძლიათ ტექსტურ რედაქტორში და შემდეგ რეალური აუდიო ფაილების ჩამოტვირთვა."
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1947,16 +1885,12 @@ msgstr ""
 #, c-format
 msgid ""
 "\"%s\" is an Advanced Audio Coding file.\n"
-"Without the optional FFmpeg library, Audacity cannot open this type of "
-"file.\n"
-"Otherwise, you need to convert it to a supported audio format, such as WAV "
-"or AIFF."
+"Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
+"Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" არის აუდიო კოდირების მოწინავე პროგრამა.\n"
-"არასავალდებულო FFmpeg ბიბლიოთეკის გარეშე, Audacity ვერ გახსნის ამ ტიპის "
-"ფაილს.\n"
-"წინააღმდეგ შემთხვევაში, თქვენ უნდა გადაიყვანოთ იგი მხარდაჭერილ აუდიო "
-"ფორმატში, მაგალითად WAV ან AIFF."
+"არასავალდებულო FFmpeg ბიბლიოთეკის გარეშე, Audacity ვერ გახსნის ამ ტიპის ფაილს.\n"
+"წინააღმდეგ შემთხვევაში, თქვენ უნდა გადაიყვანოთ იგი მხარდაჭერილ აუდიო ფორმატში, მაგალითად WAV ან AIFF."
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -2007,15 +1941,13 @@ msgid ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported "
-"audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
 "\"%s\" is a Musepack audio file. \n"
 "Audacity cannot open this type of file. \n"
 "If you think it might be an mp3 file, rename it to end with \".mp3\" \n"
-"and try importing it again. Otherwise you need to convert it to a supported "
-"audio \n"
+"and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 
 #. i18n-hint: %s will be the filename
@@ -3091,8 +3023,7 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist-მა ცარიელი აუდიო დააბრუნა.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-msgid ""
-"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
 msgstr ""
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
@@ -3294,9 +3225,7 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
-msgid ""
-"This project was created using an older Audacity version. Once saved, the "
-"project can only be opened with Audacity version %s or newer."
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
 msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -3310,8 +3239,7 @@ msgstr "პროექტის ფაილის ინიციალიზ�
 #. i18n-hint: An error message.  Don't translate inset or blockids.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to add 'inset' function (can't verify blockids)"
-msgstr ""
-"ჩამატების ფუნქციის დამატების შეცდომა (შეუძლებელია blockid-ების შემოწმება)"
+msgstr "ჩამატების ფუნქციის დამატების შეცდომა (შეუძლებელია blockid-ების შემოწმება)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -3481,12 +3409,10 @@ msgstr "(აღდგენილია)"
 #, c-format
 msgid ""
 "This file was saved using Audacity %s.\n"
-"You are using Audacity %s. You may need to upgrade to a newer version to "
-"open this file."
+"You are using Audacity %s. You may need to upgrade to a newer version to open this file."
 msgstr ""
 "ფაილი შენახულია Audacity %s-ის მიერ.\n"
-"იყენებთ Audacity-ის ვერსიას %s. შეიძლება, ფაილის გასახსნელად, ვერსიის აწევა "
-"დაგჭირდეთ."
+"იყენებთ Audacity-ის ვერსიას %s. შეიძლება, ფაილის გასახსნელად, ვერსიის აწევა დაგჭირდეთ."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Can't open project file"
@@ -3505,12 +3431,8 @@ msgid "Unable to parse project information."
 msgstr "პროექტის მონაცემების ანალიზის შეცდომა."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-msgid ""
-"The project's database failed to reopen, possibly because of limited space "
-"on the storage device."
-msgstr ""
-"პროექტის ბაზის თავიდან გახსნა ჩავარდა. შეიძლება იმიტომ, რომ დისკზე ადგილი "
-"აღარაა."
+msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
+msgstr "პროექტის ბაზის თავიდან გახსნა ჩავარდა. შეიძლება იმიტომ, რომ დისკზე ადგილი აღარაა."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Saving project"
@@ -3593,8 +3515,7 @@ msgstr ""
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
 msgstr ""
 
 #: libraries/lib-registries/Registry.cpp
@@ -4419,8 +4340,7 @@ msgstr "აქ"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Would you like to send a report to help us fix this issue?"
-msgstr ""
-"გნებავთ დაგვეხმაროთ ამ შეცდომის გასწორებაში ანგარიშის გამოგზავნის საშუალებით?"
+msgstr "გნებავთ დაგვეხმაროთ ამ შეცდომის გასწორებაში ანგარიშის გამოგზავნის საშუალებით?"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 #, c-format
@@ -4546,27 +4466,15 @@ msgid "No Local Help"
 msgstr "ლოკალური დახმარების გარეშე"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and "
-"WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional [[https://support."
-"audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
 msgstr ""
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"You can also read our help on importing [[https://manual.audacityteam.org/"
-"man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://"
-"manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio "
-"CDs]]."
+msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
 msgstr ""
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
-"download the Manual]].<br><br>To always view the Manual online, change "
-"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
 
 #: libraries/lib-wx-init/LogWindow.cpp
@@ -4663,8 +4571,7 @@ msgid "Confirm Close"
 msgstr "დახურვის დასტური"
 
 #: libraries/lib-wx-init/SelectFile.cpp
-msgid ""
-"The specified filename could not be converted due to Unicode character use."
+msgid "The specified filename could not be converted due to Unicode character use."
 msgstr ""
 
 #: libraries/lib-wx-init/SelectFile.cpp
@@ -4810,15 +4717,11 @@ msgid "Invalid project 'rate' attribute."
 msgstr "პროექტის არასწორი ატრიბუტი 'rate'."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-msgid ""
-"MIDI tracks found in project file, but this build of Audacity does not "
-"include MIDI support, bypassing track."
+msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr ""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-msgid ""
-"The active project already has a time track and one was encountered in the "
-"project being imported, bypassing imported time track."
+msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
 msgstr ""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
@@ -4925,9 +4828,7 @@ msgstr "გამონატანის ჩვენება"
 #. in the program as a format string.  Keep %f unchanged.
 #: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
-msgid ""
-"Data will be piped to standard in. \"%f\" uses the file name in the export "
-"window."
+msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr ""
 
 #: modules/import-export/mod-cl/ExportCL.cpp
@@ -5131,8 +5032,7 @@ msgstr "მიმდინარე კოდეკი:"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
-msgstr ""
-"FFmpeg : შეცდომა - ფორმატის აღწერის დადგენის შეცდომა ფაილისთვის \"%s\"."
+msgstr "FFmpeg : შეცდომა - ფორმატის აღწერის დადგენის შეცდომა ფაილისთვის \"%s\"."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
@@ -5141,25 +5041,17 @@ msgstr "FFmpeg : ERROR - Can't allocate output format context."
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr ""
-"FFmpeg : შეცდომა - გამოტანის ფაილისთვის \"%s\" აუდიო ნაკადის დამატების "
-"შეცდომა."
+msgstr "FFmpeg : შეცდომა - გამოტანის ფაილისთვის \"%s\" აუდიო ნაკადის დამატების შეცდომა."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr ""
-"FFmpeg : შეცდომა -გამოსატანი ფაილის \"%s\" ჩასაწერად გახსნა შეუძლებელია. "
-"შეცდომის კოდია %d."
+msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
+msgstr "FFmpeg : შეცდომა -გამოსატანი ფაილის \"%s\" ჩასაწერად გახსნა შეუძლებელია. შეცდომის კოდია %d."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
-msgstr ""
-"FFmpeg : შეცდომა - გამოსატანი ფაილის \"%s\" თავსართების ჩაწერა შეუძლებელია. "
-"შეცდომის კოდია %d."
+msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+msgstr "FFmpeg : შეცდომა - გამოსატანი ფაილის \"%s\" თავსართების ჩაწერა შეუძლებელია. შეცდომის კოდია %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -5191,8 +5083,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr ""
-"FFmpeg : შეცდომა - აუდიო FIFO-დან წასაკითხად ბუფერის გამოყოფა შეუძლებელია."
+msgstr "FFmpeg : შეცდომა - აუდიო FIFO-დან წასაკითხად ბუფერის გამოყოფა შეუძლებელია."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
@@ -5232,12 +5123,8 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"Attempted to export %d channels, but maximum number of channels for selected "
-"output format is %d"
-msgstr ""
-"%d არხების გატანის მცდელობა. მაგრამ გასატანი ფორმატის არხების მაქსიმალური "
-"რიცხვია %d"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
+msgstr "%d არხების გატანის მცდელობა. მაგრამ გასატანი ფორმატის არხების მაქსიმალური რიცხვია %d"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -5275,8 +5162,7 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr ""
-"პროექტის სემპლისა (%d) და ბიტური კოეფიციენტის (%d კბ/წმ) კომბინაცია "
-"მხარდაჭერილი არ არის\n"
+"პროექტის სემპლისა (%d) და ბიტური კოეფიციენტის (%d კბ/წმ) კომბინაცია მხარდაჭერილი არ არის\n"
 "მიმდინარე გამონატანის ფაილის ფორმატით. "
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -5390,9 +5276,7 @@ msgid "Codec:"
 msgstr "კოდეკი:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
-msgid ""
-"Not all formats and codecs are compatible. Nor are all option combinations "
-"compatible with all codecs."
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
 msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
@@ -5459,8 +5343,7 @@ msgid ""
 "0 - automatic\n"
 "Recommended - 192000"
 msgstr ""
-"ბიტური კოეფიციენტი (ბიტები/წამი) -გავლენას ახდენს შედეგად მიღებულ ფაილის "
-"ზომასა და ხარისხზე\n"
+"ბიტური კოეფიციენტი (ბიტები/წამი) -გავლენას ახდენს შედეგად მიღებულ ფაილის ზომასა და ხარისხზე\n"
 "ზოგიერთი კოდეკი მხოლოდ სპეციფიურ მნიშვნელობებს იღებს (128k, 192k, 256k etc)\n"
 "0 -ავტომატური\n"
 "რეკომენდებული - 19200"
@@ -5786,9 +5669,7 @@ msgstr "FFmpeg მდებარეობის დადგენა"
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr ""
-"FFmpeg-ის საშუალებით აუდიოს შემოტანისა და გატანისათვის Audacity-ის სჭირდება "
-"ფაილი %s ."
+msgstr "FFmpeg-ის საშუალებით აუდიოს შემოტანისა და გატანისათვის Audacity-ის სჭირდება ფაილი %s ."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
@@ -5926,11 +5807,8 @@ msgstr "სცადეთ, დააყენოთ FFmpeg.\n"
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 #, c-format
-msgid ""
-"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr ""
-"ინდექსი[%02x] კოდეკი[%s], ენა[%s], ბიტური სიჩქარე[%s], არხები[%d], "
-"ხანგრძლივობა[%d]"
+msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "ინდექსი[%02x] კოდეკი[%s], ენა[%s], ბიტური სიჩქარე[%s], არხები[%d], ხანგრძლივობა[%d]"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
@@ -6218,8 +6096,7 @@ msgstr "სად არის %s'?"
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid ""
-"You are linking to lame_enc.dll v%d.%d. This version is not compatible with "
-"Audacity %d.%d.%d.\n"
+"You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
 "Please download the latest version of 'LAME for Audacity'."
 msgstr ""
 
@@ -6321,8 +6198,7 @@ msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the MP3 file format. "
 msgstr ""
-"პროექტის სემპლის (%d) და ბიტის (%d წბ/წმ) კოეფიციენტის კომბინაცია არ არის "
-"მხარდაჭერილი არცერთი MP3\n"
+"პროექტის სემპლის (%d) და ბიტის (%d წბ/წმ) კოეფიციენტის კომბინაცია არ არის მხარდაჭერილი არცერთი MP3\n"
 "ფაილის ფორმატის მიერ. "
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -6603,8 +6479,7 @@ msgstr "ხმის ამ ფორმატით გატანა შე�
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid ""
-"You have attempted to Export a WAV or AIFF file which would be greater than "
-"4GB.\n"
+"You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 
@@ -7011,11 +6886,8 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(c) 2009 Leland Lucius-ის მიერ"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
-msgid ""
-"External Audacity module which provides a simple IDE for writing effects."
-msgstr ""
-"Audacity-ის გარე მოდული, რომელიც ეფექტების საწერად მარტივ ინტერფეისს "
-"მოგაწვდით."
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr "Audacity-ის გარე მოდული, რომელიც ეფექტების საწერად მარტივ ინტერფეისს მოგაწვდით."
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -7208,9 +7080,7 @@ msgid "Waiting for audio.com"
 msgstr "Audio.com-ის მოლოდინი"
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
-msgid ""
-"An action on audio.com is required before you can continue. You can cancel "
-"this operation."
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
@@ -7336,8 +7206,7 @@ msgid "Syncing to audio.com... (%d%%)"
 msgstr "სინქრონიზაცია audio.com-თან... (%d%%)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid ""
-"Project is syncing with audio.com. Do you want to stop the sync process?"
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7393,10 +7262,7 @@ msgid "Save to the Cloud (free)"
 msgstr "შენახვა ღრუბელში (უფასო)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid ""
-"Your project is backed up privately on audio.com. You can access your work "
-"from any device and collaborate on your project with others. Cloud saving is "
-"free for a limited number of projects."
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -7432,9 +7298,7 @@ msgid "Share to audio.com"
 msgstr "გაზიარება audio.com-ზე"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid ""
-"Uploads an uncompressed audio file and generates a shareable link. This link "
-"allows others to download the file in either .wav or .mp3 format."
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -7481,9 +7345,7 @@ msgid "We encountered an issue syncing your file"
 msgstr "აღმოჩენილია შეცდომა თქვენი ფაილის სინქრონიზაციისას"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid ""
-"Don't worry, your changes will be saved to a temporary location and will be "
-"synchronized to your cloud copy when your internet connection resumes."
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
@@ -7546,8 +7408,7 @@ msgstr "შესვლა ღრუბლოვან სერვისში"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Oops! It looks like there was an issue with your input.\n"
-"Please ensure your email is correct and that your password is at least 8 "
-"characters long"
+"Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
@@ -7607,15 +7468,11 @@ msgid "This project is no longer saved to the Cloud"
 msgstr "ეს პროექტი ღრუბელში შენახული აღარ იქნება"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid ""
-"This project was removed from audio.com and therefore cannot be saved at "
-"this time. "
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid ""
-"You can either save it to the Cloud as a new project, or save it to your "
-"computer."
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
@@ -7632,9 +7489,7 @@ msgid "Your project storage limit has been reached."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid ""
-"You may need to remove older projects to make space available. For more "
-"options, visit audio.com"
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
@@ -7651,9 +7506,7 @@ msgid "Project version conflict detected"
 msgstr "აღმოჩენილია პროექტის ვერსიის შეუსაბამობა"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"There's a newer version of this Audacity project on Audio.com. Saving this "
-"project will replace it as the newest version instead."
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
@@ -7665,10 +7518,7 @@ msgid "Discard and open latest version"
 msgstr "მოცილება და უკანასკნელი ვერსიის გახსნა"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"Project contains unsaved changes. There's a newer version of this Audacity "
-"project on Audio.com. Discarding changes will open the latest version "
-"instead."
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
@@ -7680,9 +7530,7 @@ msgid "Cloud project conflict"
 msgstr "ღრუბლოვანი პროექტის შეუსაბამობა"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"You are attempting to open a new active version of this project when there "
-"is already one open. Please select which version you wish to remain open."
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
@@ -7757,9 +7605,7 @@ msgid "Anyone will be able to listen to this audio."
 msgstr "ყველას შეეძლება მოუსმინოს ამ აუდიოს."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid ""
-"Only you and people you share a link with will be able to listen to this "
-"audio."
+msgid "Only you and people you share a link with will be able to listen to this audio."
 msgstr "ამ ხმის მოსმენა შეგიძლიათ მხოლოდ თქვენ და მათ, ვისაც ბმული გაუზიარეთ."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
@@ -7775,12 +7621,8 @@ msgid "Uploading audio..."
 msgstr "აუდიოს ატვირთვა..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid ""
-"We are unable to upload this file. Please try again and make sure to link to "
-"your audio.com account before uploading."
-msgstr ""
-"ამ ფაილის ატვირთვის შეცდომა. კიდევ სცადეთ და დარწმუნდით, რომ ატვირთვამდე "
-"თქვენი audio.com-ის ანგარიში მიაბით."
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr "ამ ფაილის ატვირთვის შეცდომა. კიდევ სცადეთ და დარწმუნდით, რომ ატვირთვამდე თქვენი audio.com-ის ანგარიში მიაბით."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
@@ -7816,8 +7658,7 @@ msgid "Audacity had trouble connecting to the server."
 msgstr "Audacity-ს სერვერთან მიერთების პრობლემა აქვს."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid ""
-"The project is too large to upload. Please save it to your computer instead."
+msgid "The project is too large to upload. Please save it to your computer instead."
 msgstr "პროექტი მეტისმეტად დიდია ასატვირთად. შეინახეთ ის თქვენს კომპიუტერში."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
@@ -7862,9 +7703,7 @@ msgid "Syncing your project"
 msgstr "მიმდინარეობს თქვენი პროექტის სინქი"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-msgid ""
-"The project will sync in background while you work. You can check the sync "
-"status on the bottom right corner of Audacity at any time"
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
@@ -7872,9 +7711,7 @@ msgid "Success!"
 msgstr "წარმატება!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid ""
-"All saved changes will now update to the cloud. You can manage this file "
-"from your uploaded projects page on audio.com"
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
@@ -7886,9 +7723,7 @@ msgid "Cloud project incomplete"
 msgstr "ღრუბლოვანი პროექტი დაუსრულებელია"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid ""
-"The latest version of this project was not fully uploaded to audio.com. You "
-"can load the last complete version instead."
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
@@ -7896,9 +7731,7 @@ msgid "Load latest"
 msgstr "უკანასკნელის ჩატვირთვა"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid ""
-"No version of this project has been fully uploaded to audio.com. It cannot "
-"be loaded."
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
@@ -7910,9 +7743,7 @@ msgid "Retry"
 msgstr "თავიდან ცდა"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid ""
-"An action on audio.com is required before you can continue. Once you are "
-"done with it, click Retry"
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
@@ -7928,9 +7759,7 @@ msgid "Connection error"
 msgstr "დაკავშირების შეცდომა"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-msgid ""
-"Audacity is unable to connect to MuseHub.com. Please check your connection "
-"and try again."
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
 msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
@@ -7950,10 +7779,7 @@ msgid "Become a MuseHub partner"
 msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-msgid ""
-"You can reach millions of music creators by publishing your apps, effects "
-"and sounds on MuseHub. If you're a developer and interested in publishing "
-"your products on MuseHub, you can apply today."
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
 msgstr ""
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
@@ -8173,12 +7999,8 @@ msgstr "<h3>"
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid ""
-"%s the free, open source, cross-platform software for recording and editing "
-"sounds."
-msgstr ""
-"%s უფასო, ღია კოდის მქონე, პლატფორმათაშორისი პროგრამაა ხმის ჩასაწერად და "
-"ჩასასწორებლად."
+msgid "%s the free, open source, cross-platform software for recording and editing sounds."
+msgstr "%s უფასო, ღია კოდის მქონე, პლატფორმათაშორისი პროგრამაა ხმის ჩასაწერად და ჩასასწორებლად."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -8233,8 +8055,7 @@ msgstr "%s ვებსაიტი: "
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s software is copyright %s 1999-2024 %s Team."
-msgstr ""
-"%s პროგრამულ უზრუნველყოფაზე ყველა უფლება გააჩნია %s-ს 1999-2024 %s-ის გუნდი."
+msgstr "%s პროგრამულ უზრუნველყოფაზე ყველა უფლება გააჩნია %s-ს 1999-2024 %s-ის გუნდი."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -8413,12 +8234,8 @@ msgid "PRIVACY POLICY"
 msgstr "პირადულობის დაცვა"
 
 #: src/AboutDialog.cpp
-msgid ""
-"App update checking and error reporting require network access. These "
-"features are optional."
-msgstr ""
-"აპის განახლების შემოწმება და შეცდომების გადაცემა ქსელთან წვდომას მოითხოვს. "
-"ეს ფუნქციები არასავალდებულოა."
+msgid "App update checking and error reporting require network access. These features are optional."
+msgstr "აპის განახლების შემოწმება და შეცდომების გადაცემა ქსელთან წვდომას მოითხოვს. ეს ფუნქციები არასავალდებულოა."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
@@ -8436,8 +8253,7 @@ msgstr "ჩაწერისას თაიმლაინის ფუნქ�
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr ""
-"დააწკაპუნეთ და გადაათრიეთ დასაყენებლად, დასაბრუნებლად დააწკაპუნეთ ორჯერ"
+msgstr "დააწკაპუნეთ და გადაათრიეთ დასაყენებლად, დასაბრუნებლად დააწკაპუნეთ ორჯერ"
 
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
@@ -8471,9 +8287,7 @@ msgstr "სკრაბინგის დასაწყებად დაა�
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr ""
-"სკრაბინგისთვის დააწკაპუნეთ და გადატარეთ. გადახვევისთვის დააწკაპუნეთ და "
-"გადაათრიეთ."
+msgstr "სკრაბინგისთვის დააწკაპუნეთ და გადატარეთ. გადახვევისთვის დააწკაპუნეთ და გადაათრიეთ."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -8572,9 +8386,7 @@ msgstr "Audacity ეშვება..."
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
-msgstr ""
-"SQLite -ის ბიბლიოთეკის ინიციალიზაციის შეცდომა.  Audacity -ის მუშაობის "
-"გაგრძელება არ შეუძლია."
+msgstr "SQLite -ის ბიბლიოთეკის ინიციალიზაციის შეცდომა.  Audacity -ის მუშაობის გაგრძელება არ შეუძლია."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -8609,13 +8421,11 @@ msgstr "&ფაილი"
 #: src/AudacityApp.cpp
 msgid ""
 "Audacity could not find a safe place to store temporary files.\n"
-"Audacity needs a place where automatic cleanup programs won't delete the "
-"temporary files.\n"
+"Audacity needs a place where automatic cleanup programs won't delete the temporary files.\n"
 "Please enter an appropriate directory in the preferences dialog."
 msgstr ""
 "Audacity ვერ პოულობს დროებითი ფაილების შესანახ ადგილს.\n"
-"Audacity-ის სჭრდება ადგილი, სადაც ავტომატური გამსუფთავებები მის დროებით "
-"ფაილებს არ წაშლიან.\n"
+"Audacity-ის სჭრდება ადგილი, სადაც ავტომატური გამსუფთავებები მის დროებით ფაილებს არ წაშლიან.\n"
 "გთხოვთ, შეიყვანოთ შესაბამისი საქაღალდე პარამეტრების დიალოგურ სარკმელში."
 
 #: src/AudacityApp.cpp
@@ -8627,12 +8437,8 @@ msgstr ""
 "გთხოვთ, შეიყვანოთ შესაბამისი საქაღალდე პარამეტრების დიალოგურ სარკმელში."
 
 #: src/AudacityApp.cpp
-msgid ""
-"Audacity is now going to exit. Please launch Audacity again to use the new "
-"temporary directory."
-msgstr ""
-"Audacity  ახლა დაიხურება. გთხოვთ, გაუშვათ თავიდან ახალი დროებითი საქაღალდის "
-"გამოსაყენებლად."
+msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
+msgstr "Audacity  ახლა დაიხურება. გთხოვთ, გაუშვათ თავიდან ახალი დროებითი საქაღალდის გამოსაყენებლად."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -8821,13 +8627,11 @@ msgid ""
 "\n"
 "\t%s\n"
 "\n"
-"This could be caused by many reasons, but the most likely are that the disk "
-"is full or you do not have write permissions to the file. \n"
+"This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. \n"
 "\n"
 "You can attempt to correct the issue and then click \"Retry\" to continue.\n"
 "\n"
-"If you choose to \"Quit Audacity\", your project may be left in an unsaved "
-"state which will be recovered the next time you open it."
+"If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
 
 #. i18n-hint: (verb) It's item on a menu.
@@ -8869,8 +8673,7 @@ msgstr "მუსიკის შემოტანა"
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
-"The entire source clip will be pasted into your project, allowing you to "
-"access\n"
+"The entire source clip will be pasted into your project, allowing you to access\n"
 "trimmed audio data anytime."
 msgstr ""
 
@@ -8904,8 +8707,7 @@ msgstr "ავტომატური აღდგენა ავარიი�
 
 #: src/AutoRecoveryDialog.cpp
 msgid ""
-"The following projects were not saved properly the last time Audacity was "
-"run and can be automatically recovered.\n"
+"The following projects were not saved properly the last time Audacity was run and can be automatically recovered.\n"
 "\n"
 "After recovery, save the projects to ensure changes are written to disk."
 msgstr ""
@@ -9449,17 +9251,13 @@ msgstr "ტესტირება წარმატებით დასრ�
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try "
-"again."
+msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
 msgstr ""
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
-"try again."
+msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
 msgstr ""
 
 #: src/CommonCommandFlags.cpp
@@ -9472,11 +9270,9 @@ msgstr "აუდიო მონიშნული არაა"
 msgid ""
 "Select the audio for %s to use.\n"
 "\n"
-"1. Select audio that represents noise and use %s to get your 'noise "
-"profile'.\n"
+"1. Select audio that represents noise and use %s to get your 'noise profile'.\n"
 "\n"
-"2. When you have got your noise profile, select the audio you want to "
-"change\n"
+"2. When you have got your noise profile, select the audio you want to change\n"
 "and use %s to change that audio."
 msgstr ""
 
@@ -9609,15 +9405,12 @@ msgid "Missing"
 msgstr "აკლია"
 
 #: src/Dependencies.cpp
-msgid ""
-"If you proceed, your project will not be saved to disk. Is this what you "
-"want?"
+msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
 msgstr "თუ გააგრძელებთ, თქვენი პროექტი არ შეინახება დისკზე. ასე გსურთ?"
 
 #: src/Dependencies.cpp
 msgid ""
-"Your project is self-contained; it does not depend on any external audio "
-"files. \n"
+"Your project is self-contained; it does not depend on any external audio files. \n"
 "\n"
 "Some older Audacity projects may not be self-contained, and care \n"
 "is needed to keep their external dependencies in the right place.\n"
@@ -9900,18 +9693,12 @@ msgstr "&დამატებების მართვა"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid ""
-"Audacity has found %d incompatible plugins which could not be loaded. We "
-"have disabled these plugins to avoid any stalling or crashes. If you would "
-"still like to attempt to use these plugins, you can enable them using "
-"\"Manage Plugins\". Otherwise, select \"Continue\"."
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
 msgstr ""
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid ""
-"Audacity has found %d incompatible plugins which could not be loaded. We "
-"have disabled these plugins to avoid any stalling or crashes."
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
 msgstr ""
 
 #: src/JournalEvents.cpp
@@ -9960,8 +9747,7 @@ msgstr "ახალი..."
 
 #: src/LabelDialog.cpp
 msgid "Press F2 or double click to edit cell contents."
-msgstr ""
-"უჯრედების შიგთავსის რედაქტირებისთვის დააჭირეთ F2-ს ან ორჯერ დააწკაპუნეთ."
+msgstr "უჯრედების შიგთავსის რედაქტირებისთვის დააჭირეთ F2-ს ან ორჯერ დააწკაპუნეთ."
 
 #: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
@@ -10002,9 +9788,7 @@ msgstr "აირჩიეთ Audacity-ის ენა:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid ""
-"The language you have chosen, %s (%s), is not the same as the system "
-"language, %s (%s)."
+msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
 msgstr "ენა, რომელიც აირჩიეთ, %s(%s) არ ემთხვევა სისტემის ენას, %s(%s)."
 
 #: src/Legacy.cpp
@@ -10025,10 +9809,7 @@ msgid "Opening Audacity Project"
 msgstr "Audacity პროექტის გახსნა"
 
 #: src/MenuCreator.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
 msgstr ""
 
 #: src/MenuCreator.cpp
@@ -10222,8 +10003,6 @@ msgstr "არჩეული ტრეკებიდან თავსებ�
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
 #, c-format
-#| msgctxt "clip name template"
-#| msgid "%s.%i"
 msgctxt "clip name template"
 msgid "%s.%d"
 msgstr "%s.%d"
@@ -10250,10 +10029,7 @@ msgid "Close project immediately with no changes"
 msgstr "პროექტის მყისიერი დახურვა ცვლილებების გარეშე"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project "
-"immediately\" on further error alerts."
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
 msgstr ""
 
 #: src/ProjectFSCK.cpp
@@ -10434,9 +10210,7 @@ msgid ""
 msgstr ""
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"The project exceeds the maximum size of 4GB when writing to a FAT32 "
-"formatted filesystem."
+msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
 msgstr ""
 
 #: src/ProjectFileManager.cpp
@@ -10446,8 +10220,7 @@ msgstr "შენახულია %s"
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the file name provided would overwrite "
-"another project.\n"
+"The project was not saved because the file name provided would overwrite another project.\n"
 "Please try again and select an original name."
 msgstr ""
 
@@ -10476,8 +10249,7 @@ msgstr "პროექტის თავზე გადაწერის გ
 
 #: src/ProjectFileManager.cpp
 msgid ""
-"The project was not saved because the selected project is open in another "
-"window.\n"
+"The project was not saved because the selected project is open in another window.\n"
 "Please try again and select an original name."
 msgstr ""
 
@@ -10554,15 +10326,12 @@ msgstr "სტერეოტრეკის არხი ვერ ვიპო
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-msgid ""
-"This project contained stereo tracks with different sample rates per channel."
+msgid "This project contained stereo tracks with different sample rates per channel."
 msgstr ""
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-msgid ""
-"This project contained stereo tracks with different sample formats in "
-"channels."
+msgid "This project contained stereo tracks with different sample formats in channels."
 msgstr ""
 
 #. i18n-hint: explains why opened project was auto-modified
@@ -10630,13 +10399,11 @@ msgstr "პროექტის დაპატარავება"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid ""
-"Compacting this project will free up disk space by removing unused bytes "
-"within the file.\n"
+"Compacting this project will free up disk space by removing unused bytes within the file.\n"
 "\n"
 "There is %s of free disk space and this project is currently using %s.\n"
 "\n"
-"If you proceed, the current Undo/Redo History and clipboard contents will be "
-"discarded and you will recover approximately %s of disk space.\n"
+"If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.\n"
 "\n"
 "Do you want to continue?"
 msgstr ""
@@ -10855,8 +10622,7 @@ msgstr "უყურეთ ვიდეოს"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr ""
-"რეალური დროის ეფექტები არადესტრუქციულია და ნებისმიერ დროს შეიძლება შეიცვალოს."
+msgstr "რეალური დროის ეფექტები არადესტრუქციულია და ნებისმიერ დროს შეიძლება შეიცვალოს."
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Master Effects"
@@ -10942,8 +10708,7 @@ msgstr "ჟანრი"
 
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr ""
-"ველებზე სასიარულოდ გამოიყენეთ ისრები და შეყვანის კლავიში(ჩასწორების შემდეგ)."
+msgstr "ველებზე სასიარულოდ გამოიყენეთ ისრები და შეყვანის კლავიში(ჩასწორების შემდეგ)."
 
 #: src/TagsEditor.cpp
 msgid "Tag"
@@ -11095,8 +10860,7 @@ msgstr "ავტომატური გატანის შეცდომ�
 #: src/TimerRecordDialog.cpp
 #, c-format
 msgid ""
-"You may not have enough free disk space to complete this Timer Recording, "
-"based on your current settings.\n"
+"You may not have enough free disk space to complete this Timer Recording, based on your current settings.\n"
 "\n"
 "Do you wish to continue?\n"
 "\n"
@@ -11443,9 +11207,7 @@ msgid " Select On"
 msgstr " მონიშვნა ჩართულია"
 
 #: src/TrackPanelResizeHandle.cpp
-msgid ""
-"Click and drag to adjust relative size of stereo tracks, double-click to "
-"make heights equal"
+msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
 msgstr "სტერეო ტრეკების შესაბამისი ზომის მოსარგებად დააწკაპუნეთ და გადაათრიეთ"
 
 #: src/TrackPanelResizeHandle.cpp
@@ -11580,9 +11342,7 @@ msgstr "რა არის ახალი Audacity-ის ვერსია�
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more "
-"about what we have included in the latest release!</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11596,9 +11356,7 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for "
-"Audacity users</p>"
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11610,21 +11368,15 @@ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"A guitar amp and effects modelling plugin for realistic tones and "
-"customizable sounds."
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"A responsive reverb plugin that adapts to track dynamics for immersive "
-"soundscapes."
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"A vocal multi-effect plugin that enhances vocal tracks for professional "
-"results."
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11636,21 +11388,16 @@ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"An amazing voice enhancement plugin for crystal-clear, professional vocal "
-"effects."
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"Check out a variety of plugins by well known developers available on [[%s|"
-"MuseHub]]."
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -12731,9 +12478,7 @@ msgstr ""
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid ""
-"Contrast Analyzer, for measuring RMS volume differences between two "
-"selections of audio."
+msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
 msgstr ""
 
 #. i18n-hint noun
@@ -14344,11 +14089,7 @@ msgstr "ბაფერის ზომა"
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"The buffer size controls the number of samples sent to the effect on each "
-"iteration. Smaller values will cause slower processing and some effects "
-"require 8192 samples or less to work properly. However most effects can "
-"accept large buffers and using them will greatly reduce processing time."
+msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
 msgstr ""
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
@@ -14365,11 +14106,7 @@ msgid "Latency Compensation"
 msgstr "დაყოვნების კომპენსაცია"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some VST effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST effects."
+msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
 msgstr ""
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
@@ -14387,10 +14124,7 @@ msgid "Graphical Mode"
 msgstr "გრაფიკული რეჟიმი"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
@@ -14412,18 +14146,11 @@ msgid "Load VST3 preset:"
 msgstr "VST3 პრესეტის ჩატვირთვა:"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid ""
-"As part of their processing, some VST3 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST3 effects."
+msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
 msgstr ""
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid ""
-"Most VST3 effects have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 
 #: src/effects/Wahwah.cpp
@@ -14495,12 +14222,7 @@ msgid "Audio Unit Effect Options"
 msgstr "აუდიო ერთეულის ეფექტის მორგება"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will notice "
-"that small silences have been inserted into the audio. Enabling this option "
-"will provide that compensation, but it may not work for all Audio Unit "
-"effects."
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -14508,11 +14230,7 @@ msgid "User Interface"
 msgstr "სამომხმარებლო ინტერფეისი"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid ""
-"Select \"Full\" to use the graphical interface if supplied by the Audio "
-"Unit. Select \"Generic\" to use the system supplied generic interface. "
-"Select \"Basic\" for a basic text-only interface. Reopen the effect for this "
-"to take effect."
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
 msgstr ""
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
@@ -14550,11 +14268,7 @@ msgid "LADSPA Effect Options"
 msgstr "LADSPA ეფექტების მორგება"
 
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some LADSPA effects must delay returning audio "
-"to Audacity. When not compensating for this delay, you will notice that "
-"small silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all LADSPA effects."
+msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 
 #: src/effects/lv2/LV2Effect.cpp
@@ -14571,18 +14285,11 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&ბუფერის ზომის (8-დან %d-მდე) სემპლები:"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"As part of their processing, some LV2 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this setting will "
-"provide that compensation, but it may not work for all LV2 effects."
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
 msgstr ""
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"LV2 effects can have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -15145,15 +14852,11 @@ msgid "Pasting clip contents, please wait"
 msgstr ""
 
 #: src/menus/EditMenus.cpp
-msgid ""
-"The content you are trying to paste will span across more tracks than you "
-"currently have available. Add more tracks and try again."
+msgid "The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again."
 msgstr ""
 
 #: src/menus/EditMenus.cpp
-msgid ""
-"There are not enough tracks selected to accommodate your copied content. "
-"Select additional tracks and try again."
+msgid "There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again."
 msgstr ""
 
 #: src/menus/EditMenus.cpp
@@ -16310,9 +16013,7 @@ msgstr "აირჩიეთ მინიმუმ ერთი აუდიო
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr ""
 
 #: src/menus/TrackMenus.cpp
@@ -16321,9 +16022,7 @@ msgstr "MIDI სინქრონიზაცია აუდიოსთან
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
 msgstr ""
 
 #: src/menus/TrackMenus.cpp
@@ -16800,8 +16499,8 @@ msgstr "აპლიკაციის პარამეტრები"
 
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Network communications"
-msgstr ""
+msgid "Update notifications"
+msgstr "გაფრთხილებების განახლება"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16810,23 +16509,22 @@ msgid "&Check for updates"
 msgstr "განახ&ლების შემოწმება"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Requires network access."
+msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+msgstr ""
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
 msgstr ""
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
-msgid "&Send anonymous usage info"
+msgid "&Usage info (UUID)"
 msgstr ""
 
-#: src/prefs/ApplicationPrefs.cpp
-msgid "We create a random ID to track how often Audacity is used."
-msgstr ""
-
-#: src/prefs/ApplicationPrefs.cpp
-msgid ""
-"In order to protect your privacy, Audacity does not collect any personally "
-"identifiable information about you."
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
 msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
@@ -16898,9 +16596,7 @@ msgid "&Project Sample Rate:"
 msgstr "&პროექტის სემპლის სიჩქარე:"
 
 #: src/prefs/DevicePrefs.cpp
-msgid ""
-"Sample Rate used when recording new tracks, mixing down tracks and for "
-"playback in this project."
+msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
 msgstr ""
 
 #: src/prefs/DevicePrefs.cpp
@@ -17056,12 +16752,8 @@ msgid "Directory %s is not writable"
 msgstr "%s საქაღალდე ჩაწერადი არაა"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid ""
-"Changes to temporary directory will not take effect until Audacity is "
-"restarted"
-msgstr ""
-"დროებით საქაღალდეში შეტანილი ცვლილებები არ გააქტიურდება Audacity-ის "
-"გადატვირთვამდე"
+msgid "Changes to temporary directory will not take effect until Audacity is restarted"
+msgstr "დროებით საქაღალდეში შეტანილი ცვლილებები არ გააქტიურდება Audacity-ის გადატვირთვამდე"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -17224,11 +16916,7 @@ msgid "Unused filters:"
 msgstr "გამოუყენებელი ფილტრები:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid ""
-"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
-"the items. They are likely to break the pattern matching. Unless you know "
-"what you are doing, it is recommended to trim spaces. Do you want Audacity "
-"to trim spaces for you?"
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
 msgstr ""
 
 #: src/prefs/ExtImportPrefs.cpp
@@ -17336,9 +17024,7 @@ msgid "Always &match the loop tempo to the project tempo"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid ""
-"&Only match the loop tempo to the project tempo when the ruler displays "
-"\"Beats and Measures\""
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
@@ -17354,9 +17040,7 @@ msgid "When importing a music loop into an empty project, Audacity will:"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid ""
-"When importing a music loop into an existing (non-empty) project, Audacity "
-"will:"
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
@@ -17430,8 +17114,7 @@ msgstr "და&ყენება"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr ""
-"შენიშნვა: Cmd+Q-ზე დაჭერა გამოწვევს დახურვას. ყველა სხვა კლავიში დასაშვებია."
+msgstr "შენიშნვა: Cmd+Q-ზე დაჭერა გამოწვევს დახურვას. ყველა სხვა კლავიში დასაშვებია."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -17450,8 +17133,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr ""
-"მონიშნეთ XML ფაილი, რომელიც შეიცავს Audacity კლავიშების მალსახმობებს..."
+msgstr "მონიშნეთ XML ფაილი, რომელიც შეიცავს Audacity კლავიშების მალსახმობებს..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -17460,8 +17142,7 @@ msgstr "ღილაკების მალსახმობების შ�
 #: src/prefs/KeyConfigPrefs.cpp
 #, c-format
 msgid ""
-"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" "
-"and \"%s\".\n"
+"The file with the shortcuts contains illegal shortcut duplicates for \"%s\" and \"%s\".\n"
 "Nothing is imported."
 msgstr ""
 
@@ -17473,8 +17154,7 @@ msgstr "ჩატვირთულია %d კლავიატურის �
 #: src/prefs/KeyConfigPrefs.cpp
 msgid ""
 "\n"
-"The following commands are not mentioned in the imported file, but have "
-"their shortcuts removed because of the conflict with other new shortcuts:\n"
+"The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:\n"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -17576,8 +17256,7 @@ msgstr "მოდულების გამართვა"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"Modules are optional components of Audacity that enable some functionality, "
-"such as importing and exporting. \n"
+"Modules are optional components of Audacity that enable some functionality, such as importing and exporting. \n"
 "It is generally not necessary to change these settings."
 msgstr ""
 
@@ -17599,9 +17278,7 @@ msgstr "არჩევანი გაკეთებული არაა"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Error: No modules were found. This may indicate a faulty installation."
-msgstr ""
-"შეცდომა: მოდულები აღმოჩენილი არაა. ეს, შეძლება, ჩავარდნილ დაყენებაზე "
-"მიუთითებდეს."
+msgstr "შეცდომა: მოდულები აღმოჩენილი არაა. ეს, შეძლება, ჩავარდნილ დაყენებაზე მიუთითებდეს."
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
@@ -17980,18 +17657,15 @@ msgstr "ინფო"
 msgid ""
 "Themability is an experimental feature.\n"
 "\n"
-"To try it out, click \"Save Theme Cache\" then find and modify the images "
-"and colors in\n"
+"To try it out, click \"Save Theme Cache\" then find and modify the images and colors in\n"
 "ImageCacheVxx.png using an image editor such as the Gimp.\n"
 "\n"
-"Click \"Load Theme Cache\" to load the changed images and colors back into "
-"Audacity."
+"Click \"Load Theme Cache\" to load the changed images and colors back into Audacity."
 msgstr ""
 
 #: src/prefs/ThemePrefs.cpp
 msgid ""
-"Saving and loading individual theme files uses a separate file for each "
-"image, but is\n"
+"Saving and loading individual theme files uses a separate file for each image, but is\n"
 "otherwise the same idea."
 msgstr ""
 
@@ -18858,12 +18532,8 @@ msgid "&MIDI Device Info..."
 msgstr "ინფორმაცია MIDI-მოწყობილობებზე..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
-"region."
-msgstr ""
-"ვერტიკალური შემცირებისთვის დააწკაპუნეთ, Shift-წკაპი გადიდებისთვის, "
-"გადაათრიეთ გადიდების რეგიონის მოსანიშნად."
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr "ვერტიკალური შემცირებისთვის დააწკაპუნეთ, Shift-წკაპი გადიდებისთვის, გადაათრიეთ გადიდების რეგიონის მოსანიშნად."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Zoom Reset"
@@ -19006,9 +18676,7 @@ msgstr "დააწკაპუნეთ და გადაათრიეთ 
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr ""
-"აგების გამოსაყენებლად გაადიდეთ იქამდე, სანამ არ დაინახავთ ინდივიდუალურ "
-"სემპლებს."
+msgstr "აგების გამოსაყენებლად გაადიდეთ იქამდე, სანამ არ დაინახავთ ინდივიდუალურ სემპლებს."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -19067,8 +18735,7 @@ msgid "Next &Lower Peak Frequency"
 msgstr "შემდეგი უმდაბლესი სიხშირე (ჰც)"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-msgid ""
-"Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
@@ -19076,8 +18743,7 @@ msgid "Right-click for menu. Ctrl+scroll to zoom."
 msgstr "მარჯვენა წკაპი მენიუსთვის. Ctrl+გადახვევა გადასადიდებლად."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-msgid ""
-"Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
@@ -19530,9 +19196,7 @@ msgstr "მარჯვენა წკაპი მენიუსთვის.
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
-msgid ""
-"Drag clips to reposition them. Hold Shift and drag to move all clips on the "
-"same track."
+msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
 msgstr ""
 
 #: src/tracks/ui/BackgroundCell.cpp
@@ -19694,8 +19358,7 @@ msgstr "გამართვა, პარამეტრები..."
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-msgstr ""
-"მრავალ-ხელსაწყოიანი რეჟიმი: %s თაგუნასა და კლავიატურის პარამეტრებისთვის."
+msgstr "მრავალ-ხელსაწყოიანი რეჟიმი: %s თაგუნასა და კლავიატურის პარამეტრებისთვის."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to set frequency bandwidth."
@@ -19809,9 +19472,7 @@ msgstr "განახლებების &შემოწმება"
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
-msgid ""
-"If you want to change your preference for automatic updates checking, you "
-"can find it in %s."
+msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
 msgstr ""
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
@@ -19856,8 +19517,9 @@ msgstr "გადმოწერა - %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "Stay Updated & Anonymous Usage Info"
-msgstr ""
+#, fuzzy
+msgid "App updates & usage info"
+msgstr "მოწმდება აპლიკაციის განახლებები"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19866,34 +19528,25 @@ msgstr "აპლიკაციის განახლებები"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid ""
-"Audacity notifies you in-app when a new version is available to download."
+msgid "Audacity notifies you in-app when a new version is available to download."
 msgstr ""
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "Anonymous usage info (UUID)"
+msgid "Usage info"
 msgstr ""
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid ""
-"To help us understand how often people use Audacity, we generate a random, "
-"anonymous ID (UUID). This helps us improve features and plan for the future. "
-"No personal data is collected."
-msgstr ""
-
-#. i18n-hint:  %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can disable this anytime in %s."
-msgstr "შეგიძლიათ, გათიშოთ ნებისმიერ დროს %s-ში."
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
 msgstr "შეგიძლიათ, გათიშოთ ეს ნებისმიერ დროს %s-ში."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr "შეგიძლიათ, გათიშოთ ნებისმიერ დროს %s-ში."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "View privacy policy"
@@ -20071,9 +19724,7 @@ msgid "Missing Plugins"
 msgstr "ნაკლული დამატებები"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-msgid ""
-"This project contains some realtime effect plugins that cannot be found on "
-"this system."
+msgid "This project contains some realtime effect plugins that cannot be found on this system."
 msgstr ""
 
 #. i18n-hint: %s will be replaced with "Learn more"
@@ -20103,12 +19754,8 @@ msgstr "საქაღალდე %s-ში ფაილების ჩაწ
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-msgid ""
-"Please check that the directory exists, has the necessary permissions, and "
-"the drive isn't full."
-msgstr ""
-"გთხოვთ შეამოწმოთ, საქაღალდე თუ არსებობს, მასში ჩაწერის უფლება თუ გაქვთ და "
-"თავისუფალი ადგილი დისკზე."
+msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
+msgstr "გთხოვთ შეამოწმოთ, საქაღალდე თუ არსებობს, მასში ჩაწერის უფლება თუ გაქვთ და თავისუფალი ადგილი დისკზე."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -20287,8 +19934,7 @@ msgstr "~aმინიმალური სიხშირე 0 ჰც-ზე �
 #, lisp-format
 msgid ""
 "~aFrequency selection is too high for track sample rate.~%~\n"
-"                        For the current track, the high frequency setting "
-"cannot~%~\n"
+"                        For the current track, the high frequency setting cannot~%~\n"
 "                        be greater than ~a Hz"
 msgstr ""
 
@@ -21058,8 +20704,7 @@ msgstr "გაფრთხილება. ~%ზოგიერთი ფაი�
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr ""
-"დამატებები ჩადგმულია. ~%(მათ ჩასართავად გამოიყენეთ დამატებების მმართველი):"
+msgstr "დამატებები ჩადგმულია. ~%(მათ ჩასართავად გამოიყენეთ დამატებების მმართველი):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -21362,8 +21007,7 @@ msgstr ""
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid ""
-"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
@@ -21376,10 +21020,8 @@ msgstr ""
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid ""
-"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: "
-"~a ~\n"
-"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  "
-"Unweighted RMS: ~a dB.~%~\n"
+"~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~\n"
+"                  samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~\n"
 "                  DC offset: ~a~a"
 msgstr ""
 
@@ -21827,17 +21469,11 @@ msgstr "მოძველებული"
 #~ msgid "Label Split Delete"
 #~ msgstr "წაშლის დაყოფის ჭდე"
 
-#~ msgid "Update notifications"
-#~ msgstr "გაფრთხილებების განახლება"
-
 #~ msgid "When Audacity detects music in file imported on empty project"
 #~ msgstr "როცა Audacity აღმოაჩენს მუსიკას ცარიელ პროექტზე შემოტანილ ფაილშ"
 
 #~ msgid "Change upper speed limit (%) to:"
 #~ msgstr "მაღალი სიჩქარის ლიმიტის შეცვლა (%):"
-
-#~ msgid "App update checking"
-#~ msgstr "მოწმდება აპლიკაციის განახლებები"
 
 #~ msgid "Files are saved on your device."
 #~ msgstr "ფაილები თქვენს მოწყობილობაზე იქა შენახული."
@@ -21902,12 +21538,8 @@ msgstr "მოძველებული"
 #~ msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
 #~ msgstr "[[https://support.audacityteam.org/|დამხმარე სახელმძღვანელოები]]"
 
-#~ msgid ""
-#~ " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, "
-#~ "online."
-#~ msgstr ""
-#~ " [[https://forum.audacityteam.org/|Forum]] - დასვით თქვენი კითხვა "
-#~ "პირდაპირ, ონლაინ."
+#~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+#~ msgstr " [[https://forum.audacityteam.org/|Forum]] - დასვით თქვენი კითხვა პირდაპირ, ონლაინ."
 
 #~ msgid "Warnings"
 #~ msgstr "გაფრთხილებები"
@@ -21942,8 +21574,7 @@ msgstr "მოძველებული"
 #~ msgstr "ხარვეზების გაწმენდა"
 
 #~ msgid ""
-#~ "Select all of the audio you want filtered, choose how much noise you "
-#~ "want\n"
+#~ "Select all of the audio you want filtered, choose how much noise you want\n"
 #~ "filtered out, and then click 'OK' to remove noise.\n"
 #~ msgstr ""
 #~ "ამოირჩეით ყველა გასაფილტრი აუდიო, შემდეგ კი გასაფილტრი ხარვეზის ოდენობა\n"
@@ -22010,13 +21641,11 @@ msgstr "მოძველებული"
 #~ msgid ""
 #~ "Reset Preferences?\n"
 #~ "\n"
-#~ "This is a one-time question, after an 'install' where you asked to have "
-#~ "the Preferences reset."
+#~ "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
 #~ msgstr ""
 #~ "გნებავთ საწყისი მნიშვნელობებზე დაბრუნება?\n"
 #~ "\n"
-#~ "ეს ერთჯერადი კითხვაა, სად შეინახეთ საწყისი კონფიგურაცია \"დაყენების\" "
-#~ "დროს."
+#~ "ეს ერთჯერადი კითხვაა, სად შეინახეთ საწყისი კონფიგურაცია \"დაყენების\" დროს."
 
 #~ msgid "Reset Audacity Preferences"
 #~ msgstr "Audacity პარამეტრების საწყისი მნიშვნელობებზე დაბრუნება"
@@ -22029,9 +21658,7 @@ msgstr "მოძველებული"
 #~ msgstr "&კარაოკე"
 
 #~ msgid "Select effects, click the Enable or Disable button, then click OK."
-#~ msgstr ""
-#~ "აირჩიეთ ეფექტები, დააწკაპუნეთ ჩართვის ან გამორთვის ღილაკს, შემდეგ კი "
-#~ "დააჭირეთ დიახს."
+#~ msgstr "აირჩიეთ ეფექტები, დააწკაპუნეთ ჩართვის ან გამორთვის ღილაკს, შემდეგ კი დააჭირეთ დიახს."
 
 #~ msgid "Show all"
 #~ msgstr "ყველას ჩვენება"
@@ -22562,12 +22189,8 @@ msgstr "მოძველებული"
 #~ msgid "Problem Report for Audacity"
 #~ msgstr "Audacity-ს პრობლემის შეტყობინება"
 
-#~ msgid ""
-#~ "Click \"Send\" to submit the report to Audacity. This information is "
-#~ "collected anonymously."
-#~ msgstr ""
-#~ "Audacity-ის მხარდაჭერის გუნდთან ანგარიშის გასაგზავნად დააჭირეთ "
-#~ "\"გაგზავნა\"-ს. ინფორმაცია ანონიმურია."
+#~ msgid "Click \"Send\" to submit the report to Audacity. This information is collected anonymously."
+#~ msgstr "Audacity-ის მხარდაჭერის გუნდთან ანგარიშის გასაგზავნად დააჭირეთ \"გაგზავნა\"-ს. ინფორმაცია ანონიმურია."
 
 #~ msgid "Failed to send crash report"
 #~ msgstr "კრახის ანგარიში გაგზავნა შეუძლებელია"
@@ -22595,8 +22218,7 @@ msgstr "მოძველებული"
 #~ msgstr ""
 #~ "დისკი გადავსებულია.\n"
 #~ "%s\n"
-#~ "რჩევებისათვის, თუ როგორ გავასუფთაოთ ადგილი, დააწკაპუნეთ დახმარების "
-#~ "ღილაკზე."
+#~ "რჩევებისათვის, თუ როგორ გავასუფთაოთ ადგილი, დააწკაპუნეთ დახმარების ღილაკზე."
 
 #~ msgid "FFmpeg support not compiled in"
 #~ msgstr "FFmpeg-ის მხარდაჭერა დაკომპილირებული არაა"
@@ -22616,19 +22238,11 @@ msgstr "მოძველებული"
 #~ msgid "As&k"
 #~ msgstr "მკი&თხე"
 
-#~ msgid ""
-#~ "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://"
-#~ "manual.audacityteam.org/quick_help.html|view online]]"
-#~ msgstr ""
-#~ "[[help:Quick_Help|სწრაფი დახმარება]] - თუ ლოკალურად დაყენებული არაა, "
-#~ "[[https://manual.audacityteam.org/quick_help.html|ონლაინ წაკითხვა]]"
+#~ msgid "[[help:Quick_Help|Quick Help]] - if not installed locally, [[https://manual.audacityteam.org/quick_help.html|view online]]"
+#~ msgstr "[[help:Quick_Help|სწრაფი დახმარება]] - თუ ლოკალურად დაყენებული არაა, [[https://manual.audacityteam.org/quick_help.html|ონლაინ წაკითხვა]]"
 
-#~ msgid ""
-#~ " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual."
-#~ "audacityteam.org/|view online]]"
-#~ msgstr ""
-#~ " [[help:Main_Page|სახელმძღვანელო]] - თუ ლოკალურად დაყენებული არაა, "
-#~ "[[https://manual.audacityteam.org/|ონლაინ წაკითხვა]]"
+#~ msgid " [[help:Main_Page|Manual]] - if not installed locally, [[https://manual.audacityteam.org/|view online]]"
+#~ msgstr " [[help:Main_Page|სახელმძღვანელო]] - თუ ლოკალურად დაყენებული არაა, [[https://manual.audacityteam.org/|ონლაინ წაკითხვა]]"
 
 #~ msgid "SelectionBar"
 #~ msgstr "არჩევის ზოლი"
@@ -22706,18 +22320,11 @@ msgstr "მოძველებული"
 #~ msgid "Cannot open VST3 preset file %s"
 #~ msgstr "VST3 პრესეტის ფაილის (%s) გახსნის შეცდომა"
 
-#~ msgid ""
-#~ "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
-#~ msgstr ""
-#~ "ვწუხვართ, შეუძლებელია ეფექტის გააქტიურება სტერეო ტრეკებზე, სადაც ტრეკები "
-#~ "არ ემთხვევა."
+#~ msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
+#~ msgstr "ვწუხვართ, შეუძლებელია ეფექტის გააქტიურება სტერეო ტრეკებზე, სადაც ტრეკები არ ემთხვევა."
 
-#~ msgid ""
-#~ "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual "
-#~ "channels of the track do not match."
-#~ msgstr ""
-#~ "ვწუხვართ, Vamp მოდულების გაშვება შეუძლებელია სტერეო ტრეკებზე, სადაც "
-#~ "ტრეკების ინდივიდუალური არხები არ ემთხვევა."
+#~ msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
+#~ msgstr "ვწუხვართ, Vamp მოდულების გაშვება შეუძლებელია სტერეო ტრეკებზე, სადაც ტრეკების ინდივიდუალური არხები არ ემთხვევა."
 
 #, c-format
 #~ msgid "Are you sure you want to export the file as \"%s\"?\n"
@@ -22727,15 +22334,13 @@ msgstr "მოძველებული"
 #~ msgid ""
 #~ "You are about to export a %s file with the name \"%s\".\n"
 #~ "\n"
-#~ "Normally these files end in \".%s\", and some programs will not open "
-#~ "files with nonstandard extensions.\n"
+#~ "Normally these files end in \".%s\", and some programs will not open files with nonstandard extensions.\n"
 #~ "\n"
 #~ "Are you sure you want to export the file under this name?"
 #~ msgstr ""
 #~ "თქვენ ახლა ინახავთ %s ფაილს სახელით \"%s\".\n"
 #~ "\n"
-#~ "ჩვეულებისამებრ ეს ფაილები მთავრდება \".%s\"-ით, და ზოგიერთი პროგრამა არ "
-#~ "გახსნის არასტანდარტული გაფართოების ფაილებს.\n"
+#~ "ჩვეულებისამებრ ეს ფაილები მთავრდება \".%s\"-ით, და ზოგიერთი პროგრამა არ გახსნის არასტანდარტული გაფართოების ფაილებს.\n"
 #~ "\n"
 #~ "მაინც გსურთ ფაილების შენახვა ამ სახელით?"
 
@@ -22743,15 +22348,10 @@ msgstr "მოძველებული"
 #~ msgstr "ვწუხვართ, 256 სიმბოლოზე გრძელი გეზის სახელები არ არის მხარდაჭერილი."
 
 #~ msgid "Your tracks will be mixed down and exported as one stereo file."
-#~ msgstr ""
-#~ "მოხდება თქვენი ტრეკების მიქსი და გატანილი იქნება, როგორც 1 სტერეო ფაილი."
+#~ msgstr "მოხდება თქვენი ტრეკების მიქსი და გატანილი იქნება, როგორც 1 სტერეო ფაილი."
 
-#~ msgid ""
-#~ "Your tracks will be mixed down to one exported file according to the "
-#~ "encoder settings."
-#~ msgstr ""
-#~ "მოხდება თქვენი ტრეკების მიქსი ერთ, ენკოდერის პარამეტრებში მითითებული "
-#~ "ტიპის ფაილად გატანა მოხდება."
+#~ msgid "Your tracks will be mixed down to one exported file according to the encoder settings."
+#~ msgstr "მოხდება თქვენი ტრეკების მიქსი ერთ, ენკოდერის პარამეტრებში მითითებული ტიპის ფაილად გატანა მოხდება."
 
 #~ msgid "Format Options"
 #~ msgstr "ფორმატის მორგება"

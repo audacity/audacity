@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-02-13 19:07+0300\n"
+"POT-Creation-Date: 2025-03-06 23:50+0300\n"
 "PO-Revision-Date: 2025-02-14 16:06+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://app.transifex.com/audacity/teams/164520/ko/)\n"
@@ -16701,8 +16701,8 @@ msgstr "응용프로그램 환경설정"
 
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Network communications"
-msgstr "네트웍 통신"
+msgid "Update notifications"
+msgstr "업데이트 알림"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16711,22 +16711,25 @@ msgid "&Check for updates"
 msgstr "업데이트 확인(&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Requires network access."
-msgstr "네트웍 억세스가 필요합니다."
+msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+msgstr "앱 업데이트를 확인하기 위해서는 네트워크에 접속해 있어야 합니다. 개인정보 보호를 위해서 오데시티는 어떠한 개인정보도 저장하지 않습니다."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr ""
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
 msgctxt "application preferences"
-msgid "&Send anonymous usage info"
-msgstr "익명으로 사용 정보 전송 (&S)"
+msgid "&Usage info (UUID)"
+msgstr "익명 사용 정보 (UUID)"
 
-#: src/prefs/ApplicationPrefs.cpp
-msgid "We create a random ID to track how often Audacity is used."
-msgstr "랜덤 ID를 생성하여 얼마나 자주 오데시티가 사용되는지 추적합니다."
-
-#: src/prefs/ApplicationPrefs.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
-msgstr "개인정보 보호를 위해서 오데시티는 어떠한 개인정보도 수집하지 않습니다."
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
+msgstr "오데시티를 사람들이 얼마나 자주 사용하는지 이해하기 위해, 우리는 랜덤 익명 ID (UUID)를 생성합니다. 이를 통해 추후 개선 계획을 만들게 됩니다. 개인 정보는 수집되지 않습니다."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19759,8 +19762,9 @@ msgstr "%s 다운로드 중"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "Stay Updated & Anonymous Usage Info"
-msgstr "업데이트된 익명 사용 정보로 유지"
+#, fuzzy
+msgid "App updates & usage info"
+msgstr "앱 업데이트 확인"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19774,25 +19778,20 @@ msgstr "다운로드 할 수있는 새로운 버전이 있을 경우, 앱에서 
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "Anonymous usage info (UUID)"
-msgstr "익명 사용 정보 (UUID)"
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid "To help us understand how often people use Audacity, we generate a random, anonymous ID (UUID). This helps us improve features and plan for the future. No personal data is collected."
-msgstr "오데시티를 사람들이 얼마나 자주 사용하는지 이해하기 위해, 우리는 랜덤 익명 ID (UUID)를 생성합니다. 이를 통해 추후 개선 계획을 만들게 됩니다. 개인 정보는 수집되지 않습니다."
-
-#. i18n-hint:  %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can disable this anytime in %s."
-msgstr "%s 에서 이 기능을 언제든 비활성화 할 수 있습니다."
+msgid "Usage info"
+msgstr ""
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
 msgstr "%s에서 이 기능을 언제든 끌 수 있습니다."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr "%s 에서 이 기능을 언제든 비활성화 할 수 있습니다."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "View privacy policy"
@@ -21654,18 +21653,28 @@ msgstr "특수 도구"
 msgid "Legacy"
 msgstr "레거시"
 
+#~ msgid "Network communications"
+#~ msgstr "네트웍 통신"
+
+#~ msgid "Requires network access."
+#~ msgstr "네트웍 억세스가 필요합니다."
+
+#~ msgctxt "application preferences"
+#~ msgid "&Send anonymous usage info"
+#~ msgstr "익명으로 사용 정보 전송 (&S)"
+
+#~ msgid "We create a random ID to track how often Audacity is used."
+#~ msgstr "랜덤 ID를 생성하여 얼마나 자주 오데시티가 사용되는지 추적합니다."
+
+#~ msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
+#~ msgstr "개인정보 보호를 위해서 오데시티는 어떠한 개인정보도 수집하지 않습니다."
+
+#~ msgid "Stay Updated & Anonymous Usage Info"
+#~ msgstr "업데이트된 익명 사용 정보로 유지"
+
 #, fuzzy
 #~ msgid "What's new in Audacity"
 #~ msgstr "오데시티 %s 에서 변경된 사항"
-
-#~ msgid "Update notifications"
-#~ msgstr "업데이트 알림"
-
-#~ msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-#~ msgstr "앱 업데이트를 확인하기 위해서는 네트워크에 접속해 있어야 합니다. 개인정보 보호를 위해서 오데시티는 어떠한 개인정보도 저장하지 않습니다."
-
-#~ msgid "App update checking"
-#~ msgstr "앱 업데이트 확인"
 
 #~ msgid "Open trace audio.com"
 #~ msgstr "audio.com에서 트레이스 열기"

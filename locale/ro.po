@@ -2,24 +2,24 @@
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Link Winterberg, 2025
 # Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2025
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-02-13 19:07+0300\n"
+"POT-Creation-Date: 2025-03-06 23:50+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/audacity/teams/164520/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
@@ -162,8 +162,7 @@ msgstr "Rate suportate:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr ""
-"Nu se pot verifica ratele de eșantionare mutuale fără ambele dispozitive.\n"
+msgstr "Nu se pot verifica ratele de eșantionare mutuale fără ambele dispozitive.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -253,59 +252,35 @@ msgid "Out of memory!"
 msgstr "Rămas fără memorie!"
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too high."
-msgstr ""
-"Ajustarea automată a nivelului de înregistrare a fost oprită. Nu s-a putut "
-"optimiza mai mult. Este tot prea mare."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
+msgstr "Ajustarea automată a nivelului de înregistrare a fost oprită. Nu s-a putut optimiza mai mult. Este tot prea mare."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr ""
-"Ajustarea automată a nivelului de înregistrare a scăzut volumul la %f."
+msgstr "Ajustarea automată a nivelului de înregistrare a scăzut volumul la %f."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. It was not possible to "
-"optimize it more. Still too low."
-msgstr ""
-"Ajustarea automată a nivelului de înregistrare a fost oprită. Nu s-a putut "
-"optimiza mai mult. Este tot prea mic."
+msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
+msgstr "Ajustarea automată a nivelului de înregistrare a fost oprită. Nu s-a putut optimiza mai mult. Este tot prea mic."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr ""
-"Ajustarea automată a nivelului de înregistrare a crescut volumul la %.2f."
+msgstr "Ajustarea automată a nivelului de înregistrare a crescut volumul la %.2f."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
-"Ajustarea automată a nivelului de înregistrare a fost oprită. Numărul total "
-"de analize a fost depășit fără să fie găsit un nivel de volum acceptabil. "
-"Este tot prea mare."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
+msgstr "Ajustarea automată a nivelului de înregistrare a fost oprită. Numărul total de analize a fost depășit fără să fie găsit un nivel de volum acceptabil. Este tot prea mare."
 
 #: libraries/lib-audio-io/AudioIO.cpp
-msgid ""
-"Automated Recording Level Adjustment stopped. The total number of analyses "
-"has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
-"Ajustarea automată a nivelului de înregistrare a fost oprită. Numărul total "
-"de analize a fost depășit fără să fie găsit un nivel de volum acceptabil. "
-"Este tot prea mic."
+msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
+msgstr "Ajustarea automată a nivelului de înregistrare a fost oprită. Numărul total de analize a fost depășit fără să fie găsit un nivel de volum acceptabil. Este tot prea mic."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
-msgid ""
-"Automated Recording Level Adjustment stopped. %.2f seems an acceptable "
-"volume."
-msgstr ""
-"Ajustarea automată a nivelului de înregistrare a fost oprită. %.2f pare un "
-"volum acceptabil."
+msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
+msgstr "Ajustarea automată a nivelului de înregistrare a fost oprită. %.2f pare un volum acceptabil."
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
@@ -425,34 +400,22 @@ msgid "Auto Duck"
 msgstr "Ducking automat"
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid ""
-"Reduces (ducks) the volume of one or more tracks whenever the volume of a "
-"specified \"control\" track reaches a particular level"
-msgstr ""
-"Ducking reduce volumul unei sau mai multor piste atunci când volumul unei "
-"piste de control specificate atinge un anumit nivel"
+msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
+msgstr "Ducking reduce volumul unei sau mai multor piste atunci când volumul unei piste de control specificate atinge un anumit nivel"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
 #. sound on another track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid ""
-"You selected a track which does not contain audio. AutoDuck can only process"
-" audio tracks."
-msgstr ""
-"Ai selectat o pistă care nu conține audio. Ducking-ul automat poate procesa "
-"doar piste audio."
+msgid "You selected a track which does not contain audio. AutoDuck can only process audio tracks."
+msgstr "Ai selectat o pistă care nu conține audio. Ducking-ul automat poate procesa doar piste audio."
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
 #. the volume) of the audio automatically when there is sound on another
 #. track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
-msgid ""
-"Auto Duck needs a control track which must be placed below the selected "
-"track(s)."
-msgstr ""
-"Ducking-ul automat necesită o pistă de control care trebuie plasată sub "
-"pistele selectate."
+msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
+msgstr "Ducking-ul automat necesită o pistă de control care trebuie plasată sub pistele selectate."
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
@@ -509,9 +472,7 @@ msgstr "Eliminare clicuri"
 
 #: libraries/lib-builtin-effects/ClickRemovalBase.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr ""
-"Eliminarea clicurilor este concepută să elimine clicurile audibile din "
-"pistele audio"
+msgstr "Eliminarea clicurilor este concepută să elimine clicurile audibile din pistele audio"
 
 #: libraries/lib-builtin-effects/ClickRemovalBase.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
@@ -687,12 +648,8 @@ msgid "DTMF Tones"
 msgstr "Tonuri DTMF"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
-msgid ""
-"Generates dual-tone multi-frequency (DTMF) tones like those produced by the "
-"keypad on telephones"
-msgstr ""
-"Generează tonuri DTMF (ton dual multi-frecvență), ca cele produse de tastele"
-" unui telefon"
+msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
+msgstr "Generează tonuri DTMF (ton dual multi-frecvență), ca cele produse de tastele unui telefon"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
 msgid ""
@@ -702,8 +659,7 @@ msgstr ""
 "Secvența DTMF este goală.\n"
 "Verifică TOATE setările pentru acest efect."
 
-#: libraries/lib-builtin-effects/EchoBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
 msgstr "Ecou"
 
@@ -762,11 +718,8 @@ msgid "Treble Cut"
 msgstr "Reducere înalte"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
-msgid ""
-"To apply Equalization, all selected tracks must have the same sample rate."
-msgstr ""
-"Pentru a aplica egalizarea, toate pistele selectate trebuie să aibe aceași "
-"rată de eșantionare."
+msgid "To apply Equalization, all selected tracks must have the same sample rate."
+msgstr "Pentru a aplica egalizarea, toate pistele selectate trebuie să aibe aceași rată de eșantionare."
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Track sample rate is too low for this effect."
@@ -844,6 +797,7 @@ msgstr "Clipping"
 #. size of a set, the first is the size of a subset, and not
 #. understood as an ordinal (i.e., not meaning "first", or
 #. "second", etc.)
+#.
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 #, c-format
 msgctxt "find clipping"
@@ -943,9 +897,7 @@ msgstr "Reducere zgomot"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr ""
-"Elimină zgomotele de fundal cum ar fi ventilatoare, fâsâitul benzii sau "
-"zumzetele"
+msgstr "Elimină zgomotele de fundal cum ar fi ventilatoare, fâsâitul benzii sau zumzetele"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Steps per block are too few for the window types."
@@ -957,14 +909,11 @@ msgstr "Numărul de pași per bloc nu poate depăși dimensiunea ferestrei."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Median method is not implemented for more than four steps per window."
-msgstr ""
-"Metoda mediană nu este implementată pentru mai mult de patru pași per "
-"fereastră."
+msgstr "Metoda mediană nu este implementată pentru mai mult de patru pași per fereastră."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "You must specify the same window size for steps 1 and 2."
-msgstr ""
-"Trebuie să specifici aceeași dimensiune de fereastră pentru pașii 1 și 2."
+msgstr "Trebuie să specifici aceeași dimensiune de fereastră pentru pașii 1 și 2."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Warning: window types are not the same as for profiling."
@@ -972,17 +921,11 @@ msgstr "Atenție: Tipurile de ferestre nu sunt la fel ca și la profilare."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "All noise profile data must have the same sample rate."
-msgstr ""
-"Toate datele ale profilului de zgomot trebuie să folosească aceeași rată de "
-"eșantionare."
+msgstr "Toate datele ale profilului de zgomot trebuie să folosească aceeași rată de eșantionare."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
-msgid ""
-"The sample rate of the noise profile must match that of the sound to be "
-"processed."
-msgstr ""
-"Rata de eșantionare a profilului de zgomot trebuie să se potrivească cu cea "
-"a sunetului de urmează a fi procesat."
+msgid "The sample rate of the noise profile must match that of the sound to be processed."
+msgstr "Rata de eșantionare a profilului de zgomot trebuie să se potrivească cu cea a sunetului de urmează a fi procesat."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Selected noise profile is too short."
@@ -1045,9 +988,7 @@ msgstr "Paulstretch"
 
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr ""
-"Paulstretch este doar pentru un efect de întindere în timp sau „stază” "
-"extrem"
+msgstr "Paulstretch este doar pentru un efect de întindere în timp sau „stază” extrem"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the
 #. Paulstretch effect.
@@ -1104,11 +1045,8 @@ msgid "Combines phase-shifted signals with the original signal"
 msgstr "Combină semnalele deplasate în fază cu semnalul original"
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
-msgid ""
-"To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr ""
-"Pentru a trasa spectrul, toate pistele selectate trebuie să aibă aceeași "
-"rată de eșantionare."
+msgid "To plot the spectrum, all selected tracks must have the same sample rate."
+msgstr "Pentru a trasa spectrul, toate pistele selectate trebuie să aibă aceeași rată de eșantionare."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid ""
@@ -1120,11 +1058,8 @@ msgstr ""
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 #, c-format
-msgid ""
-"Too much audio was selected. Only the first %.1f seconds of audio will be "
-"analyzed."
-msgstr ""
-"Prea mult audio a fost selectat. Doar primele %.1f secunde vor fi analizate."
+msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
+msgstr "Prea mult audio a fost selectat. Doar primele %.1f secunde vor fi analizate."
 
 #: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
@@ -1136,8 +1071,7 @@ msgstr "Setează amplitudinea de vârf a uneia sau mai multor piste"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
-"Efectul de reparare nu poate fi aplicat pe clipuri întinse sau comprimate"
+msgstr "Efectul de reparare nu poate fi aplicat pe clipuri întinse sau comprimate"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid ""
@@ -1323,9 +1257,7 @@ msgstr "Execută un filtru IIR care emulează filtrele analogice"
 
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "To apply a filter, all selected tracks must have the same sample rate."
-msgstr ""
-"Pentru a aplica un filtru, toate pistele selectate trebuie să aibă aceeași "
-"rată de eșantionare."
+msgstr "Pentru a aplica un filtru, toate pistele selectate trebuie să aibă aceeași rată de eșantionare."
 
 #. i18n-hint: noun
 #: libraries/lib-builtin-effects/SilenceBase.cpp
@@ -1404,19 +1336,12 @@ msgid "Truncate Silence"
 msgstr "Trunchiază liniștea"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-msgid ""
-"Automatically reduces the length of passages where the volume is below a "
-"specified level"
-msgstr ""
-"Reduce automat lungimea pasajelor unde volumul este sub un nivel specificat"
+msgid "Automatically reduces the length of passages where the volume is below a specified level"
+msgstr "Reduce automat lungimea pasajelor unde volumul este sub un nivel specificat"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-msgid ""
-"When truncating independently, there may only be one selected audio track in"
-" each Sync-Locked Track Group."
-msgstr ""
-"Când se trunchiază independent, se poate selecta doar o singură pistă audio "
-"din fiecare grup de piste solidare."
+msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
+msgstr "Când se trunchiază independent, se poate selecta doar o singură pistă audio din fiecare grup de piste solidare."
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1424,19 +1349,14 @@ msgid "Wahwah"
 msgstr "Wahwah"
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
-msgid ""
-"Rapid tone quality variations, like that guitar sound so popular in the "
-"1970's"
-msgstr ""
-"Variații rapide de ton calitative, ca acel sunet de chitară popular în anii "
-"1970"
+msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
+msgstr "Variații rapide de ton calitative, ca acel sunet de chitară popular în anii 1970"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
 msgstr "Nu se poate continua cu încărcarea pe server."
 
-#. i18n-hint: database operation has failed because the requested item was not
-#. found
+#. i18n-hint: database operation has failed because the requested item was not found
 #: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "File not found"
@@ -1472,9 +1392,7 @@ msgstr "A eșuat decompresia blocului proiectului din Cloud"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Local project data was removed before the sync has completed"
-msgstr ""
-"Datele locale ale proiectului au fost șterse înainte ca sincronizarea să se "
-"fi finalizat"
+msgstr "Datele locale ale proiectului au fost șterse înainte ca sincronizarea să se fi finalizat"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
@@ -1669,8 +1587,7 @@ msgid "Applying %s..."
 msgstr "Se aplică %s..."
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
-#. Audacity, named in honor of the Swedish-American Harry Nyquist (or
-#. Nyqvist).
+#. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
 #. In the translations of this and other strings, you may transliterate the
 #. name into another alphabet.
 #: libraries/lib-effects/EffectBase.h
@@ -1768,8 +1685,7 @@ msgstr "Gausiană (a=3.5)"
 msgid "Gaussian(a=4.5)"
 msgstr "Gausiană (a=4.5)"
 
-#. i18n-hint: %s will be the error message from the libsndfile software
-#. library
+#. i18n-hint: %s will be the error message from the libsndfile software library
 #: libraries/lib-file-formats/FileFormats.cpp
 #, c-format
 msgid "Error (file may not have been written): %s"
@@ -1787,11 +1703,8 @@ msgstr "Audacity a eșuat la citirea dintr-un fișier în %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
-msgid ""
-"Audacity successfully wrote a file in %s but failed to rename it as %s."
-msgstr ""
-"Audacity a scris cu succes un fișier în %s, dar a eșuat să-l redenumească în"
-" %s."
+msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
+msgstr "Audacity a scris cu succes un fișier în %s, dar a eșuat să-l redenumească în %s."
 
 #: libraries/lib-files/FileException.cpp
 #, c-format
@@ -1888,8 +1801,7 @@ msgstr ""
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
 #: libraries/lib-transactions/TransactionScope.cpp
-#: libraries/lib-wave-track/WaveClip.cpp
-#: libraries/lib-wave-track/WaveTrack.cpp
+#: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 #: libraries/lib-wx-init/LogWindow.cpp
 #: modules/import-export/mod-cl/ExportCL.cpp
@@ -2186,12 +2098,14 @@ msgstr "Una sau mai multe etichete salvate nu au putut fi citite."
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
+#.
 #: libraries/lib-ladspa/LadspaEffectBase.h
 msgid "LADSPA"
 msgstr "LADSPA"
 
 #. i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
 #. (Application programming interface)
+#.
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp
 msgid "LADSPA Effects"
 msgstr "Efecte LADSPA"
@@ -2332,32 +2246,27 @@ msgstr "la♭"
 msgid "B♭"
 msgstr "la♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "C♯/D♭"
 msgstr "do♯/re♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "D♯/E♭"
 msgstr "re♯/mi♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "F♯/G♭"
 msgstr "fa♯/sol♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "G♯/A♭"
 msgstr "sol♯/la♭"
 
-#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic
-#. scale
+#. i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale
 #: libraries/lib-math/PitchName.cpp
 msgid "A♯/B♭"
 msgstr "la♯/si♭"
@@ -2681,10 +2590,9 @@ msgstr "hh:mm:ss + sutimi"
 #. i18n-hint: Name of display format that shows frequency in hertz
 #. i18n-hint: This is the abbreviation for "Hertz", or
 #. cycles per second.
-#: libraries/lib-numeric-formats/NumericConverterFormats.cpp
-#: src/FreqWindow.cpp src/effects/ChangePitch.cpp
-#: src/effects/EqualizationUI.cpp src/effects/ScienFilter.cpp
-#: src/import/ImportRaw.cpp
+#: libraries/lib-numeric-formats/NumericConverterFormats.cpp src/FreqWindow.cpp
+#: src/effects/ChangePitch.cpp src/effects/EqualizationUI.cpp
+#: src/effects/ScienFilter.cpp src/import/ImportRaw.cpp
 msgid "Hz"
 msgstr "Hz"
 
@@ -2729,8 +2637,7 @@ msgid "seconds + milliseconds"
 msgstr "secunde + milisecunde"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
-#. * as fractional seconds. Change the comma in the middle to the 1000s
-#. separator
+#. * as fractional seconds. Change the comma in the middle to the 1000s separator
 #. * for your locale, and the 'seconds' on the end to the word for seconds.
 #. * Don't change the numbers. The decimal separator is specified using '<' if
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
@@ -2769,12 +2676,10 @@ msgstr "0100 days 024 h 060 m 060 s"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
 #. * and hundredths of a second. Change the 'h' to the abbreviation for hours,
-#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for
-#. seconds
+#. * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
 #. * (the hundredths are shown as decimal seconds). Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060>0100 s"
@@ -2785,13 +2690,11 @@ msgid "centiseconds"
 msgstr "centisecunde"
 
 #. i18n-hint: Format string for displaying time in hours, minutes, seconds
-#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to
-#. the
+#. * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
 #. * abbreviation for minutes and 's' to the abbreviation for seconds (the
 #. * milliseconds are shown as decimal seconds) . Don't change the numbers
 #. * unless there aren't 60 minutes in an hour in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060>01000 s"
@@ -2802,8 +2705,7 @@ msgstr "0100 h 060 m 060<01000 s"
 #. * abbreviation for minutes, 's' to the abbreviation for seconds and
 #. * translate samples . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+># samples"
@@ -2812,6 +2714,7 @@ msgstr "0100 h 060 m 060 s+<# eșantioane"
 #. i18n-hint: Name of time display format that shows time in samples (at the
 #. * current project sample rate).  For example the number of a sample at 1
 #. * second into a recording at 44.1KHz would be 44,100.
+#.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: plug-ins/sample-data-export.ny
 msgid "samples"
@@ -2836,8 +2739,7 @@ msgstr "hh:mm:ss + cadre film (24 fps)"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames' . Don't change the numbers
 #. * unless there aren't 60 seconds in a minute in your locale.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>24 frames"
@@ -2868,8 +2770,7 @@ msgstr "hh:mm:ss + cadre drop NTSC"
 #. * and frames with NTSC drop frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the |N alone, it's important!
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>30 frames|N"
@@ -2887,8 +2788,7 @@ msgstr "hh:mm:ss + cadre non-drop NTSC"
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Leave the | .999000999 alone,
 #. * the whole things really is slightly off-speed!
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>030 frames| .999000999"
@@ -2919,8 +2819,7 @@ msgstr "hh:mm:ss + cadre PAL (25 fps)"
 #. * and frames with PAL TV frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'. Nice simple time code!
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>25 frames"
@@ -2951,8 +2850,7 @@ msgstr "hh:mm:ss + cadre CDDA (75 fps)"
 #. * and frames with CD Audio frames. Change the 'h' to the abbreviation
 #. * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
 #. * for seconds and translate 'frames'.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "0100 h 060 m 060 s+>75 frames"
@@ -2975,8 +2873,7 @@ msgstr "01000.01000 cadre|75"
 
 #. i18n-hint: Format string for displaying frequency in hertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "010,01000>0100 Hz"
@@ -2993,8 +2890,7 @@ msgstr "kHz"
 
 #. i18n-hint: Format string for displaying frequency in kilohertz. Change
 #. * the decimal point for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "01000>01000 kHz|0.001"
@@ -3006,8 +2902,7 @@ msgstr "herți"
 
 #. i18n-hint: Format string for displaying log of frequency in octaves.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "100>01000 octaves|1.442695041"
@@ -3027,8 +2922,7 @@ msgstr "semitonuri + centisunete"
 #. i18n-hint: Format string for displaying log of frequency in semitones
 #. * and cents.
 #. * Change the decimal points for your locale. Don't change the numbers.
-#. * The decimal separator is specified using '<' if your language uses a ','
-#. or
+#. * The decimal separator is specified using '<' if your language uses a ',' or
 #. * to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "1000 semitones >0100 cents|17.312340491"
@@ -3099,9 +2993,7 @@ msgstr ""
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr ""
-"eroare: Fișierul „%s” este specificat în antet, dar nu a fost găsit în calea"
-" plugin-ului.\n"
+msgstr "eroare: Fișierul „%s” este specificat în antet, dar nu a fost găsit în calea plugin-ului.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Audio selection required."
@@ -3162,16 +3054,13 @@ msgid "Nyquist returned nil audio.\n"
 msgstr "Nyquist a întors audio nul.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
-msgid ""
-"[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr ""
-"[Atenție: Nyquist a întors un șir UTF-8 invalid, convertit aici ca Latin-1]"
+msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
+msgstr "[Atenție: Nyquist a întors un șir UTF-8 invalid, convertit aici ca Latin-1]"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr ""
-"Această versiune de Audacity nu suportă plugin-ul Nyquist versiunea %ld"
+msgstr "Această versiune de Audacity nu suportă plugin-ul Nyquist versiunea %ld"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Could not open file"
@@ -3251,8 +3140,7 @@ msgstr "A eșuat setarea unui mod sigur al conexiunii primare la %s"
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr ""
-"A eșuat setarea unui mod sigur al conexiunii al punctului de control la %s"
+msgstr "A eșuat setarea unui mod sigur al conexiunii al punctului de control la %s"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 msgid "Checkpointing project"
@@ -3374,12 +3262,8 @@ msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
-msgid ""
-"This project was created using an older Audacity version. Once saved, the "
-"project can only be opened with Audacity version %s or newer."
-msgstr ""
-"Acest proiect a fost creat într-o versiune mai veche de Audacity. Când va fi"
-" salvat, va putea fi deschis doar cu versiunea de Audacity %s sau mai nouă."
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr "Acest proiect a fost creat într-o versiune mai veche de Audacity. Când va fi salvat, va putea fi deschis doar cu versiunea de Audacity %s sau mai nouă."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Project update required"
@@ -3573,8 +3457,7 @@ msgstr "Nu se poate deschide fișierul de proiect"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to remove the autosave information from the project file."
-msgstr ""
-"A eșuat eliminarea informației de auto-salvare din fișierul proiectului."
+msgstr "A eșuat eliminarea informației de auto-salvare din fișierul proiectului."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to bind to blob"
@@ -3585,12 +3468,8 @@ msgid "Unable to parse project information."
 msgstr "Nu s-au putut parcurge informațiile de proiect."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
-msgid ""
-"The project's database failed to reopen, possibly because of limited space "
-"on the storage device."
-msgstr ""
-"Baza de date a proiectului nu s-a putut redeschide, posibil din cauza "
-"spațiului limitat de pe dispozitivul de stocare."
+msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
+msgstr "Baza de date a proiectului nu s-a putut redeschide, posibil din cauza spațiului limitat de pe dispozitivul de stocare."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Saving project"
@@ -3669,17 +3548,12 @@ msgstr "24-biți"
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr ""
-"Grupul de plugin-uri de la %s a fost contopit cu un grup definit anterior"
+msgstr "Grupul de plugin-uri de la %s a fost contopit cu un grup definit anterior"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
-msgid ""
-"Plug-in item at %s conflicts with a previously defined item and was "
-"discarded"
-msgstr ""
-"Elementul de plugin de la %s este în conflict cu un element definit anterior"
-" așa că a fost înlăturat"
+msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
+msgstr "Elementul de plugin de la %s este în conflict cu un element definit anterior așa că a fost înlăturat"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
@@ -3914,20 +3788,17 @@ msgstr "Inserarea a eșuat deoarece discul este plin"
 msgid "Unable to open the database file"
 msgstr "Nu s-a putut deschide fișierul bazei de date"
 
-#. i18n-hint: database operation has failed because the lock protocol has
-#. failed
+#. i18n-hint: database operation has failed because the lock protocol has failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Database lock protocol error"
 msgstr "Eroare la protocolul de blocare al bazei de date"
 
-#. i18n-hint: database operation has failed because the database schema has
-#. changed
+#. i18n-hint: database operation has failed because the database schema has changed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database schema changed"
 msgstr "Schema bazei de date a fost schimbată"
 
-#. i18n-hint: database operation has failed because the string or BLOB exceeds
-#. size limit
+#. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "String or BLOB exceeds size limit"
 msgstr "Șirul sau BLOB-ul depășește limita de dimensiune"
@@ -3947,8 +3818,7 @@ msgstr "Nepotrivire a tipului de date"
 msgid "Library used incorrectly"
 msgstr "Biblioteca a fost folosită incorect"
 
-#. i18n-hint: database operation has failed because the large file support is
-#. disabled
+#. i18n-hint: database operation has failed because the large file support is disabled
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The large file support is disabled"
 msgstr "Suportul pentru fișiere mari este dezactivat"
@@ -3963,14 +3833,12 @@ msgstr "Autorizarea a fost respinsă"
 msgid "Not used"
 msgstr "Nefolosit"
 
-#. i18n-hint: database operation has failed because the parameter is out of
-#. range
+#. i18n-hint: database operation has failed because the parameter is out of range
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "2nd parameter to sqlite3_bind out of range"
 msgstr "Al doilea parametru al sqlite3_bind este în afara domeniului"
 
-#. i18n-hint: database operation has failed because the file opened is not a
-#. database file
+#. i18n-hint: database operation has failed because the file opened is not a database file
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "File opened that is not a database file "
 msgstr "Fișierul care a fost deschis nu este un fișier bază de date "
@@ -4046,8 +3914,7 @@ msgid "Light"
 msgstr "Luminos"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of
-#. images
+#. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: libraries/lib-theme/Theme.cpp
@@ -4217,8 +4084,7 @@ msgstr "Eroare bază de date. Scuze, dar nu avem mai multe detalii."
 msgid "Audio In: %d, Audio Out: %d"
 msgstr "Intrare audio: %d, ieșire audio: %d"
 
-#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software
-#. protocol
+#. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
 #. developed by Steinberg GmbH
 #: libraries/lib-vst/VSTEffectBase.h
 msgid "VST"
@@ -4311,14 +4177,12 @@ msgstr "A eșuat salvarea presetărilor VST3 în fișier"
 msgid "Mel"
 msgstr "Mel"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, named for
-#. Heinrich Barkhausen
+#. i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Bark"
 msgstr "Bark"
 
-#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates
-#. Equivalent Rectangular Bandwidth
+#. i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "ERB"
 msgstr "ERB"
@@ -4328,8 +4192,7 @@ msgstr "ERB"
 msgid "Period"
 msgstr "Perioadă"
 
-#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the
-#. color scheme
+#. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgctxt "spectrum prefs"
 msgid "Color (Roseus)"
@@ -4516,16 +4379,14 @@ msgstr "aici"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Would you like to send a report to help us fix this issue?"
-msgstr ""
-"Ai dori să trimiți un raport pentru a ne ajuta să reparăm această problemă?"
+msgstr "Ai dori să trimiți un raport pentru a ne ajuta să reparăm această problemă?"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 #, c-format
 msgid "All reports are anonymous. See %s for more info."
 msgstr "Toate rapoartele sunt anonime. Vezi %s pentru mai multe informații."
 
-#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of
-#. "See".
+#. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
@@ -4644,44 +4505,16 @@ msgid "No Local Help"
 msgstr "Nu există ajutor local"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"Audacity can import unprotected files in many other formats (such as M4A and"
-" WMA, compressed WAV files from portable recorders and audio from video "
-"files) if you download and install the optional "
-"[[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg "
-"library]] to your computer."
-msgstr ""
-"Audacity poate importa fișiere neprotejate în multe alte formate (cum ar fi "
-"M4A și WMA, fișiere WAV comprimate din înregistratoarele portabile și audio "
-"din fișiere video) dacă descarci și instalezi "
-"[[https://support.audacityteam.org/basics/installing-ffmpeg|biblioteca "
-"opțională FFmpeg]] pe calculatorul tău."
+msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
+msgstr "Audacity poate importa fișiere neprotejate în multe alte formate (cum ar fi M4A și WMA, fișiere WAV comprimate din înregistratoarele portabile și audio din fișiere video) dacă descarci și instalezi [[https://support.audacityteam.org/basics/installing-ffmpeg|biblioteca opțională FFmpeg]] pe calculatorul tău."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"You can also read our help on importing "
-"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI "
-"files]] and tracks from "
-"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|"
-" audio CDs]]."
-msgstr ""
-"Poți de asemenea să citești ajutorul nostru despre importarea "
-"[[https://manual.audacityteam.org/man/playing_and_recording.html#midi|fișierelor"
-" MIDI]] și piste de pe  "
-"[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|CD-"
-"uri audio]]."
+msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
+msgstr "Poți de asemenea să citești ajutorul nostru despre importarea [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|fișierelor MIDI]] și piste de pe  [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|CD-uri audio]]."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html|"
-" download the Manual]].<br><br>To always view the Manual online, change "
-"\"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"Se pare că manualul nu este instalat. Te rog [[*URL*|vezi manualul online]] "
-"sau [[https://manual.audacityteam.org/man/unzipping_the_manual.html|descarcă"
-" manualul]]. <br> <br> Pentru a vizualiza mereu manualul online, schimbă în "
-"Preferințe interfață „Locația manualului” la „Pe internet”."
+msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+msgstr "Se pare că manualul nu este instalat. Te rog [[*URL*|vezi manualul online]] sau [[https://manual.audacityteam.org/man/unzipping_the_manual.html|descarcă manualul]]. <br> <br> Pentru a vizualiza mereu manualul online, schimbă în Preferințe interfață „Locația manualului” la „Pe internet”."
 
 #: libraries/lib-wx-init/LogWindow.cpp
 msgid "Audacity Log"
@@ -4714,8 +4547,7 @@ msgstr "Nu s-a putut salva jurnalul în fișier: %s"
 msgid "Show Log for Details"
 msgstr "Afișează jurnalul pentru detalii"
 
-#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
-#. button.
+#. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: libraries/lib-wx-init/MultiDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
@@ -4778,11 +4610,8 @@ msgid "Confirm Close"
 msgstr "Confirmă închiderea"
 
 #: libraries/lib-wx-init/SelectFile.cpp
-msgid ""
-"The specified filename could not be converted due to Unicode character use."
-msgstr ""
-"Numele specificat de fișier nu a putut fi convertit din cauza folosirii "
-"caracterelor Unicode."
+msgid "The specified filename could not be converted due to Unicode character use."
+msgstr "Numele specificat de fișier nu a putut fi convertit din cauza folosirii caracterelor Unicode."
 
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
@@ -4936,20 +4765,12 @@ msgid "Invalid project 'rate' attribute."
 msgstr "Atribut proiect „rate” invalid."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-msgid ""
-"MIDI tracks found in project file, but this build of Audacity does not "
-"include MIDI support, bypassing track."
-msgstr ""
-"Au fost găsite piste MIDI în fișierul de proiect, dar această variantă de "
-"Audacity nu include suport pentru MIDI. Se vor omite aceste piste."
+msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
+msgstr "Au fost găsite piste MIDI în fișierul de proiect, dar această variantă de Audacity nu include suport pentru MIDI. Se vor omite aceste piste."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
-msgid ""
-"The active project already has a time track and one was encountered in the "
-"project being imported, bypassing imported time track."
-msgstr ""
-"Proiectul activ deja conține o pistă de timp și încă una a fost întâlnită în"
-" proiectul care este importat. Se va omite pista de timp importată."
+msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
+msgstr "Proiectul activ deja conține o pistă de timp și încă una a fost întâlnită în proiectul care este importat. Se va omite pista de timp importată."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -5051,17 +4872,12 @@ msgstr "Afișează ieșirea"
 #. i18n-hint: Some programmer-oriented terminology here:
 #. "Data" refers to the sound to be exported, "piped" means sent,
 #. and "standard in" means the default input stream that the external program,
-#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually
-#. used
+#. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
 #. in the program as a format string.  Keep %f unchanged.
 #: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
-msgid ""
-"Data will be piped to standard in. \"%f\" uses the file name in the export "
-"window."
-msgstr ""
-"Datele vor fi trimise la intrarea standard. „%f” folosește numele fișierului"
-" în fereastra de export."
+msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
+msgstr "Datele vor fi trimise la intrarea standard. „%f” folosește numele fișierului în fereastra de export."
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
@@ -5264,9 +5080,7 @@ msgstr "Codec curent:"
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
-msgstr ""
-"FFmpeg: EROARE - Nu s-a putut determina descrierea formatului pentru "
-"fișierul „%s”."
+msgstr "FFmpeg: EROARE - Nu s-a putut determina descrierea formatului pentru fișierul „%s”."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
@@ -5275,25 +5089,17 @@ msgstr "FFmpeg: EROARE - Nu s-a putut aloca contextul formatului de ieșire."
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
-msgstr ""
-"FFmpeg: EROARE - Nu s-a putut adăuga fluxul audio în fișierul de ieșire "
-"„%s”."
+msgstr "FFmpeg: EROARE - Nu s-a putut adăuga fluxul audio în fișierul de ieșire „%s”."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
-msgstr ""
-"FFmpeg: EROARE - Nu s-a putut deschide fișierul de ieșire „%s” pentru "
-"scriere. Codul de eroare este %d."
+msgstr "FFmpeg: EROARE - Nu s-a putut deschide fișierul de ieșire „%s” pentru scriere. Codul de eroare este %d."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is "
-"%d."
-msgstr ""
-"FFmpeg: EROARE - Nu s-au putut scrie antetele în fișierul de ieșire „%s”. "
-"Codul de eroare este %d."
+msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
+msgstr "FFmpeg: EROARE - Nu s-au putut scrie antetele în fișierul de ieșire „%s”. Codul de eroare este %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
@@ -5327,23 +5133,19 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
-msgstr ""
-"FFmpeg: EROARE - Nu s-a putut aloca buffer-ul pentru a citi din audio FIFO."
+msgstr "FFmpeg: EROARE - Nu s-a putut aloca buffer-ul pentru a citi din audio FIFO."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
-msgstr ""
-"FFmpeg: EROARE - Nu s-a putut scrie cadrul audio în fișierul de ieșire."
+msgstr "FFmpeg: EROARE - Nu s-a putut scrie cadrul audio în fișierul de ieșire."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
-msgstr ""
-"FFmpeg: EROARE - Nu s-a putut obține dimensiunea buffer-ului de eșantioane"
+msgstr "FFmpeg: EROARE - Nu s-a putut obține dimensiunea buffer-ului de eșantioane"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
-msgstr ""
-"FFmpeg: EROARE - Nu s-au putut aloca octeți pentru buffer-ul de eșantioane"
+msgstr "FFmpeg: EROARE - Nu s-au putut aloca octeți pentru buffer-ul de eșantioane"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
@@ -5371,12 +5173,8 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
-msgid ""
-"Attempted to export %d channels, but maximum number of channels for selected"
-" output format is %d"
-msgstr ""
-"S-a încercat exportarea a %d canale, dar numărul maxim de canale pentru "
-"formatul de ieșire selectat este de %d"
+msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
+msgstr "S-a încercat exportarea a %d canale, dar numărul maxim de canale pentru formatul de ieșire selectat este de %d"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -5528,12 +5326,8 @@ msgid "Codec:"
 msgstr "Codec:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
-msgid ""
-"Not all formats and codecs are compatible. Nor are all option combinations "
-"compatible with all codecs."
-msgstr ""
-"Nu toate formatele și codec-urile sunt compatibile. Nici toate combinațiile "
-"de opțiuni nu sunt compatibile cu toate codec-urile."
+msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
+msgstr "Nu toate formatele și codec-urile sunt compatibile. Nici toate combinațiile de opțiuni nu sunt compatibile cu toate codec-urile."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
@@ -5830,19 +5624,15 @@ msgstr ""
 "Opțional\n"
 "0 - implicit"
 
-#. i18n-hint: 'mux' is short for multiplexor, a device that selects between
-#. several inputs
-#. 'Mux Rate' is a parameter that has some bearing on compression ratio for
-#. MPEG
+#. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
+#. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
 #. it has a hard to predict effect on the degree of compression
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Mux Rate:"
 msgstr "Rată multiplexor:"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
-#. compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one
-#. piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one piece.
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Packet size\n"
@@ -5853,10 +5643,8 @@ msgstr ""
 "Opțional\n"
 "0 - implicit"
 
-#. i18n-hint: 'Packet Size' is a parameter that has some bearing on
-#. compression ratio for MPEG
-#. compression.  It measures how big a chunk of audio is compressed in one
-#. piece.
+#. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
+#. compression.  It measures how big a chunk of audio is compressed in one piece.
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Packet Size:"
 msgstr "Mărime pachet:"
@@ -5938,9 +5726,7 @@ msgstr "Localizează FFmpeg"
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr ""
-"Audacity are nevoie de fișierul „%s” pentru a importa și exporta audio via "
-"FFmpeg."
+msgstr "Audacity are nevoie de fișierul „%s” pentru a importa și exporta audio via FFmpeg."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
@@ -6083,10 +5869,8 @@ msgstr "Încearcă să instalezi FFmpeg\n"
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 #, c-format
-msgid ""
-"Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
-msgstr ""
-"Index[%02x] Codec[%s], Limbă[%s], Rată de biți[%s], Canale[%d], Durată[%d]"
+msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
+msgstr "Index[%02x] Codec[%s], Limbă[%s], Rată de biți[%s], Canale[%d], Durată[%d]"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
@@ -6115,8 +5899,7 @@ msgstr "0 (cel mai rapid)"
 msgid "1"
 msgstr "1"
 
-#: modules/import-export/mod-flac/ExportFLAC.cpp
-#: src/effects/NoiseReduction.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
 msgid "2"
 msgstr "2"
 
@@ -6190,8 +5973,7 @@ msgstr "Durată invalidă în fișierul LOF."
 
 #: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr ""
-"Pistele MIDI nu se pot decala individual, doar fișierele audio se pot."
+msgstr "Pistele MIDI nu se pot decala individual, doar fișierele audio se pot."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: modules/import-export/mod-lof/ImportLOF.cpp
@@ -6216,8 +5998,7 @@ msgstr "Fișiere MP2"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
-msgstr ""
-"Nu se poate exporta MP2 cu această rată de eșantionare și rată de biți"
+msgstr "Nu se poate exporta MP2 cu această rată de eșantionare și rată de biți"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -6340,8 +6121,7 @@ msgstr "Constantă"
 msgid "Quality"
 msgstr "Calitate"
 
-#. i18n-hint: LAME is the name of an MP3 converter and should not be
-#. translated
+#. i18n-hint: LAME is the name of an MP3 converter and should not be translated
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Locate LAME"
 msgstr "Localizează LAME"
@@ -7133,8 +6913,7 @@ msgstr "Script"
 
 #. i18n-hint noun
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
-#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#: src/effects/BassTreble.cpp src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Output"
 msgstr "Ieșire"
 
@@ -7144,8 +6923,7 @@ msgstr "Încarcă script Nyquist"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr ""
-"Scripturi Nyquist (*.ny)|*.ny|Scripturi Lisp (*.lsp)|*.lsp|Toate fișierele|*"
+msgstr "Scripturi Nyquist (*.ny)|*.ny|Scripturi Lisp (*.lsp)|*.lsp|Toate fișierele|*"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
@@ -7176,10 +6954,8 @@ msgid "(C) 2009 by Leland Lucius"
 msgstr "(C) 2009 Leland Lucius"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
-msgid ""
-"External Audacity module which provides a simple IDE for writing effects."
-msgstr ""
-"Modul extern Audacity care oferă un IDE simplu pentru scrierea efectelor."
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr "Modul extern Audacity care oferă un IDE simplu pentru scrierea efectelor."
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
@@ -7372,12 +7148,8 @@ msgid "Waiting for audio.com"
 msgstr "Se așteptă după audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
-msgid ""
-"An action on audio.com is required before you can continue. You can cancel "
-"this operation."
-msgstr ""
-"Este necesară o acțiune pe audio.com înainte de a putea continua. Poți anula"
-" această operație."
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr "Este necesară o acțiune pe audio.com înainte de a putea continua. Poți anula această operație."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7502,11 +7274,8 @@ msgid "Syncing to audio.com... (%d%%)"
 msgstr "Sincronizare la audio.com... (%d%%)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid ""
-"Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr ""
-"Proiectul se sincronizează cu audio.com. Dorești să oprești procesul de "
-"sincronizare?"
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr "Proiectul se sincronizează cu audio.com. Dorești să oprești procesul de sincronizare?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Waiting for space to free up"
@@ -7514,9 +7283,7 @@ msgstr "Se așteaptă după spațiu eliberat"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr ""
-"Deîndată ce ai făcut rost de spațiu de stocare disponibil pe audio.com, "
-"apară pe Reîncearcă."
+msgstr "Deîndată ce ai făcut rost de spațiu de stocare disponibil pe audio.com, apară pe Reîncearcă."
 
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
@@ -7563,14 +7330,8 @@ msgid "Save to the Cloud (free)"
 msgstr "Salvează în Cloud (gratuit)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid ""
-"Your project is backed up privately on audio.com. You can access your work "
-"from any device and collaborate on your project with others. Cloud saving is"
-" free for a limited number of projects."
-msgstr ""
-"Proiectul tău este salvat privat pe audio.com. Îți poți accesa munca de pe "
-"orice dispozitiv și să colaborezi împreună cu alții. Salvarea în Cloud este "
-"gratuită pentru un număr limitat de proiecte."
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
+msgstr "Proiectul tău este salvat privat pe audio.com. Îți poți accesa munca de pe orice dispozitiv și să colaborezi împreună cu alții. Salvarea în Cloud este gratuită pentru un număr limitat de proiecte."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Save to Cloud"
@@ -7607,13 +7368,8 @@ msgid "Share to audio.com"
 msgstr "Partajează pe audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid ""
-"Uploads an uncompressed audio file and generates a shareable link. This link"
-" allows others to download the file in either .wav or .mp3 format."
-msgstr ""
-"Încarcă pe server un fișier audio necomprimat și generează o legătură "
-"partajabilă. Aceasă legătură permite altora să descarce fișierul într-un "
-"format precum .wav sau .mp3."
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr "Încarcă pe server un fișier audio necomprimat și generează o legătură partajabilă. Aceasă legătură permite altora să descarce fișierul într-un format precum .wav sau .mp3."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Share to audio.com"
@@ -7659,13 +7415,8 @@ msgid "We encountered an issue syncing your file"
 msgstr "A intervenit o problemă în sincronizarea fișierului tău"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid ""
-"Don't worry, your changes will be saved to a temporary location and will be "
-"synchronized to your cloud copy when your internet connection resumes."
-msgstr ""
-"Nu-ți face probleme, modificările tale vor fi salvate într-o locație "
-"temporară și vor fi sincronizate cu copia ta din Cloud când conexiunea la "
-"internet va reveni."
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr "Nu-ți face probleme, modificările tale vor fi salvate într-o locație temporară și vor fi sincronizate cu copia ta din Cloud când conexiunea la internet va reveni."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
@@ -7791,20 +7542,12 @@ msgid "This project is no longer saved to the Cloud"
 msgstr "Acest proiect nu mai este salvat în Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid ""
-"This project was removed from audio.com and therefore cannot be saved at "
-"this time. "
-msgstr ""
-"Acest proiect a fost eliminat de pe Audio.com și prin urmare nu poate fi "
-"salvat la momentul de față. "
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr "Acest proiect a fost eliminat de pe Audio.com și prin urmare nu poate fi salvat la momentul de față. "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid ""
-"You can either save it to the Cloud as a new project, or save it to your "
-"computer."
-msgstr ""
-"Poți să-l salvezi în Cloud ca un proiect nou sau să-l salvezi local pe "
-"calculatorul tău."
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr "Poți să-l salvezi în Cloud ca un proiect nou sau să-l salvezi local pe calculatorul tău."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
@@ -7820,18 +7563,12 @@ msgid "Your project storage limit has been reached."
 msgstr "Limita de stocarea a proiectului a fost atinsă."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid ""
-"You may need to remove older projects to make space available. For more "
-"options, visit audio.com"
-msgstr ""
-"Ar putea trebui să ștergi proiecte mai vechi pentru a face rost de spațiu "
-"liber. Pentru mai multe opțiuni, vizitează Audio.com"
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr "Ar putea trebui să ștergi proiecte mai vechi pentru a face rost de spațiu liber. Pentru mai multe opțiuni, vizitează Audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "You can also save this project locally to avoid losing changes."
-msgstr ""
-"Poți de asemenea să salvezi acest proiect local pentru a evita pierderea de "
-"date."
+msgstr "Poți de asemenea să salvezi acest proiect local pentru a evita pierderea de date."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
@@ -7843,13 +7580,8 @@ msgid "Project version conflict detected"
 msgstr "A fost detectat un conflict cu versiunea proiectului"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"There's a newer version of this Audacity project on Audio.com. Saving this "
-"project will replace it as the newest version instead."
-msgstr ""
-"Există o versiune mai nouă a acestui proiect Audacity pe Audio.com. Prin "
-"salvarea acestui proiect vei înlocui versiunea mai nouă cu versiunea "
-"curentă."
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr "Există o versiune mai nouă a acestui proiect Audacity pe Audio.com. Prin salvarea acestui proiect vei înlocui versiunea mai nouă cu versiunea curentă."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Save this project"
@@ -7860,14 +7592,8 @@ msgid "Discard and open latest version"
 msgstr "Înlătură și deschide ultima versiune"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"Project contains unsaved changes. There's a newer version of this Audacity "
-"project on Audio.com. Discarding changes will open the latest version "
-"instead."
-msgstr ""
-"Proiectul conține modificări nesalvate. Există o versiune mai nouă a acestui"
-" proiect Audacity pe Audio.com. Renunțarea la modificări va deschide ultima "
-"versiune în loc."
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr "Proiectul conține modificări nesalvate. Există o versiune mai nouă a acestui proiect Audacity pe Audio.com. Renunțarea la modificări va deschide ultima versiune în loc."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open local project"
@@ -7878,12 +7604,8 @@ msgid "Cloud project conflict"
 msgstr "Conflict proiect Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"You are attempting to open a new active version of this project when there "
-"is already one open. Please select which version you wish to remain open."
-msgstr ""
-"Încerci să deschizi o nouă versiune activă a acestui proiect când deja ai "
-"una deschisă. Te rog alege ce versiune dorești să rămână deschisă."
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr "Încerci să deschizi o nouă versiune activă a acestui proiect când deja ai una deschisă. Te rog alege ce versiune dorești să rămână deschisă."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
@@ -7959,12 +7681,8 @@ msgid "Anyone will be able to listen to this audio."
 msgstr "Oricine va putea asculta acest audio."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid ""
-"Only you and people you share a link with will be able to listen to this "
-"audio."
-msgstr ""
-"Doar tu și persoanele către care vei partaja legătura vor putea asculta "
-"acest audio."
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr "Doar tu și persoanele către care vei partaja legătura vor putea asculta acest audio."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Are you sure you want to cancel?"
@@ -7979,12 +7697,8 @@ msgid "Uploading audio..."
 msgstr "Se încarcă audio pe server..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid ""
-"We are unable to upload this file. Please try again and make sure to link to"
-" your audio.com account before uploading."
-msgstr ""
-"Nu putem încărca acest fișier pe server. Te rog încearcă din nou și asigură-"
-"te că ți-ai asociat contul Audio.com înainte de a încărca."
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr "Nu putem încărca acest fișier pe server. Te rog încearcă din nou și asigură-te că ți-ai asociat contul Audio.com înainte de a încărca."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
@@ -8020,11 +7734,8 @@ msgid "Audacity had trouble connecting to the server."
 msgstr "Audacity a întâmpinat probleme la conectarea la server."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid ""
-"The project is too large to upload. Please save it to your computer instead."
-msgstr ""
-"Proiectul este prea mare pentru a fi încărcat pe server. Te rog salvează-l "
-"pe calculatorul local."
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr "Proiectul este prea mare pentru a fi încărcat pe server. Te rog salvează-l pe calculatorul local."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You don't have access to this project."
@@ -8068,24 +7779,16 @@ msgid "Syncing your project"
 msgstr "Se sincronizează proiectul"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-msgid ""
-"The project will sync in background while you work. You can check the sync "
-"status on the bottom right corner of Audacity at any time"
-msgstr ""
-"Proiectul se va sincroniza în fundal, în timp ce lucrezi. Poți verifica "
-"starea sincronizării în colțul din dreapta jos al Audacity în orice moment"
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr "Proiectul se va sincroniza în fundal, în timp ce lucrezi. Poți verifica starea sincronizării în colțul din dreapta jos al Audacity în orice moment"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
 msgstr "Succes!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid ""
-"All saved changes will now update to the cloud. You can manage this file "
-"from your uploaded projects page on audio.com"
-msgstr ""
-"Toate modificările salvate se vor actualiza acum în Cloud. Poți administra "
-"acest fișier din pagina de proiecte încărcate pe audio.com"
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr "Toate modificările salvate se vor actualiza acum în Cloud. Poți administra acest fișier din pagina de proiecte încărcate pe audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
@@ -8096,24 +7799,16 @@ msgid "Cloud project incomplete"
 msgstr "Proiect Cloud incomplet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid ""
-"The latest version of this project was not fully uploaded to audio.com. You "
-"can load the last complete version instead."
-msgstr ""
-"Cea mai recentă versiune a acestui proiect nu a fost încărcată complet pe "
-"audio.com. Poți încărca în Audacity doar ultima versiune completă."
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr "Cea mai recentă versiune a acestui proiect nu a fost încărcată complet pe audio.com. Poți încărca în Audacity doar ultima versiune completă."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Load latest"
 msgstr "Încarcă ultima"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid ""
-"No version of this project has been fully uploaded to audio.com. It cannot "
-"be loaded."
-msgstr ""
-"Nicio versiune a acestui proiect nu a fost încărcată complet pe audio.com. "
-"Nu poate fi încărcată în Audacity."
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr "Nicio versiune a acestui proiect nu a fost încărcată complet pe audio.com. Nu poate fi încărcată în Audacity."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 msgid "You have canceled this upload to audio.com"
@@ -8124,12 +7819,8 @@ msgid "Retry"
 msgstr "Reîncearcă"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid ""
-"An action on audio.com is required before you can continue. Once you are "
-"done with it, click Retry"
-msgstr ""
-"O acțiune pe Audio.com este necesară înainte de a putea continua. Imediat ce"
-" ai terminat, apasă pe Reîncearcă"
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr "O acțiune pe Audio.com este necesară înainte de a putea continua. Imediat ce ai terminat, apasă pe Reîncearcă"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Loading..."
@@ -8144,12 +7835,8 @@ msgid "Connection error"
 msgstr "Eroare de conexiune"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-msgid ""
-"Audacity is unable to connect to MuseHub.com. Please check your connection "
-"and try again."
-msgstr ""
-"Audacity nu se poate conecta la MuseHub.com. Te rog verifică conexiunea și "
-"încearcă din nou."
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr "Audacity nu se poate conecta la MuseHub.com. Te rog verifică conexiunea și încearcă din nou."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
@@ -8168,14 +7855,8 @@ msgid "Become a MuseHub partner"
 msgstr "Devino un partener MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
-msgid ""
-"You can reach millions of music creators by publishing your apps, effects "
-"and sounds on MuseHub. If you're a developer and interested in publishing "
-"your products on MuseHub, you can apply today."
-msgstr ""
-"Poți ajunge la milioane de creatori de muzică prin publicarea aplicațiilor, "
-"efectelor și sunetelor tale pe MuseHub. Dacă ești un dezvoltator și ești "
-"interesat să îți publici produsele pe MuseHub, poți aplica chiar de astăzi."
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgstr "Poți ajunge la milioane de creatori de muzică prin publicarea aplicațiilor, efectelor și sunetelor tale pe MuseHub. Dacă ești un dezvoltator și ești interesat să îți publici produsele pe MuseHub, poți aplica chiar de astăzi."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -8265,120 +7946,103 @@ msgstr "&MIDI..."
 msgid "No revision identifier was provided"
 msgstr "Niciun identificator de revizie nu a fost furnizat"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, system administration"
 msgstr "%s, administrarea sistemului"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, co-founder and developer"
 msgstr "%s, cofondator și dezvoltator"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, designer"
 msgstr "%s, proiectant"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer"
 msgstr "%s, dezvoltator"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, developer and support"
 msgstr "%s, dezvoltator și suport"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
 msgstr "%s, documentație și suport"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, QA tester, documentation and support"
 msgstr "%s, tester QA, documentație și suport"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
 msgstr "%s, documentație și suport, franceză"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, quality assurance"
 msgstr "%s, control de calitate"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, accessibility advisor"
 msgstr "%s, consilier de accesibilitate"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphic artist"
 msgstr "%s, artist grafic"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, composer"
 msgstr "%s, compozitor"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, tester"
 msgstr "%s, tester"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
 msgstr "%s, plugin-uri Nyquist"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, web developer"
 msgstr "%s, dezvoltator web"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, graphics"
 msgstr "%s, grafician"
 
-#. i18n-hint: For "About Audacity..." credits, substituting a person's proper
-#. name
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, effects presets"
@@ -8402,11 +8066,7 @@ msgstr "Despre %s"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr ""
-"<b>Traducere în limba română</b><br><a "
-"href=\"mailto:gale@audacityteam.org\">Gale</a> (20??-2012)<br><a "
-"href=\"mailto:cristi@secarica.ro\">Cristian Secară</a> (2014-2015) <br/> "
-"SilverGreen93"
+msgstr "<b>Traducere în limba română</b><br><a href=\"mailto:gale@audacityteam.org\">Gale</a> (20??-2012)<br><a href=\"mailto:cristi@secarica.ro\">Cristian Secară</a> (2014-2015) <br/> SilverGreen93"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8415,12 +8075,8 @@ msgstr "<h3>"
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
 #, c-format
-msgid ""
-"%s the free, open source, cross-platform software for recording and editing "
-"sounds."
-msgstr ""
-"%s - programul software gratuit, cu sursă deschisă, multiplatformă pentru "
-"înregistrarea și editarea clipurilor audio."
+msgid "%s the free, open source, cross-platform software for recording and editing sounds."
+msgstr "%s - programul software gratuit, cu sursă deschisă, multiplatformă pentru înregistrarea și editarea clipurilor audio."
 
 #: src/AboutDialog.cpp
 msgid "Credits"
@@ -8580,13 +8236,16 @@ msgid "MP3 Import"
 msgstr "Import MP3"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
+#.
 #: src/AboutDialog.cpp
 msgid "MP3 Export"
 msgstr "Export MP3"
 
 #. i18n-hint: Opus is the codec name. This name should not be translated
+#.
 #. i18n-hint: Opus is the codec name. This name should not be translated
 #. i18n-hint: Opus is the codec name. This name should not be translated
+#.
 #: src/AboutDialog.cpp
 msgid "Opus Import and Export"
 msgstr "Import și export Opus"
@@ -8651,12 +8310,8 @@ msgid "PRIVACY POLICY"
 msgstr "POLITICA DE CONFIDENȚIALITATE"
 
 #: src/AboutDialog.cpp
-msgid ""
-"App update checking and error reporting require network access. These "
-"features are optional."
-msgstr ""
-"Verificarea pentru actualizări și raportarea erorilor necesită o conexiune "
-"la internet. Aceste funcții sunt opționale."
+msgid "App update checking and error reporting require network access. These features are optional."
+msgstr "Verificarea pentru actualizări și raportarea erorilor necesită o conexiune la internet. Aceste funcții sunt opționale."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
@@ -8689,6 +8344,7 @@ msgstr "Cronologie"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Seek"
 msgstr "Clic sau trage pentru a începe Seeking"
@@ -8696,6 +8352,7 @@ msgstr "Clic sau trage pentru a începe Seeking"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click or drag to begin Scrub"
 msgstr "Clic și trage pentru a începe Scrubbing"
@@ -8703,6 +8360,7 @@ msgstr "Clic și trage pentru a începe Scrubbing"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
 msgstr "Clic și mută pentru Scrubbing. Clic și trage pentru Seeking."
@@ -8710,6 +8368,7 @@ msgstr "Clic și mută pentru Scrubbing. Clic și trage pentru Seeking."
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Seek"
 msgstr "Mută pentru Seeking"
@@ -8717,6 +8376,7 @@ msgstr "Mută pentru Seeking"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips
+#.
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub"
 msgstr "Mută pentru Scrubing"
@@ -8757,9 +8417,7 @@ msgstr "Timpi și măsuri"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Setting a loop region also makes an audio selection"
-msgstr ""
-"Setarea unei regiuni de redare în buclă realizează de asemenea o selecție "
-"audio"
+msgstr "Setarea unei regiuni de redare în buclă realizează de asemenea o selecție audio"
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
@@ -8804,8 +8462,7 @@ msgstr "Audacity pornește..."
 
 #: src/AudacityApp.cpp
 msgid "SQLite library failed to initialize.  Audacity cannot continue."
-msgstr ""
-"Biblioteca SQLite nu a putut fi inițializată. Audacity nu poate continua."
+msgstr "Biblioteca SQLite nu a putut fi inițializată. Audacity nu poate continua."
 
 #: src/AudacityApp.cpp
 msgid "Block size must be within 256 to 100000000\n"
@@ -8856,12 +8513,8 @@ msgstr ""
 "Te rog introdu un dosar adecvat în fereastra de preferințe."
 
 #: src/AudacityApp.cpp
-msgid ""
-"Audacity is now going to exit. Please launch Audacity again to use the new "
-"temporary directory."
-msgstr ""
-"Audacity este pe cale de a se închide. Te rog repornește Audacity pentru a "
-"folosi noul dosar pentru fișiere temporare."
+msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
+msgstr "Audacity este pe cale de a se închide. Te rog repornește Audacity pentru a folosi noul dosar pentru fișiere temporare."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -9132,14 +8785,11 @@ msgstr "Lipește audio"
 msgid "How would you like to paste your audio?"
 msgstr "Cum ai dori să îți lipești audio?"
 
-#. i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is
-#. an audio clip containing hidden trimmed data.
+#. i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.
 #: src/AudioPasteDialog.cpp
 #, c-format
 msgid "The full smart clip is %s. Larger sizes will take longer to paste."
-msgstr ""
-"Întregul clip inteligent este %s. Dimensiunile mai mari vor dura mai mult să"
-" se lipească."
+msgstr "Întregul clip inteligent este %s. Dimensiunile mai mari vor dura mai mult să se lipească."
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
@@ -9261,8 +8911,7 @@ msgstr "Comandă meniu (cu parametri)"
 msgid "Menu Command (No Parameters)"
 msgstr "Comandă meniu (fără parametri)"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as "Remove
-#. Tracks".
+#. i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
@@ -9478,8 +9127,7 @@ msgstr "Numele macrocomenzii noi"
 msgid "Name must not be blank"
 msgstr "Numele nu trebuie să fie gol"
 
-#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/'
-#. and '\'.
+#. i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
@@ -9582,9 +9230,7 @@ msgstr "Mărimea datelor de test trebuie să fie în intervalul 1 - 2000 MB."
 #: src/Benchmark.cpp
 #, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
-msgstr ""
-"Se folosesc %lld bucăți de %lld eșantioane fiecare, pentru un total de %.1f "
-"MO.\n"
+msgstr "Se folosesc %lld bucăți de %lld eșantioane fiecare, pentru un total de %.1f MO.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
@@ -9696,24 +9342,18 @@ msgstr "TESTUL A EȘUAT!!!\n"
 msgid "Benchmark completed successfully.\n"
 msgstr "Testul de performanță s-a finalizat cu succes.\n"
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
-#. Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Cmd + A to Select All) then try"
-" again."
+msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
 msgstr ""
 "Selectează audio pentru a fi folosit de „%s” și apoi încearcă din nou.\n"
 "Sfat: Poți folosi Cmd+A pentru a selecta tot."
 
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
-#. Cut, Fade.
+#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
-msgid ""
-"Select the audio for %s to use (for example, Ctrl + A to Select All) then "
-"try again."
+msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
 msgstr ""
 "Selectează audio pentru a fi folosit de „%s” și apoi încearcă din nou.\n"
 "Sfat: Poți folosi Ctrl+A pentru a selecta tot."
@@ -9722,8 +9362,7 @@ msgstr ""
 msgid "No Audio Selected"
 msgstr "Nu ai selectat audio"
 
-#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise
-#. Reduction'.
+#. i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid ""
@@ -9878,12 +9517,8 @@ msgid "Missing"
 msgstr "Lipsă"
 
 #: src/Dependencies.cpp
-msgid ""
-"If you proceed, your project will not be saved to disk. Is this what you "
-"want?"
-msgstr ""
-"Dacă continui, proiectul nu va fi salvat pe disc. Este asta ceea ce îți "
-"dorești?"
+msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
+msgstr "Dacă continui, proiectul nu va fi salvat pe disc. Este asta ceea ce îți dorești?"
 
 #: src/Dependencies.cpp
 msgid ""
@@ -10059,30 +9694,26 @@ msgstr "Nu sunt selectate suficiente date."
 msgid "s"
 msgstr "s"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
-#. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %d dB"
 msgstr "%dHz (%s) = %ddB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
-#. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%d Hz (%s) = %.1f dB"
 msgstr "%dHz (%s) = %.1fdB"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
-#. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
 msgid "%.4f sec (%d Hz) (%s) = %f"
 msgstr "%.4fs (%dHz) (%s) = %f"
 
-#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g.
-#. A#
+#. i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
 #. * the %.4f are numbers, and 'sec' should be an abbreviation for seconds
 #: src/FreqWindow.cpp
 #, c-format
@@ -10189,27 +9820,13 @@ msgstr "Ad&ministrează plugin-uri"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid ""
-"Audacity has found %d incompatible plugins which could not be loaded. We "
-"have disabled these plugins to avoid any stalling or crashes. If you would "
-"still like to attempt to use these plugins, you can enable them using "
-"\"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr ""
-"Audacity a detectat %d plugin(-uri) incompatibil(e) care nu au putut fi "
-"încărcate. Am dezactivat aceste plugin-uri pentru a evita blocajele sau "
-"crăparea aplicației. Dacă totuși dorești să încerci să utilizezi aceste "
-"plugin-uri, le poți activa folosind managerul de plugin-uri. Altfel, "
-"selectează „Continuă”."
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
+msgstr "Audacity a detectat %d plugin(-uri) incompatibil(e) care nu au putut fi încărcate. Am dezactivat aceste plugin-uri pentru a evita blocajele sau crăparea aplicației. Dacă totuși dorești să încerci să utilizezi aceste plugin-uri, le poți activa folosind managerul de plugin-uri. Altfel, selectează „Continuă”."
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
-msgid ""
-"Audacity has found %d incompatible plugins which could not be loaded. We "
-"have disabled these plugins to avoid any stalling or crashes."
-msgstr ""
-"Audacity a detectat %d plugin(-uri) incompatibil(e) care nu au putut fi "
-"încărcate. Am dezactivat aceste plugin-uri pentru a evita blocajele sau "
-"crăparea aplicației."
+msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
+msgstr "Audacity a detectat %d plugin(-uri) incompatibil(e) care nu au putut fi încărcate. Am dezactivat aceste plugin-uri pentru a evita blocajele sau crăparea aplicației."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -10298,12 +9915,8 @@ msgstr "Alege limba care să fie folosită de Audacity:"
 #. * versions of language names.
 #: src/LangChoice.cpp
 #, c-format
-msgid ""
-"The language you have chosen, %s (%s), is not the same as the system "
-"language, %s (%s)."
-msgstr ""
-"Limba pe care ai ales-o, %s (%s), nu este aceeași cu limba sistemului, %s "
-"(%s)."
+msgid "The language you have chosen, %s (%s), is not the same as the system language, %s (%s)."
+msgstr "Limba pe care ai ales-o, %s (%s), nu este aceeași cu limba sistemului, %s (%s)."
 
 #: src/Legacy.cpp
 msgid "Error Converting Legacy Project File"
@@ -10323,14 +9936,8 @@ msgid "Opening Audacity Project"
 msgstr "Se deschide proiectul Audacity"
 
 #: src/MenuCreator.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
-msgstr ""
-"Următoarele comenzi au avut scurtăturile eliminate deoarece scurtătura lor "
-"implicită este nouă sau schimbată și este aceeași scurtătură pe care ai "
-"asociat-o unei alte comenzi."
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
+msgstr "Următoarele comenzi au avut scurtăturile eliminate deoarece scurtătura lor implicită este nouă sau schimbată și este aceeași scurtătură pe care ai asociat-o unei alte comenzi."
 
 #: src/MenuCreator.cpp
 msgid "Shortcuts have been removed"
@@ -10350,8 +9957,7 @@ msgid "Volume"
 msgstr "Volum"
 
 #. i18n-hint: title of the MIDI Velocity slider
-#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note
-#. tracks
+#. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10503,9 +10109,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
 msgid "The tracks selected for recording must all have the same sampling rate"
-msgstr ""
-"Pistele selectate pentru înregistrare trebuie să aibă toate aceeași rată de "
-"eșantionare"
+msgstr "Pistele selectate pentru înregistrare trebuie să aibă toate aceeași rată de eșantionare"
 
 #: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
 #: src/menus/TransportMenus.cpp
@@ -10526,8 +10130,7 @@ msgstr ""
 msgid "Too Few Compatible Tracks Selected"
 msgstr "Prea puține piste compatibile selectate"
 
-#. i18n-hint a numerical suffix added to distinguish otherwise like-named
-#. clips when new record started
+#. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
@@ -10556,14 +10159,8 @@ msgid "Close project immediately with no changes"
 msgstr "Închide proiectul imediat fără nicio modificare"
 
 #: src/ProjectFSCK.cpp
-msgid ""
-"Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project "
-"immediately\" on further error alerts."
-msgstr ""
-"Continuă cu reparațiile indicate în jurnal și verifică pentru mai multe "
-"erori. Acest lucru va salva proiectul în starea lui curentă dacă nu alegi "
-"„Închide proiectul imediat” la următoarele mesaje de eroare."
+msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
+msgstr "Continuă cu reparațiile indicate în jurnal și verifică pentru mai multe erori. Acest lucru va salva proiectul în starea lui curentă dacă nu alegi „Închide proiectul imediat” la următoarele mesaje de eroare."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -10639,8 +10236,7 @@ msgstr "Regenerează fișierele alias de rezumat (sigur și recomandat)"
 
 #: src/ProjectFSCK.cpp
 msgid "Fill in silence for missing display data (this session only)"
-msgstr ""
-"Umple cu liniște pentru datele de afișare lipsă (doar în această sesiune)"
+msgstr "Umple cu liniște pentru datele de afișare lipsă (doar în această sesiune)"
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no further changes"
@@ -10794,12 +10390,8 @@ msgstr ""
 "Te rog alege un alt disc cu mai mult spațiu liber."
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"The project exceeds the maximum size of 4GB when writing to a FAT32 "
-"formatted filesystem."
-msgstr ""
-"Proiectul depășește dimensiunea maximă de 4GO a fișierului suportat de "
-"sistemul de fișiere FAT32."
+msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
+msgstr "Proiectul depășește dimensiunea maximă de 4GO a fișierului suportat de sistemul de fișiere FAT32."
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -10932,21 +10524,13 @@ msgstr "Un canal al unei piste stereo lipsea."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-msgid ""
-"This project contained stereo tracks with different sample rates per "
-"channel."
-msgstr ""
-"Acest proiect conținea piste stereo cu rate de eșantionare diferite între "
-"canale."
+msgid "This project contained stereo tracks with different sample rates per channel."
+msgstr "Acest proiect conținea piste stereo cu rate de eșantionare diferite între canale."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
-msgid ""
-"This project contained stereo tracks with different sample formats in "
-"channels."
-msgstr ""
-"Acest proiect conținea piste stereo cu formate de eșantioane diferite între "
-"canale."
+msgid "This project contained stereo tracks with different sample formats in channels."
+msgstr "Acest proiect conținea piste stereo cu formate de eșantioane diferite între canale."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
@@ -11047,8 +10631,7 @@ msgstr "[Proiect %02i] "
 msgid "Welcome to Audacity version %s"
 msgstr "Bun venit la Audacity versiunea %s"
 
-#. i18n-hint: The first %s numbers the project, the second %s is the project
-#. name.
+#. i18n-hint: The first %s numbers the project, the second %s is the project name.
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%sSave changes to %s?"
@@ -11126,6 +10709,7 @@ msgstr "Activare"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
+#.
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change settings for realtime effect %s on %s"
@@ -11133,6 +10717,7 @@ msgstr "Schimbă setarea pentru efectul în timp real %s pe %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
+#.
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change realtime effect %s on %s"
@@ -11145,6 +10730,7 @@ msgstr "Înlocuiește efectul"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
+#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Removed %s from %s"
@@ -11159,6 +10745,7 @@ msgstr "Elimină %s"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
+#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Replaced %s with %s"
@@ -11188,6 +10775,7 @@ msgstr "Adaugă efect"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
+#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Moved %s up in %s"
@@ -11196,6 +10784,7 @@ msgstr "Deplasat %s în sus în %s"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
+#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Moved %s down in %s"
@@ -11208,6 +10797,7 @@ msgstr "Schimbă ordinea efectului"
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
+#.
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Added %s to %s"
@@ -11239,9 +10829,7 @@ msgstr "Urmărește video"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr ""
-"Efectele în timp real sunt non-distructive și pot fi schimbate în orice "
-"moment."
+msgstr "Efectele în timp real sunt non-distructive și pot fi schimbate în orice moment."
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Master Effects"
@@ -11329,9 +10917,7 @@ msgstr "Gen muzical"
 
 #: src/TagsEditor.cpp
 msgid "Use arrow keys (or ENTER key after editing) to navigate fields."
-msgstr ""
-"Folosiți tastele săgeți (sau tasta ENTER după editare) pentru a naviga între"
-" câmpuri."
+msgstr "Folosiți tastele săgeți (sau tasta ENTER după editare) pentru a naviga între câmpuri."
 
 #: src/TagsEditor.cpp
 msgid "Tag"
@@ -11422,18 +11008,14 @@ msgstr "Etichete metadate"
 msgid "&Metadata Editor"
 msgstr "Editor &metadate"
 
-#. i18n-hint: This string is used to configure the controls which shows the
-#. recording
-#. * duration. As such it is important that only the alphabetic parts of the
-#. string
+#. i18n-hint: This string is used to configure the controls which shows the recording
+#. * duration. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The string 'days' indicates that the first number in the control will be
-#. the number of days,
-#. * then the 'h' indicates the second number displayed is hours, the 'm'
-#. indicates the third
-#. * number displayed is minutes, and the 's' indicates that the fourth number
-#. displayed is
+#. * The string 'days' indicates that the first number in the control will be the number of days,
+#. * then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
+#. * number displayed is minutes, and the 's' indicates that the fourth number displayed is
 #. * seconds.
+#.
 #: src/TimeDialog.h src/TimerRecordDialog.cpp src/effects/DtmfGen.cpp
 #: src/effects/Noise.cpp src/effects/Silence.cpp src/effects/ToneGen.cpp
 #: src/effects/VST/VSTEditor.cpp src/effects/VST3/VST3Editor.cpp
@@ -11634,15 +11216,12 @@ msgstr "099 h 060 m 060 s"
 msgid "099 days 024 h 060 m 060 s"
 msgstr "099 zile 024 h 060 m 060 s"
 
-#. i18n-hint: This string is used to configure the controls for times when the
-#. recording is
-#. * started and stopped. As such it is important that only the alphabetic
-#. parts of the string
+#. i18n-hint: This string is used to configure the controls for times when the recording is
+#. * started and stopped. As such it is important that only the alphabetic parts of the string
 #. * are translated, with the numbers left exactly as they are.
-#. * The 'h' indicates the first number displayed is hours, the 'm' indicates
-#. the second number
-#. * displayed is minutes, and the 's' indicates that the third number
-#. displayed is seconds.
+#. * The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
+#. * displayed is minutes, and the 's' indicates that the third number displayed is seconds.
+#.
 #: src/TimerRecordDialog.cpp
 msgid "Start Date and Time"
 msgstr "Data și ora de începere"
@@ -11687,8 +11266,8 @@ msgstr "Activezi &exportarea automată?"
 msgid "Export Project As:"
 msgstr "Exportă proiectul ca:"
 
-#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp
-#: src/prefs/PlaybackPrefs.cpp src/prefs/RecordingPrefs.cpp
+#: src/TimerRecordDialog.cpp src/prefs/GUIPrefs.cpp src/prefs/PlaybackPrefs.cpp
+#: src/prefs/RecordingPrefs.cpp
 msgid "Options"
 msgstr "Opțiuni"
 
@@ -11852,12 +11431,8 @@ msgid " Select On"
 msgstr " pe selecție"
 
 #: src/TrackPanelResizeHandle.cpp
-msgid ""
-"Click and drag to adjust relative size of stereo tracks, double-click to "
-"make heights equal"
-msgstr ""
-"Clic și trage pentru a ajusta dimensiunea relativă a pistelor stereo. Dublu-"
-"clic pentru a face înălțimile egale"
+msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
+msgstr "Clic și trage pentru a ajusta dimensiunea relativă a pistelor stereo. Dublu-clic pentru a face înălțimile egale"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -11920,16 +11495,14 @@ msgstr "Mută pista în sus"
 msgid "Move Track Down"
 msgstr "Mută pista în jos"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
 msgid "Playing"
 msgstr "Se redă"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
@@ -11950,8 +11523,7 @@ msgstr "Selecția este prea scurtă pentru a folosi indexul vocii."
 msgid "Calibration Results\n"
 msgstr "Rezultate calibrare\n"
 
-#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard
-#. Deviations'
+#. i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'
 #: src/VoiceKey.cpp
 #, c-format
 msgid "Energy                  -- mean: %1.4f  sd: (%1.4f)\n"
@@ -11994,12 +11566,8 @@ msgstr "Ce este nou în Audacity %s"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more "
-"about what we have included in the latest release!</p>"
-msgstr ""
-"Urmărește [[%s|videoul de lansare]] sau citește [[%s|lista de schimbări]] "
-"pentru a afla mai multe despre ce am inclus în ultima versiune!</p>"
+msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
+msgstr "Urmărește [[%s|videoul de lansare]] sau citește [[%s|lista de schimbări]] pentru a afla mai multe despre ce am inclus în ultima versiune!</p>"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
@@ -12012,82 +11580,49 @@ msgstr "Obține plugin-uri și sunete gratuite"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for "
-"Audacity users</p>"
-msgstr ""
-"<p>Verifică [[%s|aplicația noastră Muse Hub]] pentru o gamă largă de plugin-"
-"uri audio pentru utilizatorii Audacity</p>"
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr "<p>Verifică [[%s|aplicația noastră Muse Hub]] pentru o gamă largă de plugin-uri audio pentru utilizatorii Audacity</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
-"Un efect de procesare vocală care îmbunătățește claritatea și adâncimea "
-"vocală."
+msgstr "Un efect de procesare vocală care îmbunătățește claritatea și adâncimea vocală."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
-"Un plugin polivalent de reverberații pentru un efect spațios care sună "
-"natural."
+msgstr "Un plugin polivalent de reverberații pentru un efect spațios care sună natural."
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"A guitar amp and effects modelling plugin for realistic tones and "
-"customizable sounds."
-msgstr ""
-"Un plugin de amplificator de chitară și modelare de efecte pentru tonuri "
-"realistice și sunete personalizabile."
+msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
+msgstr "Un plugin de amplificator de chitară și modelare de efecte pentru tonuri realistice și sunete personalizabile."
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"A responsive reverb plugin that adapts to track dynamics for immersive "
-"soundscapes."
-msgstr ""
-"Un plugin de reverberații receptive care se adaptează la dinamica pistei "
-"pentru peisaje sonore imersive."
+msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
+msgstr "Un plugin de reverberații receptive care se adaptează la dinamica pistei pentru peisaje sonore imersive."
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"A vocal multi-effect plugin that enhances vocal tracks for professional "
-"results."
-msgstr ""
-"Un plugin cu efecte multiple vocale care îmbunătățește pistele vocale pentru"
-" rezultate profesionale."
+msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
+msgstr "Un plugin cu efecte multiple vocale care îmbunătățește pistele vocale pentru rezultate profesionale."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
-"Un plugin de efecte bas conceput să livreze sunete joase clare și puternice."
+msgstr "Un plugin de efecte bas conceput să livreze sunete joase clare și puternice."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
-"Un plugin pentru perfectarea sunetului acustic, îmbunătățind căldura și "
-"claritatea."
+msgstr "Un plugin pentru perfectarea sunetului acustic, îmbunătățind căldura și claritatea."
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"An amazing voice enhancement plugin for crystal-clear, professional vocal "
-"effects."
-msgstr ""
-"Un plugin uimitor de îmbunătățire a vocii pentru efecte vocale profesionale,"
-" curate ca cristalul."
+msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
+msgstr "Un plugin uimitor de îmbunătățire a vocii pentru efecte vocale profesionale, curate ca cristalul."
 
 #: src/WhatsNewDialog.cpp
-msgid ""
-"A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
-"O unealtă de izolarea a vocii, tobelor și instrumentelor în timp real."
+msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
+msgstr "O unealtă de izolarea a vocii, tobelor și instrumentelor în timp real."
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"Check out a variety of plugins by well known developers available on "
-"[[%s|MuseHub]]."
-msgstr ""
-"Vizualizează o varietate de plugin-uri create de dezvoltatori binecunoscuți "
-"disponibile pe [[%s|MuseHub]]."
+msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
+msgstr "Vizualizează o varietate de plugin-uri create de dezvoltatori binecunoscuți disponibile pe [[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
@@ -12125,8 +11660,7 @@ msgstr "Vizitează forumul nostru"
 msgid "Don't show this again at start up"
 msgstr "Nu mai arăta din nou la pornire"
 
-#. i18n-hint: An item name followed by a value, with appropriate separating
-#. punctuation
+#. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurvesDialog.cpp src/effects/vamp/VampEffect.cpp
 #: src/import/ImportRaw.cpp src/menus/MenuHelper.cpp
@@ -12253,8 +11787,7 @@ msgid "Preferences"
 msgstr "Preferințe"
 
 #. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and
-#. musical
+#. * data associated with a time line, such as sequences of labels, and musical
 #. * notes
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 #: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
@@ -13036,8 +12569,7 @@ msgstr "78"
 msgid "&Speed Multiplier:"
 msgstr "Multiplicator &viteză:"
 
-#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per
-#. minute".
+#. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #. "vinyl" refers to old-fashioned phonograph records
 #: src/effects/ChangeSpeed.cpp
 msgid "Standard Vinyl rpm:"
@@ -13045,6 +12577,7 @@ msgstr "RPM standard disc vinil:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "From rpm"
 msgstr "Din RPM"
@@ -13057,6 +12590,7 @@ msgstr "&din"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #. "rpm" means "revolutions per minute" as on a vinyl record turntable
+#.
 #: src/effects/ChangeSpeed.cpp
 msgid "To rpm"
 msgstr "În RPM"
@@ -13164,17 +12698,12 @@ msgstr "Compresor"
 
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
-"Reduce „intervalul dinamic” sau diferențele dintre părțile tari și încete."
+msgstr "Reduce „intervalul dinamic” sau diferențele dintre părțile tari și încete."
 
 #. i18n-hint: RMS abbreviates root mean square, a certain averaging method
 #: src/effects/Contrast.cpp
-msgid ""
-"Contrast Analyzer, for measuring RMS volume differences between two "
-"selections of audio."
-msgstr ""
-"Analizator de contrast, pentru măsurarea diferenței RMS de volum dintre două"
-" secțiuni audio."
+msgid "Contrast Analyzer, for measuring RMS volume differences between two selections of audio."
+msgstr "Analizator de contrast, pentru măsurarea diferenței RMS de volum dintre două secțiuni audio."
 
 #. i18n-hint noun
 #: src/effects/Contrast.cpp src/effects/ToneGen.cpp
@@ -13299,8 +12828,7 @@ msgstr "Nivelul din fundal este prea intens"
 msgid "Background higher than foreground"
 msgstr "Fundalul este mai intens ca prim-planul"
 
-#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0',
-#. see http://www.w3.org/TR/WCAG20/
+#. i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/
 #: src/effects/Contrast.cpp
 msgid "WCAG2 Pass"
 msgstr "Trece WCAG2"
@@ -13817,8 +13345,7 @@ msgstr "%d Hz"
 msgid "%g kHz"
 msgstr "%g kHz"
 
-#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in
-#. translation.
+#. i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.
 #: src/effects/EqualizationBandSliders.cpp
 #, c-format
 msgid "%gk"
@@ -14111,23 +13638,20 @@ msgid "Attack Time"
 msgstr "Timp de atac"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
-#. where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
 msgid "R&elease Time:"
 msgstr "Timp de pi&eire:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release'
-#. where the
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
 msgid "Release Time"
 msgstr "Timp de pieire"
 
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate
-#. it.
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/LegacyCompressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
 msgstr "Câștig de recuperare pentru 0 dB după compresie"
@@ -14296,8 +13820,7 @@ msgstr "Re&du"
 msgid "&Isolate"
 msgstr "&Izolează"
 
-#. i18n-hint: Means the difference between effect and original sound.
-#. Translate differently from "Reduce" !
+#. i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !
 #: src/effects/NoiseReduction.cpp
 msgid "Resid&ue"
 msgstr "Rezid&uu"
@@ -14393,6 +13916,7 @@ msgstr "N&ormalizează canalele stereo independent"
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
 #. * will give an (approximately) 10 second sound
+#.
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
 msgstr "Factor de întind&ere:"
@@ -14533,8 +14057,7 @@ msgstr "Doar u&med"
 msgid "&Filter Type:"
 msgstr "Tip &filtru:"
 
-#. i18n-hint: 'Order' means the complexity of the filter, and is a number
-#. between 1 and 10.
+#. i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.
 #: src/effects/ScienFilter.cpp
 msgid "O&rder:"
 msgstr "&Grad:"
@@ -14603,40 +14126,32 @@ msgstr "Prag liniște:"
 msgid "Silence Threshold"
 msgstr "Prag liniște"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time:"
 msgstr "Durată pre-netezire:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Presmooth Time"
 msgstr "Durată pre-netezire"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Line Time:"
 msgstr "Durată linie:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -14647,10 +14162,8 @@ msgstr "Durată linie"
 msgid "Smooth Time:"
 msgstr "Durată netezire:"
 
-#. i18n-hint: The English would be clearer if it had 'Duration' rather than
-#. 'Time'
-#. This is a NEW experimental effect, and until we have it documented in the
-#. user
+#. i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
+#. This is a NEW experimental effect, and until we have it documented in the user
 #. manual we don't have a clear description of what this parameter does.
 #. It is OK to leave it in English.
 #: src/effects/ScoreAlignDialog.cpp
@@ -14808,17 +14321,8 @@ msgstr "Mărime tampon"
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"The buffer size controls the number of samples sent to the effect on each "
-"iteration. Smaller values will cause slower processing and some effects "
-"require 8192 samples or less to work properly. However most effects can "
-"accept large buffers and using them will greatly reduce processing time."
-msgstr ""
-"Mărimea buffer-ului controlează numărul de eșantioane trimise către efect la"
-" fiecare iterație. Valori mai mici vor face procesarea mai lentă și unele "
-"efecte necesită 8192 de eșantioane sau mai puțin pentru a funcționa corect. "
-"Totuși, majoritatea efectelor pot accepta buffer-e mai mari, astfel reducând"
-" considerabil timpul de procesare."
+msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
+msgstr "Mărimea buffer-ului controlează numărul de eșantioane trimise către efect la fiecare iterație. Valori mai mici vor face procesarea mai lentă și unele efecte necesită 8192 de eșantioane sau mai puțin pentru a funcționa corect. Totuși, majoritatea efectelor pot accepta buffer-e mai mari, astfel reducând considerabil timpul de procesare."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14834,17 +14338,8 @@ msgid "Latency Compensation"
 msgstr "Compensarea latenței"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some VST effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST effects."
-msgstr ""
-"Ca parte a procesării lor, unele efecte VST trebuie să întârzie întoarcerea "
-"semnalului audio în Audacity. Dacă nu se compensează pentru această "
-"întârziere, vei observa mici bucățele de liniște inserate în audio. Activând"
-" această opțiune se va activa compensarea, dar ar putea să nu funcționeze "
-"pentru toate efectele VST."
+msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
+msgstr "Ca parte a procesării lor, unele efecte VST trebuie să întârzie întoarcerea semnalului audio în Audacity. Dacă nu se compensează pentru această întârziere, vei observa mici bucățele de liniște inserate în audio. Activând această opțiune se va activa compensarea, dar ar putea să nu funcționeze pentru toate efectele VST."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14861,14 +14356,8 @@ msgid "Graphical Mode"
 msgstr "Mod grafic"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
-msgid ""
-"Most VST effects have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
-msgstr ""
-"Majoritatea efectelor VST au o interfață grafică pentru setarea valorilor "
-"parametrilor. O metodă bazată pe text este de asemenea disponibilă. Deschide"
-" din nou efectul pentru ca aceasta să se aplice."
+msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr "Majoritatea efectelor VST au o interfață grafică pentru setarea valorilor parametrilor. O metodă bazată pe text este de asemenea disponibilă. Deschide din nou efectul pentru ca aceasta să se aplice."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -14889,27 +14378,12 @@ msgid "Load VST3 preset:"
 msgstr "Încarcă presetare VST3:"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid ""
-"As part of their processing, some VST3 effects must delay returning audio to"
-" Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all VST3 effects."
-msgstr ""
-"Ca parte a procesării lor, unele efecte VST3 trebuie să întârzie întoarcerea"
-" semnalului audio în Audacity. Dacă nu se compensează pentru această "
-"întârziere, vei observa mici bucățele de liniște inserate în audio. Activând"
-" această opțiune se va activa compensarea, dar ar putea să nu funcționeze "
-"pentru toate efectele VST3."
+msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
+msgstr "Ca parte a procesării lor, unele efecte VST3 trebuie să întârzie întoarcerea semnalului audio în Audacity. Dacă nu se compensează pentru această întârziere, vei observa mici bucățele de liniște inserate în audio. Activând această opțiune se va activa compensarea, dar ar putea să nu funcționeze pentru toate efectele VST3."
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
-msgid ""
-"Most VST3 effects have a graphical interface for setting parameter values. A"
-" basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
-msgstr ""
-"Majoritatea efectelor VST3 au o interfață grafică pentru setarea valorilor "
-"parametrilor. O metodă bazată pe text este de asemenea disponibilă. Deschide"
-" din nou efectul pentru ca aceasta să se aplice."
+msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr "Majoritatea efectelor VST3 au o interfață grafică pentru setarea valorilor parametrilor. O metodă bazată pe text este de asemenea disponibilă. Deschide din nou efectul pentru ca aceasta să se aplice."
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14980,34 +14454,16 @@ msgid "Audio Unit Effect Options"
 msgstr "Opțiuni efect Audio Unit"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some Audio Unit effects must delay returning "
-"audio to Audacity. When not compensating for this delay, you will notice "
-"that small silences have been inserted into the audio. Enabling this option "
-"will provide that compensation, but it may not work for all Audio Unit "
-"effects."
-msgstr ""
-"Ca parte a procesării, unele efecte Audio Unit trebuie să întârzie "
-"întoarcerea sunetului în Audacity. Dacă nu se compensează pentru această "
-"întârziere, vei observa că se vor insera mici părți de liniște în audio. "
-"Activarea acestei opțiuni va asigura acea compensare necesară, dar ar putea "
-"să nu funcționeze pentru toate efectele Audio Unit."
+msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
+msgstr "Ca parte a procesării, unele efecte Audio Unit trebuie să întârzie întoarcerea sunetului în Audacity. Dacă nu se compensează pentru această întârziere, vei observa că se vor insera mici părți de liniște în audio. Activarea acestei opțiuni va asigura acea compensare necesară, dar ar putea să nu funcționeze pentru toate efectele Audio Unit."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
 msgstr "Interfața cu utilizatorul"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
-msgid ""
-"Select \"Full\" to use the graphical interface if supplied by the Audio "
-"Unit. Select \"Generic\" to use the system supplied generic interface. "
-"Select \"Basic\" for a basic text-only interface. Reopen the effect for this"
-" to take effect."
-msgstr ""
-"Selectează „Complet” pentru a folosi interfața grafică dacă este asigurată "
-"de Audio Unit. Selectează „Generic” pentru a folosi interfața generică "
-"asigurată de sistem. Selectează „De bază” pentru o interfață de bază doar "
-"text. Redeschide efectul pentru ca modificarea să aibe efect."
+msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
+msgstr "Selectează „Complet” pentru a folosi interfața grafică dacă este asigurată de Audio Unit. Selectează „Generic” pentru a folosi interfața generică asigurată de sistem. Selectează „De bază” pentru o interfață de bază doar text. Redeschide efectul pentru ca modificarea să aibe efect."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select &interface"
@@ -15026,10 +14482,8 @@ msgstr "Generică"
 msgid "Basic"
 msgstr "De bază"
 
-#. i18n-hint: An item name introducing a value, which is not part of the
-#. string but
-#. appears in a following text box window; translate with appropriate
-#. punctuation
+#. i18n-hint: An item name introducing a value, which is not part of the string but
+#. appears in a following text box window; translate with appropriate punctuation
 #: src/effects/ladspa/LadspaEditor.cpp src/effects/nyquist/Nyquist.cpp
 #: src/effects/vamp/VampEffect.cpp
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
@@ -15046,17 +14500,8 @@ msgid "LADSPA Effect Options"
 msgstr "Opțiuni efect LADSPA"
 
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
-msgid ""
-"As part of their processing, some LADSPA effects must delay returning audio "
-"to Audacity. When not compensating for this delay, you will notice that "
-"small silences have been inserted into the audio. Enabling this option will "
-"provide that compensation, but it may not work for all LADSPA effects."
-msgstr ""
-"Ca parte a procesării lor, unele efecte LADSPA trebuie să întârzie "
-"întoarcerea semnalului audio în Audacity. Dacă nu se compensează pentru "
-"această întârziere, vei observa mici bucățele de liniște inserate în audio. "
-"Activând această opțiune se va activa compensarea, dar ar putea să nu "
-"funcționeze pentru toate efectele LADSPA."
+msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
+msgstr "Ca parte a procesării lor, unele efecte LADSPA trebuie să întârzie întoarcerea semnalului audio în Audacity. Dacă nu se compensează pentru această întârziere, vei observa mici bucățele de liniște inserate în audio. Activând această opțiune se va activa compensarea, dar ar putea să nu funcționeze pentru toate efectele LADSPA."
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
@@ -15072,27 +14517,12 @@ msgid "&Buffer Size (8 to %d) samples:"
 msgstr "&Mărime tampon (de la 8 la %d eșantioane):"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"As part of their processing, some LV2 effects must delay returning audio to "
-"Audacity. When not compensating for this delay, you will notice that small "
-"silences have been inserted into the audio. Enabling this setting will "
-"provide that compensation, but it may not work for all LV2 effects."
-msgstr ""
-"Ca parte a procesării lor, unele efecte LV2 trebuie să întârzie întoarcerea "
-"semnalului audio în Audacity. Dacă nu se compensează pentru această "
-"întârziere, vei observa mici bucățele de liniște inserate în audio. Activând"
-" această opțiune se va activa compensarea, dar ar putea să nu funcționeze "
-"pentru toate efectele LV2."
+msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
+msgstr "Ca parte a procesării lor, unele efecte LV2 trebuie să întârzie întoarcerea semnalului audio în Audacity. Dacă nu se compensează pentru această întârziere, vei observa mici bucățele de liniște inserate în audio. Activând această opțiune se va activa compensarea, dar ar putea să nu funcționeze pentru toate efectele LV2."
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
-msgid ""
-"LV2 effects can have a graphical interface for setting parameter values. A "
-"basic text-only method is also available.  Reopen the effect for this to "
-"take effect."
-msgstr ""
-"Efectele LV2 pot avea o interfață grafică pentru setarea valorilor "
-"parametrilor. O metodă bazată pe text este de asemenea disponibilă. Deschide"
-" din nou efectul pentru ca aceasta să se aplice."
+msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
+msgstr "Efectele LV2 pot avea o interfață grafică pentru setarea valorilor parametrilor. O metodă bazată pe text este de asemenea disponibilă. Deschide din nou efectul pentru ca aceasta să se aplice."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -15192,8 +14622,7 @@ msgstr "Setări plugin-uri"
 msgid "Program"
 msgstr "Program"
 
-#. i18n-hint: Vamp is the proper name of a software protocol for sound
-#. analysis.
+#. i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
 #. It is not an abbreviation for anything.  See http://vamp-plugins.org
 #: src/effects/vamp/VampEffect.h
 msgid "Vamp"
@@ -15293,8 +14722,7 @@ msgstr "Exportarea a fost oprită după exportarea următoarelor %lld fișiere."
 
 #: src/export/ExportAudioDialog.cpp
 #, c-format
-msgid ""
-"Something went really wrong after exporting the following %lld file(s)."
+msgid "Something went really wrong after exporting the following %lld file(s)."
 msgstr "Ceva a mers foarte prost după exportarea următoarelor %lld fișiere."
 
 #: src/export/ExportAudioDialog.cpp
@@ -15510,6 +14938,7 @@ msgstr "Mărime greșită date. Nu se poate importa audio"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
+#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %s, %d of %d clip %s"
@@ -15535,6 +14964,7 @@ msgstr "sfârșit"
 #. last number counts all clips,
 #. and the last string is the name of the track containing the
 #. clips.
+#.
 #: src/menus/ClipMenus.cpp
 #, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
@@ -15659,20 +15089,12 @@ msgid "Pasting clip contents, please wait"
 msgstr "Se lipește conținutul clipului, te rog așteaptă"
 
 #: src/menus/EditMenus.cpp
-msgid ""
-"The content you are trying to paste will span across more tracks than you "
-"currently have available. Add more tracks and try again."
-msgstr ""
-"Conținutul pe care încerci să-l lipești se va întinde pe mai multe piste "
-"decât ai disponibile curent. Adaugă mai multe piste și încearcă din nou."
+msgid "The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again."
+msgstr "Conținutul pe care încerci să-l lipești se va întinde pe mai multe piste decât ai disponibile curent. Adaugă mai multe piste și încearcă din nou."
 
 #: src/menus/EditMenus.cpp
-msgid ""
-"There are not enough tracks selected to accommodate your copied content. "
-"Select additional tracks and try again."
-msgstr ""
-"Nu sunt suficiente piste selectate pentru a acomoda conținutul copiat. "
-"Selectează piste adiționale și încearcă din nou."
+msgid "There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again."
+msgstr "Nu sunt suficiente piste selectate pentru a acomoda conținutul copiat. Selectează piste adiționale și încearcă din nou."
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicated"
@@ -15713,9 +15135,7 @@ msgstr "Suprimă audio"
 #: src/menus/EditMenus.cpp
 #, c-format
 msgid "Trim selected audio tracks from %.2f seconds to %.2f seconds"
-msgstr ""
-"Păstrează audio de la %.2f secunde la %.2f secunde din pistele audio "
-"selectate"
+msgstr "Păstrează audio de la %.2f secunde la %.2f secunde din pistele audio selectate"
 
 #: src/menus/EditMenus.cpp
 msgid "Trim Audio"
@@ -16051,8 +15471,7 @@ msgstr "Șterge audio etichetat"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr ""
-"S-au decupat regiunile audio etichetate în clipboard și s-a lăsat spațiu"
+msgstr "S-au decupat regiunile audio etichetate în clipboard și s-a lăsat spațiu"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio and leave gap"
@@ -16365,9 +15784,7 @@ msgstr "Stabilește limita de selecție din dreapta"
 
 #: src/menus/SelectMenus.cpp
 msgid "Zero-crossing search regions intersect stretched clip(s)."
-msgstr ""
-"Regiunile de căutare a trecerilor prin zero se intersectează cu clipurile "
-"întinse."
+msgstr "Regiunile de căutare a trecerilor prin zero se intersectează cu clipurile întinse."
 
 #. i18n-hint: (verb) It's an item on a menu.
 #: src/menus/SelectMenus.cpp
@@ -16605,6 +16022,7 @@ msgstr "Salt lu&ng cursor la dreapta"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
+#.
 #: src/menus/SelectMenus.cpp src/tracks/ui/Scrubbing.cpp
 msgid "See&k"
 msgstr "See&k"
@@ -16832,12 +16250,8 @@ msgstr "Te rog selectează cel puțin o pistă audio și o pistă MIDI."
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f "
-"secs."
-msgstr ""
-"Alinierea s-a terminat: MIDI de la %.2f la %.2f s, audio de la %.2f la %.2f "
-"s."
+msgid "Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr "Alinierea s-a terminat: MIDI de la %.2f la %.2f s, audio de la %.2f la %.2f s."
 
 #: src/menus/TrackMenus.cpp
 msgid "Sync MIDI with Audio"
@@ -16845,12 +16259,8 @@ msgstr "Sincronizează MIDI cu audio"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
-msgid ""
-"Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from "
-"%.2f to %.2f secs."
-msgstr ""
-"Eroare aliniere: intrarea este prea scurtă: MIDI de la %.2f la %.2f s, audio"
-" de la %.2f la %.2f s."
+msgid "Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs."
+msgstr "Eroare aliniere: intrarea este prea scurtă: MIDI de la %.2f la %.2f s, audio de la %.2f la %.2f s."
 
 #: src/menus/TrackMenus.cpp
 msgid "Internal error reported by alignment process."
@@ -17061,6 +16471,7 @@ msgstr "nicio pistă cu etichete la sau dedesubtul pistei curente"
 #. first number gives the position of that label in a sequence
 #. of labels,
 #. and the last number is the total number of labels in the sequence.
+#.
 #: src/menus/TransportMenus.cpp src/tracks/labeltrack/ui/LabelTrackView.cpp
 #, c-format
 msgid "%s %d of %d"
@@ -17325,8 +16736,8 @@ msgstr "Preferințele aplicației"
 
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Network communications"
-msgstr "Comunicații în rețea"
+msgid "Update notifications"
+msgstr ""
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -17335,28 +16746,26 @@ msgid "&Check for updates"
 msgstr "Verifi&că pentru actualizări"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Requires network access."
-msgstr "Necesită acces la rețea."
+#, fuzzy
+msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
+msgstr "Pentru a-ți proteja confidențialitatea, Audacity nu colectează date personale de identificare despre tine."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr ""
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
+#, fuzzy
 msgctxt "application preferences"
-msgid "&Send anonymous usage info"
-msgstr "Trimite date de utili&zare anonime"
+msgid "&Usage info (UUID)"
+msgstr "Informații de utilizare anonime (UUID)"
 
-#: src/prefs/ApplicationPrefs.cpp
-msgid "We create a random ID to track how often Audacity is used."
-msgstr ""
-"Vom crea un identificator aleator pentru a urmări cât de des este folosit "
-"Audacity."
-
-#: src/prefs/ApplicationPrefs.cpp
-msgid ""
-"In order to protect your privacy, Audacity does not collect any personally "
-"identifiable information about you."
-msgstr ""
-"Pentru a-ți proteja confidențialitatea, Audacity nu colectează date "
-"personale de identificare despre tine."
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#, fuzzy
+msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
+msgstr "Pentru a ne ajuta să înțelegem cât de des folosesc oamenii Audacity, generăm un identificator aleator anonim (UUID). Acesta ne ajută să îmbunătățim funcțiile și să ne planificăm viitorul. Nicio informație personală nu este colectată."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -17427,12 +16836,8 @@ msgid "&Project Sample Rate:"
 msgstr "Rata de eșantionare a &proiectului:"
 
 #: src/prefs/DevicePrefs.cpp
-msgid ""
-"Sample Rate used when recording new tracks, mixing down tracks and for "
-"playback in this project."
-msgstr ""
-"Rata de eșantionare folosită la înregistrarea pistelor noi, realizarea "
-"mixului final și pentru redarea acestui proiect."
+msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
+msgstr "Rata de eșantionare folosită la înregistrarea pistelor noi, realizarea mixului final și pentru redarea acestui proiect."
 
 #: src/prefs/DevicePrefs.cpp
 msgid "D&efault Sample Rate:"
@@ -17589,12 +16994,8 @@ msgid "Directory %s is not writable"
 msgstr "Nu se poate scrie în dosarul %s"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid ""
-"Changes to temporary directory will not take effect until Audacity is "
-"restarted"
-msgstr ""
-"Schimbările asupra dosarului temporar vor avea efect numai după ce "
-"repornești Audacity"
+msgid "Changes to temporary directory will not take effect until Audacity is restarted"
+msgstr "Schimbările asupra dosarului temporar vor avea efect numai după ce repornești Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -17682,9 +17083,9 @@ msgstr "Set de instrucțiuni"
 msgid "&Use SSE/SSE2/.../AVX"
 msgstr "&Folosește SSE/SSE2/.../AVX"
 
-#. i18n-hint: Title of the panel containing user-defined paths where plugins
-#. could be found
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
 #. * First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#.
 #: src/prefs/EffectsPrefs.cpp
 #, c-format
 msgid "%s plugin locations"
@@ -17710,9 +17111,7 @@ msgstr "Preferințe pentru import extins"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "A&ttempt to use filter in OpenFile dialog first"
-msgstr ""
-"Încearcă să foloseș&ti filtrul în dialogul de deschidere a fișierului mai "
-"întâi."
+msgstr "Încearcă să foloseș&ti filtrul în dialogul de deschidere a fișierului mai întâi."
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rules to choose import filters"
@@ -17759,16 +17158,8 @@ msgid "Unused filters:"
 msgstr "Filtre neutilizate:"
 
 #: src/prefs/ExtImportPrefs.cpp
-msgid ""
-"There are space characters (spaces, newlines, tabs or linefeeds) in one of "
-"the items. They are likely to break the pattern matching. Unless you know "
-"what you are doing, it is recommended to trim spaces. Do you want Audacity "
-"to trim spaces for you?"
-msgstr ""
-"Există caractere de spațiere (spațiu, linie nouă, tab) într-unul dintre "
-"elemente. Este posibil ca acestea să strice potrivirea șablonului. Dacă nu "
-"știi ce faci, este recomandat să elimini spațiile. Vrei ca Audacity să "
-"elimine aceste spații pentru tine?"
+msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
+msgstr "Există caractere de spațiere (spațiu, linie nouă, tab) într-unul dintre elemente. Este posibil ca acestea să strice potrivirea șablonului. Dacă nu știi ce faci, este recomandat să elimini spațiile. Vrei ca Audacity să elimine aceste spații pentru tine?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -17796,8 +17187,7 @@ msgstr "Interfață"
 msgid "Preferences for GUI"
 msgstr "Preferințe pentru GUI"
 
-#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/WaveformPrefs.cpp
+#: src/prefs/GUIPrefs.cpp src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "Display"
 msgstr "Afișează"
 
@@ -17876,12 +17266,8 @@ msgid "Always &match the loop tempo to the project tempo"
 msgstr "Potrivi &mereu tempoul buclei cu tempoul proiectului"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid ""
-"&Only match the loop tempo to the project tempo when the ruler displays "
-"\"Beats and Measures\""
-msgstr ""
-"P&otrivi tempoul buclei cu tempoul proiectului doar când rigla afișează "
-"„Timpi și măsuri”"
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr "P&otrivi tempoul buclei cu tempoul proiectului doar când rigla afișează „Timpi și măsuri”"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Do nothing"
@@ -17896,12 +17282,8 @@ msgid "When importing a music loop into an empty project, Audacity will:"
 msgstr "La importarea unei bucle muzicale într-un proiect gol, Audacity va:"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid ""
-"When importing a music loop into an existing (non-empty) project, Audacity "
-"will:"
-msgstr ""
-"La importarea unei bucle muzicale într-un proiect existent (non-gol), "
-"Audacity va:"
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr "La importarea unei bucle muzicale într-un proiect existent (non-gol), Audacity va:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17995,8 +17377,7 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Select an XML file containing Audacity keyboard shortcuts..."
-msgstr ""
-"Selectează un fișier XML care conține scurtăturile de tastatură Audacity..."
+msgstr "Selectează un fișier XML care conține scurtăturile de tastatură Audacity..."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Error Importing Keyboard Shortcuts"
@@ -18122,8 +17503,7 @@ msgstr "Latența sintetizatorului MIDI trebuie să fie un număr întreg"
 msgid "Midi IO"
 msgstr "I/E MIDI"
 
-#. i18n-hint: Modules are optional extensions to Audacity that add NEW
-#. features.
+#. i18n-hint: Modules are optional extensions to Audacity that add NEW features.
 #: src/prefs/ModulePrefs.cpp
 msgid "Modules"
 msgstr "Module"
@@ -18142,9 +17522,7 @@ msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
-msgstr ""
-"Schimbările acestor setări vor intra în efect doar după repornirea "
-"Audacity.\n"
+msgstr "Schimbările acestor setări vor intra în efect doar după repornirea Audacity.\n"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Always ask"
@@ -18160,9 +17538,7 @@ msgstr "Nu s-a făcut nicio alegere"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Error: No modules were found. This may indicate a faulty installation."
-msgstr ""
-"Eroare: Niciun modul nu a fost găsit. Acest lucru poate indica o instalare "
-"coruptă."
+msgstr "Eroare: Niciun modul nu a fost găsit. Acest lucru poate indica o instalare coruptă."
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
@@ -18237,8 +17613,7 @@ msgstr "Conversie în timp real"
 msgid "Sample Rate Con&verter:"
 msgstr "Con&vertor al ratei de eșantionare:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable
-#. resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "&Dither:"
 msgstr "&Dither:"
@@ -18251,8 +17626,7 @@ msgstr "Coversie la calitate înaltă"
 msgid "Sample Rate Conver&ter:"
 msgstr "Conver&tor al ratei de eșantionare:"
 
-#. i18n-hint: technical term for randomization to reduce undesirable
-#. resampling artifacts
+#. i18n-hint: technical term for randomization to reduce undesirable resampling artifacts
 #: src/prefs/QualityPrefs.cpp
 msgid "Dit&her:"
 msgstr "Dit&her:"
@@ -18277,8 +17651,7 @@ msgstr "&Monitorizare intrare audibilă"
 msgid "Record on a new track"
 msgstr "Înregistrează pe o nouă pistă"
 
-#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the
-#. recording
+#. i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording
 #: src/prefs/RecordingPrefs.cpp
 msgid "Detect dropouts"
 msgstr "Detectează pierderi"
@@ -18463,8 +17836,7 @@ msgstr "Activează selecția spe&ctrală"
 msgid "Show a grid along the &Y-axis"
 msgstr "Afișează un caroiaj de-a lungul axei &Y"
 
-#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be
-#. translated
+#. i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated
 #: src/prefs/SpectrumPrefs.cpp
 msgid "FFT Find Notes"
 msgstr "Găsește note FFT"
@@ -18526,8 +17898,7 @@ msgid "The maximum number of notes must be in the range 1..128"
 msgstr "Numărul maxim de note trebuie să fie între 1 și 128"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
-#. graphical user interface, including choices of colors, and similarity of
-#. images
+#. graphical user interface, including choices of colors, and similarity of images
 #. such as those on button controls.  Audacity can load and save alternative
 #. themes.
 #: src/prefs/ThemePrefs.cpp src/prefs/ThemePrefs.h
@@ -18824,8 +18195,7 @@ msgstr "2 canale de înregistrare (stereo)"
 msgid "&Audio Setup Toolbar"
 msgstr "Bară de unelte setări &audio"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/toolbars/ControlToolBar.cpp
@@ -18872,8 +18242,7 @@ msgstr "Selectează până la final"
 msgid "Select to Start"
 msgstr "Selectează până la început"
 
-#. i18n-hint: These are strings for the status bar, and indicate whether
-#. Audacity
+#. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused.
 #: src/toolbars/ControlToolBar.cpp src/tracks/ui/Scrubbing.cpp
 #, c-format
@@ -19024,14 +18393,12 @@ msgstr " A făcut clipping "
 msgid "Record Meter"
 msgstr "Indicator nivel înregistrare"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being
-#. recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #: src/toolbars/MeterToolBar.cpp
 msgid "Recording Level"
 msgstr "Nivel înregistrare"
 
-#. i18n-hint: (noun) The meter that shows the loudness of the audio being
-#. recorded.
+#. i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
 #. This is the name used in screen reader software, where having 'Meter' first
 #. apparently is helpful to partially sighted people.
 #: src/toolbars/MeterToolBar.cpp
@@ -19345,9 +18712,7 @@ msgstr "Micșorează viteza &de redare"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label. Hold shift and drag to move all labels on the same track."
-msgstr ""
-"Trage eticheta. Ține apăsat Shift și trage pentru a muta toate etichetele "
-"din aceeași pistă."
+msgstr "Trage eticheta. Ține apăsat Shift și trage pentru a muta toate etichetele din aceeași pistă."
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag one or more label boundaries."
@@ -19437,12 +18802,8 @@ msgid "&MIDI Device Info..."
 msgstr "Informații dispozitiv &MIDI..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-msgid ""
-"Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom"
-" region."
-msgstr ""
-"Clic pentru a mări vertical. Shift-clic pentru a micșora. Trage pentru a "
-"specifica o regiune de mărire."
+msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
+msgstr "Clic pentru a mări vertical. Shift-clic pentru a micșora. Trage pentru a specifica o regiune de mărire."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Zoom Reset"
@@ -19492,8 +18853,7 @@ msgstr "Spațiu insuficient"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "There is not enough space to expand the clip to its original speed."
-msgstr ""
-"Nu este suficient spațiu pentru a expanda clipul la viteza lui originală."
+msgstr "Nu este suficient spațiu pentru a expanda clipul la viteza lui originală."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Reset Clip Speed"
@@ -19505,13 +18865,11 @@ msgstr "Clic pentru a reseta înălțimea clipului."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip pitch, Cmd + click to reset."
-msgstr ""
-"Clic pentru a schimba înălțimea clipului, Cmd + clic pentru a o reseta."
+msgstr "Clic pentru a schimba înălțimea clipului, Cmd + clic pentru a o reseta."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip pitch, Ctrl + click to reset."
-msgstr ""
-"Clic pentru a schimba înălțimea clipului, Ctrl + clic pentru a o reseta."
+msgstr "Clic pentru a schimba înălțimea clipului, Ctrl + clic pentru a o reseta."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to reset clip speed."
@@ -19588,9 +18946,7 @@ msgstr "Clic și trage pentru a edita eșantioanele"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "To use Draw, zoom in further until you can see the individual samples."
-msgstr ""
-"Pentru a folosi desenarea, mărește mai mult până când poți vedea "
-"eșantioanele individuale."
+msgstr "Pentru a folosi desenarea, mărește mai mult până când poți vedea eșantioanele individuale."
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Moved Samples"
@@ -19651,22 +19007,16 @@ msgid "Next &Lower Peak Frequency"
 msgstr "Următorul vârf &inferior de frecvență"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-msgid ""
-"Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
-msgstr ""
-"Trage pentru a specifica o regiune de mărire. Click-dreapta pentru meniu. "
-"Ctrl+scroll pentru a mări."
+msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr "Trage pentru a specifica o regiune de mărire. Click-dreapta pentru meniu. Ctrl+scroll pentru a mări."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid "Right-click for menu. Ctrl+scroll to zoom."
 msgstr "Clic-dreapta pentru meniu. Ctrl+derulare pentru mărire."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-msgid ""
-"Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr ""
-"Clic și trage pentru a ajusta dimensiunile sub-vizualizărilor, dublu-clic "
-"pentru a împărți în mod egal"
+msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
+msgstr "Clic și trage pentru a ajusta dimensiunile sub-vizualizărilor, dublu-clic pentru a împărți în mod egal"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -19697,22 +19047,19 @@ msgstr[0] "%s, %d din %d clip"
 msgstr[1] "%s, %d din %d clipuri"
 msgstr[2] "%s, %d din %d de clipuri"
 
-#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4
-#. seconds" is shown
+#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 #, c-format
 msgid "Adjust left trim by %.02f seconds"
 msgstr "Ajustează decuparea stângă cu %.02f secunde"
 
-#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4s"
-#. is shown
+#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 #, c-format
 msgid "Trim by %.02fs"
 msgstr "Scurtează cu %.02fs"
 
-#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4
-#. seconds" is shown
+#. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 #, c-format
 msgid "Adjust right trim by %.02f seconds"
@@ -20061,9 +19408,7 @@ msgstr "Limita de viteză superioară"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
-msgstr ""
-"Limita de viteză superioară trebuie să fie mai mare decât limita de viteză "
-"inferioară"
+msgstr "Limita de viteză superioară trebuie să fie mai mare decât limita de viteză inferioară"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Invalid Limits"
@@ -20133,12 +19478,8 @@ msgstr "Clic-dreapta pentru meniu."
 
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
-msgid ""
-"Drag clips to reposition them. Hold Shift and drag to move all clips on the "
-"same track."
-msgstr ""
-"Trage clipurile pentru a le repoziționa. Ține apăsat Shift și trage pentru a"
-" muta toate clipurile de pe aceeași pistă."
+msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
+msgstr "Trage clipurile pentru a le repoziționa. Ține apăsat Shift și trage pentru a muta toate clipurile de pe aceeași pistă."
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
@@ -20217,6 +19558,7 @@ msgstr "Plicul a fost ajustat."
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
+#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "&Scrub"
@@ -20232,6 +19574,7 @@ msgstr "Seeking"
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
 #. "Seeking" is normal speed playback but with skips, ...
+#.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Scrub &Ruler"
 msgstr "&Riglă Scrubbing"
@@ -20278,9 +19621,7 @@ msgstr "Clic și trage pentru a muta frecvența de selecție superioară."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency to a spectral peak."
-msgstr ""
-"Clic și trage pentru a muta frecvența de selecție centrală la un vârf "
-"spectral."
+msgstr "Clic și trage pentru a muta frecvența de selecție centrală la un vârf spectral."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move center selection frequency."
@@ -20295,8 +19636,7 @@ msgstr "Clic și trage pentru a ajusta lățimea de bandă a frecvenței."
 msgid "Edit, Preferences..."
 msgstr "Editare, Preferințe..."
 
-#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux,
-#. "Command+," for Mac
+#. i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
@@ -20310,8 +19650,7 @@ msgstr "Clic și trage pentru a seta lățimea de bandă a frecvenței."
 msgid "Click and drag to select audio"
 msgstr "Clic și trage pentru a selecta audio"
 
-#. i18n-hint: "Snapping" means automatic alignment of selection edges to any
-#. nearby label or clip boundaries
+#. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
 msgid "(snapping)"
 msgstr "(se fixează)"
@@ -20364,17 +19703,13 @@ msgstr "Command+Clic"
 msgid "Ctrl+Click"
 msgstr "Ctrl+Clic"
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
-#. 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track. Drag up or down to change track order."
-msgstr ""
-"%s pentru a selecta sau deselecta pista. Trage în sus sau în jos pentru a "
-"schimba ordinea pistelor."
+msgstr "%s pentru a selecta sau deselecta pista. Trage în sus sau în jos pentru a schimba ordinea pistelor."
 
-#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows,
-#. 'Command+Click' on Mac
+#. i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, c-format
 msgid "%s to select or deselect track."
@@ -20419,15 +19754,10 @@ msgstr "Verifică pentru actualizări"
 #. i18n-hint: %s is replaced with 'Preferences > Application'.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
-msgid ""
-"If you want to change your preference for automatic updates checking, you "
-"can find it in %s."
-msgstr ""
-"Dacă dorești să schimbi preferințele tale privind actualizările automate, le"
-" poți găsi în %s."
+msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
+msgstr "Dacă dorești să schimbi preferințele tale privind actualizările automate, le poți găsi în %s."
 
-#. i18n-hint: Hyperlink title that opens Preferences dialog on Application
-#. page and is substituted into "... you can find it in %s." string.
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
 #: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Preferences > Application"
@@ -20469,8 +19799,9 @@ msgstr "Se descarcă %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "Stay Updated & Anonymous Usage Info"
-msgstr "Fii la zi și Informații de utilizare anonime"
+#, fuzzy
+msgid "App updates & usage info"
+msgstr "Actualizări aplicație"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -20479,40 +19810,25 @@ msgstr "Actualizări aplicație"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid ""
-"Audacity notifies you in-app when a new version is available to download."
-msgstr ""
-"Audacity te va notifica în aplicație când o nouă versiune este disponibilă "
-"pentru descărcare."
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr "Audacity te va notifica în aplicație când o nouă versiune este disponibilă pentru descărcare."
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "Anonymous usage info (UUID)"
-msgstr "Informații de utilizare anonime (UUID)"
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid ""
-"To help us understand how often people use Audacity, we generate a random, "
-"anonymous ID (UUID). This helps us improve features and plan for the future."
-" No personal data is collected."
+msgid "Usage info"
 msgstr ""
-"Pentru a ne ajuta să înțelegem cât de des folosesc oamenii Audacity, generăm"
-" un identificator aleator anonim (UUID). Acesta ne ajută să îmbunătățim "
-"funcțiile și să ne planificăm viitorul. Nicio informație personală nu este "
-"colectată."
-
-#. i18n-hint:  %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can disable this anytime in %s."
-msgstr "Poți dezactiva asta oricând din %s."
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
 msgstr "Poți opri asta oricând din %s."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr "Poți dezactiva asta oricând din %s."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "View privacy policy"
@@ -20694,12 +20010,8 @@ msgid "Missing Plugins"
 msgstr "Plugin-uri lipsă"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-msgid ""
-"This project contains some realtime effect plugins that cannot be found on "
-"this system."
-msgstr ""
-"Acest proiect conține anumite efecte în timp real care nu se găsesc pe acest"
-" sistem."
+msgid "This project contains some realtime effect plugins that cannot be found on this system."
+msgstr "Acest proiect conține anumite efecte în timp real care nu se găsesc pe acest sistem."
 
 #. i18n-hint: %s will be replaced with "Learn more"
 #: src/widgets/MissingPluginsErrorDialog.cpp
@@ -20728,12 +20040,8 @@ msgstr "Nu s-au putut scrie fișierele în dosarul: %s."
 
 #. i18n-hint: This message describes the error in the Error dialog.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-msgid ""
-"Please check that the directory exists, has the necessary permissions, and "
-"the drive isn't full."
-msgstr ""
-"Te rog verifică dacă dosarul există, are permisiunile necesare și că discul "
-"nu este plin."
+msgid "Please check that the directory exists, has the necessary permissions, and the drive isn't full."
+msgstr "Te rog verifică dacă dosarul există, are permisiunile necesare și că discul nu este plin."
 
 #. i18n-hint: %s is replaced with 'Preferences > Directories'.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
@@ -20741,8 +20049,7 @@ msgstr ""
 msgid "You can change the directory in %s."
 msgstr "Poți schimba dosarul din %s."
 
-#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories
-#. page.
+#. i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Preferences > Directories"
 msgstr "Preferințe > Dosare"
@@ -20818,8 +20125,8 @@ msgstr "Steve Daulton"
 
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
-#: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#: plug-ins/pluck.ny plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
+#: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr "Licență Publică Generală GNU v2.0"
 
@@ -21125,10 +20432,8 @@ msgstr "Eroare.~%Selecție invalidă.~%Mai mult de 2 clipuri audio selectate."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
-msgid ""
-"Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr ""
-"Eroare.~%Selecție invalidă.~%Spațiu liber la începutul/sfârșitul selecției."
+msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
+msgstr "Eroare.~%Selecție invalidă.~%Spațiu liber la începutul/sfârșitul selecției."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -21178,8 +20483,7 @@ msgstr "Alternând intrare / ieșire"
 #: plug-ins/crossfadetracks.ny
 #, lisp-format
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr ""
-"Eroare.~%Selectează 2 (sau mai multe) piste pentru a aplica crossfade."
+msgstr "Eroare.~%Selectează 2 (sau mai multe) piste pentru a aplica crossfade."
 
 #: plug-ins/delay.ny resources/EffectsMenuDefaults.xml
 msgid "Delay"
@@ -21478,9 +20782,7 @@ msgstr "~ah ~am ~as"
 #: plug-ins/label-sounds.ny
 #, lisp-format
 msgid "Too many silences detected.~%Only the first 10000 labels added."
-msgstr ""
-"Prea multe momente de liniște detectate.~%Doar primele 10000 de etichete au "
-"fost adăugate."
+msgstr "Prea multe momente de liniște detectate.~%Doar primele 10000 de etichete au fost adăugate."
 
 #: plug-ins/label-sounds.ny
 #, lisp-format
@@ -21514,8 +20816,7 @@ msgstr "Limită soft"
 msgid "Hard Limit"
 msgstr "Limită hard"
 
-#. i18n-hint: clipping of wave peaks and troughs, not division of a track into
-#. clips
+#. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Clipping soft"
@@ -21721,9 +21022,7 @@ msgstr "Atenție.~%A eșuat copierea unor fișiere:~%"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr ""
-"Plugin-uri instalate.~%(Folosește Managerul de plugin-uri pentru a activa "
-"efectele):"
+msgstr "Plugin-uri instalate.~%(Folosește Managerul de plugin-uri pentru a activa efectele):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
@@ -21816,8 +21115,7 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr ""
-"Setează „Număr de măsuri” la zero pentru a activa „Durată pistă ritm”."
+msgstr "Setează „Număr de măsuri” la zero pentru a activa „Durată pistă ritm”."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -22029,11 +21327,8 @@ msgstr "Rata de eșantionare: ~a Hz.  Valori eșantion pe scara ~a.~%~a~%~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
-msgid ""
-"~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr ""
-"~a   ~a~%~aRata de eșantionare: ~a Hz.~%Lungimea procesată: ~a eșantioane ~a"
-" secunde.~a"
+msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
+msgstr "~a   ~a~%~aRata de eșantionare: ~a Hz.~%Lungimea procesată: ~a eșantioane ~a secunde.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -22090,15 +21385,13 @@ msgstr "<b>Rata de eșantionare:</b> &nbsp;&nbsp;~a Hz."
 msgid "<b>Peak Amplitude:</b> &nbsp;&nbsp;~a (linear) &nbsp;&nbsp;~a dB."
 msgstr "<b>Amplitudine vârf:</b> &nbsp;&nbsp;~a (liniar) &nbsp;&nbsp;~a dB."
 
-#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a
-#. signal; there also "weighted" versions of it but this isn't that
+#. i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>RMS</b> (unweighted): &nbsp;&nbsp;~a dB."
 msgstr "<b>RMS</b> (neponderat): &nbsp;&nbsp;~a dB."
 
-#. i18n-hint: DC derives from "direct current" in electronics, really means
-#. the zero frequency component of a signal
+#. i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "<b>DC Offset:</b> &nbsp;&nbsp;~a"
@@ -22272,9 +21565,7 @@ msgstr "Ștergere spectrală"
 #: plug-ins/spectral-delete.ny
 #, lisp-format
 msgid "Error.~%Track sample rate below 100 Hz is not supported."
-msgstr ""
-"Eroare.~%Ratele de eșantionare ale pistei mai mici de 100Hz nu sunt "
-"suportate."
+msgstr "Eroare.~%Ratele de eșantionare ale pistei mai mici de 100Hz nu sunt suportate."
 
 #: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
@@ -22399,3 +21690,19 @@ msgstr "Unelte spectrale"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Învechite"
+
+#~ msgid "Network communications"
+#~ msgstr "Comunicații în rețea"
+
+#~ msgid "Requires network access."
+#~ msgstr "Necesită acces la rețea."
+
+#~ msgctxt "application preferences"
+#~ msgid "&Send anonymous usage info"
+#~ msgstr "Trimite date de utili&zare anonime"
+
+#~ msgid "We create a random ID to track how often Audacity is used."
+#~ msgstr "Vom crea un identificator aleator pentru a urmări cât de des este folosit Audacity."
+
+#~ msgid "Stay Updated & Anonymous Usage Info"
+#~ msgstr "Fii la zi și Informații de utilizare anonime"
