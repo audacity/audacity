@@ -71,7 +71,7 @@ std::vector<QPoint> interpolatePoints(const QPoint& previousPosition, const QPoi
     std::vector<QPoint> container;
     if (previousPosition.x() == finalPosition.x()) {
         container.push_back(finalPosition);
-        return std::move(container);
+        return container;
     }
 
     container.reserve(std::abs(previousPosition.x() - finalPosition.x()));
@@ -96,7 +96,7 @@ std::vector<QPoint> interpolatePoints(const QPoint& previousPosition, const QPoi
         }
     }
 
-    return std::move(container);
+    return container;
 }
 }
 
