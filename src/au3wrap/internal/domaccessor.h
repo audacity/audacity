@@ -31,7 +31,7 @@ public:
 
     static size_t findClipIndexById(const Au3WaveTrack* track, const trackedit::ClipId& clipId);
 
-    static trackedit::ClipId findClipIdByIndex(const Au3WaveTrack* track,  size_t clipIndex);
+    static trackedit::ClipId findClipIdByIndex(const Au3WaveTrack* track, size_t clipIndex);
     static trackedit::ClipId findMatchedClip(const Au3WaveTrack* track, const Au3WaveTrack* originTrack,
                                              const trackedit::ClipId& originClipId);
     static std::list<std::shared_ptr<Au3WaveClip> > waveClipsAsList(Au3WaveTrack* track);

@@ -97,7 +97,6 @@ public:
     virtual void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) = 0;
     virtual void groupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
     virtual void ungroupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
-    virtual int64_t determineGroupId(const ClipKeyList& clipKeyList) const = 0;
     virtual ClipKeyList clipsInGroup(int64_t id) const = 0;
 
     virtual muse::ProgressPtr progress() const = 0;

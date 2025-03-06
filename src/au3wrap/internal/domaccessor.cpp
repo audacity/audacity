@@ -36,6 +36,7 @@ const Au3Track* DomAccessor::findTrackByIndex(const Au3Project& prj, size_t inde
             track = t;
             break;
         }
+        i++;
     }
 
     return track;

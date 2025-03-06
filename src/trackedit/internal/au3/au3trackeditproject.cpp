@@ -335,6 +335,16 @@ secs_t Au3TrackeditProject::totalTime() const
     return m_impl->trackList->GetEndTime();
 }
 
+int64_t Au3TrackeditProject::createNewGroupID(int64_t startingID) const
+{
+    auto groupsList = groupsIdsList();
+    while (muse::contains(groupsList, startingID)) {
+        startingID++;
+    }
+
+    return startingID;
+}
+
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
 {
     return std::make_shared<Au3TrackeditProject>(au3project);
