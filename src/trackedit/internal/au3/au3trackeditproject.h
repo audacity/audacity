@@ -6,14 +6,12 @@
 #include "../../itrackeditproject.h"
 
 #include "UndoManager.h"
-#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 
 #include "iprojecthistory.h"
 #include "modularity/ioc.h"
 
 struct TrackListEvent;
 namespace au::trackedit {
-
 class Au3TrackeditProject : public ITrackeditProject
 {
     muse::Inject<trackedit::IProjectHistory> projectHistory;
@@ -54,11 +52,14 @@ public:
 
     secs_t totalTime() const override;
 
-private:
+    TracksAndClips buildTracksAndClips() override;
 
+private:
     void onTrackListEvent(const TrackListEvent& e);
     void onTrackDataChanged(const TrackId& trackId);
     void onProjectTempoChange(double newTempo);
+
+    au::trackedit::Clips getClips(const TrackId& trackId) const;
 
     struct Au3Impl;
     std::shared_ptr<Au3Impl> m_impl;
