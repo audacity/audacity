@@ -240,7 +240,7 @@ Filename: "{app}\audacity.exe"; Description: "{cm:LaunchProgram,Audacity}"; Flag
   Local[1]
 
 Name: "af"; MessagesFile: "{#Get('Afrikaans.isl')}"
-Name: "ar"; MessagesFile: "{#Get('Arabic.isl')}"
+Name: "ar"; MessagesFile: "{#GetOfficial('Arabic.isl')}"
 Name: "be"; MessagesFile: "{#Get('Belarusian.isl')}"
 Name: "bg"; MessagesFile: "compiler:Languages\Bulgarian.isl"
 Name: "bn"; MessagesFile: "{#Get('Bengali.islu')}"
@@ -288,7 +288,7 @@ Name: "sk"; MessagesFile: "compiler:Languages\Slovak.isl"
 Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "sr_RS"; MessagesFile: "{#Get('SerbianCyrillic.isl')}"
 Name: "sr_RS0latin"; MessagesFile: "{#Get('SerbianLatin.isl')}"
-Name: "sv"; MessagesFile: "{#Get('Swedish.isl')}"
+Name: "sv"; MessagesFile: "{#GetOfficial('Swedish.isl')}"
 Name: "ta"; MessagesFile: "{#Dummy('Tamil', '0449')}"
 Name: "tg"; MessagesFile: "{#Dummy('Tajik', '0428')}"
 Name: "tr"; MessagesFile: "compiler:Languages\Turkish.isl"
