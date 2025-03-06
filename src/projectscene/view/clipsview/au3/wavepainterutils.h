@@ -8,5 +8,5 @@
 namespace au::projectscene::wavepainterutils {
 IWavePainter::PlotType getPlotType(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey, double zoom);
 WaveMetrics getWaveMetrics(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
-                           const IWavePainter::Params& params);
+                           const IWavePainter::Params& params, bool snapToSamples = false);
 }

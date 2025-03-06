@@ -40,7 +40,7 @@ IWavePainter::PlotType getPlotType(std::shared_ptr<au::project::IAudacityProject
 }
 
 WaveMetrics getWaveMetrics(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
-                           const IWavePainter::Params& params)
+                           const IWavePainter::Params& params, bool snapToSamples)
 {
     WaveMetrics wm;
 
@@ -65,8 +65,16 @@ WaveMetrics getWaveMetrics(std::shared_ptr<au::project::IAudacityProject> projec
 
     // calculate selection area relative to the clip itself
     if (!muse::RealIsEqual(params.selectionStartTime, params.selectionEndTime)) {
-        wm.selectionStartTime = params.selectionStartTime - waveClip->Start() + waveClip->GetTrimLeft();
-        wm.selectionEndTime = params.selectionEndTime - waveClip->Start() + waveClip->GetTrimLeft();
+        const double relativeStartTime = params.selectionStartTime - waveClip->Start();
+        const double relativeEndTime = params.selectionEndTime - waveClip->Start();
+
+        const auto snapToSampleTimeConv = [&](double time) {
+            const double multiplier = waveClip->GetRate() / waveClip->GetStretchRatio();
+            return std::round(time * multiplier) / multiplier;
+        };
+
+        wm.selectionStartTime = (snapToSamples ? snapToSampleTimeConv(relativeStartTime) : relativeStartTime) + waveClip->GetTrimLeft();
+        wm.selectionEndTime = (snapToSamples ? snapToSampleTimeConv(relativeEndTime) : relativeEndTime) + waveClip->GetTrimLeft();
     }
 
     return wm;
