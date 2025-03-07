@@ -16,10 +16,11 @@ void ReverbViewModel::doReload()
 {
     const ReverbSettings& rs = settings<ReverbSettings>();
 
-    auto makeItem = [this](const QString& key, const QString& title, double value, double min, double max, const Setter& s) {
+    auto makeItem = [this](const QString& key, const QString& title, const QString& tooltip, double value, double min, double max, const Setter& s) {
         QVariantMap item;
         item["key"] = key;
         item["title"] = title;
+        item["tooltip"] = tooltip;
         item["value"] = value;
         item["min"] = min;
         item["max"] = max;
@@ -34,6 +35,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("RoomSize",
                              muse::qtrc("effects", "Room Size (%)"),
+                             muse::qtrc("effects", "Sets the size of the simulated room"),
                              rs.mRoomSize,
                              ReverbEffect::RoomSize.min,
                              ReverbEffect::RoomSize.max,
@@ -42,6 +44,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("PreDelay",
                              muse::qtrc("effects", "Pre-delay (ms)"),
+                             muse::qtrc("effects", "Sets the delay before the reverb effect starts"),
                              rs.mPreDelay,
                              ReverbEffect::PreDelay.min,
                              ReverbEffect::PreDelay.max,
@@ -50,6 +53,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("Reverberance",
                              muse::qtrc("effects", "Reverberance (%)"),
+                             muse::qtrc("effects", "Sets the length of the reverberation tail"),
                              rs.mReverberance,
                              ReverbEffect::Reverberance.min,
                              ReverbEffect::Reverberance.max,
@@ -58,6 +62,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("HfDamping",
                              muse::qtrc("effects", "Damping (%)"),
+                             muse::qtrc("effects", "Sets the damping of the high frequencies for a more \"muted\" effect"),
                              rs.mHfDamping,
                              ReverbEffect::HfDamping.min,
                              ReverbEffect::HfDamping.max,
@@ -66,6 +71,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("ToneLow",
                              muse::qtrc("effects", "Tone Low (%)"),
+                             muse::qtrc("effects", "Controls the low frequencies, creating a more \"boomy\" effect"),
                              rs.mToneLow,
                              ReverbEffect::ToneLow.min,
                              ReverbEffect::ToneLow.max,
@@ -74,6 +80,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("ToneHigh",
                              muse::qtrc("effects", "Tone High (%)"),
+                             muse::qtrc("effects", "Controls the high frequencies, creating a more \"bright\" effect"),
                              rs.mToneHigh,
                              ReverbEffect::ToneHigh.min,
                              ReverbEffect::ToneHigh.max,
@@ -82,6 +89,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("WetGain",
                              muse::qtrc("effects", "Wet Gain (dB)"),
+                             muse::qtrc("effects", "Sets the volume of the reverberaed signal"),
                              rs.mWetGain,
                              ReverbEffect::WetGain.min,
                              ReverbEffect::WetGain.max,
@@ -90,6 +98,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("DryGain",
                              muse::qtrc("effects", "Dry Gain (dB)"),
+                             muse::qtrc("effects", "Sets the volume of the original signal"),
                              rs.mDryGain,
                              ReverbEffect::DryGain.min,
                              ReverbEffect::DryGain.max,
@@ -98,6 +107,7 @@ void ReverbViewModel::doReload()
 
     m_paramsList << makeItem("StereoWidth",
                              muse::qtrc("effects", "Stereo Width (%)"),
+                             muse::qtrc("effects", "Sets the apparent width of the effect, making it feel more \"surround\""),
                              rs.mStereoWidth,
                              ReverbEffect::StereoWidth.min,
                              ReverbEffect::StereoWidth.max,
