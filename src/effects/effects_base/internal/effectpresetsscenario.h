@@ -11,13 +11,15 @@
 #include "global/iinteractive.h"
 #include "global/iglobalconfiguration.h"
 #include "../ieffectpresetsprovider.h"
+#include "../ieffectinstancesregister.h"
 
 namespace au::effects {
 class EffectPresetsScenario : public IEffectPresetsScenario
 {
-    muse::Inject<IEffectPresetsProvider> presetsProvider;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::Inject<IEffectPresetsProvider> presetsProvider;
+    muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:
     EffectPresetsScenario() = default;
