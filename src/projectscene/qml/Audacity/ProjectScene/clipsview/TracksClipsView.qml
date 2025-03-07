@@ -347,6 +347,11 @@ Rectangle {
                 tracksModel.endUserInteraction()
             }
 
+            onCanceled: e => {
+                console.log("User interaction canceled")
+                tracksModel.endUserInteraction()
+            }
+
             onClicked: e => {
                 if (e.button !== Qt.LeftButton) {
                     return
