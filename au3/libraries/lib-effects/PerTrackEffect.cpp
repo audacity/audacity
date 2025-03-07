@@ -23,7 +23,6 @@
 #include "AudioGraphBuffers.h"
 #include "AudioGraphTask.h"
 #include "EffectStage.h"
-#include "SyncLock.h"
 #include "TimeWarper.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
@@ -71,7 +70,7 @@ bool PerTrackEffect::Process(
     std::optional<EffectOutputTracks> outputs;
     if (!pOutputs) {
         pOutputs = &outputs.emplace(*mTracks, GetType(),
-                                    EffectOutputTracks::TimeInterval { mT0, mT1 }, true);
+                                    EffectOutputTracks::TimeInterval { mT0, mT1 });
     }
 
     bool bGoodResult = true;
@@ -328,15 +327,9 @@ bool PerTrackEffect::ProcessPass(TrackList& outputs,
         }
         ++count;
     };
-    const auto defaultTrackVisitor
-        =[&](Track& t) {
-        if (SyncLock::IsSyncLockSelected(t)) {
-            t.SyncLockAdjust(mT1, mT0 + duration);
-        }
-    };
 
-    outputs.Any().VisitWhile(bGoodResult,
-                             [&](auto&& fallthrough){
+    outputs.Any<WaveTrack>().VisitWhile(bGoodResult,
+                                        [&](auto&& fallthrough){
         return [&](WaveTrack& wt) {
             if (!wt.GetSelected()) {
                 return fallthrough();
@@ -361,9 +354,7 @@ bool PerTrackEffect::ProcessPass(TrackList& outputs,
                 results.reset();
             }
         };
-    },
-                             defaultTrackVisitor
-                             );
+    });
 
     if (bGoodResult && GetType() == EffectTypeGenerate) {
         mT1 = mT0 + duration;
@@ -403,7 +394,7 @@ std::shared_ptr<EffectOutputTracks> PerTrackEffect::MakeOutputTracks()
 {
     return mpOutputTracks
                =std::make_shared<EffectOutputTracks>(*mTracks, GetType(),
-                                                     EffectOutputTracks::TimeInterval { mT0, mT1 }, true);
+                                                     EffectOutputTracks::TimeInterval { mT0, mT1 });
 }
 
 void PerTrackEffect::DestroyOutputTracks() const

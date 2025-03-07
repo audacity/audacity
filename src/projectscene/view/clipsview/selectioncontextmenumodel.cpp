@@ -22,8 +22,10 @@ void SelectionContextMenuModel::load()
 MenuItemList SelectionContextMenuModel::makeItems()
 {
     MenuItemList items {
-        makeMenuItem("split-cut"),
-        makeMenuItem("clip-cut-selected"),
+        makeMenuItem("cut"),
+        makeMenuItem("cut-per-clip-ripple"),
+        makeMenuItem("cut-per-track-ripple"),
+        makeMenuItem("cut-all-tracks-ripple"),
         makeSeparator(),
         makeMenuItem("clip-copy-selected"),
         makeMenuItem("duplicate"),
