@@ -120,7 +120,7 @@ public:
    //! If successful, return non-empty; the caller must commit to keep the
    //! association of the opened file with the project
    std::optional<TentativeConnection>
-      LoadProject(const FilePath &fileName, bool ignoreAutosave);
+      LoadProject(FilePath &fileName, bool ignoreAutosave);
 
    bool UpdateSaved(const TrackList *tracks = nullptr);
    bool SaveProject(const FilePath &fileName, const TrackList *lastSaved);
@@ -313,6 +313,7 @@ private:
 
    // The project's file path
    FilePath mFileName;
+   FilePath mShadowFileName;
 
    // Has this project been recovered from an auto-saved version
    bool mRecovered;

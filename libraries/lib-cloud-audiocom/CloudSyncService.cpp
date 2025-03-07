@@ -557,7 +557,8 @@ void CloudSyncService::SyncCloudSnapshot(
       FileNames::MkDir(dir);
 
       InvisibleTemporaryProject project;
-      ProjectFileIO::Get(project.Project()).LoadProject(wxPath, true);
+      auto filename = wxPath;
+      ProjectFileIO::Get(project.Project()).LoadProject(filename, true);
    }
    else
    {

@@ -174,7 +174,8 @@ auto ProjectFileManager::ReadProjectFile(
    ///
    /// Parse project file
    ///
-   auto parseResult = projectFileIO.LoadProject(fileName, discardAutosave);
+   auto filename = fileName;
+   auto parseResult = projectFileIO.LoadProject(filename, discardAutosave);
    const bool bParseSuccess = parseResult.has_value();
 
    bool err = false;
@@ -1267,7 +1268,8 @@ bool ImportProject(AudacityProject &dest, const FilePath &fileName)
    auto &project = temp.Project();
 
    auto &projectFileIO = ProjectFileIO::Get(project);
-   if (!projectFileIO.LoadProject(fileName, false))
+   auto filename = fileName;
+   if (!projectFileIO.LoadProject(filename, false))
       return false;
    auto &srcTracks = TrackList::Get(project);
    auto &destTracks = TrackList::Get(dest);

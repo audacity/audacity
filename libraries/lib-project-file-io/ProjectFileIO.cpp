@@ -18,6 +18,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/crt.h>
 #include <wx/log.h>
 #include <wx/sstream.h>
+#include <wx/stdpaths.h>
 #include <wx/utils.h>
 
 #include "ActiveProjects.h"
@@ -36,6 +37,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
 #include "BasicUI.h"
+#include "wx/filefn.h"
 #include "wxFileNameWrapper.h"
 #include "XMLFileReader.h"
 #include "SentryHelper.h"
@@ -2033,10 +2035,20 @@ void ProjectFileIO::TentativeConnection::Commit()
    }
 }
 
-auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
+auto ProjectFileIO::LoadProject(FilePath &fileName, bool ignoreAutosave)
    -> std::optional<TentativeConnection>
 {
    auto now = std::chrono::high_resolution_clock::now();
+
+
+   const wxString appDataDir = wxStandardPaths::Get().GetUserDataDir();
+   const wxFileName originalFile(fileName);
+   const wxString tempPath = wxFileName(appDataDir, originalFile.GetFullName()).GetFullPath();
+
+   wxCopyFile(fileName, tempPath, true);
+
+   mShadowFileName = fileName;
+   fileName = tempPath;
 
    std::optional<TentativeConnection> result{ *this };
 
@@ -2402,6 +2414,9 @@ void ProjectFileIO::CloseProject()
             RemoveProject(filename);
       }
    }
+
+   wxCopyFile(filename, mShadowFileName);
+   wxRemoveFile(filename);
 }
 
 bool ProjectFileIO::ReopenProject()
