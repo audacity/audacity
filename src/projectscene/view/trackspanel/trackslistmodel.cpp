@@ -151,6 +151,8 @@ void TracksListModel::selectRow(int row, bool exclusive)
     } else {
         m_selectionModel->select(index(row));
     }
+
+    projectHistory()->modifyState();
 }
 
 void TracksListModel::clearSelection()

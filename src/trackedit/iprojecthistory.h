@@ -25,6 +25,27 @@ public:
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription,
                                   trackedit::UndoPushType flags) = 0;
     virtual void modifyState(bool autoSave = false) = 0;
+    virtual void markUnsaved() = 0;
+
+    /**
+     * @brief Start and end user interaction.
+     *
+     * @details Use these methods when you know the user starts an interaction that will either
+     * - add a new history entry, or
+     * - modify the current state,
+     * but you don't know which one it will be.
+     *
+     * Calling `startUserInteraction()` will protect against inadvertent state modifications in the middle of an interaction,
+     * which can introduce bugs in subsequent usage of undo.
+     * If, by the time `endUserInteraction()` is called, no new history entry was pushed, the current state will be modified automatically.
+     */
+    virtual void startUserInteraction() = 0;
+
+    /**
+     * @ref startUserInteraction()
+     */
+    virtual void endUserInteraction() = 0;
+
     virtual muse::async::Notification isUndoRedoAvailableChanged() const = 0;
 };
 
