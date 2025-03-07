@@ -24,7 +24,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(QVariant trackId READ trackId_property CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(int channelCount READ channelCount CONSTANT)
+    Q_PROPERTY(int channelCount READ channelCount NOTIFY channelCountChanged)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
@@ -87,6 +87,7 @@ public slots:
 
 signals:
     void titleChanged(QString title);
+    void channelCountChanged();
 
     void leftChannelPressureChanged(float leftChannelPressure);
     void rightChannelPressureChanged(float rightChannelPressure);

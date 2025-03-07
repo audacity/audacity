@@ -80,13 +80,19 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
     m_isUndoRedoAvailableChanged.notify();
 }
 
+void au::trackedit::Au3ProjectHistory::rollbackState()
+{
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).RollbackState();
+}
+
 void Au3ProjectHistory::startUserInteraction()
 {
     if (m_interactionOngoing) {
-        LOGW() << "An interaction is already ongoing";
+        // Please report if you hit this assert.
+        LOGE() << "An interaction is already ongoing";
         return;
     }
-    modifyState(false);
     m_interactionOngoing = true;
 }
 

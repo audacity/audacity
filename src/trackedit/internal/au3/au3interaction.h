@@ -3,25 +3,29 @@
 */
 #pragma once
 
+#include "au3interactiontypes.h"
 #include "../../itrackeditinteraction.h"
 
 #include "modularity/ioc.h"
+#include "async/asyncable.h"
 #include "iinteractive.h"
 #include "context/iglobalcontext.h"
 #include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 #include "../../itrackeditclipboard.h"
+#include "../../itrackeditconfiguration.h"
 
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
-class Au3Interaction : public ITrackeditInteraction
+class Au3Interaction : public ITrackeditInteraction, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
+    muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
 
 public:
     Au3Interaction();
@@ -30,8 +34,6 @@ public:
 
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
-
-    bool moveClipToTrack(const trackedit::ClipKey& clipKey, TrackId trackId, bool completed) override;
 
     bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
@@ -103,12 +105,22 @@ private:
     friend class Au3InteractionTests;
 
     au3::Au3Project& projectRef() const;
+    void addWaveTrack(int nChannels);
     TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
     std::shared_ptr<au3::Au3Track> createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                               size_t clipboardTracksSize) const;
     TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                         size_t clipboardTracksSize) const;
+
+    size_t trackIndex(const ::Track& track) const;
+    const ::Track* trackAt(size_t index) const;
+    ::Track* trackAt(size_t index);
+    const WaveTrack* waveTrackAt(size_t index) const;
+
+    WaveTrack* waveTrackAt(size_t index);
+    ClipConversionType moveSelectedClipsUpOrDown(int offset);
+    ClipConversionType getClipConversionType(const std::vector<TrackData>& srcTracks, const TrackIdList& dstTracks) const;
     muse::Ret canPasteTrackData(const TrackIdList& tracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin);
@@ -131,8 +143,6 @@ private:
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     void doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
-    std::shared_ptr<WaveTrack> createMonoTrack();
-    std::shared_ptr<WaveTrack> createStereoTrack();
 
     bool splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
@@ -157,14 +167,21 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
-    int trackPositionOffsetMin() const;
-    bool canMoveClipsToTrack(int trackPositionOffset) const;
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
-    muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
+    bool userIsOkWithConversion(ClipConversionType) const;
+
+    using ProgressCb = std::function<void (double)>;
+    using CancelCb = std::function<bool ()>;
+    muse::Ret withProgress(const std::string& title, const std::function<bool(ProgressCb, CancelCb)>& action) const;
+
+    muse::async::Channel<au::trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
     muse::ProgressPtr m_progress;
     std::atomic<bool> m_busy;
+
+    std::optional<TrackListInfo> m_startTracklistInfo;
+    ClipConversionType m_clipConversionRequiredByDrag = ClipConversionType::NoConversion;
 };
 }

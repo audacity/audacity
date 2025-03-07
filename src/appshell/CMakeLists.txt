@@ -91,6 +91,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/editpreferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/editpreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.h
 

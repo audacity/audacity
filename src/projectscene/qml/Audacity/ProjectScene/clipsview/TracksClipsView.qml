@@ -362,6 +362,11 @@ Rectangle {
                 }
                 clipsSelection.visible = false
             }
+
+            onCanceled: {
+                console.log("interaction canceled")
+                tracksModel.endUserInteraction()
+            }
         }
 
         StyledViewScrollAndZoomArea {

@@ -33,9 +33,10 @@ void Au3SelectionController::init()
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
-        resetDataSelection();
-
         if (prj) {
+            resetSelectedClips();
+            resetSelectedTracks();
+
             //! NOTE: load project's last saved selection state
             auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
             m_selectedStartTime.set(selectedRegion.t0(), true);

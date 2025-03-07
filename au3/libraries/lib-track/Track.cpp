@@ -337,6 +337,21 @@ TrackListHolder TrackList::Create(AudacityProject* pOwner)
     return std::make_shared<TrackList>(pOwner);
 }
 
+TrackListHolder TrackList::Duplicate() const
+{
+    const auto duplicate = TrackList::Create(nullptr);
+    for (auto pTrack : *this) {
+        if (pTrack->GetId() == TrackId{}) {
+            // Don't copy a pending added track
+            continue;
+        }
+        duplicate->Add(
+            pTrack->Duplicate(Track::DuplicateOptions {}.Backup()),
+            TrackList::DoAssignId::No);
+    }
+    return duplicate;
+}
+
 #if 0
 TrackList& TrackList::operator=(TrackList&& that)
 {
@@ -414,11 +429,7 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
 void TrackList::QueueEvent(TrackListEvent event)
 {
-    BasicUI::CallAfter([wThis = weak_from_this(), event = std::move(event)]{
-        if (auto pThis = wThis.lock()) {
-            pThis->Publish(event);
-        }
-    });
+    Publish(event);
 }
 
 void TrackList::SelectionEvent(Track& track)
@@ -538,7 +549,7 @@ void TrackList::Permute(const std::vector<Track*>& tracks)
     PermutationEvent(n);
 }
 
-Track* TrackList::FindById(TrackId id)
+const Track* TrackList::FindById(TrackId id) const
 {
     // Linear search.  Tracks in a project are usually very few.
     // Search only the non-pending tracks.
@@ -548,6 +559,11 @@ Track* TrackList::FindById(TrackId id)
         return {};
     }
     return it->get();
+}
+
+Track* TrackList::FindById(TrackId id)
+{
+    return const_cast<Track*>(const_cast<const TrackList*>(this)->FindById(id));
 }
 
 Track* TrackList::DoAddToHead(const std::shared_ptr<Track>& t)
@@ -918,10 +934,10 @@ TrackListHolder TrackList::Temporary(AudacityProject* pProject,
     assert(pTrack == nullptr || pTrack->GetOwner() == nullptr);
     // Make a well formed channel group from these tracks
     auto tempList = Create(pProject);
+    tempList->mAssignsIds = false;
     if (pTrack) {
         tempList->Add(pTrack);
     }
-    tempList->mAssignsIds = false;
     return tempList;
 }
 

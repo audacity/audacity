@@ -162,7 +162,8 @@ void PreferencesModel::load(const QString& currentPageId)
 
         makeItem("spectral-display", QT_TRANSLATE_NOOP("appshell/preferences", "Spectral display"), IconCode::Code::SPECTROGRAM, ""),
 
-        makeItem("editing", QT_TRANSLATE_NOOP("appshell/preferences", "Editing"), IconCode::Code::EDIT, ""),
+        makeItem("editing", QT_TRANSLATE_NOOP("appshell/preferences",
+                                              "Editing"), IconCode::Code::EDIT, "Preferences/EditPreferencesPage.qml"),
 
         makeItem("effects", QT_TRANSLATE_NOOP("appshell/preferences", "Effects"), IconCode::Code::WAVEFORM, ""),
 

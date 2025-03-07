@@ -16,17 +16,8 @@
 namespace {
 struct TrackListRestorer final : UndoStateExtension {
     TrackListRestorer(AudacityProject& project)
-        : mpTracks{TrackList::Create(nullptr)}
+        : mpTracks{TrackList::Get(project).Duplicate()}
     {
-        for (auto pTrack : TrackList::Get(project)) {
-            if (pTrack->GetId() == TrackId{}) {
-                // Don't copy a pending added track
-                continue;
-            }
-            mpTracks->Add(
-                pTrack->Duplicate(Track::DuplicateOptions {}.Backup()),
-                TrackList::DoAssignId::No);
-        }
     }
 
     void RestoreUndoRedoState(AudacityProject& project) override
