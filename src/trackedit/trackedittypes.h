@@ -61,3 +61,16 @@ inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::track
     s << "{trackId: " << k.trackId << ", clip: " << k.clipId << "}";
     return s;
 }
+
+inline muse::logger::Stream& operator<<(muse::logger::Stream& s, au::trackedit::UndoPushType t)
+{
+    switch (t) {
+    case au::trackedit::UndoPushType::NONE: s << "UndoPushType::NONE";
+        break;
+    case au::trackedit::UndoPushType::CONSOLIDATE: s << "UndoPushType::CONSOLIDATE";
+        break;
+    case au::trackedit::UndoPushType::NOAUTOSAVE: s << "UndoPushType::NOAUTOSAVE";
+        break;
+    }
+    return s;
+}
