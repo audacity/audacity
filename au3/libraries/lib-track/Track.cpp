@@ -243,21 +243,6 @@ void Track::Notify(bool allChannels, int code)
     }
 }
 
-void Track::SyncLockAdjust(double oldT1, double newT1)
-{
-    const auto endTime = GetEndTime();
-    if (newT1 > oldT1 && oldT1 > endTime) {
-        return;
-    }
-    if (newT1 > oldT1) {
-        auto cutChannels = Cut(oldT1, endTime);
-        Paste(newT1, *cutChannels);
-    } else if (newT1 < oldT1) {
-        // Remove from the track
-        Clear(newT1, oldT1);
-    }
-}
-
 bool Track::Any() const
 { return true; }
 
