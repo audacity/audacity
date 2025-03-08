@@ -905,6 +905,13 @@ public:
     static TrackListHolder Create(AudacityProject* pOwner);
 
     /*!
+     * @brief Creates a copy without an owner.
+     * Refer to the `Track::Clone` overrides of each track type for more detail about
+     * the kind of copy that is made (e.g. deep or shallow).
+     */
+    TrackListHolder Duplicate() const;
+
+    /*!
      @pre `!GetOwner() && !that.GetOwner()`
      */
     void Swap(TrackList& that);
@@ -1062,6 +1069,7 @@ public:
     void Permute(const std::vector<Track*>& tracks);
 
     Track* FindById(TrackId id);
+    const Track* FindById(TrackId id) const;
 
     /// Add a Track, giving it a fresh id if `this` is not temporary
     template<typename TrackKind>

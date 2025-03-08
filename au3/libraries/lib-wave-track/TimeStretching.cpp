@@ -94,7 +94,5 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(OnWaveTrackProjectTempoChange) {
         for (const auto pClip : track.Intervals()) {
             pClip->OnProjectTempoChange(oldTempo, newTempo);
         }
-
-        trimRightOverlapping(track);
     };
 }

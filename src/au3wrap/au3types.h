@@ -11,6 +11,7 @@ class TrackId;
 class Track;
 class TrackList;
 class WaveTrack;
+class WaveTrackFactory;
 
 class WaveClip;
 
@@ -21,6 +22,7 @@ using Au3TrackId = ::TrackId;
 using Au3Track = ::Track;
 using Au3TrackList = ::TrackList;
 using Au3WaveTrack = ::WaveTrack;
+using Au3WaveTrackFactory = ::WaveTrackFactory;
 
 using Au3ClipId = int64_t;
 using Au3WaveClip = ::WaveClip;

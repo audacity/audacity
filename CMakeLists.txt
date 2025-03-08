@@ -114,7 +114,7 @@ option(AU_BUILD_RECORD_TESTS "Build record tests" ON)
 option(AU_BUILD_TRACKEDIT_TESTS "Build trackedit tests" ON)
 option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ON)
 
-option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
+option(AU_MODULE_EFFECTS_VST "Build audacity vst module" OFF)
 set(AU_MODULE_VST_VST3_SDK_PATH "" CACHE PATH "[optional] Path to VST3_SDK. SDK version >= ${VST3_SDK_VERSION} required")
 
 option(AU_USE_FFMPEG "Build mod-ffmpeg module" ON)

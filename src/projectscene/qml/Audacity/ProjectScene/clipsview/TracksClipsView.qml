@@ -287,6 +287,9 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
+
+                    tracksModel.startUserInteraction()
+
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
                     } else {
@@ -340,6 +343,8 @@ Rectangle {
 
                     clipsSelection.visible = false
                 }
+
+                tracksModel.endUserInteraction()
             }
 
             onClicked: e => {
@@ -364,6 +369,11 @@ Rectangle {
                     playCursorController.setPlaybackRegion(timeline.context.selectedClipStartPosition, timeline.context.selectedClipEndPosition)
                 }
                 clipsSelection.visible = false
+            }
+
+            onCanceled: {
+                console.log("interaction canceled")
+                tracksModel.endUserInteraction()
             }
         }
 

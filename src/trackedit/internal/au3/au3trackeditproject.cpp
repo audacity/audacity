@@ -172,7 +172,7 @@ void Au3TrackeditProject::onProjectTempoChange(double newTempo)
 muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
 {
     const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return muse::async::NotifyList<au::trackedit::Clip>();
     }
 
@@ -230,7 +230,7 @@ void Au3TrackeditProject::notifyAboutTrackMoved(const Track& track, int pos)
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(key.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return Clip();
     }
 
