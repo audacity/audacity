@@ -288,6 +288,10 @@
         <seq>Backspace</seq>
     </SC>
     <SC>
+        <key>track-delete</key>
+        <seq>Delete</seq>
+    </SC>
+    <SC>
         <key>file-new</key>
         <seq>Ctrl+N</seq>
     </SC>
