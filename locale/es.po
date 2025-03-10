@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
-"PO-Revision-Date: 2025-02-23 19:52+0100\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
+"PO-Revision-Date: 2025-03-10 07:01+0100\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist at gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -16724,24 +16724,22 @@ msgstr "&Comprobar actualizaciones"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "La comprobación de actualizaciones necesita acceso a la red. Para proteger su privacidad, Audacity no almacena ninguna información personal."
+msgstr "La búsqueda de actualizaciones necesita acceso a la red. Para proteger su privacidad, Audacity no almacena ninguna información personal."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Uso de información anónima (UUID)"
+msgstr "Información de &uso (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Para entender mejor con qué frecuencia los usuarios emplean Audacity generamos un identificador anónimo y aleatorio (UUID). Esto nos ayuda a mejorar características y planificar el desarrollo futuro. No se recopila ninguna información personal."
+msgstr "Para entender mejor con qué frecuencia los usuarios se usa Audacity generamos un identificador aleatorio (UUID) en cada instalación. Este ID no contiene información personal que permita identificar al usuario."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19772,14 +19770,13 @@ msgstr "Descargando %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Comprobación de actualizaciones"
+msgstr "Actualizaciones e información de uso"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr "Comprobación de actualizaciones"
+msgstr "Actualizaciones"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19789,7 +19786,7 @@ msgstr "Audacity le avisará cuando una nueva versión esté disponible para des
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Información de uso"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp

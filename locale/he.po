@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Kfir Pshititsky, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/audacity/teams/164520/he/)\n"
@@ -19768,9 +19768,8 @@ msgstr "מוריד %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "עדכונים"
+msgstr ""
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -20931,9 +20930,9 @@ msgid ""
 "               Track sample rate is ~a Hz.~%~\n"
 "               Frequency must be less than ~a Hz."
 msgstr ""
-"שגיאה:~%~%התדירות (~a הרץ) גבוהה מדי עבור קצב דגימת הרצועה.~%~%~\n"
-"               קצב דגימת הרצועה הוא ~a הרץ~%~\n"
-"               התדר חייב להיות פחות מ-~a הרץ."
+"שגיאה:~%~%התדירות %F (~a הרץ) גבוהה מדי עבור קצב דגימת הרצועה.~%~%~\n"
+"               קצב דגימת הרצועה הוא ~a הרץ.~%~\n"
+"               התדר חייב להיות פחות מ־~a הרץ."
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Nyquist Plugin Installer"

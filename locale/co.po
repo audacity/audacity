@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
@@ -2619,7 +2619,7 @@ msgstr "misura:palpitu"
 #. corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr "misura:palitu:16esimu"
+msgstr "misura:palpitu:16esimu"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -7519,7 +7519,7 @@ msgstr "Parolla d’intesa scurdata ?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr "Un contu, l’avete dighjà ?"
+msgstr "Un contu, l’avete dighjà ? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
@@ -7527,7 +7527,7 @@ msgstr "Cunnittitevi quì"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr "Bisognu d’un contu ?"
+msgstr "Bisognu d’un contu ? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -8307,7 +8307,7 @@ msgstr "PULITICA DI CUNFIDENZIALITÀ"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
-msgstr "A verificazione di i rinnovi è u signalamentu di i sbaglii richiedenu l’accessu à a reta. Ste funzioni sò ozzionale."
+msgstr "A verificazione di e nove versioni di l’appiecazione è u signalamentu di i sbaglii richiedenu l’accessu à a reta. Ste funzioni sò ozzionale."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
@@ -16724,7 +16724,7 @@ msgstr "Preferenze per l’appiecazione"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Nutificazioni per e nove versioni"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16733,26 +16733,23 @@ msgid "&Check for updates"
 msgstr "&Cuntrollà e nove versioni"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Per prutege a vostra vita privata, Audacity ùn culletta alcuna infurmazione persunale chì permette d’identificavvi."
+msgstr "A verificazione di e nove versioni richiede l’accessu à a reta. Per prutege a vostra cunfidenzialità, Audacity ùn arregistreghja alcuna infurmazione persunale."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Infurmazioni anonime d’aghjovu (UUID)"
+msgstr "&Infurmazioni d’aghjovu (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Per aiutacci à capisce à chì frequenza Audacity hè impiegatu, ingeneremu un’identificazione aleatoria è anonima (UUID). Què ci aiuta à amendà e funzioni di e versioni future. Alcunu datu persunale ùn hè cullettatu."
+msgstr "Per aiutacci à capisce à chì frequenza Audacity hè impiegatu, ingeneremu un’identificazione aleatoria (UUID) per ogni installazione. Què ci aiuta à amendà e funzioni di e versioni future. St’identificazione ùn cuntene alcuna infurmazione persunale chì permette d’identificavvi."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19740,7 +19737,7 @@ msgstr "Cuntrollà e nove versioni"
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, c-format
 msgid "If you want to change your preference for automatic updates checking, you can find it in %s."
-msgstr "S’è vo vulete cambià a vostra preferenza per a verificazione autumatica di i rinnovi, pudete truvalla in %s."
+msgstr "S’è vo vulete cambià a vostra preferenza per a verificazione autumatica di e nove versioni, pudete truvalla in %s."
 
 #. i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
 #. i18n-hint: a page in the Preferences dialog; use same name
@@ -19761,12 +19758,12 @@ msgstr "Impussibule di cunnettesi à u servitore di e nove versioni d’Audacity
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Update data was corrupted."
-msgstr "I dati di u rinnovu sò alterati."
+msgstr "I dati di a nova versione sò alterati."
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Error downloading update"
-msgstr "Sbagliu à u scaricamentu di u rinnovu"
+msgstr "Sbagliu à u scaricamentu di a nova versione"
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
@@ -19775,7 +19772,7 @@ msgstr "Ùn si pò micca apre u liame di scaricamentu d’Audacity."
 
 #: src/update/UpdateManager.cpp
 msgid "Audacity update"
-msgstr "Rinnovu d’Audacity"
+msgstr "Messa à livellu d’Audacity"
 
 #: src/update/UpdateManager.cpp
 #, c-format
@@ -19784,14 +19781,13 @@ msgstr "Scaricamentu di %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Rinnovi d’appiecazione"
+msgstr "Messe à livellu di l’appiecazione è infurmazioni d’aghjovu"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
-msgstr "Rinnovi d’appiecazione"
+msgstr "Messe à livellu di l’appiecazione"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19801,7 +19797,7 @@ msgstr "Audacity vi manda una nutificazione in l’appiecazione quandu una nova 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Infurmazioni d’aghjovu"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -19830,7 +19826,7 @@ msgstr "Accettà è cuntinuà"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "Update Audacity"
-msgstr "Rinnovà Audacity"
+msgstr "Mette à livellu Audacity"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -19840,7 +19836,7 @@ msgstr "&Tralascià"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr "&Installà u rinnovu"
+msgstr "&Installà a nova versione"
 
 #. i18n-hint Substitution of version number for %s.
 #: src/update/UpdatePopupDialog.cpp
@@ -21674,19 +21670,3 @@ msgstr "Attrezzi spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classicu"
-
-#~ msgid "Network communications"
-#~ msgstr "Cumunicazioni di a reta"
-
-#~ msgid "Requires network access."
-#~ msgstr "Richiede un accessu à a reta."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "&Mandà l’infurmazioni anonime d’aghjovu"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Creemu un’identificazione aleatoria per seguità a frequenza d’impiegu d’Audacity."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "State infurmati è infurmazioni anonime d’aghjovu"

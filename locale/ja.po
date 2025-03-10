@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Tadahisa Sugisaki, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
@@ -16739,7 +16739,7 @@ msgstr "アプリケーションの環境設定"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "更新の通知"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16748,26 +16748,23 @@ msgid "&Check for updates"
 msgstr "更新を確認(&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "利用者のプライバシーを守るため、個人が特定できる情報を Audacity は収集しません。"
+msgstr "アプリケーションの更新にはネットワーク接続が必要です。プライバシーを保護するために、Audacity はいかなる個人情報も保存しません。"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "匿名の使用情報（UUID）"
+msgstr "使用情報（UUID）(&U)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Audacity の使用頻度を調べるために、ランダムな匿名 ID (UUID) を生成します。機能の改善や、将来の計画を立てるためにこれを役立てます。個人データは収集されません。"
+msgstr "Audacity の使用頻度を調べるために、インストール時にランダムな ID (UUID) を生成します。機能の改善や、将来の更新計画を立てるためにこれを役立てます。この ID には個人を特定できる情報は含まれていません。"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19797,9 +19794,8 @@ msgstr "%s をダウンロード中"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "アプリケーションを更新"
+msgstr "アプリケーションの更新と使用情報"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19814,7 +19810,7 @@ msgstr "Audacity の新しいバージョンがダウンロード可能になれ
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "使用情報"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -21689,19 +21685,3 @@ msgstr "スペクトルツール"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "レガシー"
-
-#~ msgid "Network communications"
-#~ msgstr "ネットワーク接続"
-
-#~ msgid "Requires network access."
-#~ msgstr "ネットワークアクセスが必要です。"
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "使用情報を匿名で送信(&S)"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Audacity の使用頻度を追跡するため、ランダムな ID を作成します。"
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "最新情報および匿名の使用情報"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Catarina Anabela, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
@@ -16711,7 +16711,7 @@ msgstr "Preferensi untuk Aplikasi"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Perbarui pemberitahuan"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16720,26 +16720,23 @@ msgid "&Check for updates"
 msgstr "&Periksa pembaruan"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Untuk melindungi privasi Anda, Audacity tidak mengumpulkan informasi tentang Anda yang dapat diidentifikasi secara pribadi."
+msgstr "Pemeriksaan pembaruan aplikasi memerlukan akses jaringan. Untuk melindungi privasi Anda, Audacity tidak menyimpan informasi pribadi apa pun."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Info penggunaan anonim (UUID)"
+msgstr "Info &penggunaan (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Untuk membantu kami memahami seberapa sering orang menggunakan Audacity, kami membuat ID (UUID) anonim secara acak. Hal ini membantu kami meningkatkan fitur dan perencanaan di masa mendatang. Tidak ada data pribadi yang dikumpulkan."
+msgstr "Untuk membantu kami memahami seberapa sering orang menggunakan Audacity, kami membuat ID acak (UUID) untuk setiap instalasi. Hal ini membantu kami meningkatkan fitur dan merencanakan pembaruan di masa mendatang. ID ini tidak mengandung informasi yang dapat diidentifikasi secara pribadi."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19771,9 +19768,8 @@ msgstr "Mengunduh %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Pembaruan aplikasi"
+msgstr "Pembaruan aplikasi & info penggunaan"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19788,7 +19784,7 @@ msgstr "Ketika versi baru tersedia untuk diunduh, Audacity akan memberi tahu And
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Info penggunaan"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -21661,19 +21657,3 @@ msgstr "Alat Spektral"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Terdahulu"
-
-#~ msgid "Network communications"
-#~ msgstr "Komunikasi jaringan"
-
-#~ msgid "Requires network access."
-#~ msgstr "Memerlukan akses jaringan."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "&Kirimkan info penggunaan anonim"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Kami membuat ID acak untuk melacak seberapa sering Audacity digunakan."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "Tetap Diperbarui & Info Penggunaan Anonim"

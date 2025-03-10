@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/audacity/teams/164520/sl/)\n"
@@ -7835,7 +7835,7 @@ msgstr "Napaka pri povezavi"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
-msgstr ""
+msgstr "Audacity se ne more povezati z MuseHub.com. Preverite svojo povezavo in poskusite znova."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
@@ -7843,7 +7843,7 @@ msgstr "Poskusi znova"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Get it on MuseHub"
-msgstr ""
+msgstr "Pridobi z MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a partner"
@@ -7855,7 +7855,7 @@ msgstr "Postanite partner MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
-msgstr ""
+msgstr "Z objavo aplikacij, učinkov in zvokov v MuseHubu lahko dosežete milijone glasbenih ustvarjalcev. Če ste razvijalec in vas zanima objava vaših izdelkov v MuseHubu, se lahko prijavite še danes."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -11624,7 +11624,7 @@ msgstr "Več pasovni kompresor, ki ponuja natančen nadzor nad frekvencami."
 
 #: src/WhatsNewDialog.cpp
 msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr ""
+msgstr "Ace Studio - generator glasu petja št. 1 na svetu."
 
 #: src/WhatsNewDialog.cpp
 msgid "Continue for Cloud Storage"
@@ -16734,7 +16734,7 @@ msgstr "Nastavitve programa"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Obveščanje o posodobitvah"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16743,25 +16743,23 @@ msgid "&Check for updates"
 msgstr "Poi&šči posodobitve"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Da bi zaščitili vašo zasebnost, program Audacity ne zbira nobenih podatkov, ki bi jih lahko pripisali vam osebno."
+msgstr "Preverjanje obstoja posodobitev zahteva dostop do omrežja. Da bi zaščitili vašo zasebnost, Audacity ne hrani vaših osebnih podatkov."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Anonimizirani podatki o rabi (UUID)"
+msgstr "&Podatki o rabi (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr ""
+msgstr "Da bi lažje ugotovili, kako pogosto ljudje uporabljajo program Audacity, za vsako namestitev ustvarimo naključni ID (UUID). To nam pomaga izboljšati funkcije in načrtovati prihodnje posodobitve. Ta ID ne vsebuje nobenih osebnih podatkov."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19796,9 +19794,8 @@ msgstr "Prenašanje %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Posododitve programa"
+msgstr "Podatki o posodobitvah in rabi"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19813,7 +19810,7 @@ msgstr "Audacity vas sam obvesti, kdaj je na voljo nova različica za prenos."
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Podatki o rabi"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -21685,16 +21682,3 @@ msgstr "Spektralna orodja"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Opuščeno"
-
-#~ msgid "Network communications"
-#~ msgstr "Omrežne komunikacije"
-
-#~ msgid "Requires network access."
-#~ msgstr "Zahteva dostop do omrežja."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "&Pošlji anonimne podatke o rabi"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Ustvarimo naključni ID, da sledimo, kako pogosto se uporablja Audacity."

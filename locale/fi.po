@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Heino Keränen, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/audacity/teams/164520/fi/)\n"
@@ -1847,7 +1847,7 @@ msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Importing files"
-msgstr "Tuodaan tiedostoja"
+msgstr "Tiedostojen tuonti"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -16736,9 +16736,8 @@ msgid "&Check for updates"
 msgstr "Tarkista &päivitykset"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Yksityisyytesi suojaamiseksi Audacity ei kerää sinusta mitään henkilökohtaisia ​​tunnistetietoja."
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -16746,16 +16745,14 @@ msgstr ""
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Anonyymit käyttötiedot (UUID)"
+msgstr ""
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Auttaaksemme ymmärtämään, kuinka usein ihmiset käyttävät Audacityä, luomme satunnaisen anonyymin tunnuksen (UUID). Tämä auttaa meitä parantamaan ominaisuuksia ja suunnittelemaan tulevaisuutta. Henkilötietoja ei kerätä."
+msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19784,9 +19781,8 @@ msgstr "Ladataan %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Sovelluspäivitykset"
+msgstr ""
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -20689,8 +20685,8 @@ msgid ""
 "                 Frequency must be less than ~a Hz."
 msgstr ""
 "Virhe:~%~%Ftaajuus (~a Hz) on liian korkea raidan näytetaajuudelle.~%~%~\n"
-"                 Raidan näytetaajuus on ~a Hz~%~\n"
-"                 Taajuuden on oltava alle ~a Hz."
+"Raidan näytetaajuus on ~a Hz~%~\n"
+"Taajuuden on oltava alle ~a Hz."
 
 #. i18n-hint: Name of effect that labels sounds
 #: plug-ins/label-sounds.ny
@@ -21674,19 +21670,3 @@ msgstr "Spektrityökalut"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Perinteinen"
-
-#~ msgid "Network communications"
-#~ msgstr "Verkkoviestintä"
-
-#~ msgid "Requires network access."
-#~ msgstr "Edellyttää pääsyä verkkoon."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "&Lähetä anonyymit käyttötiedot"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Luomme satunnaisen tunnuksen seurataksemme, kuinka usein Audacityä käytetään."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "Säilytä päivitetyt ja anonyymit käyttötiedot"

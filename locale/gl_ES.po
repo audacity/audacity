@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-    "Project-Id-Version: audacity 3.6.0\n"
+    "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-02-13 19:07+0300\n"
+"POT-Creation-Date: 2025-03-06 23:50+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: nin hum <ninhum@gmx.com>, 2025\n"
 "Language-Team: Galician (Spain) (https://app.transifex.com/audacity/teams/164520/gl_ES/)\n"
@@ -17339,8 +17339,8 @@ msgstr "Preferencias de aplicación"
 
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Network communications"
-msgstr "Comunicacións en rede"
+msgid "Update notifications"
+msgstr "Notificacións de actualización"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -17349,28 +17349,36 @@ msgid "&Check for updates"
 msgstr "&Comproba se hai actualizacións"
 
 #: src/prefs/ApplicationPrefs.cpp
-msgid "Requires network access."
-msgstr "Require acceso á rede."
+msgid ""
+"App update checking requires network access. In order to protect your "
+"privacy, Audacity does not store any personal information."
+msgstr ""
+"A comprobación de actualizacións da aplicación require acceso á rede. Para "
+"protexer a túa privacidade, Audacity non almacena ningunha información "
+"persoal."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
-msgid "&Send anonymous usage info"
-msgstr "&Enviar información de uso anónima"
+msgid "&Usage info (UUID)"
+msgstr "Información de &uso (UUID)"
 
-#: src/prefs/ApplicationPrefs.cpp
-msgid "We create a random ID to track how often Audacity is used."
-msgstr ""
-"Creamos un ID aleatorio para rastrexar a frecuencia con que se emprega "
-"Audacity."
-
-#: src/prefs/ApplicationPrefs.cpp
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid ""
-"In order to protect your privacy, Audacity does not collect any personally "
-"identifiable information about you."
+"To help us understand how often people use Audacity, we generate a random ID"
+" (UUID) for each installation. This helps us improve features and plan for "
+"future updates. This ID does not contain any personally identifiable "
+"information."
 msgstr ""
-"Para protexer a súa privacidade, Audacity non recolle ningunha información "
-"de identificación persoal sobre vostede."
+"Para axudarnos a comprender con que frecuencia as persoas usan Audacity, "
+"xeramos un ID aleatorio (UUID) para cada instalación. Isto axúdanos a "
+"mellorar as funcionalidades e planificar futuras actualizacións. Este ID non"
+" contén ningunha información persoal identificable."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -20482,8 +20490,8 @@ msgstr "Descargando %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "Stay Updated & Anonymous Usage Info"
-msgstr "Mantente actualizado e información de uso anónima"
+msgid "App updates & usage info"
+msgstr "Actualizacións da aplicación e información sobre o uso"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -20500,30 +20508,19 @@ msgstr ""
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "Anonymous usage info (UUID)"
-msgstr "Información de uso anónima (UUID)"
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid ""
-"To help us understand how often people use Audacity, we generate a random, "
-"anonymous ID (UUID). This helps us improve features and plan for the future."
-" No personal data is collected."
-msgstr ""
-"Para axudarnos a comprender a frecuencia con que a xente usa Audacity, "
-"xeramos un ID aleatorio e anónimo (UUID). Isto axúdanos a mellorar as "
-"funcións e a planificar o futuro. Non se recollen datos persoais."
-
-#. i18n-hint:  %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can disable this anytime in %s."
-msgstr "Podes desactivalo en calquera momento en %s."
+msgid "Usage info"
+msgstr "Información de uso"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
+msgstr "Podes desactivalo en calquera momento en %s."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can disable this anytime in %s."
 msgstr "Podes desactivalo en calquera momento en %s."
 
 #: src/update/UpdateNoticeDialog.cpp

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jesse Lin <jesselin.com@gmail.com>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/audacity/teams/164520/zh_TW/)\n"
@@ -16709,9 +16709,8 @@ msgid "&Check for updates"
 msgstr "自動檢查更新(&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "為了保護您的隱私，Audacity 不會收集任何可以識別您個人身份的資訊。"
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -16719,16 +16718,14 @@ msgstr ""
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "匿名使用資訊 (UUID)"
+msgstr ""
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "為了幫助我們了解使用者使用 Audacity 的頻率，我們會生成一個隨機的匿名 ID（UUID）。這有助於我們改進功能並規劃未來的發展。並且不會收集任何個人資料。"
+msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19757,9 +19754,8 @@ msgstr "下載中 %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "程式更新"
+msgstr ""
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21645,19 +21641,3 @@ msgstr "頻譜工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "傳統"
-
-#~ msgid "Network communications"
-#~ msgstr "網路通訊"
-
-#~ msgid "Requires network access."
-#~ msgstr "需要網絡存取。"
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "傳送匿名使用資訊(&S)"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "我們會創建一個隨機 ID 來追蹤 Audacity 的使用頻率。"
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "保持更新 & 匿名使用資訊"

@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jean-Louis Waltener, 2025\n"
 "Language-Team: French (https://app.transifex.com/audacity/teams/164520/fr/)\n"
@@ -16744,7 +16744,7 @@ msgstr "Préférences pour l'application"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Notifications des mises à jour"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16753,26 +16753,23 @@ msgid "&Check for updates"
 msgstr "Re&chercher les mises à jour"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Afin de protéger votre vie privée, Audacity ne collecte aucune information personnelle identifiable vous concernant."
+msgstr "La vérification de la mise à jour de l'application nécessite un accès au réseau. Afin de protéger votre vie privée, Audacity ne stocke aucune information personnelle."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Informations d'utilisation anonymes (UUID)"
+msgstr "Informations d'&utilisation (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Pour nous aider à comprendre à quelle fréquence vous utilisez Audacity, nous générons un identifiant aléatoire et anonyme (UUID). Cela nous aide à améliorer les fonctionnalités des versions futures. Aucune donnée personnelle n'est collectée."
+msgstr "Pour nous aider à connaitre la fréquence à laquelle vous  utilisez Audacity, nous générons un identifiant aléatoire (UUID) pour chaque installation. Cela nous aide à améliorer les fonctionnalités et à planifier les futures mises à jour. Cet identifiant ne contient aucune information personnelle identifiable."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19807,9 +19804,8 @@ msgstr "Téléchargement %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Mises à jour de l'application"
+msgstr "Mises à jour de l'application et informations d'utilisation"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19824,7 +19820,7 @@ msgstr "Audacity vous avertit dans l'application lorsqu'une nouvelle version est
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Informations d'utilisation"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -21697,19 +21693,3 @@ msgstr "Outils spectraux"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classique"
-
-#~ msgid "Network communications"
-#~ msgstr "Communications réseau"
-
-#~ msgid "Requires network access."
-#~ msgstr "Nécessite un accès au réseau."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "Envoyer des information&s d'utilisation anonymes"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Nous créons un identifiant aléatoire pour suivre la fréquence à laquelle Audacity est utilisé."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "Restez informé et utilisation des informations anonymes"

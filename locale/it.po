@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 11:10+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/audacity/teams/164520/it/)\n"
@@ -16740,7 +16740,7 @@ msgstr "Preferenze dell'applicazione"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Notifiche sugli aggiornamenti"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16749,26 +16749,23 @@ msgid "&Check for updates"
 msgstr "&Verifica aggiornamenti"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Per garantire la tua privacy, Audacity non raccoglie alcuna informazione personale che ti identifichi."
+msgstr "Il controllo degli aggiornamenti dell'app richiede l'accesso alla rete. Per proteggere la tua privacy, Audacity non memorizza alcuna informazione personale."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Informazioni anonime sull'utilizzo (UUID)"
+msgstr "Informazioni sull'&utilizzo (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Per aiutarci a capire quanto spesso le persone usano Audacity, generiamo un ID casuale e anonimo (UUID). Questo ci aiuta a migliorare le funzionalità e a pianificare il futuro. Non vengono raccolti dati personali."
+msgstr "Per aiutarci a capire quanto spesso le persone usano Audacity, generiamo un identificativo casuale (UUID) per ogni installazione. Questo ci aiuta a migliorare le funzionalità e a pianificare gli aggiornamenti futuri. Questo ID non contiene alcuna informazione personale identificabile."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19800,9 +19797,8 @@ msgstr "Scaricamento di %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Aggiornamenti applicazione"
+msgstr "Aggiornamenti app e info sull'utilizzo"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19817,7 +19813,7 @@ msgstr "Audacity ti avvisa nell'app quando una nuova versione è disponibile per
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Informazioni sull'utilizzo"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -21690,19 +21686,3 @@ msgstr "Strumenti spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Precedente"
-
-#~ msgid "Network communications"
-#~ msgstr "Comunicazioni di rete"
-
-#~ msgid "Requires network access."
-#~ msgstr "Richiede accesso alla rete."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "Invia informazioni anonime &sull'utilizzo"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Creiamo un ID casuale per tener traccia di quando spesso viene usato Audacity."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "Resta aggiornato e Info anonime su utilizzo"
