@@ -15,7 +15,6 @@ Rectangle {
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
     property bool tracksHovered: false
-    property bool underSelection: false
     property bool altPressed: false
     property bool ctrlPressed: false
 
@@ -97,14 +96,6 @@ Rectangle {
     SelectionViewController {
         id: selectionController
         context: timeline.context
-
-        onSelectionStarted: {
-            underSelection = true
-        }
-
-        onSelectionEnded: {
-            underSelection = false
-        }
     }
 
     Component.onCompleted: {
@@ -274,6 +265,7 @@ Rectangle {
 
             preventStealing: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton
+            cursorShape: Qt.IBeamCursor
 
             hoverEnabled: true
 
@@ -475,9 +467,10 @@ Rectangle {
                     isMultiSelectionActive: model.isMultiSelectionActive
                     isTrackAudible: model.isTrackAudible
                     moveActive: tracksClipsView.moveActive
-                    underSelection: root.underSelection
                     altPressed: root.altPressed
                     ctrlPressed: root.ctrlPressed
+                    selectionEditInProgress: selectionController.selectionEditInProgress
+                    selectionInProgress: selectionController.selectionInProgress
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack
@@ -574,15 +567,6 @@ Rectangle {
                         content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
                             return track.rightTrimPressedButtons
                         })
-                    }
-                }
-
-                HoverHandler {
-                    property bool isNeedSelectionCursor: !selectionController.selectionActive
-                    cursorShape: isNeedSelectionCursor ? Qt.IBeamCursor : Qt.ArrowCursor
-
-                    onHoveredChanged: {
-                        root.tracksHovered = hovered
                     }
                 }
             }

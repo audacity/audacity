@@ -20,7 +20,6 @@ Item {
     property bool isStereo: clipsModel.isStereo
     property double channelHeightRatio: isStereo ? 0.5 : 1
     property bool moveActive: false
-    property bool underSelection: false
     property bool altPressed: false
     property bool ctrlPressed: false
     property alias isNearSample: clipsContainer.isNearSample
@@ -30,6 +29,8 @@ Item {
     property alias rightTrimContainsMouse: clipsContainer.rightTrimContainsMouse
     property alias leftTrimPressedButtons: clipsContainer.leftTrimPressedButtons
     property alias rightTrimPressedButtons: clipsContainer.rightTrimPressedButtons
+    property bool selectionEditInProgress: false
+    property bool selectionInProgress: false
 
     signal interactionStarted()
     signal interactionEnded()
@@ -123,7 +124,8 @@ Item {
             propagateComposedEvents: true
             hoverEnabled: true
             pressAndHoldInterval: 0
-            enabled: !root.underSelection && (clipsContainer.isNearSample || clipsContainer.isBrush)
+            enabled: !root.selectionInProgress && (clipsContainer.isNearSample || clipsContainer.isBrush)
+            cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor 
 
             anchors.fill: parent
 
@@ -251,6 +253,7 @@ Item {
                 isAudible: root.isTrackAudible
                 multiSampleEdit: clipsContainer.multiSampleEdit
                 altPressed: root.altPressed
+                selectionInProgress: root.selectionInProgress || root.selectionEditInProgress
 
                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
@@ -409,6 +412,7 @@ Item {
         id: clipsSelection
 
         isDataSelected: root.isDataSelected
+        selectionInProgress: root.selectionInProgress
         context: root.context
 
         anchors.fill: parent
