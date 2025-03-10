@@ -93,6 +93,7 @@ set(LINK_LIB
     record
     effects_base
     effects_builtin
+    effects_lv2
     effects_nyquist
     importer
 )
