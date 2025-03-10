@@ -3,21 +3,25 @@
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# Translators:
+# Link Winterberg, 2024
+# Jinhyeon Kim, 2024
+# lee tg, 2024
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
-"PO-Revision-Date: 2025-02-14 16:06+0900\n"
-"Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: lee tg, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/audacity/teams/164520/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.2\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -26,7 +30,7 @@ msgid ""
 "It may have been deleted."
 msgstr ""
 "이 플러그인이 로딩되지 않습니다.\n"
-"삭제되었을 수 있습니다."
+"삭제되었을 수 있습니다. "
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -50,7 +54,7 @@ msgstr "%s 반복하기"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "스트림이 활성 상태입니다 ... 정보를 가져올 수 없습니다.\n"
+msgstr "스트림이 활성 상태입니다  ... 정보를 가져올 수 없습니다.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -412,7 +416,7 @@ msgstr "오디오가 포함되지 않은 트랙을 선택했습니다. 자동 �
 #. track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "자동 더킹 반드시 선택된 트랙 아래에 위치하는제어 트랙이 필요합니다."
+msgstr "자동 더크에는 선택한 트랙 아래에 배치해야 하는 컨트롤 트랙이 필요합니다."
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
@@ -652,7 +656,7 @@ msgid ""
 "Check ALL settings for this effect."
 msgstr ""
 "DTMF 시퀀스가 비어있음.\n"
-"이 이펙트에 대한 모든 설정을 점검하세요."
+"이 이펙트에 대한 모든 설정을 점검할것."
 
 #: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
@@ -814,7 +818,7 @@ msgstr "오디오 샘플의 극성을 반전하여 위아래로 뒤집습니다"
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr "레거시 컴프레서"
+msgstr "레거시 압축기"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -2977,10 +2981,7 @@ msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
-msgstr ""
-"'스펙트럼 효과'를 사용하기 위해서는 '스펙트럼 선택'을 활성화 하세요\n"
-"트랙의 스펙트럼 설정에서 주파수 영역을 선택하여\n"
-"이펙트가 작동할 영역을 설정하십시오."
+msgstr "'스펙트럼 효과'를 사용하려면 트랙 스펙트로그램 설정에서 '스펙트럼 선택'을 활성화하고 효과가 작동할 주파수 범위를 선택합니다."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -3255,11 +3256,11 @@ msgstr ""
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
 msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
-msgstr "이 프로젝트는 예전 버전의 오데시티에서 생성되었습니다. 저장하게 되면, 이 프로젝트는 오데시티 버전 %s 이후 버전에서만 열 수 있습니다."
+msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Project update required"
-msgstr "프로젝트를 업데이트가 필요합니다"
+msgstr ""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4752,7 +4753,7 @@ msgstr "프로젝트 데이터 경로를 찾을 수 없음: \"%s\""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'rate' attribute."
-msgstr "프로젝트 'rate' 속성 사용불가."
+msgstr ""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -6050,7 +6051,7 @@ msgstr "45-85 kbps (최소 파일크기)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive, 320 kbps"
-msgstr "지나치게 높음, 320 kbps"
+msgstr "초과, 320kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -6066,7 +6067,7 @@ msgstr "중간품질, 145-185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr "지나치게 높음"
+msgstr "초과"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -7195,7 +7196,7 @@ msgstr "내보내기 동작"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "S&how 'How would you like to export?' dialog"
-msgstr "'어떤 방식으로 오디오를 내보내기 하겠습니까?'  대화 보기(&H)"
+msgstr "'어떻게 내보내시겠습니까?' 대화 상자 표시(&H)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Save behavior"
@@ -7283,7 +7284,7 @@ msgstr "오디오 공유"
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Get Effects"
-msgstr "이펙트 가져오기"
+msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7303,7 +7304,7 @@ msgstr "로그인"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
-msgstr "로그아웃 (&S)"
+msgstr "로그아웃(&S)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7329,7 +7330,7 @@ msgstr "클라우드에 저장(&S)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
-msgstr "본인의 컴퓨터에"
+msgstr "내 컴퓨터에서"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid ""
@@ -7459,7 +7460,7 @@ msgstr "audio.com 계정 연결(&L)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr "클라우드 계정 생성"
+msgstr "클라우드 계정 만들기"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
@@ -7470,48 +7471,48 @@ msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
-"당신의 입력에 이슈가 있는 것으로 보입니다. \n"
-"이메일 주소가 맞는지 확인하고 암호가 8글자보다 큰지 확인하기 바랍니다."
+"죄송합니다! 입력에 문제가 있는 것 같습니다.\n"
+"이메일이 정확하고 비밀번호가 8자 이상인지 확인하세요."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
-"죄송합니다. 입력한 이메일 또는 비밀번호가 맞지 않는 것 같습니다. \n"
-"인증 정보를 다시한번 확인하고 재시도해 보세요!"
+"입력하신 이메일 또는 비밀번호가 잘못된 것 같습니다.\n"
+"자격 증명을 다시 확인한 후 다시 시도해 주세요!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create an account to save to the cloud"
-msgstr "클라우드에 저장하려면 계정을 만드세요"
+msgstr "클라우드에 저장할 계정 만들기"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
-msgstr "클라우드에 저장하려면 로드인 하세요"
+msgstr "로그인하여 클라우드에 저장하기"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr "구글로 계속"
+msgstr "Google에서 계속하기"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr "페이스북으로 계속"
+msgstr "Facebook으로 계속하기"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr "이메일"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr "암호"
+msgstr "비밀번호"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr "암호를 잃어 버렸나요?"
+msgstr "비밀번호를 잊으셨나요?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr "계정이 이미 있나요? "
+msgstr "이미 계정이 있으신가요? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
@@ -7519,7 +7520,7 @@ msgstr "여기에서 로그인"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr "계정이 필요한가요? "
+msgstr "계정이 필요하신가요? "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -7680,7 +7681,7 @@ msgstr "Audio.com에 업로드 취소"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Uploading audio..."
-msgstr "오디오 업로딩중..."
+msgstr "오디오 업로드 중..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
@@ -7696,7 +7697,7 @@ msgstr "이 파일을 업로딩하기 위한 준비를 할 수 없습니다."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Finalizing upload..."
-msgstr "업로드 완료중..."
+msgstr "업로드 완료 중..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/TagsEditor.cpp
@@ -7810,39 +7811,39 @@ msgstr "계속하려면 audio.com에서 조치를 취해야 합니다. 작업을
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Loading..."
-msgstr "로딩..."
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Please wait..."
-msgstr "기다려 주세요..."
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Connection error"
-msgstr "연결 오류"
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
-msgstr "오데시티가 MuseHub.com에 연결할 수 없습니다. 연결을 다시 확인하고 재시도해 보세요."
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
-msgstr "다시 시도"
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Get it on MuseHub"
-msgstr "MuseHub에서 가져오기"
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a partner"
-msgstr "파트너가 되세요"
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a MuseHub partner"
-msgstr "MuseHub 파트너가 되세요"
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
-msgstr "당신의 앱, 이펙트 그리고 사운드를 MusHub을 배포함으로써 수백만의 음악가와 만날 수 있습니다. 당신이 만일 개발자이고 MuseHub에 배포하는 것에 관심이 있다면, 오늘 지원학세요."
+msgstr ""
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -7914,15 +7915,15 @@ msgstr "MIDI 파일 선택"
 
 #: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
 msgid "MIDI and Allegro files"
-msgstr "MIDI 와 Allegro 파일들"
+msgstr "MIDI 와 Allegro 파일"
 
 #: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
 msgid "MIDI files"
-msgstr "MIDI 파일들"
+msgstr "MIDI 파일"
 
 #: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
 msgid "Allegro files"
-msgstr "Allegro 파일들"
+msgstr "Allegro 파일"
 
 #: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
 msgid "&MIDI..."
@@ -7966,19 +7967,19 @@ msgstr "%s, 개발자 및 지원"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support"
-msgstr "%s, 문서화 및 지원"
+msgstr "%s, 문서 및 지원"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, QA tester, documentation and support"
-msgstr "%s, QA 테스팅, 문서화 및 지원"
+msgstr "%s, QA 테스팅, 문서 및 지원"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, documentation and support, French"
-msgstr "%s, 문서화 및 지원, 프랑스어"
+msgstr "%s, 문서 및 지원, 프랑스어"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -8032,7 +8033,7 @@ msgstr "%s, 그래픽"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, effects presets"
-msgstr "%s, 이펙트 프리셋"
+msgstr "%s, 효과 프리셋"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -9022,7 +9023,7 @@ msgstr "제거(&V)"
 
 #: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "&Rename..."
-msgstr "이름 변경(&R)..."
+msgstr "이름 바꾸기(&R)..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Re&store"
@@ -9169,7 +9170,7 @@ msgstr "편집 횟수:"
 
 #: src/Benchmark.cpp
 msgid "Test Data Size (MB):"
-msgstr "시험 데이터 크기 (MB):"
+msgstr "테스트 데이터 크기 (MB):"
 
 #. i18n-hint: A "seed" is a number that initializes a
 #. pseudorandom number generating algorithm
@@ -9238,7 +9239,7 @@ msgstr "자르기: %lld - %lld\n"
 #: src/Benchmark.cpp
 #, c-format
 msgid "Trial %d\n"
-msgstr "시험 %d\n"
+msgstr "평가판 %d\n"
 
 #: src/Benchmark.cpp
 #, c-format
@@ -9256,7 +9257,7 @@ msgid ""
 "Trial %d\n"
 "Failed on Paste.\n"
 msgstr ""
-"시험 %d\n"
+"시도 %d\n"
 "붙여넣기 실패.\n"
 
 #: src/Benchmark.cpp
@@ -9320,7 +9321,7 @@ msgstr ""
 
 #: src/Benchmark.cpp
 msgid "TEST FAILED!!!\n"
-msgstr "시험 실패!!!\n"
+msgstr "테스트 실패!!!\n"
 
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
@@ -9718,7 +9719,7 @@ msgstr "지연 (초)\t주파수 (Hz)\t레벨"
 
 #: src/FreqWindow.cpp
 msgid "Plot Spectrum..."
-msgstr "스팩트럼 그리기..."
+msgstr "스팩트럼 도식화 ..."
 
 #: src/HelpUtilities.cpp
 #, c-format
@@ -9732,11 +9733,11 @@ msgstr "저장할 수 없음 %s"
 
 #: src/HistoryWindow.cpp
 msgid "History"
-msgstr "히스토리"
+msgstr "기록"
 
 #: src/HistoryWindow.cpp
 msgid "&Manage History"
-msgstr "히스토리 관리(&M)"
+msgstr "기록 관리(&M)"
 
 #: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
@@ -9967,7 +9968,7 @@ msgstr "음소거"
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Solo"
-msgstr "독주"
+msgstr "솔로"
 
 #: src/MixerBoard.cpp
 msgid "Signal Level Meter"
@@ -9976,7 +9977,7 @@ msgstr "신호 레벨 미터"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved volume slider"
-msgstr "볼륨 슬라이더를 움직임"
+msgstr "볼륨 슬라이더 이동"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10115,7 +10116,7 @@ msgstr "선택된 트랙의 수가 너무 적음"
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr "%s.%d"
+msgstr ""
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -10656,11 +10657,11 @@ msgstr "수직 스크롤바"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "No Effect"
-msgstr "이펙트 없음"
+msgstr "효과 없음"
 
 #: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 msgid "Get more effects..."
-msgstr "더 많은 이펙트..."
+msgstr "더 많은 효과..."
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
@@ -10687,7 +10688,7 @@ msgstr "파워"
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change settings for realtime effect %s on %s"
-msgstr "%s on %s 실시간 이펙트의 설정을 변경"
+msgstr ""
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10695,11 +10696,11 @@ msgstr "%s on %s 실시간 이펙트의 설정을 변경"
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change realtime effect %s on %s"
-msgstr "%s on %s 실시간 이펙트를 변경"
+msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
-msgstr "이펙트 대체"
+msgstr "효과 대체"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10744,7 +10745,7 @@ msgstr "마스터"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Add effect"
-msgstr "이펙트 추가"
+msgstr "효과 추가"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10807,7 +10808,7 @@ msgstr "실시간 이펙트는 destructive 한 작업이 아니므로 언제든�
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Master Effects"
-msgstr "Master Effects"
+msgstr "마스터 효과"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Applies to all tracks"
@@ -10999,7 +11000,7 @@ msgstr "녹음 시간"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record"
-msgstr "오데시티 타이머 기록"
+msgstr "Audacity 타이머 기록"
 
 #: src/TimerRecordDialog.cpp
 msgid "Save Timer Recording As"
@@ -11255,7 +11256,7 @@ msgstr "동작 없음"
 
 #: src/TimerRecordDialog.cpp
 msgid "Exit Audacity"
-msgstr "오데시티 종료"
+msgstr "Audacity 종료"
 
 #: src/TimerRecordDialog.cpp
 msgid "Restart system"
@@ -11398,7 +11399,7 @@ msgstr " 음소거 On"
 
 #: src/TrackPanelAx.cpp
 msgid " Solo On"
-msgstr " 독주 On"
+msgstr " 솔로 On"
 
 #: src/TrackPanelAx.cpp
 msgid " Select On"
@@ -11519,19 +11520,19 @@ msgstr "캘리브레이션 완료"
 
 #: src/WhatsNewDialog.cpp
 msgid "<font color=\"#000000\">"
-msgstr "<font color=\"#000000\">"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Sign up to Audacity's cloud saving platform"
-msgstr "오데시티 클라우드 저장 플랫폼에 가입하세요"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "and access your projects from anywhere!"
-msgstr "그리고 어디서든 프로젝트에 억세스 할 수 있습니다!"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "</font>"
-msgstr "</font>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, c-format
@@ -11541,12 +11542,12 @@ msgstr "오데시티 %s 에서 변경된 사항"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr "최신 버전에 새롭게 포함된 기능에 대해서 알고 싶다면, [[%s|release video]]를 시청하거나, [[%s|changelog]] 읽어보세요!</p>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "You can also read the [[%s|changelog]]</p>"
-msgstr "다음 로그 정보를 읽어보세요 [[%s|changelog]]</p>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11559,35 +11560,35 @@ msgstr "<p>우릐의 [[%s|Muse Hub app]]을 방문하면 오데시티 사용자�
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr "보컬 처리 효과는 보컬을 선명도와 깊이를 개선해 줍니다."
+msgstr "보컬의 선명도와 깊이를 향상시키는 보컬 처리 효과입니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr "공간감과 자연스러운 사운드 효과를 내는 다목적 리버브 플러그인입니다."
+msgstr "넓고 자연스러운 사운드를 위한 다목적 리버브 플러그인입니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr "사실적인 음색과 사용자 정의 가능한 사운드를 제공하는 기타 앰프 및 효과 모델링 플러그인입니다."
+msgstr "사실적인 톤과 사용자 정의 가능한 사운드를 위한 기타 앰프 및 이펙트 모델링 플러그인입니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr "몰입형 사운드 스케이프를 위해 트랙 다이내믹에 맞춰 조정되는 반응형 리버브 플러그인입니다."
+msgstr "몰입감 넘치는 사운드스케이프를 위해 트랙 다이내믹스에 맞게 조정되는 반응형 리버브 플러그인입니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr "전문적인 결과를 위해 보컬 트랙을 강화하는 보컬 멀티 이펙트 플러그인입니다."
+msgstr "전문적인 결과물을 위해 보컬 트랙을 향상시키는 보컬 멀티 이펙트 플러그인입니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr "강렬하고 선명한 저음 사운드를 전달하기 위해 고안된 베이스 효과 플러그인입니다."
+msgstr "강력하고 선명한 저음 사운드를 전달하도록 설계된 베이스 효과 플러그인입니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr "음향적 사운드를 완벽하게 만들어 주는 플러그인으로, 따뜻함과 선명도를 향상시킵니다."
+msgstr "완벽한 어쿠스틱 사운드를 위한 플러그인으로 따뜻함과 선명함을 향상시킵니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr "매우 선명하고 전문적인 음성 효과를 제공하는 놀라운 보컬 향상 플러그인입니다."
+msgstr "선명하고 전문적인 보컬 효과를 위한 놀라운 음성 향상 플러그인입니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
@@ -11596,19 +11597,19 @@ msgstr "보컬, 드럼, 악기를 분리하는 실시간 스템 분리 도구입
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr "[[%s|MuseHub]]에서 유명 개발자가 만든 다양한 플러그인을 확인해 보세요."
+msgstr "유명한 개발자들이 만든 다양한 플러그인을 [[[%s |MuseHub]](뮤즈허브)에서 확인하세요."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr "주파수를 정밀하게 제어하는 멀티밴드 컴프레서."
+msgstr "주파수를 정밀하게 제어할 수 있는 멀티밴드 압축기입니다."
 
 #: src/WhatsNewDialog.cpp
 msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr "에이스 스튜디오 - 세계 1위의 AI 노래 음성 생성기."
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Continue for Cloud Storage"
-msgstr "클라우드 스토리지로 계속"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -11616,11 +11617,11 @@ msgstr "오데시티 사용을 환영합니다!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
-msgstr "릴리즈 비디오 보기"
+msgstr "출시 영상 보기"
 
 #: src/WhatsNewDialog.cpp
 msgid "Available on MuseHub"
-msgstr "MuseHub에 사용가능"
+msgstr "MuseHub에서 사용 가능"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -11826,7 +11827,7 @@ msgstr "트랙 값을 JSON으로 가져옵니다."
 
 #: src/commands/HelpCommand.cpp
 msgid "Comment"
-msgstr "코멘트"
+msgstr "주석"
 
 #: src/commands/HelpCommand.cpp
 msgid "_"
@@ -11978,11 +11979,11 @@ msgstr "다시 읽기"
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Get Preference..."
-msgstr "환경 설정 가져오기..."
+msgstr "기본 설정 가져오기..."
 
 #: src/commands/PreferenceCommands.cpp
 msgid "Set Preference..."
-msgstr "환경 설정..."
+msgstr "기본 설정..."
 
 #: src/commands/PreferenceCommands.h
 msgid "Gets the value of a single preference."
@@ -12136,7 +12137,7 @@ msgstr "클립에 대해 다양한 값을 설정합니다."
 
 #: src/commands/SetEnvelopeCommand.cpp
 msgid "Set Envelope"
-msgstr "포락선 설정"
+msgstr "엔벨로프 설정"
 
 #: src/commands/SetEnvelopeCommand.cpp
 msgid "Time:"
@@ -12149,7 +12150,7 @@ msgstr "삭제"
 
 #: src/commands/SetEnvelopeCommand.cpp
 msgid "Edited Envelope"
-msgstr "편집된 포락선"
+msgstr "편집된 엔벨로프"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
 #: src/commands/SetEnvelopeCommand.cpp src/tracks/ui/EnvelopeHandle.cpp
@@ -12274,7 +12275,7 @@ msgstr "표시:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Scale:"
-msgstr "스케일:"
+msgstr "배율:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "VZoom:"
@@ -12282,11 +12283,11 @@ msgstr "세로배율:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "VZoom Top:"
-msgstr "VZoom Top:"
+msgstr "VZoom 상단:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "VZoom Bottom:"
-msgstr "VZoom Bottom:"
+msgstr "VZoom 하단:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Use Spectral Prefs"
@@ -12393,11 +12394,11 @@ msgstr "프리셋"
 
 #: src/effects/BasicEffectUIServices.cpp
 msgid "Export Effect Parameters"
-msgstr "이펙트 매개 변수 내보내기"
+msgstr "효과 매개 변수 내보내기"
 
 #: src/effects/BasicEffectUIServices.cpp
 msgid "Import Effect Parameters"
-msgstr "이펙트 매개 변수 가져오기"
+msgstr "효과 매개 변수 가져오기"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/BasicEffectUIServices.cpp
@@ -12541,7 +12542,7 @@ msgstr "78"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "&Speed Multiplier:"
-msgstr "속도 곱셈기:"
+msgstr "속도 배율(&S):"
 
 #. i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
 #. "vinyl" refers to old-fashioned phonograph records
@@ -12595,7 +12596,7 @@ msgstr "from"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "&New Length:"
-msgstr "새로운 길이:"
+msgstr "새 길이:"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
@@ -12668,7 +12669,7 @@ msgstr "최대 스파이크 폭"
 
 #: src/effects/Compressor.cpp resources/EffectsMenuDefaults.xml
 msgid "Compressor"
-msgstr "컴프레서"
+msgstr "압축기"
 
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
@@ -13087,25 +13088,25 @@ msgstr "출력(&U)"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "A&ctual compression"
-msgstr "실제 컴프레션 (&C)"
+msgstr "실제 압축(&C)"
 
 #. i18n-hint: show actual compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show actual compression"
-msgstr "실제 컴프레션 보기"
+msgstr "실제 압축 표시"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Tar&get compression"
-msgstr "타겟 컴프레션 (&G)"
+msgstr "대상 압축(&G)"
 
 #. i18n-hint: show target compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show target compression"
-msgstr "타겟 컴프레션 보기"
+msgstr "대상 압축 표시"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Compression curve"
-msgstr "컴프레션 커브"
+msgstr "압축 커브"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Smoothing"
@@ -13149,11 +13150,11 @@ msgstr "입력"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Actual Compression"
-msgstr "실제 컴프레션"
+msgstr "실제 압축"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Target Compression"
-msgstr "타겟 컴프레션"
+msgstr "타겟 압축"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "awaiting playback"
@@ -13375,11 +13376,11 @@ msgstr "''은 특별합니다"
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
 msgid "Rename '%s' to..."
-msgstr "'%s' 이름 변경..."
+msgstr "'%s' 이름 바꾸기..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Rename..."
-msgstr "이름 변경..."
+msgstr "이름 바꾸기..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
@@ -13414,12 +13415,12 @@ msgstr "'무제'를 삭제할 수 없습니다"
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
 msgid "Delete '%s'?"
-msgstr "'%s'를 삭제?"
+msgstr "'%s'를 삭제할까요?"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
 msgid "Delete %d items?"
-msgstr "%d 아이템을 삭제?"
+msgstr "%d 아이템을 삭제할까요?"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "You cannot delete the 'unnamed' curve, it is special."
@@ -13890,11 +13891,11 @@ msgstr "스테레오 채널을 독립적으로 정규화하기"
 #.
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
-msgstr "스트레치 비율 (&S):"
+msgstr "스트레치 비율:"
 
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
-msgstr "시간 해상도 (초) (&T):"
+msgstr "시간 해상도 (초):"
 
 #: src/effects/Phaser.cpp
 msgid "&Stages:"
@@ -15063,7 +15064,7 @@ msgstr "복사한 콘텐츠를 담을 수 있을 만큼 선택된 트랙이 충�
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicated"
-msgstr "복제했습니다"
+msgstr "복제됨"
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicate"
@@ -15071,11 +15072,11 @@ msgstr "복제하기"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut to clipboard and leave gap"
-msgstr "클립보드로 잘라내고 갭은 유지"
+msgstr "클립보드로 잘라내고 여백 남기기"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
-msgstr "잘라내고 갭은 유지"
+msgstr "잘라내고 틈새 남기기"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15172,12 +15173,12 @@ msgstr "특수 제거(&E)"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "&Cut and leave gap"
-msgstr "잘라내고 갭은 유지 (&C)"
+msgstr "잘라내고 틈새 남기기(&C)"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "&Delete and leave gap"
-msgstr "삭제하고 갭은 유지 (&D)"
+msgstr "삭제 및 공백 남기기(&D)"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15260,7 +15261,7 @@ msgstr "레이블 가져오기"
 
 #: src/menus/FileMenus.cpp
 msgid "&Dangerous Reset..."
-msgstr "위험한 리셋...(&D)"
+msgstr "위험한 리셋(&D)..."
 
 #. i18n-hint: This is the name of the menu item on Mac OS X only
 #: src/menus/FileMenus.cpp
@@ -15306,11 +15307,11 @@ msgstr "레이블(&L)..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Raw Data..."
-msgstr "윈시 데이터(&R)..."
+msgstr "RAW(윈시) 데이터(&R)..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Close Project"
-msgstr "프로젝트 닫기 (&C)"
+msgstr "프로젝트 닫기(&C)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15374,15 +15375,15 @@ msgstr "오디오 장치 정보"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help"
-msgstr "빠른 도움말(&Q)"
+msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual"
-msgstr "매뉴얼(&M)"
+msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "Audacity &Support"
-msgstr "오데시티 지원 (&S)"
+msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -15402,7 +15403,7 @@ msgstr "업데이트 확인(&C)..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&About Audacity"
-msgstr "오데시티 정보(&A)"
+msgstr "Audacity 정보(&A)"
 
 #: src/menus/LabelMenus.cpp src/toolbars/TranscriptionToolBar.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
@@ -15436,11 +15437,11 @@ msgstr "레이블이 붙은 오디오 삭제"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "라벨붙은 오디오 영역을 클립보드로 잘라내고 갭은 유지"
+msgstr "레이블이 지정된 오디오 영역을 클립보드에 잘라내고 간격을 남겨두기"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio and leave gap"
-msgstr "라벨이 붙은 오디오를 잘라내고 갭은 유지"
+msgstr "레이블이 지정된 오디오 잘라내기 및 간격 남기기"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15552,28 +15553,28 @@ msgstr "잘라내기(&C)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr "라벨로 자르기"
+msgstr "라벨별로 잘라내기"
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by label"
-msgstr "라벨로 삭제"
+msgstr "레이블로 삭제"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "C&ut and leave gap"
-msgstr "자르고 갭은 유지 (&U)"
+msgstr "잘라내고 틈새 남기기(&U)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by labels and leave gap"
-msgstr "라벨로 자르고 갭은 유지"
+msgstr "라벨로 자르고 간격을 남겨두기"
 
 #: src/menus/LabelMenus.cpp
 msgid "De&lete and leave gap"
-msgstr "삭제하고 갭은 유지 (&L)\v"
+msgstr "삭제 및 공백 남기기(&L)"
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by labels and leave gap"
-msgstr "라벨로 삭제하고 갭은 유지"
+msgstr "레이블로 삭제하고 공백을 남겨두기"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -15691,19 +15692,19 @@ msgstr "최근 생성작업 반복"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
-msgstr "이펙트(&C)"
+msgstr "효과(&C)"
 
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
-msgstr "실시간 이펙트 추가"
+msgstr "실시간 효과 추가"
 
 #: src/menus/PluginMenus.cpp
 msgid "Get AI effects..."
-msgstr "AI 이펙트 가져오기..."
+msgstr "AI 효과 가져오기..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
-msgstr "마지막 이펙트 반복"
+msgstr "마지막 효과 반복"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Analyze"
@@ -15770,7 +15771,7 @@ msgstr "선택 없음"
 
 #: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
 msgid "&Tracks"
-msgstr "여러 트랙(&T)"
+msgstr "트랙(&T)"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Tracks"
@@ -16233,7 +16234,7 @@ msgstr "정렬 프로세스가 내부 오류를 보고했습니다."
 
 #: src/menus/TrackMenus.cpp
 msgid "Tracks sorted by time"
-msgstr "트랙을 시간순으로 정렬했습니다"
+msgstr "시간별로 정렬된 트랙"
 
 #: src/menus/TrackMenus.cpp
 msgid "Sort by Time"
@@ -16685,15 +16686,15 @@ msgstr "끝 선택 생략"
 
 #: src/menus/ViewMenus.cpp
 msgid "E&xtra Menus"
-msgstr "특별 메뉴 (&X)"
+msgstr "추가 메뉴(&X)"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
-msgstr "파형에서 클리핑 보기(&S)"
+msgstr "웨이브폼에서 클리핑 보기(&S)"
 
 #: src/menus/ViewMenus.cpp
 msgid "Sho&w RMS in Waveform"
-msgstr "파형에서 RMS 표시 (&W)"
+msgstr "파형에 RMS 표시(&W)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -16702,7 +16703,7 @@ msgstr "응용프로그램 환경설정"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr "업데이트 알림"
+msgstr ""
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16712,7 +16713,7 @@ msgstr "업데이트 확인(&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "앱 업데이트를 확인하기 위해서는 네트워크에 접속해 있어야 합니다. 개인정보 보호를 위해서 오데시티는 어떠한 개인정보도 저장하지 않습니다."
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -16720,16 +16721,14 @@ msgstr ""
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "익명 사용 정보 (UUID)"
+msgstr ""
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "오데시티를 사람들이 얼마나 자주 사용하는지 이해하기 위해, 우리는 랜덤 익명 ID (UUID)를 생성합니다. 이를 통해 추후 개선 계획을 만들게 됩니다. 개인 정보는 수집되지 않습니다."
+msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -16993,23 +16992,23 @@ msgstr "새 위치 추가"
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Effects"
-msgstr "이펙트"
+msgstr "효과"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
-msgstr "이펙트 환경설정"
+msgstr "효과 환경설정"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Sort by effect name"
-msgstr "이펙트 이름에 따라 정렬"
+msgstr "효과 이름에 따라 정렬"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Sort by publisher and effect name"
-msgstr "제작자와 이펙트 이름에 따라 정렬"
+msgstr "제작자와 효과 이름에 따라 정렬"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Sort by type and effect name"
-msgstr "유형과 이펙트 이름에 따라 정렬"
+msgstr "유형과 효과 이름에 따라 정렬"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Group by publisher"
@@ -17029,15 +17028,15 @@ msgstr "유형과 제작자에 따라 그룹"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
-msgstr "이펙트 옵션"
+msgstr "효과 옵션"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
-msgstr "이펙트 메뉴 구성(&O):"
+msgstr "효과 메뉴 구성(&O):"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Realtime effect o&rganization:"
-msgstr "실시간 이펙트 구성(&R):"
+msgstr "실시간 효과 구성(&R):"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -17215,7 +17214,7 @@ msgstr "가져오기 내보내기 환경설정"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&witch view to Beats and Measures and align with musical grid"
-msgstr "보기를 비트와 박자로 전환하고 음악 격자에 맞춰 정렬(&S)"
+msgstr "보기를 비드와 박자로 전환하고 음악 격자에 맞춰 정렬(&S)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ask me each time"
@@ -17227,15 +17226,15 @@ msgstr "아무 작업도 하지 않음(&N)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Always &match the loop tempo to the project tempo"
-msgstr "루프 템포를 프로젝트 템포와 항상 일치 (&M)"
+msgstr "항상 반복 템포를 프로젝트 템포와 일치시키세요(&M)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
-msgstr "눈금자에 \"비트와 박자\"가 표시될 때만 루프 템포를 프로젝트 템포와 일치 (&O)"
+msgstr "눈금자에 “박자 및 박자 수”가 표시될 때만 반복 템포를 프로젝트 템포와 일치시킵니다(&O)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Do nothing"
-msgstr "아무 것도 하지 않음 (&D)"
+msgstr "아무것도 하지 않음(&D)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
@@ -17243,11 +17242,11 @@ msgstr "음악 가져오기"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing a music loop into an empty project, Audacity will:"
-msgstr "빈 프로젝트로 음악 루프를 가져올 때 오데시티는 다음을 수행합니다:"
+msgstr "빈 프로젝트로 음악 루프를 가져올 때 Audacity가 작동합니다:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
-msgstr "기존(비어 있지 않은) 프로젝트로 음악 루프를 가져올 때 Audacity는 다음을 수행합니다:"
+msgstr "음악 반복을 기존(비어 있지 않은) 프로젝트로 가져올 때 Audacity가 작동합니다:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17767,7 +17766,7 @@ msgstr "알고리즘"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "A&lgorithm:"
-msgstr "알고리듬(&L):"
+msgstr "알고리듬(&L) :"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Window &size:"
@@ -18158,7 +18157,7 @@ msgstr "2 (스테레오) 녹음 채널"
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Setup Toolbar"
-msgstr "오디오 설정 툴바(&A)"
+msgstr "오디오 설정 도구모음(&A)"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
@@ -18485,7 +18484,7 @@ msgstr "콤보 박스에 스냅"
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
 msgid "&Snapping Toolbar"
-msgstr "스내핑 툴바(&S)"
+msgstr "스내핑 도구모음(&S)"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18549,7 +18548,7 @@ msgstr "박자표 아랫부분 변경됨"
 #. for selecting a time range of audio
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Time Signature Toolbar"
-msgstr "타임 서명 도구"
+msgstr "박자표 도구"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -18598,7 +18597,7 @@ msgstr "그리기 도구"
 
 #: src/toolbars/ToolsToolBar.cpp
 msgid "Multi-Tool"
-msgstr "다중 툴"
+msgstr "다중 도구"
 
 #. i18n-hint: Clicking this menu item shows a toolbar
 #. that has some tools in it
@@ -19100,11 +19099,11 @@ msgstr "변경된 피치 이동"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Rename Clip..."
-msgstr "클립 이름변경...(&R)"
+msgstr "클립 이름 바꾸기(&R)..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Pitch and Speed..."
-msgstr "피치와 속도...(&P)"
+msgstr "피치와 속도(&P)..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Render Pitch and &Speed"
@@ -19355,27 +19354,27 @@ msgstr "파형색상 변경"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change Speed Limits"
-msgstr "속도 한계를 변경"
+msgstr "속도 제한 변경"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change speed limit (%) to:"
-msgstr "속도 한계 (%)를 다음으로 변경:"
+msgstr "속도 제한(%)을 다음으로 변경합니다:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Lower Speed Limit"
-msgstr "최저 속도 한계"
+msgstr "낮은 속도 제한"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit"
-msgstr "최고 속도 한계"
+msgstr "상한 속도 제한"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
-msgstr "최고 속도 한계는 최저 속도 한계보다 큰 값이어야 합니다"
+msgstr "상한 속도 제한은 하한 속도 제한보다 커야 합니다."
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Invalid Limits"
-msgstr "한계 값이 유효하지 않음"
+msgstr "유효하지 않은 한도"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19516,7 +19515,7 @@ msgstr "진폭 포락선 편집은 클릭 후 드래그하세요"
 #. i18n-hint: (verb) Audacity has just adjusted the envelope .
 #: src/tracks/ui/EnvelopeHandle.cpp
 msgid "Adjusted envelope."
-msgstr "포락선을 조정했습니다."
+msgstr "엔벨로프 조정."
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -19762,9 +19761,8 @@ msgstr "%s 다운로드 중"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "앱 업데이트 확인"
+msgstr ""
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19774,7 +19772,7 @@ msgstr "앱 업데이트"
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Audacity notifies you in-app when a new version is available to download."
-msgstr "다운로드 할 수있는 새로운 버전이 있을 경우, 앱에서 알림을 받게 됩니다."
+msgstr ""
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19785,25 +19783,25 @@ msgstr ""
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
-msgstr "%s에서 이 기능을 언제든 끌 수 있습니다."
+msgstr ""
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can disable this anytime in %s."
-msgstr "%s 에서 이 기능을 언제든 비활성화 할 수 있습니다."
+msgstr ""
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "View privacy policy"
-msgstr "개인정보 보호정책 보기"
+msgstr ""
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Disable UUID"
-msgstr "UUID 비활성화"
+msgstr ""
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
-msgstr "확인 && 계속"
+msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21652,51 +21650,3 @@ msgstr "특수 도구"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "레거시"
-
-#~ msgid "Network communications"
-#~ msgstr "네트웍 통신"
-
-#~ msgid "Requires network access."
-#~ msgstr "네트웍 억세스가 필요합니다."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "익명으로 사용 정보 전송 (&S)"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "랜덤 ID를 생성하여 얼마나 자주 오데시티가 사용되는지 추적합니다."
-
-#~ msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
-#~ msgstr "개인정보 보호를 위해서 오데시티는 어떠한 개인정보도 수집하지 않습니다."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "업데이트된 익명 사용 정보로 유지"
-
-#, fuzzy
-#~ msgid "What's new in Audacity"
-#~ msgstr "오데시티 %s 에서 변경된 사항"
-
-#~ msgid "Open trace audio.com"
-#~ msgstr "audio.com에서 트레이스 열기"
-
-#~ msgid "Account not linked"
-#~ msgstr "계정이 연결되지 않음"
-
-#~ msgid "&Link Account"
-#~ msgstr "계정 연결 (&L)"
-
-#~ msgid "&Unlink Account"
-#~ msgstr "계정 연결 해제 (&U)"
-
-#, c-format
-#~ msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-#~ msgstr " 오디오 공유를 위해서는 무료 %s  계정이 필요하며 오데시티와 계정을 연결를 해야 합니다. 위의 \"계정 연결\" 을 %%누르세요."
-
-#~ msgid "audio.com"
-#~ msgstr "audio.com"
-
-#~ msgid "Press \"Continue\" to upload to audio.com"
-#~ msgstr "audio.com에 업로드 하려면 \"계속\"을 누르세요"
-
-#~ msgid "When Audacity detects music in file imported on empty project"
-#~ msgstr "빈 프로젝트에 가져온 파일에서 오데시티가 음악을 감지한 경우"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/audacity/teams/164520/ro/)\n"
@@ -767,7 +767,7 @@ msgstr "Cubic"
 
 #: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade In"
-msgstr "Fade In"
+msgstr "Fade in"
 
 #: libraries/lib-builtin-effects/Fade.cpp
 msgid "Applies a linear fade-in to the selected audio"
@@ -2003,7 +2003,7 @@ msgid ""
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"„%s” este un fișier audio Ogg Speex.\n"
+"„%s” este un fișier audio OGG Speex.\n"
 "Audacity nu poate deschide acest tip de fișier.\n"
 "Va trebui să-l convertești într-un format audio suportat, cum ar fi WAV sau AIFF."
 
@@ -2290,18 +2290,18 @@ msgstr "Cea mai bună calitate (cel mai lent)"
 #. i18n-hint: Audio data bit depth (precision): 16-bit integers
 #: libraries/lib-math/SampleFormat.cpp
 msgid "16-bit PCM"
-msgstr "PCM 16 biți"
+msgstr "PCM pe 16 biți"
 
 #. i18n-hint: Audio data bit depth (precision): 24-bit integers
 #: libraries/lib-math/SampleFormat.cpp
 msgid "24-bit PCM"
-msgstr "PCM 24 biți"
+msgstr "PCM pe 24 de biți"
 
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: libraries/lib-math/SampleFormat.cpp
 #: libraries/lib-project-rate/QualitySettings.cpp
 msgid "32-bit float"
-msgstr "zecimal 32 biți"
+msgstr "Zecimal pe 32 de biți"
 
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
@@ -3539,11 +3539,11 @@ msgstr "A fost creat un nou proiect"
 
 #: libraries/lib-project-rate/QualitySettings.cpp
 msgid "16-bit"
-msgstr "16-biți"
+msgstr "16 biți"
 
 #: libraries/lib-project-rate/QualitySettings.cpp
 msgid "24-bit"
-msgstr "24-biți"
+msgstr "24 de biți"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
@@ -4302,7 +4302,7 @@ msgstr "-120 dB (limita aproximativă a auzului uman)"
 
 #: libraries/lib-wave-track-settings/WaveformSettings.cpp
 msgid "-145 dB (PCM range of 24 bit samples)"
-msgstr "-145 dB (interval PCM de eșantioane de 24 biți)"
+msgstr "-145 dB (interval PCM de eșantioane de 24 de biți)"
 
 #: libraries/lib-wave-track/Sequence.cpp
 #, c-format
@@ -5885,7 +5885,7 @@ msgstr "16 biți"
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "24 bit"
-msgstr "24 biți"
+msgstr "24 de biți"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
 msgid "Level"
@@ -6287,7 +6287,7 @@ msgstr "Fișiere MP3"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Ogg Vorbis Files"
-msgstr "Fișiere Ogg Vorbis"
+msgstr "Fișiere OGG Vorbis"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - rate or quality problem"
@@ -6311,11 +6311,11 @@ msgstr "Nu se poate exporta - problemă cu fișierul"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
-msgstr "Se exportă audio selectat ca Ogg Vorbis"
+msgstr "Se exportă audio selectat ca OGG Vorbis"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the audio as Ogg Vorbis"
-msgstr "Se exportă audio ca Ogg Vorbis"
+msgstr "Se exportă audio ca OGG Vorbis"
 
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -6332,7 +6332,7 @@ msgstr "Eroare citire media"
 
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Not an Ogg Vorbis file"
-msgstr "Nu este un fișier Ogg Vorbis"
+msgstr "Nu este un fișier OGG Vorbis"
 
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Vorbis version mismatch"
@@ -6568,7 +6568,7 @@ msgstr ""
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV, AIFF, and other uncompressed types"
-msgstr "WAV, AIFF, și alte tipuri necomprimate"
+msgstr "WAV, AIFF și alte tipuri necomprimate"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"
@@ -6665,32 +6665,32 @@ msgstr "XI (FastTracker 2)"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 8 bit PCM"
-msgstr "PCM 8 biți cu semn"
+msgstr "PCM pe 8 biți cu semn"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 16 bit PCM"
-msgstr "PCM 16 biți cu semn"
+msgstr "PCM pe 16 biți cu semn"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 24 bit PCM"
-msgstr "PCM 24 biți cu semn"
+msgstr "PCM pe 24 de biți cu semn"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 32 bit PCM"
-msgstr "PCM 32 biți cu semn"
+msgstr "PCM pe 32 de biți cu semn"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Unsigned 8 bit PCM"
-msgstr "PCM 8 biți fără semn"
+msgstr "PCM pe 8 biți fără semn"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "32 bit float"
-msgstr "zecimal 32 biți"
+msgstr "Zecimal pe 32 de biți"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "64 bit float"
-msgstr "zecimal 64 biți"
+msgstr "Zecimal pe 64 de biți"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "U-Law"
@@ -6738,11 +6738,11 @@ msgstr "VOX ADPCM"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "16 bit DPCM"
-msgstr "DPCM 16 biți"
+msgstr "DPCM pe 16 biți"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "8 bit DPCM"
-msgstr "DPCM 8 biți"
+msgstr "DPCM pe 8 biți"
 
 #: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Vorbis"
@@ -8174,12 +8174,12 @@ msgstr "Build release (nivel depanare %d)"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 64 bits"
-msgstr "%s, 64 biți"
+msgstr "%s, 64 de biți"
 
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, 32 bits"
-msgstr "%s, 32 biți"
+msgstr "%s, 32 debiți"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
@@ -8254,7 +8254,7 @@ msgstr "Import și export Opus"
 #. * Both are proper nouns and shouldn't be translated
 #: src/AboutDialog.cpp
 msgid "Ogg Vorbis Import and Export"
-msgstr "Import și export Ogg Vorbis"
+msgstr "Import și export OGG Vorbis"
 
 #: src/AboutDialog.cpp
 msgid "ID3 tag support"
@@ -8430,7 +8430,7 @@ msgstr "Setează bucla la selecție"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Scroll view to playhead"
-msgstr "Derulează vederea la capul de redare"
+msgstr "Derulează fereastra la capul de redare"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Continuous scrolling"
@@ -12551,7 +12551,7 @@ msgstr "Procent schimbare"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
 msgid "&Use high quality stretching (slow)"
-msgstr "&Folosește întindere de calitate înaltă (greoi)"
+msgstr "&Folosește întindere de calitate înaltă (lent)"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "33⅓"
@@ -14642,15 +14642,15 @@ msgstr "Selecția curen&tă"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Using Label/Track Name"
-msgstr "Se folosește eticheta/numele pistei"
+msgstr "Pe baza etichetei/numelui pistei"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Numbering before Label/Track Name"
-msgstr "Numerotarea înainte de numele etichetei/pistei"
+msgstr "Numerotat, înainte de numele etichetei/pistei"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Numbering after File name prefix"
-msgstr "Numerotarea după prefixul numelui de fișier"
+msgstr "Numerotat, cu prefix specificat"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Export Range:"
@@ -14670,15 +14670,15 @@ msgstr "Exportă selecția curentă"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Trim blank space before first clip"
-msgstr "Elimină spațiul liber dinaintea primului clip"
+msgstr "Suprimă spațiul liber precedent primului clip"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Split files based on:"
-msgstr "Divide fișierele pe baza:"
+msgstr "Împarte fișierele pe bază de:"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Include audio before first label"
-msgstr "Include audio de dinainte de prima etichetă"
+msgstr "Include și audioul precedent primei etichete"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Name files:"
@@ -15217,7 +15217,7 @@ msgstr "Șterge și lasă spați&u"
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
 msgid "Silence Audi&o"
-msgstr "Înlocuiește audi&o cu liniște"
+msgstr "Suprimă audi&o"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15612,7 +15612,7 @@ msgstr "Șterge după etichete și lasă spațiu"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
-msgstr "Liniște în locul &audio"
+msgstr "Suprimă &audio"
 
 #: src/menus/LabelMenus.cpp
 msgid "Label Silence"
@@ -16644,7 +16644,7 @@ msgstr "Redă înainte și &după sfârșitul selecției"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview"
-msgstr "Redă previz&ualizarea tăierii"
+msgstr "Redă limitele regi&unii"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Pre&vious Label"
@@ -16737,7 +16737,7 @@ msgstr "Preferințele aplicației"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Notificare actualizare"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16746,26 +16746,23 @@ msgid "&Check for updates"
 msgstr "Verifi&că pentru actualizări"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Pentru a-ți proteja confidențialitatea, Audacity nu colectează date personale de identificare despre tine."
+msgstr "Verificarea pentru actualizări necesită acces la internet. Pentru a-ți proteja confidențialitatea, Audacity nu stochează nicio informație personală."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Informații de utilizare anonime (UUID)"
+msgstr "Informații &utilizare (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Pentru a ne ajuta să înțelegem cât de des folosesc oamenii Audacity, generăm un identificator aleator anonim (UUID). Acesta ne ajută să îmbunătățim funcțiile și să ne planificăm viitorul. Nicio informație personală nu este colectată."
+msgstr "Pentru a ne ajuta să înțelegem cât de des folosesc oamenii Audacity, generăm un identificator aleator anonim (UUID) pentru fiecare instalare. Acesta ne ajută să îmbunătățim funcțiile existente și să ne planificăm următoarele actualizări. Identificatorul nu conține nicio informație personală."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -18352,7 +18349,7 @@ msgstr "Suprimă audio în afara selecției"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Silence audio selection"
-msgstr "Liniște în locul selecției audi&o"
+msgstr "Suprimă audi&o selectat"
 
 #: src/toolbars/EditToolBar.cpp
 msgid "Sync-Lock Tracks"
@@ -18696,7 +18693,7 @@ msgstr "Redă la viteza (&o dată)"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "Redare tăiere previz&ualizare la viteză"
+msgstr "Redă limitele regi&unii la viteza"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Ad&just Playback Speed..."
@@ -19091,7 +19088,7 @@ msgstr "Înălțime și viteză..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
-msgstr "Redă înălțime și viteză"
+msgstr "Randează înălțime și viteză"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
@@ -19145,7 +19142,7 @@ msgstr "Înălțime și &viteză..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Render Pitch and &Speed"
-msgstr "Re&dă înălțime și viteză"
+msgstr "Ran&dează înălțime și viteză"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch &Up"
@@ -19186,7 +19183,7 @@ msgstr "Schimbare de format"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Rat&e"
-msgstr "&Rată"
+msgstr "&Rată de eșantionare"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "8000 Hz"
@@ -19264,11 +19261,11 @@ msgstr "Interschimbă &canalele stereo"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Spl&it Stereo Track"
-msgstr "Împarte p&ista stereo"
+msgstr "Împarte p&ista panoramată stereo"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Split Stereo to Mo&no"
-msgstr "Împarte stereo la mo&no"
+msgstr "Împarte stereo în 2 piste mo&no"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid ""
@@ -19330,7 +19327,7 @@ msgstr "„%s” s-a împărțit stereo în mono"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Split to Mono"
-msgstr "Divide în mono"
+msgstr "Împarte în mono"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
 msgid "Created new audio track"
@@ -19799,9 +19796,8 @@ msgstr "Se descarcă %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Actualizări aplicație"
+msgstr "Actualizări aplicație și informații utilizare"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19816,7 +19812,7 @@ msgstr "Audacity te va notifica în aplicație când o nouă versiune este dispo
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Informații utilizare"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -20423,7 +20419,7 @@ msgstr "Reduce amplitudinea pentru a permite restaurarea vârfurilor (dB)"
 
 #: plug-ins/crossfadeclips.ny resources/EffectsMenuDefaults.xml
 msgid "Crossfade Clips"
-msgstr "Aplică crossface pe clipuri"
+msgstr "Aplică crossfade pe clipuri"
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -21139,7 +21135,7 @@ msgstr "Decalaj timp start"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Silence before first beat"
-msgstr "Liniște înainte primului timp"
+msgstr "Suprimă audio înaintea primului timp"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beat sound"
@@ -21643,12 +21639,12 @@ msgstr "Eroare.~%Nicio frecvență modulatorie."
 #. Effects menu group name; audio dynamics compression, not data compression
 #: resources/EffectsMenuDefaults.xml
 msgid "Volume and Compression"
-msgstr "Volum și compresie"
+msgstr "Amplitudine și compresie"
 
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
 msgid "Fading"
-msgstr "Estompare"
+msgstr "Fading"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Pitch and Tempo"
@@ -21690,19 +21686,3 @@ msgstr "Unelte spectrale"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Învechite"
-
-#~ msgid "Network communications"
-#~ msgstr "Comunicații în rețea"
-
-#~ msgid "Requires network access."
-#~ msgstr "Necesită acces la rețea."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "Trimite date de utili&zare anonime"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Vom crea un identificator aleator pentru a urmări cât de des este folosit Audacity."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "Fii la zi și Informații de utilizare anonime"

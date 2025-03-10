@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: brad freedom <brad.freedom@gmail.com>, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/audacity/teams/164520/vi/)\n"
@@ -16700,9 +16700,8 @@ msgid "&Check for updates"
 msgstr "&Kiểm tra cập nhật"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Để bảo vệ quyền riêng tư của bạn, Audacity không thu thập bất kỳ thông tin nhận dạng cá nhân nào về bạn."
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -16710,16 +16709,14 @@ msgstr ""
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Thông tin sử dụng ẩn danh (UUID)"
+msgstr ""
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Để giúp chúng tôi hiểu được tần suất mọi người sử dụng Audacity, chúng tôi tạo một ID ẩn danh ngẫu nhiên (UUID). Điều này giúp chúng tôi cải thiện các tính năng và lập kế hoạch cho tương lai. Không có dữ liệu cá nhân nào được thu thập."
+msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19745,9 +19742,8 @@ msgstr "Đang tải về %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Các bản cập nhật ứng dụng"
+msgstr ""
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21634,19 +21630,3 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Phiên bản cũ"
-
-#~ msgid "Network communications"
-#~ msgstr "Truyền thông mạng"
-
-#~ msgid "Requires network access."
-#~ msgstr "Cần có quyền truy cập mạng."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "&Gửi thông tin sử dụng ẩn danh"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Chúng tôi tạo một ID ngẫu nhiên để theo dõi tần suất sử dụng Audacity."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "Luôn cập nhật & Thông tin sử dụng ẩn danh"

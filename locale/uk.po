@@ -1,24 +1,26 @@
+# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
+# Link Winterberg, 2024
+# Yuri Chornoivan <yurchor@ukr.net>, 2025
 #
-# Link Winterberg, 2024.
-# Yuri Chornoivan <yurchor@ukr.net>, 2024, 2025.
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
-"PO-Revision-Date: 2025-02-13 19:32+0200\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
+"Language-Team: Ukrainian (https://app.transifex.com/audacity/teams/164520/uk/)\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Lokalize 23.04.3\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -7853,7 +7855,7 @@ msgstr "Стати партнером"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a MuseHub partner"
-msgstr "Стати партнером MuseHub"
+msgstr "Ви можете стати частиною спільноти мільйонів творців музики, оприлюднюючи ваші програми, ефекти та звукові дані на MuseHub. Якщо ви розробник і зацікавлені у оприлюдненні ваших продуктів на MuseHub, можете подати заявку вже сьогодні."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
@@ -16756,20 +16758,18 @@ msgstr "Пошук оновлень програми потребує досту
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Анонімні дані щодо користування (UUID)"
+msgstr "Д&ані щодо користування (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Щоб допомогти нам у розумінні того, наскільки часто люди користуються Audacity, ми створимо випадковий анонімний ідентифікатор (UUID). Це допоможе нам удосконалити можливості програми і запланувати її розвиток. Особисті дані не збиратимуться."
+msgstr "Щоб допомогти нам у розумінні того, наскільки часто люди користуються Audacity, ми створимо випадковий ідентифікатор (UUID) для кожної встановленої копії. Це допоможе нам удосконалити можливості програми і запланувати її розвиток. У цьому ідентифікаторі не міститимуться будь-які дані для ідентифікації особистості користувача."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19803,9 +19803,8 @@ msgstr "Отримуємо %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "Пошук оновлень програми"
+msgstr "Оновлення програми і дані щодо користування"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19820,7 +19819,7 @@ msgstr "Audacity сповістить вас у самій програмі пр
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Дані щодо користування"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -21693,54 +21692,3 @@ msgstr "Спектральні інструменти"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Застарілі"
-
-#~ msgid "Network communications"
-#~ msgstr "Обмін даними у мережі"
-
-#~ msgid "Requires network access."
-#~ msgstr "Потребує доступу до мережі."
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "&Надсилати анонімні дані щодо користування"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Ми створимо випадковий ідентифікатор для стеження за тим, як часто ви користуєтеся Audacity."
-
-#~ msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
-#~ msgstr "Щоб захистити ваші конфіденційні дані, Audacity не збирає жодних особистих відомостей щодо вас."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "Неперервне оновлення та анонімні дані щодо користування"
-
-#, fuzzy
-#~ msgid "What's new in Audacity"
-#~ msgstr "Нове в Audacity %s"
-
-#~ msgid "Open trace audio.com"
-#~ msgstr "Відкрити трасування audio.com"
-
-#~ msgid "Account not linked"
-#~ msgstr "Обліковий запис не пов'язано"
-
-#~ msgid "Anonymous"
-#~ msgstr "Анонімний"
-
-#~ msgid "&Link Account"
-#~ msgstr "Пр&ив'язати обліковий запис"
-
-#~ msgid "&Unlink Account"
-#~ msgstr "В&ідв'язати обліковий запис"
-
-#, c-format
-#~ msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-#~ msgstr "Оприлюднення звукових даних потребує пов'язування Audacity із безкоштовним обліковим записом %s. %%Для продовження натисніть кнопку «Пов'язати обліковий запис» вище."
-
-#~ msgid "audio.com"
-#~ msgstr "audio.com"
-
-#~ msgid "Press \"Continue\" to upload to audio.com"
-#~ msgstr "Натисніть «Продовжити», щоб вивантажити дані на audio.com"
-
-#~ msgid "When Audacity detects music in file imported on empty project"
-#~ msgstr "Якщо Audacity виявляє музику у файлі, який імпортовано до порожнього проєкту"

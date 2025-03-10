@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/audacity/teams/164520/hu/)\n"
@@ -16746,9 +16746,8 @@ msgid "&Check for updates"
 msgstr "&Frissítések keresése"
 
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "A személyes adataid védelme érdekében az Audacity nem gyűjt személyes adatokat."
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -16756,16 +16755,14 @@ msgstr ""
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
-#, fuzzy
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr "Névtelen használati információ (UUID)"
+msgstr ""
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr "Azért, hogy megtudjuk, milyen gyakran használják az emberek az Audacityt, létrehozunk egy véletlenszerű, névtelen azonosítót (UUID). Ez segít a funkciók fejlesztésében és a jövőbeni tervezésében. Személyes adatokat nem gyűjtünk."
+msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19795,9 +19792,8 @@ msgstr "%s letöltése"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "App frissítések"
+msgstr ""
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21686,19 +21682,3 @@ msgstr "Spektrális eszközök"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Örökölt"
-
-#~ msgid "Network communications"
-#~ msgstr "Hálózati kommunikációk"
-
-#~ msgid "Requires network access."
-#~ msgstr "Hálózati hozzáférés szükséges"
-
-#~ msgctxt "application preferences"
-#~ msgid "&Send anonymous usage info"
-#~ msgstr "Névtelen használati információ el&küldése"
-
-#~ msgid "We create a random ID to track how often Audacity is used."
-#~ msgstr "Véletlenszerű azonosítót hozunk létre, hogy nyomon kövessük az Audacity használatának gyakoriságát."
-
-#~ msgid "Stay Updated & Anonymous Usage Info"
-#~ msgstr "Legyen naprakész & névtelen használati információ"

@@ -5,16 +5,16 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# Thomas De Rocker, 2024
+# Thomas De Rocker, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-06 23:50+0300\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Thomas De Rocker, 2024\n"
+"Last-Translator: Thomas De Rocker, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/audacity/teams/164520/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -129,12 +129,12 @@ msgstr "Hoge afspeelvertraging: %g\n"
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Playback Rates:\n"
-msgstr ""
+msgstr "Ondersteunde afspeelsnelheden:\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Capture Rates:\n"
-msgstr ""
+msgstr "Ondersteunde opnamesnelheden:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -2984,7 +2984,7 @@ msgid ""
 "To use 'Spectral effects', enable 'Spectral Selection'\n"
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
-msgstr ""
+msgstr "Om 'spectrale effecten' te gebruiken, schakelt u spectrale selectie' in in de spectrogram-instellingen van de track en selecteert u het frequentiebereik voor het effect om op te handelen."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -3258,11 +3258,11 @@ msgstr ""
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
 msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
-msgstr ""
+msgstr "Dit project is gemaakt met een oudere versie van Audacity. Nadat het project is opgeslagen, kan het alleen worden geopend met Audacity %s of een nieuwere versie."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Project update required"
-msgstr ""
+msgstr "Update van project nodig"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4760,7 +4760,7 @@ msgstr "Kon de map met projectdata niet vinden: ‘%s’"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'rate' attribute."
-msgstr ""
+msgstr "Ongeldig 'rate'-attribuut van project."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -6056,7 +6056,7 @@ msgstr "45-85 kbps (kleinere bestanden)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive, 320 kbps"
-msgstr ""
+msgstr "Buitensporig, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -6072,7 +6072,7 @@ msgstr "Medium, 145-185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr ""
+msgstr "Buitensporig"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -7285,7 +7285,7 @@ msgstr "Audio delen"
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Get Effects"
-msgstr ""
+msgstr "Effecten ophalen"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7305,7 +7305,7 @@ msgstr "Aanmelden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
-msgstr ""
+msgstr "Afmelden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7461,63 +7461,67 @@ msgstr "Audio.com-account koppelen..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "Cloud-account aanmaken"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
-msgstr ""
+msgstr "Aanmelden bij de cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
+"Oeps! Het lijkt erop dat er een probleem was met uw invoer.\n"
+"Zorg ervoor dat uw e-mailadres correct is en dat uw wachtwoord minstens 8 tekens lang is"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
+"Het lijkt erop dat het ingevoerde e-mailadres of wachtwoord onjuist is.\n"
+"Controleer uw gegevens en probeer het opnieuw!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create an account to save to the cloud"
-msgstr ""
+msgstr "Een account aanmaken om naar de cloud op te slaan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
-msgstr ""
+msgstr "Aanmelden om naar de cloud op te slaan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "Doorgaan met Google"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "Doorgaan met Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "E-mailadres"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "Wachtwoord"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Uw wachtwoord vergeten?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "Heeft u al een account?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
-msgstr ""
+msgstr "Hier aanmelden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr ""
+msgstr "Een account nodig?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -7810,39 +7814,39 @@ msgstr "Er is een actie op audio.com vereist voordat u verder kunt gaan. Klik op
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Loading..."
-msgstr ""
+msgstr "Laden..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Please wait..."
-msgstr ""
+msgstr "Even geduld..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Connection error"
-msgstr ""
+msgstr "Verbindingsfout"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
-msgstr ""
+msgstr "Audacity kan geen verbinding maken met MuseHub.com. Controleer uw verbinding en probeer het opnieuw."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
-msgstr ""
+msgstr "Opnieuw proberen"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Get it on MuseHub"
-msgstr ""
+msgstr "Ophalen bij MuseHub"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a partner"
-msgstr ""
+msgstr "Een partner worden"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a MuseHub partner"
-msgstr ""
+msgstr "Een MuseHub-partner worden"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
-msgstr ""
+msgstr "Bereik miljoenen muziekmakers door uw apps, effecten en geluiden te publiceren op MuseHub. Als u een ontwikkelaar bent en geïnteresseerd in het publiceren van uw producten op MuseHub, kunt u zich vandaag nog aanmelden."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -9932,7 +9936,7 @@ msgstr "Audacity mixer%s"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9974,7 +9978,7 @@ msgstr "Signaalniveaumeter"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved volume slider"
-msgstr ""
+msgstr "Volumeschuif verplaatst"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10683,7 +10687,7 @@ msgstr "Power"
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change settings for realtime effect %s on %s"
-msgstr ""
+msgstr "Instellingen voor realtime effect %s op %s wijzigen"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10691,7 +10695,7 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change realtime effect %s on %s"
-msgstr ""
+msgstr "Realtime effect %s op %s wijzigen"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -11514,19 +11518,19 @@ msgstr "Kalibratie voltooid"
 
 #: src/WhatsNewDialog.cpp
 msgid "<font color=\"#000000\">"
-msgstr ""
+msgstr "<font color=\"#000000\">"
 
 #: src/WhatsNewDialog.cpp
 msgid "Sign up to Audacity's cloud saving platform"
-msgstr ""
+msgstr "Registreren bij het cloud-opslagplatform van Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "and access your projects from anywhere!"
-msgstr ""
+msgstr "en krijg overal toegang tot uw projecten!"
 
 #: src/WhatsNewDialog.cpp
 msgid "</font>"
-msgstr ""
+msgstr "</font>"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
@@ -11536,12 +11540,12 @@ msgstr "Wat is nieuw in Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr ""
+msgstr "Bekijk de [[%s|release video]] of lees het [[%s|changelog]] voor meer informatie over wat we in de nieuwste release hebben opgenomen! </p>"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "You can also read the [[%s|changelog]]</p>"
-msgstr ""
+msgstr "U kunt ook het [[%s|changelog]] lezen</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11554,56 +11558,56 @@ msgstr "<p>Kijk eens naar onze [[%s|Muse Hub app]] voor een uitgebreid aanbod aa
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
+msgstr "Een stembewerkingseffect dat de helderheid en diepte van de stem verbetert."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
+msgstr "Een multifunctionele galm-plugin voor ruimtelijke, natuurlijk klinkende effecten."
 
 #: src/WhatsNewDialog.cpp
 msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr ""
+msgstr "Een plugin voor gitaarversterker- en effectmodellering voor realistische tonen en aanpasbare geluiden."
 
 #: src/WhatsNewDialog.cpp
 msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr ""
+msgstr "Een snel reagerende galm-plugin die zich aanpast aan de dynamiek van een track voor meeslepende soundscapes."
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr ""
+msgstr "Een vocale multi-effect plugin die vocale tracks verbetert voor professionele resultaten."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
+msgstr "Een baseffect-plugin ontworpen voor een pittig, helder laag geluid."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
+msgstr "Een plugin voor akoestische geluidsperfectie, die warmte en helderheid verbetert."
 
 #: src/WhatsNewDialog.cpp
 msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr ""
+msgstr "Een verbazingwekkende stemverbeteringsplugin voor kristalheldere, professionele vocale effecten."
 
 #: src/WhatsNewDialog.cpp
 msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
+msgstr "Een realtime hulpmiddel voor stemseparatie om zang, drums en instrumenten te isoleren."
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Bekijk een verscheidenheid aan plugins van bekende ontwikkelaars die beschikbaar zijn op [[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr ""
+msgstr "Een multibandcompressor met nauwkeurige controle over frequenties."
 
 #: src/WhatsNewDialog.cpp
 msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-msgstr ""
+msgstr "Ace Studio - De beste AI-zangstemgenerator ter wereld."
 
 #: src/WhatsNewDialog.cpp
 msgid "Continue for Cloud Storage"
-msgstr ""
+msgstr "Doorgaan voor cloudopslag"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -11611,11 +11615,11 @@ msgstr "Welkom bij Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
-msgstr ""
+msgstr "De release-video bekijken"
 
 #: src/WhatsNewDialog.cpp
 msgid "Available on MuseHub"
-msgstr ""
+msgstr "Beschikbaar op MuseHub"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12241,7 +12245,7 @@ msgstr "Track-audio instellen"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Volume:"
-msgstr ""
+msgstr "Volume:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -15072,11 +15076,11 @@ msgstr "Dupliceren"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut to clipboard and leave gap"
-msgstr ""
+msgstr "Knippen naar klembord en tussenruimte laten"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
-msgstr ""
+msgstr "Knippen en tussenruimte laten"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15173,12 +15177,12 @@ msgstr "Speciaal verwijderen"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "&Cut and leave gap"
-msgstr ""
+msgstr "Knippen en tussenruimte laten"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "&Delete and leave gap"
-msgstr ""
+msgstr "Verwijderen en tussenruimte laten"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15311,7 +15315,7 @@ msgstr "Raw data…"
 
 #: src/menus/FileMenus.cpp
 msgid "&Close Project"
-msgstr ""
+msgstr "Project sluiten"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15375,15 +15379,15 @@ msgstr "Audio-apparaatinfo"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help"
-msgstr ""
+msgstr "Snelle hulp"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual"
-msgstr ""
+msgstr "Handleiding"
 
 #: src/menus/HelpMenus.cpp
 msgid "Audacity &Support"
-msgstr ""
+msgstr "Audacity ondersteuning"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -15437,11 +15441,11 @@ msgstr "Gelabelde audio verwijderen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr ""
+msgstr "Gelabelde audiogebieden naar klembord knippen en tussenruimte laten"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio and leave gap"
-msgstr ""
+msgstr "Gelabelde audio knippen en tussenruimte laten"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15553,28 +15557,28 @@ msgstr "Knippen"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr ""
+msgstr "Knippen op label"
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by label"
-msgstr ""
+msgstr "Verwijderen op label"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "C&ut and leave gap"
-msgstr ""
+msgstr "Knippen en tussenruimte laten"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by labels and leave gap"
-msgstr ""
+msgstr "Knippen op labels en tussenruimte laten"
 
 #: src/menus/LabelMenus.cpp
 msgid "De&lete and leave gap"
-msgstr ""
+msgstr "Verwijderen en tussenruimte laten"
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by labels and leave gap"
-msgstr ""
+msgstr "Verwijderen op labels en tussenruimte laten"
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16686,7 +16690,7 @@ msgstr "Naar selectie-einde gaan"
 
 #: src/menus/ViewMenus.cpp
 msgid "E&xtra Menus"
-msgstr ""
+msgstr "Extra menu's"
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
@@ -16694,7 +16698,7 @@ msgstr "Oversturing weergeven in golfvorm"
 
 #: src/menus/ViewMenus.cpp
 msgid "Sho&w RMS in Waveform"
-msgstr ""
+msgstr "RMS weergeven in golfvorm"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -16703,7 +16707,7 @@ msgstr "Voorkeuren voor toepassing"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Meldingen voor updates"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16713,22 +16717,22 @@ msgstr "Controleren op updates"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Voor het controleren van app-updates is netwerktoegang vereist. Om uw privacy te beschermen, slaat Audacity geen persoonlijke informatie op."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. i18n-hint: Check-box title that enables anonymous usage info.
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Usage info (UUID)"
-msgstr ""
+msgstr "Gebruiksinformatie (UUID)"
 
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
-msgstr ""
+msgstr "Om ons te helpen begrijpen hoe vaak mensen Audacity gebruiken, genereren we een willekeurige ID (UUID) voor elke installatie. Dit helpt ons om functies te verbeteren en toekomstige updates te plannen. Deze ID bevat geen persoonlijk identificeerbare informatie."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -17226,15 +17230,15 @@ msgstr "Niets doen"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Always &match the loop tempo to the project tempo"
-msgstr ""
+msgstr "Het tempo van de loop altijd afstemmen op het tempo van het project"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
-msgstr ""
+msgstr "Het tempo van de loop alleen afstemmen op het tempo van het project als de liniaal “beats en maten\" weergeeft."
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Do nothing"
-msgstr ""
+msgstr "Niets doen"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
@@ -17242,11 +17246,11 @@ msgstr "Geïmporteerde muziek"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing a music loop into an empty project, Audacity will:"
-msgstr ""
+msgstr "Bij het importeren van een muzieklus in een leeg project zal Audacity:"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
-msgstr ""
+msgstr "Bij het importeren van een muzieklus in een bestaand (niet-leeg) project zal Audacity:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -19761,9 +19765,8 @@ msgstr "%s downloaden"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-#, fuzzy
 msgid "App updates & usage info"
-msgstr "App-updates"
+msgstr "App-updates en gebruiksinformatie"
 
 #. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19773,36 +19776,36 @@ msgstr "App-updates"
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Audacity notifies you in-app when a new version is available to download."
-msgstr ""
+msgstr "Audacity laat u in de app weten wanneer er een nieuwe versie beschikbaar is om te downloaden."
 
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr ""
+msgstr "Gebruiksinformatie"
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
-msgstr ""
+msgstr "U kunt dit op elk gewenst moment uitschakelen in %s."
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can disable this anytime in %s."
-msgstr ""
+msgstr "U kunt dit op elk gewenst moment uitschakelen in %s."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "View privacy policy"
-msgstr ""
+msgstr "Privacybeleid weergeven"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Disable UUID"
-msgstr ""
+msgstr "UUID uitschakelen"
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
-msgstr ""
+msgstr "Accepteren en doorgaan"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
