@@ -906,6 +906,13 @@ public:
     static TrackListHolder Create(AudacityProject* pOwner);
 
     /*!
+     * @brief Creates a copy without an owner.
+     * Refer to the `Track::Clone` overrides of each track type for more detail about
+     * the kind of copy that is made (e.g. deep or shallow).
+     */
+    TrackListHolder Duplicate() const;
+
+    /*!
      @pre `!GetOwner() && !that.GetOwner()`
      */
     void Swap(TrackList& that);
