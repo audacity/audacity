@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include "au3interactiontypes.h"
 #include "../../itrackeditinteraction.h"
 
 #include "modularity/ioc.h"
@@ -11,6 +12,7 @@
 #include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 #include "../../itrackeditclipboard.h"
+#include "../../itrackeditconfiguration.h"
 
 #include "au3wrap/au3types.h"
 
@@ -22,6 +24,7 @@ class Au3Interaction : public ITrackeditInteraction
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
+    muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
 
 public:
     Au3Interaction();
@@ -30,8 +33,6 @@ public:
 
     bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
-
-    bool moveClipToTrack(const trackedit::ClipKey& clipKey, TrackId trackId, bool completed) override;
 
     bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
@@ -104,12 +105,16 @@ private:
     int64_t determineNewGroupId(const ClipKeyList& clipKeyList) const;
 
     au3::Au3Project& projectRef() const;
+    void addWaveTrack(int nChannels);
     TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
     std::shared_ptr<au3::Au3Track> createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                               size_t clipboardTracksSize) const;
     TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                         size_t clipboardTracksSize) const;
+    NeedsDownmixing moveSelectedClipsUpOrDown(int offset);
+    bool clipTransferNeedsDownmixing(const std::vector<TrackData>& srcTracks, const TrackIdList& dstTracks) const;
+    bool userIsOkWithDownmixing() const;
     muse::Ret canPasteTrackData(const TrackIdList& tracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin);
@@ -132,8 +137,6 @@ private:
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     void doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
-    std::shared_ptr<WaveTrack> createMonoTrack();
-    std::shared_ptr<WaveTrack> createStereoTrack();
 
     bool splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
@@ -158,8 +161,6 @@ private:
     int trackPosition(const TrackId trackId);
     void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
     void moveTrackTo(const TrackId trackId, int pos);
-    int trackPositionOffsetMin() const;
-    bool canMoveClipsToTrack(int trackPositionOffset) const;
 
     bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
 
@@ -167,5 +168,8 @@ private:
 
     muse::ProgressPtr m_progress;
     std::atomic<bool> m_busy;
+
+    std::optional<TrackListInfo> m_startTracklistInfo;
+    bool m_moveClipsNeedsDownmixing = false;
 };
 }
