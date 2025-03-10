@@ -564,7 +564,7 @@ void TrackList::Permute(const std::vector<Track*>& tracks)
     PermutationEvent(n);
 }
 
-Track* TrackList::FindById(TrackId id)
+Track* TrackList::FindById(TrackId id) const
 {
     // Linear search.  Tracks in a project are usually very few.
     // Search only the non-pending tracks.

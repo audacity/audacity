@@ -1069,7 +1069,7 @@ public:
      */
     void Permute(const std::vector<Track*>& tracks);
 
-    Track* FindById(TrackId id);
+    Track* FindById(TrackId id) const;
 
     /// Add a Track, giving it a fresh id if `this` is not temporary
     template<typename TrackKind>
