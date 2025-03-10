@@ -337,6 +337,21 @@ TrackListHolder TrackList::Create(AudacityProject* pOwner)
     return std::make_shared<TrackList>(pOwner);
 }
 
+TrackListHolder TrackList::Duplicate() const
+{
+    const auto duplicate = TrackList::Create(nullptr);
+    for (auto pTrack : *this) {
+        if (pTrack->GetId() == TrackId{}) {
+            // Don't copy a pending added track
+            continue;
+        }
+        duplicate->Add(
+            pTrack->Duplicate(Track::DuplicateOptions {}.Backup()),
+            TrackList::DoAssignId::No);
+    }
+    return duplicate;
+}
+
 #if 0
 TrackList& TrackList::operator=(TrackList&& that)
 {

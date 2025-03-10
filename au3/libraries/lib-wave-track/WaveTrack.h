@@ -280,6 +280,13 @@ private:
 
     void RemoveClip(std::ptrdiff_t distance);
 
+    /**
+     * @brief Creates a deep copy of this track, except for the database sample blocks,
+     * shallow-copied (i.e. project size may not increase dramatically).
+     *
+     * @param backup Preserves track IDs if `true`, generates new ones if `false`
+     * @return Track::Holder
+     */
     Track::Holder Clone(bool backup) const override;
 
     friend class WaveTrackFactory;
