@@ -17,6 +17,7 @@
 #include <list>
 #include <optional>
 #include <functional>
+#include <thread>
 #include <wx/longlong.h>
 
 #include "Channel.h"
@@ -1257,6 +1258,8 @@ private:
     static long sCounter;
 
     AudacityProject* mOwner;
+    //! Needed for debugging purposes - see use in TrackList::QueueEvent
+    const std::thread::id mCtorThread;
 
     //! Whether the list assigns unique ids to added tracks;
     //! false for temporaries

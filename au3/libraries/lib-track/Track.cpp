@@ -327,7 +327,7 @@ const TrackList& TrackList::Get(const AudacityProject& project)
 }
 
 TrackList::TrackList(AudacityProject* pOwner)
-    : mOwner{pOwner}
+    : mOwner{pOwner}, mCtorThread{std::this_thread::get_id()}
 {
 }
 
@@ -414,11 +414,22 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
 void TrackList::QueueEvent(TrackListEvent event)
 {
-    BasicUI::CallAfter([wThis = weak_from_this(), event = std::move(event)]{
-        if (auto pThis = wThis.lock()) {
-            pThis->Publish(event);
-        }
-    });
+    // Experimental: let's try having these events published synchronously, to make the analysis of problems simpler.
+    // Now the event is published on the thread the action causing it is executed. In normal situations,
+    // this is also the thread where the TrackList was created, and typically, the main thread.
+    // The main danger is if a thread other than the main thread does such an action on the project's track list, which
+    // has many subscribers on the main thread.
+    // The assert below should help us catch such situations. If they arise, they are probably exceptional,
+    // and then we can consider that the responsible action itself gets called asynchronously on the main thread.
+    // TODO by the time we release AU4, if we are confident in this change, we can clean up the code removing all the
+    // mechanics for asynchronous event publication.
+    assert(mCtorThread == std::this_thread::get_id());
+    Publish(event);
+    // BasicUI::CallAfter([wThis = weak_from_this(), event = std::move(event)]{
+    //     if (auto pThis = wThis.lock()) {
+    //         pThis->Publish(event);
+    //     }
+    // });
 }
 
 void TrackList::SelectionEvent(Track& track)
