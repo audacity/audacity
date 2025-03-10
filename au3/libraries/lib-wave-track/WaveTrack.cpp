@@ -1079,6 +1079,46 @@ void WaveTrack::MakeMono()
     EraseChannelAttachments(1);
 }
 
+bool WaveTrack::MixDownToMono(const std::function<void(double)>& progress, const std::function<bool()>& cancel)
+{
+    WaveClipHolders stereoClips;
+    std::copy_if(mClips.begin(), mClips.end(), std::back_inserter(stereoClips),
+                 [](const auto& pClip){ return pClip->NChannels() == 2; });
+
+    if (stereoClips.empty()) {
+        return true;
+    }
+
+    auto i = 0u;
+    const auto clipProgress = [&](double p)
+    { progress((p + i) / stereoClips.size()); };
+    for (; i < stereoClips.size(); ++i) {
+        if (!stereoClips[i]->MakeMono(clipProgress, cancel)) {
+            return false;
+        }
+    }
+
+    if (NChannels() == 2) {
+        mRightChannel.reset();
+        EraseChannelAttachments(1);
+    }
+
+    return true;
+}
+
+bool WaveTrack::FixClipChannels(
+    const std::function<void(double)>& progress, const std::function<bool()>& cancel)
+{
+    if (NChannels() == 1) {
+        return MixDownToMono(progress, cancel);
+    } else {
+        for (const auto& clip : mClips) {
+            clip->MakeStereo();
+        }
+        return true;
+    }
+}
+
 auto WaveTrack::MonoToStereo() -> Holder
 {
     assert(!GetOwner());
