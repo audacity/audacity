@@ -371,6 +371,20 @@ public:
     void MakeMono();
 
     /*!
+     * @brief Mixes down to mono by averaging. Returns `true` on complete conversion.
+     * @details Converts all clips to mono by mixdown.
+     * No care is taken to restore the initial state if convertion gets interrupted between clips,
+     * in which case `false` is returned and the track should be disposed of.
+     */
+    bool MixDownToMono(const std::function<void(double)>& progress, const std::function<bool()>& cancel);
+
+    /*!
+     * @brief If stereo/mono, ensures all clips within it are stereo/mono, converting them if necessary.
+     */
+    bool FixClipChannels(
+        const std::function<void(double)>& progress, const std::function<bool()>& cancel);
+
+    /*!
      @pre `!GetOwner()`
      */
     Holder MonoToStereo();

@@ -572,6 +572,58 @@ void WaveClip::MakeStereo(WaveClip&& other, bool mustAlign)
     }
 }
 
+void WaveClip::MakeStereo()
+{
+    if (NChannels() == 2) {
+        return;
+    }
+    constexpr auto mustAlign = true; // Since they're the same ...
+    MakeStereo(WaveClip(*this, GetFactory(), true, CreateToken {}), mustAlign);
+}
+
+bool WaveClip::MakeMono(const std::function<void(double)>& progress, const std::function<bool()>& cancel)
+{
+    if (NChannels() == 1) {
+        return true;
+    }
+    constexpr auto blockSize = 1024;
+    auto n = 0;
+
+    auto mix = std::make_unique<Sequence>(GetFactory(), SampleFormats { floatSample, floatSample });
+    std::optional<AudioSegmentSampleView> leftView;
+    std::optional<AudioSegmentSampleView> rightView;
+    const auto nSamples = mSequences[0]->GetNumSamples();
+    while (n < nSamples)
+    {
+        const auto len
+            =std::min<sampleCount>(blockSize, nSamples - n)
+              .as_size_t();
+        leftView.emplace(mSequences[0]->GetFloatSampleView(n, len, true));
+        rightView.emplace(mSequences[1]->GetFloatSampleView(n, len, true));
+        std::array<float, blockSize> buffer;
+        buffer.fill(0);
+        leftView->AddTo(buffer.data(), len);
+        rightView->AddTo(buffer.data(), len);
+        for (size_t i = 0; i < len; ++i) {
+            buffer[i] /= 2;
+        }
+        mix->Append(
+            reinterpret_cast<constSamplePtr>(buffer.data()), floatSample, len, 1,
+            floatSample);
+        n += len;
+        progress(n / nSamples.as_double());
+        if (cancel()) {
+            return false;
+        }
+    }
+    mix->Flush();
+
+    mSequences.resize(1);
+    mSequences[0] = std::move(mix);
+
+    return true;
+}
+
 size_t WaveClip::GreatestAppendBufferLen() const
 {
     size_t result = 0;
