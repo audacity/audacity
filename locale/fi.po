@@ -20684,8 +20684,8 @@ msgid ""
 "                 Track sample rate is ~a Hz~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"Virhe:~%~%Ftaajuus (~a Hz) on liian korkea raidan näytetaajuudelle.~%~%~ \n"
-"Raidan näytetaajuus on ~a Hz~%~ \n"
+"Virhe:~%~%Ftaajuus (~a Hz) on liian korkea raidan näytetaajuudelle.~%~%~\n"
+"Raidan näytetaajuus on ~a Hz~%~\n"
 "Taajuuden on oltava alle ~a Hz."
 
 #. i18n-hint: Name of effect that labels sounds
