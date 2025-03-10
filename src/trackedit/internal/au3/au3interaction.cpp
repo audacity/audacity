@@ -996,7 +996,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin)
         ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin);
     }
     if (!ok) {
-        make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        return make_ret(trackedit::Err::FailedToMakeRoomForClip);
     }
 
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
