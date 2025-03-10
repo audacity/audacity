@@ -261,7 +261,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "spectral-box-select", false },
             { "spectral-brush", false },
             { "", true },
-            { "cut", false },
+            { "split-cut", false },
             { "copy", false },
             { "paste", false },
             { "", true },
