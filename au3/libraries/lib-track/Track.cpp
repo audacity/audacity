@@ -549,7 +549,7 @@ void TrackList::Permute(const std::vector<Track*>& tracks)
     PermutationEvent(n);
 }
 
-Track* TrackList::FindById(TrackId id)
+const Track* TrackList::FindById(TrackId id) const
 {
     // Linear search.  Tracks in a project are usually very few.
     // Search only the non-pending tracks.
@@ -559,6 +559,11 @@ Track* TrackList::FindById(TrackId id)
         return {};
     }
     return it->get();
+}
+
+Track* TrackList::FindById(TrackId id)
+{
+    return const_cast<Track*>(const_cast<const TrackList*>(this)->FindById(id));
 }
 
 Track* TrackList::DoAddToHead(const std::shared_ptr<Track>& t)
