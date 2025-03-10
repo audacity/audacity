@@ -34,6 +34,8 @@ Rectangle {
     property bool isAudible: true
     property real selectionStart: 0
     property real selectionWidth: 0
+    property bool selectionInProgress: false
+    property bool enableCursorInteraction: !selectionInProgress && !isBrush
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
@@ -171,6 +173,8 @@ Rectangle {
         cursorShape: Qt.IBeamCursor
         acceptedButtons: Qt.RightButton
 
+        visible: root.enableCursorInteraction
+
         onClicked: function(e) {
             if (root.multiClipsSelected) {
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
@@ -195,8 +199,6 @@ Rectangle {
     MouseArea {
         id: leftTrimStretchEdgeHover
 
-        enabled: !root.isBrush
-
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
         z: headerDragArea.z + 1
@@ -205,7 +207,7 @@ Rectangle {
         anchors.top: root.top
 
         hoverEnabled: true
-        visible: !root.clipSelected
+        visible: !root.clipSelected && root.enableCursorInteraction
 
         cursorShape: Qt.BlankCursor
 
@@ -253,8 +255,6 @@ Rectangle {
     MouseArea {
         id: rightTrimStretchEdgeHover
 
-        enabled: !root.isBrush
-
         x: root.width - 5
         z: headerDragArea.z + 1
         width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5): 11
@@ -263,7 +263,7 @@ Rectangle {
         anchors.top: root.top
 
         hoverEnabled: true
-        visible: !root.clipSelected
+        visible: !root.clipSelected && root.enableCursorInteraction
 
         cursorShape: Qt.BlankCursor
 
@@ -351,7 +351,7 @@ Rectangle {
                 id: headerDragArea
                 anchors.fill: parent
 
-                enabled:  !root.isBrush
+                visible: root.enableCursorInteraction
 
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
@@ -468,6 +468,8 @@ Rectangle {
                 ClipItemPropertyButton {
                     id: pitchBtn
 
+                    mouseArea.visible: root.enableCursorInteraction
+
                     text: {
                         let semis = Math.trunc(root.pitch / 100)
                         let cents = Math.abs(root.pitch % 100).toString().padStart(2, "0")
@@ -489,6 +491,8 @@ Rectangle {
                 ClipItemPropertyButton {
                     id: speedBtn
 
+                    mouseArea.visible: root.enableCursorInteraction
+
                     icon: IconCode.CLOCK
                     text: root.speedPercentage + "%"
 
@@ -508,6 +512,8 @@ Rectangle {
                     width: 16
                     height: 16
                     anchors.verticalCenter: parent.verticalCenter
+
+                    mouseArea.visible: root.enableCursorInteraction
 
                     menuModel: (root.multiClipsSelected || root.groupId != -1) ? multiClipContextMenuModel : singleClipContextMenuModel
 
