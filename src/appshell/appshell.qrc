@@ -32,6 +32,7 @@
         <file>qml/Preferences/FoldersPreferencesPage.qml</file>
         <file>qml/Preferences/AdvancedPreferencesPage.qml</file>
         <file>qml/Preferences/CanvasPreferencesPage.qml</file>
+        <file>qml/Preferences/EditPreferencesPage.qml</file>
         <file>qml/Preferences/ScorePreferencesPage.qml</file>
         <file>qml/Preferences/ShortcutsPreferencesPage.qml</file>
         <file>qml/Preferences/ImportPreferencesPage.qml</file>
@@ -50,6 +51,7 @@
         <file>qml/Preferences/internal/ImportStyleSection.qml</file>
         <file>qml/Preferences/internal/CharsetsSection.qml</file>
         <file>qml/Preferences/internal/MidiSection.qml</file>
+        <file>qml/Preferences/internal/MonoStereoConversionSection.qml</file>
         <file>qml/Preferences/internal/MusicXmlSection.qml</file>
         <file>qml/Preferences/internal/MidiDevicesSection.qml</file>
         <file>qml/Preferences/internal/AudioEngineSection.qml</file>
