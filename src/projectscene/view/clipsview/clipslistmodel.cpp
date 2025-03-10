@@ -72,6 +72,10 @@ void ClipsListModel::init()
 
 void ClipsListModel::reload()
 {
+    if (m_trackId < 0) {
+        return;
+    }
+
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
@@ -80,6 +84,12 @@ void ClipsListModel::reload()
     prj->trackChanged().onReceive(this, [this](const au::trackedit::Track& track) {
         if (track.id == m_trackId) {
             reload();
+        }
+    });
+
+    prj->trackRemoved().onReceive(this, [this](const au::trackedit::Track& track) {
+        if (track.id == m_trackId) {
+            m_trackId = -1;
         }
     });
 
@@ -747,7 +757,6 @@ void ClipsListModel::selectClip(const ClipKey& key)
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     constexpr auto complete = true;
-    constexpr auto modifyState = true;
     const auto clipGroupId = trackeditInteraction()->clipGroupId(key.key);
     if (clipGroupId != -1) {
         //! NOTE: clip belongs to a group, select the whole group
@@ -756,7 +765,7 @@ void ClipsListModel::selectClip(const ClipKey& key)
                 selectionController()->addSelectedClip(key);
             }
         } else {
-            selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete, modifyState);
+            selectionController()->setSelectedClips(trackeditInteraction()->clipsInGroup(clipGroupId), complete);
         }
     } else {
         if (modifiers.testFlag(Qt::ShiftModifier)) {
@@ -765,14 +774,13 @@ void ClipsListModel::selectClip(const ClipKey& key)
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
                 return;
             }
-            selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete, modifyState);
+            selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
         }
     }
 }
 
 void ClipsListModel::resetSelectedClips()
 {
-    selectionController()->resetSelectedClips();
     clearSelectedItems();
 }
 
