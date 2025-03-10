@@ -24,6 +24,7 @@ public:
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription,
                                   trackedit::UndoPushType flags) = 0;
+    virtual void rollbackState() = 0;
     virtual void modifyState(bool autoSave = false) = 0;
     virtual void markUnsaved() = 0;
 

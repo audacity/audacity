@@ -211,9 +211,6 @@ void RealtimeEffectListModel::onChanged(effects::TrackId trackId)
 
     if (!newStack.has_value()) {
         m_trackEffectLists.erase(trackId);
-        // Track was deleted, apparently.
-        emit trackNameChanged();
-        emit trackEffectsActiveChanged();
     } else {
         // Do not brute-force delete and re-create everything: in case the dialog for a RealtimeEffectListItemModel is open,
         // we don't want it to close unless the effect state it refers to was removed.
