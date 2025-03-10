@@ -41,8 +41,7 @@ public:
     muse::async::Channel<EffectId> lastProcessorIdChanged() const override;
     muse::Ret repeatLastProcessor() override;
 
-    muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) override;
-
+    muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings, muse::ProgressPtr playProgress) override;
 private:
 
     std::pair<std::string, std::string> makeErrorMsg(const muse::Ret& ret, const EffectId& effectId);
