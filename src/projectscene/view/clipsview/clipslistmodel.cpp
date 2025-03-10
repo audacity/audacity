@@ -72,6 +72,10 @@ void ClipsListModel::init()
 
 void ClipsListModel::reload()
 {
+    if (m_trackId < 0) {
+        return;
+    }
+
     ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
@@ -80,6 +84,12 @@ void ClipsListModel::reload()
     prj->trackChanged().onReceive(this, [this](const au::trackedit::Track& track) {
         if (track.id == m_trackId) {
             reload();
+        }
+    });
+
+    prj->trackRemoved().onReceive(this, [this](const au::trackedit::Track& track) {
+        if (track.id == m_trackId) {
+            m_trackId = -1;
         }
     });
 
