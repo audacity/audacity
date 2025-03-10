@@ -4,10 +4,32 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
+# Cleber Tavano, 2002-2023
+# Djavan Fagundes, 2010
+# Paulo Castro, 2013
+# Rogênio Belém, 2013
+# Flávio Salgado Moreira, 2014
+# Marcelo Thomaz de Aquino Filho, 2014
+# Victor Westmann, 2014-2015
+# Gutem, 2015
+# Henrique Terto de Souza, 2015-2017
+# Igor Rückert, 2015-2020
+# Marcos Nakamine, 2015
+# Pablo do Amaral Ferreira, 2015
+# Thales Alexander Barné Peres, 2015
+# Ciro, 2016
+# J.Nylson, 2016
+# Lourenço Schmid, 2016
+# millemiglia, 2016
+# Rodrigo de Araújo, 2016
+# Diego Medeiros, 2016-2017
+# Thomas De Rocker, 2017
+# Bruno Ramalhete, 2019
+# Aline Furlanetto Viero, 2021
 # Link Winterberg, 2024
 # Victoria Pelegrini Thobias, 2024
 # Rodrigo Fontanella, 2024
-# Fúlvio Alves <fga.fulvio@gmail.com>, 2025
+# Fúlvio Alves, 2024-2025
 #
 #, fuzzy
 msgid ""
@@ -8066,7 +8088,7 @@ msgstr "Sobre o %s"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"Tradução para português do Brasil por Cleber Tavano (2002-2023), com contribuições, atualizações e revisões de Djavan Fagundes (2010), Paulo Castro (2013), Rogênio Belém (2013), Flávio Salgado Moreira (2014), Marcelo Thomaz de Aquino Filho (2014), Victor Westmann (2014-2015), Gutem (2015), Henrique Terto de Souza (2015-2017), Igor Rückert, (2015-2020), Marcos Nakamine, (2015), Pablo do Amaral Ferreira (2015), Thales Alexander Barné Peres (2015), Ciro (2016), J.Nylson (2016), Lourenço Schmid (2016), millemiglia (2016), Rodrigo de Araújo (2016), Diego Medeiros (2016-2017), Thomas De Rocker (2017), Bruno Ramalhete (2019), Aline Furlanetto Viero (2021), Fúlvio Alves (2024-2025). \n"
+"Tradução para português do Brasil por Cleber Tavano (2002-2023), com contribuições, atualizações e revisões de Djavan Fagundes (2010), Paulo Castro (2013), Rogênio Belém (2013), Flávio Salgado Moreira (2014), Marcelo Thomaz de Aquino Filho (2014), Victor Westmann (2014-2015), Gutem (2015), Henrique Terto de Souza (2015-2017), Igor Rückert (2015-2020), Marcos Nakamine (2015), Pablo do Amaral Ferreira (2015), Thales Alexander Barné Peres (2015), Ciro (2016), J.Nylson (2016), Lourenço Schmid (2016), millemiglia (2016), Rodrigo de Araújo (2016), Diego Medeiros (2016-2017), Thomas De Rocker (2017), Bruno Ramalhete (2019), Aline Furlanetto Viero (2021), Link Winterberg (2024), Rodrigo Fontanella (2024), Victoria Pelegrini Thobias (2024), Fúlvio Alves (2024-2025). \n"
 "Comentários e sugestões são bem-vindos."
 
 #: src/AboutDialog.cpp
