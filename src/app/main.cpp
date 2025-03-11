@@ -58,7 +58,9 @@
 #include "record/recordmodule.h"
 #include "effects/effects_base/effectsmodule.h"
 #include "effects/builtin/builtineffectsmodule.h"
+#ifdef AU_MODULE_EFFECTS_LV2
 #include "effects/lv2/lv2effectsmodule.h"
+#endif
 #ifdef AU_MODULE_EFFECTS_VST
 #include "effects/vst/vsteffectsmodule.h"
 #endif
@@ -153,7 +155,9 @@ int main(int argc, char** argv)
     app.addModule(new au::record::RecordModule());
     app.addModule(new au::effects::EffectsModule());
     app.addModule(new au::effects::BuiltinEffectsModule());
+#ifdef AU_MODULE_EFFECTS_LV2
     app.addModule(new au::effects::Lv2EffectsModule());
+#endif
 #ifdef AU_MODULE_EFFECTS_VST
     app.addModule(new au::effects::VstEffectsModule());
 #endif

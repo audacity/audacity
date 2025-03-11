@@ -163,6 +163,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-utility/ModuleConstants.cpp
     ${AU3_LIBRARIES}/lib-utility/ModuleConstants.h
     ${AU3_LIBRARIES}/lib-utility/TypedAny.h
+    ${AU3_LIBRARIES}/lib-utility/CommandLineArgs.cpp
+    ${AU3_LIBRARIES}/lib-utility/CommandLineArgs.h
 
     ${AU3_LIBRARIES}/lib-files/AudacityLogger.cpp
     ${AU3_LIBRARIES}/lib-files/AudacityLogger.h
@@ -374,6 +376,10 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-module-manager/ModuleSettings.h
     ${AU3_LIBRARIES}/lib-module-manager/ConfigInterface.cpp
     ${AU3_LIBRARIES}/lib-module-manager/ConfigInterface.h
+    ${AU3_LIBRARIES}/lib-module-manager/PluginHost.cpp
+    ${AU3_LIBRARIES}/lib-module-manager/PluginHost.h
+    ${AU3_LIBRARIES}/lib-module-manager/PluginIPCUtils.cpp
+    ${AU3_LIBRARIES}/lib-module-manager/PluginIPCUtils.h
 
     ${AU3_LIBRARIES}/lib-components/EffectAutomationParameters.cpp
     ${AU3_LIBRARIES}/lib-components/EffectAutomationParameters.h
@@ -540,7 +546,46 @@ set(AU3_SRC
 
     ${AU3_LIBRARIES}/lib-tags/Tags.cpp
     ${AU3_LIBRARIES}/lib-tags/Tags.h
+
+    ${AU3_LIBRARIES}/lib-ipc/IPCChannel.cpp
+    ${AU3_LIBRARIES}/lib-ipc/IPCChannel.h
+    ${AU3_LIBRARIES}/lib-ipc/IPCClient.cpp
+    ${AU3_LIBRARIES}/lib-ipc/IPCClient.h
+    ${AU3_LIBRARIES}/lib-ipc/IPCServer.cpp
+    ${AU3_LIBRARIES}/lib-ipc/IPCServer.h
+    ${AU3_LIBRARIES}/lib-ipc/internal/BufferedIPCChannel.cpp
+    ${AU3_LIBRARIES}/lib-ipc/internal/BufferedIPCChannel.h
+    ${AU3_LIBRARIES}/lib-ipc/internal/ipc-types.h
+    ${AU3_LIBRARIES}/lib-ipc/internal/socket_guard.h
 )
+
+if (AU_MODULE_EFFECTS_LV2)
+
+    add_subdirectory(lv2sdk)
+
+    set(MODULE_SRC ${MODULE_SRC}
+        ${AU3_LIBRARIES}/lib-lv2/LoadLV2.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LoadLV2.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2EffectBase.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2EffectBase.h
+        ${AU3_LIBRARIES}/lib-lv2/lv2_external_ui.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2FeaturesList.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2FeaturesList.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2Instance.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2InstanceFeaturesList.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2InstanceFeaturesList.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2Instance.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2Ports.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2Ports.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2Preferences.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2Preferences.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2Symbols.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2Symbols.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2Utils.h
+        ${AU3_LIBRARIES}/lib-lv2/LV2Wrapper.cpp
+        ${AU3_LIBRARIES}/lib-lv2/LV2Wrapper.h
+    )
+endif()
 
 if(AU_MODULE_EFFECTS_VST)
 
@@ -670,6 +715,14 @@ set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 set(MODULE_LINK ${AU3_LINK})
+
+if (AU_MODULE_EFFECTS_LV2)
+    set(MODULE_INCLUDE ${MODULE_INCLUDE}
+        ${AU_MODULE_LV2_LV2SDK_PATH}/lv2/include
+        ${AU_MODULE_LV2_LV2SDK_PATH}/lilv/include
+    )
+    set(MODULE_LINK ${MODULE_LINK} lv2sdk)
+endif()
 
 if (AU_MODULE_EFFECTS_VST)
     set(MODULE_INCLUDE ${MODULE_INCLUDE} ${AU_MODULE_VST_VST3_SDK_PATH})
