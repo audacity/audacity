@@ -158,7 +158,7 @@ mWorkerInterface{ static_cast<const LV2_Worker_Interface*>(
     if (mWorkerInterface) {
         mThread = std::thread{
             std::mem_fn(&LV2Wrapper::ThreadFunction), std::ref(*this)
-        }
+        };
     }
 }
 

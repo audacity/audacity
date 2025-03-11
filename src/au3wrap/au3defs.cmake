@@ -1,4 +1,6 @@
 
+set(PKGLIBDIR "${_PKGLIBDIR}" )
+set(LIBDIR "${CMAKE_INSTALL_FULL_LIBDIR}" )
 
 set(AU3_DEF
 
@@ -62,6 +64,11 @@ set(AU3_DEF
 
     -DEFFECTS_API=
     -DVST3_API=
+    -DUSE_LV2
+    -DLV2_API=
+    -DPKGLIBDIR="${PKGLIBDIR}"
+    -DLIBDIR="${LIBDIR}"
+    -DIPC_API=
 
     -DCOMMAND_PARAMETERS_API=
     -DAUDACITY_APPLICATION_LOGIC_API=
@@ -141,8 +148,9 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-audio-unit
     ${AU3_LIBRARIES}/lib-command-parameters
     ${AU3_LIBRARIES}/lib-menus
-
     ${AU3_LIBRARIES}/lib-vst3
+    ${AU3_LIBRARIES}/lib-lv2
+    ${AU3_LIBRARIES}/lib-ipc
 
     ${AU3_MODULES}/import-export/mod-ffmpeg
 )

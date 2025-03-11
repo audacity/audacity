@@ -317,12 +317,12 @@ LV2EffectBase::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
     using namespace LV2Symbols;
     if (id < 0 || id >= (int)mFactoryPresetUris.size()) {
-        return {}
+        return {};
     }
 
     LilvNodePtr preset{ lilv_new_uri(gWorld, mFactoryPresetUris[id].ToUTF8()) };
     if (!preset) {
-        return {}
+        return {};
     }
 
     using LilvStatePtr = Lilv_ptr<LilvState, lilv_state_free>;
@@ -331,7 +331,7 @@ LV2EffectBase::LoadFactoryPreset(int id, EffectSettings& settings) const
                                   mFeatures.URIDMapFeature(), preset.get())
     };
     if (!state) {
-        return {}
+        return {};
     }
 
     auto& mySettings = GetSettings(settings);
@@ -361,14 +361,14 @@ OptionalMessage LV2EffectBase::LoadParameters(
     wxString parms;
     if (!GetConfig(*this,
                    PluginSettings::Private, group, wxT("Parameters"), parms, wxEmptyString)) {
-        return {}
+        return {};
     }
     CommandParameters eap;
     if (!eap.SetParameters(parms)) {
-        return {}
+        return {};
     }
     if (!LoadSettings(eap, settings)) {
-        return {}
+        return {};
     }
     return { nullptr };
 }

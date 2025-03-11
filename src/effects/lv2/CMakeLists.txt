@@ -10,6 +10,9 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/lv2effectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/lv2effectsmodule.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.h
 )
 
 # AU3
@@ -21,7 +24,7 @@ set(MODULE_INCLUDE
 )
 set(MODULE_DEF ${AU3_DEF})
 
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap lv2sdk)
 
 set(MODULE_USE_UNITY OFF)
 setup_module()

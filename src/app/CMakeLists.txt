@@ -93,7 +93,6 @@ set(LINK_LIB
     record
     effects_base
     effects_builtin
-    effects_lv2
     effects_nyquist
     importer
 )
@@ -101,6 +100,11 @@ set(LINK_LIB
 if (AU_MODULE_EFFECTS_VST)
     list(APPEND LINK_LIB effects_vst muse::vst)
     add_definitions(-DAU_MODULE_EFFECTS_VST)
+endif()
+
+if (AU_MODULE_EFFECTS_LV2)
+    list(APPEND LINK_LIB effects_lv2)
+    add_definitions(-DAU_MODULE_EFFECTS_LV2)
 endif()
 
 ###########################################
