@@ -246,7 +246,7 @@ ClipKeyList Au3SelectionController::selectedClipsInTrackOrder() const
     return sortedSelectedClips;
 }
 
-void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete, bool modifyState)
+void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)
 {
     m_selectedClips.set(clipKeys, complete);
 
@@ -260,9 +260,6 @@ void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool 
         selectedTracks.push_back(key.trackId);
     }
     setSelectedTracks(selectedTracks, complete);
-    if (complete && modifyState) {
-        projectHistory()->modifyState();
-    }
 }
 
 void Au3SelectionController::addSelectedClip(const ClipKey& clipKey)
@@ -365,20 +362,6 @@ void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
 
     secs_t audioDataStartTime = au3Track->GetStartTime();
     secs_t audioDataEndTime = au3Track->GetEndTime();
-
-    setDataSelectedStartTime(audioDataStartTime, true);
-    setDataSelectedEndTime(audioDataEndTime, true);
-}
-
-void Au3SelectionController::setSelectedClipAudioData(trackedit::TrackId trackId, secs_t time)
-{
-    const auto& clip = au3::DomAccessor::findWaveClip(projectRef(), trackId, time);
-    if (!clip) {
-        return;
-    }
-
-    secs_t audioDataStartTime = clip->Start();
-    secs_t audioDataEndTime = clip->End();
 
     setDataSelectedStartTime(audioDataStartTime, true);
     setDataSelectedEndTime(audioDataEndTime, true);

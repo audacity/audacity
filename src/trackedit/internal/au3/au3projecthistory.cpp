@@ -33,6 +33,7 @@ void au::trackedit::Au3ProjectHistory::undo()
         ::ProjectHistory::Get(project).PopState(elem.state);
     });
 
+    m_interactionOngoing = false;
     m_isUndoRedoAvailableChanged.notify();
 }
 
@@ -51,31 +52,61 @@ void au::trackedit::Au3ProjectHistory::redo()
         ::ProjectHistory::Get(project).PopState(elem.state);
     });
 
+    m_interactionOngoing = false;
     m_isUndoRedoAvailableChanged.notify();
 }
 
 void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
 {
-    auto& project = projectRef();
-    ::ProjectHistory::Get(project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} });
-
-    m_isUndoRedoAvailableChanged.notify();
+    pushHistoryState(longDescription, shortDescription, UndoPushType::NONE);
 }
 
 void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription, UndoPushType flags)
 {
+    LOGI() << "pushHistoryState(\"" << shortDescription << "\", " << flags << ")";
     auto& project = projectRef();
     UndoPush undoFlags = static_cast<UndoPush>(flags);
     ::ProjectHistory::Get(project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} },
                                              undoFlags);
 
+    m_interactionOngoing = false;
     m_isUndoRedoAvailableChanged.notify();
+}
+
+void Au3ProjectHistory::startUserInteraction()
+{
+    LOGI() << "startUserInteraction()";
+    IF_ASSERT_FAILED(!m_interactionOngoing) {
+        return;
+    }
+    m_interactionOngoing = true;
+}
+
+void Au3ProjectHistory::endUserInteraction()
+{
+    LOGI() << "endUserInteraction()";
+    if (m_interactionOngoing) {
+        m_interactionOngoing = false;
+        // No new history entry was pushed -> update the state.
+        modifyState(false);
+    }
 }
 
 void Au3ProjectHistory::modifyState(bool autoSave)
 {
+    LOGI() << "modifyState(" << (autoSave ? "true" : "false") << ")";
+    if (m_interactionOngoing) {
+        LOGW() << "Attempt to modify state during undoable action";
+        return;
+    }
     auto& project = projectRef();
     ::ProjectHistory::Get(project).ModifyState(autoSave);
+}
+
+void Au3ProjectHistory::markUnsaved()
+{
+    LOGI() << "markUnsaved()";
+    auto& project = projectRef();
     ::UndoManager::Get(project).MarkUnsaved();
 }
 

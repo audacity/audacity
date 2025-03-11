@@ -287,6 +287,9 @@ Rectangle {
                 }
 
                 if (e.button === Qt.LeftButton) {
+
+                    tracksModel.startUserInteraction()
+
                     if (root.clipHeaderHovered) {
                         tracksClipsView.clipStartEditRequested(hoveredClipKey)
                     } else {
@@ -340,6 +343,13 @@ Rectangle {
 
                     clipsSelection.visible = false
                 }
+
+                tracksModel.endUserInteraction()
+            }
+
+            onCanceled: e => {
+                console.log("User interaction canceled")
+                tracksModel.endUserInteraction()
             }
 
             onClicked: e => {

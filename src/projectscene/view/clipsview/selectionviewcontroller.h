@@ -42,7 +42,7 @@ public:
 
     Q_INVOKABLE void resetSelectedClip();
     Q_INVOKABLE void resetDataSelection();
-    Q_INVOKABLE bool isLeftSelection(double x);
+    Q_INVOKABLE bool isLeftSelection(double x) const;
 
     bool selectionActive() const;
     void setSelectionActive(bool newSelectionActive);

@@ -28,7 +28,6 @@ public:
     virtual void resetSelectedTracks() = 0;
     virtual TrackIdList selectedTracks() const = 0;
     virtual void setSelectedTracks(const TrackIdList& trackIds, bool complete = true) = 0;
-    virtual void addSelectedTrack(const trackedit::TrackId& trackId) = 0;
     virtual muse::async::Channel<TrackIdList> tracksSelected() const = 0;
     virtual std::optional<trackedit::TrackId> determinePointedTrack(double y) const = 0;
     virtual trackedit::TrackIdList determinateTracks(double y1, double y2) const = 0;
@@ -38,8 +37,7 @@ public:
     virtual bool hasSelectedClips() const = 0;
     virtual ClipKeyList selectedClips() const = 0;
     virtual ClipKeyList selectedClipsInTrackOrder() const = 0;
-    //! Note: history state gets modified only if both `complete` and `modifyState` are true
-    virtual void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true, bool modifyState = false) = 0;
+    virtual void setSelectedClips(const ClipKeyList& clipKeys, bool complete = true) = 0;
     virtual void addSelectedClip(const ClipKey& clipKey) = 0;
     virtual void removeClipSelection(const ClipKey& clipKey) = 0;
     virtual muse::async::Channel<ClipKeyList> clipsSelected() const = 0;
@@ -51,7 +49,6 @@ public:
 
     // data selection
     virtual void setSelectedTrackAudioData(trackedit::TrackId trackId) = 0;
-    virtual void setSelectedClipAudioData(trackedit::TrackId trackId, secs_t time) = 0;
     virtual void resetDataSelection() = 0;
     virtual bool timeSelectionIsNotEmpty() const = 0;
     virtual bool isDataSelectedOnTrack(TrackId trackId) const = 0;
