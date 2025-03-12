@@ -2287,11 +2287,11 @@ bool Au3Interaction::undo()
 
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
 
-    TracksAndClips before = trackeditProject->buildTracksAndClips();
+    const TracksAndClips before = trackeditProject->buildTracksAndClips();
 
     projectHistory()->undo();
 
-    TracksAndClips after = trackeditProject->buildTracksAndClips();
+    const TracksAndClips after = trackeditProject->buildTracksAndClips();
 
     changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
 

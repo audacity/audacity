@@ -47,9 +47,9 @@ void notifier(const std::vector<TYPE>& longestList,
      * @param trackeditProject a TrackEditProjectPtr expected to be valid
      * @return true if a change has been detected and notified.
      */
-bool _forTracks(const TrackList& before,
-                const TrackList& after,
-                au::trackedit::ITrackeditProjectPtr trackeditProject)
+bool forTracks(const TrackList& before,
+               const TrackList& after,
+               au::trackedit::ITrackeditProjectPtr trackeditProject)
 {
     bool changed = false;
 
@@ -69,7 +69,7 @@ bool _forTracks(const TrackList& before,
         notifier<Track>(before,
                         after,
                         [&](Track track, int index) {
-            trackeditProject->trackInserted().send(std::move(track), index);
+            trackeditProject->trackInserted().send(track, index);
         },
                         trackComparison);
 
@@ -80,13 +80,14 @@ bool _forTracks(const TrackList& before,
         notifier<Track>(after,
                         before,
                         [&](Track track, int) {
-            trackeditProject->trackRemoved().send(std::move(track));
+            trackeditProject->trackRemoved().send(track);
         },
                         trackComparison);
 
         changed = true;
-    } else if (before.size() == after.size()) {
-        //! Reordering is a problem:
+    } else {
+        //! The sizes are euqual.
+        //  Reordering is a problem:
         //  We can only detect that tracks are out of order, we cannot detect which have moved.
         //  Imagine moving the first track to last.
         //  All tracks in the project will be flagged as out of order.
@@ -131,9 +132,9 @@ bool _forTracks(const TrackList& before,
  * @param after a vector of Clips lists after the change
  * @param trackeditProjectPtr a TrackEditProjectPtr expected to be valid
  */
-void _forClips(const std::vector<Clips>& before,
-               const std::vector<Clips>& after,
-               ITrackeditProjectPtr trackeditProjectPtr)
+void forClips(const std::vector<Clips>& before,
+              const std::vector<Clips>& after,
+              ITrackeditProjectPtr trackeditProjectPtr)
 {
     IF_ASSERT_FAILED(before.size() == after.size()) {
         return;
@@ -165,8 +166,9 @@ void _forClips(const std::vector<Clips>& before,
                            [](const Clip& first, const Clip& second) {
                 return first.key == second.key;                    // Here we're only interested in if the "id" exists.
             });
-        } else if (clipsBefore.size() == clipsAfter.size()) {
-            //! Detecting reordering is a problem, see above.
+        } else {
+            //! The sizes are equal.
+            //  Detecting reordering is a problem, see above.
             //  And for clip change notification TrackeditProject lacks the API now anyway.
 
             auto clipComparison = [](const Clip& first, const Clip& second) {
@@ -205,11 +207,11 @@ void notifyOfUndoRedo(const TracksAndClips& before,
                       const TracksAndClips& after,
                       ITrackeditProjectPtr trackeditProject)
 {
-    const TrackList& tracksBefore = before.first;
-    const TrackList& tracksAfter = after.first;
+    const TrackList& tracksBefore = before.tracks;
+    const TrackList& tracksAfter = after.tracks;
 
     //! Track changes:
-    bool changed = _forTracks(tracksBefore, tracksAfter, trackeditProject);
+    bool changed = forTracks(tracksBefore, tracksAfter, trackeditProject);
 
     //! It cannot be that both clips AND tracks were changed in the same undo/redo action.
     if (changed) {
@@ -217,6 +219,6 @@ void notifyOfUndoRedo(const TracksAndClips& before,
     }
 
     //! Clip changes:
-    _forClips(before.second, after.second, trackeditProject);
+    forClips(before.clips, after.clips, trackeditProject);
 }
 }
