@@ -22,7 +22,7 @@ namespace {
 template<typename TYPE>
 void notifier(const std::vector<TYPE>& longestList,
               const std::vector<TYPE>& shortestList,
-              const std::function<void(TYPE item, int)>& notification,
+              const std::function<void(const TYPE& item, int)>& notification,
               const std::function<bool(const TYPE& first, const TYPE& second)>& comparison)
 {
     for (int i = 0; i < shortestList.size(); i++) {
