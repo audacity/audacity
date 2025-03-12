@@ -6,9 +6,8 @@
 #include "trackedit/itrackeditproject.h"
 
 /**
- * Au3's Undo/Redo depends on the entire state of the model having been "cached" in the project with the
- * "autosave" table entry.
- * On Undo/Redo, the entire "autosaved" model is loaded, replacing the current one.
+ * Au3's Undo/Redo depends on the entire state of the model having been "cached".
+ * On Undo/Redo, the model is loaded, replacing the current one.
  * This class takes two structures, one created before and one after Undo/Redo.
  * It compares these, and calls the corresponding notifications in AU4,
  * to update as small a GUI section as needed, for reflecting the changes before and after.

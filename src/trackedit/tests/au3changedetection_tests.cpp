@@ -5,7 +5,6 @@
 
 #include "../internal/au3/au3changedetection.h"
 
-#include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "mocks/trackeditprojectmock.h"
 
@@ -37,7 +36,7 @@ protected:
     {
         constexpr int trackCount = 5;
 
-        std::pair<TrackList, std::vector<trackedit::Clips> > structure;
+        TracksAndClips structure;
 
         // Adding tracks and clips vectors:
         for (int i = 0; i < trackCount; ++i) {
@@ -56,33 +55,33 @@ protected:
 
     static void addOneTrack(TracksAndClips& structure, int id)
     {
-        structure.first.emplace_back();
-        structure.second.emplace_back();
-        structure.first.back().id = id;
+        structure.tracks.emplace_back();
+        structure.clips.emplace_back();
+        structure.tracks.back().id = id;
 
         // None of the below should cause a change trigger:
-        structure.first.back().title = std::to_string(id).c_str();
+        structure.tracks.back().title = std::to_string(id).c_str();
 
         switch (std::rand() % 4) {
         case 1:
-            structure.first.back().type = TrackType::Mono;
+            structure.tracks.back().type = TrackType::Mono;
             break;
         case 2:
-            structure.first.back().type = TrackType::Stereo;
+            structure.tracks.back().type = TrackType::Stereo;
             break;
         case 3:
-            structure.first.back().type = TrackType::Label;
+            structure.tracks.back().type = TrackType::Label;
             break;
         default:
-            structure.first.back().type = TrackType::Undefined;
+            structure.tracks.back().type = TrackType::Undefined;
         }
 
-        structure.first.back().color = muse::draw::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
+        structure.tracks.back().color = muse::draw::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
     }
 
-    static void addClipToTrack(TracksAndClips& structure, int trackId, int j)
+    static void addClipToTrack(TracksAndClips& structure, TrackId trackId, int j)
     {
-        auto& newClip = structure.second[trackId].emplace_back();
+        auto& newClip = structure.clips[trackId].emplace_back();
         newClip.key.clipId = j;
         newClip.key.trackId = trackId;
 
@@ -111,7 +110,7 @@ TEST_F(Au3ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
 
     //! The above are equal. No change notifications are expected.
 
-    EXPECT_EQ(before.first.size(), after.first.size());
+    EXPECT_EQ(before.tracks.size(), after.tracks.size());
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -134,9 +133,9 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    addOneTrack(after, after.first.size());
+    addOneTrack(after, after.tracks.size());
 
-    EXPECT_NE(before.first.size(), after.first.size());
+    EXPECT_NE(before.tracks.size(), after.tracks.size());
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(1);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -155,10 +154,10 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    addOneTrack(after, after.first.size());
-    addOneTrack(after, after.first.size());
+    addOneTrack(after, static_cast<int>(after.tracks.size()));
+    addOneTrack(after, static_cast<int>(after.tracks.size()));
 
-    EXPECT_NE(before.first.size(), after.first.size());
+    EXPECT_NE(before.tracks.size(), after.tracks.size());
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(2);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -177,10 +176,10 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.first.pop_back();
-    after.second.pop_back();
+    after.tracks.pop_back();
+    after.clips.pop_back();
 
-    EXPECT_NE(before.first.size(), after.first.size());
+    EXPECT_NE(before.tracks.size(), after.tracks.size());
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(1);
@@ -199,13 +198,13 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.first.pop_back();
-    after.second.pop_back();
+    after.tracks.pop_back();
+    after.clips.pop_back();
 
-    after.first.pop_back();
-    after.second.pop_back();
+    after.tracks.pop_back();
+    after.clips.pop_back();
 
-    EXPECT_NE(before.first.size(), after.first.size());
+    EXPECT_NE(before.tracks.size(), after.tracks.size());
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(2);
@@ -224,11 +223,11 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForReordering)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    EXPECT_EQ(before.first.size(), after.first.size());
+    EXPECT_EQ(before.tracks.size(), after.tracks.size());
 
     // Causes reordering detection:
-    before.first.back().id = 0;
-    before.first.front().id = 5;
+    before.tracks.back().id = 0;
+    before.tracks.front().id = 5;
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -251,7 +250,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingOne)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    addClipToTrack(after, after.first.back().id, after.second.back().size());
+    addClipToTrack(after, after.tracks.back().id, static_cast<int>(after.clips.back().size()));
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -270,8 +269,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingTwo)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    addClipToTrack(after, after.first.front().id, after.second.front().size());
-    addClipToTrack(after, after.first.back().id, after.second.back().size());
+    addClipToTrack(after, after.tracks.front().id, static_cast<int>(after.clips.front().size()));
+    addClipToTrack(after, after.tracks.back().id, static_cast<int>(after.clips.back().size()));
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -290,7 +289,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingOne)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.second.back().pop_back();
+    after.clips.back().pop_back();
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -309,8 +308,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingTwo)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.second.front().pop_back();
-    after.second.back().pop_back();
+    after.clips.front().pop_back();
+    after.clips.back().pop_back();
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -329,7 +328,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStartTime)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.second.back().back().startTime += 200;
+    after.clips.back().back().startTime += 200;
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -348,7 +347,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeEndTime)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.second.back().back().endTime += after.second.back().back().startTime + 200;
+    after.clips.back().back().endTime += after.clips.back().back().startTime + 200;
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -367,7 +366,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStereo)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.second.back().back().stereo = !after.second.back().back().stereo;
+    after.clips.back().back().stereo = !after.clips.back().back().stereo;
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -386,7 +385,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangePitch)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.second.back().back().pitch = 100;
+    after.clips.back().back().pitch = 100;
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -405,7 +404,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeSpeed)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.second.back().back().speed = 10.0;
+    after.clips.back().back().speed = 10.0;
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -424,8 +423,8 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeGroup)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.second.back().back().groupId = 2;
-    after.second.back().front().groupId = 2;
+    after.clips.back().back().groupId = 2;
+    after.clips.back().front().groupId = 2;
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
