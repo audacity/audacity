@@ -109,6 +109,12 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Merge selected clips"),
              TranslatableString("action", "Merge selected clips")
              ),
+    UiAction("disjoin",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Split clips at silences"),
+             TranslatableString("action", "Split clips at silences")
+             ),
     UiAction("undo",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
