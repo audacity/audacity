@@ -3,10 +3,10 @@
  */
 #include <gtest/gtest.h>
 
-#include "../internal/au3/au3changedetection.h"
+#include "../internal/changedetection.h"
 
-#include "project/tests/mocks/audacityprojectmock.h"
 #include "mocks/trackeditprojectmock.h"
+#include "project/tests/mocks/audacityprojectmock.h"
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -20,7 +20,7 @@ using namespace au;
 using namespace au::au3;
 
 namespace au::trackedit {
-class Au3ChangeDetectionTests : public ::testing::Test
+class ChangeDetectionTests : public ::testing::Test
 {
 protected:
     void SetUp() override
@@ -103,7 +103,7 @@ protected:
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;
 };
 
-TEST_F(Au3ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
+TEST_F(ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -128,7 +128,7 @@ TEST_F(Au3ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
 /// Tests for track change notification:
 ////////////////////////////////////////////////
 
-TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
+TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -149,7 +149,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingOneTrack)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
+TEST_F(ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -171,7 +171,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForAddingTwoTracks)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
+TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -193,7 +193,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingOneTrack)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
+TEST_F(ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -218,7 +218,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForRemovingTwoTracks)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForReordering)
+TEST_F(ChangeDetectionTests, TestTrackNotificationsForReordering)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -245,7 +245,7 @@ TEST_F(Au3ChangeDetectionTests, TestTrackNotificationsForReordering)
 /// Tests for clip change notification:
 ////////////////////////////////////////////////
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingOne)
+TEST_F(ChangeDetectionTests, TestClipNotificationAddingOne)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -264,7 +264,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingOne)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingTwo)
+TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwo)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -284,7 +284,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationAddingTwo)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingOne)
+TEST_F(ChangeDetectionTests, TestClipNotificationRemovingOne)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -303,7 +303,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingOne)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingTwo)
+TEST_F(ChangeDetectionTests, TestClipNotificationRemovingTwo)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -323,7 +323,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationRemovingTwo)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStartTime)
+TEST_F(ChangeDetectionTests, TestClipNotificationChangeStartTime)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -342,7 +342,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStartTime)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeEndTime)
+TEST_F(ChangeDetectionTests, TestClipNotificationChangeEndTime)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -361,7 +361,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeEndTime)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStereo)
+TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -380,7 +380,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeStereo)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangePitch)
+TEST_F(ChangeDetectionTests, TestClipNotificationChangePitch)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -399,7 +399,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangePitch)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeSpeed)
+TEST_F(ChangeDetectionTests, TestClipNotificationChangeSpeed)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
@@ -418,7 +418,7 @@ TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeSpeed)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
-TEST_F(Au3ChangeDetectionTests, TestClipNotificationChangeGroup)
+TEST_F(ChangeDetectionTests, TestClipNotificationChangeGroup)
 {
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();

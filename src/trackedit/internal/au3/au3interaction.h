@@ -5,8 +5,6 @@
 
 #include "../../itrackeditinteraction.h"
 
-#include "au3changedetection.h"
-
 #include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 #include "../../itrackeditclipboard.h"
