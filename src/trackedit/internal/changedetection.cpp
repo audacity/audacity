@@ -7,7 +7,7 @@ using namespace au::trackedit;
 namespace {
 /**
  * @tparam TYPE The type of object that is being compared between the lists,
- *              to detect change. Note that the == operator needs to be implemented.
+ *              to detect change.
  *              A design limitation of this method is that the comparison assumes all fields compared
  *              for equality, are also reasons to notify for change.
  *              If this is undesirable an additional comparison lambda argument can be added
@@ -18,6 +18,9 @@ namespace {
  *                     but not the second.
  * @param comparison Lambda for detecting UNDOABLE change - not actual equality.
  *                   Which is why it doesn't simply use an '==' overload.
+ *                   So for example, to detect addition/deletion/move, compare only ID's,
+ *                   since e.g. a simple mono->stereo change, should not trigger the same refresh,
+ *                   as adding/deleting/moving.
  */
 template<typename TYPE>
 void notifier(const std::vector<TYPE>& longestList,
