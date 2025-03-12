@@ -60,7 +60,8 @@ public:
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) = 0;
-    virtual bool splitClipsAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
+    virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
+    virtual bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateClip(const ClipKey& clipKey) = 0;

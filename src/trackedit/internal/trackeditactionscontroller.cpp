@@ -38,6 +38,7 @@ static const ActionCode PASTE("paste");
 static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
 static const ActionCode SPLIT_CLIPS_AT_SILENCES("split-clips-at-silences");
+static const ActionCode SPLIT_RANGE_SELECTION_AT_SILENCES("split-range-selection-at-silences");
 static const ActionCode MERGE_SELECTED_ON_TRACK("merge-selected-on-tracks");
 static const ActionCode DUPLICATE_RANGE_SELECTION_CODE("duplicate-selected");
 static const ActionCode DUPLICATE_CLIPS_CODE("duplicate-clips");
@@ -89,6 +90,7 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACK_SPLIT,
     TRACK_SPLIT_AT,
     SPLIT_CLIPS_AT_SILENCES,
+    SPLIT_RANGE_SELECTION_AT_SILENCES,
     MERGE_SELECTED_ON_TRACK,
     DUPLICATE_RANGE_SELECTION_CODE,
     DUPLICATE_CLIPS_CODE,
@@ -138,6 +140,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
     dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::tracksSplitAt);
+    dispatcher()->reg(this, SPLIT_RANGE_SELECTION_AT_SILENCES, this, &TrackeditActionsController::splitRangeSelectionAtSilences);
     dispatcher()->reg(this, SPLIT_CLIPS_AT_SILENCES, this, &TrackeditActionsController::splitClipsAtSilences);
     dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
     dispatcher()->reg(this, UNDO, this, &TrackeditActionsController::undo);
@@ -345,12 +348,21 @@ void TrackeditActionsController::doGlobalJoin()
 
 void TrackeditActionsController::doGlobalDisjoin()
 {
-    TrackIdList selectedTracks = selectionController()->selectedTracks();
-    secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
-    secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+    if (selectionController()->timeSelectionIsNotEmpty()) {
+        TrackIdList selectedTracks = selectionController()->selectedTracks();
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-    dispatcher()->dispatch(SPLIT_CLIPS_AT_SILENCES,
-                           ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+        dispatcher()->dispatch(SPLIT_RANGE_SELECTION_AT_SILENCES,
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+        return;
+    }
+
+    ClipKeyList selectedClips = selectionController()->selectedClips();
+    if (selectedClips.empty()) {
+        return;
+    }
+    dispatcher()->dispatch(SPLIT_CLIPS_AT_SILENCES, ActionData::make_arg1<ClipKeyList>(selectedClips));
 }
 
 void TrackeditActionsController::undo()
@@ -572,6 +584,20 @@ void TrackeditActionsController::tracksSplitAt(const ActionData& args)
 
 void TrackeditActionsController::splitClipsAtSilences(const ActionData& args)
 {
+    IF_ASSERT_FAILED(args.count() == 1) {
+        return;
+    }
+
+    ClipKeyList clipKeyList = args.arg<ClipKeyList>(0);
+    if (clipKeyList.empty()) {
+        return;
+    }
+
+    trackeditInteraction()->splitClipsAtSilences(clipKeyList);
+}
+
+void TrackeditActionsController::splitRangeSelectionAtSilences(const ActionData& args)
+{
     IF_ASSERT_FAILED(args.count() == 3) {
         return;
     }
@@ -584,7 +610,7 @@ void TrackeditActionsController::splitClipsAtSilences(const ActionData& args)
     secs_t begin = args.arg<secs_t>(1);
     secs_t end = args.arg<secs_t>(2);
 
-    trackeditInteraction()->splitClipsAtSilences(tracksIds, begin, end);
+    trackeditInteraction()->splitRangeSelectionAtSilences(tracksIds, begin, end);
 }
 
 void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::ActionData& args)
