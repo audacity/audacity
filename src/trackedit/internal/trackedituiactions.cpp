@@ -104,13 +104,6 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Delete"),
              IconCode::Code::DELETE_TANK
              ),
-    UiAction("split-delete",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete and leave gap"),
-             TranslatableString("action", "Delete and leave gap"),
-             IconCode::Code::DELETE_TANK
-             ),
     UiAction("delete-per-track-ripple",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -224,57 +217,6 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Split stereo"),
              TranslatableString("action", "Split stereo")
              ),
-    // clip actions
-    UiAction("clip-cut",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut"),
-             TranslatableString("action", "Cut clip")
-             ),
-    UiAction("multi-clip-cut",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut"),
-             TranslatableString("action", "Cut clip")
-             ),
-    UiAction("clip-copy",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Copy"),
-             TranslatableString("action", "Copy clip")
-             ),
-    UiAction("multi-clip-copy",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Copy"),
-             TranslatableString("action", "Copy clip")
-             ),
-    UiAction("clip-delete",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete"),
-             TranslatableString("action", "Delete clip")
-             ),
-    UiAction("multi-clip-delete",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete"),
-             TranslatableString("action", "Delete clip")
-             ),
-    UiAction("clip-cut-selected",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut"),
-             TranslatableString("action", "Cut"),
-             IconCode::Code::CUT
-             ),
-    UiAction("clip-copy-selected",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Copy"),
-             TranslatableString("action", "Copy"),
-             IconCode::Code::COPY
-             ),
     UiAction("paste",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -295,12 +237,6 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Insert and Preserve Sync"),
              TranslatableString("action", "Insert and Preserve Sync"),
              IconCode::Code::PASTE
-             ),
-    UiAction("clip-delete-selected",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete"),
-             TranslatableString("action", "Delete")
              ),
     UiAction("track-split",
              au::context::UiCtxAny,
@@ -331,30 +267,6 @@ const UiActionList TrackeditUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Duplicate clip"),
              TranslatableString("action", "Duplicate clip")
-             ),
-    UiAction("clip-split-cut",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut and leave gap"),
-             TranslatableString("action", "Cut and leave gap")
-             ),
-    UiAction("clip-split-delete",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete and leave gap"),
-             TranslatableString("action", "Delete and leave gap")
-             ),
-    UiAction("split-cut-selected",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut and leave gap"),
-             TranslatableString("action", "Cut and leave gap")
-             ),
-    UiAction("split-delete-selected",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete and leave gap"),
-             TranslatableString("action", "Delete and leave gap")
              ),
     UiAction("clip-export",
              au::context::UiCtxAny,
