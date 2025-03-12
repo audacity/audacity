@@ -24,13 +24,12 @@
 
 #include "trackedit/dom/track.h"
 #include "trackedit/trackeditutils.h"
+#include "trackedit/internal/changedetection.h"
 
 #include "defer.h"
 #include "log.h"
 #include "trackediterrors.h"
 #include "translation.h"
-
-#include "au3changedetection.h"
 
 using namespace au::trackedit;
 using namespace au::au3;
