@@ -54,8 +54,8 @@ static const ActionCode DUPLICATE_RANGE_SELECTION_CODE("duplicate-selected");
 static const ActionCode DUPLICATE_CLIPS_CODE("duplicate-clips");
 static const ActionCode CLIP_SPLIT_CUT("clip-split-cut");
 static const ActionCode CLIP_SPLIT_DELETE("clip-split-delete");
-static const ActionCode SPLIT_CUT_SELECTED("split-cut-selected");
-static const ActionCode SPLIT_DELETE_SELECTED("split-delete-selected");
+static const ActionCode RANGE_SELECTION_SPLIT_CUT("split-cut-selected");
+static const ActionCode RANGE_SELECTION_SPLIT_DELETE("split-delete-selected");
 static const ActionCode NEW_MONO_TRACK("new-mono-track");
 static const ActionCode NEW_STEREO_TRACK("new-stereo-track");
 static const ActionCode NEW_LABEL_TRACK("new-label-track");
@@ -111,8 +111,8 @@ static const std::vector<ActionCode> actionsDisabledDuringRecording {
     DUPLICATE_CLIPS_CODE,
     CLIP_SPLIT_CUT,
     CLIP_SPLIT_DELETE,
-    SPLIT_CUT_SELECTED,
-    SPLIT_DELETE_SELECTED,
+    RANGE_SELECTION_SPLIT_CUT,
+    RANGE_SELECTION_SPLIT_DELETE,
     NEW_MONO_TRACK,
     NEW_STEREO_TRACK,
     NEW_LABEL_TRACK,
@@ -173,8 +173,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, DUPLICATE_CLIPS_CODE, this, &TrackeditActionsController::duplicateClips);
     dispatcher()->reg(this, CLIP_SPLIT_CUT, this, &TrackeditActionsController::clipSplitCut);
     dispatcher()->reg(this, CLIP_SPLIT_DELETE, this, &TrackeditActionsController::clipSplitDelete);
-    dispatcher()->reg(this, SPLIT_CUT_SELECTED, this, &TrackeditActionsController::splitCutSelected);
-    dispatcher()->reg(this, SPLIT_DELETE_SELECTED, this, &TrackeditActionsController::splitDeleteSelected);
+    dispatcher()->reg(this, RANGE_SELECTION_SPLIT_CUT, this, &TrackeditActionsController::splitCutSelected);
+    dispatcher()->reg(this, RANGE_SELECTION_SPLIT_DELETE, this, &TrackeditActionsController::splitDeleteSelected);
     dispatcher()->reg(this, "toggle-loop-region", this, &TrackeditActionsController::toggleLoopRegion);
     dispatcher()->reg(this, "clear-loop-region", this, &TrackeditActionsController::clearLoopRegion);
     dispatcher()->reg(this, "set-loop-region-to-selection", this, &TrackeditActionsController::setLoopRegionToSelection);
@@ -264,7 +264,7 @@ void TrackeditActionsController::doGlobalCut()
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-        dispatcher()->dispatch(SPLIT_CUT_SELECTED,
+        dispatcher()->dispatch(RANGE_SELECTION_SPLIT_CUT,
                                ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
         return;
     }
@@ -339,7 +339,7 @@ void TrackeditActionsController::doGlobalDelete()
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
-        dispatcher()->dispatch(SPLIT_DELETE_SELECTED,
+        dispatcher()->dispatch(RANGE_SELECTION_SPLIT_DELETE,
                                ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
         return;
     }

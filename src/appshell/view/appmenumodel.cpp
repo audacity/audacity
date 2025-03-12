@@ -204,7 +204,7 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenuItem("ungroup-clips"),
         makeSeparator(),
         makeMenuItem("duplicate"),
-        makeMenuItem("insert"),
+        makeMenuItem("paste-insert"),
         makeMenuItem("delete-per-track-ripple"),
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/clip", "Clip"), makeClipItems(), "menu-clip"),

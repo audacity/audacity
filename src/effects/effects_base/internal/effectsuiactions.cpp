@@ -57,7 +57,8 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("action://effects/presets/delete",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&Delete Preset")
+             TranslatableString("action", "&Delete Preset"),
+             IconCode::Code::DELETE_TANK
              ),
     UiAction("action://effects/presets/import",
              au::context::UiCtxAny,
