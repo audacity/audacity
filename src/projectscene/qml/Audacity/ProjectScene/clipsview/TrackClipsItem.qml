@@ -465,6 +465,8 @@ Item {
 
         cursorShape: Qt.SizeVerCursor
 
+        visible: !root.selectionInProgress
+
         onPressed: {
             root.interactionStarted()
         }
