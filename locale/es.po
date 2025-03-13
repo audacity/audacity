@@ -4,9 +4,9 @@
 # Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.2\n"
+"Project-Id-Version: audacity 3.7.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-10 10:55+0300\n"
+"POT-Creation-Date: 2025-03-13 10:52+0300\n"
 "PO-Revision-Date: 2025-03-10 07:01+0100\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist at gmail.com>\n"
 "Language-Team: \n"

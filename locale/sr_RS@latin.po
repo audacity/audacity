@@ -5,9 +5,9 @@
 # Miroslav Nikolić <miroslavnikolic@rocketmail.com>, 2011—2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.2\n"
+"Project-Id-Version: audacity 3.7.3\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-03-10 10:55+0300\n"
+"POT-Creation-Date: 2025-03-13 10:52+0300\n"
 "PO-Revision-Date: 2014-10-06 05:34-0000\n"
 "Last-Translator: Miroslav Nikolic\n"
 "Language-Team: Serbian <>\n"
