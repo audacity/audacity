@@ -285,37 +285,37 @@ Item {
                         if (clipItem.isNearSample) {
                             clipsContainer.currentChannel = clipItem.currentChannel
                         }
-                        return clipItem.isNearSample
+                        return clipItem && clipItem.isNearSample
                     })
                 }
 
                 onIsBrushChanged: function() {
                     clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.isBrush
+                        return clipItem && clipItem.isBrush
                     })
                 }
 
                 onLeftTrimContainsMouseChanged: function() {
                     clipsContainer.leftTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.leftTrimContainsMouse
+                        return clipItem && clipItem.leftTrimContainsMouse
                     })
                 }
 
                 onRightTrimContainsMouseChanged: function() {
                     clipsContainer.rightTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.rightTrimContainsMouse
+                        return clipItem && clipItem.rightTrimContainsMouse
                     })
                 }
 
                 onLeftTrimPressedButtonsChanged: function() {
                     clipsContainer.leftTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.leftTrimPressedButtons
+                        return clipItem && clipItem.leftTrimPressedButtons
                     })
                 }
 
                 onRightTrimPressedButtonsChanged: function() {
                     clipsContainer.rightTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.rightTrimPressedButtons
+                        return clipItem && clipItem.rightTrimPressedButtons
                     })
                 }
 
