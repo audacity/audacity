@@ -15,7 +15,7 @@ StyledDialogViewWithoutNavigationSection {
 
     property alias type: viewer.type
     property alias instanceId: viewer.instanceId
-    property alias effectState: viewer.effectState
+    property alias effectState: viewerModel.effectState
 
     title: viewer.title + " - " + viewerModel.trackName
 

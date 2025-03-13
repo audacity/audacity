@@ -33,7 +33,7 @@ EffectViewLoader::EffectViewLoader(QObject* parent)
     : QObject(parent)
 {}
 
-void EffectViewLoader::load(const QString& type, const QString& instanceId, const QString& effectState, QObject* itemParent)
+void EffectViewLoader::load(const QString& type, const QString& instanceId, QObject* itemParent)
 {
     LOGD() << "type: " << type << ", instanceId: " << instanceId;
 
@@ -58,8 +58,7 @@ void EffectViewLoader::load(const QString& type, const QString& instanceId, cons
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
-        { "instanceId", QVariant::fromValue(instanceId) },
-        { "effectState", QVariant::fromValue(effectState) }
+        { "instanceId", QVariant::fromValue(instanceId) }
     });
 
     m_contentItem = qobject_cast<QQuickItem*>(obj);
