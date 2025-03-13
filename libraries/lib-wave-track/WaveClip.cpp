@@ -1121,7 +1121,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
       mClipStretchRatio = other.mClipStretchRatio;
       mProjectTempo = other.mProjectTempo;
    }
-   else if (GetStretchRatio() != other.GetStretchRatio())
+   else if (!HasEqualPitchAndSpeed(other))
       // post is satisfied
       return false;
 
@@ -1145,7 +1145,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    if (t0 == GetPlayStartTime())
    {
       pastePositionShift = t0;
-      startPositionShift = other.GetSequenceStartTime() + GetTrimLeft();
+      startPositionShift = GetTrimLeft() - other.GetTrimLeft();
 
       finisher = ClearSequence(GetSequenceStartTime(), t0);
       SetTrimLeft(other.GetTrimLeft());
