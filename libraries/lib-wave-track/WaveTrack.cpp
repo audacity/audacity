@@ -1160,7 +1160,7 @@ void WaveTrack::FinishCopy(
 /*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1)
 {
-   HandleClear(t0, t1, false, false, true);
+   HandleClear(t0, t1, false, false);
 }
 
 /*! @excsafety{Strong} */
