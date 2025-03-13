@@ -59,6 +59,8 @@ public:
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
+    bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
+    bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateClip(const ClipKey& clipKey) override;

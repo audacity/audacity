@@ -1502,6 +1502,49 @@ NeedsDownmixing Au3Interaction::moveSelectedClipsUpOrDown(int offset)
     return needsDownmixing;
 }
 
+bool Au3Interaction::splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+{
+    for (const auto& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        waveTrack->Disjoin(begin, end);
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    projectHistory()->pushHistoryState("Split clips at silence", "Split at silence");
+
+    return true;
+}
+
+bool Au3Interaction::splitClipsAtSilences(const ClipKeyList& clipKeyList)
+{
+    for (const auto& clipKey : clipKeyList) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+        IF_ASSERT_FAILED(clip) {
+            continue;
+        }
+
+        waveTrack->Disjoin(clip->Start(), clip->End());
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+    }
+
+    projectHistory()->pushHistoryState("Split clips at silence", "Split at silence");
+
+    return true;
+}
+
 bool Au3Interaction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));

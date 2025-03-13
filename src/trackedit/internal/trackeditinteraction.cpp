@@ -144,6 +144,16 @@ bool TrackeditInteraction::splitTracksAt(const TrackIdList& tracksIds, secs_t pi
     return withPlaybackStop(&ITrackeditInteraction::splitTracksAt, tracksIds, pivot);
 }
 
+bool TrackeditInteraction::splitClipsAtSilences(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitClipsAtSilences, clipKeyList);
+}
+
+bool TrackeditInteraction::splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitRangeSelectionAtSilences, tracksIds, begin, end);
+}
+
 bool TrackeditInteraction::mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
     return withPlaybackStop(&ITrackeditInteraction::mergeSelectedOnTracks, tracksIds, begin, end);
