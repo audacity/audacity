@@ -13,6 +13,8 @@
 #include <algorithm>
 #include <atomic>
 #include <future>
+#include <iomanip>
+#include <sstream>
 #include <utility>
 
 #include "MemoryX.h"
@@ -114,6 +116,12 @@ public:
          return { {}, false };
 
       hash = crypto::sha256(sampleData);
+
+      std::ostringstream oss;
+      oss << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << block.Id;
+      std::string blockIdHex = oss.str();
+
+      hash.replace(0, 8, blockIdHex);
 
       return { hash, true };
    }

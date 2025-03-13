@@ -136,9 +136,6 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
          block.Url, [this, hash = ToUpper(block.Hash)](auto response)
          { OnBlockDownloaded(std::move(hash), response); }));
    }
-
-   mRequestsThread =
-      std::thread { &RemoteProjectSnapshot::RequestsThread, this };
 }
 
 RemoteProjectSnapshot::~RemoteProjectSnapshot()
@@ -150,11 +147,6 @@ RemoteProjectSnapshot::~RemoteProjectSnapshot()
 
    if (mCopyBlocksFuture.has_value())
       mCopyBlocksFuture->wait();
-
-   {
-      auto lock = std::unique_lock { mResponsesMutex };
-      mResponsesEmptyCV.wait(lock, [this] { return mResponses.empty(); });
-   }
 
    auto db = CloudProjectsDatabase::Get().GetConnection();
 
@@ -190,7 +182,13 @@ std::shared_ptr<RemoteProjectSnapshot> RemoteProjectSnapshot::Sync(
    if (snapshot->mNothingToDo)
       return {};
 
+   snapshot->StartSync();
    return snapshot;
+}
+
+void RemoteProjectSnapshot::StartSync() {
+   mRequestsThread =
+      std::thread { &RemoteProjectSnapshot::RequestsThread, this };
 }
 
 void RemoteProjectSnapshot::Cancel()
@@ -359,11 +357,8 @@ void RemoteProjectSnapshot::DoCancel()
 
    mRequestsCV.notify_one();
 
-   {
-      auto responsesLock = std::lock_guard { mResponsesMutex };
-      for (auto& response : mResponses)
-         response->abort();
-   }
+   while (!mResponses.empty())
+      RemoveResponse(mResponses.front().get());
 }
 
 void RemoteProjectSnapshot::DownloadBlob(
@@ -379,6 +374,16 @@ void RemoteProjectSnapshot::DownloadBlob(
       auto responsesLock = std::lock_guard { mResponsesMutex };
       mResponses.push_back(response);
    }
+
+   assert(!weak_from_this().expired());
+
+   response->setDownloadProgressCallback([this, self = weak_from_this()](int64_t current, int64_t expected) {
+      auto strong = self.lock();
+      if(!strong) {
+         return;
+      }
+      ReportProgress();
+   });
 
    response->setRequestFinishedCallback(
       [this, self = weak_from_this(), onSuccess = std::move(onSuccess), retries, response](auto)
@@ -405,7 +410,8 @@ void RemoteProjectSnapshot::DownloadBlob(
             return;
          }
 
-         if (responseResult.Code == SyncResultCode::ConnectionFailed)
+         // The cloud storage may throw a recoverable InternalServerError, so lets retry
+         if (responseResult.Code == SyncResultCode::ConnectionFailed || responseResult.Code == SyncResultCode::InternalServerError)
          {
             if (retries <= 0)
             {
@@ -642,14 +648,12 @@ void RemoteProjectSnapshot::RemoveResponse(
 {
    {
       auto lock = std::lock_guard { mResponsesMutex };
+      response->abort();
       mResponses.erase(
          std::remove_if(
             mResponses.begin(), mResponses.end(),
             [response](auto& r) { return r.get() == response; }),
          mResponses.end());
-
-      if (mResponses.empty())
-         mResponsesEmptyCV.notify_all();
    }
    {
       auto lock = std::lock_guard { mRequestsMutex };
@@ -722,6 +726,8 @@ bool RemoteProjectSnapshot::InProgress() const
 void RemoteProjectSnapshot::RequestsThread()
 {
    constexpr auto MAX_CONCURRENT_REQUESTS = 6;
+   // The cloud storage often throws timeouts, so increase the retries count
+   constexpr auto MAX_RETRIES_COUNT = 10;
 
    while (InProgress())
    {
@@ -750,7 +756,7 @@ void RemoteProjectSnapshot::RequestsThread()
          mRequestsInProgress++;
       }
 
-      DownloadBlob(std::move(request.first), std::move(request.second), 3);
+      DownloadBlob(std::move(request.first), std::move(request.second), MAX_RETRIES_COUNT);
 
       // TODO: Random sleep to avoid overloading the server
       std::this_thread::sleep_for(std::chrono::milliseconds(50));

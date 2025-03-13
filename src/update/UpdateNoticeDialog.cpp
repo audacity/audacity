@@ -14,31 +14,60 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 
+#include "BasicUI.h"
+#include "Prefs.h"
 #include "ShuttleGui.h"
 #include "CodeConversions.h"
 #include "prefs/PrefsDialog.h"
 #include "AccessibleLinksFormatter.h"
 
 
+static const auto windowTitle =
+   /* i18n-hint: Window title of the app update notice dialog. */
+   XO("App updates & usage info");
+
 static const auto title =
-   /* i18n-hint: Title of the app update notice dialog. */
-   XO("App update checking");
+   /* i18n-hint: First line of the app update notice dialog. */
+   XO("App updates");
 
 static const auto firstParagraph =
-   /* i18n-hint: The first paragraph of app update notice dialog. */
-   XO("To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download.");
+   /* i18n-hint: The first paragraph of app update notice dialog.*/
+   XO("Audacity notifies you in-app when a new version is available to download.");
+
+static const auto subTitle =
+   /* i18n-hint: Subtitle of the app update notice dialog. */
+   XO("Usage info");
 
 static const auto secondParagraph =
    /* i18n-hint: The second paragraph of app update notice dialog */
-   XO("In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access.");
+   XO("To help us understand how often people use Audacity, "
+      "we generate a random ID (UUID) for each installation. "
+      "This helps us improve features and plan for future updates. "
+      "This ID does not contain any personally identifiable information.");
 
-static const auto thirdParagraph =
-   /* i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link*/
-   XO("You can turn off app update checking at any time in %s.");
+static const auto preferencesPage =
+   /* i18n-hint: a page in the Preferences dialog; use same name */
+   XO("Preferences > Application");
 
+static const auto preferencesPageLinkA =
+   /* i18n-hint:  %s is replaced with "Preferences > Application" link */
+   XO("You can turn this off anytime in %s.");
+
+static const auto preferencesPageLinkB =
+   /* i18n-hint:  %s is replaced with "Preferences > Application" link */
+   XO("You can disable this anytime in %s.");
+
+static const std::string privacyPolicyUrl = "https://www.audacityteam.org/desktop-privacy-notice/";
+
+enum {
+   ViewPrivacyPolicyID = 10000,
+   DisableAnonymousInfoID,
+};
 
 BEGIN_EVENT_TABLE(UpdateNoticeDialog, wxDialogWrapper)
-    EVT_BUTTON(wxID_OK, UpdateNoticeDialog::OnOk)
+    EVT_BUTTON(wxID_OK, UpdateNoticeDialog::OnAccept)
+    EVT_BUTTON(DisableAnonymousInfoID, UpdateNoticeDialog::OnDecline)
+    EVT_BUTTON(ViewPrivacyPolicyID, UpdateNoticeDialog::OnViewPrivacyPolicy)
     EVT_SIZE(UpdateNoticeDialog::OnSize)
 END_EVENT_TABLE()
 
@@ -46,76 +75,72 @@ IMPLEMENT_CLASS(UpdateNoticeDialog, wxDialogWrapper)
 
 UpdateNoticeDialog::UpdateNoticeDialog(wxWindow* parent)
     : wxDialogWrapper(
-         /* i18n-hint: Title of the app update notice dialog. */
-         parent, -1, XO("App updates"), wxDefaultPosition, wxDefaultSize,
+         parent, -1, windowTitle, wxDefaultPosition, wxDefaultSize,
          wxCAPTION | wxCLOSE_BOX)
 {
+   const auto openAppPrefs = [this]() {
+      GlobalPrefsDialog dialog(this /* parent */, nullptr);
+      dialog.SelectPageByName(XO("Application").Translation());
+      dialog.ShowModal();
+   };
+
    ShuttleGui S(this, eIsCreating);
 
    S.StartVerticalLay();
    {
-      S.AddSpace(0, 16);
-
       S.StartHorizontalLay(wxEXPAND, 0);
       {
-         S.AddSpace(24, 0);
-
+         S.AddSpace(8);
          S.StartPanel();
          {
-            S.SetBorder(8);
+            S.SetBorder(5);
 
+            S.AddSpace(15);
             wxStaticText* titleCtrl = S.AddVariableText(title, false, 0, 500);
-
             wxFont font = titleCtrl->GetFont().MakeLarger().MakeBold();
-
             titleCtrl->SetFont(font);
 
+            S.AddSpace(10);
             S.AddFixedText(firstParagraph, false, 500);
 
+
+            AccessibleLinksFormatter preferencesMessageA(preferencesPageLinkA);
+            preferencesMessageA.FormatLink(wxT("%s"), preferencesPage, openAppPrefs);
+            preferencesMessageA.Populate(S);
+
+            S.AddSpace(20);
+            wxStaticText* subtitleCtrl = S.AddVariableText(subTitle, false, 0, 500);
+            subtitleCtrl->SetFont(font);
+
+            S.AddSpace(10);
             S.AddFixedText(secondParagraph, false, 500);
 
-            S.AddSpace(0, 8);
-
-            /* i18n-hint: %s will be replaced with "our Privacy Policy" */
-            AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
-            
-            privacyPolicy.FormatLink(
-               /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
-               wxT("%s"), XO("our Privacy Policy"),
-               "https://www.audacityteam.org/about/desktop-privacy-notice/");
-
-            privacyPolicy.Populate(S);
-
-            AccessibleLinksFormatter preferencesMessage(thirdParagraph);
-            
-            preferencesMessage.FormatLink(
-               // i18n-hint: a page in the Preferences dialog; use same name
-               wxT("%s"), XO("Preferences > Application"), [this]() {
-                  GlobalPrefsDialog dialog(this /* parent */, nullptr);
-
-                  dialog.SelectPageByName(XO("Application").Translation());
-                  dialog.ShowModal();
-               });
-
-            preferencesMessage.Populate(S);
+            AccessibleLinksFormatter preferencesMessageB(preferencesPageLinkB);
+            preferencesMessageB.FormatLink(wxT("%s"), preferencesPage, openAppPrefs);
+            preferencesMessageB.Populate(S);
          }
          S.EndPanel();
-
-         S.AddSpace(24, 0);
+         S.AddSpace(8);
       }
       S.EndHorizontalLay();
+
+      S.AddSpace(8, 24);
 
       S.StartHorizontalLay(wxEXPAND);
       {
-         S.AddSpace(1, 0, 1);
+         S.SetBorder(8);
+         S.AddSpace(8, 24);
 
-         S.Id(wxID_OK).AddButton(XO("&OK"))->SetFocus();
+         S.Id(ViewPrivacyPolicyID).AddButton(XO("View privacy policy"));
+         S.AddSpace(1, 1, 1);
+         S.Id(DisableAnonymousInfoID).AddButton(XO("Disable UUID"));
+         S.Id(wxID_OK).AddButton(XO("Accept && continue"))->SetFocus();
 
-         S.AddSpace(8, 0);
+         S.AddSpace(8);
       }
       S.EndHorizontalLay();
+      S.AddSpace(8);
    }
-
    S.EndVerticalLay();
 
    Fit();
@@ -124,9 +149,19 @@ UpdateNoticeDialog::UpdateNoticeDialog(wxWindow* parent)
    Center();
 }
 
-void UpdateNoticeDialog::OnOk(wxCommandEvent&)
+void UpdateNoticeDialog::OnAccept(wxCommandEvent&)
 {
    EndModal(wxOK);
+}
+
+void UpdateNoticeDialog::OnViewPrivacyPolicy(wxCommandEvent&)
+{
+   BasicUI::OpenInDefaultBrowser(privacyPolicyUrl);
+}
+
+void UpdateNoticeDialog::OnDecline(wxCommandEvent&)
+{
+   EndModal(wxNO);
 }
 
 void UpdateNoticeDialog::OnSize(wxSizeEvent&)

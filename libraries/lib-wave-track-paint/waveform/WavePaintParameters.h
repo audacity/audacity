@@ -51,6 +51,9 @@ struct WAVE_TRACK_PAINT_API WavePaintParameters final
    //! True, if we mark clipped values
    bool ShowClipping { false };
 
+   //! True, if we paint envelope
+   bool DrawEnvelope { false };
+
    //! True, if we paint RMS values on top of min and max
    bool ShowRMS { false };
 
@@ -66,6 +69,8 @@ struct WAVE_TRACK_PAINT_API WavePaintParameters final
    ColorPair RMSColors;
    //! Color for the columns where clipping has occurred
    ColorPair ClippingColors;
+   //! Color for the envelope band
+   ColorPair EnvelopeColors;
 
    //! Sets the basic painting parameters
    WavePaintParameters& SetDisplayParameters(int height, double zoomMin, double zoomMax, bool showClipping) noexcept;
@@ -87,12 +92,17 @@ struct WAVE_TRACK_PAINT_API WavePaintParameters final
    //! Sets the clipping colors
    WavePaintParameters&
    SetClippingColors(graphics::Color normal, graphics::Color selected) noexcept;
+   //! Sets the envelope colors
+   WavePaintParameters&
+   SetEnvelopeColors(graphics::Color normal, graphics::Color selected) noexcept;
    //! Sets volume envelope
    WavePaintParameters& SetEnvelope(const Envelope& envelope) noexcept;
    //! Resets the envelope
    WavePaintParameters& ResetEnvelope() noexcept;
    //! Sets the ShowRMS flag
    WavePaintParameters& SetShowRMS(bool showRMS) noexcept;
+   //! Sets the DrawEnvelope flag
+   WavePaintParameters& SetDrawEnvelope(bool drawEnvelope) noexcept;
 
    friend WAVE_TRACK_PAINT_API bool operator==(
       const WavePaintParameters& lhs,

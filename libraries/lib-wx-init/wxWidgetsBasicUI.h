@@ -24,6 +24,7 @@ public:
 protected:
    void DoCallAfter(const BasicUI::Action &action) override;
    void DoYield() override;
+   void DoProcessIdle() override;
    void DoShowErrorDialog(const BasicUI::WindowPlacement &placement,
       const TranslatableString &dlogTitle,
       const TranslatableString &message,

@@ -20,11 +20,13 @@
 
 #include <wx/defs.h>
 #include <wx/hyperlink.h>
+#include <wx/checkbox.h>
 
 #include "Prefs.h"
 #include "ShuttleGui.h"
 
 #include "AccessibleLinksFormatter.h"
+#include "WindowAccessible.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -71,19 +73,59 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
    S.SetBorder(2);
    S.StartScroller();
 
-   /* i18n-hint: Title for the update notifications panel in the preferences dialog. */
+   /* i18n-hint: Title for the panel in the application preferences dialog. */
    S.StartStatic(XO("Update notifications"));
    {
-      S.TieCheckBox(
-         /* i18n-hint: Check-box title that configures periodic updates checking. */
-         XXC("&Check for updates", "application preferences"),
-         *DefaultUpdatesCheckingFlag);
-
       S.StartVerticalLay();
       {
-         S.AddFixedText(XO(
-            "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."),
-            false, 470);
+         /* i18n-hint: Check-box title that configures periodic updates checking. */
+         const auto checkBoxLabel = XXC("&Check for updates", "application preferences");
+         const auto checkBoxDescription =
+            XO("App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information.");
+
+         wxCheckBox* checkBox = S.Name(checkBoxLabel + Verbatim(", ") + checkBoxDescription)
+            .TieCheckBox(checkBoxLabel, *DefaultUpdatesCheckingFlag);
+#if wxUSE_ACCESSIBILITY
+         safenew WindowAccessible(checkBox);
+#endif
+
+         S.AddFixedText(checkBoxDescription, false, 470);
+
+         S.AddSpace(20);
+         /* i18n-hint: %s will be replaced with "our Privacy Policy" */
+         AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
+
+         privacyPolicy.FormatLink(
+            /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
+            wxT("%s"), XO("our Privacy Policy"),
+            "https://www.audacityteam.org/desktop-privacy-notice/");
+
+         privacyPolicy.Populate(S);
+         S.AddSpace(10);
+      }
+      S.EndVerticalLay();
+   }
+   S.EndStatic();
+   S.StartStatic(XO("UUID"));
+   {
+      S.StartVerticalLay();
+      {
+         /* i18n-hint: Check-box title that enables anonymous usage info. */
+         const auto checkBoxLabel = XXC("&Usage info (UUID)", "application preferences");
+         const auto checkBoxDescription = XO(
+            "To help us understand how often people use Audacity, we generate a random ID (UUID) "
+            "for each installation. This helps us improve features and plan for future updates. "
+            "This ID does not contain any personally identifiable information.");
+
+         wxCheckBox* checkBox = S.Name(checkBoxLabel + Verbatim(", ") + checkBoxDescription)
+            .TieCheckBox(checkBoxLabel, *SendAnonymousUsageInfo);
+#if wxUSE_ACCESSIBILITY
+         safenew WindowAccessible(checkBox);
+#endif
+
+         S.AddFixedText(checkBoxDescription, false, 470);
+
+         S.AddSpace(20);
 
          /* i18n-hint: %s will be replaced with "our Privacy Policy" */
          AccessibleLinksFormatter privacyPolicy(XO("See %s for more info."));
@@ -91,9 +133,11 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
          privacyPolicy.FormatLink(
             /* i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See". */
             wxT("%s"), XO("our Privacy Policy"),
-            "https://www.audacityteam.org/about/desktop-privacy-notice/");
+            "https://www.audacityteam.org/desktop-privacy-notice/");
 
          privacyPolicy.Populate(S);
+
+         S.AddSpace(10);
       }
 
       S.EndVerticalLay();
@@ -108,6 +152,7 @@ bool ApplicationPrefs::Commit()
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
    DefaultUpdatesCheckingFlag->Invalidate();
+   SendAnonymousUsageInfo->Invalidate();
 
    return true;
 }

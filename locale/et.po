@@ -9,9 +9,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-    "Project-Id-Version: audacity 3.6.0\n"
+    "Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-11 15:07+0200\n"
+"POT-Creation-Date: 2025-03-06 23:50+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Peeter Ramst <peeter.ramst@aste.edu.ee>, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/audacity/teams/164520/et/)\n"
@@ -3353,6 +3353,17 @@ msgstr ""
 "Selle avamiseks peate uuendama."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid ""
+"This project was created using an older Audacity version. Once saved, the "
+"project can only be opened with Audacity version %s or newer."
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Project update required"
+msgstr ""
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "Projekti faili ei saa lähtestada"
 
@@ -4162,7 +4173,7 @@ msgstr "Kohandatud"
 
 #: libraries/lib-time-frequency-selection/ViewInfo.cpp
 msgid "Enable &Looping"
-msgstr "Lubage &Looping"
+msgstr "Lubage &Kordamine"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Time track.
@@ -4492,7 +4503,7 @@ msgstr "Kõik aruanded on anonüümsed. Lisateavet vt %s."
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of
 #. "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr "meie privaatsuspoliitika"
 
@@ -4687,8 +4698,8 @@ msgstr "Kuva logi üksikasjade jaoks"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
@@ -4897,6 +4908,10 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Ei leidnud projekti andmekausta: \"%s\""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
+msgid "Invalid project 'rate' attribute."
+msgstr ""
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
 "MIDI tracks found in project file, but this build of Audacity does not "
 "include MIDI support, bypassing track."
@@ -5070,7 +5085,6 @@ msgstr "Käsu väljund"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -7343,8 +7357,9 @@ msgid "Generating audio preview..."
 msgstr "Audio eelvaate genereerimine..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-msgid "Open trace audio.com"
-msgstr "Avatud jälg audio.com"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Ava kohast audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7468,11 +7483,15 @@ msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr ""
 "Kui olete teinud audio.com-i salvestusruumi vabaks, klõpsake nuppu Korda."
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
 msgstr "Heli jagamine"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get Effects"
+msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7481,28 +7500,18 @@ msgid "&Share Audio Toolbar"
 msgstr "Heli jagamise tööriistariba"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr "Konto ei ole lingitud"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "Te ei ole sisse logitud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr "Anonüümne"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "&Lingi konto"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "Tühistage konto linkimine"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Logi sisse"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
 msgstr "&Logi välja"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Ava kohast audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7622,16 +7631,8 @@ msgstr ""
 "sünkroonitakse pilvekoopiaga, kui internetiühendus taastub."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr "Te ei ole sisse logitud"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr "Jätkamiseks logige sisse audio.com-i."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Sign in"
-msgstr "Logi sisse"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7961,25 +7962,6 @@ msgstr "Üleslaadimise lõpetamine..."
 msgid "Track Title"
 msgstr "Pala pealkiri"
 
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this
-#. context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid ""
-"Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
-"account\" above to proceed."
-msgstr ""
-"Helide jagamiseks on vaja tasuta %s kontot, mis on seotud Audacityga. %% "
-"Jätkamiseks vajutage ülalpool \"Lingi konto\"."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Vajutage \"Jätka\", et laadida üles audio.com-i"
-
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
 msgstr "Audio ettevalmistamine..."
@@ -8107,6 +8089,47 @@ msgid ""
 msgstr ""
 "Enne jätkamist on vajalik audio.com-i tegevus. Kui olete sellega valmis, "
 "klõpsake nuppu Retry (proovi uuesti)"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Loading..."
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Please wait..."
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Connection error"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid ""
+"Audacity is unable to connect to MuseHub.com. Please check your connection "
+"and try again."
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Try again"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get it on MuseHub"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr ""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid ""
+"You can reach millions of music creators by publishing your apps, effects "
+"and sounds on MuseHub. If you're a developer and interested in publishing "
+"your products on MuseHub, you can apply today."
+msgstr ""
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -8587,7 +8610,6 @@ msgstr ""
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "Vaata %s lisateavet."
@@ -11041,6 +11063,20 @@ msgstr "Efekt %d"
 msgid "Power"
 msgstr "Võimsus"
 
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr ""
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change realtime effect %s on %s"
+msgstr ""
+
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
 msgstr "Asendage efekt"
@@ -11875,6 +11911,22 @@ msgid "Calibration Complete"
 msgstr "Kalibreerimine lõpetatud"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr "Mida uut on Audacity's %s"
@@ -11887,6 +11939,11 @@ msgid ""
 msgstr ""
 "Vaadake [[%s|väljaande videot]] või lugege [[%s|muudatuste logi]], et saada "
 "lisateavet selle kohta, mida oleme viimasesse versiooni lisanud!</p>"
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11975,15 +12032,25 @@ msgstr ""
 msgid "A multiband compressor offering precise control over frequencies."
 msgstr "Mitmeribaline kompressor, mis pakub täpset sageduste juhtimist."
 
-#. i18n-hint: MuseHub is a name of a product, see musehub.com.
 #: src/WhatsNewDialog.cpp
-#, c-format
-msgid "Available on [[%s|MuseHub]]."
-msgstr "Saadaval saidil [[%s|MuseHub]]."
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Continue for Cloud Storage"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Tere tulemast Audacitysse!"
+
+#: src/WhatsNewDialog.cpp
+msgid "Watch the release video"
+msgstr "Vaadake väljalaskevideot"
+
+#: src/WhatsNewDialog.cpp
+msgid "Available on MuseHub"
+msgstr "Saadaval MuseHubis"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -15851,12 +15918,16 @@ msgid "Audio Device Info"
 msgstr "Heliseadme teave"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Quick Help..."
-msgstr "&Kiire abi ..."
+msgid "&Quick Help"
+msgstr ""
 
 #: src/menus/HelpMenus.cpp
-msgid "&Manual..."
-msgstr "&Manuaal..."
+msgid "&Manual"
+msgstr ""
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Support"
+msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -17003,7 +17074,7 @@ msgstr "Parandage &käigu pealt"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Looping"
-msgstr "&Looping"
+msgstr "&Kordamine"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Clear Loop"
@@ -17179,11 +17250,10 @@ msgstr "Näita RMS lainekujul"
 msgid "Preferences for Application"
 msgstr "Rakenduse eelistused"
 
-#. i18n-hint: Title for the update notifications panel in the preferences
-#. dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr "Teatiste ajakohastamine"
+msgstr ""
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -17196,8 +17266,25 @@ msgid ""
 "App update checking requires network access. In order to protect your "
 "privacy, Audacity does not store any personal information."
 msgstr ""
-"Rakenduse uuenduste kontrollimine nõuab juurdepääsu võrgule. Teie "
-"privaatsuse kaitsmiseks ei salvesta Audacity mingeid isikuandmeid."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr ""
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Usage info (UUID)"
+msgstr ""
+
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+msgid ""
+"To help us understand how often people use Audacity, we generate a random ID"
+" (UUID) for each installation. This helps us improve features and plan for "
+"future updates. This ID does not contain any personally identifiable "
+"information."
+msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -17712,12 +17799,36 @@ msgid "Do &nothing"
 msgstr "Ära tee midagi"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr "&Sobitage silmustempo alati projekti tempoga"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid ""
+"&Only match the loop tempo to the project tempo when the ruler displays "
+"\"Beats and Measures\""
+msgstr ""
+"&Sobitage silmustempo projekti tempoga ainult siis, kui joonlaud kuvab "
+"\"Löögid ja mõõdud\""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Do nothing"
+msgstr "Ära tee mi&dagi"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "Muusika import"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Kui Audacity tuvastab muusika tühja projekti imporditud failis"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr "Kui impordite muusikahela tühja projekti, siis Audacity:"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid ""
+"When importing a music loop into an existing (non-empty) project, Audacity "
+"will:"
+msgstr ""
+"Kui impordite muusikahela olemasolevasse (mitte-tühja) projekti, siis "
+"Audacity:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -20272,40 +20383,50 @@ msgstr "Audacity uuendamine"
 msgid "Downloading %s"
 msgstr "Allalaadimine %s"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
-msgstr "Rakenduse uuendamise kontrollimine"
+msgid "App updates & usage info"
+msgstr ""
+
+#. i18n-hint: First line of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr "Rakenduse uuendused"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid ""
-"To stay up to date, you will receive an in-app notification whenever there "
-"is a new version of Audacity available to download."
+"Audacity notifies you in-app when a new version is available to download."
 msgstr ""
-"Et olla kursis, saate rakenduse sisese teate, kui on saadaval uus Audacity "
-"versioon, mille saate alla laadida."
 
-#. i18n-hint: The second paragraph of app update notice dialog
+#. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid ""
-"In order to protect your privacy, Audacity does not collect any personal "
-"information. However, app update checking does require network access."
+msgid "Usage info"
 msgstr ""
-"Teie privaatsuse kaitsmiseks ei kogu Audacity mingeid isikuandmeid. "
-"Rakenduse uuenduste kontrollimine nõuab siiski juurdepääsu võrgule."
 
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is
-#. replaced with "Preferences > Application" link
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
-msgid "You can turn off app update checking at any time in %s."
-msgstr "Rakenduse uuenduste kontrollimise saate igal ajal välja lülitada %s."
+msgid "You can turn this off anytime in %s."
+msgstr ""
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App updates"
-msgstr "Rakenduse uuendused"
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "View privacy policy"
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Disable UUID"
+msgstr ""
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
+msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"

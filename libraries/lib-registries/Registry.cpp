@@ -733,7 +733,7 @@ void detail::Visit(VisitorBase &visitor,
    Path emptyPath;
    VisitItem(
       visitor, collection, emptyPath, pTopItem,
-      pRegistry, pRegistry->orderingHint, doFlush, pComputedItemContext);
+      pRegistry, pRegistry ? pRegistry->orderingHint : OrderingHint(), doFlush, pComputedItemContext);
    // Flush any writes done by MergeItems()
    if (doFlush)
       gPrefs->Flush();
@@ -757,7 +757,7 @@ void OrderingPreferenceInitializer::operator () ()
          doFlush = true;
       }
    }
-   
+
    if (doFlush)
       gPrefs->Flush();
 }

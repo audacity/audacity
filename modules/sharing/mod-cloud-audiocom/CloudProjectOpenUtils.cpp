@@ -38,7 +38,7 @@ namespace
 auto MakeProgress()
 {
    return BasicUI::MakeProgress(
-      XO("Open trace audio.com"), XO("Synchronizing project"),
+      XO("Open from audio.com"), XO("Synchronizing project"),
       BasicUI::ProgressShowCancel);
 }
 

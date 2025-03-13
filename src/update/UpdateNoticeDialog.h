@@ -24,7 +24,9 @@ public:
     explicit UpdateNoticeDialog (wxWindow* parent);
 
  private:
-    void OnOk (wxCommandEvent&);
+    void OnAccept (wxCommandEvent&);
+    void OnDecline (wxCommandEvent&);
+    void OnViewPrivacyPolicy (wxCommandEvent&);
     void OnSize(wxSizeEvent&);
 
     DECLARE_EVENT_TABLE ()

@@ -1160,7 +1160,7 @@ void WaveTrack::FinishCopy(
 /*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1)
 {
-   HandleClear(t0, t1, false, false);
+   HandleClear(t0, t1, false, false, true);
 }
 
 /*! @excsafety{Strong} */
@@ -1298,7 +1298,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
       // we need to copy clips, trims and names, because the original ones
       // could be changed later during Clear/Paste routines
       st = roundTime(clip->GetPlayStartTime());
-      if (st >= t0 && st <= t1) {
+      if (st > t0 && st < t1) {
          auto it = get_split(st);
          if (clip->GetTrimLeft() != 0) {
             //keep only hidden left part
@@ -1310,7 +1310,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
       }
 
       st = roundTime(clip->GetPlayEndTime());
-      if (st >= t0 && st <= t1) {
+      if (st > t0 && st < t1) {
          auto it = get_split(st);
          if (clip->GetTrimRight() != 0) {
             //keep only hidden right part

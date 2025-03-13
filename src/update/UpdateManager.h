@@ -23,14 +23,14 @@
 #include <iostream>
 #include <fstream>
 #include <mutex>
- 
+
 /// A class that managing of updates.
 /**
     Opt-in request and show update dialog by the scheduled time.
     Have a built-in check that allows avoiding multiplying update notifications
     when multiple Audacity windows are shown.
 */
-class UpdateManager final : public wxEvtHandler
+class UpdateManager final : public wxEvtHandler, public PrefsListener
 {
 public:
     UpdateManager() = default;
@@ -41,6 +41,9 @@ public:
     void GetUpdates(bool ignoreNetworkErrors, bool configurableNotification);
 
     VersionPatch GetVersionPatch() const;
+
+    // PrefsListener implementation
+    void UpdatePrefs() override;
 
 private:
     UpdateDataParser mUpdateDataParser;
@@ -53,11 +56,16 @@ private:
     /// Scheduling update time for avoiding multiplying update notifications.
     bool IsTimeForUpdatesChecking();
 
+    void SendOptOutRequest() const;
+
+    std::string GetUpdatesUrl() const;
+    std::string GetOptOutUrl() const;
+
     std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 
     std::string mAudacityInstallerPath;
     std::ofstream mAudacityInstaller;
-    
+
     std::mutex mUpdateMutex;
     bool mOnProgress{ false };
 public:

@@ -1,18 +1,20 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2024 Audacity Team
+# Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
 # Link Winterberg, 2024
-# Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2013-2024
+# Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2013-2025
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.1\n"
+"Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
-"PO-Revision-Date: 2024-11-12 00:00+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
+"POT-Creation-Date: 2025-03-10 14:18+0300\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -80,7 +82,7 @@ msgstr "Informacje o urządzeniu niedostępne dla: %d\n"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device ID: %d\n"
-msgstr "ID urządzenia: %d\n"
+msgstr "Identyfikator urządzenia: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -817,7 +819,7 @@ msgstr "Odwraca próbki do góry nogami, odwracając ich biegunowość"
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr "Legacy Compressor"
+msgstr "Stary kompresor"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -967,7 +969,7 @@ msgstr "Analizowanie drugiej ścieżki z pary stereo: %s"
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr "Przetwarzanie ścieżki stereo niezależnie: %s"
+msgstr "Przetwarzanie kanałów stereo niezależnie: %s"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
@@ -3258,6 +3260,15 @@ msgstr ""
 "Musisz zaktualizować do nowszej wersji, aby go otworzyć."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr "Ten projekt został utworzony przy użyciu starszej wersji Audacity. Po zapisaniu projekt można otworzyć tylko w wersji %s Audacity lub nowszej."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Project update required"
+msgstr "Wymagane zaktualizowanie projektu"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "Nie można zainicjować pliku projektu"
 
@@ -4376,7 +4387,7 @@ msgstr "Wszystkie raporty są anonimowe. Zobacz %s, aby uzyskać więcej informa
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr "naszą Politykę prywatności"
 
@@ -4436,7 +4447,7 @@ msgstr "Z Internetu"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Welcome!"
-msgstr "Witamy!"
+msgstr "Witaj!"
 
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
@@ -4541,8 +4552,8 @@ msgstr "Pokaż dziennik dla szczegółów"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
@@ -4749,6 +4760,10 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Nie można znaleźć folderu projektu: „%s”"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
+msgid "Invalid project 'rate' attribute."
+msgstr "Nieprawidłowy atrybut „rate” projektu."
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr "Ścieżki MIDI zostały znalezione w pliku projektu, ale ta kompilacja Audacity nie obejmuje obsługi MIDI, pomijając ścieżkę."
 
@@ -4894,15 +4909,15 @@ msgstr "(program zewnętrzny)"
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Cannot export audio to %s"
-msgstr "Nie można eksportować dźwięku do %s"
+msgstr "Nie można eksportować nagrania do %s"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
-msgstr "Eksportowanie zaznaczonego dźwięku za pomocą kodera wiersza poleceń"
+msgstr "Eksportowanie zaznaczonego nagrania za pomocą kodera wiersza poleceń"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
-msgstr "Eksportowanie dźwięku za pomocą kodera wiersza poleceń"
+msgstr "Eksportowanie nagrania za pomocą kodera wiersza poleceń"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Command Output"
@@ -4911,7 +4926,6 @@ msgstr "Wyjście polecenia"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -5164,13 +5178,13 @@ msgstr "Usiłowano eksportować %d kanałów, ale maksymalna liczba kanałów dl
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Exporting selected audio as %s"
-msgstr "Eksportowanie zaznaczonego dźwięku jako %s"
+msgstr "Eksportowanie zaznaczonego nagrania jako %s"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the audio as %s"
-msgstr "Eksportowanie dźwięku jako %s"
+msgstr "Eksportowanie nagrania jako %s"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -5932,11 +5946,11 @@ msgstr ""
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
-msgstr "Eksportowanie zaznaczonego dźwięku jako FLAC"
+msgstr "Eksportowanie zaznaczonego nagrania jako FLAC"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the audio as FLAC"
-msgstr "Eksportowanie dźwięku jako FLAC"
+msgstr "Eksportowanie nagrania jako FLAC"
 
 #: modules/import-export/mod-flac/ImportFLAC.cpp
 msgid "FLAC files"
@@ -5996,12 +6010,12 @@ msgstr "Nie można otworzyć pliku do zapisu"
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting selected audio at %ld kbps"
-msgstr "Eksportowanie zaznaczonego dźwięku z jakością %ld kbps"
+msgstr "Eksportowanie zaznaczonego nagrania z jakością %ld kbps"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting the audio at %ld kbps"
-msgstr "Eksportowanie dźwięku jako %ld kbps"
+msgstr "Eksportowanie nagrania z jakością %ld kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "220-260 kbps (Best Quality)"
@@ -6200,32 +6214,32 @@ msgstr "Nie można zainicjować strumienia MP3"
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with %s preset"
-msgstr "Eksportowanie zaznaczonego dźwięku z presetem %s"
+msgstr "Eksportowanie zaznaczonego nagrania z presetem %s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with %s preset"
-msgstr "Eksportowanie dźwięku z presetem %s"
+msgstr "Eksportowanie nagrania z presetem %s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
-msgstr "Eksportowanie zaznaczonego dźwięku z jakością VBR %s"
+msgstr "Eksportowanie zaznaczonego nagrania z jakością VBR %s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with VBR quality %s"
-msgstr "Eksportowanie dźwięku z jakością VBR %s"
+msgstr "Eksportowanie nagrania z jakością VBR %s"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
-msgstr "Eksportowanie zaznaczonego dźwięku z jakością %d Kbps"
+msgstr "Eksportowanie zaznaczonego nagrania z jakością %d Kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio at %d Kbps"
-msgstr "Eksportowanie dźwięku jako %d Kbps"
+msgstr "Eksportowanie nagrania z jakością %d Kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
@@ -6296,11 +6310,11 @@ msgstr "Nie można eksportować - problem z plikiem"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
-msgstr "Eksportowanie zaznaczonego dźwięku jako Ogg Vorbis"
+msgstr "Eksportowanie zaznaczonego nagrania jako Ogg Vorbis"
 
 #: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the audio as Ogg Vorbis"
-msgstr "Eksportowanie dźwięku jako Ogg Vorbis"
+msgstr "Eksportowanie nagrania jako Ogg Vorbis"
 
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Ogg Vorbis files"
@@ -6409,11 +6423,11 @@ msgstr "Nieobsługiwana częstotliwość próbkowania"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting selected audio as Opus"
-msgstr "Eksportowanie zaznaczonego dźwięku jako Opus"
+msgstr "Eksportowanie zaznaczonego nagrania jako Opus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting the audio as Opus"
-msgstr "Eksportowanie dźwięku jako Opus"
+msgstr "Eksportowanie nagrania jako Opus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to create Opus encoder"
@@ -6524,7 +6538,7 @@ msgstr "Formaty WAVEX i GSM 6.10 są niekompatybilne"
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Cannot export audio in this format."
-msgstr "Nie można eksportować danych w tym formacie."
+msgstr "Nie można eksportować nagrania w tym formacie."
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid ""
@@ -6537,7 +6551,7 @@ msgstr ""
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the selected audio as %s"
-msgstr "Eksportowanie zaznaczonego dźwięku jako %s"
+msgstr "Eksportowanie zaznaczonego nagrania jako %s"
 
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
@@ -6773,11 +6787,11 @@ msgstr "Nie można utworzyć pliku do zapisu"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
-msgstr "Eksportowanie zaznaczonego dźwięku jako WavPack"
+msgstr "Eksportowanie zaznaczonego nagrania jako WavPack"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting the audio as WavPack"
-msgstr "Eksportowanie dźwięku jako WavPack"
+msgstr "Eksportowanie nagrania jako WavPack"
 
 #: modules/import-export/mod-wavpack/ImportWavPack.cpp
 msgid "WavPack files"
@@ -7148,8 +7162,9 @@ msgid "Generating audio preview..."
 msgstr "Generowanie podglądu nagrania..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-msgid "Open trace audio.com"
-msgstr "Otwórz ślad Audio.com"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Otwórz z Audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7269,11 +7284,15 @@ msgstr "Oczekiwanie na zwolnienie miejsca"
 msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr "Po zwolnieniu miejsca na Audio.com, kliknij „Ponów”."
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
 msgstr "Udostępnij nagranie"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get Effects"
+msgstr "Uzyskaj efekty"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7282,28 +7301,18 @@ msgid "&Share Audio Toolbar"
 msgstr "Pa&sek narzędzi udostępniania nagrania"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr "Konto nie jest połączone"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "Nie zalogowano się"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr "Anonim"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "&Połącz konto"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "&Odłącz konto"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Zaloguj się"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
 msgstr "Wyloguj &się"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Otwórz z Audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7337,7 +7346,7 @@ msgid ""
 "Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
 "Pliki są zapisywane na Twoim urządzeniu.\n"
-"Uwaga: Aby eksportować pliki MP3 i WAV, użyj „Plik > Eksportuj dźwięk”."
+"Uwaga: Aby eksportować pliki MP3 i WAV, użyj „Plik > Eksportuj nagranie”."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
@@ -7409,16 +7418,8 @@ msgid "Don't worry, your changes will be saved to a temporary location and will 
 msgstr "Nie martw się, Twoje zmiany zostaną zapisane w lokalizacji tymczasowej i zsynchronizowane z kopią w chmurze po wznowieniu połączenia internetowego."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr "Nie zalogowano się"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr "Aby kontynuować, zaloguj się na Audio.com."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Sign in"
-msgstr "Zaloguj się"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7607,7 +7608,7 @@ msgstr "Próbujesz otworzyć nową aktywną wersję tego projektu, podczas gdy j
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
-msgstr "Zachowaj aktualnie otwartą wersję"
+msgstr "Zachowaj obecnie otwartą wersję"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open new version"
@@ -7717,20 +7718,6 @@ msgstr "Kończenie przesyłania..."
 msgid "Track Title"
 msgstr "Tytuł ścieżki"
 
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "Udostępnianie nagrania wymaga darmowego konta na %s połączonego z Audacity. %%Naciśnij „Połącz konto” powyżej, aby przejść."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "Audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Naciśnij „Kontynuuj”, aby przesłać na Audio.com"
-
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
 msgstr "Przygotowywanie nagrania..."
@@ -7835,6 +7822,42 @@ msgstr "Ponów"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr "Aby móc kontynuować, wymagane jest wykonanie działania na Audio.com. Gdy już to zrobisz, kliknij „Ponów”."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Loading..."
+msgstr "Ładowanie..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Please wait..."
+msgstr "Czekaj..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Connection error"
+msgstr "Błąd połączenia"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr "Audacity nie może połączyć się z MuseHub.com. Sprawdź swoje połączenie internetowe lub spróbuj ponownie później."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Try again"
+msgstr "Spróbuj ponownie"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get it on MuseHub"
+msgstr "Uzyskaj na MuseHubie"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr "Zostań partnerem"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr "Zostań partnerem MuseHuba"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgstr "Możesz dotrzeć do milionów twórców muzyki, publikując swoje aplikacje, efekty i brzmienia w MuseHubie. Jeśli jesteś deweloperem i jesteś zainteresowany/a publikacją swoich produktów w MuseHubie, możesz złożyć wniosek już dziś."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -8137,7 +8160,7 @@ msgstr "Data kompilacji programu:"
 
 #: src/AboutDialog.cpp
 msgid "Commit Id:"
-msgstr "Obowiązkowy Id:"
+msgstr "Obowiązkowy identyfikator:"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -8293,7 +8316,6 @@ msgstr "Sprawdzanie aktualizacji aplikacji i raportowanie błędów wymagają do
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "Zobacz %s, aby uzyskać więcej informacji."
@@ -8696,13 +8718,13 @@ msgstr ""
 "\n"
 "Możesz spróbować rozwiązać problem, a następnie kliknąć „Ponów”, aby kontynuować.\n"
 "\n"
-"Jeśli wybierzesz opcję „Opuść Audacity”, Twój projekt może pozostać w stanie niezapisanym, który zostanie odzyskany przy następnym otwarciu."
+"Jeśli wybierzesz opcję „Zakończ Audacity”, Twój projekt może pozostać w stanie niezapisanym, który zostanie odzyskany przy następnym otwarciu."
 
 #. i18n-hint: (verb) It's item on a menu.
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 #: src/menus/FileMenus.cpp
 msgid "&Quit Audacity"
-msgstr "&Opuść Audacity"
+msgstr "Za&kończ Audacity"
 
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
@@ -10549,7 +10571,7 @@ msgstr "Pobieranie informacji o muzyce"
 
 #: src/ProjectFileManager.cpp
 msgid "Analyzing imported audio"
-msgstr "Analizowanie zaimportowanego dźwięku"
+msgstr "Analizowanie zaimportowanego nagrania"
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -10602,7 +10624,7 @@ msgstr "[Projekt %02i] "
 #: src/ProjectManager.cpp
 #, c-format
 msgid "Welcome to Audacity version %s"
-msgstr "Witamy w wersji %s Audacity"
+msgstr "Witaj w wersji %s Audacity"
 
 #. i18n-hint: The first %s numbers the project, the second %s is the project name.
 #: src/ProjectManager.cpp
@@ -10681,6 +10703,22 @@ msgstr "Efekt %d"
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
 msgstr "Moc"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr "Zmień ustawienia dla efektu w czasie rzeczywistym %s na %s"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change realtime effect %s on %s"
+msgstr "Zmień efekt w czasie rzeczywistym %s na %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -11318,7 +11356,7 @@ msgstr "Nagrywaj cza&sowo..."
 
 #: src/TimerRecordExportDialog.cpp src/export/ExportAudioDialog.cpp
 msgid "Export Audio"
-msgstr "Eksportuj dźwięk"
+msgstr "Eksportuj nagranie"
 
 #: src/TimerRecordExportDialog.cpp src/export/ExportAudioDialog.cpp
 msgid "Edit &Metadata..."
@@ -11503,6 +11541,22 @@ msgid "Calibration Complete"
 msgstr "Kalibracja zakończona"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr "<font color=\"#000000\">"
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr "Zarejestruj się na platformie Audacity do zapisywania danych w chmurze"
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr "i uzyskaj dostęp do swoich projektów z dowolnego miejsca!"
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr "</font>"
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr "Co nowego w Audacity %s"
@@ -11511,6 +11565,11 @@ msgstr "Co nowego w Audacity %s"
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr "Obejrzyj [[%s|wideo o wydaniu]] lub przeczytaj [[%s|dziennik zmian]], aby dowiedzieć się więcej o tym, co zawarliśmy w najnowszej wersji!</p>"
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
+msgstr "Możesz również przeczytać [[%s|dziennik zmian]]</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11567,8 +11626,16 @@ msgid "A multiband compressor offering precise control over frequencies."
 msgstr "Kompresor wielopasmowy zapewniający precyzyjną kontrolę częstotliwości."
 
 #: src/WhatsNewDialog.cpp
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr "Ace Studio - wiodący na świecie generator głosu wokalnego oparty na sztucznej inteligencji."
+
+#: src/WhatsNewDialog.cpp
+msgid "Continue for Cloud Storage"
+msgstr "Kontynuuj dla pamięci masowej w chmurze"
+
+#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
-msgstr "Witamy w Audacity!"
+msgstr "Witaj w Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Watch the release video"
@@ -11666,7 +11733,7 @@ msgstr "Ścieżka 1"
 #. i18n-hint abbreviates "Identity" or "Identifier"
 #: src/commands/DragCommand.cpp
 msgid "Id:"
-msgstr "Numer:"
+msgstr "Id:"
 
 #: src/commands/DragCommand.cpp
 msgid "Window Name:"
@@ -15254,7 +15321,7 @@ msgstr "&Projekt kopii zapasowej..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export Audio..."
-msgstr "&Eksportuj dźwięk..."
+msgstr "&Eksportuj nagranie..."
 
 #: src/menus/FileMenus.cpp
 msgid "Expo&rt Other"
@@ -15298,7 +15365,7 @@ msgstr "Eksportuj jako FLAC"
 
 #: src/menus/FileMenus.cpp
 msgid "Expo&rt Selected Audio..."
-msgstr "Ekspo&rtuj zaznaczony dźwięk..."
+msgstr "Ekspo&rtuj zaznaczone nagranie..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -15341,12 +15408,16 @@ msgid "Audio Device Info"
 msgstr "Informacje o urządzeniu dźwiękowym"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Quick Help..."
-msgstr "&Szybka pomoc..."
+msgid "&Quick Help"
+msgstr "&Szybka pomoc"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Manual..."
-msgstr "Podręcz&nik..."
+msgid "&Manual"
+msgstr "Podręcz&nik"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Support"
+msgstr "W&sparcie Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -16663,7 +16734,7 @@ msgstr "Pokaż RMS &w kształcie fali"
 msgid "Preferences for Application"
 msgstr "Ustawienia aplikacji"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
 msgstr "Powiadomienia o aktualizacjach"
@@ -16677,6 +16748,21 @@ msgstr "Sprawdź aktualiza&cje"
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
 msgstr "Sprawdzanie aktualizacji aplikacji wymaga dostępu do sieci. Aby chronić Twoją prywatność, Audacity nie przechowuje żadnych danych osobowych."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr "UUID"
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Usage info (UUID)"
+msgstr "Informacje o &użytkowaniu (UUID)"
+
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
+msgstr "Aby pomóc nam zrozumieć, jak często ludzie używają Audacity, generujemy losowy, anonimowy identyfikator (UUID). Pomaga nam to ulepszać funkcje i planować przyszłość. Ten identyfikator nie zawiera żadnych danych osobowych."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -16906,7 +16992,7 @@ msgstr "Katalog %s nie jest przeznaczony do zapisu"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
-msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do zrestartowania programu Audacity"
+msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do ponownego uruchomienia Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -17173,12 +17259,28 @@ msgid "Do &nothing"
 msgstr "&Nic nie rób"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr "Zawsze dopasuj te&mpo pętli do tempa projektu"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr "Dopasuj tempo pętli do tempa projektu tylko wtedy, gdy linijka wyświetla „Miary i takty”"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Do nothing"
+msgstr "Ni&c nie rób"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "Importy muzyki"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Gdy Audacity wykryje muzykę w pliku zaimportowanym do pustego projektu"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr "Podczas importowania pętli muzycznej do pustego projektu Audacity będzie:"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr "Podczas importowania pętli muzycznej do istniejącego (niepustego) projektu Audacity będzie:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17194,7 +17296,7 @@ msgstr "Ustawienia KeyConfig"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
-msgstr "Ustawienia klawiatury chwilowo niedostępne."
+msgstr "Ustawienia klawiatury obecnie niedostępne."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
@@ -17251,7 +17353,7 @@ msgstr "U&staw"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Note: Pressing Cmd+Q will quit. All other keys are valid."
-msgstr "Uwaga: Naciśnięcie Cmd+Q spowoduje wyjście. Pozostałe klawisze są prawidłowe."
+msgstr "Uwaga: Naciśnięcie Cmd+Q spowoduje zakończenie. Pozostałe klawisze są prawidłowe."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Import..."
@@ -17583,7 +17685,7 @@ msgstr "Niestandardowa nazwa tekstu"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Recorded_Audio"
-msgstr "Nagrany_dźwięk"
+msgstr "Nagranie"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "&Track Number"
@@ -17999,15 +18101,15 @@ msgstr "Użyj wyświetlacza &półfalowego, gdy jest zwinięty"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "&Pinned Recording/Playback head"
-msgstr "&Podpięty do głowicy nagrywania/odtwarzania"
+msgstr "&Podpięty do wskaźnika nagrywania/odtwarzania"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "A&uto-scroll if head unpinned"
-msgstr "A&utoprzewijanie, jeśli głowica jest odpięta"
+msgstr "A&utoprzewijanie, jeśli wskaźnik jest odpięty"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Pinned &head position"
-msgstr "Pozycja podpiętej &głowicy"
+msgstr "Pozycja podpięte&go wskaźnika"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Default &view mode:"
@@ -19391,7 +19493,7 @@ msgstr "Dodaj etykietę ścieżki"
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Export Audio..."
-msgstr "Eksportuj dźwięk..."
+msgstr "Eksportuj nagranie..."
 
 #: src/tracks/ui/BrushHandle.cpp
 msgid "Erased selected area"
@@ -19693,31 +19795,49 @@ msgstr "Aktualizacja Audacity"
 msgid "Downloading %s"
 msgstr "Pobieranie %s"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
-msgstr "Sprawdzanie aktualizacji aplikacji"
+msgid "App updates & usage info"
+msgstr "Aktualizacje aplikacji i informacje o użytkowaniu"
 
-#. i18n-hint: The first paragraph of app update notice dialog.
-#: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Aby być na bieżąco, otrzymasz powiadomienie w aplikacji za każdym razem, gdy będzie dostępna do pobrania nowa wersja Audacity."
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "Aby chronić Twoją prywatność, Audacity nie gromadzi żadnych danych osobowych. Jednak sprawdzanie aktualizacji aplikacji wymaga dostępu do sieci."
-
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can turn off app update checking at any time in %s."
-msgstr "Sprawdzanie aktualizacji aplikacji możesz wyłączyć w dowolnym momencie w %s."
-
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
 msgstr "Aktualizacje aplikacji"
+
+#. i18n-hint: The first paragraph of app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr "Audacity powiadamia Cię w aplikacji, gdy dostępna jest nowa wersja do pobrania."
+
+#. i18n-hint: Subtitle of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Usage info"
+msgstr "Informacje o użytkowaniu"
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn this off anytime in %s."
+msgstr "Możesz to wyłączyć w dowolnym momencie w %s."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr "Możesz to wyłączyć w dowolnym momencie w %s."
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "View privacy policy"
+msgstr "Zobacz politykę prywatności"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Disable UUID"
+msgstr "Wyłącz UUID"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
+msgstr "Zaakceptuj &i kontynuuj"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -20682,7 +20802,7 @@ msgstr ""
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Legacy Limiter"
-msgstr "Legacy Limiter"
+msgstr "Stary limiter"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -21104,7 +21224,7 @@ msgstr "Amplituda (0-1)"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample Data Export"
-msgstr "Eksportuj przykładowe dane"
+msgstr "Eksportuj dane przykładowe"
 
 #: plug-ins/sample-data-export.ny
 msgid "Limit output to first"
@@ -21285,7 +21405,7 @@ msgstr "Lewy: ~a lin, ~a dB | Prawy: ~a liniowy, &nbsp;&nbsp;~a dB."
 
 #: plug-ins/sample-data-export.ny
 msgid "sample data"
-msgstr "przykładowe dane"
+msgstr "dane przykładowe"
 
 #: plug-ins/sample-data-export.ny
 msgid "Sample #"
@@ -21327,7 +21447,7 @@ msgid ""
 "Daulton"
 msgstr ""
 "Stworzone przez Steve’a Daultona\n"
-"z <span>Eksportu przykładowych danych</span> dla\n"
+"z <span>Eksportu danych przykładowych</span> dla\n"
 "<a href=\"~a\">Audacity</a>"
 
 #: plug-ins/sample-data-export.ny
@@ -21378,7 +21498,7 @@ msgstr "Błąd.~%\"~a\" nie może zostać zapisany."
 
 #: plug-ins/sample-data-import.ny
 msgid "Sample Data Import"
-msgstr "Importuj przykładowe dane"
+msgstr "Importuj dane przykładowe"
 
 #: plug-ins/sample-data-import.ny
 msgid "Select file"
@@ -21565,4 +21685,4 @@ msgstr "Narzędzia widma"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
-msgstr "Legacy"
+msgstr "Stare"

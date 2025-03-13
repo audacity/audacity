@@ -1,13 +1,13 @@
 # Header entry was created by Lokalize.
 #
 # Aportaciones de Francisco Vila, Kntro Cantero, David Franco y Jaime Serquera
-# Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
+# Antonio Paniagua Navarro <aplist@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-29 13:23+0100\n"
-"PO-Revision-Date: 2024-10-15 17:37+0200\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
+"PO-Revision-Date: 2025-03-10 07:01+0100\n"
 "Last-Translator: Antonio Paniagua Navarro <aplist at gmail.com>\n"
 "Language-Team: \n"
 "Language: es\n"
@@ -2511,7 +2511,7 @@ msgstr "&Segundos"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "&Beats"
-msgstr "&Compases"
+msgstr "&Pulsos"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -2604,12 +2604,12 @@ msgstr "compás"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr "compás"
+msgstr "pulso"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr "compás:tiempo"
+msgstr "compás:pulso"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick"
 #. corresponds to a 16th note.
@@ -3255,6 +3255,15 @@ msgstr ""
 "Debe actualizar a una nueva versión para abrirlo."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr "Este proyecto se creó con una versión anterior de Audacity. Una vez guardado, el proyecto sólo se podrá abrir con Audacity %s o posterior."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Project update required"
+msgstr "Es necesario actualizar el proyecto"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "No se puede inicializar el archivo de proyecto"
 
@@ -3585,7 +3594,7 @@ msgstr "De&purar"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Beats"
-msgstr "Compases"
+msgstr "Pulsos"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
@@ -4373,7 +4382,7 @@ msgstr "Todos los informes son anónimos. Para obtener más información consult
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr "nuestra Política de Privacidad"
 
@@ -4538,8 +4547,8 @@ msgstr "Mostrar registro para ver detalles"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "Aceptar"
 
@@ -4745,6 +4754,10 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "No se ha podido encontrar la carpeta de datos de proyecto: \"%s\""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
+msgid "Invalid project 'rate' attribute."
+msgstr "Atributo 'rate' del proyecto no válido."
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr "El proyecto contiene pistas MIDI, pero esta versión de Audacity no cuenta con compatibilidad MIDI, por lo que se omite la pista."
 
@@ -4907,7 +4920,6 @@ msgstr "Salida de comando"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&Aceptar"
 
@@ -7143,8 +7155,9 @@ msgid "Generating audio preview..."
 msgstr "Generando vista previa del audio..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-msgid "Open trace audio.com"
-msgstr "Abrir audio.com"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Abrir desde audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7264,11 +7277,15 @@ msgstr "Esperando a que se libere espacio"
 msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr "Una vez que haya generado suficiente espacio en audio.com haga clic en Reintentar."
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
 msgstr "Compartir audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get Effects"
+msgstr "Obtener efectos"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7277,28 +7294,18 @@ msgid "&Share Audio Toolbar"
 msgstr "Barra de herramientas de &Compartir audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr "Cuenta no enlazada"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "No se ha iniciado sesión"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr "Anónimo"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "Vincu&lar cuenta"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "&Desvincular cuenta"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Iniciar sesión"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
 msgstr "Cerrar &sesión"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Abrir desde audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7404,16 +7411,8 @@ msgid "Don't worry, your changes will be saved to a temporary location and will 
 msgstr "Los cambios se almacenarán en una ubicación temporal y se sincronizarán en la nube cuando la conexión a Internet vuelva a estar disponible."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr "No se ha iniciado sesión"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr "Inicie sesión en audio.com para continuar."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Sign in"
-msgstr "Iniciar sesión"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7708,20 +7707,6 @@ msgstr "Finalizando subida..."
 msgid "Track Title"
 msgstr "Nombre de pista"
 
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "Compartir audio requiere vincular una cuenta %s gratuita con Audacity. %%Haga clic en \"Vincula cuenta\" para realizar este paso."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Haga clic en \"Continuar\" para subir el archivo a audio.com"
-
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
 msgstr "Preparando audio..."
@@ -7826,6 +7811,42 @@ msgstr "Reintentar"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr "Se requiere una acción en audio.com para continuar. Una vez que se haya completado, haga clic en Reintentar"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Loading..."
+msgstr "Cargando..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Please wait..."
+msgstr "Espere..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Connection error"
+msgstr "Error de conexión"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr "Audacity no puede acceder a MuseHub.com. Compruebe la conexión e inténtelo de nuevo."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Try again"
+msgstr "Intentarlo de nuevo"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get it on MuseHub"
+msgstr "Obtener en MuseHub"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr "Convertirse en socio"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr "Convertirse en un socio de MuseHub"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgstr "Puede llegar a millones de creadores musicales publicando sus aplicaciones, efectos y sonidos en MuseHub. Si es desarrollador y está interesado en publicar en MuseHub, puede solicitarlo."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -8284,7 +8305,6 @@ msgstr "La búsqueda de actualizaciones y los informes de errores necesitan acce
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "Consulte %s para obtener más información."
@@ -8383,7 +8403,7 @@ msgstr "Minutos y segundos"
 #: src/AdornedRulerPanel.cpp src/TimeDisplayMode.cpp
 #: src/menus/TimelineMenus.cpp
 msgid "Beats and Measures"
-msgstr "Compases y medidas"
+msgstr "Pulsos y medidas"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Setting a loop region also makes an audio selection"
@@ -10667,6 +10687,22 @@ msgstr "Efecto %d"
 msgid "Power"
 msgstr "Encendido"
 
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr "Modificar la configuración del efecto de tiempo real %s a %s"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change realtime effect %s on %s"
+msgstr "Cambiar efecto en tiempo real %s a %s"
+
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
 msgstr "Reemplazar efecto"
@@ -11488,6 +11524,22 @@ msgid "Calibration Complete"
 msgstr "Calibración completada"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr "<font color=\"#000000\">"
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr "Regístrese en la plataforma de grabación en la nube de Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr "y  acceda a sus proyectos desde cualquier lugar."
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr "</font>"
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr "Novedades de Audacity %s"
@@ -11496,6 +11548,11 @@ msgstr "Novedades de Audacity %s"
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr "Vea el [[%s|vídeo del lanzamiento ]] o consulte el [[%s|registro de cambios]] para conocer lo que hemos incluido en la última versión</p>"
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
+msgstr "También puede consultar el [[%s|registro de cambios]]</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11552,18 +11609,24 @@ msgid "A multiband compressor offering precise control over frequencies."
 msgstr "Un compresor multibanda con control preciso de las frecuencias."
 
 #: src/WhatsNewDialog.cpp
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr "Ace Studio - El principal generador de canto de IA del mundo."
+
+#: src/WhatsNewDialog.cpp
+msgid "Continue for Cloud Storage"
+msgstr "Continuar a Cloud Storage"
+
+#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Bienvenido a Audacity"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Watch the release video"
-msgstr "Ver tutorial"
+msgstr "Ver el vídeo de la publicación"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Available on MuseHub"
-msgstr "Disponible en [[%s|MuseHub]]."
+msgstr "Disponible en MuseHub"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12548,12 +12611,12 @@ msgstr "a"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute"
-msgstr "Compases por minuto"
+msgstr "Pulsos por minuto"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, from"
-msgstr "Compases por minuto, desde"
+msgstr "Pulsos por minuto, desde"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -12564,7 +12627,7 @@ msgstr "&desde"
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, to"
-msgstr "Compases por minuto, hasta"
+msgstr "Pulsos por minuto, hasta"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -15322,12 +15385,16 @@ msgid "Audio Device Info"
 msgstr "Información del dispositivo de audio"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Quick Help..."
-msgstr "&Ayuda rápida..."
+msgid "&Quick Help"
+msgstr "&Ayuda rápida"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Manual..."
-msgstr "&Manual..."
+msgid "&Manual"
+msgstr "&Manual"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Support"
+msgstr "A&sistencia de Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -16644,7 +16711,7 @@ msgstr "Mostrar &RMS en forma de onda"
 msgid "Preferences for Application"
 msgstr "Preferencias de la aplicación"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
 msgstr "Notificación de actualizaciones"
@@ -16653,11 +16720,26 @@ msgstr "Notificación de actualizaciones"
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "&Comprobar actualizaciones..."
+msgstr "&Comprobar actualizaciones"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "La comprobación de actualizaciones necesita acceso a la red. Para proteger su privacidad, Audacity no almacena ninguna información personal."
+msgstr "La búsqueda de actualizaciones necesita acceso a la red. Para proteger su privacidad, Audacity no almacena ninguna información personal."
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr "UUID"
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Usage info (UUID)"
+msgstr "Información de &uso (UUID)"
+
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
+msgstr "Para entender mejor con qué frecuencia los usuarios se usa Audacity generamos un identificador aleatorio (UUID) en cada instalación. Este ID no contiene información personal que permita identificar al usuario."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -17143,7 +17225,7 @@ msgstr "Preferencias de importación y exportación"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&witch view to Beats and Measures and align with musical grid"
-msgstr "&Cambiar la vista a Compases y medidas y alinear con la cuadrícula musical"
+msgstr "&Cambiar la vista a Pulsos y medidas y alinear con la cuadrícula musical"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ask me each time"
@@ -17154,12 +17236,28 @@ msgid "Do &nothing"
 msgstr "&No hacer nada"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Music Imports"
-msgstr "Importación de música"
+msgid "Always &match the loop tempo to the project tempo"
+msgstr "Hacer coincidir sie&mpre el tempo del bucle con el tempo del proyecto"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Cuando Audacity detecte música en un archivo importado en un proyecto vacío"
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr "Hacer coincidir s&ólo el tempo del bucle con el tempo del proyecto si la regla está mostrando \"Pulsos y medidas\""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Do nothing"
+msgstr "No hacer na&da"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Music Imports"
+msgstr "Importaciones de música"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr "Al importar un bucle musical (loop) en un proyecto vacío, Audacity debe:"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr "Al importar un bucle musical (loop) en un proyecto existente (no vacío), Audacity debe:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -19670,31 +19768,49 @@ msgstr "Actualización de Audacity"
 msgid "Downloading %s"
 msgstr "Descargando %s"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
-msgstr "Comprobación de actualizaciones"
+msgid "App updates & usage info"
+msgstr "Actualizaciones e información de uso"
+
+#. i18n-hint: First line of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "App updates"
+msgstr "Actualizaciones"
 
 #. i18n-hint: The first paragraph of app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Para mantenerse al día, recibirá una notificación en la aplicación cada vez que se encuentre disponible una nueva versión de Audacity."
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr "Audacity le avisará cuando una nueva versión esté disponible para descargar."
 
-#. i18n-hint: The second paragraph of app update notice dialog
+#. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "Para proteger su privacidad, Audacity no recopila ningún dato personal. No obstante, la comprobación de actualizaciones requiere acceso a la red."
+msgid "Usage info"
+msgstr "Información de uso"
 
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
-msgid "You can turn off app update checking at any time in %s."
-msgstr "Puede desactiva la comprobación de actualizaciones en cualquier momento en %s."
+msgid "You can turn this off anytime in %s."
+msgstr "Se puede desactivar en cualquier momento en %s."
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App updates"
-msgstr "Comprobación de actualizaciones"
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr "Se puede deshabilitar en cualquier momento en %s."
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "View privacy policy"
+msgstr "Consultar la política de privacidad"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Disable UUID"
+msgstr "Deshabilitar UUID"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
+msgstr "Aceptar && continuar"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -19709,7 +19825,7 @@ msgstr "&Saltar"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "&Install update"
-msgstr "&Actualizar"
+msgstr "&Instalar actualización"
 
 #. i18n-hint Substitution of version number for %s.
 #: src/update/UpdatePopupDialog.cpp
@@ -20253,7 +20369,7 @@ msgstr ""
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
-msgstr "Buscador de compases"
+msgstr "Buscador de pulsos"
 
 #: plug-ins/beat.ny
 msgid "Threshold Percentage"
@@ -20949,15 +21065,15 @@ msgstr "Tempo (bpm)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "30 - 300 beats/minute"
-msgstr "30 - 300 compases/minuto"
+msgstr "30 - 300 pulsos/minuto"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beats per bar"
-msgstr "Compases por bar"
+msgstr "Pulsos por compás"
 
 #: plug-ins/rhythmtrack.ny
 msgid "1 - 20 beats/measure"
-msgstr "1 - 20 compases/medida"
+msgstr "1 - 20 pulsos/medida"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Swing amount"
@@ -20993,11 +21109,11 @@ msgstr "Desplazamiento de tiempo inicial:"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Silence before first beat"
-msgstr "Silencia antes del primer compás"
+msgstr "Silencia antes del primer pulso"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beat sound"
-msgstr "Sonido de compás"
+msgstr "Sonido de pulso"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Metronome Tick"
@@ -21033,7 +21149,7 @@ msgstr "Goteo (largo)"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of strong beat"
-msgstr "Tono MIDI de compás fuerte"
+msgstr "Tono MIDI de pulso fuerte"
 
 #: plug-ins/rhythmtrack.ny
 msgid "18 - 116"
@@ -21041,7 +21157,7 @@ msgstr "18 - 116"
 
 #: plug-ins/rhythmtrack.ny
 msgid "MIDI pitch of weak beat"
-msgstr "Tono MIDI de compás débil"
+msgstr "Tono MIDI de pulso débil"
 
 #: plug-ins/rhythmtrack.ny
 #, lisp-format
@@ -21544,6 +21660,57 @@ msgstr "Herramientas espectrales"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Heredado"
+
+#~ msgid "Network communications"
+#~ msgstr "Comunicaciones de red"
+
+#~ msgid "Requires network access."
+#~ msgstr "Se necesita acceso a la red."
+
+#~ msgctxt "application preferences"
+#~ msgid "&Send anonymous usage info"
+#~ msgstr "Enviar dato&s de uso anónimos"
+
+#~ msgid "We create a random ID to track how often Audacity is used."
+#~ msgstr "Se genera un identificador anónimo para hacer un seguimiento de la frecuencia con la que se utiliza Audacity."
+
+#~ msgid "In order to protect your privacy, Audacity does not collect any personally identifiable information about you."
+#~ msgstr "Para proteger su privacidad, Audacity no recopila ninguna información personal que pueda identificar al usuario."
+
+#~ msgid "Stay Updated & Anonymous Usage Info"
+#~ msgstr "Mantenerse al día y uso de información anónima"
+
+#, fuzzy
+#~ msgid "What's new in Audacity"
+#~ msgstr "Novedades de Audacity %s"
+
+#~ msgid "Open trace audio.com"
+#~ msgstr "Abrir audio.com"
+
+#~ msgid "Account not linked"
+#~ msgstr "Cuenta no enlazada"
+
+#~ msgid "Anonymous"
+#~ msgstr "Anónimo"
+
+#~ msgid "&Link Account"
+#~ msgstr "Vincu&lar cuenta"
+
+#~ msgid "&Unlink Account"
+#~ msgstr "&Desvincular cuenta"
+
+#, c-format
+#~ msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+#~ msgstr "Compartir audio requiere vincular una cuenta %s gratuita con Audacity. %%Haga clic en \"Vincula cuenta\" para realizar este paso."
+
+#~ msgid "audio.com"
+#~ msgstr "audio.com"
+
+#~ msgid "Press \"Continue\" to upload to audio.com"
+#~ msgstr "Haga clic en \"Continuar\" para subir el archivo a audio.com"
+
+#~ msgid "When Audacity detects music in file imported on empty project"
+#~ msgstr "Cuando Audacity detecte música en un archivo importado en un proyecto vacío"
 
 #~ msgid "Insane"
 #~ msgstr "Brutal"

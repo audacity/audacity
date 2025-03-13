@@ -453,13 +453,11 @@ bool AudioUnitWrapper::SetRateAndChannels(
       sizeof(float) * 8,
    };
 
-   unsigned one = 1u;
    const struct Info{
       unsigned &nChannels;
       AudioUnitScope scope;
       const char *const msg; // used only in log messages
    } infos[]{
-      { one, kAudioUnitScope_Global, "global" },
       { mAudioIns, kAudioUnitScope_Input, "input" },
       { mAudioOuts, kAudioUnitScope_Output, "output" },
    };
@@ -471,21 +469,20 @@ bool AudioUnitWrapper::SetRateAndChannels(
                identifier.wx_str(), msg);
             return false;
          }
-         if (scope != kAudioUnitScope_Global) {
-            bool failed = true;
-            ++nChannels;
-            do {
-               --nChannels;
-               streamFormat.mChannelsPerFrame = nChannels;
-               failed = SetProperty(kAudioUnitProperty_StreamFormat,
-                  streamFormat, scope);
-            } while(failed && nChannels > 0);
-            if (failed) {
-               wxLogError("%ls didn't accept stream format on %s\n",
-                  // Exposing internal name only in logging
-                  identifier.wx_str(), msg);
-               return false;
-            }
+
+         bool failed = true;
+         ++nChannels;
+         do {
+            --nChannels;
+            streamFormat.mChannelsPerFrame = nChannels;
+            failed = SetProperty(kAudioUnitProperty_StreamFormat,
+               streamFormat, scope);
+         } while(failed && nChannels > 0);
+         if (failed) {
+            wxLogError("%ls didn't accept stream format on %s\n",
+               // Exposing internal name only in logging
+               identifier.wx_str(), msg);
+            return false;
          }
       }
    }

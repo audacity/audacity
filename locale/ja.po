@@ -5,16 +5,16 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# Tadahisa Sugisaki, 2024
+# Tadahisa Sugisaki, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Tadahisa Sugisaki, 2024\n"
+"Last-Translator: Tadahisa Sugisaki, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -175,7 +175,7 @@ msgstr "ポートミキサーを開けません\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available mixers:\n"
-msgstr "利用可能なミキサー:\n"
+msgstr "使用可能なミキサー:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -184,11 +184,11 @@ msgstr "%d - %s\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available recording sources:\n"
-msgstr "利用可能な録音ソース:\n"
+msgstr "使用可能な録音ソース:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available playback volumes:\n"
-msgstr "利用可能な再生音量:\n"
+msgstr "使用可能な再生音量:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Recording volume is emulated\n"
@@ -298,7 +298,7 @@ msgstr "プリセットを設定ファイルに記録できません"
 #: libraries/lib-nyquist-effects/NyquistBase.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/EffectUI.cpp
 msgid "n/a"
-msgstr "利用不可"
+msgstr "使用不可"
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
@@ -750,7 +750,7 @@ msgstr "EQ 曲線の保存エラー"
 
 #: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
 msgid "Requested curve not found, using 'unnamed'"
-msgstr "要求された曲線が見つかりません。「無題」をお使いください"
+msgstr "要求された曲線が見つかりません。「無題」を使ってください"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: libraries/lib-builtin-effects/EqualizationParameters.cpp
@@ -917,7 +917,7 @@ msgstr "ステップ 1 および 2 に同じ窓関数のサイズを指定して
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Warning: window types are not the same as for profiling."
-msgstr "警告: プロファイリングにおけるウインドウ形式が同じではありません。"
+msgstr "警告: プロファイリングにおけるウィンドウ形式が同じではありません。"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "All noise profile data must have the same sample rate."
@@ -925,7 +925,7 @@ msgstr "すべてのノイズプロファイルは同じサンプリング周波
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr "ノイズプロファイルのサンプリング周波数は、処理する音と同じである必要があります。"
+msgstr "ノイズプロファイルのサンプリング周波数は、処理する音と一致している必要があります。"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Selected noise profile is too short."
@@ -1898,7 +1898,7 @@ msgid ""
 msgstr ""
 "「%s」は Windows Media Audio ファイルです。\n"
 "特許上の制限により、この形式のファイルを開くことはできません。\n"
-"利用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
+"使用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1910,7 +1910,7 @@ msgid ""
 msgstr ""
 "「%s」は Advanced Audio Coding ファイルです。\n"
 "オプションの FFmpeg ライブラリがなければ、この形式のファイルを開くことはできません。\n"
-"もしくは利用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
+"もしくは使用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1926,7 +1926,7 @@ msgstr ""
 "これらは一般的にはオンライン音楽ショップからのものです。\n"
 "暗号化されているため、この形式のファイルを開くことはできません。\n"
 "録音するか、いったんオーディオ CD に焼いてから\n"
-"利用可能な WAV や AIFF などのオーディオファイル形式に変換してください。"
+"使用可能な WAV や AIFF などのオーディオファイル形式に変換してください。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1938,7 +1938,7 @@ msgid ""
 msgstr ""
 "「%s」は RealPlayer メディアファイルです。\n"
 "このような独自形式のファイルを開くことはできません。\n"
-"利用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
+"使用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1968,7 +1968,7 @@ msgstr ""
 "この形式のファイルを開くことはできません。\n"
 "これが MP3 ファイルであると考えられる場合は、「.mp3」で終わるよう\n"
 "ファイル名を書き換えてからインポートし直してください。\n"
-"うまくいかなければ、利用可能なオーディオファイル形式（WAV、AIFF など）に\n"
+"うまくいかなければ、使用可能なオーディオファイル形式（WAV、AIFF など）に\n"
 "変換する必要があります。"
 
 #. i18n-hint: %s will be the filename
@@ -1981,7 +1981,7 @@ msgid ""
 msgstr ""
 "「%s」は Wavpack オーディオファイルです。\n"
 "この形式のファイルを開くことはできません。\n"
-"利用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
+"使用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -1993,7 +1993,7 @@ msgid ""
 msgstr ""
 "「%s」は Dolby Digital オーディオファイルです。\n"
 "この形式のファイルを開くことはできません。\n"
-"利用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
+"使用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -2005,7 +2005,7 @@ msgid ""
 msgstr ""
 "「%s」は Ogg Speex オーディオファイルです。\n"
 "この形式のファイルを開くことはできません。\n"
-"利用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
+"使用可能なオーディオファイル形式（WAV、AIFF など）に変換する必要があります。"
 
 #. i18n-hint: %s will be the filename
 #: libraries/lib-import-export/Import.cpp
@@ -2017,7 +2017,7 @@ msgid ""
 msgstr ""
 "「%s」は動画ファイルです。\n"
 "この形式のファイルを開くことはできません。\n"
-"利用可能なオーディオファイル形式（WAV、AIFF など）を抽出する必要があります。"
+"使用可能なオーディオファイル形式（WAV、AIFF など）を抽出する必要があります。"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -2383,9 +2383,9 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"モジュール「%s」は、Audacity のバージョン「%s」用です。\n"
+"モジュール「%s」は、Audacity バージョン「%s」用です。\n"
 "\n"
-"このモジュールは読み込みません。"
+"このモジュールを読み込みません。"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, c-format
@@ -2411,7 +2411,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"信頼できるソースのモジュールだけをお使いください"
+"信頼できるソースのモジュールだけを使ってください"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
 #: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
@@ -2984,8 +2984,8 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
-"「スペクトル編集」系エフェクトの利用の際は、\n"
-"トラックのスペクトログラム設定から［スペクトル選択］を有効にし、\n"
+"「スペクトル編集」系エフェクトを使用する場合は、\n"
+"トラックのスペクトログラム設定から［スペクトル選択］を有効化し、\n"
 "エフェクトを適用する周波数帯を選択してください。"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
@@ -3256,6 +3256,15 @@ msgstr ""
 "このファイルは、より新しいバージョンの Audacity で作成されました。\n"
 "\n"
 "開くためには、Audacity をアップグレードしてください。"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr "このプロジェクトは旧バージョンの Audacity で作成されたものです。保存すると、このプロジェクトを開くには Audacity バージョン %s 以降が必要になります。"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Project update required"
+msgstr "プロジェクトのアップデートが必要です"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -4364,7 +4373,7 @@ msgstr "レポートはすべて匿名です。詳細は %s を参照してく�
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr "プライバシーポリシー"
 
@@ -4529,8 +4538,8 @@ msgstr "ログの詳細を見る"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
@@ -4595,7 +4604,7 @@ msgstr "新規ファイル名を指定してください:"
 
 #: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
 msgid "Don't ask me again"
-msgstr "次回からは表示しない"
+msgstr "次回からは確認しない"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -4696,7 +4705,7 @@ msgstr ""
 "このプロジェクトは Audacity バージョン 1.0 以下で保存されています。\n"
 "ファイル形式の違いにより、このプロジェクトをインポートできません。\n"
 "\n"
-"v3.0.0 より古い Audacity を利用してプロジェクトをアップグレードすれば、\n"
+"v3.0.0 より古い Audacity を使用してプロジェクトをアップグレードすれば、\n"
 "この Audacity でもインポートできる可能性があります。"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
@@ -4735,6 +4744,10 @@ msgstr "プロジェクトの「selHigh」属性が正しくありません。"
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "プロジェクトデータフォルダーが見つかりません:「%s」"
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
+msgid "Invalid project 'rate' attribute."
+msgstr "プロジェクトの「rate」属性が正しくありません。"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -4852,7 +4865,7 @@ msgstr "出力を表示"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
-msgstr "データを標準入力にパイプします。「%f」はエクスポートウインドウのファイル名を使います。"
+msgstr "データを標準入力にパイプします。「%f」はエクスポートウィンドウのファイル名を使います。"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
@@ -4902,7 +4915,6 @@ msgstr "コマンド出力"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -5386,7 +5398,7 @@ msgid ""
 "-1 - off (use bitrate instead)"
 msgstr ""
 "全体の品質、コーデックごとに異なる\n"
-"vorbis に要求される\n"
+"vorbis を必要とします\n"
 "0 - 自動\n"
 "-1 - オフ（ビットレートが代わりに使用される）"
 
@@ -6038,7 +6050,7 @@ msgstr "45～85 kbps（ファイルサイズ小）"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive, 320 kbps"
-msgstr "狂気、320 kbps"
+msgstr "過度、320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -6054,7 +6066,7 @@ msgstr "控えめ、145～185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr "狂気"
+msgstr "過度"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -6314,7 +6326,7 @@ msgstr "Ogg Vorbis ファイルではありません"
 
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Vorbis version mismatch"
-msgstr "Vorbis バージョンが合いません"
+msgstr "Vorbis バージョンが一致しません"
 
 #: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Invalid Vorbis bitstream header"
@@ -7067,7 +7079,7 @@ msgstr "テキスト検索"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Match"
-msgstr "マッチ"
+msgstr "一致"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Go to matching paren"
@@ -7127,7 +7139,7 @@ msgstr "audio.com の応答を待っています"
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
-msgstr "続行するには audio.com に応答する必要があります。この操作はキャンセルできます。"
+msgstr "続けるには audio.com での操作が必要です。この操作はキャンセルできます。"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7141,8 +7153,9 @@ msgid "Generating audio preview..."
 msgstr "オーディオプレビューを生成中..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-msgid "Open trace audio.com"
-msgstr "audio.com をトレースして開く"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "audio.com から開く"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7262,11 +7275,15 @@ msgstr "スペースが空くのを待っています"
 msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr "audio.com のストレージスペースが使用可能になったら、［再試行］をクリックしてください。"
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
 msgstr "オーディオ共有"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get Effects"
+msgstr "エフェクトを取得"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7275,28 +7292,18 @@ msgid "&Share Audio Toolbar"
 msgstr "オーディオ共有ツールバー(&S)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr "リンクされていないアカウント"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "サインインしていません"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr "匿名"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "アカウントをリンク(&L)"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "アカウントをリンク解除(&U)"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "サインイン"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
 msgstr "サインアウト(&S)"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "audio.com から開く"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7352,7 +7359,9 @@ msgstr "audio.com で共有"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr "非圧縮オーディオファイルをアップロードし、共有リンクを作成します。このリンクから、ほかの人が WAV または MP3 形式のファイルをダウンロードできます。"
+msgstr ""
+"非圧縮オーディオファイルをアップロードし、共有リンクを作成します。\n"
+"このリンクから、ほかの人が WAV または MP3 形式のファイルをダウンロードできます。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Share to audio.com"
@@ -7402,16 +7411,8 @@ msgid "Don't worry, your changes will be saved to a temporary location and will 
 msgstr "変更点は一時的な場所に保存され、インターネット接続が再開したときにクラウドのコピーと同期されますので、安心してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr "サインインしていません"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr "続行するには audio.com にログインしてください。"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Sign in"
-msgstr "サインイン"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7472,7 +7473,7 @@ msgid ""
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
 "おっと! 入力に問題があるようです。\n"
-"メールアドレスが正しいものか、パスワードが 8 文字以上あるかを確認してください。"
+"メールアドレスが正しいか、パスワードが 8 文字以上であることを確認してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7480,7 +7481,7 @@ msgid ""
 "Please double-check your credentials and try again!"
 msgstr ""
 "申し訳ありませんが、入力されたメールアドレスまたはパスワードが正しくありません。\n"
-"視覚情報を再度確認のうえ、もう一度行ってください!"
+"視覚情報を再度確認のうえ、もう一度行なってください!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create an account to save to the cloud"
@@ -7704,20 +7705,6 @@ msgstr "アップロードを完了中..."
 msgid "Track Title"
 msgstr "トラック名"
 
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "オーディオ共有には、Audacity とリンクした無料の %s アカウントが必要です。%%上の 「アカウントをリンク」 を押して進んでください。"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "［続ける］をクリックして audio.com にアップロード"
-
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
 msgstr "オーディオを準備中..."
@@ -7822,6 +7809,42 @@ msgstr "再試行"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr "続けるには audio.com での操作が必要です。完了したら［再試行］をクリックしてください"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Loading..."
+msgstr "読み込み..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Please wait..."
+msgstr "お待ちください..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Connection error"
+msgstr "接続エラー"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr "MuseHub.com に接続できません。接続を確認してやり直してください。"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Try again"
+msgstr "再試行"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get it on MuseHub"
+msgstr "MuseHub から入手"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr "パートナーになる"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr "MuseHub パートナーになる"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgstr "MuseHub でアプリやエフェクト、サウンドを公開することで、何百万人もの音楽クリエイターに届けられます。MuseHub での製品公開に興味のある開発者の方は、今すぐ申し込んでください。"
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -8035,9 +8058,9 @@ msgstr ""
 "日本語訳:<br>\n"
 "Atsushi Yoshida -2015<br>\n"
 "Phroneris 2018-2022<br>\n"
-"SakiPapa 2022-2024<br>\n"
-"Akira Nishimura 2023-2024<br>\n"
-"Shinki Nishikori 2024"
+"SakiPapa 2022-2025<br>\n"
+"Akira Nishimura 2023-2025<br>\n"
+"Shinki Nishikori 2024-2025"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8288,7 +8311,6 @@ msgstr "更新の確認と問題の報告にはネットワーク接続が必要
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "詳細については、%sをご覧ください。"
@@ -8488,7 +8510,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Audacity is now going to exit. Please launch Audacity again to use the new temporary directory."
-msgstr "Audacity を終了します。新しい一時ディレクトリを利用するには、Audacity を再起動してください。"
+msgstr "Audacity を終了します。Audacity の再起動後に新しい一時ディレクトリが使用できるようになります。"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -8554,7 +8576,7 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
-"セマフォを捕捉できません。\n"
+"セマフォを取得できません。\n"
 "\n"
 "このエラーはリソースが不足している際に起こりやすく、\n"
 "コンピューターを再起動すると解決する場合があります。"
@@ -8578,7 +8600,7 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
-"ロックセマフォ（lock semaphore）を捕捉できません。\n"
+"ロックセマフォ（lock semaphore）を取得できません。\n"
 "\n"
 "このエラーはリソースが不足している際に起こりやすく、\n"
 "コンピューターを再起動すると解決する場合があります。"
@@ -8590,7 +8612,7 @@ msgid ""
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
-"サーバーセマフォ（server semaphore）を捕捉できません。\n"
+"サーバーセマフォ（server semaphore）を取得できません。\n"
 "\n"
 "このエラーはリソースが不足している際に起こりやすく、\n"
 "コンピューターを再起動すると解決する場合があります。"
@@ -8739,16 +8761,16 @@ msgid ""
 "The entire source clip will be pasted into your project, allowing you to access\n"
 "trimmed audio data anytime."
 msgstr ""
-"スマートクリップ。\n"
+"スマートクリップ\n"
 "ソースクリップ全体がプロジェクトに貼り付けられ、トリミングしたオーディオデータに\n"
-"いつでもアクセスできるようになります。"
+"いつでもアクセスできます。"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Selected audio only.\n"
 "Only the selected portion of the source clip will be pasted."
 msgstr ""
-"選択したオーディオのみ。\n"
+"選択したオーディオのみ\n"
 "ソースクリップの選択部分だけが貼り付けられます。"
 
 #: src/AudioPasteDialog.cpp
@@ -8757,7 +8779,7 @@ msgstr "オーディオを貼り付け"
 
 #: src/AudioPasteDialog.cpp
 msgid "How would you like to paste your audio?"
-msgstr "どのようにオーディオを貼り付けますか?"
+msgstr "オーディオをどの方法で貼り付けますか?"
 
 #. i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.
 #: src/AudioPasteDialog.cpp
@@ -8767,7 +8789,7 @@ msgstr "スマートクリップ全体で %s あります。サイズが大き�
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
-msgstr "選択を記憶し、再度尋ねない"
+msgstr "選択を記憶し、次回からは確認しない"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
@@ -9320,13 +9342,13 @@ msgstr "ベンチマークは正常に完了しました。\n"
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid "Select the audio for %s to use (for example, Cmd + A to Select All) then try again."
-msgstr "%s に利用するオーディオを選択して（例えば Cmd+A ですべてを選択）やり直してください。"
+msgstr "%s に使用するオーディオを選択して（例えば Cmd+A ですべてを選択）やり直してください。"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
 #, c-format
 msgid "Select the audio for %s to use (for example, Ctrl + A to Select All) then try again."
-msgstr "%s に利用するオーディオを選択して（例えば Ctrl+A ですべてを選択）やり直してください。"
+msgstr "%s に使用するオーディオを選択して（例えば Ctrl+A ですべてを選択）やり直してください。"
 
 #: src/CommonCommandFlags.cpp
 msgid "No Audio Selected"
@@ -9365,7 +9387,7 @@ msgid ""
 "action. (You cannot use this with mono.)"
 msgstr ""
 "この操作を適用するステレオオーディオを最初に選択してください。\n"
-"（モノラルには利用できません。）"
+"（モノラルには使用できません。）"
 
 #: src/CommonCommandFlags.cpp
 msgid ""
@@ -9373,7 +9395,7 @@ msgid ""
 "(Selecting other kinds of track won't work.)"
 msgstr ""
 "この操作を適用するオーディオを最初に選択してください。\n"
-"（そのほかのトラックには利用できません）"
+"（そのほかのトラックには使用できません）"
 
 #: src/CrashReport.cpp
 msgid "Audacity Support Data"
@@ -10559,7 +10581,7 @@ msgstr "インポートエラー"
 
 #: src/ProjectFileManager.cpp
 msgid "Cannot import AUP3 format.  Use File > Open instead"
-msgstr "AUP3 形式をインポートできません。  代わりに［ファイル］>［開く］をご利用ください。"
+msgstr "AUP3 形式をインポートできません。  代わりに［ファイル］>［開く］を使用してください。"
 
 #: src/ProjectFileManager.cpp
 msgid "Compact Project"
@@ -10673,6 +10695,22 @@ msgstr "エフェクト %d"
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
 msgstr "強さ"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr "リアルタイムエフェクト %s（%s 上）の設定を変更"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change realtime effect %s on %s"
+msgstr "リアルタイムエフェクト %s（%s）を変更"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -11497,6 +11535,22 @@ msgid "Calibration Complete"
 msgstr "校正完了"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr "<font color=“#000000”>"
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr "Audacity のクラウド保存プラットフォームにサインアップ"
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr "また、自分のプロジェクトにどこでもアクセスできます!"
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr "</font>"
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr "Audacity %s の更新内容"
@@ -11505,6 +11559,11 @@ msgstr "Audacity %s の更新内容"
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr "[%s|リリースビデオ]]を見たり、[[%s|更新ログ]]を読んで、最新リリースに含まれる内容について詳しい情報を得てください!<p>"
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
+msgstr "[[%s|changelog]] もお読みください</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11561,18 +11620,24 @@ msgid "A multiband compressor offering precise control over frequencies."
 msgstr "周波数を正確にコントロールできるマルチバンドコンプレッサーです。"
 
 #: src/WhatsNewDialog.cpp
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr "Ace Studio - 世界No.1の AI 歌声ジェネレータです。"
+
+#: src/WhatsNewDialog.cpp
+msgid "Continue for Cloud Storage"
+msgstr "クラウドストレージで続ける"
+
+#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Audacity へようこそ!"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Watch the release video"
-msgstr "動画を視聴"
+msgstr "リリース動画を見る"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Available on MuseHub"
-msgstr "[[%s|MuseHub]]から入手できます。"
+msgstr "MuseHub から入手できます"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -13321,7 +13386,7 @@ msgstr ""
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "'unnamed' always stays at the bottom of the list"
-msgstr "「無題」の位置はリストの一番最後に固定されています"
+msgstr "「無題」の位置はリストの一番最後に固定されます"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "'unnamed' is special"
@@ -14292,7 +14357,7 @@ msgstr "グラフィカルモード"
 msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 "ほとんどの VST エフェクトは、パラメーター設定用のグラフィカルインターフェイスを備えています。\n"
-"一方で、テキストだけの基本的なものも利用可能です。\n"
+"一方で、テキストだけの基本的なものも使用可能です。\n"
 "エフェクトを閉じて、開き直せば変更が適用されます。"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
@@ -14319,7 +14384,7 @@ msgstr "処理の際に VST3 エフェクトの一部ではオーディオが遅
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "VST3 エフェクトのほとんどは、パラメータを設定するためのグラフィカルなインターフェースを備えています。テキストのみで設定する方法も利用可能です。 エフェクトを閉じて、開き直せば変更が適用されます。"
+msgstr "VST3 エフェクトのほとんどは、パラメータを設定するためのグラフィカルなインターフェースを備えています。テキストのみで設定する方法も使用可能です。 エフェクトを閉じて、開き直せば変更が適用されます。"
 
 #: src/effects/Wahwah.cpp
 msgid "Dept&h (%):"
@@ -14400,8 +14465,8 @@ msgstr "ユーザーインターフェイス"
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
 msgstr ""
-"Audio Unit が提供するグラフィカルインターフェイスを利用するには、「完全」を選んでください。\n"
-"システムのインターフェイスを利用するには、「一般」を選んでください。\n"
+"Audio Unit が提供するグラフィカルインターフェイスを使用するには、「完全」を選んでください。\n"
+"システムのインターフェイスを使用するには、「一般」を選んでください。\n"
 "テキスト型インターフェイスにするには「基本」を選んでください。\n"
 "エフェクトを閉じて、開き直せば変更が適用されます。"
 
@@ -14464,7 +14529,7 @@ msgstr "処理の際に LV2 エフェクトの一部ではオーディオが遅�
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
 msgstr ""
 "LV2 エフェクトには、パラメーター設定用のグラフィカルインターフェイスを備えている場合があります。\n"
-"一方で、テキストだけの基本的なものも利用可能です。\n"
+"一方で、テキストだけの基本的なものも使用可能です。\n"
 "エフェクトを閉じて、開き直せば変更が適用されます。"
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -15345,12 +15410,16 @@ msgid "Audio Device Info"
 msgstr "オーディオデバイス情報"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Quick Help..."
-msgstr "簡易ヘルプ(&Q)..."
+msgid "&Quick Help"
+msgstr "簡易ヘルプ(&Q)"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Manual..."
-msgstr "マニュアル(&M)..."
+msgid "&Manual"
+msgstr "マニュアル(&M)"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Support"
+msgstr "Audacity サポート(&S)"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -16667,10 +16736,10 @@ msgstr "波形にRMSを表示(&W)"
 msgid "Preferences for Application"
 msgstr "アプリケーションの環境設定"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr "更新通知"
+msgstr "更新の通知"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16680,9 +16749,22 @@ msgstr "更新を確認(&C)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
-"アプリケーションの更新を確認するには、ネットワーク接続が必要です。\n"
-"プライバシーを保護するため、Audacity はいかなる個人情報も保存しません。"
+msgstr "アプリケーションの更新にはネットワーク接続が必要です。プライバシーを保護するために、Audacity はいかなる個人情報も保存しません。"
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr "UUID"
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Usage info (UUID)"
+msgstr "使用情報（UUID）(&U)"
+
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
+msgstr "Audacity の使用頻度を調べるために、インストール時にランダムな ID (UUID) を生成します。機能の改善や、将来の更新計画を立てるためにこれを役立てます。この ID には個人を特定できる情報は含まれていません。"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -16722,7 +16804,7 @@ msgstr "ホスト(&H):"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Using:"
-msgstr "利用中:"
+msgstr "使用中:"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 #: src/prefs/PlaybackPrefs.cpp src/prefs/PlaybackPrefs.h
@@ -16815,8 +16897,8 @@ msgid ""
 "Leave a field empty to go to the last directory used for that operation.\n"
 "Fill in a field to always go to that directory for that operation."
 msgstr ""
-"この処理で最後に使用したディレクトリを利用する場合は、空欄にしてください。\n"
-"ディレクトリを指定すると、そのディレクトリを常にこの処理に利用します。"
+"前回使用したディレクトリを使う場合には、空欄にしてください。\n"
+"指定した場合は、そのディレクトリを常にこの処理に使用します。"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "O&pen:"
@@ -16864,7 +16946,7 @@ msgstr "空き領域(&F):"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
-msgstr "利用不可 - この場所は存在しません"
+msgstr "使用できません - この場所は存在しません"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location"
@@ -17179,12 +17261,28 @@ msgid "Do &nothing"
 msgstr "何もしない(&N)"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr "ループのテンポをプロジェクトのテンポに常に一致させる(&M)"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr "ルーラ表示が「ビートと小節」の場合にのみ、ループのテンポをプロジェクトのテンポに一致させる(&O)"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Do nothing"
+msgstr "何もしない(&D)"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "音楽のインポート"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "空のプロジェクトへインポートしたファイルに音楽を検出した場合"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr "音楽ループを空のプロジェクトにインポートする場合の Audacity の動作："
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr "音楽ループを既存の（空でない）プロジェクトにインポートする場合の Audacity の動作："
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17877,8 +17975,8 @@ msgid ""
 "Ask me each time.\n"
 "Show dialog each time audio is pasted."
 msgstr ""
-"毎回確認する。\n"
-"オーディオを貼り付ける場合に、毎回ダイアログを表示。"
+"毎回確認\n"
+"オーディオを貼り付ける場合に、毎回ダイアログを表示します。"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Select all audio, if selection required"
@@ -17915,11 +18013,11 @@ msgstr "ソロボタン(&B):"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Pasted audio"
-msgstr "貼り付けたオーディオ"
+msgstr "オーディオの貼り付け"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Paste audio from other Audacity project as"
-msgstr "ほかの Audacity プロジェクトからオーディオを貼り付け"
+msgstr "ほかの Audacity プロジェクトからのオーディオ貼り付け"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -18032,7 +18130,7 @@ msgstr "デフォルトのオーディオトラック名(&N):"
 
 #: src/prefs/TracksPrefs.cpp src/toolbars/EditToolBar.cpp
 msgid "Zoom Toggle"
-msgstr "拡大/縮小を切り替え"
+msgstr "拡大/縮小の切り替え"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Preset 1:"
@@ -19181,7 +19279,7 @@ msgid ""
 "Do you wish to continue?"
 msgstr ""
 "ステレオにマージしようとしているトラックには、位置が異なるクリップや\n"
-"不適切なクリップが含まれています。マージするとトラックをレンダリング\n"
+"不一致のクリップが含まれています。マージするとトラックをレンダリング\n"
 "します。\n"
 "\n"
 "このため、リアルタイムエフェクトを波形に適用し、隠れたデータは消去\n"
@@ -19694,31 +19792,49 @@ msgstr "Audacity を更新"
 msgid "Downloading %s"
 msgstr "%s をダウンロード中"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
-msgstr "アプリケーションの更新確認について"
+msgid "App updates & usage info"
+msgstr "アプリケーションの更新と使用情報"
 
-#. i18n-hint: The first paragraph of app update notice dialog.
-#: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "アプリケーションを最新に保つため、新しいバージョンの Audacity がダウンロード可能になるたびに、アプリ内通知を受信することができます。"
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "利用者のプライバシーを守るため、個人情報の収集は行いません。しかし、更新を確認するためにはネットワーク接続が必要です。"
-
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can turn off app update checking at any time in %s."
-msgstr "更新確認機能は、%s からいつでも停止することができます。"
-
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
 msgstr "アプリケーションを更新"
+
+#. i18n-hint: The first paragraph of app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr "Audacity の新しいバージョンがダウンロード可能になれば、アプリ内で通知します。"
+
+#. i18n-hint: Subtitle of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Usage info"
+msgstr "使用情報"
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn this off anytime in %s."
+msgstr "いつでも %s からこれを停止できます。"
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr "いつでも %s からこれを無効化できます。"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "View privacy policy"
+msgstr "プライバシーポリシーを表示"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Disable UUID"
+msgstr "UUID を無効化"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
+msgstr "承認して継続(&&)"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -20675,8 +20791,8 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 "サウンド間にラベル領域を作成するには、~%~\n"
-"                 有音部が 2 か所以上必要です。~%~\n"
-"                 1 か所しか検出されません。"
+"                 サウンドが 2 か所以上必要です。~%~\n"
+"                 サウンドが 1 か所しか検出されません。"
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Legacy Limiter"

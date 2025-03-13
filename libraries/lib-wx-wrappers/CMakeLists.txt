@@ -33,10 +33,17 @@ set( SOURCES
    WindowAccessible.h
    wxPanelWrapper.cpp
    wxPanelWrapper.h
+   GradientButton.cpp
+   GradientButton.h
+   HyperLink.cpp
+   HyperLink.h
+   RoundedStaticBitmap.cpp
+   RoundedStaticBitmap.h
 )
 
 set( LIBRARIES
    lib-files-interface
+   lib-theme-interface
    wxwidgets::wxwidgets
 )
 

@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Catarina Anabela, 2024
 # Link Winterberg, 2024
+# Catarina Anabela, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2024\n"
+"Last-Translator: Catarina Anabela, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "Kesalahan Plugin"
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #, c-format
 msgid "Applied effect: %s"
-msgstr "Efek teraplikasi: %s"
+msgstr "Efek diterapkan: %s"
 
 #. i18n-hint: %s will be the name of the effect which will be
 #. * repeated if this menu item is chosen
@@ -1000,7 +1000,7 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
-"Seleksi audio terlalu pendek untuk di-preview.\n"
+"Seleksi audio terlalu pendek untuk dipratinjau.\n"
 "\n"
 "Coba pilih audio hingga setidaknya %.1f detik lebih lama,\n"
 "atau kurangi 'Resolusi Waktu' menjadi kurang dari %.1f detik."
@@ -1015,7 +1015,7 @@ msgid ""
 "For the current audio selection, the maximum\n"
 "'Time Resolution' is %.1f seconds."
 msgstr ""
-"Tidak dapat melakukan preview.\n"
+"Tidak dapat melakukan pratinjau.\n"
 "\n"
 "Untuk seleksi audio saat ini,\n"
 "'Resolusi Waktu' maksimum adalah %.1f detik."
@@ -1384,11 +1384,11 @@ msgstr "Ekspor kesalahan"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to attach to the Cloud project database"
-msgstr "Gagal melampirkan ke database proyek Cloud"
+msgstr "Gagal melampirkan ke database proyek Awan"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to decompress the Cloud project block"
-msgstr "Gagal mendekompresi blok proyek Cloud"
+msgstr "Gagal mendekompresi blok proyek Awan"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Local project data was removed before the sync has completed"
@@ -1717,7 +1717,7 @@ msgstr ""
 
 #: libraries/lib-files/FileException.h
 msgid "File Error"
-msgstr "Berkas Kesalahan"
+msgstr "Kesalahan Berkas"
 
 #: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
@@ -1828,7 +1828,7 @@ msgstr "Ekspor"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
 msgid "Export completed with error."
-msgstr "Ekspor selesai dengan kesalahan."
+msgstr "Ekspor yang telah selesai dengan kesalahan."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
@@ -2439,7 +2439,7 @@ msgid ""
 "\n"
 "It will not be loaded."
 msgstr ""
-"Modul \"%s\" tidak menyediakan fungsi apa pun yang dibutuhkan.\n"
+"Modul \"%s\" tidak menyediakan fungsi apa pun yang diperlukan.\n"
 "\n"
 "Modul ini tidak akan dimuat."
 
@@ -2958,7 +2958,7 @@ msgstr "Memberikan dukungan Efek Nyquist untuk Audacity"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Applying Nyquist Effect..."
-msgstr "Mengaplikasikan Efek Nyquist..."
+msgstr "Menerapkan Efek Nyquist..."
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist
 #. * Prompt"
@@ -3199,7 +3199,7 @@ msgid ""
 msgstr ""
 "Ruang disk yang tersisa pada %s tinggal sedikit.\n"
 "Mohon pilih lokasi direktori sementara yang lebih besar di\n"
-"Ppustaka Direktori."
+"Pustaka Direktori."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to open the project's database"
@@ -3257,6 +3257,15 @@ msgstr ""
 "Proyek ini dibuat dengan versi Audacity yang lebih baru.\n"
 "\\v\n"
 "Anda perlu melakukan upgrade untuk membukanya."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr "Proyek ini dibuat menggunakan versi Audacity yang lebih lama. Setelah disimpan, proyek hanya dapat dibuka dengan Audacity versi %s atau yang lebih baru."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Project update required"
+msgstr "Diperlukan pembaruan proyek"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
@@ -3318,7 +3327,7 @@ msgid ""
 "A disk I/O error\n"
 "(Unable to work with the blockfiles)"
 msgstr ""
-"Errror I/O pada disk\n"
+"Kesalahan I/O pada disk\n"
 "(Tidak dapat bekerja dengan blockberkas)"
 
 #. i18n-hint: An error message.  Don't translate blockfiles.
@@ -3573,7 +3582,7 @@ msgstr "Bantuan"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp src/effects/EffectUI.cpp
 msgid "&Preview"
-msgstr "&Preview"
+msgstr "&Pratinjau"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp
 msgid "Dry Previe&w"
@@ -4017,9 +4026,9 @@ msgid ""
 "  %s\n"
 "were already present. Overwrite?"
 msgstr ""
-"Semua berkas yang dibutuhjkan di:\n"
+"Semua berkas yang diperlukan di:\n"
 "  %s\n"
-"sudah ada. Timpa?"
+"sudah tersedia. Timpa?"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -4378,7 +4387,7 @@ msgstr "Semua laporan bersifat anonim. Lihat %s untuk info lebih lanjut."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr "Kebijakan Privasi kami"
 
@@ -4543,8 +4552,8 @@ msgstr "Tampilkan Log untuk Rincian"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
@@ -4751,6 +4760,10 @@ msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Tidak dapat menemukan folder data proyek: \"%s\""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
+msgid "Invalid project 'rate' attribute."
+msgstr "Atribut 'rate' proyek tidak valid."
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr "Trek MIDI ditemukan dalam berkas proyek, tetapi versi Audacity ini tidak mendukung MIDI, mengabaikan trek."
 
@@ -4911,7 +4924,6 @@ msgstr "Output Perintah"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -5154,7 +5166,7 @@ msgid ""
 "You can configure it at Preferences > Libraries."
 msgstr ""
 "FFMpeg yang dikonfigurasi dengan benar diperlukan untuk melanjutkan.\n"
-"Anda dapat mengaturnya di Ppustaka > Pustaka."
+"Anda dapat mengaturnya di Pustaka > Pustaka."
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -5694,7 +5706,7 @@ msgstr ""
 "FFmpeg terkonfigurasi di Pustaka dan berhasil dimuat sebelumnya\n"
 "tetapi kali ini Audacity gagal memuatnya saat startup.\n"
 "\n"
-"Coba kembali ke Ppustaka > Pustaka dan konfigurasi ulang."
+"Coba kembali ke Pustaka > Pustaka dan konfigurasi ulang."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg startup failed"
@@ -5768,7 +5780,7 @@ msgstr ""
 "Audacity mencoba menggunakan FFmpeg untuk mengimpor berkas audio,\n"
 "tetapi pustaka tidak ditemukan.\n"
 "\n"
-"Untuk menggunakan impor FFmpeg, silakan ke Edit > Ppustaka > Pustaka\n"
+"Untuk menggunakan impor FFmpeg, silakan ke Edit > Pustaka > Pustaka\n"
 "untuk unduh atau temukan pustaka FFMpeg."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
@@ -6130,7 +6142,7 @@ msgstr "Untuk menemukan %s, click di sini -->"
 #. i18n-hint: There is a  button to the right of the arrow.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "To get a free copy of LAME, click here -->"
-msgstr "Untuk mendapatkan salinan Lame gratis, klik di sini -->"
+msgstr "Untuk mendapatkan salinan LAME gratis, klik di sini -->"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
@@ -6260,7 +6272,7 @@ msgstr "(Built-in)"
 
 #: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "LAME MP3 Export Library"
-msgstr "Pustaka Pengeksporan MP3"
+msgstr "Pustaka Pengeksporan MP3 LAME"
 
 #: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "MP3 Library Version:"
@@ -7145,11 +7157,12 @@ msgstr "Simpan ke audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 msgid "Generating audio preview..."
-msgstr "Membuat preview audio..."
+msgstr "Membuat pratinjau audio..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-msgid "Open trace audio.com"
-msgstr "Buka jejak audio.com"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Buka dari audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7157,19 +7170,19 @@ msgstr "Menyinkronkan proyek"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Previews can be updated only for Cloud projects"
-msgstr "Preview hanya bisa diperbarui untuk proyek Cloud"
+msgstr "Pratinjau hanya bisa diperbarui untuk proyek Awan"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
-msgstr "Simpan &ke Cloud..."
+msgstr "Simpan &ke Awan..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
-msgstr "&Perbarui Preview Audio Cloud"
+msgstr "&Perbarui Pratinjau Audio Awan"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Fro&m Cloud..."
-msgstr "Buka dar&i Cloud..."
+msgstr "Buka dar&i Awan..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
@@ -7177,7 +7190,7 @@ msgstr "B&agikan Audio..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
-msgstr "Cloud"
+msgstr "Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Account"
@@ -7201,7 +7214,7 @@ msgstr "Selalu &tanya"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always &save to cloud"
-msgstr "Selalu &simpan ke cloud"
+msgstr "Selalu &simpan ke awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always save to the co&mputer"
@@ -7209,7 +7222,7 @@ msgstr "Selalu simpan ke ko&mputer"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Temporary Cloud files directory"
-msgstr "Direktori berkas Cloud sementara"
+msgstr "Direktori berkas Awan sementara"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -7231,7 +7244,7 @@ msgstr "&Hapus berkas sementara setelahnya:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Preferences for Cloud"
-msgstr "Ppustaka untuk Cloud"
+msgstr "Pustaka untuk Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -7269,11 +7282,15 @@ msgstr "Menunggu ruang untuk kosong"
 msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr "Setelah Anda menyediakan ruang penyimpanan di audio.com, klik Coba Lagi."
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
 msgstr "Bagikan Audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get Effects"
+msgstr "Dapatkan Efek"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7282,28 +7299,18 @@ msgid "&Share Audio Toolbar"
 msgstr "&Bagikan Toolbar Audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr "Akun tidak terhubung"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "Anda belum masuk"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr "Anonim"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "&Hubungkan Akun"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "&Putuskan Hubungan Akun"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Masuk"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
 msgstr "&Keluar"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Buka dari audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7317,15 +7324,15 @@ msgstr "Bagaimana cara Anda ingin menyimpan?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to the Cloud (free)"
-msgstr "Simpan ke Cloud (gratis)"
+msgstr "Simpan ke Awan (gratis)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
-msgstr "Proyek Anda dicadangkan secara pribadi di audio.com. Anda dapat mengakses pekerjaan Anda dari perangkat apa pun dan berkolaborasi dalam proyek Anda dengan orang lain. Penyimpanan cloud gratis untuk jumlah proyek terbatas."
+msgstr "Proyek Anda dicadangkan secara pribadi di audio.com. Anda dapat mengakses pekerjaan Anda dari perangkat apa pun dan berkolaborasi dalam proyek Anda dengan orang lain. Penyimpanan awan gratis untuk jumlah proyek terbatas."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Save to Cloud"
-msgstr "&Simpan ke Cloud"
+msgstr "&Simpan ke Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
@@ -7406,19 +7413,11 @@ msgstr "Terdapat masalah saat menyinkronkan berkas Anda"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
-msgstr "Jangan khawatir, perubahan Anda akan disimpan sementara dan akan disinkronkan dengan salinan di Cloud saat koneksi internet Anda kembali."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr "Anda belum masuk"
+msgstr "Jangan khawatir, perubahan Anda akan disimpan sementara dan akan disinkronkan dengan salinan di Awan saat koneksi internet Anda kembali."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr "Login ke audio.com untuk melanjutkan."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Sign in"
-msgstr "Masuk"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7467,11 +7466,11 @@ msgstr "H&ubungkan akun audio.com..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr "Buat akun cloud"
+msgstr "Buat akun awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
-msgstr "Masuk ke cloud"
+msgstr "Masuk ke awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7491,11 +7490,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create an account to save to the cloud"
-msgstr "Buat akun untuk menyimpan ke cloud"
+msgstr "Buat akun untuk menyimpan ke awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
-msgstr "Masuk untuk menyimpan ke cloud"
+msgstr "Masuk untuk menyimpan ke awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
@@ -7537,7 +7536,7 @@ msgstr "Lanjutkan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
-msgstr "Proyek ini tidak lagi disimpan di Cloud"
+msgstr "Proyek ini tidak lagi disimpan di Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
@@ -7545,7 +7544,7 @@ msgstr "Proyek telah dihapus dari audio.com sehingga tidak dapat disimpan saat i
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "You can either save it to the Cloud as a new project, or save it to your computer."
-msgstr "Anda bisa menyimpannya di Cloud sebagai proyek baru, atau simpan ke komputer."
+msgstr "Anda bisa menyimpannya di Awan sebagai proyek baru, atau simpan ke komputer."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
@@ -7554,7 +7553,7 @@ msgstr "Simpan ke komputer"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "Save to Cloud"
-msgstr "Simpan ke Cloud"
+msgstr "Simpan ke Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "Your project storage limit has been reached."
@@ -7599,7 +7598,7 @@ msgstr "Buka proyek lokal"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Cloud project conflict"
-msgstr "Konflik proyek Cloud"
+msgstr "Konflik proyek Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
@@ -7615,7 +7614,7 @@ msgstr "Buka versi baru"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open from Cloud"
-msgstr "Buka dari Cloud"
+msgstr "Buka dari Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "less than 1 minute"
@@ -7651,7 +7650,7 @@ msgstr "Gagal mendapatkan daftar proyek"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Cloud saved projects"
-msgstr "Proyek yang disimpan di Cloud"
+msgstr "Proyek yang disimpan di Awan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Search:"
@@ -7710,20 +7709,6 @@ msgstr "Menyelesaikan unggahan..."
 #: src/TagsEditor.cpp
 msgid "Track Title"
 msgstr "Judul Trek"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "Membagikan audio memerlukan akun %s gratis terhubung ke Audacity. %%Klik \"Hubungkan akun\" di atas untuk melanjutkan."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Tekan \"Lanjutkan\" untuk mengunggah ke audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
@@ -7796,7 +7781,7 @@ msgstr "Sukses!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
-msgstr "Semua perubahan tersimpan kini akan diperbarui di cloud. Anda dapat mengelola berkas ini di halaman proyek yang diunggah di audio.com"
+msgstr "Semua perubahan tersimpan kini akan diperbarui di awan. Anda dapat mengelola berkas ini di halaman proyek yang diunggah di audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
@@ -7804,7 +7789,7 @@ msgstr "Selesai"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Cloud project incomplete"
-msgstr "Proyek Cloud tidak lengkap"
+msgstr "Proyek Awan tidak lengkap"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
@@ -7829,6 +7814,42 @@ msgstr "Coba lagi"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr "Diperlukan tindakan di audio.com sebelum melanjutkan. Setelah Anda selesai melakukannya, klik Coba Lagi"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Loading..."
+msgstr "Memuat..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Please wait..."
+msgstr "Mohon tunggu..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Connection error"
+msgstr "Kesalahan sambungan"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr "Audacity tidak dapat terhubung ke MuseHub.com. Periksa koneksi Anda dan coba lagi."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Try again"
+msgstr "Coba lagi"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get it on MuseHub"
+msgstr "Dapatkan di MuseHub"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr "Menjadi mitra"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr "Menjadi mitra MuseHub"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgstr "Anda dapat menjangkau jutaan kreator musik dengan mempublikasikan aplikasi, efek, dan suara Anda di MuseHub. Jika Anda seorang pengembang dan tertarik untuk menerbitkan produk Anda di MuseHub, Anda bisa mendaftar hari ini."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -8287,7 +8308,6 @@ msgstr "Pemeriksaan pembaruan dan laporan kesalahan membutuhkan akses ke jaringa
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "Lihat %s untuk informasi lebih lanjut."
@@ -8298,7 +8318,7 @@ msgstr "Klik dan seret untuk menentukan area pengulangan."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
-msgstr "Tindakan garis waktu tidak aktif selama perekaman"
+msgstr "Tindakan lini masa nonaktif selama perekaman"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
@@ -8312,7 +8332,7 @@ msgstr "Rekaman/Playhead"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
-msgstr "Garis Waktu"
+msgstr "Lini Masa"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -8368,7 +8388,7 @@ msgstr "Pindahkan untuk Scrub. Seret untuk Cari."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play disabled"
-msgstr "Putar-Cepat tidak aktif"
+msgstr "Putar-Cepat nonaktif"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Quick-Play enabled"
@@ -8376,7 +8396,7 @@ msgstr "Putar-Cepat aktif"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline Options"
-msgstr "Opsi Garis Waktu"
+msgstr "Opsi Lini Masa"
 
 #: src/AdornedRulerPanel.cpp src/TimeDisplayMode.cpp
 #: src/menus/TimelineMenus.cpp
@@ -8981,7 +9001,7 @@ msgstr "Tidak ada makro yang dipilih"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Applying '%s' to current project"
-msgstr "Mengaplikasikan '%s' ke proyek saat ini"
+msgstr "Menerapkan '%s' ke proyek saat ini"
 
 #: src/BatchProcessDialog.cpp
 msgid "Please save and close the current project first."
@@ -8989,7 +9009,7 @@ msgstr "Mohon simpan dan tutup proyek yang ada dahulu."
 
 #: src/BatchProcessDialog.cpp
 msgid "Select file(s) for batch processing..."
-msgstr "Pilih (beberapa) berkas untuk pemrosesan batch..."
+msgstr "Pilih (beberapa) berkas untuk pemrosesan kumpulan..."
 
 #: src/BatchProcessDialog.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
@@ -10667,6 +10687,22 @@ msgstr "Efek %d"
 msgid "Power"
 msgstr "Daya"
 
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr "Mengubah pengaturan untuk efek realtime %s pada %s"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change realtime effect %s on %s"
+msgstr "Ubah efek realtime %s ke %s"
+
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
 msgstr "Ganti efek"
@@ -11488,6 +11524,22 @@ msgid "Calibration Complete"
 msgstr "Kalibrasi Selesai"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr "<font color=\"#000000\">"
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr "Daftarkan diri Anda ke platform penyimpanan awan Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr "dan akses proyek Anda dari mana saja!"
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr "</font>"
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr "Apa yang baru di Audacity %s"
@@ -11496,6 +11548,11 @@ msgstr "Apa yang baru di Audacity %s"
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
 msgstr "Tonton [[%s|video rilisan]] atau baca [[%s|catatan perubahan]] untuk mengetahui lebih lanjut apa saja yang telah kami sertakan dalam rilisan terbaru!</p>"
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
+msgstr "Anda juga dapat membaca [[%s|changelog]]</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -11552,18 +11609,24 @@ msgid "A multiband compressor offering precise control over frequencies."
 msgstr "Kompresor multiband yang menawarkan kontrol yang tepat atas frekuensi."
 
 #: src/WhatsNewDialog.cpp
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr "Ace Studio - Penghasil Suara Bernyanyi AI No.1 di Dunia."
+
+#: src/WhatsNewDialog.cpp
+msgid "Continue for Cloud Storage"
+msgstr "Lanjutkan untuk Penyimpanan Awan"
+
+#: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Selamat datang di Audacity!"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Watch the release video"
-msgstr "Tonton video"
+msgstr "Tonton video rilis"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Available on MuseHub"
-msgstr "Tersedia di [[%s|MuseHub]]."
+msgstr "Tersedia di MuseHub"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12328,7 +12391,7 @@ msgstr "&Threshold:"
 
 #: src/effects/AutoDuck.cpp
 msgid "Preview not available"
-msgstr "Preview tidak tersedia"
+msgstr "Pratinjau tidak tersedia"
 
 #: src/effects/BasicEffectUIServices.cpp
 msgid "Presets"
@@ -13136,11 +13199,11 @@ msgstr "Default Pabrik"
 
 #: src/effects/EffectPreview.cpp
 msgid "Preparing preview"
-msgstr "Meyiapkan preview"
+msgstr "Meyiapkan pratinjau"
 
 #: src/effects/EffectPreview.cpp
 msgid "Previewing"
-msgstr "Melihat preview"
+msgstr "Melakukan Pratinjau"
 
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 msgid "&Generate"
@@ -13152,11 +13215,11 @@ msgstr "Mengelola preset dan opsi"
 
 #: src/effects/EffectUI.cpp
 msgid "Presets && settings"
-msgstr "Preset & & pengaturan"
+msgstr "Preset && pengaturan"
 
 #: src/effects/EffectUI.cpp
 msgid "Preview effect"
-msgstr "Preview efek"
+msgstr "Pratinjau efek"
 
 #: src/effects/EffectUI.cpp
 msgid "&Apply"
@@ -14533,7 +14596,7 @@ msgstr "Maaf, Plug-in Vamp gagal diinstall."
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Plugin Settings"
-msgstr "Aturan Plugin"
+msgstr "Pengaturan Plugin"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Program"
@@ -15319,12 +15382,16 @@ msgid "Audio Device Info"
 msgstr "Info Perangkat Audio"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Quick Help..."
-msgstr "&Bantuan Cepat..."
+msgid "&Quick Help"
+msgstr "&Bantuan Cepat"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Manual..."
-msgstr "&Manual..."
+msgid "&Manual"
+msgstr "&Manual"
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Support"
+msgstr "&Dukungan Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -15952,7 +16019,7 @@ msgstr "Penelusuran Panjang ke Ka&nan Selama Pemutaran"
 
 #: src/menus/TimelineMenus.cpp
 msgid "Tim&eline"
-msgstr "Gar&is waktu"
+msgstr "Li&ni Masa"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -16551,7 +16618,7 @@ msgstr "Putar Sebelum da&n Sesudah Seleksi Berakhir"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play C&ut Preview"
-msgstr "Putar Preview P&otong"
+msgstr "Putar Pratinjau P&otong"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Pre&vious Label"
@@ -16641,10 +16708,10 @@ msgstr "Tampilk&an RMS dalam Waveform"
 msgid "Preferences for Application"
 msgstr "Preferensi untuk Aplikasi"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr "Memperbarui pemberitahuan"
+msgstr "Perbarui pemberitahuan"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16656,13 +16723,28 @@ msgstr "&Periksa pembaruan"
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
 msgstr "Pemeriksaan pembaruan aplikasi memerlukan akses jaringan. Untuk melindungi privasi Anda, Audacity tidak menyimpan informasi pribadi apa pun."
 
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr "UUID"
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Usage info (UUID)"
+msgstr "Info &penggunaan (UUID)"
+
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
+msgstr "Untuk membantu kami memahami seberapa sering orang menggunakan Audacity, kami membuat ID acak (UUID) untuk setiap instalasi. Hal ini membantu kami meningkatkan fitur dan merencanakan pembaruan di masa mendatang. ID ini tidak mengandung informasi yang dapat diidentifikasi secara pribadi."
+
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
-msgstr "Batch"
+msgstr "Kumpulan"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "Preferences for Batch"
-msgstr "Preferensi untuk Batch"
+msgstr "Preferensi untuk Kumpulan"
 
 #: src/prefs/BatchPrefs.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Behaviors"
@@ -16670,11 +16752,11 @@ msgstr "Kelakuan"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "&Don't apply effects in batch mode"
-msgstr "&Jangan aplikasikan efek pada mode batch"
+msgstr "&Jangan terapkan efek pada mode kumpulan"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Audio Settings"
-msgstr "Audio Settings"
+msgstr "Pengaturan Audio"
 
 #: src/prefs/DevicePrefs.cpp
 #, c-format
@@ -17151,12 +17233,28 @@ msgid "Do &nothing"
 msgstr "Tidak melakukan apa pun"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr "Selalu sesuaikan tempo pengulangan dengan tempo proyek"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr "&Hanya cocokkan tempo pengulangan dengan tempo proyek saat penggaris menampilkan \"Ketukan dan Irama\""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Do nothing"
+msgstr "%Tidak melakukan apa pun"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "Impor Musik"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Ketika Audacity mendeteksi musik dalam berkas yang diimpor pada proyek kosong"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr "Saat mengimpor pengulangan musik ke dalam proyek kosong, Audacity akan:"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr "Saat mengimpor pengulangan musik ke dalam proyek yang sudah ada (tidak kosong), Audacity akan:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17172,7 +17270,7 @@ msgstr "Preferensi untuk KeyConfig"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Keyboard preferences currently unavailable."
-msgstr "Ppustaka Papan Ketik sudah tidak ada."
+msgstr "Pustaka Papan Ketik sudah tidak ada."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
@@ -17423,7 +17521,7 @@ msgstr "Preferensi untuk Pemutaran"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Effects Preview"
-msgstr "Preview Efek"
+msgstr "Pratinjau Efek"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Length:"
@@ -17432,7 +17530,7 @@ msgstr "&Panjang:"
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Cut Preview"
-msgstr "Preview Potongan"
+msgstr "Pratinjau Potongan"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Before cut region:"
@@ -17464,7 +17562,7 @@ msgstr "Selalu scrub yang tak terse&mat"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
-msgstr "Ppustaka Audacity"
+msgstr "Pustaka Audacity"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Category"
@@ -18569,7 +18667,7 @@ msgstr "Putar-pada-Kecepatan &Sekali"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play C&ut Preview-at-Speed"
-msgstr "Putar Potongan Preview-pada-Kecepatan"
+msgstr "Putar Potongan Pratinjau-pada-Kecepatan"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Ad&just Playback Speed..."
@@ -19157,7 +19255,7 @@ msgstr ""
 "posisi yang berbeda, atau klip yang tidak cocok. Menggabungkannya\n"
 "akan me-render trek tersebut.\n"
 "\n"
-"Hal ini menyebabkan efek waktu nyata diterapkan ke bentuk gelombang dan\n"
+"Hal ini menyebabkan efek realtime diterapkan ke bentuk gelombang dan\n"
 "data tersembunyi akan dihapus. Selain itu, seluruh trek akan\n"
 "menjadi satu klip besar.\n"
 "\n"
@@ -19668,31 +19766,49 @@ msgstr "Pembaruan Audacity"
 msgid "Downloading %s"
 msgstr "Mengunduh %s"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
-msgstr "Memeriksa pembaruan aplikasi"
+msgid "App updates & usage info"
+msgstr "Pembaruan aplikasi & info penggunaan"
 
-#. i18n-hint: The first paragraph of app update notice dialog.
-#: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Agar tetap up-to-date, Anda akan menerima notifikasi dalam aplikasi setiap kali ada versi baru Audacity yang tersedia untuk diunduh."
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "Untuk melindungi privasi Anda, Audacity tidak mengumpulkan informasi pribadi apa pun. Namun, pemeriksaan pembaruan aplikasi memerlukan akses jaringan."
-
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can turn off app update checking at any time in %s."
-msgstr "Anda dapat menonaktifkan pemeriksaan pembaruan aplikasi kapan saja di %s."
-
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
 msgstr "Pembaruan aplikasi"
+
+#. i18n-hint: The first paragraph of app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr "Ketika versi baru tersedia untuk diunduh, Audacity akan memberi tahu Anda intra-aplikasi."
+
+#. i18n-hint: Subtitle of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Usage info"
+msgstr "Info penggunaan"
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn this off anytime in %s."
+msgstr "Anda dapat mematikannya kapan saja di %s."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr "Anda dapat menonaktifkan ini kapan saja di %s."
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "View privacy policy"
+msgstr "Lihat kebijakan privasi"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Disable UUID"
+msgstr "Nonaktifkan UUID"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
+msgstr "Terima && lanjutkan"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -19728,7 +19844,7 @@ msgstr "Baca lebih lanjut di GitHub"
 
 #: src/widgets/AButton.cpp
 msgid "(disabled)"
-msgstr "(dimatikan)"
+msgstr "(nonaktif)"
 
 #: src/widgets/AButton.cpp src/widgets/MeterPanel.cpp
 msgid "Press"
@@ -19792,7 +19908,7 @@ msgstr "Pengukur"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Disable Silent Monitoring"
-msgstr "Menonaktifkan Pemantauan Senyap"
+msgstr "Nonaktifkan Pemantauan Senyap"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Enable Silent Monitoring"

@@ -13,6 +13,7 @@
 
 #include "ProjectRate.h"
 
+#include <chrono>
 #include <thread>
 
 #include <wx/app.h>

@@ -35,14 +35,18 @@ private:
    void EnableDisableButtons() override;
    void ReCreateButtons() override;
 
+   AButton* MakeButton(int id, const TranslatableString& label, const wxImage& icon);
    void MakeShareAudioButton();
+   void MakeGetEffectsButton();
    void ArrangeButtons();
 
    AButton* mShareAudioButton {};
+   AButton* mGetEffectsButton {};
 
    enum
    {
       ID_SHARE_AUDIO_BUTTON = 14000,
+      ID_GET_EFFECTS_BUTTON = 14001,
       BUTTON_COUNT,
    };
 

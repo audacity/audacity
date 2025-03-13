@@ -785,6 +785,15 @@ bool ProjectFileIO::CheckVersion()
       );
       return false;
    }
+   else if (version < BaseProjectFormatVersion) {
+      using namespace BasicUI;
+      wxString currentVersionStr = wxString::Format("%u.%u", BaseProjectFormatVersion.Major, BaseProjectFormatVersion.Minor);
+      bool updateVersion = (MessageBoxResult::Yes == ShowMessageBox(
+         XO("This project was created using an older Audacity version. "
+            "Once saved, the project can only be opened with Audacity version %s or newer.").Format(currentVersionStr),
+         MessageBoxOptions{}
+            .Caption(XO("Project update required"))));
+   }
 
    return true;
 }
@@ -2077,7 +2086,7 @@ auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       }
 
       // Check for orphans blocks...sets mRecovered if any were deleted
-      
+
       auto blockids = WaveTrackFactory::Get( mProject )
          .GetSampleBlockFactory()
             ->GetActiveBlockIDs();
@@ -2087,7 +2096,7 @@ auto ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
          if (!success)
             return {};
       }
-   
+
       // Remember if we used autosave or not
       if (useAutosave)
       {

@@ -236,7 +236,7 @@ namespace detail {
       BaseItem, std::unique_ptr<BaseItem>, const Identifier &
    > {
       using Base::Base;
-   
+
       GroupItemBase(const GroupItemBase&) = delete;
       GroupItemBase& operator=(const GroupItemBase&) = delete;
       ~GroupItemBase() override = 0;
@@ -377,7 +377,7 @@ namespace detail {
          "traits");
       detail::RegisterItem(registry, placement, move(pItem));
    }
-   
+
    //! Generates classes whose instances register items at construction
    /*!
        Usually constructed statically

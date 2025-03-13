@@ -324,6 +324,14 @@ RealtimeEffectState::~RealtimeEffectState()
 
 }
 
+std::shared_ptr<RealtimeEffectState> RealtimeEffectState::Clone() const
+{
+   auto pNewState{RealtimeEffectState::make_shared(GetID())};
+   pNewState->mPlugin = mPlugin;
+   pNewState->mMainSettings.Set(mMainSettings);
+   return pNewState;
+}
+
 void RealtimeEffectState::SetID(const PluginID & id)
 {
    bool empty = id.empty();

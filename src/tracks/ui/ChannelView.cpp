@@ -277,6 +277,8 @@ struct TrackPositioner final : ClientData::Base
       auto iter =
          TrackList::Get(mProject).Find(e.mpTrack.lock().get());
       if (!*iter)
+         iter = TrackList::Get(mProject).begin();
+      if (!*iter)
          return;
 
       auto prev = iter;

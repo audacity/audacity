@@ -95,6 +95,9 @@ public:
    /// online help is available
    static const wxString HelpHostname;
 
+   ///Hostname of the audacity support gitbook 
+   static const wxString AudacitySupportHostname;
+
    /// URL path on the help server to the root directory of the manual.
    /// index and quick_help are here in the on-line release manual.
    /// Must both start and end with '/' characters.

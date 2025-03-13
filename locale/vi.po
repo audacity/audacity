@@ -5,15 +5,17 @@
 #
 # Translators:
 # Link Winterberg, 2024
+# Brad Freedom, 2024
+# brad freedom <brad.freedom@gmail.com>, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.7.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-10-28 11:47+0100\n"
+"POT-Creation-Date: 2025-03-10 10:55+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2024\n"
+"Last-Translator: brad freedom <brad.freedom@gmail.com>, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/audacity/teams/164520/vi/)\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +35,7 @@ msgstr ""
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
 msgid "Plugin Error"
-msgstr "Lỗi Plugin Tính năng bổ sung"
+msgstr "Lỗi Plugin"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #, c-format
@@ -128,12 +130,12 @@ msgstr "Độ trễ phát tiếng cao: %g\n"
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Playback Rates:\n"
-msgstr ""
+msgstr "Tốc độ phát lại chấp nhận được:\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Capture Rates:\n"
-msgstr ""
+msgstr "Tỷ lệ ghi âm chấp nhận được:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -170,7 +172,7 @@ msgstr "Nhận %d khi mở thiết bị \n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Unable to open Portmixer\n"
-msgstr "Không mở được bộ phối cổng (Portmixer)\n"
+msgstr "Không mở được bộ phối cổng Portmixer\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available mixers:\n"
@@ -398,7 +400,7 @@ msgstr "Auto Duck - Tự động giảm âm lượng cho đoạn âm"
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr "Giảm (nhỏ) âm lượng của (các) track mỗi khi âm lượng đạt đến một mức độ nhất định"
+msgstr "Giảm âm lượng của (các) track mỗi khi âm lượng đạt đến một mức độ nhất định"
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
@@ -597,23 +599,23 @@ msgstr "Cổng biến âm mở rộng"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Light, -70dB noise floor"
-msgstr "Leveller, Light - Nhẹ, -70dB Noise Floor - Nhiễu nhỏ nhất"
+msgstr "Leveller, Light, -70dB Noise Floor - Nhiễu nhỏ nhất Nhẹ"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Moderate, -70dB noise floor"
-msgstr "Leveller, Moderate - Vừa phải, -70dB Noise floor - Nhiễu nhỏ nhất"
+msgstr "Leveller, Moderate, -70dB Noise floor - Nhiễu nhỏ nhất Vừa phải"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heavy, -70dB noise floor"
-msgstr "Leveller, Heavy - Nặng, -70dB Noise floor - Nhiễu nhỏ nhất"
+msgstr "Leveller, Heavy, -70dB Noise floor - Nhiễu nhỏ nhất Nặng"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heavier, -70dB noise floor"
-msgstr "Leveller, Heavier - Nặng Hơn, -70dB Noise floor - Nhiễu nhỏ nhất"
+msgstr "Leveller, Heavier, -70dB Noise floor - Nhiễu nhỏ nhất Nặng Hơn"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr "Leveller, Heaviest - Nặng Nhất, -70dB Noise floor - Nhiễu nhỏ nhất"
+msgstr "Leveller, Heaviest -70dB Noise floor - Nhiễu nhỏ nhất Nặng Nhất,"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Half-wave Rectifier"
@@ -1043,7 +1045,7 @@ msgstr "Kết hợp các tín hiệu lệch pha với tín hiệu gốc"
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "Để vẽ phổ, tất cả các đoạn âm được chọn phải có cùng tỷ lệ tốc độ mẫu."
+msgstr "Để vẽ phổ, tất cả các track được chọn phải có cùng tỷ lệ tốc độ mẫu."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid ""
@@ -1274,7 +1276,7 @@ msgstr "Chuyển đổi các track stereo thành track mono"
 
 #: libraries/lib-builtin-effects/StereoToMono.cpp
 msgid "Mixing down to mono"
-msgstr "Trộn mono"
+msgstr "Trộn xuống thành đơn âm mono"
 
 #: libraries/lib-builtin-effects/TimeScaleBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1379,11 +1381,11 @@ msgstr "Lỗi xuất tệp"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to attach to the Cloud project database"
-msgstr "L"
+msgstr "Không thể đính kèm vào cơ sở dữ liệu dự án Đám mây"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
 msgid "Failed to decompress the Cloud project block"
-msgstr "Z"
+msgstr "Không giải nén được khối dự án Cloud"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Local project data was removed before the sync has completed"
@@ -1406,7 +1408,7 @@ msgstr "Nhẹ nhàng"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Beat Booster"
-msgstr "Tăng cường nhạc nền"
+msgstr "Beat Booster - Tăng Cường Nhịp"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1706,7 +1708,9 @@ msgstr "Audacity đã thành công trong việc tạo tập tin tại %s nhưng 
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full."
-msgstr "Audacity không viết được tập tin %s."
+msgstr ""
+"Audacity không thể ghi vào tệp.\n"
+"Có lẽ %s không thể ghi hoặc đĩa đã đầy."
 
 #: libraries/lib-files/FileException.h
 msgid "File Error"
@@ -2063,7 +2067,7 @@ msgstr "&Chuẩn"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "E&xtended (with frequency ranges)"
-msgstr "Mở & rộng (với dải tần số)"
+msgstr "Mở &rộng (với dải tần số)"
 
 #: libraries/lib-label-track/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
@@ -2076,7 +2080,7 @@ msgstr "Các nhãn"
 #: libraries/lib-label-track/LabelTrack.cpp src/LabelDialog.cpp
 #: src/LabelDialog.h src/TrackPanelAx.cpp
 msgid "Label Track"
-msgstr "Nhãn của track"
+msgstr "Track Nhãn"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Importing WebVTT files is not currently supported."
@@ -2436,15 +2440,15 @@ msgstr ""
 #: libraries/lib-module-manager/PluginManager.cpp
 #, c-format
 msgid "Overwrite the plug-in file %s?"
-msgstr "Thay thế tập tin plug-in%s?"
+msgstr "Thay thế tập tin plugin%s?"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Plug-in already exists"
-msgstr "Plug-in đã tồn tại"
+msgstr "Plugin đã tồn tại"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Plug-in file is in use. Failed to overwrite"
-msgstr "Plug-in file (tập tin điện toán) đang được sử dụng. Không thể lưu được"
+msgstr "Tập tin plugin đang được sử dụng. Không thể lưu được"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 #, c-format
@@ -2459,11 +2463,11 @@ msgstr "Không thể đăng ký: '%s'"
 msgctxt "plug-ins"
 msgid "Enable this plug-in?\n"
 msgid_plural "Enable these plug-ins?\n"
-msgstr[0] "Bật những plug-ins (điện toán) này?\n"
+msgstr[0] "Bật những plugin này?\n"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Enable new plug-ins"
-msgstr "Bật plug-ins (điện toán) mới "
+msgstr "Bật plugin mới "
 
 #: libraries/lib-module-manager/PluginManager.h
 msgid "Nyquist Prompt"
@@ -2601,13 +2605,13 @@ msgstr "Phách"
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr "thanh:nhạc nền"
+msgstr "thanh:nhịp "
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick"
 #. corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr "thanh:nhạc nền:đánh dấu"
+msgstr "thanh:nhịp:đánh dấu"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -2956,7 +2960,7 @@ msgstr "Nyquist Worker"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Ill-formed Nyquist plug-in header"
-msgstr "Ill-hình thành tiêu đề trình cắm thêm Nyquist"
+msgstr "Tiêu đề plugin Nyquist không đúng định dạng"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid ""
@@ -2972,11 +2976,14 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
+"Để dùng 'hiệu ứng âm phổ' - 'Spectral Effects' , bật 'Lựa chọn âm phổ' - 'Spectral Selection'\n"
+"trong cài đặt âm phổ Spectrogram và chọn\n"
+" vùng tần số cho hiệu ứng."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
 msgid "error: File \"%s\" specified in header but not found in plug-in path.\n"
-msgstr "lỗi: tập tin \"%s\" lẽ ra phải có trong tiêu đề nhưng không thể tìm thấy trong đường dẫn plug-in.\n"
+msgstr "lỗi: tập tin \"%s\" lẽ ra phải có trong tiêu đề nhưng không thể tìm thấy trong đường dẫn plugin.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Audio selection required."
@@ -3004,7 +3011,7 @@ msgstr "Nyx_error từ %s.\n"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "plug-in"
-msgstr "Plug-in \"điện toán\""
+msgstr "Plugin"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Nyquist returned a list."
@@ -3043,7 +3050,7 @@ msgstr "[Cảnh báo: Nyquist trả về chuỗi UTF-8 không hợp lệ, đư�
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Phiên bản Audacity này không hỗ trợ phiên bản plug-in Nyquist %ld"
+msgstr "Phiên bản Audacity này không hỗ trợ phiên bản plugin Nyquist %ld"
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 msgid "Could not open file"
@@ -3243,6 +3250,15 @@ msgstr ""
 "Bạn cần cập nhật Audacity để mở nó."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
+#, c-format
+msgid "This project was created using an older Audacity version. Once saved, the project can only be opened with Audacity version %s or newer."
+msgstr "Dự án này được tạo bằng phiên bản Audacity cũ hơn. Sau khi lưu, dự án chỉ có thể mở bằng phiên bản %s Audacity hoặc mới hơn."
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
+msgid "Project update required"
+msgstr "Yêu cầu cập nhật dự án"
+
+#: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to initialize the project file"
 msgstr "Không thể khởi chạy tập tin dự án"
 
@@ -3317,7 +3333,7 @@ msgstr ""
 #. i18n-hint: An error message.  Don't translate blockfiles.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to work with the blockfiles"
-msgstr "(Không thể làm việc với các blockfiles)"
+msgstr "Không thể làm việc với các blockfiles"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
@@ -3521,25 +3537,25 @@ msgstr "24-bit"
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in group at %s was merged with a previously defined group"
-msgstr "Nhóm thêm vào ở %s sẽ được kết hợp với nhóm xác định trước đó"
+msgstr "Nhóm Plugin thêm vào ở %s sẽ được kết hợp với nhóm xác định trước đó"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in item at %s conflicts with a previously defined item and was discarded"
-msgstr "Mục tin thêm vào ở %s xung đột với item xác định trước đó và đã bị loại bỏ"
+msgstr "Mục tin Plugin thêm vào ở %s xung đột với item xác định trước đó và đã bị loại bỏ"
 
 #: libraries/lib-registries/Registry.cpp
 #, c-format
 msgid "Plug-in items at %s specify conflicting placements"
-msgstr "Mục tin thêm vào ở %s xác định các sắp xếp gây xung đột"
+msgstr "Mục tin Plugin thêm vào ở %s xác định các sắp xếp gây xung đột"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
 msgid "Sample Track"
-msgstr "Đoạn âm lấy mẫu"
+msgstr "Track lấy mẫu"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
 msgid "Writable Sample Track"
-msgstr "Đoạn âm lấy mẫu có thể ghi được"
+msgstr "Track lấy mẫu có thể ghi được"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
 #: src/effects/Contrast.cpp
@@ -4032,7 +4048,7 @@ msgstr "Tùy chỉnh"
 
 #: libraries/lib-time-frequency-selection/ViewInfo.cpp
 msgid "Enable &Looping"
-msgstr "Bật lên & Lặp lại"
+msgstr "Bật lên &Lặp lại"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Time track.
@@ -4187,7 +4203,7 @@ msgstr "Thang đo độ xám ngược chiều"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Frequencies"
-msgstr "Tần số (Hz)"
+msgstr "Tần số"
 
 #. i18n-hint: the Reassignment algorithm for spectrograms
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
@@ -4311,7 +4327,7 @@ msgstr "Audio"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "Wave Track"
-msgstr "Sóng của Track"
+msgstr "Track Sóng"
 
 #. i18n-hint Template for clip name generation on copy-paste
 #. i18n-hint Template for clip name generation on inserting new empty clip
@@ -4357,7 +4373,7 @@ msgstr "Tất cả các báo cáo đều được ẩn danh. Xem %s để biết
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+#: src/prefs/ApplicationPrefs.cpp
 msgid "our Privacy Policy"
 msgstr "Chính sách quyền riêng tư của chúng tôi"
 
@@ -4522,8 +4538,8 @@ msgstr "Hiển thị chi tiết nhật ký máy "
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
-#: src/effects/nyquist/Nyquist.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/AboutDialog.cpp
+#: src/Dependencies.cpp src/WhatsNewDialog.cpp src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
@@ -4675,7 +4691,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "Tính năng này không được hỗ trợ trong các phiên bản Audacity trước 3.3.3 .\n"
-"Các đoạn âm thanh nổi này đã được chia thành các đoạn âm đơn âm.\n"
+"Các track stereo thanh nổi này đã được chia thành các track mono đơn âm.\n"
 "Vui lòng xác minh rằng mọi thứ hoạt động như dự định trước khi lưu."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
@@ -4728,6 +4744,10 @@ msgstr "Thuộc tính 'selHigh' của dự án không hợp lệ."
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Không tìm thấy thư mục dữ liệu của dự án: \"%s\""
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
+msgid "Invalid project 'rate' attribute."
+msgstr "Thuộc tính 'tốc độ' của dự án không hợp lệ."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -4892,7 +4912,6 @@ msgstr "Đầu ra của lệnh"
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
@@ -5093,7 +5112,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Không thể mở audio Codec (bộ giải mã) \"%s\"(0x%x)\n"
+"Không thể mở bộ giải mã audio Codec  \"%s\" (0x%x)\n"
 "\n"
 "%s"
 
@@ -5237,7 +5256,7 @@ msgstr "Cập-2"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "4-level"
-msgstr "Cập"
+msgstr "4 cấp độ"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "8-level"
@@ -5320,7 +5339,10 @@ msgid ""
 "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
-msgstr "SO 639 3-"
+msgstr ""
+"Mã ngôn ngữ 3 chữ cái ISO 639\n"
+"Tùy chọn\n"
+"trống - tự động"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Language:"
@@ -5372,8 +5394,10 @@ msgid ""
 "0 - automatic\n"
 "-1 - off (use bitrate instead)"
 msgstr ""
-"Tất cả thiết lập chất lượng, được dùng khác nhau tùy theo bộ giải mã khác nhau\n"
-"cần có vorbis"
+"Chất lượng tổng thể, được sử dụng khác nhau bởi các codec khác nhau\n"
+"Cần thiết cho vorbis\n"
+"0 - tự động\n"
+"-1 - tắt (sử dụng bitrate thay thế)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Quality:"
@@ -5539,7 +5563,8 @@ msgid ""
 msgstr ""
 "Lệnh dự đoán thấp nhất\n"
 "Tùy chọn\n"
-"-Thấp nhất - 0\n"
+"-1 - mặc định\n"
+"Thấp nhất - 0\n"
 "Cao nhất - 8"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
@@ -5648,7 +5673,7 @@ msgstr "Định dạng %s không tương thích với codec %s."
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Incompatible format and codec"
-msgstr "Lỗi định dạng và codec (bộ giải mã)"
+msgstr "Lỗi định dạng và bộ giải mã codec"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to guess format"
@@ -6019,7 +6044,7 @@ msgstr "45-85 kbps (Tệp nhỏ hơn)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive, 320 kbps"
-msgstr ""
+msgstr "Siêu Cao, 320 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -6035,7 +6060,7 @@ msgstr "Trung bình, 145-185 kbps"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive"
-msgstr ""
+msgstr "Siêu Cao"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
@@ -6764,7 +6789,7 @@ msgstr "Đã gặp %d lỗi khi giải mã tập tin WavPack!"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
-msgstr "&Nyquist Workbench (bàn làm việc)"
+msgstr "&Nyquist Workbench - Bàn làm việc "
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
@@ -7122,8 +7147,9 @@ msgid "Generating audio preview..."
 msgstr "Đang tạo bản xem trước âm thanh.."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-msgid "Open trace audio.com"
-msgstr "Mở dấu vết audio.com"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Mở từ audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -7163,7 +7189,7 @@ msgstr "Kiểu xuất tệp"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "S&how 'How would you like to export?' dialog"
-msgstr "Đưa& ra \"cách mà bạn muốn xuất tệp?\" hộp thoại"
+msgstr "Đưa &ra \"cách mà bạn muốn xuất tệp?\" hộp thoại"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Save behavior"
@@ -7179,7 +7205,7 @@ msgstr "Luôn &lưu vào đám mây"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always save to the co&mputer"
-msgstr "L"
+msgstr "Luôn luôn lưu vào &máy tính"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Temporary Cloud files directory"
@@ -7243,11 +7269,15 @@ msgstr "Đợi làm trống đĩa"
 msgid "Once you have made storage space available on audio.com, click Retry."
 msgstr "Khi bạn đã làm trống "
 
-#. i18n-hint: Share audio button text, keep as short as possible
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Share Audio"
 msgstr "Chia sẻ audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get Effects"
+msgstr "Tải về hiệu ứng"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7256,28 +7286,18 @@ msgid "&Share Audio Toolbar"
 msgstr "&Thanh công cụ Chia sẻ Audio"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr "Tài khoản không được kết nối"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "Bạn chưa đăng nhập"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Anonymous"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "&Liên kết Tài khoản"
-
-#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "&Hủy liên kết Tài khoản"
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Đăng nhập"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
-msgstr ""
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr "Mở từ audio.com"
+msgstr "Đăng Xuất"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7383,16 +7403,8 @@ msgid "Don't worry, your changes will be saved to a temporary location and will 
 msgstr "Xin đừng lo lắng, những thay đổi của bạn sẽ được lưu vào một thư mục tạm thời và sẽ được đồng bộ hóa với bản sao trên đám mây khi kết nối Internet của bạn trở lại."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr "Bạn chưa đăng nhập"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
 msgstr "Đăng nhập vào audio.com để tiến hành."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Sign in"
-msgstr "Đăng nhập"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -7441,63 +7453,67 @@ msgstr "L&iên kết tài khoản audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "Tạo tài khoản đám mây - Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
-msgstr ""
+msgstr "Đăng nhập vào Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Oops! It looks like there was an issue with your input.\n"
 "Please ensure your email is correct and that your password is at least 8 characters long"
 msgstr ""
+"Ồ! Có vẻ như có vấn đề với thông tin bạn nhập.\n"
+"Vui lòng đảm bảo email của bạn là chính xác và mật khẩu của bạn dài ít nhất 8 ký tự"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
+"Xin lỗi, nhưng có vẻ như email hoặc mật khẩu bạn nhập không đúng.\n"
+"Vui lòng kiểm tra lại thông tin đăng nhập của bạn và thử lại!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create an account to save to the cloud"
-msgstr ""
+msgstr "Tạo một tài khoản để lưu vào đám mây - cloud "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
-msgstr ""
+msgstr "Đăng nhập để lưu vào đám mây - cloud "
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "Tiếp tục với Google"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "Tiếp tục với Facebook"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "Mật khẩu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Quên mật khẩu?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "Bạn đã có tài khoản?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
-msgstr ""
+msgstr "Đăng nhập ở đây"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr ""
+msgstr "Bạn cần một tài khoản?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -7681,20 +7697,6 @@ msgstr "Đang hoàn thiện tải lên ..."
 msgid "Track Title"
 msgstr "Tiêu đề của track"
 
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "Chia sẻ audio yêu cầu một tài khoản %s miễn phí được liên kết với Audacity. %%Nhấn \"Liên kết tài khoản\" ở trên để thực hiện."
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Nhấn \"Tiếp tục\" để tải lên audio.com"
-
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
 msgstr "Đang chuẩn bị audio ..."
@@ -7709,7 +7711,7 @@ msgstr "Bạn vừa truy cập vào một dự án đã hết hạn."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audacity had trouble connecting to the server."
-msgstr "Audacity "
+msgstr "Audacity gặp sự cố khi kết nối với máy chủ."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The project is too large to upload. Please save it to your computer instead."
@@ -7790,7 +7792,7 @@ msgstr "Chưa có phiên bản nào của dự án này được tải đầy đ
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 msgid "You have canceled this upload to audio.com"
-msgstr "Ban đã "
+msgstr "Bạn đã hủy tải lên này đến audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
 msgid "Retry"
@@ -7799,6 +7801,42 @@ msgstr "Thử lại"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr "Một thao tác trên audio.com đang được xử lý trước khi bạn có thể tiếp tục. Một khi bạn làm xong, hãy bấm vào \"Thử lại\""
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Loading..."
+msgstr "Đang tải..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Please wait..."
+msgstr "Vui lòng chờ..."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Connection error"
+msgstr "Lỗi kết nối"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
+msgstr "Audacity không thể kết nối với MuseHub.com. Vui lòng kiểm tra kết nối của bạn và thử lại."
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Try again"
+msgstr "Thử lại"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Get it on MuseHub"
+msgstr "Tìm trên MuseHub"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a partner"
+msgstr "Trở thành đối tác"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "Become a MuseHub partner"
+msgstr "Trở thành đối tác MuseHub"
+
+#: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
+msgid "You can reach millions of music creators by publishing your apps, effects and sounds on MuseHub. If you're a developer and interested in publishing your products on MuseHub, you can apply today."
+msgstr "Bạn có thể tiếp cận hàng triệu người sáng tạo âm nhạc bằng cách xuất bản ứng dụng, hiệu ứng và âm thanh của mình trên MuseHub. Nếu bạn là nhà phát triển và quan tâm đến việc xuất bản sản phẩm của mình trên MuseHub, bạn có thể nộp đơn ngay hôm nay."
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Exported Allegro (.gro) files save time as:"
@@ -7970,7 +8008,7 @@ msgstr "%s, kiểm tra thử phần mềm"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
-msgstr "%s, Plug-ins - Điện toán Nyquist"
+msgstr "%s, Plugin Nyquist"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -8222,7 +8260,7 @@ msgstr "Các tính năng"
 
 #: src/AboutDialog.cpp
 msgid "Plug-in support"
-msgstr "Hỗ trợ trình bổ sung"
+msgstr "Hỗ trợ trình bổ sung Plugin"
 
 #: src/AboutDialog.cpp
 msgid "Sound card mixer support"
@@ -8257,7 +8295,6 @@ msgstr "Ứng dụng kiểm tra cập nhật báo lỗi yêu và cầu quyền t
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
-#: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "See %s for more info."
 msgstr "Xem %s dể biết thêm thông tin."
@@ -8306,7 +8343,7 @@ msgstr "Nhấp chuột và kéo để Scrub (tua rê chuột)"
 #.
 #: src/AdornedRulerPanel.cpp
 msgid "Click & move to Scrub. Click & drag to Seek."
-msgstr "Nhấp chuột & rê chuột để Scrub (tua rê). Nhấp & kéo thả để Seek (tua ngắt quãng)"
+msgstr "Nhấp chuột và rê chuột để Scrub (tua rê). Nhấp và kéo thả để Seek (tua ngắt quãng)"
 
 #. i18n-hint: These commands assist the user in finding a sound by ear. ...
 #. "Scrubbing" is variable-speed playback, ...
@@ -9272,7 +9309,7 @@ msgstr "Thời gian cần để kiểm tra toàn bộ dữ liệu (2): %ld ms\n"
 msgid ""
 "At 44100 Hz, %d bytes per sample, the estimated number of\n"
 " simultaneous tracks that could be played at once: %.1f\n"
-msgstr "Ở 4400 Hz, %dbytes mỗi mẫu, ước tính số lượng track có thể chạy cùng lúc là: %.1f\n"
+msgstr "Ở 44100 Hz, %d bytes mỗi mẫu, ước tính số lượng track có thể chạy cùng lúc là: %.1f\n"
 
 #: src/Benchmark.cpp
 msgid "TEST FAILED!!!\n"
@@ -9619,7 +9656,7 @@ msgstr "&Tái tạo tọa độ..."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
-msgstr "Chưa chọn đủ data (dữ liệu)"
+msgstr "Chưa chọn đủ data"
 
 #. i18n-hint: short form of 'seconds'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp
@@ -9740,25 +9777,25 @@ msgstr "&Lịch sử"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "New Plugins"
-msgstr "Tính năng bổ trợ mới"
+msgstr "Plugin mới"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "Incompatible plugin(s) found"
-msgstr "Đã tìm thấy (các) Plugin tính năng bổ sung không tương thích"
+msgstr "Đã tìm thấy (các) Plugin không tương thích"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
-msgstr "&Quản lý phần mềm bổ trợ"
+msgstr "&Quản lý Plugin"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr "Audacity đã tìm thấy %d các tính năng bổ trợ không tương tích không thể mở được. Chúng tôi đã tắt các tính năng bổ sung này để tránh việc phần mềm bị đơ hoặc treo. Nếu bạn vẫn muốn cố gắng sử dụng các tính nắng bổ trợ này, bạn có thể bật chúng bằng cách ấn vào \"Quản lý  tính năng bổ trợ\". Nếu không, hãy chọn \"Tiep tục\"."
+msgstr "Audacity đã tìm thấy %d các plugin không tương tích không thể mở được. Chúng tôi đã tắt các plugin này để tránh việc phần mềm bị đơ hoặc treo. Nếu bạn vẫn muốn cố gắng sử dụng các plugin này, bạn có thể bật chúng bằng cách ấn vào \"Quản lý Plugin\". Nếu không, hãy chọn \"Tiep tục\"."
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
-msgstr "Audacity đã tìm thấy %d tính năng bổ trợ không tương thích không thể tải được. Chúng tôi đã vô hiệu hóa các tính năng bổ trợ này để tránh mọi sự cố hoặc sự cố."
+msgstr "Audacity đã tìm thấy %d plugin không tương thích không thể tải được. Chúng tôi đã vô hiệu hóa các plugin này để tránh mọi sự cố hoặc sự cố."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -9886,7 +9923,7 @@ msgstr "Bộ trộn và xử lý âm thanh Audacity%s"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Volume"
-msgstr ""
+msgstr "Âm lượng"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -9928,7 +9965,7 @@ msgstr "Thước đo mức tín hiệu"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved volume slider"
-msgstr ""
+msgstr "Đã di chuyển thanh trượt âm lượng"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -9987,7 +10024,7 @@ msgstr "Công cụ"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Manage Plugins"
-msgstr "Quản lý tính năng bổ trợ"
+msgstr "Quản lý Plugin"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Native Audacity"
@@ -9999,7 +10036,7 @@ msgstr "&Hiển thị:"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "&Type:"
-msgstr "&loại:"
+msgstr "&Loại:"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "C&ategory:"
@@ -10023,7 +10060,7 @@ msgstr "&Lấy thêm hiệu ứng..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
-msgstr "Đang tìm kiếm tính năng bổ trợ"
+msgstr "Đang tìm kiếm plugin"
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -10271,7 +10308,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "Tính năng này không được hỗ trợ trong các phiên bản Audacity trước 3.3.3.\n"
-"Các đoạn âm thanh stereo này đã được chia thành các đoạn âm đơn âm.\n"
+"Các track stereo này đã được chia thành các track mono.\n"
 "Do đó, một số hiệu ứng thời gian thực có thể mất tích.\n"
 "Vui lòng xác minh rằng mọi thứ hoạt động như dự định trước khi lưu."
 
@@ -10450,22 +10487,22 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "A channel of a stereo track was missing."
-msgstr "Một kênh của đoạn âm thanh nổi bị mất tích."
+msgstr "Một kênh của track stereo bị mất tích."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with different sample rates per channel."
-msgstr "Dự án này chứa đoạn âm stereo với tỷ lệ tốc độ mẫu khác nhau cho mỗi kênh."
+msgstr "Dự án này chứa track stereo với tỷ lệ tốc độ mẫu khác nhau cho mỗi kênh."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with different sample formats in channels."
-msgstr "Dự án này chứa đoạn âm stereo với định dạng mẫu khác nhau trong các kênh."
+msgstr "Dự án này chứa track stereo với định dạng mẫu khác nhau trong các kênh."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with non-aligned content."
-msgstr "Dự án này chứa đoạn âm stereo với nội dung không được căn chỉnh."
+msgstr "Dự án này chứa track stereo với nội dung không được căn chỉnh."
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
@@ -10539,7 +10576,9 @@ msgstr ""
 "\n"
 "Dung lượng trống hiện có %svà dự án này sẽ dùng %s\n"
 "\n"
-"nếu bạn tiếp tục, tất cả lịch sử thao tác của bạn trên bộ nhớ đệm sẽ bị xóa và bạn sẽ có thêm khoảng %s dung lượng đĩa."
+"nếu bạn tiếp tục, tất cả lịch sử thao tác của bạn trên bộ nhớ đệm sẽ bị xóa và bạn sẽ có thêm khoảng %s dung lượng đĩa.\n"
+"\n"
+"Bạn có muốn tiếp tục không?"
 
 #: src/ProjectFileManager.cpp
 msgid "Compacted project file"
@@ -10630,6 +10669,22 @@ msgstr "Hiệu ứng %d"
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
 msgstr "Nguồn"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change settings for realtime effect %s on %s"
+msgstr "Thay đổi cài đặt cho hiệu ứng thời gian thực %s trên %s"
+
+#. i18n-hint: undo history record
+#. first parameter - realtime effect name
+#.
+#: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
+#, c-format
+msgid "Change realtime effect %s on %s"
+msgstr "Thay đổi hiệu ứng thời gian thực %s trên %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -11354,7 +11409,7 @@ msgstr "Xoá bỏ track"
 #: src/TrackUtilities.cpp
 #, c-format
 msgid "Removed track '%s'."
-msgstr "Đã xoá đoạn âm '%s'."
+msgstr "Đã xoá track '%s'."
 
 #: src/TrackUtilities.cpp
 msgid "Track Remove"
@@ -11368,7 +11423,7 @@ msgstr "Đã chuyển '%s' lên đầu"
 
 #: src/TrackUtilities.cpp
 msgid "Move Track to Top"
-msgstr "chuyển track lên đầu tiên"
+msgstr "Chuyển track lên đầu tiên"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/TrackUtilities.cpp
@@ -11449,6 +11504,22 @@ msgid "Calibration Complete"
 msgstr "Quá trinh đo đạt hoàn tất"
 
 #: src/WhatsNewDialog.cpp
+msgid "<font color=\"#000000\">"
+msgstr "<font color=\"#000000\">"
+
+#: src/WhatsNewDialog.cpp
+msgid "Sign up to Audacity's cloud saving platform"
+msgstr "Đăng ký nền tảng lưu trữ đám mây của Audacity"
+
+#: src/WhatsNewDialog.cpp
+msgid "and access your projects from anywhere!"
+msgstr "và truy cập dự án của bạn từ mọi nơi!"
+
+#: src/WhatsNewDialog.cpp
+msgid "</font>"
+msgstr "</font>"
+
+#: src/WhatsNewDialog.cpp
 #, c-format
 msgid "What's new in Audacity %s"
 msgstr "Các tính năng mới trong Audacity %s"
@@ -11456,75 +11527,86 @@ msgstr "Các tính năng mới trong Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-msgstr ""
+msgstr "Hãy xem [[%s|release video]] hoặc đọc [[%s|changelog]] để tìm hiểu thêm về những gì chúng tôi đã đưa vào bản phát hành mới nhất!</p>"
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "You can also read the [[%s|changelog]]</p>"
+msgstr "Bạn cũng có thể đọc [[%s|changelog]]</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
-msgstr "Nhận plugin & âm thanh miễn phí"
+msgstr "Nhận plugin và âm thanh miễn phí"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>Ghé thăm [[%s|Muse Hub app]] của chúng tôi "
+msgstr "<p>Hãy xem Ứng dụng của chúng tôi [[%s|Muse Hub app]] để biết nhiều plugin âm thanh dành cho người dùng Audacity</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal processing effect that enhances vocal clarity and depth."
-msgstr ""
+msgstr "Hiệu ứng xử lý giọng nói giúp tăng cường độ trong trẻo và chiều sâu của giọng nói."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-msgstr ""
+msgstr "Một plugin tạo hiệu ứng hồi âm reverb đa năng cho hiệu ứng âm thanh rộng rãi, tự nhiên."
 
 #: src/WhatsNewDialog.cpp
 msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-msgstr ""
+msgstr "Một plugin mô phỏng hiệu ứng và guitar amp cho âm thanh chân thực và có thể tùy chỉnh."
 
 #: src/WhatsNewDialog.cpp
 msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-msgstr ""
+msgstr "Một plugin tạo hiệu ứng hồi âm reverb có khả năng thích ứng với động lực của bản nhạc để tạo nên cảnh quan âm thanh sống động."
 
 #: src/WhatsNewDialog.cpp
 msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-msgstr ""
+msgstr "Một plugin đa hiệu ứng giọng hát giúp tăng cường chất lượng giọng hát để mang lại kết quả chuyên nghiệp."
 
 #: src/WhatsNewDialog.cpp
 msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-msgstr ""
+msgstr "Một plugin hiệu ứng âm trầm được thiết kế để mang lại âm thanh trầm mạnh mẽ, rõ ràng."
 
 #: src/WhatsNewDialog.cpp
 msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-msgstr ""
+msgstr "Một plugin giúp âm thanh trở nên hoàn hảo, tăng cường độ ấm và độ trong trẻo."
 
 #: src/WhatsNewDialog.cpp
 msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-msgstr ""
+msgstr "Một plugin tăng cường giọng nói tuyệt vời mang lại hiệu ứng giọng nói chuyên nghiệp, rõ ràng."
 
 #: src/WhatsNewDialog.cpp
 msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-msgstr ""
+msgstr "Một công cụ phân tách stem thời gian thực để tách giọng hát, tiếng trống và nhạc cụ."
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-msgstr ""
+msgstr "Kiểm tra nhiều plugin của các nhà phát triển nổi tiếng có sẵn trên [[%s|MuseHub]]."
 
 #: src/WhatsNewDialog.cpp
 msgid "A multiband compressor offering precise control over frequencies."
-msgstr ""
+msgstr "Bộ nén đa băng tần cung cấp khả năng kiểm soát tần số chính xác."
+
+#: src/WhatsNewDialog.cpp
+msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
+msgstr "Ace Studio - Công cụ tạo giọng hát bằng AI số.1 thế giới."
+
+#: src/WhatsNewDialog.cpp
+msgid "Continue for Cloud Storage"
+msgstr "Tiếp tục cho Lưu trữ đám mây"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
 msgstr "Xin chào!"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Watch the release video"
-msgstr "Xem video"
+msgstr "Xem video phát hành"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Available on MuseHub"
-msgstr "Các nguồn thu âm hợp lệ:\n"
+msgstr "Tìm trên MuseHub"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12146,11 +12228,11 @@ msgstr "Được chú trọng"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Audio"
-msgstr "Đặt Audio track"
+msgstr "Đặt Audio Track"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Volume:"
-msgstr ""
+msgstr "Âm lượng:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Pan:"
@@ -12204,7 +12286,7 @@ msgstr "Chọn âm phổ"
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
 msgctxt "spectrum prefs"
 msgid "Sche&me:"
-msgstr "kế &hoạch"
+msgstr "Kế &hoạch"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -12252,7 +12334,7 @@ msgstr "&Đỉnh khuếch đại mới (dB):"
 
 #: src/effects/Amplify.cpp
 msgid "Allo&w clipping"
-msgstr "Cho phé&p ghim đỉnh"
+msgstr "Cho phép &ghim đỉnh"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -12341,7 +12423,7 @@ msgstr "Treble"
 
 #: src/effects/BassTreble.cpp
 msgid "&Volume (dB):"
-msgstr "&Âm lượng (dB):"
+msgstr "Âm &Lượng (dB):"
 
 #: src/effects/BassTreble.cpp
 msgid "&Link Volume control to Tone controls"
@@ -12395,7 +12477,7 @@ msgstr "Nữa cung"
 
 #: src/effects/ChangePitch.cpp
 msgid "&Semitones (half-steps):"
-msgstr "&nửa cung:"
+msgstr "&Nửa cung:"
 
 #: src/effects/ChangePitch.cpp
 msgid "Frequency"
@@ -12514,7 +12596,7 @@ msgstr "Nhịp điệu mỗi phút"
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, from"
-msgstr "Nhịp điệu mỗi phút, từ"
+msgstr "BPM Nhịp điệu mỗi phút, từ"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -12525,7 +12607,7 @@ msgstr "&Từ"
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
 msgid "Beats per minute, to"
-msgstr "Nhịp điệu mỗi phút, đến"
+msgstr "BPM Nhịp điệu mỗi phút, đến"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -12623,7 +12705,7 @@ msgstr "Thời gian kết thúc của nền"
 
 #: src/effects/Contrast.cpp
 msgid "Mea&sure selection"
-msgstr "Do& vùng chọn"
+msgstr "Đo &vùng chọn"
 
 #: src/effects/Contrast.cpp
 msgid "Result"
@@ -12635,7 +12717,7 @@ msgstr "Kết quả tương &phản:"
 
 #: src/effects/Contrast.cpp
 msgid "R&eset"
-msgstr "Thiết& lập lại"
+msgstr "Thiết &lập lại"
 
 #: src/effects/Contrast.cpp
 msgid "&Difference:"
@@ -13037,15 +13119,15 @@ msgstr "Tỷ &lệ"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Lookahead (ms)"
-msgstr "&hướng về phía trước (ms)"
+msgstr "&Hướng về phía trước (mili giây)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "Attac&k (ms)"
-msgstr "Sự đánh nhạc"
+msgstr "Attac&k - sự đánh nhạc (mili giây)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Release (ms)"
-msgstr "&P"
+msgstr "&Release - Giải phóng (mili giây)"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Input"
@@ -13069,7 +13151,7 @@ msgstr "&Thời gian Trễ (giây):"
 
 #: src/effects/Echo.cpp
 msgid "D&ecay factor:"
-msgstr "Hệ& số suy hao:"
+msgstr "&Hệ số suy hao:"
 
 #: src/effects/EffectPresetDialog.cpp
 msgid "Select Preset"
@@ -13153,7 +13235,7 @@ msgstr "Phiên bản: %s"
 #: src/effects/EffectUI.cpp
 #, c-format
 msgid "Vendor: %s"
-msgstr "Vendor (người bán hàng): %s"
+msgstr "Vendor - Người bán hàng: %s"
 
 #: src/effects/EffectUI.cpp
 #, c-format
@@ -13447,7 +13529,7 @@ msgstr "&Ngưỡng bắt đầu (mẫu):"
 
 #: src/effects/FindClipping.cpp
 msgid "St&op threshold (samples):"
-msgstr "Ngưỡng kết& thúc (mẫu):"
+msgstr "Ngưỡng kết &thúc (mẫu):"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
@@ -13532,7 +13614,7 @@ msgstr "Thời gian phát hành"
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/LegacyCompressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "Điều chỉnh& 0dB sau khi nén"
+msgstr "Điều &chỉnh 0dB sau khi nén"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
@@ -13599,7 +13681,7 @@ msgstr "Chuẩn hoá kênh &stereo riêng biệt"
 
 #: src/effects/Loudness.cpp
 msgid "&Treat mono as dual-mono (recommended)"
-msgstr "Xử lý đơn âm như đơn âm kép (nên dùng)"
+msgstr "Xử lý đơn âm mono như đơn âm mono kép (nên dùng)"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 msgid "(Maximum 0dB)"
@@ -13627,7 +13709,7 @@ msgstr "Độ nhạy"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Attac&k time (secs):"
-msgstr "Thời gian khởi& chạy (giây):"
+msgstr "Thời gian &khởi chạy (giây):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Attack time"
@@ -13635,7 +13717,7 @@ msgstr "Thời gian khởi chạy"
 
 #: src/effects/NoiseReduction.cpp
 msgid "R&elease time (secs):"
-msgstr "Thời gian phát& hành (giây):"
+msgstr "Thời gian &phát hành (giây):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Release time"
@@ -13773,7 +13855,7 @@ msgstr "4 (mặc định)"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method:"
-msgstr "Phương pháp& phân tách:"
+msgstr "Phương pháp &phân tách:"
 
 #: src/effects/Normalize.cpp
 msgid "&Remove DC offset (center on 0.0 vertically)"
@@ -13789,7 +13871,7 @@ msgstr "Biên độ đỉnh dv"
 
 #: src/effects/Normalize.cpp
 msgid "N&ormalize stereo channels independently"
-msgstr "Chuẩn& hoá kênh stereo riêng biệt"
+msgstr "Chuẩn h&oá kênh stereo riêng biệt"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -13829,7 +13911,7 @@ msgstr "LFO Bộ dao động tần thấp (Hz)"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "LFO Sta&rt Phase (deg.):"
-msgstr "Pha ban& đầu của dao động (độ):"
+msgstr "Pha ban đầu của LFO &dao động (độ):"
 
 #: src/effects/Phaser.cpp src/effects/Wahwah.cpp
 msgid "LFO start phase in degrees"
@@ -13901,7 +13983,7 @@ msgstr "&Trước khi hoãn (ms):"
 
 #: src/effects/Reverb.cpp
 msgid "Rever&berance (%):"
-msgstr "Độ& vang (%):"
+msgstr "Độ &vang (%):"
 
 #: src/effects/Reverb.cpp
 msgid "Da&mping (%):"
@@ -13917,11 +13999,11 @@ msgstr "Tông &cao (%):"
 
 #: src/effects/Reverb.cpp
 msgid "Wet &Gain (dB):"
-msgstr "Wet (âm tiếng vang) &Gain (dB):"
+msgstr "Wet &Gain - âm tiếng vang (dB):"
 
 #: src/effects/Reverb.cpp
 msgid "Dr&y Gain (dB):"
-msgstr "Dr&y (âm nguyên bản) Gain (dB):"
+msgstr "Dr&y Gain - âm nguyên bản (dB):"
 
 #: src/effects/Reverb.cpp
 msgid "Stereo Wid&th (%):"
@@ -13929,7 +14011,7 @@ msgstr "Chiều rộng stereo (%):"
 
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
-msgstr "Chỉ Wet (âm tiếng vang)"
+msgstr "Chỉ âm tiếng vang Wet "
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -13958,7 +14040,7 @@ msgstr "Cắt (Hz)"
 
 #: src/effects/ScienFilter.cpp
 msgid "C&utoff:"
-msgstr "C&ắt"
+msgstr "&Cắt"
 
 #: src/effects/ScienFilter.cpp
 msgid "Minimum S&topband Attenuation:"
@@ -14075,11 +14157,11 @@ msgstr "Thay đổi độ cao ban đầu của âm"
 
 #: src/effects/TimeScale.cpp
 msgid "(&semitones) [-12 to 12]:"
-msgstr "(&semitones) [-12 to 12]:"
+msgstr "(&semitones) [-12 đến 12]:"
 
 #: src/effects/TimeScale.cpp
 msgid "(%) [-50 to 100]:"
-msgstr "%) [-50 đến 100]:"
+msgstr "(%) [-50 đến 100]:"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Pitch Shift"
@@ -14087,7 +14169,7 @@ msgstr "Thay đổi độ cao cuối của âm"
 
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
-msgstr "(s&emitones) [-12 to 12]:"
+msgstr "(s&emitones) [-12 đến 12]:"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
@@ -14139,7 +14221,7 @@ msgstr "Phát hiện khoảng im lặng"
 
 #: src/effects/TruncSilence.cpp
 msgid "Tr&uncate to:"
-msgstr "C&ắt đến"
+msgstr "&Cắt đến"
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
@@ -14147,7 +14229,7 @@ msgstr "%"
 
 #: src/effects/TruncSilence.cpp
 msgid "C&ompress to:"
-msgstr "N&én thành"
+msgstr "&Nén thành"
 
 #: src/effects/TruncSilence.cpp
 msgid "Trunc&ate tracks independently"
@@ -14486,11 +14568,11 @@ msgstr "Cung cấp hỗ trợ hiệu ứng Vamp cho Audacity"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
-msgstr "Không thể nạp phần bổ sung Vamp"
+msgstr "Không thể nạp phần bổ sung Vamp Plugin"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, Vamp Plug-in failed to initialize."
-msgstr "Không thể khởi tạo phần bổ sung Vamp"
+msgstr "Không thể khởi tạo phần bổ sung Vamp Plugin"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Plugin Settings"
@@ -14516,7 +14598,7 @@ msgstr "Đa dạng tập tin"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Curren&t Selection"
-msgstr "Vùng chọn& hiện hành"
+msgstr "Vùng chọn &hiện hành"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Using Label/Track Name"
@@ -14753,11 +14835,11 @@ msgstr "Endianness mặc định"
 
 #: src/import/ImportRaw.cpp
 msgid "1 Channel (Mono)"
-msgstr "Đơn thể (Mono)"
+msgstr "1 Kênh (mono)"
 
 #: src/import/ImportRaw.cpp
 msgid "2 Channels (Stereo)"
-msgstr "Lập thể (Stereo)"
+msgstr "2 Channels (Stereo)"
 
 #: src/import/ImportRaw.cpp
 #, c-format
@@ -14797,7 +14879,7 @@ msgstr "Tốc độ lấy mẫu:"
 #. i18n-hint: Guess format of raw file
 #: src/import/ImportRaw.cpp
 msgid "Detect"
-msgstr "Detect (đoán định dạng tập tin)"
+msgstr "Detect - đoán định dạng tập tin"
 
 #: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
 msgid "&Import"
@@ -14821,7 +14903,7 @@ msgstr "Kích thước dữ liệu không tốt. Không thể nhập âm thanh"
 #, c-format
 msgid "%s %s, %d of %d clip %s"
 msgid_plural "%s %s, %d of %d clips %s"
-msgstr[0] "%s %s, %d of %d clips %s"
+msgstr[0] "%s %s, %d của %d clips %s"
 
 #: src/menus/ClipMenus.cpp
 msgid "start"
@@ -14845,7 +14927,7 @@ msgstr "Kết thúc"
 #, c-format
 msgid "%s %s and %s %s, %d and %d of %d clip %s"
 msgid_plural "%s %s and %s %s, %d and %d of %d clips %s"
-msgstr[0] "%s %s và %s %s, %d và %d of %d clips %s"
+msgstr[0] "%s %s và %s %s, %d và %d của %d clips %s"
 
 #. i18n-hint:
 #. first string is the name of a clip,
@@ -14881,7 +14963,7 @@ msgstr "Cắt/ghép âm thanh"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "Đường biên độ clip trước& đó đến con trỏ"
+msgstr "Đường biên độ clip &trước đó đến con trỏ"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
@@ -14905,7 +14987,7 @@ msgstr "Chọn clip tiếp theo"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary"
-msgstr "Đường biên độ clip trước& đó"
+msgstr "Đường biên độ clip &trước đó"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Prev Clip Boundary"
@@ -14921,11 +15003,11 @@ msgstr "Con trỏ chuyển đến biên độ clip tiếp theo"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time Shift &Left"
-msgstr "Time Shift (di chuyển) &Trái"
+msgstr "Time Shift - Di chuyển &Trái"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time Shift &Right"
-msgstr "Time Shift (di chuyển) &Phải"
+msgstr "Time Shift - Di chuyển &Phải"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasted text from the clipboard"
@@ -14962,11 +15044,11 @@ msgstr "Đang dán nội dung clip, vui lòng đợi"
 
 #: src/menus/EditMenus.cpp
 msgid "The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again."
-msgstr "Nội dung bạn đang cố gắng dán sẽ trải dài qua nhiều đoạn âm hơn số đoạn âm hiện có. Thêm nhiều đoạn âm và thử lại."
+msgstr "Nội dung bạn đang cố gắng dán sẽ trải dài qua nhiều track hơn số track hiện có. Thêm nhiều track và thử lại."
 
 #: src/menus/EditMenus.cpp
 msgid "There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again."
-msgstr "Không có đủ đoạn âm được chọn để chứa nội dung đã sao chép của bạn. Chọn thêm đoạn âm và thử lại."
+msgstr "Không có đủ track được chọn để chứa nội dung đã sao chép của bạn. Chọn thêm track và thử lại."
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicated"
@@ -14978,11 +15060,11 @@ msgstr "Nhân đôi"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut to clipboard and leave gap"
-msgstr ""
+msgstr "Cắt vào clipboard và để lại khoảng cách"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
-msgstr ""
+msgstr "Cắt để lại khoảng cách"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -15079,12 +15161,12 @@ msgstr "Xó&a hiệu ứng đặc biệt"
 #. i18n-hint: (verb) Do a special kind of cut
 #: src/menus/EditMenus.cpp
 msgid "&Cut and leave gap"
-msgstr ""
+msgstr "&Cắt để lại khoảng cách"
 
 #. i18n-hint: (verb) Do a special kind of DELETE
 #: src/menus/EditMenus.cpp
 msgid "&Delete and leave gap"
-msgstr ""
+msgstr "&Xóa và để lại khoảng cách"
 
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp
@@ -15132,7 +15214,7 @@ msgstr "Thêm &vào"
 
 #: src/menus/ExtraMenus.cpp
 msgid "Enable &Full Screen"
-msgstr "Bật & Toàn màn hình"
+msgstr "Bật &Toàn màn hình"
 
 #: src/menus/FileMenus.cpp
 msgid "Cannot proceed to export."
@@ -15197,7 +15279,7 @@ msgstr "&Xuất Audio..."
 
 #: src/menus/FileMenus.cpp
 msgid "Expo&rt Other"
-msgstr "Xuất& đối tượng khác "
+msgstr "Xuất đối tượng &khác "
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
@@ -15217,7 +15299,7 @@ msgstr "&Dữ liệu thô..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Close Project"
-msgstr ""
+msgstr "Đóng &Dự án"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15237,7 +15319,7 @@ msgstr "Xuất tập tin định dạng FLAC"
 
 #: src/menus/FileMenus.cpp
 msgid "Expo&rt Selected Audio..."
-msgstr "Xuấ&t audio đã chọn"
+msgstr "&Xuất audio đã chọn"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -15280,12 +15362,16 @@ msgid "Audio Device Info"
 msgstr "Thông tin thiết bị audio "
 
 #: src/menus/HelpMenus.cpp
-msgid "&Quick Help..."
-msgstr "&Trợ giúp nhanh..."
+msgid "&Quick Help"
+msgstr "&Trợ giúp nhanh"
 
 #: src/menus/HelpMenus.cpp
-msgid "&Manual..."
+msgid "&Manual"
 msgstr "&Thủ công..."
+
+#: src/menus/HelpMenus.cpp
+msgid "Audacity &Support"
+msgstr "&Hỗ trợ của Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -15320,7 +15406,7 @@ msgstr "Dán văn bản vào nhãn mới"
 #. regions.
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard"
-msgstr "Đã cắt các phần Audio có nhãn vào bộ nhớ sao chép Clipboard"
+msgstr "Cắt các phần Audio có nhãn vào clipboard"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -15339,11 +15425,11 @@ msgstr "Xoá audio được dán nhãn"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr ""
+msgstr "Cắt các vùng âm thanh có nhãn vào clipboard và để lại khoảng cách"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio and leave gap"
-msgstr ""
+msgstr "Cắt âm thanh có nhãn và để lại khoảng cách"
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15369,7 +15455,7 @@ msgstr "Tắt tiếng Audio được dán nhãn"
 
 #: src/menus/LabelMenus.cpp
 msgid "Copied labeled audio regions to clipboard"
-msgstr "Đã sao chép Audio có nhãn vào bộ nhớ sao chép Clipboard"
+msgstr "Đã sao chép các phần Audio có nhãn vào clipboard"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -15455,28 +15541,28 @@ msgstr "&Cắt"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr ""
+msgstr "Cắt theo nhãn"
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by label"
-msgstr ""
+msgstr "Xoá theo nhãn"
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
 msgid "C&ut and leave gap"
-msgstr ""
+msgstr "&Cắt để lại khoảng cách"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by labels and leave gap"
-msgstr ""
+msgstr "Cắt theo nhãn và để lại khoảng cách "
 
 #: src/menus/LabelMenus.cpp
 msgid "De&lete and leave gap"
-msgstr ""
+msgstr "Xóa và để &lại khoảng cách"
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by labels and leave gap"
-msgstr ""
+msgstr "Xóa theo nhãn và để lại khoàng cách "
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -15558,11 +15644,11 @@ msgstr "Chuyển đến track gần nhất"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to P&revious and Select"
-msgstr "Chuyển ra trước& và chọn"
+msgstr "Chuyển ra &trước và chọn"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Move Focus to N&ext and Select"
-msgstr "Chuyển đên tiếo& theo và chọn"
+msgstr "&Chuyển đên tiếo theo và chọn"
 
 #: src/menus/NavigationMenus.cpp
 msgid "&Toggle Focused Track"
@@ -15570,7 +15656,7 @@ msgstr "&Chuyển đổi track mục tiêu"
 
 #: src/menus/NavigationMenus.cpp
 msgid "Toggle Focuse&d Track"
-msgstr "Chuyển đổi track mục& tiêu"
+msgstr "Chuyển &đổi track mục tiêu"
 
 #. i18n-hint a "journal" is a text file that records
 #. the user's interactions with the application
@@ -15622,7 +15708,7 @@ msgstr "Công &cụ"
 
 #: src/menus/PluginMenus.cpp
 msgid "Reset &Configuration"
-msgstr "Đặt lại & Cấu hình"
+msgstr "Đặt lại &Cấu hình"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Run Benchmark..."
@@ -15681,7 +15767,7 @@ msgstr "Trong tất cả các &track"
 
 #: src/menus/SelectMenus.cpp
 msgid "In All &Sync-Locked Tracks"
-msgstr "Trong tất cả các & Sync-Locked Tracks "
+msgstr "Trong tất cả các &Sync-Locked Tracks "
 
 #: src/menus/SelectMenus.cpp
 msgid "Select Sync-Locked"
@@ -15689,7 +15775,7 @@ msgstr "Chọn Sync bị khóa"
 
 #: src/menus/SelectMenus.cpp
 msgid "R&egion"
-msgstr "V&ùng"
+msgstr "&Vùng"
 
 #: src/menus/SelectMenus.cpp
 msgid "&Left at Playback Position"
@@ -15905,7 +15991,7 @@ msgstr "Tua theo con trỏ về &bên phải trong khi phát lại"
 
 #: src/menus/SelectMenus.cpp
 msgid "Long Seek Le&ft During Playback"
-msgstr "Tua theo con trỏ về bên& trái trong khi phát lại"
+msgstr "Tua theo con trỏ về bên &trái trong khi phát lại"
 
 #: src/menus/SelectMenus.cpp
 msgid "Long Seek Rig&ht During Playback"
@@ -15973,7 +16059,7 @@ msgstr "Từ Đầu đến Phần được chọn"
 
 #: src/menus/TrackMenus.cpp
 msgid "End to Cu&rsor/Selection Start"
-msgstr "Kết thúc con& trỏ/khởi động vùng chọn"
+msgstr "Kết thúc &con trỏ/khởi động vùng chọn"
 
 #: src/menus/TrackMenus.cpp
 msgid "End to Selection En&d"
@@ -16106,7 +16192,7 @@ msgstr "Đang lấy mẫu lại track %d"
 
 #: src/menus/TrackMenus.cpp
 msgid "Resampled audio track(s)"
-msgstr "Đã thay đổi tốc độ lấy mẫu cho track"
+msgstr "Đã thay đổi tốc độ lấy mẫu cho (cac) track"
 
 #: src/menus/TrackMenus.cpp
 msgid "Resample Track"
@@ -16296,7 +16382,7 @@ msgstr "&Giảm độ khuếch đại của track hiện hành"
 
 #: src/menus/TrackMenus.cpp
 msgid "Op&en Menu on Focused Track..."
-msgstr "Mở& menu trên track hiện hành"
+msgstr "Mở m&enu trên track hiện hành"
 
 #: src/menus/TrackMenus.cpp
 msgid "M&ute/Unmute Focused Track"
@@ -16352,12 +16438,12 @@ msgstr "Không có nhãn nào trong mục nhãn dán track"
 #. i18n-hint Sets a starting point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &In"
-msgstr "Thiết lập vòng lặp & Vào"
+msgstr "Thiết lập vòng lặp &Vào"
 
 #. i18n-hint Sets an ending point for looping play
 #: src/menus/TransportMenus.cpp
 msgid "Set Loop &Out"
-msgstr "Thiết lập vòng lặp & Ra"
+msgstr "Thiết lập vòng lặp &Ra"
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a mono track."
@@ -16397,7 +16483,7 @@ msgstr "Phát/Dừng và &đặt con trỏ"
 
 #: src/menus/TransportMenus.cpp
 msgid "Play &Once/Stop"
-msgstr "Phát & Một lần / Dừng"
+msgstr "Phát &Một lần / Dừng"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Pause"
@@ -16434,7 +16520,7 @@ msgstr "&Xoá vòng lặp đã chọn"
 
 #: src/menus/TransportMenus.cpp
 msgid "&Set Loop to Selection"
-msgstr "& Đặt Vòng lặp cho Lựa chọn"
+msgstr "&Đặt Vòng lặp cho Lựa chọn"
 
 #: src/menus/TransportMenus.cpp src/toolbars/AudioSetupToolBar.cpp
 msgid "R&escan Audio Devices"
@@ -16446,7 +16532,7 @@ msgstr "Tùy chọn &truyền vận"
 
 #: src/menus/TransportMenus.cpp
 msgid "Set sound activation le&vel..."
-msgstr "Đặt m&ức kích hoạt âm thanh..."
+msgstr "Đặt &mức kích hoạt âm thanh..."
 
 #: src/menus/TransportMenus.cpp
 msgid "Enable sound a&ctivated recording"
@@ -16516,11 +16602,11 @@ msgstr "Phát thử đoạn cắt"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Pre&vious Label"
-msgstr "Di chuyển đến nhãn Trước & đó"
+msgstr "Di chuyển đến nhãn &Trước đó"
 
 #: src/menus/TransportMenus.cpp
 msgid "Move to Ne&xt Label"
-msgstr "Di chuyển đến nhãn tiếp & theo"
+msgstr "Di chuyển đến nhãn t&iếp theo"
 
 #: src/menus/ViewMenus.cpp
 msgid "&View"
@@ -16588,7 +16674,7 @@ msgstr "Di chuyên đến kết thúc vùng chọn:"
 
 #: src/menus/ViewMenus.cpp
 msgid "E&xtra Menus"
-msgstr ""
+msgstr "Hiển Thị Menu &Bổ Sung "
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
@@ -16596,16 +16682,16 @@ msgstr "&Hiển thị Clipping theo dạng sóng"
 
 #: src/menus/ViewMenus.cpp
 msgid "Sho&w RMS in Waveform"
-msgstr ""
+msgstr "Hiển Thị &RMS ở Dạng Sóng"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
 msgstr "Các tùy chỉnh cho ứng dụng"
 
-#. i18n-hint: Title for the update notifications panel in the preferences dialog.
+#. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr "Các thông báo cập nhật"
+msgstr ""
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16615,7 +16701,22 @@ msgstr "&Kiểm tra cập nhật"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Ứng dụng kiểm tra cập nhật yêu cầu truy cập mạng. Để bảo vệ sự riêng tư của bạn, Audacity không lưu trữ bất kỳ thông tin cá nhân nào."
+msgstr ""
+
+#: src/prefs/ApplicationPrefs.cpp
+msgid "UUID"
+msgstr ""
+
+#. i18n-hint: Check-box title that enables anonymous usage info.
+#: src/prefs/ApplicationPrefs.cpp
+msgctxt "application preferences"
+msgid "&Usage info (UUID)"
+msgstr ""
+
+#. i18n-hint: The second paragraph of app update notice dialog
+#: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
+msgid "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This helps us improve features and plan for future updates. This ID does not contain any personally identifiable information."
+msgstr ""
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -16687,7 +16788,7 @@ msgstr "Tốc độ lấy mẫu của dự án"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
-msgstr "Tỷ lệ tốc độ mẫu được sử dụng khi thu các đoạn âm mới, trộn lẫn các đoạn âm và để phát lại trong dự án này."
+msgstr "Tỷ lệ tốc độ mẫu được sử dụng khi thu các track mới, trộn lẫn các track và để phát lại trong dự án này."
 
 #: src/prefs/DevicePrefs.cpp
 msgid "D&efault Sample Rate:"
@@ -16947,7 +17048,7 @@ msgstr "&Bỏ qua quá trình quét hiệu ứng khi khởi động"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Open Plugin &Manager"
-msgstr "Mở Trình &quản lý Plugin"
+msgstr "Mở Trình &Quản Lý Plugin"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -17051,7 +17152,7 @@ msgstr "N&ền:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Meter dB &range:"
-msgstr "Đồng hồ đo dB & phạm vi:"
+msgstr "Đồng hồ đo dB &phạm vi:"
 
 #: src/prefs/GUIPrefs.cpp
 msgid "Show 'How to Get &Help' at launch"
@@ -17112,12 +17213,28 @@ msgid "Do &nothing"
 msgstr "Không làm &gì cả"
 
 #: src/prefs/ImportExportPrefs.cpp
+msgid "Always &match the loop tempo to the project tempo"
+msgstr "Luôn luôn &phù hợp nhịp độ vòng lặp với nhịp độ dự án"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Only match the loop tempo to the project tempo when the ruler displays \"Beats and Measures\""
+msgstr "&Chỉ khớp nhịp độ vòng lặp với nhịp độ dự án khi thước đo hiển thị \"Nhịp và Đo lường\" - \"Beats and Measures\" "
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Do nothing"
+msgstr "Không làm gì cả"
+
+#: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
 msgstr "Nhập Âm nhạc"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "When Audacity detects music in file imported on empty project"
-msgstr "Khi Audacity phát hiện nhạc trong tệp được nhập vào dự án trống"
+msgid "When importing a music loop into an empty project, Audacity will:"
+msgstr "Khi nhập vòng lặp nhạc vào một dự án trống, Audacity sẽ:"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When importing a music loop into an existing (non-empty) project, Audacity will:"
+msgstr "Khi nhập vòng lặp nhạc vào một dự án hiện có (không trống), Audacity sẽ:"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17409,11 +17526,11 @@ msgstr "Tìm thời gian khi phát"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Short period:"
-msgstr "&Chu kỳ ngắn:"
+msgstr "Chu kỳ &ngắn:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Lo&ng period:"
-msgstr "Chu kỳ d&ài:"
+msgstr "Chu kỳ &dài:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
@@ -17421,7 +17538,7 @@ msgstr "&Micro-fades - chuyển dần micro "
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
-msgstr "Luôn luôn bỏ & ghim"
+msgstr "Luôn luôn bỏ &ghim"
 
 #: src/prefs/PrefsDialog.cpp
 msgid "Audacity Preferences"
@@ -17471,7 +17588,7 @@ msgstr "Tuỳ chọn ghi âm"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Hear &other tracks while recording (overdub)"
-msgstr "Nghe &đoạn âm khác trong lúc đang thu âm (qúa nhiều tạp âm)"
+msgstr "Overdub - Nghe &track khác trong lúc đang thu âm (qúa nhiều tạp âm)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Use &hardware to play other tracks"
@@ -17479,7 +17596,7 @@ msgstr "Dùng &phần cứng để chạy các track khác"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Audible input &monitoring"
-msgstr "Kiểm tra &âm thanh đầu vào"
+msgstr "Kiểm tra â&m thanh đầu vào"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Record on a new track"
@@ -17583,11 +17700,11 @@ msgstr "Cross&fade -Trộn chéo: "
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrogram Settings"
-msgstr "Cái đặt Ảnh phổ"
+msgstr "Cái đặt Âm phổ Spectrogram"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Spectrograms"
-msgstr "Ảnh phổ"
+msgstr "Âh phổ Spectrograms"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Preferences for Spectrum"
@@ -17660,7 +17777,7 @@ msgstr "&Loại cửa sổ:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "&Zero padding factor:"
-msgstr "& Hệ số đệm bằng không:"
+msgstr "&Hệ số đệm bằng không:"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "Ena&ble Spectral Selection"
@@ -17859,7 +17976,7 @@ msgstr "Dạng sóng"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Spectrogram"
-msgstr "Ảnh phổ"
+msgstr "Âh phổ - Spectrogram"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Connect dots"
@@ -17985,7 +18102,7 @@ msgstr "Tùy chỉnh cho Dạng sóng"
 
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveform dB &range:"
-msgstr "Dạng sóng dB & phạm vi:"
+msgstr "Dạng sóng dB &phạm vi:"
 
 #. i18n-hint: Audio setup button text, keep as short as possible
 #: src/toolbars/AudioSetupToolBar.cpp
@@ -18291,11 +18408,11 @@ msgstr "Điều &chỉnh âm lượng thu âm..."
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "I&ncrease Recording Volume"
-msgstr "T&ăng âm lượng ghi âm"
+msgstr "&Tăng âm lượng ghi âm"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "D&ecrease Recording Volume"
-msgstr "Gi&ảm âm lượng ghi âm"
+msgstr "&Giảm âm lượng ghi âm"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18524,7 +18641,7 @@ msgstr "&Tốc độ phát"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play-at-Speed &Once"
-msgstr "Phát ở tốc độ & một lần"
+msgstr "Phát ở tốc độ &một lần"
 
 #: src/toolbars/TranscriptionToolBar.cpp
 msgid "Play C&ut Preview-at-Speed"
@@ -18593,7 +18710,7 @@ msgstr "Cắ&t dòng chữ trong nhãn"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "&Copy Label text"
-msgstr " &Chép dòng chữ trong nhãn"
+msgstr "&Chép dòng chữ trong nhãn"
 
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
 msgid "&Delete Label"
@@ -18618,12 +18735,12 @@ msgstr "Nhãn mới"
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Up &Octave"
-msgstr "Tăng &bát độ"
+msgstr "&Tăng bát độ"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackControls.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
 msgid "Down Octa&ve"
-msgstr "Giảm bát &độ"
+msgstr "&Giảm bát độ"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackMenuItems.cpp
 msgid "MIDI Device Info"
@@ -18804,15 +18921,15 @@ msgstr "Đặt lại Zoom"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
-msgstr "&Ảnh phổ"
+msgstr "&Ânh phổ - Spectrogram"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid ""
 "To change Spectrogram Settings, stop any\n"
 " playing or recording first."
 msgstr ""
-"Để thay đổi Cài đặt Quang phổ, trước tiên hãy dừng bất kỳ\n"
-"sự phát âm hoặc ghi âm trước."
+"Để thay đổi cài đặt âm phổ - spectrogram, trước tiên hãy dừng\n"
+" bất kỳ sự phát âm hoặc ghi âm trước."
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Stop the Audio First"
@@ -18820,7 +18937,7 @@ msgstr "Bạn phải dừng audio trước"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "S&pectrogram Settings..."
-msgstr "Cái đặt ảnh& phổ"
+msgstr "Cái đặt ảnh &phổ"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "S&pectral"
@@ -18979,7 +19096,7 @@ msgstr "Xuất Cao độ và &tốc Độ"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch &Up"
-msgstr "Cao độ &lên"
+msgstr "Cao độ &Lên"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch &Down"
@@ -19112,15 +19229,15 @@ msgid ""
 "\n"
 "Do you wish to continue?"
 msgstr ""
-"Các đoạn âm bạn đang cố gộp thành âm stereo chứa các đoạn clip ở vị trí khác nhau hoặc các đoạn clip không phù hợp. Gộp chúng sẽ tạo ra các đoạn âm.\n"
+"Các track bạn đang cố gộp thành âm stereo chứa các đoạn clip ở vị trí khác nhau hoặc các đoạn clip không phù hợp. Gộp chúng sẽ tạo ra các track.\n"
 "\n"
-"Điều này làm cho bất kỳ hiệu ứng thời gian thực nào được áp dụng vào hình dạng sóng và dữ liệu ẩn được loại bỏ. Ngoài ra, toàn bộ đoạn âm sẽ trở thành một đoạn clip lớn.\n"
+"Điều này làm cho bất kỳ hiệu ứng thời gian thực nào được áp dụng vào hình dạng sóng và dữ liệu ẩn được loại bỏ. Ngoài ra, toàn bộ track sẽ trở thành một đoạn clip lớn.\n"
 "\n"
 "Bạn có muốn tiếp tục không?"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Combine mono to stereo"
-msgstr "Kết hợp mono với strereo"
+msgstr "Kết hợp mono với stereo"
 
 #. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -19309,7 +19426,7 @@ msgstr "Kéo các clip để định vị lại chúng. Giữ phím Shift và k�
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Mono Track"
-msgstr "Thêm Track &Mono"
+msgstr "Thêm Track Mono"
 
 #: src/tracks/ui/BackgroundCell.cpp
 msgid "Add Stereo Track"
@@ -19337,7 +19454,7 @@ msgstr "Lựa chọn công cụ Brush-Bàn chải"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Re&name Track..."
-msgstr "Đổi &tên đoạn âm..."
+msgstr "Đổi &tên Track..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -19513,7 +19630,7 @@ msgstr "Phân mãnh"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Delete Track"
-msgstr "Xoá đoạn âm"
+msgstr "Xoá track"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -19623,31 +19740,49 @@ msgstr "Bản cập nhật Audacity"
 msgid "Downloading %s"
 msgstr "Đang tải về %s"
 
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
-msgid "App update checking"
-msgstr "Ứng dụng kiểm tra cập nhật"
+msgid "App updates & usage info"
+msgstr ""
 
-#. i18n-hint: The first paragraph of app update notice dialog.
-#: src/update/UpdateNoticeDialog.cpp
-msgid "To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download."
-msgstr "Để luôn cập nhật, bạn sẽ nhận được thông báo trong ứng dụng bất cứ khi nào có phiên bản Audacity mới để tải xuống."
-
-#. i18n-hint: The second paragraph of app update notice dialog
-#: src/update/UpdateNoticeDialog.cpp
-msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "Để bảo vệ sự riêng tư của bạn, Audacity không thu thập bất kỳ thông tin cá nhân nào. Tuy nhiên, ứng dụng kiểm tra cập nhật yêu cầu quyền truy cập mạng."
-
-#. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
-#: src/update/UpdateNoticeDialog.cpp
-#, c-format
-msgid "You can turn off app update checking at any time in %s."
-msgstr "Bạn có thể tắt tính năng kiểm tra cập nhật ứng dụng bất kỳ lúc nào trong %s."
-
-#. i18n-hint: Title of the app update notice dialog.
+#. i18n-hint: First line of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "App updates"
 msgstr "Các bản cập nhật ứng dụng"
+
+#. i18n-hint: The first paragraph of app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Audacity notifies you in-app when a new version is available to download."
+msgstr "Audacity sẽ thông báo cho bạn trong ứng dụng khi có phiên bản mới để tải xuống."
+
+#. i18n-hint: Subtitle of the app update notice dialog.
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Usage info"
+msgstr ""
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can turn this off anytime in %s."
+msgstr "Bạn có thể tắt chức năng này bất cứ lúc nào %s."
+
+#. i18n-hint:  %s is replaced with "Preferences > Application" link
+#: src/update/UpdateNoticeDialog.cpp
+#, c-format
+msgid "You can disable this anytime in %s."
+msgstr "Bạn có thể vô hiệu hóa điều này bất cứ lúc nào trong %s."
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "View privacy policy"
+msgstr "Xem chính sách bảo mật"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Disable UUID"
+msgstr "Vô hiệu hóa UUID"
+
+#: src/update/UpdateNoticeDialog.cpp
+msgid "Accept && continue"
+msgstr "Chấp nhận và tiếp tục"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -19830,7 +19965,7 @@ msgstr "Tìm hiểu thêm"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
-msgstr "Dùng nút menu context để thay đổi định dạng"
+msgstr "(Dùng nút menu context để thay đổi định dạng)"
 
 #: src/widgets/PopupMenuTable.h
 #, c-format
@@ -19917,7 +20052,7 @@ msgstr "Giá trị không được lớn hơn %s"
 
 #: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
 msgid "Shelf Filter"
-msgstr "Lọc đa tần"
+msgstr "Shelf Filter - Lọc đa tần"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
@@ -20010,7 +20145,7 @@ msgstr "Spectral Edit Parametric EQ-Chỉnh sửa âm phổ EQ tham số"
 
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/SpectralEditShelves.ny
 msgid "Gain (dB)"
-msgstr "Gain (dB)"
+msgstr "Gain - Khuếch đại (dB)"
 
 #: plug-ins/SpectralEditParametricEQ.ny
 #, lisp-format
@@ -20074,11 +20209,11 @@ msgstr "Vùng chọn quá ngắn. ~%vùng chọn phải từ 2 mẫu trở lên.
 
 #: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 msgid "Adjustable Fade"
-msgstr "Adjustable Fade - Độ phai cân chỉnh"
+msgstr "Adjustable Fade - Độ mờ dần có thể điều chỉnh"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Type"
-msgstr "Loại nhiễu"
+msgstr "Loại Mờ Dần Fade"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Fade Up"
@@ -20130,19 +20265,19 @@ msgstr "Chưa được chọn"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Linear In"
-msgstr "Tuyến tính In"
+msgstr "Linear - Tuyến tính vào"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Linear Out"
-msgstr "Tuyến tính hướng ra phía ngoài"
+msgstr "Linear - Tuyến tính ra"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Exponential In"
-msgstr "Số mũ vào"
+msgstr "Exponential - Số mũ vào"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Exponential Out"
-msgstr "Số mũ ra"
+msgstr "Exponential - Số mũ ra"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Logarithmic In"
@@ -20204,7 +20339,7 @@ msgstr ""
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
-msgstr "Beat Finder - Tìm điểm ghim"
+msgstr "Beat Finder - Tìm Nhịp"
 
 #: plug-ins/beat.ny
 msgid "Threshold Percentage"
@@ -20251,7 +20386,7 @@ msgstr "Crossfade Tracks - Trộn Chéo Track"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Fade TYPE"
-msgstr "Loại nhiễu"
+msgstr "Loại Mờ Dần Fade"
 
 #: plug-ins/crossfadetracks.ny
 msgid "Constant Gain"
@@ -20288,7 +20423,7 @@ msgstr "Luân phiên Vào / Ra"
 #: plug-ins/crossfadetracks.ny
 #, lisp-format
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr "Lỗi.~% Chọn >=2 track để áp dụng crossfade (trộn chéo đoạn âm)."
+msgstr "Lỗi.~% Chọn >=2 track để áp dụng crossfade (trộn chéo track)."
 
 #: plug-ins/delay.ny resources/EffectsMenuDefaults.xml
 msgid "Delay"
@@ -20509,7 +20644,7 @@ msgid ""
 "                 Track sample rate is ~a Hz~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"Lỗi:~%~%Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~\n"
+"Lỗi:~%~%F Tần số (~a Hz) quá cao so với tốc độ lấy mẫu của track.~%~%~\n"
 "Tốc độ mẫu của track là ~a Hz.~%~\n"
 "Tần số phải nhỏ hơn ~a Hz."
 
@@ -20634,7 +20769,9 @@ msgstr "Clip cứng"
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
-msgstr "Núm điều chỉnh đầu vào (dB) mono/left"
+msgstr ""
+"Núm điều chỉnh đầu vào (dB)\n"
+"mono/left"
 
 #: plug-ins/legacy-limiter.ny
 msgid ""
@@ -20646,7 +20783,7 @@ msgstr ""
 
 #: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
-msgstr "Giới hạn dB"
+msgstr "Limit - Giới hạn (dB)"
 
 #: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
@@ -20686,7 +20823,7 @@ msgstr "Liên kết các track stereo"
 
 #: plug-ins/noisegate.ny
 msgid "Don't Link Stereo"
-msgstr "Không liên kết âm thanh nổi"
+msgstr "Không liên kết âm thanh nổi stereo"
 
 #: plug-ins/noisegate.ny
 msgid "Gate threshold (dB)"
@@ -20702,7 +20839,7 @@ msgstr "Mức giảm (dB)"
 
 #: plug-ins/noisegate.ny
 msgid "Attack (ms)"
-msgstr "Sự đánh nhạc"
+msgstr "Attack - Sự đánh nhạc (mili giây)"
 
 #: plug-ins/noisegate.ny
 msgid "Decay (ms)"
@@ -20718,7 +20855,7 @@ msgid ""
 msgstr ""
 "Lỗi:~%`\n"
 "Tần số cổng phía trên: ~s kHz~%~\n"
-"quá cao đối với đoạn âm đã chọn.~%~\n"
+"quá cao đối với track đã chọn.~%~\n"
 "Cài đặt điều khiển bên dưới ~a kHz."
 
 #: plug-ins/noisegate.ny
@@ -20766,13 +20903,13 @@ msgid ""
 "               Track sample rate is ~a Hz.~%~\n"
 "               Frequency must be less than ~a Hz."
 msgstr ""
-"Lỗi:~%~%Tần số (~a Hz)quá cao so với tốc độ lấy mẫu của track.~%~%~\n"
+"Lỗi:~%~%FTần số (~a Hz) quá cao so với tốc độ lấy mẫu của track.~%~%~\n"
 "Tốc độ mẫu của track là ~a Hz.~%~\n"
 "Tần số phải nhỏ hơn ~a Hz."
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Nyquist Plugin Installer"
-msgstr "Trình cài đặt tính năng bổ trợ Nyquist "
+msgstr "Trình cài đặt tính năng bổ trợ Nyquist Plugin"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -20781,7 +20918,7 @@ msgstr "Chọn (các) tập tin để cài đặt"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-in"
-msgstr "Plug-in \"điện toán\""
+msgstr "Plugin"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Lisp file"
@@ -20815,25 +20952,25 @@ msgstr "Cho phép"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr "Thành công.~%tệp được ghi vào:~%~s~%"
+msgstr "Thành công.~%F tệp được ghi vào:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Cảnh báo.~% Sao chép một số tệp không thành công:~%"
+msgstr "Cảnh báo.~%F Sao chép một số tệp không thành công:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Plug-ins installed.~%(Use the Plug-in Manager to enable effects):"
-msgstr "Phần mở rộng đã được cài đặt.~%(Sử dụng Quản lí phần mở rộng để kích hoạt các hiệu ứng):"
+msgstr "Plugin đã được cài đặt.~%(Sử dụng Quản ly plugin để kích hoạt các hiệu ứng):"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Plug-ins updated:"
-msgstr "Đã cập nhật Plug-ins(điện toán):"
+msgstr "Đã cập nhật Plugin:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Files copied to plug-ins folder:"
-msgstr "Đã sao chép tập tin vào thư mục Plug-ins"
+msgstr "Đã sao chép tập tin vào thư mục Plugins"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Not found or cannot be read:"
@@ -20849,7 +20986,7 @@ msgstr "Các tập tin đã được cài đặt ('Cho phép ghi đè' đã đư
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Cannot be written to plug-ins folder:"
-msgstr "Không thể lưu vào thư mục Plug-ins (điện toán) "
+msgstr "Không thể lưu vào thư mục Plugins "
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -20870,7 +21007,7 @@ msgstr "Cao độ MIDI"
 
 #: plug-ins/pluck.ny
 msgid "Fade-out type"
-msgstr "Loại âm lượng"
+msgstr "Loại mờ dần âm lượng"
 
 #: plug-ins/pluck.ny
 msgid "Abrupt"
@@ -20946,7 +21083,7 @@ msgstr "Khoản lặng trước nhịp đầu tiên"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Beat sound"
-msgstr "Âm thanh nhạc beat"
+msgstr "Âm thanh nhịp"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Metronome Tick"
@@ -21015,7 +21152,7 @@ msgstr "Kéo đuôi (giây)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Center frequency of noise (Hz)"
-msgstr "Tần số trung tâm của tiếng ồn"
+msgstr "Tần số trung tâm của tiếng ồn (Hz)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Width of noise band (Hz)"
@@ -21079,7 +21216,7 @@ msgstr "Tùy chọn tiêu đề"
 
 #: plug-ins/sample-data-export.ny
 msgid "Channel layout for stereo"
-msgstr "Bố cục kênh cho âm thanh nổi"
+msgstr "Bố cục kênh cho âm thanh nổi stereo"
 
 #. i18n-hint: Left and Right
 #: plug-ins/sample-data-export.ny
@@ -21263,11 +21400,11 @@ msgstr "tuyến tính"
 
 #: plug-ins/sample-data-export.ny
 msgid "2 channels (stereo)"
-msgstr "Lập thể (stereo)"
+msgstr "2 Channels (Stereo)"
 
 #: plug-ins/sample-data-export.ny
 msgid "1 channel (mono)"
-msgstr "Kênh 1 (mono)"
+msgstr "1 Kênh (mono)"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21432,7 +21569,7 @@ msgstr "Biên độ của tiếng ồn trắng (phần trăm)"
 
 #: plug-ins/vocoder.ny
 msgid "Amplitude of Radar Needles (percent)"
-msgstr "Biên độ của kim radar phần trăm)"
+msgstr "Biên độ của kim radar (phần trăm)"
 
 #: plug-ins/vocoder.ny
 msgid "Frequency of Radar Needles (Hz)"
