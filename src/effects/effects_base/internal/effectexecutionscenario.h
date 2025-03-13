@@ -3,20 +3,22 @@
 */
 #pragma once
 
-#include "../ieffectexecutionscenario.h"
+#include "modularity/ioc.h"
 
 #include "async/channel.h"
-#include "modularity/ioc.h"
-#include "global/iinteractive.h"
 #include "context/iglobalcontext.h"
-#include "../ieffectsprovider.h"
-#include "../ieffectinstancesregister.h"
-#include "trackedit/iselectioncontroller.h"
-#include "trackedit/iprojecthistory.h"
+#include "global/iinteractive.h"
 
+#include "../ieffectinstancesregister.h"
+#include "../ieffectsprovider.h"
+#include "ieffectsconfiguration.h"
+#include "trackedit/iprojecthistory.h"
+#include "trackedit/iselectioncontroller.h"
 #include "au3wrap/au3types.h"
 
 #include <optional>
+
+#include "../ieffectexecutionscenario.h"
 
 class Effect;
 class EffectBase;
@@ -31,6 +33,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<IEffectsConfiguration> effectsConfiguration;
 
 public:
     EffectExecutionScenario() = default;

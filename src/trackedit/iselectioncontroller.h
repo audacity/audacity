@@ -52,6 +52,7 @@ public:
     virtual void resetDataSelection() = 0;
     virtual bool timeSelectionIsNotEmpty() const = 0;
     virtual bool isDataSelectedOnTrack(TrackId trackId) const = 0;
+    virtual void setSelectedAllAudioData() = 0;
 
     virtual secs_t dataSelectedStartTime() const = 0;
     virtual void setDataSelectedStartTime(secs_t time, bool complete) = 0;
