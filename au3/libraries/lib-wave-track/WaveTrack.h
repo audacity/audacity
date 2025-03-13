@@ -280,6 +280,13 @@ private:
 
     void RemoveClip(std::ptrdiff_t distance);
 
+    /**
+     * @brief Creates a deep copy of this track, except for the database sample blocks,
+     * shallow-copied (i.e. project size may not increase dramatically).
+     *
+     * @param backup Preserves track IDs if `true`, generates new ones if `false`
+     * @return Track::Holder
+     */
     Track::Holder Clone(bool backup) const override;
 
     friend class WaveTrackFactory;
@@ -364,6 +371,20 @@ public:
     void MakeMono();
 
     /*!
+     * @brief Mixes down to mono by averaging. Returns `true` on complete conversion.
+     * @details Converts all clips to mono by mixdown.
+     * No care is taken to restore the initial state if convertion gets interrupted between clips,
+     * in which case `false` is returned and the track should be disposed of.
+     */
+    bool MixDownToMono(const std::function<void(double)>& progress, const std::function<bool()>& cancel);
+
+    /*!
+     * @brief If stereo/mono, ensures all clips within it are stereo/mono, converting them if necessary.
+     */
+    bool FixClipChannels(
+        const std::function<void(double)>& progress, const std::function<bool()>& cancel);
+
+    /*!
      @pre `!GetOwner()`
      */
     Holder MonoToStereo();
@@ -435,6 +456,12 @@ public:
         std::optional<TimeInterval> interval, ProgressReporter reportProgress);
 
     void SyncLockAdjust(double oldT1, double newT1) override;
+
+    /** @brief Returns true if there are no WaveClips
+     *
+     * @return true if there are no clips in the track, false otherwise.
+     */
+    bool IsEmpty() const;
 
     /** @brief Returns true if there are no WaveClips in the specified region
      *
@@ -679,6 +706,7 @@ public:
     void InsertInterval(const IntervalHolder& interval, bool newClip, bool allowEmpty = false);
 
     void RemoveInterval(const IntervalHolder& interval);
+    void RemoveInterval(const IntervalConstHolder& interval);
 
     Track::Holder PasteInto(AudacityProject& project, TrackList& list)
     const override;
@@ -889,7 +917,7 @@ public:
      * \brief Creates an unnamed empty WaveTrack with default sample format and default rate
      * \return Orphaned WaveTrack
      */
-    std::shared_ptr<WaveTrack> Create();
+    std::shared_ptr<WaveTrack> Create() const;
 
     /**
      * \brief Creates an unnamed empty WaveTrack with custom sample format and custom rate
@@ -897,7 +925,7 @@ public:
      * \param rate Desired sample rate
      * \return Orphaned WaveTrack
      */
-    std::shared_ptr<WaveTrack> Create(sampleFormat format, double rate);
+    std::shared_ptr<WaveTrack> Create(sampleFormat format, double rate) const;
 
     /**
      * \brief Creates a new track with project's default rate and format and the
@@ -905,13 +933,13 @@ public:
      * @pre `nChannels > 0`
      * @pre `nChannels <= 2`
      */
-    WaveTrack::Holder Create(size_t nChannels);
+    WaveTrack::Holder Create(size_t nChannels) const;
 
     /**
      * \brief Creates tracks with project's default rate and format and the
      * given number of channels.
      */
-    TrackListHolder CreateMany(size_t nChannels);
+    TrackListHolder CreateMany(size_t nChannels) const;
 
     /**
      * \brief Creates a new \p track with specified \p format and
@@ -919,23 +947,23 @@ public:
      * @pre `nChannels > 0`
      * @pre `nChannels <= 2`
      */
-    WaveTrack::Holder Create(size_t nChannels, sampleFormat format, double rate);
+    WaveTrack::Holder Create(size_t nChannels, sampleFormat format, double rate) const;
 
     /**
      * \brief Creates tracks with specified \p format and
      * \p rate and number of channels
      */
-    TrackListHolder CreateMany(size_t nChannels, sampleFormat format, double rate);
+    TrackListHolder CreateMany(size_t nChannels, sampleFormat format, double rate) const;
 
     /**
      * \brief Creates an empty copy of \p proto with the specified number
      * of channels.
      */
-    WaveTrack::Holder Create(size_t nChannels, const WaveTrack& proto);
+    WaveTrack::Holder Create(size_t nChannels, const WaveTrack& proto) const;
 
 private:
     std::shared_ptr<WaveTrack> DoCreate(
-        size_t nChannels, sampleFormat format, double rate);
+        size_t nChannels, sampleFormat format, double rate) const;
 
     const ProjectRate& mRate;
     SampleBlockFactoryPtr mpFactory;

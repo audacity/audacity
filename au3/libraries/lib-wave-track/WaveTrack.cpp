@@ -394,13 +394,13 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
     WaveTrack::New
 };
 
-std::shared_ptr<WaveTrack> WaveTrackFactory::Create()
+std::shared_ptr<WaveTrack> WaveTrackFactory::Create() const
 {
     return Create(QualitySettings::SampleFormatChoice(), mRate.GetRate());
 }
 
 std::shared_ptr<WaveTrack> WaveTrackFactory::DoCreate(size_t nChannels,
-                                                      sampleFormat format, double rate)
+                                                      sampleFormat format, double rate) const
 {
     auto result = std::make_shared<WaveTrack>(
         WaveTrack::CreateToken {}, mpFactory, format, rate);
@@ -415,19 +415,19 @@ std::shared_ptr<WaveTrack> WaveTrackFactory::DoCreate(size_t nChannels,
     return result;
 }
 
-std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double rate)
+std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double rate) const
 {
     return DoCreate(1, format, rate);
 }
 
-WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels) const
 {
     assert(nChannels > 0);
     assert(nChannels <= 2);
     return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
 }
 
-TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels)
+TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels) const
 {
     return CreateMany(nChannels,
                       QualitySettings::SampleFormatChoice(), mRate.GetRate());
@@ -467,7 +467,7 @@ void WaveTrack::EraseChannelAttachments(size_t ii)
     });
 }
 
-WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate) const
 {
     assert(nChannels > 0);
     assert(nChannels <= 2);
@@ -475,7 +475,7 @@ WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, sampleFormat format
            ->SharedPointer<WaveTrack>();
 }
 
-TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels, sampleFormat format, double rate)
+TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels, sampleFormat format, double rate) const
 {
     // There are some cases where more than two channels are requested
     if (nChannels == 2) {
@@ -488,7 +488,7 @@ TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels, sampleFormat form
     return result;
 }
 
-WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto) const
 {
     return proto.EmptyCopy(nChannels, mpFactory);
 }
@@ -954,6 +954,11 @@ void WaveTrack::ConvertToSampleFormat(sampleFormat format,
     WaveTrackData::Get(*this).SetSampleFormat(format);
 }
 
+bool WaveTrack::IsEmpty() const
+{
+    return mClips.empty();
+}
+
 bool WaveTrack::IsEmpty(double t0, double t1) const
 {
     if (t0 > t1) {
@@ -1072,6 +1077,46 @@ void WaveTrack::MakeMono()
         pClip->DiscardRightChannel();
     }
     EraseChannelAttachments(1);
+}
+
+bool WaveTrack::MixDownToMono(const std::function<void(double)>& progress, const std::function<bool()>& cancel)
+{
+    WaveClipHolders stereoClips;
+    std::copy_if(mClips.begin(), mClips.end(), std::back_inserter(stereoClips),
+                 [](const auto& pClip){ return pClip->NChannels() == 2; });
+
+    if (stereoClips.empty()) {
+        return true;
+    }
+
+    auto i = 0u;
+    const auto clipProgress = [&](double p)
+    { progress((p + i) / stereoClips.size()); };
+    for (; i < stereoClips.size(); ++i) {
+        if (!stereoClips[i]->MakeMono(clipProgress, cancel)) {
+            return false;
+        }
+    }
+
+    if (NChannels() == 2) {
+        mRightChannel.reset();
+        EraseChannelAttachments(1);
+    }
+
+    return true;
+}
+
+bool WaveTrack::FixClipChannels(
+    const std::function<void(double)>& progress, const std::function<bool()>& cancel)
+{
+    if (NChannels() == 1) {
+        return MixDownToMono(progress, cancel);
+    } else {
+        for (const auto& clip : mClips) {
+            clip->MakeStereo();
+        }
+        return true;
+    }
 }
 
 auto WaveTrack::MonoToStereo() -> Holder
@@ -3362,6 +3407,11 @@ void WaveTrack::InsertInterval(const IntervalHolder& clip,
 }
 
 void WaveTrack::RemoveInterval(const IntervalHolder& interval)
+{
+    return RemoveInterval(std::const_pointer_cast<const Interval>(interval));
+}
+
+void WaveTrack::RemoveInterval(const IntervalConstHolder& interval)
 {
     const auto end = mClips.end(),
                iter = find(mClips.begin(), end, interval);

@@ -17,6 +17,7 @@
 #include <list>
 #include <optional>
 #include <functional>
+#include <thread>
 #include <wx/longlong.h>
 
 #include "Channel.h"
@@ -905,6 +906,13 @@ public:
     static TrackListHolder Create(AudacityProject* pOwner);
 
     /*!
+     * @brief Creates a copy without an owner.
+     * Refer to the `Track::Clone` overrides of each track type for more detail about
+     * the kind of copy that is made (e.g. deep or shallow).
+     */
+    TrackListHolder Duplicate() const;
+
+    /*!
      @pre `!GetOwner() && !that.GetOwner()`
      */
     void Swap(TrackList& that);
@@ -1061,7 +1069,7 @@ public:
      */
     void Permute(const std::vector<Track*>& tracks);
 
-    Track* FindById(TrackId id);
+    Track* FindById(TrackId id) const;
 
     /// Add a Track, giving it a fresh id if `this` is not temporary
     template<typename TrackKind>
@@ -1257,6 +1265,8 @@ private:
     static long sCounter;
 
     AudacityProject* mOwner;
+    //! Needed for debugging purposes - see use in TrackList::QueueEvent
+    const std::thread::id mCtorThread;
 
     //! Whether the list assigns unique ids to added tracks;
     //! false for temporaries
