@@ -158,7 +158,8 @@ WAVE_TRACK_API bool RemoveCutLine(WaveTrack& track, double cutLinePosition);
  @param[out] cutlineStart start time of the insertion
  @param[out] cutlineEnd end time of the insertion
  */
-WAVE_TRACK_API void ExpandCutLine(WaveTrack& track, double cutLinePosition, double* cutlineStart = nullptr, double* cutlineEnd = nullptr);
+WAVE_TRACK_API void ExpandCutLine(WaveTrack& track, double cutLinePosition, double* cutlineStart = nullptr, double* cutlineEnd = nullptr,
+                                  bool moveClips=false);
 
 //! Whether any clips have hidden audio
 WAVE_TRACK_API bool HasHiddenData(const WaveTrack& track);

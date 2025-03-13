@@ -9,7 +9,6 @@
 **********************************************************************/
 #include "EffectOutputTracks.h"
 #include "BasicUI.h"
-#include "SyncLock.h"
 #include "UserException.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
@@ -20,8 +19,7 @@ int EffectOutputTracks::nEffectsDone = 0;
 
 EffectOutputTracks::EffectOutputTracks(
     TrackList& tracks, EffectType effectType,
-    std::optional<TimeInterval> effectTimeInterval, bool allSyncLockSelected,
-    bool stretchSyncLocked)
+    std::optional<TimeInterval> effectTimeInterval)
     : mTracks{tracks}
     , mEffectType{effectType}
 {
@@ -33,12 +31,7 @@ EffectOutputTracks::EffectOutputTracks(
     mOMap.clear();
     mOutputTracks = TrackList::Create(mTracks.GetOwner());
 
-    auto trackRange = mTracks.Any()
-                      +[&](const Track * pTrack) {
-        return allSyncLockSelected
-               ? SyncLock::IsSelectedOrSyncLockSelected(*pTrack)
-               : dynamic_cast<const WaveTrack*>(pTrack) && pTrack->GetSelected();
-    };
+    auto trackRange = mTracks.Selected<WaveTrack>();
 
     for (auto aTrack : trackRange) {
         auto pTrack = aTrack->Duplicate(Track::DuplicateOptions {}.Backup());
@@ -54,8 +47,7 @@ EffectOutputTracks::EffectOutputTracks(
             [&](const ProgressReporter& parent)
         {
             const auto tracksToUnstretch
-                =(stretchSyncLocked ? mOutputTracks->Any<WaveTrack>()
-                  : mOutputTracks->Selected<WaveTrack>())
+                =(mOutputTracks->Selected<WaveTrack>())
                   +[&](const WaveTrack * pTrack)
                 {
                     return TimeStretching::HasPitchOrSpeed(

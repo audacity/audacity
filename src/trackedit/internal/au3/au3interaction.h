@@ -47,16 +47,16 @@ public:
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
-    muse::Ret pasteFromClipboard(secs_t begin) override;
+    muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks) override;
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
-    bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
     bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
     bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
-    bool removeClips(const trackedit::ClipKeyList& clipKeyList) override;
-    bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
+    bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
@@ -135,10 +135,14 @@ private:
     bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool stretchClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
-    bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end);
+    bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end, bool moveClips);
+    bool cutTrackDataIntoClipboardRipple(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     void doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
+    void insertBlankSpace(const TrackIdList& trackIds, secs_t begin, secs_t duration);
+    std::shared_ptr<WaveTrack> createMonoTrack();
+    std::shared_ptr<WaveTrack> createStereoTrack();
 
     bool splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);

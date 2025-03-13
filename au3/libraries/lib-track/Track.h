@@ -315,7 +315,7 @@ public:
      @return non-NULL or else throw
      May assume precondition: t0 <= t1
      */
-    virtual Holder Cut(double t0, double t1) = 0;
+    virtual Holder Cut(double t0, double t1, bool moveClips) = 0;
 
     //! Create new tracks and don't modify this track
     /*!
@@ -331,18 +331,14 @@ public:
     /*!
      May assume precondition: t0 <= t1
      */
-    virtual void Clear(double t0, double t1) = 0;
+    virtual void Clear(double t0, double t1, bool moveClips) = 0;
 
     //! Weak precondition allows overrides to replicate one channel into many
     /*!
      @pre `SameKindAs(src)`
      @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
      */
-    virtual void Paste(double t, const Track& src) = 0;
-
-    //! This can be used to adjust a sync-lock selected track when the selection
-    //! is replaced by one of a different length.
-    virtual void SyncLockAdjust(double oldT1, double newT1);
+    virtual void Paste(double t, const Track& src, bool moveClips) = 0;
 
     // May assume precondition: t0 <= t1
     virtual void

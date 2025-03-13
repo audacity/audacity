@@ -227,12 +227,8 @@
         <seq>Ctrl+Shift+Z</seq>
     </SC>
     <SC>
-        <key>cut</key>
-        <seq>Ctrl+X</seq>
-    </SC>
-    <SC>
-        <key>delete</key>
-        <seq>Ctrl+K</seq>
+        <key>cut-per-track-ripple</key>
+        <seq>Ctrl+Shift+X</seq>
     </SC>
     <SC>
         <key>copy</key>
@@ -243,16 +239,20 @@
         <seq>Ctrl+V</seq>
     </SC>
     <SC>
+        <key>paste-insert</key>
+        <seq>Ctrl+Shift+V</seq>
+    </SC>
+    <SC>
+        <key>paste-insert-all-tracks-ripple</key>
+        <seq>Ctrl+Alt+V</seq>
+    </SC>
+    <SC>
         <key>duplicate</key>
         <seq>Ctrl+D</seq>
     </SC>
     <SC>
-        <key>split-cut</key>
-        <seq>Ctrl+Alt+X</seq>
-    </SC>
-    <SC>
-        <key>split-delete</key>
-        <seq>Ctrl+Alt+K</seq>
+        <key>cut</key>
+        <seq>Ctrl+X</seq>
     </SC>
     <SC>
         <key>silence</key>
@@ -286,6 +286,16 @@
         <key>delete</key>
         <seq>Del</seq>
         <seq>Backspace</seq>
+    </SC>
+    <SC>
+        <key>delete-per-track-ripple</key>
+        <seq>Shift+Del</seq>
+        <seq>Shift+Backspace</seq>
+    </SC>
+    <SC>
+        <key>delete-all-tracks-ripple</key>
+        <seq>Ctrl+Del</seq>
+        <seq>Ctrl+Backspace</seq>
     </SC>
     <SC>
         <key>file-new</key>
@@ -388,10 +398,6 @@
     <SC>
         <key>add-label-playing</key>
         <seq>Ctrl+.</seq>
-    </SC>
-    <SC>
-        <key>paste-new-label</key>
-        <seq>Ctrl+Alt+V</seq>
     </SC>
     <SC>
         <key>type-to-create-label</key>
@@ -929,10 +935,6 @@
     <SC>
         <key>collapse-all-tracks</key>
         <seq>Ctrl+Shift+C</seq>
-    </SC>
-    <SC>
-        <key>expand-all-tracks</key>
-        <seq>Ctrl+Shift+X</seq>
     </SC>
     <SC>
         <key>skip-sel-start</key>

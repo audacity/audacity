@@ -235,8 +235,6 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-mixer/AudioIOSequences.cpp
     ${AU3_LIBRARIES}/lib-mixer/AudioIOSequences.h
 
-    ${AU3_LIBRARIES}/lib-track-selection/SyncLock.cpp
-    ${AU3_LIBRARIES}/lib-track-selection/SyncLock.h
     ${AU3_LIBRARIES}/lib-track-selection/TrackFocus.cpp
     ${AU3_LIBRARIES}/lib-track-selection/TrackFocus.h
 

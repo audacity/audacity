@@ -25,7 +25,6 @@
 #include "ConfigInterface.h"
 #include "ProjectNumericFormats.h"
 #include "ShuttleAutomation.h"
-#include "SyncLock.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "wxFileNameWrapper.h"

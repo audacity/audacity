@@ -81,9 +81,9 @@ void TrackeditInteraction::clearClipboard()
     return m_interaction->clearClipboard();
 }
 
-muse::Ret TrackeditInteraction::pasteFromClipboard(secs_t begin)
+muse::Ret TrackeditInteraction::pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks)
 {
-    return withPlaybackStop(&ITrackeditInteraction::pasteFromClipboard, begin);
+    return withPlaybackStop(&ITrackeditInteraction::pasteFromClipboard, begin, moveClips, moveAllTracks);
 }
 
 bool TrackeditInteraction::cutClipIntoClipboard(const ClipKey& clipKey)
@@ -91,9 +91,9 @@ bool TrackeditInteraction::cutClipIntoClipboard(const ClipKey& clipKey)
     return withPlaybackStop(&ITrackeditInteraction::cutClipIntoClipboard, clipKey);
 }
 
-bool TrackeditInteraction::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+bool TrackeditInteraction::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
-    return withPlaybackStop(&ITrackeditInteraction::cutClipDataIntoClipboard, tracksIds, begin, end);
+    return withPlaybackStop(&ITrackeditInteraction::cutClipDataIntoClipboard, tracksIds, begin, end, moveClips);
 }
 
 bool TrackeditInteraction::copyClipIntoClipboard(const trackedit::ClipKey& clipKey)
@@ -121,14 +121,14 @@ bool TrackeditInteraction::removeClip(const trackedit::ClipKey& clipKey)
     return withPlaybackStop(&ITrackeditInteraction::removeClip, clipKey);
 }
 
-bool TrackeditInteraction::removeClips(const ClipKeyList& clipKeyList)
+bool TrackeditInteraction::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
 {
-    return withPlaybackStop(&ITrackeditInteraction::removeClips, clipKeyList);
+    return withPlaybackStop(&ITrackeditInteraction::removeClips, clipKeyList, moveClips);
 }
 
-bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
-    return withPlaybackStop(&ITrackeditInteraction::removeTracksData, tracksIds, begin, end);
+    return withPlaybackStop(&ITrackeditInteraction::removeTracksData, tracksIds, begin, end, moveClips);
 }
 
 bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
