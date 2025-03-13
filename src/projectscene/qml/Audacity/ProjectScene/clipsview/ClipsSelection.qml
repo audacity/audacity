@@ -43,6 +43,8 @@ Item {
 
         visible: isDataSelected
 
+        cursorShape: Qt.IBeamCursor
+
         onClicked: function(mouse) {
             let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
             root.requestSelectionContextMenu(position.x, position.y)
