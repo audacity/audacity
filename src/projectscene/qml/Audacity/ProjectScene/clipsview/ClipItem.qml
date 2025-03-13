@@ -91,8 +91,8 @@ Rectangle {
     property bool isIsolationMode: false
     property alias isNearSample: waveView.isNearSample
     property alias currentChannel: waveView.currentChannel
-    property alias leftTrimContainsMouse: leftTrimStretchEdgeHover.containsMouse
-    property alias rightTrimContainsMouse: rightTrimStretchEdgeHover.containsMouse
+    property bool leftTrimContainsMouse: false
+    property bool rightTrimContainsMouse: false
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
     property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
 
@@ -165,6 +165,16 @@ Rectangle {
         multiClipContextMenuModel.load()
     }
 
+    Component.onDestruction: {
+        //! NOTE The outer component uses this information to handle the current cursor.
+        // It is important to cleanup this state before removing the component
+        // to prevent the cursor from being stuck in the wrong state.
+        waveView.isNearSample = false
+        waveView.isStemPlot = false
+        root.leftTrimContainsMouse = false
+        root.rightTrimContainsMouse = false
+    }
+
     MouseArea {
         id: hoverArea
         anchors.fill: parent
@@ -213,6 +223,7 @@ Rectangle {
 
         // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
+            root.leftTrimContainsMouse = containsMouse
             if (containsMouse || pressedButtons) {
                 root.parent.z = 1
             } else {
@@ -269,6 +280,7 @@ Rectangle {
 
         // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
+            root.rightTrimContainsMouse = containsMouse
             if (containsMouse || pressedButtons) {
                 root.parent.z = 1
             } else {

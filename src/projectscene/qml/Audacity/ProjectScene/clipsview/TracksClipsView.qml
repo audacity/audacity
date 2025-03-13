@@ -529,43 +529,43 @@ Rectangle {
 
                     onIsBrushChanged: function() {
                         content.isBrush = tracksClipsView.checkIfAnyTrack(function(track) {
-                            return track.isBrush
+                            return track && track.isBrush
                         })
                     }
 
                     onIsIsolationModeChanged: function() {
                         content.isIsolationMode = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.isIsolationMode
+                            return track && track.isIsolationMode
                         })
                     }
 
                     onIsNearSampleChanged: function() {
                         content.isNearSample = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.isNearSample
+                            return track &&track.isNearSample
                         })
                     }
 
                     onLeftTrimContainsMouseChanged: function() {
                         content.leftTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.leftTrimContainsMouse
+                            return track && track.leftTrimContainsMouse
                         })
                     }
 
                     onRightTrimContainsMouseChanged: function() {
                         content.rightTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.rightTrimContainsMouse
+                            return track && track.rightTrimContainsMouse
                         })
                     }
 
                     onLeftTrimPressedButtonsChanged: function() {
                         content.leftTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.leftTrimPressedButtons
+                            return track && track.leftTrimPressedButtons
                         })
                     }
 
                     onRightTrimPressedButtonsChanged: function() {
                         content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.rightTrimPressedButtons
+                            return track && track.rightTrimPressedButtons
                         })
                     }
                 }
