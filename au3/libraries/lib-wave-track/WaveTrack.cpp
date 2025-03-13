@@ -58,7 +58,6 @@ from the project that will own the track.
 #include "BasicUI.h"
 #include "Prefs.h"
 #include "QualitySettings.h"
-#include "SyncLock.h"
 #include "TimeWarper.h"
 
 #include "InconsistencyException.h"
@@ -707,8 +706,9 @@ Track::Holder WaveTrack::PasteInto(
     auto& trackFactory = WaveTrackFactory::Get(project);
     auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
     auto pFirstTrack = EmptyCopy(pSampleBlockFactory);
+    constexpr bool moveClips = false;
     list.Add(pFirstTrack->SharedPointer());
-    pFirstTrack->Paste(0.0, *this);
+    pFirstTrack->Paste(0.0, *this, moveClips);
     return pFirstTrack->SharedPointer();
 }
 
@@ -981,14 +981,14 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
     return true;
 }
 
-Track::Holder WaveTrack::Cut(double t0, double t1)
+Track::Holder WaveTrack::Cut(double t0, double t1, bool moveClips)
 {
     if (t1 < t0) {
         THROW_INCONSISTENCY_EXCEPTION;
     }
 
     auto result = Copy(t0, t1);
-    Clear(t0, t1);
+    Clear(t0, t1, moveClips);
     return result;
 }
 
@@ -1032,7 +1032,8 @@ void WaveTrack::Trim(double t0, double t1)
     if (const auto endTime = GetEndTime()
         ; !inside1 && t1 < endTime
         ) {
-        Clear(t1, endTime);
+        constexpr bool moveClips = false;
+        Clear(t1, endTime, moveClips);
     }
 
     if (const auto startTime = GetStartTime()
@@ -1237,15 +1238,22 @@ void WaveTrack::FinishCopy(
 }
 
 /*! @excsafety{Strong} */
-void WaveTrack::Clear(double t0, double t1)
+void WaveTrack::Clear(double t0, double t1, bool moveClips)
 {
-    HandleClear(t0, t1, false, false);
+    bool addCutLines = false;
+    bool split = false;
+
+    HandleClear(t0, t1, addCutLines, split, moveClips);
 }
 
 /*! @excsafety{Strong} */
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
-    HandleClear(t0, t1, true, false);
+    bool addCutLines = true;
+    bool split = false;
+    bool moveClips = false;
+
+    HandleClear(t0, t1, addCutLines, split, moveClips);
 }
 
 namespace {
@@ -1332,7 +1340,8 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     // If duration is 0, then it's just a plain paste
     if (dur == 0.0) {
         // use Weak-guarantee
-        PasteWaveTrack(t0, src, merge);
+        constexpr bool moveClips = false;
+        PasteWaveTrack(t0, src, merge, moveClips);
         return;
     }
 
@@ -1421,13 +1430,15 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     const auto tolerance = 2.0 / track.GetRate();
 
     // This is not a split-cut operation.
+    constexpr auto addCutLines = false;
     constexpr auto split = false;
+    constexpr auto moveClips = false;
 
     // Now, clear the selection
-    track.HandleClear(t0, t1, false, split, clearByTrimming);
+    track.HandleClear(t0, t1, addCutLines, split, moveClips, clearByTrimming);
 
     // And paste in the new data
-    track.PasteWaveTrackAtSameTempo(t0, src, merge);
+    track.PasteWaveTrackAtSameTempo(t0, src, merge, moveClips);
 
     // First, merge the new clip(s) in with the existing clips
     if (merge && splits.size() > 0) {
@@ -1611,7 +1622,8 @@ void WaveTrack::SplitDelete(double t0, double t1)
 {
     constexpr bool addCutLines = false;
     constexpr bool split = true;
-    HandleClear(t0, t1, addCutLines, split);
+    constexpr bool moveClips = false;
+    HandleClear(t0, t1, addCutLines, split, moveClips);
 }
 
 std::ptrdiff_t WaveTrack::FindClip(const Interval& clip)
@@ -1633,7 +1645,7 @@ void WaveTrack::RemoveClip(std::ptrdiff_t distance)
 
 /*! @excsafety{Strong} */
 void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
-                            const bool split, const bool clearByTrimming)
+                            const bool split, const bool moveClips, const bool clearByTrimming)
 {
     // For debugging, use an ASSERT so that we stop
     // closer to the problem.
@@ -1743,7 +1755,7 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
         RemoveInterval(clip);
     }
 
-    const auto moveClipsLeft = !split && GetEditClipsCanMove();
+    const auto moveClipsLeft = !split && moveClips;
     if (moveClipsLeft) {
         // Clip is "behind" the region -- offset it unless we're splitting
         // or we're using the "don't move other clips" mode
@@ -1759,47 +1771,7 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
     }
 }
 
-void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
-{
-    const auto endTime = GetEndTime();
-    if (newT1 > oldT1
-        &&// JKC: This is a rare case where using >= rather than > on a float matters.
-          // GetEndTime() looks through the clips and may give us EXACTLY the same
-          // value as T1, when T1 was set to be at the end of one of those clips.
-        oldT1 >= endTime) {
-        return;
-    }
-    if (newT1 > oldT1) {
-        // Insert space within the track
-
-        // If track is empty at oldT1 insert whitespace; otherwise, silence
-        if (IsEmpty(oldT1, oldT1)) {
-            // Check if clips can move
-            if (EditClipsCanMove.Read()) {
-                const auto offset = newT1 - oldT1;
-                const auto rate = GetRate();
-                for (const auto& clip : Intervals()) {
-                    if (clip->GetPlayStartTime() > oldT1 - (1.0 / rate)) {
-                        clip->ShiftBy(offset);
-                    }
-                }
-            }
-            return;
-        } else {
-            // AWD: Could just use InsertSilence() on its own here, but it doesn't
-            // follow EditClipCanMove rules (Paste() does it right)
-            const auto duration = newT1 - oldT1;
-            auto tmp = EmptyCopy(mpFactory);
-            tmp->InsertSilence(0.0, duration);
-            tmp->Flush();
-            Paste(oldT1, *tmp);
-        }
-    } else if (newT1 < oldT1) {
-        Clear(newT1, oldT1);
-    }
-}
-
-void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other, bool merge)
+void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other, bool merge, bool moveClips)
 {
     // Get a modifiable copy of `src` because it may come from another project
     // with different tempo, making boundary queries incorrect.
@@ -1808,11 +1780,10 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other, bool merge)
         THROW_INCONSISTENCY_EXCEPTION;
     }
     const auto copyHolder = other.DuplicateWithOtherTempo(*tempo);
-    PasteWaveTrackAtSameTempo(t0, *copyHolder, merge);
+    PasteWaveTrackAtSameTempo(t0, *copyHolder, merge, moveClips);
 }
 
-void WaveTrack::PasteWaveTrackAtSameTempo(
-    double t0, const WaveTrack& other, bool merge)
+void WaveTrack::PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, bool merge, bool moveClips)
 {
     const auto otherNChannels = other.NChannels();
     assert(otherNChannels == NChannels());
@@ -1878,8 +1849,6 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
 
     //wxPrintf("Check if we need to make room for the pasted data\n");
 
-    bool editClipCanMove = GetEditClipsCanMove();
-
     const SimpleMessageBoxException notEnoughSpaceException {
         ExceptionType::BadUserAction,
         XO("There is not enough room available to paste the selection"),
@@ -1887,7 +1856,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
     };
 
     // Make room for the pasted data
-    if (editClipCanMove) {
+    if (moveClips) {
         if (!singleClipMode) {
             // We need to insert multiple clips, so split the current clip and ...
             track.SplitAt(t0);
@@ -1922,7 +1891,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
 
         IntervalHolder insideClip{};
         for (const auto& clip : track.Intervals()) {
-            if (editClipCanMove) {
+            if (moveClips) {
                 if (clip->SplitsPlayRegion(t0)) {
                     //wxPrintf("t0=%.6f: inside clip is %.6f ... %.6f\n",
                     //       t0, clip->GetStartTime(), clip->GetEndTime());
@@ -1941,7 +1910,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
         if (insideClip) {
             // Exhibit traditional behaviour
             //wxPrintf("paste: traditional behaviour\n");
-            if (!editClipCanMove) {
+            if (!moveClips) {
                 // We did not move other clips out of the way already, so
                 // check if we can paste without having to move other clips
                 for (const auto& clip : track.Intervals()) {
@@ -1973,7 +1942,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
     // Insert NEW clips
     //wxPrintf("paste: multi clip mode!\n");
 
-    if (!editClipCanMove
+    if (!moveClips
         && !track.IsEmpty(t0, t0 + insertDuration - 1.0 / rate)) {
         // Strong-guarantee in case of this path
         // not that it matters.
@@ -2107,13 +2076,12 @@ void WaveTrack::ApplyPitchAndSpeed(
 }
 
 /*! @excsafety{Weak} */
-void WaveTrack::Paste(double t0, const Track& src)
+void WaveTrack::Paste(double t0, const Track& src, bool moveClips)
 {
     if (const auto other = dynamic_cast<const WaveTrack*>(&src)) {
-        // Currently `Paste` isn't used by code that wants the newer "don't merge
-        // when copy/pasting" behaviour ...
-        constexpr auto merge = true;
-        PasteWaveTrack(t0, *other, merge);
+        // We always create a new clip on paste
+        constexpr auto merge = false;
+        PasteWaveTrack(t0, *other, merge, moveClips);
     } else {
         // THROW_INCONSISTENCY_EXCEPTION; // ?
         (void)0;// Empty if intentional.
@@ -3574,22 +3542,5 @@ StringSetting AudioTrackNameSetting{
     // Computed default value depends on chosen language
     []{ return DefaultName.Translation(); }
 };
-
-// Bug 825 is essentially that SyncLock requires EditClipsCanMove.
-// SyncLock needs rethinking, but meanwhile this function
-// fixes the issues of Bug 825 by allowing clips to move when in
-// SyncLock.
-bool GetEditClipsCanMove()
-{
-    bool mIsSyncLocked = SyncLockTracks.Read();
-    if (mIsSyncLocked) {
-        return true;
-    }
-    bool editClipsCanMove;
-    return EditClipsCanMove.Read();
-}
-
-BoolSetting EditClipsCanMove{
-    L"/GUI/EditClipCanMove",         false };
 
 DEFINE_XML_METHOD_REGISTRY(WaveTrackIORegistry);

@@ -157,7 +157,7 @@ Track::Holder LabelTrack::PasteInto(AudacityProject&, TrackList& list) const
 {
     auto pNewTrack = std::make_shared<LabelTrack>();
     pNewTrack->Init(*this);
-    pNewTrack->Paste(0.0, *this);
+    pNewTrack->Paste(0.0, *this, false);
     list.Add(pNewTrack);
     return pNewTrack;
 }
@@ -216,7 +216,7 @@ void LabelTrack::ShiftBy(double t0, double delta)
     }
 }
 
-void LabelTrack::Clear(double b, double e)
+void LabelTrack::Clear(double b, double e, bool moveClips)
 {
     // May DELETE labels, so use subscripts to iterate
     for (size_t i = 0; i < mLabels.size(); ++i) {
@@ -821,10 +821,10 @@ void LabelTrack::WriteXML(XMLWriter& xmlFile) const
     xmlFile.EndTag(wxT("labeltrack"));
 }
 
-Track::Holder LabelTrack::Cut(double t0, double t1)
+Track::Holder LabelTrack::Cut(double t0, double t1, bool moveClips)
 {
     auto tmp = Copy(t0, t1);
-    Clear(t0, t1);
+    Clear(t0, t1, moveClips);
     return tmp;
 }
 
@@ -922,7 +922,7 @@ bool LabelTrack::PasteOver(double t, const Track& src)
     return result;
 }
 
-void LabelTrack::Paste(double t, const Track& src)
+void LabelTrack::Paste(double t, const Track& src, bool moveClips)
 {
     bool bOk = src.TypeSwitch<bool>([&](const LabelTrack& lt) {
         double shiftAmt = lt.mClipLen > 0.0 ? lt.mClipLen : lt.GetEndTime();
@@ -987,23 +987,6 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
     }
 
     return true;
-}
-
-void LabelTrack::SyncLockAdjust(double oldT1, double newT1)
-{
-    if (newT1 > oldT1) {
-        // Insert space within the track
-
-        if (oldT1 > GetEndTime()) {
-            return;
-        }
-
-        //Clear(oldT1, newT1);
-        ShiftLabelsOnInsert(newT1 - oldT1, oldT1);
-    } else if (newT1 < oldT1) {
-        // Remove from the track
-        Clear(newT1, oldT1);
-    }
 }
 
 void LabelTrack::Silence(double t0, double t1, ProgressReporter)

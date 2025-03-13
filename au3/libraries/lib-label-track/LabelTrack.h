@@ -135,13 +135,12 @@ public:
     XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
     void WriteXML(XMLWriter& xmlFile) const override;
 
-    Track::Holder Cut(double t0, double t1) override;
+    Track::Holder Cut(double t0, double t1, bool moveClips) override;
     Track::Holder Copy(double t0, double t1, bool forClipboard = true)
     const override;
-    void Clear(double t0, double t1) override;
-    void Paste(double t, const Track& src) override;
+    void Clear(double t0, double t1, bool moveClips) override;
+    void Paste(double t, const Track& src, bool moveClips) override;
     bool Repeat(double t0, double t1, int n);
-    void SyncLockAdjust(double oldT1, double newT1) override;
 
     void
     Silence(double t0, double t1, ProgressReporter reportProgress = {}) override;

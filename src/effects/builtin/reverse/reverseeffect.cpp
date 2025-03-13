@@ -1,7 +1,6 @@
 #include "reverseeffect.h"
 #include "EffectOutputTracks.h"
 #include "LabelTrack.h"
-#include "SyncLock.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
 #include <algorithm>
@@ -46,13 +45,13 @@ bool ReverseEffect::Process(EffectInstance&, EffectSettings&)
 {
     // all needed because ReverseEffect should move the labels too
     EffectOutputTracks outputs {
-        *mTracks, GetType(), { { mT0, mT1 } }, true, true
+        *mTracks, GetType(), { { mT0, mT1 } }
     };
     bool bGoodResult = true;
     int count = 0;
 
     auto trackRange
-        =outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelectedP;
+        =outputs.Get().Any();
     trackRange.VisitWhile(
         bGoodResult,
         [&](WaveTrack& track) {

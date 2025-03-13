@@ -314,10 +314,8 @@ bool WaveTrackUtilities::RemoveCutLine(WaveTrack& track, double cutLinePosition)
 // Can't yet promise strong exception safety for a pair of channels together
 void WaveTrackUtilities::ExpandCutLine(WaveTrack& track,
                                        double cutLinePosition, double* cutlineStart,
-                                       double* cutlineEnd)
+                                       double* cutlineEnd, bool moveClips)
 {
-    const bool editClipCanMove = GetEditClipsCanMove();
-
     // Find clip which contains this cut line
     double start = 0, end = 0;
     const auto& clips = track.Intervals();
@@ -328,7 +326,8 @@ void WaveTrackUtilities::ExpandCutLine(WaveTrack& track,
     });
     if (pClip != pEnd) {
         auto&& clip = *pClip;
-        if (!editClipCanMove) {
+
+        if (!moveClips) {
             // We are not allowed to move the other clips, so see if there
             // is enough room to expand the cut line
             for (const auto& clip2: clips) {
@@ -357,7 +356,7 @@ void WaveTrackUtilities::ExpandCutLine(WaveTrack& track,
         }
 
         // Move clips which are to the right of the cut line
-        if (editClipCanMove) {
+        if (moveClips) {
             for (const auto& clip2 : clips) {
                 if (clip2->GetPlayStartTime() > clip->GetPlayStartTime()) {
                     clip2->ShiftBy(end - start);
