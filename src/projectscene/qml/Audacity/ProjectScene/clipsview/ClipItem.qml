@@ -5,6 +5,7 @@ import Muse.Ui
 import Muse.UiComponents
 import Muse.GraphicalEffects
 
+import Audacity.Preferences
 import Audacity.ProjectScene
 
 Rectangle {
@@ -164,9 +165,20 @@ Rectangle {
         }
     }
 
+    EditPreferencesModel {
+        id: editPreferencesModel
+
+        onAsymmetricStereoHeightsPossibleChanged: {
+            if (!asymmetricStereoHeightsPossible) {
+                root.ratioChanged(showChannelSplitter ? 0.5 : 1)
+            }
+        }
+    }
+
     Component.onCompleted: {
         singleClipContextMenuModel.load()
         multiClipContextMenuModel.load()
+        editPreferencesModel.init()
     }
 
     Component.onDestruction: {
@@ -579,7 +591,7 @@ Rectangle {
 
                 anchors.fill: parent
 
-                editable: root.enableCursorInteraction
+                editable: root.enableCursorInteraction && editPreferencesModel.asymmetricStereoHeightsPossible
 
                 color: "#000000"
                 opacity: 0.10

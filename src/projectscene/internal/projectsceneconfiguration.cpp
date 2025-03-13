@@ -16,6 +16,8 @@ static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/
 static const muse::Settings::Key INSERT_SILENCE_DURATION(moduleName, "projectscene/insertSilenceDuration");
 static const muse::Settings::Key INSERT_SILENCE_DURATION_FORMAT(moduleName, "projectscene/insertSilenceDurationFormat");
 static const muse::Settings::Key CLIP_STYLE(moduleName, "projectscene/clipStyle");
+static const muse::Settings::Key STEREO_HEIGHTS_PREF(moduleName, "projectscene/asymmetricStereoHeights");
+static const muse::Settings::Key ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES(moduleName, "projectscene/asymmetricStereoHeightsWorkspaces");
 
 static const QString TIMELINE_RULER_MODE("projectscene/timelineRulerMode");
 static const QString EFFECTS_PANEL_VISIBILITY("projectscene/effectsPanelVisible");
@@ -35,6 +37,18 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(CLIP_STYLE, muse::Val(ClipStyles::Style::COLORFUL));
     muse::settings()->valueChanged(CLIP_STYLE).onReceive(nullptr, [this](const muse::Val& val) {
         m_clipStyleChanged.send(val.toEnum<ClipStyles::Style>());
+    });
+
+    muse::settings()->setDefaultValue(STEREO_HEIGHTS_PREF,
+                                      muse::Val(StereoHeightsPref::AsymmetricStereoHeights::WORKSPACE_DEPENDENT));
+    muse::settings()->valueChanged(STEREO_HEIGHTS_PREF).onReceive(nullptr, [this](const muse::Val& val) {
+        m_asymmetricStereoHeightsChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES,
+                                      muse::Val("Advanced audio editing"));
+    muse::settings()->valueChanged(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES).onReceive(nullptr, [this](const muse::Val& val) {
+        m_asymmetricStereoHeightsWorkspacesChanged.notify();
     });
 }
 
@@ -155,4 +169,88 @@ void ProjectSceneConfiguration::setClipStyle(ClipStyles::Style style)
 muse::async::Channel<ClipStyles::Style> ProjectSceneConfiguration::clipStyleChanged() const
 {
     return m_clipStyleChanged;
+}
+
+StereoHeightsPref::AsymmetricStereoHeights
+ProjectSceneConfiguration::stereoHeightsPref() const
+{
+    return muse::settings()->value(STEREO_HEIGHTS_PREF).toEnum<StereoHeightsPref::AsymmetricStereoHeights>();
+}
+
+void ProjectSceneConfiguration::setStereoHeightsPref(
+    StereoHeightsPref::AsymmetricStereoHeights pref)
+{
+    if (stereoHeightsPref() == pref) {
+        return;
+    }
+    muse::settings()->setSharedValue(STEREO_HEIGHTS_PREF, muse::Val(pref));
+}
+
+muse::async::Notification ProjectSceneConfiguration::stereoHeightsPrefChanged() const
+{
+    return m_asymmetricStereoHeightsChanged;
+}
+
+std::vector<std::string> ProjectSceneConfiguration::asymmetricStereoHeightsWorkspaces() const
+{
+    // workspaces that have asymmetricStereoHeights enabled are stored as a string in muse::settings
+    // "Classic|Music|Advanced audio editing"
+    std::vector<std::string> result;
+    std::string combinedString = muse::settings()->value(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES).toString();
+    std::stringstream ss(combinedString);
+    std::string item;
+
+    while (std::getline(ss, item, '|')) {
+        result.push_back(item);
+    }
+
+    return result;
+}
+
+void ProjectSceneConfiguration::setAsymmetricStereoHeightsWorkspaces(std::vector<std::string>& asymmetricWorkspaces)
+{
+    if (asymmetricStereoHeightsWorkspaces() == asymmetricWorkspaces) {
+        return;
+    }
+
+    // convert vector to single string saveable in muse::settings
+    std::ostringstream oss;
+    for (size_t i = 0; i < asymmetricWorkspaces.size(); ++i) {
+        if (i > 0) {
+            oss << '|';
+        }
+        oss << asymmetricWorkspaces.at(i);
+    }
+
+    std::string result = oss.str();
+
+    muse::settings()->setSharedValue(ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES, muse::Val(result));
+}
+
+muse::async::Notification ProjectSceneConfiguration::asymmetricStereoHeightsWorkspacesChanged() const
+{
+    return m_asymmetricStereoHeightsWorkspacesChanged;
+}
+
+void ProjectSceneConfiguration::asymmetricStereoHeightWorkspacesCleanUp()
+{
+    // cleanup after user removes workspace
+    std::vector<std::string> asymmetricWorkspaces = asymmetricStereoHeightsWorkspaces();
+    auto workspaces = workspaceManager()->workspaces();
+
+    // gather workspace names into a set for quick lookup
+    std::unordered_set<std::string> workspaceNames;
+    for (const auto& workspace : workspaces) {
+        workspaceNames.insert(workspace->name());
+    }
+
+    // remove asymmetric workspaces that are not in the set
+    asymmetricWorkspaces.erase(
+        std::remove_if(asymmetricWorkspaces.begin(), asymmetricWorkspaces.end(),
+                       [&](const auto& asymmetricWorkspace) {
+        return workspaceNames.find(asymmetricWorkspace) == workspaceNames.end();
+    }),
+        asymmetricWorkspaces.end());
+
+    setAsymmetricStereoHeightsWorkspaces(asymmetricWorkspaces);
 }

@@ -52,6 +52,7 @@ public:
     void resetDataSelection() override;
     bool timeSelectionIsNotEmpty() const override;
     bool isDataSelectedOnTrack(TrackId trackId) const override;
+    void setSelectedAllAudioData() override;
 
     trackedit::secs_t dataSelectedStartTime() const override;
     void setDataSelectedStartTime(trackedit::secs_t time, bool complete) override;

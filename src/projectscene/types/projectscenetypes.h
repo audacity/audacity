@@ -125,6 +125,18 @@ enum class Direction {
     Right
 };
 
+class StereoHeightsPref
+{
+    Q_GADGET
+public:
+    enum class AsymmetricStereoHeights {
+        ALWAYS = 0,
+        WORKSPACE_DEPENDENT,
+        NEVER
+    };
+    Q_ENUM(AsymmetricStereoHeights)
+};
+
 constexpr const char16_t* COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-color?color=%1";
 inline muse::actions::ActionQuery makeColorChangeAction(const std::string& colorHex)
 {

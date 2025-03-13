@@ -9,9 +9,21 @@ namespace au::trackedit {
 static const std::string moduleName("trackedit");
 
 static const muse::Settings::Key ASK_BEFORE_CONVERTING_TO_MONO_OR_STEREO(moduleName, "trackedit/askBeforeConvertingToMonoOrStereo");
+static const muse::Settings::Key APPLY_EFFECT_TO_ALL_AUDIO(moduleName, "trackedit/applyEffectToAllAudio");
+static const muse::Settings::Key PASTE_AS_NEW_CLIP(moduleName, "trackedit/pasteAsNewClip");
 
 void TrackeditConfiguration::init()
 {
+    muse::settings()->setDefaultValue(APPLY_EFFECT_TO_ALL_AUDIO, muse::Val(true));
+    muse::settings()->valueChanged(APPLY_EFFECT_TO_ALL_AUDIO).onReceive(nullptr, [this](const muse::Val& val) {
+        m_applyEffectToAllAudioChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PASTE_AS_NEW_CLIP, muse::Val(true));
+    muse::settings()->valueChanged(PASTE_AS_NEW_CLIP).onReceive(nullptr, [this](const muse::Val& val) {
+        m_pasteAsNewClipChanged.notify();
+    });
+
     muse::settings()->setDefaultValue(ASK_BEFORE_CONVERTING_TO_MONO_OR_STEREO, muse::Val(true));
     muse::settings()->valueChanged(ASK_BEFORE_CONVERTING_TO_MONO_OR_STEREO).onReceive(nullptr, [this](const muse::Val& val) {
         m_askBeforeConvertingToMonoOrStereoChanged.notify();
@@ -34,5 +46,43 @@ void TrackeditConfiguration::setAskBeforeConvertingToMonoOrStereo(bool ask)
 muse::async::Notification TrackeditConfiguration::askBeforeConvertingToMonoOrStereoChanged() const
 {
     return m_askBeforeConvertingToMonoOrStereoChanged;
+}
+
+bool TrackeditConfiguration::applyEffectToAllAudio() const
+{
+    return muse::settings()->value(APPLY_EFFECT_TO_ALL_AUDIO).toBool();
+}
+
+void TrackeditConfiguration::setApplyEffectToAllAudio(bool value)
+{
+    if (applyEffectToAllAudio() == value) {
+        return;
+    }
+
+    muse::settings()->setSharedValue(APPLY_EFFECT_TO_ALL_AUDIO, muse::Val(value));
+}
+
+muse::async::Notification TrackeditConfiguration::applyEffectToAllAudioChanged() const
+{
+    return m_applyEffectToAllAudioChanged;
+}
+
+bool TrackeditConfiguration::pasteAsNewClip() const
+{
+    return muse::settings()->value(PASTE_AS_NEW_CLIP).toBool();
+}
+
+void TrackeditConfiguration::setPasteAsNewClip(bool value)
+{
+    if (pasteAsNewClip() == value) {
+        return;
+    }
+
+    muse::settings()->setSharedValue(PASTE_AS_NEW_CLIP, muse::Val(value));
+}
+
+muse::async::Notification TrackeditConfiguration::pasteAsNewClipChanged() const
+{
+    return m_pasteAsNewClipChanged;
 }
 }

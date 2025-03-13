@@ -390,6 +390,20 @@ bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const
     return muse::contains(m_selectedTracks.val, trackId) && timeSelectionIsNotEmpty();
 }
 
+void Au3SelectionController::setSelectedAllAudioData()
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackedit::TrackIdList tracks = prj->trackIdList();
+
+    setSelectedTracks(tracks, true);
+    setDataSelectedStartTime(0.0, true);
+    setDataSelectedEndTime(prj->totalTime(), true);
+}
+
 au::trackedit::secs_t Au3SelectionController::dataSelectedStartTime() const
 {
     return m_selectedStartTime.val;
