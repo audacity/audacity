@@ -6,6 +6,7 @@ Item {
     property double channelHeightRatio: 0.5
     property alias color : splitter.color
     property alias thickness: splitter.height
+    property alias editable: dragArea.visible
 
     opacity: 0.05
 
@@ -27,6 +28,8 @@ Item {
     }
 
     MouseArea {
+        id: dragArea
+
         anchors.fill: splitter
         anchors.margins: -2
 

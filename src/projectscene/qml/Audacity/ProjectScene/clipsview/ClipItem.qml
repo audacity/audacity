@@ -575,6 +575,8 @@ Rectangle {
 
                 anchors.fill: parent
 
+                editable: root.enableCursorInteraction
+
                 color: "#000000"
                 opacity: 0.10
 
