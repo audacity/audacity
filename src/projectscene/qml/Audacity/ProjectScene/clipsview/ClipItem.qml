@@ -47,6 +47,8 @@ Rectangle {
 
     property bool multiSampleEdit: false
 
+    property bool asymmetricStereoHeightsPossible: false
+
     signal clipStartEditRequested()
     signal clipEndEditRequested()
 
@@ -98,6 +100,12 @@ Rectangle {
 
     onHeaderHoveredChanged: {
         root.clipHeaderHoveredChanged(headerHovered)
+    }
+
+    onAsymmetricStereoHeightsPossibleChanged: {
+        if (!asymmetricStereoHeightsPossible) {
+            root.ratioChanged(showChannelSplitter ? 0.5 : 1)
+        }
     }
 
     function editTitle() {
@@ -579,7 +587,8 @@ Rectangle {
 
                 anchors.fill: parent
 
-                editable: root.enableCursorInteraction
+                editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
+                asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
 
                 color: "#000000"
                 opacity: 0.10

@@ -7,6 +7,7 @@ Item {
     property alias color : splitter.color
     property alias thickness: splitter.height
     property alias editable: dragArea.visible
+    property bool asymmetricStereoHeightsPossible: false
 
     opacity: 0.05
 
@@ -38,6 +39,8 @@ Item {
         drag.threshold: 0
 
         cursorShape: Qt.SplitVCursor
+
+        enabled: asymmetricStereoHeightsPossible
 
         onPositionChanged: {
             let ratio = splitter.y / root.height

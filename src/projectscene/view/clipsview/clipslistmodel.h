@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "global/iinteractive.h"
 #include "global/async/asyncable.h"
+#include "workspace/iworkspacemanager.h"
 
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditinteraction.h"
@@ -28,6 +29,8 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(bool isStereo READ isStereo NOTIFY isStereoChanged FINAL)
     Q_PROPERTY(ClipStyles::Style clipStyle READ clipStyle NOTIFY clipStyleChanged FINAL)
+    Q_PROPERTY(
+        bool asymmetricStereoHeightsPossible READ asymmetricStereoHeightsPossible NOTIFY asymmetricStereoHeightsPossibleChanged)
 
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
@@ -37,6 +40,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
 
 public:
     explicit ClipsListModel(QObject* parent = nullptr);
@@ -77,6 +81,8 @@ public:
     // update clip after moving to other track
     Q_INVOKABLE projectscene::ClipKey updateClipTrack(ClipKey clipKey) const;
 
+    bool asymmetricStereoHeightsPossible() const;
+
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -89,6 +95,7 @@ signals:
     void selectedClipIdxChanged();
     void isStereoChanged();
     void clipStyleChanged();
+    void asymmetricStereoHeightsPossibleChanged();
 
     void requestClipTitleEdit(int index);
 

@@ -17,5 +17,12 @@ public:
     EffectsConfiguration() = default;
 
     void init();
+
+    bool applyEffectToAllAudio() const override;
+    void setApplyEffectToAllAudio(bool value) override;
+    muse::async::Notification applyEffectToAllAudioChanged() const override;
+
+private:
+    muse::async::Notification m_applyEffectToAllAudioChanged;
 };
 }

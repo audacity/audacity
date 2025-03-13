@@ -67,6 +67,18 @@ void ClipsListModel::init()
         update();
     });
 
+    projectSceneConfiguration()->stereoHeightsPrefChanged().onNotify(this, [this] {
+        emit asymmetricStereoHeightsPossibleChanged();
+    });
+
+    projectSceneConfiguration()->asymmetricStereoHeightsWorkspacesChanged().onNotify(this, [this] {
+        emit asymmetricStereoHeightsPossibleChanged();
+    });
+
+    workspacesManager()->currentWorkspaceChanged().onNotify(this, [this]() {
+        emit asymmetricStereoHeightsPossibleChanged();
+    });
+
     reload();
 }
 
@@ -504,6 +516,21 @@ void ClipsListModel::openClipSpeedEdit(const ClipKey& key)
 void ClipsListModel::resetClipSpeed(const ClipKey& key)
 {
     trackeditInteraction()->resetClipSpeed(key.key);
+}
+
+bool ClipsListModel::asymmetricStereoHeightsPossible() const
+{
+    auto pref = projectSceneConfiguration()->stereoHeightsPref();
+    if (pref == projectscene::StereoHeightsPref::AsymmetricStereoHeights::ALWAYS) {
+        return true;
+    } else if (pref == projectscene::StereoHeightsPref::AsymmetricStereoHeights::WORKSPACE_DEPENDENT) {
+        std::string currentWorkspace = workspacesManager()->currentWorkspace()->name();
+        if (muse::contains(projectSceneConfiguration()->asymmetricStereoHeightsWorkspaces(), currentWorkspace)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 au::projectscene::ClipKey ClipsListModel::updateClipTrack(ClipKey clipKey) const
