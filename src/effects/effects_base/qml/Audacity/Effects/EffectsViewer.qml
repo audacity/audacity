@@ -11,7 +11,6 @@ Rectangle {
 
     property string type: ""
     property string instanceId: ""
-    property string effectState: ""
 
     property string title: builder.contentItem ? builder.contentItem.title : ""
     property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
@@ -27,7 +26,7 @@ Rectangle {
     height: implicitHeight
 
     Component.onCompleted: {
-        builder.load(root.type, root.instanceId, root.effectState, root)
+        builder.load(root.type, root.instanceId, root)
     }
 
     function manage(parent) {
