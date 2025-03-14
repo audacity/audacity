@@ -5,12 +5,12 @@
 
 #include "../../itrackeditinteraction.h"
 
-#include "modularity/ioc.h"
-#include "iinteractive.h"
-#include "context/iglobalcontext.h"
 #include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 #include "../../itrackeditclipboard.h"
+#include "context/iglobalcontext.h"
+#include "iinteractive.h"
+#include "modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
 

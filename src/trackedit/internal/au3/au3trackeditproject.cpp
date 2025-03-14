@@ -169,23 +169,37 @@ void Au3TrackeditProject::onProjectTempoChange(double newTempo)
     }
 }
 
-muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
+au::trackedit::Clips Au3TrackeditProject::getClips(const TrackId& trackId) const
 {
+    au::trackedit::Clips clips;
+
     const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return muse::async::NotifyList<au::trackedit::Clip>();
+        return clips;
     }
 
-    muse::async::NotifyList<au::trackedit::Clip> clips;
     for (const std::shared_ptr<const Au3WaveClip>& interval : waveTrack->Intervals()) {
         au::trackedit::Clip clip = DomConverter::clip(waveTrack, interval.get());
         clips.push_back(std::move(clip));
     }
 
-    async::ChangedNotifier<Clip>& notifier = m_clipsChanged[trackId];
-    clips.setNotify(notifier.notify());
-
     return clips;
+}
+
+muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const au::trackedit::TrackId& trackId) const
+{
+    au::trackedit::Clips clips = getClips(trackId);
+    muse::async::NotifyList<au::trackedit::Clip> clipNotifyList;
+
+    clipNotifyList.reserve(clips.size());
+    for (Clip& clip : clips) {
+        clipNotifyList.push_back(std::move(clip));
+    }
+
+    async::ChangedNotifier<Clip>& notifier = m_clipsChanged[trackId];
+    clipNotifyList.setNotify(notifier.notify());
+
+    return clipNotifyList;
 }
 
 std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId) const
@@ -343,6 +357,22 @@ int64_t Au3TrackeditProject::createNewGroupID(int64_t startingID) const
     }
 
     return startingID;
+}
+
+TracksAndClips Au3TrackeditProject::buildTracksAndClips() const
+{
+    TracksAndClips newCache;
+
+    newCache.tracks = trackList();
+
+    newCache.clips.reserve(newCache.tracks.size());
+
+    for (const Track& track : newCache.tracks) {
+        trackedit::Clips clips = getClips(track.id);
+        newCache.clips.push_back(std::move(clips));
+    }
+
+    return newCache;
 }
 
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const

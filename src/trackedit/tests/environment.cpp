@@ -17,8 +17,8 @@ static muse::testing::SuiteEnvironment trackedit_se
     = muse::testing::SuiteEnvironment()
       .setDependencyModules({ new au::au3::Au3WrapModule(), })
       .setPostInit([]() {
-    std::shared_ptr<ProjectSceneConfigurationMock> projectSceneConfigurator(new ProjectSceneConfigurationMock(),
-                                                                            [](ProjectSceneConfigurationMock*) {}); // no delete
+    std::shared_ptr<NiceMock<ProjectSceneConfigurationMock> > projectSceneConfigurator(new NiceMock<ProjectSceneConfigurationMock>(),
+                                                                                       [](ProjectSceneConfigurationMock*) {}); // no delete
 
     static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
         { "blue", "#0000FF" },
@@ -31,7 +31,8 @@ static muse::testing::SuiteEnvironment trackedit_se
     muse::modularity::globalIoc()->unregister<IProjectSceneConfiguration>("utests");
     muse::modularity::globalIoc()->registerExport<IProjectSceneConfiguration>("utests", projectSceneConfigurator);
 }).setPreInit([](){
-    std::shared_ptr<ProjectConfigurationMock> projectConfigurator(new ProjectConfigurationMock(), [](ProjectConfigurationMock*){});
+    std::shared_ptr<NiceMock<ProjectConfigurationMock> > projectConfigurator(new NiceMock<ProjectConfigurationMock>(),
+                                                                             [](ProjectConfigurationMock*){});
 
     ON_CALL(*projectConfigurator, temporaryDir())
     .WillByDefault(Return(""));

@@ -19,6 +19,12 @@ class IAu3Project;
 }
 
 namespace au::trackedit {
+struct TracksAndClips
+{
+    trackedit::TrackList tracks;
+    std::vector<trackedit::Clips> clips;
+};
+
 class ITrackeditProject
 {
 public:
@@ -57,6 +63,8 @@ public:
     virtual secs_t totalTime() const = 0;
 
     virtual int64_t createNewGroupID(int64_t startingId = 0) const = 0;
+
+    virtual TracksAndClips buildTracksAndClips() const = 0;
 };
 
 using ITrackeditProjectPtr = std::shared_ptr<ITrackeditProject>;
