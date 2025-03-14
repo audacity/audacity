@@ -6,18 +6,11 @@
 #include "../internal/changedetection.h"
 
 #include "mocks/trackeditprojectmock.h"
-#include "project/tests/mocks/audacityprojectmock.h"
-
-#include "au3wrap/internal/au3project.h"
-#include "au3wrap/internal/domaccessor.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Truly;
 using ::testing::_;
-
-using namespace au;
-using namespace au::au3;
 
 namespace au::trackedit {
 class ChangeDetectionTests : public ::testing::Test
@@ -62,18 +55,17 @@ protected:
         // None of the below should cause a change trigger:
         structure.tracks.back().title = std::to_string(id).c_str();
 
-        switch (std::rand() % 4) {
+        switch (id % 2) {
         case 1:
             structure.tracks.back().type = TrackType::Mono;
             break;
-        case 2:
+        default:
             structure.tracks.back().type = TrackType::Stereo;
             break;
-        case 3:
-            structure.tracks.back().type = TrackType::Label;
-            break;
-        default:
-            structure.tracks.back().type = TrackType::Undefined;
+
+            // The below are unused in the tests. If they're used we can introduce them.
+            // structure.tracks.back().type = TrackType::Label;
+            // structure.tracks.back().type = TrackType::Undefined;
         }
 
         structure.tracks.back().color = muse::draw::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
@@ -115,7 +107,10 @@ TEST_F(ChangeDetectionTests, TestNotificationsWhenTheresNoChanges)
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
-    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    //! If there are no changes detected,
+    //  change detection will reload the project so that it's not out of sync with mode.
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(1);
 
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
@@ -225,15 +220,27 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForReordering)
 
     EXPECT_EQ(before.tracks.size(), after.tracks.size());
 
-    // Causes reordering detection:
+    // Swapping the ID's
     before.tracks.back().id = 0;
-    before.tracks.front().id = 5;
 
+    for (Clip& clip : before.clips.back()) {
+        clip.key.trackId = 0;
+    }
+
+    before.tracks.front().id = 4;
+
+    for (Clip& clip : before.clips.front()) {
+        clip.key.trackId = 4;
+    }
+
+    // Reordering is detected indirectly, as removal and addition.
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
     EXPECT_CALL(*m_trackEditProject, reload()).Times(1);
 
+    // With the added side effect,
+    // that since the ID's pre-existed, clip addition/removal is triggered.
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
@@ -366,7 +373,15 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
     TracksAndClips before = buildTracksAndClips();
     TracksAndClips after = buildTracksAndClips();
 
-    after.clips.back().back().stereo = !after.clips.back().back().stereo;
+    if (after.tracks.back().type == TrackType::Stereo) {
+        after.tracks.back().type == TrackType::Mono;
+    } else {
+        after.tracks.back().type == TrackType::Stereo;
+    }
+
+    for (auto& clip : after.clips.back()) {
+        clip.stereo = !clip.stereo;
+    }
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
@@ -375,7 +390,7 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeStereo)
 
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
-    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(5);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
@@ -434,6 +449,56 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeGroup)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+////////////////////////////////////////////////
+/// Compound changes:
+////////////////////////////////////////////////
+
+TEST_F(ChangeDetectionTests, TestNotificationsForAddingOneTrackAndOneClip)
+{
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
+
+    addOneTrack(after, after.tracks.size());
+
+    addClipToTrack(after, after.tracks.front().id, static_cast<int>(after.clips.front().size()));
+
+    EXPECT_NE(before.tracks.size(), after.tracks.size());
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(1);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwoAndRemovingTwo)
+{
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
+
+    after.clips.front().pop_back();
+    after.clips.back().pop_back();
+
+    addClipToTrack(after, after.tracks.front().id, std::rand() % 100);
+    addClipToTrack(after, after.tracks.back().id, std::rand() % 100);
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(2);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(2);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
