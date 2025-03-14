@@ -19,6 +19,7 @@
 
 #include "IResponse.h"
 #include "NetworkManager.h"
+#include "NetworkUtils.h"
 #include "Request.h"
 
 #include "RequestPayload.h"
@@ -126,6 +127,8 @@ struct DataUploader::UploadOperation final : std::enable_shared_from_this<DataUp
     {
         Data = {};
         Request request { Target.SuccessUrl };
+
+        SetOptionalHeaders(request);
 
         auto networkResponse
             =NetworkManager::GetInstance().doPost(request, nullptr, 0);

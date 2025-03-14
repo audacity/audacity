@@ -43,7 +43,7 @@ public:
     bool ComputeHashes(BlockHashCache& cache, std::vector<LockedBlock> blocks, std::function<void()> onComplete);
     bool IsReady() const;
 
-    std::vector<std::pair<int64_t, std::string> > TakeResult();
+    std::vector<std::pair<int64_t, std::string>> TakeResult();
 
 private:
     class Workers;
