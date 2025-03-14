@@ -73,6 +73,13 @@ WavePaintParameters& WavePaintParameters::SetClippingColors(
     return *this;
 }
 
+WavePaintParameters& WavePaintParameters::SetEnvelopeColors(
+    graphics::Color normal, graphics::Color selected) noexcept
+{
+    EnvelopeColors = { normal, selected };
+    return *this;
+}
+
 WavePaintParameters&
 WavePaintParameters::SetEnvelope(const Envelope& envelope) noexcept
 {
@@ -89,6 +96,12 @@ WavePaintParameters& WavePaintParameters::ResetEnvelope() noexcept
 WavePaintParameters& WavePaintParameters::SetShowRMS(bool showRMS) noexcept
 {
     ShowRMS = showRMS;
+    return *this;
+}
+
+WavePaintParameters& WavePaintParameters::SetDrawEnvelope(bool drawEnvelope) noexcept
+{
+    DrawEnvelope = drawEnvelope;
     return *this;
 }
 
@@ -111,11 +124,13 @@ bool operator==(
            && lhs.Max == rhs.Max && lhs.DBRange == rhs.DBRange
            && lhs.DBScale == rhs.DBScale && lhs.ShowClipping == rhs.ShowClipping
            && lhs.ShowRMS == rhs.ShowRMS
+           && lhs.DrawEnvelope == rhs.DrawEnvelope
            && lhs.BlankColor == rhs.BlankColor
            && lhs.BackgroundColors == rhs.BackgroundColors
            && lhs.SampleColors == rhs.SampleColors
            && lhs.RMSColors == rhs.RMSColors
-           && lhs.ClippingColors == rhs.ClippingColors;
+           && lhs.ClippingColors == rhs.ClippingColors
+           && lhs.EnvelopeColors == rhs.EnvelopeColors;
 }
 
 bool operator!=(
