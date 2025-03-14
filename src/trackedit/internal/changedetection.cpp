@@ -6,14 +6,7 @@ using namespace au::trackedit;
 
 namespace {
 /**
- * @tparam TYPE The type of object that is being compared between the lists,
- *              to detect change.
- *              A design limitation of this method is that the comparison assumes all fields compared
- *              for equality, are also reasons to notify for change.
- *              If this is undesirable an additional comparison lambda argument can be added
- *              in a future revision.
- * @param longestList A list that should be larger or equal to the second list, with elements of TYPE
- * @param shortestList A second list, smaller or equal to the first one.
+ * @tparam TYPE The type of object that is being compared between the lists, to detect change.
  * @param notification The notification to trigger for each item found in the first list,
  *                     but not the second.
  * @param comparison Lambda for detecting UNDOABLE change - not actual equality.
@@ -23,36 +16,36 @@ namespace {
  *                   as adding/deleting/moving.
  */
 template<typename TYPE>
-void notifier(const std::vector<TYPE>& longestList,
-              const std::vector<TYPE>& shortestList,
+void notifier(const std::vector<TYPE>& first,
+              const std::vector<TYPE>& second,
               const std::function<void(const TYPE& item, int)>& notification,
               const std::function<bool(const TYPE& first, const TYPE& second)>& comparison)
 {
-    for (int i = 0; i < shortestList.size(); i++) {
+    for (int i = 0; i < second.size(); i++) {
         bool found = false;
-        for (auto it = longestList.begin(); it != longestList.end(); ++it) {
-            if (comparison(*it, shortestList[i])) {
+        for (auto it = first.begin(); it != first.end(); ++it) {
+            if (comparison(*it, second[i])) {
                 found = true; // Found one, so we don't notify, go to next.
                 break;
             }
         }
 
         if (!found) {
-            notification(shortestList[i], i);
+            notification(second[i], i);
         }
     }
 }
 
 /**
- * Iterates over two lists of Tracks, and when two track ID's match, it invokes the action
+ * Iterates over two TrackLists, and when two track ID's match, it invokes the action
  */
-void clipsMatcher(const TrackList& longestList,
-                  const TrackList& shortestList,
+void clipsMatcher(const TrackList& first,
+                  const TrackList& second,
                   const std::function<void(int, int)>& action)
 {
-    for (int i = 0; i < shortestList.size(); i++) {
-        for (int j = 0; j < longestList.size(); j++) {
-            if (shortestList[i].id == longestList[j].id) {
+    for (int i = 0; i < second.size(); i++) {
+        for (int j = 0; j < first.size(); j++) {
+            if (second[i].id == first[j].id) {
                 action(i, j);
             }
         }
@@ -69,56 +62,60 @@ void clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
                const Clips& before,
                const Clips& after)
 {
-    if (before.size() < after.size()) {
-        //! Before is smaller than after. Something had been deleted. Find and notify that it's added.
+    //! Check for added clips:
+    notifier<Clip>(
+        before,
+        after,
+        [&](const Clip& clip, int) {
+        trackeditProjectPtr->notifyAboutClipAdded(clip);
+    },
+        [](const Clip& first, const Clip& second) {
+        return first.key == second.key;      // Here we're only interested in if the "id" exists.
+    }
+        );
 
-        notifier<Clip>(
-            before,
-            after,
-            [&](Clip clip, int) {
-            trackeditProjectPtr->notifyAboutClipAdded(clip);
-        },
-            [](const Clip& first, const Clip& second) {
-            return first.key == second.key;      // Here we're only interested in if the "id" exists.
+    //! Check for removed clips:
+    notifier<Clip>(
+        after,
+        before,
+        [&](const Clip& clip, int) {
+        trackeditProjectPtr->notifyAboutClipRemoved(clip);
+    },
+        [](const Clip& first, const Clip& second) {
+        return first.key == second.key;      // Here we're only interested in if the "id" exists.
+    }
+        );
+
+    //! Check for changed clips:
+
+    auto clipComparison = [](const Clip& first, const Clip& second) {
+        IF_ASSERT_FAILED(first.key == second.key)
+        {
+            // This comparison assumes the key has been the same.
+            return false;
         }
-            );
-    } else if (before.size() > after.size()) {
-        //! After is smaller than before. Something had been added. Find and notify that it's removed.
 
-        notifier<Clip>(
-            after,
-            before,
-            [&](Clip clip, int) {
-            trackeditProjectPtr->notifyAboutClipRemoved(clip);
-        },
-            [](const Clip& first, const Clip& second) {
-            return first.key == second.key;      // Here we're only interested in if the "id" exists.
-        }
-            );
-    } else {
-        //! The sizes are equal.
-        //  Detecting reordering is a problem, see above.
-        //  And for clip change notification TrackeditProject lacks the API now anyway.
+        return first.groupId == second.groupId
+               && first.startTime == second.startTime
+               && first.endTime == second.endTime
+               && first.stereo == second.stereo
+               && first.pitch == second.pitch
+               && first.speed == second.speed;
+        //! For now these do not result in "autosave",
+        //  and so should not be criteria under undo/redo refresh.
+        //  This might change in future AU4 versions.
+        // first.title == second.title &&
+        // first.color == second.color &&
+        // first.hasCustomColor == second.hasCustomColor &&
+        // first.optimizeForVoice == second.optimizeForVoice &&
+        // first.stretchToMatchTempo == second.stretchToMatchTempo
+    };
 
-        auto clipComparison = [](const Clip& first, const Clip& second) {
-            return first.key == second.key && first.groupId == second.groupId && first.startTime == second.startTime
-                   && first.endTime == second.endTime && first.stereo == second.stereo && first.pitch == second.pitch
-                   && first.speed == second.speed;
-            //! For now these do not result in "autosave",
-            //  and so should not be criteria under undo/redo refresh.
-            //  This might change in future AU4 versions.
-            // first.title == second.title &&
-            // first.color == second.color &&
-            // first.hasCustomColor == second.hasCustomColor &&
-            // first.optimizeForVoice == second.optimizeForVoice &&
-            // first.stretchToMatchTempo == second.stretchToMatchTempo
-        };
-
-        for (int c = 0; c < before.size(); c++) {
-            const Clip& clipBefore = before[c];
-            const Clip& clipAfter = after[c];
-
-            if (!clipComparison(clipBefore, clipAfter)) {
+    // Brute force I'm afraid:
+    for (const Clip& clipBefore : before) {
+        for (const Clip& clipAfter : after) {
+            if ((clipBefore.key == clipAfter.key)
+                && !clipComparison(clipBefore, clipAfter)) {
                 trackeditProjectPtr->notifyAboutClipChanged(clipAfter);
             }
         }

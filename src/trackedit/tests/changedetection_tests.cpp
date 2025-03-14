@@ -464,4 +464,27 @@ TEST_F(ChangeDetectionTests, TestNotificationsForAddingOneTrackAndOneClip)
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
+
+TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwoAndRemovingTwo)
+{
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
+
+    after.clips.front().pop_back();
+    after.clips.back().pop_back();
+
+    addClipToTrack(after, after.tracks.front().id, std::rand() % 100);
+    addClipToTrack(after, after.tracks.back().id, std::rand() % 100);
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(2);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(2);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
 }
