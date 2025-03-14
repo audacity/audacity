@@ -91,6 +91,7 @@ void PerformProjectGetRequest(
         common_headers::Accept, common_content_types::ApplicationJson);
 
     SetCommonHeaders(request);
+    SetOptionalHeaders(request);
 
     auto response = NetworkManager::GetInstance().doGet(request);
 
@@ -300,6 +301,7 @@ CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
         common_headers::Accept, common_content_types::ApplicationJson);
 
     SetCommonHeaders(request);
+    SetOptionalHeaders(request);
 
     auto response = NetworkManager::GetInstance().doGet(request);
 
@@ -650,6 +652,7 @@ void CloudSyncService::ReportUploadStats(
         common_headers::ContentType, common_content_types::ApplicationJson);
 
     SetCommonHeaders(request);
+    SetOptionalHeaders(request);
 
     auto body = Serialize(networkStats);
 

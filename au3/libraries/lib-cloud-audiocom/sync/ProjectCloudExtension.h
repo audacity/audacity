@@ -143,7 +143,7 @@ private:
     std::string mSnapshotId;
 
     std::mutex mUploadQueueMutex;
-    std::vector<std::shared_ptr<UploadQueueElement> > mUploadQueue;
+    std::vector<std::shared_ptr<UploadQueueElement>> mUploadQueue;
 
     mutable std::mutex mStatusMutex;
     CloudStatusChangedMessage mLastStatus;

@@ -125,7 +125,7 @@ private:
     void
     ReportUploadStats(std::string_view projectId, const TransferStats& stats);
 
-    std::vector<std::shared_ptr<sync::LocalProjectSnapshot> > mLocalSnapshots;
+    std::vector<std::shared_ptr<sync::LocalProjectSnapshot>> mLocalSnapshots;
     std::shared_ptr<sync::RemoteProjectSnapshot> mRemoteSnapshot;
 
     SyncPromise mSyncPromise;
