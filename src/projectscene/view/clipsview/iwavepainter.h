@@ -28,6 +28,7 @@ public:
         QColor sampleStalk;
         QColor sampleHeadSelection;
         QColor sampleStalkSelection;
+        QColor envelopeBackground;
     };
 
     struct Geometry {

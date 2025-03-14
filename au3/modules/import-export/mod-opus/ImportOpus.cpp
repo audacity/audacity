@@ -216,7 +216,7 @@ void OpusImportFileHandle::Import(
         {
             channel.AppendBuffer(
                 reinterpret_cast<constSamplePtr>(floatBuffer.get()
-                                                 + chn), mFormat, samplesRead, mNumChannels, mFormat
+                                                 + chn), mFormat, samplesPerChannelRead, mNumChannels, mFormat
                 );
             ++chn;
         });

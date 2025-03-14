@@ -57,7 +57,7 @@ private:
 
     std::mutex mResponseMutex;
 
-    using ResponsesList = std::vector<std::shared_ptr<UploadOperation> >;
+    using ResponsesList = std::vector<std::shared_ptr<UploadOperation>>;
     ResponsesList mResponses;
 };
 } // namespace audacity::cloud::audiocom::sync

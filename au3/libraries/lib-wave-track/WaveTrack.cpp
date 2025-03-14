@@ -1386,7 +1386,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
         // we need to copy clips, trims and names, because the original ones
         // could be changed later during Clear/Paste routines
         st = roundTime(clip->GetPlayStartTime());
-        if (st >= t0 && st <= t1) {
+        if (st > t0 && st < t1) {
             auto it = get_split(st);
             if (clip->GetTrimLeft() != 0) {
                 //keep only hidden left part
@@ -1398,7 +1398,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
         }
 
         st = roundTime(clip->GetPlayEndTime());
-        if (st >= t0 && st <= t1) {
+        if (st > t0 && st < t1) {
             auto it = get_split(st);
             if (clip->GetTrimRight() != 0) {
                 //keep only hidden right part
@@ -1927,7 +1927,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, boo
                 // This branch only gets executed in `singleClipMode` - we've
                 // already made sure that stretch ratios are equal, satisfying
                 // `WaveClip::Paste`'s precondition.
-                assert(insideClip->GetStretchRatio() == pClip->GetStretchRatio());
+                assert(insideClip->HasEqualPitchAndSpeed(*pClip));
                 // This too should follow from the assertion of the same number
                 // of channels in the tracks, near the top
                 assert(insideClip->NChannels() == pClip->NChannels());
@@ -2299,7 +2299,7 @@ void WaveTrack::Join(
     auto t = firstToDelete->GetPlayStartTime();
     //preserve left trim data if any
     newClip = CreateClip(
-        firstToDelete->GetSequenceStartTime(),
+        firstToDelete->GetPlayStartTime(),
         firstToDelete->GetName());
 
     for (const auto& clip : clipsToDelete) {

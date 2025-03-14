@@ -96,7 +96,7 @@ private:
     void DoCancel();
 
     void
-    DownloadBlob(std::string url, SuccessHandler onSuccess, int retries = 3);
+    DownloadBlob(std::string url, SuccessHandler onSuccess, int retries);
 
     void
     OnProjectBlobDownloaded(audacity::network_manager::ResponsePtr response);
@@ -110,6 +110,7 @@ private:
 
     void ReportProgress();
 
+    void StartSync();
     bool InProgress() const;
     void RequestsThread();
 
@@ -137,15 +138,14 @@ private:
     std::mutex mRequestsMutex;
     std::condition_variable mRequestsCV;
 
-    std::vector<std::pair<std::string, SuccessHandler> > mRequests;
+    std::vector<std::pair<std::string, SuccessHandler>> mRequests;
 
     int mRequestsInProgress { 0 };
     size_t mNextRequestIndex { 0 };
 
     std::mutex mResponsesMutex;
-    std::vector<std::shared_ptr<audacity::network_manager::IResponse> >
+    std::vector<std::shared_ptr<audacity::network_manager::IResponse>>
     mResponses;
-    std::condition_variable mResponsesEmptyCV;
 
     std::atomic<int64_t> mDownloadedBlocks { 0 };
     std::atomic<int64_t> mCopiedBlocks { 0 };
@@ -153,7 +153,7 @@ private:
 
     int64_t mMissingBlocks { 0 };
 
-    std::optional<std::future<bool> > mCopyBlocksFuture;
+    std::optional<std::future<bool>> mCopyBlocksFuture;
 
     std::atomic<bool> mProjectDownloaded { false };
 

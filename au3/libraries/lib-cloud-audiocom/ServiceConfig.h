@@ -42,7 +42,7 @@ public:
     std::string GetFinishUploadPage(
         std::string_view audioID, std::string_view token, AudiocomTrace) const;
     //! Helper to construct the page URL for the authorised upload
-    std::string GetAudioURL(
+    std::string GetAudioPagePath(
         std::string_view userSlug, std::string_view audioSlug, AudiocomTrace) const;
     //! Timeout between progress callbacks
     std::chrono::milliseconds GetProgressCallbackTimeout() const;

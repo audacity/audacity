@@ -22,6 +22,7 @@
 #include "CloudProjectsDatabase.h"
 #include "DataUploader.h"
 #include "MixdownUploader.h"
+#include "NetworkUtils.h"
 #include "ProjectCloudExtension.h"
 
 #include "ExportUtils.h"
@@ -389,6 +390,8 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
         common_headers::Accept, common_content_types::ApplicationJson);
     // request.setHeader(common_headers::ContentEncoding, "gzip");
 
+    SetOptionalHeaders(request);
+
     const auto language = mServiceConfig.GetAcceptLanguageValue();
 
     if (!language.empty()) {
@@ -581,6 +584,7 @@ void LocalProjectSnapshot::MarkSnapshotSynced()
                         mCreateSnapshotResponse->Snapshot.Id));
 
     SetCommonHeaders(request);
+    SetOptionalHeaders(request);
 
     auto response = NetworkManager::GetInstance().doPost(request, nullptr, 0);
 

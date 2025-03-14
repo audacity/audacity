@@ -24,6 +24,7 @@
 
 #include "OAuthService.h"
 #include "ServiceConfig.h"
+#include "UserService.h"
 
 #include "IResponse.h"
 #include "MultipartData.h"
@@ -261,11 +262,17 @@ struct AudiocomUploadOperation final : UploadOperation, std::enable_shared_from_
         std::lock_guard<std::mutex> callbacksLock(mCallbacksMutex);
 
         if (mCompletedCallback) {
+            auto& userService = GetUserService();
+            auto& oauthService = GetOAuthService();
+
+            auto userId = audacity::ToUTF8(userService.GetUserId());
+            auto audioPage = mServiceConfig.GetAudioPagePath(
+                mUserName, mAudioSlug, mAudiocomTrace);
+
             const auto uploadURL = mAuthToken.empty()
                                    ? mServiceConfig.GetFinishUploadPage(
                 mAudioID, mUploadToken, mAudiocomTrace)
-                                   : mServiceConfig.GetAudioURL(
-                mUserName, mAudioSlug, mAudiocomTrace);
+                                   : oauthService.MakeAudioComAuthorizeURL(userId, audioPage);
 
             mCompletedCallback(
                 { UploadOperationCompleted::Result::Success,
@@ -287,6 +294,8 @@ struct AudiocomUploadOperation final : UploadOperation, std::enable_shared_from_
 
         request.setHeader(
             common_headers::Accept, common_content_types::ApplicationJson);
+
+        SetOptionalHeaders(request);
 
         mAuthToken = std::string(authToken);
         SetRequiredHeaders(request);

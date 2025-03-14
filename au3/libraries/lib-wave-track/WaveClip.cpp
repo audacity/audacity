@@ -85,7 +85,7 @@ double WaveClipChannel::Start() const
 
 double WaveClipChannel::End() const
 {
-    return GetClip().GetPlayEndTime();
+    return GetClip().GetCommittedEndTime();
 }
 
 AudioSegmentSampleView
@@ -1272,7 +1272,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
         mRawAudioTempo = other.mRawAudioTempo;
         mClipStretchRatio = other.mClipStretchRatio;
         mClipTempo = other.mClipTempo;
-    } else if (GetStretchRatio() != other.GetStretchRatio()) {
+    } else if (!HasEqualPitchAndSpeed(other)) {
         // post is satisfied
         return false;
     }
@@ -1291,8 +1291,13 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
     ClearSequenceFinisher finisher;
 
     //seems like edge cases cannot happen, see WaveTrack::PasteWaveTrack
+    double pastePositionShift = 0.0;
+    double startPositionShift = 0.0;
     auto& factory = GetFactory();
     if (t0 == GetPlayStartTime()) {
+        pastePositionShift = t0;
+        startPositionShift = GetTrimLeft() - other.GetTrimLeft();
+
         finisher = ClearSequence(GetSequenceStartTime(), t0);
         SetTrimLeft(other.GetTrimLeft());
 
@@ -1344,7 +1349,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
         newCutlines.push_back(std::move(cutlineCopy));
     }
 
-    sampleCount s0 = TimeToSequenceSamples(t0);
+    sampleCount s0 = TimeToSequenceSamples(t0 - pastePositionShift);
 
     // Because newClip was made above as a copy of (a copy of) other
     assert(other.NChannels() == newClip->NChannels());
@@ -1359,6 +1364,8 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
     finisher.Commit();
     transaction.Commit();
     MarkChanged();
+
+    SetSequenceStartTime(GetSequenceStartTime() + startPositionShift);
 
     const auto sampleTime = 1.0 / GetRate();
     const auto timeOffsetInEnvelope
@@ -1946,6 +1953,16 @@ double WaveClip::GetPlayEndTime() const
                     + ((numSamples + GreatestAppendBufferLen()).as_double())
                     * GetStretchRatio() / mRate
                     - mTrimRight;
+    // JS: calculated value is not the length;
+    // it is a maximum value and can be negative; no clipping to 0
+    return SnapToTrackSample(maxLen);
+}
+
+double WaveClip::GetCommittedEndTime() const
+{
+    const auto numSamples = GetNumSamples();
+    double maxLen = mSequenceOffset - mTrimRight
+                    + numSamples.as_double() * GetStretchRatio() / mRate;
     // JS: calculated value is not the length;
     // it is a maximum value and can be negative; no clipping to 0
     return SnapToTrackSample(maxLen);

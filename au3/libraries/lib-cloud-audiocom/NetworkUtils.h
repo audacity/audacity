@@ -65,6 +65,7 @@ struct ResponseResult final
     audacity::network_manager::IResponse& response, bool readBody);
 
 void SetCommonHeaders(audacity::network_manager::Request& request);
+void SetOptionalHeaders(audacity::network_manager::Request& request);
 
 bool IsUploadRecoverable(SyncResultCode code);
 } // namespace audacity::cloud::audiocom

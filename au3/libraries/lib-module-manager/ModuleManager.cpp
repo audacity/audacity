@@ -26,6 +26,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include <wx/dynlib.h>
 #include <wx/log.h>
 #include <wx/filename.h>
+#include <wx/tokenzr.h>
 
 #include "FileNames.h"
 #include "MemoryX.h"
@@ -68,6 +69,22 @@ static BasicUI::MessageBoxResult DoMessageBox(const TranslatableString& msg)
                           MessageBoxOptions {}.Caption(XO("Module Unsuitable")));
 }
 
+// Module's Major.Minor version should match the current Audacity build
+static bool IsVersionCompatible(const wxString& moduleVersion)
+{
+    wxArrayString parts1 = wxStringTokenize(AUDACITY_VERSION_STRING, ".");
+    wxArrayString parts2 = wxStringTokenize(moduleVersion, ".");
+
+    if (parts1.size() < 2 || parts2.size() < 2) {
+        wxLogError("Invalid version format. Audacity version: %s, module version: %s", AUDACITY_VERSION_STRING, moduleVersion);
+        assert(false);
+        return false;
+    }
+
+    // Check only Major and Minor parts
+    return parts1[0] == parts2[0] && parts1[1] == parts2[1];
+}
+
 void Module::ShowLoadFailureError(const wxString& Error)
 {
     auto ShortName = wxFileName(mName).GetName();
@@ -100,7 +117,7 @@ bool Module::Load(wxString& deferredErrorMessage)
         return false;
     }
 
-    // Check version string matches.  (For now, they must match exactly)
+    // Check if the version matches
     tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
     if (versionFn == NULL) {
         DoMessageBox(
@@ -112,7 +129,7 @@ bool Module::Load(wxString& deferredErrorMessage)
     }
 
     wxString moduleVersion = versionFn();
-    if (moduleVersion != AUDACITY_VERSION_STRING) {
+    if (!IsVersionCompatible(moduleVersion)) {
         DoMessageBox(
             XO("The module \"%s\" is matched with Audacity version \"%s\".\n\nIt will not be loaded.")
             .Format(ShortName, moduleVersion));

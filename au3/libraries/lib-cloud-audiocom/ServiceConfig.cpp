@@ -185,13 +185,13 @@ std::string ServiceConfig::GetFinishUploadPage(
             { "button_name", GetButtonName(trace) } });
 }
 
-std::string ServiceConfig::GetAudioURL(
+std::string ServiceConfig::GetAudioPagePath(
     std::string_view userSlug, std::string_view audioSlug,
     AudiocomTrace trace) const
 {
     return Substitute(
-        "{frontend_url}/{user_slug}/audio/{audio_slug}/edit?" MTM_CAMPAIGN,
-        { { "frontend_url", mFrontendURL },
+        "/{user_slug}/audio/{audio_slug}/edit?" MTM_CAMPAIGN,
+        {
             { "user_slug", userSlug },
             { "audio_slug", audioSlug },
             { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },

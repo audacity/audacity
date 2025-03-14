@@ -367,6 +367,10 @@ void DrawWaveform(
     .SetClippingColors(
         ColorFromWXPen(muted ? artist->muteClippedPen : artist->clippedPen),
         ColorFromWXPen(muted ? artist->muteClippedPen : artist->clippedPen))
+    .SetEnvelopeColors(
+        ColorFromWXBrush(artist->envelopeBackgroundBrush),
+        ColorFromWXBrush(artist->envelopeBackgroundBrush)
+    )
     .SetEnvelope(clip.GetEnvelope());
 
     clipPainter.SetSelection(
