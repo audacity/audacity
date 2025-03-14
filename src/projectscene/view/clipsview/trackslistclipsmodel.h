@@ -32,8 +32,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
 
 public:
-
-    TracksListClipsModel(QObject* parent = nullptr);
+    explicit TracksListClipsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void startUserInteraction();
