@@ -24,10 +24,10 @@
 #include "WaveClip.h"
 
 // The worst case scenario is:
-// blank -> background -> min -> rms -> max -> backgroud -> blank
-// So we have 7 stops
+// blank > background > envelope top + envelope bottom > sample > rms > zero line
+// So we have 7 bands
 
-constexpr size_t ColorFunctionStops = 7;
+constexpr size_t ColorFunctionBands = 7;
 
 struct Triplet final
 {
@@ -49,6 +49,8 @@ struct Triplet final
 
     Triplet(const Triplet&) = default;
     Triplet(Triplet&&) = default;
+    Triplet& operator=(const Triplet&) = default;
+    Triplet& operator=(Triplet&&) = default;
 
     uint8_t r { 0 };
     uint8_t g { 0 };
@@ -57,30 +59,43 @@ struct Triplet final
     uint8_t unused { 0 };
 };
 
+struct Band final
+{
+    Triplet color;
+    uint32_t from;
+    uint32_t to;
+};
+
 struct ColorFunction final
 {
-    std::array<std::pair<Triplet, uint32_t>, ColorFunctionStops> Stops;
+    std::array<Band, ColorFunctionBands> bands;
+    size_t bandsCount { 0 };
 
     Triplet GetColor(uint32_t row, Triplet defaultColor) const noexcept
     {
-        for (auto stop : Stops) {
-            if (row < stop.second) {
-                return stop.first;
+        // Later bands are the topmost
+        for (size_t i = bandsCount; i > 0; --i) {
+            const Band& band = bands[i - 1];
+            if (band.from <= row && row < band.to) {
+                return band.color;
             }
         }
-
         return defaultColor;
     }
 
-    void SetStop(size_t index, graphics::Color color, uint32_t position)
+    void AddBand(graphics::Color color, uint32_t from, uint32_t to)
     {
-        assert(index < Stops.size());
+        assert(bandsCount < bands.size());
+        assert(from <= to);
 
-        Stops[index].first.SetColor(color);
-        Stops[index].second = position;
+        bands[bandsCount++] = { Triplet(color), from, to };
+    }
+
+    void Reset()
+    {
+        bandsCount = 0;
     }
 };
-
 struct WaveBitmapCache::LookupHelper final
 {
     explicit LookupHelper(std::shared_ptr <WaveDataCache> dataCache)
@@ -103,9 +118,9 @@ struct WaveBitmapCache::LookupHelper final
 
         const auto columnsCount = result->AvailableColumns;
 
-        if (cache->mPaintParamters.DBScale) {
+        if (cache->mPaintParameters.DBScale) {
             auto GetDBValue
-                =[dbRange = cache->mPaintParamters.DBRange](float value)
+                =[dbRange = cache->mPaintParameters.DBRange](float value)
             {
                 float sign = (value >= 0 ? 1 : -1);
 
@@ -133,18 +148,18 @@ struct WaveBitmapCache::LookupHelper final
         }
 
         auto GetRowFromValue
-            =[min = cache->mPaintParamters.Min, max = cache->mPaintParamters.Max,
-              height = cache->mPaintParamters.Height](float value)
+            =[min = cache->mPaintParameters.Min, max = cache->mPaintParameters.Max,
+              height = cache->mPaintParameters.Height](float value)
         {
             value = (max - value) / (max - min);
             return static_cast<int>(value * (height - 1) + 0.5);
         };
 
-        const auto height = cache->mPaintParamters.Height;
+        const auto height = cache->mPaintParameters.Height;
 
         const auto zeroLineY = GetRowFromValue(.0f);
 
-        auto inputData = cache->mPaintParamters.DBScale
+        auto inputData = cache->mPaintParameters.DBScale
                          ? DBRemappedColumns.data()
                          : result->Data.data();
 
@@ -173,25 +188,26 @@ struct WaveBitmapCache::LookupHelper final
             inputData = EnvRemappedColumns.data();
         }
 
-        const bool hasTopBlankArea = cache->mPaintParamters.Max > 1.0;
-        const auto globalMaxRow = GetRowFromValue(cache->mPaintParamters.Max);
-        const auto globalMinRow = GetRowFromValue(cache->mPaintParamters.Min) + 1;
+        const auto globalMaxRow = GetRowFromValue(cache->mPaintParameters.Max);
+        const auto globalMinRow = GetRowFromValue(cache->mPaintParameters.Min) + 1;
 
-        const auto blankColor = cache->mPaintParamters.BlankColor;
-        const auto zeroLineColor  = cache->mPaintParamters.ZeroLineColor;
+        const auto blankColor = cache->mPaintParameters.BlankColor;
+        const auto zeroLineColor  = cache->mPaintParameters.ZeroLineColor;
 
-        const auto backgroundColors = cache->mPaintParamters.BackgroundColors;
-        const auto sampleColors = cache->mPaintParamters.SampleColors;
-        const auto rmsColors = cache->mPaintParamters.RMSColors;
-        const auto clipColors = cache->mPaintParamters.ClippingColors;
-        const auto showRMS = cache->mPaintParamters.ShowRMS;
+        const auto backgroundColors = cache->mPaintParameters.BackgroundColors;
+        const auto envelopeColors = cache->mPaintParameters.EnvelopeColors;
+        const auto sampleColors = cache->mPaintParameters.SampleColors;
+        const auto rmsColors = cache->mPaintParameters.RMSColors;
+        const auto clipColors = cache->mPaintParameters.ClippingColors;
+        const auto showRMS = cache->mPaintParameters.ShowRMS;
+        const auto drawEnvelope = cache->mPaintParameters.DrawEnvelope;
 
         auto firstPixel = int64_t(key.FirstSample / cache->GetScaledSampleRate() * key.PixelsPerSecond + 0.5);
 
         const auto selFirst = cache->mSelection.FirstPixel;
         const auto selLast = cache->mSelection.LastPixel;
 
-        const bool showClipping = cache->mPaintParamters.ShowClipping;
+        const bool showClipping = cache->mPaintParameters.ShowClipping;
 
         for (size_t column = 0; column < columnsCount; ++column) {
             const bool selected = firstPixel >= selFirst && firstPixel < selLast;
@@ -199,102 +215,49 @@ struct WaveBitmapCache::LookupHelper final
 
             const auto columnData = inputData[column];
             auto& function = ColorFunctions[column];
+            function.Reset();
 
             if (showClipping && (columnData.min <= -MAX_AUDIO || columnData.max >= MAX_AUDIO)) {
-                function.SetStop(
-                    0, selected ? clipColors.Selected : clipColors.Normal, height);
-
+                function.AddBand(selected ? clipColors.Selected : clipColors.Normal, 0, height);
                 continue;
             }
 
-            size_t stopIndex = 0;
+            const auto maxSampleRow = std::clamp(GetRowFromValue(columnData.max), globalMaxRow, globalMinRow);
+            const auto minSampleRow = std::clamp(GetRowFromValue(columnData.min), globalMaxRow, globalMinRow);
 
-            if (hasTopBlankArea) {
-                function.SetStop(stopIndex++, blankColor, globalMaxRow);
+            function.AddBand(selected ? backgroundColors.Selected : backgroundColors.Normal, globalMaxRow, globalMinRow);
+
+            if (envelope) {
+                const auto envelopeValue = envelope->GetNumberOfPoints() ? EnvelopeValues[column] : envelope->GetDefaultValue();
+                const auto envelopePositiveRow = std::clamp(GetRowFromValue(envelopeValue), globalMaxRow, globalMinRow);
+                const auto envelopeNegativeRow = std::clamp(GetRowFromValue(-envelopeValue) + 1, globalMaxRow, globalMinRow);
+
+                function.AddBand(envelopeColors.Normal, globalMaxRow, envelopePositiveRow);
+
+                if (drawEnvelope) {
+                    const auto envelopeEndPositiveRow = std::clamp(GetRowFromValue(envelopeValue - 0.5), globalMaxRow, zeroLineY);
+                    const auto envelopeEndNegativeRow = std::clamp(GetRowFromValue(-envelopeValue + 0.5) + 1, zeroLineY, globalMinRow);
+
+                    if (envelopeEndNegativeRow != envelopeEndPositiveRow) {
+                        function.AddBand(envelopeColors.Normal, envelopeEndPositiveRow, envelopeEndNegativeRow);
+                    }
+                }
+
+                function.AddBand(envelopeColors.Normal, envelopeNegativeRow, globalMinRow);
             }
 
-            const auto maxRow = GetRowFromValue(columnData.max);
+            function.AddBand(zeroLineColor, zeroLineY, zeroLineY + 1);
 
-            if (zeroLineY > globalMaxRow && maxRow > zeroLineY) {
-                //Waveform is below 0
-                function.SetStop(
-                    stopIndex++,
-                    selected ? backgroundColors.Selected : backgroundColors.Normal,
-                    zeroLineY);
-                function.SetStop(
-                    stopIndex++,
-                    zeroLineColor,
-                    zeroLineY + 1
-                    );
-            }
-
-            if (maxRow > 0) {
-                function.SetStop(
-                    stopIndex++,
-                    selected ? backgroundColors.Selected : backgroundColors.Normal,
-                    maxRow);
-            }
-
-            if (maxRow >= height) {
-                continue;
-            }
+            function.AddBand(selected ? sampleColors.Selected : sampleColors.Normal, maxSampleRow,
+                             minSampleRow == maxSampleRow ? minSampleRow + 1 : minSampleRow);
 
             if (showRMS) {
-                const auto positiveRMSRow = GetRowFromValue(columnData.rms);
+                const auto rmsPositiveRow = GetRowFromValue(std::min(columnData.rms, columnData.max));
+                const auto rmsNegativeRow = GetRowFromValue(std::max(-columnData.rms, columnData.min));
 
-                if (maxRow < positiveRMSRow) {
-                    function.SetStop(
-                        stopIndex++,
-                        selected ? sampleColors.Selected : sampleColors.Normal,
-                        positiveRMSRow);
+                if (rmsNegativeRow >= rmsPositiveRow) {
+                    function.AddBand(selected ? rmsColors.Selected : rmsColors.Normal, rmsPositiveRow, rmsNegativeRow);
                 }
-
-                if (positiveRMSRow >= height) {
-                    continue;
-                }
-
-                const auto negativeRMSRow
-                    =GetRowFromValue(std::max(-columnData.rms, columnData.min));
-
-                if (positiveRMSRow < negativeRMSRow) {
-                    function.SetStop(
-                        stopIndex++, selected ? rmsColors.Selected : rmsColors.Normal,
-                        negativeRMSRow);
-                }
-
-                if (negativeRMSRow >= height) {
-                    continue;
-                }
-            }
-
-            const auto minRow = GetRowFromValue(columnData.min);
-
-            // if minRow == maxRow - we want to display it as a single pixel
-            function.SetStop(
-                stopIndex++, selected ? sampleColors.Selected : sampleColors.Normal,
-                minRow != maxRow ? minRow : minRow + 1);
-
-            if (zeroLineY < globalMinRow && minRow < zeroLineY) {
-                //Waveform is above 0
-                function.SetStop(
-                    stopIndex++,
-                    selected ? backgroundColors.Selected : backgroundColors.Normal,
-                    zeroLineY);
-                function.SetStop(
-                    stopIndex++,
-                    zeroLineColor,
-                    zeroLineY + 1);
-            }
-
-            if (minRow < globalMinRow) {
-                function.SetStop(
-                    stopIndex++,
-                    selected ? backgroundColors.Selected : backgroundColors.Normal,
-                    globalMinRow);
-            }
-
-            if (globalMinRow < height) {
-                function.SetStop(stopIndex++, blankColor, height);
             }
         }
 
@@ -343,8 +306,8 @@ WaveBitmapCacheElement::~WaveBitmapCacheElement() = default;
 WaveBitmapCache&
 WaveBitmapCache::SetPaintParameters(const WavePaintParameters& params)
 {
-    if (mPaintParamters != params) {
-        mPaintParamters = params;
+    if (mPaintParameters != params) {
+        mPaintParameters = params;
         mEnvelope = params.AttachedEnvelope;
         mEnvelopeVersion = mEnvelope != nullptr ? mEnvelope->GetVersion() : 0;
 
@@ -385,13 +348,13 @@ void WaveBitmapCache::CheckCache(const ZoomInfo&, double, double)
 bool WaveBitmapCache::InitializeElement(
     const GraphicsDataCacheKey& key, WaveBitmapCacheElement& element)
 {
-    if (mPaintParamters.Height == 0) {
+    if (mPaintParameters.Height == 0) {
         return false;
     }
 
     if (!mLookupHelper->PerformLookup(this, key)) {
         const auto width = 1;
-        const auto height = mPaintParamters.Height;
+        const auto height = mPaintParameters.Height;
         const auto bytes = element.Allocate(width, height);
         std::memset(bytes, 0, width * height * 3);
         return true;
@@ -402,9 +365,9 @@ bool WaveBitmapCache::InitializeElement(
 
     const auto columnsCount = mLookupHelper->AvailableColumns;
 
-    const auto defaultColor = Triplet(mPaintParamters.BlankColor);
+    const auto defaultColor = Triplet(mPaintParameters.BlankColor);
 
-    const auto height = static_cast<uint32_t>(mPaintParamters.Height);
+    const auto height = static_cast<uint32_t>(mPaintParameters.Height);
 
     auto rowData = element.Allocate(columnsCount, height);
 

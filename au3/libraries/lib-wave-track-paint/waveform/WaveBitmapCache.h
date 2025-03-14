@@ -54,7 +54,7 @@ private:
 
     struct LookupHelper;
 
-    WavePaintParameters mPaintParamters;
+    WavePaintParameters mPaintParameters;
 
     struct
     {

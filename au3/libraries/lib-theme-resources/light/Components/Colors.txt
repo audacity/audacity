@@ -37,7 +37,7 @@
                         HzPlot: #8c3cbe;
                 WavelengthPlot: #c83296;
                 EnvelopeColour: #677ce4;
-            EnvelopeBackground: #14151a;
+            EnvelopeBackground: #d5e3ff;
               MuteButtonActive: #a0aad2;
               MuteButtonVetoed: #d5e3ff;
                      CursorPen: #14151a;
@@ -80,7 +80,7 @@
                    GraphLabels: #14151a;
              SpectroBackground: #ffff14;
                     ScrubRuler: #e4e4e4;
-                 RulerSelected: #75a0ff; 
+                 RulerSelected: #75a0ff;
                      TimeHours: #323545;
                      MidiZebra: #808080;
                      MidiLines: #3c3c98;
@@ -96,7 +96,7 @@
                    Spectro4Sel: #bf0000;
                    Spectro5Sel: #bfbfbf;
       ClipAffordanceOutlinePen: #14151a;
- ClipAffordanceUnselectedBrush: #cfd6f4; 
+ ClipAffordanceUnselectedBrush: #cfd6f4;
    ClipAffordanceSelectedBrush: #aeb6db;
           ClipAffordanceStroke: #ffffff;
           ClipAffordanceButton: #949bba;
@@ -112,7 +112,7 @@
              BeatFillWeakBrush: #4B4F5F;
         BeatFillStrongSelBrush: #9cb7d2;
           BeatFillWeakSelBrush: #b4cfe9;
-                   LoopEnabled: #c4c6c8; 
+                   LoopEnabled: #c4c6c8;
                 LoopNotEnabled: #e9e9eb;
                        Grabber: #9295a6;
        TimelineRulerBackground: #e9e9eb;
