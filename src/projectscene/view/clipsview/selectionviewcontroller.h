@@ -18,6 +18,8 @@ class SelectionViewController : public QObject
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
+    Q_PROPERTY(bool selectionEditInProgress READ selectionEditInProgress NOTIFY selectionEditInProgressChanged FINAL)
+    Q_PROPERTY(bool selectionInProgress READ selectionInProgress NOTIFY selectionInProgressChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
@@ -45,11 +47,15 @@ public:
     Q_INVOKABLE bool isLeftSelection(double x) const;
 
     bool selectionActive() const;
+    bool selectionEditInProgress() const;
+    bool selectionInProgress() const;
     void setSelectionActive(bool newSelectionActive);
 
 signals:
     void timelineContextChanged();
     void selectionActiveChanged();
+    void selectionEditInProgressChanged();
+    void selectionInProgressChanged();
 
     void selectionStarted();
     void selectionChanged(QPointF p1, QPointF p2);
@@ -70,6 +76,7 @@ private:
 
     bool m_selectionStarted = false;
     bool m_selectionActive = false;
+    bool m_selectionEditInProgress = false;
     QPointF m_startPoint;
     QPointF m_lastPoint;
 };

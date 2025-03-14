@@ -20,7 +20,6 @@ Item {
     property bool isStereo: clipsModel.isStereo
     property double channelHeightRatio: isStereo ? 0.5 : 1
     property bool moveActive: false
-    property bool underSelection: false
     property bool altPressed: false
     property bool ctrlPressed: false
     property alias isNearSample: clipsContainer.isNearSample
@@ -30,6 +29,8 @@ Item {
     property alias rightTrimContainsMouse: clipsContainer.rightTrimContainsMouse
     property alias leftTrimPressedButtons: clipsContainer.leftTrimPressedButtons
     property alias rightTrimPressedButtons: clipsContainer.rightTrimPressedButtons
+    property bool selectionEditInProgress: false
+    property bool selectionInProgress: false
 
     signal interactionStarted()
     signal interactionEnded()
@@ -123,7 +124,8 @@ Item {
             propagateComposedEvents: true
             hoverEnabled: true
             pressAndHoldInterval: 0
-            enabled: !root.underSelection && (clipsContainer.isNearSample || clipsContainer.isBrush)
+            enabled: !root.selectionInProgress && (clipsContainer.isNearSample || clipsContainer.isBrush)
+            cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor 
 
             anchors.fill: parent
 
@@ -251,6 +253,7 @@ Item {
                 isAudible: root.isTrackAudible
                 multiSampleEdit: clipsContainer.multiSampleEdit
                 altPressed: root.altPressed
+                selectionInProgress: root.selectionInProgress || root.selectionEditInProgress
 
                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)
@@ -282,37 +285,37 @@ Item {
                         if (clipItem.isNearSample) {
                             clipsContainer.currentChannel = clipItem.currentChannel
                         }
-                        return clipItem.isNearSample
+                        return clipItem && clipItem.isNearSample
                     })
                 }
 
                 onIsBrushChanged: function() {
                     clipsContainer.isBrush = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.isBrush
+                        return clipItem && clipItem.isBrush
                     })
                 }
 
                 onLeftTrimContainsMouseChanged: function() {
                     clipsContainer.leftTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.leftTrimContainsMouse
+                        return clipItem && clipItem.leftTrimContainsMouse
                     })
                 }
 
                 onRightTrimContainsMouseChanged: function() {
                     clipsContainer.rightTrimContainsMouse = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.rightTrimContainsMouse
+                        return clipItem && clipItem.rightTrimContainsMouse
                     })
                 }
 
                 onLeftTrimPressedButtonsChanged: function() {
                     clipsContainer.leftTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.leftTrimPressedButtons
+                        return clipItem && clipItem.leftTrimPressedButtons
                     })
                 }
 
                 onRightTrimPressedButtonsChanged: function() {
                     clipsContainer.rightTrimPressedButtons = clipsContainer.checkIfAnyClip(function(clipItem) {
-                        return clipItem.rightTrimPressedButtons
+                        return clipItem && clipItem.rightTrimPressedButtons
                     })
                 }
 
@@ -409,6 +412,7 @@ Item {
         id: clipsSelection
 
         isDataSelected: root.isDataSelected
+        selectionInProgress: root.selectionInProgress
         context: root.context
 
         anchors.fill: parent
@@ -460,6 +464,8 @@ Item {
         height: 4
 
         cursorShape: Qt.SizeVerCursor
+
+        visible: !root.selectionInProgress
 
         onPressed: {
             root.interactionStarted()

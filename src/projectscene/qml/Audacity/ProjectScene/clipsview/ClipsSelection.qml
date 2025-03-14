@@ -4,6 +4,7 @@ Item {
     id: root
 
     property bool isDataSelected: false
+    property bool selectionInProgress: false
     property alias active: selRect.visible
     property var context: null
     //! NOTE: sync with SelectionViewController's MIN_SELECTION_PX
@@ -11,6 +12,11 @@ Item {
 
     signal selectionDraged(var x1, var x2, var completed)
     signal requestSelectionContextMenu(real x, real y)
+
+    onSelectionInProgressChanged: {
+        leftMa.cursorShape = root.selectionInProgress ? Qt.IBeamCursor : Qt.SizeHorCursor
+        rightMa.cursorShape = root.selectionInProgress ? Qt.IBeamCursor : Qt.SizeHorCursor
+    }
 
     Rectangle {
         id: selRect
@@ -36,6 +42,8 @@ Item {
         anchors.bottom: parent.bottom
 
         visible: isDataSelected
+
+        cursorShape: Qt.IBeamCursor
 
         onClicked: function(mouse) {
             let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
@@ -64,10 +72,10 @@ Item {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
-            leftMa.cursorShape = Qt.ArrowCursor
             leftMa.startX = selRect.x
             leftMa.startW = selRect.width
             leftMa.x = selRect.x
+            centerMa.cursorShape = Qt.SizeHorCursor
         }
 
         onPositionChanged: function(mouse) {
@@ -89,6 +97,7 @@ Item {
             root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
             leftMa.x = Qt.binding(function() { return selRect.x })
             leftMa.cursorShape = Qt.SizeHorCursor
+            centerMa.cursorShape = Qt.IBeamCursor
         }
 
         onClicked: function(mouse) {
@@ -120,9 +129,9 @@ Item {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
-            rightMa.cursorShape = Qt.ArrowCursor
             rightMa.startW = selRect.width
             rightMa.x = selRect.x + selRect.width - rightMa.width
+            centerMa.cursorShape = Qt.SizeHorCursor
         }
 
         onPositionChanged: function(mouse) {
@@ -143,6 +152,7 @@ Item {
             root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
             rightMa.x = Qt.binding(function() {return selRect.x + selRect.width - rightMa.width })
             rightMa.cursorShape = Qt.SizeHorCursor
+            centerMa.cursorShape = Qt.IBeamCursor
         }
 
         onClicked: function(mouse) {

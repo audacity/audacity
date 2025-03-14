@@ -34,6 +34,8 @@ Rectangle {
     property bool isAudible: true
     property real selectionStart: 0
     property real selectionWidth: 0
+    property bool selectionInProgress: false
+    property bool enableCursorInteraction: !selectionInProgress && !isBrush
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
@@ -89,8 +91,8 @@ Rectangle {
     property bool isIsolationMode: false
     property alias isNearSample: waveView.isNearSample
     property alias currentChannel: waveView.currentChannel
-    property alias leftTrimContainsMouse: leftTrimStretchEdgeHover.containsMouse
-    property alias rightTrimContainsMouse: rightTrimStretchEdgeHover.containsMouse
+    property bool leftTrimContainsMouse: false
+    property bool rightTrimContainsMouse: false
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
     property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
 
@@ -163,6 +165,16 @@ Rectangle {
         multiClipContextMenuModel.load()
     }
 
+    Component.onDestruction: {
+        //! NOTE The outer component uses this information to handle the current cursor.
+        // It is important to cleanup this state before removing the component
+        // to prevent the cursor from being stuck in the wrong state.
+        waveView.isNearSample = false
+        waveView.isStemPlot = false
+        root.leftTrimContainsMouse = false
+        root.rightTrimContainsMouse = false
+    }
+
     MouseArea {
         id: hoverArea
         anchors.fill: parent
@@ -170,6 +182,8 @@ Rectangle {
         hoverEnabled: true
         cursorShape: Qt.IBeamCursor
         acceptedButtons: Qt.RightButton
+
+        visible: root.enableCursorInteraction
 
         onClicked: function(e) {
             if (root.multiClipsSelected) {
@@ -195,8 +209,6 @@ Rectangle {
     MouseArea {
         id: leftTrimStretchEdgeHover
 
-        enabled: !root.isBrush
-
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
         z: headerDragArea.z + 1
@@ -205,12 +217,13 @@ Rectangle {
         anchors.top: root.top
 
         hoverEnabled: true
-        visible: !root.clipSelected
+        visible: !root.clipSelected && root.enableCursorInteraction
 
         cursorShape: Qt.BlankCursor
 
         // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
+            root.leftTrimContainsMouse = containsMouse
             if (containsMouse || pressedButtons) {
                 root.parent.z = 1
             } else {
@@ -253,8 +266,6 @@ Rectangle {
     MouseArea {
         id: rightTrimStretchEdgeHover
 
-        enabled: !root.isBrush
-
         x: root.width - 5
         z: headerDragArea.z + 1
         width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5): 11
@@ -263,12 +274,13 @@ Rectangle {
         anchors.top: root.top
 
         hoverEnabled: true
-        visible: !root.clipSelected
+        visible: !root.clipSelected && root.enableCursorInteraction
 
         cursorShape: Qt.BlankCursor
 
         // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
+            root.rightTrimContainsMouse = containsMouse
             if (containsMouse || pressedButtons) {
                 root.parent.z = 1
             } else {
@@ -351,7 +363,7 @@ Rectangle {
                 id: headerDragArea
                 anchors.fill: parent
 
-                enabled:  !root.isBrush
+                visible: root.enableCursorInteraction
 
                 acceptedButtons: Qt.LeftButton
                 hoverEnabled: true
@@ -468,6 +480,8 @@ Rectangle {
                 ClipItemPropertyButton {
                     id: pitchBtn
 
+                    mouseArea.visible: root.enableCursorInteraction
+
                     text: {
                         let semis = Math.trunc(root.pitch / 100)
                         let cents = Math.abs(root.pitch % 100).toString().padStart(2, "0")
@@ -489,6 +503,8 @@ Rectangle {
                 ClipItemPropertyButton {
                     id: speedBtn
 
+                    mouseArea.visible: root.enableCursorInteraction
+
                     icon: IconCode.CLOCK
                     text: root.speedPercentage + "%"
 
@@ -508,6 +524,8 @@ Rectangle {
                     width: 16
                     height: 16
                     anchors.verticalCenter: parent.verticalCenter
+
+                    mouseArea.visible: root.enableCursorInteraction
 
                     menuModel: (root.multiClipsSelected || root.groupId != -1) ? multiClipContextMenuModel : singleClipContextMenuModel
 
@@ -556,6 +574,8 @@ Rectangle {
                 id: channelSplitter
 
                 anchors.fill: parent
+
+                editable: root.enableCursorInteraction
 
                 color: "#000000"
                 opacity: 0.10
