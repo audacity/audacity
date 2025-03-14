@@ -743,6 +743,8 @@ bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String&
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(track));
 
+    pushProjectHistoryChangeTrackTitle();
+
     return true;
 }
 
@@ -763,6 +765,8 @@ bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const mu
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    pushProjectHistoryChangeClipTitle();
 
     return true;
 }
@@ -2535,6 +2539,16 @@ void Au3Interaction::pushProjectHistoryResetClipSpeedState()
 void Au3Interaction::pushProjectHistoryRenderClipStretchingState()
 {
     projectHistory()->pushHistoryState("Rendered time-stretched audio", "Render");
+}
+
+void Au3Interaction::pushProjectHistoryChangeTrackTitle()
+{
+    projectHistory()->pushHistoryState("Track Title", "Changed Track Title");
+}
+
+void Au3Interaction::pushProjectHistoryChangeClipTitle()
+{
+    projectHistory()->pushHistoryState("Clip Title", "Changed Clip Title");
 }
 
 bool Au3Interaction::doChangeClipSpeed(const ClipKey& clipKey, double speed)

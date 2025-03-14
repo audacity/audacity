@@ -34,7 +34,7 @@ class ClipListItem : public QObject
     Q_PROPERTY(int speedPercentage READ speedPercentage NOTIFY speedPercentageChanged FINAL)
 
 public:
-    ClipListItem(QObject* parent);
+    explicit ClipListItem(QObject* parent);
 
     void setClip(const trackedit::Clip& clip);
     const trackedit::Clip& clip() const;

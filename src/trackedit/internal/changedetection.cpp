@@ -104,11 +104,11 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
                && first.endTime == second.endTime
                && first.stereo == second.stereo
                && first.pitch == second.pitch
-               && first.speed == second.speed;
+               && first.speed == second.speed
+               && first.title == second.title;
         //! For now these do not result in "autosave",
         //  and so should not be criteria under undo/redo refresh.
         //  This might change in future AU4 versions.
-        // first.title == second.title &&
         // first.color == second.color &&
         // first.hasCustomColor == second.hasCustomColor &&
         // first.optimizeForVoice == second.optimizeForVoice &&
@@ -186,12 +186,12 @@ void notifyOfUndoRedo(const TracksAndClips& before,
     //! Checking for Track field change - brute force I'm afraid:
     {
         auto trackFieldComparison = [](const Track& first, const Track& second) {
-            return first.type == second.type;
+            return first.type == second.type
+                   && first.title == second.title;
 
             //! For now these do not result in "autosave",
             //  and so should not be criteria under undo/redo.
             //  This might change in future AU4 versions.
-            // first.title == second.title &&
             // first.color == second.color;
         };
 
