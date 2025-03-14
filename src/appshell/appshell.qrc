@@ -38,6 +38,7 @@
         <file>qml/Preferences/ImportPreferencesPage.qml</file>
         <file>qml/Preferences/MidiDeviceMappingPreferencesPage.qml</file>
         <file>qml/Preferences/AudioPreferencesPage.qml</file>
+        <file>qml/Preferences/PlaybackPreferencesPage.qml</file>
         <file>qml/Preferences/SaveAndPublishPreferencesPage.qml</file>
         <file>qml/Preferences/PreferencesDialog.qml</file>
         <file>qml/Preferences/internal/PreferencesButtonsPanel.qml</file>
@@ -58,6 +59,9 @@
         <file>qml/Preferences/internal/AudioApiSection.qml</file>
         <file>qml/Preferences/internal/BufferAndLatencySection.qml</file>
         <file>qml/Preferences/internal/SampleRateSection.qml</file>
+        <file>qml/Preferences/internal/PlaybackPerformanceSection.qml</file>
+        <file>qml/Preferences/internal/SoloButtonSection.qml</file>
+        <file>qml/Preferences/internal/CursorSection.qml</file>
         <file>qml/Preferences/internal/CommonAudioApiConfiguration.qml</file>
         <file>qml/Preferences/internal/ComboBoxWithTitle.qml</file>
         <file>qml/Preferences/internal/IncrementalPropertyControlWithTitle.qml</file>

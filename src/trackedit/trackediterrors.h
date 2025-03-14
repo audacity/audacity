@@ -37,6 +37,7 @@ inline muse::Ret make_ret(Err e)
     case Err::TrackEmpty: return muse::Ret(retCode);
     case Err::NotEnoughSpaceForPaste: return muse::Ret(retCode, muse::trc("trackedit", "Not enough space to paste clip into"));
     case Err::FailedToMakeRoomForClip: return muse::Ret(retCode);
+    case Err::DisallowedDuringRecording: return muse::Ret(retCode);
     case Err::NotEnoughDataInClipboard: return muse::Ret(retCode);
     }
 

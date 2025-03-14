@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2025 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -27,9 +27,6 @@
 #include "modularity/ioc.h"
 #include "async/asyncable.h"
 #include "audio/iaudioconfiguration.h"
-// #include "midi/imidiconfiguration.h"
-// #include "midi/imidioutport.h"
-// #include "midi/imidiinport.h"
 #include "playback/iaudiodevicesprovider.h"
 #include "playback/iplaybackconfiguration.h"
 
@@ -38,75 +35,54 @@ class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    INJECT(muse::audio::IAudioConfiguration, audioConfiguration)
-    // INJECT(midi::IMidiConfiguration, midiConfiguration)
-    // INJECT(midi::IMidiOutPort, midiOutPort)
-    // INJECT(midi::IMidiInPort, midiInPort)
-    INJECT(playback::IPlaybackConfiguration, playbackConfiguration)
+    Q_PROPERTY(QString currentPlaybackQuality READ currentPlaybackQuality NOTIFY currentPlaybackQualityChanged)
+    Q_PROPERTY(QVariantList playbackQualityList READ playbackQualityList NOTIFY playbackQualityListChanged)
+
+    Q_PROPERTY(QString currentDithering READ currentDithering NOTIFY currentDitheringChanged)
+    Q_PROPERTY(QVariantList ditheringList READ ditheringList NOTIFY ditheringListChanged)
+
+    Q_PROPERTY(playback::TracksBehaviors::SoloBehavior soloBehavior READ soloBehavior NOTIFY soloBehaviorChanged)
+
+    Q_PROPERTY(double shortSkip READ shortSkip NOTIFY shortSkipChanged)
+    Q_PROPERTY(double longSkip READ longSkip NOTIFY longSkipChanged)
+
+    muse::Inject<muse::audio::IAudioConfiguration> audioConfiguration;
+    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
-
-    Q_PROPERTY(int currentAudioApiIndex READ currentAudioApiIndex WRITE setCurrentAudioApiIndex NOTIFY currentAudioApiIndexChanged)
-
-    // Q_PROPERTY(QVariantList midiInputDevices READ midiInputDevices NOTIFY midiInputDevicesChanged)
-    // Q_PROPERTY(QString midiInputDeviceId READ midiInputDeviceId NOTIFY midiInputDeviceIdChanged)
-
-    // Q_PROPERTY(QVariantList midiOutputDevices READ midiOutputDevices NOTIFY midiOutputDevicesChanged)
-    // Q_PROPERTY(QString midiOutputDeviceId READ midiOutputDeviceId NOTIFY midiOutputDeviceIdChanged)
-
-    // Q_PROPERTY(bool isMIDI20OutputSupported READ isMIDI20OutputSupported CONSTANT)
-    // Q_PROPERTY(bool useMIDI20Output READ useMIDI20Output WRITE setUseMIDI20Output NOTIFY useMIDI20OutputChanged)
-
-    // Q_PROPERTY(bool muteHiddenInstruments READ muteHiddenInstruments WRITE setMuteHiddenInstruments NOTIFY muteHiddenInstrumentsChanged)
 
 public:
     explicit PlaybackPreferencesModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
 
-    int currentAudioApiIndex() const;
+    QString currentPlaybackQuality() const;
+    QVariantList playbackQualityList() const;
+    Q_INVOKABLE void playbackQualitySelected(const QString& quality);
 
-    // QString midiInputDeviceId() const;
-    // Q_INVOKABLE void inputDeviceSelected(const QString& deviceId);
+    QString currentDithering() const;
+    QVariantList ditheringList() const;
+    Q_INVOKABLE void ditheringSelected(const QString& quality);
 
-    // QString midiOutputDeviceId() const;
-    // Q_INVOKABLE void outputDeviceSelected(const QString& deviceId);
+    Q_INVOKABLE playback::TracksBehaviors::SoloBehavior soloBehavior() const;
+    Q_INVOKABLE void soloBehaviorSelected(playback::TracksBehaviors::SoloBehavior behavior);
 
-    Q_INVOKABLE QStringList audioApiList() const;
+    double shortSkip() const;
+    Q_INVOKABLE void shortSkipSelected(double seconds);
 
-    // Q_INVOKABLE void restartAudioAndMidiDevices();
-
-    // QVariantList midiInputDevices() const;
-    // QVariantList midiOutputDevices() const;
-
-    // bool isMIDI20OutputSupported() const;
-    // bool useMIDI20Output() const;
-
-    // bool muteHiddenInstruments() const;
-
-public slots:
-    void setCurrentAudioApiIndex(int index);
-
-    // void setUseMIDI20Output(bool use);
-
-    // void setMuteHiddenInstruments(bool mute);
+    double longSkip() const;
+    Q_INVOKABLE void longSkipSelected(double seconds);
 
 signals:
-    void currentAudioApiIndexChanged();
-    // void midiInputDeviceIdChanged();
-    // void midiOutputDeviceIdChanged();
+    void currentPlaybackQualityChanged();
+    void playbackQualityListChanged();
 
-    // void midiInputDevicesChanged();
-    // void midiOutputDevicesChanged();
+    void currentDitheringChanged();
+    void ditheringListChanged();
 
-    // void useMIDI20OutputChanged();
+    void soloBehaviorChanged();
 
-    // void muteHiddenInstrumentsChanged(bool mute);
-
-// private:
-    // midi::MidiDeviceID midiInputDeviceId(int index) const;
-    // midi::MidiDeviceID midiOutputDeviceId(int index) const;
-
-    // void showMidiError(const midi::MidiDeviceID& deviceId, const std::string& text) const;
+    void shortSkipChanged();
+    void longSkipChanged();
 };
 }
 

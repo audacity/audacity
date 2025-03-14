@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2025 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -26,160 +26,89 @@
 
 using namespace au::appshell;
 using namespace muse::audio;
-// using namespace mu::midi;
 
 PlaybackPreferencesModel::PlaybackPreferencesModel(QObject* parent)
     : QObject(parent)
 {
 }
 
-int PlaybackPreferencesModel::currentAudioApiIndex() const
-{
-    QString currentApi = QString::fromStdString(audioDevicesProvider()->currentAudioApi());
-    return audioApiList().indexOf(currentApi);
-}
-
-void PlaybackPreferencesModel::setCurrentAudioApiIndex(int index)
-{
-    if (index == currentAudioApiIndex()) {
-        return;
-    }
-
-    std::vector<std::string> apiList = audioDevicesProvider()->audioApiList();
-    if (index < 0 || index >= static_cast<int>(apiList.size())) {
-        return;
-    }
-
-    audioDevicesProvider()->setAudioApi(apiList[index]);
-}
-
-// QString PlaybackPreferencesModel::midiInputDeviceId() const
-// {
-//     return QString::fromStdString(midiInPort()->deviceID());
-// }
-
-// void PlaybackPreferencesModel::inputDeviceSelected(const QString& deviceId)
-// {
-//     midiConfiguration()->setMidiInputDeviceId(deviceId.toStdString());
-// }
-
-// QString PlaybackPreferencesModel::midiOutputDeviceId() const
-// {
-//     return QString::fromStdString(midiOutPort()->deviceID());
-// }
-
-// void PlaybackPreferencesModel::outputDeviceSelected(const QString& deviceId)
-// {
-//     midiConfiguration()->setMidiOutputDeviceId(deviceId.toStdString());
-// }
-
 void PlaybackPreferencesModel::init()
 {
-    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() { emit currentAudioApiIndexChanged(); });
-    // midiInPort()->availableDevicesChanged().onNotify(this, [this]() {
-    //     emit midiInputDevicesChanged();
-    // });
-
-    // midiInPort()->deviceChanged().onNotify(this, [this]() {
-    //     emit midiInputDeviceIdChanged();
-    // });
-
-    // midiOutPort()->availableDevicesChanged().onNotify(this, [this]() {
-    //     emit midiOutputDevicesChanged();
-    // });
-
-    // midiOutPort()->deviceChanged().onNotify(this, [this]() {
-    //     emit midiOutputDeviceIdChanged();
-    // });
-
-    // playbackConfiguration()->muteHiddenInstrumentsChanged().onReceive(this, [this](bool mute) {
-    //     emit muteHiddenInstrumentsChanged(mute);
-    // });
+    playbackConfiguration()->playbackQualityChanged().onNotify(this, [this](){ emit currentPlaybackQualityChanged(); });
+    playbackConfiguration()->ditheringChanged().onNotify(this, [this](){ emit currentDitheringChanged(); });
+    playbackConfiguration()->soloBehaviorChanged().onNotify(this, [this](){
+        emit soloBehaviorChanged();
+    });
+    playbackConfiguration()->shortSkipChanged().onNotify(this, [this](){ emit shortSkipChanged(); });
+    playbackConfiguration()->longSkipChanged().onNotify(this, [this](){ emit longSkipChanged(); });
 }
 
-QStringList PlaybackPreferencesModel::audioApiList() const
+QString PlaybackPreferencesModel::currentPlaybackQuality() const
 {
-    QStringList result;
-    for (const std::string& api: audioDevicesProvider()->audioApiList()) {
-        result.push_back(QString::fromStdString(api));
+    return QString::fromStdString(playbackConfiguration()->currentPlaybackQuality());
+}
+
+QVariantList PlaybackPreferencesModel::playbackQualityList() const
+{
+    QVariantList result;
+    for (const auto& quality: playbackConfiguration()->playbackQualityList()) {
+        result << QString::fromStdString(quality);
     }
 
     return result;
 }
 
-// void PlaybackPreferencesModel::restartAudioAndMidiDevices()
-// {
-//     NOT_IMPLEMENTED;
-// }
+void PlaybackPreferencesModel::playbackQualitySelected(const QString& quality)
+{
+    playbackConfiguration()->setPlaybackQuality(quality.toStdString());
+}
 
-// QVariantList PlaybackPreferencesModel::midiInputDevices() const
-// {
-//     QVariantList result;
+QString PlaybackPreferencesModel::currentDithering() const
+{
+    return QString::fromStdString(playbackConfiguration()->currentDithering());
+}
 
-//     std::vector<MidiDevice> devices = midiInPort()->availableDevices();
-//     for (const MidiDevice& device : devices) {
-//         QVariantMap obj;
-//         obj["value"] = QString::fromStdString(device.id);
-//         obj["text"] = QString::fromStdString(device.name);
+QVariantList PlaybackPreferencesModel::ditheringList() const
+{
+    QVariantList result;
+    for (const auto& dithering: playbackConfiguration()->ditheringList()) {
+        result << QString::fromStdString(dithering);
+    }
 
-//         result << obj;
-//     }
+    return result;
+}
 
-//     return result;
-// }
+void PlaybackPreferencesModel::ditheringSelected(const QString& dithering)
+{
+    playbackConfiguration()->setDithering(dithering.toStdString());
+}
 
-// QVariantList PlaybackPreferencesModel::midiOutputDevices() const
-// {
-//     QVariantList result;
+au::playback::TracksBehaviors::SoloBehavior PlaybackPreferencesModel::soloBehavior() const
+{
+    return playbackConfiguration()->currentSoloBehavior();
+}
 
-//     std::vector<MidiDevice> devices = midiOutPort()->availableDevices();
-//     for (const MidiDevice& device : devices) {
-//         QVariantMap obj;
-//         obj["value"] = QString::fromStdString(device.id);
-//         obj["text"] = QString::fromStdString(device.name);
+void PlaybackPreferencesModel::soloBehaviorSelected(playback::TracksBehaviors::SoloBehavior behavior)
+{
+    playbackConfiguration()->setSoloBehavior(behavior);
+}
 
-//         result << obj;
-//     }
+double PlaybackPreferencesModel::shortSkip() const
+{
+    return playbackConfiguration()->shortSkip();
+}
 
-//     return result;
-// }
+void PlaybackPreferencesModel::shortSkipSelected(double seconds)
+{
+    playbackConfiguration()->setShortSkip(seconds);
+}
 
-// bool PlaybackPreferencesModel::isMIDI20OutputSupported() const
-// {
-//     return midiOutPort()->supportsMIDI20Output();
-// }
+double PlaybackPreferencesModel::longSkip() const
+{
+    return playbackConfiguration()->longSkip();
+}
 
-// bool PlaybackPreferencesModel::useMIDI20Output() const
-// {
-//     return midiConfiguration()->useMIDI20Output();
-// }
-
-// void PlaybackPreferencesModel::setUseMIDI20Output(bool use)
-// {
-//     if (use == useMIDI20Output()) {
-//         return;
-//     }
-
-//     midiConfiguration()->setUseMIDI20Output(use);
-//     emit useMIDI20OutputChanged();
-// }
-
-// void PlaybackPreferencesModel::showMidiError(const MidiDeviceID& deviceId, const std::string& text) const
-// {
-//     // todo: display error
-//     LOGE() << "failed connect to device, deviceID: " << deviceId << ", err: " << text;
-// }
-
-// bool PlaybackPreferencesModel::muteHiddenInstruments() const
-// {
-//     return playbackConfiguration()->muteHiddenInstruments();
-// }
-
-// void PlaybackPreferencesModel::setMuteHiddenInstruments(bool mute)
-// {
-//     if (mute == muteHiddenInstruments()) {
-//         return;
-//     }
-
-//     playbackConfiguration()->setMuteHiddenInstruments(mute);
-// }
+void PlaybackPreferencesModel::longSkipSelected(double seconds)
+{
+    playbackConfiguration()->setLongSkip(seconds);
+}
