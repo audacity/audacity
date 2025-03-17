@@ -27,13 +27,6 @@ CustomCursor::CustomCursor(QQuickItem*)
     connect(this, &CustomCursor::activeChanged, changeCursor);
     connect(this, &CustomCursor::sourceChanged, changeCursor);
     connect(this, &CustomCursor::sizeChanged, changeCursor);
-    connect(qApp, &QApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
-        bool appActive = state == Qt::ApplicationActive;
-        if (m_appActive != appActive) {
-            m_appActive = appActive;
-            emit appActiveChanged();
-        }
-    });
 }
 
 bool CustomCursor::active() const
@@ -49,11 +42,6 @@ QString CustomCursor::source() const
 int CustomCursor::size() const
 {
     return m_size;
-}
-
-bool CustomCursor::appActive() const
-{
-    return m_appActive;
 }
 
 void CustomCursor::setActive(bool active)

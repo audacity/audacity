@@ -212,6 +212,18 @@ bool TracksViewStateModel::eventFilter(QObject* watched, QEvent* event)
             m_ctrlPressed = false;
             emit ctrlPressedChanged();
         }
+    } else if (event->type() == QEvent::ApplicationStateChange) {
+        if (qApp->applicationState() != Qt::ApplicationState::ApplicationActive) {
+            if (m_altPressed) {
+                m_altPressed = false;
+                emit altPressedChanged();
+            }
+
+            if (m_ctrlPressed) {
+                m_ctrlPressed = false;
+                emit ctrlPressedChanged();
+            }
+        }
     }
 
     return QObject::eventFilter(watched, event);

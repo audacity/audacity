@@ -203,7 +203,7 @@ Rectangle {
 
     CustomCursor {
         id: customCursor
-        active: customCursor.appActive && (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
+        active: (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
             || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
         source: {
             if (content.isBrush) {
@@ -217,14 +217,6 @@ Rectangle {
             return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
         }
         size: content.isIsolationMode || (!content.isBrush && content.isNearSample) ? 36 : 26
-
-        onAppActiveChanged: {
-            if (!customCursor.appActive) {
-                //NOTE! This will avoid the cursor to get stucked when we navigate out of the app
-                root.altPressed = false
-                root.ctrlPressed = false
-            }
-        }
     }
 
     Rectangle {
