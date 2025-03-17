@@ -264,6 +264,7 @@ WaveClip::WaveClip(
     mTrimRight = orig.mTrimRight;
     mRate = orig.mRate;
     mStretchToMatchProjectTempo = orig.mStretchToMatchProjectTempo;
+    mVersion = orig.mVersion + 1;
 
     // Deep copy of attachments
     Attachments& attachments = *this;
@@ -369,6 +370,11 @@ int64_t WaveClip::GetId() const
 void WaveClip::SetId(int64_t id)
 {
     mId = id;
+}
+
+int64_t WaveClip::GetVersion() const
+{
+    return mVersion;
 }
 
 double WaveClip::Start() const

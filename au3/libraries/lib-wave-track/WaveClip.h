@@ -276,7 +276,7 @@ public:
 
     using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
 
-    //! Cteate a new clip
+    //! Create a new clip
     /*!
      @param width how many sequences
      @pre `width > 0`
@@ -338,10 +338,12 @@ public:
             NewFromRange(orig, factory, copyCutlines, backup, t0, t1));
     }
 
-    virtual ~WaveClip();
+    ~WaveClip() override;
 
     int64_t GetId() const;
     void SetId(int64_t id);
+
+    int64_t GetVersion() const;
 
     // Satisfying WideChannelGroupInterval
     double Start() const override;
@@ -501,9 +503,9 @@ public:
     //! Same as `TrimRight`, but expressed as quarter notes
     void TrimQuarternotesFromRight(double quarters);
 
-    //! Sets the the left trimming to the absolute time (if that is in bounds)
+    //! Sets the left trimming to the absolute time (if that is in bounds)
     void TrimLeftTo(double to);
-    //! Sets the the right trimming to the absolute time (if that is in bounds)
+    //! Sets the right trimming to the absolute time (if that is in bounds)
     void TrimRightTo(double to);
 
     /*! @excsafety{No-fail} */
@@ -1014,6 +1016,7 @@ private:
     };
 
     int64_t mId = -1;
+    int64_t mVersion = -1;
 
     //! Real-time durations, i.e., stretching the clip modifies these.
     //! @{

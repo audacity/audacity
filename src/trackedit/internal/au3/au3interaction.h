@@ -4,7 +4,6 @@
 #pragma once
 
 #include "au3interactiontypes.h"
-#include "au3changedetection.h"
 
 #include "../../itrackeditinteraction.h"
 #include "../../iprojecthistory.h"

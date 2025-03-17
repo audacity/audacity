@@ -270,8 +270,8 @@ void Au3TrackeditProject::notifyAboutClipRemoved(const Clip& clip)
 
 void Au3TrackeditProject::notifyAboutClipAdded(const Clip& clip)
 {
-    async::ChangedNotifier<Clip>& notifer = m_clipsChanged[clip.key.trackId];
-    notifer.itemAdded(clip);
+    async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
+    notifier.itemAdded(clip);
 }
 
 au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const

@@ -905,7 +905,7 @@ bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
         LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack)); //! todo: replase with onClipChanged
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack)); //! todo: replace with onClipChanged
 
         pushProjectHistoryRenderClipStretchingState();
     });

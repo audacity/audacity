@@ -73,7 +73,7 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
         trackeditProjectPtr->notifyAboutClipAdded(clip);
     },
         [](const Clip& first, const Clip& second) {
-        return first.key == second.key;      // Here we're only interested in if the "id" exists.
+        return first.key.clipId == second.key.clipId; // Here we're only interested in if the "id" exists.
     }
         );
 
@@ -86,7 +86,7 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
         trackeditProjectPtr->notifyAboutClipRemoved(clip);
     },
         [](const Clip& first, const Clip& second) {
-        return first.key == second.key;      // Here we're only interested in if the "id" exists.
+        return first.key.clipId == second.key.clipId; // Here we're only interested in if the "id" exists.
     }
         );
 
@@ -98,7 +98,8 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
             return false;
         }
 
-        return first.groupId == second.groupId
+        return first.clipVersion == second.clipVersion
+               && first.groupId == second.groupId
                && first.startTime == second.startTime
                && first.endTime == second.endTime
                && first.stereo == second.stereo
@@ -147,21 +148,23 @@ void notifyOfUndoRedo(const TracksAndClips& before,
     };
 
     //! Checking for re-reorder. If detected, reload and return.
-    auto trackBefore = before.tracks.begin();
-    auto trackAfter = after.tracks.begin();
+    {
+        auto trackBefore = before.tracks.begin();
+        auto trackAfter = after.tracks.begin();
 
-    //! Not assuming they are of equal length,
-    //  since a reorder could have happened as part of a compound action.
-    while (trackBefore != before.tracks.end() &&
-           trackAfter != after.tracks.end()) {
-        if (trackBefore->id != trackAfter->id) {
-            //! Reorder found.
-            //  Reload and return.
-            trackeditProject->reload();
-            return;
+        //! Not assuming they are of equal length,
+        //  since a reorder could have happened as part of a compound action.
+        while (trackBefore != before.tracks.end()
+               && trackAfter != after.tracks.end()) {
+            if (trackBefore->id != trackAfter->id) {
+                //! Reorder found.
+                //  Reload and return.
+                trackeditProject->reload();
+                return;
+            }
+            ++trackBefore;
+            ++trackAfter;
         }
-        ++trackBefore;
-        ++trackAfter;
     }
 
     //! Checking for addition:
@@ -191,9 +194,9 @@ void notifyOfUndoRedo(const TracksAndClips& before,
         for (const Track& trackAfter : after.tracks) {
             if ((trackBefore.id == trackAfter.id)
                 && !trackComparison(trackBefore, trackAfter)) {
-            changed = true;
-            trackeditProject->trackChanged().send(trackBefore);
-                }
+                changed = true;
+                trackeditProject->trackChanged().send(trackBefore);
+            }
         }
     }
 

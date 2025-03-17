@@ -38,6 +38,8 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     au::trackedit::Clip clip;
     clip.key.trackId = waveTrack->GetId();
     clip.key.clipId = au3clip->GetId();
+    clip.clipVersion = au3clip->GetVersion();
+
     clip.title = wxToString(au3clip->GetName());
     clip.startTime = au3clip->GetPlayStartTime();
     clip.endTime = au3clip->GetPlayEndTime();

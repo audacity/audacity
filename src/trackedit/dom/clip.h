@@ -10,8 +10,12 @@
 #include "../trackedittypes.h"
 
 namespace au::trackedit {
+using ClipVersion = int64_t;
+
 struct Clip {
     ClipKey key;
+    ClipVersion clipVersion = -1;
+
     muse::String title;
     muse::draw::Color color;
     int groupId = -1;
