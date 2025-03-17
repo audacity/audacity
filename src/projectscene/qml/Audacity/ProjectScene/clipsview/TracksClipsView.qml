@@ -15,8 +15,9 @@ Rectangle {
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
     property bool tracksHovered: false
-    property bool altPressed: false
-    property bool ctrlPressed: false
+    property bool underSelection: false
+    property alias altPressed: tracksViewState.altPressed
+    property alias ctrlPressed: tracksViewState.ctrlPressed
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
@@ -118,25 +119,6 @@ Rectangle {
         Qt.callLater(tracksModel.load)
     }
 
-
-    Keys.onPressed: (event) => {
-        if (event.key === Qt.Key_Alt) {
-            root.altPressed = true
-        }
-        else if (event.key === Qt.Key_Control) {
-            root.ctrlPressed = true
-        }
-    }
-
-    Keys.onReleased: (event) => {
-        if (event.key === Qt.Key_Alt) {
-            root.altPressed = false
-        }
-        else if (event.key === Qt.Key_Control) {
-            root.ctrlPressed = false
-        }
-    }
-
     Rectangle {
         id: timelineIndent
         anchors.top: parent.top
@@ -221,7 +203,7 @@ Rectangle {
 
     CustomCursor {
         id: customCursor
-        active: (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
+        active: customCursor.appActive && (content.isIsolationMode || content.isBrush || content.isNearSample || content.leftTrimContainsMouse || content.rightTrimContainsMouse
             || content.leftTrimPressedButtons || content.rightTrimPressedButtons)
         source: {
             if (content.isBrush) {
@@ -235,6 +217,14 @@ Rectangle {
             return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
         }
         size: content.isIsolationMode || (!content.isBrush && content.isNearSample) ? 36 : 26
+
+        onAppActiveChanged: {
+            if (!customCursor.appActive) {
+                //NOTE! This will avoid the cursor to get stucked when we navigate out of the app
+                root.altPressed = false
+                root.ctrlPressed = false
+            }
+        }
     }
 
     Rectangle {

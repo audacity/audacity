@@ -28,6 +28,9 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(int trackHeight READ trackHeight NOTIFY trackHeightChanged FINAL)
     Q_PROPERTY(bool isTrackCollapsed READ isTrackCollapsed NOTIFY isTrackCollapsedChanged FINAL)
 
+    Q_PROPERTY(bool altPressed READ altPressed WRITE setAltPressed NOTIFY altPressedChanged FINAL)
+    Q_PROPERTY(bool ctrlPressed READ ctrlPressed WRITE setCtrlPressed NOTIFY ctrlPressedChanged FINAL)
+
     muse::Inject<context::IGlobalContext> globalContext;
 
 public:
@@ -37,6 +40,11 @@ public:
 
     // context of all tracks
     int tracksVericalY() const;
+    bool altPressed() const;
+    bool ctrlPressed() const;
+    void setAltPressed(bool altPressed);
+    void setCtrlPressed(bool ctrlPressed);
+
     Q_INVOKABLE void changeTracksVericalY(int deltaY);
     Q_INVOKABLE void setMouseY(double y);
 
@@ -57,6 +65,8 @@ signals:
     // context of all tracks
     void tracksVericalYChanged();
     void tracksVerticalScrollLockedChanged();
+    void altPressedChanged();
+    void ctrlPressedChanged();
 
     // context of track
     void trackIdChanged();
@@ -66,11 +76,15 @@ signals:
 private:
     static constexpr int m_tracksVerticalScrollPadding = 228;
 
+    bool eventFilter(QObject* watched, QEvent* event) override;
+
     IProjectViewStatePtr viewState() const;
 
     // context of all tracks
     muse::ValCh<int> m_tracksVericalY;
     muse::ValCh<bool> m_tracksVerticalScrollLocked;
+    bool m_altPressed = false;
+    bool m_ctrlPressed = false;
 
     // context of track
     trackedit::TrackId m_trackId = -1;

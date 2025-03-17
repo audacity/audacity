@@ -9,6 +9,7 @@ using namespace au::project;
 TracksViewStateModel::TracksViewStateModel(QObject* parent)
     : QObject(parent)
 {
+    qApp->installEventFilter(this);
 }
 
 IProjectViewStatePtr TracksViewStateModel::viewState() const
@@ -135,4 +136,83 @@ int TracksViewStateModel::trackHeight() const
 bool TracksViewStateModel::isTrackCollapsed() const
 {
     return m_isTrackCollapsed.val;
+}
+
+bool TracksViewStateModel::altPressed() const
+{
+    return m_altPressed;
+}
+
+bool TracksViewStateModel::ctrlPressed() const
+{
+    return m_ctrlPressed;
+}
+
+void TracksViewStateModel::setAltPressed(bool altPressed)
+{
+    if (m_altPressed == altPressed) {
+        return;
+    }
+    m_altPressed = altPressed;
+    emit altPressedChanged();
+}
+
+void TracksViewStateModel::setCtrlPressed(bool ctrlPressed)
+{
+    if (m_ctrlPressed == ctrlPressed) {
+        return;
+    }
+    m_ctrlPressed = ctrlPressed;
+    emit ctrlPressedChanged();
+}
+
+bool TracksViewStateModel::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        if (static_cast<QKeyEvent*>(event)->key() == 0 || static_cast<QKeyEvent*>(event)->key() == Qt::Key_unknown) {
+            return QObject::eventFilter(watched, event);
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt
+            && static_cast<QKeyEvent*>(event)->modifiers() == Qt::AltModifier) {
+            if (!m_altPressed) {
+                m_altPressed = true;
+                emit altPressedChanged();
+            }
+        } else if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Control
+                   && static_cast<QKeyEvent*>(event)->modifiers() == Qt::ControlModifier) {
+            if (!m_ctrlPressed) {
+                m_ctrlPressed = true;
+                emit ctrlPressedChanged();
+            }
+        } else {
+            // We only want to process single ALT and CTRL key presses
+            if (m_altPressed) {
+                m_altPressed = false;
+                emit altPressedChanged();
+            }
+
+            if (m_ctrlPressed) {
+                m_ctrlPressed = false;
+                emit ctrlPressedChanged();
+            }
+        }
+    } else if (event->type() == QEvent::KeyRelease) {
+        if (static_cast<QKeyEvent*>(event)->key() == 0 || static_cast<QKeyEvent*>(event)->key() == Qt::Key_unknown) {
+            return QObject::eventFilter(watched, event);
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt || (static_cast<QKeyEvent*>(event)->modifiers() & Qt::AltModifier)) {
+            m_altPressed = false;
+            emit altPressedChanged();
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Control
+            || (static_cast<QKeyEvent*>(event)->modifiers() & Qt::ControlModifier)) {
+            m_ctrlPressed = false;
+            emit ctrlPressedChanged();
+        }
+    }
+
+    return QObject::eventFilter(watched, event);
 }
