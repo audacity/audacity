@@ -76,8 +76,8 @@ std::vector<QPoint> interpolatePoints(const QPoint& previousPosition, const QPoi
 
     container.reserve(std::abs(previousPosition.x() - finalPosition.x()));
 
-    // We do a simple linear interpolation if the move more than 1 pixel to avoid missing point due mouse fast movement
-    if (std::abs(previousPosition.x() - finalPosition.x()) > 1) {
+    // We do a simple linear interpolation to handle fast mouse movements
+    if (previousPosition.x() != finalPosition.x()) {
         const auto xdiff = std::abs(finalPosition.x() - previousPosition.x());
         const auto ydiff = finalPosition.y() - previousPosition.y();
         const auto rate = static_cast<double>(ydiff) / xdiff;
