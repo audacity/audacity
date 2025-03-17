@@ -135,6 +135,10 @@ Rectangle {
         }
     }
 
+    function updateWave() {
+        waveView.update()
+    }
+
     ClipContextMenuModel {
         id: singleClipContextMenuModel
         clipKey: root.clipKey

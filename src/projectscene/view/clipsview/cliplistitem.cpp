@@ -19,6 +19,7 @@ void ClipListItem::setClip(const trackedit::Clip& clip)
     emit speedPercentageChanged();
     emit colorChanged();
     emit groupIdChanged();
+    emit waveChanged();
 }
 
 const au::trackedit::Clip& ClipListItem::clip() const

@@ -402,6 +402,13 @@ Item {
                 onSpeedResetRequested: {
                     Qt.callLater(clipsModel.resetClipSpeed, clipItem.key)
                 }
+
+                Connections {
+                    target: clipItem
+                    function onWaveChanged() {
+                        updateWave()
+                    }
+                }
             }
         }
     }

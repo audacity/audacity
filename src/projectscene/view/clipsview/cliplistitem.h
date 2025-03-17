@@ -80,6 +80,7 @@ signals:
     void selectedChanged();
     void pitchChanged();
     void speedPercentageChanged();
+    void waveChanged();
 
 private:
     trackedit::Clip m_clip;
