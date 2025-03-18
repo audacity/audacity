@@ -353,6 +353,8 @@ WaveClip::WaveClip(
             WaveClip::NewSharedFrom(*cutline, factory, true, backup));
     }
 
+    mVersion = orig.mVersion + 1;
+
     assert(NChannels() == orig.NChannels());
     assert(CheckInvariants());
 }

@@ -453,6 +453,25 @@ TEST_F(ChangeDetectionTests, TestClipNotificationChangeGroup)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
+TEST_F(ChangeDetectionTests, TestClipNotificationChangeVersion)
+{
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
+
+    after.clips.back().back().clipVersion++;
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
 ////////////////////////////////////////////////
 /// Compound changes:
 ////////////////////////////////////////////////
