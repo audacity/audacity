@@ -34,6 +34,7 @@ void SelectionViewController::onPressed(double x, double y)
         selectionController()->setSelectionStartTime(m_context->positionToTime(m_startPoint.x()));
     }
     emit selectionStarted();
+    emit selectionInProgressChanged();
     resetDataSelection();
 
     TrackIdList tracks;
@@ -131,6 +132,7 @@ void SelectionViewController::onReleased(double x, double y)
 
     // point
     emit selectionEnded(m_startPoint, QPointF(x, y));
+    emit selectionInProgressChanged();
 
     double x1 = m_startPoint.x();
     double x2 = x;
@@ -179,6 +181,8 @@ void SelectionViewController::onSelectionDraged(double x1, double x2, bool compl
     }
 
     setSelection(x1, x2, completed);
+    m_selectionEditInProgress = !completed;
+    emit selectionEditInProgressChanged();
 }
 
 void SelectionViewController::selectTrackAudioData(double y)
@@ -277,6 +281,16 @@ void SelectionViewController::setTimelineContext(TimelineContext* newContext)
 bool SelectionViewController::selectionActive() const
 {
     return m_selectionActive;
+}
+
+bool SelectionViewController::selectionEditInProgress() const
+{
+    return m_selectionEditInProgress;
+}
+
+bool SelectionViewController::selectionInProgress() const
+{
+    return m_selectionStarted;
 }
 
 void SelectionViewController::setSelectionActive(bool newSelectionActive)

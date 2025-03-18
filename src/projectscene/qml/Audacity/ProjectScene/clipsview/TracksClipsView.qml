@@ -15,7 +15,6 @@ Rectangle {
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
     property bool tracksHovered: false
-    property bool underSelection: false
     property bool altPressed: false
     property bool ctrlPressed: false
 
@@ -97,14 +96,6 @@ Rectangle {
     SelectionViewController {
         id: selectionController
         context: timeline.context
-
-        onSelectionStarted: {
-            underSelection = true
-        }
-
-        onSelectionEnded: {
-            underSelection = false
-        }
     }
 
     Component.onCompleted: {
@@ -274,6 +265,7 @@ Rectangle {
 
             preventStealing: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton
+            cursorShape: Qt.IBeamCursor
 
             hoverEnabled: true
 
@@ -475,9 +467,10 @@ Rectangle {
                     isMultiSelectionActive: model.isMultiSelectionActive
                     isTrackAudible: model.isTrackAudible
                     moveActive: tracksClipsView.moveActive
-                    underSelection: root.underSelection
                     altPressed: root.altPressed
                     ctrlPressed: root.ctrlPressed
+                    selectionEditInProgress: selectionController.selectionEditInProgress
+                    selectionInProgress: selectionController.selectionInProgress
 
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack
@@ -536,53 +529,44 @@ Rectangle {
 
                     onIsBrushChanged: function() {
                         content.isBrush = tracksClipsView.checkIfAnyTrack(function(track) {
-                            return track.isBrush
+                            return track && track.isBrush
                         })
                     }
 
                     onIsIsolationModeChanged: function() {
                         content.isIsolationMode = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.isIsolationMode
+                            return track && track.isIsolationMode
                         })
                     }
 
                     onIsNearSampleChanged: function() {
                         content.isNearSample = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.isNearSample
+                            return track &&track.isNearSample
                         })
                     }
 
                     onLeftTrimContainsMouseChanged: function() {
                         content.leftTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.leftTrimContainsMouse
+                            return track && track.leftTrimContainsMouse
                         })
                     }
 
                     onRightTrimContainsMouseChanged: function() {
                         content.rightTrimContainsMouse = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.rightTrimContainsMouse
+                            return track && track.rightTrimContainsMouse
                         })
                     }
 
                     onLeftTrimPressedButtonsChanged: function() {
                         content.leftTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.leftTrimPressedButtons
+                            return track && track.leftTrimPressedButtons
                         })
                     }
 
                     onRightTrimPressedButtonsChanged: function() {
                         content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
-                            return track.rightTrimPressedButtons
+                            return track && track.rightTrimPressedButtons
                         })
-                    }
-                }
-
-                HoverHandler {
-                    property bool isNeedSelectionCursor: !selectionController.selectionActive
-                    cursorShape: isNeedSelectionCursor ? Qt.IBeamCursor : Qt.ArrowCursor
-
-                    onHoveredChanged: {
-                        root.tracksHovered = hovered
                     }
                 }
             }
