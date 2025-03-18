@@ -137,17 +137,11 @@ void notifyOfUndoRedo(const TracksAndClips& before,
 {
     bool changed = false;
 
-    auto trackComparison = [](const Track& first, const Track& second) {
+    auto trackIdCheck = [](const Track& first, const Track& second) {
         return first.id == second.id;
-        //! For now these do not result in "autosave",
-        //  and so should not be criteria under undo/redo.
-        //  This might change in future AU4 versions.
-        // first.title == second.title &&
-        // first.type == second.type &&
-        // first.color == second.color;
     };
 
-    //! Checking for re-reorder. If detected, reload and return.
+    //! Checking for Track reorder. If detected, reload and return.
     {
         auto trackBefore = before.tracks.begin();
         auto trackAfter = after.tracks.begin();
@@ -167,7 +161,7 @@ void notifyOfUndoRedo(const TracksAndClips& before,
         }
     }
 
-    //! Checking for addition:
+    //! Checking for Track addition:
     notifier<Track>(
         before.tracks,
         after.tracks,
@@ -175,10 +169,10 @@ void notifyOfUndoRedo(const TracksAndClips& before,
         changed = true;
         trackeditProject->trackInserted().send(track, index);
     },
-        trackComparison
+        trackIdCheck
         );
 
-    //! Checking for removal:
+    //! Checking for Track removal:
     notifier<Track>(
         after.tracks,
         before.tracks,
@@ -186,21 +180,33 @@ void notifyOfUndoRedo(const TracksAndClips& before,
         changed = true;
         trackeditProject->trackRemoved().send(track);
     },
-        trackComparison
+        trackIdCheck
         );
 
-    //! Checking for field change - brute force I'm afraid:
-    for (const Track& trackBefore : before.tracks) {
-        for (const Track& trackAfter : after.tracks) {
-            if ((trackBefore.id == trackAfter.id)
-                && !trackComparison(trackBefore, trackAfter)) {
-                changed = true;
-                trackeditProject->trackChanged().send(trackBefore);
+    //! Checking for Track field change - brute force I'm afraid:
+    {
+        auto trackFieldComparison = [](const Track& first, const Track& second) {
+            return first.type == second.type;
+
+            //! For now these do not result in "autosave",
+            //  and so should not be criteria under undo/redo.
+            //  This might change in future AU4 versions.
+            // first.title == second.title &&
+            // first.color == second.color;
+        };
+
+        for (const Track& trackBefore : before.tracks) {
+            for (const Track& trackAfter : after.tracks) {
+                if ((trackBefore.id == trackAfter.id)
+                    && !trackFieldComparison(trackBefore, trackAfter)) {
+                    changed = true;
+                    trackeditProject->trackChanged().send(trackAfter);
+                }
             }
         }
     }
 
-    //! Clips.
+    //! Now checking for changes in Clips lists.
     clipsMatcher(after.tracks,
                  before.tracks,
                  [&](int i, int j) {
@@ -211,10 +217,10 @@ void notifyOfUndoRedo(const TracksAndClips& before,
     }
                  );
 
+    //! Despite Undo-Redo being called, if this fails no change was detected.
+    //  Reload everything to be sure - slow,
+    //  but better than leaving the UI in an invalid state.
     if (!changed) {
-        //! Despite Undo-Redo being called, no change was detected.
-        //  Reload everything to be sure - slow, but better than leaving the UI
-        //  in an invalid state.
         trackeditProject->reload();
 
         //! And log. This means there are undetected changes,

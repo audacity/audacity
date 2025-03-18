@@ -40,8 +40,13 @@ TrackItem::~TrackItem()
 void TrackItem::init(const trackedit::Track& track)
 {
     m_trackId = track.id;
-    m_trackType = track.type;
     m_title = track.title;
+
+    if (m_trackType != track.type) {
+        m_trackType = track.type;
+        emit channelCountChanged();
+    }
+
     const auto ctrl = trackPlaybackControl();
     if (m_trackType != trackedit::TrackType::Label) {
         m_outParams.volume = ctrl->volume(m_trackId);

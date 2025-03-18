@@ -1016,7 +1016,7 @@ private:
     };
 
     int64_t mId = -1;
-    int64_t mVersion = 0;
+    const int64_t mVersion = 0;
 
     //! Real-time durations, i.e., stretching the clip modifies these.
     //! @{

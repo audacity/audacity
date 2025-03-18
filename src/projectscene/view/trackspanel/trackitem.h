@@ -24,7 +24,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(QVariant trackId READ trackId_property CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(int channelCount READ channelCount CONSTANT)
+    Q_PROPERTY(int channelCount READ channelCount NOTIFY channelCountChanged)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
@@ -40,7 +40,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:
-    TrackItem(QObject* parent = nullptr);
+    explicit TrackItem(QObject* parent = nullptr);
 
     ~TrackItem() override;
 
@@ -95,6 +95,7 @@ signals:
     void balanceChanged(int balance);
     void soloChanged();
     void mutedChanged();
+    void channelCountChanged();
 
     void outputParamsChanged(const audio::AudioOutputParams& params);
 
@@ -109,11 +110,6 @@ signals:
 protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
-
-    void applyMuteToOutputParams(const bool isMuted);
-
-    void addBlankSlots(size_t count);
-    void removeBlankSlotsFromEnd(size_t count);
 
     // muse::audio::AudioSignalChanges m_audioSignalChanges;
     audio::AudioOutputParams m_outParams;

@@ -249,14 +249,19 @@ ListItemBlank {
             topPadding: 5
 
             spacing: 2
-            Repeater {
-                id: volumePressureMeters
-                model: root.item.channelCount
-                VolumePressureMeter {
-                    height: root.height
-                    currentVolumePressure: index === 0 ? root.item.leftChannelPressure :
-                                                         root.item.rightChannelPressure
-                }
+                // id: volumePressureMeters
+
+            VolumePressureMeter {
+                id: leftOrMonoVolumePressureMeter
+                height: root.height
+                currentVolumePressure: root.item.leftChannelPressure
+            }
+
+            VolumePressureMeter {
+                id: rightVolumePressureMeter
+                visible: root.item.channelCount === 2
+                height: root.height
+                currentVolumePressure: root.item.rightChannelPressure
             }
 
             states: [
@@ -268,7 +273,7 @@ ListItemBlank {
                         leftPadding: 8
                     }
                     PropertyChanges {
-                        target: volumePressureMeters.itemAt(0)
+                        target: leftOrMonoVolumePressureMeter
                         indicatorWidth: 8
                     }
                 },
@@ -280,11 +285,11 @@ ListItemBlank {
                         leftPadding: 4
                     }
                     PropertyChanges {
-                        target: volumePressureMeters.itemAt(0)
+                        target: leftOrMonoVolumePressureMeter
                         indicatorWidth: 7
                     }
                     PropertyChanges {
-                        target: volumePressureMeters.itemAt(1)
+                        target: rightVolumePressureMeter
                         indicatorWidth: 7
                     }
                 }

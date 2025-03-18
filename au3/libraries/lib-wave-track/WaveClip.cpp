@@ -253,6 +253,7 @@ WaveClip::WaveClip(
     , mClipStretchRatio{orig.mClipStretchRatio}
     , mRawAudioTempo{orig.mRawAudioTempo}
     , mClipTempo{orig.mClipTempo}
+    , mVersion{orig.mVersion + 1}
 {
     // essentially a copy constructor - but you must pass in the
     // current sample block factory, because we might be copying
@@ -264,7 +265,6 @@ WaveClip::WaveClip(
     mTrimRight = orig.mTrimRight;
     mRate = orig.mRate;
     mStretchToMatchProjectTempo = orig.mStretchToMatchProjectTempo;
-    mVersion = orig.mVersion + 1;
 
     // Deep copy of attachments
     Attachments& attachments = *this;
@@ -303,6 +303,7 @@ WaveClip::WaveClip(
     , mClipStretchRatio{orig.mClipStretchRatio}
     , mRawAudioTempo{orig.mRawAudioTempo}
     , mClipTempo{orig.mClipTempo}
+    , mVersion{orig.mVersion + 1}
 {
     assert(orig.CountSamples(t0, t1) > 0);
 
@@ -352,8 +353,6 @@ WaveClip::WaveClip(
         mCutLines.push_back(
             WaveClip::NewSharedFrom(*cutline, factory, true, backup));
     }
-
-    mVersion = orig.mVersion + 1;
 
     assert(NChannels() == orig.NChannels());
     assert(CheckInvariants());

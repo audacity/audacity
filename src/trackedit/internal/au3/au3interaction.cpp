@@ -945,10 +945,9 @@ bool Au3Interaction::clipTransferNeedsDownmixing(const std::vector<TrackData>& s
 namespace {
 void notifyAboutTrackToggledStereo(au::trackedit::ITrackeditProject& prj, const Au3TrackList& trackList, const Au3WaveTrack& track)
 {
-    // Here as well, need these two so as to also get the track header repainted.
-    // TODO do something about this.
-    prj.notifyAboutTrackRemoved(DomConverter::track(&track));
-    prj.notifyAboutTrackInserted(DomConverter::track(&track), utils::getTrackIndex(trackList, track));
+    // prj.notifyAboutTrackRemoved(DomConverter::track(&track));
+    // prj.notifyAboutTrackInserted(DomConverter::track(&track), utils::getTrackIndex(trackList, track));
+    prj.trackChanged().send(DomConverter::track(&track));
 }
 }
 
