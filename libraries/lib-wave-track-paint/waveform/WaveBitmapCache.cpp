@@ -62,8 +62,8 @@ struct Triplet final
 struct Band final
 {
    Triplet color;
-   uint32_t from;
-   uint32_t to;
+   int from;
+   int to;
 };
 
 struct ColorFunction final
@@ -71,7 +71,7 @@ struct ColorFunction final
    std::array<Band, ColorFunctionBands> bands;
    size_t bandsCount { 0 };
 
-   Triplet GetColor(uint32_t row, Triplet defaultColor) const noexcept
+   Triplet GetColor(int row, Triplet defaultColor) const noexcept
    {
       // Later bands are the topmost
       for (size_t i = bandsCount; i > 0; --i)
@@ -83,7 +83,7 @@ struct ColorFunction final
       return defaultColor;
    }
 
-   void AddBand(graphics::Color color, uint32_t from, uint32_t to)
+   void AddBand(graphics::Color color, int from, int to)
    {
       assert(bandsCount < bands.size());
       assert(from <= to);
@@ -227,8 +227,8 @@ struct WaveBitmapCache::LookupHelper final
             continue;
          }
 
-         const auto maxSampleRow = std::clamp(GetRowFromValue(columnData.max), globalMaxRow, globalMinRow);
-         const auto minSampleRow = std::clamp(GetRowFromValue(columnData.min), globalMaxRow, globalMinRow);
+         const auto maxSampleRow = GetRowFromValue(columnData.max);
+         const auto minSampleRow = GetRowFromValue(columnData.min);
 
          function.AddBand(selected ? backgroundColors.Selected : backgroundColors.Normal, globalMaxRow, globalMinRow);
 
@@ -375,11 +375,11 @@ bool WaveBitmapCache::InitializeElement(
 
    const auto defaultColor = Triplet(mPaintParameters.BlankColor);
 
-   const auto height = static_cast<uint32_t>(mPaintParameters.Height);
+   const auto height = static_cast<int>(mPaintParameters.Height);
 
    auto rowData = element.Allocate(columnsCount, height);
 
-   for (uint32_t row = 0; row < height; ++row)
+   for (int row = 0; row < height; ++row)
    {
       auto colorFunction = mLookupHelper->ColorFunctions.data();
 
