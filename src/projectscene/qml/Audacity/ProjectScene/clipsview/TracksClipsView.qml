@@ -15,7 +15,6 @@ Rectangle {
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
     property bool tracksHovered: false
-    property bool underSelection: false
     property alias altPressed: tracksViewState.altPressed
     property alias ctrlPressed: tracksViewState.ctrlPressed
 
