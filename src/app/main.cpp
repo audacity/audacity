@@ -63,6 +63,8 @@
 #endif
 #ifdef AU_MODULE_EFFECTS_VST
 #include "effects/vst/vsteffectsmodule.h"
+#else
+#include "stubs/vst/vsteffectsstubmodule.h"
 #endif
 #include "effects/nyquist/nyquisteffectsmodule.h"
 #include "importexport/import/importermodule.h"
@@ -160,6 +162,8 @@ int main(int argc, char** argv)
 #endif
 #ifdef AU_MODULE_EFFECTS_VST
     app.addModule(new au::effects::VstEffectsModule());
+#else
+    app.addModule(new au::effects::VstEffectsStubModule());
 #endif
     app.addModule(new au::effects::NyquistEffectsModule());
     app.addModule(new au::importexport::ImporterModule());

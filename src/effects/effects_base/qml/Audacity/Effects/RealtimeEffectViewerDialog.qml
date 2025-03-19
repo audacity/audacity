@@ -8,6 +8,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.Vst
 
 StyledDialogViewWithoutNavigationSection {
     id: root
