@@ -43,16 +43,35 @@ void TracksViewStateModel::init()
     if (m_trackId != -1) {
         m_trackHeight = vs->trackHeight(m_trackId);
         m_trackHeight.ch.onReceive(this, [this](int h) {
+            if (m_trackHeight.val == h) {
+                return;
+            }
             m_trackHeight.val = h;
             emit trackHeightChanged();
         });
 
         m_isTrackCollapsed = vs->isTrackCollapsed(m_trackId);
         m_isTrackCollapsed.ch.onReceive(this, [this](bool v) {
+            if (m_isTrackCollapsed.val == v) {
+                return;
+            }
+
             m_isTrackCollapsed.val = v;
             emit isTrackCollapsedChanged();
         });
     }
+
+    m_altPressed = vs->altPressed();
+    m_altPressed.ch.onReceive(this, [this](bool v) {
+        m_altPressed.val = v;
+        emit altPressedChanged();
+    });
+
+    m_ctrlPressed = vs->ctrlPressed();
+    m_ctrlPressed.ch.onReceive(this, [this](bool v) {
+        m_ctrlPressed.val = v;
+        emit ctrlPressedChanged();
+    });
 }
 
 void TracksViewStateModel::changeTrackHeight(int deltaY)
@@ -135,4 +154,14 @@ int TracksViewStateModel::trackHeight() const
 bool TracksViewStateModel::isTrackCollapsed() const
 {
     return m_isTrackCollapsed.val;
+}
+
+bool TracksViewStateModel::altPressed() const
+{
+    return m_altPressed.val;
+}
+
+bool TracksViewStateModel::ctrlPressed() const
+{
+    return m_ctrlPressed.val;
 }

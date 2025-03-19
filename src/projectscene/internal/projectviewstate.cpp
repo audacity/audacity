@@ -12,6 +12,7 @@ constexpr int COLLAPSE_HEIGHT = 72;
 ProjectViewState::ProjectViewState()
 {
     configuration()->setIsEffectsPanelVisible(false);
+    qApp->installEventFilter(this);
 }
 
 muse::ValCh<int> ProjectViewState::tracksVericalY() const
@@ -191,4 +192,69 @@ void ProjectViewState::setClipEditEndTimeOffset(double val)
 double ProjectViewState::clipEditEndTimeOffset()
 {
     return m_clipEditEndTimeOffset;
+}
+
+muse::ValCh<bool> ProjectViewState::altPressed() const
+{
+    return m_altPressed;
+}
+
+muse::ValCh<bool> ProjectViewState::ctrlPressed() const
+{
+    return m_ctrlPressed;
+}
+
+bool ProjectViewState::eventFilter(QObject* watched, QEvent* event)
+{
+    if (event->type() == QEvent::KeyPress) {
+        if (static_cast<QKeyEvent*>(event)->key() == 0 || static_cast<QKeyEvent*>(event)->key() == Qt::Key_unknown) {
+            return QObject::eventFilter(watched, event);
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt
+            && static_cast<QKeyEvent*>(event)->modifiers() == Qt::AltModifier) {
+            if (!m_altPressed.val) {
+                m_altPressed.set(true);
+            }
+        } else if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Control
+                   && static_cast<QKeyEvent*>(event)->modifiers() == Qt::ControlModifier) {
+            if (!m_ctrlPressed.val) {
+                m_ctrlPressed.set(true);
+            }
+        } else {
+            // We only want to process single ALT and CTRL key presses
+            if (m_altPressed.val) {
+                m_altPressed.set(false);
+            }
+
+            if (m_ctrlPressed.val) {
+                m_ctrlPressed.set(false);
+            }
+        }
+    } else if (event->type() == QEvent::KeyRelease) {
+        if (static_cast<QKeyEvent*>(event)->key() == 0 || static_cast<QKeyEvent*>(event)->key() == Qt::Key_unknown) {
+            return QObject::eventFilter(watched, event);
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Alt || (static_cast<QKeyEvent*>(event)->modifiers() & Qt::AltModifier)) {
+            m_altPressed.set(false);
+        }
+
+        if (static_cast<QKeyEvent*>(event)->key() == Qt::Key_Control
+            || (static_cast<QKeyEvent*>(event)->modifiers() & Qt::ControlModifier)) {
+            m_ctrlPressed.set(false);
+        }
+    } else if (event->type() == QEvent::ApplicationStateChange) {
+        if (qApp->applicationState() != Qt::ApplicationState::ApplicationActive) {
+            if (m_altPressed.val) {
+                m_altPressed.set(false);
+            }
+
+            if (m_ctrlPressed.val) {
+                m_ctrlPressed.set(false);
+            }
+        }
+    }
+
+    return QObject::eventFilter(watched, event);
 }

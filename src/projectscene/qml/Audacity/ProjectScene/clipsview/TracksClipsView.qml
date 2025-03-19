@@ -15,8 +15,8 @@ Rectangle {
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
     property bool tracksHovered: false
-    property bool altPressed: false
-    property bool ctrlPressed: false
+    property alias altPressed: tracksViewState.altPressed
+    property alias ctrlPressed: tracksViewState.ctrlPressed
 
     readonly property string pencilShape: ":/images/customCursorShapes/Pencil.png"
     readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
@@ -116,25 +116,6 @@ Rectangle {
         // Let's make sure that everything is loaded and initialized before this,
         // to avoid double loading at the beginning, when some parameters are initialized.
         Qt.callLater(tracksModel.load)
-    }
-
-
-    Keys.onPressed: (event) => {
-        if (event.key === Qt.Key_Alt) {
-            root.altPressed = true
-        }
-        else if (event.key === Qt.Key_Control) {
-            root.ctrlPressed = true
-        }
-    }
-
-    Keys.onReleased: (event) => {
-        if (event.key === Qt.Key_Alt) {
-            root.altPressed = false
-        }
-        else if (event.key === Qt.Key_Control) {
-            root.ctrlPressed = false
-        }
     }
 
     Rectangle {
