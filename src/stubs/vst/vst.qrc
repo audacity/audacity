@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Audacity/Vst/qmldir</file>
+        <file>qml/Audacity/Vst/VstViewerStub.qml</file>
+    </qresource>
+</RCC>

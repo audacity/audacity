@@ -86,6 +86,7 @@ set(LINK_LIB
     appshell
     au3wrap
     context
+    effects_vst
     project
     projectscene
     audio
@@ -98,7 +99,7 @@ set(LINK_LIB
 )
 
 if (AU_MODULE_EFFECTS_VST)
-    list(APPEND LINK_LIB effects_vst muse::vst)
+    list(APPEND LINK_LIB muse::vst)
     add_definitions(-DAU_MODULE_EFFECTS_VST)
 endif()
 
