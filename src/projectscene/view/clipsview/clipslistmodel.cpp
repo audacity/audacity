@@ -547,8 +547,13 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
         return false;
     }
 
-    auto vs = globalContext()->currentProject()->viewState();
-    if (!vs) {
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
+    IF_ASSERT_FAILED(vs) {
         return false;
     }
 
@@ -575,8 +580,13 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    auto vs = globalContext()->currentProject()->viewState();
-    if (!vs) {
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
+    IF_ASSERT_FAILED(vs) {
         return false;
     }
 
