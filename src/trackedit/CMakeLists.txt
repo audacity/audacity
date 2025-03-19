@@ -16,6 +16,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditclipboard.h
     ${CMAKE_CURRENT_LIST_DIR}/trackediterrors.h
+    ${CMAKE_CURRENT_LIST_DIR}/trackeditutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/trackeditutils.h
 
     ${CMAKE_CURRENT_LIST_DIR}/dom/track.h
     ${CMAKE_CURRENT_LIST_DIR}/dom/clip.cpp

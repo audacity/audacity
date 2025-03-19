@@ -46,7 +46,5 @@ au::trackedit::TrackListInfo getTrackListInfo(const au3::Au3TrackList& tracks);
 
 bool clipIdSetsAreEqual(const au3::Au3WaveTrack& track1, const au3::Au3WaveTrack& track2);
 
-std::vector<const Clip*> clipSetDifference(const Clips& set1, const Clips& set2);
-
 muse::Ret withProgress(muse::IInteractive& interactive, const std::string& title, const std::function<bool(ProgressCb, CancelCb)>& action);
 }

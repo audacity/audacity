@@ -291,6 +291,7 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
                 track, TrackList::DoAssignId::Yes,
                 TrackList::EventPublicationSynchrony::Synchronous);
             newTrack->SetSelected(true);
+            globalContext()->currentTrackeditProject()->notifyAboutTrackAdded(au3::DomConverter::track(newTrack));
         }
     }
 
@@ -347,13 +348,11 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
     //! ============================================================================
 
     {
-        if (success) {
-            if (newTrack) {
-                const auto trackeditProject = globalContext()->currentTrackeditProject();
-                trackeditProject->notifyAboutTrackAdded(au3::DomConverter::track(*effect->mTracks->rbegin()));
-            }
-        } else if (newTrack) {
+        if (!success && newTrack) {
+            const auto au4Track = au3::DomConverter::track(newTrack);
+            // This decreases the reference count of the track, so it may be deleted.
             effect->mTracks->Remove(*newTrack);
+            globalContext()->currentTrackeditProject()->notifyAboutTrackRemoved(au4Track);
         }
     }
 
