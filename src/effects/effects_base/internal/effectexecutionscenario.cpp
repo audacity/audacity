@@ -22,6 +22,7 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "trackedit/trackeditutils.h"
 
 #include "../effecterrors.h"
 
@@ -250,7 +251,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     // common things used below
     Ret success;
     if (numSelectedClips == 0) {
-        success = performEffectOnTimeSelection(project, *effect, pInstanceEx, *settings);
+        success = performGenerator(project, *effect, pInstanceEx, *settings);
     } else if (numSelectedClips == 1) {
         performEffectOnSingleClip(project, *effect, pInstanceEx, *settings, selectedClips.front().trackId, success);
     } else {
@@ -261,21 +262,10 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! NOTE Step 7 - cleanup
     //! ============================================================================
 
-    {
-        //! NOTE Step 7.1 - cleanup effect
-        // Don't hold a dangling pointer when done
-        effect->SetTracks(nullptr);
-        effect->mPresetNames.clear();
-        effect->mUIFlags = oldFlags;
-
-        //! NOTE Step 7.2 - update selected region after process
-
-        //! Generators, and even some processors (e.g. tempo change), need an update of the selection.
-        if (success && numSelectedClips == 0 && (effect->mT1 >= effect->mT0)) {
-            selectionController()->setDataSelectedStartTime(effect->mT0, true);
-            selectionController()->setDataSelectedEndTime(effect->mT1, true);
-        }
-    }
+    // Don't hold a dangling pointer when done
+    effect->SetTracks(nullptr);
+    effect->mPresetNames.clear();
+    effect->mUIFlags = oldFlags;
 
     //! NOTE break if not success
     if (!success) {
@@ -321,11 +311,41 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     return true;
 }
 
-muse::Ret EffectExecutionScenario::performEffectOnTimeSelection(au3::Au3Project& project, Effect& effect,
-                                                                const std::shared_ptr<EffectInstanceEx>& instance,
-                                                                EffectSettings& settings)
+namespace {
+auto getAllClips(const au::trackedit::ITrackeditProject& prj)
 {
-    return effectsProvider()->performEffect(project, &effect, instance, settings);
+    const auto tracks = prj.trackIdList();
+    au::trackedit::Clips clips;
+    for (const auto& trackId : tracks) {
+        const auto trackClips = prj.clipList(trackId);
+        clips.insert(clips.end(), trackClips.begin(), trackClips.end());
+    }
+    return clips;
+}
+}
+
+muse::Ret EffectExecutionScenario::performGenerator(au3::Au3Project& project, Effect& effect,
+                                                    const std::shared_ptr<EffectInstanceEx>& instance,
+                                                    EffectSettings& settings)
+{
+    const auto prj = globalContext()->currentTrackeditProject();
+    const auto clipsBefore = getAllClips(*prj);
+
+    const auto ret = effectsProvider()->performEffect(project, &effect, instance, settings);
+
+    if (ret) {
+        const auto clipsAfter = getAllClips(*prj);
+        const std::vector<const au::trackedit::Clip*> newClips = trackedit::utils::clipSetDifference(clipsAfter, clipsBefore);
+        if (!newClips.empty()) {
+            trackedit::ClipKeyList newClipsKeys;
+            std::transform(newClips.begin(), newClips.end(), std::back_inserter(newClipsKeys),
+                           [](const auto clip) { return clip->key; });
+            selectionController()->resetDataSelection();
+            selectionController()->setSelectedClips(newClipsKeys, true);
+        }
+    }
+
+    return ret;
 }
 
 std::optional<au::trackedit::ClipId> EffectExecutionScenario::performEffectOnSingleClip(au3::Au3Project& project, Effect& effect,

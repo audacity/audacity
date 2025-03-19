@@ -24,6 +24,7 @@
 #include "au3wrap/au3types.h"
 
 #include "trackedit/dom/track.h"
+#include "trackedit/trackeditutils.h"
 
 #include "defer.h"
 #include "log.h"
