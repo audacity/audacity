@@ -33,9 +33,6 @@
 using namespace muse;
 using namespace au::effects;
 
-static const char16_t* REALTIME_VIEWER_URI
-    = u"audacity://effects/realtime_viewer?type=%1&instanceId=%2&effectState=%3&sync=false&modal=false&floating=true";
-
 bool EffectsProvider::isVstSupported() const
 {
     return vstEffectsRepository() ? true : false;
@@ -164,28 +161,47 @@ Effect* EffectsProvider::effect(const EffectId& effectId) const
     return effect;
 }
 
-muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInstanceId& instanceId)
+namespace {
+IEffectViewLauncherPtr getLauncher(const EffectId& effectId, const IEffectViewLaunchRegister& launchRegister)
 {
-    LOGD() << "try open effect: " << effectId << ", instanceId: " << instanceId;
-
     PluginID pluginID = effectId.toStdString();
     const PluginDescriptor* plug = PluginManager::Get().GetPlugin(pluginID);
     if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
         LOGE() << "plugin not available, effectId: " << effectId;
-        return muse::make_ret(muse::Ret::Code::UnknownError);
+        return {};
     }
 
-    std::string family = au3::wxToStdSting(plug->GetEffectFamily());
-
-    LOGD() << "effect family: " << family;
-
-    IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(family);
+    const auto family = au::au3::wxToStdSting(plug->GetEffectFamily());
+    const auto launcher = launchRegister.launcher(family);
     IF_ASSERT_FAILED(launcher) {
         LOGE() << "not found launcher for family:" << family;
+        return {};
+    }
+    return launcher;
+}
+
+void callOnLauncher(const RealtimeEffectStatePtr& state, const IEffectViewLaunchRegister& launchRegister,
+                    std::function<void(const IEffectViewLauncher&, const RealtimeEffectStatePtr&)> func)
+{
+    IF_ASSERT_FAILED(state) {
+        return;
+    }
+    if (const auto launcher = getLauncher(au::au3::wxToString(state->GetID()), launchRegister)) {
+        func(*launcher, state);
+    }
+}
+}
+
+muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInstanceId& instanceId)
+{
+    LOGD() << "try open effect: " << effectId << ", instanceId: " << instanceId;
+
+    const auto launcher = getLauncher(effectId, *viewLaunchRegister());
+    if (!launcher) {
         return muse::make_ret(muse::Ret::Code::NotSupported);
     }
 
-    Ret ret = launcher->showEffect(effectId, instanceId);
+    Ret ret = launcher->showEffect(instanceId);
 
     LOGD() << "open ret: " << ret.toString();
     return ret;
@@ -193,82 +209,23 @@ muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInst
 
 void EffectsProvider::showEffect(const RealtimeEffectStatePtr& state) const
 {
-    IF_ASSERT_FAILED(state) {
-        return;
-    }
-    const auto effectId = state->GetID().ToStdString();
-    const auto type = muse::String::fromStdString(effectSymbol(effectId));
-    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
-    if (!instance) {
-        LOGW() << "Could not get instance for " << effectId;
-        return;
-    }
-    const auto instanceId = instance->id();
-
-    const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
-
-    // If the dialog for this specific instance is opened, just raise it.
-    if (interactive()->isOpened(query).val) {
-        // Note: at the time of writing, `raise` doesn't seem to be working for QML dialogs (although it does for QtWidget dialogs)
-        // Some changes are needed in the Muse framework.
-        interactive()->raise(query);
-        return;
-    }
-
-    // At the time of writing, despite the `alwaysOnTop: true` property set on the dialog, whenever a new dialog is spawned,
-    // the other dialog isn't always on top anymore. UX-wise this is very confusing, so until this problem is solved in the framework,
-    // we only allow one effect dialog open at all times.
-    const Uri genericUri { REALTIME_VIEWER_URI };
-    if (interactive()->isOpened(genericUri).val) {
-        interactive()->close(genericUri);
-    }
-
-    interactive()->open(query);
+    callOnLauncher(state, *viewLaunchRegister(), [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
+        launcher.showRealtimeEffect(state);
+    });
 }
 
 void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
 {
-    IF_ASSERT_FAILED(state) {
-        return;
-    }
-    const auto effectId = state->GetID().ToStdString();
-    const auto type = muse::String::fromStdString(effectSymbol(effectId));
-    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
-    if (!instance) {
-        LOGW() << "Could not get instance for " << effectId;
-        return;
-    }
-    const auto instanceId = instance->id();
-
-    const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
-
-    if (interactive()->isOpened(query).val) {
-        interactive()->close(query);
-    }
+    callOnLauncher(state, *viewLaunchRegister(), [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
+        launcher.hideRealtimeEffect(state);
+    });
 }
 
 void EffectsProvider::toggleShowEffect(const RealtimeEffectStatePtr& state) const
 {
-    IF_ASSERT_FAILED(state) {
-        return;
-    }
-    const auto effectId = state->GetID().ToStdString();
-    const auto type = muse::String::fromStdString(effectSymbol(effectId));
-    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
-    if (!instance) {
-        // This could happen if e.g. a VST plugin was uninstalled since the last run.
-        LOGW() << "Could not get instance for " << effectId;
-        return;
-    }
-    const auto instanceId = instance->id();
-
-    const UriQuery query{ String(REALTIME_VIEWER_URI).arg(type).arg(size_t(instanceId)).arg(size_t(state.get())) };
-
-    if (interactive()->isOpened(query).val) {
-        interactive()->close(query);
-    } else {
-        showEffect(state);
-    }
+    callOnLauncher(state, *viewLaunchRegister(), [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
+        launcher.toggleShowRealtimeEffect(state);
+    });
 }
 
 muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,

@@ -26,6 +26,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlaunchregister.h
 
     # internal
+    ${CMAKE_CURRENT_LIST_DIR}/internal/abstractviewlauncher.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/abstractviewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectconfigsettings.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectconfigsettings.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.cpp

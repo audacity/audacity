@@ -12,6 +12,7 @@
 #include "modularity/ioc.h"
 #include "../ieffectsviewregister.h"
 #include "../ieffectsuiengine.h"
+#include "../ieffectinstancesregister.h"
 
 namespace au::effects {
 //! TODO Move to builtin module
@@ -23,13 +24,14 @@ class EffectViewLoader : public QObject, public muse::async::Asyncable
 
     muse::Inject<IEffectsViewRegister> viewRegister;
     muse::Inject<IEffectsUiEngine> engine;
+    muse::Inject<IEffectInstancesRegister> instancesRegister;
 
 public:
     EffectViewLoader(QObject* parent = nullptr);
 
     QQuickItem* contentItem() const;
 
-    Q_INVOKABLE void load(const QString& type, const QString& instanceId, QObject* itemParent);
+    Q_INVOKABLE void load(const QString& instanceId, QObject* itemParent);
 
 signals:
     void titleChanged();

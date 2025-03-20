@@ -3,4 +3,6 @@
  */
 import QtQuick 2.15
 
-Item { }
+Item {
+    property string instanceId
+}

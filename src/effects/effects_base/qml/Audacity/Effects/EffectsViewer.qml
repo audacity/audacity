@@ -9,7 +9,6 @@ Rectangle {
 
     id: root
 
-    property string type: ""
     property string instanceId: ""
 
     property string title: builder.contentItem ? builder.contentItem.title : ""
@@ -26,7 +25,7 @@ Rectangle {
     height: implicitHeight
 
     Component.onCompleted: {
-        builder.load(root.type, root.instanceId, root)
+        builder.load(root.instanceId, root)
     }
 
     function manage(parent) {
