@@ -800,7 +800,7 @@ MenuItemList AppMenuModel::makeEffectsItems()
     effects::EffectMetaList metaList = effectsProvider()->effectMetaList();
 
     for (const effects::EffectMeta& meta : metaList) {
-        MenuItem* item = makeMenuItem(effects::makeEffectOpenAction(meta.id).toString());
+        MenuItem* item = makeMenuItem(effects::makeEffectAction(effects::EFFECT_OPEN_ACTION, meta.id).toString());
         effectsToCategoryMap[meta.categoryId].push_back(item);
     }
 

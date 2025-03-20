@@ -52,9 +52,22 @@ struct EffectMeta {
 using EffectMetaList = std::vector<EffectMeta>;
 
 constexpr const char16_t* EFFECT_OPEN_ACTION = u"action://effects/open?effectId=%1";
-inline muse::actions::ActionQuery makeEffectOpenAction(const EffectId& id)
+constexpr const char16_t* REALTIME_EFFECT_ADD_ACTION = u"action://effects/realtime-add?effectId=%1";
+constexpr const char16_t* REALTIME_EFFECT_REPLACE_ACTION = u"action://effects/realtime-replace?effectId=%1";
+
+inline muse::actions::ActionQuery makeEffectAction(const char16_t* action, const EffectId id)
 {
-    return muse::actions::ActionQuery(muse::String(EFFECT_OPEN_ACTION).arg(id));
+    return muse::actions::ActionQuery(muse::String(action).arg(id));
+}
+
+inline EffectId effectIdFromAction(const muse::actions::ActionQuery& action)
+{
+    return EffectId::fromStdString(action.param("effectId").toString());
+}
+
+inline EffectId effectIdFromAction(const QString& action)
+{
+    return effectIdFromAction(muse::actions::ActionQuery { action });
 }
 
 struct EffectCategory {

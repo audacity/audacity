@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "realtimeeffectlistitemmenumodel.h"
+#include "effects/effects_base/effectstypes.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "global/defer.h"
 #include "log.h"
@@ -40,8 +41,9 @@ void RealtimeEffectListItemMenuModel::doPopulateMenu()
         if (!meta.isRealtimeCapable) {
             continue;
         }
-        MenuItem* item = makeMenuItem("realtimeeffect-replace", muse::TranslatableString::untranslatable(meta.title));
-        item->setArgs(actions::ActionData::make_arg1(effects::EffectId { meta.id }));
+        MenuItem* item = makeMenuItem(effects::makeEffectAction(effects::REALTIME_EFFECT_REPLACE_ACTION,
+                                                                meta.id).toString(), muse::TranslatableString::untranslatable(meta.title));
+        item->setCheckable(true);
         menuCategories[meta.categoryId].push_back(item);
     }
 
@@ -63,16 +65,13 @@ void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
         return;
     }
 
-    if (menuItem.id() == "realtimeeffect-replace") {
-        const auto effectId = menuItem.args().arg<effects::EffectId>(0);
+    if (menuItem.id() == "realtimeeffect-remove") {
+        realtimeEffectService()->removeRealtimeEffect(*tId, m_effectState);
+    } else {
+        const auto effectId = effects::effectIdFromAction(menuItem.id());
         if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, m_effectState, effectId)) {
             effectsProvider()->showEffect(newState);
         }
-    } else if (menuItem.id() == "realtimeeffect-remove") {
-        realtimeEffectService()->removeRealtimeEffect(*tId, m_effectState);
-    } else {
-        assert(false);
-        LOGE() << "Unknown menu item id: " << itemId.toStdString();
     }
 }
 
@@ -103,7 +102,7 @@ void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
     for (MenuItem* category : itemList) {
         auto categoryChecked = false;
         for (MenuItem* subItem : category->subitems()) {
-            const auto effectId = subItem->args().arg<effects::EffectId>(0);
+            const auto effectId = effects::effectIdFromAction(subItem->id());
             categoryChecked |= myEffectId == effectId;
             subItem->setChecked(myEffectId == effectId);
         }

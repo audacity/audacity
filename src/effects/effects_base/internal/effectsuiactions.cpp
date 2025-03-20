@@ -23,27 +23,12 @@ static UiActionList STATIC_ACTIONS = {
              REPEAT_LAST_EFFECT_DEF_TITLE,
              TranslatableString("action", "Repeat last effect")
              ),
-
-    UiAction("realtimeeffect-add",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Add realtime effect"),
-             TranslatableString("action", "Add realtime effect")
-             ),
     UiAction("realtimeeffect-remove",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Remove realtime effect"),
              TranslatableString("action", "Remove realtime effect")
              ),
-    UiAction("realtimeeffect-replace",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Replace realtime effect"),
-             TranslatableString("action", "Replace realtime effect"),
-             muse::ui::Checkable::Yes
-             ),
-
     UiAction("action://effects/presets/apply",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -79,6 +64,19 @@ EffectsUiActions::EffectsUiActions(std::shared_ptr<EffectsActionsController> con
 {
 }
 
+namespace {
+UiAction makeUiAction(const char16_t* uri, const EffectMeta& meta)
+{
+    UiAction action;
+    action.code = makeEffectAction(uri, meta.id).toString();
+    action.uiCtx = au::context::UiCtxProjectOpened;
+    action.scCtx = au::context::CTX_PROJECT_FOCUSED;
+    action.description = TranslatableString::untranslatable(meta.description);
+    action.title = TranslatableString::untranslatable(meta.title);
+    return action;
+}
+}
+
 void EffectsUiActions::reload()
 {
     effectExecutionScenario()->lastProcessorIdChanged().onReceive(this, [this](const EffectId& effectId) {
@@ -98,14 +96,12 @@ void EffectsUiActions::reload()
         m_actions.reserve(effects.size() + STATIC_ACTIONS.size());
 
         for (const EffectMeta& e : effects) {
-            UiAction action;
-            action.code = makeEffectOpenAction(e.id).toString();
-            action.uiCtx = context::UiCtxProjectOpened;
-            action.scCtx = context::CTX_PROJECT_FOCUSED;
-            action.description = TranslatableString::untranslatable(e.description);
-            action.title = TranslatableString::untranslatable(e.title);
-
-            m_actions.push_back(std::move(action));
+            m_actions.push_back(makeUiAction(EFFECT_OPEN_ACTION, e));
+            if (e.isRealtimeCapable) {
+                for (const auto uri : { REALTIME_EFFECT_ADD_ACTION, REALTIME_EFFECT_REPLACE_ACTION }) {
+                    m_actions.push_back(makeUiAction(uri, e));
+                }
+            }
         }
 
         m_actions.insert(m_actions.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());
