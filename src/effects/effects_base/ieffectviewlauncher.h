@@ -14,7 +14,11 @@ class IEffectViewLauncher
 public:
     virtual ~IEffectViewLauncher() = default;
 
-    virtual muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) = 0;
+    virtual muse::Ret showEffect(const EffectInstanceId& instanceId) const = 0;
+
+    virtual void showRealtimeEffect(const RealtimeEffectStatePtr& state) const = 0;
+    virtual void hideRealtimeEffect(const RealtimeEffectStatePtr& state) const = 0;
+    virtual void toggleShowRealtimeEffect(const RealtimeEffectStatePtr& state) const = 0;
 };
 
 using IEffectViewLauncherPtr = std::shared_ptr<IEffectViewLauncher>;

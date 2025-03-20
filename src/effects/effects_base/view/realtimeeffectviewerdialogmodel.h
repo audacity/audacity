@@ -31,6 +31,7 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
 
 public:
     Q_INVOKABLE void load();
+    Q_INVOKABLE bool isVst3() const;
 
     RealtimeEffectViewerDialogModel(QObject* parent = nullptr);
     ~RealtimeEffectViewerDialogModel() override;
@@ -54,5 +55,6 @@ private:
     void unregisterState();
 
     RealtimeEffectStatePtr m_effectState;
+    bool m_isVst3 = false;
 };
 }

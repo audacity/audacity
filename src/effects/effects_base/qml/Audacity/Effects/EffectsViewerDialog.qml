@@ -10,7 +10,6 @@ import Muse.UiComponents
 StyledDialogView {
     id: root
 
-    property alias type: viewer.type
     property alias instanceId: viewer.instanceId
 
     title: viewer.title

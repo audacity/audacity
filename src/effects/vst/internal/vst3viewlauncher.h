@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "effects/effects_base/ieffectviewlauncher.h"
+#include "effects/effects_base/internal/abstractviewlauncher.h"
 
 #include "global/modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
@@ -14,15 +14,17 @@
 #include "vst/ivstinstancesregister.h"
 
 namespace au::effects {
-class Vst3ViewLauncher : public IEffectViewLauncher
+class Vst3ViewLauncher : public AbstractViewLauncher
 {
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<muse::vst::IVstInstancesRegister> museInstancesRegister;
-    muse::Inject<muse::IInteractive> interactive;
 
 public:
     Vst3ViewLauncher() = default;
 
-    muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) override;
+    muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
+    void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
+
+private:
+    void registerFxPlugin(const EffectInstanceId& instanceId) const;
 };
 }

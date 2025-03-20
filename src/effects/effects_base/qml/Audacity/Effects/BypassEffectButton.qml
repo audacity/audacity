@@ -7,8 +7,10 @@ FlatButton {
     id: root
 
     property bool isMasterEffect: false
+    property int size: 24
 
-    height: width
+    width: size
+    height: size
     icon: IconCode.BYPASS
     iconColor: accentButton ? "white" : ui.theme.fontPrimaryColor
     iconFont: ui.theme.toolbarIconsFont
