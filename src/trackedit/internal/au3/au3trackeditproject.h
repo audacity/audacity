@@ -22,6 +22,7 @@ public:
 
     TrackIdList trackIdList() const override;
     std::vector<Track> trackList() const override;
+    std::optional<Track> track(TrackId trackId) const override;
     Clip clip(const ClipKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
     std::vector<int64_t> groupsIdsList() const override;

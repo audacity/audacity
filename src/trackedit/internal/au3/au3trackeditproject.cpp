@@ -109,6 +109,19 @@ au::trackedit::TrackList Au3TrackeditProject::trackList() const
     return au4tracks;
 }
 
+std::optional<au::trackedit::Track> Au3TrackeditProject::track(TrackId trackId) const
+{
+    std::optional<au::trackedit::Track> toReturn;
+
+    for (const Au3Track* t : *m_impl->trackList) {
+        if (t->GetId() == trackId) {
+            toReturn = DomConverter::track(t);
+        }
+    }
+
+    return toReturn;
+}
+
 static std::string eventTypeToString(const TrackListEvent& e)
 {
     switch (e.mType) {
