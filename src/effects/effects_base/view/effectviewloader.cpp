@@ -20,10 +20,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "effectviewloader.h"
+#include "effectstypes.h"
 
 #include <QQmlEngine>
 
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "global/types/number.h"
+#include "libraries/lib-effects/EffectManager.h"
+#include "libraries/lib-effects/Effect.h"
 
 #include "log.h"
 
@@ -33,9 +37,20 @@ EffectViewLoader::EffectViewLoader(QObject* parent)
     : QObject(parent)
 {}
 
-void EffectViewLoader::load(const QString& type, const QString& instanceId, QObject* itemParent)
+void EffectViewLoader::load(const QString& instanceId, QObject* itemParent)
 {
-    LOGD() << "type: " << type << ", instanceId: " << instanceId;
+    LOGD() << "instanceId: " << instanceId;
+
+    // TODO: could instancesRegister have a `typeByInstanceId` method?
+    const auto effectId = instancesRegister()->effectIdByInstanceId(instanceId.toInt()).toStdString();
+
+    const auto effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(effectId));
+    IF_ASSERT_FAILED(effect) {
+        LOGE() << "effect not available, instanceId: " << instanceId << ", effectId: " << effectId;
+        return;
+    }
+
+    const muse::String type = au3::wxToString(effect->GetSymbol().Internal());
 
     QString url = viewRegister()->viewUrl(type);
     if (url.isEmpty()) {

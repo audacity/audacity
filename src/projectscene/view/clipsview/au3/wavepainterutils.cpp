@@ -12,7 +12,7 @@ IWavePainter::PlotType getPlotType(std::shared_ptr<au::project::IAudacityProject
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(track) {
+    if (!track) {
         return IWavePainter::PlotType::MinMaxRMS;
     }
 

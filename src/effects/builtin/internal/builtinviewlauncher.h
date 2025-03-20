@@ -3,19 +3,15 @@
 */
 #pragma once
 
-#include "effects/effects_base/ieffectviewlauncher.h"
-
-#include "modularity/ioc.h"
-#include "global/iinteractive.h"
+#include "effects/effects_base/internal/abstractviewlauncher.h"
 
 namespace au::effects {
-class BuiltinViewLauncher : public IEffectViewLauncher
+class BuiltinViewLauncher : public AbstractViewLauncher
 {
-    muse::Inject<muse::IInteractive> interactive;
-
 public:
     BuiltinViewLauncher() = default;
 
-    muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) override;
+    muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
+    void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
 };
 }
