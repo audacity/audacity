@@ -216,16 +216,12 @@ void ClipsListModel::update()
         //       but it'd solve this ambiguity.
         //       With the above fixed, this code and TODO should be removed.
         auto prj = globalContext()->currentTrackeditProject();
-
-        auto tracks = prj->trackList();
-        for (const Track& track : tracks) {
-            if (m_trackId == track.id) {
-                if (track.type == TrackType::Stereo) {
-                    isStereo = true;
-                    m_isStereo = isStereo;
-                    emit isStereoChanged();
-                    break;
-                }
+        auto track = prj->track(m_trackId);
+        if (track.has_value()) {
+            if (track.value().type == TrackType::Stereo) {
+                isStereo = true;
+                m_isStereo = isStereo;
+                emit isStereoChanged();
             }
         }
     }
