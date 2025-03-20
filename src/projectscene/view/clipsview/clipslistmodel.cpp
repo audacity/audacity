@@ -206,6 +206,30 @@ void ClipsListModel::update()
         isStereo |= c.stereo;
     }
 
+    if (m_clipList.empty()) {
+        // TODO: This addresses a symptom stemming from an inconsistency in the DOM.
+        //       We should remove the bool stereo field from trackedit::Clip.
+        //       At the moment, a project with a stereo/mono track
+        //       with one or more mono/stereo clips is not supported by the AU3 backend.
+        //       In the future, we ambition not to distinguish mono from stereo tracks,
+        //       Likely we should instead query what track the clip belongs to using the track's type instead,
+        //       but it'd solve this ambiguity.
+        //       With the above fixed, this code and TODO should be removed.
+        auto prj = globalContext()->currentTrackeditProject();
+
+        auto tracks = prj->trackList();
+        for (const Track& track : tracks) {
+            if (m_trackId == track.id) {
+                if (track.type == TrackType::Stereo) {
+                    isStereo = true;
+                    m_isStereo = isStereo;
+                    emit isStereoChanged();
+                    break;
+                }
+            }
+        }
+    }
+
     std::sort(m_clipList.begin(), m_clipList.end(), [](ClipListItem* a, ClipListItem* b) {
         return a->time().clipStartTime < b->time().clipStartTime;
     });
