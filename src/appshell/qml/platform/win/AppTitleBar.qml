@@ -25,6 +25,7 @@ import QtQuick.Window 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
+
 import Audacity.AppShell 1.0
 
 import "../"
@@ -59,15 +60,19 @@ Rectangle {
             id: menu
 
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
-            Layout.preferredWidth: width
-            Layout.preferredHeight: height
+            Layout.fillWidth: menu.truncated ? true : false
+            Layout.preferredWidth: implicitWidth
+            Layout.preferredHeight: implicitHeight
+
+            availableWidth: root.width - (content.spacing + titleTextmetrics.width + content.spacing + systemButtons.width)
         }
 
         StyledTextLabel {
             id: titleLabel
 
-            Layout.fillWidth: true
+            Layout.fillWidth: !menu.truncated ? true : false
             Layout.fillHeight: true
+            Layout.minimumWidth: titleTextmetrics.advanceWidth
 
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
@@ -90,7 +95,7 @@ Rectangle {
             TextMetrics {
                 id: titleTextmetrics
 
-                text: qsTrc("appshell", "MuseScore 4")
+                text: qsTrc("appshell", "Audacity")
                 font: titleLabel.font
                 elide: Qt.ElideRight
                 elideWidth: titleLabel.width
@@ -103,6 +108,7 @@ Rectangle {
             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
             Layout.preferredWidth: width
             Layout.preferredHeight: height
+            Layout.minimumWidth: width
 
             windowIsMiximized: root.windowVisibility === Window.Maximized
 
