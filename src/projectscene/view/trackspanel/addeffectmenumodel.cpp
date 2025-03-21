@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "addeffectmenumodel.h"
+#include "effects/effects_base/effectstypes.h"
 #include "log.h"
 
 using namespace muse;
@@ -28,8 +29,12 @@ void AddEffectMenuModel::doPopulateMenu()
         if (!meta.isRealtimeCapable) {
             continue;
         }
-        MenuItem* item = makeMenuItem("realtimeeffect-add", TranslatableString::untranslatable(meta.title));
-        item->setArgs(actions::ActionData::make_arg1(meta.id));
+        const auto actionId = effects::makeEffectAction(effects::REALTIME_EFFECT_ADD_ACTION,
+                                                        meta.id).toString();
+        MenuItem* item = makeMenuItem(actionId, TranslatableString::untranslatable(meta.title));
+        IF_ASSERT_FAILED(item) {
+            continue;
+        }
         menuCategories[meta.categoryId].push_back(item);
     }
 
@@ -48,7 +53,7 @@ void AddEffectMenuModel::handleMenuItem(const QString& itemId)
         return;
     }
 
-    const auto effectId = menuItem.args().arg<effects::EffectId>(0);
+    const auto effectId = effects::effectIdFromAction(menuItem.id());
     if (const auto state = realtimeEffectService()->addRealtimeEffect(*tId, effectId)) {
         effectsProvider()->showEffect(state);
     }

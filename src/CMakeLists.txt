@@ -55,4 +55,7 @@ endif()
 
 add_subdirectory(importexport/import)
 
+# Stubs
+add_subdirectory(stubs)
+
 # ...

@@ -37,7 +37,7 @@ EffectMetaList VstEffectsRepository::effectMetaList() const
         EffectMeta meta;
         meta.id = muse::String(info.meta.id.c_str());
         meta.title = muse::io::completeBasename(info.path).toString();
-
+        meta.isRealtimeCapable = true;
         meta.categoryId = VST_CATEGORY_ID;
 
         effects.push_back(std::move(meta));

@@ -1,0 +1,2 @@
+module Audacity.Vst
+VstViewer 1.0 VstViewerStub.qml
