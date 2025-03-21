@@ -17,11 +17,16 @@ BaseSection {
 
         CheckBox {
             id: checkbox
+
             width: parent.width
+
             text: qsTrc("appshell/preferences", "Always convert to mono without prompt")
+
             checked: !root.askBeforeConverting
+
             navigation.name: "StereoToMonoBox"
             navigation.panel: root.navigation
+
             onClicked: {
                 root.askBeforeConverting = !root.askBeforeConverting
             }
