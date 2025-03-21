@@ -248,6 +248,27 @@ TEST_F(ChangeDetectionTests, TestTrackNotificationsForReordering)
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }
 
+TEST_F(ChangeDetectionTests, TestTrackNotificationForTitleChange)
+{
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
+
+    EXPECT_EQ(before.tracks.size(), after.tracks.size());
+
+    before.tracks.back().title = "new title";
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(1);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
 ////////////////////////////////////////////////
 /// Tests for clip change notification:
 ////////////////////////////////////////////////
@@ -518,6 +539,25 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwoAndRemovingTwo)
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(2);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(2);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
+
+    changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
+}
+
+TEST_F(ChangeDetectionTests, TestClipNotificationChangeTitle)
+{
+    TracksAndClips before = buildTracksAndClips();
+    TracksAndClips after = buildTracksAndClips();
+
+    after.clips.back().back().title = "new clip title";
+
+    EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, trackChanged()).Times(0);
+    EXPECT_CALL(*m_trackEditProject, reload()).Times(0);
+
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipAdded(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(0);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
 
     changeDetection::notifyOfUndoRedo(before, after, m_trackEditProject);
 }

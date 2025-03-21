@@ -40,7 +40,11 @@ TrackItem::~TrackItem()
 void TrackItem::init(const trackedit::Track& track)
 {
     m_trackId = track.id;
-    m_title = track.title;
+
+    if (m_title != track.title) {
+        m_title = track.title;
+        emit titleChanged(m_title);
+    }
 
     if (m_trackType != track.type) {
         m_trackType = track.type;

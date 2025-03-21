@@ -163,6 +163,8 @@ private:
     void pushProjectHistoryChangeClipSpeedState();
     void pushProjectHistoryResetClipSpeedState();
     void pushProjectHistoryRenderClipStretchingState();
+    void pushProjectHistoryChangeTrackTitle();
+    void pushProjectHistoryChangeClipTitle();
 
     bool canMoveTrack(const TrackId trackId, const TrackMoveDirection direction);
     int trackPosition(const TrackId trackId);
