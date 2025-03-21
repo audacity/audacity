@@ -124,6 +124,8 @@ void ClipsListModel::reload()
             item->setClip(clip);
         }
 
+        m_context->updateSelectedClipTime();
+
         updateItemsMetrics();
     });
 
@@ -236,7 +238,6 @@ void ClipsListModel::update()
     //! to take pointers to the items from the new list
     m_selectedItems.clear();
     onSelectedClips(selectionController()->selectedClips());
-    m_context->updateSelectedClipTime();
 
     endResetModel();
 
@@ -582,8 +583,6 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
 
     bool clipsMovedToOtherTrack = trackeditInteraction()->moveClips(timePositionOffset, trackPositionOffset, completed);
 
-    m_context->updateSelectedClipTime();
-
     if ((completed && m_autoScrollConnection)) {
         disconnect(m_autoScrollConnection);
     } else if (!m_autoScrollConnection && !completed) {
@@ -627,7 +626,6 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
     }
 
     bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed);
-    m_context->updateSelectedClipTime();
 
     // handle auto-scroll over the edge
     if (!ok) {
@@ -672,7 +670,6 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
     }
 
     bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed);
-    m_context->updateSelectedClipTime();
 
     // handle auto-scroll over the edge
     if (!ok) {
@@ -719,7 +716,6 @@ bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed)
     }
 
     bool ok = trackeditInteraction()->stretchClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed);
-    m_context->updateSelectedClipTime();
 
     // handle auto-scroll over the edge
     if (!ok) {
@@ -764,7 +760,6 @@ bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed)
     }
 
     bool ok = trackeditInteraction()->stretchClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed);
-    m_context->updateSelectedClipTime();
 
     // handle auto-scroll over the edge
     if (!ok) {
