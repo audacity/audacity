@@ -208,8 +208,10 @@ muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId>& t
     return muse::make_ok();
 }
 
-muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData,
-                                                  secs_t begin)
+muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds,
+                                                  const std::vector<TrackData>& trackData,
+                                                  secs_t begin,
+                                                  bool pasteIntoExistingClip)
 {
     IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
@@ -221,9 +223,20 @@ muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tr
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
 
+        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(trackData.at(i).track);
+
         //! NOTE need to snap begin just like Paste() function do
         secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
         secs_t insertDuration = trackData.at(i).track.get()->GetEndTime();
+
+        // if paste into existing clip and there is a single clip to paste,
+        // we need to make room for the clip to be extended
+        if (pasteIntoExistingClip
+            && singleClipOnTrack(trackToPaste.get())
+            && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
+            secs_t currentClipEnd = dstWaveTrack->GetClipAtTime(begin)->GetPlayEndTime();
+            snappedBegin = dstWaveTrack->SnapToSample(currentClipEnd);
+        }
 
         auto ok = makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
         if (!ok) {
@@ -254,6 +267,18 @@ muse::Ret Au3Interaction::makeRoomForDataOnTrack(const TrackId trackId, secs_t b
     }
 
     return muse::make_ret(muse::Ret::Code::Ok);
+}
+
+bool Au3Interaction::singleClipOnTrack(WaveTrack* waveTrack) const
+{
+    IF_ASSERT_FAILED(waveTrack) {
+        return make_ret(trackedit::Err::WaveTrackNotFound);
+    }
+
+    if (waveTrack->Intervals().size() == 1) {
+        return true;
+    }
+    return false;
 }
 
 void Au3Interaction::trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin, secs_t end, std::shared_ptr<WaveClip> otherClip)
@@ -1000,12 +1025,13 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, bool moveClips, bool 
     }
 
     muse::Ret ok { muse::make_ok() };
+    bool pasteIntoExistingClip = !configuration()->pasteAsNewClip() && !moveAllTracks;
 
     if (!moveClips) {
         if (clipboard()->isMultiSelectionCopy()) {
             ok = makeRoomForClipsOnTracks(dstTracksIds, copiedData, begin);
         } else {
-            ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin);
+            ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, pasteIntoExistingClip);
         }
     }
 
@@ -1058,6 +1084,14 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, bool moveClips, bool 
             for (const auto& interval : trackToPaste->Intervals()) {
                 dstWaveTrack->InsertInterval(interval, false);
             }
+        } else if (pasteIntoExistingClip
+                   && singleClipOnTrack(trackToPaste.get())
+                   && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
+            auto [leftClip, rightClip] = dstWaveTrack->SplitAt(begin);
+            rightClip->SetPlayStartTime(begin + trackToPaste->GetClip(0)->GetPlayDuration());
+            dstWaveTrack->Paste(begin, *trackToPaste, false);
+            ProgressReporter dummyProgressReporter;
+            dstWaveTrack->Join(leftClip->GetPlayStartTime(), rightClip->GetPlayEndTime(), dummyProgressReporter);
         } else {
             dstWaveTrack->Paste(begin, *trackToPaste, moveClips);
         }
@@ -1203,7 +1237,9 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
 
     trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
     clipboard()->addTrackData(TrackData { clipboardTrack, dummyClipKey });
-    clipboard()->setMultiSelectionCopy(true);
+    if (clipKeys.size() > 1) {
+        clipboard()->setMultiSelectionCopy(true);
+    }
 
     return true;
 }
