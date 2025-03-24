@@ -30,6 +30,7 @@ public:
     // internal
     uintptr_t au3ProjectPtr() const override;
 
+    void clearSavedState();
 private:
     void updateSavedState();
 

@@ -34,8 +34,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h
-
+    ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectioncontroller.cpp
@@ -51,6 +50,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditclipboard.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/selectionrestorer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/selectionrestorer.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/tracktemplatefactory.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/tracktemplatefactory.h
     )
 
 # AU3
