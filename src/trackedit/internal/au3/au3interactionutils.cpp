@@ -148,9 +148,9 @@ au::au3::Au3WaveTrack* au::trackedit::utils::appendWaveTrack(au3::Au3TrackList& 
     return track.get();
 }
 
-au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsUpOrDown(int offset, const au3::Au3TrackList& orig,
-                                                                       au3::Au3TrackList& copy,
-                                                                       const trackedit::ClipKeyList& selectedClips)
+au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(VerticalDrag dragDirection, const au3::Au3TrackList& orig,
+                                                                         au3::Au3TrackList& copy,
+                                                                         const trackedit::ClipKeyList& selectedClips)
 {
     const auto& project = *orig.GetOwner();
     const auto& factory = ::WaveTrackFactory::Get(project);
@@ -188,7 +188,7 @@ au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsUpOrDown(int offse
         }
 
         ::TrackList::iterator it = copy.begin();
-        const auto dstTrackIndex = static_cast<int>(clip.origTrackIndex) + offset;
+        const auto dstTrackIndex = static_cast<int>(clip.origTrackIndex) + (dragDirection == VerticalDrag::Up ? -1 : 1);
         IF_ASSERT_FAILED(dstTrackIndex >= 0) {
             continue;
         }

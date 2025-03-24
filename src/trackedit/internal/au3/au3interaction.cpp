@@ -1430,7 +1430,17 @@ NeedsDownmixing Au3Interaction::moveSelectedClipsUpOrDown(int offset)
     const auto copy = orig.Duplicate();
     const auto prj = globalContext()->currentTrackeditProject();
     ClipKeyList selectedClips = selectionController()->selectedClips();
-    const NeedsDownmixing needsDownmixing = utils::moveClipsUpOrDown(offset, orig, *copy, selectedClips);
+
+    const auto dragDirection = offset == -1 ? utils::VerticalDrag::Up : utils::VerticalDrag::Down;
+    // Make sure clips aren't dragged past the topmost track:
+    if (dragDirection == utils::VerticalDrag::Up && std::any_of(selectedClips.begin(), selectedClips.end(), [&](const ClipKey& clip) {
+        return utils::getTrackIndex(orig, clip.trackId) == 0;
+    })) {
+        return NeedsDownmixing::No;
+    }
+
+    const NeedsDownmixing needsDownmixing = utils::moveClipsVertically(dragDirection, orig,
+                                                                       *copy, selectedClips);
 
     // Clean-up after ourselves, preserving original track formats:
     // Tracks that were empty at the start of the interaction, are empty now and differ in format must be restored.
