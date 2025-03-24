@@ -26,7 +26,7 @@ class ITrackeditInteraction : MODULE_EXPORT_INTERFACE
     INTERFACE_ID(ITrackeditInteraction)
 
 public:
-    virtual ~ITrackeditInteraction() = default;
+    ~ITrackeditInteraction() override = default;
 
     virtual secs_t clipStartTime(const ClipKey& clipKey) const = 0;
 
