@@ -105,8 +105,17 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
 
 void PlayCursorController::onFrameTimeChanged()
 {
-    m_positionX = m_context->timeToPosition(playbackState()->playbackPosition());
-    emit positionXChanged();
+    double newPosition;
+    if (globalContext()->isRecording()) {
+        newPosition = m_context->timeToPosition(globalContext()->recordPosition());
+    } else {
+        newPosition = m_context->timeToPosition(playbackState()->playbackPosition());
+    }
+
+    if (m_positionX != newPosition) {
+        m_positionX = newPosition;
+        emit positionXChanged();
+    }
 }
 
 double PlayCursorController::positionX() const
