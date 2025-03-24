@@ -39,8 +39,16 @@ au3::Au3WaveTrack* toggleStereo(au3::Au3TrackList& tracks, size_t trackIndex);
 au3::Au3WaveTrack* appendWaveTrack(au3::Au3TrackList& tracks, size_t nChannels, const au3::Au3WaveTrackFactory* trackFactory = nullptr,
                                    double projectRate = 0.);
 
-NeedsDownmixing moveClipsUpOrDown(int offset, const au3::Au3TrackList& orig, au3::Au3TrackList& copy,
-                                  const trackedit::ClipKeyList& selectedClips);
+enum class VerticalDrag {
+    Up,
+    Down
+};
+
+/*!
+ * @pre `upOrDown == VerticalDrag::Down` or track indices of selected clips are not 0 (i.e. can't drag clips up past the topmost track)
+ */
+NeedsDownmixing moveClipsVertically(VerticalDrag upOrDown, const au3::Au3TrackList& orig, au3::Au3TrackList& copy,
+                                    const trackedit::ClipKeyList& selectedClips);
 
 au::trackedit::TrackListInfo getTrackListInfo(const au3::Au3TrackList& tracks);
 
