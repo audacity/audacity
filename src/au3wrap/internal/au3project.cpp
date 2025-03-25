@@ -132,6 +132,12 @@ void Au3ProjectAccessor::updateSavedState()
     }
 }
 
+void Au3ProjectAccessor::clearSavedState()
+{
+    m_lastSavedTracks->Clear();
+    m_lastSavedTracks.reset();
+}
+
 void Au3ProjectAccessor::close()
 {
     auto& project = m_data->projectRef();

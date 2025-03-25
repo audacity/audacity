@@ -7,7 +7,9 @@
 
 #include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
+#include "testutility/tracktemplatefactory.h"
 #include "mocks/trackeditprojectmock.h"
+#include "mocks/projecthistorymock.h"
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -19,17 +21,126 @@ using ::testing::_;
 
 using namespace au;
 using namespace au::au3;
+using namespace au::testutility;
 
 namespace au::trackedit {
+/*******************************************************************************
+ * DEFAULT TRACK CONFIGURATIONS
+ * ===========================
+ *
+ * The test suite uses several track layouts to test data manipulation functions.
+ * Each layout represents a specific use case.
+ * Below is a visual representation of each track template:
+ *
+ * TRACK1: Single clip with large silence in the middle
+ * -----------------------------------------------------
+ * Legend: [A][B] = Audio data, ~~~~ = Silence
+ *
+ *   |                                                |
+ *   |------|                                |--------|
+ *   |  A   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ |   B    |
+ *   |------|                                |--------|
+ *    10 samples         450 samples          10 samples
+ *
+ * TRACK2: Single clip with small silence in the middle
+ * ----------------------------------------------------
+ *
+ *   |                       |
+ *   |------|------|---------|
+ *   |  A   |~~~~~~|    B    |
+ *   |------|------|---------|
+ *    10 samples 10samples   10 samples
+ *
+ * TRACK3: Two separate small clips with gap between
+ * -------------------------------------------------
+ *
+ *   |               |          |
+ *   |------|        |          |------|
+ *   |  A   |        |          |  B   |
+ *   |------|        |          |------|
+ *   10 samples    10 samples  10 samples
+ *              (gap)
+ *
+ * TRACK4: Single clip with silence at the beginning
+ * -------------------------------------------------
+ *
+ *   |                                    |
+ *   |------------------------------------|--------|
+ *   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|    A   |
+ *   |------------------------------------|--------|
+ *         450 samples                     10 samples
+ *
+ * TRACK5: Single clip with silence at the end
+ * -------------------------------------------
+ *
+ *   |           |                                     |
+ *   |-----------|-------------------------------------|
+ *   |     A     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+ *   |-----------|-------------------------------------|
+ *    10 samples             450 samples
+ *
+ * What should we expect from the tests?
+ *
+ * - Split operations only work when the silence is large enough. (0.01s)
+ * - If the silence is too short, the operation should not be performed.
+ * - The splitted clips should have the same duration as the original clip
+ * but trimmed in the left or right edge.
+ * - If executed in a single clip with silence at the beginning or end, the
+ * duration will be maintained but the clip will be trimmed at the start or end.
+ * - Merge operations should join two clips into a single clip with the same
+ * duration as the sum of the two clips.
+ *******************************************************************************/
+
+constexpr static double DEFAULT_SAMPLE_RATE = 44100.0;
+constexpr static double SAMPLE_INTERVAL = 1.0 / DEFAULT_SAMPLE_RATE;
+
+constexpr static double TRACK1_CLIP_START = 0.0;
+constexpr static double TRACK1_FIRST_SEGMENT_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK1_SILENCE_SEGMENT_DURATION = 450 * SAMPLE_INTERVAL;
+constexpr static double TRACK1_SECOND_SEGMENT_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK1_CLIP_DURATION = TRACK1_FIRST_SEGMENT_DURATION + TRACK1_SILENCE_SEGMENT_DURATION
+                                               + TRACK1_SECOND_SEGMENT_DURATION;
+constexpr static double TRACK1_CLIP_END = TRACK1_CLIP_START + TRACK1_CLIP_DURATION;
+
+constexpr static double TRACK2_CLIP_START = 0.0;
+constexpr static double TRACK2_FIRST_SEGMENT_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK2_SILENCE_SEGMENT_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK2_SECOND_SEGMENT_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK2_CLIP_DURATION = TRACK2_FIRST_SEGMENT_DURATION + TRACK2_SILENCE_SEGMENT_DURATION
+                                               + TRACK2_SECOND_SEGMENT_DURATION;
+constexpr static double TRACK2_CLIP_END = TRACK2_CLIP_START + TRACK2_CLIP_DURATION;
+
+constexpr static double TRACK3_CLIP1_START = 0.0;
+constexpr static double TRACK3_CLIP1_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK3_CLIP1_END = TRACK3_CLIP1_START + TRACK3_CLIP1_DURATION;
+constexpr static double TRACK3_CLIP2_START = 20 * SAMPLE_INTERVAL;
+constexpr static double TRACK3_CLIP2_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK3_CLIP2_END = TRACK3_CLIP2_START + TRACK3_CLIP2_DURATION;
+
+constexpr static double TRACK4_CLIP_START = 0.0;
+constexpr static double TRACK4_SILENCE_DURATION = 450 * SAMPLE_INTERVAL;
+constexpr static double TRACK4_FIRST_SEGMENT_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK4_CLIP_DURATION = TRACK4_SILENCE_DURATION + TRACK4_FIRST_SEGMENT_DURATION;
+constexpr static double TRACK4_CLIP_END = TRACK4_CLIP_START + TRACK4_CLIP_DURATION;
+
+constexpr static double TRACK5_CLIP_START = 0.0;
+constexpr static double TRACK5_FIRST_SEGMENT_DURATION = 10 * SAMPLE_INTERVAL;
+constexpr static double TRACK5_SILENCE_DURATION = 450 * SAMPLE_INTERVAL;
+constexpr static double TRACK5_CLIP_DURATION = TRACK5_FIRST_SEGMENT_DURATION + TRACK5_SILENCE_DURATION;
+constexpr static double TRACK5_CLIP_END = TRACK5_CLIP_START + TRACK5_CLIP_DURATION;
+
 class Au3InteractionTests : public ::testing::Test
 {
-protected:
+public:
     void SetUp() override
     {
         m_au3Interaction = std::make_shared<Au3Interaction>();
 
-        m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
+        m_globalContext = std::make_shared<context::GlobalContextMock>();
+        m_projectHistory = std::make_shared<ProjectHistoryMock>();
+
         m_au3Interaction->globalContext.set(m_globalContext);
+        m_au3Interaction->projectHistory.set(m_projectHistory);
 
         m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
         ON_CALL(*m_globalContext, currentTrackeditProject())
@@ -40,16 +151,77 @@ protected:
         .WillByDefault(Return(m_currentProject));
 
         initTestProject();
+        createSampleData();
     }
 
     void initTestProject()
     {
         m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>();
-        const muse::io::path_t TEST_PROJECT_PATH = muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/test.aup3";
+        const muse::io::path_t TEST_PROJECT_PATH = muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/empty.aup3";
         muse::Ret ret = m_au3ProjectAccessor->load(TEST_PROJECT_PATH);
 
         ON_CALL(*m_currentProject, au3ProjectPtr())
         .WillByDefault(Return(m_au3ProjectAccessor->au3ProjectPtr()));
+    }
+
+    void createSampleData()
+    {
+        TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+
+        m_trackMinSilenceId  = factory.addTrackFromTemplate("clipWithMinSilence", {
+                { TRACK1_CLIP_START, {
+                      { TRACK1_FIRST_SEGMENT_DURATION, TrackTemplateFactory::createNoise },
+                      { TRACK1_SILENCE_SEGMENT_DURATION, TrackTemplateFactory::createSilence },
+                      { TRACK1_SECOND_SEGMENT_DURATION, TrackTemplateFactory::createNoise }
+                  } }
+            });
+
+        m_trackSmallSilenceId = factory.addTrackFromTemplate("clipWithSmallSilence", {
+                { TRACK2_CLIP_START, {
+                      { TRACK2_FIRST_SEGMENT_DURATION, TrackTemplateFactory::createNoise },
+                      { TRACK2_SILENCE_SEGMENT_DURATION, TrackTemplateFactory::createSilence },
+                      { TRACK2_SECOND_SEGMENT_DURATION, TrackTemplateFactory::createNoise }
+                  } }
+            });
+
+        m_trackTwoClipsId = factory.addTrackFromTemplate("twoClips", {
+                { TRACK3_CLIP1_START, {
+                      { TRACK3_CLIP1_DURATION, TrackTemplateFactory::createNoise }
+                  } },
+                { TRACK3_CLIP2_START, {
+                      { TRACK3_CLIP2_DURATION, TrackTemplateFactory::createNoise }
+                  } }
+            });
+
+        m_trackSilenceAtStartId = factory.addTrackFromTemplate("clipWithSilenceAtStart", {
+                { TRACK4_CLIP_START, {
+                      { TRACK4_SILENCE_DURATION, TrackTemplateFactory::createSilence },
+                      { TRACK4_FIRST_SEGMENT_DURATION, TrackTemplateFactory::createNoise }
+                  } }
+            });
+
+        m_trackSilenceAtEndId = factory.addTrackFromTemplate("clipWithSilenceAtEnd", {
+                { TRACK5_CLIP_START, {
+                      { TRACK5_FIRST_SEGMENT_DURATION, TrackTemplateFactory::createNoise },
+                      { TRACK5_SILENCE_DURATION, TrackTemplateFactory::createSilence }
+                  } }
+            });
+    }
+
+    void cleanupSampleData()
+    {
+        auto& trackList = Au3TrackList::Get(projectRef());
+        auto track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackMinSilenceId));
+        trackList.Remove(*track);
+        auto track2 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackSmallSilenceId));
+        trackList.Remove(*track2);
+        auto track3 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackTwoClipsId));
+        trackList.Remove(*track3);
+        auto track4 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackSilenceAtStartId));
+        trackList.Remove(*track4);
+        auto track5 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackSilenceAtEndId));
+        trackList.Remove(*track5);
+        trackList.Clear();
     }
 
     Au3Project& projectRef() const
@@ -60,7 +232,18 @@ protected:
 
     void TearDown() override
     {
+        cleanupSampleData();
+        m_au3ProjectAccessor->clearSavedState();
         m_au3ProjectAccessor->close();
+    }
+
+    void ValidateClipProperties(const WaveTrack::IntervalHolder clip, double sequenceStart, double sequenceEnd, double playStart,
+                                double playEnd)
+    {
+        ASSERT_DOUBLE_EQ(clip->GetSequenceStartTime(), sequenceStart) << "Clip sequence start time is not as expected";
+        ASSERT_DOUBLE_EQ(clip->GetSequenceEndTime(), sequenceEnd) << "Clip sequence end time is not as expected";
+        ASSERT_DOUBLE_EQ(clip->GetPlayStartTime(), playStart) << "Clip play start time is not as expected";
+        ASSERT_DOUBLE_EQ(clip->GetPlayEndTime(), playEnd) << "Clip play end time is not as expected";
     }
 
     std::shared_ptr<Au3Interaction> m_au3Interaction;
@@ -68,8 +251,15 @@ protected:
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;
+    std::shared_ptr<ProjectHistoryMock> m_projectHistory;
 
     std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor;
+
+    TrackId m_trackMinSilenceId;
+    TrackId m_trackSmallSilenceId;
+    TrackId m_trackTwoClipsId;
+    TrackId m_trackSilenceAtStartId;
+    TrackId m_trackSilenceAtEndId;
 };
 
 TEST_F(Au3InteractionTests, ChangeClipColor)
@@ -90,5 +280,170 @@ TEST_F(Au3InteractionTests, ChangeClipColor)
     //! [THEN] The color is updated
     const std::shared_ptr<Au3WaveClip> au3UpdatedClip = DomAccessor::findWaveClip(project, au3WaveTrack->GetId(), 0);
     EXPECT_EQ(au3UpdatedClip->GetColor(), "red");
+}
+
+TEST_F(Au3InteractionTests, SplitRangeSelectionAtSilencesOnValidInterval)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackMinSilenceId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin within the clip bondaries
+    m_au3Interaction->splitRangeSelectionAtSilences({ track->GetId() }, TRACK1_CLIP_START, TRACK1_CLIP_END);
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the split range operation is not 2";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK1_CLIP_START, TRACK1_CLIP_END, TRACK1_CLIP_START,
+                           TRACK1_CLIP_START + TRACK1_FIRST_SEGMENT_DURATION);
+
+    auto secondClip = track->GetClip(1);
+    ValidateClipProperties(secondClip, TRACK1_CLIP_START, TRACK1_CLIP_END,
+                           TRACK1_CLIP_START + TRACK1_FIRST_SEGMENT_DURATION + TRACK1_SILENCE_SEGMENT_DURATION,
+                           TRACK1_CLIP_END);
+}
+
+TEST_F(Au3InteractionTests, SplitRangeSelectionAtSilencesOnInvalidInterval)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackMinSilenceId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin outside the clip bondaries
+    m_au3Interaction->splitRangeSelectionAtSilences(
+        { track->GetId() }, TRACK1_CLIP_END, TRACK1_CLIP_END + 1.0);
+
+    //! [THEN] The number of intervals is still one
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK1_CLIP_START, TRACK1_CLIP_END, TRACK1_CLIP_START, TRACK1_CLIP_END);
+}
+
+TEST_F(Au3InteractionTests, SplitRangeSelectionAtSilencesOnIntervalWithShortSilence)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackSmallSilenceId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip with a small silence
+    m_au3Interaction->splitRangeSelectionAtSilences({ track->GetId() }, TRACK2_CLIP_START, TRACK2_CLIP_END);
+
+    //! [THEN] The number of intervals is 1 once the silence is less than 0.01s
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK2_CLIP_START, TRACK2_CLIP_END, TRACK2_CLIP_START, TRACK2_CLIP_END);
+}
+
+TEST_F(Au3InteractionTests, SplitClipsAtSilencesOnValidInterval)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackMinSilenceId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip
+    const auto clip = track->GetClip(0);
+    m_au3Interaction->splitClipsAtSilences({ { track->GetId(), clip->GetId() } });
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the split range operation is not 2";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK1_CLIP_START, TRACK1_CLIP_END, TRACK1_CLIP_START,
+                           TRACK1_CLIP_START + TRACK1_FIRST_SEGMENT_DURATION);
+
+    auto secondClip = track->GetClip(1);
+    ValidateClipProperties(secondClip, TRACK1_CLIP_START, TRACK1_CLIP_END,
+                           TRACK1_CLIP_START + TRACK1_FIRST_SEGMENT_DURATION + TRACK1_SILENCE_SEGMENT_DURATION,
+                           TRACK1_CLIP_END);
+}
+
+TEST_F(Au3InteractionTests, SplitClipsAtSilencesOnIntervalWithShortSilence)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackSmallSilenceId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip with a small silence
+    const auto clip = track->GetClip(0);
+    m_au3Interaction->splitClipsAtSilences({ { track->GetId(), clip->GetId() } });
+
+    //! [THEN] The number of intervals is 1 once the silence is less than 0.01s
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK2_CLIP_START, TRACK2_CLIP_END, TRACK2_CLIP_START, TRACK2_CLIP_END);
+}
+
+TEST_F(Au3InteractionTests, SplitClipsAtSilenceWhenSilenceAtStart)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence at the start
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackSilenceAtStartId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip
+    const auto clip = track->GetClip(0);
+    m_au3Interaction->splitClipsAtSilences({ { track->GetId(), clip->GetId() } });
+
+    //! [THEN] The number of intervals is 1 once the silence is at the start
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK4_CLIP_START, TRACK4_CLIP_END, TRACK4_CLIP_START + TRACK4_SILENCE_DURATION,
+                           TRACK4_CLIP_END);
+}
+
+TEST_F(Au3InteractionTests, SplitClipsAtSilenceWhenSilenceAtEnd)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence at the end
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackSilenceAtEndId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip
+    const auto clip = track->GetClip(0);
+    m_au3Interaction->splitClipsAtSilences({ { track->GetId(), clip->GetId() } });
+
+    //! [THEN] The number of intervals is 1 once the silence is at the end
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK4_CLIP_START, TRACK4_CLIP_END, TRACK4_CLIP_START,
+                           TRACK4_CLIP_START + TRACK4_FIRST_SEGMENT_DURATION);
+}
+
+TEST_F(Au3InteractionTests, MergeSelectedOnTrackOnValidInterval)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackTwoClipsId));
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Merge the clips
+    const auto clip1 = track->GetClip(0);
+    const auto clip2 = track->GetClip(1);
+    m_au3Interaction->mergeSelectedOnTracks({ track->GetId() }, TRACK3_CLIP1_START, TRACK3_CLIP2_END);
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the merge operation is not 1";
+
+    auto mergedClip = track->GetClip(0);
+    ValidateClipProperties(mergedClip, TRACK3_CLIP1_START, TRACK3_CLIP2_END, TRACK3_CLIP1_START, TRACK3_CLIP2_END);
 }
 }
