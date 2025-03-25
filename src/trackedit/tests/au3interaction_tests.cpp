@@ -319,6 +319,9 @@ TEST_F(Au3InteractionTests, SplitRangeSelectionAtSilencesOnInvalidInterval)
 
     //! [THEN] The number of intervals is still one
     ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK1_CLIP_START, TRACK1_CLIP_END, TRACK1_CLIP_START, TRACK1_CLIP_END);
 }
 
 TEST_F(Au3InteractionTests, SplitRangeSelectionAtSilencesOnIntervalWithShortSilence)
@@ -334,6 +337,9 @@ TEST_F(Au3InteractionTests, SplitRangeSelectionAtSilencesOnIntervalWithShortSile
 
     //! [THEN] The number of intervals is 1 once the silence is less than 0.01s
     ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK2_CLIP_START, TRACK2_CLIP_END, TRACK2_CLIP_START, TRACK2_CLIP_END);
 }
 
 TEST_F(Au3InteractionTests, SplitClipsAtSilencesOnValidInterval)
@@ -375,6 +381,9 @@ TEST_F(Au3InteractionTests, SplitClipsAtSilencesOnIntervalWithShortSilence)
 
     //! [THEN] The number of intervals is 1 once the silence is less than 0.01s
     ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK2_CLIP_START, TRACK2_CLIP_END, TRACK2_CLIP_START, TRACK2_CLIP_END);
 }
 
 TEST_F(Au3InteractionTests, SplitClipsAtSilenceWhenSilenceAtStart)
