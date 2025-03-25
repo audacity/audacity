@@ -98,7 +98,7 @@ void RealtimeEffectListItemMenuModel::prop_setEffectState(effects::RealtimeEffec
 void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
 {
     const MenuItemList& itemList = items();
-    const auto myEffectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    const auto myEffectId = muse::String::fromStdString(m_effectState->GetPluginID().ToStdString());
     for (MenuItem* category : itemList) {
         auto categoryChecked = false;
         for (MenuItem* subItem : category->subitems()) {

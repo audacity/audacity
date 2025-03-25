@@ -141,7 +141,7 @@ std::string EffectsProvider::effectName(const std::string& effectId) const
 
 std::string EffectsProvider::effectName(const effects::RealtimeEffectState& state) const
 {
-    return effectName(state.GetID().ToStdString());
+    return effectName(state.GetPluginID().ToStdString());
 }
 
 std::string EffectsProvider::effectSymbol(const std::string& effectId) const
@@ -211,7 +211,7 @@ void callOnLauncher(const RealtimeEffectStatePtr& state, const IEffectViewLaunch
     IF_ASSERT_FAILED(state) {
         return;
     }
-    if (const auto launcher = getLauncher(au::au3::wxToString(state->GetID()), launchRegister)) {
+    if (const auto launcher = getLauncher(au::au3::wxToString(state->GetPluginID()), launchRegister)) {
         func(*launcher, state);
     }
 }

@@ -16,7 +16,7 @@ void AbstractViewLauncher::doShowRealtimeEffect(const RealtimeEffectStatePtr& st
     }
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
     if (!instance) {
-        LOGW() << "Could not get instance for " << state->GetID().ToStdString();
+        LOGW() << "Could not get instance for " << state->GetPluginID().ToStdString();
         return;
     }
     const auto instanceId = instance->id();
@@ -49,7 +49,7 @@ void AbstractViewLauncher::hideRealtimeEffect(const RealtimeEffectStatePtr& stat
     }
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
     if (!instance) {
-        LOGW() << "Could not get instance for " << state->GetID().ToStdString();
+        LOGW() << "Could not get instance for " << state->GetPluginID().ToStdString();
         return;
     }
     const auto instanceId = instance->id();
@@ -70,7 +70,7 @@ void AbstractViewLauncher::toggleShowRealtimeEffect(const RealtimeEffectStatePtr
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
     if (!instance) {
         // This could happen if e.g. a VST plugin was uninstalled since the last run.
-        LOGW() << "Could not get instance for " << state->GetID().ToStdString();
+        LOGW() << "Could not get instance for " << state->GetPluginID().ToStdString();
         return;
     }
     const auto instanceId = instance->id();

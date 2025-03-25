@@ -94,7 +94,7 @@ const RealtimeEffectList& RealtimeEffectList::Get(
 bool
 RealtimeEffectList::AddState(std::shared_ptr<RealtimeEffectState> pState)
 {
-    const auto& id = pState->GetID();
+    const auto& id = pState->GetPluginID();
     if (pState->GetEffect() != nullptr) {
         auto shallowCopy = mStates;
         shallowCopy.emplace_back(pState);
@@ -122,7 +122,7 @@ RealtimeEffectList::ReplaceState(size_t index,
     if (index >= mStates.size()) {
         return false;
     }
-    const auto& id = pState->GetID();
+    const auto& id = pState->GetPluginID();
     if (pState->GetEffect() != nullptr) {
         auto shallowCopy = mStates;
 

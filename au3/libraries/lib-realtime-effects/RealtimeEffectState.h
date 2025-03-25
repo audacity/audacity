@@ -49,8 +49,8 @@ public:
     /*!
      Call with empty id is ignored.
      Called by the constructor that takes an id */
-    void SetID(const PluginID& id);
-    const PluginID& GetID() const noexcept;
+    void SetPluginID(const PluginID& id);
+    const PluginID& GetPluginID() const noexcept;
     //! Initializes the effect on demand
     const EffectInstanceFactory* GetEffect();
     //! const accessor will not initialize the effect on demand
@@ -132,7 +132,7 @@ private:
         return mpAccessState.load(std::memory_order_acquire);
     }
 
-    PluginID mID;
+    PluginID mPluginID;
 
     //! Stateful instance made by the plug-in
     std::weak_ptr<EffectInstance> mwInstance;

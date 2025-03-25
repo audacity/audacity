@@ -388,7 +388,7 @@ RealtimeEffectList* RealtimeEffectService::realtimeEffectList(TrackId trackId)
 
 std::string RealtimeEffectService::getEffectName(const RealtimeEffectState& state) const
 {
-    return effectsProvider()->effectName(state.GetID().ToStdString());
+    return effectsProvider()->effectName(state.GetPluginID().ToStdString());
 }
 }
 

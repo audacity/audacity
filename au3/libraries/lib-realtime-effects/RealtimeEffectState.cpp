@@ -344,19 +344,19 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
 
 RealtimeEffectState::RealtimeEffectState(const PluginID& id)
 {
-    SetID(id);
+    SetPluginID(id);
     BuildAll();
 }
 
 RealtimeEffectState::RealtimeEffectState(const RealtimeEffectState& other)
-    : RealtimeEffectState(other.mID)
+    : RealtimeEffectState(other.mPluginID)
 {
     *this = other;
 }
 
-RealtimeEffectState& RealtimeEffectState::operator =(const RealtimeEffectState& other)
+RealtimeEffectState& RealtimeEffectState::operator=(const RealtimeEffectState& other)
 {
-    assert(other.mID == mID);
+    assert(other.mPluginID == mPluginID);
     SetActive(other.IsActive());
     if (!mPlugin || !other.mPlugin) {
         return *this;
@@ -374,27 +374,27 @@ RealtimeEffectState::~RealtimeEffectState()
 {
 }
 
-void RealtimeEffectState::SetID(const PluginID& id)
+void RealtimeEffectState::SetPluginID(const PluginID& id)
 {
     bool empty = id.empty();
-    if (mID.empty() && !empty) {
-        mID = id;
+    if (mPluginID.empty() && !empty) {
+        mPluginID = id;
         GetEffect();
     } else {
-        // Set mID to non-empty at most once
+        // Set mPluginID to non-empty at most once
         assert(empty);
     }
 }
 
-const PluginID& RealtimeEffectState::GetID() const noexcept
+const PluginID& RealtimeEffectState::GetPluginID() const noexcept
 {
-    return mID;
+    return mPluginID;
 }
 
 const EffectInstanceFactory* RealtimeEffectState::GetEffect()
 {
     if (!mPlugin) {
-        mPlugin = EffectFactory::Call(mID);
+        mPlugin = EffectFactory::Call(mPluginID);
         if (mPlugin) {
             // Also make EffectSettings, but preserve activation
             auto wasActive = mMainSettings.settings.extra.GetActive();
@@ -795,10 +795,10 @@ bool RealtimeEffectState::HandleXMLTag(
     if (tag == XMLTag()) {
         mParameters.clear();
         mPlugin = nullptr;
-        mID.clear();
+        mPluginID.clear();
         for (auto&[attr, value] : attrs) {
             if (attr == idAttribute) {
-                SetID(value.ToWString());
+                SetPluginID(value.ToWString());
                 if (!mPlugin) {
                     // TODO - complain!!!!
                 }

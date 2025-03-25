@@ -58,7 +58,7 @@ muse::Ret Vst3ViewLauncher::showEffect(const EffectInstanceId& instanceId) const
 
 void Vst3ViewLauncher::showRealtimeEffect(const RealtimeEffectStatePtr& state) const
 {
-    const auto effectId = au3::wxToString(state->GetID());
+    const auto effectId = au3::wxToString(state->GetPluginID());
 
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
     if (!instance) {
