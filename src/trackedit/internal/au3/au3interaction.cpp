@@ -2341,14 +2341,19 @@ bool Au3Interaction::canRedo()
 
 bool Au3Interaction::undoRedoToIndex(size_t index)
 {
+    if (projectHistory()->currentStateIndex() == index) {
+        return false;
+    }
+
     auto trackeditProject = globalContext()->currentProject()->trackeditProject();
+
+    const TracksAndClips before = trackeditProject->buildTracksAndClips();
 
     projectHistory()->undoRedoToIndex(index);
 
-    // Redo removes all tracks from current state and
-    // inserts tracks from the previous state so we need
-    // to reload whole model
-    trackeditProject->reload();
+    const TracksAndClips after = trackeditProject->buildTracksAndClips();
+
+    changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
 
     return true;
 }

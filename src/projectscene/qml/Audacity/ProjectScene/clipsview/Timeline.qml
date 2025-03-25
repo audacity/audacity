@@ -14,9 +14,11 @@ Rectangle {
     color: ui.theme.backgroundSecondaryColor
 
     //! NOTE This element must be the same width as the track wave visible area.
-    //! If this is different, than appropriate changes must be made.
+    //! If this is different, then appropriate changes must be made.
     onWidthChanged: {
-        timelineContext.onResizeFrameWidth(root.width)
+        if (root.visible) {
+            timelineContext.onResizeFrameWidth(root.width)
+        }
     }
 
     function init() {
