@@ -34,8 +34,14 @@ namespace au::effects {
  * This allows realtime effect list UI models to not modify things unnecessarily (like closing a realtime effect dialog)
  */
 
+namespace {
+static std::weak_ptr<IEffectsProvider> wEffectsProvider;
+}
+
 void RealtimeEffectService::init()
 {
+    wEffectsProvider = effectsProvider();
+
     globalContext()->currentProjectChanged().onNotify(this, [this]
     { onProjectChanged(globalContext()->currentProject()); });
 
@@ -99,17 +105,15 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
         }
     });
 
+
+    // Proactively load realtime effects.
+    for (auto i = 0u; i < list.GetStatesCount(); ++i) {
+        list.GetStateAt(i)->GetEffect();
+    }
+
     if (m_trackUndoRedoOngoing) {
         m_modifiedTracks.insert(trackId);
     } else {
-        // Proactively load realtime effects.
-        for (auto i = 0u; i < list.GetStatesCount(); ++i) {
-            const auto state = list.GetStateAt(i);
-            const auto id = EffectId::fromStdString(state->GetID().ToStdString());
-            if (effectsProvider()->loadEffect(id)) {
-                state->GetEffect();
-            }
-        }
         m_realtimeEffectStackChanged.send(trackId);
     }
 }
@@ -332,23 +336,26 @@ void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& sta
                                        "Change effect order");
 }
 
-bool RealtimeEffectService::isActive(const RealtimeEffectStatePtr& stateId) const
+bool RealtimeEffectService::isActive(const RealtimeEffectStatePtr& state) const
 {
-    if (stateId == 0) {
+    if (state == nullptr) {
         return false;
     }
-    return stateId->GetSettings().extra.GetActive();
+    return state->GetSettings().extra.GetActive();
 }
 
-void RealtimeEffectService::setIsActive(const RealtimeEffectStatePtr& stateId, bool isActive)
+void RealtimeEffectService::setIsActive(const RealtimeEffectStatePtr& state, bool isActive)
 {
-    if (stateId->GetSettings().extra.GetActive() == isActive) {
+    if (state == nullptr) {
         return;
     }
-    stateId->SetActive(isActive);
+    if (state->GetSettings().extra.GetActive() == isActive) {
+        return;
+    }
+    state->SetActive(isActive);
     projectHistory()->modifyState();
     projectHistory()->markUnsaved();
-    m_isActiveChanged.send(stateId);
+    m_isActiveChanged.send(state);
 }
 
 muse::async::Channel<RealtimeEffectStatePtr> RealtimeEffectService::isActiveChanged() const
@@ -390,7 +397,20 @@ std::string RealtimeEffectService::getEffectName(const RealtimeEffectState& stat
 {
     return effectsProvider()->effectName(state.GetID().ToStdString());
 }
+
+const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const PluginID& id)
+{
+    const auto provider = wEffectsProvider.lock();
+    // We don't expect this to be called before the framework is initialized or after it's shut down.
+    IF_ASSERT_FAILED(provider) {
+        return nullptr;
+    }
+    if (!provider->loadEffect(EffectId::fromStdString(id.ToStdString()))) {
+        return nullptr;
+    }
+    return EffectManager::GetInstanceFactory(id);
+}
 }
 
 // Inject a factory for realtime effects
-static RealtimeEffectState::EffectFactory::Scope scope{ &EffectManager::GetInstanceFactory };
+static RealtimeEffectState::EffectFactory::Scope scope{ &au::effects::RealtimeEffectService::getInstanceFactory };
