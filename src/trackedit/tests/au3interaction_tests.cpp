@@ -4,10 +4,10 @@
 #include <gtest/gtest.h>
 
 #include "../internal/au3/au3interaction.h"
-#include "../internal/au3/tracktemplatefactory.h"
 
 #include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
+#include "testutility/tracktemplatefactory.h"
 #include "mocks/trackeditprojectmock.h"
 #include "mocks/projecthistorymock.h"
 
@@ -21,6 +21,7 @@ using ::testing::_;
 
 using namespace au;
 using namespace au::au3;
+using namespace au::testutility;
 
 namespace au::trackedit {
 /*******************************************************************************

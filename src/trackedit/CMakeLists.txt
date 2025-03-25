@@ -50,8 +50,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditclipboard.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/selectionrestorer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/selectionrestorer.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/tracktemplatefactory.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/tracktemplatefactory.h
     )
 
 # AU3
@@ -60,7 +58,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3defs.cmake)
 
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap testutility)
 
 set(MODULE_LINK
     ${MODULE_LINK}

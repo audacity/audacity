@@ -4,7 +4,7 @@
 
 #include <functional>
 #include <memory>
-namespace au::trackedit {
+namespace au::testutility {
 using ClipDataGeneratorFunc = std::function<std::vector<float>(double duration, double sampleRate)>;
 
 struct ClipTemplate {
