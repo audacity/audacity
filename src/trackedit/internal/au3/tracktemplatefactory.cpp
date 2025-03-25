@@ -4,6 +4,7 @@
 #include "WaveClip.h"
 
 #include <tuple>
+#include <random>
 
 using namespace au::au3;
 
@@ -49,5 +50,23 @@ au::au3::Au3TrackId TrackTemplateFactory::addTrackFromTemplate(const std::string
 {
     auto track = createTrackFromTemplate(name, clipTemplates);
     return addTrackToProject(track);
+}
+
+std::vector<float> TrackTemplateFactory::createNoise(double duration, double sampleRate)
+{
+    std::vector<float> data(static_cast<size_t>(duration * sampleRate));
+    std::default_random_engine generator;
+    std::normal_distribution<float> distribution(0.0f, 1.0f);
+
+    for (auto& sample : data) {
+        sample = distribution(generator);
+    }
+
+    return data;
+}
+
+std::vector<float> TrackTemplateFactory::createSilence(double duration, double sampleRate)
+{
+    return std::vector<float>(static_cast<size_t>(duration * sampleRate), 0.0f);
 }
 }

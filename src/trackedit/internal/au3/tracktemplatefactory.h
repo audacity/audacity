@@ -20,6 +20,9 @@ public:
     au::au3::Au3TrackId addTrackToProject(std::shared_ptr<WaveTrack> track);
     au::au3::Au3TrackId addTrackFromTemplate(const std::string& name, const std::vector<ClipTemplate>& clipTemplates);
 
+    static std::vector<float> createNoise(double duration, double sampleRate);
+    static std::vector<float> createSilence(double duration, double sampleRate);
+
 private:
     au::au3::Au3Project& m_project;
     double m_sampleRate;

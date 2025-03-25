@@ -14,8 +14,6 @@
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
 
-#include <random>
-
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Truly;
@@ -130,24 +128,6 @@ constexpr static double TRACK5_SILENCE_DURATION = 450 * SAMPLE_INTERVAL;
 constexpr static double TRACK5_CLIP_DURATION = TRACK5_FIRST_SEGMENT_DURATION + TRACK5_SILENCE_DURATION;
 constexpr static double TRACK5_CLIP_END = TRACK5_CLIP_START + TRACK5_CLIP_DURATION;
 
-static std::vector<float> createNoise(double duration, double sampleRate)
-{
-    std::vector<float> data(static_cast<size_t>(duration * sampleRate));
-    std::default_random_engine generator;
-    std::normal_distribution<float> distribution(0.0f, 1.0f);
-
-    for (auto& sample : data) {
-        sample = distribution(generator);
-    }
-
-    return data;
-}
-
-static std::vector<float> createSilence(double duration, double sampleRate)
-{
-    return std::vector<float>(static_cast<size_t>(duration * sampleRate), 0.0f);
-}
-
 class Au3InteractionTests : public ::testing::Test
 {
 public:
@@ -189,40 +169,40 @@ public:
 
         m_trackMinSilenceId  = factory.addTrackFromTemplate("clipWithMinSilence", {
                 { TRACK1_CLIP_START, {
-                      { TRACK1_FIRST_SEGMENT_DURATION, createNoise },
-                      { TRACK1_SILENCE_SEGMENT_DURATION, createSilence },
-                      { TRACK1_SECOND_SEGMENT_DURATION, createNoise }
+                      { TRACK1_FIRST_SEGMENT_DURATION, TrackTemplateFactory::createNoise },
+                      { TRACK1_SILENCE_SEGMENT_DURATION, TrackTemplateFactory::createSilence },
+                      { TRACK1_SECOND_SEGMENT_DURATION, TrackTemplateFactory::createNoise }
                   } }
             });
 
         m_trackSmallSilenceId = factory.addTrackFromTemplate("clipWithSmallSilence", {
                 { TRACK2_CLIP_START, {
-                      { TRACK2_FIRST_SEGMENT_DURATION, createNoise },
-                      { TRACK2_SILENCE_SEGMENT_DURATION, createSilence },
-                      { TRACK2_SECOND_SEGMENT_DURATION, createNoise }
+                      { TRACK2_FIRST_SEGMENT_DURATION, TrackTemplateFactory::createNoise },
+                      { TRACK2_SILENCE_SEGMENT_DURATION, TrackTemplateFactory::createSilence },
+                      { TRACK2_SECOND_SEGMENT_DURATION, TrackTemplateFactory::createNoise }
                   } }
             });
 
         m_trackTwoClipsId = factory.addTrackFromTemplate("twoClips", {
                 { TRACK3_CLIP1_START, {
-                      { TRACK3_CLIP1_DURATION, createNoise }
+                      { TRACK3_CLIP1_DURATION, TrackTemplateFactory::createNoise }
                   } },
                 { TRACK3_CLIP2_START, {
-                      { TRACK3_CLIP2_DURATION, createNoise }
+                      { TRACK3_CLIP2_DURATION, TrackTemplateFactory::createNoise }
                   } }
             });
 
         m_trackSilenceAtStartId = factory.addTrackFromTemplate("clipWithSilenceAtStart", {
                 { TRACK4_CLIP_START, {
-                      { TRACK4_SILENCE_DURATION, createSilence },
-                      { TRACK4_FIRST_SEGMENT_DURATION, createNoise }
+                      { TRACK4_SILENCE_DURATION, TrackTemplateFactory::createSilence },
+                      { TRACK4_FIRST_SEGMENT_DURATION, TrackTemplateFactory::createNoise }
                   } }
             });
 
         m_trackSilenceAtEndId = factory.addTrackFromTemplate("clipWithSilenceAtEnd", {
                 { TRACK5_CLIP_START, {
-                      { TRACK5_FIRST_SEGMENT_DURATION, createNoise },
-                      { TRACK5_SILENCE_DURATION, createSilence }
+                      { TRACK5_FIRST_SEGMENT_DURATION, TrackTemplateFactory::createNoise },
+                      { TRACK5_SILENCE_DURATION, TrackTemplateFactory::createSilence }
                   } }
             });
     }
