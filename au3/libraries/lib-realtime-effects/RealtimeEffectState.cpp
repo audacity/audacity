@@ -348,13 +348,7 @@ RealtimeEffectState::RealtimeEffectState(const PluginID& id)
     BuildAll();
 }
 
-RealtimeEffectState::RealtimeEffectState(const RealtimeEffectState& other)
-    : RealtimeEffectState(other.mID)
-{
-    *this = other;
-}
-
-RealtimeEffectState& RealtimeEffectState::operator =(const RealtimeEffectState& other)
+RealtimeEffectState& RealtimeEffectState::operator=(const RealtimeEffectState& other)
 {
     assert(other.mID == mID);
     SetActive(other.IsActive());

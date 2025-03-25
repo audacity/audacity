@@ -41,8 +41,13 @@ public:
                                                            > {};
 
     explicit RealtimeEffectState(const PluginID& id);
-    RealtimeEffectState(const RealtimeEffectState& other);
     RealtimeEffectState& operator =(const RealtimeEffectState& other);
+
+    // Copying expects shared_from_this() to return a non-null pointer.
+    // First make_shared, then use the assignment operator instead.
+    RealtimeEffectState(const RealtimeEffectState&) = delete;
+
+public:
     ~RealtimeEffectState();
 
     //! May be called with nonempty id at most once in the lifetime of a state
