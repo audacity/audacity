@@ -81,6 +81,9 @@ public:
     bool needShowSplashScreen() const override;
     void setNeedShowSplashScreen(bool show) override;
 
+    const QString& preferencesDialogLastOpenedPageId() const override;
+    void setPreferencesDialogLastOpenedPageId(const QString& lastOpenedPageId) override;
+
     void startEditSettings() override;
     void applySettings() override;
     void rollbackSettings() override;
@@ -106,6 +109,8 @@ private:
     muse::Ret writeSessionState(const QByteArray& data);
 
     muse::io::paths_t parseSessionProjectsPaths(const QByteArray& json) const;
+
+    QString m_preferencesDialogCurrentPageId;
 };
 }
 
