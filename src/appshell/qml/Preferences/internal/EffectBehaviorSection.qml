@@ -13,6 +13,8 @@ BaseSection {
 
     property var editPreferencesModel: null
 
+    navigationOrderEnd: root.navigation.order
+
     Column {
         width: parent.width
         spacing: 24
