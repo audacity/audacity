@@ -142,7 +142,12 @@ void PreferencesModel::load(const QString& currentPageId)
     if (!currentPageId.isEmpty()) {
         setCurrentPageId(currentPageId);
     } else {
-        setCurrentPageId("general");
+        const QString& lastOpenedPageId = configuration()->preferencesDialogLastOpenedPageId();
+        if (lastOpenedPageId.isEmpty()) {
+            setCurrentPageId("general");
+        } else {
+            setCurrentPageId(lastOpenedPageId);
+        }
     }
 
     m_rootItem = new PreferencePageItem();
@@ -196,6 +201,7 @@ void PreferencesModel::resetFactorySettings()
 
 void PreferencesModel::apply()
 {
+    configuration()->setPreferencesDialogLastOpenedPageId(m_currentPageId);
     configuration()->applySettings();
 }
 
