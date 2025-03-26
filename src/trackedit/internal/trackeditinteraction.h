@@ -47,6 +47,8 @@ private:
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
     bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    bool splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    bool splitClipsIntoNewTracks(const ClipKeyList& clipKeyList) override;
     bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
     bool duplicateClip(const ClipKey& clipKey) override;
