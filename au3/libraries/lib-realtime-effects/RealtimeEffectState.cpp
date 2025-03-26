@@ -358,6 +358,9 @@ RealtimeEffectState& RealtimeEffectState::operator =(const RealtimeEffectState& 
 {
     assert(other.mID == mID);
     SetActive(other.IsActive());
+    if (!mPlugin || !other.mPlugin) {
+        return *this;
+    }
     CommandParameters params;
     if (other.mPlugin->SaveSettings(mMainSettings.settings, params)) {
         mPlugin->LoadSettings(params, mMainSettings.settings);
