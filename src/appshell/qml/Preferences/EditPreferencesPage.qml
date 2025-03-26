@@ -26,6 +26,8 @@ PreferencesPage {
         spacing: root.sectionsSpacing
 
         EffectBehaviorSection {
+            id: effectBehaviorSection
+
             editPreferencesModel: editPreferencesModel
 
             navigation.section: root.navigationSection
@@ -40,7 +42,7 @@ PreferencesPage {
             editPreferencesModel: editPreferencesModel
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 1
+            navigation.order: effectBehaviorSection.navigationOrderEnd + 1
         }
 
         SeparatorLine { }
