@@ -152,7 +152,7 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("general", QT_TRANSLATE_NOOP("appshell/preferences", "General"), IconCode::Code::SETTINGS_COG,
                  "Preferences/GeneralPreferencesPage.qml"),
 
-        makeItem("appearance", QT_TRANSLATE_NOOP("appshell/preferences", "Interface"), IconCode::Code::BRUSH,
+        makeItem("appearance", QT_TRANSLATE_NOOP("appshell/preferences", "Appearance"), IconCode::Code::BRUSH,
                  "Preferences/AppearancePreferencesPage.qml"),
 
         makeItem("audio-settings", QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"), IconCode::Code::AUDIO,
@@ -167,14 +167,16 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("editing", QT_TRANSLATE_NOOP("appshell/preferences",
                                               "Editing"), IconCode::Code::EDIT, "Preferences/EditPreferencesPage.qml"),
 
-        makeItem("effects", QT_TRANSLATE_NOOP("appshell/preferences", "Effects"), IconCode::Code::WAVEFORM, ""),
+        makeItem("plugin", QT_TRANSLATE_NOOP("appshell/preferences", "Plugins"), IconCode::Code::PLUGIN, ""),
+
+        makeItem("music", QT_TRANSLATE_NOOP("appshell/preferences", "Music"), IconCode::Code::METRONOME, ""),
 
         makeItem("cloud", QT_TRANSLATE_NOOP("appshell/preferences", "Cloud"), IconCode::Code::CLOUD, ""),
 
         makeItem("shortcuts", QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
                  "Preferences/ShortcutsPreferencesPage.qml"),
 
-        makeItem("plugin", QT_TRANSLATE_NOOP("appshell/preferences", "Plugin manager"), IconCode::Code::PLUGIN, "")
+        makeItem("advanced", QT_TRANSLATE_NOOP("appshell/preferences", "Advanced options"), IconCode::Code::SETTINGS_COG, ""),
     };
 
     for (PreferencePageItem* item: items) {
