@@ -29,11 +29,6 @@ EffectMetaList VstEffectsRepository::effectMetaList() const
             continue;
         }
 
-        bool ok = registerPlugin(info.path);
-        if (!ok) {
-            continue;
-        }
-
         EffectMeta meta;
         meta.id = muse::String(info.meta.id.c_str());
         meta.title = muse::io::completeBasename(info.path).toString();
@@ -46,9 +41,27 @@ EffectMetaList VstEffectsRepository::effectMetaList() const
     return effects;
 }
 
-bool VstEffectsRepository::registerPlugin(const muse::io::path_t& path) const
+bool VstEffectsRepository::ensurePluginIsLoaded(const EffectId& effectId) const
 {
+    if (PluginManager::Get().IsPluginLoaded(au3::wxFromString(effectId))) {
+        return true;
+    }
+
     VST3EffectsModule vst3Module;
+
+    const auto plugins = knownPlugins()->pluginInfoList();
+    const auto it = std::find_if(plugins.begin(), plugins.end(), [&](const muse::audioplugins::AudioPluginInfo& info) {
+        return info.meta.id == effectId.toStdString();
+    });
+    if (it == plugins.end()) {
+        LOGE() << "plugin not in registry: " << effectId;
+        return false;
+    }
+    if (!it->enabled) {
+        LOGW() << "plugin disabled: " << effectId;
+        return false;
+    }
+    const auto& path = it->path;
 
     PluginID pluginId;
     TranslatableString errorMessage{};

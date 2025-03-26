@@ -17,8 +17,6 @@ public:
     VstEffectsRepository() = default;
 
     EffectMetaList effectMetaList() const override;
-
-private:
-    bool registerPlugin(const muse::io::path_t& path) const;
+    bool ensurePluginIsLoaded(const EffectId&) const override;
 };
 }

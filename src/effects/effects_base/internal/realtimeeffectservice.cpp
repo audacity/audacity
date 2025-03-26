@@ -102,6 +102,14 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
     if (m_trackUndoRedoOngoing) {
         m_modifiedTracks.insert(trackId);
     } else {
+        // Proactively load realtime effects.
+        for (auto i = 0u; i < list.GetStatesCount(); ++i) {
+            const auto state = list.GetStateAt(i);
+            const auto id = EffectId::fromStdString(state->GetID().ToStdString());
+            if (effectsProvider()->loadEffect(id)) {
+                state->GetEffect();
+            }
+        }
         m_realtimeEffectStackChanged.send(trackId);
     }
 }
@@ -233,6 +241,7 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
         return nullptr;
     }
 
+    effectsProvider()->loadEffect(effectId);
     if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString())) {
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
@@ -281,6 +290,7 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         return nullptr;
     }
 
+    effectsProvider()->loadEffect(newEffectId);
     const auto oldState = data->effectList->GetStateAt(effectListIndex);
     if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString())) {
         const auto oldEffectName = getEffectName(*oldState);

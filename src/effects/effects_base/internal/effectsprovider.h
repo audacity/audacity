@@ -39,6 +39,7 @@ public:
     EffectCategoryList effectsCategoryList() const override;
 
     EffectMeta meta(const EffectId& effectId) const override;
+    bool loadEffect(const EffectId& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
     std::string effectName(const effects::RealtimeEffectState& state) const override;
     std::string effectSymbol(const std::string& effectId) const override;

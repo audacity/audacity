@@ -108,6 +108,25 @@ EffectMeta EffectsProvider::meta(const EffectId& effectId) const
     return EffectMeta();
 }
 
+bool EffectsProvider::loadEffect(const EffectId& effectId) const
+{
+    const auto it = std::find_if(m_effects.begin(), m_effects.end(), [&](const EffectMeta& meta) {
+        return meta.id == effectId;
+    });
+    if (it == m_effects.end()) {
+        return false;
+    }
+    const auto isVst = it->categoryId == VST_CATEGORY_ID;
+    if (!isVst) {
+        // If an effect is not a VST and is in m_effects, then it's a built-in effect and it's loaded already.
+        return true;
+    }
+    IF_ASSERT_FAILED(vstEffectsRepository()) {
+        return false;
+    }
+    return vstEffectsRepository()->ensurePluginIsLoaded(effectId);
+}
+
 std::string EffectsProvider::effectName(const std::string& effectId) const
 {
     const auto desc = PluginManager::Get().GetPlugin(effectId);
@@ -145,6 +164,9 @@ bool EffectsProvider::supportsMultipleClipSelection(const EffectId& effectId) co
 
 Effect* EffectsProvider::effect(const EffectId& effectId) const
 {
+    if (!loadEffect(effectId)) {
+        return nullptr;
+    }
     PluginID pluginID = effectId.toStdString();
     const PluginDescriptor* plug = PluginManager::Get().GetPlugin(pluginID);
     if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
@@ -195,6 +217,10 @@ void callOnLauncher(const RealtimeEffectStatePtr& state, const IEffectViewLaunch
 muse::Ret EffectsProvider::showEffect(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
     LOGD() << "try open effect: " << effectId << ", instanceId: " << instanceId;
+
+    if (!loadEffect(effectId)) {
+        return muse::make_ret(muse::Ret::Code::NotSupported);
+    }
 
     const auto launcher = getLauncher(effectId, *viewLaunchRegister());
     if (!launcher) {
