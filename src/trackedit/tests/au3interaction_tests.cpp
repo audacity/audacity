@@ -89,6 +89,9 @@ namespace au::trackedit {
  * duration will be maintained but the clip will be trimmed at the start or end.
  * - Merge operations should join two clips into a single clip with the same
  * duration as the sum of the two clips.
+ * - Split range selection into new tracks only adds a track if the interval
+ * contains clip data.
+ * - Split into new track should keep the clip / selection start time.
  *******************************************************************************/
 
 constexpr static double DEFAULT_SAMPLE_RATE = 44100.0;
@@ -128,6 +131,8 @@ constexpr static double TRACK5_FIRST_SEGMENT_DURATION = 10 * SAMPLE_INTERVAL;
 constexpr static double TRACK5_SILENCE_DURATION = 450 * SAMPLE_INTERVAL;
 constexpr static double TRACK5_CLIP_DURATION = TRACK5_FIRST_SEGMENT_DURATION + TRACK5_SILENCE_DURATION;
 constexpr static double TRACK5_CLIP_END = TRACK5_CLIP_START + TRACK5_CLIP_DURATION;
+
+constexpr static size_t NUM_TRACKS = 5;
 
 class Au3InteractionTests : public ::testing::Test
 {
@@ -445,5 +450,105 @@ TEST_F(Au3InteractionTests, MergeSelectedOnTrackOnValidInterval)
 
     auto mergedClip = track->GetClip(0);
     ValidateClipProperties(mergedClip, TRACK3_CLIP1_START, TRACK3_CLIP2_END, TRACK3_CLIP1_START, TRACK3_CLIP2_END);
+}
+
+TEST_F(Au3InteractionTests, SplitRangeSelectionIntoNewTracks)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackTwoClipsId));
+
+    //! [THEN] We have NUM_TRACKS tracks
+    const auto& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), NUM_TRACKS) << "Precondition failed: The number of tracks is not 5";
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Splitting into new tracks
+    m_au3Interaction->splitRangeSelectionIntoNewTracks({ track->GetId() }, TRACK3_CLIP1_START, TRACK3_CLIP2_END);
+
+    //! [THEN] The number of intervals now is 0
+    ASSERT_EQ(track->NIntervals(), 0) << "The number of intervals after the split range operation is not 0";
+
+    //! [THEN] Now we have added a new track
+    ASSERT_EQ(projectTracks.Size(), NUM_TRACKS + 1) << "The number of tracks after the split range operation is not 6";
+
+    //! [THEN] The new track has the same clip information as the original one
+    auto newTrack = projectTracks.rbegin();
+    auto newTrackId = (*newTrack)->GetId();
+    auto newTrackWave = DomAccessor::findWaveTrack(projectRef(), newTrackId);
+    ASSERT_EQ(newTrackWave->NIntervals(), 2) << "The number of intervals in the new track is not 2";
+
+    auto firstClip = newTrackWave->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK3_CLIP1_START, TRACK3_CLIP1_END, TRACK3_CLIP1_START, TRACK3_CLIP1_END);
+
+    auto secondClip = newTrackWave->GetClip(1);
+    ValidateClipProperties(secondClip, TRACK3_CLIP2_START, TRACK3_CLIP2_END, TRACK3_CLIP2_START, TRACK3_CLIP2_END);
+}
+
+TEST_F(Au3InteractionTests, SplitRangeSelectionIntoNewTracksOutOfClipBounds)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackTwoClipsId));
+
+    //! [THEN] We have NUM_TRACKS tracks
+    const auto& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), NUM_TRACKS) << "Precondition failed: The number of tracks is not 5";
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Splitting into new tracks outside the clip bounds
+    m_au3Interaction->splitRangeSelectionIntoNewTracks({ track->GetId() }, TRACK3_CLIP2_END, TRACK3_CLIP2_END + 1.0);
+
+    //! [THEN] The number of intervals is still 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the split range operation is not 2";
+
+    //! [THEN] The number of tracks is still NUM_TRACKS
+    ASSERT_EQ(projectTracks.Size(), NUM_TRACKS) << "The number of tracks after the split range operation is not 5";
+
+    //! [THEN] The clip information is still the same
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK3_CLIP1_START, TRACK3_CLIP1_END, TRACK3_CLIP1_START, TRACK3_CLIP1_END);
+
+    auto secondClip = track->GetClip(1);
+    ValidateClipProperties(secondClip, TRACK3_CLIP2_START, TRACK3_CLIP2_END, TRACK3_CLIP2_START, TRACK3_CLIP2_END);
+}
+
+TEST_F(Au3InteractionTests, SplitRangeClipsIntoNewTracks)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(m_trackTwoClipsId));
+
+    //! [THEN] We have NUM_TRACKS tracks
+    const auto& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), NUM_TRACKS) << "Precondition failed: The number of tracks is not 5";
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Splitting into new tracks
+    const auto clip1 = track->GetClip(0);
+    const auto clip2 = track->GetClip(1);
+    m_au3Interaction->splitClipsIntoNewTracks({ { track->GetId(), clip1->GetId() } });
+
+    //! [THEN] The number of intervals now is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    //! [THEN] Now we have added a new track
+    ASSERT_EQ(projectTracks.Size(), NUM_TRACKS + 1) << "The number of tracks after the split range operation is not 6";
+
+    //! [THEN] The original track has only the second clip
+    auto firstClip = track->GetClip(0);
+    ValidateClipProperties(firstClip, TRACK3_CLIP2_START, TRACK3_CLIP2_END, TRACK3_CLIP2_START, TRACK3_CLIP2_END);
+
+    //! [THEN] The new track has the first clip
+    auto newTrack = projectTracks.rbegin();
+    auto newTrackId = (*newTrack)->GetId();
+    auto newTrackWave = DomAccessor::findWaveTrack(projectRef(), newTrackId);
+    ASSERT_EQ(newTrackWave->NIntervals(), 1) << "The number of intervals in the new track is not 1";
+
+    auto newClip = newTrackWave->GetClip(0);
+    ValidateClipProperties(newClip, TRACK3_CLIP1_START, TRACK3_CLIP1_END, TRACK3_CLIP1_START, TRACK3_CLIP1_END);
 }
 }
