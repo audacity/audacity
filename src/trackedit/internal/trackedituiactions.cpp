@@ -121,7 +121,7 @@ const UiActionList TrackeditUiActions::m_actions = {
     UiAction("split",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Split"),
+             TranslatableString("action", "Split clip"),
              TranslatableString("action", "Split")
              ),
     UiAction("join",
