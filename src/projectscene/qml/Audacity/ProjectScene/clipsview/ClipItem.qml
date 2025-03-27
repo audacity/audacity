@@ -451,6 +451,7 @@ Rectangle {
                     onFocusChanged: {
                         if (!titleEdit.focus) {
                             titleEdit.visible = false
+                            titleEdit.accepted()
                         }
                     }
                 }
