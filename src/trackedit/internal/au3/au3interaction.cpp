@@ -1609,7 +1609,7 @@ bool Au3Interaction::splitRangeSelectionIntoNewTracks(const TrackIdList& tracksI
         prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
     }
 
-    projectHistory()->pushHistoryState("Split into new tracks", "Split into new tracks");
+    projectHistory()->pushHistoryState("Split into new track", "Split into new track");
 
     return true;
 }
@@ -1648,7 +1648,7 @@ bool Au3Interaction::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList)
         prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
     }
 
-    projectHistory()->pushHistoryState("Split into new tracks", "Split into new tracks");
+    projectHistory()->pushHistoryState("Split into new track", "Split into new track");
 
     return true;
 }
