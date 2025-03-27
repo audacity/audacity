@@ -837,7 +837,6 @@ void TrackeditActionsController::mergeSelectedOnTrack(const muse::actions::Actio
 
     secs_t begin = args.arg<secs_t>(1);
     secs_t end = args.arg<secs_t>(2);
-    secs_t duration = end - begin;
 
     trackeditInteraction()->mergeSelectedOnTracks(tracksIds, begin, end);
 }
@@ -1004,7 +1003,7 @@ void TrackeditActionsController::duplicateTracks(const muse::actions::ActionData
     trackeditInteraction()->duplicateTracks(trackIds);
 }
 
-void TrackeditActionsController::moveTracksUp(const muse::actions::ActionData& args)
+void TrackeditActionsController::moveTracksUp(const muse::actions::ActionData&)
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
@@ -1015,7 +1014,7 @@ void TrackeditActionsController::moveTracksUp(const muse::actions::ActionData& a
     trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Up);
 }
 
-void TrackeditActionsController::moveTracksDown(const muse::actions::ActionData& args)
+void TrackeditActionsController::moveTracksDown(const muse::actions::ActionData&)
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
@@ -1026,7 +1025,7 @@ void TrackeditActionsController::moveTracksDown(const muse::actions::ActionData&
     trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Down);
 }
 
-void TrackeditActionsController::moveTracksToTop(const muse::actions::ActionData& args)
+void TrackeditActionsController::moveTracksToTop(const muse::actions::ActionData&)
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
@@ -1037,7 +1036,7 @@ void TrackeditActionsController::moveTracksToTop(const muse::actions::ActionData
     trackeditInteraction()->moveTracks(trackIds, TrackMoveDirection::Top);
 }
 
-void TrackeditActionsController::moveTracksToBottom(const muse::actions::ActionData& args)
+void TrackeditActionsController::moveTracksToBottom(const muse::actions::ActionData&)
 {
     TrackIdList trackIds = selectionController()->selectedTracks();
 
@@ -1163,7 +1162,7 @@ void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& 
     notifyActionCheckedChanged(q.toString());
 }
 
-bool TrackeditActionsController::actionChecked(const ActionCode& actionCode) const
+bool TrackeditActionsController::actionChecked(const ActionCode&) const
 {
     //! TODO AU4
     return false;
