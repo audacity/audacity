@@ -120,7 +120,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     {
         ActionQuery q("action://effects/presets/export");
         q.addParam("instanceId", Val(instanceId));
-        MenuItem* item = makeMenuItem("action://effects/presets/export");
+        MenuItem* item = makeMenuItem(q.toString());
         items << item;
     }
 
