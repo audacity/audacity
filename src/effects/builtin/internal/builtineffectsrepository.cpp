@@ -70,6 +70,7 @@ void BuiltinEffectsRepository::updateEffectMetaList()
                           bool supportsMultipleClipSelection) {
         EffectMeta meta;
         meta.id = au3::wxToString(desc.GetID());
+        meta.family = EffectFamily::Builtin;
         meta.categoryId = BUILTIN_CATEGORY_ID;
         meta.title = title;
         meta.description = description;

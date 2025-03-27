@@ -34,8 +34,15 @@ using RealtimeEffectStatePtr = std::shared_ptr<RealtimeEffectState>;
 using TrackId = long;
 using EffectChainLinkIndex = int;
 
+enum class EffectFamily {
+    Unknown = -1,
+    Builtin,
+    VST3,
+};
+
 struct EffectMeta {
     EffectId id;
+    EffectFamily family = EffectFamily::Unknown;
     muse::String title;
     muse::String description;
     muse::String version;
