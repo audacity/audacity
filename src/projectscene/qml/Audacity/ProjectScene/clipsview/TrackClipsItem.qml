@@ -52,10 +52,6 @@ Item {
 
     ClipsListModel {
         id: clipsModel
-
-        onRequestClipTitleEdit: function(index){
-            repeator.itemAt(index).editTitle()
-        }
     }
 
     TracksViewStateModel {
