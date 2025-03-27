@@ -154,6 +154,16 @@ bool TrackeditInteraction::splitRangeSelectionAtSilences(const TrackIdList& trac
     return withPlaybackStop(&ITrackeditInteraction::splitRangeSelectionAtSilences, tracksIds, begin, end);
 }
 
+bool TrackeditInteraction::splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitRangeSelectionIntoNewTracks, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitClipsIntoNewTracks, clipKeyList);
+}
+
 bool TrackeditInteraction::mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
     return withPlaybackStop(&ITrackeditInteraction::mergeSelectedOnTracks, tracksIds, begin, end);

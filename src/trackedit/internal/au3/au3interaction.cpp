@@ -1577,6 +1577,82 @@ bool Au3Interaction::splitClipsAtSilences(const ClipKeyList& clipKeyList)
     return true;
 }
 
+bool Au3Interaction::splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+{
+    for (const auto& trackId : tracksIds) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        bool hasClipInSelection = false;
+        for (const auto& interval : waveTrack->Intervals()) {
+            if ((interval->GetPlayStartTime() < end) && (interval->GetPlayEndTime() > begin)) {
+                hasClipInSelection = true;
+                break;
+            }
+        }
+
+        if (!hasClipInSelection) {
+            continue;
+        }
+
+        auto newTrack = waveTrack->Copy(begin, end, false);
+        newTrack->MoveTo(begin);
+        waveTrack->SplitDelete(begin, end);
+
+        auto& projectTracks = Au3TrackList::Get(projectRef());
+        projectTracks.Add(newTrack);
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
+    }
+
+    projectHistory()->pushHistoryState("Split into new track", "Split into new track");
+
+    return true;
+}
+
+bool Au3Interaction::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList)
+{
+    std::map<TrackId, std::vector<ClipKey> > clipsPerTrack;
+    for (const auto& clipKey : clipKeyList) {
+        clipsPerTrack[clipKey.trackId].push_back(clipKey);
+    }
+
+    for (const auto& [trackId, clips] : clipsPerTrack) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        auto& trackFactory = WaveTrackFactory::Get(projectRef());
+        auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
+        auto newTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+        auto& projectTracks = Au3TrackList::Get(projectRef());
+
+        for (const auto& clipKey : clips) {
+            std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+            IF_ASSERT_FAILED(clip) {
+                continue;
+            }
+
+            newTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
+            waveTrack->SplitDelete(clip->Start(), clip->End());
+        }
+        projectTracks.Add(newTrack);
+
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
+    }
+
+    projectHistory()->pushHistoryState("Split into new track", "Split into new track");
+
+    return true;
+}
+
 bool Au3Interaction::mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
