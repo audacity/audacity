@@ -19,6 +19,8 @@ protected:
     void SetUp() override
     {
         m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
+
+        std::srand(std::time({}));
     }
 
     void TearDown() override
@@ -528,8 +530,10 @@ TEST_F(ChangeDetectionTests, TestClipNotificationAddingTwoAndRemovingTwo)
     after.clips.front().pop_back();
     after.clips.back().pop_back();
 
-    addClipToTrack(after, after.tracks.front().id, std::rand() % 100);
-    addClipToTrack(after, after.tracks.back().id, std::rand() % 100);
+    int newClipIdNumber = static_cast<int>(after.clips.back().size()) + 1;
+
+    addClipToTrack(after, after.tracks.front().id, newClipIdNumber);
+    addClipToTrack(after, after.tracks.back().id, newClipIdNumber + 1);
 
     EXPECT_CALL(*m_trackEditProject, trackInserted()).Times(0);
     EXPECT_CALL(*m_trackEditProject, trackRemoved()).Times(0);
