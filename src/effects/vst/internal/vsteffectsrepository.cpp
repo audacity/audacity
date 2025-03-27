@@ -70,6 +70,7 @@ bool VstEffectsRepository::ensurePluginIsLoaded(const EffectId& effectId) const
 
     PluginID pluginId;
     TranslatableString errorMessage{};
+    LOGI() << "Loading " << it->meta.id;
     int numPlugins = vst3Module.DiscoverPluginsAtPath(
         au3::wxFromString(path.toString()), errorMessage,
         [&](PluginProvider* provider, ComponentInterface* ident) -> const PluginID&

@@ -13,7 +13,7 @@ StyledDialogViewWithoutNavigationSection {
     id: root
 
     property string instanceId
-    property alias effectState: viewerModel.effectState
+    property alias effectStateId: viewerModel.effectStateId
 
     property alias viewItem: viewLoader.item
 
@@ -30,7 +30,7 @@ StyledDialogViewWithoutNavigationSection {
 
     RealtimeEffectViewerDialogModel {
         id: viewerModel
-        effectState: root.effectState
+        effectStateId: root.effectStateId
     }
 
     Component {

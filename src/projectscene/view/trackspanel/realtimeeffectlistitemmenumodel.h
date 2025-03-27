@@ -5,9 +5,12 @@
 
 #include "realtimeeffectmenumodelbase.h"
 #include "effects/effects_base/effectstypes.h"
+#include "effects/effects_base/irealtimeeffectstateregister.h"
 #include "context/iglobalcontext.h"
 #include <QObject>
+
 #include <map>
+#include <optional>
 
 namespace au::projectscene {
 class RealtimeEffectListItemMenuModel : public RealtimeEffectMenuModelBase
@@ -15,18 +18,20 @@ class RealtimeEffectListItemMenuModel : public RealtimeEffectMenuModelBase
     Q_OBJECT
 
     Q_PROPERTY(QVariantList availableEffects READ availableEffects)
-    Q_PROPERTY(effects::RealtimeEffectStatePtr effectState READ prop_effectState WRITE prop_setEffectState NOTIFY effectStateChanged)
+    Q_PROPERTY(effects::RealtimeEffectStateId effectStateId READ prop_effectStateId WRITE prop_setEffectStateId NOTIFY effectStateIdChanged)
+
+    muse::Inject<effects::IRealtimeEffectStateRegister> stateRegister;
 
 public:
     explicit RealtimeEffectListItemMenuModel(QObject* parent = nullptr);
 
     QVariantList availableEffects() const;
 
-    effects::RealtimeEffectStatePtr prop_effectState() const;
-    void prop_setEffectState(effects::RealtimeEffectStatePtr);
+    effects::RealtimeEffectStateId prop_effectStateId() const;
+    void prop_setEffectStateId(effects::RealtimeEffectStateId);
 
 signals:
-    void effectStateChanged();
+    void effectStateIdChanged();
 
 private:
     void handleMenuItem(const QString& itemId) override;
@@ -37,6 +42,6 @@ private:
     bool belongsWithMe(effects::TrackId) const;
     void updateEffectCheckmarks();
 
-    effects::RealtimeEffectStatePtr m_effectState;
+    std::optional<effects::RealtimeEffectStateId> m_stateId;
 };
 }

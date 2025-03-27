@@ -8,6 +8,7 @@
 #include "ieffectsprovider.h"
 #include "effectstypes.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
+#include "effects/effects_base/irealtimeeffectstateregister.h"
 #include "context/iglobalcontext.h"
 #include "actions/actionable.h"
 #include "async/asyncable.h"
@@ -19,14 +20,15 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
     public muse::actions::Actionable
 {
     Q_OBJECT
-    Q_PROPERTY(QString effectState READ prop_effectState WRITE prop_setEffectState FINAL)
+    Q_PROPERTY(RealtimeEffectStateId effectStateId READ prop_effectStateId WRITE prop_setEffectStateId FINAL)
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged);
     Q_PROPERTY(bool isActive READ prop_isActive WRITE prop_setIsActive NOTIFY isActiveChanged);
     Q_PROPERTY(bool isMasterEffect READ prop_isMasterEffect NOTIFY isMasterEffectChanged);
 
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
+    muse::Inject<IRealtimeEffectService> realtimeEffectService;
+    muse::Inject<IRealtimeEffectStateRegister> stateRegister;
     muse::Inject<context::IGlobalContext> globalContext;
 
 public:
@@ -34,10 +36,9 @@ public:
     Q_INVOKABLE bool isVst3() const;
 
     RealtimeEffectViewerDialogModel(QObject* parent = nullptr);
-    ~RealtimeEffectViewerDialogModel() override;
 
-    QString prop_effectState() const;
-    void prop_setEffectState(const QString& effectState);
+    RealtimeEffectStateId prop_effectStateId() const;
+    void prop_setEffectStateId(RealtimeEffectStateId effectStateId);
     QString prop_trackName() const;
 
     bool prop_isActive() const;
@@ -54,7 +55,7 @@ private:
     void subscribe();
     void unregisterState();
 
-    RealtimeEffectStatePtr m_effectState;
+    std::optional<RealtimeEffectStateId> m_stateId;
     bool m_isVst3 = false;
 };
 }

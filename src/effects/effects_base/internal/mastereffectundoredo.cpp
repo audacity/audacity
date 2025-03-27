@@ -4,6 +4,7 @@
 #include "mastereffectundoredo.h"
 
 #include "irealtimeeffectservice.h"
+#include "irealtimeeffectstateregister.h"
 
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-project-history/UndoManager.h"
@@ -31,7 +32,8 @@ public:
     struct RealtimeEffectStackChanged : public ClientData::Base
     {
         static RealtimeEffectStackChanged& Get(AudacityProject& project);
-        muse::async::Channel<TrackId> channel;
+        muse::async::Channel<TrackId> trackEffectsChanged;
+        IRealtimeEffectStateRegister* stateRegister = nullptr;
     };
 
     MasterEffectListRestorer(au3::Au3Project& project)
@@ -41,11 +43,26 @@ public:
 
     void RestoreUndoRedoState(au3::Au3Project& project) override
     {
-        auto& changed = RealtimeEffectStackChanged::Get(project).channel;
+        auto& trackEffectsChanged = RealtimeEffectStackChanged::Get(project).trackEffectsChanged;
+        auto stateRegister = RealtimeEffectStackChanged::Get(project).stateRegister;
         auto& currentList = RealtimeEffectList::Get(project);
+
         if (currentList != *m_targetList) {
+            std::vector<RealtimeEffectStateId> oldIds;
+            oldIds.reserve(currentList.GetStatesCount());
+            for (auto i = 0u; i < currentList.GetStatesCount(); ++i) {
+                oldIds.push_back(stateRegister->registerState(currentList.GetStateAt(i)));
+            }
+
             currentList = *m_targetList;
-            changed.send(IRealtimeEffectService::masterTrackId);
+
+            for (auto i = 0u; i < currentList.GetStatesCount(); ++i) {
+                stateRegister->registerState(currentList.GetStateAt(i));
+            }
+            trackEffectsChanged.send(IRealtimeEffectService::masterTrackId);
+            for (auto id : oldIds) {
+                stateRegister->unregisterState(id);
+            }
         }
     }
 
@@ -73,7 +90,10 @@ MasterEffectListRestorer::RealtimeEffectStackChanged& MasterEffectListRestorer::
 }
 }
 
-void au::effects::setNotificationChannelForMasterEffectUndoRedo(au::au3::Au3Project& project, muse::async::Channel<TrackId> channel)
+void au::effects::setupMasterEffectUndoRedo(au::au3::Au3Project& project, muse::async::Channel<TrackId> trackEffectsChanged,
+                                            IRealtimeEffectStateRegister* stateRegister)
 {
-    MasterEffectListRestorer::RealtimeEffectStackChanged::Get(project).channel = channel;
+    auto& instance = MasterEffectListRestorer::RealtimeEffectStackChanged::Get(project);
+    instance.trackEffectsChanged = std::move(trackEffectsChanged);
+    instance.stateRegister = stateRegister;
 }

@@ -189,7 +189,7 @@ ListItemBlank {
 
             RealtimeEffectListItemMenuModel {
                 id: menuModel
-                effectState: root.item ? root.item.effectState() : null
+                effectStateId: root.item ? root.item.effectStateId() : null
                 isMasterTrack: root.item && root.item.isMasterEffect
             }
 

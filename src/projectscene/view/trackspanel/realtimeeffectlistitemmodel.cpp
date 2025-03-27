@@ -5,12 +5,15 @@
 #include "log.h"
 
 namespace au::projectscene {
-RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState)
-    : QObject{parent}, m_effectState{effectState}
+RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStateId stateId)
+    : QObject{parent}, m_stateId{stateId}
 {
+    // Should be set already.
+    assert(stateRegister()->stateById(m_stateId));
+
     realtimeEffectService()->isActiveChanged().onReceive(this, [this](effects::RealtimeEffectStatePtr state)
     {
-        if (state == m_effectState.lock()) {
+        if (state == stateRegister()->stateById(m_stateId)) {
             emit isActiveChanged();
         }
     });
@@ -18,9 +21,8 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
 
 RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
 {
-    const auto state = m_effectState.lock();
-    IF_ASSERT_FAILED(state) {
-        // Effect state lifetime is expected to span more than this.
+    const auto state = stateRegister()->stateById(m_stateId);
+    if (!state) {
         return;
     }
     effectsProvider()->hideEffect(state);
@@ -28,8 +30,8 @@ RealtimeEffectListItemModel::~RealtimeEffectListItemModel()
 
 bool RealtimeEffectListItemModel::prop_isMasterEffect() const
 {
-    const auto state = m_effectState.lock();
-    IF_ASSERT_FAILED(state) {
+    const auto state = stateRegister()->stateById(m_stateId);
+    if (!state) {
         return false;
     }
     return realtimeEffectService()->trackId(state) == effects::IRealtimeEffectService::masterTrackId;
@@ -37,38 +39,34 @@ bool RealtimeEffectListItemModel::prop_isMasterEffect() const
 
 QString RealtimeEffectListItemModel::effectName() const
 {
-    const auto state = m_effectState.lock();
-    IF_ASSERT_FAILED(state) {
+    const auto state = stateRegister()->stateById(m_stateId);
+    if (!state) {
         return QString();
     }
     return QString::fromStdString(effectsProvider()->effectName(*state));
 }
 
-effects::RealtimeEffectStatePtr RealtimeEffectListItemModel::effectState() const
+effects::RealtimeEffectStateId RealtimeEffectListItemModel::effectStateId() const
 {
-    return m_effectState.lock();
+    return m_stateId;
 }
 
 void RealtimeEffectListItemModel::toggleDialog()
 {
-    effectsProvider()->toggleShowEffect(m_effectState.lock());
+    effectsProvider()->toggleShowEffect(stateRegister()->stateById(m_stateId));
 }
 
 bool RealtimeEffectListItemModel::prop_isActive() const
 {
-    const auto state = m_effectState.lock();
-    IF_ASSERT_FAILED(state) {
-        return false;
-    }
-    return realtimeEffectService()->isActive(state);
+    return realtimeEffectService()->isActive(stateRegister()->stateById(m_stateId));
 }
 
 void RealtimeEffectListItemModel::prop_setIsActive(bool isActive)
 {
-    const auto state = m_effectState.lock();
-    IF_ASSERT_FAILED(state) {
+    const auto state = stateRegister()->stateById(m_stateId);
+    if (!state) {
         return;
     }
-    realtimeEffectService()->setIsActive(state, isActive);
+    realtimeEffectService()->setIsActive(stateRegister()->stateById(m_stateId), isActive);
 }
 }

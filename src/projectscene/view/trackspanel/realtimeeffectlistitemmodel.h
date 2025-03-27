@@ -7,6 +7,7 @@
 #include "async/asyncable.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
+#include "effects/effects_base/irealtimeeffectstateregister.h"
 
 #include <QObject>
 
@@ -19,12 +20,13 @@ class RealtimeEffectListItemModel : public QObject, public muse::Injectable, pub
 
     muse::Inject<effects::IEffectsProvider> effectsProvider;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
+    muse::Inject<effects::IRealtimeEffectStateRegister> stateRegister;
 
 public:
-    RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState);
+    RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStateId stateId);
     ~RealtimeEffectListItemModel();
 
-    Q_INVOKABLE effects::RealtimeEffectStatePtr effectState() const;
+    Q_INVOKABLE effects::RealtimeEffectStateId effectStateId() const;
     Q_INVOKABLE QString effectName() const;
     Q_INVOKABLE void toggleDialog();
 
@@ -36,7 +38,7 @@ signals:
     void isActiveChanged();
 
 private:
-    std::weak_ptr<RealtimeEffectState> m_effectState;
+    const effects::RealtimeEffectStateId m_stateId;
 };
 
 using RealtimeEffectListItemModelPtr = std::shared_ptr<RealtimeEffectListItemModel>;
