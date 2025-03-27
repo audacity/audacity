@@ -40,10 +40,21 @@ public:
                                                            const EffectInstanceFactory* (const PluginID&)
                                                            > {};
 
+    //! Create a new effect state ; its ID will be set to the next available.
     explicit RealtimeEffectState(const PluginID& id);
-    RealtimeEffectState(const RealtimeEffectState& other);
+
+    //! To copy an effect state, use this constructor with the IDs of the state to be copied, and then use the assignment operator.
+    explicit RealtimeEffectState(int id, const PluginID& pluginId);
     RealtimeEffectState& operator =(const RealtimeEffectState& other);
+
+    // Copying expects shared_from_this() to return a non-null pointer.
+    // First make_shared, then use the assignment operator instead.
+    RealtimeEffectState(const RealtimeEffectState&) = delete;
+
+public:
     ~RealtimeEffectState();
+
+    int GetID() const noexcept { return mID; }
 
     //! May be called with nonempty id at most once in the lifetime of a state
     /*!
@@ -133,6 +144,7 @@ private:
     }
 
     PluginID mPluginID;
+    const int mID;
 
     //! Stateful instance made by the plug-in
     std::weak_ptr<EffectInstance> mwInstance;
@@ -177,7 +189,7 @@ private:
     //! How many samples must be discarded
     std::optional<EffectInstance::SampleCount> mLatency;
     //! Assigned in the worker thread at the start of each processing scope
-    bool mLastActive{};
+    bool mLastWorkerActive{};
 
     //! @}
 

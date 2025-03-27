@@ -36,7 +36,9 @@ RealtimeEffectList& RealtimeEffectList::operator=(const RealtimeEffectList& othe
     mStates.clear();
     mStates.reserve(other.mStates.size());
     for (auto& pState : other.mStates) {
-        mStates.push_back(std::make_shared<RealtimeEffectState>(*pState));
+        const auto newState = std::make_shared<RealtimeEffectState>(pState->GetID(), pState->GetPluginID());
+        *newState = *pState;
+        mStates.push_back(std::move(newState));
     }
     SetActive(other.IsActive());
     return *this;

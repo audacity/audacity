@@ -342,16 +342,20 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
     std::weak_ptr<RealtimeEffectState> mwState;
 };
 
-RealtimeEffectState::RealtimeEffectState(const PluginID& id)
-{
-    SetPluginID(id);
-    BuildAll();
+namespace {
+static int sIDCounter = 0;
 }
 
-RealtimeEffectState::RealtimeEffectState(const RealtimeEffectState& other)
-    : RealtimeEffectState(other.mPluginID)
+RealtimeEffectState::RealtimeEffectState(const PluginID& id)
+    : RealtimeEffectState(sIDCounter++, id)
 {
-    *this = other;
+}
+
+RealtimeEffectState::RealtimeEffectState(int id, const PluginID& pluginId)
+    : mID{id}
+{
+    SetPluginID(pluginId);
+    BuildAll();
 }
 
 RealtimeEffectState& RealtimeEffectState::operator=(const RealtimeEffectState& other)
@@ -437,7 +441,7 @@ RealtimeEffectState::EnsureInstance(double sampleRate)
     if (!mInitialized) {
         //! copying settings in the main thread while worker isn't yet running
         mWorkerSettings = mMainSettings;
-        mLastActive = IsActive();
+        mLastWorkerActive = mWorkerSettings.settings.extra.GetActive();
 
         //! If there was already an instance, recycle it; else make one here
         if (!pInstance) {
@@ -559,8 +563,8 @@ bool RealtimeEffectState::ProcessStart(bool running)
 
     // Detect transitions of activity state
     auto pInstance = mwInstance.lock();
-    bool active = IsActive() && running;
-    if (active != mLastActive) {
+    bool active = mWorkerSettings.settings.extra.GetActive() && running;
+    if (active != mLastWorkerActive) {
         if (pInstance) {
             bool success = active
                            ? pInstance->RealtimeResume()
@@ -569,7 +573,7 @@ bool RealtimeEffectState::ProcessStart(bool running)
                 return false;
             }
         }
-        mLastActive = active;
+        mLastWorkerActive = active;
     }
 
     bool result = false;
@@ -621,7 +625,7 @@ size_t RealtimeEffectState::Process(
         }
     };
 
-    if (!mPlugin || !pInstance || !mLastActive) {
+    if (!mPlugin || !pInstance || !mLastWorkerActive) {
         // Process trivially
         for (size_t ii = 0; ii < chans; ++ii) {
             memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
@@ -716,7 +720,7 @@ bool RealtimeEffectState::ProcessEnd()
     bool result = pInstance
                   &&// Assuming we are in a processing scope, use the worker settings
                   pInstance->RealtimeProcessEnd(mWorkerSettings.settings)
-                  && IsActive() && mLastActive;
+                  && mWorkerSettings.settings.extra.GetActive() && mLastWorkerActive;
 
     if (auto pAccessState = TestAccessState()) {
         // Always done, regardless of activity
@@ -737,7 +741,7 @@ bool RealtimeEffectState::IsEnabled() const noexcept
 
 bool RealtimeEffectState::IsActive() const noexcept
 {
-    return mWorkerSettings.settings.extra.GetActive();
+    return mMainSettings.settings.extra.GetActive();
 }
 
 void RealtimeEffectState::SetActive(bool active)
@@ -890,6 +894,7 @@ std::shared_ptr<EffectSettingsAccess> RealtimeEffectState::GetAccess()
     if (!GetEffect()) {
         // Effect not found!
         // Return a dummy
+        assert(false);
         return std::make_shared<Access>();
     }
 

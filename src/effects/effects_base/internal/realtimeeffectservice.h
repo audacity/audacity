@@ -21,6 +21,8 @@ class AudacityProject;
 class RealtimeEffectList;
 class WaveTrack;
 class RealtimeEffectState;
+class EffectInstanceFactory;
+class wxString;
 struct TrackListEvent;
 
 namespace au3 {
@@ -60,6 +62,8 @@ public:
 
     bool trackEffectsActive(TrackId trackId) const override;
     void setTrackEffectsActive(TrackId trackId, bool active) override;
+
+    static const EffectInstanceFactory* getInstanceFactory(const wxString&);
 
 private:
     void onProjectChanged(const au::project::IAudacityProjectPtr& project);
