@@ -116,10 +116,13 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
     if (it == m_effects.end()) {
         return false;
     }
-    const auto isVst = it->categoryId == VST_CATEGORY_ID;
-    if (!isVst) {
+    if (it->family == EffectFamily::Builtin) {
         // If an effect is not a VST and is in m_effects, then it's a built-in effect and it's loaded already.
         return true;
+    }
+    IF_ASSERT_FAILED(it->family == EffectFamily::VST3) {
+        LOGE() << "unknown family: " << static_cast<int>(it->family);
+        return false;
     }
     IF_ASSERT_FAILED(vstEffectsRepository()) {
         return false;

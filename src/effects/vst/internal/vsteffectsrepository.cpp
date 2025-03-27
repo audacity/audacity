@@ -31,6 +31,7 @@ EffectMetaList VstEffectsRepository::effectMetaList() const
 
         EffectMeta meta;
         meta.id = muse::String(info.meta.id.c_str());
+        meta.family = EffectFamily::VST3;
         meta.title = muse::io::completeBasename(info.path).toString();
         meta.isRealtimeCapable = true;
         meta.categoryId = VST_CATEGORY_ID;
@@ -59,6 +60,10 @@ bool VstEffectsRepository::ensurePluginIsLoaded(const EffectId& effectId) const
     }
     if (!it->enabled) {
         LOGW() << "plugin disabled: " << effectId;
+        return false;
+    }
+    if (it->meta.type != muse::audio::AudioResourceType::VstPlugin) {
+        LOGE() << "not a VST plugin: " << effectId;
         return false;
     }
     const auto& path = it->path;
