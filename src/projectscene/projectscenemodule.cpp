@@ -21,6 +21,7 @@
 #include "view/common/customcursor.h"
 #include "view/common/insertsilencemodel.h"
 
+#include "view/toolbars/audiosetupcontextmenumodel.h"
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/toolbars/undoredotoolbarmodel.h"
 #include "view/toolbars/workspacestoolbarmodel.h"
@@ -132,6 +133,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
     qmlRegisterType<UndoRedoToolBarModel>("Audacity.ProjectScene", 1, 0, "UndoRedoToolBarModel");
     qmlRegisterType<WorkspacesToolBarModel>("Audacity.ProjectScene", 1, 0, "WorkspacesToolBarModel");
+    qmlRegisterType<AudioSetupContextMenuModel>("Audacity.ProjectScene", 1, 0, "AudioSetupContextMenuModel");
 
     qmlRegisterType<PlaybackToolBarModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarModel");
     qmlRegisterType<PlaybackToolBarCustomiseModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseModel");
