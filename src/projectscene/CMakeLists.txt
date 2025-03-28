@@ -77,6 +77,9 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/workspacestoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/workspacestoolbarmodel.h
+    
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/isamplespainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainter.h
