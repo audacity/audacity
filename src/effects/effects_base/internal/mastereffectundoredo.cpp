@@ -10,6 +10,7 @@
 #include "libraries/lib-project-history/UndoManager.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectList.h"
 #include "libraries/lib-realtime-effects/RealtimeEffectState.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
 
 namespace au::effects {
 namespace {
@@ -37,37 +38,44 @@ public:
     };
 
     MasterEffectListRestorer(au3::Au3Project& project)
-        : m_targetList(std::make_unique<RealtimeEffectList>(RealtimeEffectList::Get(project)))
     {
+        append(m_items, RealtimeEffectList::Get(project));
+        const auto tracks = TrackList::Get(project).Any<WaveTrack>();
+        for (WaveTrack* track : tracks) {
+            append(m_items, RealtimeEffectList::Get(*track));
+        }
     }
 
-    void RestoreUndoRedoState(au3::Au3Project& project) override
+    void RestoreUndoRedoState(au3::Au3Project&) override
     {
-        auto& trackEffectsChanged = RealtimeEffectStackChanged::Get(project).trackEffectsChanged;
-        auto stateRegister = RealtimeEffectStackChanged::Get(project).stateRegister;
-        auto& currentList = RealtimeEffectList::Get(project);
-
-        if (currentList != *m_targetList) {
-            std::vector<RealtimeEffectStateId> oldIds;
-            oldIds.reserve(currentList.GetStatesCount());
-            for (auto i = 0u; i < currentList.GetStatesCount(); ++i) {
-                oldIds.push_back(stateRegister->registerState(currentList.GetStateAt(i)));
-            }
-
-            currentList = *m_targetList;
-
-            for (auto i = 0u; i < currentList.GetStatesCount(); ++i) {
-                stateRegister->registerState(currentList.GetStateAt(i));
-            }
-            trackEffectsChanged.send(IRealtimeEffectService::masterTrackId);
-            for (auto id : oldIds) {
-                stateRegister->unregisterState(id);
-            }
+        for ( auto& item : m_items) {
+            const auto access = item.state->GetAccess();
+            EffectSettings settings = item.settings;
+            access->Set(std::move(settings));
+            access->Flush();
         }
     }
 
 private:
-    const std::unique_ptr<RealtimeEffectList> m_targetList;
+    struct StateAndSettings {
+        StateAndSettings(RealtimeEffectStatePtr state, EffectSettings settings)
+            : state(std::move(state)), settings(std::move(settings))
+        {
+        }
+
+        const RealtimeEffectStatePtr state;
+        EffectSettings settings;
+    };
+
+    static void append(std::vector<StateAndSettings>& items, RealtimeEffectList& list)
+    {
+        for (auto i = 0; i < static_cast<int>(list.GetStatesCount()); ++i) {
+            const auto state = list.GetStateAt(i);
+            items.emplace_back(state, state->GetSettings());
+        }
+    }
+
+    std::vector<StateAndSettings> m_items;
 };
 
 static UndoRedoExtensionRegistry::Entry sEntry {
