@@ -13,6 +13,12 @@
 
 using namespace au::effects;
 
+VstViewModel::~VstViewModel()
+{
+    m_settingUpdateTimer.stop();
+    QObject::disconnect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUi);
+}
+
 void VstViewModel::init()
 {
     EffectInstanceId id = this->instanceId();
@@ -50,9 +56,7 @@ void VstViewModel::init()
 
     settingsToView();
 
-    QObject::connect(&m_settingUpdateTimer, &QTimer::timeout, this, [this]() {
-        checkSettingChangesFromUi();
-    });
+    QObject::connect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUi);
 
     // When playback is idle (see VstViewModel::event), no need for setting updates to be low-latency. Every 100ms is plenty.
     m_settingUpdateTimer.start(std::chrono::milliseconds { 100 });

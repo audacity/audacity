@@ -31,6 +31,7 @@ public:
 
 public:
     VstViewModel() = default;
+    ~VstViewModel() override;
 
     int instanceId() const;
     void setInstanceId(int newInstanceId);
