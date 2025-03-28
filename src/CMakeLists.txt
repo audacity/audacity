@@ -53,10 +53,6 @@ if (AU_BUILD_EFFECTS_MODULE)
     add_subdirectory(effects)
 endif()
 
-if (AU_BUILD_TESTUTILITY_MODULE)
-    add_subdirectory(testutility)
-endif()
-
 add_subdirectory(importexport/import)
 
 # Stubs
