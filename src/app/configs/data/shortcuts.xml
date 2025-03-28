@@ -240,11 +240,11 @@
     </SC>
     <SC>
         <key>paste-insert</key>
-        <seq>Ctrl+Shift+V</seq>
+        <seq>Shift+V</seq>
     </SC>
     <SC>
         <key>paste-insert-all-tracks-ripple</key>
-        <seq>Ctrl+Alt+V</seq>
+        <seq>Ctrl+Shift+V</seq>
     </SC>
     <SC>
         <key>duplicate</key>
