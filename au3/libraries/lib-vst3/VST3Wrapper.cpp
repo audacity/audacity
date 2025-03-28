@@ -319,7 +319,7 @@ public:
         mParametersCache.clear();
     }
 
-    void NotifyParamChange(
+    void UpdateCurrentParamValue(
         Steinberg::Vst::ParamID id, Steinberg::Vst::ParamValue valueNormalized)
     {
         auto it = mCurrentParamValues.find(id);
@@ -339,10 +339,6 @@ public:
         }
 
         it->second = valueNormalized;
-
-        if (mStateChangeSettings == nullptr && mWrapper.ParamChangedHandler) {
-            mWrapper.ParamChangedHandler(id, valueNormalized);
-        }
     }
 
     Steinberg::tresult PLUGIN_API beginEdit(Steinberg::Vst::ParamID id) override { return Steinberg::kResultOk; }
@@ -353,7 +349,7 @@ public:
             return Steinberg::kResultFalse;
         }
 
-        NotifyParamChange(id, valueNormalized);
+        UpdateCurrentParamValue(id, valueNormalized);
 
         if (mStateChangeSettings != nullptr || !mWrapper.IsActive()) {
             // Collecting edit callbacks from the plug-in, in response to changes
@@ -371,7 +367,13 @@ public:
         return Steinberg::kResultOk;
     }
 
-    Steinberg::tresult PLUGIN_API endEdit(Steinberg::Vst::ParamID id) override { return Steinberg::kResultOk; }
+    Steinberg::tresult PLUGIN_API endEdit(Steinberg::Vst::ParamID id) override
+    {
+        if (mStateChangeSettings == nullptr && mWrapper.ParamChangedHandler) {
+            mWrapper.ParamChangedHandler(id);
+        }
+        return Steinberg::kResultOk;
+    }
 
     Steinberg::tresult PLUGIN_API restartComponent(Steinberg::int32 flags) override { return Steinberg::kNotImplemented; }
 

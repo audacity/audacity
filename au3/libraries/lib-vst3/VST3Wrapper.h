@@ -135,7 +135,7 @@ public:
 
     static void CopySettingsContents(const EffectSettings& src, EffectSettings& dst);
 
-    std::function<void(Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue)> ParamChangedHandler;
+    std::function<void(Steinberg::Vst::ParamID)> ParamChangedHandler;
 
 private:
 
