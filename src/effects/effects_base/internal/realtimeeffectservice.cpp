@@ -51,7 +51,6 @@ void RealtimeEffectService::init()
 void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProjectPtr& project)
 {
     m_rtEffectSubscriptions.clear();
-    stateRegister()->clear();
 
     if (!project) {
         return;
@@ -59,7 +58,7 @@ void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProject
 
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
-    setupMasterEffectUndoRedo(*au3Project, m_realtimeEffectStackChanged, stateRegister().get());
+    setNotificationChannelForMasterEffectUndoRedo(*au3Project, m_realtimeEffectStackChanged);
 
     auto& trackList = TrackList::Get(*au3Project);
 
@@ -87,21 +86,17 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
         }
         switch (msg.type) {
             case RealtimeEffectListMessage::Type::Insert:
-                stateRegister()->registerState(msg.affectedState);
                 m_realtimeEffectAdded.send(trackId, msg.affectedState);
                 return;
             case RealtimeEffectListMessage::Type::Remove:
                 m_realtimeEffectRemoved.send(trackId, msg.affectedState);
-                stateRegister()->unregisterState(msg.affectedState->GetID());
                 return;
             case RealtimeEffectListMessage::Type::DidReplace: {
                 const auto newState = effect(trackId, msg.srcIndex);
                 IF_ASSERT_FAILED(newState) {
                     return;
                 }
-                stateRegister()->registerState(newState);
-                m_realtimeEffectReplaced.send(trackId, msg.affectedState, newState);
-                stateRegister()->unregisterState(msg.affectedState->GetID());
+                m_realtimeEffectReplaced.send(trackId, msg.srcIndex, newState);
             }
                 return;
             case RealtimeEffectListMessage::Type::Move:
@@ -114,10 +109,6 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
     // Proactively load realtime effects.
     for (auto i = 0u; i < list.GetStatesCount(); ++i) {
         list.GetStateAt(i)->GetEffect();
-    }
-
-    for (auto i = 0u; i < list.GetStatesCount(); ++i) {
-        stateRegister()->registerState(list.GetStateAt(i));
     }
 
     if (m_trackUndoRedoOngoing) {
@@ -180,7 +171,7 @@ muse::async::Channel<TrackId, RealtimeEffectStatePtr> RealtimeEffectService::rea
     return m_realtimeEffectRemoved;
 }
 
-muse::async::Channel<TrackId, RealtimeEffectStatePtr, RealtimeEffectStatePtr> RealtimeEffectService::realtimeEffectReplaced() const
+muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> RealtimeEffectService::realtimeEffectReplaced() const
 {
     return m_realtimeEffectReplaced;
 }

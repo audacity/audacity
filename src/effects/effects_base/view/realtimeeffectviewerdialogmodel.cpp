@@ -15,6 +15,11 @@ RealtimeEffectViewerDialogModel::RealtimeEffectViewerDialogModel(QObject* parent
 {
 }
 
+RealtimeEffectViewerDialogModel::~RealtimeEffectViewerDialogModel()
+{
+    unregisterState();
+}
+
 void RealtimeEffectViewerDialogModel::load()
 {
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]
@@ -23,25 +28,10 @@ void RealtimeEffectViewerDialogModel::load()
     });
     subscribe();
 
-    realtimeEffectService()->isActiveChanged().onReceive(this, [this](const RealtimeEffectStatePtr& state)
+    realtimeEffectService()->isActiveChanged().onReceive(this, [this](RealtimeEffectStatePtr stateId)
     {
-        if (state->GetID() == m_stateId) {
+        if (stateId == m_effectState) {
             emit isActiveChanged();
-        }
-    });
-
-    realtimeEffectService()->realtimeEffectRemoved().onReceive(this, [this](TrackId, const RealtimeEffectStatePtr& state)
-    {
-        if (state->GetID() == m_stateId) {
-            unregisterState();
-        }
-    });
-
-    realtimeEffectService()->realtimeEffectReplaced().onReceive(this, [this](TrackId, const RealtimeEffectStatePtr& oldState,
-                                                                             const RealtimeEffectStatePtr&)
-    {
-        if (oldState->GetID() == m_stateId) {
-            unregisterState();
         }
     });
 }
@@ -53,43 +43,39 @@ bool RealtimeEffectViewerDialogModel::isVst3() const
 
 bool RealtimeEffectViewerDialogModel::prop_isActive() const
 {
-    if (!m_stateId.has_value()) {
-        return false;
-    }
-    return realtimeEffectService()->isActive(stateRegister()->stateById(*m_stateId));
+    return realtimeEffectService()->isActive(m_effectState);
 }
 
 void RealtimeEffectViewerDialogModel::prop_setIsActive(bool isActive)
 {
-    if (!m_stateId.has_value()) {
-        return;
+    realtimeEffectService()->setIsActive(m_effectState, isActive);
+}
+
+QString RealtimeEffectViewerDialogModel::prop_effectState() const
+{
+    if (!m_effectState) {
+        return {};
     }
-    realtimeEffectService()->setIsActive(stateRegister()->stateById(*m_stateId), isActive);
+    return QString::number(reinterpret_cast<uintptr_t>(m_effectState.get()));
 }
 
-RealtimeEffectStateId RealtimeEffectViewerDialogModel::prop_effectStateId() const
+void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectState)
 {
-    return m_stateId.value_or(-1);
-}
-
-void RealtimeEffectViewerDialogModel::prop_setEffectStateId(RealtimeEffectStateId stateId)
-{
-    if (stateId == m_stateId) {
+    if (effectState == prop_effectState()) {
         return;
     }
 
     unregisterState();
 
-    const auto state = stateRegister()->stateById(stateId);
-    if (!state) {
+    if (effectState.isEmpty()) {
         return;
     }
 
-    m_stateId = stateId;
-    const auto effectId = state->GetPluginID().ToStdString();
+    m_effectState = reinterpret_cast<RealtimeEffectState*>(effectState.toULongLong())->shared_from_this();
+    const auto effectId = m_effectState->GetPluginID().ToStdString();
     const auto type = effectsProvider()->effectSymbol(effectId);
-    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
-    instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, state->GetAccess());
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
+    instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, m_effectState->GetAccess());
 
     const PluginDescriptor* const plug = PluginManager::Get().GetPlugin(effectId);
     if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
@@ -106,25 +92,18 @@ void RealtimeEffectViewerDialogModel::prop_setEffectStateId(RealtimeEffectStateI
 
 void RealtimeEffectViewerDialogModel::unregisterState()
 {
-    if (!m_stateId.has_value()) {
+    if (!m_effectState) {
         return;
     }
 
-    const auto state = stateRegister()->stateById(*m_stateId);
-    IF_ASSERT_FAILED(state) {
-        return;
-    }
-    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
     instancesRegister()->unregInstance(instance);
-    m_stateId.reset();
+    m_effectState.reset();
 }
 
 QString RealtimeEffectViewerDialogModel::prop_trackName() const
 {
-    if (!m_stateId.has_value()) {
-        return QString();
-    }
-    const auto trackName = realtimeEffectService()->effectTrackName(stateRegister()->stateById(*m_stateId));
+    const auto trackName = realtimeEffectService()->effectTrackName(m_effectState);
     IF_ASSERT_FAILED(trackName.has_value()) {
         return QString();
     }
@@ -139,10 +118,7 @@ void RealtimeEffectViewerDialogModel::subscribe()
         return;
     }
     project->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
-        IF_ASSERT_FAILED(m_stateId.has_value()) {
-            return;
-        }
-        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(stateRegister()->stateById(*m_stateId));
+        const std::optional<trackedit::TrackId> trackId = realtimeEffectService()->trackId(m_effectState);
         IF_ASSERT_FAILED(trackId.has_value()) {
             return;
         }
@@ -155,9 +131,6 @@ void RealtimeEffectViewerDialogModel::subscribe()
 
 bool RealtimeEffectViewerDialogModel::prop_isMasterEffect() const
 {
-    if (!m_stateId.has_value()) {
-        return false;
-    }
-    return realtimeEffectService()->trackId(stateRegister()->stateById(*m_stateId)) == IRealtimeEffectService::masterTrackId;
+    return realtimeEffectService()->trackId(m_effectState) == IRealtimeEffectService::masterTrackId;
 }
 }

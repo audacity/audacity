@@ -4,7 +4,6 @@
 #include "mastereffectundoredo.h"
 
 #include "irealtimeeffectservice.h"
-#include "irealtimeeffectstateregister.h"
 
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-project-history/UndoManager.h"
@@ -33,8 +32,7 @@ public:
     struct RealtimeEffectStackChanged : public ClientData::Base
     {
         static RealtimeEffectStackChanged& Get(AudacityProject& project);
-        muse::async::Channel<TrackId> trackEffectsChanged;
-        IRealtimeEffectStateRegister* stateRegister = nullptr;
+        muse::async::Channel<TrackId> channel;
     };
 
     MasterEffectListRestorer(au3::Au3Project& project)
@@ -98,10 +96,7 @@ MasterEffectListRestorer::RealtimeEffectStackChanged& MasterEffectListRestorer::
 }
 }
 
-void au::effects::setupMasterEffectUndoRedo(au::au3::Au3Project& project, muse::async::Channel<TrackId> trackEffectsChanged,
-                                            IRealtimeEffectStateRegister* stateRegister)
+void au::effects::setNotificationChannelForMasterEffectUndoRedo(au::au3::Au3Project& project, muse::async::Channel<TrackId> channel)
 {
-    auto& instance = MasterEffectListRestorer::RealtimeEffectStackChanged::Get(project);
-    instance.trackEffectsChanged = std::move(trackEffectsChanged);
-    instance.stateRegister = stateRegister;
+    MasterEffectListRestorer::RealtimeEffectStackChanged::Get(project).channel = channel;
 }

@@ -8,7 +8,6 @@
 
 #include "context/iglobalcontext.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
-#include "effects/effects_base/irealtimeeffectstateregister.h"
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
 #include <QAbstractListModel>
@@ -24,7 +23,6 @@ class RealtimeEffectListModel : public QAbstractListModel, public muse::async::A
     Q_PROPERTY(bool trackEffectsActive READ prop_trackEffectsActive WRITE prop_setTrackEffectsActive NOTIFY trackEffectsActiveChanged)
 
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
-    muse::Inject<effects::IRealtimeEffectStateRegister> realtimeEffectStateRegister;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<IRealtimeEffectPanelTrackSelection> trackSelection;
 
@@ -65,8 +63,7 @@ private:
 
     bool belongsWithMe(effects::TrackId trackId) const;
     void onAdded(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& newState);
-    void onReplaced(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& oldState,
-                    const effects::RealtimeEffectStatePtr& newState);
+    void onReplaced(effects::TrackId trackId, effects::EffectChainLinkIndex index, const effects::RealtimeEffectStatePtr& newState);
     void onRemoved(effects::TrackId trackId, const effects::RealtimeEffectStatePtr& state);
     void onMoved(effects::TrackId trackId, effects::EffectChainLinkIndex from, effects::EffectChainLinkIndex to);
     void onChanged(effects::TrackId trackId);

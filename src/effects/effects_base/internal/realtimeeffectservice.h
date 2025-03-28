@@ -7,7 +7,6 @@
 #include "async/asyncable.h"
 #include "irealtimeeffectservice.h"
 #include "effects/effects_base/ieffectsprovider.h"
-#include "effects/effects_base/irealtimeeffectstateregister.h"
 #include "effectstypes.h"
 #include "context/iglobalcontext.h"
 #include "trackedit/iprojecthistory.h"
@@ -37,7 +36,6 @@ class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asynca
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IRealtimeEffectStateRegister> stateRegister;
 
 public:
     void init();
@@ -50,7 +48,7 @@ public:
 
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectAdded() const override;
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectRemoved() const override;
-    muse::async::Channel<TrackId, RealtimeEffectStatePtr, RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> realtimeEffectMoved() const override;
     muse::async::Channel<TrackId> realtimeEffectStackChanged() const override;
 
@@ -83,7 +81,7 @@ private:
     std::unordered_map<TrackId, Observer::Subscription> m_rtEffectSubscriptions;
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> m_realtimeEffectAdded;
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> m_realtimeEffectRemoved;
-    muse::async::Channel<TrackId, RealtimeEffectStatePtr, RealtimeEffectStatePtr> m_realtimeEffectReplaced;
+    muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> m_realtimeEffectReplaced;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> m_realtimeEffectMoved;
     muse::async::Channel<TrackId> m_realtimeEffectStackChanged;
     bool m_trackUndoRedoOngoing = false;

@@ -8,8 +8,5 @@
 #include "async/channel.h"
 
 namespace au::effects {
-class IRealtimeEffectStateRegister;
-
-void setupMasterEffectUndoRedo(au3::Au3Project&, muse::async::Channel<TrackId> trackEffectsChanged,
-                               IRealtimeEffectStateRegister* stateRegister);
+void setNotificationChannelForMasterEffectUndoRedo(au3::Au3Project&, muse::async::Channel<TrackId> channel);
 }

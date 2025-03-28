@@ -48,8 +48,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectserviceutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectserviceutils.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectstateregister.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectstateregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectpresetsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectpresetsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectpresetsscenario.cpp

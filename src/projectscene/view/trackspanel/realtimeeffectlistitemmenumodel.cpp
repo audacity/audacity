@@ -59,21 +59,17 @@ void RealtimeEffectListItemMenuModel::doPopulateMenu()
 
 void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
 {
-    IF_ASSERT_FAILED(m_stateId.has_value()) {
-        return;
-    }
     const MenuItem& menuItem = findItem(itemId);
     const auto tId = trackId();
-    const auto state = stateRegister()->stateById(*m_stateId);
-    IF_ASSERT_FAILED(tId.has_value() && state) {
+    IF_ASSERT_FAILED(tId.has_value() && m_effectState) {
         return;
     }
 
     if (menuItem.id() == "realtimeeffect-remove") {
-        realtimeEffectService()->removeRealtimeEffect(*tId, state);
+        realtimeEffectService()->removeRealtimeEffect(*tId, m_effectState);
     } else {
         const auto effectId = effects::effectIdFromAction(menuItem.id());
-        if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, state, effectId)) {
+        if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, m_effectState, effectId)) {
             effectsProvider()->showEffect(newState);
         }
     }
@@ -84,32 +80,25 @@ QVariantList RealtimeEffectListItemMenuModel::availableEffects() const
     return menuItemListToVariantList(items());
 }
 
-au::effects::RealtimeEffectStateId RealtimeEffectListItemMenuModel::prop_effectStateId() const
+au::effects::RealtimeEffectStatePtr RealtimeEffectListItemMenuModel::prop_effectState() const
 {
-    return m_stateId.value_or(-1);
+    return m_effectState;
 }
 
-void RealtimeEffectListItemMenuModel::prop_setEffectStateId(effects::RealtimeEffectStateId stateId)
+void RealtimeEffectListItemMenuModel::prop_setEffectState(effects::RealtimeEffectStatePtr effectState)
 {
-    if (m_stateId == stateId) {
+    if (m_effectState == effectState) {
         return;
     }
-    m_stateId = stateId;
+    m_effectState = effectState;
     updateEffectCheckmarks();
-    emit effectStateIdChanged();
+    emit effectStateChanged();
 }
 
 void RealtimeEffectListItemMenuModel::updateEffectCheckmarks()
 {
-    if (!m_stateId.has_value()) {
-        return;
-    }
-    const auto state = stateRegister()->stateById(*m_stateId);
-    if (!state) {
-        return;
-    }
     const MenuItemList& itemList = items();
-    const auto myEffectId = muse::String::fromStdString(state->GetPluginID().ToStdString());
+    const auto myEffectId = muse::String::fromStdString(m_effectState->GetPluginID().ToStdString());
     for (MenuItem* category : itemList) {
         auto categoryChecked = false;
         for (MenuItem* subItem : category->subitems()) {

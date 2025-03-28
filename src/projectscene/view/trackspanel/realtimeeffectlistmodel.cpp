@@ -3,7 +3,6 @@
  */
 #include "realtimeeffectlistmodel.h"
 #include "realtimeeffectlistitemmodel.h"
-#include "libraries/lib-realtime-effects/RealtimeEffectState.h"
 #include "global/defer.h"
 #include "global/types/translatablestring.h"
 #include "log.h"
@@ -72,7 +71,7 @@ void RealtimeEffectListModel::load()
     //! so we just call layoutAboutToChange.)
 
     realtimeEffectService()->realtimeEffectAdded().onReceive(this,
-                                                             [this](effects::TrackId trackId, const RealtimeEffectStatePtr& state) {
+                                                             [this](effects::TrackId trackId, RealtimeEffectStatePtr state) {
         if (belongsWithMe(
                 trackId)) {
             onAdded(trackId, state);
@@ -80,14 +79,14 @@ void RealtimeEffectListModel::load()
     });
 
     realtimeEffectService()->realtimeEffectReplaced().onReceive(this,
-                                                                [this](effects::TrackId trackId, const RealtimeEffectStatePtr& oldState,
-                                                                       const RealtimeEffectStatePtr& newState) {
+                                                                [this](effects::TrackId trackId, EffectChainLinkIndex index,
+                                                                       RealtimeEffectStatePtr newState) {
         if (belongsWithMe(trackId)) {
-            onReplaced(trackId, oldState, newState);
+            onReplaced(trackId, index, newState);
         }
     });
 
-    realtimeEffectService()->realtimeEffectRemoved().onReceive(this, [this](effects::TrackId trackId, const RealtimeEffectStatePtr& state) {
+    realtimeEffectService()->realtimeEffectRemoved().onReceive(this, [this](effects::TrackId trackId, RealtimeEffectStatePtr state) {
         if (belongsWithMe(trackId)) {
             onRemoved(trackId, state);
         }
@@ -124,11 +123,11 @@ void RealtimeEffectListModel::onAdded(effects::TrackId trackId, const effects::R
     auto& list = it->second;
     const int index = list.size();
     beginInsertRows(QModelIndex(), index, index);
-    list.insert(list.begin() + index, std::make_shared<RealtimeEffectListItemModel>(this, newState->GetID()));
+    list.insert(list.begin() + index, std::make_shared<RealtimeEffectListItemModel>(this, newState));
     endInsertRows();
 }
 
-void RealtimeEffectListModel::onReplaced(effects::TrackId trackId, const RealtimeEffectStatePtr& oldState,
+void RealtimeEffectListModel::onReplaced(effects::TrackId trackId, effects::EffectChainLinkIndex index,
                                          const effects::RealtimeEffectStatePtr& newState)
 {
     const auto it = m_trackEffectLists.find(trackId);
@@ -136,18 +135,12 @@ void RealtimeEffectListModel::onReplaced(effects::TrackId trackId, const Realtim
         return;
     }
 
-    const auto index = std::distance(it->second.begin(),
-                                     std::find_if(it->second.begin(), it->second.end(),
-                                                  [oldState](const RealtimeEffectListItemModelPtr& item) {
-        return item->effectStateId() == oldState->GetID();
-    }));
-
     auto& list = it->second;
     IF_ASSERT_FAILED(index >= 0 && index < static_cast<int>(list.size())) {
         return;
     }
 
-    list[index] = std::make_shared<RealtimeEffectListItemModel>(this, newState->GetID());
+    list[index] = std::make_shared<RealtimeEffectListItemModel>(this, newState);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
 }
 
@@ -160,7 +153,7 @@ void RealtimeEffectListModel::onRemoved(effects::TrackId trackId, const Realtime
 
     const auto& list = it->second;
     const auto it2 = std::find_if(list.begin(), list.end(), [state](const RealtimeEffectListItemModelPtr& item) {
-        return item->effectStateId() == state->GetID();
+        return item->effectState() == state;
     });
     IF_ASSERT_FAILED(it2 != list.end()) {
         return;
@@ -226,12 +219,12 @@ void RealtimeEffectListModel::onChanged(effects::TrackId trackId)
         for (auto i = 0; i < static_cast<int>(newStack->size()); ++i) {
             const auto& state = newStack->at(i);
             const auto it = std::find_if(oldList.begin(), oldList.end(), [state](const RealtimeEffectListItemModelPtr& item) {
-                return item->effectStateId() == state->GetID();
+                return item->effectState() == state;
             });
             if (it != oldList.end()) {
                 newList[i] = *it;
             } else {
-                newList[i] = std::make_shared<RealtimeEffectListItemModel>(this, state->GetID());
+                newList[i] = std::make_shared<RealtimeEffectListItemModel>(this, state);
             }
         }
         m_trackEffectLists[trackId] = std::move(newList);
@@ -264,7 +257,7 @@ void RealtimeEffectListModel::moveRow(int from, int to)
         return;
     }
 
-    realtimeEffectService()->moveRealtimeEffect(realtimeEffectStateRegister()->stateById(list[from]->effectStateId()), to);
+    realtimeEffectService()->moveRealtimeEffect(list[from]->effectState(), to);
 }
 
 void RealtimeEffectListModel::onSelectedTrackIdChanged()
