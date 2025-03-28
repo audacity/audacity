@@ -39,7 +39,15 @@ void VstViewModel::init()
         settingsFromView();
     });
 
+    m_auVst3Instance->GetWrapper().ParamChangedHandler = [this](Steinberg::Vst::ParamID) {
+        projectHistory()->modifyState();
+        projectHistory()->markUnsaved();
+    };
+
     settingsToView();
+
+    // When playback is idle, no need for setting updates to be low-latency. Every 100ms is plenty.
+    startTimer(std::chrono::milliseconds { 100 });
 }
 
 void VstViewModel::settingsToView()
@@ -94,4 +102,24 @@ void VstViewModel::setInstanceId(int newInstanceId)
     }
     m_instanceId = newInstanceId;
     emit instanceIdChanged();
+}
+
+bool VstViewModel::event(QEvent* event)
+{
+    if (event->type() == QEvent::Timer && !m_auVst3Instance->GetWrapper().IsActive()) {
+        bool hasChanges { false };
+        m_settingsAccess->ModifySettings([this, &hasChanges](EffectSettings& settings)
+        {
+            auto& wrapper = m_auVst3Instance->GetWrapper();
+            wrapper.FlushParameters(settings, &hasChanges);
+            if (hasChanges) {
+                wrapper.StoreSettings(settings);
+            }
+            return nullptr;
+        });
+        if (hasChanges) {
+            m_settingsAccess->Flush();
+        }
+    }
+    return QObject::event(event);
 }

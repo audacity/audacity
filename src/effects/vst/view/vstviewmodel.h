@@ -8,6 +8,7 @@
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "trackedit/iprojecthistory.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
 
@@ -24,6 +25,7 @@ class VstViewModel : public QObject, public muse::async::Asyncable
 public:
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectExecutionScenario> executionScenario;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     VstViewModel() = default;
@@ -42,6 +44,8 @@ private:
     EffectSettingsAccess* settingsAccess() const;
     void settingsToView();
     void settingsFromView();
+
+    bool event(QEvent* event) override;
 
     EffectInstanceId m_instanceId = -1;
     std::shared_ptr<VST3Instance> m_auVst3Instance;
