@@ -1116,9 +1116,11 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
 
    if (GetSequenceSamplesCount() == 0)
    {
-      // Empty clip: we're flexible and adopt the other's stretching.
-      mRawAudioTempo = other.mRawAudioTempo;
+      // Empty clip: we're flexible and adopt the other's pitch and stretch.
+      mPitchAndSpeedPreset = other.mPitchAndSpeedPreset;
+      mCentShift = other.mCentShift;
       mClipStretchRatio = other.mClipStretchRatio;
+      mRawAudioTempo = other.mRawAudioTempo;
       mProjectTempo = other.mProjectTempo;
    }
    else if (!HasEqualPitchAndSpeed(other))
