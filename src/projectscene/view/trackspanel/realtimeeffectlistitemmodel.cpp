@@ -14,6 +14,11 @@ RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effect
             emit isActiveChanged();
         }
     });
+
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]
+    {
+        emit isActiveChanged();
+    });
 }
 
 RealtimeEffectListItemModel::~RealtimeEffectListItemModel()

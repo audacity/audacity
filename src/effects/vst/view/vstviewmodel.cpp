@@ -39,6 +39,10 @@ void VstViewModel::init()
         settingsFromView();
     });
 
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]() {
+        settingsToView();
+    });
+
     settingsToView();
 }
 

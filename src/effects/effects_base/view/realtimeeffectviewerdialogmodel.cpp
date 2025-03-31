@@ -34,6 +34,10 @@ void RealtimeEffectViewerDialogModel::load()
             emit isActiveChanged();
         }
     });
+
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]{
+        emit isActiveChanged();
+    });
 }
 
 bool RealtimeEffectViewerDialogModel::isVst3() const

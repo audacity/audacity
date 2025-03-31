@@ -1,6 +1,6 @@
 #include "realtimeeffectservice.h"
 
-#include "mastereffectundoredo.h"
+#include "realtimeeffectrestorer.h"
 #include "realtimeeffectserviceutils.h"
 
 #include "libraries/lib-audio-io/AudioIO.h"
@@ -27,7 +27,7 @@ namespace au::effects {
  *
  * Track realtime effects are attached to WaveTrack objects, so whenever there is an undo/redo,
  * the track realtime effect lists are updated and we just need to notify that there was a change.
- * For the master effects, undo and redo are specially handled by the `MasterEffectListRestorer`.
+ * For the master effects, undo and redo are specially handled by the `RealtimeEffectRestorer`.
  *
  * The RealtimeEffectList assignment operator (RealtimeEffectList::operator=) is on purpose silent ;
  * only once the assignment is finished do we send a notification.
@@ -58,7 +58,7 @@ void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProject
 
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
-    setNotificationChannelForMasterEffectUndoRedo(*au3Project, m_realtimeEffectStackChanged);
+    setRealtimeEffectRestorerSignals(*au3Project, { m_realtimeEffectStackChanged, m_effectSettingsChanged });
 
     auto& trackList = TrackList::Get(*au3Project);
 
@@ -104,7 +104,6 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
                 return;
         }
     });
-
 
     // Proactively load realtime effects.
     for (auto i = 0u; i < list.GetStatesCount(); ++i) {
@@ -377,6 +376,11 @@ void RealtimeEffectService::setTrackEffectsActive(TrackId trackId, bool active)
         projectHistory()->modifyState();
         projectHistory()->markUnsaved();
     }
+}
+
+muse::async::Notification RealtimeEffectService::effectSettingsChanged() const
+{
+    return m_effectSettingsChanged;
 }
 
 const RealtimeEffectList* RealtimeEffectService::realtimeEffectList(TrackId trackId) const
