@@ -11,6 +11,7 @@
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
+#include "trackedit/iprojecthistory.h"
 
 #include "global/async/asyncable.h"
 
@@ -26,6 +27,7 @@ public:
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectExecutionScenario> executionScenario;
     muse::Inject<IRealtimeEffectService> realtimeEffectService;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     AbstractEffectModel(QObject* parent = nullptr);
@@ -36,6 +38,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void preview();
+    Q_INVOKABLE void commitSettings();
 
     EffectInstanceId instanceId() const;
     EffectId effectId() const;

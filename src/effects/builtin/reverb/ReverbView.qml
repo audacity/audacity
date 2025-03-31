@@ -80,6 +80,8 @@ EffectBase {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
+
+                    onCommitRequested: reverb.commitSettings()
                 }
 
                 BigParameterKnob {
@@ -91,6 +93,8 @@ EffectBase {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
+
+                    onCommitRequested: reverb.commitSettings()
                 }
 
                 BigParameterKnob {
@@ -102,6 +106,8 @@ EffectBase {
                         newParameterValueRequested(key, newValue)
                         value = newValue
                     }
+
+                    onCommitRequested: reverb.commitSettings()
                 }
             }
         }
@@ -133,6 +139,8 @@ EffectBase {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
+
+                onCommitRequested: reverb.commitSettings()
             }
 
             ParameterKnob {
@@ -145,6 +153,8 @@ EffectBase {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
+
+                onCommitRequested: reverb.commitSettings()
             }
 
             ParameterKnob {
@@ -157,6 +167,8 @@ EffectBase {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
+
+                onCommitRequested: reverb.commitSettings()
             }
 
             ParameterKnob {
@@ -169,6 +181,8 @@ EffectBase {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
+
+                onCommitRequested: reverb.commitSettings()
             }
 
             SeparatorLine {
@@ -185,6 +199,8 @@ EffectBase {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
+
+                onCommitRequested: reverb.commitSettings()
             }
 
             ParameterKnob {
@@ -197,6 +213,8 @@ EffectBase {
                     newParameterValueRequested(key, newValue)
                     value = newValue
                 }
+
+                onCommitRequested: reverb.commitSettings()
             }
 
             CheckBox {
@@ -204,7 +222,10 @@ EffectBase {
 
                 text: qsTrc("effects/reverb", "Wet Only")
                 checked: reverb.wetOnly
-                onClicked: reverb.wetOnly = !reverb.wetOnly
+                onClicked: function() {
+                    reverb.wetOnly = !reverb.wetOnly
+                    reverb.commitSettings()
+                }
             }
 
             Item {
