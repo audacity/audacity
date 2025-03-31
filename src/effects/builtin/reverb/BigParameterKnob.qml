@@ -15,6 +15,7 @@ Item {
     implicitHeight: content.implicitHeight
 
     signal newValueRequested(string key, real newValue)
+    signal commitRequested()
 
     onParameterChanged: {
         if (parameter) {
@@ -41,6 +42,10 @@ Item {
             onNewValueRequested: function (value) {
                 root.newValueRequested(root.parameter["key"], value)
             }
+
+            mouseArea.onReleased: function() {
+                root.commitRequested()
+            }
         }
 
         StyledTextLabel {
@@ -66,6 +71,10 @@ Item {
 
             onValueEdited: function(value) {
                 root.newValueRequested(root.parameter["key"], value)
+            }
+
+            onValueEditingFinished: function(value) {
+                root.commitRequested()
             }
         }
     }
