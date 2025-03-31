@@ -29,6 +29,10 @@ signals:
 private:
 
     void doReload() override;
+    void doUpdateSettings() override
+    {
+        // TODO: let https://github.com/audacity/audacity/pull/8565 get merged and then implement this.
+    }
 
     using Setter = std::function<void (ReverbSettings&, double)>;
 

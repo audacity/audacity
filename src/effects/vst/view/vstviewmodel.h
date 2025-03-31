@@ -10,6 +10,7 @@
 #include "modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
 
 #include "effects/effects_base/effectstypes.h"
 
@@ -24,6 +25,7 @@ class VstViewModel : public QObject, public muse::async::Asyncable
 public:
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectExecutionScenario> executionScenario;
+    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
 
 public:
     VstViewModel() = default;

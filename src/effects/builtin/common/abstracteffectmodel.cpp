@@ -27,6 +27,10 @@ void AbstractEffectModel::init()
         doReload();
     });
 
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]() {
+        doUpdateSettings();
+    });
+
     doReload();
     m_inited = true;
 }
