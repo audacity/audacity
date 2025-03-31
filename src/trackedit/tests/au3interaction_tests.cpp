@@ -7,9 +7,12 @@
 
 #include "context/tests/mocks/globalcontextmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
+#include "mocks/clipboardmock.h"
 #include "mocks/trackeditprojectmock.h"
 #include "mocks/projecthistorymock.h"
+#include "mocks/selectioncontrollermock.h"
 #include "tracktemplatefactory.h"
+#include "../trackediterrors.h"
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -172,9 +175,13 @@ public:
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
+        m_clipboard = std::make_shared<NiceMock<ClipboardMock> >();
+        m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
 
         m_au3Interaction->globalContext.set(m_globalContext);
         m_au3Interaction->projectHistory.set(m_projectHistory);
+        m_au3Interaction->clipboard.set(m_clipboard);
+        m_au3Interaction->selectionController.set(m_selectionController);
 
         m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
         ON_CALL(*m_globalContext, currentTrackeditProject())
@@ -263,6 +270,9 @@ public:
                         }
                     }
                 });
+            break;
+        default:
+            break;
         }
 
         return trackId;
@@ -303,8 +313,10 @@ public:
 
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
+    std::shared_ptr<ClipboardMock> m_clipboard;
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
+    std::shared_ptr<SelectionControllerMock> m_selectionController;
 
     std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor;
 };
@@ -845,5 +857,265 @@ TEST_F(Au3InteractionTests, DeleteTracks)
 
     //Cleanup
     removeTrack(trackTwoClipsId);
+}
+
+TEST_F(Au3InteractionTests, CopyClipIntoClipboard)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto clip = track->GetClip(0);
+
+    //! [EXPECT] The clipboard is notified about the new track data
+    const ClipKey clipKey { track->GetId(), clip->GetId() };
+    EXPECT_CALL(*m_clipboard, addTrackData(Truly([&](const TrackData& data) {
+        return data.clipKey == clipKey;
+    }))).Times(1);
+
+    //! [WHEN] Copy the tracks into the clipboard
+    m_au3Interaction->copyClipIntoClipboard(clipKey);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3InteractionTests, CopyContinuousTrackDataIntoClipboard)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+
+    //! [EXPECT] The clipboard is notified about the new data even if outside the clip bounds
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(2);
+
+    //! [WHEN] Copy the tracks into the clipboard inside the clip bounds
+    m_au3Interaction->copyContinuousTrackDataIntoClipboard(track->GetId(), track->GetClip(0)->GetSequenceStartTime(),
+                                                           track->GetClip(0)->GetSequenceEndTime());
+
+    //! [WHEN] Copy the tracks into the clipboard outside the clip bounds
+    m_au3Interaction->copyContinuousTrackDataIntoClipboard(track->GetId(), track->GetClip(0)->GetSequenceEndTime() + 1.0,
+                                                           track->GetClip(0)->GetSequenceEndTime() + 2.0);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3InteractionTests, CopyContinuousTrackDataThrowsWhenStartIsGreaterThanEnd)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+
+    //! [EXPECT] The clipboard is not notified about the new data
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(0);
+
+    //! [WHEN] Copy the tracks into the clipboard thrown InconsistencyExpection
+    ASSERT_THROW(m_au3Interaction->copyContinuousTrackDataIntoClipboard(track->GetId(), track->GetClip(0)->GetSequenceEndTime(),
+                                                                        track->GetClip(0)->GetSequenceStartTime()), InconsistencyException);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3InteractionTests, CopyNonContinuousTrackDataIntoClipboard)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+
+    //! [EXPECT] The clipboard is notified about the new data
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(1);
+    EXPECT_CALL(*m_clipboard, setMultiSelectionCopy(true)).Times(1);
+
+    //! [WHEN] Copy the tracks into the clipboard
+    std::vector<ClipKey> clips;
+    for (size_t i = 0; i < track->NIntervals(); i++) {
+        clips.push_back({ track->GetId(), track->GetClip(i)->GetId() });
+    }
+    m_au3Interaction->copyNonContinuousTrackDataIntoClipboard(track->GetId(), clips, 0);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3InteractionTests, CutClipIntoClipboard)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto clip = track->GetClip(1);
+    const auto middleClipStart = clip->GetSequenceStartTime();
+
+    //! [GIVEN] Thee number of intervas is 3
+    ASSERT_EQ(track->NIntervals(), 3) << "Precondition failed: The number of intervals is not 3";
+
+    //! [EXPECT] The clipboard is notified about the new track data
+    const ClipKey clipKey { track->GetId(), clip->GetId() };
+    EXPECT_CALL(*m_clipboard, addTrackData(Truly([&](const TrackData& data) {
+        return data.clipKey == clipKey;
+    }))).Times(1);
+
+    //! [EXPECT] The project is notified about clip removed and track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(Truly([&](const Track& modifiedTrack) {
+        return modifiedTrack.id == trackId;
+    }))).Times(1);
+
+    //! [WHEN] Cut the tracks into the clipboard
+    m_au3Interaction->cutClipIntoClipboard(clipKey);
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the cut operation is not 2";
+
+    //! [THEN] The last clip was moved
+    const auto lastClip = track->GetClip(1);
+    ValidateClipProperties(lastClip, middleClipStart, middleClipStart + TRACK6_CLIP3_DURATION, middleClipStart,
+                           middleClipStart + TRACK6_CLIP3_DURATION);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3InteractionTests, CutClipDataIntoClipboardWithoutMovingClips)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto clip = track->GetClip(1);
+    const auto middleClipStart = clip->GetSequenceStartTime();
+    const auto midleClipEnd = clip->GetSequenceEndTime();
+
+    const auto lastClip = track->GetClip(2);
+    const auto lastClipStart = lastClip->GetSequenceStartTime();
+    const auto lastClipEnd = lastClip->GetSequenceEndTime();
+
+    //! [GIVEN] Thee number of intervas is 3
+    ASSERT_EQ(track->NIntervals(), 3) << "Precondition failed: The number of intervals is not 3";
+
+    //! [EXPECT] The clipboard is notified about the new track data
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(1);
+
+    //! [EXPECT] The project is notified about clip removed and track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(Truly([&](const Track& modifiedTrack) {
+        return modifiedTrack.id == trackId;
+    }))).Times(1);
+
+    //! [WHEN] Cut the tracks into the clipboard
+    m_au3Interaction->cutClipDataIntoClipboard({ trackId }, middleClipStart, midleClipEnd, false);
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the cut operation is not 2";
+
+    //! [THEN] The last clip was not moved
+    const auto modifiedLastClip = track->GetClip(1);
+    ValidateClipProperties(modifiedLastClip, lastClipStart, lastClipEnd, lastClipStart, lastClipEnd);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3InteractionTests, CutClipDataIntoClipboardMovingClips)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto clip = track->GetClip(1);
+    const auto middleClipStart = clip->GetSequenceStartTime();
+    const auto midleClipEnd = clip->GetSequenceEndTime();
+
+    const auto lastClip = track->GetClip(2);
+    const auto lastClipDuration = lastClip->GetSequenceEndTime() - lastClip->GetSequenceStartTime();
+
+    //! [GIVEN] Thee number of intervas is 3
+    ASSERT_EQ(track->NIntervals(), 3) << "Precondition failed: The number of intervals is not 3";
+
+    //! [EXPECT] The clipboard is notified about the new track data
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(1);
+
+    //! [EXPECT] The project is notified about clip removed and track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(Truly([&](const Track& modifiedTrack) {
+        return modifiedTrack.id == trackId;
+    }))).Times(1);
+
+    //! [WHEN] Cut the tracks into the clipboard
+    m_au3Interaction->cutClipDataIntoClipboard({ trackId }, middleClipStart, midleClipEnd, true);
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the cut operation is not 2";
+
+    //! [THEN] The last clip was moved
+    const auto modifiedLastClip = track->GetClip(1);
+    ValidateClipProperties(modifiedLastClip, middleClipStart, middleClipStart + lastClipDuration, middleClipStart,
+                           middleClipStart + lastClipDuration);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3InteractionTests, DuplicateClipsOnEmptyList)
+{
+    EXPECT_EQ(m_au3Interaction->duplicateClips({}), false);
+}
+
+TEST_F(Au3InteractionTests, DuplicateSingleClip)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto clip = track->GetClip(0);
+
+    //! [EXPECT] The number of tracks is 1
+    const auto& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 1) << "Precondition failed: The number of tracks is not 1";
+
+    //! [EXPECT] The trackList is requested
+    EXPECT_CALL(*m_trackEditProject, trackIdList()).Times(1).WillOnce(Return(std::vector<trackedit::TrackId> { track->GetId() }));
+
+    //! [EXPECT] Notify about track added
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+
+    //! [WHEN] Duplicate the clip
+    m_au3Interaction->duplicateClip({ track->GetId(), clip->GetId() });
+
+    //! [THEN] The number of tracks is 2
+    ASSERT_EQ(projectTracks.Size(), 2) << "The number of tracks after the duplicate operation is not 2";
+
+    //Cleanup
+    removeTrack(trackId);
+    const auto newTrackId = (*projectTracks.begin())->GetId();
+    removeTrack(newTrackId);
+}
+
+TEST_F(Au3InteractionTests, DuplicateTracksOnEmptyList)
+{
+    EXPECT_EQ(m_au3Interaction->duplicateTracks({}), true);
+}
+
+TEST_F(Au3InteractionTests, DuplicateTracks)
+{
+    const auto trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+
+    //! [EXPECT] The number of tracks is 1
+    const auto& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 1) << "Precondition failed: The number of tracks is not 1";
+
+    //! [EXPECT] Notify about track added
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, _)).Times(1);
+
+    //! [WHEN] Duplicate the track
+    const TrackIdList trackList { trackId };
+    m_au3Interaction->duplicateTracks(trackList);
+
+    //! [THEN] The number of tracks is 2
+    ASSERT_EQ(projectTracks.Size(), 2) << "The number of tracks after the duplicate operation is not 2";
+
+    //Cleanup
+    removeTrack(trackId);
+    const auto newTrackId = (*projectTracks.begin())->GetId();
+    removeTrack(newTrackId);
 }
 }
