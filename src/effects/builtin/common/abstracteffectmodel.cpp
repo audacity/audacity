@@ -27,6 +27,10 @@ void AbstractEffectModel::init()
         doReload();
     });
 
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]() {
+        doReload();
+    });
+
     doReload();
     m_inited = true;
 }
@@ -97,6 +101,8 @@ void AbstractEffectModel::modifySettings(const std::function<void(EffectSettings
         return nullptr;
     });
     access->Flush();
+    projectHistory()->modifyState();
+    projectHistory()->markUnsaved();
 }
 
 QString AbstractEffectModel::instanceId_prop() const

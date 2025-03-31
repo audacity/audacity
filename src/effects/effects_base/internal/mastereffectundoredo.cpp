@@ -32,10 +32,11 @@ public:
     struct RealtimeEffectStackChanged : public ClientData::Base
     {
         static RealtimeEffectStackChanged& Get(AudacityProject& project);
-        muse::async::Channel<TrackId> channel;
+        IRealtimeEffectService* service = nullptr;
     };
 
     MasterEffectListRestorer(au3::Au3Project& project)
+        : m_masterEffectList{std::make_unique<RealtimeEffectList>(RealtimeEffectList::Get(project))}
     {
         append(m_items, RealtimeEffectList::Get(project));
         const auto tracks = TrackList::Get(project).Any<WaveTrack>();
@@ -44,7 +45,7 @@ public:
         }
     }
 
-    void RestoreUndoRedoState(au3::Au3Project&) override
+    void RestoreUndoRedoState(au3::Au3Project& project) override
     {
         for ( auto& item : m_items) {
             const auto access = item.state->GetAccess();
@@ -52,6 +53,18 @@ public:
             access->Set(std::move(settings));
             access->Flush();
         }
+        IRealtimeEffectService* const service = RealtimeEffectStackChanged::Get(project).service;
+        if (!m_items.empty()) {
+            service->notifyAboutEffectSettingsChanged();
+        }
+        // Use this `UndoStateExtension` to detect changes in the master effect list.
+        auto& currentList = RealtimeEffectList::Get(project);
+        if (currentList != *m_masterEffectList) {
+            currentList = *m_masterEffectList;
+            service->notifyAboutEffectStackChanged(IRealtimeEffectService::masterTrackId);
+        }
+        // At the moment, the changes in the track effect lists are managed in the RealtimeEffectService
+        // (See use of `m_modifiedTracks`). Maybe it'd be better to have this extension also manage these?
     }
 
 private:
@@ -73,7 +86,9 @@ private:
         }
     }
 
+    // TODO make const
     std::vector<StateAndSettings> m_items;
+    const std::unique_ptr<RealtimeEffectList> m_masterEffectList;
 };
 
 static UndoRedoExtensionRegistry::Entry sEntry {
@@ -96,7 +111,7 @@ MasterEffectListRestorer::RealtimeEffectStackChanged& MasterEffectListRestorer::
 }
 }
 
-void au::effects::setNotificationChannelForMasterEffectUndoRedo(au::au3::Au3Project& project, muse::async::Channel<TrackId> channel)
+void au::effects::setNotificationChannelForMasterEffectUndoRedo(au::au3::Au3Project& project, IRealtimeEffectService* service)
 {
-    MasterEffectListRestorer::RealtimeEffectStackChanged::Get(project).channel = channel;
+    MasterEffectListRestorer::RealtimeEffectStackChanged::Get(project).service = service;
 }

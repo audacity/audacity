@@ -39,6 +39,10 @@ void VstViewModel::init()
         settingsFromView();
     });
 
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]() {
+        settingsToView();
+    });
+
     m_auVst3Instance->GetWrapper().ParamChangedHandler = [this](Steinberg::Vst::ParamID) {
         projectHistory()->modifyState();
         projectHistory()->markUnsaved();

@@ -10,6 +10,8 @@
 #include "modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectexecutionscenario.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
+#include "trackedit/iprojecthistory.h"
 
 #include "global/async/asyncable.h"
 
@@ -24,6 +26,8 @@ class AbstractEffectModel : public QObject, public muse::async::Asyncable
 public:
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectExecutionScenario> executionScenario;
+    muse::Inject<IRealtimeEffectService> realtimeEffectService;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     AbstractEffectModel(QObject* parent = nullptr);

@@ -50,7 +50,12 @@ public:
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> realtimeEffectRemoved() const override;
     muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> realtimeEffectMoved() const override;
+
+    void notifyAboutEffectStackChanged(TrackId trackId) override;
     muse::async::Channel<TrackId> realtimeEffectStackChanged() const override;
+
+    void notifyAboutEffectSettingsChanged() override;
+    muse::async::Notification effectSettingsChanged() const override;
 
     std::optional<TrackId> trackId(const RealtimeEffectStatePtr&) const override;
     std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const override;
@@ -83,7 +88,10 @@ private:
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> m_realtimeEffectRemoved;
     muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> m_realtimeEffectReplaced;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> m_realtimeEffectMoved;
+
     muse::async::Channel<TrackId> m_realtimeEffectStackChanged;
+    muse::async::Notification m_effectSettingsChanged;
+
     bool m_trackUndoRedoOngoing = false;
     std::unordered_set<TrackId> m_modifiedTracks;
 };

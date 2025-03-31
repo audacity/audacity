@@ -13,6 +13,7 @@ class ReverbViewModel : public AbstractEffectModel
 
 public:
     ReverbViewModel();
+    ~ReverbViewModel() override = default;
 
     QVariantList paramsList() const;
 

@@ -58,7 +58,7 @@ void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProject
 
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
-    setNotificationChannelForMasterEffectUndoRedo(*au3Project, m_realtimeEffectStackChanged);
+    setNotificationChannelForMasterEffectUndoRedo(*au3Project, this);
 
     auto& trackList = TrackList::Get(*au3Project);
 
@@ -104,7 +104,6 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
                 return;
         }
     });
-
 
     // Proactively load realtime effects.
     for (auto i = 0u; i < list.GetStatesCount(); ++i) {
@@ -377,6 +376,21 @@ void RealtimeEffectService::setTrackEffectsActive(TrackId trackId, bool active)
         projectHistory()->modifyState();
         projectHistory()->markUnsaved();
     }
+}
+
+void RealtimeEffectService::notifyAboutEffectStackChanged(TrackId trackId)
+{
+    m_realtimeEffectStackChanged.send(trackId);
+}
+
+void RealtimeEffectService::notifyAboutEffectSettingsChanged()
+{
+    m_effectSettingsChanged.notify();
+}
+
+muse::async::Notification RealtimeEffectService::effectSettingsChanged() const
+{
+    return m_effectSettingsChanged;
 }
 
 const RealtimeEffectList* RealtimeEffectService::realtimeEffectList(TrackId trackId) const
