@@ -17,7 +17,7 @@ StyledDialogViewWithoutNavigationSection {
 
     property alias viewItem: viewLoader.item
 
-    title: viewItem ? viewItem.title + " - " + viewerModel.trackName : ""
+    title: viewerModel.title + " - " + viewerModel.trackName
 
     contentWidth: viewItem ? Math.max(viewItem.implicitWidth, headerBar.width) : headerBar.width
     contentHeight: viewItem ? headerBar.height + viewItem.implicitHeight : headerBar.height

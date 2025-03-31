@@ -54,6 +54,7 @@ public:
     muse::async::Notification effectSettingsChanged() const override;
 
     std::optional<TrackId> trackId(const RealtimeEffectStatePtr&) const override;
+    std::optional<std::string> effectName(const RealtimeEffectStatePtr& state) const override;
     std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const override;
     std::optional<std::vector<RealtimeEffectStatePtr> > effectStack(TrackId trackId) const override;
 

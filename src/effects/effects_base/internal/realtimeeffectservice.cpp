@@ -190,6 +190,11 @@ std::optional<TrackId> RealtimeEffectService::trackId(const RealtimeEffectStateP
     return utils::trackId(globalContext()->currentProject(), state);
 }
 
+std::optional<std::string> RealtimeEffectService::effectName(const RealtimeEffectStatePtr& state) const
+{
+    return state ? std::make_optional(getEffectName(*state)) : std::nullopt;
+}
+
 std::optional<std::string> RealtimeEffectService::effectTrackName(const RealtimeEffectStatePtr& state) const
 {
     const auto tId = trackId(state);
