@@ -28,6 +28,7 @@ class EffectViewLoader : public QObject, public muse::async::Asyncable
 
 public:
     EffectViewLoader(QObject* parent = nullptr);
+    ~EffectViewLoader() override;
 
     QQuickItem* contentItem() const;
 
