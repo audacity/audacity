@@ -58,13 +58,19 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     return clip;
 }
 
-au::trackedit::Track DomConverter::track(const Au3Track* waveTrack)
+au::trackedit::Track DomConverter::track(const Au3Track* track)
 {
     trackedit::Track au4t;
-    au4t.id = waveTrack->GetId();
-    au4t.title = wxToString(waveTrack->GetName());
-    au4t.type = trackType(waveTrack);
-    au4t.color = TrackColor::Get(waveTrack).GetColor();
+    au4t.id = track->GetId();
+    au4t.title = wxToString(track->GetName());
+    au4t.type = trackType(track);
+    au4t.color = TrackColor::Get(track).GetColor();
+
+    auto castToWaveTrack = dynamic_cast<const Au3WaveTrack*>(track);
+    if (castToWaveTrack) {
+        au4t.volume = castToWaveTrack->GetVolume();
+        // TODO: Do also for pan?
+    }
 
     return au4t;
 }

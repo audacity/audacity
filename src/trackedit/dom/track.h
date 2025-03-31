@@ -24,6 +24,7 @@ struct Track {
     muse::String title;
     TrackType type = TrackType::Undefined;
     muse::draw::Color color;
+    std::optional<float> volume;
 };
 
 using TrackList = std::vector<Track>;

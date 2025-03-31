@@ -128,6 +128,19 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
 
     return changed;
 }
+
+bool approximatelyEqual(float a, float b)
+{
+    const auto relativeDifferenceFactor = 0.0001; // 0.01%
+    const auto greaterMagnitude = std::max(std::abs(a), std::abs(b));
+
+    if (std::abs(a - b) < relativeDifferenceFactor * greaterMagnitude)
+        return true;
+    else
+        return false;
+
+    // return fabs(a - b) <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * std::numeric_limits<float>::epsilon());
+}
 }  // namespace
 
 namespace au::trackedit::changeDetection {
@@ -186,8 +199,14 @@ void notifyOfUndoRedo(const TracksAndClips& before,
     //! Checking for Track field change - brute force I'm afraid:
     {
         auto trackFieldComparison = [](const Track& first, const Track& second) {
+            bool volumeChanged = false;
+            if (first.volume.has_value() && second.volume.has_value()) {
+                volumeChanged = !approximatelyEqual(first.volume.value(), second.volume.value());
+            }
+
             return first.type == second.type
-                   && first.title == second.title;
+                   && first.title == second.title
+                   && volumeChanged;
 
             //! For now these do not result in "autosave",
             //  and so should not be criteria under undo/redo.
