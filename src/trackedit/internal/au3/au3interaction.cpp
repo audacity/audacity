@@ -1192,24 +1192,6 @@ bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
     return true;
 }
 
-bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, secs_t begin, secs_t end)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
-
-    auto track = waveTrack->Copy(begin, end);
-    clipboard()->addTrackData(TrackData { track, clipKey });
-
-    return true;
-}
-
 bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
@@ -2077,6 +2059,10 @@ bool Au3Interaction::deleteTracks(const TrackIdList& trackIds)
 
 bool Au3Interaction::duplicateTracks(const TrackIdList& trackIds)
 {
+    if (trackIds.empty()) {
+        return true;
+    }
+
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
 
