@@ -41,6 +41,7 @@ public:
     virtual muse::async::Notification effectSettingsChanged() const = 0;
 
     virtual std::optional<TrackId> trackId(const RealtimeEffectStatePtr& state) const = 0;
+    virtual std::optional<std::string> effectName(const RealtimeEffectStatePtr& state) const = 0;
     virtual std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const = 0;
     virtual std::optional<std::vector<RealtimeEffectStatePtr> > effectStack(TrackId trackId) const = 0;
 
