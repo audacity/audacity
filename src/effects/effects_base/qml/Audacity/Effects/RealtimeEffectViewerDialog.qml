@@ -38,7 +38,7 @@ StyledDialogViewWithoutNavigationSection {
         VstViewer {
             id: view
             instanceId: root.instanceId
-            x: (root.width - view.width) / 2
+            x: 0
             y: headerBar.height
         }
     }

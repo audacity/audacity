@@ -21,7 +21,6 @@ Item {
             knob.from = parameter["min"]
             knob.to = parameter["max"]
             knob.value = parameter["value"]
-            textEdit.measureUnitsSymbol = parameter["unit"]
         }
     }
 
