@@ -37,6 +37,10 @@ public:
      */
     size_t Unput(size_t size);
     size_t Clear(sampleFormat format, size_t samples);
+
+    //! Call only if no other operations can occur simultaneously
+    void ClearBuffer();
+
     //! Get access to written but unflushed data, which is in at most two blocks
     //! Excludes the padding of the most recent Put()
     std::pair<samplePtr, size_t> GetUnflushed(unsigned iBlock);

@@ -1722,6 +1722,14 @@ void AudioIO::SetPaused(bool state, bool publish)
         }
     }
 
+    if (!state) {
+        for (auto& buffer : mPlaybackBuffers) {
+            buffer->ClearBuffer();
+        }
+    }
+    //! This should be safe here, because the thread producing samples doesn't add new ones when paused,
+    //! nor does the consumer consume.
+
     mPaused.store(state, std::memory_order_relaxed);
 
     if (publish) {

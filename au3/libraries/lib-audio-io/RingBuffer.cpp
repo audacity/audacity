@@ -183,6 +183,18 @@ size_t RingBuffer::Clear(sampleFormat format, size_t samplesToClear)
     return cleared;
 }
 
+void RingBuffer::ClearBuffer()
+{
+    size_t pos = 0;
+    size_t samplesToClear = mBufferSize;
+    while (samplesToClear) {
+        auto block = std::min(samplesToClear, mBufferSize - pos);
+        ClearSamples(mBuffer.ptr(), mFormat, pos, block);
+        pos = (pos + block) % mBufferSize;
+        samplesToClear -= block;
+    }
+}
+
 std::pair<samplePtr, size_t> RingBuffer::GetUnflushed(unsigned iBlock)
 {
     // This function is called by the writer
