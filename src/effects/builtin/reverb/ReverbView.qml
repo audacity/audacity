@@ -13,7 +13,7 @@ EffectBase {
     property string title: qsTrc("effects/reverb", "Reverb")
     property bool isApplyAllowed: true
 
-    height: 380
+    implicitHeight: row.height
     width: 560
 
     model: reverb
@@ -41,6 +41,7 @@ EffectBase {
     }
 
     RowLayout {
+        id: row
 
         width: parent.width
         spacing: prv.rowSpacing
