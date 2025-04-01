@@ -16,7 +16,7 @@ EffectBase {
     property alias isApplyAllowed: tone.isApplyAllowed
 
     width: 360
-    height: 340
+    implicitHeight: column.height
 
     model: tone
 
@@ -40,9 +40,9 @@ EffectBase {
     }
 
     Column {
+        id: column
 
         width: parent.width
-        height: parent.height
 
         spacing: prv.spacing
 

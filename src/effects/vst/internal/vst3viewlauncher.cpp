@@ -14,8 +14,6 @@
 
 using namespace au::effects;
 
-static const char16_t* VST_VIEWER_URI = u"audacity://effects/vst_viewer?instanceId=%1&modal=false&floating=true";
-
 void Vst3ViewLauncher::registerFxPlugin(const EffectInstanceId& instanceId) const
 {
     if (museInstancesRegister()->instanceById(instanceId)) {
@@ -49,8 +47,9 @@ muse::Ret Vst3ViewLauncher::showEffect(const EffectInstanceId& instanceId) const
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    muse::Ret ret = interactive()->open(muse::String(VST_VIEWER_URI)
-                                        .arg(size_t(museVstInstance->id())).toStdString()
+    constexpr auto isVst = true;
+    muse::Ret ret = interactive()->open(muse::String(EFFECT_VIEWER_URI)
+                                        .arg(size_t(museVstInstance->id())).arg(isVst).toStdString()
                                         ).ret;
 
     return ret;

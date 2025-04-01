@@ -2,6 +2,5 @@
     <qresource prefix="/">
         <file>qml/Audacity/Vst/qmldir</file>
         <file>qml/Audacity/Vst/VstViewer.qml</file>
-        <file>qml/Audacity/Vst/VstViewerDialog.qml</file>
     </qresource>
 </RCC>

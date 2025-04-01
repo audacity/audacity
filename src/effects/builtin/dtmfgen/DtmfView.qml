@@ -17,7 +17,7 @@ EffectBase {
     property alias isApplyAllowed: dtmf.isApplyAllowed
 
     width: 550
-    height: 350
+    implicitHeight: row.height
 
     model: dtmf
 
@@ -38,6 +38,7 @@ EffectBase {
     }
 
     RowLayout {
+        id: row
 
         width: parent.width
         spacing: prv.spacing
