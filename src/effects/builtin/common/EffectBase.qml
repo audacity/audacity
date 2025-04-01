@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 
 import Muse.Ui
 import Muse.UiComponents
@@ -12,6 +13,8 @@ Rectangle {
     property var instanceId: null
 
     property AbstractEffectModel model: null
+
+    default property alias content: effectSettings.data
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -41,6 +44,46 @@ Rectangle {
 
         onHandleMenuItem: function(itemId) {
             manageMenuModel.handleMenuItem(itemId)
+        }
+    }
+
+    ColumnLayout {
+        anchors.fill: parent
+
+        spacing: 16
+
+        RowLayout {
+            spacing: 4
+
+            StyledDropdown {
+                Layout.fillWidth: true
+                indeterminateText: "Default preset"
+            }
+
+            FlatButton {
+                Layout.alignment: Qt.AlignVCenter
+                icon: IconCode.SAVE
+            }
+
+            FlatButton {
+                Layout.alignment: Qt.AlignVCenter
+                icon: IconCode.UNDO
+            }
+
+            FlatButton {
+                Layout.alignment: Qt.AlignVCenter
+                icon: IconCode.MENU_THREE_DOTS
+            }
+        }
+
+        SeparatorLine {
+
+        }
+
+        Item {
+            id: effectSettings
+            Layout.fillWidth: true
+            Layout.fillHeight: true
         }
     }
 }

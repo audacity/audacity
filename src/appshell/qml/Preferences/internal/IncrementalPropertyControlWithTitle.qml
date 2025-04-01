@@ -35,6 +35,8 @@ Column {
     property alias minValue: control.minValue
     property alias maxValue: control.maxValue
     property alias measureUnitsSymbol: control.measureUnitsSymbol
+    property alias decimals: control.decimals
+    property alias step: control.step
 
     property alias control: control
 

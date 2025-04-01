@@ -9,6 +9,9 @@ import Muse.UiComponents
 MenuButton {
     id: menuBtn
 
+    property color backgroundColor: ui.theme.backgroundQuarternaryColor
+    property Border border: Border{}
+
     icon: IconCode.SMALL_ARROW_DOWN
     iconColor: ui.theme.fontSecondaryColor
 
@@ -20,7 +23,8 @@ MenuButton {
         topRightRadius: 3
         bottomRightRadius: 3
 
-        color: ui.theme.backgroundQuarternaryColor
+        color: root.backgroundColor
+        border: root.border
 
         states: [
             State {

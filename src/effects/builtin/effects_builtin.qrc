@@ -8,5 +8,7 @@
         <file>general/GeneralEffectView.qml</file>
         <file>reverb/ReverbView.qml</file>
         <file>noisegen/NoiseView.qml</file>
+        <file>reverb/ParameterKnob.qml</file>
+        <file>reverb/BigParameterKnob.qml</file>
     </qresource>
 </RCC>

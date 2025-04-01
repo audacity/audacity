@@ -46,11 +46,11 @@ Dial {
 
         readonly property bool reversed: root.isBalanceKnob ? root.angle < 0 : false
 
-        readonly property real handlerHeight: 8
-        readonly property real handlerWidth: 2
+        readonly property real handlerHeight: radius / 2
+        readonly property real handlerWidth: radius / 8
 
-        readonly property real outerArcLineWidth: 3
-        readonly property real innerArcLineWidth: 2
+        readonly property real outerArcLineWidth: radius / 5
+        readonly property real innerArcLineWidth: radius / 8
 
         readonly property real startAngle: -140 * (Math.PI/180) - Math.PI/2
         readonly property real endAngle: 140 * (Math.PI/180) - Math.PI/2
@@ -136,9 +136,10 @@ Dial {
             ctx.arc(width/2, height/2, root.radius - prv.outerArcLineWidth/2, prv.startAngle, prv.endAngle, false)
             ctx.stroke()
 
+            ctx.lineWidth = prv.outerArcLineWidth + 0.5
             ctx.strokeStyle = prv.valueArcColor
             ctx.beginPath()
-            ctx.arc(width/2, height/2, root.radius - prv.outerArcLineWidth/2, prv.startValueArcAngle * (Math.PI/180) - Math.PI/2, root.angle * (Math.PI/180) - Math.PI/2, prv.reversed)
+            ctx.arc(width/2, height/2, root.radius - prv.outerArcLineWidth/2 - 0.25, prv.startValueArcAngle * (Math.PI/180) - Math.PI/2, root.angle * (Math.PI/180) - Math.PI/2, prv.reversed)
             ctx.stroke()
 
             ctx.lineWidth = prv.innerArcLineWidth

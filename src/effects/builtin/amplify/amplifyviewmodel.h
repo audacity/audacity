@@ -60,7 +60,7 @@ private:
     void update();
 
     Param<db_t> m_amp;
-    db_t m_newPeak = 0.0;
+    db_t m_newPeak = 0.0f;
     bool m_canClip = false;
     bool m_isApplyAllowed = false;
 };

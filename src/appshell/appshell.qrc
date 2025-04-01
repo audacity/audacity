@@ -121,5 +121,6 @@
         <file>qml/platform/PlatformMenuBar.qml</file>
         <file>qml/ProjectPage/ProjectPage.qml</file>
         <file>qml/ProjectPage/ProjectStatusBar.qml</file>
+        <file>qml/Preferences/qmldir</file>
     </qresource>
 </RCC>

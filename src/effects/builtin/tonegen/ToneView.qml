@@ -6,20 +6,32 @@ import Audacity.Effects
 import Audacity.Playback
 import "../common"
 
-EffectBase {
+// TODO: move to common controls
+import Preferences
 
+EffectBase {
     id: root
 
-    property string title: qsTrc("effects", "Tone")
+    property string title: qsTrc("effects/tone", "Tone")
     property alias isApplyAllowed: tone.isApplyAllowed
 
-    width: 370
-    height: 200
+    width: 360
+    height: 340
 
     model: tone
 
+    QtObject {
+        id: prv
+
+        readonly property int spacing: 16
+        readonly property int interpolationLinear: 0
+        readonly property int interpolationLogarithmic: 1
+    }
+
+
     ToneViewModel {
         id: tone
+
         instanceId: root.instanceId
     }
 
@@ -27,87 +39,101 @@ EffectBase {
         tone.init()
     }
 
-    GridLayout {
-        columns: 2
-        rows: 4
-        columnSpacing: 4
-        rowSpacing: 16
+    Column {
 
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.fill: parent
-        anchors.margins: 10
+        width: parent.width
+        height: parent.height
 
-        // First row
-        StyledTextLabel {
-            text: qsTrc("effects/tone", "Waveform:")
-        }
+        spacing: prv.spacing
 
-        ComboBox {
-            Layout.preferredWidth: 80
+        ComboBoxWithTitle {
 
-            model: tone.waveforms
+            title: qsTrc("effects/tone", "Waveform")
+            columnWidth: parent.width
+
             currentIndex: tone.waveform
+            model: tone.waveforms
 
-            onActivated: function (index) {
-                tone.waveform = index
+            onValueEdited: function(newIndex, newValue) {
+                tone.waveform = newIndex
             }
         }
 
-        // Second row
-        StyledTextLabel {
-            text: qsTrc("effects", "Frequency (Hz):")
-        }
+        IncrementalPropertyControlWithTitle {
 
-        RealInputField {
-            Layout.preferredWidth: 80
+            columnWidth: (parent.width - parent.spacing) / 2
+            controlWidth: (parent.width - parent.spacing) / 2
 
-            min: 1
-            max: 1000000
-
+            title: qsTrc("effects/tone", "Frequency")
             currentValue: tone.frequencyStart
-            onCurrentValueChanged: {
-                tone.frequencyStart = currentValue
+
+            minValue: 1
+            maxValue: 1000000
+
+            measureUnitsSymbol: qsTrc("global", "Hz")
+
+            onValueEdited: function(newValue) {
+                if (tone.frequencyStart !== newValue) {
+                    tone.frequencyStart = newValue
+                }
             }
         }
 
-        // Third row
-        StyledTextLabel {
-            text: qsTrc("effects/tone", "Amplitude (0-1):")
-        }
+        IncrementalPropertyControlWithTitle {
 
-        RealInputField {
-            Layout.preferredWidth: 80
+            columnWidth: (parent.width - parent.spacing) / 2
+            controlWidth: parent.width * .25
 
-            min: 0
-            max: 1
-
+            title: qsTrc("effects/tone", "Amplitude (0-1)")
             currentValue: tone.amplitudeStart
-            onCurrentValueChanged: {
-                tone.amplitudeStart = currentValue
+
+            minValue: 0
+            maxValue: 1
+            decimals: 4
+            step: 0.01
+
+            onValueEdited: function(newValue) {
+                if (tone.amplitudeStart !== newValue) {
+                    tone.amplitudeStart = newValue
+                }
             }
         }
 
-        // Fourth row
-        StyledTextLabel {
-            text: qsTrc("effects/tone", "Duration:")
-        }
+        Column {
 
-        Timecode {
-            Layout.fillHeight: false
+            spacing: 8
 
-            id: timecode
+            StyledTextLabel {
+                text: qsTrc("effects/tone", "Duration")
+            }
 
-            value: tone.duration
-            mode: TimecodeModeSelector.Duration
-            currentFormatStr: tone.durationFormat
-            sampleRate: tone.sampleRate
-            tempo: tone.tempo
-            upperTimeSignature: tone.upperTimeSignature
-            lowerTimeSignature: tone.lowerTimeSignature
-            enabled: true
+            Timecode {
+                id: timecode
 
-            onValueChanged: {
-                tone.duration = timecode.value
+                Layout.fillHeight: false
+                Layout.columnSpan: 2
+
+                border: Border {
+                    color: ui.theme.strokeColor
+                    width: 1
+                }
+
+                arrowSpacing: -2
+                backgroundColor: ui.theme.backgroundSecondaryColor
+                textColor: ui.theme.fontPrimaryColor
+
+                value: tone.duration
+                mode: TimecodeModeSelector.Duration
+                currentFormatStr: tone.durationFormat
+                sampleRate: tone.sampleRate
+                tempo: tone.tempo
+                upperTimeSignature: tone.upperTimeSignature
+                lowerTimeSignature: tone.lowerTimeSignature
+                enabled: true
+
+                onValueChanged: {
+                    tone.duration = timecode.value
+                }
             }
         }
     }

@@ -51,20 +51,12 @@ StyledDialogView {
         }
 
         FlatButton {
-            id: manageBtn
-            text: qsTrc("effects", "Manage")
-            buttonRole: ButtonBoxModel.CustomRole
-            buttonId: ButtonBoxModel.CustomButton + 1
-            isLeftSide: true
-            onClicked: viewer.manage(manageBtn)
-        }
-
-        FlatButton {
             id: previewBtn
             text: qsTrc("effects", "Preview")
             buttonRole: ButtonBoxModel.CustomRole
             buttonId: ButtonBoxModel.CustomButton + 2
             isLeftSide: true
+            minWidth: 80
             onClicked: viewer.preview()
         }
 
@@ -72,6 +64,7 @@ StyledDialogView {
             text: qsTrc("global", "Cancel")
             buttonRole: ButtonBoxModel.RejectRole
             buttonId: ButtonBoxModel.Cancel
+            minWidth: 80
             onClicked: root.reject()
         }
 
@@ -79,6 +72,7 @@ StyledDialogView {
             text: qsTrc("global", "Apply")
             buttonRole: ButtonBoxModel.AcceptRole
             buttonId: ButtonBoxModel.Apply
+            minWidth: 80
             accentButton: true
             onClicked: root.accept()
         }

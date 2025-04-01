@@ -20,7 +20,6 @@ class ToneViewModel : public GeneratorEffectModel
     Q_PROPERTY(int waveform READ waveform WRITE prop_setWaveform NOTIFY waveformChanged)
     Q_PROPERTY(int interpolation READ interpolation WRITE prop_setInterpolation NOTIFY interpolationChanged)
     Q_PROPERTY(QList<QString> waveforms READ waveforms CONSTANT)
-    Q_PROPERTY(QList<QString> interpolationTypes READ interpolationTypes CONSTANT)
 
     muse::Inject<IEffectsProvider> effectsProvider;
 

@@ -15,6 +15,7 @@ ListItemBlank {
 
     property var value: null
     property bool isEditable: false
+    property alias color: symbolField.color
 
     width: isEditable ? 12 : (value === " " ? 1 : symbolField.implicitWidth)
     height: 28
