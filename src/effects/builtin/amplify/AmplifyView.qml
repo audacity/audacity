@@ -11,7 +11,7 @@ EffectBase {
     property alias isApplyAllowed: amplify.isApplyAllowed
 
     width: 320
-    height: 250
+    implicitHeight: column.height
 
     model: amplify
 
@@ -29,6 +29,7 @@ EffectBase {
     }
 
     Column {
+        id: column
 
         height: implicitHeight
         width: parent.width

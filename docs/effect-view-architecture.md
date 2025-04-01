@@ -6,7 +6,6 @@
 ---
 classDiagram
   VstViewer *-- VstView
-  EffectsViewerDialog *-- EffectsViewer
 
   namespace legend {
     class CPP
@@ -22,18 +21,16 @@ classDiagram
   IEffectViewLauncher <|-- Vst3ViewLauncher
   IEffectViewLauncher <|-- BuiltinViewLauncher
 
-  RealtimeEffectViewerDialog *-- Loader
-  Loader o.. EffectsViewer: sourceComponent
-  Loader o.. VstViewer: sourceComponent
-  VstViewerDialog *-- VstViewer
+  RealtimeEffectViewerDialog o.. EffectsViewer
+  RealtimeEffectViewerDialog o.. VstViewer
+  EffectsViewerDialog o.. VstViewer
+  EffectsViewerDialog o.. EffectsViewer
   EffectsViewer *-- EffectViewLoader
   EffectViewLoader o.. ReverbView: loads
   EffectViewLoader o.. CompressorView: loads
-  Vst3ViewLauncher ..> VstViewerDialog
+  Vst3ViewLauncher ..> EffectsViewerDialog
   BuiltinViewLauncher ..> EffectsViewerDialog
 
-  class Loader:::qml
-  class RealtimeEffectViewerDialog:::qml
   class ReverbView:::qml
   class CompressorView:::qml
 
@@ -50,7 +47,7 @@ classDiagram
     applyBtn
   }
 
-  class VstViewerDialog:::qml {
+  class EffectsViewerDialog:::qml {
     instanceId: string
     ------------
     manageBtn

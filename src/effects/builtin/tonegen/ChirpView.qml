@@ -17,7 +17,7 @@ EffectBase {
     property alias isApplyAllowed: chirp.isApplyAllowed
 
     width: 370
-    height: 450
+    implicitHeight: column.height
 
     model: chirp
 
@@ -41,9 +41,9 @@ EffectBase {
     }
 
     ColumnLayout {
+        id: column
 
         width: parent.width
-        height: parent.height
 
         spacing: prv.spacing
 

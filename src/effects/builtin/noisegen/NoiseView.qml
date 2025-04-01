@@ -16,7 +16,7 @@ EffectBase {
     property alias isApplyAllowed: noise.isApplyAllowed
 
     width: 300
-    height: 260
+    implicitHeight: column.height
 
     model: noise
 
@@ -31,9 +31,9 @@ EffectBase {
     }
 
     Column {
+        id: column
 
         width: parent.width
-        height: parent.height
 
         spacing: 16
 
