@@ -54,6 +54,13 @@
 #define IS_INPUT    (TRUE)
 #define IS_OUTPUT   (FALSE)
 
+#ifndef kAudioObjectPropertyScopeInput
+#define kAudioObjectPropertyScopeInput kAudioDevicePropertyScopeInput
+#endif
+#ifndef kAudioObjectPropertyScopeOutput
+#define kAudioObjectPropertyScopeOutput kAudioDevicePropertyScopeOutput
+#endif
+
 typedef struct PxInfo
 {
    AudioDeviceID  input;
