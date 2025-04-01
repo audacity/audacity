@@ -53,4 +53,44 @@ protected:
 private:
     void doInit() override;
 };
+
+inline bool operator==(ToneEffect::Waveform lhs, int rhs)
+{
+    return lhs == static_cast<ToneEffect::Waveform>(rhs);
+}
+
+inline bool operator==(int lhs, ToneEffect::Waveform rhs)
+{
+    return static_cast<ToneEffect::Waveform>(lhs) == rhs;
+}
+
+inline bool operator==(ToneEffect::Interpolation lhs, int rhs)
+{
+    return lhs == static_cast<ToneEffect::Interpolation>(rhs);
+}
+
+inline bool operator==(int lhs, ToneEffect::Interpolation rhs)
+{
+    return static_cast<ToneEffect::Interpolation>(lhs) == rhs;
+}
+
+inline bool operator!=(ToneEffect::Waveform lhs, int rhs)
+{
+    return lhs != static_cast<ToneEffect::Waveform>(rhs);
+}
+
+inline bool operator!=(int lhs, ToneEffect::Waveform rhs)
+{
+    return static_cast<ToneEffect::Waveform>(lhs) != rhs;
+}
+
+inline bool operator!=(ToneEffect::Interpolation lhs, int rhs)
+{
+    return lhs != static_cast<ToneEffect::Interpolation>(rhs);
+}
+
+inline bool operator!=(int lhs, ToneEffect::Interpolation rhs)
+{
+    return static_cast<ToneEffect::Interpolation>(lhs) != rhs;
+}
 }

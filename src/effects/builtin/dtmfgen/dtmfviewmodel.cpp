@@ -40,6 +40,11 @@ void DtmfViewModel::prop_setSequence(const QString& newSequence)
     if (!m_inited) {
         return;
     }
+
+    if (settings<DtmfSettings>().dtmfSequence == newSequence.toStdString()) {
+        return;
+    }
+
     const bool wasAllowed = isApplyAllowed();
 
     mutSettings<DtmfSettings>().dtmfSequence = newSequence.toStdString();
@@ -62,9 +67,14 @@ void DtmfViewModel::prop_setAmplitude(double newAmplitude)
         return;
     }
 
+    if (settings<DtmfSettings>().dtmfAmplitude == newAmplitude) {
+        return;
+    }
+
     const bool wasAllowed = isApplyAllowed();
 
     mutSettings<DtmfSettings>().dtmfAmplitude = newAmplitude;
+    emit amplitudeChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -79,6 +89,10 @@ double DtmfViewModel::dutyCycle() const
 void DtmfViewModel::prop_setDutyCycle(double newDutyCycle)
 {
     if (!m_inited) {
+        return;
+    }
+
+    if (settings<DtmfSettings>().dtmfDutyCycle == newDutyCycle) {
         return;
     }
 

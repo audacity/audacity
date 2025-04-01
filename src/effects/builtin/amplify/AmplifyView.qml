@@ -1,26 +1,25 @@
 import QtQuick
-
 import Muse.UiComponents
-
 import Audacity.Effects
 
 import "../common"
 
 EffectBase {
-
     id: root
 
-    property string title: "Amplify"
+    property string title: qsTrc("effects/amplify", "Amplify")
     property alias isApplyAllowed: amplify.isApplyAllowed
 
-    width: 300
-    height: 200
+    width: 320
+    height: 250
 
     model: amplify
 
     AmplifyViewModel {
         id: amplify
+
         instanceId: root.instanceId
+
         onAmpChanged: slider.value = amp
     }
 
@@ -31,76 +30,124 @@ EffectBase {
 
     Column {
 
-        anchors.fill: parent
+        height: implicitHeight
+        width: parent.width
         spacing: 16
 
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
+        Column {
 
-            spacing: 4
+            height: implicitHeight
+            width: parent.width
+            spacing: 8
 
             StyledTextLabel {
-                anchors.verticalCenter: parent.verticalCenter
-
-                text: qsTrc("effects/amplify", "Amplification (dB):")
+                text: qsTrc("effects/amplify", "Amplification")
             }
 
-            RealInputField {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 80
+            Row {
 
-                min: amplify.ampMin
-                max: amplify.ampMax
-                decimals: 4
+                width: parent.width - spacing
+                spacing: 16
 
-                currentValue: amplify.amp
-                onCurrentValueChanged: {
-                    amplify.amp = currentValue
+                StyledSlider {
+                    id: slider
+
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    width: parent.width * .65
+
+                    value: amplify.amp
+                    to: amplify.ampMax
+                    from: amplify.ampMin
+                    stepSize: 0.01
+
+                    onMoved: {
+                        if (value !== amplify.amp) {
+                            amplify.amp = value
+                        }
+                    }
+                }
+
+                IncrementalPropertyControl {
+
+                    width: parent.width * .35
+
+                    measureUnitsSymbol: qsTrc("global", "dB")
+                    minValue: amplify.ampMin
+                    maxValue: amplify.ampMax
+                    decimals: 4
+                    step: 0.01
+
+                    currentValue: (amplify.amp).toFixed(decimals)
+
+                    onValueEdited: function(newValue) {
+                        newValue = +(newValue.toFixed(decimals))
+                        if (newValue !== amplify.amp) {
+                            amplify.amp = newValue
+                        }
+                    }
                 }
             }
         }
 
-        StyledSlider {
-            id: slider
+        Column {
+
+            height: implicitHeight
             width: parent.width
-
-            to: amplify.ampMax
-            from: amplify.ampMin
-            stepSize: 0.1
-
-            onMoved: {
-                amplify.amp = value
-            }
-        }
-
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            spacing: 4
+            spacing: 8
 
             StyledTextLabel {
-                anchors.verticalCenter: parent.verticalCenter
 
-                text: qsTrc("effects/amplify", "New Peak Amplitude (dB):")
+                text: qsTrc("effects/amplify", "New peak amplitude")
             }
 
-            RealInputField {
-                anchors.verticalCenter: parent.verticalCenter
-                width: 80
+            Row {
 
-                min: amplify.newPeakMin
-                max: amplify.newPeakMax
-                decimals: 4
+                width: parent.width - spacing
 
-                currentValue: amplify.newPeak
-                onCurrentValueChanged: {
-                    amplify.newPeak = currentValue
+                spacing: 16
+
+                StyledSlider {
+
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    width: parent.width * .65
+
+                    value: amplify.newPeak
+                    to: amplify.newPeakMax
+                    from: amplify.newPeakMin
+                    stepSize: 0.01
+
+                    onMoved: {
+                        if (value !== amplify.newPeak) {
+                            amplify.newPeak = value
+                        }
+                    }
+                }
+
+                IncrementalPropertyControl {
+
+                    width: parent.width * .35
+
+                    measureUnitsSymbol: qsTrc("global", "dB")
+                    minValue: amplify.newPeakMin
+                    maxValue: amplify.newPeakMax
+                    decimals: 4
+                    step: 0.01
+
+                    currentValue: +(amplify.newPeak).toFixed(decimals)
+
+                    onValueEdited: function(newValue) {
+                        newValue = +(newValue.toFixed(decimals))
+                        if (newValue !== amplify.newPeak) {
+                            amplify.newPeak = newValue
+                        }
+                    }
                 }
             }
         }
 
         CheckBox {
-            anchors.horizontalCenter: parent.horizontalCenter
 
             text: qsTrc("effects/amplify", "Allow clipping")
             checked: amplify.canClip

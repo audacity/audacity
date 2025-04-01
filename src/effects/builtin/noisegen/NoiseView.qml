@@ -6,20 +6,23 @@ import Audacity.Effects
 import Audacity.Playback
 import "../common"
 
-EffectBase {
+// TODO: move to common controls
+import Preferences
 
+EffectBase {
     id: root
 
     property string title: qsTrc("effects", "Noise")
     property alias isApplyAllowed: noise.isApplyAllowed
 
     width: 300
-    height: 150
+    height: 260
 
     model: noise
 
     NoiseViewModel {
         id: noise
+
         instanceId: root.instanceId
     }
 
@@ -27,74 +30,82 @@ EffectBase {
         noise.init()
     }
 
-    GridLayout {
-        columns: 2
-        rows: 3
+    Column {
 
-        columnSpacing: 10
-        rowSpacing: 16
+        width: parent.width
+        height: parent.height
 
-        anchors.fill: parent
-        anchors.margins: 10
+        spacing: 16
 
-        // First row
-        StyledTextLabel {
-            text: qsTrc("effects/noise", "Type:")
-        }
-
-        ComboBox {
+        ComboBoxWithTitle {
             id: typeSelector
 
-            Layout.fillWidth: true
+            columnWidth: parent.width
+
+            title: qsTrc("effects/noise", "Type")
 
             model: noise.types
             textRole: "text"
             valueRole: "value"
             currentIndex: noise.types.findIndex(type => type.value === noise.type)
 
-            onActivated: function (index) {
-                noise.type = currentValue
+            onValueEdited: function (newIndex, newValue) {
+                noise.type = newIndex
             }
         }
 
-        // Second row
-        StyledTextLabel {
-            text: qsTrc("effects/noise", "Duration:")
-        }
+        IncrementalPropertyControlWithTitle {
 
-        Timecode {
-            id: timecode
+            title: qsTrc("effects/noise", "Amplitude (0-1)")
 
-            Layout.fillWidth: true
-            Layout.fillHeight: false
-
-            value: noise.duration
-            mode: TimecodeModeSelector.Duration
-            currentFormatStr: noise.durationFormat
-            sampleRate: noise.sampleRate
-            tempo: noise.tempo
-            upperTimeSignature: noise.upperTimeSignature
-            lowerTimeSignature: noise.lowerTimeSignature
-
-            onValueChanged: {
-                noise.duration = timecode.value
-            }
-        }
-
-        // Third row
-        StyledTextLabel {
-            text: qsTrc("effects/noise", "Amplitude (0-1):")
-        }
-
-        RealInputField {
-            Layout.fillWidth: true
-
-            min: 0
-            max: 1
+            minValue: 0
+            maxValue: 1
+            decimals: 4
+            step: 0.01
 
             currentValue: noise.amplitude
-            onCurrentValueChanged: {
-                noise.amplitude = currentValue
+
+            onValueEdited: function(newValue) {
+                if (noise.amplitude !== newValue) {
+                    noise.amplitude = newValue
+                }
+            }
+        }
+
+        Column {
+
+            spacing: 8
+
+            StyledTextLabel {
+                text: qsTrc("effects/noise", "Duration")
+            }
+
+            Timecode {
+                id: timecode
+
+                Layout.fillWidth: true
+                Layout.fillHeight: false
+
+                border: Border {
+                    color: ui.theme.strokeColor
+                    width: 1
+                }
+
+                arrowSpacing: -2
+                backgroundColor: ui.theme.backgroundSecondaryColor
+                textColor: ui.theme.fontPrimaryColor
+
+                value: noise.duration
+                mode: TimecodeModeSelector.Duration
+                currentFormatStr: noise.durationFormat
+                sampleRate: noise.sampleRate
+                tempo: noise.tempo
+                upperTimeSignature: noise.upperTimeSignature
+                lowerTimeSignature: noise.lowerTimeSignature
+
+                onValueChanged: {
+                    noise.duration = timecode.value
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ WorkspacesToolBar 1.0 toolbars/WorkspacesToolBar.qml
 RealtimeEffectListItem 1.0 trackspanel/RealtimeEffectListItem.qml
 RealtimeEffectListItemButtonBackground 1.0 trackspanel/RealtimeEffectListItemButtonBackground.qml
 TracksPanel 1.0 trackspanel/TracksPanel.qml
+KnobControl 1.0 trackspanel/audio/KnobControl.qml
 TrackEffectList 1.0 trackspanel/TrackEffectList.qml
 TrackEffectsSection 1.0 trackspanel/TrackEffectsSection.qml
 TracksTitleBar 1.0 trackspanel/TracksTitleBar.qml

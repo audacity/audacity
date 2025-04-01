@@ -32,6 +32,8 @@ Column {
 
     property alias currentIndex: comboBox.currentIndex
     property alias currentValue: comboBox.currentValue
+    property alias textRole: comboBox.textRole
+    property alias valueRole: comboBox.valueRole
     property alias model: comboBox.model
     property alias control: comboBox
 
