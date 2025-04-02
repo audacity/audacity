@@ -33,7 +33,6 @@ namespace au::trackedit {
  * ===========================
  *
  * The test suite uses several track layouts to test data manipulation functions.
- * Each layout represents a specific use case.
  * Below is a visual representation of each track template:
  *
  * TRACK1: Single clip with large silence in the middle
@@ -92,23 +91,6 @@ namespace au::trackedit {
  *  |-----------|-----------|---------|
  *  10 samples   10 samples  10 samples
  *
- * What should we expect from the tests?
- *
- * - Split operations only work when the silence is large enough. (0.01s)
- * - If the silence is too short, the operation should not be performed.
- * - The splitted clips should have the same duration as the original clip
- * but trimmed in the left or right edge.
- * - If executed in a single clip with silence at the beginning or end, the
- * duration will be maintained but the clip will be trimmed at the start or end.
- * - Merge operations should join two clips into a single clip with the same
- * duration as the sum of the two clips.
- * - Split range selection into new tracks only adds a track if the interval
- * contains clip data.
- * - Split into new track should keep the clip / selection start time.
- * - Remove operations clears the content of a track.
- * This data cannot be recovered later by untrimming a clip.
- * - RemoveTracksData can use ripple per clip or per track strategy selected by
- * a boolean parameter moveClips.
  ******************************************************************************************/
 
 constexpr static double DEFAULT_SAMPLE_RATE = 44100.0;
