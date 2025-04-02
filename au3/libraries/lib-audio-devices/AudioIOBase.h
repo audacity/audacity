@@ -302,7 +302,6 @@ protected:
 
     /// True if audio playback is paused
     std::atomic<bool> mPaused{ false };
-    std::atomic<bool> mWasPaused{ false };
 
     /*! Read by worker threads but unchanging during playback */
     std::atomic<int> mStreamToken{ 0 };

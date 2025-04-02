@@ -836,7 +836,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     }
                ));
 
-    mWasPaused.store(false, std::memory_order_relaxed);
+    mPurgeIsNeeded.store(false, std::memory_order_relaxed);
 
     const auto& pStartTime = options.pStartTime;
     t1 = std::min(t1, mixerLimit);
@@ -1440,7 +1440,7 @@ void AudioIO::SetMeters()
 
 void AudioIO::StopStream()
 {
-    mWasPaused.store(false, std::memory_order_relaxed);
+    mPurgeIsNeeded.store(false, std::memory_order_relaxed);
 
     auto cleanup = finally([this] {
         ClearRecordingException();
@@ -1729,7 +1729,7 @@ void AudioIO::SetPaused(bool state, bool publish)
     mPaused.store(state, std::memory_order_relaxed);
 
     if (state) {
-        mWasPaused.store(state, std::memory_order_relaxed);
+        mPurgeIsNeeded.store(state, std::memory_order_relaxed);
     }
 
     if (publish) {
@@ -2532,6 +2532,25 @@ void ClampBuffer(float* pBuffer, unsigned long len)
     }
 }
 
+void AudioIoCallback::PurgeAfterPause(unsigned long framesPerBuffer, float** const sampleBuffer)
+{
+    size_t nAvailable = GetCommonlyReadyPlayback();
+    const auto wasPaused = mPurgeIsNeeded.exchange(false);
+
+    for (size_t n = 0; n < mNumPlaybackChannels; ++n) {
+        if (wasPaused && !IsPaused()) {
+            auto totalPurged = static_cast<int>(nAvailable);
+
+            while (totalPurged > 0) {
+                mPlaybackBuffers[n]->Get(reinterpret_cast<samplePtr>(sampleBuffer[n]),
+                                         floatSample,
+                                         framesPerBuffer);
+                totalPurged -= framesPerBuffer;
+            }
+        }
+    }
+}
+
 // return true, IFF we have fully handled the callback.
 //
 // Mix and copy to PortAudio's output buffer
@@ -2607,24 +2626,9 @@ bool AudioIoCallback::FillOutputBuffers(
         playbackVolume = 0.0;
     }
 
-    size_t nAvailable = GetCommonlyReadyPlayback();
+    PurgeAfterPause(framesPerBuffer, tempBufs);
 
     for (unsigned n = 0; n < numPlaybackChannels; ++n) {
-        //! Purging queued samples from before pause.
-        if (mWasPaused && !IsPaused()) {
-            auto totalPurged = static_cast<int>(nAvailable);
-            size_t nextPurge = totalPurged % framesPerBuffer;
-            while (totalPurged > 0) {
-                mPlaybackBuffers[n]->Get(
-                    reinterpret_cast<samplePtr>(tempBufs[n]),
-                    floatSample,
-                    nextPurge
-                    );
-                totalPurged -= nextPurge;
-                nextPurge = framesPerBuffer;
-            }
-        }
-
         decltype(framesPerBuffer) len = mPlaybackBuffers[n]->Get(
             reinterpret_cast<samplePtr>(tempBufs[n]),
             floatSample,
@@ -2688,10 +2692,6 @@ bool AudioIoCallback::FillOutputBuffers(
             }
         }
         CallbackCheckCompletion(mCallbackReturn, len);
-    }
-
-    if (!IsPaused()) {
-        mWasPaused.store(false, std::memory_order_relaxed);
     }
 
     mOldPlaybackVolume = playbackVolume;
