@@ -179,7 +179,7 @@ private:
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
     muse::ProgressPtr m_progress;
-    std::atomic<bool> m_busy;
+    std::atomic<bool> m_busy = false;
 
     std::optional<TrackListInfo> m_startTracklistInfo;
     bool m_moveClipsNeedsDownmixing = false;
