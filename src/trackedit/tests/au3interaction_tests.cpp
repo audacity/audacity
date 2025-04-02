@@ -12,9 +12,10 @@
 #include "mocks/trackeditprojectmock.h"
 #include "mocks/projecthistorymock.h"
 #include "mocks/selectioncontrollermock.h"
-#include "mocks/interactivemock.h"
 #include "tracktemplatefactory.h"
 #include "../trackediterrors.h"
+
+#include "global/tests/mocks/interactivemock.h"
 
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -161,7 +162,7 @@ public:
         m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
         m_clipboard = std::make_shared<NiceMock<ClipboardMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
-        m_interactive = std::make_shared<NiceMock<InteractiveMock> >();
+        m_interactive = std::make_shared<NiceMock<muse::InteractiveMock> >();
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
 
         m_au3Interaction->globalContext.set(m_globalContext);
@@ -1490,7 +1491,7 @@ TEST_F(Au3InteractionTests, MoveClipLeftWhenClipIsAtZero)
 
 TEST_F(Au3InteractionTests, SplitDeleteOnRangeSelection)
 {
-    //! [GIVEN] There is a project with a track and a clip with two clips
+    //! [GIVEN] There is a project with a track and a two clips
     const auto trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
     ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
 
@@ -1515,7 +1516,7 @@ TEST_F(Au3InteractionTests, SplitDeleteOnRangeSelection)
 
 TEST_F(Au3InteractionTests, SplitDeteleByClipId)
 {
-    //! [GIVEN] There is a project with a track and a clip with two clips
+    //! [GIVEN] There is a project with a track and two clips
     const auto trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
     ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
 
@@ -1541,7 +1542,7 @@ TEST_F(Au3InteractionTests, SplitDeteleByClipId)
 
 TEST_F(Au3InteractionTests, SplitCutByClipId)
 {
-    //! [GIVEN] There is a project with a track and a clip with two clips
+    //! [GIVEN] There is a project with a track and two clips
     const auto trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
     ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
 
@@ -1557,7 +1558,7 @@ TEST_F(Au3InteractionTests, SplitCutByClipId)
     //! [WHEN] Split and cut the whole clip
     m_au3Interaction->clipSplitCut({ trackTwoClipsId, firstClip->GetId() });
 
-    //! [THEN] Clip was
+    //! [THEN] Clip was removed there is ony one left
     ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split delete operation is not 1";
 
     //! [THEN] The remaining clip stays unchanged
@@ -1570,7 +1571,7 @@ TEST_F(Au3InteractionTests, SplitCutByClipId)
 
 TEST_F(Au3InteractionTests, SpliCutOnRangeSelection)
 {
-    //! [GIVEN] There is a project with a track and a clip with two clips
+    //! [GIVEN] There is a project with a track and two clips
     const auto trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
     ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
 
@@ -1590,8 +1591,15 @@ TEST_F(Au3InteractionTests, SpliCutOnRangeSelection)
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
     ASSERT_EQ(track->NIntervals(), 3) << "The number of intervals after the split delete operation is not 3";
 
-    const auto firstSplittedClip = track->GetClip(1);
-    const auto secondSplittedClip = track->GetClip(2);
+    //! [THEN] The clip are splitted and the other remains untouched
+    const auto untouchedClip = track->GetIntervalAtTime(TRACK3_CLIP2_START);
+    ASSERT_NE(untouchedClip, nullptr) << "The untouched clip is not found";
+    ValidateClipProperties(untouchedClip, TRACK3_CLIP2_START, TRACK3_CLIP2_END, TRACK3_CLIP2_START, TRACK3_CLIP2_END);
+    const auto firstSplittedClip = track->GetIntervalAtTime(TRACK3_CLIP1_START);
+    ASSERT_NE(firstSplittedClip, nullptr) << "The first splitted clip is not found";
+    const auto secondSplittedClip = track->GetIntervalAtTime(TRACK3_CLIP1_START + 5 * SAMPLE_INTERVAL);
+    ASSERT_NE(secondSplittedClip, nullptr) << "The second splitted clip is not found";
+    ASSERT_NE(firstSplittedClip, secondSplittedClip) << "The first and second splitted clips are the same";
     ValidateClipProperties(firstSplittedClip, TRACK3_CLIP1_START, TRACK3_CLIP1_END, TRACK3_CLIP1_START, begin);
     ValidateClipProperties(secondSplittedClip, TRACK3_CLIP1_START, TRACK3_CLIP1_END, end, TRACK3_CLIP1_END);
 
@@ -1601,15 +1609,18 @@ TEST_F(Au3InteractionTests, SpliCutOnRangeSelection)
 
 TEST_F(Au3InteractionTests, SplitTracksAtEmptyList)
 {
+    //! [EXPECT] The project is not notified about track changed
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(0);
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
+
+    //! [WHEN] Split an empty list
     m_au3Interaction->splitTracksAt({}, 0.0);
 }
 
 TEST_F(Au3InteractionTests, SplitTracksOnClipData)
 {
-    //! [GIVEN] There is a project with a track and a clip with two clips
+    //! [GIVEN] There is a project with a track and two clips
     const auto trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
     ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
 
@@ -1625,6 +1636,7 @@ TEST_F(Au3InteractionTests, SplitTracksOnClipData)
     //! [THEN] The number of intervals should be 3
     ASSERT_EQ(track->NIntervals(), 3) << "The number of intervals after the split operation is not 3";
 
+    //! [THEN] The clip are splitted and the other remains untouched
     const auto untouchedClip = track->GetIntervalAtTime(TRACK3_CLIP2_START);
     const auto firstSplittedClip = track->GetIntervalAtTime(pivot - SAMPLE_INTERVAL);
     const auto secondSplittedClip = track->GetIntervalAtTime(pivot + SAMPLE_INTERVAL);
@@ -1692,74 +1704,6 @@ TEST_F(Au3InteractionTests, TrimSingleClipRight)
     removeTrack(trackId);
 }
 
-TEST_F(Au3InteractionTests, TrimTwoClipsLeft)
-{
-    //! [GIVEN] There is a project with a track and two clips
-    const auto trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
-    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
-
-    //! [EXPECT] The project is notified about clip changed
-    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
-
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    const auto firstClip =  track->GetClip(0);
-    const auto secondClip =  track->GetClip(1);
-
-    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
-            ClipKey { trackId, firstClip->GetId() },
-            ClipKey { trackId, secondClip->GetId() }
-        }));
-
-    //! [WHEN] Trim the clips from the left
-    const secs_t deltaSec = 2 * SAMPLE_INTERVAL;
-    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
-    m_au3Interaction->trimClipLeft({ trackId, firstClip->GetId() }, deltaSec, minClipDuration, true);
-
-    //! [THEN] The clips are trimmed
-    const auto trimmedFirstClip = track->GetClip(0);
-    ValidateClipProperties(trimmedFirstClip, TRACK3_CLIP1_START, TRACK3_CLIP1_END, TRACK3_CLIP1_START + deltaSec, TRACK3_CLIP1_END);
-
-    const auto trimmedSecondClip = track->GetClip(1);
-    ValidateClipProperties(trimmedSecondClip, TRACK3_CLIP2_START, TRACK3_CLIP2_END, TRACK3_CLIP2_START + deltaSec, TRACK3_CLIP2_END);
-
-    // Cleanup
-    removeTrack(trackId);
-}
-
-TEST_F(Au3InteractionTests, TrimTwoClipsRight)
-{
-    //! [GIVEN] There is a project with a track and two clips
-    const auto trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
-    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
-
-    //! [EXPECT] The project is notified about clip changed
-    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
-
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    const auto firstClip =  track->GetClip(0);
-    const auto secondClip =  track->GetClip(1);
-
-    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
-            ClipKey { trackId, firstClip->GetId() },
-            ClipKey { trackId, secondClip->GetId() }
-        }));
-
-    //! [WHEN] Trim the clips from the right
-    const secs_t deltaSec = 2 * SAMPLE_INTERVAL;
-    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
-    m_au3Interaction->trimClipRight({ trackId, firstClip->GetId() }, deltaSec, minClipDuration, true);
-
-    //! [THEN] The clips are trimmed
-    const auto trimmedFirstClip = track->GetClip(0);
-    ValidateClipProperties(trimmedFirstClip, TRACK3_CLIP1_START, TRACK3_CLIP1_END, TRACK3_CLIP1_START, TRACK3_CLIP1_END - deltaSec);
-
-    const auto trimmedSecondClip = track->GetClip(1);
-    ValidateClipProperties(trimmedSecondClip, TRACK3_CLIP2_START, TRACK3_CLIP2_END, TRACK3_CLIP2_START, TRACK3_CLIP2_END - deltaSec);
-
-    // Cleanup
-    removeTrack(trackId);
-}
-
 TEST_F(Au3InteractionTests, TrimTwoClipsLeftShouldConsiderMinClipDuration)
 {
     //! [GIVEN] There is a project with a track and two clips
@@ -1773,6 +1717,7 @@ TEST_F(Au3InteractionTests, TrimTwoClipsLeftShouldConsiderMinClipDuration)
     const auto firstClip =  track->GetClip(0);
     const auto secondClip =  track->GetClip(1);
 
+    //! [GIVEN] Both clips are selected
     ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
             ClipKey { trackId, firstClip->GetId() },
             ClipKey { trackId, secondClip->GetId() }
@@ -1807,6 +1752,7 @@ TEST_F(Au3InteractionTests, TrimTwoClipsRightShouldConsiderMinClipDuration)
     const auto firstClip =  track->GetClip(0);
     const auto secondClip =  track->GetClip(1);
 
+    //! [GIVEN] Both clips are selected
     ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
             ClipKey { trackId, firstClip->GetId() },
             ClipKey { trackId, secondClip->GetId() }
@@ -1895,6 +1841,7 @@ TEST_F(Au3InteractionTests, StretchTwoClipsLeftShouldConsiderMinClipDuration)
     const auto firstClip =  track->GetClip(0);
     const auto secondClip =  track->GetClip(1);
 
+    //! [GIVEN] Both clips are selected
     ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
             ClipKey { trackId, firstClip->GetId() },
             ClipKey { trackId, secondClip->GetId() }
@@ -1926,13 +1873,14 @@ TEST_F(Au3InteractionTests, StretchTwoClipsRightShouldConsiderMinClipDuration)
     const auto trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
 
-    //! [EXPECT] The project is notified about clip changed
+    //! [EXPECT] The project is notified about clip changed twice
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
 
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     const auto firstClip =  track->GetClip(0);
     const auto secondClip =  track->GetClip(1);
 
+    //! [GIVEN] Both clips are selected
     ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
             ClipKey { trackId, firstClip->GetId() },
             ClipKey { trackId, secondClip->GetId() }
@@ -1977,7 +1925,8 @@ TEST_F(Au3InteractionTests, InsertSilenceWithEmptyTrackCreatesNewTrack)
     Au3WaveTrack* newTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(newTrackId));
     ASSERT_EQ(newTrack->NIntervals(), 1) << "The number of intervals after the insert silence operation is not 1";
 
-    const auto newClip = newTrack->GetClip(0);
+    const auto newClip = newTrack->GetIntervalAtTime(begin);
+    ASSERT_NE(newClip, nullptr) << "The new clip is not found";
     ValidateClipProperties(newClip, begin, end, begin, end);
 
     // Cleanup
@@ -1986,11 +1935,11 @@ TEST_F(Au3InteractionTests, InsertSilenceWithEmptyTrackCreatesNewTrack)
 
 TEST_F(Au3InteractionTests, InsertSilenceOnEmptySpace)
 {
-    //! [GIVEN] There is a project with a track and a single clip
+    //! [GIVEN] There is a project with a track and two clips
     const auto trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
 
-    //! [EXPECT] The project is notified about clip changed
+    //! [EXPECT] The project is notified about track changed
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
 
     // [WHEN] Insert silence on the empty space
@@ -2003,7 +1952,8 @@ TEST_F(Au3InteractionTests, InsertSilenceOnEmptySpace)
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     ASSERT_EQ(track->NIntervals(), 3) << "The number of intervals after the insert silence operation is not 3";
 
-    const auto newClip = track->GetClip(2);
+    const auto newClip = track->GetIntervalAtTime(begin);
+    ASSERT_NE(newClip, nullptr) << "The new clip is not found";
     ValidateClipProperties(newClip, begin, end, begin, end);
 
     // Cleanup
@@ -2027,7 +1977,7 @@ TEST_F(Au3InteractionTests, PasteOnEmptyTrack)
     const auto track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     const auto firstClip = track->GetClip(0);
 
-    //! [GIVEN] There is data in the clipboard
+    //! [GIVEN] Clipboard contains data
     const auto trackCopy = track->Copy(firstClip->GetSequenceStartTime(), firstClip->GetSequenceEndTime());
     ASSERT_NE(trackCopy, nullptr) << "Failed to copy clip";
     const auto trackData = TrackData { trackCopy, { trackCopy->GetId(), firstClip->GetId() } };
@@ -2072,6 +2022,7 @@ TEST_F(Au3InteractionTests, AddNewMonoTrack)
     //! [THEN] The project has a new track
     ASSERT_EQ(projectTracks.Size(), 1) << "The number of tracks after the add new mono track operation is not 1";
 
+    //! [THEN] The new track is mono
     const auto newTrackId = (*projectTracks.begin())->GetId();
     Au3WaveTrack* newTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(newTrackId));
     ASSERT_EQ(newTrack->NChannels(), 1) << "The channel count of the new track is not 1";
@@ -2098,6 +2049,7 @@ TEST_F(Au3InteractionTests, AddNewStereoTrack)
     //! [THEN] The project has a new track
     ASSERT_EQ(projectTracks.Size(), 1) << "The number of tracks after the add new stereo track operation is not 1";
 
+    //! [THEN] The new track has two channels
     const auto newTrackId = (*projectTracks.begin())->GetId();
     Au3WaveTrack* newTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(newTrackId));
     ASSERT_EQ(newTrack->NChannels(), 2) << "The channel count of the new track is not 2";
@@ -2146,6 +2098,8 @@ TEST_F(Au3InteractionTests, DecreaseClipSpeed)
     const auto firstClip =  track->GetClip(0);
 
     //! [WHEN] Decrease the clip speed
+    //! TODO: We should rename the parameter from changeClipSpeed once a value of
+    //! 0.5 makes the clip shrink and not expand
     const double speedFactor = 0.5;
     m_au3Interaction->changeClipSpeed({ trackId, firstClip->GetId() }, speedFactor);
 
