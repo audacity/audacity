@@ -1,4 +1,5 @@
 #include "noisegenerator.h"
+#include "ShuttleAutomation.h"
 #include <cmath>
 
 #include "log.h"
@@ -16,6 +17,13 @@ NoiseGenerator::NoiseGenerator()
 NoiseGenerator::~NoiseGenerator()
 {
 }
+
+// These are used for preset serialization
+const EnumValueSymbol NoiseGenerator::TypeStrings[NoiseSettings::Count] = {
+    { "White" },
+    { "Pink" },
+    { "Brownian" }
+};
 
 std::shared_ptr<EffectInstance> NoiseGenerator::MakeInstance() const
 {
@@ -53,6 +61,12 @@ RegistryPaths NoiseGenerator::GetFactoryPresets() const
 OptionalMessage NoiseGenerator::LoadFactoryPreset(int id, EffectSettings& settings) const
 {
     return {};
+}
+
+const EffectParameterMethods& NoiseGenerator::Parameters() const
+{
+    static CapturedParameters<NoiseGenerator, Type, Amp> parameters;
+    return parameters;
 }
 
 NoiseGenerator::Instance::Instance(const PerTrackEffect& effect)

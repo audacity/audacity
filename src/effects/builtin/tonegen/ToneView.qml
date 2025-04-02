@@ -51,6 +51,10 @@ EffectBase {
             title: qsTrc("effects/tone", "Waveform")
             columnWidth: parent.width
 
+            control.background.color: ui.theme.backgroundPrimaryColor
+            control.background.border.width: 1
+            control.itemColor: "transparent"
+
             currentIndex: tone.waveform
             model: tone.waveforms
 

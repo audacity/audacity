@@ -1,4 +1,5 @@
 #include "dtmfgenerator.h"
+#include "ShuttleAutomation.h"
 #include <cmath>
 
 using namespace au::effects;
@@ -15,6 +16,25 @@ DtmfGenerator::DtmfGenerator()
 
 DtmfGenerator::~DtmfGenerator()
 {
+}
+
+const EffectParameterMethods& DtmfGenerator::Parameters() const
+{
+    static CapturedParameters<DtmfGenerator, Sequence, DutyCycle, Amplitude>
+    parameters {
+        [](DtmfGenerator&, EffectSettings& es, DtmfSettings& s, bool updating) {
+            if (updating) {
+                if (!std::all_of(s.dtmfSequence.begin(), s.dtmfSequence.end(), [](wxUniChar c) {
+                    return std::find(kSymbols.begin(), kSymbols.end(), static_cast<char>(c)) != kSymbols.end();
+                })) {
+                    return false;
+                }
+                s.Recalculate(es);
+            }
+            return true;
+        },
+    };
+    return parameters;
 }
 
 // ComponentInterface implementation
