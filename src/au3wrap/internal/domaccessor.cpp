@@ -96,7 +96,7 @@ std::shared_ptr<WaveClip> DomAccessor::findWaveClip(Au3Project& prj, const track
     WaveTrack* au3Track = dynamic_cast<WaveTrack*>(tracks.FindById(::TrackId(trackId)));
 
     for (const std::shared_ptr<WaveClip>& clip : au3Track->Intervals()) {
-        if (clip->Start() <= time && clip->End() >= time) {
+        if (clip->Start() <= time && clip->End() > time) {
             return clip;
         }
     }
