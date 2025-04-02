@@ -32,7 +32,7 @@ void DtmfViewModel::doEmitSignals()
 
 QString DtmfViewModel::sequence() const
 {
-    return QString::fromStdString(settings<DtmfSettings>().dtmfSequence);
+    return QString::fromStdString(settings<DtmfSettings>().dtmfSequence.ToStdString());
 }
 
 void DtmfViewModel::prop_setSequence(const QString& newSequence)

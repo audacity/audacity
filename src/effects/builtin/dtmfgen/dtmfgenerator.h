@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SettingsVisitor.h" // EffectParameter
 #include "PerTrackEffect.h"
 #include "common/generatoreffect.h"
 #include <array>
@@ -15,7 +16,7 @@ struct DtmfSettings
     static constexpr double DutyCycleMin = 0.0;
     static constexpr double DutyCycleMax = 100.0;
 
-    std::string dtmfSequence { DefaultSequence }; // dtmf tone string
+    wxString dtmfSequence { DefaultSequence }; // dtmf tone string
     size_t dtmfNTones = dtmfSequence.length(); // total number of tones to generate
     double dtmfTone {};      // duration of a single tone in ms
     double dtmfSilence {};   // duration of silence between tones in ms
@@ -97,5 +98,27 @@ private:
     // DtmfGenerator implementation
 
     static bool MakeDtmfTone(float* buffer, size_t len, float fs, char tone, sampleCount last, sampleCount total, float amplitude);
+
+protected:
+    const EffectParameterMethods& Parameters() const override;
+
+    static constexpr EffectParameter Sequence { &DtmfSettings::dtmfSequence,
+                                                L"Sequence",
+                                                DtmfSettings::DefaultSequence,
+                                                "",
+                                                "",
+                                                "" };
+    static constexpr EffectParameter DutyCycle { &DtmfSettings::dtmfDutyCycle,
+                                                 L"Duty Cycle",
+                                                 DtmfSettings::DefaultDutyCycle,
+                                                 DtmfSettings::DutyCycleMin,
+                                                 DtmfSettings::DutyCycleMax,
+                                                 10.0 };
+    static constexpr EffectParameter Amplitude { &DtmfSettings::dtmfAmplitude,
+                                                 L"Amplitude",
+                                                 DtmfSettings::DefaultAmplitude,
+                                                 DtmfSettings::AmplitudeMin,
+                                                 DtmfSettings::AmplitudeMax,
+                                                 1 };
 };
 }

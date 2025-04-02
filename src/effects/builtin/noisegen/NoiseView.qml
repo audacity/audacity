@@ -49,6 +49,10 @@ EffectBase {
             valueRole: "value"
             currentIndex: noise.types.findIndex(type => type.value === noise.type)
 
+            control.background.color: ui.theme.backgroundPrimaryColor
+            control.background.border.width: 1
+            control.itemColor: "transparent"
+
             onValueEdited: function (newIndex, newValue) {
                 noise.type = newIndex
             }

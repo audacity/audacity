@@ -52,6 +52,10 @@ EffectBase {
             title: qsTrc("effects/chirp", "Waveform")
             columnWidth: parent.width
 
+            control.background.color: ui.theme.backgroundPrimaryColor
+            control.background.border.width: 1
+            control.itemColor: "transparent"
+
             currentIndex: chirp.waveform
             model: chirp.waveforms
 

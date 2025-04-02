@@ -20,7 +20,7 @@ struct NoiseSettings
     static constexpr double amplitudeMax = 1.0;
     static constexpr double amplitudeMin = 0.0;
 
-    Type type { typeDefault };
+    int type { typeDefault };
     double amplitude { amplitudeDefault };
 
     bool isApplyAllowed() const;
@@ -64,6 +64,19 @@ public:
 
         double mSampleRate {};
         float y, z, buf0, buf1, buf2, buf3, buf4, buf5, buf6;
+    };
+
+protected:
+    const EffectParameterMethods& Parameters() const override;
+
+    static const EnumValueSymbol TypeStrings[NoiseSettings::Count];
+
+    static constexpr EnumParameter Type {
+        &NoiseSettings::type, L"Type", NoiseSettings::typeDefault, 0, NoiseSettings::Count - 1, 1, TypeStrings,
+        NoiseSettings::Count
+    };
+    static constexpr EffectParameter Amp {
+        &NoiseSettings::amplitude, L"Amplitude", 0.8, 0.0, 1.0, 1
     };
 };
 }
