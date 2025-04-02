@@ -354,7 +354,7 @@ bool Effect::TrackGroupProgress(
 }
 
 void Effect::GetBounds(
-    const WaveTrack& track, sampleCount* start, sampleCount* len)
+    const WaveTrack& track, sampleCount* start, sampleCount* len) const
 {
     const auto t0 = std::max(mT0, track.GetStartTime());
     const auto t1 = std::min(mT1, track.GetEndTime());

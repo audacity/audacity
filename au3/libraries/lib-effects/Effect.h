@@ -138,7 +138,7 @@ protected:
     int GetNumWaveGroups() const { return mNumGroups; }
 
     // Calculates the start time and length in samples for one or two channels
-    void GetBounds(const WaveTrack& track, sampleCount* start, sampleCount* len);
+    void GetBounds(const WaveTrack& track, sampleCount* start, sampleCount* len) const;
 
 private:
     wxString GetSavedStateGroup();

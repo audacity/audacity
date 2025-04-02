@@ -58,10 +58,6 @@ public:
     };
 
 protected:
-    // These were overridables but the generality wasn't used yet
-    /* virtual */ bool DoPass1() const;
-    /* virtual */ bool DoPass2() const;
-
     // non-virtual
     bool Process(EffectInstance& instance, EffectSettings& settings) const;
 
@@ -76,7 +72,7 @@ protected:
 private:
     using Buffers = AudioGraph::Buffers;
 
-    bool ProcessPass(TrackList& outputs, Instance& instance, EffectSettings& settings);
+    bool DoProcess(TrackList& outputs, Instance& instance, EffectSettings& settings);
     using Factory = std::function<std::shared_ptr<EffectInstance>()>;
     /*!
      Previous contents of inBuffers and outBuffers are ignored
