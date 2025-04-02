@@ -1381,7 +1381,6 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
 
         //! TODO AU4: later when having keyboard arrow shortcut for moving clips
         //! make use of UndoPush::CONSOLIDATE arg in UndoManager
-        const auto trackIds = prj->trackIdList();
         ok = utils::withProgress(*interactive(),
                                  muse::trc("trackedit", "Rendering clips"),
                                  [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
