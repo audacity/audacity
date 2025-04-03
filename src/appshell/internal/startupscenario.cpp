@@ -180,6 +180,8 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 
     if (!configuration()->hasCompletedFirstLaunchSetup()) {
         interactive()->open(FIRST_LAUNCH_SETUP_URI);
+        interactive()->open(HOME_URI.toString() + "?section=projects");
+        dispatcher()->dispatch("file-new");
     }
 }
 
