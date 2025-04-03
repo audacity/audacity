@@ -3079,6 +3079,12 @@ WaveTrack::GetSortedClipsIntersecting(double t0, double t1) const
     return result;
 }
 
+WaveTrack::IntervalConstHolder WaveTrack::GetSortedClipByIndex(size_t index) const
+{
+    const auto clips = SortedClipArray();
+    return index < clips.size() ? clips[index] : nullptr;
+}
+
 auto WaveTrack::CreateClip(double offset, const wxString& name,
                            const Interval* pToCopy, bool copyCutlines) -> IntervalHolder
 {

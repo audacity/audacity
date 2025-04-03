@@ -235,12 +235,12 @@ bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, i
 {
     setLoadingBlocked(true);
 
-    int sourceFirstRow = sourceRow;
-    int sourceLastRow = sourceRow + count - 1;
-    int destinationRow = destinationChild + 1;
-
-    NOT_IMPLEMENTED;
     // todo: move
+    NOT_IMPLEMENTED;
+
+    //int sourceFirstRow = sourceRow;
+    //int sourceLastRow = sourceRow + count - 1;
+    //int destinationRow = destinationChild + 1;
 
     // if (m_dragInProgress) {
     //     m_activeDragMoveParams = sourceParentItem->buildMoveParams(sourceRow, count, destinationParentItem, destinationRow);

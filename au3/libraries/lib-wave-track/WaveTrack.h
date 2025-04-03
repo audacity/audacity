@@ -594,6 +594,7 @@ public:
     */
     IntervalConstHolders GetSortedClipsIntersecting(double t0, double t1) const;
     IntervalConstHolder GetClipAtTime(double time) const;
+    IntervalConstHolder GetSortedClipByIndex(size_t index) const;
 
 private:
     void CopyWholeClip(
