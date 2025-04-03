@@ -836,6 +836,8 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     }
                ));
 
+    mPurgeIsNeeded.store(false, std::memory_order_relaxed);
+
     const auto& pStartTime = options.pStartTime;
     t1 = std::min(t1, mixerLimit);
 
@@ -1438,6 +1440,8 @@ void AudioIO::SetMeters()
 
 void AudioIO::StopStream()
 {
+    mPurgeIsNeeded.store(false, std::memory_order_relaxed);
+
     auto cleanup = finally([this] {
         ClearRecordingException();
         mRecordingSchedule.mCrossfadeData.clear(); // free arrays
@@ -1724,6 +1728,10 @@ void AudioIO::SetPaused(bool state, bool publish)
 
     mPaused.store(state, std::memory_order_relaxed);
 
+    if (state) {
+        mPurgeIsNeeded.store(state, std::memory_order_relaxed);
+    }
+
     if (publish) {
         Publish({ mOwningProject.lock().get(), AudioIOEvent::PAUSE, state });
     }
@@ -1907,8 +1915,8 @@ void AudioIO::FillPlayBuffers()
     }
 
     // It is possible that some buffers will have more samples available than
-    // others.  This could happen if we hit this code during the PortAudio
-    // callback.  Also, if in a previous pass, unequal numbers of samples were
+    // others. This could happen if we hit this code during the PortAudio
+    // callback. Also, if in a previous pass, unequal numbers of samples were
     // discarded from ring buffers for differing latencies.
 
     // To keep things simple, we write no more data than is vacant in
@@ -1916,7 +1924,7 @@ void AudioIO::FillPlayBuffers()
     auto nAvailable = GetCommonlyFreePlayback();
 
     // Don't fill the buffers at all unless we can do
-    // at least mPlaybackSamplesToCopy.  This improves performance
+    // at least mPlaybackSamplesToCopy. This improves performance
     // by not always trying to process tiny chunks, eating the
     // CPU unnecessarily.
     if (nAvailable < mPlaybackSamplesToCopy) {
@@ -2524,6 +2532,25 @@ void ClampBuffer(float* pBuffer, unsigned long len)
     }
 }
 
+void AudioIoCallback::PurgeAfterPause(unsigned long framesPerBuffer, float** const sampleBuffer)
+{
+    size_t nAvailable = GetCommonlyReadyPlayback();
+    const auto wasPaused = mPurgeIsNeeded.exchange(false);
+
+    for (size_t n = 0; n < mNumPlaybackChannels; ++n) {
+        if (wasPaused && !IsPaused()) {
+            auto totalPurged = static_cast<int>(nAvailable);
+
+            while (totalPurged > 0) {
+                mPlaybackBuffers[n]->Get(reinterpret_cast<samplePtr>(sampleBuffer[n]),
+                                         floatSample,
+                                         framesPerBuffer);
+                totalPurged -= framesPerBuffer;
+            }
+        }
+    }
+}
+
 // return true, IFF we have fully handled the callback.
 //
 // Mix and copy to PortAudio's output buffer
@@ -2599,17 +2626,20 @@ bool AudioIoCallback::FillOutputBuffers(
         playbackVolume = 0.0;
     }
 
+    PurgeAfterPause(framesPerBuffer, tempBufs);
+
     for (unsigned n = 0; n < numPlaybackChannels; ++n) {
         decltype(framesPerBuffer) len = mPlaybackBuffers[n]->Get(
             reinterpret_cast<samplePtr>(tempBufs[n]),
             floatSample,
             toGet
             );
+
         if (len < framesPerBuffer) {
             // This used to happen normally at the end of non-looping
             // plays, but it can also be an anomalous case where the
             // supply from SequenceBufferExchange fails to keep up with the
-            // real-time demand in this thread (see bug 1932).  We
+            // real-time demand in this thread (see bug 1932). We
             // must supply something to the sound card, so pad it with
             // zeroes and not random garbage.
             memset((void*)&tempBufs[n][len], 0,
