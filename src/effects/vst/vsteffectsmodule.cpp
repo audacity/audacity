@@ -63,11 +63,6 @@ void VstEffectsModule::resolveImports()
     if (lr) {
         lr->regLauncher("VST3", std::make_shared<Vst3ViewLauncher>());
     }
-
-    auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
-    if (ir) {
-        ir->registerQmlUri(Uri("audacity://effects/vst_viewer"), "Audacity/Vst/VstViewerDialog.qml");
-    }
 }
 
 void VstEffectsModule::registerResources()

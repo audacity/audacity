@@ -82,7 +82,7 @@ Rectangle {
         id: view
         width: implicitWidth
         height: implicitHeight
-        x: (root.width - view.width) / 2
+        x: root.x
         y: root.y
     }
 }
