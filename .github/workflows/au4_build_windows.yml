@@ -85,7 +85,8 @@ jobs:
         echo "SENTRY_PROJECT: $SENTRY_PROJECT"
         echo "SENTRY_URL=$SENTRY_URL" >> $GITHUB_ENV
         echo "SENTRY_URL: $SENTRY_URL"
-
+    - name: Register msvc problem matcher
+      run: echo "::add-matcher::.github/problem_matchers/msvc.json"
     - name: Setup environment
       if: env.DO_BUILD == 'true'
       shell: bash
