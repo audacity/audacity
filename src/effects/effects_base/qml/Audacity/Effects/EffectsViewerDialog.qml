@@ -16,13 +16,13 @@ StyledDialogView {
     property var instanceId
     property bool isVst: false
 
-    property alias viewer: loader.item
+    property alias viewer: viewerLoader.item
     property bool isApplyAllowed: isVst || (viewer && viewer.isApplyAllowed)
 
     title: viewer ? viewer.title : ""
 
-    contentWidth: loader.width
-    contentHeight: rowLayout.height + separator.height + loader.height + bboxLoader.height + margins * 3
+    contentWidth: Math.max(viewerLoader.width, 300)
+    contentHeight: presetRow.height + separator.height + viewerLoader.height + btnBarLoader.height + margins * 3
 
     margins: 16
 
@@ -33,13 +33,13 @@ StyledDialogView {
 
     onWindowChanged: {
         // Wait until the window is set: VstView needs it for intialization
-        loader.sourceComponent = isVst ? vstViewerComp : builtinViewerComp
+        viewerLoader.sourceComponent = isVst ? vstViewerComp : builtinViewerComp
     }
 
     Component.onCompleted: {
         // Delay loading of ButtonBox because it needs to know the final width before executing its layout
         // (which it only does once)
-        bboxLoader.sourceComponent = bboxComponent
+        btnBarLoader.sourceComponent = bboxComponent
         Qt.callLater(manageMenuModel.load)
     }
 
@@ -63,7 +63,7 @@ StyledDialogView {
         spacing: 16
 
         RowLayout {
-            id: rowLayout
+            id: presetRow
             spacing: 4
             anchors.left: parent.left
             anchors.right: parent.right
@@ -144,12 +144,12 @@ StyledDialogView {
                 instanceId: root.instanceId
                 height: implicitHeight
                 x: root.margins
-                y: root.margins * 3 + rowLayout.height + separator.height
+                y: root.margins * 3 + presetRow.height + separator.height
             }
         }
 
         Loader {
-            id: loader
+            id: viewerLoader
         }
 
         Component {
@@ -183,6 +183,7 @@ StyledDialogView {
                 }
 
                 FlatButton {
+                    id: cancelBtn
                     text: qsTrc("global", "Cancel")
                     buttonRole: ButtonBoxModel.RejectRole
                     buttonId: ButtonBoxModel.Cancel
@@ -191,6 +192,7 @@ StyledDialogView {
                 }
 
                 FlatButton {
+                    id: okBtn
                     text: qsTrc("global", "Apply")
                     buttonRole: ButtonBoxModel.AcceptRole
                     buttonId: ButtonBoxModel.Apply
@@ -203,7 +205,7 @@ StyledDialogView {
         }
 
         Loader {
-            id: bboxLoader
+            id: btnBarLoader
         }
     }
 }
