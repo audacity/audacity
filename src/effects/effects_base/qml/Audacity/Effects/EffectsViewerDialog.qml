@@ -22,14 +22,9 @@ StyledDialogView {
     title: viewer ? viewer.title : ""
 
     contentWidth: Math.max(viewerLoader.width, 300)
-    contentHeight: presetRow.height + separator.height + viewerLoader.height + btnBarLoader.height + margins * 3
+    contentHeight: presetsBar.height + separator.height + viewerLoader.height + btnBarLoader.height + margins * 3
 
     margins: 16
-
-    EffectManageMenu {
-        id: manageMenuModel
-        instanceId: root.instanceId
-    }
 
     onWindowChanged: {
         // Wait until the window is set: VstView needs it for intialization
@@ -40,20 +35,6 @@ StyledDialogView {
         // Delay loading of ButtonBox because it needs to know the final width before executing its layout
         // (which it only does once)
         btnBarLoader.sourceComponent = bboxComponent
-        Qt.callLater(manageMenuModel.load)
-    }
-
-    function manage(button) {
-        var pos = Qt.point(button.x, button.y + button.height)
-        menuLoader.show(pos, manageMenuModel)
-    }
-
-    ContextMenuLoader {
-        id: menuLoader
-
-        onHandleMenuItem: function (itemId) {
-            manageMenuModel.handleMenuItem(itemId)
-        }
     }
 
     Column {
@@ -62,69 +43,11 @@ StyledDialogView {
 
         spacing: 16
 
-        RowLayout {
-            id: presetRow
-            spacing: 4
+        EffectPresetsBar {
+            id: presetsBar
+            instanceId: root.instanceId
             anchors.left: parent.left
             anchors.right: parent.right
-
-            StyledDropdown {
-                id: presetSelector
-
-                Layout.fillWidth: true
-                background.color: ui.theme.backgroundPrimaryColor
-                background.border.width: 1
-                itemColor: "transparent"
-
-                textRole: "name"
-                valueRole: "id"
-
-                indeterminateText: qsTrc("effects", "Select preset")
-
-                model: manageMenuModel.presets
-
-                onActivated: function (index, value) {
-                    manageMenuModel.preset = value
-                    currentIndex = manageMenuModel.presets.findIndex(
-                                preset => preset.id === value)
-                }
-            }
-
-            FlatButton {
-                Layout.alignment: Qt.AlignVCenter
-                icon: IconCode.SAVE
-
-                onClicked: {
-                    manageMenuModel.savePresetAs()
-                }
-            }
-
-            FlatButton {
-                Layout.alignment: Qt.AlignVCenter
-
-                icon: IconCode.UNDO
-
-                onClicked: {
-                    if (manageMenuModel.preset === "") {
-                        manageMenuModel.preset = "default"
-                        presetSelector.currentIndex = 0
-                    }
-
-                    manageMenuModel.resetPreset()
-                }
-            }
-
-            FlatButton {
-                id: manageButton
-
-                Layout.alignment: Qt.AlignVCenter
-
-                icon: IconCode.MENU_THREE_DOTS
-
-                onClicked: {
-                    root.manage(manageButton)
-                }
-            }
         }
 
         SeparatorLine {
@@ -144,7 +67,7 @@ StyledDialogView {
                 instanceId: root.instanceId
                 height: implicitHeight
                 x: root.margins
-                y: root.margins * 3 + presetRow.height + separator.height
+                y: root.margins * 3 + presetsBar.height + separator.height
             }
         }
 
