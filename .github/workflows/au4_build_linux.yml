@@ -88,6 +88,8 @@ jobs:
     - name: Install Conan
       id: conan
       uses: turtlebrowser/get-conan@main
+    - name: Register gcc problem matcher
+      run: echo "::add-matcher::.github/problem_matchers/gcc.json"
     - name: Setup environment
       if: env.DO_BUILD == 'true'
       run: |
