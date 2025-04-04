@@ -31,6 +31,8 @@ void ProjectToolBarModel::load()
     context()->currentProjectChanged().onNotify(this, [this]() {
         load();
     });
+
+    dispatcher()->reg(this, "audio-setup", [this]() { emit openAudioSetupContextMenu(); });
 }
 
 bool ProjectToolBarModel::isCompactMode() const

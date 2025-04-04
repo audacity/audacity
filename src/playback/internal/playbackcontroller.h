@@ -5,21 +5,24 @@
 
 #include "async/asyncable.h"
 #include "actions/actionable.h"
-
-#include "modularity/ioc.h"
-#include "actions/iactionsdispatcher.h"
-#include "context/iglobalcontext.h"
-#include "iinteractive.h"
 #include "iapplication.h"
-#include "../iplayback.h"
+#include "iinteractive.h"
+#include "actions/iactionsdispatcher.h"
+#include "ui/iuiactionsregister.h"
+#include "context/iglobalcontext.h"
+
+#include "au3audio/audiotypes.h"
 #include "record/irecordcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 
-#include "au3audio/audiotypes.h"
-#include "../iplayer.h"
-#include "../iplaybackcontroller.h"
+#include "playback/iaudiodevicesprovider.h"
+#include "playback/iplayback.h"
+#include "playback/iplayer.h"
+
+#include "playback/iplaybackcontroller.h"
 
 namespace au::playback {
+class PlaybackUiActions;
 class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable
 {
 public:
@@ -30,6 +33,7 @@ public:
     muse::Inject<IPlayback> playback;
     muse::Inject<record::IRecordController> recordController;
     muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     void init();
@@ -103,6 +107,11 @@ private:
     void toggleLoopPlayback();
 
     void openPlaybackSetupDialog();
+
+    void setAudioApi(const muse::actions::ActionQuery& q);
+    void setAudioOutputDevice(const muse::actions::ActionQuery& q);
+    void setAudioInputDevice(const muse::actions::ActionQuery& q);
+    void setInputChannels(const muse::actions::ActionQuery& q);
 
     // void addLoopBoundary(LoopBoundaryType type);
     // void addLoopBoundaryToTick(LoopBoundaryType type, int tick);

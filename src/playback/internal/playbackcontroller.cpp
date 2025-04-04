@@ -2,7 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 #include "playbackcontroller.h"
-
+#include "playbackuiactions.h"
 #include "../playbacktypes.h"
 
 using namespace muse;
@@ -26,6 +26,11 @@ static const ActionCode REPEAT_CODE("repeat");
 
 static const secs_t TIME_EPS = secs_t(1 / 1000.0);
 
+static const ActionQuery CHANGE_AUDIO_API_QUERY("action://playback/change-api");
+static const ActionQuery CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
+static const ActionQuery CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
+static const ActionQuery CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
+
 void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
@@ -40,6 +45,11 @@ void PlaybackController::init()
     // dispatcher()->reg(this, LOOP_OUT_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopOut); });
     dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
     dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
+
+    dispatcher()->reg(this, CHANGE_AUDIO_API_QUERY, this, &PlaybackController::setAudioApi);
+    dispatcher()->reg(this, CHANGE_PLAYBACK_DEVICE_QUERY, this, &PlaybackController::setAudioOutputDevice);
+    dispatcher()->reg(this, CHANGE_RECORDING_DEVICE_QUERY, this, &PlaybackController::setAudioInputDevice);
+    dispatcher()->reg(this, CHANGE_INPUT_CHANNELS_QUERY, this, &PlaybackController::setInputChannels);
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
@@ -389,6 +399,50 @@ void PlaybackController::toggleAutomaticallyPan()
 void PlaybackController::toggleLoopPlayback()
 {
     NOT_IMPLEMENTED;
+}
+
+void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
+{
+    IF_ASSERT_FAILED(q.contains("api_index")) {
+        return;
+    }
+
+    int index = q.param("api_index").toInt();
+
+    audioDevicesProvider()->setAudioApi(audioDevicesProvider()->audioApiList().at(index));
+}
+
+void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
+{
+    IF_ASSERT_FAILED(q.contains("device_index")) {
+        return;
+    }
+
+    int index = q.param("device_index").toInt();
+
+    audioDevicesProvider()->setAudioOutputDevice(audioDevicesProvider()->audioOutputDevices().at(index));
+}
+
+void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
+{
+    IF_ASSERT_FAILED(q.contains("device_index")) {
+        return;
+    }
+
+    int index = q.param("device_index").toInt();
+
+    audioDevicesProvider()->setAudioInputDevice(audioDevicesProvider()->audioInputDevices().at(index));
+}
+
+void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
+{
+    IF_ASSERT_FAILED(q.contains("input-channels_index")) {
+        return;
+    }
+
+    int index = q.param("input-channels_index").toInt();
+
+    audioDevicesProvider()->setInputChannels(audioDevicesProvider()->inputChannelsList().at(index));
 }
 
 // void PlaybackController::addLoopBoundary(LoopBoundaryType type)

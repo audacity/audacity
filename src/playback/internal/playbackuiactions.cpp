@@ -21,6 +21,11 @@ static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
 static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
 static const ActionCode LOOP_ACTION_CODE("loop");
 
+static const ActionQuery CHANGE_AUDIO_API_QUERY("action://playback/change-api");
+static const ActionQuery CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
+static const ActionQuery CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
+static const ActionQuery CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
+
 const UiActionList PlaybackUiActions::m_mainActions = {
     UiAction(PLAY_ACTION_CODE,
              au::context::UiCtxProjectOpened,
@@ -69,8 +74,20 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Audio setup"),
-             TranslatableString("action", "Open audio setup dialog"),
+             TranslatableString("action", "Open audio setup context menu"),
              IconCode::Code::CONFIGURE
+             ),
+    UiAction("audio-settings",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Audio settings"),
+             TranslatableString("action", "Open audio setup dialog")
+             ),
+    UiAction("rescan-devices",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Rescan audio devices"),
+             TranslatableString("action", "Rescan audio devices")
              ),
     UiAction("metronome",
              au::context::UiCtxProjectOpened,
@@ -107,6 +124,34 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Playback level"),
              TranslatableString("action", "Set playback level"),
              IconCode::Code::AUDIO
+             ),
+    UiAction(CHANGE_AUDIO_API_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Change audio host"),
+             TranslatableString("action", "Change audio host"),
+             Checkable::Yes
+             ),
+    UiAction(CHANGE_PLAYBACK_DEVICE_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Change playback device"),
+             TranslatableString("action", "Change playback device"),
+             Checkable::Yes
+             ),
+    UiAction(CHANGE_RECORDING_DEVICE_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Change recording device"),
+             TranslatableString("action", "Change recording device"),
+             Checkable::Yes
+             ),
+    UiAction(CHANGE_INPUT_CHANNELS_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Change input channels"),
+             TranslatableString("action", "Change input channels"),
+             Checkable::Yes
              ),
 };
 
@@ -153,6 +198,8 @@ PlaybackUiActions::PlaybackUiActions(std::shared_ptr<PlaybackController> control
 
 void PlaybackUiActions::init()
 {
+    registerActions();
+
     m_controller->actionCheckedChanged().onReceive(this, [this](const ActionCode& code) {
         m_actionCheckedChanged.send({ code });
     });
@@ -176,6 +223,22 @@ void PlaybackUiActions::init()
         };
 
         m_actionEnabledChanged.send(codes);
+    });
+
+    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() {
+        actionCheckedChanged().send(ActionCodeList({ CHANGE_AUDIO_API_QUERY.toString() }));
+    });
+
+    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() {
+        actionCheckedChanged().send(ActionCodeList({ CHANGE_PLAYBACK_DEVICE_QUERY.toString() }));
+    });
+
+    audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() {
+        actionCheckedChanged().send(ActionCodeList({ CHANGE_RECORDING_DEVICE_QUERY.toString() }));
+    });
+
+    audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this]() {
+        actionCheckedChanged().send(ActionCodeList({ CHANGE_INPUT_CHANNELS_QUERY.toString() }));
     });
 }
 
@@ -202,6 +265,15 @@ bool PlaybackUiActions::actionEnabled(const UiAction& act) const
 bool PlaybackUiActions::actionChecked(const UiAction& act) const
 {
     return m_controller->actionChecked(act.code);
+}
+
+void PlaybackUiActions::registerActions()
+{
+    m_actions.clear();
+
+    m_actions.insert(m_actions.end(), m_mainActions.begin(), m_mainActions.end());
+    m_actions.insert(m_actions.end(), m_settingsActions.begin(), m_settingsActions.end());
+    m_actions.insert(m_actions.end(), m_loopBoundaryActions.begin(), m_loopBoundaryActions.end());
 }
 
 muse::async::Channel<ActionCodeList> PlaybackUiActions::actionEnabledChanged() const

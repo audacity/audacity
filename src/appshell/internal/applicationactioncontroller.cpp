@@ -61,6 +61,8 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "preference-dialog", this, &ApplicationActionController::openPreferencesDialog);
 
     dispatcher()->reg(this, "revert-factory", this, &ApplicationActionController::revertToFactorySettings);
+
+    dispatcher()->reg(this, "audio-settings", this, &ApplicationActionController::openAudioSettingsDialog);
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -239,6 +241,14 @@ void ApplicationActionController::openPreferencesDialog()
     // }
 
     interactive()->open("audacity://preferences");
+}
+
+void ApplicationActionController::openAudioSettingsDialog()
+{
+    muse::UriQuery preferencesUri("audacity://preferences");
+    preferencesUri.addParam("currentPageId", muse::Val("audio-settings"));
+
+    interactive()->open(preferencesUri);
 }
 
 void ApplicationActionController::revertToFactorySettings()
