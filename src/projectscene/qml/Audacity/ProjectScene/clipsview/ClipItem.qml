@@ -400,7 +400,9 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        root.requestSelected()
+                        if (!root.multiClipsSelected) {
+                            root.requestSelected()
+                        }
 
                         lastClickTime = currentTime;
                     }
