@@ -46,6 +46,10 @@ void GeneralPreferencesModel::load()
     languagesService()->needRestartToApplyLanguageChangeChanged().onReceive(this, [this](bool need) {
         setIsNeedRestart(need);
     });
+
+    projectConfiguration()->temporaryDirChanged().onReceive(this, [this](muse::io::path_t) {
+        emit temporaryDirChanged();
+    });
 }
 
 void GeneralPreferencesModel::checkUpdateForCurrentLanguage()

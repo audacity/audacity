@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include "settings.h"
+
 #include "internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -21,11 +23,98 @@
 using namespace muse;
 using namespace au::au3;
 
+static const muse::Settings::Key AUDIO_HOST("au3wrap", "AudioIO/Host");
+static const muse::Settings::Key PLAYBACK_DEVICE("au3wrap", "AudioIO/PlaybackDevice");
+static const muse::Settings::Key RECORDING_DEVICE("au3wrap", "AudioIO/RecordingDevice");
+static const muse::Settings::Key INPUT_CHANNELS("au3wrap", "AudioIO/RecordChannels");
+
+static const muse::Settings::Key LATENCY_DURATION("au3wrap", "AudioIO/LatencyDuration");
+static const muse::Settings::Key LATENCY_COMPENSATION("au3wrap", "AudioIO/LatencyCorrection");
+
+static const muse::Settings::Key DEFAULT_SAMPLE_RATE("au3wrap", "SamplingRate/DefaultProjectSampleRate");
+static const muse::Settings::Key SAMPLE_FORMAT("au3wrap", "SamplingRate/DefaultProjectSampleFormatChoice");
+
 void Au3AudioDevicesProvider::init()
 {
     initHosts();
     initHostDevices();
+
+    std::string defaultHost = !audioApiList().empty() ? audioApiList().front() : "";
+    muse::settings()->setDefaultValue(AUDIO_HOST, muse::Val(defaultHost));
+    muse::settings()->valueChanged(AUDIO_HOST).onReceive(nullptr, [this](const muse::Val& val) {
+        const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+
+        wxString newHost = wxString(val.toString());
+        for (const auto& device : outMaps) {
+            if (device.hostString == newHost) {
+                AudioIOHost.Write(device.hostString);
+                m_audioApiChanged.notify();
+
+                updateInputOutputDevices();
+
+                return;
+            }
+        }
+    });
+
+    std::string defaultOutput = defaultOutputDevice();
+    muse::settings()->setDefaultValue(PLAYBACK_DEVICE, muse::Val(defaultOutput));
+    muse::settings()->valueChanged(PLAYBACK_DEVICE).onReceive(nullptr, [this](const muse::Val& val) {
+        AudioIOPlaybackDevice.Write(wxString::FromUTF8(val.toString()));
+        Au3AudioDevicesProvider::handleDeviceChange();
+
+        m_audioOutputDeviceChanged.notify();
+    });
+
+    std::string defaultInput = defaultInputDevice();
+    muse::settings()->setDefaultValue(RECORDING_DEVICE, muse::Val(defaultInput));
+    muse::settings()->valueChanged(RECORDING_DEVICE).onReceive(nullptr, [this](const muse::Val& val) {
+        setupRecordingDevice(val.toString());
+
+        m_audioInputDeviceChanged.notify();
+        m_inputChannelsListChanged.notify();
+        m_inputChannelsChanged.notify();
+    });
+
+    updateInputOutputDevices();
     initInputChannels();
+
+    std::string defaultInputChannels = !inputChannelsList().empty() ? inputChannelsList().front() : "";
+    muse::settings()->setDefaultValue(INPUT_CHANNELS, muse::Val(defaultInputChannels));
+    muse::settings()->valueChanged(INPUT_CHANNELS).onReceive(nullptr, [this](const muse::Val& val) {
+        AudioIORecordChannels.Write(val.toInt());
+        m_inputChannelsChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(LATENCY_DURATION, muse::Val(100.0));
+    muse::settings()->valueChanged(LATENCY_DURATION).onReceive(nullptr, [this](const muse::Val& val) {
+        AudioIOLatencyDuration.Write(val.toDouble());
+        m_bufferLengthChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(LATENCY_COMPENSATION, muse::Val(-130.0));
+    muse::settings()->valueChanged(LATENCY_COMPENSATION).onReceive(nullptr, [this](const muse::Val& val) {
+        AudioIOLatencyCorrection.Write(val.toDouble());
+        m_latencyCompensationChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(DEFAULT_SAMPLE_RATE, muse::Val(AudioIOBase::GetOptimalSupportedSampleRate()));
+    muse::settings()->valueChanged(DEFAULT_SAMPLE_RATE).onReceive(nullptr, [this](const muse::Val& val) {
+        QualitySettings::DefaultSampleRate.Write(val.toInt());
+        auto currentProject = globalContext()->currentProject();
+        if (currentProject) {
+            Au3Project* project = reinterpret_cast<Au3Project*>(currentProject->au3ProjectPtr());
+            ::ProjectRate::Get(*project).SetRate(val.toInt());
+        }
+
+        m_defaultSampleRateChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(SAMPLE_FORMAT, muse::Val(QualitySettings::SampleFormatSetting.Default().Internal().ToStdString()));
+    muse::settings()->valueChanged(SAMPLE_FORMAT).onReceive(nullptr, [this](const muse::Val& val) {
+        QualitySettings::SampleFormatSetting.Write(wxString(val.toString()));
+        m_defaultSampleFormatChanged.notify();
+    });
 }
 
 std::vector<std::string> Au3AudioDevicesProvider::audioOutputDevices() const
@@ -45,16 +134,12 @@ std::vector<std::string> Au3AudioDevicesProvider::audioOutputDevices() const
 
 std::string Au3AudioDevicesProvider::currentAudioOutputDevice() const
 {
-    return wxToStdSting(AudioIOPlaybackDevice.Read());
+    return muse::settings()->value(PLAYBACK_DEVICE).toString();
 }
 
 void Au3AudioDevicesProvider::setAudioOutputDevice(const std::string& deviceName)
 {
-    AudioIOPlaybackDevice.Write(wxString::FromUTF8(deviceName));
-
-    Au3AudioDevicesProvider::handleDeviceChange();
-
-    m_audioOutputDeviceChanged.notify();
+    muse::settings()->setSharedValue(PLAYBACK_DEVICE, muse::Val(deviceName));
 }
 
 async::Notification Au3AudioDevicesProvider::audioOutputDeviceChanged() const
@@ -79,60 +164,12 @@ std::vector<std::string> Au3AudioDevicesProvider::audioInputDevices() const
 
 std::string Au3AudioDevicesProvider::currentAudioInputDevice() const
 {
-    return wxToStdSting(AudioIORecordingDevice.Read());
+    return muse::settings()->value(RECORDING_DEVICE).toString();
 }
 
 void Au3AudioDevicesProvider::setAudioInputDevice(const std::string& deviceName)
 {
-    std::vector<std::string> inputDevices;
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
-    auto host = AudioIOHost.Read();
-
-    long newChannels = 0;
-    auto oldChannels = AudioIORecordChannels.Read();
-
-    wxArrayStringEx names;
-    for (const auto& device : inMaps) {
-        if (device.hostString == host && wxToStdSting(MakeDeviceSourceString(&device)) == deviceName) {
-            AudioIORecordingDevice.Write(wxString::FromUTF8(deviceName));
-            AudioIORecordingSourceIndex.Write(device.sourceIndex);
-            if (device.totalSources >= 1) {
-                AudioIORecordingSource.Write(device.sourceString);
-            } else {
-                AudioIORecordingSource.Reset();
-            }
-
-            for (size_t j = 0; j < (unsigned int)device.numChannels; j++) {
-                wxString name;
-
-                if (j == 0) {
-                    name = _("1 (Mono) Recording Channel");
-                } else if (j == 1) {
-                    name = _("2 (Stereo) Recording Channels");
-                } else {
-                    name = wxString::Format(wxT("%d"), (int)j + 1);
-                }
-                names.push_back(name);
-            }
-            newChannels = device.numChannels;
-            if (oldChannels <= newChannels && oldChannels >= 1) {
-                newChannels = oldChannels;
-            }
-            AudioIORecordChannels.Write(newChannels);
-
-            Au3AudioDevicesProvider::handleDeviceChange();
-        }
-    }
-
-    mInputChannels.Set(std::move(names));
-    if (newChannels >= 1) {
-        // Correct to 0-based index in choice
-        mInputChannels.Set(newChannels - 1);
-    }
-
-    m_audioInputDeviceChanged.notify();
-    m_inputChannelsListChanged.notify();
-    m_inputChannelsChanged.notify();
+    muse::settings()->setSharedValue(RECORDING_DEVICE, muse::Val(deviceName));
 }
 
 async::Notification Au3AudioDevicesProvider::audioInputDeviceChanged() const
@@ -161,31 +198,12 @@ std::vector<std::string> Au3AudioDevicesProvider::audioApiList() const
 
 std::string Au3AudioDevicesProvider::currentAudioApi() const
 {
-    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
-    auto host = AudioIOHost.Read();
-
-    for (const auto& device : outMaps) {
-        if (device.hostString == host) {
-            return wxToStdSting(device.hostString);
-        }
-    }
-    return std::string();
+    return muse::settings()->value(AUDIO_HOST).toString();
 }
 
 void Au3AudioDevicesProvider::setAudioApi(const std::string& audioApi)
 {
-    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
-
-    for (const auto& device : outMaps) {
-        if (device.hostString == wxString(audioApi)) {
-            AudioIOHost.Write(device.hostString);
-            m_audioApiChanged.notify();
-
-            updateInputOutputDevices();
-
-            return;
-        }
-    }
+    muse::settings()->setSharedValue(AUDIO_HOST, muse::Val(audioApi));
 }
 
 std::vector<std::string> Au3AudioDevicesProvider::inputChannelsList() const
@@ -224,8 +242,7 @@ std::vector<std::string> Au3AudioDevicesProvider::inputChannelsList() const
 
 std::string Au3AudioDevicesProvider::currentInputChannels() const
 {
-    int currentRecordChannels = AudioIORecordChannels.Read();
-
+    int currentRecordChannels = muse::settings()->value(INPUT_CHANNELS).toInt();
     if (inputChannelsList().empty()) {
         return std::string();
     }
@@ -257,38 +274,30 @@ void Au3AudioDevicesProvider::setInputChannels(const std::string& newChannels)
             break;
         }
     }
-    if (channelsToWrite.has_value()) {
-        AudioIORecordChannels.Write(channelsToWrite.value());
-        m_inputChannelsChanged.notify();
-    }
+    muse::settings()->setSharedValue(INPUT_CHANNELS, muse::Val(channelsToWrite.value()));
 }
 
 double Au3AudioDevicesProvider::bufferLength() const
 {
-    return AudioIOLatencyDuration.Read();
+    return muse::settings()->value(LATENCY_DURATION).toDouble();
 }
 
 void Au3AudioDevicesProvider::setBufferLength(double newBufferLength)
 {
     if (!muse::RealIsEqualOrMore(newBufferLength, 0.0)) {
-        AudioIOLatencyDuration.Reset();
-        m_bufferLengthChanged.notify();
-        return;
+        newBufferLength = muse::settings()->defaultValue(LATENCY_DURATION).toDouble();
     }
-
-    AudioIOLatencyDuration.Write(newBufferLength);
-    m_bufferLengthChanged.notify();
+    muse::settings()->setSharedValue(LATENCY_DURATION, muse::Val(newBufferLength));
 }
 
 double Au3AudioDevicesProvider::latencyCompensation() const
 {
-    return AudioIOLatencyCorrection.Read();
+    return muse::settings()->value(LATENCY_COMPENSATION).toDouble();
 }
 
 void Au3AudioDevicesProvider::setLatencyCompensation(double newLatencyCompensation)
 {
-    AudioIOLatencyCorrection.Write(newLatencyCompensation);
-    m_latencyCompensationChanged.notify();
+    settings()->setSharedValue(LATENCY_COMPENSATION, muse::Val(newLatencyCompensation));
 }
 
 std::vector<uint64_t> Au3AudioDevicesProvider::availableSampleRateList() const
@@ -304,29 +313,19 @@ std::vector<uint64_t> Au3AudioDevicesProvider::availableSampleRateList() const
 
 uint64_t Au3AudioDevicesProvider::defaultSampleRate() const
 {
-    int intRate = 0;
-    QualitySettings::DefaultSampleRate.Read(&intRate);
-    return intRate;
+    return muse::settings()->value(DEFAULT_SAMPLE_RATE).toDouble();
 }
 
 void Au3AudioDevicesProvider::setDefaultSampleRate(uint64_t newRate)
 {
-    QualitySettings::DefaultSampleRate.Write(static_cast<int>(newRate));
-    auto currentProject = globalContext()->currentProject();
-    if (currentProject) {
-        Au3Project* project = reinterpret_cast<Au3Project*>(currentProject->au3ProjectPtr());
-        ::ProjectRate::Get(*project).SetRate(newRate);
-    }
-
-    m_defaultSampleRateChanged.notify();
+    settings()->setSharedValue(DEFAULT_SAMPLE_RATE, muse::Val(static_cast<int>(newRate)));
 }
 
 void Au3AudioDevicesProvider::setDefaultSampleFormat(const std::string& format)
 {
     for (const auto& symbol : QualitySettings::SampleFormatSetting.GetSymbols()) {
         if (format == symbol.Msgid().Translation()) {
-            QualitySettings::SampleFormatSetting.Write(wxString(symbol.Internal()));
-            m_defaultSampleFormatChanged.notify();
+            settings()->setSharedValue(SAMPLE_FORMAT, muse::Val(symbol.Internal().ToStdString()));
         }
     }
 }
@@ -338,12 +337,14 @@ async::Notification Au3AudioDevicesProvider::defaultSampleFormatChanged() const
 
 std::string Au3AudioDevicesProvider::defaultSampleFormat() const
 {
-    auto currentFormat = QualitySettings::SampleFormatSetting.Read();
+    auto currentFormat = muse::settings()->value(SAMPLE_FORMAT).toString();
     for (const auto& symbol : QualitySettings::SampleFormatSetting.GetSymbols()) {
         if (currentFormat == symbol.Internal()) {
             return symbol.Msgid().Translation().ToStdString();
         }
     }
+
+    return "";
 }
 
 std::vector<std::string> Au3AudioDevicesProvider::defaultSampleFormatList() const
@@ -544,9 +545,107 @@ void Au3AudioDevicesProvider::initInputChannels()
 
 void Au3AudioDevicesProvider::updateInputOutputDevices()
 {
+    std::string input = defaultInputDevice();
+    std::string output = defaultOutputDevice();
+
+    if (!input.empty()) {
+        setAudioInputDevice(input);
+    }
+
+    if (!output.empty()) {
+        setAudioOutputDevice(output);
+    }
+}
+
+void Au3AudioDevicesProvider::setupRecordingDevice(const std::string& newDevice)
+{
+    std::vector<std::string> inputDevices;
+    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    auto host = AudioIOHost.Read();
+
+    long newChannels = 0;
+    auto oldChannels = AudioIORecordChannels.Read();
+
+    wxArrayStringEx names;
+    for (const auto& device : inMaps) {
+        if (device.hostString == host && wxToStdSting(MakeDeviceSourceString(&device)) == newDevice) {
+            AudioIORecordingDevice.Write(wxString::FromUTF8(newDevice));
+            AudioIORecordingSourceIndex.Write(device.sourceIndex);
+            if (device.totalSources >= 1) {
+                AudioIORecordingSource.Write(device.sourceString);
+            } else {
+                AudioIORecordingSource.Reset();
+            }
+
+            for (size_t j = 0; j < (unsigned int)device.numChannels; j++) {
+                wxString name;
+
+                if (j == 0) {
+                    name = _("1 (Mono) Recording Channel");
+                } else if (j == 1) {
+                    name = _("2 (Stereo) Recording Channels");
+                } else {
+                    name = wxString::Format(wxT("%d"), (int)j + 1);
+                }
+                names.push_back(name);
+            }
+            newChannels = device.numChannels;
+            if (oldChannels <= newChannels && oldChannels >= 1) {
+                newChannels = oldChannels;
+            }
+            AudioIORecordChannels.Write(newChannels);
+
+            Au3AudioDevicesProvider::handleDeviceChange();
+        }
+    }
+
+    mInputChannels.Set(std::move(names));
+    if (newChannels >= 1) {
+        // Correct to 0-based index in choice
+        mInputChannels.Set(newChannels - 1);
+    }
+}
+
+std::string Au3AudioDevicesProvider::defaultOutputDevice()
+{
     // get api index
     if (audioApiList().size() < 1) {
-        return;
+        return "";
+    }
+
+    int index = -1;
+    auto apiName = currentAudioApi();
+    int nHosts = Pa_GetHostApiCount();
+    for (int i = 0; i < nHosts; ++i) {
+        wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(i)->name);
+        if (name == apiName) {
+            index = i;
+            break;
+        }
+    }
+
+    const auto currentOutputDevice = currentAudioOutputDevice();
+    const auto outputDevices = audioOutputDevices();
+    if (!muse::contains(outputDevices, currentOutputDevice) && !outputDevices.empty()) {
+        // choose the default on this API, as defined by PortAudio
+        if (index < 0) {
+            return outputDevices[0];
+        } else {
+            DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(index);
+            if (defaultMap) {
+                return wxToStdSting(MakeDeviceSourceString(defaultMap));
+            }
+        }
+    }
+
+    return "";
+}
+
+std::string Au3AudioDevicesProvider::defaultInputDevice()
+{
+    // get api index
+    if (audioApiList().size() < 1) {
+        return "";
     }
 
     int index = -1;
@@ -565,26 +664,14 @@ void Au3AudioDevicesProvider::updateInputOutputDevices()
     if (!muse::contains(inputDevices, currentInputDevice) && !inputDevices.empty()) {
         // choose the default on this API, as defined by PortAudio
         if (index < 0) {
-            setAudioInputDevice(inputDevices[0]);
+            return inputDevices[0];
         } else {
             DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(index);
             if (defaultMap) {
-                setAudioInputDevice(wxToStdSting(MakeDeviceSourceString(defaultMap)));
+                return wxToStdSting(MakeDeviceSourceString(defaultMap));
             }
         }
     }
 
-    const auto currentOutputDevice = currentAudioOutputDevice();
-    const auto outputDevices = audioOutputDevices();
-    if (!muse::contains(outputDevices, currentOutputDevice) && !outputDevices.empty()) {
-        // choose the default on this API, as defined by PortAudio
-        if (index < 0) {
-            setAudioOutputDevice(outputDevices[0]);
-        } else {
-            DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(index);
-            if (defaultMap) {
-                setAudioOutputDevice(wxToStdSting(MakeDeviceSourceString(defaultMap)));
-            }
-        }
-    }
+    return "";
 }
