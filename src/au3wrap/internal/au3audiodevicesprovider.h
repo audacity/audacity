@@ -71,6 +71,10 @@ private:
     void initInputChannels();
 
     void updateInputOutputDevices();
+    void setupRecordingDevice(const std::string& newDevice);
+
+    std::string defaultOutputDevice();
+    std::string defaultInputDevice();
 
     class Choices
     {

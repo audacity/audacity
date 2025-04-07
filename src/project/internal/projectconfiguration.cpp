@@ -195,9 +195,6 @@ muse::io::path_t ProjectConfiguration::temporaryDir() const
 void ProjectConfiguration::setTemporaryDir(const muse::io::path_t& path)
 {
     muse::settings()->setSharedValue(TEMPORARY_FILES_PATH, muse::Val(path));
-    UpdateDefaultPath(FileNames::Operation::Temp, au3::wxFromString(path.toString()));
-
-    m_temporaryDirChanged.send(path);
 }
 
 muse::async::Channel<muse::io::path_t> ProjectConfiguration::temporaryDirChanged() const
@@ -265,4 +262,8 @@ void ProjectConfiguration::initTempDir()
         }
     }
     muse::settings()->setDefaultValue(TEMPORARY_FILES_PATH, muse::Val(appDataLocation));
+    muse::settings()->valueChanged(TEMPORARY_FILES_PATH).onReceive(nullptr, [this](const muse::Val& val) {
+        UpdateDefaultPath(FileNames::Operation::Temp, au3::wxFromString(val.toPath().toString()));
+        m_temporaryDirChanged.send(val.toString());
+    });
 }

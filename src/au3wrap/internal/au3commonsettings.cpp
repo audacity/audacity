@@ -13,8 +13,8 @@ using namespace au::au3;
 static muse::Settings::Key make_key(const wxString& key)
 {
     wxString _key = key;
-    if (!_key.starts_with("/")) {
-        _key += "/";
+    if (_key.starts_with("/")) {
+        _key.Remove(0, 1);
     }
 
     return muse::Settings::Key("au3wrap", wxToStdSting(_key));

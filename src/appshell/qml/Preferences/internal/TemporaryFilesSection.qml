@@ -31,6 +31,10 @@ BaseSection {
 
     property string temporaryPath: ""
 
+    onTemporaryPathChanged: {
+        dirPicker.path = temporaryPath
+    }
+
     signal temporaryFilesLocationChanged(string newPath)
 
     Column {
