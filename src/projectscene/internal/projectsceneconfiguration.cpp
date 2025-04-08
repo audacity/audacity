@@ -4,7 +4,7 @@
 
 #include "settings.h"
 
-#include "stringutils.h"
+#include "global/stringutils.h"
 
 #include "NumericConverterFormats.h"
 
