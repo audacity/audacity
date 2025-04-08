@@ -359,6 +359,11 @@ void TrackeditActionsController::doGlobalDelete()
         return;
     }
 
+    if (!selectionController()->selectedTracks().empty()) {
+        dispatcher()->dispatch(TRACK_DELETE);
+        return;
+    }
+
     interactive()->error(muse::trc("trackedit", "No audio selected"),
                          muse::trc("trackedit", "Select the audio for Delete then try again."));
 }

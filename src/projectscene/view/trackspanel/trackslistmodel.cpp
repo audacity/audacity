@@ -152,6 +152,9 @@ void TracksListModel::selectRow(int row, bool exclusive)
         m_selectionModel->select(index(row));
     }
 
+    //! NOTE: Selecting a track unselects all clips
+    selectionController()->resetSelectedClips();
+
     projectHistory()->modifyState();
 }
 
@@ -218,6 +221,11 @@ void TracksListModel::removeSelectedRows()
     });
 
     removeRows(firstIndex.row(), selectedIndexList.size(), firstIndex.parent());
+}
+
+void TracksListModel::removeSelection()
+{
+    dispatcher()->dispatch("delete");
 }
 
 void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)

@@ -53,6 +53,7 @@ public:
     Q_INVOKABLE void moveSelectedRowsUp();
     Q_INVOKABLE void moveSelectedRowsDown();
     Q_INVOKABLE void removeSelectedRows();
+    Q_INVOKABLE void removeSelection();
 
     Q_INVOKABLE void requestTracksMove(QVariantList trackIndexes, int to);
 
