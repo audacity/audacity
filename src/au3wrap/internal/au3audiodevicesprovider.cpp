@@ -613,16 +613,7 @@ std::string Au3AudioDevicesProvider::defaultOutputDevice()
         return "";
     }
 
-    int index = -1;
-    auto apiName = currentAudioApi();
-    int nHosts = Pa_GetHostApiCount();
-    for (int i = 0; i < nHosts; ++i) {
-        wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(i)->name);
-        if (name == apiName) {
-            index = i;
-            break;
-        }
-    }
+    int index = AudioIO::GetHostIndex(currentAudioApi());
 
     const auto currentOutputDevice = currentAudioOutputDevice();
     const auto outputDevices = audioOutputDevices();
@@ -648,16 +639,7 @@ std::string Au3AudioDevicesProvider::defaultInputDevice()
         return "";
     }
 
-    int index = -1;
-    auto apiName = currentAudioApi();
-    int nHosts = Pa_GetHostApiCount();
-    for (int i = 0; i < nHosts; ++i) {
-        wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(i)->name);
-        if (name == apiName) {
-            index = i;
-            break;
-        }
-    }
+    int index = AudioIO::GetHostIndex(currentAudioApi());
 
     const auto currentInputDevice = currentAudioInputDevice();
     const auto inputDevices = audioInputDevices();

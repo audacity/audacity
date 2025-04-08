@@ -42,14 +42,20 @@ CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* pare
 
 void CommonAudioApiConfigurationModel::load()
 {
-    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() { emit currentAudioApiIndexChanged(); });
-    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentOutputDeviceIdChanged(); });
-    audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
-    audioDevicesProvider()->audioApiChanged().onNotify(this, [this](){
+    audioDevicesProvider()->audioApiChanged().onNotify(this, [this]() {
+        emit currentAudioApiIndexChanged();
         emit outputDeviceListChanged();
         emit inputDeviceListChanged();
         emit longestDeviceNameLengthChanged();
+
+        emit currentOutputDeviceIdChanged();
+        emit currentInputDeviceIdChanged();
+
+        emit inputChannelsListChanged();
+        emit currentInputChannelsChanged();
     });
+    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentOutputDeviceIdChanged(); });
+    audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
     audioDevicesProvider()->inputChannelsListChanged().onNotify(this, [this](){ emit inputChannelsListChanged(); });
     audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this](){ emit currentInputChannelsChanged(); });
     audioDevicesProvider()->bufferLengthChanged().onNotify(this, [this](){ emit bufferLengthChanged(); });
@@ -134,7 +140,7 @@ QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
 
 void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& deviceId)
 {
-    if (deviceId == currentOutputDeviceId()) {
+    if (deviceId == currentInputDeviceId()) {
         return;
     }
     audioDevicesProvider()->setAudioInputDevice(deviceId.toStdString());

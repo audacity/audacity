@@ -125,6 +125,8 @@ public:
      * GetSupported*Rate functions considerably */
     void HandleDeviceChange();
 
+    static int GetHostIndex(const std::string& hostName);
+
     /** \brief Get a list of sample rates the output (playback) device
      * supports.
      *
