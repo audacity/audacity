@@ -293,6 +293,21 @@ void AudioIOBase::HandleDeviceChange()
 #endif   // USE_PORTMIXER
 }
 
+int AudioIOBase::GetHostIndex(const std::string& hostName)
+{
+    int index = -1;
+    int nHosts = Pa_GetHostApiCount();
+    for (int i = 0; i < nHosts; ++i) {
+        wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(i)->name);
+        if (name == hostName) {
+            index = i;
+            break;
+        }
+    }
+
+    return index;
+}
+
 void AudioIOBase::SetCaptureMeter(
     const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<Meter>& wMeter)
 {
