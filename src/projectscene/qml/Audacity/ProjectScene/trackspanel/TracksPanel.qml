@@ -201,6 +201,10 @@ Item {
                         root.openEffectsRequested()
                     }
 
+                    onRemoveSelectionRequested: {
+                        tracksModel.removeSelection()
+                    }
+
                     Component.onCompleted: {
                         mousePressed.connect(dragHandler.startDrag)
                         mouseReleased.connect(dragHandler.endDrag)
