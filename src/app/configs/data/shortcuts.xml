@@ -861,6 +861,10 @@
         <seq>Shift+Space</seq>
     </SC>
     <SC>
+        <key>stop-record</key>
+        <seq>Space</seq>
+    </SC>
+    <SC>
         <key>play-one-sec</key>
         <seq>1</seq>
     </SC>
