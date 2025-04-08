@@ -39,6 +39,18 @@ static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7;
 WaveView::WaveView(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {
+    //! NOTE: Push history state after edit is completed to avoid multiple unecessary calls.
+    connect(this, &WaveView::isIsolationModeChanged, [this]() {
+        if (!m_isIsolationMode) {
+            pushProjectHistorySampleEdit();
+        }
+    });
+
+    connect(this, &WaveView::multiSampleEditChanged, [this]() {
+        if (!m_multiSampleEdit) {
+            pushProjectHistorySampleEdit();
+        }
+    });
 }
 
 WaveView::~WaveView()
@@ -292,6 +304,36 @@ void WaveView::setIsIsolationMode(bool isIsolationMode)
     emit isIsolationModeChanged();
 }
 
+void WaveView::setMultiSampleEdit(bool multiSampleEdit)
+{
+    if (m_multiSampleEdit == multiSampleEdit) {
+        return;
+    }
+
+    m_multiSampleEdit = multiSampleEdit;
+    emit multiSampleEditChanged();
+}
+
+bool WaveView::multiSampleEdit() const
+{
+    return m_multiSampleEdit;
+}
+
+void WaveView::setIsBrush(bool isBrush)
+{
+    if (m_isBrush == isBrush) {
+        return;
+    }
+
+    m_isBrush = isBrush;
+    emit isBrushChanged();
+}
+
+bool WaveView::isBrush() const
+{
+    return m_isBrush;
+}
+
 QColor WaveView::transformColor(const QColor& originalColor) const
 {
     int r = originalColor.red();
@@ -362,6 +404,11 @@ void WaveView::smoothLastClickPos(unsigned int x, const unsigned int y)
     samplespainterutils::smoothLastClickPos(
         m_currentChannel.value(),
         globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+
+    //! NOTE: History state is only pushed when data is actually changed.
+    // For smooth edition there is no data change on button press or release
+    // just on mouse click.
+    pushProjectHistorySampleEdit();
 }
 
 void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
@@ -389,4 +436,9 @@ void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
     samplespainterutils::setIsolatedPoint(
         m_currentChannel.value(),
         m_clipKey.key, globalContext()->currentProject(), m_lastClickedPoint.value(), currentPosition, params);
+}
+
+void WaveView::pushProjectHistorySampleEdit()
+{
+    projectHistory()->pushHistoryState("Moved Samples", "Sample Edit", trackedit::UndoPushType::CONSOLIDATE);
 }

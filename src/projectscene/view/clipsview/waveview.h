@@ -7,6 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "trackedit/iprojecthistory.h"
 
 #include "iwavepainter.h"
 #include "../timeline/timelinecontext.h"
@@ -29,10 +30,13 @@ class WaveView : public QQuickPaintedItem
     Q_PROPERTY(bool isStemPlot READ isStemPlot WRITE setIsStemPlot NOTIFY isStemPlotChanged FINAL)
     Q_PROPERTY(int currentChannel READ currentChannel WRITE setCurrentChannel FINAL)
     Q_PROPERTY(bool isIsolationMode READ isIsolationMode WRITE setIsIsolationMode NOTIFY isIsolationModeChanged FINAL)
+    Q_PROPERTY(bool multiSampleEdit READ multiSampleEdit WRITE setMultiSampleEdit NOTIFY multiSampleEditChanged FINAL)
+    Q_PROPERTY(bool isBrush READ isBrush WRITE setIsBrush NOTIFY isBrushChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::projectscene::IWavePainter> wavePainter;
     muse::Inject<IProjectSceneConfiguration> configuration;
+    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
 
 public:
     WaveView(QQuickItem* parent = nullptr);
@@ -58,6 +62,10 @@ public:
     void setCurrentChannel(int currentChannel);
     bool isIsolationMode() const;
     void setIsIsolationMode(bool isIsolationMode);
+    bool multiSampleEdit() const;
+    void setMultiSampleEdit(bool multiSampleEdit);
+    bool isBrush() const;
+    void setIsBrush(bool isBrush);
 
     Q_INVOKABLE QColor transformColor(const QColor& originalColor) const;
     Q_INVOKABLE void setLastMousePos(const unsigned int x, const unsigned int y);
@@ -77,6 +85,8 @@ signals:
     void isNearSampleChanged();
     void isStemPlotChanged();
     void isIsolationModeChanged();
+    void multiSampleEditChanged();
+    void isBrushChanged();
 
 private:
 
@@ -84,6 +94,7 @@ private:
     IWavePainter::Params getWavePainterParams() const;
     void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, bool selected) const;
     void applyClassicStyle(IWavePainter::Params& params, bool selected) const;
+    void pushProjectHistorySampleEdit();
 
     TimelineContext* m_context = nullptr;
     ClipKey m_clipKey;
@@ -95,6 +106,8 @@ private:
     bool m_isNearSample = false;
     bool m_isStemPlot = false;
     bool m_isIsolationMode = false;
+    bool m_multiSampleEdit = false;
+    bool m_isBrush = false;
 
     std::optional<int> m_currentChannel;
     std::optional<QPoint> m_lastClickedPoint;

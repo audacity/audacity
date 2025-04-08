@@ -574,6 +574,8 @@ Rectangle {
             clipColor: root.clipColor
             clipSelected: root.clipSelected
             isIsolationMode: root.isIsolationMode
+            multiSampleEdit: root.multiSampleEdit
+            isBrush: root.isBrush
 
             function onWaveViewPositionChanged(x, y) {
                 if (waveView.isIsolationMode) {
