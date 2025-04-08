@@ -54,7 +54,7 @@ template<template < typename, typename ...> typename ContainerType, typename Res
                                  const SeparatorType& separator)
          {
              if (container.empty()) {
-                 return ResultType {}
+                 return ResultType {};
              }
 
              const auto sepratorLength = StringLength(separator);

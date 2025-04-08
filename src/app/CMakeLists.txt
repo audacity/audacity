@@ -126,9 +126,19 @@ add_executable(${EXECUTABLE_NAME}
     commandlineparser.h
 )
 
-target_include_directories(audacity PUBLIC
+###########################################
+# Includes
+###########################################
+
+target_include_directories(audacity PRIVATE
+    ${PROJECT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+
     ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/src/framework
+
+    ${MUSE_FRAMEWORK_PATH}
+    ${MUSE_FRAMEWORK_PATH}/framework
+    ${MUSE_FRAMEWORK_PATH}/framework/global
 )
 
 
