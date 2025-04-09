@@ -353,6 +353,68 @@ double Au3SelectionController::selectedClipEndTime() const
     return clip->End();
 }
 
+double Au3SelectionController::leftMostSelectedClipStartTime() const
+{
+    std::optional<double> startTime;
+    for (const auto& selectedClip : selectedClips()) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            continue;
+        }
+
+        if (!startTime.has_value()) {
+            startTime = clip->GetPlayStartTime();
+            continue;
+        }
+
+        if (!muse::RealIsEqualOrMore(clip->GetPlayStartTime(), startTime.value())) {
+            startTime = clip->GetPlayStartTime();
+        }
+    }
+
+    if (startTime.has_value()) {
+        return startTime.value();
+    }
+
+    return -1.0;
+}
+
+double Au3SelectionController::rightMostSelectedClipEndTime() const
+{
+    std::optional<double> endTime;
+    for (const auto& selectedClip : selectedClips()) {
+        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+        IF_ASSERT_FAILED(waveTrack) {
+            continue;
+        }
+
+        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+        IF_ASSERT_FAILED(clip) {
+            continue;
+        }
+
+        if (!endTime.has_value()) {
+            endTime = clip->GetPlayEndTime();
+            continue;
+        }
+
+        if (!muse::RealIsEqualOrLess(clip->GetPlayEndTime(), endTime.value())) {
+            endTime = clip->GetPlayEndTime();
+        }
+    }
+
+    if (endTime.has_value()) {
+        return endTime.value();
+    }
+
+    return -1.0;
+}
+
 void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
 {
     auto& tracks = ::TrackList::Get(projectRef());

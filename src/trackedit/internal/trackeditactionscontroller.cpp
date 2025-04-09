@@ -407,9 +407,10 @@ void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
 {
     auto moveClips = ActionData::make_arg1(true);
 
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto tracks = project->trackeditProject()->trackIdList();
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
-        project::IAudacityProjectPtr project = globalContext()->currentProject();
-        auto tracks = project->trackeditProject()->trackIdList();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
@@ -420,7 +421,12 @@ void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
     }
 
     if (!selectionController()->selectedClips().empty()) {
-        dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, moveClips);
+        secs_t selectedStartTime = selectionController()->leftMostSelectedClipStartTime();
+        secs_t selectedEndTime = selectionController()->rightMostSelectedClipEndTime();
+
+        trackeditInteraction()->removeTracksData(tracks, selectedStartTime, selectedEndTime, true);
+
+        selectionController()->resetDataSelection();
         return;
     }
 

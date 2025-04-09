@@ -46,6 +46,8 @@ public:
     muse::async::Channel<ClipKeyList> clipsSelected() const override;
     double selectedClipStartTime() const override;
     double selectedClipEndTime() const override;
+    double leftMostSelectedClipStartTime() const override;
+    double rightMostSelectedClipEndTime() const override;
 
     // data selection
     void setSelectedTrackAudioData(trackedit::TrackId trackId) override;
