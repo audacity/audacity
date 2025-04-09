@@ -6,8 +6,6 @@
 #include "../common/generatoreffectmodel.h"
 
 namespace au::effects {
-class DtmfGenerator;
-
 class DtmfViewModel : public GeneratorEffectModel
 {
     Q_OBJECT

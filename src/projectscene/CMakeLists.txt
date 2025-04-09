@@ -34,8 +34,6 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/insertsilencemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/insertsilencemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/common/customcursor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/customcursor.h
 
@@ -77,7 +75,7 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/workspacestoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/workspacestoolbarmodel.h
-    
+
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/audiosetupcontextmenumodel.h
 
@@ -88,12 +86,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/samplespainterutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iminmaxrmspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/minmaxrmspainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/minmaxrmspainter.h 
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/minmaxrmspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iconnectingdotspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/connectingdotspainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/connectingdotspainter.h 
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/connectingdotspainter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/iau3wavepainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/sampledata.h 
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/sampledata.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformSettings.cpp

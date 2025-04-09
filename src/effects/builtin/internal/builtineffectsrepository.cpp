@@ -24,6 +24,8 @@
 #include "tonegen/toneviewmodel.h"
 #include "dtmfgen/dtmfgenerator.h"
 #include "dtmfgen/dtmfviewmodel.h"
+#include "silencegen/silencegenerator.h"
+#include "silencegen/silenceviewmodel.h"
 #include "noisegen/noisegenerator.h"
 #include "noisegen/noiseviewmodel.h"
 #include "fade/fadeeffect.h"
@@ -47,6 +49,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
+    static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
     static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
 }
@@ -160,6 +163,15 @@ void BuiltinEffectsRepository::updateEffectMetaList()
             regMeta(desc,
                     muse::mtrc("effects/dtmf", "DTMF Tones"),
                     muse::mtrc("effects/dtmf", "Generates DTMF signal"),
+                    false
+                    );
+        } else if (symbol == SilenceGenerator::Symbol) {
+            qmlRegisterType<SilenceViewModel>("Audacity.Effects", 1, 0, "SilenceViewModel");
+            regView(SilenceGenerator::Symbol, u"qrc:/silencegen/SilenceView.qml");
+            regMeta(desc,
+                    muse::mtrc("effects/silence", "Silence"),
+                    muse::mtrc("effects/silence", "Generates silence"),
+                    EffectCategoryId::None,
                     false
                     );
         } else {

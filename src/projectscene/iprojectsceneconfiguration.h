@@ -20,12 +20,6 @@ public:
 
     virtual double zoom() const = 0;
 
-    virtual trackedit::secs_t insertSilenceDuration() const = 0;
-    virtual void setInsertSilenceDuration(const trackedit::secs_t duration) = 0;
-
-    virtual std::string insertSilenceDurationFormat() const = 0;
-    virtual void setInsertSilenceDurationFormat(const std::string& format) = 0;
-
     virtual int mouseZoomPrecision() const = 0;
     virtual void setMouseZoomPrecision(int precision) = 0;
     virtual TimelineRulerMode timelineRulerMode() const = 0;

@@ -5,6 +5,7 @@
         <file>tonegen/ChirpView.qml</file>
         <file>tonegen/ToneView.qml</file>
         <file>dtmfgen/DtmfView.qml</file>
+        <file>silencegen/SilenceView.qml</file>
         <file>general/GeneralEffectView.qml</file>
         <file>reverb/ReverbView.qml</file>
         <file>noisegen/NoiseView.qml</file>
