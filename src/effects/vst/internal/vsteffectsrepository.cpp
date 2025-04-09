@@ -22,7 +22,7 @@ EffectMetaList VstEffectsRepository::effectMetaList() const
 
     EffectMetaList effects;
 
-    std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
+    const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
     for (const AudioPluginInfo& info : allEffects) {
         if (!(info.type == AudioPluginType::Fx && info.meta.type == AudioResourceType::VstPlugin)) {
@@ -34,7 +34,9 @@ EffectMetaList VstEffectsRepository::effectMetaList() const
         meta.family = EffectFamily::VST3;
         meta.title = muse::io::completeBasename(info.path).toString();
         meta.isRealtimeCapable = true;
-        meta.categoryId = VST_CATEGORY_ID;
+        meta.vendor = muse::String::fromStdString(info.meta.vendor);
+        meta.type = EffectType::Processor;
+        meta.path = info.path;
 
         effects.push_back(std::move(meta));
     }

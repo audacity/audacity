@@ -8,6 +8,8 @@
 #include "types/translatablestring.h"
 #include "log.h"
 
+#include <unordered_map>
+
 using namespace au::effects;
 using namespace muse;
 using namespace muse::ui;
@@ -75,6 +77,46 @@ UiAction makeUiAction(const char16_t* uri, const EffectMeta& meta)
     action.title = TranslatableString::untranslatable(meta.title);
     return action;
 }
+
+// It can be that different plugins have the same name. Seeing them side by side in a menu is confusing for the user.
+// To mitigate this, we replace the title with the path of the plugin.
+void replaceIdenticalTitlesWithPaths(EffectMetaList& effects)
+{
+    std::unordered_map<muse::String, std::vector<size_t> > duplicateMap;
+
+    for (auto i = 0u; i < effects.size(); ++i) {
+        duplicateMap[effects[i].title].push_back(i);
+    }
+
+    for (const auto&[_, indices] : duplicateMap) {
+        if (indices.size() == 1) {
+            continue;
+        }
+        for (const size_t index : indices) {
+            auto& meta = effects[index];
+            meta.title = meta.path.toString();
+        }
+    }
+}
+}
+
+void EffectsUiActions::makeActions(EffectMetaList effects)
+{
+    m_actions.clear();
+    m_actions.reserve(effects.size() + STATIC_ACTIONS.size());
+
+    replaceIdenticalTitlesWithPaths(effects);
+
+    for (const EffectMeta& e : effects) {
+        m_actions.push_back(makeUiAction(EFFECT_OPEN_ACTION, e));
+        if (e.isRealtimeCapable) {
+            for (const auto uri : { REALTIME_EFFECT_ADD_ACTION, REALTIME_EFFECT_REPLACE_ACTION }) {
+                m_actions.push_back(makeUiAction(uri, e));
+            }
+        }
+    }
+
+    m_actions.insert(m_actions.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());
 }
 
 void EffectsUiActions::reload()
@@ -91,26 +133,10 @@ void EffectsUiActions::reload()
         m_actionsChanged.send({ *it });
     });
 
-    auto makeActions = [this](const EffectMetaList& effects) {
-        m_actions.clear();
-        m_actions.reserve(effects.size() + STATIC_ACTIONS.size());
-
-        for (const EffectMeta& e : effects) {
-            m_actions.push_back(makeUiAction(EFFECT_OPEN_ACTION, e));
-            if (e.isRealtimeCapable) {
-                for (const auto uri : { REALTIME_EFFECT_ADD_ACTION, REALTIME_EFFECT_REPLACE_ACTION }) {
-                    m_actions.push_back(makeUiAction(uri, e));
-                }
-            }
-        }
-
-        m_actions.insert(m_actions.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());
-    };
-
     EffectMetaList metaList = effectsProvider()->effectMetaList();
     makeActions(metaList);
 
-    effectsProvider()->effectMetaListChanged().onNotify(this, [this, makeActions]() {
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this] {
         EffectMetaList metaList = effectsProvider()->effectMetaList();
         makeActions(metaList);
     });

@@ -46,7 +46,6 @@ bool EffectsProvider::isNyquistSupported() const
 void EffectsProvider::reloadEffects()
 {
     m_effects.clear();
-    m_effectsCategories.clear();
 
     // built-in
     {
@@ -83,17 +82,6 @@ EffectMetaList EffectsProvider::effectMetaList() const
 muse::async::Notification EffectsProvider::effectMetaListChanged() const
 {
     return m_effectsChanged;
-}
-
-EffectCategoryList EffectsProvider::effectsCategoryList() const
-{
-    EffectCategoryList list;
-    list.push_back({ BUILTIN_CATEGORY_ID, muse::mtrc("effects", "Built-in") });
-    if (isVstSupported()) {
-        list.push_back({ VST_CATEGORY_ID, muse::mtrc("effects", "VST") });
-    }
-
-    return list;
 }
 
 EffectMeta EffectsProvider::meta(const EffectId& effectId) const

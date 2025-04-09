@@ -40,6 +40,8 @@ Q_MOC_INCLUDE(< QWindow >)
 #include "internal/iappmenumodelhook.h"
 #include "global/iglobalconfiguration.h"
 #include "effects/effects_base/ieffectsprovider.h"
+#include "effects/effects_base/ieffectsconfiguration.h"
+#include "effects/effects_base/effectstypes.h"
 #include "trackedit/iprojecthistory.h"
 
 //! TODO AU4
@@ -49,7 +51,7 @@ Q_MOC_INCLUDE(< QWindow >)
 // #include "update/iupdateconfiguration.h"
 
 namespace au::appshell {
-class AppMenuModel : public muse::uicomponents::AbstractMenuModel
+class AppMenuModel : public muse::uicomponents::AbstractMenuModel, public effects::IEffectMenuItemFactory
 {
     Q_OBJECT
 
@@ -63,6 +65,7 @@ public:
     muse::Inject<IAppShellConfiguration> configuration = { this };
     muse::Inject<IAppMenuModelHook> appMenuModelHook = { this };
     muse::Inject<effects::IEffectsProvider> effectsProvider = { this };
+    muse::Inject<effects::IEffectsConfiguration> effectsConfiguration = { this };
     muse::Inject<trackedit::IProjectHistory> projectHistory = { this };
 
     //! TODO AU4
@@ -79,6 +82,12 @@ public:
 
 private:
     void setupConnections();
+    void onEffectsChanged();
+
+    // effects::IEffectMenuItemFactory
+    muse::uicomponents::MenuItem* makeMenuSeparator() override { return makeSeparator(); }
+    muse::uicomponents::MenuItem* makeMenuEffectItem(const effects::EffectId& effectId) override;
+    muse::uicomponents::MenuItem* makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items) override;
 
     using muse::uicomponents::AbstractMenuModel::makeMenuItem;
     muse::uicomponents::MenuItem* makeMenuItem(const muse::actions::ActionCode& actionCode, muse::uicomponents::MenuItemRole role);
@@ -115,6 +124,7 @@ private:
     muse::uicomponents::MenuItemList makeWorkspacesItems();
     muse::uicomponents::MenuItemList makeShowItems();
     muse::uicomponents::MenuItemList makeEffectsItems();
+    muse::uicomponents::MenuItemList makeGeneratorItems();
 
     void setItemIsChecked(const QString& itemId, bool checked);
 
