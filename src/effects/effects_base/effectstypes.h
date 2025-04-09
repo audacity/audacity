@@ -34,8 +34,15 @@ using RealtimeEffectStatePtr = std::shared_ptr<RealtimeEffectState>;
 using TrackId = long;
 using EffectChainLinkIndex = int;
 
+enum class EffectFamily {
+    Unknown = -1,
+    Builtin,
+    VST3,
+};
+
 struct EffectMeta {
     EffectId id;
+    EffectFamily family = EffectFamily::Unknown;
     muse::String title;
     muse::String description;
     muse::String version;
@@ -54,6 +61,8 @@ using EffectMetaList = std::vector<EffectMeta>;
 constexpr const char16_t* EFFECT_OPEN_ACTION = u"action://effects/open?effectId=%1";
 constexpr const char16_t* REALTIME_EFFECT_ADD_ACTION = u"action://effects/realtime-add?effectId=%1";
 constexpr const char16_t* REALTIME_EFFECT_REPLACE_ACTION = u"action://effects/realtime-replace?effectId=%1";
+
+constexpr const char16_t* EFFECT_VIEWER_URI = u"audacity://effects/effect_viewer?instanceId=%1&isVst=%2";
 
 inline muse::actions::ActionQuery makeEffectAction(const char16_t* action, const EffectId id)
 {

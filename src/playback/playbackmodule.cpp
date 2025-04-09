@@ -1,27 +1,21 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "playbackmodule.h"
 
 #include <QQmlEngine>
 #include <QtQml>
 
-#include "modularity/ioc.h"
-
-#include "ui/iuiactionsregister.h"
-
 #include "internal/playbackconfiguration.h"
 #include "internal/playbackcontroller.h"
 #include "internal/playbackuiactions.h"
-
 #include "internal/au3/au3playback.h"
 #include "internal/au3/au3trackplaybackcontrol.h"
-
 #include "view/common/playbackstatemodel.h"
-
 #include "view/toolbars/components/timecodemodeselector.h"
 #include "view/toolbars/components/timecodemodel.h"
 #include "view/toolbars/components/bpmmodel.h"
+
+#include "playbackmodule.h"
 
 using namespace au::playback;
 using namespace muse;
@@ -49,7 +43,6 @@ void PlaybackModule::registerExports()
     ioc()->registerExport<PlaybackConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IPlaybackController>(moduleName(), m_controller);
     ioc()->registerExport<playback::IPlayback>(moduleName(), m_playback);
-
     ioc()->registerExport<ITrackPlaybackControl>(moduleName(), new Au3TrackPlaybackControl());
 }
 
@@ -84,15 +77,13 @@ void PlaybackModule::onInit(const IApplication::RunMode& mode)
         return;
     }
 
-    m_controller->init();
-
     if (mode != IApplication::RunMode::GuiApp) {
         return;
     }
 
-    m_uiActions->init();
-
     m_configuration->init();
+    m_uiActions->init();
+    m_controller->init();
 }
 
 void PlaybackModule::onDeinit()

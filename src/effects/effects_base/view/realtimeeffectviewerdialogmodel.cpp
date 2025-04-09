@@ -34,6 +34,10 @@ void RealtimeEffectViewerDialogModel::load()
             emit isActiveChanged();
         }
     });
+
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]{
+        emit isActiveChanged();
+    });
 }
 
 bool RealtimeEffectViewerDialogModel::isVst3() const
@@ -87,6 +91,7 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
 
     emit isActiveChanged();
     emit trackNameChanged();
+    emit titleChanged();
     emit isMasterEffectChanged();
 }
 
@@ -109,6 +114,12 @@ QString RealtimeEffectViewerDialogModel::prop_trackName() const
     }
 
     return QString::fromStdString(*trackName);
+}
+
+QString RealtimeEffectViewerDialogModel::prop_title() const
+{
+    const auto effectName = realtimeEffectService()->effectName(m_effectState);
+    return effectName.has_value() ? QString::fromStdString(*effectName) : QString();
 }
 
 void RealtimeEffectViewerDialogModel::subscribe()

@@ -1,0 +1,4 @@
+# TODO: move to common controls
+module Preferences
+IncrementalPropertyControlWithTitle 1.0 internal/IncrementalPropertyControlWithTitle.qml
+ComboBoxWithTitle 1.0 internal/ComboBoxWithTitle.qml

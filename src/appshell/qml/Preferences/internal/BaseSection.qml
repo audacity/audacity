@@ -38,6 +38,7 @@ Column {
     property int rowSpacing: 12
 
     property int navigationOrderStart: 0
+    property int navigationOrderEnd: 0
     property NavigationPanel navigation: NavigationPanel {
         name: root.title
         direction: NavigationPanel.Vertical

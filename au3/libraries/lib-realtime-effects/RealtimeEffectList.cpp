@@ -33,11 +33,7 @@ std::unique_ptr<ClientData::Cloneable<> > RealtimeEffectList::Clone() const
 
 RealtimeEffectList& RealtimeEffectList::operator=(const RealtimeEffectList& other)
 {
-    mStates.clear();
-    mStates.reserve(other.mStates.size());
-    for (auto& pState : other.mStates) {
-        mStates.push_back(std::make_shared<RealtimeEffectState>(*pState));
-    }
+    mStates = other.mStates;
     SetActive(other.IsActive());
     return *this;
 }

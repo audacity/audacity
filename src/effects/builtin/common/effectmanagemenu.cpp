@@ -30,6 +30,11 @@ void EffectManageMenu::load()
 void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
     MenuItemList items;
+    QVariantList presets;
+
+    presets << QVariantMap {
+        { "id", "default" },
+        { "name", muse::qtrc("effects", "Default preset") } };
 
     auto makeApplyAction = [](const EffectInstanceId& iid, const PresetId& p) {
         ActionQuery q("action://effects/presets/apply");
@@ -51,6 +56,10 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
                 MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), TranslatableString::untranslatable(name));
                 item->setId("user_apply_" + name);
                 subitems << item;
+
+                presets << QVariantMap {
+                    { "id", name.toQString() },
+                    { "name", name.toQString() } };
             }
             menuItem->setSubitems(subitems);
         }
@@ -99,8 +108,13 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         for (const PresetId& p : factoryPresets) {
             String name = au3::wxToString(p);
             MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), TranslatableString::untranslatable(name));
-            item->setId("factory_apply_" + name);
+            QString id = "factory_apply_" + name;
+            item->setId(id);
             subitems << item;
+
+            presets << QVariantMap {
+                { "id", name.toQString() },
+                { "name", name.toQString() } };
         }
         menuItem->setSubitems(subitems);
 
@@ -125,6 +139,8 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     }
 
     setItems(items);
+    m_presets = presets;
+    emit presetsChanged();
 }
 
 QString EffectManageMenu::instanceId_prop() const
@@ -139,4 +155,40 @@ void EffectManageMenu::setInstanceId_prop(const QString& newInstanceId)
     }
     m_instanceId = newInstanceId;
     emit instanceIdChanged();
+}
+
+QVariantList EffectManageMenu::presets()
+{
+    return m_presets;
+}
+
+QString EffectManageMenu::preset() const
+{
+    return m_currentPreset;
+}
+
+void EffectManageMenu::setPreset(QString presetId)
+{
+    m_currentPreset = presetId;
+    resetPreset();
+    emit presetChanged();
+}
+
+void EffectManageMenu::resetPreset()
+{
+    const EffectInstanceId instanceId = m_instanceId.toULongLong();
+    ActionQuery q("action://effects/presets/apply");
+    q.addParam("instanceId", Val(instanceId));
+    q.addParam("presetId", Val(m_currentPreset.toStdString()));
+    dispatcher()->dispatch(q);
+}
+
+void EffectManageMenu::savePresetAs()
+{
+    const EffectInstanceId instanceId = m_instanceId.toULongLong();
+    ActionQuery q("action://effects/presets/save");
+    q.addParam("instanceId", Val(instanceId));
+    dispatcher()->dispatch(q);
+    emit presetsChanged();
+    emit presetChanged();
 }

@@ -8,7 +8,7 @@
 
 using namespace au::au3;
 
-namespace au::testutility {
+namespace au::trackedit {
 TrackTemplateFactory::TrackTemplateFactory(au::au3::Au3Project& project, double sampleRate)
     : m_project(project)
     , m_sampleRate(sampleRate)

@@ -240,11 +240,11 @@
     </SC>
     <SC>
         <key>paste-insert</key>
-        <seq>Ctrl+Shift+V</seq>
+        <seq>Shift+V</seq>
     </SC>
     <SC>
         <key>paste-insert-all-tracks-ripple</key>
-        <seq>Ctrl+Alt+V</seq>
+        <seq>Ctrl+Shift+V</seq>
     </SC>
     <SC>
         <key>duplicate</key>
@@ -859,6 +859,10 @@
         <key>play</key>
         <seq>Space</seq>
         <seq>Shift+Space</seq>
+    </SC>
+    <SC>
+        <key>stop-record</key>
+        <seq>Space</seq>
     </SC>
     <SC>
         <key>play-one-sec</key>

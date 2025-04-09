@@ -101,11 +101,6 @@ bool TrackeditInteraction::copyClipIntoClipboard(const trackedit::ClipKey& clipK
     return m_interaction->copyClipIntoClipboard(clipKey);
 }
 
-bool TrackeditInteraction::copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end)
-{
-    return m_interaction->copyClipDataIntoClipboard(clipKey, begin, end);
-}
-
 bool TrackeditInteraction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
 {
     return m_interaction->copyNonContinuousTrackDataIntoClipboard(trackId, clipKeys, offset);

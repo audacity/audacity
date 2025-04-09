@@ -13,6 +13,12 @@
 
 using namespace au::effects;
 
+VstViewModel::~VstViewModel()
+{
+    m_settingUpdateTimer.stop();
+    QObject::disconnect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUi);
+}
+
 void VstViewModel::init()
 {
     EffectInstanceId id = this->instanceId();
@@ -39,7 +45,44 @@ void VstViewModel::init()
         settingsFromView();
     });
 
+    realtimeEffectService()->effectSettingsChanged().onNotify(this, [this]() {
+        settingsToView();
+    });
+
+    m_auVst3Instance->GetWrapper().ParamChangedHandler = [this](Steinberg::Vst::ParamID) {
+        projectHistory()->modifyState();
+        projectHistory()->markUnsaved();
+    };
+
     settingsToView();
+
+    QObject::connect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUi);
+
+    // When playback is idle (see VstViewModel::event), no need for setting updates to be low-latency. Every 100ms is plenty.
+    m_settingUpdateTimer.start(std::chrono::milliseconds { 100 });
+}
+
+void VstViewModel::checkSettingChangesFromUi()
+{
+    if (m_auVst3Instance->GetWrapper().IsActive()) {
+        // While playback is active, setting updates are taken care of by AU3 backend.
+        return;
+    }
+
+    bool hasChanges { false };
+    m_settingsAccess->ModifySettings([this, &hasChanges](EffectSettings& settings)
+    {
+        auto& wrapper = m_auVst3Instance->GetWrapper();
+        wrapper.FlushParameters(settings, &hasChanges);
+        if (hasChanges) {
+            wrapper.StoreSettings(settings);
+        }
+        return nullptr;
+    });
+
+    if (hasChanges) {
+        m_settingsAccess->Flush();
+    }
 }
 
 void VstViewModel::settingsToView()

@@ -38,8 +38,6 @@ void ClipsListModel::init()
         return;
     }
 
-    dispatcher()->reg(this, "clip-rename", this, &ClipsListModel::onClipRenameAction);
-
     onSelectedClips(selectionController()->selectedClips());
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList& keyList) {
         if (keyList.empty()) {
@@ -65,6 +63,18 @@ void ClipsListModel::init()
         Q_UNUSED(style);
         emit clipStyleChanged();
         update();
+    });
+
+    projectSceneConfiguration()->stereoHeightsPrefChanged().onNotify(this, [this] {
+        emit asymmetricStereoHeightsPossibleChanged();
+    });
+
+    projectSceneConfiguration()->asymmetricStereoHeightsWorkspacesChanged().onNotify(this, [this] {
+        emit asymmetricStereoHeightsPossibleChanged();
+    });
+
+    workspacesManager()->currentWorkspaceChanged().onNotify(this, [this]() {
+        emit asymmetricStereoHeightsPossibleChanged();
     });
 
     reload();
@@ -366,22 +376,6 @@ void ClipsListModel::clearSelectedItems()
     m_selectedItems.clear();
 }
 
-void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
-{
-    IF_ASSERT_FAILED(args.count() > 0) {
-        return;
-    }
-
-    trackedit::ClipKey key = args.arg<trackedit::ClipKey>(0);
-    int idx = indexByKey(key);
-
-    IF_ASSERT_FAILED(idx != -1) {
-        return;
-    }
-
-    emit requestClipTitleEdit(idx);
-}
-
 bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
 {
     bool ok = trackeditInteraction()->changeClipTitle(key.key, newTitle);
@@ -504,6 +498,21 @@ void ClipsListModel::openClipSpeedEdit(const ClipKey& key)
 void ClipsListModel::resetClipSpeed(const ClipKey& key)
 {
     trackeditInteraction()->resetClipSpeed(key.key);
+}
+
+bool ClipsListModel::asymmetricStereoHeightsPossible() const
+{
+    auto pref = projectSceneConfiguration()->stereoHeightsPref();
+    if (pref == projectscene::StereoHeightsPref::AsymmetricStereoHeights::ALWAYS) {
+        return true;
+    } else if (pref == projectscene::StereoHeightsPref::AsymmetricStereoHeights::WORKSPACE_DEPENDENT) {
+        std::string currentWorkspace = workspacesManager()->currentWorkspace()->name();
+        if (muse::contains(projectSceneConfiguration()->asymmetricStereoHeightsWorkspaces(), currentWorkspace)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 au::projectscene::ClipKey ClipsListModel::updateClipTrack(ClipKey clipKey) const

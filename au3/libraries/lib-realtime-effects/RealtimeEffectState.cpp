@@ -348,16 +348,13 @@ RealtimeEffectState::RealtimeEffectState(const PluginID& id)
     BuildAll();
 }
 
-RealtimeEffectState::RealtimeEffectState(const RealtimeEffectState& other)
-    : RealtimeEffectState(other.mID)
-{
-    *this = other;
-}
-
-RealtimeEffectState& RealtimeEffectState::operator =(const RealtimeEffectState& other)
+RealtimeEffectState& RealtimeEffectState::operator=(const RealtimeEffectState& other)
 {
     assert(other.mID == mID);
     SetActive(other.IsActive());
+    if (!mPlugin || !other.mPlugin) {
+        return *this;
+    }
     CommandParameters params;
     if (other.mPlugin->SaveSettings(mMainSettings.settings, params)) {
         mPlugin->LoadSettings(params, mMainSettings.settings);

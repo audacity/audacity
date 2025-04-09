@@ -152,6 +152,9 @@ void TracksListModel::selectRow(int row, bool exclusive)
         m_selectionModel->select(index(row));
     }
 
+    //! NOTE: Selecting a track unselects all clips
+    selectionController()->resetSelectedClips();
+
     projectHistory()->modifyState();
 }
 
@@ -220,6 +223,11 @@ void TracksListModel::removeSelectedRows()
     removeRows(firstIndex.row(), selectedIndexList.size(), firstIndex.parent());
 }
 
+void TracksListModel::removeSelection()
+{
+    dispatcher()->dispatch("delete");
+}
+
 void TracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
 {
     std::vector<TrackId> tracksToMove;
@@ -235,12 +243,12 @@ bool TracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, i
 {
     setLoadingBlocked(true);
 
-    int sourceFirstRow = sourceRow;
-    int sourceLastRow = sourceRow + count - 1;
-    int destinationRow = destinationChild + 1;
-
-    NOT_IMPLEMENTED;
     // todo: move
+    NOT_IMPLEMENTED;
+
+    //int sourceFirstRow = sourceRow;
+    //int sourceLastRow = sourceRow + count - 1;
+    //int destinationRow = destinationChild + 1;
 
     // if (m_dragInProgress) {
     //     m_activeDragMoveParams = sourceParentItem->buildMoveParams(sourceRow, count, destinationParentItem, destinationRow);

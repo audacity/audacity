@@ -91,10 +91,8 @@ size_t au::trackedit::utils::getTrackIndex(const au3::Au3TrackList& tracks, cons
 
 void au::trackedit::utils::exchangeTrack(au3::Au3TrackList& tracks, au3::Au3WaveTrack& oldOne, au3::Au3WaveTrack& newOne)
 {
-    const auto i = getTrackIndex(tracks, oldOne);
-    tracks.Remove(oldOne);
-    constexpr auto assignId = false;
-    tracks.Insert(getWaveTrack(tracks, TrackIndex { i }), newOne.shared_from_this(), assignId);
+    auto tmp = TrackList::Temporary(nullptr, newOne.shared_from_this());
+    tracks.ReplaceOne(oldOne, std::move(*tmp));
 }
 
 au::au3::Au3WaveTrack* au::trackedit::utils::toggleStereo(au3::Au3TrackList& tracks, size_t trackIndex)

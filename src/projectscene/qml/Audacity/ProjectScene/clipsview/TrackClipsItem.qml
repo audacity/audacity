@@ -52,10 +52,6 @@ Item {
 
     ClipsListModel {
         id: clipsModel
-
-        onRequestClipTitleEdit: function(index){
-            repeator.itemAt(index).editTitle()
-        }
     }
 
     TracksViewStateModel {
@@ -254,6 +250,7 @@ Item {
                 multiSampleEdit: clipsContainer.multiSampleEdit
                 altPressed: root.altPressed
                 selectionInProgress: root.selectionInProgress || root.selectionEditInProgress
+                asymmetricStereoHeightsPossible: clipsModel.asymmetricStereoHeightsPossible
 
                 //! NOTE: use the same integer rounding as in WaveBitmapCache
                 selectionStart: root.context.selectionStartPosition < clipItem.x ? 0 : Math.floor(root.context.selectionStartPosition - clipItem.x + 0.5)

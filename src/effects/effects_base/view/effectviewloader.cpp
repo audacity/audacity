@@ -37,6 +37,14 @@ EffectViewLoader::EffectViewLoader(QObject* parent)
     : QObject(parent)
 {}
 
+EffectViewLoader::~EffectViewLoader()
+{
+    if (m_contentItem) {
+        m_contentItem->deleteLater();
+        m_contentItem = nullptr;
+    }
+}
+
 void EffectViewLoader::load(const QString& instanceId, QObject* itemParent)
 {
     LOGD() << "instanceId: " << instanceId;

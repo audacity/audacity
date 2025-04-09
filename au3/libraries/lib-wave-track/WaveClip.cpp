@@ -442,6 +442,9 @@ void WaveClip::SetSamples(size_t ii,
 {
     StrongInvariantScope scope{ *this };
     assert(ii < NChannels());
+
+    mVersion++;
+
     // use Strong-guarantee
     mSequences[ii]->SetSamples(buffer, format,
                                start + TimeToSamples(mTrimLeft), len, effectiveFormat);

@@ -51,7 +51,6 @@ public:
     bool cutClipIntoClipboard(const ClipKey& clipKey) override;
     bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
-    bool copyClipDataIntoClipboard(const trackedit::ClipKey& clipKey, secs_t begin, secs_t end) override;
     bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
     bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
@@ -124,7 +123,9 @@ private:
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
     muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin);
     muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);
-    muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin);
+    muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin,
+                                      bool pasteIntoExistingClip);
+    bool singleClipOnTrack(WaveTrack* waveTrack) const;
     void trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin, secs_t end, std::shared_ptr<WaveClip> otherClip);
     std::optional<secs_t> shortestClipDuration(const ClipKeyList& clipKeys) const;
     bool anyLeftFullyUntrimmed(const ClipKeyList& clipKeys) const;
@@ -178,7 +179,7 @@ private:
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 
     muse::ProgressPtr m_progress;
-    std::atomic<bool> m_busy;
+    std::atomic<bool> m_busy = false;
 
     std::optional<TrackListInfo> m_startTracklistInfo;
     bool m_moveClipsNeedsDownmixing = false;

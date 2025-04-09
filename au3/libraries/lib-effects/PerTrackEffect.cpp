@@ -24,7 +24,6 @@
 #include "AudioGraphTask.h"
 #include "EffectStage.h"
 #include "TimeWarper.h"
-#include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveTrackSink.h"
 #include "WideSampleSource.h"
@@ -49,16 +48,6 @@ bool PerTrackEffect::Instance::ProcessFinalize() noexcept
 
 PerTrackEffect::~PerTrackEffect() = default;
 
-bool PerTrackEffect::DoPass1() const
-{
-    return true;
-}
-
-bool PerTrackEffect::DoPass2() const
-{
-    return false;
-}
-
 bool PerTrackEffect::Process(
     EffectInstance& instance, EffectSettings& settings) const
 {
@@ -73,25 +62,18 @@ bool PerTrackEffect::Process(
                                     EffectOutputTracks::TimeInterval { mT0, mT1 });
     }
 
-    bool bGoodResult = true;
-    // mPass = 1;
-    if (DoPass1()) {
-        auto& myInstance = dynamic_cast<Instance&>(instance);
-        bGoodResult = pThis->ProcessPass(pOutputs->Get(), myInstance, settings);
-        // mPass = 2;
-        if (bGoodResult && DoPass2()) {
-            bGoodResult = pThis->ProcessPass(pOutputs->Get(), myInstance, settings);
-        }
-    }
-    if (bGoodResult) {
+    auto& myInstance = dynamic_cast<Instance&>(instance);
+    const bool goodResult = pThis->DoProcess(pOutputs->Get(), myInstance, settings);
+
+    if (goodResult) {
         pOutputs->Commit();
     }
     DestroyOutputTracks();
-    return bGoodResult;
+    return goodResult;
 }
 
-bool PerTrackEffect::ProcessPass(TrackList& outputs,
-                                 Instance& instance, EffectSettings& settings)
+bool PerTrackEffect::DoProcess(TrackList& outputs,
+                               Instance& instance, EffectSettings& settings)
 {
     const auto duration = settings.extra.GetDuration();
     bool bGoodResult = true;
@@ -345,10 +327,9 @@ bool PerTrackEffect::ProcessPass(TrackList& outputs,
                 }
             }
             if (results) {
-                const auto t1 = ViewInfo::Get(*FindProject()).selectedRegion.t1();
-                PasteTimeWarper warper { t1,
+                PasteTimeWarper warper { mT1,
                                          mT0 + (*results->begin())->GetEndTime() };
-                wt.ClearAndPaste(mT0, t1,
+                wt.ClearAndPaste(mT0, mT1,
                                  static_cast<WaveTrack&>(*results->DetachFirst()),
                                  true, true, &warper);
                 results.reset();

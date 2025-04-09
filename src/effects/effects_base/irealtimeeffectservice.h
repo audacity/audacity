@@ -38,8 +38,10 @@ public:
     virtual muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectReplaced() const = 0;
     virtual muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> realtimeEffectMoved() const = 0;
     virtual muse::async::Channel<TrackId> realtimeEffectStackChanged() const = 0;
+    virtual muse::async::Notification effectSettingsChanged() const = 0;
 
     virtual std::optional<TrackId> trackId(const RealtimeEffectStatePtr& state) const = 0;
+    virtual std::optional<std::string> effectName(const RealtimeEffectStatePtr& state) const = 0;
     virtual std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const = 0;
     virtual std::optional<std::vector<RealtimeEffectStatePtr> > effectStack(TrackId trackId) const = 0;
 

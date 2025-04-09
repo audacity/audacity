@@ -54,7 +54,12 @@ void NoiseViewModel::prop_setAmplitude(double newAmplitude)
 
     bool wasAllowed = isApplyAllowed();
 
+    if (settings<NoiseSettings>().amplitude == newAmplitude) {
+        return;
+    }
+
     mutSettings<NoiseSettings>().amplitude = newAmplitude;
+    emit amplitudeChanged();
 
     if (wasAllowed != isApplyAllowed()) {
         emit isApplyAllowedChanged();
@@ -77,6 +82,10 @@ void NoiseViewModel::prop_setType(int type)
     NoiseSettings::Type noiseType = static_cast<NoiseSettings::Type>(type);
 
     DO_ASSERT(noiseType < NoiseSettings::Type::Count);
+
+    if (settings<NoiseSettings>().type == noiseType) {
+        return;
+    }
 
     mutSettings<NoiseSettings>().type = noiseType;
     emit typeChanged();

@@ -90,6 +90,7 @@ private:
     void openOnlineHandbookPage();
     void openAskForHelpPage();
     void openPreferencesDialog();
+    void openAudioSettingsDialog();
 
     void revertToFactorySettings();
 

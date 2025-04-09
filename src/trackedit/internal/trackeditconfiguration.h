@@ -13,11 +13,16 @@ public:
 
     void init();
 
+    bool pasteAsNewClip() const override;
+    void setPasteAsNewClip(bool value) override;
+    muse::async::Notification pasteAsNewClipChanged() const override;
+
     bool askBeforeConvertingToMonoOrStereo() const override;
     void setAskBeforeConvertingToMonoOrStereo(bool value) override;
     muse::async::Notification askBeforeConvertingToMonoOrStereoChanged() const override;
 
 private:
+    muse::async::Notification m_pasteAsNewClipChanged;
     muse::async::Notification m_askBeforeConvertingToMonoOrStereoChanged;
 };
 }

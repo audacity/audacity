@@ -373,6 +373,17 @@ protected:
     //! Holds some state for duration of playback or recording
     std::unique_ptr<TransportState> mpTransportState;
 
+    /*!
+     * When re-starting playback after pause, there will be samples in the queue from before.
+     * Since those are stale, this method purges them.
+     * That way resuming from pause only plays back newly rendered samples.
+     * @param framesPerBuffer
+     * @param sampleBuffer Buffer for reading purged samples
+     */
+    void PurgeAfterPause(unsigned long framesPerBuffer, float** sampleBuffer);
+
+    std::atomic<bool> mPurgeIsNeeded{ false };
+
 private:
     /*!
      Privatize the inherited array but give access by Extensions().
@@ -528,7 +539,6 @@ public:
     void DelayActions(bool recording);
 
 private:
-
     bool DelayingActions() const;
 
     /** \brief Set the current VU meters - this should be done once after

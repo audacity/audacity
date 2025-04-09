@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 import QtQuick
+import QtQuick.Layouts
 
 import Muse.Ui
 import Muse.UiComponents
@@ -17,10 +18,10 @@ StyledDialogViewWithoutNavigationSection {
 
     property alias viewItem: viewLoader.item
 
-    title: viewItem ? viewItem.title + " - " + viewerModel.trackName : ""
+    title: viewerModel.title + " - " + viewerModel.trackName
 
     contentWidth: viewItem ? Math.max(viewItem.implicitWidth, headerBar.width) : headerBar.width
-    contentHeight: viewItem ? headerBar.height + viewItem.implicitHeight : headerBar.height
+    contentHeight: 2 * 16 + headerBar.height + (viewItem ? viewItem.implicitHeight : 0)
     alwaysOnTop: true
 
     Component.onCompleted: {
@@ -38,56 +39,57 @@ StyledDialogViewWithoutNavigationSection {
         VstViewer {
             id: view
             instanceId: root.instanceId
-            x: (root.width - view.width) / 2
-            y: headerBar.height
+            y: 62
         }
     }
 
     Component {
         id: builtinViewerComponent
-        Row {
-            padding: 8
+        Column {
+            topPadding: 0
+            leftPadding: 16
+            rightPadding: 16
+            bottomPadding: 16
+
             EffectsViewer {
                 id: view
                 instanceId: root.instanceId
-                x: (root.width - view.width) / 2
-                y: headerBar.height
             }
         }
     }
 
-    Row {
-        id: headerBar
+    ColumnLayout {
+        spacing: 0
 
-        padding: 8
-        spacing: 8
+        RowLayout {
+            id: headerBar
 
-        BypassEffectButton {
-            id: bypassBtn
+            Layout.fillWidth: true
+            Layout.margins: 16
+            spacing: presetsBar.spacing
 
-            size: 36
-            isMasterEffect: viewerModel.isMasterEffect
-            accentButton: viewerModel.isActive
+            BypassEffectButton {
+                id: bypassBtn
 
-            onClicked: {
-                viewerModel.isActive = !viewerModel.isActive
+                size: presetsBar.implicitHeight
+                isMasterEffect: viewerModel.isMasterEffect
+                accentButton: viewerModel.isActive
+
+                onClicked: {
+                    viewerModel.isActive = !viewerModel.isActive
+                }
+            }
+
+            EffectPresetsBar {
+                id: presetsBar
+                instanceId: root.instanceId
+                Layout.fillWidth: true
             }
         }
 
-        FlatButton {
-            id: manageBtn
-
-            width: implicitWidth
-            height: bypassBtn.size
-
-            text: qsTrc("effects", "Presets & settings")
-            buttonRole: ButtonBoxModel.CustomRole
-            buttonId: ButtonBoxModel.CustomButton + 1
-            onClicked: viewItem.manage(manageBtn)
+        Loader {
+            id: viewLoader
+            Layout.fillWidth: true
         }
-    }
-
-    Loader {
-        id: viewLoader
     }
 }

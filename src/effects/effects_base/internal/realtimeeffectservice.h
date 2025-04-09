@@ -21,6 +21,8 @@ class AudacityProject;
 class RealtimeEffectList;
 class WaveTrack;
 class RealtimeEffectState;
+class EffectInstanceFactory;
+class wxString;
 struct TrackListEvent;
 
 namespace au3 {
@@ -49,8 +51,10 @@ public:
     muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> realtimeEffectReplaced() const override;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> realtimeEffectMoved() const override;
     muse::async::Channel<TrackId> realtimeEffectStackChanged() const override;
+    muse::async::Notification effectSettingsChanged() const override;
 
     std::optional<TrackId> trackId(const RealtimeEffectStatePtr&) const override;
+    std::optional<std::string> effectName(const RealtimeEffectStatePtr& state) const override;
     std::optional<std::string> effectTrackName(const RealtimeEffectStatePtr& state) const override;
     std::optional<std::vector<RealtimeEffectStatePtr> > effectStack(TrackId trackId) const override;
 
@@ -60,6 +64,8 @@ public:
 
     bool trackEffectsActive(TrackId trackId) const override;
     void setTrackEffectsActive(TrackId trackId, bool active) override;
+
+    static const EffectInstanceFactory* getInstanceFactory(const wxString&);
 
 private:
     void onProjectChanged(const au::project::IAudacityProjectPtr& project);
@@ -79,7 +85,10 @@ private:
     muse::async::Channel<TrackId, RealtimeEffectStatePtr> m_realtimeEffectRemoved;
     muse::async::Channel<TrackId, EffectChainLinkIndex, RealtimeEffectStatePtr> m_realtimeEffectReplaced;
     muse::async::Channel<TrackId, EffectChainLinkIndex, EffectChainLinkIndex> m_realtimeEffectMoved;
+
     muse::async::Channel<TrackId> m_realtimeEffectStackChanged;
+    muse::async::Notification m_effectSettingsChanged;
+
     bool m_trackUndoRedoOngoing = false;
     std::unordered_set<TrackId> m_modifiedTracks;
 };

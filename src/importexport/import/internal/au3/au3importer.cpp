@@ -70,7 +70,6 @@ private:
 bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    auto& projectFileIO = ProjectFileIO::Get(*project);
 
     auto oldTags = Tags::Get(*project).shared_from_this();
     bool committed = false;
@@ -82,7 +81,6 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     auto newTags = oldTags->Duplicate();
     Tags::Set(*project, newTags);
 
-    bool initiallyEmpty = TrackList::Get(*project).empty();
     TrackHolders newTracks;
     TranslatableString errorMessage;
     ImportProgress importProgress(*project);
@@ -104,19 +102,19 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     committed = true;
 
     addImportedTracks(filePath, std::move(newTracks));
+
+    return true;
 }
 
 void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    auto& projectFileIO = ProjectFileIO::Get(*project);
     auto& tracks = TrackList::Get(*project);
 
     std::vector<Track*> results;
 
     wxFileName fn(fileName.toStdString());
 
-    bool initiallyEmpty = tracks.empty();
     double newRate = 0;
     wxString trackNameBase = fn.GetName();
     int i = -1;

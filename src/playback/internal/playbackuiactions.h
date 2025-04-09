@@ -4,16 +4,19 @@
 #ifndef AU_PLAYBACK_PLAYBACKUIACTIONS_H
 #define AU_PLAYBACK_PLAYBACKUIACTIONS_H
 
-#include "ui/iuiactionsmodule.h"
-#include "playbackcontroller.h"
-#include "modularity/ioc.h"
-#include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
+#include "context/iuicontextresolver.h"
+#include "ui/iuiactionsmodule.h"
+#include "ui/iuiactionsregister.h"
+
+#include "iaudiodevicesprovider.h"
+#include "internal/playbackcontroller.h"
 
 namespace au::playback {
 class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
     INJECT(context::IUiContextResolver, uicontextResolver)
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     PlaybackUiActions(std::shared_ptr<PlaybackController> controller);
@@ -30,8 +33,10 @@ public:
 
     static const muse::ui::UiActionList& settingsActions();
     static const muse::ui::UiActionList& loopBoundaryActions();
+    void registerActions();
 
 private:
+    muse::ui::UiActionList m_actions;
     static const muse::ui::UiActionList m_mainActions;
     static const muse::ui::UiActionList m_settingsActions;
     static const muse::ui::UiActionList m_loopBoundaryActions;

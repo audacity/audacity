@@ -1,6 +1,6 @@
 #include "realtimeeffectservice.h"
 
-#include "mastereffectundoredo.h"
+#include "realtimeeffectrestorer.h"
 #include "realtimeeffectserviceutils.h"
 
 #include "libraries/lib-audio-io/AudioIO.h"
@@ -27,15 +27,21 @@ namespace au::effects {
  *
  * Track realtime effects are attached to WaveTrack objects, so whenever there is an undo/redo,
  * the track realtime effect lists are updated and we just need to notify that there was a change.
- * For the master effects, undo and redo are specially handled by the `MasterEffectListRestorer`.
+ * For the master effects, undo and redo are specially handled by the `RealtimeEffectRestorer`.
  *
  * The RealtimeEffectList assignment operator (RealtimeEffectList::operator=) is on purpose silent ;
  * only once the assignment is finished do we send a notification.
  * This allows realtime effect list UI models to not modify things unnecessarily (like closing a realtime effect dialog)
  */
 
+namespace {
+static std::weak_ptr<IEffectsProvider> wEffectsProvider;
+}
+
 void RealtimeEffectService::init()
 {
+    wEffectsProvider = effectsProvider();
+
     globalContext()->currentProjectChanged().onNotify(this, [this]
     { onProjectChanged(globalContext()->currentProject()); });
 
@@ -52,7 +58,7 @@ void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProject
 
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
-    setNotificationChannelForMasterEffectUndoRedo(*au3Project, m_realtimeEffectStackChanged);
+    setRealtimeEffectRestorerSignals(*au3Project, { m_realtimeEffectStackChanged, m_effectSettingsChanged });
 
     auto& trackList = TrackList::Get(*au3Project);
 
@@ -98,6 +104,11 @@ void RealtimeEffectService::registerRealtimeEffectList(TrackId trackId, Realtime
                 return;
         }
     });
+
+    // Proactively load realtime effects.
+    for (auto i = 0u; i < list.GetStatesCount(); ++i) {
+        list.GetStateAt(i)->GetEffect();
+    }
 
     if (m_trackUndoRedoOngoing) {
         m_modifiedTracks.insert(trackId);
@@ -179,6 +190,11 @@ std::optional<TrackId> RealtimeEffectService::trackId(const RealtimeEffectStateP
     return utils::trackId(globalContext()->currentProject(), state);
 }
 
+std::optional<std::string> RealtimeEffectService::effectName(const RealtimeEffectStatePtr& state) const
+{
+    return state ? std::make_optional(getEffectName(*state)) : std::nullopt;
+}
+
 std::optional<std::string> RealtimeEffectService::effectTrackName(const RealtimeEffectStatePtr& state) const
 {
     const auto tId = trackId(state);
@@ -233,6 +249,7 @@ RealtimeEffectStatePtr RealtimeEffectService::addRealtimeEffect(TrackId trackId,
         return nullptr;
     }
 
+    effectsProvider()->loadEffect(effectId);
     if (const auto state = AudioIO::Get()->AddState(*data->au3Project, data->au3Track, effectId.toStdString())) {
         const auto effectName = getEffectName(*state);
         const auto trackName = effectTrackName(trackId);
@@ -281,6 +298,7 @@ RealtimeEffectStatePtr RealtimeEffectService::replaceRealtimeEffect(TrackId trac
         return nullptr;
     }
 
+    effectsProvider()->loadEffect(newEffectId);
     const auto oldState = data->effectList->GetStateAt(effectListIndex);
     if (const auto newState = AudioIO::Get()->ReplaceState(*data->au3Project, data->au3Track, effectListIndex, newEffectId.toStdString())) {
         const auto oldEffectName = getEffectName(*oldState);
@@ -322,23 +340,26 @@ void RealtimeEffectService::moveRealtimeEffect(const RealtimeEffectStatePtr& sta
                                        "Change effect order");
 }
 
-bool RealtimeEffectService::isActive(const RealtimeEffectStatePtr& stateId) const
+bool RealtimeEffectService::isActive(const RealtimeEffectStatePtr& state) const
 {
-    if (stateId == 0) {
+    if (state == nullptr) {
         return false;
     }
-    return stateId->GetSettings().extra.GetActive();
+    return state->GetSettings().extra.GetActive();
 }
 
-void RealtimeEffectService::setIsActive(const RealtimeEffectStatePtr& stateId, bool isActive)
+void RealtimeEffectService::setIsActive(const RealtimeEffectStatePtr& state, bool isActive)
 {
-    if (stateId->GetSettings().extra.GetActive() == isActive) {
+    if (state == nullptr) {
         return;
     }
-    stateId->SetActive(isActive);
+    if (state->GetSettings().extra.GetActive() == isActive) {
+        return;
+    }
+    state->SetActive(isActive);
     projectHistory()->modifyState();
     projectHistory()->markUnsaved();
-    m_isActiveChanged.send(stateId);
+    m_isActiveChanged.send(state);
 }
 
 muse::async::Channel<RealtimeEffectStatePtr> RealtimeEffectService::isActiveChanged() const
@@ -362,6 +383,11 @@ void RealtimeEffectService::setTrackEffectsActive(TrackId trackId, bool active)
     }
 }
 
+muse::async::Notification RealtimeEffectService::effectSettingsChanged() const
+{
+    return m_effectSettingsChanged;
+}
+
 const RealtimeEffectList* RealtimeEffectService::realtimeEffectList(TrackId trackId) const
 {
     const auto data = utils::utilData(globalContext()->currentProject(), trackId);
@@ -380,7 +406,20 @@ std::string RealtimeEffectService::getEffectName(const RealtimeEffectState& stat
 {
     return effectsProvider()->effectName(state.GetID().ToStdString());
 }
+
+const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const PluginID& id)
+{
+    const auto provider = wEffectsProvider.lock();
+    // We don't expect this to be called before the framework is initialized or after it's shut down.
+    IF_ASSERT_FAILED(provider) {
+        return nullptr;
+    }
+    if (!provider->loadEffect(EffectId::fromStdString(id.ToStdString()))) {
+        return nullptr;
+    }
+    return EffectManager::GetInstanceFactory(id);
+}
 }
 
 // Inject a factory for realtime effects
-static RealtimeEffectState::EffectFactory::Scope scope{ &EffectManager::GetInstanceFactory };
+static RealtimeEffectState::EffectFactory::Scope scope{ &au::effects::RealtimeEffectService::getInstanceFactory };

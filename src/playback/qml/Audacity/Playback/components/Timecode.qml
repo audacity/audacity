@@ -26,6 +26,10 @@ RowLayout {
 
     property bool showMenu: true
     property int backgroundLeftRadius: 3
+    property Border border: Border {}
+    property int arrowSpacing: 1
+    property color textColor: ui.theme.fontSecondaryColor
+    property color backgroundColor: ui.theme.backgroundQuarternaryColor
 
     signal valueChangeRequested(var newValue)
 
@@ -41,7 +45,7 @@ RowLayout {
         }
     }
 
-    spacing: 1
+    spacing: root.arrowSpacing
 
     RoundedRectangle {
         Layout.preferredWidth: childrenRect.width
@@ -50,7 +54,8 @@ RowLayout {
         topLeftRadius: root.backgroundLeftRadius
         bottomLeftRadius: root.backgroundLeftRadius
 
-        color: ui.theme.backgroundQuarternaryColor
+        border: root.border
+        color: root.backgroundColor
 
         Item {
             property int margin: 6
@@ -76,6 +81,7 @@ RowLayout {
                         isSelected: model.index === timecodeModel.currentEditedFieldIndex
                         isEditable: editable
 
+                        color: root.textColor
                         enabled: root.enabled
 
                         onClicked: {
@@ -95,6 +101,9 @@ RowLayout {
 
         menuModel: timecodeModel.availableFormats
 
+        border: root.border
+        backgroundColor: root.backgroundColor
+        iconColor: root.textColor
         visible: root.showMenu
 
         onHandleMenuItem: function(itemId) {

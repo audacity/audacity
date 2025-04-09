@@ -45,14 +45,12 @@ void AmplifyViewModel::update()
     }
 
     Param<db_t> amp = ae->amp();
+    db_t newPeak = muse::linear_to_db(ae->ratio() * ae->peak());
+
     if (!muse::is_equal(m_amp.val, amp.val)) {
         m_amp = amp;
-        emit ampChanged();
-    }
-
-    db_t newPeak = muse::linear_to_db(ae->ratio() * ae->peak());
-    if (!muse::is_equal(m_newPeak, newPeak)) {
         m_newPeak = newPeak;
+        emit ampChanged();
         emit newPeakChanged();
     }
 

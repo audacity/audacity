@@ -8,13 +8,14 @@ struct ReverbSettings;
 class ReverbViewModel : public AbstractEffectModel
 {
     Q_OBJECT
-    Q_PROPERTY(QVariantList paramsList READ paramsList NOTIFY paramsListChanged FINAL)
+    Q_PROPERTY(QVariantMap paramsList READ paramsList NOTIFY paramsListChanged FINAL)
+
     Q_PROPERTY(bool wetOnly READ wetOnly WRITE setWetOnly NOTIFY wetOnlyChanged FINAL)
 
 public:
     ReverbViewModel();
 
-    QVariantList paramsList() const;
+    QVariantMap paramsList() const;
 
     Q_INVOKABLE void setParam(const QString& key, double val);
 
@@ -28,10 +29,14 @@ signals:
 private:
 
     void doReload() override;
+    void doUpdateSettings() override
+    {
+        // TODO: let https://github.com/audacity/audacity/pull/8565 get merged and then implement this.
+    }
 
     using Setter = std::function<void (ReverbSettings&, double)>;
 
-    QVariantList m_paramsList;
+    QVariantMap m_paramsList;
     QMap<QString, Setter> m_setters;
 };
 }
