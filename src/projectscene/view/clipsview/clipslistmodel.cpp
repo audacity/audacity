@@ -77,6 +77,8 @@ void ClipsListModel::init()
         emit asymmetricStereoHeightsPossibleChanged();
     });
 
+    dispatcher()->reg(this, "rename-clip", this, &ClipsListModel::requestClipTitleChange);
+
     reload();
 }
 
@@ -816,6 +818,25 @@ void ClipsListModel::selectClip(const ClipKey& key)
 void ClipsListModel::resetSelectedClips()
 {
     clearSelectedItems();
+}
+
+void ClipsListModel::requestClipTitleChange()
+{
+    auto selectedClips = selectionController()->selectedClips();
+
+    if (selectedClips.empty() || selectedClips.size() > 1) {
+        return;
+    }
+
+    trackedit::ClipKey clipKey = selectedClips.front();
+    if (!clipKey.isValid()) {
+        return;
+    }
+
+    ClipListItem* selectedItem = itemByKey(clipKey);
+    if (selectedItem != nullptr) {
+        emit selectedItem->titleEditRequested();
+    }
 }
 
 void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)

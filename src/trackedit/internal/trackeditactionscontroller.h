@@ -116,6 +116,7 @@ private:
     void silenceAudioSelection();
 
     void toggleStretchClipToMatchTempo(const muse::actions::ActionData& args);
+    void openClipPitchAndSpeed();
     void renderClipPitchAndSpeed(const muse::actions::ActionData& args);
 
     void groupClips();

@@ -81,6 +81,7 @@ signals:
     void pitchChanged();
     void speedPercentageChanged();
     void waveChanged();
+    void titleEditRequested();
 
 private:
     trackedit::Clip m_clip;
