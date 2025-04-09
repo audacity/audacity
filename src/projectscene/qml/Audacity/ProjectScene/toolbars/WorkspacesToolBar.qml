@@ -26,7 +26,7 @@ StyledToolBarView {
         id: workspacesModel
     }
 
-    model: isCompactMode ? null : workspacesModel
+    model: workspacesModel
 
     sourceComponentCallback: function(type) {
         switch(type) {
@@ -39,24 +39,44 @@ StyledToolBarView {
     Component {
         id: controlComp
 
-        DropdownWithTitle {
-            id: control
+        Loader {
+            id: loader
 
             property var itemData: null
 
-            width: 228
-            height: root.rowHeight
+            sourceComponent: !root.isCompactMode ? dropdownComp : buttonComp
 
-            title: qsTrc("projectscene", "Workspace")
-            model: Boolean(control.itemData) ? control.itemData.menuItems : null
-            current: Boolean(control.itemData) ? control.itemData.title : ""
+            Component {
+                id: dropdownComp
 
-            allowOptionToggle: false
+                DropdownWithTitle {
+                    property var itemData: loader.itemData
 
-            onHandleMenuItem: function(itemId) {
-                Qt.callLater(root.model.handleWorkspacesMenuItem, itemId)
+                    width: 228
+                    height: root.rowHeight
+
+                    title: qsTrc("projectscene", "Workspace")
+                    model: Boolean(itemData) ? itemData.menuItems : null
+                    current: Boolean(itemData) ? itemData.title : ""
+
+                    allowOptionToggle: false
+
+                    onHandleMenuItem: function(itemId) {
+                        Qt.callLater(root.model.handleWorkspacesMenuItem, itemId)
+                    }
+                }
+            }
+
+            Component {
+                id: buttonComp
+
+                StyledToolBarItem {
+                    itemData: loader.itemData
+
+                    icon: IconCode.WORKSPACE
+                    enabled: true
+                }
             }
         }
     }
 }
-

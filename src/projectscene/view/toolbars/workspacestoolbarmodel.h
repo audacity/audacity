@@ -29,6 +29,5 @@ private:
     void updateState();
 
     std::shared_ptr<muse::uicomponents::AbstractMenuModel> m_workspacesMenuModel;
-    QString m_selectedWorkspaceName;
 };
 }
