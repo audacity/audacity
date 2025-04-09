@@ -35,6 +35,7 @@ public:
     muse::async::Channel<muse::ui::UiActionList> actionsChanged() const override;
 
 private:
+    void makeActions(EffectMetaList effects);
     muse::ui::UiActionList m_actions;
     const std::shared_ptr<EffectsActionsController> m_controller;
     muse::async::Channel<muse::ui::UiActionList> m_actionsChanged;

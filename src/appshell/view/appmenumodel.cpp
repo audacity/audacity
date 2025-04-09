@@ -22,6 +22,7 @@
 #include "appmenumodel.h"
 
 #include "types/translatablestring.h"
+#include "effects/effects_base/effectsutils.h"
 
 #include "muse_framework_config.h"
 
@@ -132,8 +133,11 @@ void AppMenuModel::setupConnections()
     });
 
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
-        MenuItem& effectsItem = findMenu("menu-effect");
-        effectsItem.setSubitems(makeEffectsItems());
+        onEffectsChanged();
+    });
+
+    effectsConfiguration()->effectMenuOrganizationChanged().onNotify(this, [this]() {
+        onEffectsChanged();
     });
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
@@ -347,13 +351,7 @@ MenuItem* AppMenuModel::makeTracksMenu()
 
 MenuItem* AppMenuModel::makeGenerateMenu()
 {
-    MenuItemList generateItems {
-        makeMenuItem("generate-plugin-manager"),
-        makeSeparator(),
-        makeMenuItem("generate-omitted"),
-    };
-
-    return makeMenu(TranslatableString("appshell/menu/generate", "&Generate"), generateItems, "menu-generate");
+    return makeMenu(TranslatableString("appshell/menu/generate", "&Generate"), makeGeneratorItems(), "menu-generate");
 }
 
 MenuItem* AppMenuModel::makeEffectMenu()
@@ -780,6 +778,17 @@ MenuItemList AppMenuModel::makeShowItems()
     return items;
 }
 
+muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
+{
+    return makeMenuItem(effects::makeEffectAction(effects::EFFECT_OPEN_ACTION,
+                                                  effectId).toString());
+}
+
+muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items)
+{
+    return makeMenu(TranslatableString::untranslatable(title), items);
+}
+
 MenuItemList AppMenuModel::makeEffectsItems()
 {
     MenuItemList items {
@@ -787,26 +796,42 @@ MenuItemList AppMenuModel::makeEffectsItems()
         makeMenuItem("add-realtime-effects"),
         makeSeparator(),
         makeMenuItem("repeat-last-effect"),
-        makeSeparator(),
-        makeMenuItem("favourite-effect-1"),
-        makeMenuItem("favourite-effect-2"),
-        makeMenuItem("favourite-effect-3"),
-        makeMenuItem("insert-silence"),
-        makeSeparator(),
     };
 
-    std::map<muse::String, MenuItemList> effectsToCategoryMap;
-
-    effects::EffectMetaList metaList = effectsProvider()->effectMetaList();
-
-    for (const effects::EffectMeta& meta : metaList) {
-        MenuItem* item = makeMenuItem(effects::makeEffectAction(effects::EFFECT_OPEN_ACTION, meta.id).toString());
-        effectsToCategoryMap[meta.categoryId].push_back(item);
-    }
-
-    for (const effects::EffectCategory& category : effectsProvider()->effectsCategoryList()) {
-        items << makeMenu(TranslatableString::untranslatable(category.title), effectsToCategoryMap[category.id]);
+    const effects::utils::EffectFilter filter = [](const effects::EffectMeta& meta) {
+        return meta.type != effects::EffectType::Processor;
+    };
+    const muse::uicomponents::MenuItemList effectMenus = effects::utils::effectMenus(effectsConfiguration()->effectMenuOrganization(),
+                                                                                     effectsProvider()->effectMetaList(), filter,  *this);
+    if (!effectMenus.empty()) {
+        items << makeSeparator() << effectMenus;
     }
 
     return items;
+}
+
+MenuItemList AppMenuModel::makeGeneratorItems()
+{
+    MenuItemList items {
+        makeMenuItem("generate-plugin-manager"),
+        makeSeparator(),
+    };
+
+    const effects::utils::EffectFilter filter = [](const effects::EffectMeta& meta) {
+        return meta.type != effects::EffectType::Generator;
+    };
+    const muse::uicomponents::MenuItemList effectMenus = effects::utils::effectMenus(effectsConfiguration()->effectMenuOrganization(),
+                                                                                     effectsProvider()->effectMetaList(), filter,  *this);
+
+    items << effectMenus;
+
+    return items;
+}
+
+void AppMenuModel::onEffectsChanged()
+{
+    MenuItem& effectsItem = findMenu("menu-effect");
+    effectsItem.setSubitems(makeEffectsItems());
+    MenuItem& generateItem = findMenu("menu-generate");
+    generateItem.setSubitems(makeGeneratorItems());
 }

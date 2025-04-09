@@ -12,6 +12,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/effecterrors.h
     ${CMAKE_CURRENT_LIST_DIR}/effectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/effectsmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/effectsutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/effectsutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/effectstypes.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h

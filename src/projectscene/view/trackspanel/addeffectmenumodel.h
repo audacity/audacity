@@ -17,6 +17,10 @@ public:
 private:
     void handleMenuItem(const QString& itemId) override;
 
+    // effects::IEffectMenuItemFactory
+    muse::uicomponents::MenuItem* makeMenuEffectItem(const effects::EffectId& effectId) override;
+    muse::uicomponents::MenuItem* makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items) override;
+
     void doLoad() override;
     void doPopulateMenu() override;
 };

@@ -15,8 +15,9 @@ void RealtimeEffectMenuModelBase::load()
 {
     AbstractMenuModel::load();
 
-    effectsProvider()->effectMetaListChanged().onNotify(this, [this]
-    { doPopulateMenu(); });
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this] { doPopulateMenu(); });
+
+    effectsConfiguration()->realtimeEffectOrganizationChanged().onNotify(this, [this]{ doPopulateMenu(); });
 
     trackSelection()->selectedTrackIdChanged().onNotify(this, [this]
     {
