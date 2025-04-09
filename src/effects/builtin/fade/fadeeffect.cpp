@@ -12,7 +12,7 @@ FadeEffectBase::~FadeEffectBase()
 
 // EffectDefinitionInterface implementation
 
-EffectType FadeEffectBase::GetType() const
+::EffectType FadeEffectBase::GetType() const
 {
     return EffectTypeProcess;
 }

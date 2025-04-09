@@ -56,7 +56,7 @@ ManualPageID DtmfGenerator::ManualPage() const
 
 // EffectDefinitionInterface implementation
 
-EffectType DtmfGenerator::GetType() const
+::EffectType DtmfGenerator::GetType() const
 {
     return EffectTypeGenerate;
 }

@@ -48,7 +48,7 @@ ManualPageID NoiseGenerator::ManualPage() const
 }
 
 // EffectDefinitionInterface implementation
-EffectType NoiseGenerator::GetType() const
+::EffectType NoiseGenerator::GetType() const
 {
     return EffectTypeGenerate;
 }

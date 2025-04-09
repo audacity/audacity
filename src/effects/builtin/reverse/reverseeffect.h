@@ -16,7 +16,7 @@ public:
     TranslatableString GetDescription() const override;
 
     // EffectDefinitionInterface implementation
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
     bool IsInteractive() const override;
 
     // Effect implementation
