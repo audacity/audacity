@@ -11,7 +11,7 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
     bool IsInteractive() const override;
 
     unsigned GetAudioInCount() const override;

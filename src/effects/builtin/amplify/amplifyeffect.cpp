@@ -127,7 +127,7 @@ bool AmplifyEffect::isApplyAllowed() const
     return false;
 }
 
-EffectType AmplifyEffect::GetType() const
+::EffectType AmplifyEffect::GetType() const
 {
     return EffectTypeProcess;
 }

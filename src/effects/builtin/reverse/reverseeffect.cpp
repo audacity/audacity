@@ -29,7 +29,7 @@ TranslatableString ReverseEffect::GetDescription() const
 
 // EffectDefinitionInterface implementation
 
-EffectType ReverseEffect::GetType() const
+::EffectType ReverseEffect::GetType() const
 {
     return EffectTypeProcess;
 }

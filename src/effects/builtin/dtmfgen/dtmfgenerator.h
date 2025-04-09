@@ -53,7 +53,7 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
 
     //! Temporary state of the computation
     struct Instance : PerTrackEffect::Instance, EffectInstanceWithBlockSize

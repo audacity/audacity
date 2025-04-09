@@ -79,7 +79,7 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings) const override;
 
