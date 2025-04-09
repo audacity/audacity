@@ -139,6 +139,10 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
         return !playbackController()->isPlaying();
     }
 
+    if (code == STOP_CODE) {
+        return isRecording();
+    }
+
     return true;
 }
 
