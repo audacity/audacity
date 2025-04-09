@@ -52,6 +52,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dtmfgen/dtmfviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dtmfgen/dtmfviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/silencegen/silencegenerator.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/silencegen/silencegenerator.h
+    ${CMAKE_CURRENT_LIST_DIR}/silencegen/silenceviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.h
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.cpp
@@ -82,6 +86,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-builtin-effects/ToneGenBase.h
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.cpp
     ${AU3_LIBRARIES}/lib-builtin-effects/Generator.h
+    ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.cpp
+    ${AU3_LIBRARIES}/lib-builtin-effects/SilenceBase.h
 )
 
 set(AU3_DEF ${AU3_DEF}

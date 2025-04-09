@@ -116,7 +116,11 @@ void GeneratorEffectModel::prop_setDurationFormat(const QString& newDurationForm
 
 bool GeneratorEffectModel::isApplyAllowed() const
 {
-    return generatorEffect()->isApplyAllowed();
+    const auto e = generatorEffect();
+    if (!e) {
+        return false;
+    }
+    return e->isApplyAllowed();
 }
 
 void GeneratorEffectModel::update()
