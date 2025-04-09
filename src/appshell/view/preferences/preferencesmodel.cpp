@@ -172,7 +172,8 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("editing", QT_TRANSLATE_NOOP("appshell/preferences",
                                               "Editing"), IconCode::Code::EDIT, "Preferences/EditPreferencesPage.qml"),
 
-        makeItem("plugin", QT_TRANSLATE_NOOP("appshell/preferences", "Plugins"), IconCode::Code::PLUGIN, ""),
+        makeItem("plugin", QT_TRANSLATE_NOOP("appshell/preferences",
+                                             "Plugins"), IconCode::Code::PLUGIN, "Preferences/PluginPreferencesPage.qml"),
 
         makeItem("music", QT_TRANSLATE_NOOP("appshell/preferences", "Music"), IconCode::Code::METRONOME, ""),
 

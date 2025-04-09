@@ -89,6 +89,8 @@ set(MODULE_SRC
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/pluginpreferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/pluginpreferencesmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/preferences/editpreferencesmodel.cpp
