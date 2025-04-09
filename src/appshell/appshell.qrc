@@ -33,6 +33,7 @@
         <file>qml/Preferences/AdvancedPreferencesPage.qml</file>
         <file>qml/Preferences/CanvasPreferencesPage.qml</file>
         <file>qml/Preferences/EditPreferencesPage.qml</file>
+        <file>qml/Preferences/PluginPreferencesPage.qml</file>
         <file>qml/Preferences/ScorePreferencesPage.qml</file>
         <file>qml/Preferences/ShortcutsPreferencesPage.qml</file>
         <file>qml/Preferences/ImportPreferencesPage.qml</file>
@@ -43,6 +44,7 @@
         <file>qml/Preferences/PreferencesDialog.qml</file>
         <file>qml/Preferences/internal/PreferencesButtonsPanel.qml</file>
         <file>qml/Preferences/internal/PreferencesMenu.qml</file>
+        <file>qml/Preferences/internal/EffectOptionsSection.qml</file>
         <file>qml/Preferences/internal/ThemesSection.qml</file>
         <file>qml/Preferences/internal/ClipStyleSection.qml</file>
         <file>qml/Preferences/internal/AccentColorsSection.qml</file>

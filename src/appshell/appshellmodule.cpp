@@ -45,6 +45,7 @@
 #include "view/preferences/preferencesmodel.h"
 #include "view/preferences/generalpreferencesmodel.h"
 #include "view/preferences/editpreferencesmodel.h"
+#include "view/preferences/pluginpreferencesmodel.h"
 // #include "view/preferences/updatepreferencesmodel.h"
 #include "view/preferences/appearancepreferencesmodel.h"
 // #include "view/preferences/folderspreferencesmodel.h"
@@ -147,6 +148,7 @@ void AppShellModule::registerUiTypes()
     qmlRegisterType<PreferencesModel>("Audacity.Preferences", 1, 0, "PreferencesModel");
     qmlRegisterType<GeneralPreferencesModel>("Audacity.Preferences", 1, 0, "GeneralPreferencesModel");
     qmlRegisterType<EditPreferencesModel>("Audacity.Preferences", 1, 0, "EditPreferencesModel");
+    qmlRegisterType<PluginPreferencesModel>("Audacity.Preferences", 1, 0, "PluginPreferencesModel");
     // qmlRegisterType<UpdatePreferencesModel>("MuseScore.Preferences", 1, 0, "UpdatePreferencesModel");
     qmlRegisterType<AppearancePreferencesModel>("Audacity.Preferences", 1, 0, "AppearancePreferencesModel");
     // qmlRegisterType<FoldersPreferencesModel>("MuseScore.Preferences", 1, 0, "FoldersPreferencesModel");
