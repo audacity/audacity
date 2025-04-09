@@ -557,7 +557,9 @@ Rectangle {
 
                     onClicked: {
                         if (!root.multiClipsSelected) {
-                            root.requestSelectionReset()
+                            if (!root.clipSelected) {
+                                root.requestSelectionReset()
+                            }
                             root.requestSelected()
                         }
                     }

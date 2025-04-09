@@ -45,6 +45,7 @@ static const ActionCode CLIP_DELETE_CODE("clip-delete");
 static const ActionCode MULTI_CLIP_DELETE_CODE("multi-clip-delete");
 static const ActionCode RANGE_SELECTION_DELETE_CODE("clip-delete-selected");
 
+static const ActionCode OPEN_CLIP_AND_SPEED_CODE("clip-pitch-speed-open");
 static const ActionCode CLIP_RENDER_PITCH_AND_SPEED_CODE("clip-render-pitch-speed");
 static const ActionCode TRACK_SPLIT("track-split");
 static const ActionCode TRACK_SPLIT_AT("track-split-at");
@@ -168,6 +169,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, MULTI_CLIP_DELETE_CODE, this, &TrackeditActionsController::multiClipDelete);
     dispatcher()->reg(this, RANGE_SELECTION_DELETE_CODE, this, &TrackeditActionsController::rangeSelectionDelete);
 
+    dispatcher()->reg(this, OPEN_CLIP_AND_SPEED_CODE, this, &TrackeditActionsController::openClipPitchAndSpeed);
     dispatcher()->reg(this, CLIP_RENDER_PITCH_AND_SPEED_CODE, this, &TrackeditActionsController::renderClipPitchAndSpeed);
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
     dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::tracksSplitAt);
@@ -1119,6 +1121,17 @@ void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData&
 
     trackeditInteraction()->toggleStretchToMatchProjectTempo(clipKey);
     notifyActionCheckedChanged(STRETCH_ENABLED_CODE);
+}
+
+void TrackeditActionsController::openClipPitchAndSpeed()
+{
+    auto selectedClips = selectionController()->selectedClips();
+
+    if (selectedClips.empty() || selectedClips.size() > 1) {
+        return;
+    }
+
+    dispatcher()->dispatch("clip-pitch-speed", ActionData::make_arg1<trackedit::ClipKey>(selectedClips.front()));
 }
 
 void TrackeditActionsController::renderClipPitchAndSpeed(const muse::actions::ActionData& args)

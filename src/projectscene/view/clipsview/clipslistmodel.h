@@ -124,6 +124,7 @@ private:
     ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
     int indexByKey(const trackedit::ClipKey& k) const;
     QVariant neighbor(const ClipKey& key, int offset) const;
+    void requestClipTitleChange();
 
     trackedit::secs_t calculateTimePositionOffset(const ClipListItem* item) const;
     int calculateTrackPositionOffset(const ClipKey& key, bool completed) const;
