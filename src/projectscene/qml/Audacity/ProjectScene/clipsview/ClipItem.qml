@@ -525,7 +525,7 @@ Rectangle {
                     mouseArea.visible: root.enableCursorInteraction
 
                     icon: IconCode.CLOCK
-                    text: Math.round(root.speedPercentage) === 100 ? "~100%" : Math.round(root.speedPercentage) + "%"
+                    text: Math.round(root.speedPercentage) + "%"
 
                     visible: root.speedPercentage !== 100.0
 
