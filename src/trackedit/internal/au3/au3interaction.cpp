@@ -24,7 +24,6 @@
 
 #include "trackedit/dom/track.h"
 #include "trackedit/trackeditutils.h"
-#include "trackedit/internal/changedetection.h"
 
 #include "defer.h"
 #include "log.h"
@@ -2386,73 +2385,6 @@ void Au3Interaction::pushProjectHistoryJoinState(secs_t start, secs_t duration)
     ss << "Joined " << duration << " seconds at " << start;
 
     projectHistory()->pushHistoryState(ss.str(), "Join");
-}
-
-bool Au3Interaction::undo()
-{
-    if (!canUndo()) {
-        return false;
-    }
-
-    auto trackeditProject = globalContext()->currentProject()->trackeditProject();
-
-    const TracksAndClips before = trackeditProject->buildTracksAndClips();
-
-    projectHistory()->undo();
-
-    const TracksAndClips after = trackeditProject->buildTracksAndClips();
-
-    changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
-
-    return true;
-}
-
-bool Au3Interaction::canUndo()
-{
-    return projectHistory()->undoAvailable();
-}
-
-bool Au3Interaction::redo()
-{
-    if (!canRedo()) {
-        return false;
-    }
-
-    auto trackeditProject = globalContext()->currentProject()->trackeditProject();
-
-    TracksAndClips before = trackeditProject->buildTracksAndClips();
-
-    projectHistory()->redo();
-
-    TracksAndClips after = trackeditProject->buildTracksAndClips();
-
-    changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
-
-    return true;
-}
-
-bool Au3Interaction::canRedo()
-{
-    return projectHistory()->redoAvailable();
-}
-
-bool Au3Interaction::undoRedoToIndex(size_t index)
-{
-    if (projectHistory()->currentStateIndex() == index) {
-        return false;
-    }
-
-    auto trackeditProject = globalContext()->currentProject()->trackeditProject();
-
-    const TracksAndClips before = trackeditProject->buildTracksAndClips();
-
-    projectHistory()->undoRedoToIndex(index);
-
-    const TracksAndClips after = trackeditProject->buildTracksAndClips();
-
-    changeDetection::notifyOfUndoRedo(before, after, trackeditProject);
-
-    return true;
 }
 
 bool Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)

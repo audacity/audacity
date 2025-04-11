@@ -87,12 +87,6 @@ public:
 
     bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
 
-    bool undo() override;
-    bool canUndo() override;
-    bool redo() override;
-    bool canRedo() override;
-    bool undoRedoToIndex(size_t index) override;
-
     bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
 
     int64_t clipGroupId(const trackedit::ClipKey& clipKey) const override;

@@ -5,6 +5,7 @@
 
 #include "itrackeditinteraction.h"
 #include "itrackandclipoperations.h"
+#include "iundomanager.h"
 #include "modularity/ioc.h"
 
 namespace au::trackedit {
@@ -13,6 +14,9 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
 
 public:
+    TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager);
+    ~TrackeditOperationController() override = default;
+
     secs_t clipStartTime(const ClipKey& clipKey) const override;
 
     bool changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed) override;
@@ -86,5 +90,8 @@ public:
     ClipKeyList clipsInGroup(int64_t id) const override;
 
     muse::ProgressPtr progress() const override;
+
+private:
+    const std::unique_ptr<IUndoManager> m_undoManager;
 };
 }
