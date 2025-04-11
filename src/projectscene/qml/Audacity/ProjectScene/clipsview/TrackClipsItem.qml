@@ -231,6 +231,7 @@ Item {
             id: clipComp
 
             ClipItem {
+                id: item
 
                 context: root.context
                 canvas: root.canvas
@@ -404,6 +405,15 @@ Item {
                     target: clipItem
                     function onWaveChanged() {
                         updateWave()
+                    }
+                }
+
+                Connections {
+                    target: clipsModel
+                    onRequestClipTitleEdit: function(clipId) {
+                        if (clipItem.selected) {
+                            item.editTitle()
+                        }
                     }
                 }
             }

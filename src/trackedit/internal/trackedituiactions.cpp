@@ -281,6 +281,12 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Stretch with tempo changes"),
              Checkable::Yes
              ),
+    UiAction("clip-pitch-speed-open",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Open pitch and speed dialog"),
+             TranslatableString("action", "Open pitch and speed dialog")
+             ),
     UiAction("clip-render-pitch-speed",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

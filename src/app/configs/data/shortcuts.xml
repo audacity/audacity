@@ -1093,7 +1093,7 @@
         <seq>Ctrl+F2</seq>
     </SC>
     <SC>
-        <key>change-pitch-and-speed</key>
+        <key>clip-pitch-speed-open</key>
         <seq>Ctrl+Shift+P</seq>
     </SC>
     <SC>
