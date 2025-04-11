@@ -4,6 +4,9 @@
 #include "trackeditoperationcontroller.h"
 
 namespace au::trackedit {
+TrackeditOperationController::TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager)
+    : m_undoManager{std::move(undoManager)} {}
+
 secs_t TrackeditOperationController::clipStartTime(const ClipKey& clipKey) const
 {
     return trackAndClipOperations()->clipStartTime(clipKey);
@@ -262,27 +265,27 @@ void TrackeditOperationController::moveTracksTo(const TrackIdList& trackIds, int
 
 bool TrackeditOperationController::undo()
 {
-    return trackAndClipOperations()->undo();
+    return m_undoManager->undo();
 }
 
 bool TrackeditOperationController::canUndo()
 {
-    return trackAndClipOperations()->canUndo();
+    return m_undoManager->canUndo();
 }
 
 bool TrackeditOperationController::redo()
 {
-    return trackAndClipOperations()->redo();
+    return m_undoManager->redo();
 }
 
 bool TrackeditOperationController::canRedo()
 {
-    return trackAndClipOperations()->canRedo();
+    return m_undoManager->canRedo();
 }
 
 bool TrackeditOperationController::undoRedoToIndex(size_t index)
 {
-    return trackAndClipOperations()->undoRedoToIndex(index);
+    return m_undoManager->undoRedoToIndex(index);
 }
 
 bool TrackeditOperationController::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
