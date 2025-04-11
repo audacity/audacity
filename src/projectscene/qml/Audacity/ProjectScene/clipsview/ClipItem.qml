@@ -21,9 +21,12 @@ Rectangle {
     property alias channelHeightRatio: channelSplitter.channelHeightRatio
     property var canvas: null
     property color clipColor: "#677CE4"
-    property color currentClipHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
-    readonly property color classicHeaderColor: "#C3C8EC"
-    readonly property color classicHeaderSelectedColor: "#ACC3F0"
+    property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
+    property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.3) : classicHeaderColor
+    property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.8) : classicHeaderHoveredColor
+    property color selectedHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.2) : classicHeaderHoveredColor
+    readonly property color classicHeaderColor: "#D0D6F2"
+    readonly property color classicHeaderHoveredColor: "#B0B6D8"
     property int currentClipStyle: ClipStyle.COLORFUL
     property int groupId: -1
     property bool clipSelected: false
@@ -371,8 +374,8 @@ Rectangle {
                 anchors.top: header.top
                 anchors.bottom: header.bottom
 
-                color: currentClipStyle == ClipStyle.COLORFUL ? waveView.transformColor(clipColor) : classicHeaderSelectedColor
-                visible: root.isDataSelected
+                color: waveView.transformColor(clipColor)
+                visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
             }
 
             MouseArea {
@@ -689,7 +692,7 @@ Rectangle {
         State {
             name: "NORMAL"
             when: !root.clipSelected && !headerDragArea.containsMouse
-            PropertyChanges { target: header; color: root.currentClipHeaderColor}
+            PropertyChanges { target: header; color: root.normalHeaderColor}
             PropertyChanges { target: titleLabel; color: "#000000"}
             PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
@@ -699,7 +702,7 @@ Rectangle {
         State {
             name: "SELECTED"
             when: root.clipSelected && !headerDragArea.containsMouse
-            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.currentClipHeaderColor, 0.3) }
+            PropertyChanges { target: header; color: root.selectedHeaderColor }
             PropertyChanges { target: titleLabel; color: "#000000" }
             PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
@@ -709,7 +712,7 @@ Rectangle {
         State {
             name: "NORMAL_HEADER_HOVERED"
             when: !root.clipSelected && headerDragArea.containsMouse
-            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.currentClipHeaderColor, 0.8)}
+            PropertyChanges { target: header; color: root.normalHeaderHoveredColor }
             PropertyChanges { target: titleLabel; color: "#000000"}
             PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
@@ -719,7 +722,7 @@ Rectangle {
         State {
             name: "SELECTED_HEADER_HOVERED"
             when: root.clipSelected && headerDragArea.containsMouse
-            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.currentClipHeaderColor, 0.2) }
+            PropertyChanges { target: header; color: root.selectedHeaderHoveredColor }
             PropertyChanges { target: titleLabel; color: "#000000"}
             PropertyChanges { target: pitchBtn; textColor: "#000000"; iconColor: "#000000" }
             PropertyChanges { target: speedBtn; textColor: "#000000"; iconColor: "#000000" }
