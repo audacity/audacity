@@ -5,7 +5,7 @@
 
 #include "au3interactiontypes.h"
 
-#include "../../itrackeditinteraction.h"
+#include "../../itrackandclipoperations.h"
 #include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 #include "../../itrackeditclipboard.h"
@@ -17,7 +17,7 @@
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
-class Au3Interaction : public ITrackeditInteraction
+class Au3Interaction : public ITrackAndClipOperations
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::ISelectionController> selectionController;

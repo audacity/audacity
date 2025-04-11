@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 #pragma once
 
 #include "dom/track.h"
@@ -11,20 +14,15 @@
 #include "types/ret.h"
 
 namespace au::trackedit {
-//! NOTE Interface for interacting with the project
-//! When it gets big, maybe we’ll divide it into several
-//! Currently implemented in the au3wrap module
-class ITrackeditInteraction : MODULE_EXPORT_INTERFACE
+class ITrackAndClipOperations : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(ITrackeditInteraction)
+    INTERFACE_ID(ITrackAndClipOperations)
 
 public:
-    ~ITrackeditInteraction() override = default;
+    ~ITrackAndClipOperations() override = default;
 
     virtual secs_t clipStartTime(const ClipKey& clipKey) const = 0;
 
-    //! NOTE Can be called by moving a clip
-    //! if the changes is completed, then it is necessary to pass: `completed = true`
     virtual bool changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed) = 0;
     virtual muse::async::Channel<ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const = 0;
 
