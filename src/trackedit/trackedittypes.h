@@ -54,6 +54,13 @@ enum class UndoPushType : unsigned char {
     CONSOLIDATE = 1 << 0,
     NOAUTOSAVE = 1 << 1
 };
+
+enum class TrackMoveDirection {
+    Up,
+    Down,
+    Top,
+    Bottom
+};
 }
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)

@@ -12,6 +12,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/iselectioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/itrackandclipoperations.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojecthistory.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditclipboard.h
@@ -27,6 +28,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditinteraction.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditinteraction.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditoperationcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditoperationcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackedituiactions.cpp
@@ -34,7 +37,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectioncontroller.cpp
@@ -48,8 +51,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3projecthistory.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditclipboard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditclipboard.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackdata.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackdata.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/selectionrestorer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/selectionrestorer.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/iundomanager.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/undomanager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/undomanager.h
     )
 
 # AU3
