@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "../internal/au3/au3interaction.h"
+#include "../internal/au3/au3trackdata.h"
 
 #include "context/tests/mocks/globalcontextmock.h"
 #include "context/tests/mocks/playbackstatemock.h"
@@ -894,9 +895,7 @@ TEST_F(Au3InteractionTests, CopyClipIntoClipboard)
 
     //! [EXPECT] The clipboard is notified about the new track data
     const ClipKey clipKey { track->GetId(), clip->GetId() };
-    EXPECT_CALL(*m_clipboard, addTrackData(Truly([&](const TrackData& data) {
-        return data.clipKey == clipKey;
-    }))).Times(1);
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(1);
 
     //! [WHEN] Copy the tracks into the clipboard
     m_au3Interaction->copyClipIntoClipboard(clipKey);
@@ -932,8 +931,8 @@ TEST_F(Au3InteractionTests, CopyContinuousTrackDataIntoClipboardOutsideClipBound
 
     //! [EXPECT] The clipboard is notified but data is empty
     //! NOTE: If the selection ends with whitespace a placeholder clip is created
-    EXPECT_CALL(*m_clipboard, addTrackData(Truly([&](const TrackData& data) {
-        return data.track->NIntervals() == 1;
+    EXPECT_CALL(*m_clipboard, addTrackData(Truly([&](const ITrackDataPtr& data) {
+        return std::static_pointer_cast<Au3TrackData>(data)->track()->NIntervals() == 1;
     }))).Times(1);
 
     //! [WHEN] Copy the tracks into the clipboard outside the clip bounds
@@ -997,9 +996,7 @@ TEST_F(Au3InteractionTests, CutClipIntoClipboard)
 
     //! [EXPECT] The clipboard is notified about the new track data
     const ClipKey clipKey { track->GetId(), clip->GetId() };
-    EXPECT_CALL(*m_clipboard, addTrackData(Truly([&](const TrackData& data) {
-        return data.clipKey == clipKey;
-    }))).Times(1);
+    EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(1);
 
     //! [EXPECT] The project is notified about clip removed and track changed
     EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(1);
@@ -2044,11 +2041,11 @@ TEST_F(Au3InteractionTests, PasteOnEmptyTrack)
     //! [GIVEN] Clipboard contains data
     const Au3Track::Holder trackCopy = track->Copy(firstClip->GetSequenceStartTime(), firstClip->GetSequenceEndTime());
     ASSERT_NE(trackCopy, nullptr) << "Failed to copy clip";
-    const auto trackData = TrackData { trackCopy, { trackCopy->GetId(), firstClip->GetId() } };
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
 
     //! [EXPECT] The clipboard is asked for track data
     EXPECT_CALL(*m_clipboard, trackDataEmpty()).Times(1).WillOnce(Return(false));
-    EXPECT_CALL(*m_clipboard, trackDataCopy()).Times(1).WillOnce(Return(std::vector<TrackData> { trackData }));
+    EXPECT_CALL(*m_clipboard, trackDataCopy()).Times(1).WillOnce(Return(std::vector<ITrackDataPtr> { trackData }));
     EXPECT_CALL(*m_playbackState, playbackPosition()).Times(1).WillOnce(Return(0.0));
 
     //! [WHEN] Paste from clipboard

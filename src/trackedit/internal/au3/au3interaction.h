@@ -17,6 +17,9 @@
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
+class Au3TrackData;
+using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
+
 class Au3Interaction : public ITrackAndClipOperations
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -104,20 +107,20 @@ private:
 
     au3::Au3Project& projectRef() const;
     void addWaveTrack(int nChannels);
-    TrackIdList pasteIntoNewTracks(const std::vector<au::trackedit::TrackData>& tracksData);
+    TrackIdList pasteIntoNewTracks(const std::vector<Au3TrackDataPtr>& tracksData);
     std::shared_ptr<au3::Au3Track> createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
     TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                               size_t clipboardTracksSize) const;
     TrackIdList expandDestinationTracks(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
                                         size_t clipboardTracksSize) const;
     NeedsDownmixing moveSelectedClipsUpOrDown(int offset);
-    bool clipTransferNeedsDownmixing(const std::vector<TrackData>& srcTracks, const TrackIdList& dstTracks) const;
+    bool clipTransferNeedsDownmixing(const std::vector<Au3TrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const;
     bool userIsOkWithDownmixing() const;
-    muse::Ret canPasteTrackData(const TrackIdList& tracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const;
+    muse::Ret canPasteTrackData(const TrackIdList& tracksIds, const std::vector<Au3TrackDataPtr>& clipsToPaste, secs_t begin) const;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey);
-    muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin);
+    muse::Ret makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<Au3TrackDataPtr>& trackData, secs_t begin);
     muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);
-    muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData, secs_t begin,
+    muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<Au3TrackDataPtr>& trackData, secs_t begin,
                                       bool pasteIntoExistingClip);
     bool singleClipOnTrack(WaveTrack* waveTrack) const;
     void trimOrDeleteOverlapping(WaveTrack* waveTrack, secs_t begin, secs_t end, std::shared_ptr<WaveClip> otherClip);

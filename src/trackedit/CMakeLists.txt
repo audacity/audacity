@@ -51,6 +51,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3projecthistory.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditclipboard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditclipboard.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackdata.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackdata.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/selectionrestorer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/selectionrestorer.h
 
