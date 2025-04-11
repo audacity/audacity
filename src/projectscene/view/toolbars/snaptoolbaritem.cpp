@@ -135,6 +135,7 @@ void SnapToolBarItem::onProjectChanged()
     });
 
     m_isSnapEnabled = projectViewState->isSnapEnabled();
+    m_isTripletsEnabled = projectViewState->isSnapTripletsEnabled();
     emit isSnapEnabledChanged();
 
     updateCheckedState();

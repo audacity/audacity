@@ -105,7 +105,6 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
 
     m_trackeditProject = trackeditProjectCreator()->create(m_au3Project);
 
-    //! NOTE At the moment, view state don't saved and loaded
     m_viewState = viewStateCreator()->createViewState(m_au3Project);
 
     return muse::make_ret(Ret::Code::Ok);
