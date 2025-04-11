@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 #include "projectviewstate.h"
+#include "au3wrap/internal/projectsnap.h"
+#include "au3wrap/au3types.h"
 
 using namespace au::projectscene;
 
@@ -9,10 +11,43 @@ constexpr int DEFAULT_HEIGHT = 116;
 constexpr int MIN_HEIGHT = 44;
 constexpr int COLLAPSE_HEIGHT = 72;
 
-ProjectViewState::ProjectViewState()
+namespace {
+void saveProjectSnap(std::shared_ptr<au::au3::IAu3Project> project, const Snap& snap)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    IF_ASSERT_FAILED(au3Project) {
+        return;
+    }
+    auto& projectSnap = au::au3::ProjectSnap::Get(*au3Project);
+    projectSnap.setSnapType(static_cast<unsigned int>(snap.type));
+    projectSnap.enableSnap(snap.enabled);
+    projectSnap.setSnapTriplets(snap.isSnapTriplets);
+}
+
+Snap getProjectSnap(std::shared_ptr<au::au3::IAu3Project> project)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    IF_ASSERT_FAILED(au3Project) {
+        return Snap {};
+    }
+    auto& projectSnap = au::au3::ProjectSnap::Get(*au3Project);
+    return Snap {
+        static_cast<SnapType>(projectSnap.snapType()),
+        projectSnap.isSnapEnabled(),
+        projectSnap.isSnapTriplets()
+    };
+}
+}
+
+ProjectViewState::ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project)
 {
     configuration()->setIsEffectsPanelVisible(false);
     qApp->installEventFilter(this);
+
+    m_snap.set(getProjectSnap(project));
+    m_snap.ch.onReceive(this, [project = project](const Snap& s) {
+        saveProjectSnap(project, s);
+    });
 }
 
 muse::ValCh<int> ProjectViewState::tracksVericalY() const

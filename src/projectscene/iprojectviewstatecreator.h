@@ -1,6 +1,7 @@
 #pragma once
 
 #include "modularity/imoduleinterface.h"
+#include "au3wrap/iau3project.h"
 
 #include "iprojectviewstate.h"
 
@@ -11,6 +12,6 @@ class IProjectViewStateCreator : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IProjectViewStateCreator() = default;
 
-    virtual IProjectViewStatePtr createViewState() const = 0;
+    virtual IProjectViewStatePtr createViewState(std::shared_ptr<au::au3::IAu3Project> au3project) const = 0;
 };
 }

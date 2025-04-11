@@ -79,8 +79,8 @@ public:
     Q_ENUM(Type)
 };
 
-enum class SnapType {
-    Bar,
+enum class SnapType : unsigned int {
+    Bar = 0,
 
     Half,
     Quarter,
@@ -102,6 +102,12 @@ enum class SnapType {
     PALFrames,
 
     CDDAFrames
+};
+
+struct Snap {
+    SnapType type = SnapType::Bar;
+    bool enabled = false;
+    bool isSnapTriplets = false;
 };
 
 enum class TimelineRulerMode {

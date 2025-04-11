@@ -11,6 +11,6 @@ class ProjectViewStateCreator : public IProjectViewStateCreator
 public:
     ProjectViewStateCreator() = default;
 
-    std::shared_ptr<IProjectViewState> createViewState() const override;
+    std::shared_ptr<IProjectViewState> createViewState(std::shared_ptr<au::au3::IAu3Project> project) const override;
 };
 }
