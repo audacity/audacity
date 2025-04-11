@@ -1,5 +1,6 @@
 #include "au3interaction.h"
 #include "au3interactionutils.h"
+#include "au3trackdata.h"
 
 #include <algorithm>
 
@@ -39,7 +40,7 @@ Au3Project& Au3Interaction::projectRef() const
     return *project;
 }
 
-TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<TrackData>& tracksData)
+TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<Au3TrackDataPtr>& tracksData)
 {
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
@@ -49,8 +50,8 @@ TrackIdList Au3Interaction::pasteIntoNewTracks(const std::vector<TrackData>& tra
     TrackIdList tracksIdsPastedInto;
 
     Au3Track* pFirstNewTrack = nullptr;
-    for (auto data : tracksData) {
-        auto pNewTrack = createNewTrackAndPaste(data.track, tracks, selectedStartTime);
+    for (const auto& data : tracksData) {
+        auto pNewTrack = createNewTrackAndPaste(data->track(), tracks, selectedStartTime);
         if (!pFirstNewTrack) {
             pFirstNewTrack = pNewTrack.get();
         }
@@ -125,7 +126,8 @@ TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tr
     return result;
 }
 
-muse::Ret Au3Interaction::canPasteTrackData(const TrackIdList& dstTracksIds, const std::vector<TrackData>& clipsToPaste, secs_t begin) const
+muse::Ret Au3Interaction::canPasteTrackData(const TrackIdList& dstTracksIds, const std::vector<Au3TrackDataPtr>& clipsToPaste,
+                                            secs_t begin) const
 {
     IF_ASSERT_FAILED(dstTracksIds.size() <= clipsToPaste.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
@@ -178,7 +180,8 @@ muse::Ret Au3Interaction::makeRoomForClip(const ClipKey& clipKey)
     return muse::make_ret(muse::Ret::Code::Ok);
 }
 
-muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<TrackData>& trackData,
+muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId>& tracksIds,
+                                                   const std::vector<Au3TrackDataPtr>& trackData,
                                                    secs_t begin)
 {
     IF_ASSERT_FAILED(tracksIds.size() <= trackData.size()) {
@@ -194,7 +197,7 @@ muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId>& t
         //! NOTE need to snap begin just like Paste() function do
         secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
 
-        const WaveTrack* wt = dynamic_cast<const Au3WaveTrack*>(trackData.at(i).track.get());
+        const WaveTrack* wt = dynamic_cast<const Au3WaveTrack*>(trackData.at(i)->track().get());
         for (const auto& interval : wt->Intervals()) {
             auto ok = makeRoomForDataOnTrack(tracksIds.at(i),
                                              snappedBegin + interval->GetPlayStartTime(), snappedBegin + interval->GetPlayEndTime());
@@ -208,7 +211,7 @@ muse::Ret Au3Interaction::makeRoomForClipsOnTracks(const std::vector<TrackId>& t
 }
 
 muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds,
-                                                  const std::vector<TrackData>& trackData,
+                                                  const std::vector<Au3TrackDataPtr>& trackData,
                                                   secs_t begin,
                                                   bool pasteIntoExistingClip)
 {
@@ -222,11 +225,11 @@ muse::Ret Au3Interaction::makeRoomForDataOnTracks(const std::vector<TrackId>& tr
             return make_ret(trackedit::Err::WaveTrackNotFound);
         }
 
-        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(trackData.at(i).track);
+        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(trackData.at(i)->track());
 
         //! NOTE need to snap begin just like Paste() function do
         secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
-        secs_t insertDuration = trackData.at(i).track.get()->GetEndTime();
+        secs_t insertDuration = trackData.at(i)->track()->GetEndTime();
 
         // if paste into existing clip and there is a single clip to paste,
         // we need to make room for the clip to be extended
@@ -946,7 +949,7 @@ void Au3Interaction::clearClipboard()
     clipboard()->clearTrackData();
 }
 
-bool Au3Interaction::clipTransferNeedsDownmixing(const std::vector<TrackData>& srcTracks,
+bool Au3Interaction::clipTransferNeedsDownmixing(const std::vector<Au3TrackDataPtr>& srcTracks,
                                                  const TrackIdList& dstTracks) const
 {
     IF_ASSERT_FAILED(srcTracks.size() >= dstTracks.size()) {
@@ -954,7 +957,7 @@ bool Au3Interaction::clipTransferNeedsDownmixing(const std::vector<TrackData>& s
     }
 
     for (size_t i = 0; i < dstTracks.size(); ++i) {
-        const auto srcTrack = std::static_pointer_cast<Au3WaveTrack>(srcTracks.at(i).track);
+        const auto srcTrack = std::static_pointer_cast<Au3WaveTrack>(srcTracks.at(i)->track());
         const auto dstTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracks[i]));
         if (dstTrack->IsEmpty()) {
             // For empty tracks, we convert the track rather than the clip.
@@ -985,15 +988,24 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, bool moveClips, bool 
         return make_ret(trackedit::Err::TrackEmpty);
     }
 
-    auto copiedData = clipboard()->trackDataCopy();
+    std::vector<std::shared_ptr<Au3TrackData> > copiedData;
+    {
+        const std::vector<ITrackDataPtr> trackData = clipboard()->trackDataCopy();
+        copiedData.reserve(trackData.size());
+        for (const auto& trackDataHolder : trackData) {
+            copiedData.push_back(std::static_pointer_cast<Au3TrackData>(trackDataHolder));
+        }
+    }
+
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
 
     if (moveAllTracks) {
-        secs_t duration = std::max_element(copiedData.begin(), copiedData.end(),
-                                           [](const auto& a, const auto& b) {
-            return a.track->GetEndTime() < b.track->GetEndTime();
-        })->track->GetEndTime();
+        const auto it = std::max_element(copiedData.begin(), copiedData.end(),
+                                         [](const auto& a, const auto& b) {
+            return a->track()->GetEndTime() < b->track()->GetEndTime();
+        });
+        const secs_t duration = (*it)->track()->GetEndTime();
         auto existingTracks = project->trackeditProject()->trackIdList();
         insertBlankSpace(existingTracks, begin, duration);
     }
@@ -1056,7 +1068,7 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, bool moveClips, bool 
             clipIdsBefore.insert(clip.key.clipId);
         }
 
-        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(i).track);
+        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(i)->track());
 
         if (dstWaveTrack->IsEmpty() && trackToPaste->NChannels() != dstWaveTrack->NChannels()) {
             auto& trackList = au3::Au3TrackList::Get(projectRef());
@@ -1130,7 +1142,7 @@ bool Au3Interaction::cutClipIntoClipboard(const ClipKey& clipKey)
 
     bool moveClips = true;
     auto track = waveTrack->Cut(clip->Start(), clip->End(), moveClips);
-    clipboard()->addTrackData(TrackData { track, clipKey });
+    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipRemoved(DomConverter::clip(waveTrack, clip.get()));
@@ -1164,8 +1176,7 @@ bool Au3Interaction::cutTrackDataIntoClipboard(const TrackId trackId, secs_t beg
     }
 
     auto track = waveTrack->Cut(begin, end, moveClips);
-    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
@@ -1186,7 +1197,7 @@ bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
     }
 
     auto track = waveTrack->Copy(clip->Start(), clip->End());
-    clipboard()->addTrackData(TrackData { track, clipKey });
+    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
 
     return true;
 }
@@ -1216,8 +1227,7 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
         clip->SetPlayStartTime(clip->GetPlayStartTime() + offset);
     }
 
-    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { clipboardTrack, dummyClipKey });
+    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(clipboardTrack)));
     if (clipKeys.size() > 1) {
         clipboard()->setMultiSelectionCopy(true);
     }
@@ -1233,8 +1243,7 @@ bool Au3Interaction::copyContinuousTrackDataIntoClipboard(const TrackId trackId,
     }
 
     auto track = waveTrack->Copy(begin, end);
-    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
 
     return true;
 }
@@ -1713,8 +1722,7 @@ bool Au3Interaction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin
     }
 
     auto track = waveTrack->SplitCut(begin, end);
-    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
@@ -1846,8 +1854,7 @@ bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
     }
 
     auto track = waveTrack->SplitCut(clip->Start(), clip->End());
-    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
-    clipboard()->addTrackData(TrackData { track, dummyClipKey });
+    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
