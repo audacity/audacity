@@ -23,11 +23,11 @@ static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
 static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
 
-static const QColor CLASSIC_BACKGROUND_COLOR = QColor(222, 224, 244);
-static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(101, 113, 205);
+static const QColor CLASSIC_BACKGROUND_COLOR = QColor(241, 243, 254);
+static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 204);
 
-static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(190, 212, 246);
-static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(88, 101, 202);
+static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(175, 194, 238);
+static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(68, 71, 195);
 
 static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
 static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8;
@@ -127,8 +127,8 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
     params.style.selectedBackground = selected ? transformColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
 
     QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
-    params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, baseSampleColor, 0.8);
-    params.style.selectedSamplePen = baseSampleColor;
+    params.style.samplePen = baseSampleColor;
+    params.style.selectedSamplePen = CLASSIC_SAMPLES_BASE_SELECTED_COLOR;
     params.style.rmsPen = baseSampleColor;
     params.style.centerLine = baseSampleColor;
     params.style.sampleHead = baseSampleColor;
