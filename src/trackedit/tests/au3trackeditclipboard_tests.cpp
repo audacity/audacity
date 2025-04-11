@@ -11,6 +11,7 @@
 #include "au3wrap/internal/domaccessor.h"
 
 #include "trackedit/internal/au3/au3trackeditclipboard.h"
+#include "trackedit/internal/au3/au3trackdata.h"
 
 using ::testing::Return;
 using ::testing::Truly;
@@ -72,11 +73,11 @@ public:
     }
 
     /**
-     *  Populates a TrackData vector from the loaded project's model.
+     *  Populates a Au3TrackDataPtr vector from the loaded project's model.
      */
-    std::vector<TrackData> buildTrackData()
+    std::vector<Au3TrackDataPtr> buildTrackData()
     {
-        std::vector<TrackData> trackDataList;
+        std::vector<Au3TrackDataPtr> trackDataList;
 
         Au3Project& project = projectRef();
         auto& trackFactory = WaveTrackFactory::Get(projectRef());
@@ -102,10 +103,10 @@ public:
                 clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
             }
 
-            TrackData trackData { clipboardTrack, ClipKey() };  // (Dummy ClipKey)
+            const auto trackData = std::make_shared<Au3TrackData>(clipboardTrack);
             trackDataList.push_back(trackData);
 
-            m_au3TrackEditClipboard->addTrackData(trackData);
+            m_au3TrackEditClipboard->addTrackData(std::static_pointer_cast<ITrackData>(trackData));
         }
 
         m_au3TrackEditClipboard->setMultiSelectionCopy(true);
@@ -138,7 +139,7 @@ TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)
 
     EXPECT_TRUE(m_au3TrackEditClipboard->trackDataEmpty());
 
-    std::vector<TrackData> trackDataBefore = buildTrackData();
+    std::vector<Au3TrackDataPtr> trackDataBefore = buildTrackData();
 
     auto trackDataAfter = m_au3TrackEditClipboard->trackDataCopy();
 
@@ -148,7 +149,7 @@ TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)
 
     int ungrouped = 0;
 
-    //! Iterates over returned TrackData list and compares to the original one.
+    //! Iterates over returned Au3TrackDataPtr list and compares to the original one.
     //  Ensures that the same number of clips and tracks are present,
     //  and that the groupID's are new.
 
@@ -156,9 +157,8 @@ TEST_F(Au3TrackEditClipboardTests, groupedTrackDataCopy)
     auto tracksAfterIter = trackDataAfter.begin();
     for (; tracksBeforeIter != trackDataBefore.end() && tracksAfterIter != trackDataAfter.end();
          ++tracksBeforeIter, ++tracksAfterIter) {
-        auto waveTrackBefore = dynamic_cast<au3::Au3WaveTrack*>(tracksBeforeIter->track.get());
-        auto waveTrackAfter = dynamic_cast<au3::Au3WaveTrack*>(tracksAfterIter->track.get());
-
+        auto waveTrackBefore = dynamic_cast<au3::Au3WaveTrack*>((*tracksBeforeIter)->track().get());
+        auto waveTrackAfter = dynamic_cast<au3::Au3WaveTrack*>(std::static_pointer_cast<Au3TrackData>(*tracksAfterIter)->track().get());
         auto clipsBefore = waveTrackBefore->Intervals();
         auto clipsAfter = waveTrackAfter->Intervals();
 
