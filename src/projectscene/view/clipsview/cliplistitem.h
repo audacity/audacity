@@ -31,7 +31,7 @@ class ClipListItem : public QObject
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged FINAL)
 
     Q_PROPERTY(int pitch READ pitch NOTIFY pitchChanged FINAL)
-    Q_PROPERTY(int speedPercentage READ speedPercentage NOTIFY speedPercentageChanged FINAL)
+    Q_PROPERTY(double speedPercentage READ speedPercentage NOTIFY speedPercentageChanged FINAL)
 
 public:
     explicit ClipListItem(QObject* parent);
@@ -66,7 +66,7 @@ public:
     void setRightVisibleMargin(double newRightVisibleMargin);
 
     int pitch() const;
-    int speedPercentage() const;
+    double speedPercentage() const;
 
 signals:
     void titleChanged();
