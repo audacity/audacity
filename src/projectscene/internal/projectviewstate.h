@@ -9,6 +9,7 @@
 #include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 #include "async/asyncable.h"
+#include "au3wrap/iau3project.h"
 
 namespace au::projectscene {
 class ProjectViewState : public QObject, public IProjectViewState, public muse::async::Asyncable
@@ -19,7 +20,7 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
     muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
-    ProjectViewState();
+    ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project);
 
     // State of elements
     muse::ValCh<int> trackHeight(const trackedit::TrackId& trackId) const override;

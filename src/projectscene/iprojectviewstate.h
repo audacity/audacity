@@ -8,12 +8,6 @@
 #include "trackedit/trackedittypes.h"
 
 namespace au::projectscene {
-struct Snap {
-    SnapType type = SnapType::Bar;
-    bool enabled = false;
-    bool isSnapTriplets = false;
-};
-
 class IProjectViewState
 {
 public:
