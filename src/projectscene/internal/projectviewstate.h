@@ -52,10 +52,13 @@ public:
     void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) override;
 
     void setClipEditStartTimeOffset(double val) override;
-    double clipEditStartTimeOffset() override;
+    double clipEditStartTimeOffset() const override;
 
     void setClipEditEndTimeOffset(double val) override;
-    double clipEditEndTimeOffset() override;
+    double clipEditEndTimeOffset() const override;
+
+    void setMoveInitiated(bool val) override;
+    bool moveInitiated() const override;
 
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;
@@ -81,6 +84,10 @@ private:
     //! Offset between mouse click position on clip's header and clip's start and end time
     double m_clipEditStartTimeOffset = -1.0;
     double m_clipEditEndTimeOffset = -1.0;
+
+    //! User needs to drag a mouse by a certain amount of pixels (left or right) or
+    //! move to the other track for move to be initiated
+    bool m_moveInitiated = false;
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;

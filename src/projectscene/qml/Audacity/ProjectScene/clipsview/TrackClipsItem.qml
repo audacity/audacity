@@ -544,6 +544,10 @@ Item {
             clipsModel.startEditClip(clipKey)
         }
 
+        function onClipEndEditRequested(clipKey) {
+            clipsModel.endEditClip(clipKey)
+        }
+
         function onStartAutoScroll() {
             root.context.startAutoScroll(root.context.mousePositionTime())
         }

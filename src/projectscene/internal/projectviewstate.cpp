@@ -210,7 +210,7 @@ void ProjectViewState::setClipEditStartTimeOffset(double val)
     m_clipEditStartTimeOffset = val;
 }
 
-double ProjectViewState::clipEditStartTimeOffset()
+double ProjectViewState::clipEditStartTimeOffset() const
 {
     return m_clipEditStartTimeOffset;
 }
@@ -224,9 +224,23 @@ void ProjectViewState::setClipEditEndTimeOffset(double val)
     m_clipEditEndTimeOffset = val;
 }
 
-double ProjectViewState::clipEditEndTimeOffset()
+double ProjectViewState::clipEditEndTimeOffset() const
 {
     return m_clipEditEndTimeOffset;
+}
+
+void ProjectViewState::setMoveInitiated(bool val)
+{
+    if (m_moveInitiated == val) {
+        return;
+    }
+
+    m_moveInitiated = val;
+}
+
+bool ProjectViewState::moveInitiated() const
+{
+    return m_moveInitiated;
 }
 
 muse::ValCh<bool> ProjectViewState::altPressed() const
