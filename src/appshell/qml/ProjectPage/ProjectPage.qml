@@ -186,21 +186,43 @@ DockPage {
                 root.toolBarBottomDropDestination
             ]
 
-            //! small hack: needed so that when the screen is quickly reduced the dock system works correctly
             minimumWidth: 300
+            resizable: true
 
             PlaybackToolBar {
+                id: playbackToolBarContent
+
                 floating: playbackToolBar.floating
+                onFloatingChanged: {
+                    //! HACK: When docking and undocking we recalculate
+                    //        the toolbar's content size and it looks ugly for the user.
+                    //        Let's hide the content, delayedly relayout the window and show the content.
+                    visible = false
+                    playbackToolBarRelayoutTimer.start()
+                }
 
                 maximumWidth: playbackToolBar.width - 30 /* grip button */
                 maximumHeight: playbackToolBar.height
 
                 onHeightChanged: {
+                    if (!playbackToolBar.inited) {
+                        return
+                    }
+
                     playbackToolBar.thickness = height
                 }
 
                 navigationPanel.section: root.playbackToolBarKeyNavSec
                 navigationPanel.order: 1
+
+                Timer {
+                    id: playbackToolBarRelayoutTimer
+                    interval: 10
+                    onTriggered: {
+                        root.layoutRequested()
+                        playbackToolBarContent.visible = true
+                    }
+                }
             }
         }
     ]

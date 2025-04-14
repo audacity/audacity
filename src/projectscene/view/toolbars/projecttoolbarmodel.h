@@ -14,7 +14,7 @@ class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel, pub
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool isCompactMode READ isCompactMode WRITE setIsCompactMode CONSTANT FINAL)
+    Q_PROPERTY(bool isCompactMode READ isCompactMode WRITE setIsCompactMode NOTIFY isCompactModeChanged)
 
     muse::Inject<au::context::IGlobalContext> context;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
@@ -27,6 +27,7 @@ public:
 
 signals:
     void openAudioSetupContextMenu();
+    void isCompactModeChanged();
 
 private:
     bool m_isCompactMode = false;
