@@ -52,4 +52,5 @@ void ProjectToolBarModel::setIsCompactMode(bool isCompactMode)
     }
 
     m_isCompactMode = isCompactMode;
+    emit isCompactModeChanged();
 }
