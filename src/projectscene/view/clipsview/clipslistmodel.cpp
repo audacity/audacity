@@ -17,6 +17,7 @@ constexpr int CACHE_BUFFER_PX = 200;
 constexpr double MOVE_MAX = 100000.0;
 constexpr double MOVE_MIN = 0.0;
 constexpr double MIN_CLIP_WIDTH = 3.0;
+constexpr double MOVE_THRESHOLD = 3.0;
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -412,6 +413,32 @@ QVariant ClipsListModel::neighbor(const ClipKey& key, int offset) const
     return QVariant::fromValue(m_clipList[sortedIndex]);
 }
 
+ClipsListModel::MoveOffset ClipsListModel::calculateMoveOffset(const ClipListItem* item,
+                                                               const ClipKey& key,
+                                                               bool completed) const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return MoveOffset{};
+    }
+
+    auto vs = prj->viewState();
+
+    MoveOffset moveOffset {
+        calculateTimePositionOffset(item),
+        calculateTrackPositionOffset(key, completed)
+    };
+
+    secs_t positionOffsetX = moveOffset.timeOffset * m_context->zoom();
+    if (!vs->moveInitiated() && (muse::RealIsEqualOrMore(std::abs(positionOffsetX), MOVE_THRESHOLD) || moveOffset.trackOffset != 0)) {
+        vs->setMoveInitiated(true);
+    } else if (!vs->moveInitiated()) {
+        moveOffset.timeOffset = 0.0;
+    }
+
+    return moveOffset;
+}
+
 int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key, bool completed) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
@@ -563,6 +590,7 @@ void ClipsListModel::endEditClip(const ClipKey& key)
 
     vs->setClipEditStartTimeOffset(-1.0);
     vs->setClipEditEndTimeOffset(-1.0);
+    vs->setMoveInitiated(false);
 }
 
 /*!
@@ -589,10 +617,11 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
         return false;
     }
 
-    secs_t timePositionOffset = calculateTimePositionOffset(item);
-    int trackPositionOffset = calculateTrackPositionOffset(key, completed);
-
-    bool clipsMovedToOtherTrack = trackeditInteraction()->moveClips(timePositionOffset, trackPositionOffset, completed);
+    bool clipsMovedToOtherTrack = false;
+    MoveOffset moveOffset = calculateMoveOffset(item, key, completed);
+    if (vs->moveInitiated()) {
+        clipsMovedToOtherTrack = trackeditInteraction()->moveClips(moveOffset.timeOffset, moveOffset.trackOffset, completed);
+    }
 
     if ((completed && m_autoScrollConnection)) {
         disconnect(m_autoScrollConnection);
