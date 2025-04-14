@@ -52,10 +52,10 @@ public:
     void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) override;
 
     void setClipEditStartTimeOffset(double val) override;
-    double clipEditStartTimeOffset() override;
+    double clipEditStartTimeOffset() const override;
 
     void setClipEditEndTimeOffset(double val) override;
-    double clipEditEndTimeOffset() override;
+    double clipEditEndTimeOffset() const override;
 
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;

@@ -48,7 +48,7 @@ public:
     virtual bool removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
-    virtual bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) = 0;
+    virtual bool moveClips(secs_t timePositionOffset, double pixelsPerSecond, int trackPositionOffset, bool completed) = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) = 0;
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
     virtual bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;

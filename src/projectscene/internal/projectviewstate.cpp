@@ -210,7 +210,7 @@ void ProjectViewState::setClipEditStartTimeOffset(double val)
     m_clipEditStartTimeOffset = val;
 }
 
-double ProjectViewState::clipEditStartTimeOffset()
+double ProjectViewState::clipEditStartTimeOffset() const
 {
     return m_clipEditStartTimeOffset;
 }
@@ -224,7 +224,7 @@ void ProjectViewState::setClipEditEndTimeOffset(double val)
     m_clipEditEndTimeOffset = val;
 }
 
-double ProjectViewState::clipEditEndTimeOffset()
+double ProjectViewState::clipEditEndTimeOffset() const
 {
     return m_clipEditEndTimeOffset;
 }

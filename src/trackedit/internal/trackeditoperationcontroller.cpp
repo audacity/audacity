@@ -128,9 +128,9 @@ bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds
     return trackAndClipOperations()->removeTracksData(tracksIds, begin, end, moveClips);
 }
 
-bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
+bool TrackeditOperationController::moveClips(secs_t timePositionOffset, double pixelsPerSecond, int trackPositionOffset, bool completed)
 {
-    return trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed);
+    return trackAndClipOperations()->moveClips(timePositionOffset, pixelsPerSecond, trackPositionOffset, completed);
 }
 
 bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
