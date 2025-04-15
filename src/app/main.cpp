@@ -20,12 +20,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include <QApplication>
 #include <QTextCodec>
 
 #include <csignal>
 
 #include "app.h"
-
+#include "commandlineparser.h"
 #include "log.h"
 
 // Framework
@@ -119,6 +120,15 @@ int main(int argc, char** argv)
     signal(SIGFPE, crashCallback);
 #endif
 
+    // ====================================================
+    // Parse command line options
+    // ====================================================
+    au::app::CommandLineParser commandLineParser;
+    commandLineParser.init();
+    commandLineParser.parse(argc, argv);
+
+    const bool isPluginRegistration = commandLineParser.runMode() == muse::IApplication::RunMode::AudioPluginRegistration;
+
     // Force the 8-bit text encoding to UTF-8. This is the default encoding on all supported platforms except for MSVC under Windows, which
     // would otherwise default to the local ANSI code page and cause corruption of any non-ANSI Unicode characters in command-line arguments.
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
@@ -130,33 +140,25 @@ int main(int argc, char** argv)
     app.addModule(new muse::diagnostics::DiagnosticsModule());
 
 // framework
-    app.addModule(new muse::draw::DrawModule());
-    app.addModule(new muse::actions::ActionsModule());
     app.addModule(new muse::audioplugins::AudioPluginsModule());
-    app.addModule(new muse::ui::UiModule());
-    app.addModule(new muse::uicomponents::UiComponentsModule());
-    app.addModule(new muse::dock::DockModule());
-    app.addModule(new muse::shortcuts::ShortcutsModule());
-    app.addModule(new muse::workspace::WorkspaceModule());
-    app.addModule(new muse::accessibility::AccessibilityModule());
-    app.addModule(new muse::cloud::CloudModule());
-    app.addModule(new muse::network::NetworkModule());
-    app.addModule(new muse::mi::MultiInstancesModule());
-    app.addModule(new muse::learn::LearnModule());
-    app.addModule(new muse::languages::LanguagesModule());
+    if (!isPluginRegistration) {
+        app.addModule(new muse::draw::DrawModule());
+        app.addModule(new muse::actions::ActionsModule());
+        app.addModule(new muse::workspace::WorkspaceModule());
+        app.addModule(new muse::accessibility::AccessibilityModule());
+        app.addModule(new muse::mi::MultiInstancesModule());
+        app.addModule(new muse::learn::LearnModule());
+        app.addModule(new muse::languages::LanguagesModule());
+        app.addModule(new muse::ui::UiModule());
+        app.addModule(new muse::uicomponents::UiComponentsModule());
+        app.addModule(new muse::dock::DockModule());
+        app.addModule(new muse::shortcuts::ShortcutsModule());
+        app.addModule(new muse::cloud::CloudModule());
+        app.addModule(new muse::network::NetworkModule());
+    }
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
-    app.addModule(new au::context::ContextModule());
-    app.addModule(new au::project::ProjectModule());
-    app.addModule(new au::projectscene::ProjectSceneModule());
-    app.addModule(new au::au3::Au3WrapModule());
-    app.addModule(new au::audio::AudioModule());
-    app.addModule(new au::playback::PlaybackModule());
-    app.addModule(new au::trackedit::TrackeditModule());
-    app.addModule(new au::record::RecordModule());
-    app.addModule(new au::effects::EffectsModule());
-    app.addModule(new au::effects::BuiltinEffectsModule());
 #ifdef AU_MODULE_EFFECTS_LV2
     app.addModule(new au::effects::Lv2EffectsModule());
 #endif
@@ -165,8 +167,20 @@ int main(int argc, char** argv)
 #else
     app.addModule(new au::effects::VstEffectsStubModule());
 #endif
-    app.addModule(new au::effects::NyquistEffectsModule());
-    app.addModule(new au::importexport::ImporterModule());
+    if (!isPluginRegistration) {
+        app.addModule(new au::context::ContextModule());
+        app.addModule(new au::audio::AudioModule());
+        app.addModule(new au::projectscene::ProjectSceneModule());
+        app.addModule(new au::playback::PlaybackModule());
+        app.addModule(new au::record::RecordModule());
+        app.addModule(new au::trackedit::TrackeditModule());
+        app.addModule(new au::project::ProjectModule());
+        app.addModule(new au::au3::Au3WrapModule());
+        app.addModule(new au::effects::EffectsModule());
+        app.addModule(new au::effects::BuiltinEffectsModule());
+        app.addModule(new au::effects::NyquistEffectsModule());
+        app.addModule(new au::importexport::ImporterModule());
+    }
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.
@@ -199,7 +213,18 @@ int main(int argc, char** argv)
 
 #endif
 
-    int code = app.run(argcFinal, argvFinal);
+    QCoreApplication* qApplication = nullptr;
+
+    if (commandLineParser.runMode() == muse::IApplication::RunMode::AudioPluginRegistration) {
+        qApplication = new QCoreApplication(argc, argv);
+    } else {
+        qApplication = new QApplication(argc, argv);
+    }
+
+    int code = app.run(*qApplication, commandLineParser);
+
+    delete qApplication;
+
     LOGI() << "Goodbye!! code: " << code;
     return code;
 }
