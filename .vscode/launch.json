@@ -5,6 +5,10 @@
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${config:cmake.installPrefix}/bin/audacity.exe",
+            "args": [
+                // Comment this out to run audacity in plugin registration mode
+                // "--register-audio-plugin", "C:/Program Files/Common Files/VST3/Your plugin.vst3"
+            ],
             "preLaunchTask": "CMake: install",
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -63,7 +63,7 @@ void App::addModule(modularity::IModuleSetup* module)
     m_modules.push_back(module);
 }
 
-int App::run(int argc, char** argv)
+int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
 {
     // ====================================================
     // Setup global Qt application variables
@@ -107,22 +107,6 @@ int App::run(int argc, char** argv)
 
     QGuiApplication::styleHints()->setMousePressAndHoldInterval(250);
 
-    // ====================================================
-    // Parse command line options
-    // ====================================================
-    CommandLineParser commandLineParser;
-    commandLineParser.init();
-    commandLineParser.parse(argc, argv);
-
-    IApplication::RunMode runMode = commandLineParser.runMode();
-    QCoreApplication* app = nullptr;
-
-    if (runMode == IApplication::RunMode::AudioPluginRegistration) {
-        app = new QCoreApplication(argc, argv);
-    } else {
-        app = new QApplication(argc, argv);
-    }
-
     QCoreApplication::setApplicationName(appName);
     QCoreApplication::setOrganizationName("Audacity");
     QCoreApplication::setOrganizationDomain("audacityteam.org");
@@ -133,7 +117,7 @@ int App::run(int argc, char** argv)
 //     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
 // #endif
 
-    commandLineParser.processBuiltinArgs(*app);
+    commandLineParser.processBuiltinArgs(app);
 
     // ====================================================
     // Setup modules: Resources, Exports, Imports, UiTypes
@@ -158,6 +142,8 @@ int App::run(int argc, char** argv)
         m->resolveImports();
         m->registerApi();
     }
+
+    const IApplication::RunMode runMode = commandLineParser.runMode();
 
     // ====================================================
     // Setup modules: apply the command line options
@@ -284,7 +270,7 @@ int App::run(int argc, char** argv)
         const QUrl url(QStringLiteral("qrc:/qml") + mainQmlFile);
 
         QObject::connect(engine, &QQmlApplicationEngine::objectCreated,
-                         app, [this, url, splashScreen](QObject* obj, const QUrl& objUrl) {
+                         &app, [this, url, splashScreen](QObject* obj, const QUrl& objUrl) {
                 if (!obj && url == objUrl) {
                     LOGE() << "failed Qml load\n";
                     QCoreApplication::exit(-1);
@@ -342,7 +328,7 @@ int App::run(int argc, char** argv)
     // ====================================================
     // Run main loop
     // ====================================================
-    int retCode = app->exec();
+    int retCode = app.exec();
 
     // ====================================================
     // Quit
@@ -360,10 +346,11 @@ int App::run(int argc, char** argv)
 #endif
 
 #ifdef AU_BUILD_APPSHELL_MODULE
-    // Engine quit
-    modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
+    if (runMode == IApplication::RunMode::GuiApp) {
+        // Engine quit
+        modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
+    }
 #endif
-
     // Deinit
 
     globalModule.invokeQueuedCalls();
@@ -384,8 +371,6 @@ int App::run(int argc, char** argv)
     qDeleteAll(m_modules);
     m_modules.clear();
     modularity::_ioc()->reset();
-
-    delete app;
 
     return retCode;
 }

@@ -46,7 +46,7 @@ public:
 
     void addModule(muse::modularity::IModuleSetup* module);
 
-    int run(int argc, char** argv);
+    int run(QCoreApplication& app, CommandLineParser& parser);
 
 private:
     void applyCommandLineOptions(const CommandLineParser::Options& options);
