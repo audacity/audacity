@@ -134,12 +134,11 @@ bool approximatelyEqual(float a, float b)
     const auto relativeDifferenceFactor = 0.0001; // 0.01%
     const auto greaterMagnitude = std::max(std::abs(a), std::abs(b));
 
-    if (std::abs(a - b) < relativeDifferenceFactor * greaterMagnitude)
+    if (std::abs(a - b) < relativeDifferenceFactor * greaterMagnitude) {
         return true;
-    else
+    } else {
         return false;
-
-    // return fabs(a - b) <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * std::numeric_limits<float>::epsilon());
+    }
 }
 }  // namespace
 
