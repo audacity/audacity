@@ -16,7 +16,8 @@ using namespace au::effects;
 VstViewModel::~VstViewModel()
 {
     m_settingUpdateTimer.stop();
-    QObject::disconnect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUi);
+    QObject::disconnect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUiWhileIdle);
+    checkSettingChangesFromUi(true);
 }
 
 void VstViewModel::init()
@@ -56,31 +57,35 @@ void VstViewModel::init()
 
     settingsToView();
 
-    QObject::connect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUi);
+    QObject::connect(&m_settingUpdateTimer, &QTimer::timeout, this, &VstViewModel::checkSettingChangesFromUiWhileIdle);
 
     // When playback is idle (see VstViewModel::event), no need for setting updates to be low-latency. Every 100ms is plenty.
     m_settingUpdateTimer.start(std::chrono::milliseconds { 100 });
 }
 
-void VstViewModel::checkSettingChangesFromUi()
+void VstViewModel::checkSettingChangesFromUiWhileIdle()
 {
     if (m_auVst3Instance->GetWrapper().IsActive()) {
         // While playback is active, setting updates are taken care of by AU3 backend.
         return;
     }
+    checkSettingChangesFromUi(false);
+}
 
+void VstViewModel::checkSettingChangesFromUi(bool forceCommitting)
+{
     bool hasChanges { false };
-    m_settingsAccess->ModifySettings([this, &hasChanges](EffectSettings& settings)
+    m_settingsAccess->ModifySettings([&](EffectSettings& settings)
     {
         auto& wrapper = m_auVst3Instance->GetWrapper();
         wrapper.FlushParameters(settings, &hasChanges);
-        if (hasChanges) {
+        if (hasChanges || forceCommitting) {
             wrapper.StoreSettings(settings);
         }
         return nullptr;
     });
 
-    if (hasChanges) {
+    if (hasChanges || forceCommitting) {
         m_settingsAccess->Flush();
     }
 }
