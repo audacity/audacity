@@ -47,7 +47,8 @@ private:
     EffectSettingsAccess* settingsAccess() const;
     void settingsToView();
     void settingsFromView();
-    void checkSettingChangesFromUi();
+    void checkSettingChangesFromUiWhileIdle();
+    void checkSettingChangesFromUi(bool forceCommitting);
 
     EffectInstanceId m_instanceId = -1;
     std::shared_ptr<VST3Instance> m_auVst3Instance;
