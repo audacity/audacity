@@ -69,7 +69,7 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     auto castToWaveTrack = dynamic_cast<const Au3WaveTrack*>(track);
     if (castToWaveTrack) {
         au4t.volume = castToWaveTrack->GetVolume();
-        // TODO: Do also for pan?
+        au4t.panning = castToWaveTrack->GetPan();
     }
 
     return au4t;

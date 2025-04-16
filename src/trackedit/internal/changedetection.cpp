@@ -198,14 +198,19 @@ void notifyOfUndoRedo(const TracksAndClips& before,
     //! Checking for Track field change - brute force I'm afraid:
     {
         auto trackFieldComparison = [](const Track& first, const Track& second) {
-            bool volumeChanged = false;
+            bool volumeEqual = false;
             if (first.volume.has_value() && second.volume.has_value()) {
-                volumeChanged = !approximatelyEqual(first.volume.value(), second.volume.value());
+                volumeEqual = approximatelyEqual(first.volume.value(), second.volume.value());
+            }
+            bool panningEqual = false;
+            if (first.panning.has_value() && second.panning.has_value()) {
+                panningEqual = approximatelyEqual(first.panning.value(), second.panning.value());
             }
 
             return first.type == second.type
                    && first.title == second.title
-                   && volumeChanged;
+                   && volumeEqual
+                   && panningEqual;
 
             //! For now these do not result in "autosave",
             //  and so should not be criteria under undo/redo.
