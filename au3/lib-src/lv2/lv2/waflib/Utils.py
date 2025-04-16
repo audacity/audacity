@@ -84,11 +84,11 @@ O644 = 420
 O755 = 493
 """Constant representing the permissions for executable files (0755 raises a syntax error on python 3)"""
 
-rot_chr = ['\\', '|', '/', '-']
-"List of characters to use when displaying the throbber (progress bar)"
+rotating_characters = ['\\', '|', '/', '-']
+"""Characters used for displaying a rotating progress indicator."""
 
-rot_idx = 0
-"Index of the current throbber character (progress bar)"
+rotating_index = 0
+"""Index of the current character in the rotating progress indicator."""
 
 class ordered_iter_dict(dict):
 	"""Ordered dictionary that provides iteration from the most recently inserted keys first"""
@@ -276,9 +276,10 @@ def h_file(fname):
 	"""
 	m = md5()
 	with open(fname, 'rb') as f:
-		while fname:
-			fname = f.read(200000)
-			m.update(fname)
+		#while fname:
+		for chunk in iter(lambda:f.read(8192), b''):
+			# fname = f.read(200000)
+			m.update(chunk)
 	return m.digest()
 
 def readf_win32(f, m='r', encoding='latin-1'):
