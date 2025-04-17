@@ -111,6 +111,11 @@ private:
         ClipItemRole = Qt::UserRole + 1,
     };
 
+    struct MoveOffset {
+        muse::secs_t timeOffset = 0.0;
+        int trackOffset = 0;
+    };
+
     void setSelectedItems(const QList<ClipListItem*>& items);
     void addSelectedItem(ClipListItem* item);
     void clearSelectedItems();
@@ -126,6 +131,7 @@ private:
     QVariant neighbor(const ClipKey& key, int offset) const;
     void requestClipTitleChange();
 
+    MoveOffset calculateMoveOffset(const ClipListItem* item, const ClipKey& key, bool completed) const;
     trackedit::secs_t calculateTimePositionOffset(const ClipListItem* item) const;
     int calculateTrackPositionOffset(const ClipKey& key, bool completed) const;
 

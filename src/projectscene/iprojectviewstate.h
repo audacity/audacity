@@ -43,10 +43,13 @@ public:
     virtual void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) = 0;
 
     virtual void setClipEditStartTimeOffset(double val) = 0;
-    virtual double clipEditStartTimeOffset() = 0;
+    virtual double clipEditStartTimeOffset() const = 0;
 
     virtual void setClipEditEndTimeOffset(double val) = 0;
-    virtual double clipEditEndTimeOffset() = 0;
+    virtual double clipEditEndTimeOffset() const = 0;
+
+    virtual void setMoveInitiated(bool val) = 0;
+    virtual bool moveInitiated() const = 0;
 
     virtual muse::ValCh<bool> altPressed() const = 0;
     virtual muse::ValCh<bool> ctrlPressed() const = 0;

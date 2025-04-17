@@ -303,6 +303,7 @@ Rectangle {
                 if (root.clipHeaderHovered && tracksClipsView.moveActive) {
                     tracksClipsView.clipMoveRequested(hoveredClipKey, true)
                     tracksClipsView.stopAutoScroll()
+                    tracksClipsView.clipEndEditRequested(hoveredClipKey)
                 } else {
                     if (selectionController.isLeftSelection(e.x)) {
                         playCursorController.seekToX(e.x)
@@ -388,6 +389,7 @@ Rectangle {
 
                 signal clipMoveRequested(var clipKey, bool completed)
                 signal clipStartEditRequested(var clipKey)
+                signal clipEndEditRequested(var clipKey)
                 signal startAutoScroll()
                 signal stopAutoScroll()
 
