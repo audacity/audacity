@@ -1324,7 +1324,7 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
     return true;
 }
 
-bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
+bool Au3Interaction::moveClips(secs_t timePositionOffset, double pixelsPerSecond, int trackPositionOffset, bool completed)
 {
     //! NOTE: cannot start moving until previous move is handled
     if (m_busy) {
@@ -1337,8 +1337,11 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
 
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
-    if (!m_startTracklistInfo) {
-        m_startTracklistInfo.emplace(utils::getTrackListInfo(Au3TrackList::Get(projectRef())));
+    if (!m_clipMovement) {
+        m_clipMovement.emplace(utils::getTrackListInfo(Au3TrackList::Get(projectRef())));
+    } else {
+        m_clipMovement->totalXOffset += std::abs(timePositionOffset) * pixelsPerSecond;
+        m_clipMovement->totalTrackOffset += std::abs(trackPositionOffset);
     }
 
     //! NOTE: check if offset is applicable to every clip and recalculate if needed
@@ -1370,12 +1373,14 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
     }
 
     if (completed) {
-        m_startTracklistInfo.reset();
+        const bool somethingHappened = m_clipMovement->totalXOffset > 3.0 || m_clipMovement->totalTrackOffset > 0;
+
+        m_clipMovement.reset();
 
         bool ok = true;
         const muse::Defer defer2([&] {
             m_moveClipsNeedsDownmixing = false;
-            if (ok) {
+            if (ok && somethingHappened) {
                 projectHistory()->pushHistoryState("Clip moved", "Move clip");
             } else {
                 projectHistory()->rollbackState();
@@ -1471,11 +1476,11 @@ NeedsDownmixing Au3Interaction::moveSelectedClipsUpOrDown(int offset)
     // Tracks that were empty at the start of the interaction, are empty now and differ in format must be restored.
     const TrackListInfo copyInfo = utils::getTrackListInfo(*copy);
     for (const size_t index : copyInfo.emptyTrackIndices) {
-        if (index >= m_startTracklistInfo->size) {
+        if (index >= m_clipMovement->trackListInfo.size) {
             continue;
         }
         const auto isStereoNow = muse::contains(copyInfo.stereoTrackIndices, index);
-        const auto wasStereoBefore = muse::contains(m_startTracklistInfo->stereoTrackIndices, index);
+        const auto wasStereoBefore = muse::contains(m_clipMovement->trackListInfo.stereoTrackIndices, index);
         if (isStereoNow != wasStereoBefore) {
             // Toggle back the way it was.
             utils::toggleStereo(*copy, index);
@@ -1544,9 +1549,9 @@ NeedsDownmixing Au3Interaction::moveSelectedClipsUpOrDown(int offset)
     if (offset < 0) {
         // The user dragged up. It's possible that the bottom-most tracks were created during this interaction,
         // in which case we make it nice to the user and remove them automatically.
-        // `m_startTracklistInfo` tells use what the tracks looks like at the start of the interaction. We check all extra tracks.
+        // `m_clipMovement` tells use what the tracks looks like at the start of the interaction. We check all extra tracks.
         const auto tracks = prj->trackList();
-        for (auto i = m_startTracklistInfo->size; i < tracks.size(); ++i) {
+        for (auto i = m_clipMovement->trackListInfo.size; i < tracks.size(); ++i) {
             const auto& track = tracks[i];
             Au3WaveTrack* const waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track.id));
             if (waveTrack->IsEmpty()) {

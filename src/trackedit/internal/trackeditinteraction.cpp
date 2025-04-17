@@ -126,10 +126,11 @@ bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t
     return withPlaybackStop(&ITrackeditInteraction::removeTracksData, tracksIds, begin, end, moveClips);
 }
 
-bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
+bool TrackeditInteraction::moveClips(secs_t timePositionOffset, double pixelsPerSecond, int trackPositionOffset, bool completed)
 {
     return withPlaybackStop(&ITrackeditInteraction::moveClips,
                             timePositionOffset,
+                            pixelsPerSecond,
                             trackPositionOffset,
                             completed);
 }

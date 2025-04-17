@@ -592,7 +592,8 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     secs_t timePositionOffset = calculateTimePositionOffset(item);
     int trackPositionOffset = calculateTrackPositionOffset(key, completed);
 
-    bool clipsMovedToOtherTrack = trackeditInteraction()->moveClips(timePositionOffset, trackPositionOffset, completed);
+    const bool clipsMovedToOtherTrack
+        = trackeditInteraction()->moveClips(timePositionOffset, m_context->zoom(), trackPositionOffset, completed);
 
     if ((completed && m_autoScrollConnection)) {
         disconnect(m_autoScrollConnection);

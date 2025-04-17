@@ -59,7 +59,7 @@ public:
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
-    bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) override;
+    bool moveClips(secs_t timePositionOffset, double pixelsPerSecond, int trackPositionOffset, bool completed) override;
     bool splitTracksAt(const TrackIdList& tracksIds, secs_t pivot) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
     bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
@@ -178,7 +178,15 @@ private:
     muse::ProgressPtr m_progress;
     std::atomic<bool> m_busy = false;
 
-    std::optional<TrackListInfo> m_startTracklistInfo;
+    struct ClipMovement {
+        ClipMovement(TrackListInfo info)
+            : trackListInfo{std::move(info)} {}
+        const TrackListInfo trackListInfo;
+        double totalXOffset = 0.;
+        int totalTrackOffset = 0;
+    };
+
+    std::optional<ClipMovement> m_clipMovement;
     bool m_moveClipsNeedsDownmixing = false;
 };
 }
