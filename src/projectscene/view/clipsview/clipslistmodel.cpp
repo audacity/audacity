@@ -468,6 +468,46 @@ int ClipsListModel::calculateTrackPositionOffset(const ClipKey& key, bool comple
     return trackPositionOffset;
 }
 
+bool ClipsListModel::isKeyboardTriggered() const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return 0;
+    }
+
+    auto vs = prj->viewState();
+
+    return muse::RealIsEqual(vs->clipEditStartTimeOffset(), -1.0);
+}
+
+void ClipsListModel::handleAutoScroll(bool ok,
+                                      bool completed,
+                                      const std::function<void()>& onAutoScrollFrame)
+{
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return;
+    }
+
+    // do not handle auto-scroll when using key-nav
+    if (muse::RealIsEqual(vs->clipEditStartTimeOffset(), -1.0)) {
+        return;
+    }
+
+    // handle auto-scroll over the edge
+    if (!ok) {
+        m_context->stopAutoScroll();
+    } else {
+        m_context->startAutoScroll(m_context->mousePositionTime());
+    }
+
+    if ((completed && m_autoScrollConnection) || !ok) {
+        disconnect(m_autoScrollConnection);
+    } else if (!m_autoScrollConnection && !completed) {
+        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, onAutoScrollFrame);
+    }
+}
+
 secs_t ClipsListModel::calculateTimePositionOffset(const ClipListItem* item) const
 {
     auto vs = globalContext()->currentProject()->viewState();
@@ -581,7 +621,10 @@ void ClipsListModel::startEditClip(const ClipKey& key)
 
 void ClipsListModel::endEditClip(const ClipKey& key)
 {
-    UNUSED(key);
+    ClipListItem* item = itemByKey(key.key);
+    if (!item) {
+        return;
+    }
 
     auto vs = globalContext()->currentProject()->viewState();
     if (!vs) {
@@ -632,7 +675,7 @@ bool ClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     return clipsMovedToOtherTrack;
 }
 
-bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
+bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -649,9 +692,33 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    double newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+    UndoPushType undoType = UndoPushType::NONE;
+    double newStartTime;
+    if (isKeyboardTriggered()) {
+        secs_t offset = 1 / m_context->zoom();
 
-    newStartTime = m_context->applySnapToTime(newStartTime);
+        if (action == ClipBoundary::Action::Expand) {
+            offset = -offset;
+        }
+
+        newStartTime = item->clip().startTime + offset;
+
+        Direction direction = Direction::Left;
+        if (action == ClipBoundary::Action::Shrink) {
+            direction = Direction::Right;
+        }
+        bool snapEnabled = vs->isSnapEnabled();
+        if (snapEnabled) {
+            newStartTime = m_context->singleStepToTime(m_context->timeToPosition(newStartTime), direction, vs->snap().val);
+        }
+
+        if (vs->lastEditedClip().isValid() && vs->lastEditedClip() == key.key) {
+            undoType = UndoPushType::CONSOLIDATE;
+        }
+    } else {
+        newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+        newStartTime = m_context->applySnapToTime(newStartTime);
+    }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
     double newClipTime = item->clip().endTime - newStartTime;
@@ -661,29 +728,20 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed)
 
     newStartTime = std::max(newStartTime, 0.0);
 
-    if (muse::RealIsEqual(newStartTime, item->clip().startTime)) {
-        return false;
+    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed, undoType);
+
+    if (ok) {
+        vs->setLastEditedClip(key.key);
     }
 
-    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed);
-
-    // handle auto-scroll over the edge
-    if (!ok) {
-        m_context->stopAutoScroll();
-    } else {
-        m_context->startAutoScroll(m_context->mousePositionTime());
-    }
-
-    if ((completed && m_autoScrollConnection) || !ok) {
-        disconnect(m_autoScrollConnection);
-    } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ trimLeftClip(key, false); });
-    }
+    handleAutoScroll(ok, completed, [this, key]() {
+        trimLeftClip(key, false);
+    });
 
     return ok;
 }
 
-bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
+bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -695,9 +753,33 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    double newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+    UndoPushType undoType = UndoPushType::NONE;
+    double newEndTime;
+    if (isKeyboardTriggered()) {
+        secs_t offset = 1 / m_context->zoom();
 
-    newEndTime = m_context->applySnapToTime(newEndTime);
+        if (action == ClipBoundary::Action::Expand) {
+            offset = -offset;
+        }
+
+        newEndTime = item->clip().endTime - offset;
+
+        Direction direction = Direction::Left;
+        if (action == ClipBoundary::Action::Expand) {
+            direction = Direction::Right;
+        }
+        bool snapEnabled = vs->isSnapEnabled();
+        if (snapEnabled) {
+            newEndTime = m_context->singleStepToTime(m_context->timeToPosition(newEndTime), direction, vs->snap().val);
+        }
+
+        if (vs->lastEditedClip().isValid() && vs->lastEditedClip() == key.key) {
+            undoType = UndoPushType::CONSOLIDATE;
+        }
+    } else {
+        newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+        newEndTime = m_context->applySnapToTime(newEndTime);
+    }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
     double newClipTime = newEndTime - item->clip().startTime;
@@ -705,29 +787,20 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed)
         newEndTime = item->clip().startTime + minClipTime;
     }
 
-    if (muse::RealIsEqual(newEndTime, item->clip().endTime)) {
-        return false;
+    bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed, undoType);
+
+    if (ok) {
+        vs->setLastEditedClip(key.key);
     }
 
-    bool ok = trackeditInteraction()->trimClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed);
-
-    // handle auto-scroll over the edge
-    if (!ok) {
-        m_context->stopAutoScroll();
-    } else {
-        m_context->startAutoScroll(m_context->mousePositionTime());
-    }
-
-    if ((completed && m_autoScrollConnection) || !ok) {
-        disconnect(m_autoScrollConnection);
-    } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ trimRightClip(key, false); });
-    }
+    handleAutoScroll(ok, completed, [this, key]() {
+        trimRightClip(key, false);
+    });
 
     return ok;
 }
 
-bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed)
+bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -739,9 +812,33 @@ bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    double newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+    UndoPushType undoType = UndoPushType::NONE;
+    double newStartTime;
+    if (isKeyboardTriggered()) {
+        secs_t offset = 1 / m_context->zoom();
 
-    newStartTime = m_context->applySnapToTime(newStartTime);
+        if (action == ClipBoundary::Action::Expand) {
+            offset = -offset;
+        }
+
+        newStartTime = item->clip().startTime + offset;
+
+        Direction direction = Direction::Left;
+        if (action == ClipBoundary::Action::Shrink) {
+            direction = Direction::Right;
+        }
+        bool snapEnabled = vs->isSnapEnabled();
+        if (snapEnabled) {
+            newStartTime = m_context->singleStepToTime(m_context->timeToPosition(newStartTime), direction, vs->snap().val);
+        }
+
+        if (vs->lastEditedClip().isValid() && vs->lastEditedClip() == key.key) {
+            undoType = UndoPushType::CONSOLIDATE;
+        }
+    } else {
+        newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
+        newStartTime = m_context->applySnapToTime(newStartTime);
+    }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
     double newClipTime = item->clip().endTime - newStartTime;
@@ -751,29 +848,20 @@ bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed)
 
     newStartTime = std::max(newStartTime, 0.0);
 
-    if (muse::RealIsEqual(newStartTime, item->clip().startTime)) {
-        return false;
+    bool ok = trackeditInteraction()->stretchClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed, undoType);
+
+    if (ok) {
+        vs->setLastEditedClip(key.key);
     }
 
-    bool ok = trackeditInteraction()->stretchClipLeft(key.key, newStartTime - item->clip().startTime, minClipTime, completed);
-
-    // handle auto-scroll over the edge
-    if (!ok) {
-        m_context->stopAutoScroll();
-    } else {
-        m_context->startAutoScroll(m_context->mousePositionTime());
-    }
-
-    if ((completed && m_autoScrollConnection) || !ok) {
-        disconnect(m_autoScrollConnection);
-    } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ stretchLeftClip(key, false); });
-    }
+    handleAutoScroll(ok, completed, [this, key]() {
+        stretchLeftClip(key, false);
+    });
 
     return ok;
 }
 
-bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed)
+bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -785,9 +873,33 @@ bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed)
         return false;
     }
 
-    double newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+    UndoPushType undoType = UndoPushType::NONE;
+    double newEndTime;
+    if (isKeyboardTriggered()) {
+        secs_t offset = 1 / m_context->zoom();
 
-    newEndTime = m_context->applySnapToTime(newEndTime);
+        if (action == ClipBoundary::Action::Expand) {
+            offset = -offset;
+        }
+
+        newEndTime = item->clip().endTime - offset;
+
+        Direction direction = Direction::Left;
+        if (action == ClipBoundary::Action::Expand) {
+            direction = Direction::Right;
+        }
+        bool snapEnabled = vs->isSnapEnabled();
+        if (snapEnabled) {
+            newEndTime = m_context->singleStepToTime(m_context->timeToPosition(newEndTime), direction, vs->snap().val);
+        }
+
+        if (vs->lastEditedClip().isValid() && vs->lastEditedClip() == key.key) {
+            undoType = UndoPushType::CONSOLIDATE;
+        }
+    } else {
+        newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
+        newEndTime = m_context->applySnapToTime(newEndTime);
+    }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
     double newClipTime = newEndTime - item->clip().startTime;
@@ -795,24 +907,15 @@ bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed)
         newEndTime = item->clip().startTime + minClipTime;
     }
 
-    if (muse::RealIsEqual(newEndTime, item->clip().endTime)) {
-        return false;
+    bool ok = trackeditInteraction()->stretchClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed, undoType);
+
+    if (ok) {
+        vs->setLastEditedClip(key.key);
     }
 
-    bool ok = trackeditInteraction()->stretchClipRight(key.key, item->clip().endTime - newEndTime, minClipTime, completed);
-
-    // handle auto-scroll over the edge
-    if (!ok) {
-        m_context->stopAutoScroll();
-    } else {
-        m_context->startAutoScroll(m_context->mousePositionTime());
-    }
-
-    if ((completed && m_autoScrollConnection) || !ok) {
-        disconnect(m_autoScrollConnection);
-    } else if (!m_autoScrollConnection && !completed) {
-        m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this, key](){ stretchRightClip(key, false); });
-    }
+    handleAutoScroll(ok, completed, [this, key]() {
+        stretchRightClip(key, false);
+    });
 
     return ok;
 }
@@ -847,6 +950,7 @@ void ClipsListModel::selectClip(const ClipKey& key)
 void ClipsListModel::resetSelectedClips()
 {
     clearSelectedItems();
+    selectionController()->resetSelectedClips();
 }
 
 void ClipsListModel::requestClipTitleChange()

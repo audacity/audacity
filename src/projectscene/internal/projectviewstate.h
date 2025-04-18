@@ -60,6 +60,9 @@ public:
     void setMoveInitiated(bool val) override;
     bool moveInitiated() const override;
 
+    void setLastEditedClip(const trackedit::ClipKey& clipKey) override;
+    trackedit::ClipKey lastEditedClip() const override;
+
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;
 
@@ -88,6 +91,8 @@ private:
     //! User needs to drag a mouse by a certain amount of pixels (left or right) or
     //! move to the other track for move to be initiated
     bool m_moveInitiated = false;
+
+    trackedit::ClipKey m_lastEditedClip = trackedit::ClipKey{};
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;

@@ -131,6 +131,18 @@ enum class Direction {
     Right
 };
 
+class ClipBoundary
+{
+    Q_GADGET
+public:
+    enum class Action {
+        Shrink, // trim or time-stretch inward
+        Expand,  // untrim or time-stretch outward,
+        Auto
+    };
+    Q_ENUM(Action)
+};
+
 class StereoHeightsPref
 {
     Q_GADGET

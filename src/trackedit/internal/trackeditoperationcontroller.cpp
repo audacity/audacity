@@ -198,24 +198,28 @@ bool TrackeditOperationController::splitDeleteSelectedOnTracks(const TrackIdList
     return trackAndClipOperations()->splitDeleteSelectedOnTracks(tracksIds, begin, end);
 }
 
-bool TrackeditOperationController::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool TrackeditOperationController::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                                UndoPushType type)
 {
-    return trackAndClipOperations()->trimClipLeft(clipKey, deltaSec, minClipDuration, completed);
+    return trackAndClipOperations()->trimClipLeft(clipKey, deltaSec, minClipDuration, completed, type);
 }
 
-bool TrackeditOperationController::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool TrackeditOperationController::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                                 UndoPushType type)
 {
-    return trackAndClipOperations()->trimClipRight(clipKey, deltaSec, minClipDuration, completed);
+    return trackAndClipOperations()->trimClipRight(clipKey, deltaSec, minClipDuration, completed, type);
 }
 
-bool TrackeditOperationController::stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool TrackeditOperationController::stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                                   UndoPushType type)
 {
-    return trackAndClipOperations()->stretchClipLeft(clipKey, deltaSec, minClipDuration, completed);
+    return trackAndClipOperations()->stretchClipLeft(clipKey, deltaSec, minClipDuration, completed, type);
 }
 
-bool TrackeditOperationController::stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool TrackeditOperationController::stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                                    UndoPushType type)
 {
-    return trackAndClipOperations()->stretchClipRight(clipKey, deltaSec, minClipDuration, completed);
+    return trackAndClipOperations()->stretchClipRight(clipKey, deltaSec, minClipDuration, completed, type);
 }
 
 secs_t TrackeditOperationController::clipDuration(const ClipKey& clipKey) const

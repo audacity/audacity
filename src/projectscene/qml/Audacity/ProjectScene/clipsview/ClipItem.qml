@@ -55,10 +55,10 @@ Rectangle {
     signal clipStartEditRequested()
     signal clipEndEditRequested()
 
-    signal clipLeftTrimRequested(bool completed)
-    signal clipRightTrimRequested(bool completed)
-    signal clipLeftStretchRequested(bool completed);
-    signal clipRightStretchRequested(bool completed);
+    signal clipLeftTrimRequested(bool completed, int action)
+    signal clipRightTrimRequested(bool completed, int action)
+    signal clipLeftStretchRequested(bool completed, int action);
+    signal clipRightStretchRequested(bool completed, int action);
 
     signal requestSelected()
     signal requestSelectionReset()
@@ -82,6 +82,8 @@ Rectangle {
     signal clipItemMousePositionChanged(real x, real y)
     signal clipHeaderHoveredChanged(bool value)
 
+    property alias navigation: navCtrl
+
     radius: 4
     color: clipSelected ? "white" : clipColor
     border.color: "#000000"
@@ -100,6 +102,51 @@ Rectangle {
     property bool rightTrimContainsMouse: false
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
     property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
+
+    // for navigating between clips
+    NavigationControl {
+        id: navCtrl
+        name: root.name
+        enabled: root.enabled && root.visible
+
+        accessible.role: MUAccessible.Button
+        accessible.name: root.name
+
+        onActiveChanged: function(active) {
+            if (active) {
+                root.forceActiveFocus()
+            }
+        }
+
+        onTriggered: {
+            clipNavigationPanel.requestActive()
+        }
+    }
+
+    NavigationFocusBorder {
+        navigationCtrl: navCtrl
+    }
+
+    // panel for navigating within the clip's items
+    property NavigationPanel clipNavigationPanel: NavigationPanel {
+        name: "ClipNavigationPanel"
+        enabled: navCtrl.active
+        direction: NavigationPanel.Horizontal
+        section: navigation.panel.section
+        onActiveChanged: function(active) {
+            if (active) {
+                root.forceActiveFocus()
+            }
+        }
+
+        onNavigationEvent: function(event) {
+            if (event.type === NavigationEvent.Escape && !clipHandles.leftTrimActive
+                    && !clipHandles.rightTrimActive && !clipHandles.leftStretchActive
+                    && !clipHandles.rightStretchActive) {
+                navCtrl.requestActive()
+            }
+        }
+    }
 
     onHeaderHoveredChanged: {
         root.clipHeaderHoveredChanged(headerHovered)
@@ -256,9 +303,9 @@ Rectangle {
 
         onReleased: function(e) {
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
-                root.clipLeftStretchRequested(true)
+                root.clipLeftStretchRequested(true, ClipBoundaryAction.Shrink)
             } else {
-                root.clipLeftTrimRequested(true)
+                root.clipLeftTrimRequested(true, ClipBoundaryAction.Shrink)
             }
 
             root.stopAutoScroll()
@@ -272,11 +319,11 @@ Rectangle {
 
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
                 if (pressed) {
-                    root.clipLeftStretchRequested(false)
+                    root.clipLeftStretchRequested(false, ClipBoundaryAction.Shrink)
                 }
             } else {
                 if (pressed) {
-                    root.clipLeftTrimRequested(false)
+                    root.clipLeftTrimRequested(false, ClipBoundaryAction.Shrink)
                 }
             }
         }
@@ -313,9 +360,9 @@ Rectangle {
 
         onReleased: function(e) {
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
-                root.clipRightStretchRequested(true)
+                root.clipRightStretchRequested(true, ClipBoundaryAction.Shrink)
             } else {
-                root.clipRightTrimRequested(true)
+                root.clipRightTrimRequested(true, ClipBoundaryAction.Shrink)
             }
 
             root.stopAutoScroll()
@@ -329,11 +376,11 @@ Rectangle {
 
             if (e.modifiers & (Qt.AltModifier | Qt.MetaModifier)) {
                 if (pressed) {
-                    root.clipRightStretchRequested(false)
+                    root.clipRightStretchRequested(false, ClipBoundaryAction.Shrink)
                 }
             } else {
                 if (pressed) {
-                    root.clipRightTrimRequested(false)
+                    root.clipRightTrimRequested(false, ClipBoundaryAction.Shrink)
                 }
             }
         }
@@ -433,6 +480,28 @@ Rectangle {
                 anchors.leftMargin: root.leftVisibleMargin + 4
                 anchors.rightMargin: 8
                 horizontalAlignment: Qt.AlignLeft
+
+                NavigationControl {
+                    id: titleEditNavCtrl
+                    name: "TitleEditNavCtrl"
+                    enabled: root.enabled && root.visible
+                    panel: root.clipNavigationPanel
+                    column: 3
+
+                    accessible.enabled: titleEditNavCtrl.enabled
+
+                    onTriggered: {
+                        root.editTitle()
+                    }
+                }
+
+                NavigationFocusBorder {
+                    navigationCtrl: titleEditNavCtrl
+
+                    anchors.topMargin: 1
+                    anchors.bottomMargin: 0
+                    radius: 5
+                }
             }
 
             Loader {
@@ -455,6 +524,7 @@ Rectangle {
 
             Component {
                 id: titleEditComp
+
                 TextInputField {
                     id: titleEdit
 
@@ -551,6 +621,10 @@ Rectangle {
 
                     menuModel: (root.multiClipsSelected || root.groupId != -1) ? multiClipContextMenuModel : singleClipContextMenuModel
 
+                    navigation.name: "ClipMenuBtn"
+                    navigation.panel: root.clipNavigationPanel
+                    navigation.column: 4
+
                     onHandleMenuItem: function(itemId) {
                         Qt.callLater(menuModel.handleMenuItem, itemId)
                     }
@@ -612,6 +686,32 @@ Rectangle {
                 }
             }
 
+            FlatButton {
+                id: accessibilitySelectBtn
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 10
+
+                navigation.name: "SelectBtn"
+                navigation.panel: root.clipNavigationPanel
+                navigation.column: 0
+
+                width: 55
+                height: 20
+                text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
+                visible: root.clipNavigationPanel.highlight
+                normalColor: "#2b2a33"
+
+                onClicked: {
+                    if (!root.clipSelected) {
+                        root.requestSelected()
+                    } else {
+                        root.requestSelectionReset()
+                    }
+                }
+            }
+
             onIsNearSampleChanged: {
                 if(root.isNearSample) {
                     waveView.forceActiveFocus()
@@ -654,6 +754,8 @@ Rectangle {
         handlesVisible: root.clipSelected && !root.moveActive
         canvas: root.canvas
 
+        clipNavigationPanel: root.clipNavigationPanel
+
         onClipHandlesMousePositionChanged: function(xWithinClipHandles, yWithinClipHandles) {
             var xWithinClipItem = xWithinClipHandles
             var yWithinClipItem = header.height + 1 + yWithinClipHandles
@@ -668,20 +770,20 @@ Rectangle {
             root.clipEndEditRequested()
         }
 
-        onTrimLeftRequested: function(completed) {
-            root.clipLeftTrimRequested(completed)
+        onTrimLeftRequested: function(completed, action) {
+            root.clipLeftTrimRequested(completed, action)
         }
 
-        onTrimRightRequested: function(completed) {
-            root.clipRightTrimRequested(completed)
+        onTrimRightRequested: function(completed, action) {
+            root.clipRightTrimRequested(completed, action)
         }
 
-        onStretchLeftRequested: function(completed) {
-            root.clipLeftStretchRequested(completed)
+        onStretchLeftRequested: function(completed, action) {
+            root.clipLeftStretchRequested(completed, action)
         }
 
-        onStretchRightRequested: function(completed) {
-            root.clipRightStretchRequested(completed)
+        onStretchRightRequested: function(completed, action) {
+            root.clipRightStretchRequested(completed, action)
         }
 
         onStopAutoScroll: {

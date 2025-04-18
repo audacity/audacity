@@ -51,6 +51,9 @@ public:
     virtual void setMoveInitiated(bool val) = 0;
     virtual bool moveInitiated() const = 0;
 
+    virtual void setLastEditedClip(const trackedit::ClipKey& clipKey) = 0;
+    virtual trackedit::ClipKey lastEditedClip() const = 0;
+
     virtual muse::ValCh<bool> altPressed() const = 0;
     virtual muse::ValCh<bool> ctrlPressed() const = 0;
 };

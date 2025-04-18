@@ -305,6 +305,8 @@ DockPage {
 
     central: TracksClipsView {
         id: clipsView
+
+        navigationSection: tracksPanel.navigationSection
     }
 
     statusBar: DockStatusBar {

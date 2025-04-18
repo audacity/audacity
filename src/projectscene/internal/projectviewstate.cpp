@@ -243,6 +243,20 @@ bool ProjectViewState::moveInitiated() const
     return m_moveInitiated;
 }
 
+void ProjectViewState::setLastEditedClip(const trackedit::ClipKey& clipKey)
+{
+    if (m_lastEditedClip == clipKey) {
+        return;
+    }
+
+    m_lastEditedClip = clipKey;
+}
+
+au::trackedit::ClipKey ProjectViewState::lastEditedClip() const
+{
+    return m_lastEditedClip;
+}
+
 muse::ValCh<bool> ProjectViewState::altPressed() const
 {
     return m_altPressed;

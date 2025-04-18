@@ -199,34 +199,37 @@ bool TrackeditInteraction::splitDeleteSelectedOnTracks(const TrackIdList tracksI
     return withPlaybackStop(&ITrackeditInteraction::splitDeleteSelectedOnTracks, tracksIds, begin, end);
 }
 
-bool TrackeditInteraction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool TrackeditInteraction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
 {
-    return withPlaybackStop(&ITrackeditInteraction::trimClipLeft, clipKey, deltaSec, minClipDuration, completed);
+    return withPlaybackStop(&ITrackeditInteraction::trimClipLeft, clipKey, deltaSec, minClipDuration, completed, type);
 }
 
-bool TrackeditInteraction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool TrackeditInteraction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
 {
-    return withPlaybackStop(&ITrackeditInteraction::trimClipRight, clipKey, deltaSec, minClipDuration, completed);
+    return withPlaybackStop(&ITrackeditInteraction::trimClipRight, clipKey, deltaSec, minClipDuration, completed, type);
 }
 
 bool TrackeditInteraction::stretchClipLeft(const ClipKey& clipKey,
                                            secs_t deltaSec,
                                            secs_t minClipDuration,
-                                           bool completed)
+                                           bool completed,
+                                           UndoPushType type)
 {
-    return withPlaybackStop(&ITrackeditInteraction::stretchClipLeft, clipKey, deltaSec, minClipDuration, completed);
+    return withPlaybackStop(&ITrackeditInteraction::stretchClipLeft, clipKey, deltaSec, minClipDuration, completed, type);
 }
 
 bool TrackeditInteraction::stretchClipRight(const ClipKey& clipKey,
                                             secs_t deltaSec,
                                             secs_t minClipDuration,
-                                            bool completed)
+                                            bool completed,
+                                            UndoPushType type)
 {
     return withPlaybackStop(&ITrackeditInteraction::stretchClipRight,
                             clipKey,
                             deltaSec,
                             minClipDuration,
-                            completed);
+                            completed,
+                            type);
 }
 
 muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKey) const
