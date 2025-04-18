@@ -1,5 +1,6 @@
 import QtQuick
 
+import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.ProjectScene
@@ -8,6 +9,10 @@ Item {
 
     id: root
 
+    property NavigationSection navigationSection: null
+    property NavigationPanel navigationPanel: null
+
+    property int trackIdx: null
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
     property var canvas: null
@@ -45,6 +50,7 @@ Item {
 
     signal selectionDraged(var x1, var x2, var completed)
     signal seekToX(var x)
+    signal insureVerticallyVisible(var top, var bottom)
 
     signal clipHeaderHoveredChanged(bool val)
 
@@ -189,6 +195,7 @@ Item {
 
             delegate: Loader {
                 property QtObject clipItem: model.item
+                property int index: model.index
 
                 height: parent.height
                 width: Math.max(3, clipItem.width)
@@ -263,6 +270,19 @@ Item {
                 collapsed: trackViewState.isTrackCollapsed
                 channelHeightRatio: root.channelHeightRatio
                 showChannelSplitter: isStereo
+
+                navigation.name: Boolean(clipItem) ? clipItem.title + clipItem.index : ""
+                navigation.panel: root.navigationPanel
+                navigation.column: index
+                navigation.row: root.trackIdx
+                navigation.accessible.name: Boolean(clipItem) ? clipItem.title : ""
+                navigation.onActiveChanged: {
+                    if (navigation.active) {
+                        root.context.insureVisible(root.context.positionToTime(clipItem.x))
+                        root.insureVerticallyVisible(root.y, root.y + root.height)
+                    }
+                }
+
                 distanceToLeftNeighbor: {
                     let leftNeighbor = clipsModel.prev(clipItem.key)
                     if (!leftNeighbor) {
@@ -329,20 +349,20 @@ Item {
                     clipsModel.endEditClip(clipItem.key)
                 }
 
-                onClipLeftTrimRequested: function(completed) {
-                    clipsModel.trimLeftClip(clipItem.key, completed)
+                onClipLeftTrimRequested: function(completed, action) {
+                    clipsModel.trimLeftClip(clipItem.key, completed, action)
                 }
 
-                onClipRightTrimRequested: function(completed) {
-                    clipsModel.trimRightClip(clipItem.key, completed)
+                onClipRightTrimRequested: function(completed, action) {
+                    clipsModel.trimRightClip(clipItem.key, completed, action)
                 }
 
-                onClipLeftStretchRequested: function(completed) {
-                    clipsModel.stretchLeftClip(clipItem.key, completed)
+                onClipLeftStretchRequested: function(completed, action) {
+                    clipsModel.stretchLeftClip(clipItem.key, completed, action)
                 }
 
-                onClipRightStretchRequested: function(completed) {
-                    clipsModel.stretchRightClip(clipItem.key, completed)
+                onClipRightStretchRequested: function(completed, action) {
+                    clipsModel.stretchRightClip(clipItem.key, completed, action)
                 }
 
                 onStartAutoScroll: {

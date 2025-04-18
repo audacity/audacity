@@ -11,6 +11,8 @@ Rectangle {
 
     id: root
 
+    property NavigationSection navigationSection: null
+
     property bool clipHovered: false
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
@@ -300,7 +302,7 @@ Rectangle {
                     return
                 }
 
-                if (root.clipHeaderHovered && tracksClipsView.moveActive) {
+                if (root.clipHeaderHovered) {
                     tracksClipsView.clipMoveRequested(hoveredClipKey, true)
                     tracksClipsView.stopAutoScroll()
                     tracksClipsView.clipEndEditRequested(hoveredClipKey)
@@ -369,6 +371,9 @@ Rectangle {
 
                 anchors.fill: parent
                 clip: true
+
+                navigation.section: root.navigationSection
+                navigation.order: 3
 
                 property bool moveActive: false
 
@@ -455,6 +460,10 @@ Rectangle {
                     selectionEditInProgress: selectionController.selectionEditInProgress
                     selectionInProgress: selectionController.selectionInProgress
 
+                    trackIdx: model.index
+                    navigationSection: root.navigationSection
+                    navigationPanel: tracksClipsView.navigation
+
                     onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack, clipKey) {
                         let xGlobalPosition = xWithinTrack
                         let yGlobalPosition = y + yWithinTrack - tracksClipsView.contentY
@@ -500,6 +509,15 @@ Rectangle {
 
                     onSeekToX: function(x) {
                         playCursorController.seekToX(x)
+                    }
+
+                    onInsureVerticallyVisible: function(clipTop, clipBottom) {
+                        var delta = calculateVerticalScrollDelta(tracksViewState.tracksVericalY, tracksViewState.tracksVericalY + content.height, clipTop, clipBottom)
+                        if (tracksViewState.tracksVericalY + delta < 0) {
+                            tracksViewState.changeTracksVericalY(0)
+                        } else {
+                            tracksViewState.changeTracksVericalY(tracksViewState.tracksVericalY + delta)
+                        }
                     }
 
                     onInteractionStarted: {
@@ -550,6 +568,25 @@ Rectangle {
                         content.rightTrimPressedButtons = tracksClipsView.checkIfAnyTrack(function(track){
                             return track && track.rightTrimPressedButtons
                         })
+                    }
+
+                    function calculateVerticalScrollDelta(viewTop, viewBottom, clipTop, clipBottom, padding = 10) {
+                        // clip fully visible
+                        if (clipTop >= viewTop && clipBottom <= viewBottom) {
+                            return 0
+                        }
+
+                        // clip is above the view —> scroll up
+                        if (clipTop < viewTop) {
+                            return clipTop - (viewTop + padding)
+                        }
+
+                        // clip is below the view —> scroll down
+                        if (clipBottom > viewBottom) {
+                            return clipBottom - (viewBottom - padding)
+                        }
+
+                        return 0;
                     }
                 }
             }

@@ -1917,7 +1917,7 @@ bool Au3Interaction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, se
     return true;
 }
 
-bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsForInteraction(clipKey);
@@ -1933,13 +1933,13 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_
     }
 
     if (completed) {
-        projectHistory()->pushHistoryState("Clip trimmed", "Trim clip");
+        projectHistory()->pushHistoryState("Clip left trimmed", "Trim clip left", type);
     }
 
     return true;
 }
 
-bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsForInteraction(clipKey);
@@ -1954,7 +1954,7 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs
     }
 
     if (completed) {
-        projectHistory()->pushHistoryState("Clip trimmed", "Trim clip");
+        projectHistory()->pushHistoryState("Clip right trimmed", "Trim clip right", type);
     }
 
     return true;
@@ -1963,7 +1963,8 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs
 bool Au3Interaction::stretchClipLeft(const ClipKey& clipKey,
                                      secs_t deltaSec,
                                      secs_t minClipDuration,
-                                     bool completed)
+                                     bool completed,
+                                     UndoPushType type)
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsForInteraction(clipKey);
@@ -1979,7 +1980,7 @@ bool Au3Interaction::stretchClipLeft(const ClipKey& clipKey,
     }
 
     if (completed) {
-        projectHistory()->pushHistoryState("Clip stretched", "Stretch clip");
+        projectHistory()->pushHistoryState("Clip left stretched", "Stretch clip left", type);
     }
 
     return true;
@@ -1988,7 +1989,8 @@ bool Au3Interaction::stretchClipLeft(const ClipKey& clipKey,
 bool Au3Interaction::stretchClipRight(const ClipKey& clipKey,
                                       secs_t deltaSec,
                                       secs_t minClipDuration,
-                                      bool completed)
+                                      bool completed,
+                                      UndoPushType type)
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsForInteraction(clipKey);
@@ -2003,7 +2005,7 @@ bool Au3Interaction::stretchClipRight(const ClipKey& clipKey,
     }
 
     if (completed) {
-        projectHistory()->pushHistoryState("Clip stretched", "Stretch clip");
+        projectHistory()->pushHistoryState("Clip right stretched", "Stretch clip right", type);
     }
 
     return true;

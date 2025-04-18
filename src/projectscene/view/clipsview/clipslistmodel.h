@@ -60,10 +60,10 @@ public:
     Q_INVOKABLE void endEditClip(const ClipKey& key);
 
     Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
-    Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed);
-    Q_INVOKABLE bool trimRightClip(const ClipKey& key, bool completed);
-    Q_INVOKABLE bool stretchLeftClip(const ClipKey& key, bool completed);
-    Q_INVOKABLE bool stretchRightClip(const ClipKey& key, bool completed);
+    Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
+    Q_INVOKABLE bool trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
+    Q_INVOKABLE bool stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
+    Q_INVOKABLE bool stretchRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
 
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClips();
@@ -134,6 +134,9 @@ private:
     MoveOffset calculateMoveOffset(const ClipListItem* item, const ClipKey& key, bool completed) const;
     trackedit::secs_t calculateTimePositionOffset(const ClipListItem* item) const;
     int calculateTrackPositionOffset(const ClipKey& key, bool completed) const;
+    bool isKeyboardTriggered() const;
+
+    void handleAutoScroll(bool ok, bool completed, const std::function<void()>& onAutoScrollFrame);
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 

@@ -3,6 +3,8 @@ import QtQuick
 import Muse.Ui
 import Muse.UiComponents
 
+import Audacity.ProjectScene
+
 Item {
     id: root
 
@@ -14,6 +16,12 @@ Item {
 
     property bool debugRectsVisible: false
 
+    property NavigationPanel clipNavigationPanel: null
+    property bool leftTrimActive: false
+    property bool rightTrimActive: false
+    property bool leftStretchActive: false
+    property bool rightStretchActive: false
+
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
     signal clipHandlesMousePositionChanged(real x, real y)
@@ -23,11 +31,11 @@ Item {
     signal clipStartEditRequested()
     signal clipEndEditRequested()
 
-    signal trimLeftRequested(bool completed)
-    signal trimRightRequested(bool completed)
+    signal trimLeftRequested(bool completed, int action)
+    signal trimRightRequested(bool completed, int action)
 
-    signal stretchLeftRequested(bool completed)
-    signal stretchRightRequested(bool completed)
+    signal stretchLeftRequested(bool completed, int action)
+    signal stretchRightRequested(bool completed, int action)
 
     //! NOTE: auto-scroll for trimming is triggered from clipslistmodel
     signal stopAutoScroll()
@@ -77,6 +85,62 @@ Item {
 
                 visible: debugRectsVisible
             }
+
+            NavigationControl {
+                id: leftTrimNavCtrl
+                name: "LeftArrowNavCtrl"
+                enabled: handlesVisible
+                panel: root.clipNavigationPanel
+                column: 2
+
+                accessible.enabled: leftTrimNavCtrl.enabled
+
+                onTriggered: {
+                    root.leftTrimActive = !root.leftTrimActive
+                }
+
+                onNavigationEvent: function(event) {
+                    if (!root.leftTrimActive) {
+                        return
+                    }
+
+                    switch(event.type) {
+                    case NavigationEvent.Left:
+                        root.trimLeftRequested(true, ClipBoundaryAction.Expand)
+                        event.accepted = true
+                        break
+                    case NavigationEvent.Right:
+                        root.trimLeftRequested(true, ClipBoundaryAction.Shrink)
+                        event.accepted = true
+                        break
+                    case NavigationEvent.Trigger:
+                        // NOTE: do not modify leftTrimActive, otherwise it breaks
+                        // trim mode activation/deactivation
+                        break
+                    case NavigationEvent.Escape:
+                        root.leftTrimActive = false
+                        event.accepted = true
+                        break
+                    default:
+                        root.leftTrimActive = false
+                        break
+                    }
+                }
+
+                onActiveChanged: {
+                    if (!active) {
+                        root.leftTrimActive = false
+                    }
+                }
+            }
+
+            NavigationFocusBorder {
+                navigationCtrl: leftTrimNavCtrl
+
+                radius: 5
+
+                border.color: root.leftTrimActive ? "orange" : ui.theme.fontPrimaryColor
+            }
         }
 
         MouseArea {
@@ -91,7 +155,7 @@ Item {
             }
 
             onReleased: function(e) {
-                root.trimLeftRequested(true)
+                root.trimLeftRequested(true, ClipBoundaryAction.Auto)
                 root.stopAutoScroll()
 
                 // this needs to be always at the very end
@@ -112,7 +176,7 @@ Item {
                 clipHandlesMousePositionChanged(mouseX + leftTrimHandle.x, mouseY)
 
                 if (pressed) {
-                    root.trimLeftRequested(false)
+                    root.trimLeftRequested(false, ClipBoundaryAction.Auto)
                 }
             }
         }
@@ -162,6 +226,62 @@ Item {
 
                 visible: debugRectsVisible
             }
+
+            NavigationControl {
+                id: rightTrimNavCtrl
+                name: "RightArrowNavCtrl"
+                enabled: handlesVisible
+                panel: root.clipNavigationPanel
+                column: 5
+
+                accessible.enabled: rightTrimNavCtrl.enabled
+
+                onTriggered: {
+                    root.rightTrimActive = !root.rightTrimActive
+                }
+
+                onNavigationEvent: function(event) {
+                    if (!root.rightTrimActive) {
+                        return
+                    }
+
+                    switch(event.type) {
+                    case NavigationEvent.Left:
+                        root.trimRightRequested(true, ClipBoundaryAction.Shrink)
+                        event.accepted = true
+                        break
+                    case NavigationEvent.Right:
+                        root.trimRightRequested(true, ClipBoundaryAction.Expand)
+                        event.accepted = true
+                        break
+                    case NavigationEvent.Trigger:
+                        // NOTE: do not modify rightTrimActive, otherwise it breaks
+                        // trim mode activation/deactivation
+                        break
+                    case NavigationEvent.Escape:
+                        root.rightTrimActive = false
+                        event.accepted = true
+                        break
+                    default:
+                        root.rightTrimActive = false
+                        break
+                    }
+                }
+
+                onActiveChanged: {
+                    if (!active) {
+                        root.rightTrimActive = false
+                    }
+                }
+            }
+
+            NavigationFocusBorder {
+                navigationCtrl: rightTrimNavCtrl
+
+                radius: 5
+
+                border.color: root.rightTrimActive ? "orange" : ui.theme.fontPrimaryColor
+            }
         }
 
         MouseArea {
@@ -176,7 +296,7 @@ Item {
             }
 
             onReleased: function(e) {
-                root.trimRightRequested(true)
+                root.trimRightRequested(true, ClipBoundaryAction.Auto)
                 root.stopAutoScroll()
 
                 // this needs to be always at the very end
@@ -197,7 +317,7 @@ Item {
                 clipHandlesMousePositionChanged(mouseX + rightTrimHandle.x, mouseY)
 
                 if (pressed) {
-                    root.trimRightRequested(false)
+                    root.trimRightRequested(false, ClipBoundaryAction.Auto)
                 }
             }
         }
@@ -257,6 +377,70 @@ Item {
                     visible: debugRectsVisible
                 }
             }
+
+            NavigationControl {
+                id: leftStretchNavCtrl
+                name: "LeftStretchNavCtrl"
+                enabled: handlesVisible
+                panel: root.clipNavigationPanel
+                column: 1
+
+                accessible.enabled: leftStretchNavCtrl.enabled
+
+                onTriggered: {
+                    root.leftStretchActive = !root.leftStretchActive
+                }
+
+                onNavigationEvent: function(event) {
+                    if (!root.leftStretchActive) {
+                        return
+                    }
+
+                    switch(event.type) {
+                    case NavigationEvent.Left:
+                        root.stretchLeftRequested(true, ClipBoundaryAction.Expand)
+                        event.accepted = true
+                        break
+                    case NavigationEvent.Right:
+                        root.stretchLeftRequested(true, ClipBoundaryAction.Shrink)
+                        event.accepted = true
+                        break
+                    case NavigationEvent.Trigger:
+                        // NOTE: do not modify leftStretchActive, otherwise it breaks
+                        // stretch mode activation/deactivation
+                        break
+                    case NavigationEvent.Escape:
+                        root.leftStretchActive = false
+                        event.accepted = true
+                        break
+                    default:
+                        root.leftStretchActive = false
+                        break
+                    }
+                }
+
+                onActiveChanged: {
+                    if (!active) {
+                        root.leftStretchActive = false
+                    }
+                }
+            }
+
+            Rectangle {
+                x: -9
+                y: -9
+                height: 30
+                width: 30
+                color: "transparent"
+
+                NavigationFocusBorder {
+                    navigationCtrl: leftStretchNavCtrl
+
+                    radius: 5
+
+                    border.color: root.leftStretchActive ? "orange" : ui.theme.fontPrimaryColor
+                }
+            }
         }
 
         MouseArea {
@@ -270,7 +454,7 @@ Item {
             }
 
             onReleased: {
-                root.stretchLeftRequested(true)
+                root.stretchLeftRequested(true, ClipBoundaryAction.Auto)
                 root.stopAutoScroll()
 
                 // this needs to be always at the very end
@@ -291,7 +475,7 @@ Item {
                 clipHandlesMousePositionChanged(mouseX + leftTimecode.x, mouseY)
 
                 if (pressed) {
-                    root.stretchLeftRequested(false)
+                    root.stretchLeftRequested(false, ClipBoundaryAction.Auto)
                 }
             }
         }
@@ -347,6 +531,70 @@ Item {
                     border.width: 1
                     visible: debugRectsVisible
                 }
+
+                NavigationControl {
+                    id: rightStretchNavCtrl
+                    name: "RightStretchNavCtrl"
+                    enabled: handlesVisible
+                    panel: root.clipNavigationPanel
+                    column: 6
+
+                    accessible.enabled: rightStretchNavCtrl.enabled
+
+                    onTriggered: {
+                        root.rightStretchActive = !root.rightStretchActive
+                    }
+
+                    onNavigationEvent: function(event) {
+                        if (!root.rightStretchActive) {
+                            return
+                        }
+
+                        switch(event.type) {
+                        case NavigationEvent.Left:
+                            root.stretchRightRequested(true, ClipBoundaryAction.Shrink)
+                            event.accepted = true
+                            break
+                        case NavigationEvent.Right:
+                            root.stretchRightRequested(true, ClipBoundaryAction.Expand)
+                            event.accepted = true
+                            break
+                        case NavigationEvent.Trigger:
+                            // NOTE: do not modify rightStretchActive, otherwise it breaks
+                            // stretch mode activation/deactivation
+                            break
+                        case NavigationEvent.Escape:
+                            root.rightStretchActive = false
+                            event.accepted = true
+                            break
+                        default:
+                            root.rightStretchActive = false
+                            break
+                        }
+                    }
+
+                    onActiveChanged: {
+                        if (!active) {
+                            root.rightStretchActive = false
+                        }
+                    }
+                }
+
+                Rectangle {
+                    x: -8
+                    y: -8
+                    height: 30
+                    width: 30
+                    color: "transparent"
+
+                    NavigationFocusBorder {
+                        navigationCtrl: rightStretchNavCtrl
+
+                        radius: 5
+
+                        border.color: root.rightStretchActive ? "orange" : ui.theme.fontPrimaryColor
+                    }
+                }
             }
         }
 
@@ -361,7 +609,7 @@ Item {
             }
 
             onReleased: {
-                root.stretchRightRequested(true)
+                root.stretchRightRequested(true, ClipBoundaryAction.Auto)
                 root.stopAutoScroll()
 
                 // this needs to be always at the very end
@@ -382,7 +630,7 @@ Item {
                 clipHandlesMousePositionChanged(mouseX + rightTimecode.x, mouseY)
 
                 if (pressed) {
-                    root.stretchRightRequested(false)
+                    root.stretchRightRequested(false, ClipBoundaryAction.Auto)
                 }
             }
         }
