@@ -1,4 +1,24 @@
-There are several ways to contribute to Audacity:
+# Contributing to Audacity
+
+Thank you for considering contributing to Audacity! We welcome contributions from the community to improve the project. This document outlines the guidelines for contributing, including coding standards, testing processes, and how to submit your changes.
+
+---
+
+## Table of Contents
+1. [Getting Started](#getting-started)
+2. [Coding Standards](#coding-standards)
+3. [Testing Guidelines](#testing-guidelines)
+4. [Submitting Changes](#submitting-changes)
+5. [Code of Conduct](#code-of-conduct)
+
+---
+
+## Getting Started
+
+1. **Fork the Repository**: Start by forking the repository to your GitHub account.
+2. **Clone the Repository**: Clone your forked repository to your local machine:
+   ```bash
+   git clone https://github.com/your-username/audacity.git
 
 ## Developing
 
