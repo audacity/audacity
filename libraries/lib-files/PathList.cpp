@@ -183,6 +183,11 @@ void FileNames::InitializePathList()
    FileNames::AddUniquePathToPathList(
       progPath + wxT("/../Resources"), audacityPathList);
 
+   // Add system Library directory to allow loading third-party modules installed for all users
+   const wxString modulesPath = wxString::Format(
+      wxT("/Library/Application Support/audacity"));
+   FileNames::AddUniquePathToPathList(modulesPath, audacityPathList);
+
    // JKC Bug 1220: Using an actual temp directory for session data on Mac was
    // wrong because it would get cleared out on a reboot.
    TempDirectory::SetDefaultTempDir( wxString::Format(
