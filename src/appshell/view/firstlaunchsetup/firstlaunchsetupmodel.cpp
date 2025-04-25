@@ -30,8 +30,8 @@ FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent)
     : QObject(parent)
 {
     m_pages = {
+        Page { "UnderConstructionPage.qml", "audacity://project" },
         Page { "ThemesPage.qml", "audacity://project" },
-        Page { "PlaybackPage.qml", "audacity://project" },
         Page { "TutorialsPage.qml", "musescore://home?section=learn" }
     };
 }
