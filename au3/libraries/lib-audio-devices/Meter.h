@@ -11,8 +11,13 @@ Paul Licameli split from MeterPanelBase.h
 #ifndef __AUDACITY_METER__
 #define __AUDACITY_METER__
 
+#include <map>
+#include <cstdint>
+#include <cstddef>
+#include <vector>
+
 //! AudioIO uses this to send sample buffers for real-time display updates
-class AUDIO_DEVICES_API Meter /* not final */
+class AUDIO_DEVICES_API Meter  /* not final */
 {
 public:
     virtual ~Meter();
@@ -20,6 +25,7 @@ public:
     virtual void Clear() = 0;
     virtual void Reset(double sampleRate, bool resetClipping) = 0;
     virtual void UpdateDisplay(unsigned numChannels, unsigned long numFrames, const float* sampleData) = 0;
+    virtual void UpdateDisplayPerTrack(const float* sampleData, int64_t trackId, unsigned channel, size_t len) = 0;
     virtual bool IsMeterDisabled() const = 0;
     virtual float GetMaxPeak() const = 0;
     virtual bool IsClipping() const = 0;

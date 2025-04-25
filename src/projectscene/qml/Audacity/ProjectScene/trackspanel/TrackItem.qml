@@ -249,12 +249,26 @@ ListItemBlank {
             topPadding: 5
 
             spacing: 2
-                // id: volumePressureMeters
+
+            TapHandler {
+                id: volumePressureTapHandler
+                onTapped: {
+                    rightVolumePressureMeter.onTapped()
+                    leftOrMonoVolumePressureMeter.onTapped()
+                }
+            }
 
             VolumePressureMeter {
                 id: leftOrMonoVolumePressureMeter
                 height: root.height
                 currentVolumePressure: root.item.leftChannelPressure
+                isPlaying: trackViewState.isPlaying
+            
+                onCurrentVolumePressureChanged: {
+                    if (leftOrMonoVolumePressureMeter.maxPeak < currentVolumePressure) {
+                        leftOrMonoVolumePressureMeter.maxPeak = currentVolumePressure
+                    }
+                }
             }
 
             VolumePressureMeter {
@@ -262,6 +276,13 @@ ListItemBlank {
                 visible: root.item.channelCount === 2
                 height: root.height
                 currentVolumePressure: root.item.rightChannelPressure
+                isPlaying: trackViewState.isPlaying
+
+                onCurrentVolumePressureChanged: {
+                    if (rightVolumePressureMeter.maxPeak < currentVolumePressure) {
+                        rightVolumePressureMeter.maxPeak = currentVolumePressure
+                    }
+                }
             }
 
             states: [

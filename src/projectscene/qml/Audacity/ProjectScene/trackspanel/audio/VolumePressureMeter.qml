@@ -15,15 +15,21 @@ Canvas {
     }
 
     property real currentVolumePressure: -60.0
+    property real updatedVolumePressure: -60.0
+    property real maxPeak: -60.0
+    property real recentPeak: -60.0
+    property var recentVolumePressure: []
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
+    property bool isPlaying: false
 
     property real indicatorWidth
     property bool showRuler: false
     property int style: VolumePressureMeter.Style.Solid
     property color meterColor: "#7689E6" // TODO: Use the track color
 
-    property bool isClipping: currentVolumePressure >= maxDisplayedVolumePressure
+    property bool isClipping: updatedVolumePressure >= maxDisplayedVolumePressure
+    property bool wasClipped: false
 
     width: root.showRuler ? indicatorWidth + 20 : indicatorWidth
 
@@ -65,6 +71,48 @@ Canvas {
         onShortStrokeColorChanged: { prv.rulerNeedsPaint = true; root.requestPaint() }
 
         property bool rulerNeedsPaint: true
+        property bool needsClear: false
+    }
+
+    function onTapped() {
+        root.maxPeak = -60
+        root.recentPeak = -60
+        root.wasClipped = false
+        root.recentVolumePressure = []
+        root.updatedVolumePressure = -60
+        requestPaint()
+    }
+
+    function updateRecentPeak(currentValue) {
+        const now = Date.now()
+
+        root.recentVolumePressure.push({ value: currentValue, time: now })
+
+        const recentPeakStartInterval = now - 600
+        let cutoffIndex = -1
+
+        for (let i = 0; i < root.recentVolumePressure.length; i++) {
+            if (root.recentVolumePressure[i].time < recentPeakStartInterval) {
+                cutoffIndex = i
+            }
+            else {
+                break
+            }
+        }
+
+        if (cutoffIndex !== -1) {
+            root.recentVolumePressure.splice(0, cutoffIndex)
+        }
+
+        // Calculate the recent peak
+        let recentPeak = -60
+        for (let i = 0; i < root.recentVolumePressure.length; i++) {
+            if (root.recentVolumePressure[i].value > recentPeak) {
+                recentPeak = root.recentVolumePressure[i].value
+            }
+        }
+
+        return recentPeak
     }
 
     // Rounding up fullStep value to the predefined one,
@@ -202,28 +250,59 @@ Canvas {
         drawRoundedRect(ctx, ui.theme.strokeColor, 0, 0, indicatorWidth, prv.indicatorHeight, 2, "both")
 
         // Drawing the Overload indicator
-        const overloadStyle = root.isClipping ? "#EF476F" : ui.theme.buttonColor
+        const overloadStyle = root.wasClipped ? "#EF476F" : ui.theme.buttonColor
         drawRoundedRect(ctx, overloadStyle, 0, 0, indicatorWidth, prv.overloadHeight, 2, "top")
 
         // Clamping the current volume pressure
         const volumePressure = Math.max(minDisplayedVolumePressure,
-                                    Math.min(currentVolumePressure, maxDisplayedVolumePressure));
+                                    Math.min(updatedVolumePressure, maxDisplayedVolumePressure));
         // calculating the current volume height depending on the panel height
         const meterHeight = prv.heightPerUnit * (volumePressure - root.minDisplayedVolumePressure)
 
-        if (meterHeight > 0) {
-            // Drawing the volume pressure
-            drawRoundedRect(ctx, getMeterFillStyle(ctx),
-                            0, root.height - 10 - meterHeight,
-                            indicatorWidth, meterHeight,
-                            /* radius */ 2, /* rounded edge */ "bottom")
+        const volumePressurePeak = Math.max(minDisplayedVolumePressure,
+                                    Math.min(root.maxPeak, maxDisplayedVolumePressure));
+
+        const meterPeakHeight = prv.heightPerUnit * (volumePressurePeak - root.minDisplayedVolumePressure)
+
+        const volumePressureRecentPeak = Math.max(minDisplayedVolumePressure,
+                                    Math.min(root.recentPeak, maxDisplayedVolumePressure));
+        
+        const meterRecentPeakHeight = prv.heightPerUnit * (volumePressureRecentPeak - root.minDisplayedVolumePressure)
+
+        if (!prv.needsClear) {
+            if (root.isClipping) {
+                drawRoundedRect(ctx, "#EF476F", 0, 0, indicatorWidth, prv.indicatorHeight, 2, "both")
+            }
+            else {
+                if (meterHeight > 0) {
+                    // Drawing the volume pressure
+                    drawRoundedRect(ctx, ui.theme.accentColor,
+                                    0, root.height - 10 - meterHeight,
+                                    indicatorWidth, meterHeight,
+                                    2, "bottom")
+                }
+
+                drawRoundedRect(ctx, ui.theme.accentColor,
+                                0, root.height - 10 - meterRecentPeakHeight,
+                                indicatorWidth, 1,
+                                0, "none")
+
+                drawRoundedRect(ctx, prv.unitTextColor,
+                                0, root.height - 10 - meterPeakHeight,
+                                indicatorWidth, 1,
+                                0, "none")
+                
+
+                if (prv.rulerNeedsPaint) {
+                    var originVPos = prv.overloadHeight
+                    var originHPos = indicatorWidth + prv.strokeHorizontalMargin
+
+                    drawRuler(ctx, originHPos, originVPos)
+                }
+            }
         }
-
-        if (prv.rulerNeedsPaint) {
-            var originVPos = prv.overloadHeight
-            var originHPos = indicatorWidth + prv.strokeHorizontalMargin
-
-            drawRuler(ctx, originHPos, originVPos)
+        else {
+            prv.needsClear = false
         }
     }
 
@@ -234,7 +313,29 @@ Canvas {
         requestPaint();
     }
 
+    onIsClippingChanged: {
+        if (!root.wasClipped && root.isClipping) {
+            root.wasClipped = true
+            requestPaint()
+        }
+    }
+
     onCurrentVolumePressureChanged: {
+        root.updatedVolumePressure = root.currentVolumePressure
+        root.recentPeak = updateRecentPeak(currentVolumePressure)
+        requestPaint()
+    }
+
+    onIsPlayingChanged: {
+        if (!root.isPlaying) {
+            prv.needsClear = true
+            root.recentVolumePressure = []
+            root.recentPeak = -60
+            root.maxPeak = -60
+        }
+        else {
+            root.wasClipped = false
+        }
         requestPaint()
     }
 

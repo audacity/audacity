@@ -68,10 +68,27 @@ void au::playback::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned 
     for (unsigned int j = 0; j < num; j++) {
         rms[j] = sqrt(rms[j] / numFrames);
     }
+    //std::cout << "UpdateDisplay peak: " << peak[0] << " - " << peak[1] << std::endl;
 
     m_audioSignalChanges.send(0, au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak[0])) });
     m_audioSignalChanges.send(1, au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak[1])) });
     // LOGD() << "=============== change " << LINEAR_TO_DB(peak[0]) << " - " << LINEAR_TO_DB(peak[1]);
+}
+
+void au::playback::InOutMeter::UpdateDisplayPerTrack(const float* sampleData, int64_t trackId, unsigned channel, size_t len)
+{
+    if (!len) {
+        return;
+    }
+
+    float peak = 0.0f;
+    for (size_t i = 0; i < len; ++i) {
+        peak = std::max(peak, static_cast<float>(fabs(sampleData[i])));
+    }
+
+    //std::cout << "UpdateDisplayPerTrack peak: " << channel << " - " << peak << std::endl;
+    m_audioSignalChangesByTrack.send(trackId, channel,
+                                     au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak)) });
 }
 
 bool au::playback::InOutMeter::IsMeterDisabled() const
@@ -104,5 +121,14 @@ au::playback::InOutMeter::signalChanges() const
     return muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >([this](auto resolve, auto /*reject*/) {
         return resolve(
             m_audioSignalChanges);
+    });
+}
+
+muse::async::Promise<muse::async::Channel<uint8_t, au::audio::audioch_t, au::audio::AudioSignalVal> >
+au::playback::InOutMeter::signalChangesByTrack() const
+{
+    return muse::async::Promise<muse::async::Channel<uint8_t, au::audio::audioch_t, au::audio::AudioSignalVal> >([this](auto resolve, auto /*reject*/) {
+        return resolve(
+            m_audioSignalChangesByTrack);
     });
 }

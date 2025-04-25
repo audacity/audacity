@@ -108,6 +108,12 @@ muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::Audio
     return m_outputMeter->signalChanges();
 }
 
+muse::async::Promise<muse::async::Channel<uint8_t, au::audio::audioch_t,
+                                          au::audio::AudioSignalVal> > Au3AudioOutput::playbackSignalChangesByTrack() const
+{
+    return m_outputMeter->signalChangesByTrack();
+}
+
 Au3Project* Au3AudioOutput::projectRef() const
 {
     if (!globalContext()->currentProject()) {

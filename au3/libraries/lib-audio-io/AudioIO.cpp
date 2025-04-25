@@ -72,6 +72,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <algorithm>
 #include <numeric>
 #include <optional>
+#include <iostream>
 
 #ifdef __WXMSW__
 #include <malloc.h>
@@ -112,6 +113,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "RealtimeEffectManager.h"
 #include "QualitySettings.h"
 #include "BasicUI.h"
+#include "WaveTrack.h"
 
 #include "Gain.h"
 
@@ -436,7 +438,7 @@ wxArrayString AudioIO::GetInputSourceNames()
 
     if (mPortMixer) {
         int numSources = Px_GetNumInputSources(mPortMixer);
-        for ( int source = 0; source < numSources; source++ ) {
+        for (int source = 0; source < numSources; source++) {
             deviceNames.push_back(wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(mPortMixer, source))));
         }
     } else {
@@ -930,6 +932,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     });
 
     mPlaybackBuffers.clear();
+    mTrackPlaybackBuffers.clear();
     mScratchBuffers.clear();
     mScratchPointers.clear();
     mPlaybackMixers.clear();
@@ -1405,6 +1408,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
     mpTransportState.reset();
 
     mPlaybackBuffers.clear();
+    mTrackPlaybackBuffers.clear();
     mScratchBuffers.clear();
     mScratchPointers.clear();
     mPlaybackMixers.clear();
@@ -1546,7 +1550,7 @@ void AudioIO::StopStream()
     // be sure it has really stopped before resetting mpTransportState
     WaitForAudioThreadStopped();
 
-    for ( auto& ext : Extensions()) {
+    for (auto& ext : Extensions()) {
         ext.StopOtherStream();
     }
 
@@ -1572,6 +1576,7 @@ void AudioIO::StopStream()
     // we allocated in StartStream()
     //
     mPlaybackBuffers.clear();
+    mTrackPlaybackBuffers.clear();
     mScratchBuffers.clear();
     mScratchPointers.clear();
     mPlaybackMixers.clear();
@@ -1719,8 +1724,9 @@ void AudioIO::SetPaused(bool state, bool publish)
 {
     if (state != IsPaused()) {
         if (auto pOwningProject = mOwningProject.lock()) {
-            // The realtime effects manager may remain "active" but becomes
-            // "suspended" or "resumed".
+            // The realtime effects manager may remain "active " but becomes
+            // "suspended " or "resumed \
+            //         ".
             auto& em = RealtimeEffectManager::Get(*pOwningProject);
             em.SetSuspended(state);
         }
@@ -1861,7 +1867,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
 }
 
 size_t AudioIoCallback::MinValue(
-    const RingBuffers& buffers, size_t (RingBuffer::*pmf)() const)
+    const RingBuffers& buffers, size_t (RingBuffer::* pmf)() const)
 {
     return std::accumulate(buffers.begin(), buffers.end(),
                            std::numeric_limits<size_t>::max(),
@@ -1957,6 +1963,12 @@ void AudioIO::FillPlayBuffers()
         */
         for (const auto& pBuffer : mPlaybackBuffers) {
             pBuffer->Flush();
+        }
+
+        for (const auto& trackBuffer : mTrackPlaybackBuffers) {
+            for (auto& buffer : trackBuffer.second) {
+                buffer->Flush();
+            }
         }
     };
 
@@ -2174,11 +2186,15 @@ bool AudioIO::ProcessPlaybackSlices(
         for (const auto& seq : mPlaybackSequences) {
             //TODO: apply micro-fades
             const auto numChannels = seq->NChannels();
+            const auto* waveTrack = dynamic_cast<const WaveTrack*>(seq->FindChannelGroup());
+            const int64_t trackId = waveTrack ? waveTrack->GetId() : -1;
+
             if (numChannels > 1) {
                 for (unsigned n = 0, cnt = std::min(numChannels, mNumPlaybackChannels); n < cnt; ++n) {
                     const auto volume = seq->GetChannelVolume(n);
                     for (unsigned i = 0; i < samplesAvailable; ++i) {
-                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex + n][i] * volume;
+                        mProcessingBuffers[bufferIndex + n][i] *= volume;
+                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex + n][i];
                     }
                 }
             } else if (numChannels == 1) {
@@ -2186,10 +2202,33 @@ bool AudioIO::ProcessPlaybackSlices(
                 for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
                     const auto volume = seq->GetChannelVolume(n);
                     for (unsigned i = 0; i < samplesAvailable; ++i) {
-                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i] * volume;
+                        if (n == 0) {
+                            mProcessingBuffers[bufferIndex][i] *= volume;
+                        }
+                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i];
                     }
                 }
             }
+
+            auto playbackBufferSize
+                =std::max((size_t)lrint(mRate * mPlaybackRingBufferSecs.count()), mHardwarePlaybackLatencyFrames * 2);
+
+            if (mTrackPlaybackBuffers.find(trackId) == mTrackPlaybackBuffers.end()) {
+                for (unsigned n = 0; n < 2; ++n) {
+                    mTrackPlaybackBuffers[trackId].push_back(
+                        std::make_unique<RingBuffer>(floatSample, playbackBufferSize));
+                }
+            }
+
+            mTrackPlaybackBuffers[trackId][0]->Put(
+                reinterpret_cast<constSamplePtr>(mProcessingBuffers[bufferIndex].data()),
+                floatSample,
+                samplesAvailable, 0);
+            mTrackPlaybackBuffers[trackId][1]->Put(
+                reinterpret_cast<constSamplePtr>(mProcessingBuffers[bufferIndex + (numChannels == 1 ? 0 : 1)].data()),
+                floatSample,
+                samplesAvailable, 0);
+
             bufferIndex += seq->NChannels();
         }
     }
@@ -2227,6 +2266,7 @@ bool AudioIO::ProcessPlaybackSlices(
 
     {
         unsigned bufferIndex = 0;
+        //std::cout << "mPlayback " << samplesAvailable << std::endl;
         for (auto& buffer : mMasterBuffers) {
             mPlaybackBuffers[bufferIndex++]->Put(
                 reinterpret_cast<constSamplePtr>(buffer.data()) + masterBufferOffset * sizeof(float),
@@ -2508,7 +2548,7 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
     }
 
     float maxPeak = 0.;
-    for ( unsigned long i = 0, cnt = framesPerBuffer * mNumCaptureChannels; i < cnt; ++i ) {
+    for (unsigned long i = 0, cnt = framesPerBuffer * mNumCaptureChannels; i < cnt; ++i) {
         float sample = fabs(*(inputSamples++));
         if (sample > maxPeak) {
             maxPeak = sample;
@@ -2669,7 +2709,7 @@ bool AudioIoCallback::FillOutputBuffers(
             // Output volume emulation: possibly copy meter samples, then
             // apply volume, then copy to the output buffer
             if (outputMeterFloats != outputFloats) {
-                for ( unsigned i = 0; i < len; ++i) {
+                for (unsigned i = 0; i < len; ++i) {
                     outputMeterFloats[numPlaybackChannels * i + n]
                         +=playbackVolume * tempBufs[n][i];
                 }
@@ -2797,7 +2837,9 @@ void AudioIoCallback::DrainInputBuffers(
 
     if (len < framesPerBuffer) {
         mLostSamples += (framesPerBuffer - len);
-        wxPrintf(wxT("lost %d samples\n"), (int)(framesPerBuffer - len));
+        wxPrintf(wxT("lost                \
+        % d samples \ n \
+        "), (int)(framesPerBuffer - len));
     }
 
     if (len <= 0) {
@@ -2832,7 +2874,7 @@ void AudioIoCallback::DrainInputBuffers(
         case int16Sample: {
             auto inputShorts = (const short*)inputBuffer;
             short* tempShorts = (short*)tempFloats;
-            for ( unsigned i = 0; i < len; i++) {
+            for (unsigned i = 0; i < len; i++) {
                 float tmp = inputShorts[numCaptureChannels * i + t];
                 tmp = std::clamp(tmp, -32768.0f, 32767.0f);
                 tempShorts[i] = (short)(tmp);
@@ -2934,8 +2976,7 @@ void AudioIoCallback::SendVuInputMeterData(
     if (pInputMeter->IsMeterDisabled()) {
         return;
     }
-    pInputMeter->UpdateDisplay(
-        numCaptureChannels, framesPerBuffer, inputSamples);
+    //pInputMeter->UpdateDisplay(numCaptureChannels, framesPerBuffer, inputSamples);
 }
 
 /* Send data to playback VU meter if applicable */
@@ -2970,13 +3011,26 @@ void AudioIoCallback::SendVuOutputMeterData(
     //                              (pProj->GetControlToolBar()->GetLastPlayMode() == loopedPlay));
 }
 
+void AudioIoCallback::SendVuOutputMeterDataPerTrack(const float* sampleData, int64_t trackId, unsigned channel, size_t len)
+{
+    auto pOutputMeter = mOutputMeter.lock();
+    if (!pOutputMeter) {
+        return;
+    }
+    if (pOutputMeter->IsMeterDisabled()) {
+        return;
+    }
+
+    pOutputMeter->UpdateDisplayPerTrack(sampleData, trackId, channel, len);
+}
+
 unsigned AudioIoCallback::CountSoloingSequences()
 {
     const auto numPlaybackSequences = mPlaybackSequences.size();
 
     // MOVE_TO: CountSoloingSequences() function
     unsigned numSolo = 0;
-    for (unsigned t = 0; t < numPlaybackSequences; t++ ) {
+    for (unsigned t = 0; t < numPlaybackSequences; t++) {
         if (mPlaybackSequences[t]->GetSolo()) {
             numSolo++;
         }
@@ -3040,7 +3094,7 @@ int AudioIoCallback::AudioCallback(
         mNumPauseFrames += framesPerBuffer;
     }
 
-    for ( auto& ext : Extensions()) {
+    for (auto& ext : Extensions()) {
         ext.ComputeOtherTimings(mRate, IsPaused(),
                                 timeInfo,
                                 framesPerBuffer);
@@ -3064,6 +3118,7 @@ int AudioIoCallback::AudioCallback(
     const auto outputMeterFloats = bVolEmulationActive
                                    ? stackAllocate(float, framesPerBuffer * numPlaybackChannels)
                                    : outputBuffer;
+    const auto trackOutputMeter= stackAllocate(float, framesPerBuffer);
     // ----- END of MEMORY ALLOCATIONS ------------------------------------------
 
     if (inputBuffer && numCaptureChannels) {
@@ -3127,6 +3182,25 @@ int AudioIoCallback::AudioCallback(
         statusFlags,
         tempFloats);
 
+    int64_t trackId = 0;
+    size_t len = 0;
+
+    for (const auto& trackPlayback : mTrackPlaybackBuffers) {
+        trackId = trackPlayback.first;
+
+        for (size_t i = 0; i < trackPlayback.second.size(); ++i) {
+            len = trackPlayback.second[i]->Get(
+                reinterpret_cast<samplePtr>(trackOutputMeter),
+                floatSample,
+                framesPerBuffer
+                );
+            SendVuOutputMeterDataPerTrack(
+                trackOutputMeter,
+                trackId,
+                i,
+                len);
+        }
+    }
     SendVuOutputMeterData(outputMeterFloats, framesPerBuffer);
 
     return mCallbackReturn;
@@ -3206,7 +3280,7 @@ void AudioIoCallback::CallbackCheckCompletion(
         return;
     }
 
-    for ( auto& ext : Extensions()) {
+    for (auto& ext : Extensions()) {
         ext.SignalOtherCompletion();
     }
     callbackReturn = paComplete;

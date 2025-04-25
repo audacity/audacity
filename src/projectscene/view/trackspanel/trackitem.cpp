@@ -7,6 +7,7 @@
 #include <QString>
 
 #include "playback/playbacktypes.h"
+#include "playback/iaudiooutput.h"
 
 #include "log.h"
 
@@ -29,6 +30,40 @@ TrackItem::TrackItem(QObject* parent)
         if (muted()) {
             resetAudioChannelsVolumePressure();
         }
+    });
+
+    playback()->audioOutput()->playbackSignalChangesByTrack().onResolve(this,
+                                                                        [this](muse::async::Channel<uint8_t,
+                                                                                                    audio::audioch_t,
+                                                                                                    audio::AudioSignalVal> signalVal) {
+        signalVal.onReceive(this, [this](const uint8_t trackId, const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
+            if (trackId != m_trackId) {
+                return;
+            }
+
+            float newPressure = 0;
+            if (newValue.pressure < -60.f) {
+                newPressure = -60.f;
+            } else if (newValue.pressure > 0.f) {
+                newPressure = 0.f;
+            } else {
+                newPressure = newValue.pressure;
+            }
+
+            if (audioChNum == 0) {
+                if (m_leftChannelPressure == newPressure) {
+                    return;
+                }
+                m_leftChannelPressure = newPressure;
+                emit leftChannelPressureChanged(newPressure);
+            } else {
+                if (m_rightChannelPressure == newPressure) {
+                    return;
+                }
+                m_rightChannelPressure = newPressure;
+                emit rightChannelPressureChanged(newPressure);
+            }
+        });
     });
 }
 

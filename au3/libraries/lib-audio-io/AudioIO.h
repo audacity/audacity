@@ -203,6 +203,7 @@ public:
         const float* inputSamples, unsigned long framesPerBuffer);
     void SendVuOutputMeterData(
         const float* outputMeterFloats, unsigned long framesPerBuffer);
+    void SendVuOutputMeterDataPerTrack(const float* sampleData, int64_t trackId, unsigned channel, size_t len);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
@@ -222,6 +223,7 @@ public:
     std::vector<std::unique_ptr<Resample> > mResample;
 
     using RingBuffers = std::vector<std::unique_ptr<RingBuffer> >;
+    using TrackRingBuffers = std::map<int64_t, std::vector<std::unique_ptr<RingBuffer> > >;
     RingBuffers mCaptureBuffers;
     RecordableSequences mCaptureSequences;
     //!Buffers that hold outcome of transformations applied to each individual sample source.
@@ -232,6 +234,7 @@ public:
     std::vector<std::vector<float> > mMasterBuffers;
     /*! Read by worker threads but unchanging during playback */
     RingBuffers mPlaybackBuffers;
+    TrackRingBuffers mTrackPlaybackBuffers;
     ConstPlayableSequences mPlaybackSequences;
     // Old volume is used in playback in linearly interpolating
     // the volume.
@@ -300,7 +303,7 @@ public:
 
 protected:
     static size_t MinValue(
-        const RingBuffers& buffers, size_t (RingBuffer::*pmf)() const);
+        const RingBuffers& buffers, size_t (RingBuffer::* pmf)() const);
 
     float GetMixerOutputVol()
     {
