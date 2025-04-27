@@ -37,15 +37,16 @@ void ClipContextMenuModel::load()
     auto colorItems = makeClipColourItems();
 
     MenuItemList items {
-        makeItemWithArg("clip-properties"),
-        makeItemWithArg("rename-clip"),
-        makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems, "colorMenu"),
-        makeSeparator(),
         makeItemWithArg("copy"),
-        makeItemWithArg("duplicate"),
         makeItemWithArg("cut"),
+        makeItemWithArg("rename-clip"),
+        makeItemWithArg("clip-properties"),
         makeSeparator(),
+        makeMenu(muse::TranslatableString("clip", "Clip color"), colorItems, "colorMenu"),
         makeItemWithArg("split"),
+        makeItemWithArg("duplicate"),
+        makeSeparator(),
+        makeItemWithArg("clip-properties"),
         makeSeparator(),
         makeItemWithArg("clip-export"),
         makeSeparator(),
