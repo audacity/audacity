@@ -120,6 +120,39 @@ muse::secs_t SnapTimeFormatter::singleStep(muse::secs_t time, const Snap& snap, 
     return 0.0;
 }
 
+muse::secs_t SnapTimeFormatter::snapToClip(muse::secs_t time,
+                                           muse::secs_t tolerance,
+                                           const std::set<muse::secs_t> clipsBoundaries) const
+{
+    if (clipsBoundaries.empty()) {
+        return time;
+    }
+
+    auto it = clipsBoundaries.lower_bound(time);
+
+    muse::secs_t closest = time;
+    muse::secs_t minDist = std::numeric_limits<double>::max();
+
+    if (it != clipsBoundaries.end()) {
+        muse::secs_t dist = std::abs(*it - time);
+        if (dist <= tolerance && dist < minDist) {
+            closest = *it;
+            minDist = dist;
+        }
+    }
+
+    if (it != clipsBoundaries.begin()) {
+        auto prev = std::prev(it);
+        muse::secs_t dist = std::abs(*prev - time);
+        if (dist <= tolerance && dist < minDist) {
+            closest = *prev;
+            minDist = dist;
+        }
+    }
+
+    return (minDist <= tolerance) ? closest : time;
+}
+
 double SnapTimeFormatter::snapTypeMultiplier(SnapType type, bool triplets, trackedit::TimeSignature timeSig) const
 {
     double multiplier = 0.0;

@@ -22,6 +22,7 @@ public:
     ~ITrackeditInteraction() override = default;
 
     virtual secs_t clipStartTime(const ClipKey& clipKey) const = 0;
+    virtual secs_t clipEndTime(const trackedit::ClipKey& clipKey) const = 0;
 
     //! NOTE Can be called by moving a clip
     //! if the changes is completed, then it is necessary to pass: `completed = true`

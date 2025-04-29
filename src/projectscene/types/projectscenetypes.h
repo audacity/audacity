@@ -126,9 +126,16 @@ public:
     Q_ENUM(Style)
 };
 
-enum class Direction {
-    Left = 0,
-    Right
+class DirectionType
+{
+    Q_GADGET
+public:
+    enum class Direction {
+        Left = 0,
+        Right,
+        Auto
+    };
+    Q_ENUM(Direction);
 };
 
 class ClipBoundary

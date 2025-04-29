@@ -54,6 +54,8 @@ Item {
 
     signal clipHeaderHoveredChanged(bool val)
 
+    signal triggerGuideline(real x, bool completed)
+
     height: trackViewState.trackHeight
 
     ClipsListModel {
@@ -347,22 +349,32 @@ Item {
 
                 onClipEndEditRequested: function() {
                     clipsModel.endEditClip(clipItem.key)
+
+                    root.triggerGuideline(false, -1)
                 }
 
                 onClipLeftTrimRequested: function(completed, action) {
                     clipsModel.trimLeftClip(clipItem.key, completed, action)
+
+                    handleGuideline(clipItem.key, Direction.Left, completed)
                 }
 
                 onClipRightTrimRequested: function(completed, action) {
                     clipsModel.trimRightClip(clipItem.key, completed, action)
+
+                    handleGuideline(clipItem.key, Direction.Right, completed)
                 }
 
                 onClipLeftStretchRequested: function(completed, action) {
                     clipsModel.stretchLeftClip(clipItem.key, completed, action)
+
+                    handleGuideline(clipItem.key, Direction.Left, completed)
                 }
 
                 onClipRightStretchRequested: function(completed, action) {
                     clipsModel.stretchRightClip(clipItem.key, completed, action)
+
+                    handleGuideline(clipItem.key, Direction.Right, completed)
                 }
 
                 onStartAutoScroll: {
@@ -556,8 +568,11 @@ Item {
 
             // clip might change its' track, we need to update grabbed clipKey
             if (clipMovedToOtherTrack) {
+                clipKey = clipsModel.updateClipTrack(clipKey)
                 setHoveredClipKey(clipsModel.updateClipTrack(clipKey));
             }
+
+            handleGuideline(clipKey, Direction.Auto, completed)
         }
 
         function onClipStartEditRequested(clipKey) {
@@ -574,6 +589,13 @@ Item {
 
         function onStopAutoScroll() {
             root.context.stopAutoScroll()
+        }
+    }
+
+    function handleGuideline(clipKey, direction, completed) {
+        let guidelinePos = clipsModel.findGuideline(clipKey, direction)
+        if (guidelinePos) {
+            triggerGuideline(guidelinePos, completed)
         }
     }
 }

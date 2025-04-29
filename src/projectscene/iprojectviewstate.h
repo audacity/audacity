@@ -4,8 +4,9 @@
 
 #include "global/types/retval.h"
 
-#include "types/projectscenetypes.h"
 #include "trackedit/trackedittypes.h"
+#include "types/projectscenetypes.h"
+#include "types/secs.h"
 
 namespace au::projectscene {
 class IProjectViewState
@@ -53,6 +54,9 @@ public:
 
     virtual void setLastEditedClip(const trackedit::ClipKey& clipKey) = 0;
     virtual trackedit::ClipKey lastEditedClip() const = 0;
+
+    virtual void setClipsBoundaries(const std::set<muse::secs_t>& boundaries) = 0;
+    virtual std::set<muse::secs_t> clipsBoundaries() const = 0;
 
     virtual muse::ValCh<bool> altPressed() const = 0;
     virtual muse::ValCh<bool> ctrlPressed() const = 0;

@@ -12,6 +12,11 @@ secs_t TrackeditOperationController::clipStartTime(const ClipKey& clipKey) const
     return trackAndClipOperations()->clipStartTime(clipKey);
 }
 
+secs_t TrackeditOperationController::clipEndTime(const ClipKey& clipKey) const
+{
+    return trackAndClipOperations()->clipEndTime(clipKey);
+}
+
 bool TrackeditOperationController::changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed)
 {
     return trackAndClipOperations()->changeClipStartTime(clipKey, newStartTime, completed);

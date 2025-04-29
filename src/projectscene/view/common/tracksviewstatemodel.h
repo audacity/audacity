@@ -33,6 +33,7 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool ctrlPressed READ ctrlPressed NOTIFY ctrlPressedChanged FINAL)
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
+    Q_PROPERTY(bool snapEnabled READ snapEnabled NOTIFY snapEnabledChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<playback::IPlaybackController> playbackController;
@@ -64,6 +65,8 @@ public:
 
     Q_INVOKABLE void changeTrackHeight(int deltaY);
 
+    Q_INVOKABLE bool snapEnabled();
+
 signals:
     // Context of elements
     void trackIdChanged();
@@ -76,6 +79,8 @@ signals:
     void altPressedChanged();
     void ctrlPressedChanged();
     void isPlayingChanged();
+
+    void snapEnabledChanged();
 
 private:
     static constexpr int m_tracksVerticalScrollPadding = 228;
@@ -93,5 +98,7 @@ private:
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;
+
+    bool m_snapEnabled;
 };
 }

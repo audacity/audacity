@@ -516,7 +516,27 @@ secs_t ClipsListModel::calculateTimePositionOffset(const ClipListItem* item) con
     }
 
     double newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
-    newStartTime = m_context->applySnapToTime(newStartTime);
+    double duration = item->time().clipEndTime - item->time().clipStartTime;
+    double newEndTime = newStartTime + duration;
+
+    double snappedEndTime = newEndTime;
+    double snappedStartTime = newStartTime;
+    if (vs->isSnapEnabled()) {
+        snappedStartTime = m_context->applySnapToTime(newStartTime);
+    } else {
+        snappedEndTime = m_context->applySnapToClip(newEndTime);
+        snappedStartTime = m_context->applySnapToClip(newStartTime);
+    }
+    if (muse::RealIsEqual(snappedEndTime, newEndTime)) {
+        newStartTime = snappedStartTime;
+    } else if (muse::RealIsEqual(snappedStartTime, newStartTime)) {
+        newStartTime = snappedEndTime - duration;
+    } else {
+        newStartTime
+            = (!muse::RealIsEqualOrMore(std::abs(snappedStartTime - newStartTime), std::abs(snappedEndTime - newEndTime))
+               ? snappedStartTime : snappedEndTime - duration);
+    }
+
     secs_t timePositionOffset = newStartTime - item->time().clipStartTime;
 
     constexpr auto limit = 1. / 192000.; // 1 sample at 192 kHz
@@ -569,6 +589,51 @@ void ClipsListModel::resetClipSpeed(const ClipKey& key)
     trackeditInteraction()->resetClipSpeed(key.key);
 }
 
+QVariant ClipsListModel::findGuideline(const ClipKey& key, Direction direction)
+{
+    auto vs = globalContext()->currentProject()->viewState();
+    if (!vs) {
+        return QVariant();
+    }
+
+    ClipListItem* item = itemByKey(key.key);
+    if (!item) {
+        return QVariant();
+    }
+
+    if (vs->isSnapEnabled()) {
+        if (direction != Direction::Right) {
+            double clipStartTime = item->time().clipStartTime;
+            if (muse::RealIsEqual(clipStartTime, m_context->applySnapToTime(clipStartTime))) {
+                return QVariant(clipStartTime);
+            }
+        }
+
+        if (direction != Direction::Left) {
+            double clipEndTime = item->time().clipEndTime;
+            if (muse::RealIsEqual(clipEndTime, m_context->applySnapToTime(clipEndTime))) {
+                return QVariant(clipEndTime);
+            }
+        }
+    } else {
+        if (direction != Direction::Right) {
+            double clipStartTime = item->time().clipStartTime;
+            if (muse::contains(vs->clipsBoundaries(), static_cast<muse::secs_t>(clipStartTime))) {
+                return QVariant(clipStartTime);
+            }
+        }
+
+        if (direction != Direction::Left) {
+            double clipEndTime = item->time().clipEndTime;
+            if (muse::contains(vs->clipsBoundaries(), static_cast<muse::secs_t>(clipEndTime))) {
+                return QVariant(clipEndTime);
+            }
+        }
+    }
+
+    return -1.0;
+}
+
 bool ClipsListModel::asymmetricStereoHeightsPossible() const
 {
     auto pref = projectSceneConfiguration()->stereoHeightsPref();
@@ -617,6 +682,25 @@ void ClipsListModel::startEditClip(const ClipKey& key)
 
     vs->setClipEditStartTimeOffset(mousePositionTime - item->clip().startTime);
     vs->setClipEditEndTimeOffset(item->clip().endTime - mousePositionTime);
+
+    auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    std::set<secs_t> boundaries;
+    for (const auto& trackId : prj->trackIdList()) {
+        for (const auto& clip : prj->clipList(trackId)) {
+            if (muse::contains(selectionController()->selectedClips(), clip.key)) {
+                continue;
+            }
+
+            boundaries.insert(trackeditInteraction()->clipStartTime(clip.key));
+            boundaries.insert(trackeditInteraction()->clipEndTime(clip.key));
+        }
+    }
+
+    vs->setClipsBoundaries(boundaries);
 }
 
 void ClipsListModel::endEditClip(const ClipKey& key)
@@ -634,6 +718,7 @@ void ClipsListModel::endEditClip(const ClipKey& key)
     vs->setClipEditStartTimeOffset(-1.0);
     vs->setClipEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
+    vs->setClipsBoundaries({});
 }
 
 /*!
@@ -717,7 +802,11 @@ bool ClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBounda
         }
     } else {
         newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
-        newStartTime = m_context->applySnapToTime(newStartTime);
+        if (vs->isSnapEnabled()) {
+            newStartTime = m_context->applySnapToTime(newStartTime);
+        } else {
+            newStartTime = m_context->applySnapToClip(newStartTime);
+        }
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
@@ -778,7 +867,11 @@ bool ClipsListModel::trimRightClip(const ClipKey& key, bool completed, ClipBound
         }
     } else {
         newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
-        newEndTime = m_context->applySnapToTime(newEndTime);
+        if (vs->isSnapEnabled()) {
+            newEndTime = m_context->applySnapToTime(newEndTime);
+        } else {
+            newEndTime = m_context->applySnapToClip(newEndTime);
+        }
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
@@ -837,7 +930,11 @@ bool ClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, ClipBou
         }
     } else {
         newStartTime = m_context->mousePositionTime() - vs->clipEditStartTimeOffset();
-        newStartTime = m_context->applySnapToTime(newStartTime);
+        if (vs->isSnapEnabled()) {
+            newStartTime = m_context->applySnapToTime(newStartTime);
+        } else {
+            newStartTime = m_context->applySnapToClip(newStartTime);
+        }
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
@@ -898,7 +995,11 @@ bool ClipsListModel::stretchRightClip(const ClipKey& key, bool completed, ClipBo
         }
     } else {
         newEndTime = m_context->mousePositionTime() + vs->clipEditEndTimeOffset();
-        newEndTime = m_context->applySnapToTime(newEndTime);
+        if (vs->isSnapEnabled()) {
+            newEndTime = m_context->applySnapToTime(newEndTime);
+        } else {
+            newEndTime = m_context->applySnapToClip(newEndTime);
+        }
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
