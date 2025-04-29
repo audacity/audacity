@@ -22,6 +22,7 @@ public:
     ~ITrackAndClipOperations() override = default;
 
     virtual secs_t clipStartTime(const ClipKey& clipKey) const = 0;
+    virtual secs_t clipEndTime(const trackedit::ClipKey& clipKey) const = 0;
 
     virtual bool changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed) = 0;
     virtual muse::async::Channel<ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const = 0;

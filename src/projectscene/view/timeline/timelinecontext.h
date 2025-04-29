@@ -20,6 +20,8 @@
 //! then we should split it into two separate classes.
 
 namespace au::projectscene {
+using Direction = DirectionType::Direction;
+
 class SnapTimeFormatter;
 class TimelineContext : public QObject, public muse::async::Asyncable, public muse::actions::Actionable
 {
@@ -105,6 +107,7 @@ public:
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
     double singleStepToTime(double position, Direction direction, const Snap& snap) const;
     double applySnapToTime(double time) const;
+    double applySnapToClip(double time) const;
 
     Q_INVOKABLE void updateMousePositionTime(double mouseX);
     Q_INVOKABLE double mousePositionTime() const;

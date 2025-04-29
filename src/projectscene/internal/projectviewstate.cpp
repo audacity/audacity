@@ -257,6 +257,16 @@ au::trackedit::ClipKey ProjectViewState::lastEditedClip() const
     return m_lastEditedClip;
 }
 
+void ProjectViewState::setClipsBoundaries(const std::set<muse::secs_t>& boundaries)
+{
+    m_clipsBoundaries = boundaries;
+}
+
+std::set<muse::secs_t> ProjectViewState::clipsBoundaries() const
+{
+    return m_clipsBoundaries;
+}
+
 muse::ValCh<bool> ProjectViewState::altPressed() const
 {
     return m_altPressed;

@@ -63,6 +63,9 @@ public:
     void setLastEditedClip(const trackedit::ClipKey& clipKey) override;
     trackedit::ClipKey lastEditedClip() const override;
 
+    void setClipsBoundaries(const std::set<muse::secs_t>& boundaries) override;
+    std::set<muse::secs_t> clipsBoundaries() const override;
+
     muse::ValCh<bool> altPressed() const override;
     muse::ValCh<bool> ctrlPressed() const override;
 
@@ -93,6 +96,9 @@ private:
     bool m_moveInitiated = false;
 
     trackedit::ClipKey m_lastEditedClip = trackedit::ClipKey{};
+
+    //! clips start/end times the currently moved/trimmed/stretched clip can snap to
+    std::set<muse::secs_t> m_clipsBoundaries;
 
     muse::ValCh<bool> m_altPressed;
     muse::ValCh<bool> m_ctrlPressed;

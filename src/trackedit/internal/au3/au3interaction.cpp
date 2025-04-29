@@ -674,7 +674,22 @@ muse::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) co
         return -1.0;
     }
 
-    return clip->Start();
+    return clip->GetPlayStartTime();
+}
+
+muse::secs_t au::trackedit::Au3Interaction::clipEndTime(const ClipKey& clipKey) const
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return -1.0;
+    }
+
+    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return -1.0;
+    }
+
+    return clip->GetPlayEndTime();
 }
 
 bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed)

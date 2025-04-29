@@ -11,6 +11,11 @@ muse::secs_t TrackeditInteraction::clipStartTime(const trackedit::ClipKey& clipK
     return m_interaction->clipStartTime(clipKey);
 }
 
+muse::secs_t TrackeditInteraction::clipEndTime(const ClipKey& clipKey) const
+{
+    return m_interaction->clipEndTime(clipKey);
+}
+
 bool TrackeditInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed)
 {
     return withPlaybackStop(&ITrackeditInteraction::changeClipStartTime, clipKey, newStartTime, completed);

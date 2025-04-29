@@ -20,6 +20,8 @@ static constexpr double SCROLL_MARGIN_PX = 40.0;
 static constexpr double SCROLL_MIN_SPEED = 0.00001;
 static constexpr double SCROLL_MAX_SPEED = 0.025;
 
+static constexpr int SNAP_TO_CLIP_TOLERANCE_PX = 4;
+
 using namespace au::projectscene;
 
 namespace {
@@ -535,6 +537,24 @@ double TimelineContext::applySnapToTime(double time) const
 
     trackedit::TimeSignature timeSig = project->timeSignature();
     return m_snapTimeFormatter->snapTime(time, viewState->snap().val, timeSig);
+}
+
+double TimelineContext::applySnapToClip(double time) const
+{
+    auto viewState = this->viewState();
+    if (!viewState || viewState->isSnapEnabled()) {
+        return time;
+    }
+
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return time;
+    }
+
+    muse::secs_t tolerance = SNAP_TO_CLIP_TOLERANCE_PX / zoom();
+    std::set<muse::secs_t> clipsBoundaries = viewState->clipsBoundaries();
+
+    return m_snapTimeFormatter->snapToClip(time, tolerance, clipsBoundaries);
 }
 
 void TimelineContext::updateMousePositionTime(double mouseX)

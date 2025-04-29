@@ -18,6 +18,7 @@ public:
     ~TrackeditOperationController() override = default;
 
     secs_t clipStartTime(const ClipKey& clipKey) const override;
+    secs_t clipEndTime(const trackedit::ClipKey& clipKey) const override;
 
     bool changeClipStartTime(const ClipKey& clipKey, secs_t newStartTime, bool completed) override;
     muse::async::Channel<ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;

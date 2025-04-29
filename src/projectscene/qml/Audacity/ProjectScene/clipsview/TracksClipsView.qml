@@ -17,6 +17,7 @@ Rectangle {
     property bool clipHeaderHovered: false
     property var hoveredClipKey: null
     property bool tracksHovered: false
+    property bool guidelineActive: false
     property alias altPressed: tracksViewState.altPressed
     property alias ctrlPressed: tracksViewState.ctrlPressed
 
@@ -570,6 +571,11 @@ Rectangle {
                         })
                     }
 
+                    onTriggerGuideline: function(x, completed) {
+                        clipGuideline.x = timeline.context.timeToPosition(x)
+                        root.guidelineActive = x != -1 && !completed
+                    }
+
                     function calculateVerticalScrollDelta(viewTop, viewBottom, clipTop, clipBottom, padding = 10) {
                         // clip fully visible
                         if (clipTop >= viewTop && clipBottom <= viewBottom) {
@@ -632,6 +638,19 @@ Rectangle {
             onPlayCursorMousePositionChanged: function(ix) {
                 timeline.updateCursorPosition(ix, -1)
             }
+        }
+
+        Rectangle {
+            id: clipGuideline
+
+            anchors.top: content.top
+            anchors.bottom: content.bottom
+
+            width: 1
+
+            color: tracksViewState.snapEnabled ? "#00E5FF" : "#FFF200"
+
+            visible: root.guidelineActive
         }
 
         VerticalRulersPanel {
