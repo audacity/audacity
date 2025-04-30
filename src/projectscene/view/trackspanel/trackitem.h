@@ -9,6 +9,7 @@
 #include "modularity/ioc.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "trackedit/itrackeditinteraction.h"
+#include "playback/iplayback.h"
 
 #include "async/asyncable.h"
 
@@ -38,6 +39,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<playback::IPlayback> playback;
 
 public:
     explicit TrackItem(QObject* parent = nullptr);
