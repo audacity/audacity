@@ -63,6 +63,7 @@ EffectStyledDialogView {
 
     ColumnLayout {
         spacing: 0
+        anchors.fill: parent
 
         RowLayout {
             id: headerBar
