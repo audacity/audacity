@@ -168,6 +168,17 @@ public:
         };
     }
 
+    static constexpr size_t MaxPlaybackChannels = 2;
+    struct Track {
+        std::shared_ptr<const PlayableSequence> mSequence;
+        std::array<std::unique_ptr<RingBuffer>, MaxPlaybackChannels> mBuffers;
+
+        Track(std::shared_ptr<const PlayableSequence> sequence);
+        ~Track();
+
+        int64_t trackId() const;
+    };
+
     //! @}
 
     std::shared_ptr< AudioIOListener > GetListener() const
@@ -193,6 +204,7 @@ public:
 
     bool FillOutputBuffers(
         float* outputFloats, unsigned long framesPerBuffer, float* outputMeterFloats);
+    void FillTrackOutputBuffer(const Track& track, float* trackMeterFloats, size_t channel, unsigned long framesPerBuffer);
     void DrainInputBuffers(
         constSamplePtr inputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackFlags statusFlags, float* tempFloats);
     void UpdateTimePosition(
@@ -203,6 +215,7 @@ public:
         const float* inputSamples, unsigned long framesPerBuffer);
     void SendVuOutputMeterData(
         const float* outputMeterFloats, unsigned long framesPerBuffer);
+    void SendVuOutputMeterDataPerTrack(int64_t trackId, size_t channel, const float* sampleData, unsigned long framesPerBuffer);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
@@ -232,6 +245,7 @@ public:
     std::vector<std::vector<float> > mMasterBuffers;
     /*! Read by worker threads but unchanging during playback */
     RingBuffers mPlaybackBuffers;
+    std::vector<Track> mPlaybackTracks;
     ConstPlayableSequences mPlaybackSequences;
     // Old volume is used in playback in linearly interpolating
     // the volume.
@@ -300,7 +314,7 @@ public:
 
 protected:
     static size_t MinValue(
-        const RingBuffers& buffers, size_t (RingBuffer::*pmf)() const);
+        const RingBuffers& buffers, size_t (RingBuffer::* pmf)() const);
 
     float GetMixerOutputVol()
     {
@@ -364,6 +378,11 @@ public:
     // Whether to check the error code passed to audacityAudioCallback to
     // detect more dropouts
     std::atomic<bool> mDetectUpstreamDropouts{ true };
+
+    size_t GetNumPlaybackChannels() const
+    {
+        return std::min(mNumPlaybackChannels, MaxPlaybackChannels);
+    }
 
 protected:
     RecordingSchedule mRecordingSchedule{};

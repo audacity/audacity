@@ -19,6 +19,7 @@ set( SOURCES
    DeviceManager.h
    Meter.cpp
    Meter.h
+   TrackMeter.h
 )
 set( LIBRARIES
    portaudio::portaudio

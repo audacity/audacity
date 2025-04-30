@@ -14,6 +14,7 @@ Paul Licameli split from AudacityProject.h
 #include "ClientData.h" // to inherit
 #include "GlobalVariable.h"
 #include "Observer.h" // to inherit
+#include "TrackMeter.h"
 #include <wx/weakref.h>
 
 #include <atomic>
@@ -64,6 +65,9 @@ public:
     const std::shared_ptr<Meter>& GetCaptureMeter() const;
     void SetCaptureMeter(
         const std::shared_ptr<Meter>& capture);
+    void SetTrackMeter(
+        const std::shared_ptr<TrackMeter> meter);
+    const std::shared_ptr<TrackMeter> GetTrackMeter() const;
 
     // Speed play
     double GetPlaySpeed() const
@@ -79,6 +83,7 @@ private:
     // Project owned meters
     std::shared_ptr<Meter> mPlaybackMeter;
     std::shared_ptr<Meter> mCaptureMeter;
+    std::shared_ptr<TrackMeter> mTrackMeter;
 
     // This is atomic because scrubber may read it in a separate thread from
     // the main

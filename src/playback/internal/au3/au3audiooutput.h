@@ -5,6 +5,7 @@
 #pragma once
 
 #include "../../iaudiooutput.h"
+#include "au3audiotrackmeter.h"
 
 #include "global/async/asyncable.h"
 
@@ -30,6 +31,8 @@ public:
     muse::async::Channel<audio::sample_rate_t> sampleRateChanged() const override;
 
     muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> > playbackSignalChanges() const override;
+    muse::async::Promise<muse::async::Channel<int64_t, audio::audioch_t,
+                                              audio::AudioSignalVal> > playbackTrackSignalChanges() const override;
 
 private:
     au3::Au3Project* projectRef() const;
@@ -42,5 +45,6 @@ private:
     mutable muse::async::Channel<audio::sample_rate_t> m_sampleRateChanged;
 
     std::shared_ptr<InOutMeter> m_outputMeter;
+    std::shared_ptr<Au3TrackMeter> m_trackMeter;
 };
 }

@@ -25,6 +25,7 @@ using namespace au::au3;
 Au3AudioOutput::Au3AudioOutput()
 {
     m_outputMeter = std::make_shared<InOutMeter>();
+    m_trackMeter = std::make_shared<Au3TrackMeter>();
 
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
@@ -46,6 +47,7 @@ void Au3AudioOutput::initMeter()
 
     auto& projectAudioIO = ProjectAudioIO::Get(*project);
     projectAudioIO.SetPlaybackMeter(m_outputMeter);
+    projectAudioIO.SetTrackMeter(m_trackMeter);
 }
 
 void Au3AudioOutput::notifyAboutSampleRateChanged()
@@ -106,6 +108,12 @@ muse::async::Channel<au::audio::sample_rate_t> Au3AudioOutput::sampleRateChanged
 muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > Au3AudioOutput::playbackSignalChanges() const
 {
     return m_outputMeter->signalChanges();
+}
+
+muse::async::Promise<muse::async::Channel<int64_t, au::audio::audioch_t,
+                                          au::audio::AudioSignalVal> > Au3AudioOutput::playbackTrackSignalChanges() const
+{
+    return m_trackMeter->signalChanges();
 }
 
 Au3Project* Au3AudioOutput::projectRef() const

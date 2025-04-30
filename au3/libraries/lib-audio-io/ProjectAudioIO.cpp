@@ -24,6 +24,7 @@ ProjectAudioIO::DefaultOptionsFactory(AudacityProject& project, bool)
     };
     options.captureMeter = projectAudioIO.GetCaptureMeter();
     options.playbackMeter = projectAudioIO.GetPlaybackMeter();
+    options.trackMeter = projectAudioIO.GetTrackMeter();
     options.envelope
         =Mixer::WarpOptions::DefaultWarp::Call(&project);
     // options.listener remains null
@@ -110,6 +111,17 @@ void ProjectAudioIO::SetCaptureMeter(
     if (gAudioIO) {
         gAudioIO->SetCaptureMeter(project.shared_from_this(), mCaptureMeter);
     }
+}
+
+void ProjectAudioIO::SetTrackMeter(
+    const std::shared_ptr<TrackMeter> meter)
+{
+    mTrackMeter = meter;
+}
+
+const std::shared_ptr<TrackMeter> ProjectAudioIO::GetTrackMeter() const
+{
+    return mTrackMeter;
 }
 
 void ProjectAudioIO::SetPlaySpeed(double value)
