@@ -17,13 +17,14 @@ Canvas {
     property real currentVolumePressure: -60.0
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
+    property bool isPlaying: false
 
     property real indicatorWidth
     property bool showRuler: false
     property int style: VolumePressureMeter.Style.Solid
     property color meterColor: "#7689E6" // TODO: Use the track color
 
-    property bool isClipping: currentVolumePressure >= maxDisplayedVolumePressure
+    property int recentPeakInterval: 600
 
     width: root.showRuler ? indicatorWidth + 20 : indicatorWidth
 
@@ -65,7 +66,67 @@ Canvas {
         onShortStrokeColorChanged: { prv.rulerNeedsPaint = true; root.requestPaint() }
 
         property bool rulerNeedsPaint: true
+        property bool needsClear: false
+
+        property real updatedVolumePressure: -60.0
+        property real maxPeak: -60.0
+        property real recentPeak: -60.0
+        property var recentVolumePressure: []
+
+        property bool isClipping: updatedVolumePressure >= root.maxDisplayedVolumePressure
+        property bool clipped: false
+
+        function updateRecentPeak() {
+            const now = Date.now()
+
+            prv.recentVolumePressure.push({ value: prv.updatedVolumePressure, time: now })
+
+            const recentPeakStartInterval = now - root.recentPeakInterval
+            let cutoffIndex = -1
+
+            for (let i = 0; i < prv.recentVolumePressure.length; i++) {
+                if (prv.recentVolumePressure[i].time < recentPeakStartInterval) {
+                    cutoffIndex = i
+                }
+                else {
+                    break
+                }
+            }
+
+            if (cutoffIndex !== -1) {
+                prv.recentVolumePressure.splice(0, cutoffIndex)
+            }
+
+            prv.recentPeak = Math.max(-60, ...prv.recentVolumePressure.map(item => item.value))
+        }
+
+        function sampleValueToHeight(sampleValue) {
+            const clampedValue = Math.max(root.minDisplayedVolumePressure,
+                                    Math.min(sampleValue, root.maxDisplayedVolumePressure));
+
+            return prv.heightPerUnit * (clampedValue - root.minDisplayedVolumePressure)
+
+        }
+        
+        onIsClippingChanged: {
+            if (prv.isClipping) {
+                prv.clipped = true
+                root.requestPaint()
+            }
+        }
     }
+
+    function reset() {
+        prv.maxPeak = -60
+        prv.recentPeak = -60
+        prv.recentVolumePressure = []
+        prv.updatedVolumePressure = -60
+
+        prv.clipped = false
+
+        requestPaint()
+    }
+
 
     // Rounding up fullStep value to the predefined one,
     // to avoid getting funny intervals like 3, or 7
@@ -202,29 +263,52 @@ Canvas {
         drawRoundedRect(ctx, ui.theme.strokeColor, 0, 0, indicatorWidth, prv.indicatorHeight, 2, "both")
 
         // Drawing the Overload indicator
-        const overloadStyle = root.isClipping ? "#EF476F" : ui.theme.buttonColor
+        const overloadStyle = prv.clipped ? "#EF476F" : ui.theme.buttonColor
         drawRoundedRect(ctx, overloadStyle, 0, 0, indicatorWidth, prv.overloadHeight, 2, "top")
-
-        // Clamping the current volume pressure
-        const volumePressure = Math.max(minDisplayedVolumePressure,
-                                    Math.min(currentVolumePressure, maxDisplayedVolumePressure));
-        // calculating the current volume height depending on the panel height
-        const meterHeight = prv.heightPerUnit * (volumePressure - root.minDisplayedVolumePressure)
-
-        if (meterHeight > 0) {
-            // Drawing the volume pressure
-            drawRoundedRect(ctx, getMeterFillStyle(ctx),
-                            0, root.height - 10 - meterHeight,
-                            indicatorWidth, meterHeight,
-                            /* radius */ 2, /* rounded edge */ "bottom")
-        }
-
+        
         if (prv.rulerNeedsPaint) {
             var originVPos = prv.overloadHeight
             var originHPos = indicatorWidth + prv.strokeHorizontalMargin
 
             drawRuler(ctx, originHPos, originVPos)
         }
+
+        if (prv.needsClear) {
+            // Just don´t draw anything else
+            prv.needsClear = false
+            return
+        }
+
+        // On clipping draw full red rectangle
+        if (prv.isClipping) {
+            drawRoundedRect(ctx, "#EF476F", 0, 0, indicatorWidth, prv.indicatorHeight, 2, "both")
+            return
+        }
+
+        // Draw the volume pressure
+        const meterHeight = prv.sampleValueToHeight(prv.updatedVolumePressure)
+        if (meterHeight > 0) {
+            drawRoundedRect(ctx, ui.theme.accentColor,
+                            0, root.height - 10 - meterHeight,
+                            indicatorWidth, meterHeight,
+                            2, "bottom")
+        }
+
+        // Draw the recent peak
+        const meterRecentPeakHeight = prv.sampleValueToHeight(prv.recentPeak)
+        drawRoundedRect(ctx, ui.theme.accentColor,
+                        0, root.height - 10 - meterRecentPeakHeight,
+                        indicatorWidth, 1,
+                        0, "none")
+
+        // Draw the max peak
+        const meterPeakHeight = prv.sampleValueToHeight(prv.maxPeak)
+        drawRoundedRect(ctx, prv.unitTextColor,
+                        0, root.height - 10 - meterPeakHeight,
+                        indicatorWidth, 1,
+                        0, "none")
+        
+
     }
 
     onHeightChanged: {
@@ -235,6 +319,22 @@ Canvas {
     }
 
     onCurrentVolumePressureChanged: {
+        prv.maxPeak = Math.max(prv.maxPeak, root.currentVolumePressure)
+        prv.updatedVolumePressure = root.currentVolumePressure
+        prv.updateRecentPeak()
+        requestPaint()
+    }
+
+    onIsPlayingChanged: {
+        if (root.isPlaying) {
+            prv.clipped = false
+        }
+        else {
+            prv.needsClear = true
+            prv.recentVolumePressure = []
+            prv.recentPeak = -60
+            prv.maxPeak = -60
+        }
         requestPaint()
     }
 
