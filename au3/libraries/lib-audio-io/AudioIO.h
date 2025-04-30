@@ -16,12 +16,14 @@
 #include "AudioIOBase.h" // to inherit
 #include "AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
+#include "RingBuffer.h"
 
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <thread>
 #include <utility>
+#include <array>
 #include <wx/atomic.h> // member variable
 #include <wx/thread.h>
 
@@ -33,7 +35,6 @@
 class wxArrayString;
 class AudioIOBase;
 class AudioIO;
-class RingBuffer;
 class Mixer;
 class OtherPlayableSequence;
 class RealtimeEffectState;
