@@ -5,7 +5,7 @@
 #pragma once
 
 #include "../../iaudiooutput.h"
-#include "au3audiotrackmeter.h"
+#include "au3audiooutmeter.h"
 
 #include "global/async/asyncable.h"
 
@@ -43,7 +43,6 @@ private:
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
     mutable muse::async::Channel<audio::sample_rate_t> m_sampleRateChanged;
 
-    std::shared_ptr<InOutMeter> m_outputMeter;
-    std::shared_ptr<TrackMeter> m_trackMeter;
+    std::shared_ptr<OutMeter> m_outputMeter;
 };
 }

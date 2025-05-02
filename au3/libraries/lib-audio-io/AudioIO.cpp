@@ -271,7 +271,6 @@ AudioIO::AudioIO()
     mSilenceLevel = 0.0;
 
     mOutputMeter.reset();
-    mTrackMeter.reset();
 
     PaError err = Pa_Initialize();
 
@@ -504,7 +503,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
     mInputMeter.reset();
     mOutputMeter.reset();
-    mTrackMeter.reset();
 
     mLastPaError = paNoError;
     // pick a rate to do the audio I/O at, from those available. The project
@@ -605,7 +603,6 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         }
 
         mOutputMeter = options.playbackMeter;
-        mTrackMeter = options.trackMeterChannel;
     }
 
     if (numCaptureChannels > 0) {
@@ -1471,7 +1468,7 @@ void AudioIO::SetMeters()
         pInputMeter->Reset(mRate, true);
     }
     if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->Reset(mRate, true);
+        pOutputMeter->reset();
     }
 }
 
@@ -1682,12 +1679,11 @@ void AudioIO::StopStream()
     }
 
     if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->Reset(mRate, false);
+        pOutputMeter->reset();
     }
 
     mInputMeter.reset();
     mOutputMeter.reset();
-    mTrackMeter.reset();
 
     if (pListener && mNumCaptureChannels > 0) {
         pListener->OnAudioIOStopRecording();
@@ -3038,65 +3034,66 @@ void AudioIoCallback::SendVuOutputMeterData(
     const float* outputMeterFloats,
     unsigned long framesPerBuffer)
 {
-    const auto numPlaybackChannels = mNumPlaybackChannels;
+    if (framesPerBuffer == 0) {
+        return;
+    }
 
-    auto pOutputMeter = mOutputMeter.lock();
-    if (!pOutputMeter) {
+    auto outputMeter = mOutputMeter.lock();
+    if (!outputMeter) {
         return;
     }
-    if (pOutputMeter->IsMeterDisabled()) {
-        return;
-    }
+
     if (!outputMeterFloats) {
         return;
     }
-    pOutputMeter->UpdateDisplay(
-        numPlaybackChannels, framesPerBuffer, outputMeterFloats);
 
-    //v Vaughan, 2011-02-25: Moved this update back to TrackPanel::OnTimer()
-    //    as it helps with playback issues reported by Bill and noted on Bug 258.
-    //    The problem there occurs if Software Playthrough is on.
-    //    Could conditionally do the update here if Software Playthrough is off,
-    //    and in TrackPanel::OnTimer() if Software Playthrough is on, but not now.
-    // PRL 12 Jul 2015: and what was in TrackPanel::OnTimer is now handled by means of track panel timer events
-    //MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
-    //if (pMixerBoard)
-    //   pMixerBoard->UpdateMeters(GetStreamTime(),
-    //                              (pProj->GetControlToolBar()->GetLastPlayMode() == loopedPlay));
+    PushMainMeterValues(outputMeter, outputMeterFloats, mNumPlaybackChannels, framesPerBuffer);
+    PushTrackMeterValues(outputMeter,framesPerBuffer);
+    outputMeter->sendAll();
 }
 
-void AudioIoCallback::SendVuOutputTrackMeterData(unsigned long frames) {
-    if (frames == 0) {
-        return;
-    }
 
-    const auto trackOutputMeter= stackAllocate(float, frames);
+void AudioIoCallback::PushMainMeterValues(std::shared_ptr<IMeterChannel> channel, const float * values, uint8_t channels, unsigned long frames)
+{
+    auto sptr = values;
+    std::vector<float> peak(channels, -1.0f);
 
-    auto trackMeter = mTrackMeter.lock();
-    if (!trackMeter) {
-        return;
+    for (unsigned long i = 0; i < frames; i++) {
+        for (unsigned int j = 0; j < channels; j++) {
+            peak[j] = std::max(peak[j], static_cast<float>(fabs(sptr[j])));
+        }
+        sptr += channels;
     }
+    for (unsigned int j = 0; j < channels; j++) {
+        peak[j] = std::clamp(peak[j], -1.0f, 1.0f);
+        channel->push(j, peak[j]);
+    }
+}
+
+
+void AudioIoCallback::PushTrackMeterValues(std::shared_ptr<IMeterChannel> channel, unsigned long frames)
+{
+    auto stackBuffer = stackAllocate(float, frames);
 
     for (const Track& track: mPlaybackTracks) {
         const auto nChannels = track.mSequence->NChannels();
-        for (size_t channel = 0; channel < nChannels; ++channel) {
-            const auto& buffer = track.mBuffers[channel];
+        for (size_t nch = 0; nch < nChannels; ++nch) {
+            const auto& buffer = track.mBuffers[nch];
             size_t len = buffer->Get(
-                reinterpret_cast<samplePtr>(trackOutputMeter),
+                reinterpret_cast<samplePtr>(stackBuffer),
                 floatSample,
                 frames
             );
-            ClampBuffer(trackOutputMeter, len);
-
+    
             float peak = 0.0f;
             for (size_t i = 0; i < len; ++i) {
-                peak = std::max(peak, fabs(trackOutputMeter[i]));
+                peak = std::max(peak, fabs(stackBuffer[i]));
             }
-
-            trackMeter->push(track.trackId(), channel, au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak)) });
+            peak = std::clamp(peak, -1.0f, 1.0f);
+    
+            channel->push(nch, peak, track.trackId());
         }
     }
-    trackMeter->sendAll();
 }
 
 unsigned AudioIoCallback::CountSoloingSequences()
@@ -3257,7 +3254,6 @@ int AudioIoCallback::AudioCallback(
         tempFloats);
 
     SendVuOutputMeterData(outputMeterFloats, framesPerBuffer);
-    SendVuOutputTrackMeterData(framesPerBuffer);
 
     return mCallbackReturn;
 }

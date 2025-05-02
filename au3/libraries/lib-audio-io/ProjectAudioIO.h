@@ -14,7 +14,7 @@ Paul Licameli split from AudacityProject.h
 #include "ClientData.h" // to inherit
 #include "GlobalVariable.h"
 #include "Observer.h" // to inherit
-#include "MeterChannel.h"
+#include "IMeterChannel.h"
 #include <wx/weakref.h>
 
 #include <atomic>
@@ -59,15 +59,12 @@ public:
     bool IsAudioActive() const;
     void SetAudioIOToken(int token);
 
-    const std::shared_ptr<Meter>& GetPlaybackMeter() const;
+    const std::shared_ptr<IMeterChannel>& GetPlaybackMeter() const;
     void SetPlaybackMeter(
-        const std::shared_ptr<Meter>& playback);
+        const std::shared_ptr<IMeterChannel>& playback);
     const std::shared_ptr<Meter>& GetCaptureMeter() const;
     void SetCaptureMeter(
         const std::shared_ptr<Meter>& capture);
-    void SetTrackMeter(
-        const std::shared_ptr<MeterChannel> meter);
-    const std::shared_ptr<MeterChannel> GetTrackMeter() const;
 
     // Speed play
     double GetPlaySpeed() const
@@ -81,9 +78,8 @@ private:
     AudacityProject& mProject;
 
     // Project owned meters
-    std::shared_ptr<Meter> mPlaybackMeter;
+    std::shared_ptr<IMeterChannel> mPlaybackMeter;
     std::shared_ptr<Meter> mCaptureMeter;
-    std::shared_ptr<MeterChannel> mTrackMeter;
 
     // This is atomic because scrubber may read it in a separate thread from
     // the main
