@@ -113,7 +113,7 @@ protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
 
-    // muse::audio::AudioSignalChanges m_audioSignalChanges;
+    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> m_playbackTrackSignalChanged;
     audio::AudioOutputParams m_outParams;
 
     trackedit::TrackId m_trackId = -1;

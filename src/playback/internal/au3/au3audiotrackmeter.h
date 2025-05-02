@@ -8,19 +8,25 @@
 #include "global/async/promise.h"
 #include "global/async/channel.h"
 
-#include "au3audio/audiotypes.h"
-
-#include "libraries/lib-audio-devices/TrackMeter.h"
-
+#include "libraries/lib-audio-devices/MeterChannel.h"
 namespace au::playback {
-class Au3TrackMeter : public TrackMeter, public muse::async::Asyncable
+class TrackMeter : public MeterChannel, public muse::async::Asyncable
 {
 public:
-    void Update(int64_t trackId, size_t channel, const float* sampleData, unsigned long numFrames) override;
-
-    muse::async::Promise<muse::async::Channel<int64_t, au::audio::audioch_t, au::audio::AudioSignalVal> > signalChanges() const;
+    TrackMeter();
+    void push(int64_t key, au::audio::audioch_t channel, au::audio::AudioSignalVal signal) override;
+    void sendAll() override;
+    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> dataChanged(int64_t key) override;
 
 private:
-    muse::async::Channel<int64_t, au::audio::audioch_t, au::audio::AudioSignalVal> m_audioSignalChanges;
+    struct Data
+    {
+        au::audio::audioch_t channel;
+        au::audio::AudioSignalVal signal;
+    };
+
+    muse::async::Channel < std::map<int64_t, std::vector<Data> > > m_audioSignalChanges;
+    std::map < int64_t, std::vector<Data> > m_trackData;
+    std::map<int64_t, muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > m_channels;
 };
 }

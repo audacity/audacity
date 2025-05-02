@@ -33,43 +33,34 @@ TrackItem::TrackItem(QObject* parent)
             resetAudioChannelsVolumePressure();
         }
     });
-
-    playback()->audioOutput()->playbackTrackSignalChanges().onResolve(this,
-                                                                      [this](muse::async::Channel<int64_t,
-                                                                                                  audio::audioch_t,
-                                                                                                  audio::AudioSignalVal> signalVal) {
-        signalVal.onReceive(this, [this](const uint8_t trackId, const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
-            if (trackId != m_trackId) {
-                return;
-            }
-
-            float newPressure = std::min(std::max(newValue.pressure, MIN_ALLOWED_PRESSURE), MAX_ALLOWED_PRESSURE);
-
-            if (audioChNum == 0) {
-                if (m_leftChannelPressure == newPressure) {
-                    return;
-                }
-                m_leftChannelPressure = newPressure;
-                emit leftChannelPressureChanged(newPressure);
-            } else {
-                if (m_rightChannelPressure == newPressure) {
-                    return;
-                }
-                m_rightChannelPressure = newPressure;
-                emit rightChannelPressureChanged(newPressure);
-            }
-        });
-    });
 }
 
 TrackItem::~TrackItem()
 {
-    // m_audioSignalChanges.resetOnReceive(this);
+    m_playbackTrackSignalChanged.close();
 }
 
 void TrackItem::init(const trackedit::Track& track)
 {
     m_trackId = track.id;
+
+    m_playbackTrackSignalChanged = playback()->audioOutput()->playbackTrackSignalChanges(m_trackId);
+    m_playbackTrackSignalChanged.onReceive(this, [this](au::audio::audioch_t channel, const au::audio::AudioSignalVal& newValue) {
+        float newPressure = std::min(std::max(newValue.pressure, MIN_ALLOWED_PRESSURE), MAX_ALLOWED_PRESSURE);
+        if (channel == 0) {
+            if (m_leftChannelPressure == newPressure) {
+                return;
+            }
+            m_leftChannelPressure = newPressure;
+            emit leftChannelPressureChanged(newPressure);
+        } else {
+            if (m_rightChannelPressure == newPressure) {
+                return;
+            }
+            m_rightChannelPressure = newPressure;
+            emit rightChannelPressureChanged(newPressure);
+        }
+    });
 
     if (m_title != track.title) {
         m_title = track.title;

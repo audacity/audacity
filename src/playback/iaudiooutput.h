@@ -22,7 +22,6 @@ public:
     virtual muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> >
     playbackSignalChanges() const = 0;
 
-    virtual muse::async::Promise<muse::async::Channel<int64_t, audio::audioch_t, audio::AudioSignalVal> >
-    playbackTrackSignalChanges() const = 0;
+    virtual muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> playbackTrackSignalChanges(int64_t key) const = 0;
 };
 }

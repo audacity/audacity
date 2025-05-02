@@ -9,27 +9,40 @@
 
 #include "libraries/lib-utility/MemoryX.h"
 
-void au::playback::Au3TrackMeter::Update(int64_t trackId, size_t channel, const float* sampleData, unsigned long numFrames)
+au::playback::TrackMeter::TrackMeter()
 {
-    if (numFrames == 0) {
-        return;
-    }
-
-    float peak = 0.0f;
-    for (size_t i = 0; i < numFrames; ++i) {
-        peak = std::max(peak, static_cast<float>(fabs(sampleData[i])));
-    }
-
-    m_audioSignalChanges.send(trackId, channel,
-                              au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak)) });
+    m_audioSignalChanges.onReceive(this,
+                                   [this](const std::map<int64_t, std::vector<TrackMeter::Data> >& data) {
+        for (const auto& [key, values] : data) {
+            auto it = m_channels.find(key);
+            if (it != m_channels.end()) {
+                for (const auto& value : values) {
+                    it->second.send(value.channel, value.signal);
+                }
+            }
+        }
+    });
 }
 
-muse::async::Promise<muse::async::Channel<int64_t, au::audio::audioch_t, au::audio::AudioSignalVal> >
-au::playback::Au3TrackMeter::signalChanges() const
+void au::playback::TrackMeter::push(int64_t key, au::audio::audioch_t channel, au::audio::AudioSignalVal signal)
 {
-    return muse::async::Promise<muse::async::Channel<int64_t, au::audio::audioch_t, au::audio::AudioSignalVal> >([this](auto resolve,
-                                                                                                                        auto) {
-        return resolve(
-            m_audioSignalChanges);
+    auto& trackData = m_trackData[key];
+    trackData.push_back(Data { channel, signal });
+}
+
+void au::playback::TrackMeter::sendAll()
+{
+    m_audioSignalChanges.send(m_trackData);
+    m_trackData.clear();
+}
+
+muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> au::playback::TrackMeter::dataChanged(int64_t key)
+{
+    auto channel = m_channels[key];
+
+    channel.onClose(this, [this, key]() {
+        m_channels.erase(key);
     });
+
+    return channel;
 }

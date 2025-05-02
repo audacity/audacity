@@ -108,7 +108,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "Prefs.h"
 #include "Project.h"
 #include "TransactionScope.h"
-#include "TrackMeter.h"
 
 #include "RealtimeEffectManager.h"
 #include "QualitySettings.h"
@@ -272,7 +271,7 @@ AudioIO::AudioIO()
     mSilenceLevel = 0.0;
 
     mOutputMeter.reset();
-    mTrackMeter.reset();
+    mTrackMeterChannel.reset();
 
     PaError err = Pa_Initialize();
 
@@ -505,7 +504,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
     mInputMeter.reset();
     mOutputMeter.reset();
-    mTrackMeter.reset();
+    mTrackMeterChannel.reset();
 
     mLastPaError = paNoError;
     // pick a rate to do the audio I/O at, from those available. The project
@@ -606,7 +605,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         }
 
         mOutputMeter = options.playbackMeter;
-        mTrackMeter = options.trackMeter;
+        mTrackMeterChannel = options.trackMeterChannel;
     }
 
     if (numCaptureChannels > 0) {
@@ -1688,7 +1687,7 @@ void AudioIO::StopStream()
 
     mInputMeter.reset();
     mOutputMeter.reset();
-    mTrackMeter.reset();
+    mTrackMeterChannel.reset();
 
     if (pListener && mNumCaptureChannels > 0) {
         pListener->OnAudioIOStopRecording();
@@ -3066,14 +3065,38 @@ void AudioIoCallback::SendVuOutputMeterData(
     //                              (pProj->GetControlToolBar()->GetLastPlayMode() == loopedPlay));
 }
 
-void AudioIoCallback::SendVuOutputMeterDataPerTrack(int64_t trackId, size_t channel, const float* sampleData, unsigned long framesPerBuffer)
-{
-    auto trackMeter = mTrackMeter.lock();
-    if (!trackMeter) {
+void AudioIoCallback::SendVuOutputTrackMeterData(unsigned long frames) {
+    if (frames == 0) {
         return;
     }
 
-    trackMeter->Update(trackId, channel, sampleData, framesPerBuffer);
+    const auto trackOutputMeter= stackAllocate(float, frames);
+
+    auto trackMeterChannel = mTrackMeterChannel.lock();
+    if (!trackMeterChannel) {
+        return;
+    }
+
+    for (const Track& track: mPlaybackTracks) {
+        const auto nChannels = track.mSequence->NChannels();
+        for (size_t channel = 0; channel < nChannels; ++channel) {
+            const auto& buffer = track.mBuffers[channel];
+            size_t len = buffer->Get(
+                reinterpret_cast<samplePtr>(trackOutputMeter),
+                floatSample,
+                frames
+            );
+            ClampBuffer(trackOutputMeter, len);
+
+            float peak = 0.0f;
+            for (size_t i = 0; i < len; ++i) {
+                peak = std::max(peak, fabs(trackOutputMeter[i]));
+            }
+
+            trackMeterChannel->push(track.trackId(), channel, au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak)) });
+        }
+    }
+    trackMeterChannel->sendAll();
 }
 
 unsigned AudioIoCallback::CountSoloingSequences()
@@ -3170,7 +3193,6 @@ int AudioIoCallback::AudioCallback(
     const auto outputMeterFloats = bVolEmulationActive
                                    ? stackAllocate(float, framesPerBuffer * numPlaybackChannels)
                                    : outputBuffer;
-    const auto trackOutputMeter= stackAllocate(float, framesPerBuffer);
     // ----- END of MEMORY ALLOCATIONS ------------------------------------------
 
     if (inputBuffer && numCaptureChannels) {
@@ -3235,21 +3257,7 @@ int AudioIoCallback::AudioCallback(
         tempFloats);
 
     SendVuOutputMeterData(outputMeterFloats, framesPerBuffer);
-    for (const Track& track: mPlaybackTracks) {
-        for (size_t channel = 0; channel < track.mBuffers.size(); ++channel) {
-            FillTrackOutputBuffer(
-                track,
-                trackOutputMeter,
-                channel,
-                framesPerBuffer);
-
-            SendVuOutputMeterDataPerTrack(
-                track.trackId(),
-                channel,
-                trackOutputMeter,
-                framesPerBuffer);
-        }
-    }
+    SendVuOutputTrackMeterData(framesPerBuffer);
 
     return mCallbackReturn;
 }

@@ -216,7 +216,7 @@ public:
         const float* inputSamples, unsigned long framesPerBuffer);
     void SendVuOutputMeterData(
         const float* outputMeterFloats, unsigned long framesPerBuffer);
-    void SendVuOutputMeterDataPerTrack(int64_t trackId, size_t channel, const float* sampleData, unsigned long framesPerBuffer);
+    void SendVuOutputTrackMeterData(unsigned long frames);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
