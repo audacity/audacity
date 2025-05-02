@@ -25,7 +25,7 @@ public:
     muse::async::Notification updateSettingsRequested(const EffectInstanceId& instanceId) const override;
 
     const EffectSettings* settingsById(const EffectInstanceId& instanceId) const override;
-    EffectSettingsAccess* settingsAccessById(const EffectInstanceId& instanceId) const override;
+    EffectSettingsAccessPtr settingsAccessById(const EffectInstanceId& instanceId) const override;
     void notifyAboutSettingsChanged(const EffectInstanceId& instanceId) override;
     muse::async::Notification settingsChanged(const EffectInstanceId& instanceId) const override;
 

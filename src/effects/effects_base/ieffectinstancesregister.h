@@ -33,7 +33,7 @@ public:
     virtual muse::async::Notification updateSettingsRequested(const EffectInstanceId& instanceId) const = 0;
 
     virtual const EffectSettings* settingsById(const EffectInstanceId& instanceId) const = 0;
-    virtual EffectSettingsAccess* settingsAccessById(const EffectInstanceId& instanceId) const = 0;
+    virtual EffectSettingsAccessPtr settingsAccessById(const EffectInstanceId& instanceId) const = 0;
     virtual void notifyAboutSettingsChanged(const EffectInstanceId& instanceId) = 0;
     virtual muse::async::Notification settingsChanged(const EffectInstanceId& instanceId) const = 0;
 };

@@ -60,7 +60,7 @@ const EffectSettings* AbstractEffectModel::settings() const
     return instancesRegister()->settingsById(id);
 }
 
-EffectSettingsAccess* AbstractEffectModel::settingsAccess() const
+EffectSettingsAccessPtr AbstractEffectModel::settingsAccess() const
 {
     EffectInstanceId id = this->instanceId();
     if (id == 0) {
@@ -82,7 +82,7 @@ EffectId AbstractEffectModel::effectId() const
 
 void AbstractEffectModel::preview()
 {
-    if (EffectSettingsAccess* access = this->settingsAccess()) {
+    if (const EffectSettingsAccessPtr access = this->settingsAccess()) {
         access->ModifySettings([this](EffectSettings& settings) {
             executionScenario()->previewEffect(instanceId(), settings);
             return nullptr;
@@ -92,7 +92,7 @@ void AbstractEffectModel::preview()
 
 void AbstractEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
 {
-    EffectSettingsAccess* const access = this->settingsAccess();
+    const EffectSettingsAccessPtr access = this->settingsAccess();
     IF_ASSERT_FAILED(access) {
         return;
     }
@@ -104,7 +104,7 @@ void AbstractEffectModel::modifySettings(const std::function<void(EffectSettings
 
 void AbstractEffectModel::commitSettings()
 {
-    EffectSettingsAccess* const access = this->settingsAccess();
+    const EffectSettingsAccessPtr access = this->settingsAccess();
     IF_ASSERT_FAILED(access) {
         return;
     }
