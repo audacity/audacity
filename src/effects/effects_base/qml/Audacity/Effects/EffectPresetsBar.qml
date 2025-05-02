@@ -13,6 +13,8 @@ RowLayout {
     id: root
 
     property var instanceId
+    property int navigationOrder: 0
+    property var navigationPanel: null
 
     spacing: 4
 
@@ -41,6 +43,9 @@ RowLayout {
     StyledDropdown {
         id: presetSelector
 
+        navigation.panel: root.navigationPanel
+        navigation.order: root.navigationOrder
+
         Layout.fillWidth: true
         background.color: ui.theme.backgroundPrimaryColor
         background.border.width: 1
@@ -61,6 +66,11 @@ RowLayout {
     }
 
     FlatButton {
+        id: saveBtn
+
+        navigation.panel: root.navigationPanel
+        navigation.order: presetSelector.navigation.order + 1
+
         Layout.alignment: Qt.AlignVCenter
         icon: IconCode.SAVE
 
@@ -70,6 +80,11 @@ RowLayout {
     }
 
     FlatButton {
+        id: resetBtn
+
+        navigation.panel: root.navigationPanel
+        navigation.order: saveBtn.navigation.order + 1
+
         Layout.alignment: Qt.AlignVCenter
 
         icon: IconCode.UNDO
@@ -86,6 +101,9 @@ RowLayout {
 
     FlatButton {
         id: manageButton
+
+        navigation.panel: root.navigationPanel
+        navigation.order: resetBtn.navigation.order + 1
 
         Layout.alignment: Qt.AlignVCenter
 

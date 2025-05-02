@@ -10,7 +10,7 @@ import Muse.UiComponents
 import Audacity.Effects
 import Audacity.Vst
 
-StyledDialogView {
+EffectStyledDialogView {
     id: root
 
     property var instanceId
@@ -45,6 +45,8 @@ StyledDialogView {
 
         EffectPresetsBar {
             id: presetsBar
+            navigationPanel: root.navigationPanel
+            navigationOrder: 0
             instanceId: root.instanceId
             anchors.left: parent.left
             anchors.right: parent.right
