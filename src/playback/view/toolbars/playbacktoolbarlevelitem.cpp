@@ -37,17 +37,15 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
         emit levelChanged();
     });
 
-    playback()->audioOutput()->playbackSignalChanges()
-    .onResolve(this, [this](muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> signalVal) {
-        signalVal.onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
-            if (newValue.pressure < MIN_DISPLAYED_DBFS) {
-                setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
-            } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
-                setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
-            } else {
-                setAudioChannelVolumePressure(audioChNum, newValue.pressure);
-            }
-        });
+    playback()->audioOutput()->playbackSignalChanges().onReceive(this,
+                                                                 [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
+        if (newValue.pressure < MIN_DISPLAYED_DBFS) {
+            setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
+        } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
+            setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
+        } else {
+            setAudioChannelVolumePressure(audioChNum, newValue.pressure);
+        }
     });
 
     resetAudioChannelsVolumePressure();

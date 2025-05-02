@@ -271,7 +271,7 @@ AudioIO::AudioIO()
     mSilenceLevel = 0.0;
 
     mOutputMeter.reset();
-    mTrackMeterChannel.reset();
+    mTrackMeter.reset();
 
     PaError err = Pa_Initialize();
 
@@ -504,7 +504,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 
     mInputMeter.reset();
     mOutputMeter.reset();
-    mTrackMeterChannel.reset();
+    mTrackMeter.reset();
 
     mLastPaError = paNoError;
     // pick a rate to do the audio I/O at, from those available. The project
@@ -605,7 +605,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         }
 
         mOutputMeter = options.playbackMeter;
-        mTrackMeterChannel = options.trackMeterChannel;
+        mTrackMeter = options.trackMeterChannel;
     }
 
     if (numCaptureChannels > 0) {
@@ -1687,7 +1687,7 @@ void AudioIO::StopStream()
 
     mInputMeter.reset();
     mOutputMeter.reset();
-    mTrackMeterChannel.reset();
+    mTrackMeter.reset();
 
     if (pListener && mNumCaptureChannels > 0) {
         pListener->OnAudioIOStopRecording();
@@ -3072,8 +3072,8 @@ void AudioIoCallback::SendVuOutputTrackMeterData(unsigned long frames) {
 
     const auto trackOutputMeter= stackAllocate(float, frames);
 
-    auto trackMeterChannel = mTrackMeterChannel.lock();
-    if (!trackMeterChannel) {
+    auto trackMeter = mTrackMeter.lock();
+    if (!trackMeter) {
         return;
     }
 
@@ -3093,10 +3093,10 @@ void AudioIoCallback::SendVuOutputTrackMeterData(unsigned long frames) {
                 peak = std::max(peak, fabs(trackOutputMeter[i]));
             }
 
-            trackMeterChannel->push(track.trackId(), channel, au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak)) });
+            trackMeter->push(track.trackId(), channel, au::audio::AudioSignalVal { 0, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(peak)) });
         }
     }
-    trackMeterChannel->sendAll();
+    trackMeter->sendAll();
 }
 
 unsigned AudioIoCallback::CountSoloingSequences()

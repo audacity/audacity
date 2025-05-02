@@ -98,11 +98,7 @@ int au::playback::InOutMeter::GetDBRange() const
     return 0;
 }
 
-muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >
-au::playback::InOutMeter::signalChanges() const
+muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> au::playback::InOutMeter::signalChanges() const
 {
-    return muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >([this](auto resolve, auto /*reject*/) {
-        return resolve(
-            m_audioSignalChanges);
-    });
+    return m_audioSignalChanges;
 }

@@ -79,7 +79,7 @@ muse::async::Channel<float> Au3AudioInput::recordVolumeChanged() const
     return m_recordVolumeChanged;
 }
 
-muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > Au3AudioInput::recordSignalChanges() const
+muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> Au3AudioInput::recordSignalChanges() const
 {
     return m_inputMeter->signalChanges();
 }

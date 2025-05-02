@@ -24,7 +24,7 @@ public:
     bool IsClipping() const override;
     int GetDBRange() const override;
 
-    muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > signalChanges() const;
+    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> signalChanges() const;
 
 private:
     muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> m_audioSignalChanges;

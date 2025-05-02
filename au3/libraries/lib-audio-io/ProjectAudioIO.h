@@ -83,7 +83,7 @@ private:
     // Project owned meters
     std::shared_ptr<Meter> mPlaybackMeter;
     std::shared_ptr<Meter> mCaptureMeter;
-    std::shared_ptr<MeterChannel> mTrackMeterChannel;
+    std::shared_ptr<MeterChannel> mTrackMeter;
 
     // This is atomic because scrubber may read it in a separate thread from
     // the main

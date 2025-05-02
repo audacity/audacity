@@ -116,12 +116,12 @@ void ProjectAudioIO::SetCaptureMeter(
 void ProjectAudioIO::SetTrackMeter(
     const std::shared_ptr<MeterChannel> meter)
 {
-    mTrackMeterChannel = meter;
+    mTrackMeter = meter;
 }
 
 const std::shared_ptr<MeterChannel> ProjectAudioIO::GetTrackMeter() const
 {
-    return mTrackMeterChannel;
+    return mTrackMeter;
 }
 
 void ProjectAudioIO::SetPlaySpeed(double value)

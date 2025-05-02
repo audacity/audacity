@@ -318,7 +318,7 @@ protected:
 
     std::weak_ptr<Meter> mInputMeter{};
     std::weak_ptr<Meter> mOutputMeter{};
-    std::weak_ptr<MeterChannel> mTrackMeterChannel{};
+    std::weak_ptr<MeterChannel> mTrackMeter{};
 
    #if USE_PORTMIXER
     PxMixer* mPortMixer;
