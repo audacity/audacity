@@ -44,7 +44,7 @@ signals:
 
 private:
 
-    EffectSettingsAccess* settingsAccess() const;
+    std::shared_ptr<EffectSettingsAccess> settingsAccess() const;
     void settingsToView();
     void settingsFromView();
     void checkSettingChangesFromUiWhileIdle();
@@ -52,7 +52,7 @@ private:
 
     EffectInstanceId m_instanceId = -1;
     std::shared_ptr<VST3Instance> m_auVst3Instance;
-    EffectSettingsAccess* m_settingsAccess = nullptr;
+    std::shared_ptr<EffectSettingsAccess> m_settingsAccess;
     QTimer m_settingUpdateTimer;
 };
 }

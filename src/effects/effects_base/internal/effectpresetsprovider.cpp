@@ -53,7 +53,7 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
     const EffectSettingsManager& sm = settingsManager(effectId);
-    EffectSettingsAccess* access = instancesRegister()->settingsAccessById(effectInstanceId);
+    const EffectSettingsAccessPtr access = instancesRegister()->settingsAccessById(effectInstanceId);
 
     Ret ret;
 
@@ -164,7 +164,7 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
         return make_ret(Err::InternalError);
     }
 
-    EffectSettingsAccess* access = instancesRegister()->settingsAccessById(effectInstanceId);
+    const EffectSettingsAccessPtr access = instancesRegister()->settingsAccessById(effectInstanceId);
     IF_ASSERT_FAILED(access) {
         return make_ret(Err::InternalError);
     }

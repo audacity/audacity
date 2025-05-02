@@ -84,11 +84,11 @@ const EffectSettings* EffectInstancesRegister::settingsById(const EffectInstance
     return nullptr;
 }
 
-EffectSettingsAccess* EffectInstancesRegister::settingsAccessById(const EffectInstanceId& instanceId) const
+EffectSettingsAccessPtr EffectInstancesRegister::settingsAccessById(const EffectInstanceId& instanceId) const
 {
     auto it = m_data.find(instanceId);
     if (it != m_data.end()) {
-        return it->second.access.get();
+        return it->second.access;
     }
 
     return nullptr;

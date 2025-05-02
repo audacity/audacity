@@ -74,7 +74,7 @@ protected:
     bool m_inited = false;
 
 private:
-    EffectSettingsAccess* settingsAccess() const;
+    EffectSettingsAccessPtr settingsAccess() const;
     QString m_instanceId;
 };
 }
