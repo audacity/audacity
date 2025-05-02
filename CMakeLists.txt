@@ -24,7 +24,7 @@ include(FetchContent)
 FetchContent_Declare(
   muse_framework
   GIT_REPOSITORY https://github.com/saintmatthieu/framework_tmp.git
-  GIT_TAG        7b1aa8f9688ab02a4e76cea273787b0e44792cdf
+  GIT_TAG        149cd33d365e4d6f77e03ac57dd17b4bc7110959
 )
 
 FetchContent_GetProperties(muse_framework)
