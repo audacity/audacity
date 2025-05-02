@@ -10,7 +10,6 @@
 #include "libraries/lib-utility/MemoryX.h"
 
 namespace au::playback {
-
 OutMeter::OutMeter()
 {
     m_audioSignalChanges.onReceive(this,
@@ -21,7 +20,7 @@ OutMeter::OutMeter()
                 for (const auto& value : values) {
                     it->second.send(value.channel, value.signal);
                 }
-            } 
+            }
         }
     });
 }
@@ -29,7 +28,8 @@ OutMeter::OutMeter()
 void OutMeter::push(uint8_t channel, float signal, int64_t key)
 {
     auto& trackData = m_trackData[key];
-    trackData.push_back(Data { channel, au::audio::AudioSignalVal { signal, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(signal)) } });
+    trackData.push_back(Data { channel,
+                               au::audio::AudioSignalVal { signal, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(signal)) } });
 }
 
 void OutMeter::reset()
