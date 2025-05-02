@@ -2789,16 +2789,6 @@ bool AudioIoCallback::FillOutputBuffers(
     return false;
 }
 
-void AudioIoCallback::FillTrackOutputBuffer(const Track& track, float* trackMeterFloats, size_t channel, unsigned long framesPerBuffer) {
-    const auto& buffer = track.mBuffers[channel];
-    size_t len = buffer->Get(
-        reinterpret_cast<samplePtr>(trackMeterFloats),
-        floatSample,
-        framesPerBuffer
-    );
-    ClampBuffer(trackMeterFloats, len);
-}
-
 void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
 {
     // Quick returns if next to nothing to do.

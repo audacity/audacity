@@ -205,7 +205,6 @@ public:
 
     bool FillOutputBuffers(
         float* outputFloats, unsigned long framesPerBuffer, float* outputMeterFloats);
-    void FillTrackOutputBuffer(const Track& track, float* trackMeterFloats, size_t channel, unsigned long framesPerBuffer);
     void DrainInputBuffers(
         constSamplePtr inputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackFlags statusFlags, float* tempFloats);
     void UpdateTimePosition(
@@ -216,7 +215,7 @@ public:
         const float* inputSamples, unsigned long framesPerBuffer);
     void SendVuOutputMeterData(
         const float* outputMeterFloats, unsigned long framesPerBuffer);
-    void PushMainMeterValues(std::shared_ptr<IMeterChannel> channel, const float * values, uint8_t channels, unsigned long frames);
+    void PushMainMeterValues(std::shared_ptr<IMeterChannel> channel, const float* values, uint8_t channels, unsigned long frames);
     void PushTrackMeterValues(std::shared_ptr<IMeterChannel> channel, unsigned long frames);
 
     /** \brief Get the number of audio samples ready in all of the playback
