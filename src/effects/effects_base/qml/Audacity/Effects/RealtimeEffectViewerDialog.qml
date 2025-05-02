@@ -10,7 +10,7 @@ import Muse.UiComponents
 import Audacity.Effects
 import Audacity.Vst
 
-StyledDialogViewWithoutNavigationSection {
+EffectStyledDialogView {
     id: root
 
     property string instanceId
@@ -71,6 +71,8 @@ StyledDialogViewWithoutNavigationSection {
             BypassEffectButton {
                 id: bypassBtn
 
+                navigation.panel: root.navigationPanel
+                navigation.order: 0
                 size: presetsBar.implicitHeight
                 isMasterEffect: viewerModel.isMasterEffect
                 accentButton: viewerModel.isActive
@@ -82,6 +84,8 @@ StyledDialogViewWithoutNavigationSection {
 
             EffectPresetsBar {
                 id: presetsBar
+                navigationPanel: root.navigationPanel
+                navigationOrder: 1
                 instanceId: root.instanceId
                 Layout.fillWidth: true
             }
