@@ -96,6 +96,7 @@ bool updateCheckmarks(MenuItem& item, const au::effects::EffectId& selectedEffec
             checked |= updateCheckmarks(*subItem, selectedEffectId);
         }
         item.setChecked(checked);
+        return checked;
     }
 }
 }
