@@ -13,13 +13,11 @@ namespace au::playback {
 OutMeter::OutMeter()
 {
     m_audioSignalChanges.onReceive(this,
-                                   [this](const std::map<int64_t, std::vector<OutMeter::Data> >& data) {
-        for (const auto& [key, values] : data) {
-            auto it = m_channels.find(key);
+                                   [this](const std::vector<OutMeter::Data>& data) {
+        for (const auto& item : data) {
+            auto it = m_channels.find(item.key);
             if (it != m_channels.end()) {
-                for (const auto& value : values) {
-                    it->second.send(value.channel, value.signal);
-                }
+                it->second.send(item.channel, item.signal);
             }
         }
     });
@@ -27,9 +25,8 @@ OutMeter::OutMeter()
 
 void OutMeter::push(uint8_t channel, float signal, int64_t key)
 {
-    auto& trackData = m_trackData[key];
-    trackData.push_back(Data { channel,
-                               au::audio::AudioSignalVal { signal, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(signal)) } });
+    m_trackData.push_back(Data { key, channel,
+                                 au::audio::AudioSignalVal { signal, static_cast<au::audio::volume_dbfs_t>(LINEAR_TO_DB(signal)) } });
 }
 
 void OutMeter::reset()
@@ -50,7 +47,6 @@ void OutMeter::sendAll()
 muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> OutMeter::dataChanged(int64_t key)
 {
     auto channel = m_channels[key];
-
     channel.onClose(this, [this, key]() {
         m_channels.erase(key);
     });

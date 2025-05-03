@@ -25,12 +25,13 @@ public:
 private:
     struct Data
     {
+        int64_t key;
         au::audio::audioch_t channel;
         au::audio::AudioSignalVal signal;
     };
 
-    muse::async::Channel < std::map<int64_t, std::vector<Data> > > m_audioSignalChanges;
-    std::map < int64_t, std::vector<Data> > m_trackData;
+    muse::async::Channel <std::vector<Data> > m_audioSignalChanges;
+    std::vector<Data> m_trackData;
     std::map<int64_t, muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > m_channels;
 };
 }
