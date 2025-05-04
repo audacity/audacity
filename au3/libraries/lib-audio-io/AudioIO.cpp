@@ -1366,8 +1366,8 @@ bool AudioIO::AllocateBuffers(
                 mPlaybackSchedule.mTimeQueue.Init(timeQueueSize);
             }
 
-            size_t mNumPlaybackChannels = GetNumPlaybackChannels();
-            size_t playbackBufferSize = std::max((size_t)lrint(mRate * mPlaybackRingBufferSecs.count()), mHardwarePlaybackLatencyFrames * 2);
+            const size_t mNumPlaybackChannels = GetNumPlaybackChannels();
+            const size_t playbackBufferSize = std::max((size_t)lrint(mRate * mPlaybackRingBufferSecs.count()), mHardwarePlaybackLatencyFrames * 2);
             for (auto& track : mPlaybackTracks) {
                 for (auto& buffer : track.mBuffers) {
                     buffer.reset();
@@ -2221,7 +2221,7 @@ bool AudioIO::ProcessPlaybackSlices(
             const auto numChannels = seq->NChannels();
             if (numChannels > 1) {
                 for (unsigned n = 0, cnt = std::min(numChannels, mNumPlaybackChannels); n < cnt; ++n) {
-                    const auto volume = seq->GetChannelVolume(n);
+                    const float volume = seq->GetChannelVolume(n);
                     for (unsigned i = 0; i < samplesAvailable; ++i) {
                         mProcessingBuffers[bufferIndex + n][i] *= volume;
                         mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex + n][i];
@@ -2234,7 +2234,7 @@ bool AudioIO::ProcessPlaybackSlices(
                         samplesAvailable, 0);
                 }
             } else if (numChannels == 1) {
-                const auto volume = seq->GetChannelVolume(0);
+                const float volume = seq->GetChannelVolume(0);
                 for (unsigned i = 0; i < samplesAvailable; ++i) {
                     mProcessingBuffers[bufferIndex][i] *= volume;
                 }

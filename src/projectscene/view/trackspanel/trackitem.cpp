@@ -46,7 +46,7 @@ void TrackItem::init(const trackedit::Track& track)
 
     m_playbackTrackSignalChanged = playback()->audioOutput()->playbackTrackSignalChanges(m_trackId);
     m_playbackTrackSignalChanged.onReceive(this, [this](au::audio::audioch_t channel, const au::audio::AudioSignalVal& newValue) {
-        float newPressure = std::min(std::max(newValue.pressure, MIN_ALLOWED_PRESSURE), MAX_ALLOWED_PRESSURE);
+        const float newPressure = std::min(std::max(newValue.pressure, MIN_ALLOWED_PRESSURE), MAX_ALLOWED_PRESSURE);
         if (channel == 0) {
             if (m_leftChannelPressure == newPressure) {
                 return;
