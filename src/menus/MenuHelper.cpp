@@ -330,23 +330,55 @@ void AddGroupedEffectMenuItems(
    PluginIDs group;
    std::vector<CommandFlag> flags;
 
+   // Sorts items within a group alphabetically (case insensitive)
+   auto sortGroupItems = [&]() 
+   {
+      if(names.size() < 2) return;
+
+      // Create and sort indices to maintain correlation between vectors
+      std::vector<size_t> indices(names.size());
+      for(size_t i = 0; i < indices.size(); ++i)
+         indices[i] = i;
+
+      std::sort(indices.begin(), indices.end(), [&](size_t a, size_t b) {
+         return names[a].Translation().Lower() < names[b].Translation().Lower();
+      });
+
+      // Reorder all vectors based on sorted indices
+      std::vector<TranslatableString> sortedNames;
+      PluginIDs sortedGroup;
+      std::vector<CommandFlag> sortedFlags;
+
+      for(auto i : indices) {
+         sortedNames.push_back(std::move(names[i]));
+         sortedGroup.push_back(std::move(group[i]));
+         sortedFlags.push_back(std::move(flags[i]));
+      }
+
+      names = std::move(sortedNames);
+      group = std::move(sortedGroup);
+      flags = std::move(sortedFlags);
+   };
+
+   // Handles adding a complete group of items to the menu
    auto doAddGroup = [&]
    {
-      using namespace MenuRegistry;
       if(names.empty())
          return;
 
+      // Sort items within the current group
+      sortGroupItems();
       const auto inSubmenu = !path.empty() && (names.size() > 1);
       const auto label = inSubmenu ? path.back() : TranslatableString{};
       if (label.empty()) {
          auto items = Items("");
          AddEffectMenuItemGroup(*items, names, group, flags, onMenuCommand);
-         parentTable->push_back(move(items));
+         parentTable->push_back(std::move(items));
       }
       else {
          auto items = Menu("", label);
          AddEffectMenuItemGroup(*items, names, group, flags, onMenuCommand);
-         parentTable->push_back(move(items));
+         parentTable->push_back(std::move(items));
       }
 
       names.clear();
@@ -354,24 +386,31 @@ void AddGroupedEffectMenuItems(
       flags.clear();
    };
 
+   // Process each plugin and group them according to groupBy parameter
    for(auto plug : plugs)
    {
+      TranslatableString groupName;
+      bool groupChanged = false;
       if(groupBy == GroupBy::Publisher)
       {
-         const auto vendorName = effectManager.GetVendorName(plug->GetID());
+         vendorName = effectManager.GetVendorName(plug->GetID());
+         if(groupName.empty()) groupName = UnknownGroupName;
          if(path.empty() || path[0] != vendorName)
          {
             doAddGroup();
             path = { vendorName };
+            groupChanged = true;
          }
       }
       else if(groupBy == GroupBy::Type)
       {
-         const auto effectFamilyName = effectManager.GetEffectFamilyName(plug->GetID());
+         effectFamilyName = effectManager.GetEffectFamilyName(plug->GetID());
+         if(groupName.empty()) groupName = UnknownGroupName;
          if(path.empty() || path[0] != effectFamilyName)
          {
             doAddGroup();
             path = { effectFamilyName };
+            groupChanged = true;
          }
       }
       else if(groupBy == GroupBy::TypePublisher)
@@ -384,12 +423,14 @@ void AddGroupedEffectMenuItems(
             path = { effectFamilyName, vendorName };
             auto menu = Menu("", effectFamilyName);
             parentTable = menu.get();
-            table.push_back(move(menu));
+            table.push_back(std::move(menu));
+            groupChanged = true;
          }
          else if(path[1] != vendorName)
          {
             doAddGroup();
             path[1] = vendorName;
+            groupChanged = true;
          }
       }
       
