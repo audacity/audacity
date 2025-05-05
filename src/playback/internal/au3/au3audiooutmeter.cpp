@@ -38,10 +38,15 @@ void OutMeter::reset()
     sendAll();
 }
 
+void OutMeter::reserve(size_t size)
+{
+    m_trackData.reserve(size);
+}
+
 void OutMeter::sendAll()
 {
-    m_audioSignalChanges.send(m_trackData);
-    m_trackData.clear();
+    m_audioSignalChanges.send(std::move(m_trackData));
+    m_trackData = {};
 }
 
 muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> OutMeter::dataChanged(int64_t key)

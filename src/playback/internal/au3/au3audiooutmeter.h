@@ -20,7 +20,8 @@ public:
     void push(uint8_t channel, float signal, int64_t key) override;
     void sendAll() override;
     void reset() override;
-    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> dataChanged(int64_t key = MAIN_METER_KEY);
+    void reserve(size_t size) override;
+    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> dataChanged(int64_t key = MASTER_TRACK_ID);
 
 private:
     struct Data

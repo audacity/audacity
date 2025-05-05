@@ -24,7 +24,7 @@ Canvas {
     property int style: VolumePressureMeter.Style.Solid
     property color meterColor: "#7689E6" // TODO: Use the track color
 
-    property int recentPeakInterval: 600
+    property int recentPeakIntervalMiliseconds: 600
 
     width: root.showRuler ? indicatorWidth + 20 : indicatorWidth
 
@@ -81,7 +81,7 @@ Canvas {
 
             prv.recentVolumePressure.push({ value: prv.updatedVolumePressure, time: now })
 
-            const recentPeakStartInterval = now - root.recentPeakInterval
+            const recentPeakStartInterval = now - root.recentPeakIntervalMiliseconds
             let cutoffIndex = -1
 
             for (let i = 0; i < prv.recentVolumePressure.length; i++) {
@@ -265,7 +265,7 @@ Canvas {
         // Drawing the Overload indicator
         const overloadStyle = prv.clipped ? "#EF476F" : ui.theme.buttonColor
         drawRoundedRect(ctx, overloadStyle, 0, 0, indicatorWidth, prv.overloadHeight, 2, "top")
-        
+
         if (prv.rulerNeedsPaint) {
             var originVPos = prv.overloadHeight
             var originHPos = indicatorWidth + prv.strokeHorizontalMargin
@@ -319,6 +319,10 @@ Canvas {
     }
 
     onCurrentVolumePressureChanged: {
+        if (isNaN(root.currentVolumePressure)) {
+            return
+        }
+
         prv.maxPeak = Math.max(prv.maxPeak, root.currentVolumePressure)
         prv.updatedVolumePressure = root.currentVolumePressure
         prv.updateRecentPeak()

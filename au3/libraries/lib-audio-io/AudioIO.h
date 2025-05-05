@@ -215,8 +215,8 @@ public:
         const float* inputSamples, unsigned long framesPerBuffer);
     void SendVuOutputMeterData(
         const float* outputMeterFloats, unsigned long framesPerBuffer);
-    void PushMainMeterValues(std::shared_ptr<IMeterChannel> channel, const float* values, uint8_t channels, unsigned long frames);
-    void PushTrackMeterValues(std::shared_ptr<IMeterChannel> channel, unsigned long frames);
+    void PushMainMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float* values, uint8_t channels, unsigned long frames);
+    void PushTrackMeterValues(const std::shared_ptr<IMeterChannel>& channel, unsigned long frames);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
@@ -379,11 +379,6 @@ public:
     // Whether to check the error code passed to audacityAudioCallback to
     // detect more dropouts
     std::atomic<bool> mDetectUpstreamDropouts{ true };
-
-    size_t GetNumPlaybackChannels() const
-    {
-        return std::min(mNumPlaybackChannels, MaxPlaybackChannels);
-    }
 
 protected:
     RecordingSchedule mRecordingSchedule{};

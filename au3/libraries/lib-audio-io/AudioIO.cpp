@@ -119,6 +119,22 @@ time warp info and AudioIOListener and whether the playback is looped.
 using std::max;
 using std::min;
 
+namespace {
+float GetAbsValue(const float* buffer, size_t frames, size_t step)
+{
+    auto sptr = buffer;
+    float peak = -1.0f;
+
+    for (unsigned long i = 0; i < frames; i++) {
+        peak = std::max(peak, fabs(*sptr));
+        sptr += step;
+    }
+    std::clamp(peak, -1.0f, 1.0f);
+
+    return peak;
+}
+}
+
 AudioIO* AudioIO::Get()
 {
     return static_cast< AudioIO* >(AudioIOBase::Get());
@@ -1291,6 +1307,12 @@ bool AudioIO::AllocateBuffers(
                                 reinterpret_cast<float*>(buffer.ptr()));
                         }
                     }
+
+                    auto outputMeter = mOutputMeter.lock();
+                    if (outputMeter) {
+                        // Reserve space for all tracks and master
+                        outputMeter->reserve((mPlaybackSequences.size() + 1) * mNumPlaybackChannels);
+                    }
                 }
 
                 std::generate(
@@ -1366,7 +1388,6 @@ bool AudioIO::AllocateBuffers(
                 mPlaybackSchedule.mTimeQueue.Init(timeQueueSize);
             }
 
-            const size_t mNumPlaybackChannels = GetNumPlaybackChannels();
             const size_t playbackBufferSize = std::max((size_t)lrint(mRate * mPlaybackRingBufferSecs.count()), mHardwarePlaybackLatencyFrames * 2);
             for (auto& track : mPlaybackTracks) {
                 for (auto& buffer : track.mBuffers) {
@@ -2176,7 +2197,6 @@ bool AudioIO::ProcessPlaybackSlices(
                     }
                 }
             }
-
             bufferIndex += seq->NChannels();
         }
     }
@@ -2252,7 +2272,6 @@ bool AudioIO::ProcessPlaybackSlices(
                         samplesAvailable, 0);
                 }
             }
-            
             bufferIndex += seq->NChannels();
         }
     }
@@ -3043,25 +3062,17 @@ void AudioIoCallback::SendVuOutputMeterData(
 }
 
 
-void AudioIoCallback::PushMainMeterValues(std::shared_ptr<IMeterChannel> channel, const float * values, uint8_t channels, unsigned long frames)
+void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float * values, uint8_t channels, unsigned long frames)
 {
     auto sptr = values;
-    std::vector<float> peak(channels, -1.0f);
-
-    for (unsigned long i = 0; i < frames; i++) {
-        for (unsigned int j = 0; j < channels; j++) {
-            peak[j] = std::max(peak[j], static_cast<float>(fabs(sptr[j])));
-        }
-        sptr += channels;
-    }
-    for (unsigned int j = 0; j < channels; j++) {
-        peak[j] = std::clamp(peak[j], -1.0f, 1.0f);
-        channel->push(j, peak[j]);
+    for (size_t ch = 0; ch < channels; ++ch) {
+        auto sptr = values + ch;
+        channel->push(ch, GetAbsValue(sptr, frames, channels));
     }
 }
 
 
-void AudioIoCallback::PushTrackMeterValues(std::shared_ptr<IMeterChannel> channel, unsigned long frames)
+void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterChannel>& channel, unsigned long frames)
 {
     auto stackBuffer = stackAllocate(float, frames);
 
@@ -3074,14 +3085,8 @@ void AudioIoCallback::PushTrackMeterValues(std::shared_ptr<IMeterChannel> channe
                 floatSample,
                 frames
             );
-    
-            float peak = 0.0f;
-            for (size_t i = 0; i < len; ++i) {
-                peak = std::max(peak, fabs(stackBuffer[i]));
-            }
-            peak = std::clamp(peak, -1.0f, 1.0f);
-    
-            channel->push(nch, peak, track.trackId());
+
+            channel->push(nch, GetAbsValue(stackBuffer, len, 1), track.trackId());
         }
     }
 }
@@ -3299,7 +3304,7 @@ int AudioIoCallback::CallbackDoSeek()
     for (auto& track : mPlaybackTracks) {
         for (auto& buffer : track.mBuffers) {
             const auto toDiscard = buffer->AvailForGet();
-            const auto discarded = buffer->Discard(toDiscard);
+            buffer->Discard(toDiscard);
         }
     }
 
