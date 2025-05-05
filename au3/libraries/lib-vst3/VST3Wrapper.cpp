@@ -611,7 +611,7 @@ bool VST3Wrapper::IsActive() const noexcept
     return mActive;
 }
 
-void VST3Wrapper::FetchSettings(EffectSettings& settings)
+void VST3Wrapper::FetchSettings(EffectSettings& settings, bool resetState)
 {
     //TODO: perform version check
     {
@@ -622,7 +622,7 @@ void VST3Wrapper::FetchSettings(EffectSettings& settings)
 
         //Restore state
         const auto* vst3settings = &GetSettings(settings);
-        if (!vst3settings->processorState.has_value()) {
+        if (!vst3settings->processorState.has_value() && resetState) {
             vst3settings = &GetSettings(GetCache(mEffectClassInfo.ID())->defaultSettings);
         }
 
@@ -642,8 +642,8 @@ void VST3Wrapper::FetchSettings(EffectSettings& settings)
         }
     }
     //restore parameters if present
-    auto& vst3setting = GetSettings(settings);
-    for (auto& p : vst3setting.parameterChanges) {
+    const auto& vst3setting = GetSettings(settings);
+    for (const auto& p : vst3setting.parameterChanges) {
         mEditController->setParamNormalized(p.first, p.second);
     }
 }
@@ -778,7 +778,8 @@ bool VST3Wrapper::Initialize(EffectSettings& settings, Steinberg::Vst::SampleRat
 
     mSetup = setup;
 
-    FetchSettings(settings);
+    constexpr auto fallbackOnDefaults = false;
+    FetchSettings(settings, fallbackOnDefaults);
 
     if (mEffectComponent->setActive(true) == kResultOk) {
         if (mAudioProcessor->setProcessing(true) != kResultFalse) {

@@ -98,7 +98,8 @@ void VstViewModel::settingsToView()
 
     VST3Wrapper& w = m_auVst3Instance->GetWrapper();
     m_settingsAccess->ModifySettings([&w](EffectSettings& settings) {
-        w.FetchSettings(settings);
+        constexpr auto fallbackOnDefaults = true;
+        w.FetchSettings(settings, fallbackOnDefaults);
         return nullptr;
     });
 }
