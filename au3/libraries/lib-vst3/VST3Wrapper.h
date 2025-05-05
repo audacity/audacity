@@ -86,7 +86,7 @@ public:
     bool IsActive() const noexcept;
 
     //!Fetch state from settings object, may change internal runtime data
-    void FetchSettings(EffectSettings&);
+    void FetchSettings(EffectSettings&, bool resetState);
     //!Saves current state inside settings object, clears all runtime data
     void StoreSettings(EffectSettings&) const;
 
