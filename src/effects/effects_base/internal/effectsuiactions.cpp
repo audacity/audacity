@@ -82,10 +82,14 @@ UiAction makeUiAction(const char16_t* uri, const EffectMeta& meta)
 // To mitigate this, we replace the title with the path of the plugin.
 void replaceIdenticalTitlesWithPaths(EffectMetaList& effects)
 {
-    std::unordered_map<muse::String, std::vector<size_t> > duplicateMap;
+    using DuplicationKey = std::tuple<EffectFamily, EffectType, muse::String, muse::String>;
+
+    std::map<DuplicationKey, std::vector<size_t> > duplicateMap;
 
     for (auto i = 0u; i < effects.size(); ++i) {
-        duplicateMap[effects[i].title].push_back(i);
+        const auto& effect = effects[i];
+        DuplicationKey key{ effect.family, effect.type, effect.category, effect.title };
+        duplicateMap[key].push_back(i);
     }
 
     for (const auto&[_, indices] : duplicateMap) {
