@@ -69,8 +69,11 @@ Ret Audacity4Project::import(const muse::io::path_t& path, bool forceMode)
 {
     std::string importInfo = muse::qtrc("project", "Imported file “%1”?")
                              .arg(path.toString()).toStdString();
+
+    Ret ok = doImport(path, forceMode);
     projectHistory()->pushHistoryState(importInfo, muse::trc("project", "Import"));
-    return doImport(path, forceMode);
+
+    return ok;
 }
 
 Ret Audacity4Project::import(const std::vector<muse::io::path_t>& paths, bool forceMode)
