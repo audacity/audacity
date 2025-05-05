@@ -371,6 +371,42 @@ TEST_F(Au3InteractionTests, ChangeClipColor)
     removeTrack(trackMinSilenceId);
 }
 
+TEST_F(Au3InteractionTests, ClipColorRetainedWhenClipIsCopied)
+{
+    //! [GIVEN] There is a project with a track and a clip with a custom color
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3Project& project = projectRef();
+    const Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(trackId));
+    const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(project, track->GetId(), 0);
+
+    m_au3Interaction->changeClipColor(ClipKey { track->GetId(), clip->GetId() }, "red");
+
+    const Au3Track::Holder trackCopy = track->Copy(clip->GetSequenceStartTime(), clip->GetSequenceEndTime());
+    ASSERT_NE(trackCopy, nullptr) << "Failed to copy clip";
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
+
+    //! [EXPECT] The clipboard is asked for track data
+    EXPECT_CALL(*m_clipboard, trackDataEmpty()).Times(1).WillOnce(Return(false));
+    EXPECT_CALL(*m_clipboard, trackDataCopy()).Times(1).WillOnce(Return(std::vector<ITrackDataPtr> { trackData }));
+    EXPECT_CALL(*m_playbackState, playbackPosition()).Times(1).WillOnce(Return(0.0));
+
+    //! [WHEN] Making a clip copy to a new track
+    const ClipKey clipKey { track->GetId(), clip->GetId() };
+    const muse::Ret ret = m_au3Interaction->pasteFromClipboard(0.0, true, true);
+    const Au3TrackList& projectTracks = Au3TrackList::Get(project);
+    const TrackId newTrackId = (*projectTracks.rbegin())->GetId();
+
+    //! [THEN] The color should be retained for the copy
+    const std::shared_ptr<Au3WaveClip> clipCopy = DomAccessor::findWaveClip(project, newTrackId, 0.0);
+    EXPECT_EQ(clipCopy->GetColor(), "red");
+
+    // Cleanup
+    removeTrack(trackId);
+    removeTrack(newTrackId);
+}
+
 TEST_F(Au3InteractionTests, SplitRangeSelectionAtSilencesOnValidInterval)
 {
     //! [GIVEN] There is a project with a track and a clip with silence in the middle

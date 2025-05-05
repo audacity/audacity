@@ -291,6 +291,8 @@ WaveClip::WaveClip(
 
     mIsPlaceholder = orig.GetIsPlaceholder();
 
+    mColor = orig.mColor;
+
     assert(NChannels() == (token.emptyCopy ? 0 : orig.NChannels()));
     assert(token.emptyCopy || CheckInvariants());
     assert(!copyCutlines || NumCutLines() == orig.NumCutLines());
@@ -353,6 +355,8 @@ WaveClip::WaveClip(
         mCutLines.push_back(
             WaveClip::NewSharedFrom(*cutline, factory, true, backup));
     }
+
+    mColor = orig.mColor;
 
     assert(NChannels() == orig.NChannels());
     assert(CheckInvariants());
