@@ -445,8 +445,9 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
         } else {
             if (effect.mNumTracks > 0) {
                 for (const WaveTrack* src : originCtx.tracks->Selected<const au::au3::Au3WaveTrack>()) {
-                    auto dest = src->Copy(newCtx.t0, newCtx.t1);
+                    const auto dest = std::static_pointer_cast<WaveTrack>(src->Copy(newCtx.t0, newCtx.t1));
                     dest->SetSelected(true);
+                    dest->SetMute(false);
                     newCtx.tracks->Add(dest);
                 }
             } else {
