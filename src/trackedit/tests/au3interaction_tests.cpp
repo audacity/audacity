@@ -1676,7 +1676,7 @@ TEST_F(Au3InteractionTests, SplitTracksAtEmptyList)
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(0);
 
     //! [WHEN] Split an empty list
-    m_au3Interaction->splitTracksAt({}, 0.0);
+    m_au3Interaction->splitTracksAt({}, { 0.0 });
 }
 
 TEST_F(Au3InteractionTests, SplitTracksOnClipData)
@@ -1692,7 +1692,7 @@ TEST_F(Au3InteractionTests, SplitTracksOnClipData)
 
     //! [WHEN] Split the track in the middle of the first clip
     const secs_t pivot = TRACK_TWO_CLIPS_CLIP1_START + 2 * SAMPLE_INTERVAL;
-    m_au3Interaction->splitTracksAt({ trackTwoClipsId }, pivot);
+    m_au3Interaction->splitTracksAt({ trackTwoClipsId }, { pivot });
 
     //! [THEN] The number of intervals should be 3
     ASSERT_EQ(track->NIntervals(), 3) << "The number of intervals after the split operation is not 3";
@@ -1710,6 +1710,32 @@ TEST_F(Au3InteractionTests, SplitTracksOnClipData)
     ValidateClipProperties(untouchedClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
     ValidateClipProperties(firstSplittedClip, TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END, TRACK_TWO_CLIPS_CLIP1_START, pivot);
     ValidateClipProperties(secondSplittedClip, TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END, pivot, TRACK_TWO_CLIPS_CLIP1_END);
+
+    // Cleanup
+    removeTrack(trackTwoClipsId);
+}
+
+TEST_F(Au3InteractionTests, RangeSplitTracks)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals before the split operation is not 2";
+
+    //! [WHEN] Split the track on range selection within 1st clip boundaries
+    std::vector<secs_t> pivots;
+    pivots.push_back(TRACK_TWO_CLIPS_CLIP1_START + 2 * SAMPLE_INTERVAL);
+    pivots.push_back(TRACK_TWO_CLIPS_CLIP1_START + 5 * SAMPLE_INTERVAL);
+    m_au3Interaction->splitTracksAt({ trackTwoClipsId }, { pivots });
+
+    //! [THEN] The clip is splitted in two timepoints
+    ASSERT_EQ(track->NIntervals(), 4) << "The number of intervals after the split operation is not 4";
 
     // Cleanup
     removeTrack(trackTwoClipsId);

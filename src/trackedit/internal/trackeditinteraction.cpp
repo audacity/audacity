@@ -134,9 +134,9 @@ bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositio
                             completed);
 }
 
-bool TrackeditInteraction::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
+bool TrackeditInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
-    return withPlaybackStop(&ITrackeditInteraction::splitTracksAt, tracksIds, pivot);
+    return withPlaybackStop(&ITrackeditInteraction::splitTracksAt, tracksIds, pivots);
 }
 
 bool TrackeditInteraction::splitClipsAtSilences(const ClipKeyList& clipKeyList)

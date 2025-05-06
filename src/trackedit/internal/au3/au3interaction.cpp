@@ -1418,7 +1418,7 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
     return trackPositionOffset != 0;
 }
 
-bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
+bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
     for (const auto& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
@@ -1426,7 +1426,9 @@ bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
             return false;
         }
 
-        waveTrack->SplitAt(pivot);
+        for (const auto& pivot : pivots) {
+            waveTrack->SplitAt(pivot);
+        }
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
