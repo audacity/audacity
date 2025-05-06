@@ -130,11 +130,13 @@ void EffectPreview(EffectBase &effect,
       mTracks->Add(newTrack);
 
       newTrack->MoveTo(0);
+      std::static_pointer_cast<WaveTrack>(newTrack)->SetMute(false);
       newTrack->SetSelected(true);
    }
    else {
       for (auto src : saveTracks->Selected<const WaveTrack>()) {
-         auto dest = src->Copy(mT0, t1);
+         const auto dest = std::static_pointer_cast<WaveTrack>(src->Copy(mT0, t1));
+         dest->SetMute(false);
          dest->SetSelected(true);
          mTracks->Add(dest);
       }
