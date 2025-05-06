@@ -452,9 +452,7 @@ void TrackeditActionsController::doGlobalSplit()
         pivots.push_back(globalContext()->playbackState()->playbackPosition());
     }
 
-    for (const auto& pivot : pivots) {
-        dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, secs_t>(tracksIdsToSplit, pivot));
-    }
+    dispatcher()->dispatch(TRACK_SPLIT_AT, ActionData::make_arg2<TrackIdList, std::vector<secs_t> >(tracksIdsToSplit, pivots));
 }
 
 void TrackeditActionsController::doGlobalSplitIntoNewTrack()
@@ -770,9 +768,9 @@ void TrackeditActionsController::tracksSplitAt(const ActionData& args)
         return;
     }
 
-    secs_t playbackPosition = args.arg<secs_t>(1);
+    auto pivots = args.arg<std::vector<secs_t> >(1);
 
-    trackeditInteraction()->splitTracksAt(tracksIds, playbackPosition);
+    trackeditInteraction()->splitTracksAt(tracksIds, pivots);
 }
 
 void TrackeditActionsController::splitClipsAtSilences(const ActionData& args)

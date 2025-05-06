@@ -133,9 +133,9 @@ bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trac
     return trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed);
 }
 
-bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, secs_t pivot)
+bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
 {
-    return trackAndClipOperations()->splitTracksAt(tracksIds, pivot);
+    return trackAndClipOperations()->splitTracksAt(tracksIds, pivots);
 }
 
 bool TrackeditOperationController::splitClipsAtSilences(const ClipKeyList& clipKeyList)
