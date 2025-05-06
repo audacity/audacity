@@ -68,6 +68,7 @@ private:
 
     std::mutex mUpdateMutex;
     bool mOnProgress{ false };
+
 public:
     DECLARE_EVENT_TABLE()
 };
