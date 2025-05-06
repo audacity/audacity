@@ -340,6 +340,10 @@ std::string UpdateManager::GetUpdatesUrl() const
    if (SendAnonymousUsageInfo->Read())
    {
       url += "?audacity-instance-id=" + InstanceId->Read().ToStdString();
+      bool showSplashScreen;
+      gPrefs->Read(wxT("/GUI/ShowSplashScreen"), &showSplashScreen, false );
+      url += "&welcome-screen-launched=";
+      url += showSplashScreen ? "true" : "false";
 
       if (!AudioComUserId.Read().IsEmpty())
       {

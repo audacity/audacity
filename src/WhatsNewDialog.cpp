@@ -29,12 +29,16 @@
 #include "Theme.h"
 #include "AllThemeResources.h"
 #include "GradientButton.h"
+#include "ImageCarousel.h"
 #include "HyperLink.h"
 
 #include "../images/ACE.jpg.h"
 #include "../images/Audacity_3.7.2_Thumb.jpg.h"
 #include "../images/Cloud.xpm"
 #include "../images/Cloud_low_res.xpm"
+#include "../images/ACE.xpm"
+#include "../images/Audacity36.xpm"
+#include "../images/CompleteAudioComSetup.xpm"
 
 namespace
 {
@@ -64,14 +68,19 @@ const char* MuseHubURL = "https://www.musehub.com/app/ace-studio?utm_source=au-a
 const char* PromoURL = "https://audacityteam.org/audacitypromo";
 const char* AudioComURL = "https://audio.com/audacity/auth/sign-in?mtm_campaign=audacitydesktop&mtm_content=app_launch_popup";
 
-
-constexpr auto WindowWidth = SHOW_MUSEHUB ? 820 : 540;
+#if defined(__WXOSX__) || defined(__WXMSW__)
+constexpr auto WindowWidth = 812;
+#else
+constexpr auto WindowWidth = 550;
+#endif
 
 #if defined(__WXOSX__)
 // wxHTML renders text with smaller line spacing on macOS
-   constexpr auto WindowHeight = SHOW_CLOUD_PROMO ? 636 : 470;
+   constexpr auto WindowHeight = 620;
+#elif defined(__WXMSW__)
+   constexpr auto WindowHeight = 668;
 #else
-   constexpr auto WindowHeight = SHOW_CLOUD_PROMO ? 685 : 496;
+   constexpr auto WindowHeight = 450;
 #endif
 
 }
@@ -93,18 +102,18 @@ struct FSHelper final
    {
       wxFileSystem::AddHandler(mMemoryFSHandler.get());
 
-      wxMemoryFSHandler::AddFile(
-         "audacity_3_7_2_thumb.jpeg", bin2c_Audacity_3_7_2_Thumb_jpg,
-         sizeof(bin2c_Audacity_3_7_2_Thumb_jpg));
-      wxMemoryFSHandler::AddFile(
-         "ace.jpeg", bin2c_ACE_jpg,
-         sizeof(bin2c_ACE_jpg));
+//      wxMemoryFSHandler::AddFile(
+//         "audacity_3_7_2_thumb.jpeg", bin2c_Audacity_3_7_2_Thumb_jpg,
+//         sizeof(bin2c_Audacity_3_7_2_Thumb_jpg));
+//      wxMemoryFSHandler::AddFile(
+//         "ace.jpeg", bin2c_ACE_jpg,
+//         sizeof(bin2c_ACE_jpg));
    }
 
    ~FSHelper()
    {
-      wxMemoryFSHandler::RemoveFile("audacity_3_7_2_thumb.jpeg");
-      wxMemoryFSHandler::RemoveFile("ace.jpeg");
+//      wxMemoryFSHandler::RemoveFile("audacity_3_7_2_thumb.jpeg");
+//      wxMemoryFSHandler::RemoveFile("ace.jpeg");
       wxFileSystem::RemoveHandler(mMemoryFSHandler.get());
    }
 
@@ -340,71 +349,54 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
    FSHelper helper;
 
-   if constexpr (SHOW_CLOUD_PROMO) {
-      S.AddSpace(10);
-
-      S.StartHorizontalLay(wxALIGN_CENTER, 0);
+#if defined (__WXOSX__) || defined(__WXMSW__)
+   const int width = 572;
+   const int height = 322;
+#else
+   const int width = 762;
+   const int height = 429;
+#endif
+   std::vector<CarouselSnapshot> snapshots {
+      {  XXO("Complete your Audacity cloud setup with audio.com"),
+         Rescale(wxBitmap(CompleteAudioComSetup), width, height),
+         AudioComURL,
+         XXO("Continue")
+      },
       {
-         const auto cloudInfo = safenew InfoWindow(S.GetParent());
+         XXO("What's new in Audacity"),
+         Rescale(wxBitmap(Audacity36), width, height),
+         WhatsNewURL,
+         XXO("Watch the release video")
+      },
+      {
+         XXO("ACE Studio - A Singing Voice AI Generator"),
+         Rescale(wxBitmap(ACE), width, height),
+         MuseHubURL,
+         XXO("Get it on MuseHub")
+      },
+      {
+         XXO("Survey: choose next Audacity features"),
+         Rescale(wxBitmap(Audacity36), width, height),
+         WhatsNewURL,
+         XXO("Take part in survey")
+      }
+   };
+   
+   S.StartVerticalLay(wxEXPAND);
+   {
+      S.StartHorizontalLay(wxEXPAND);
+      {
+         const auto carousel = safenew ImageCarousel(S.GetParent(), snapshots);
+         carousel->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
          S
             .Prop(1)
-            .Position(wxALL | wxALIGN_CENTER)
-            .AddWindow(cloudInfo);
+            .Position(wxEXPAND)
+            .AddWindow(carousel);
       }
       S.EndHorizontalLay();
    }
+   S.EndVerticalLay();
 
-   S.StartHorizontalLay(wxEXPAND);
-   {
-      S.StartVerticalLay(wxEXPAND);
-      {
-         const auto whatsnew = safenew LinkingHtmlWindow(S.GetParent());
-         whatsnew->SetPage(MakeWhatsNewText());
-         whatsnew->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
-         S
-            .Prop(1)
-#if SHOW_MUSEHUB
-            .Position(wxEXPAND | wxLEFT | wxTOP)
-#else
-            .Position(wxEXPAND | wxALL)
-#endif
-            .AddWindow(whatsnew);
-
-         TranslatableString releaseLabel = XXO("Watch the release video");
-         S
-            .Id(WhatsNewID_WatchReleaseVideo)
-            .Position(wxALL | wxALIGN_CENTER)
-#if defined (__WXOSX__) || defined(__WXMSW__)
-            .AddGradientButton(releaseLabel, wxALL, true, true /* set padding */);
-#else
-            .AddButton(releaseLabel, wxALL, true);
-#endif
-      }
-      S.EndVerticalLay();
-      if constexpr(SHOW_MUSEHUB) {
-         S.StartVerticalLay(wxEXPAND);
-         {
-            const auto getplugins = safenew LinkingHtmlWindow(S.GetParent());
-            getplugins->SetPage(MakeGetPluginsText());
-            getplugins->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
-            S
-               .Prop(1)
-               .Position(wxEXPAND | wxTOP)
-               .AddWindow(getplugins);
-            TranslatableString museHubLabel = XXO("Available on MuseHub");
-            S
-               .Id(WhatsNewID_GoToMuseHub)
-               .Position(wxALL | wxALIGN_CENTER)
-   #if defined (__WXOSX__) || defined(__WXMSW__)
-               .AddGradientButton(museHubLabel, wxALL, true, true /* set padding */);
-   #else
-               .AddButton(museHubLabel, wxALL, true);
-   #endif
-         }
-         S.EndVerticalLay();
-      }
-   }
-   S.EndHorizontalLay();
    S.AddSpace(15);
    const auto line = safenew wxWindow(S.GetParent(), wxID_ANY);
    line->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
@@ -487,3 +479,10 @@ void WhatsNewDialog::OnGoToAudioCom(wxCommandEvent& evt)
    OpenInDefaultBrowser(AudioComURL);
 }
 
+wxBitmap WhatsNewDialog::Rescale(const wxBitmap& bmp, int width, int height)
+{
+   wxImage img = bmp.ConvertToImage();
+   img.Rescale(width, height, wxIMAGE_QUALITY_HIGH);
+   
+   return wxBitmap(img);
+}
