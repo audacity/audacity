@@ -24,7 +24,7 @@ using namespace au::au3;
 
 Au3AudioOutput::Au3AudioOutput()
 {
-    m_outputMeter = std::make_shared<InOutMeter>();
+    m_outputMeter = std::make_shared<OutMeter>();
 
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
@@ -103,9 +103,14 @@ muse::async::Channel<au::audio::sample_rate_t> Au3AudioOutput::sampleRateChanged
     return m_sampleRateChanged;
 }
 
-muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > Au3AudioOutput::playbackSignalChanges() const
+muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> Au3AudioOutput::playbackSignalChanges() const
 {
-    return m_outputMeter->signalChanges();
+    return m_outputMeter->dataChanged();
+}
+
+muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> Au3AudioOutput::playbackTrackSignalChanges(int64_t key) const
+{
+    return m_outputMeter->dataChanged(key);
 }
 
 Au3Project* Au3AudioOutput::projectRef() const

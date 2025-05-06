@@ -112,15 +112,46 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "RealtimeEffectManager.h"
 #include "QualitySettings.h"
 #include "BasicUI.h"
+#include "WaveTrack.h"
 
 #include "Gain.h"
 
 using std::max;
 using std::min;
 
+namespace {
+float GetAbsValue(const float* buffer, size_t frames, size_t step)
+{
+    auto sptr = buffer;
+    float peak = -1.0f;
+
+    for (unsigned long i = 0; i < frames; i++) {
+        peak = std::max(peak, fabs(*sptr));
+        sptr += step;
+    }
+    std::clamp(peak, -1.0f, 1.0f);
+
+    return peak;
+}
+}
+
 AudioIO* AudioIO::Get()
 {
     return static_cast< AudioIO* >(AudioIOBase::Get());
+}
+
+AudioIoCallback::Track::Track(std::shared_ptr<const PlayableSequence> seq)
+    : mSequence(seq)
+{
+    assert(seq && seq->FindChannelGroup());
+}
+
+AudioIoCallback::Track::~Track() = default;
+
+int64_t AudioIoCallback::Track::trackId() const
+{
+    const auto* waveTrack = dynamic_cast<const WaveTrack*>(mSequence->FindChannelGroup());
+    return waveTrack ? waveTrack->GetId() : -1;
 }
 
 struct AudioIoCallback::TransportState {
@@ -913,12 +944,17 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     mLastRecordingOffset = 0;
     mCaptureSequences = sequences.captureSequences;
     mPlaybackSequences = sequences.playbackSequences;
-
+    mPlaybackTracks = {
+        sequences.playbackSequences.begin(),
+        sequences.playbackSequences.end()
+    };
+    
     bool commit = false;
     auto cleanupSequences = finally([&]{
         if (!commit) {
             // Don't keep unnecessary shared pointers to sequences
             mPlaybackSequences.clear();
+            mPlaybackTracks.clear();
             mCaptureSequences.clear();
             for (auto& ext : Extensions()) {
                 ext.AbortOtherStream();
@@ -1271,6 +1307,12 @@ bool AudioIO::AllocateBuffers(
                                 reinterpret_cast<float*>(buffer.ptr()));
                         }
                     }
+
+                    auto outputMeter = mOutputMeter.lock();
+                    if (outputMeter) {
+                        // Reserve space for all tracks and master
+                        outputMeter->reserve((mPlaybackSequences.size() + 1) * mNumPlaybackChannels);
+                    }
                 }
 
                 std::generate(
@@ -1346,6 +1388,18 @@ bool AudioIO::AllocateBuffers(
                 mPlaybackSchedule.mTimeQueue.Init(timeQueueSize);
             }
 
+            const size_t playbackBufferSize = std::max((size_t)lrint(mRate * mPlaybackRingBufferSecs.count()), mHardwarePlaybackLatencyFrames * 2);
+            for (auto& track : mPlaybackTracks) {
+                for (auto& buffer : track.mBuffers) {
+                    buffer.reset();
+                }
+
+                for (size_t i = 0; i < mNumPlaybackChannels; ++i) {
+                    track.mBuffers[i] = std::make_unique<RingBuffer>(
+                        floatSample, playbackBufferSize);
+                }
+            }
+
             if (mNumCaptureChannels > 0) {
                 // Allocate input buffers.  For every input sequence we allocate
                 // a ring buffer of five seconds
@@ -1405,6 +1459,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
     mpTransportState.reset();
 
     mPlaybackBuffers.clear();
+    mPlaybackTracks.clear();
     mScratchBuffers.clear();
     mScratchPointers.clear();
     mPlaybackMixers.clear();
@@ -1434,7 +1489,7 @@ void AudioIO::SetMeters()
         pInputMeter->Reset(mRate, true);
     }
     if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->Reset(mRate, true);
+        pOutputMeter->reset();
     }
 }
 
@@ -1645,7 +1700,7 @@ void AudioIO::StopStream()
     }
 
     if (auto pOutputMeter = mOutputMeter.lock()) {
-        pOutputMeter->Reset(mRate, false);
+        pOutputMeter->reset();
     }
 
     mInputMeter.reset();
@@ -1958,6 +2013,12 @@ void AudioIO::FillPlayBuffers()
         for (const auto& pBuffer : mPlaybackBuffers) {
             pBuffer->Flush();
         }
+
+        for (const auto& track : mPlaybackTracks) {
+            for (auto& buffer : track.mBuffers) {
+                buffer->Flush();
+            }
+        }
     };
 
     while (true) {
@@ -2136,7 +2197,6 @@ bool AudioIO::ProcessPlaybackSlices(
                     }
                 }
             }
-
             bufferIndex += seq->NChannels();
         }
     }
@@ -2171,23 +2231,45 @@ bool AudioIO::ProcessPlaybackSlices(
 
     {
         unsigned bufferIndex = 0;
-        for (const auto& seq : mPlaybackSequences) {
-            //TODO: apply micro-fades
+        for (auto& track :  mPlaybackTracks) {
+            auto seq = track.mSequence;
+            if (!seq) {
+                continue;
+            }
+
+            auto& buffers = track.mBuffers;
             const auto numChannels = seq->NChannels();
             if (numChannels > 1) {
                 for (unsigned n = 0, cnt = std::min(numChannels, mNumPlaybackChannels); n < cnt; ++n) {
-                    const auto volume = seq->GetChannelVolume(n);
+                    const float volume = seq->GetChannelVolume(n);
                     for (unsigned i = 0; i < samplesAvailable; ++i) {
-                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex + n][i] * volume;
+                        mProcessingBuffers[bufferIndex + n][i] *= volume;
+                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex + n][i];
                     }
+
+                    //Copy per track data to ring buffers
+                    buffers[n]->Put(
+                        reinterpret_cast<constSamplePtr>(mProcessingBuffers[bufferIndex + n].data()),
+                        floatSample,
+                        samplesAvailable, 0);
                 }
             } else if (numChannels == 1) {
+                const float volume = seq->GetChannelVolume(0);
+                for (unsigned i = 0; i < samplesAvailable; ++i) {
+                    mProcessingBuffers[bufferIndex][i] *= volume;
+                }
+    
                 //mono source is duplicated into every output channel
                 for (unsigned n = 0; n < mNumPlaybackChannels; ++n) {
-                    const auto volume = seq->GetChannelVolume(n);
                     for (unsigned i = 0; i < samplesAvailable; ++i) {
-                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i] * volume;
+                        mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i];
                     }
+
+                    //Copy per track data to ring buffers
+                    buffers[n]->Put(
+                        reinterpret_cast<constSamplePtr>(mProcessingBuffers[bufferIndex].data()),
+                        floatSample,
+                        samplesAvailable, 0);
                 }
             }
             bufferIndex += seq->NChannels();
@@ -2234,6 +2316,17 @@ bool AudioIO::ProcessPlaybackSlices(
                 samplesAvailable,
                 0
                 );
+        }
+
+        // Discard equal amounts of samples on per track buffers
+        if (masterBufferOffset > 0) {
+            for (auto& track: mPlaybackTracks) {
+                for (size_t channel = 0; channel < mNumPlaybackChannels; channel++) {
+                    auto& ringBuffer = track.mBuffers[channel];
+                    auto discarded = ringBuffer->Unput(masterBufferOffset);
+                    assert(discarded == masterBufferOffset);
+                }
+            }
         }
     }
 
@@ -2545,6 +2638,13 @@ void AudioIoCallback::PurgeAfterPause(unsigned long framesPerBuffer, float** con
                 mPlaybackBuffers[n]->Get(reinterpret_cast<samplePtr>(sampleBuffer[n]),
                                          floatSample,
                                          framesPerBuffer);
+                        
+                for (auto& track : mPlaybackTracks) {
+                    track.mBuffers[n]->Get(reinterpret_cast<samplePtr>(sampleBuffer[n]),
+                    floatSample,
+                    framesPerBuffer);
+                } 
+
                 totalPurged -= framesPerBuffer;
             }
         }
@@ -2943,31 +3043,52 @@ void AudioIoCallback::SendVuOutputMeterData(
     const float* outputMeterFloats,
     unsigned long framesPerBuffer)
 {
-    const auto numPlaybackChannels = mNumPlaybackChannels;
+    if (framesPerBuffer == 0) {
+        return;
+    }
 
-    auto pOutputMeter = mOutputMeter.lock();
-    if (!pOutputMeter) {
+    auto outputMeter = mOutputMeter.lock();
+    if (!outputMeter) {
         return;
     }
-    if (pOutputMeter->IsMeterDisabled()) {
-        return;
-    }
+
     if (!outputMeterFloats) {
         return;
     }
-    pOutputMeter->UpdateDisplay(
-        numPlaybackChannels, framesPerBuffer, outputMeterFloats);
 
-    //v Vaughan, 2011-02-25: Moved this update back to TrackPanel::OnTimer()
-    //    as it helps with playback issues reported by Bill and noted on Bug 258.
-    //    The problem there occurs if Software Playthrough is on.
-    //    Could conditionally do the update here if Software Playthrough is off,
-    //    and in TrackPanel::OnTimer() if Software Playthrough is on, but not now.
-    // PRL 12 Jul 2015: and what was in TrackPanel::OnTimer is now handled by means of track panel timer events
-    //MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
-    //if (pMixerBoard)
-    //   pMixerBoard->UpdateMeters(GetStreamTime(),
-    //                              (pProj->GetControlToolBar()->GetLastPlayMode() == loopedPlay));
+    PushMainMeterValues(outputMeter, outputMeterFloats, mNumPlaybackChannels, framesPerBuffer);
+    PushTrackMeterValues(outputMeter,framesPerBuffer);
+    outputMeter->sendAll();
+}
+
+
+void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float * values, uint8_t channels, unsigned long frames)
+{
+    auto sptr = values;
+    for (size_t ch = 0; ch < channels; ++ch) {
+        auto sptr = values + ch;
+        channel->push(ch, GetAbsValue(sptr, frames, channels));
+    }
+}
+
+
+void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterChannel>& channel, unsigned long frames)
+{
+    auto stackBuffer = stackAllocate(float, frames);
+
+    for (const Track& track: mPlaybackTracks) {
+        const auto nChannels = track.mSequence->NChannels();
+        for (size_t nch = 0; nch < nChannels; ++nch) {
+            const auto& buffer = track.mBuffers[nch];
+            size_t len = buffer->Get(
+                reinterpret_cast<samplePtr>(stackBuffer),
+                floatSample,
+                frames
+            );
+
+            channel->push(nch, GetAbsValue(stackBuffer, len, 1), track.trackId());
+        }
+    }
 }
 
 unsigned AudioIoCallback::CountSoloingSequences()
@@ -3179,6 +3300,12 @@ int AudioIoCallback::CallbackDoSeek()
         // wxASSERT( discarded == toDiscard );
         // but we can't assert in this thread
         wxUnusedVar(discarded);
+    }
+    for (auto& track : mPlaybackTracks) {
+        for (auto& buffer : track.mBuffers) {
+            const auto toDiscard = buffer->AvailForGet();
+            buffer->Discard(toDiscard);
+        }
     }
 
     mPlaybackSchedule.mTimeQueue.Prime(time);

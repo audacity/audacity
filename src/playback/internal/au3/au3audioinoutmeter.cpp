@@ -14,11 +14,12 @@
 using namespace muse;
 using namespace muse::async;
 
-void au::playback::InOutMeter::Clear()
+namespace au::playback {
+void InOutMeter::Clear()
 {
 }
 
-void au::playback::InOutMeter::Reset(double sampleRate, bool resetClipping)
+void InOutMeter::Reset(double sampleRate, bool resetClipping)
 {
     UNUSED(sampleRate);
     UNUSED(resetClipping);
@@ -29,7 +30,7 @@ void au::playback::InOutMeter::Reset(double sampleRate, bool resetClipping)
     m_audioSignalChanges.send(1, au::audio::AudioSignalVal { 0, zero });
 }
 
-void au::playback::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned long numFrames, const float* sampleData)
+void InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned long numFrames, const float* sampleData)
 {
     auto sptr = sampleData;
     unsigned int num = 2;
@@ -74,35 +75,32 @@ void au::playback::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned 
     // LOGD() << "=============== change " << LINEAR_TO_DB(peak[0]) << " - " << LINEAR_TO_DB(peak[1]);
 }
 
-bool au::playback::InOutMeter::IsMeterDisabled() const
+bool InOutMeter::IsMeterDisabled() const
 {
     //NOT_IMPLEMENTED;
     return false;
 }
 
-float au::playback::InOutMeter::GetMaxPeak() const
+float InOutMeter::GetMaxPeak() const
 {
     NOT_IMPLEMENTED;
     return 0.0;
 }
 
-bool au::playback::InOutMeter::IsClipping() const
+bool InOutMeter::IsClipping() const
 {
     NOT_IMPLEMENTED;
     return false;
 }
 
-int au::playback::InOutMeter::GetDBRange() const
+int InOutMeter::GetDBRange() const
 {
     NOT_IMPLEMENTED;
     return 0;
 }
 
-muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >
-au::playback::InOutMeter::signalChanges() const
+muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> InOutMeter::signalChanges() const
 {
-    return muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >([this](auto resolve, auto /*reject*/) {
-        return resolve(
-            m_audioSignalChanges);
-    });
+    return m_audioSignalChanges;
+}
 }

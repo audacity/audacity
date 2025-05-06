@@ -16,12 +16,14 @@
 #include "AudioIOBase.h" // to inherit
 #include "AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
+#include "RingBuffer.h"
 
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <thread>
 #include <utility>
+#include <array>
 #include <wx/atomic.h> // member variable
 #include <wx/thread.h>
 
@@ -33,7 +35,6 @@
 class wxArrayString;
 class AudioIOBase;
 class AudioIO;
-class RingBuffer;
 class Mixer;
 class OtherPlayableSequence;
 class RealtimeEffectState;
@@ -168,6 +169,17 @@ public:
         };
     }
 
+    static constexpr size_t MaxPlaybackChannels = 2;
+    struct Track {
+        std::shared_ptr<const PlayableSequence> mSequence;
+        std::array<std::unique_ptr<RingBuffer>, MaxPlaybackChannels> mBuffers;
+
+        Track(std::shared_ptr<const PlayableSequence> sequence);
+        ~Track();
+
+        int64_t trackId() const;
+    };
+
     //! @}
 
     std::shared_ptr< AudioIOListener > GetListener() const
@@ -203,6 +215,8 @@ public:
         const float* inputSamples, unsigned long framesPerBuffer);
     void SendVuOutputMeterData(
         const float* outputMeterFloats, unsigned long framesPerBuffer);
+    void PushMainMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float* values, uint8_t channels, unsigned long frames);
+    void PushTrackMeterValues(const std::shared_ptr<IMeterChannel>& channel, unsigned long frames);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
@@ -232,6 +246,7 @@ public:
     std::vector<std::vector<float> > mMasterBuffers;
     /*! Read by worker threads but unchanging during playback */
     RingBuffers mPlaybackBuffers;
+    std::vector<Track> mPlaybackTracks;
     ConstPlayableSequences mPlaybackSequences;
     // Old volume is used in playback in linearly interpolating
     // the volume.
@@ -300,7 +315,7 @@ public:
 
 protected:
     static size_t MinValue(
-        const RingBuffers& buffers, size_t (RingBuffer::*pmf)() const);
+        const RingBuffers& buffers, size_t (RingBuffer::* pmf)() const);
 
     float GetMixerOutputVol()
     {

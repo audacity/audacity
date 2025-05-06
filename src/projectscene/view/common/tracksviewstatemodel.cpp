@@ -72,6 +72,10 @@ void TracksViewStateModel::init()
         m_ctrlPressed.val = v;
         emit ctrlPressedChanged();
     });
+
+    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+        emit isPlayingChanged();
+    });
 }
 
 void TracksViewStateModel::changeTrackHeight(int deltaY)
@@ -164,4 +168,9 @@ bool TracksViewStateModel::altPressed() const
 bool TracksViewStateModel::ctrlPressed() const
 {
     return m_ctrlPressed.val;
+}
+
+bool TracksViewStateModel::isPlaying() const
+{
+    return playbackController()->isPlaying();
 }

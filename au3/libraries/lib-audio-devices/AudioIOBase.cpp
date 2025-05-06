@@ -326,7 +326,7 @@ void AudioIOBase::SetCaptureMeter(
 }
 
 void AudioIOBase::SetPlaybackMeter(
-    const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<Meter>& wMeter)
+    const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterChannel>& wMeter)
 {
     if (auto pOwningProject = mOwningProject.lock();
         (pOwningProject) && (pOwningProject != project)) {
@@ -336,7 +336,7 @@ void AudioIOBase::SetPlaybackMeter(
     auto meter = wMeter.lock();
     if (meter) {
         mOutputMeter = meter;
-        meter->Reset(mRate, true);
+        meter->reset();
     } else {
         mOutputMeter.reset();
     }

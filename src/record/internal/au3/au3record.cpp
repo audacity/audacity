@@ -338,14 +338,14 @@ muse::Ret Au3Record::stop()
     // also clean the MeterQueues
     Au3Project& project = projectRef();
     auto& projectAudioIO = ProjectAudioIO::Get(project);
-    auto meter = projectAudioIO.GetPlaybackMeter();
-    if (meter) {
-        meter->Clear();
+    auto playbackMeter = projectAudioIO.GetPlaybackMeter();
+    if (playbackMeter) {
+        playbackMeter->reset();
     }
 
-    meter = projectAudioIO.GetCaptureMeter();
-    if (meter) {
-        meter->Clear();
+    auto captureMeter = projectAudioIO.GetCaptureMeter();
+    if (captureMeter) {
+        captureMeter->Clear();
     }
 
     return make_ok();

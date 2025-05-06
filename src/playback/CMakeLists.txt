@@ -34,6 +34,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3player.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutmeter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audioinoutmeter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audioinoutmeter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.cpp

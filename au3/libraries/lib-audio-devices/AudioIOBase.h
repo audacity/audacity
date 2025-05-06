@@ -21,6 +21,7 @@ Paul Licameli split from AudioIO.h
 #include <utility>
 #include <wx/string.h>
 #include "MemoryX.h"
+#include "IMeterChannel.h"
 
 struct PaDeviceInfo;
 typedef void PaStream;
@@ -53,7 +54,8 @@ struct AudioIOStartStreamOptions
     {}
 
     std::shared_ptr<AudacityProject> pProject;
-    std::weak_ptr<Meter> captureMeter, playbackMeter;
+    std::weak_ptr<Meter> captureMeter;
+    std::weak_ptr<IMeterChannel> playbackMeter;
     const BoundedEnvelope* envelope{}; // for time warping
     std::shared_ptr< AudioIOListener > listener;
     double rate;
@@ -113,7 +115,7 @@ public:
     void SetCaptureMeter(
         const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<Meter>& meter);
     void SetPlaybackMeter(
-        const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<Meter>& meter);
+        const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterChannel>& meter);
 
     /** \brief update state after changing what audio devices are selected
      *
@@ -315,7 +317,7 @@ protected:
     PaStream* mPortStreamV19;
 
     std::weak_ptr<Meter> mInputMeter{};
-    std::weak_ptr<Meter> mOutputMeter{};
+    std::weak_ptr<IMeterChannel> mOutputMeter{};
 
    #if USE_PORTMIXER
     PxMixer* mPortMixer;

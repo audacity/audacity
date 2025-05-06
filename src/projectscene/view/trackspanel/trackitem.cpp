@@ -7,6 +7,7 @@
 #include <QString>
 
 #include "playback/playbacktypes.h"
+#include "playback/iaudiooutput.h"
 
 #include "log.h"
 
@@ -15,6 +16,8 @@ using namespace au::trackedit;
 using namespace au::audio;
 
 static constexpr float BALANCE_SCALING_FACTOR = 100.f;
+static constexpr float MIN_ALLOWED_PRESSURE = -60.f;
+static constexpr float MAX_ALLOWED_PRESSURE = 0.f;
 
 static const std::string TRACK_ID_KEY("trackId");
 static const std::string RESOURCE_ID_KEY("resourceId");
@@ -34,12 +37,30 @@ TrackItem::TrackItem(QObject* parent)
 
 TrackItem::~TrackItem()
 {
-    // m_audioSignalChanges.resetOnReceive(this);
+    m_playbackTrackSignalChanged.close();
 }
 
 void TrackItem::init(const trackedit::Track& track)
 {
     m_trackId = track.id;
+
+    m_playbackTrackSignalChanged = playback()->audioOutput()->playbackTrackSignalChanges(m_trackId);
+    m_playbackTrackSignalChanged.onReceive(this, [this](au::audio::audioch_t channel, const au::audio::AudioSignalVal& newValue) {
+        const float newPressure = std::clamp(newValue.pressure, MIN_ALLOWED_PRESSURE, MAX_ALLOWED_PRESSURE);
+        if (channel == 0) {
+            if (m_leftChannelPressure == newPressure) {
+                return;
+            }
+            m_leftChannelPressure = newPressure;
+            emit leftChannelPressureChanged(newPressure);
+        } else {
+            if (m_rightChannelPressure == newPressure) {
+                return;
+            }
+            m_rightChannelPressure = newPressure;
+            emit rightChannelPressureChanged(newPressure);
+        }
+    });
 
     if (m_title != track.title) {
         m_title = track.title;

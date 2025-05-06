@@ -9,6 +9,7 @@
 #include "modularity/ioc.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "trackedit/itrackeditinteraction.h"
+#include "playback/iplayback.h"
 
 #include "async/asyncable.h"
 
@@ -38,6 +39,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<playback::IPlayback> playback;
 
 public:
     explicit TrackItem(QObject* parent = nullptr);
@@ -111,7 +113,7 @@ protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
 
-    // muse::audio::AudioSignalChanges m_audioSignalChanges;
+    muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> m_playbackTrackSignalChanged;
     audio::AudioOutputParams m_outParams;
 
     trackedit::TrackId m_trackId = -1;
