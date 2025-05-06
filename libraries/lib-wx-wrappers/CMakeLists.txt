@@ -39,6 +39,10 @@ set( SOURCES
    HyperLink.h
    RoundedStaticBitmap.cpp
    RoundedStaticBitmap.h
+   ImageCarousel.cpp
+   ImageCarousel.h
+   ArrowButton.cpp
+   ArrowButton.h
 )
 
 set( LIBRARIES

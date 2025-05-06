@@ -64,10 +64,11 @@ UpdateManager& UpdateManager::GetInstance()
     return updateManager;
 }
 
-void UpdateManager::Start(bool suppressModal)
+void UpdateManager::Start(bool suppressModal, bool welcomeScreenLaunched)
 {
     auto& instance = GetInstance();
 
+    instance.mWelcomeScreenLaunched = welcomeScreenLaunched;
     if (!suppressModal && !prefUpdatesNoticeShown.Read())
     {
         // DefaultUpdatesCheckingFlag survives the "Reset Preferences"
@@ -340,6 +341,7 @@ std::string UpdateManager::GetUpdatesUrl() const
    if (SendAnonymousUsageInfo->Read())
    {
       url += "?audacity-instance-id=" + InstanceId->Read().ToStdString();
+      url += "&welcome-screen-launched=" + (mWelcomeScreenLaunched) ? "true" : "false";
 
       if (!AudioComUserId.Read().IsEmpty())
       {

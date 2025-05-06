@@ -36,7 +36,7 @@ public:
     UpdateManager() = default;
 
     static UpdateManager& GetInstance();
-    static void Start(bool suppressModal);
+    static void Start(bool suppressModal, bool welcomeScreenLaunched);
 
     void GetUpdates(bool ignoreNetworkErrors, bool configurableNotification);
 
@@ -68,6 +68,8 @@ private:
 
     std::mutex mUpdateMutex;
     bool mOnProgress{ false };
+
+    bool mWelcomeScreenLaunched{ false };
 public:
     DECLARE_EVENT_TABLE()
 };

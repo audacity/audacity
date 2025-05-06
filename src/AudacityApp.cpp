@@ -1695,6 +1695,7 @@ bool AudacityApp::InitPart2()
       project = ProjectManager::New();
    }
 
+   bool welcomeScreenLaunched = false;
    if (!playingJournal && ProjectSettings::Get(*project).GetShowSplashScreen())
    {
       // This may do a check-for-updates at every start up.
@@ -1703,6 +1704,7 @@ bool AudacityApp::InitPart2()
       // project->MayCheckForUpdates();
 #ifdef HAS_WHATS_NEW
       WhatsNewDialog::Show(*project);
+      welcomeScreenLaunched = true;
 #endif
    }
 
@@ -1711,7 +1713,7 @@ bool AudacityApp::InitPart2()
    HideSplashScreen(splashFadeOut);
 
 #if defined(HAVE_UPDATES_CHECK)
-   UpdateManager::Start(playingJournal);
+   UpdateManager::Start(playingJournal, welcomeScreenLaunched);
 #endif
 
    Importer::Get().Initialize();

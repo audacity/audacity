@@ -65,6 +65,8 @@ StickySetting<BoolSetting> DefaultUpdatesCheckingFlag{
 
 StickySetting<BoolSetting> SendAnonymousUsageInfo{ L"SendAnonymousUsageInfo", false };
 
+StickySetting<IntSetting> IntroOrderStart{ L"IntroOrderStart", 0 };
+
 StickySetting<StringSetting> InstanceId{ L"InstanceId" };
 
 std::unique_ptr<audacity::BasicSettings> ugPrefs {};

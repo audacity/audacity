@@ -702,5 +702,6 @@ struct PREFERENCES_API PreferenceInitializer {
 extern PREFERENCES_API StickySetting<BoolSetting> DefaultUpdatesCheckingFlag;
 extern PREFERENCES_API StickySetting<BoolSetting> SendAnonymousUsageInfo;
 extern PREFERENCES_API StickySetting<StringSetting> InstanceId;
+extern PREFERENCES_API StickySetting<IntSetting> IntroOrderStart;
 
 #endif
