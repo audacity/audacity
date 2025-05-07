@@ -1486,7 +1486,7 @@ bool AudioIO::IsAvailable(AudacityProject& project) const
 void AudioIO::SetMeters()
 {
     if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->Reset(mRate, true);
+        pInputMeter->reset();
     }
     if (auto pOutputMeter = mOutputMeter.lock()) {
         pOutputMeter->reset();
@@ -1696,7 +1696,7 @@ void AudioIO::StopStream()
     }
 
     if (auto pInputMeter = mInputMeter.lock()) {
-        pInputMeter->Reset(mRate, false);
+        pInputMeter->reset();
     }
 
     if (auto pOutputMeter = mOutputMeter.lock()) {
@@ -3026,16 +3026,17 @@ void AudioIoCallback::SendVuInputMeterData(
     const float* inputSamples,
     unsigned long framesPerBuffer)
 {
-    const auto numCaptureChannels = mNumCaptureChannels;
-    auto pInputMeter = mInputMeter.lock();
-    if (!pInputMeter) {
+    auto inputMeter = mInputMeter.lock();
+    if (!inputMeter) {
         return;
     }
-    if (pInputMeter->IsMeterDisabled()) {
+
+    if (!inputSamples) {
         return;
     }
-    pInputMeter->UpdateDisplay(
-        numCaptureChannels, framesPerBuffer, inputSamples);
+
+    PushInputMeterValues(inputMeter, inputSamples, framesPerBuffer);
+    inputMeter->sendAll();
 }
 
 /* Send data to playback VU meter if applicable */
@@ -3061,13 +3062,47 @@ void AudioIoCallback::SendVuOutputMeterData(
     outputMeter->sendAll();
 }
 
+void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float * values, unsigned long frames)
+{
+    auto sptr = values;
+    for (const auto sequence : mCaptureSequences) {
+        auto nChannels = sequence->NChannels();
+        const int64_t id = sequence->GetRecordableSequenceId();
+        for (size_t ch = 0; ch < nChannels; ch++) {
+            channel->push(ch, {sptr, frames, 1}, id);
+            sptr += frames;
+        }
+    }
+
+    constexpr size_t maxMainTrackChannels = 2;
+    auto mainTrackInput = stackAllocate(float, maxMainTrackChannels * frames);
+    for (size_t i = 0; i < maxMainTrackChannels * frames; ++i) {
+        mainTrackInput[i] = 0.0f;
+    }
+
+    sptr = values;
+    for (const auto sequence : mCaptureSequences)
+    {
+        size_t nChannels = std::min(sequence->NChannels(), maxMainTrackChannels);
+        for(size_t ch = 0; ch < nChannels; ++ch) {
+            for (size_t i = 0; i < frames; ++i) {
+                mainTrackInput[ch * frames + i] += sptr[i];
+            }
+            sptr += frames;
+        }
+    }
+
+    for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
+        channel->push(ch, {mainTrackInput + ch * frames, frames, 1});
+    }
+}
 
 void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float * values, uint8_t channels, unsigned long frames)
 {
     auto sptr = values;
     for (size_t ch = 0; ch < channels; ++ch) {
         auto sptr = values + ch;
-        channel->push(ch, GetAbsValue(sptr, frames, channels));
+        channel->push(ch, {sptr, frames, channels});
     }
 }
 
@@ -3086,7 +3121,7 @@ void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterChannel>&
                 frames
             );
 
-            channel->push(nch, GetAbsValue(stackBuffer, len, 1), track.trackId());
+            channel->push(nch, {stackBuffer, len, 1}, track.trackId());
         }
     }
 }

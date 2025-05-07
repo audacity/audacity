@@ -5,7 +5,6 @@
 #pragma once
 
 #include "../../iaudiooutput.h"
-#include "au3audiooutmeter.h"
 
 #include "global/async/asyncable.h"
 
@@ -13,9 +12,9 @@
 #include "context/iglobalcontext.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/au3audiometer.h"
 
 namespace au::playback {
-class InOutMeter;
 class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -43,6 +42,6 @@ private:
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
     mutable muse::async::Channel<audio::sample_rate_t> m_sampleRateChanged;
 
-    std::shared_ptr<OutMeter> m_outputMeter;
+    std::shared_ptr<au::au3::Meter> m_outputMeter;
 };
 }

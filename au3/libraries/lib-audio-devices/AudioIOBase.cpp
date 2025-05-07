@@ -309,7 +309,7 @@ int AudioIOBase::GetHostIndex(const std::string& hostName)
 }
 
 void AudioIOBase::SetCaptureMeter(
-    const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<Meter>& wMeter)
+    const std::shared_ptr<AudacityProject>& project, const std::weak_ptr<IMeterChannel>& wMeter)
 {
     if (auto pOwningProject = mOwningProject.lock();
         (pOwningProject) && (pOwningProject != project)) {
@@ -319,7 +319,7 @@ void AudioIOBase::SetCaptureMeter(
     auto meter = wMeter.lock();
     if (meter) {
         mInputMeter = meter;
-        meter->Reset(mRate, true);
+        meter->reset();
     } else {
         mInputMeter.reset();
     }

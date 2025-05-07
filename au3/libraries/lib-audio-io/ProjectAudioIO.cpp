@@ -95,13 +95,13 @@ void ProjectAudioIO::SetPlaybackMeter(
     }
 }
 
-const std::shared_ptr<Meter>& ProjectAudioIO::GetCaptureMeter() const
+const std::shared_ptr<IMeterChannel>& ProjectAudioIO::GetCaptureMeter() const
 {
     return mCaptureMeter;
 }
 
 void ProjectAudioIO::SetCaptureMeter(
-    const std::shared_ptr<Meter>& capture)
+    const std::shared_ptr<IMeterChannel>& capture)
 {
     auto& project = mProject;
     mCaptureMeter = capture;

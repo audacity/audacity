@@ -345,7 +345,7 @@ muse::Ret Au3Record::stop()
 
     auto captureMeter = projectAudioIO.GetCaptureMeter();
     if (captureMeter) {
-        captureMeter->Clear();
+        captureMeter->reset();
     }
 
     return make_ok();

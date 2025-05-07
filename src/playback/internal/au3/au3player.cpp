@@ -244,7 +244,7 @@ void Au3Player::stop()
 
     auto captureMeter= projectAudioIO.GetCaptureMeter();
     if (captureMeter) {
-        captureMeter->Clear();
+        captureMeter->reset();
     }
 
     while (isBusy()) {

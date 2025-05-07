@@ -84,6 +84,10 @@ void TracksViewStateModel::init()
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();
     });
+
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        emit isRecordingChanged();
+    });
 }
 
 void TracksViewStateModel::changeTrackHeight(int deltaY)
@@ -191,4 +195,9 @@ bool TracksViewStateModel::ctrlPressed() const
 bool TracksViewStateModel::isPlaying() const
 {
     return playbackController()->isPlaying();
+}
+
+bool TracksViewStateModel::isRecording() const
+{
+    return recordController()->isRecording();
 }

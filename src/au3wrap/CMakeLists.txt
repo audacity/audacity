@@ -27,6 +27,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3types.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3project.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiometer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiometer.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxtypes_convert.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.h

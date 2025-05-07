@@ -263,6 +263,7 @@ ListItemBlank {
                 height: root.height
                 currentVolumePressure: root.item.leftChannelPressure
                 isPlaying: trackViewState.isPlaying
+                isRecording: trackViewState.isRecording
             }
 
             VolumePressureMeter {
@@ -271,6 +272,7 @@ ListItemBlank {
                 height: root.height
                 currentVolumePressure: root.item.rightChannelPressure
                 isPlaying: trackViewState.isPlaying
+                isRecording: trackViewState.isRecording
             }
 
             states: [

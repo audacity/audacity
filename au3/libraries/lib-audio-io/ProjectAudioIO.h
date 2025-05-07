@@ -62,9 +62,9 @@ public:
     const std::shared_ptr<IMeterChannel>& GetPlaybackMeter() const;
     void SetPlaybackMeter(
         const std::shared_ptr<IMeterChannel>& playback);
-    const std::shared_ptr<Meter>& GetCaptureMeter() const;
+    const std::shared_ptr<IMeterChannel>& GetCaptureMeter() const;
     void SetCaptureMeter(
-        const std::shared_ptr<Meter>& capture);
+        const std::shared_ptr<IMeterChannel>& capture);
 
     // Speed play
     double GetPlaySpeed() const
@@ -79,7 +79,7 @@ private:
 
     // Project owned meters
     std::shared_ptr<IMeterChannel> mPlaybackMeter;
-    std::shared_ptr<Meter> mCaptureMeter;
+    std::shared_ptr<IMeterChannel> mCaptureMeter;
 
     // This is atomic because scrubber may read it in a separate thread from
     // the main
