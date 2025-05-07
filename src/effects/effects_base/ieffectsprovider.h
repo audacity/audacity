@@ -38,7 +38,6 @@ public:
 
     virtual void showEffect(const RealtimeEffectStatePtr& state) const = 0;
     virtual void hideEffect(const RealtimeEffectStatePtr& state) const = 0;
-    virtual void toggleShowEffect(const RealtimeEffectStatePtr& state) const = 0;
 
     virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
                                     EffectSettings& settings) = 0;

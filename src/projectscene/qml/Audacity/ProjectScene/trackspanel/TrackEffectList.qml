@@ -18,6 +18,9 @@ Rectangle {
     property alias trackName: trackEffectListModel.trackName
     property alias trackEffectsActive: trackEffectListModel.trackEffectsActive
     property bool empty: trackEffectList.count == 0
+    property alias count: trackEffectList.count
+    property NavigationSection navigationSection: null
+    property int navigationPanelOrderOffset: 0
 
     Component.onCompleted: {
         trackEffectListModel.load()
@@ -58,6 +61,8 @@ Rectangle {
             listView: trackEffectList
             availableEffects: trackEffectList.model.availableEffects
             width: trackEffectList.width - scrollbarContainer.width
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: navigationPanelOrderOffset + model.index
         }
 
         ScrollBar.vertical: scrollbar

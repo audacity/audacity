@@ -18,6 +18,17 @@ ListItemBlank {
     property int scrollOffset: 0
     property int topMargin: 0
 
+    property NavigationPanel navigationPanel: NavigationPanel {
+        name: "effect item panel - " + prv.title
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+    }
+
+    QtObject {
+        id: prv
+        property string title: root.item ? root.item.effectName() : ""
+    }
+
     // Internal properties
     property int yOffset: 0
     readonly property int animationDuration: 200
@@ -136,11 +147,17 @@ ListItemBlank {
         }
 
         BypassEffectButton {
+            id: bypassButton
+
             Layout.margins: 0
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredWidth: root.height
             Layout.minimumHeight: root.height
             Layout.maximumHeight: root.height
+
+            navigation.panel: root.navigationPanel
+            navigation.order: 0
+            navigation.name: "panel bypass btn - " + prv.title
 
             isMasterEffect: item && item.isMasterEffect
             accentButton: item && item.isActive
@@ -153,12 +170,17 @@ ListItemBlank {
         FlatButton {
             id: effectNameButton
 
+            navigation.panel: root.navigationPanel
+            navigation.order: 1
+            navigation.name: "show ui btn - " + prv.title
+
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredWidth: 148
 
             backgroundItem: RealtimeEffectListItemButtonBackground {
                 mouseArea: effectNameButton.mouseArea
+                navigationCtrl: effectNameButton.navigation
             }
 
             StyledTextLabel {
@@ -172,12 +194,22 @@ ListItemBlank {
             }
 
             onClicked: {
-                root.item.toggleDialog()
+                // Request navigation activation of the effect panel so that
+                // if there already is a dialog open and we click on this button,
+                // the new dialog doesn't believe its parent is the previous dialog.
+                // Note that calling `navigation.requestActive()` has no effect because
+                // the RealtimeEffectSection isn't of `NavigationSection.Exclusive` type.
+                root.navigationPanel.requestActive()
+                root.item.showEffectDialog()
             }
         }
 
         FlatButton {
             id: chooseEffectDropdown
+
+            navigation.panel: root.navigationPanel
+            navigation.order: 2
+            navigation.name: "replace btn - " + prv.title
 
             Layout.fillHeight: true
             Layout.preferredWidth: height
@@ -185,6 +217,7 @@ ListItemBlank {
             icon: IconCode.SMALL_ARROW_DOWN
             backgroundItem: RealtimeEffectListItemButtonBackground {
                 mouseArea: chooseEffectDropdown.mouseArea
+                navigationCtrl: chooseEffectDropdown.navigation
             }
 
             RealtimeEffectListItemMenuModel {

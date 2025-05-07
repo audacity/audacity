@@ -45,6 +45,7 @@ RowLayout {
 
         navigation.panel: root.navigationPanel
         navigation.order: root.navigationOrder
+        navigation.name: "preset dropdown"
 
         Layout.fillWidth: true
         background.color: ui.theme.backgroundPrimaryColor
@@ -70,6 +71,7 @@ RowLayout {
 
         navigation.panel: root.navigationPanel
         navigation.order: presetSelector.navigation.order + 1
+        navigation.name: "save preset btn"
 
         Layout.alignment: Qt.AlignVCenter
         icon: IconCode.SAVE
@@ -84,6 +86,7 @@ RowLayout {
 
         navigation.panel: root.navigationPanel
         navigation.order: saveBtn.navigation.order + 1
+        navigation.name: "reset preset btn"
 
         Layout.alignment: Qt.AlignVCenter
 
@@ -104,6 +107,7 @@ RowLayout {
 
         navigation.panel: root.navigationPanel
         navigation.order: resetBtn.navigation.order + 1
+        navigation.name: "manage preset btn"
 
         Layout.alignment: Qt.AlignVCenter
 
