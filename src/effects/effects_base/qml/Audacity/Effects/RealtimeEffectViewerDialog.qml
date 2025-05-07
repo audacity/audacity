@@ -19,6 +19,7 @@ EffectStyledDialogView {
     property alias viewItem: viewLoader.item
 
     title: viewerModel.title + " - " + viewerModel.trackName
+    navigationSection.name: title
 
     contentWidth: viewItem ? Math.max(viewItem.implicitWidth, headerBar.width) : headerBar.width
     contentHeight: 2 * 16 + headerBar.height + (viewItem ? viewItem.implicitHeight : 0)
@@ -32,6 +33,8 @@ EffectStyledDialogView {
     RealtimeEffectViewerDialogModel {
         id: viewerModel
         effectState: root.effectState
+        dialogView: root
+        navigationPanel: root.navigationPanel
     }
 
     Component {
@@ -73,6 +76,7 @@ EffectStyledDialogView {
 
                 navigation.panel: root.navigationPanel
                 navigation.order: 0
+                navigation.name: "Bypass effect"
                 size: presetsBar.implicitHeight
                 isMasterEffect: viewerModel.isMasterEffect
                 accentButton: viewerModel.isActive

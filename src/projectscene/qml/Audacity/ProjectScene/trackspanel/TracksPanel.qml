@@ -18,6 +18,9 @@ Item {
     property alias tracksModel: tracksModel
     signal openEffectsRequested()
 
+    property NavigationSection trackEffectsNavigationSection: null
+    property NavigationSection masterEffectsNavigationSection: null
+
     // property alias contextMenuModel: contextMenuModel
     property int effectsSectionWidth: 240 // TODO: can this be set as a constant that can be imported?
     property alias showEffectsSection: effectSectionModel.showEffectsSection
@@ -72,6 +75,8 @@ Item {
             TrackEffectsSection {
                 id: trackEffectsSection
 
+                navigationSection: trackEffectsNavigationSection
+
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.minimumHeight: trackEffectsSection.minimumHeight
@@ -110,6 +115,8 @@ Item {
 
             TrackEffectsSection {
                 id: masterEffectsSection
+
+                navigationSection: masterEffectsNavigationSection
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 300

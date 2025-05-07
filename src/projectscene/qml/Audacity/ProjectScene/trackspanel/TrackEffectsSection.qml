@@ -15,6 +15,9 @@ Rectangle {
     id: root
 
     property alias isMasterTrack: effectList.isMasterTrack
+    property alias minimumHeight: prv.addEffectButtonHeight
+
+    property NavigationSection navigationSection: null
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -45,6 +48,15 @@ Rectangle {
 
             BypassEffectButton {
                 id: trackEffectsPowerButton
+
+                property NavigationPanel navigationPanel: NavigationPanel {
+                    name: (isMasterTrack ? "Master" : effectList.trackName) + " effects bypass"
+                    enabled: root.enabled && root.visible
+                    section: root.navigationSection
+                    order: 0
+                }
+
+                navigation.panel: trackEffectsPowerButton.navigationPanel
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 Layout.margins: 8
@@ -85,6 +97,8 @@ Rectangle {
             Layout.fillWidth: true
             TrackEffectList {
                 id: effectList
+                navigationSection: root.navigationSection
+                navigationPanelOrderOffset: 1
                 color: "transparent"
                 anchors.fill: parent
                 anchors.leftMargin: 4
@@ -106,6 +120,15 @@ Rectangle {
             Layout.maximumHeight: prv.addEffectButtonHeight
             Layout.margins: prv.addEffectButtonMargin
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
+
+            property NavigationPanel navigationPanel: NavigationPanel {
+                name: (isMasterTrack ? "Master" : effectList.trackName) + " add effect"
+                enabled: root.enabled && root.visible
+                section: root.navigationSection
+                order: effectList.navigationPanelOrderOffset + effectList.count + 1
+            }
+
+            navigation.panel: addEffectButton.navigationPanel
 
             text: qsTrc("projectscene", "Add effect")
 
@@ -147,7 +170,7 @@ Rectangle {
             leftPadding: 16
             rightPadding: 16
             elide: Text.ElideNone
-            verticalAlignment: Text.AlignVTop
+            verticalAlignment: Text.AlignTop
             horizontalAlignment: Text.AlignLeft
         }
     }
