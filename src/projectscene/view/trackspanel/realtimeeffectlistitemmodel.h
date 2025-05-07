@@ -26,7 +26,7 @@ public:
 
     Q_INVOKABLE effects::RealtimeEffectStatePtr effectState() const;
     Q_INVOKABLE QString effectName() const;
-    Q_INVOKABLE void toggleDialog();
+    Q_INVOKABLE void showEffectDialog();
 
     bool prop_isActive() const;
     void prop_setIsActive(bool isActive);

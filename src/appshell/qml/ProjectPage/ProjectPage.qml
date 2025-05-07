@@ -47,28 +47,40 @@ DockPage {
         order: 2
     }
 
+    property NavigationSection trackEffectsKeyNavSec: NavigationSection {
+        name: "TrackEffectsSection"
+        enabled: tracksPanel.showEffectsSection
+        order: playbackToolBarKeyNavSec.order + 1
+    }
+
+    property NavigationSection masterEffectsKeyNavSec: NavigationSection {
+        name: "MasterEffectsSection"
+        enabled: tracksPanel.showEffectsSection
+        order: trackEffectsKeyNavSec.order + 1
+    }
+
     property NavigationSection keynavTopPanelSec: NavigationSection {
         name: "NavigationTopPanel"
         enabled: root.visible
-        order: 3
+        order: masterEffectsKeyNavSec.order + 1
     }
 
     property NavigationSection keynavLeftPanelSec: NavigationSection {
         name: "NavigationLeftPanel"
         enabled: root.visible
-        order: 4
+        order: keynavTopPanelSec.order + 1
     }
 
     property NavigationSection keynavRightPanelSec: NavigationSection {
         name: "NavigationRightPanel"
         enabled: root.visible
-        order: 6
+        order: keynavLeftPanelSec.order + 1
     }
 
     property NavigationSection keynavBottomPanelSec: NavigationSection {
         name: "NavigationBottomPanel"
         enabled: root.visible
-        order: 7
+        order: keynavRightPanelSec.order + 1
     }
 
     function navigationPanelSec(location) {
@@ -253,6 +265,9 @@ DockPage {
 
                 navigationSection: tracksPanel.navigationSection
                 effectsSectionWidth: tracksPanel.effectsSectionWidth
+
+                trackEffectsNavigationSection: root.trackEffectsKeyNavSec
+                masterEffectsNavigationSection: root.masterEffectsKeyNavSec
 
                 onOpenEffectsRequested: {
                     tracksPanel.showEffectsSection = true
