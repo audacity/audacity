@@ -67,6 +67,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "DeviceManager.h"
 
 #include <cfloat>
+#include <cstring>
 #include <math.h>
 #include <stdlib.h>
 #include <algorithm>
@@ -3075,9 +3076,7 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterChannel>&
 
     constexpr size_t maxMainTrackChannels = 2;
     auto mainTrackInput = stackAllocate(float, maxMainTrackChannels * frames);
-    for (size_t i = 0; i < maxMainTrackChannels * frames; ++i) {
-        mainTrackInput[i] = 0.0f;
-    }
+    std::memset(mainTrackInput, 0, maxMainTrackChannels * frames * sizeof(float));
 
     sptr = values;
     for (const auto sequence : mCaptureSequences)

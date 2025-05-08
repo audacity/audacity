@@ -16,7 +16,7 @@ class Meter : public IMeterChannel, public muse::async::Asyncable
 {
 public:
     Meter();
-    void push(uint8_t channel, const IMeterChannel::SampleData&& sampleData, int64_t key) override;
+    void push(uint8_t channel, const IMeterChannel::SampleData& sampleData, int64_t key) override;
     void push(uint8_t channel, float signal, int64_t key) override;
     void sendAll() override;
     void reset() override;

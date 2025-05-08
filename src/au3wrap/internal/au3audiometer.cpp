@@ -37,7 +37,7 @@ Meter::Meter()
     });
 }
 
-void Meter::push(uint8_t channel, const IMeterChannel::SampleData&& sampleData, int64_t key)
+void Meter::push(uint8_t channel, const IMeterChannel::SampleData& sampleData, int64_t key)
 {
     float peak = GetAbsValue(sampleData.buffer, sampleData.frames, sampleData.step);
     push(channel, peak, key);
