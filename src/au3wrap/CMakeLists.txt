@@ -275,8 +275,6 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-audio-devices/AudioIOBase.h
     ${AU3_LIBRARIES}/lib-audio-devices/DeviceManager.cpp
     ${AU3_LIBRARIES}/lib-audio-devices/DeviceManager.h
-    ${AU3_LIBRARIES}/lib-audio-devices/Meter.cpp
-    ${AU3_LIBRARIES}/lib-audio-devices/Meter.h
 
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.cpp
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.h

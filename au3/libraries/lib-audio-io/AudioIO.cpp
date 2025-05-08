@@ -100,7 +100,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #endif
 
 #include "Channel.h"
-#include "Meter.h"
 #include "Mix.h"
 #include "Resample.h"
 #include "RingBuffer.h"

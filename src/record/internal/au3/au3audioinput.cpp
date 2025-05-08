@@ -9,7 +9,6 @@
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
-#include "playback/internal/au3/au3audioinoutmeter.h"
 #include "au3wrap/au3types.h"
 
 #include "au3audio/audiotypes.h"

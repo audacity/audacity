@@ -12,7 +12,6 @@
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-time-frequency-selection/ViewInfo.h"
 #include "libraries/lib-audio-io/AudioIO.h"
-#include "libraries/lib-audio-devices/Meter.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"

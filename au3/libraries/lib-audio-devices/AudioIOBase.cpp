@@ -17,7 +17,6 @@ Paul Licameli split from AudioIO.cpp
 #include <wx/txtstrm.h>
 
 #include "IteratorX.h"
-#include "Meter.h"
 #include "Prefs.h"
 
 #include "portaudio.h"

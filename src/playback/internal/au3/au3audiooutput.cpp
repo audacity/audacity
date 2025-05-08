@@ -10,7 +10,6 @@
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 #include "libraries/lib-project-rate/ProjectRate.h"
 
-#include "au3audioinoutmeter.h"
 #include "au3wrap/au3types.h"
 
 #include "au3audio/audiotypes.h"
