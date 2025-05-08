@@ -3064,8 +3064,13 @@ void AudioIoCallback::SendVuOutputMeterData(
 
 void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float * values, unsigned long frames)
 {
+    if ((mCaptureSequences.size() == 0) || (frames == 0)) {
+        return;
+    }
+
+    // Update meter tracks
     auto sptr = values;
-    for (const auto sequence : mCaptureSequences) {
+    for (const auto& sequence : mCaptureSequences) {
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
@@ -3075,23 +3080,35 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
     }
 
     constexpr size_t maxMainTrackChannels = 2;
-    auto mainTrackInput = stackAllocate(float, maxMainTrackChannels * frames);
-    std::memset(mainTrackInput, 0, maxMainTrackChannels * frames * sizeof(float));
-
     sptr = values;
-    for (const auto sequence : mCaptureSequences)
-    {
-        size_t nChannels = std::min(sequence->NChannels(), maxMainTrackChannels);
-        for(size_t ch = 0; ch < nChannels; ++ch) {
-            for (size_t i = 0; i < frames; ++i) {
-                mainTrackInput[ch * frames + i] += sptr[i];
-            }
-            sptr += frames;
+
+    // Update main meter
+    // If the input source has more than 2 channels it will be splitted on multiple mono sequences
+    if (mCaptureSequences.size() == 1) {
+        const auto nChannels = mCaptureSequences[0]->NChannels();
+        assert(nChannels <= 2);
+        for (size_t ch = 0; ch < nChannels; ++ch) {
+            sender->push(ch, {sptr + ch, frames, nChannels});
         }
     }
+    else {
+        assert(std::all_of(mCaptureSequences.begin(), mCaptureSequences.end(),
+            [](const auto& seq) { return seq->NChannels() == 1; }));
 
-    for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
-        sender->push(ch, {mainTrackInput + ch * frames, frames, 1});
+        const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
+        std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
+        for (size_t i = 0; i < frames; ++i) {
+            for (size_t seqNum = 0; seqNum < mCaptureSequences.size(); seqNum++) {
+                const auto channel = seqNum % maxMainTrackChannels;
+                mainTrackInput[channel * frames + i] = std::max(
+                    mainTrackInput[channel * frames + i], *sptr);
+                    sptr++;
+            }
+        }
+
+        for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
+            sender->push(ch, {mainTrackInput + ch * frames, frames, 1});
+        }
     }
 }
 
