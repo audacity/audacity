@@ -3062,14 +3062,14 @@ void AudioIoCallback::SendVuOutputMeterData(
     outputMeter->sendAll();
 }
 
-void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float * values, unsigned long frames)
+void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float * values, unsigned long frames)
 {
     auto sptr = values;
     for (const auto sequence : mCaptureSequences) {
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
-            channel->push(ch, {sptr, frames, 1}, id);
+            sender->push(ch, {sptr, frames, 1}, id);
             sptr += frames;
         }
     }
@@ -3091,21 +3091,21 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterChannel>&
     }
 
     for (size_t ch = 0; ch < maxMainTrackChannels; ++ch) {
-        channel->push(ch, {mainTrackInput + ch * frames, frames, 1});
+        sender->push(ch, {mainTrackInput + ch * frames, frames, 1});
     }
 }
 
-void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float * values, uint8_t channels, unsigned long frames)
+void AudioIoCallback::PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float * values, uint8_t channels, unsigned long frames)
 {
     auto sptr = values;
     for (size_t ch = 0; ch < channels; ++ch) {
         auto sptr = values + ch;
-        channel->push(ch, {sptr, frames, channels});
+        sender->push(ch, {sptr, frames, channels});
     }
 }
 
 
-void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterChannel>& channel, unsigned long frames)
+void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames)
 {
     auto stackBuffer = stackAllocate(float, frames);
 
@@ -3119,7 +3119,7 @@ void AudioIoCallback::PushTrackMeterValues(const std::shared_ptr<IMeterChannel>&
                 frames
             );
 
-            channel->push(nch, {stackBuffer, len, 1}, track.trackId());
+            sender->push(nch, {stackBuffer, len, 1}, track.trackId());
         }
     }
 }

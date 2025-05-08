@@ -9,14 +9,14 @@
 
 #include "au3audio/audiotypes.h"
 
-#include "libraries/lib-audio-devices/IMeterChannel.h"
+#include "libraries/lib-audio-devices/IMeterSender.h"
 
 namespace au::au3 {
-class Meter : public IMeterChannel, public muse::async::Asyncable
+class Meter : public IMeterSender, public muse::async::Asyncable
 {
 public:
     Meter();
-    void push(uint8_t channel, const IMeterChannel::SampleData& sampleData, int64_t key) override;
+    void push(uint8_t channel, const IMeterSender::SampleData& sampleData, int64_t key) override;
     void push(uint8_t channel, float signal, int64_t key) override;
     void sendAll() override;
     void reset() override;

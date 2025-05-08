@@ -5,7 +5,7 @@
 
 constexpr int64_t MASTER_TRACK_ID = -2;
 
-class AUDIO_DEVICES_API IMeterChannel
+class AUDIO_DEVICES_API IMeterSender
 {
 public:
     struct SampleData
@@ -15,7 +15,7 @@ public:
         const size_t step;
     };
 
-    virtual ~IMeterChannel() = default;
+    virtual ~IMeterSender() = default;
     virtual void push(uint8_t channel, float signal, int64_t key = MASTER_TRACK_ID) = 0;
     virtual void push(uint8_t channel, const SampleData& sampleData, int64_t key = MASTER_TRACK_ID) = 0;
     virtual void sendAll() = 0;

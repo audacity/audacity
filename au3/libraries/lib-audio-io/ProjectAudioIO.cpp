@@ -79,13 +79,13 @@ bool ProjectAudioIO::IsAudioActive() const
            && gAudioIO->IsStreamActive(GetAudioIOToken());
 }
 
-const std::shared_ptr<IMeterChannel>& ProjectAudioIO::GetPlaybackMeter() const
+const std::shared_ptr<IMeterSender>& ProjectAudioIO::GetPlaybackMeter() const
 {
     return mPlaybackMeter;
 }
 
 void ProjectAudioIO::SetPlaybackMeter(
-    const std::shared_ptr<IMeterChannel>& playback)
+    const std::shared_ptr<IMeterSender>& playback)
 {
     auto& project = mProject;
     mPlaybackMeter = playback;
@@ -95,13 +95,13 @@ void ProjectAudioIO::SetPlaybackMeter(
     }
 }
 
-const std::shared_ptr<IMeterChannel>& ProjectAudioIO::GetCaptureMeter() const
+const std::shared_ptr<IMeterSender>& ProjectAudioIO::GetCaptureMeter() const
 {
     return mCaptureMeter;
 }
 
 void ProjectAudioIO::SetCaptureMeter(
-    const std::shared_ptr<IMeterChannel>& capture)
+    const std::shared_ptr<IMeterSender>& capture)
 {
     auto& project = mProject;
     mCaptureMeter = capture;
