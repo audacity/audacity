@@ -4,7 +4,9 @@
 #pragma once
 
 #include "itrackeditinteraction.h"
+#include "iprojecthistory.h"
 #include "itrackandclipoperations.h"
+#include "itrackeditclipboard.h"
 #include "iundomanager.h"
 #include "modularity/ioc.h"
 
@@ -12,6 +14,8 @@ namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable
 {
     muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
+    muse::Inject<ITrackeditClipboard> clipboard;
+    muse::Inject<IProjectHistory> projectHistory;
 
 public:
     TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager);
