@@ -40,7 +40,7 @@ public:
     virtual bool changeClipColor(const ClipKey& clipKey, const std::string& color) = 0;
     virtual bool changeTrackColor(const TrackId trackId, const std::string& color) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
-    virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey, std::function<void()> onComplete) = 0;
+    virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks,
                             bool isMultiSelectionCopy) = 0;
     virtual ITrackDataPtr cutClip(const ClipKey& clipKey) = 0;

@@ -121,7 +121,11 @@ bool TrackeditOperationController::changeClipOptimizeForVoice(const ClipKey& cli
 
 bool TrackeditOperationController::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
-    return trackAndClipOperations()->renderClipPitchAndSpeed(clipKey);
+    if (trackAndClipOperations()->renderClipPitchAndSpeed(clipKey)) {
+        projectHistory()->pushHistoryState("Rendered time-stretched audio", "Render");
+        return true;
+    }
+    return false;
 }
 
 void TrackeditOperationController::clearClipboard()

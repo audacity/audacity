@@ -922,41 +922,35 @@ bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool opt
     return true;
 }
 
-bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey, std::function<void()> onComplete)
+bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
-    muse::Concurrent::run([this, clipKey, onComplete]() {
-        m_progress->start();
+    m_progress->start();
 
-        muse::ProgressResult result;
+    muse::ProgressResult result;
 
-        DEFER {
-            m_progress->finish(result);
-        };
+    DEFER {
+        m_progress->finish(result);
+    };
 
-        WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return;
-        }
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
 
-        std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
-        IF_ASSERT_FAILED(clip) {
-            return;
-        }
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
 
-        auto progressCallBack = [this](double progressFraction) {
-            m_progress->progress(progressFraction * 1000, 1000, "");
-        };
+    auto progressCallBack = [this](double progressFraction) {
+        m_progress->progress(progressFraction * 1000, 1000, "");
+    };
 
-        waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
-        LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
+    waveTrack->ApplyPitchAndSpeed({ { clip->GetPlayStartTime(), clip->GetPlayEndTime() } }, progressCallBack);
+    LOGD() << "apply pitch and speed for clip: " << clipKey.clipId << ", track: " << clipKey.trackId;
 
-        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->notifyAboutTrackChanged(DomConverter::track(waveTrack)); //! todo: replace with onClipChanged
-
-        if (onComplete) {
-            onComplete();
-        }
-    });
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));         //! todo: replace with onClipChanged
 
     return true;
 }
