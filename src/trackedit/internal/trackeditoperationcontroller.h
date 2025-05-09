@@ -97,6 +97,11 @@ public:
     muse::ProgressPtr progress() const override;
 
 private:
+    void pushProjectHistoryJoinState(secs_t start, secs_t duration);
+    void pushProjectHistoryDuplicateState();
+    void pushProjectHistorySplitDeleteState();
+    void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+
     const std::unique_ptr<IUndoManager> m_undoManager;
 };
 }
