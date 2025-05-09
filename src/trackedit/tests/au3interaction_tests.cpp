@@ -1090,7 +1090,7 @@ TEST_F(Au3InteractionTests, CutClip)
     removeTrack(trackId);
 }
 
-TEST_F(Au3InteractionTests, CutClipDataIntoClipboardWithoutMovingClips)
+TEST_F(Au3InteractionTests, CutTrackDataWithoutMovingClips)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
@@ -1115,7 +1115,7 @@ TEST_F(Au3InteractionTests, CutClipDataIntoClipboardWithoutMovingClips)
     }))).Times(1);
 
     //! [WHEN] Cut the tracks into the clipboard
-    m_au3Interaction->cutClipDataIntoClipboard({ trackId }, middleClipStart, midleClipEnd, false);
+    m_au3Interaction->cutTrackData(trackId, middleClipStart, midleClipEnd, false);
 
     //! [THEN] The number of intervals is 2
     ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the cut operation is not 2";
@@ -1128,7 +1128,7 @@ TEST_F(Au3InteractionTests, CutClipDataIntoClipboardWithoutMovingClips)
     removeTrack(trackId);
 }
 
-TEST_F(Au3InteractionTests, CutClipDataIntoClipboardMovingClips)
+TEST_F(Au3InteractionTests, CutTrackDataMovingClips)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
@@ -1152,7 +1152,7 @@ TEST_F(Au3InteractionTests, CutClipDataIntoClipboardMovingClips)
     }))).Times(1);
 
     //! [WHEN] Cut the tracks into the clipboard
-    m_au3Interaction->cutClipDataIntoClipboard({ trackId }, middleClipStart, midleClipEnd, true);
+    m_au3Interaction->cutTrackData(trackId, middleClipStart, midleClipEnd, true);
 
     //! [THEN] The number of intervals is 2
     ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the cut operation is not 2";

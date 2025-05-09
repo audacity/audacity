@@ -54,7 +54,7 @@ public:
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks) override;
     ITrackDataPtr cutClip(const ClipKey& clipKey) override;
-    bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
+    ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
     bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
@@ -142,7 +142,6 @@ private:
     bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool stretchClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
-    bool cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end, bool moveClips);
     bool cutTrackDataIntoClipboardRipple(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);

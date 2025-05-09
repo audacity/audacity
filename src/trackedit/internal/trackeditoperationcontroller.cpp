@@ -99,7 +99,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
 
 bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
 {
-    auto data = trackAndClipOperations()->cutClip(clipKey);
+    ITrackDataPtr data = trackAndClipOperations()->cutClip(clipKey);
     if (!data) {
         return false;
     }
@@ -110,7 +110,19 @@ bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
 
 bool TrackeditOperationController::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
-    return trackAndClipOperations()->cutClipDataIntoClipboard(tracksIds, begin, end, moveClips);
+    std::vector<ITrackDataPtr> tracksData(tracksIds.size());
+    for (const auto& trackId : tracksIds) {
+        const auto data = trackAndClipOperations()->cutTrackData(trackId, begin, end, moveClips);
+        if (!data) {
+            return false;
+        }
+        tracksData.push_back(std::move(data));
+    }
+    for (auto& trackData : tracksData) {
+        clipboard()->addTrackData(std::move(trackData));
+    }
+    projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
+    return true;
 }
 
 bool TrackeditOperationController::copyClipIntoClipboard(const ClipKey& clipKey)

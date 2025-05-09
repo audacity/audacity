@@ -1191,35 +1191,20 @@ ITrackDataPtr Au3Interaction::cutClip(const ClipKey& clipKey)
     return data;
 }
 
-bool Au3Interaction::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
-{
-    for (const auto& trackId : tracksIds) {
-        bool ok = cutTrackDataIntoClipboard(trackId, begin, end, moveClips);
-        if (!ok) {
-            return false;
-        }
-    }
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
-
-    return true;
-}
-
-bool Au3Interaction::cutTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end, bool moveClips)
+ITrackDataPtr Au3Interaction::cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return nullptr;
     }
 
     auto track = waveTrack->Cut(begin, end, moveClips);
-    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
+    const auto data = std::make_shared<Au3TrackData>(std::move(track));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
-    return true;
+    return data;
 }
 
 bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
