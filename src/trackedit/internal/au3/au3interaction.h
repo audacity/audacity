@@ -50,7 +50,6 @@ public:
     bool changeClipColor(const ClipKey& clipKey, const std::string& color) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
-    void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks) override;
     ITrackDataPtr cutClip(const ClipKey& clipKey) override;
     ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) override;

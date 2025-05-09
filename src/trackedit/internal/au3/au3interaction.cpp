@@ -959,11 +959,6 @@ bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
     return true;
 }
 
-void Au3Interaction::clearClipboard()
-{
-    clipboard()->clearTrackData();
-}
-
 bool Au3Interaction::clipTransferNeedsDownmixing(const std::vector<Au3TrackDataPtr>& srcTracks,
                                                  const TrackIdList& dstTracks) const
 {
