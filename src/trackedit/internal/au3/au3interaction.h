@@ -47,7 +47,7 @@ public:
     bool resetClipSpeed(const ClipKey& clipKey) override;
     bool changeClipColor(const ClipKey& clipKey, const std::string& color) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
-    bool renderClipPitchAndSpeed(const ClipKey& clipKey, std::function<void()> onComplete) override;
+    bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks,
                     bool isMultiSelectionCopy) override;
     ITrackDataPtr cutClip(const ClipKey& clipKey) override;
@@ -146,10 +146,6 @@ private:
     bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
 
     void pushProjectHistoryPasteState();
-    void pushProjectHistoryResetClipPitchState();
-    void pushProjectHistoryChangeClipSpeedState();
-    void pushProjectHistoryResetClipSpeedState();
-    void pushProjectHistoryRenderClipStretchingState();
 
     bool canMoveTrack(const TrackId trackId, const TrackMoveDirection direction);
     int trackPosition(const TrackId trackId);

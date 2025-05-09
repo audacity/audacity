@@ -8,10 +8,11 @@
 #include "itrackandclipoperations.h"
 #include "itrackeditclipboard.h"
 #include "iundomanager.h"
+#include "async/asyncable.h"
 #include "modularity/ioc.h"
 
 namespace au::trackedit {
-class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable
+class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
 {
     muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
     muse::Inject<ITrackeditClipboard> clipboard;
