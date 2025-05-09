@@ -442,6 +442,7 @@ muse::Ret EffectsProvider::doEffectPreview(EffectBase& effect, EffectSettings& s
 
             newTrack->MoveTo(0);
             newTrack->SetSelected(true);
+            std::static_pointer_cast<WaveTrack>(newTrack)->SetMute(false);
         } else {
             if (effect.mNumTracks > 0) {
                 for (const WaveTrack* src : originCtx.tracks->Selected<const au::au3::Au3WaveTrack>()) {
