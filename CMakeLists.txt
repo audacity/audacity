@@ -23,8 +23,8 @@ set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_LIST_DIR}/_deps)
 include(FetchContent)
 FetchContent_Declare(
   muse_framework
-  GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u250408_2
+  GIT_REPOSITORY https://github.com/saintmatthieu/framework_tmp.git
+  GIT_TAG        149cd33d365e4d6f77e03ac57dd17b4bc7110959
 )
 
 FetchContent_GetProperties(muse_framework)
