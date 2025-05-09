@@ -94,7 +94,8 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
         return make_ret(trackedit::Err::TrackEmpty);
     }
 
-    return trackAndClipOperations()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks);
+    return trackAndClipOperations()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks,
+                                           clipboard()->isMultiSelectionCopy());
 }
 
 bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
@@ -156,6 +157,7 @@ bool TrackeditOperationController::copyContinuousTrackDataIntoClipboard(const Tr
         return false;
     }
     clipboard()->addTrackData(std::move(data));
+    return true;
 }
 
 bool TrackeditOperationController::removeClip(const ClipKey& clipKey)
