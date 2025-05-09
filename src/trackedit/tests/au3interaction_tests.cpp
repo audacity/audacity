@@ -10,7 +10,6 @@
 #include "context/tests/mocks/playbackstatemock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "mocks/trackeditprojectmock.h"
-#include "mocks/projecthistorymock.h"
 #include "mocks/selectioncontrollermock.h"
 #include "tracktemplatefactory.h"
 #include "../trackediterrors.h"
@@ -164,13 +163,11 @@ public:
         m_au3Interaction = std::make_shared<Au3Interaction>();
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
-        m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
         m_interactive = std::make_shared<NiceMock<muse::InteractiveMock> >();
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
 
         m_au3Interaction->globalContext.set(m_globalContext);
-        m_au3Interaction->projectHistory.set(m_projectHistory);
         m_au3Interaction->selectionController.set(m_selectionController);
         m_au3Interaction->interactive.set(m_interactive);
 
@@ -334,7 +331,6 @@ public:
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;
-    std::shared_ptr<ProjectHistoryMock> m_projectHistory;
     std::shared_ptr<SelectionControllerMock> m_selectionController;
     std::shared_ptr<muse::IInteractive> m_interactive;
     std::shared_ptr<context::PlaybackStateMock> m_playbackState;
