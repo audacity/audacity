@@ -980,7 +980,7 @@ bool Au3Interaction::clipTransferNeedsDownmixing(const std::vector<Au3TrackDataP
 }
 
 muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks,
-                                bool isMultiSelectionCopy)
+                                bool isMultiSelectionCopy, bool& projectWasModified)
 {
     if (data.empty()) {
         return make_ret(trackedit::Err::TrackEmpty);
@@ -1002,20 +1002,21 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
         const secs_t duration = (*it)->track()->GetEndTime();
         auto existingTracks = project->trackeditProject()->trackIdList();
         insertBlankSpace(existingTracks, begin, duration);
+        projectWasModified = true;
     }
 
     TrackIdList selectedTracks = selectionController()->selectedTracks();
     if (selectedTracks.empty()) {
         const TrackIdList tracksIdsToSelect = pasteIntoNewTracks(copiedData);
         selectionController()->setSelectedTracks(tracksIdsToSelect);
-        pushProjectHistoryPasteState();
+        projectWasModified = true;
         return muse::make_ok();
     }
 
     TrackIdList dstTracksIds = determineDestinationTracksIds(tracks, selectedTracks, data.size());
 
     if (clipTransferNeedsDownmixing(copiedData, dstTracksIds) && !userIsOkWithDownmixing()) {
-        return muse::make_ok();
+        return trackedit::make_ret(trackedit::Err::Cancel);
     }
 
     const bool newTracksNeeded = dstTracksIds.size() != data.size();
@@ -1026,7 +1027,8 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
     }
 
     muse::Ret ok { muse::make_ok() };
-    bool pasteIntoExistingClip = !configuration()->pasteAsNewClip() && !moveAllTracks;
+    projectWasModified = true;
+    const bool pasteIntoExistingClip = !configuration()->pasteAsNewClip() && !moveAllTracks;
 
     if (!moveClips) {
         if (isMultiSelectionCopy) {
@@ -1035,15 +1037,6 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
             ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, pasteIntoExistingClip);
         }
     }
-
-    muse::Defer finalize{ [&]{
-            if (ok) {
-                pushProjectHistoryPasteState();
-            } else {
-                projectHistory()->rollbackState();
-                project->trackeditProject()->reload();
-            }
-        } };
 
     for (size_t i = 0; i < dstTracksIds.size(); ++i) {
         Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
@@ -2388,11 +2381,6 @@ ClipKeyList Au3Interaction::clipsInGroup(int64_t id) const
 muse::ProgressPtr Au3Interaction::progress() const
 {
     return m_progress;
-}
-
-void Au3Interaction::pushProjectHistoryPasteState()
-{
-    projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
 }
 
 bool Au3Interaction::doChangeClipSpeed(const ClipKey& clipKey, double speed)

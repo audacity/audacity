@@ -135,8 +135,16 @@ void TrackeditOperationController::clearClipboard()
 
 muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks)
 {
-    return trackAndClipOperations()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks,
-                                           clipboard()->isMultiSelectionCopy());
+    auto modifiedState = false;
+    const auto ret = trackAndClipOperations()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks,
+                                                     clipboard()->isMultiSelectionCopy(), modifiedState);
+    if (ret) {
+        projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
+    } else if (modifiedState) {
+        projectHistory()->rollbackState();
+        globalContext()->currentTrackeditProject()->reload();
+    }
+    return ret;
 }
 
 bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
