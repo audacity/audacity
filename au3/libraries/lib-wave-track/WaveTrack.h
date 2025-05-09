@@ -488,6 +488,12 @@ public:
     const ChannelGroup* FindChannelGroup() const override;
     bool GetMute() const override;
     bool GetSolo() const override;
+
+    int64_t GetRecordableSequenceId() const override
+    {
+        return GetId();
+    }
+
     //! @}
 
     ///

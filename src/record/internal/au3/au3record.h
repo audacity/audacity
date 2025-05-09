@@ -21,7 +21,6 @@ struct TransportSequences;
 struct AudioIOStartStreamOptions;
 
 namespace au::record {
-class InOutMeter;
 class Au3Record : public IRecord, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;

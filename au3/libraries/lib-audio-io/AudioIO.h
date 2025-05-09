@@ -215,8 +215,9 @@ public:
         const float* inputSamples, unsigned long framesPerBuffer);
     void SendVuOutputMeterData(
         const float* outputMeterFloats, unsigned long framesPerBuffer);
-    void PushMainMeterValues(const std::shared_ptr<IMeterChannel>& channel, const float* values, uint8_t channels, unsigned long frames);
-    void PushTrackMeterValues(const std::shared_ptr<IMeterChannel>& channel, unsigned long frames);
+    void PushMainMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, uint8_t channels, unsigned long frames);
+    void PushTrackMeterValues(const std::shared_ptr<IMeterSender>& sender, unsigned long frames);
+    void PushInputMeterValues(const std::shared_ptr<IMeterSender>& sender, const float* values, unsigned long frames);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
