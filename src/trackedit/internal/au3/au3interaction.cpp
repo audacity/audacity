@@ -1250,7 +1250,7 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
     return true;
 }
 
-bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
+bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, EditReport& report)
 {
     //! NOTE: cannot start moving until previous move is handled
     if (m_busy) {
@@ -1295,17 +1295,16 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
         m_moveClipsNeedsDownmixing = moveSelectedClipsUpOrDown(trackPositionOffset) == NeedsDownmixing::Yes;
     }
 
+    bool ok = true;
+
     if (completed) {
         m_startTracklistInfo.reset();
 
-        bool ok = true;
         const muse::Defer defer2([&] {
             m_moveClipsNeedsDownmixing = false;
-            if (ok) {
-                projectHistory()->pushHistoryState("Clip moved", "Move clip");
-            } else {
-                projectHistory()->rollbackState();
-                prj->reload();
+            if (!ok) {
+                report.clipsMovedHorizontally = timePositionOffset.raw() != 0;
+                report.clipsMovedVertically = trackPositionOffset != 0;
             }
         });
 
@@ -1341,7 +1340,7 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
         });
     }
 
-    return trackPositionOffset != 0;
+    return ok;
 }
 
 bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)

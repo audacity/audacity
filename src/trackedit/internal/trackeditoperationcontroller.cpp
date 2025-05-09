@@ -229,9 +229,23 @@ bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds
     return trackAndClipOperations()->removeTracksData(tracksIds, begin, end, moveClips);
 }
 
-bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
+bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed,
+                                             bool& clipsMovedToOtherTrack)
 {
-    return trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed);
+    EditReport report;
+    auto success = false;
+    if (trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed, report)) {
+        success = true;
+        projectHistory()->pushHistoryState("Clip moved", "Move clip");
+    } else {
+        success = false;
+        if (report.clipsMovedHorizontally || report.clipsMovedVertically) {
+            projectHistory()->rollbackState();
+            globalContext()->currentTrackeditProject()->reload();
+        }
+    }
+    clipsMovedToOtherTrack = report.clipsMovedVertically;
+    return success;
 }
 
 bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
