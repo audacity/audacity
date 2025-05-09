@@ -1194,11 +1194,11 @@ ITrackDataPtr Au3Interaction::copyClip(const ClipKey& clipKey)
     return std::make_shared<Au3TrackData>(std::move(track));
 }
 
-bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
+ITrackDataPtr Au3Interaction::copyNonContinuousTrackData(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return nullptr;
     }
 
     auto& trackFactory = WaveTrackFactory::Get(projectRef());
@@ -1209,7 +1209,7 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
     for (const auto& clipKey : clipKeys) {
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
         IF_ASSERT_FAILED(clip) {
-            return false;
+            return nullptr;
         }
 
         clipboardTrack->InsertInterval(waveTrack->CopyClip(*clip, true), false);
@@ -1219,12 +1219,7 @@ bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId track
         clip->SetPlayStartTime(clip->GetPlayStartTime() + offset);
     }
 
-    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(clipboardTrack)));
-    if (clipKeys.size() > 1) {
-        clipboard()->setMultiSelectionCopy(true);
-    }
-
-    return true;
+    return std::make_shared<Au3TrackData>(std::move(clipboardTrack));
 }
 
 bool Au3Interaction::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
