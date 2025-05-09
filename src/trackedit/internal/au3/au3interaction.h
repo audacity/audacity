@@ -6,7 +6,6 @@
 #include "au3interactiontypes.h"
 
 #include "../../itrackandclipoperations.h"
-#include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
 #include "../../itrackeditconfiguration.h"
 #include "context/iglobalcontext.h"
@@ -24,7 +23,6 @@ class Au3Interaction : public ITrackAndClipOperations
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
 
 public:
