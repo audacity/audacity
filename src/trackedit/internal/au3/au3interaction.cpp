@@ -1019,6 +1019,10 @@ void notifyAboutTrackToggledStereo(au::trackedit::ITrackeditProject& prj, const 
 
 muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks, bool isMultiSelectionCopy)
 {
+    if (data.empty()) {
+        return make_ret(trackedit::Err::TrackEmpty);
+    }
+
     std::vector<std::shared_ptr<Au3TrackData> > copiedData(data.size());
     for (size_t i = 0; i < data.size(); ++i) {
         copiedData[i] = std::static_pointer_cast<Au3TrackData>(data[i]);

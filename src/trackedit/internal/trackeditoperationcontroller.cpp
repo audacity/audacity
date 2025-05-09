@@ -95,10 +95,6 @@ void TrackeditOperationController::clearClipboard()
 
 muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks)
 {
-    if (clipboard()->trackDataEmpty()) {
-        return make_ret(trackedit::Err::TrackEmpty);
-    }
-
     return trackAndClipOperations()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks,
                                            clipboard()->isMultiSelectionCopy());
 }

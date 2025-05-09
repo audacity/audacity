@@ -8,7 +8,6 @@
 #include "../../itrackandclipoperations.h"
 #include "../../iprojecthistory.h"
 #include "../../iselectioncontroller.h"
-#include "../../itrackeditclipboard.h"
 #include "../../itrackeditconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
@@ -26,7 +25,6 @@ class Au3Interaction : public ITrackAndClipOperations
     muse::Inject<au::trackedit::ISelectionController> selectionController;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
-    muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
     muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
 
 public:
@@ -142,7 +140,6 @@ private:
     bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool stretchClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
     bool stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
-    bool cutTrackDataIntoClipboardRipple(const TrackId trackId, secs_t begin, secs_t end);
     bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool duplicateSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     void doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
