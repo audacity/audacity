@@ -921,7 +921,7 @@ TEST_F(Au3InteractionTests, DeleteTracks)
     removeTrack(trackTwoClipsId);
 }
 
-TEST_F(Au3InteractionTests, CopyClipIntoClipboard)
+TEST_F(Au3InteractionTests, CopyClip)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
@@ -933,8 +933,8 @@ TEST_F(Au3InteractionTests, CopyClipIntoClipboard)
     const ClipKey clipKey { track->GetId(), clip->GetId() };
     EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(1);
 
-    //! [WHEN] Copy the tracks into the clipboard
-    m_au3Interaction->copyClipIntoClipboard(clipKey);
+    //! [WHEN] Copy the tracks
+    m_au3Interaction->copyClip(clipKey);
 
     //Cleanup
     removeTrack(trackId);
