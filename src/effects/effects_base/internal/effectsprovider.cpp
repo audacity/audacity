@@ -238,13 +238,6 @@ void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
     });
 }
 
-void EffectsProvider::toggleShowEffect(const RealtimeEffectStatePtr& state) const
-{
-    callOnLauncher(state, *viewLaunchRegister(), [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
-        launcher.toggleShowRealtimeEffect(state);
-    });
-}
-
 muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,
                                          EffectSettings& settings)
 {

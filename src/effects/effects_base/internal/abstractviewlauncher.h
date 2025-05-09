@@ -18,6 +18,5 @@ protected:
 
 private:
     void hideRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
-    void toggleShowRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
 };
 }

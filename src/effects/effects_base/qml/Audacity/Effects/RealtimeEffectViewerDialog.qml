@@ -29,6 +29,18 @@ EffectStyledDialogView {
         viewLoader.sourceComponent = viewerModel.isVst3() ? vstViewerComponent : builtinViewerComponent
     }
 
+    onWindowChanged: {
+        if (window) {
+            window.onActiveChanged.connect(function () {
+                if (window.active) {
+                    // Not only when opening, but also when clicking on the window,
+                    // should navigation be activated for the dialog.
+                    root.navigationSection.requestActive()
+                }
+            })
+        }
+    }
+
     RealtimeEffectViewerDialogModel {
         id: viewerModel
         effectState: root.effectState
@@ -73,6 +85,7 @@ EffectStyledDialogView {
 
                 navigation.panel: root.navigationPanel
                 navigation.order: 0
+                navigation.name: "Bypass effect"
                 size: presetsBar.implicitHeight
                 isMasterEffect: viewerModel.isMasterEffect
                 accentButton: viewerModel.isActive

@@ -11,13 +11,8 @@ StyledDialogView {
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: root.title
-        enabled: root.enabled && root.visible
+        enabled: root.isOpened
         direction: NavigationPanel.Horizontal
         section: root.navigationSection
-        onActiveChanged: function(active) {
-            if (active) {
-                root.forceActiveFocus()
-            }
-        }
     }
 }
