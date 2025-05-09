@@ -11,6 +11,7 @@
 #include "global/progress.h"
 
 #include "trackedittypes.h"
+#include "itrackdata.h"
 #include "types/ret.h"
 
 namespace au::trackedit {
@@ -42,7 +43,7 @@ public:
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual void clearClipboard() = 0;
     virtual muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks=false) = 0;
-    virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;
+    virtual ITrackDataPtr cutClip(const ClipKey& clipKey) = 0;
     virtual bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
     virtual bool copyClipIntoClipboard(const ClipKey& clipKey) = 0;
     virtual bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) = 0;

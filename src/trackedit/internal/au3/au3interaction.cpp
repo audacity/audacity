@@ -1168,29 +1168,27 @@ muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, bool moveClips, bool 
     return ok;
 }
 
-bool Au3Interaction::cutClipIntoClipboard(const ClipKey& clipKey)
+ITrackDataPtr Au3Interaction::cutClip(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return nullptr;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
-        return false;
+        return nullptr;
     }
 
-    bool moveClips = true;
+    constexpr bool moveClips = true;
     auto track = waveTrack->Cut(clip->Start(), clip->End(), moveClips);
-    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
+    const auto data = std::make_shared<Au3TrackData>(std::move(track));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipRemoved(DomConverter::clip(waveTrack, clip.get()));
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
-    projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
-
-    return true;
+    return data;
 }
 
 bool Au3Interaction::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)

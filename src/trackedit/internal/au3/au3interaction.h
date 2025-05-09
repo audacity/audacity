@@ -53,7 +53,7 @@ public:
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;
     muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks) override;
-    bool cutClipIntoClipboard(const ClipKey& clipKey) override;
+    ITrackDataPtr cutClip(const ClipKey& clipKey) override;
     bool cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
     bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;

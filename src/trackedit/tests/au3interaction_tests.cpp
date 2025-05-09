@@ -1055,7 +1055,7 @@ TEST_F(Au3InteractionTests, CopyNonContinuousTrackDataIntoClipboard)
     removeTrack(trackId);
 }
 
-TEST_F(Au3InteractionTests, CutClipIntoClipboard)
+TEST_F(Au3InteractionTests, CutClip)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
@@ -1077,7 +1077,7 @@ TEST_F(Au3InteractionTests, CutClipIntoClipboard)
     }))).Times(1);
 
     //! [WHEN] Cut the tracks into the clipboard
-    m_au3Interaction->cutClipIntoClipboard(clipKey);
+    m_au3Interaction->cutClip(clipKey);
 
     //! [THEN] The number of intervals is 2
     ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the cut operation is not 2";

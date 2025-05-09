@@ -99,7 +99,13 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
 
 bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
 {
-    return trackAndClipOperations()->cutClipIntoClipboard(clipKey);
+    auto data = trackAndClipOperations()->cutClip(clipKey);
+    if (!data) {
+        return false;
+    }
+    clipboard()->addTrackData(std::move(data));
+    projectHistory()->pushHistoryState("Cut to the clipboard", "Cut");
+    return true;
 }
 
 bool TrackeditOperationController::cutClipDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
