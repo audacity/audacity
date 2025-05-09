@@ -46,7 +46,7 @@ public:
     virtual ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) = 0;
     virtual ITrackDataPtr copyClip(const ClipKey& clipKey) = 0;
     virtual ITrackDataPtr copyNonContinuousTrackData(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) = 0;
-    virtual bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) = 0;
+    virtual ITrackDataPtr copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;

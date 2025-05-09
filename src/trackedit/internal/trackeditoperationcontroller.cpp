@@ -151,7 +151,11 @@ bool TrackeditOperationController::copyNonContinuousTrackDataIntoClipboard(const
 
 bool TrackeditOperationController::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
-    return trackAndClipOperations()->copyContinuousTrackDataIntoClipboard(trackId, begin, end);
+    ITrackDataPtr data = trackAndClipOperations()->copyContinuousTrackData(trackId, begin, end);
+    if (!data) {
+        return false;
+    }
+    clipboard()->addTrackData(std::move(data));
 }
 
 bool TrackeditOperationController::removeClip(const ClipKey& clipKey)

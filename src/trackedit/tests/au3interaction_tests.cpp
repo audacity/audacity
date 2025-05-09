@@ -976,7 +976,7 @@ TEST_F(Au3InteractionTests, CopyClip)
     removeTrack(trackId);
 }
 
-TEST_F(Au3InteractionTests, CopyContinuousTrackDataIntoClipboard)
+TEST_F(Au3InteractionTests, CopyContinuousTrackData)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
@@ -986,15 +986,15 @@ TEST_F(Au3InteractionTests, CopyContinuousTrackDataIntoClipboard)
     //! [EXPECT] The clipboard is notified about the new data even
     EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(1);
 
-    //! [WHEN] Copy the tracks into the clipboard inside the clip bounds
-    m_au3Interaction->copyContinuousTrackDataIntoClipboard(track->GetId(), track->GetClip(0)->GetSequenceStartTime(),
-                                                           track->GetClip(0)->GetSequenceEndTime());
+    //! [WHEN] Copy the tracks inside the clip bounds
+    m_au3Interaction->copyContinuousTrackData(track->GetId(), track->GetClip(0)->GetSequenceStartTime(),
+                                              track->GetClip(0)->GetSequenceEndTime());
 
     //Cleanup
     removeTrack(trackId);
 }
 
-TEST_F(Au3InteractionTests, CopyContinuousTrackDataIntoClipboardOutsideClipBounds)
+TEST_F(Au3InteractionTests, CopyContinuousTrackDataOutsideClipBounds)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
@@ -1007,9 +1007,9 @@ TEST_F(Au3InteractionTests, CopyContinuousTrackDataIntoClipboardOutsideClipBound
         return std::static_pointer_cast<Au3TrackData>(data)->track()->NIntervals() == 1;
     }))).Times(1);
 
-    //! [WHEN] Copy the tracks into the clipboard outside the clip bounds
-    m_au3Interaction->copyContinuousTrackDataIntoClipboard(track->GetId(), track->GetClip(0)->GetSequenceEndTime() + 1.0,
-                                                           track->GetClip(0)->GetSequenceEndTime() + 2.0);
+    //! [WHEN] Copy the tracks outside the clip bounds
+    m_au3Interaction->copyContinuousTrackData(track->GetId(), track->GetClip(0)->GetSequenceEndTime() + 1.0,
+                                              track->GetClip(0)->GetSequenceEndTime() + 2.0);
 
     //Cleanup
     removeTrack(trackId);
@@ -1025,9 +1025,9 @@ TEST_F(Au3InteractionTests, CopyContinuousTrackDataThrowsWhenStartIsGreaterThanE
     //! [EXPECT] The clipboard is not notified about the new data
     EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(0);
 
-    //! [WHEN] Copy the tracks into the clipboard thrown InconsistencyExpection
-    ASSERT_THROW(m_au3Interaction->copyContinuousTrackDataIntoClipboard(track->GetId(), track->GetClip(0)->GetSequenceEndTime(),
-                                                                        track->GetClip(0)->GetSequenceStartTime()), InconsistencyException);
+    //! [WHEN] Copy the tracks thrown InconsistencyExpection
+    ASSERT_THROW(m_au3Interaction->copyContinuousTrackData(track->GetId(), track->GetClip(0)->GetSequenceEndTime(),
+                                                           track->GetClip(0)->GetSequenceStartTime()), InconsistencyException);
 
     //Cleanup
     removeTrack(trackId);

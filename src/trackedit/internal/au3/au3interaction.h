@@ -56,7 +56,7 @@ public:
     ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) override;
     ITrackDataPtr copyClip(const trackedit::ClipKey& clipKey) override;
     ITrackDataPtr copyNonContinuousTrackData(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
-    bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
+    ITrackDataPtr copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;

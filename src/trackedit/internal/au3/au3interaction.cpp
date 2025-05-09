@@ -1247,17 +1247,15 @@ ITrackDataPtr Au3Interaction::copyNonContinuousTrackData(const TrackId trackId, 
     return std::make_shared<Au3TrackData>(std::move(clipboardTrack));
 }
 
-bool Au3Interaction::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
+ITrackDataPtr Au3Interaction::copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return nullptr;
     }
 
     auto track = waveTrack->Copy(begin, end);
-    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
-
-    return true;
+    return std::make_shared<Au3TrackData>(std::move(track));
 }
 
 bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
