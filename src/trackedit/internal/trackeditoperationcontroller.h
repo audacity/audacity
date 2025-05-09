@@ -8,6 +8,7 @@
 #include "itrackandclipoperations.h"
 #include "itrackeditclipboard.h"
 #include "iundomanager.h"
+#include "context/iglobalcontext.h"
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
 
@@ -17,6 +18,7 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::Inject<ITrackAndClipOperations> trackAndClipOperations;
     muse::Inject<ITrackeditClipboard> clipboard;
     muse::Inject<IProjectHistory> projectHistory;
+    muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
     TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager);

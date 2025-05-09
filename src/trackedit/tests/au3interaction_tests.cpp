@@ -391,7 +391,8 @@ TEST_F(Au3InteractionTests, ClipColorRetainedWhenClipIsCopied)
     constexpr auto moveClips = true;
     constexpr auto moveAllTracks = true;
     constexpr auto isMultiSelectionCopy = false;
-    const muse::Ret ret = m_au3Interaction->paste({ trackData }, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy);
+    auto projectWasModified = false;
+    const muse::Ret ret = m_au3Interaction->paste({ trackData }, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy, projectWasModified);
     const Au3TrackList& projectTracks = Au3TrackList::Get(project);
     const TrackId newTrackId = (*projectTracks.rbegin())->GetId();
 
@@ -2054,7 +2055,8 @@ TEST_F(Au3InteractionTests, PasteEmptyDataReturnsError)
     constexpr auto moveClips = true;
     constexpr auto moveAllTracks = true;
     constexpr auto isMultiSelectionCopy = false;
-    const muse::Ret ret = m_au3Interaction->paste({}, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy);
+    bool projectWasModified = false;
+    const muse::Ret ret = m_au3Interaction->paste({}, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy, projectWasModified);
     ASSERT_EQ(ret, make_ret(Err::TrackEmpty)) << "The return value is not TrackEmpty";
 }
 
@@ -2078,7 +2080,8 @@ TEST_F(Au3InteractionTests, PasteOnEmptyTrack)
     constexpr auto moveClips = true;
     constexpr auto moveAllTracks = true;
     constexpr auto isMultiSelectionCopy = false;
-    const muse::Ret ret = m_au3Interaction->paste({ trackData }, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy);
+    auto projectWasModified = false;
+    const muse::Ret ret = m_au3Interaction->paste({ trackData }, 0.0, moveClips, moveAllTracks, isMultiSelectionCopy, projectWasModified);
     ASSERT_EQ(ret, muse::make_ok()) << "The return value is not Ok";
 
     //! [THEN] The project has a new track with a single clip
