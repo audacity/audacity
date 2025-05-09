@@ -55,7 +55,7 @@ public:
     muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks) override;
     ITrackDataPtr cutClip(const ClipKey& clipKey) override;
     ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) override;
-    bool copyClipIntoClipboard(const trackedit::ClipKey& clipKey) override;
+    ITrackDataPtr copyClip(const trackedit::ClipKey& clipKey) override;
     bool copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
     bool copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end) override;
     bool removeClip(const trackedit::ClipKey& clipKey) override;

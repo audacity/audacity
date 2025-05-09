@@ -1207,22 +1207,21 @@ ITrackDataPtr Au3Interaction::cutTrackData(const TrackId trackId, secs_t begin, 
     return data;
 }
 
-bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
+ITrackDataPtr Au3Interaction::copyClip(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return nullptr;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
-        return false;
+        return nullptr;
     }
 
     auto track = waveTrack->Copy(clip->Start(), clip->End());
-    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
 
-    return true;
+    return std::make_shared<Au3TrackData>(std::move(track));
 }
 
 bool Au3Interaction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
