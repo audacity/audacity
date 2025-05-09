@@ -41,7 +41,7 @@ public:
     virtual bool changeTrackColor(const TrackId trackId, const std::string& color) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
-    virtual muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks=false) = 0;
+    virtual muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks=false) = 0;
     virtual ITrackDataPtr cutClip(const ClipKey& clipKey) = 0;
     virtual ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) = 0;
     virtual ITrackDataPtr copyClip(const ClipKey& clipKey) = 0;

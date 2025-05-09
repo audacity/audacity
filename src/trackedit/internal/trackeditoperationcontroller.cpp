@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "trackeditoperationcontroller.h"
+#include "trackediterrors.h"
 
 namespace au::trackedit {
 TrackeditOperationController::TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager)
@@ -94,7 +95,11 @@ void TrackeditOperationController::clearClipboard()
 
 muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks)
 {
-    return trackAndClipOperations()->pasteFromClipboard(begin, moveClips, moveAllTracks);
+    if (clipboard()->trackDataEmpty()) {
+        return make_ret(trackedit::Err::TrackEmpty);
+    }
+
+    return trackAndClipOperations()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks);
 }
 
 bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)

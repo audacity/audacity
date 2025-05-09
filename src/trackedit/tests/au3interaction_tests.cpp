@@ -388,14 +388,12 @@ TEST_F(Au3InteractionTests, ClipColorRetainedWhenClipIsCopied)
     ASSERT_NE(trackCopy, nullptr) << "Failed to copy clip";
     const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
 
-    //! [EXPECT] The clipboard is asked for track data
-    EXPECT_CALL(*m_clipboard, trackDataEmpty()).Times(1).WillOnce(Return(false));
-    EXPECT_CALL(*m_clipboard, trackDataCopy()).Times(1).WillOnce(Return(std::vector<ITrackDataPtr> { trackData }));
+    //! [EXPECT] The playback is asked for its position
     EXPECT_CALL(*m_playbackState, playbackPosition()).Times(1).WillOnce(Return(0.0));
 
     //! [WHEN] Making a clip copy to a new track
     const ClipKey clipKey { track->GetId(), clip->GetId() };
-    const muse::Ret ret = m_au3Interaction->pasteFromClipboard(0.0, true, true);
+    const muse::Ret ret = m_au3Interaction->paste({ trackData }, 0.0, true, true);
     const Au3TrackList& projectTracks = Au3TrackList::Get(project);
     const TrackId newTrackId = (*projectTracks.rbegin())->GetId();
 
@@ -2119,12 +2117,9 @@ TEST_F(Au3InteractionTests, InsertSilenceOnEmptySpace)
     removeTrack(trackId);
 }
 
-TEST_F(Au3InteractionTests, PasteOnEmptyClipboardReturnsError)
+TEST_F(Au3InteractionTests, PasteEmptyDataReturnsError)
 {
-    //! [EXPECT] The project is not notified about track changed
-    EXPECT_CALL(*m_clipboard, trackDataEmpty()).Times(1).WillOnce(Return(true));
-
-    const muse::Ret ret = m_au3Interaction->pasteFromClipboard(0.0, true, true);
+    const muse::Ret ret = m_au3Interaction->paste({}, 0.0, true, true);
     ASSERT_EQ(ret, make_ret(Err::TrackEmpty)) << "The return value is not TrackEmpty";
 }
 
@@ -2141,13 +2136,11 @@ TEST_F(Au3InteractionTests, PasteOnEmptyTrack)
     ASSERT_NE(trackCopy, nullptr) << "Failed to copy clip";
     const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
 
-    //! [EXPECT] The clipboard is asked for track data
-    EXPECT_CALL(*m_clipboard, trackDataEmpty()).Times(1).WillOnce(Return(false));
-    EXPECT_CALL(*m_clipboard, trackDataCopy()).Times(1).WillOnce(Return(std::vector<ITrackDataPtr> { trackData }));
+    //! [EXPECT] The playback is asked for its position
     EXPECT_CALL(*m_playbackState, playbackPosition()).Times(1).WillOnce(Return(0.0));
 
     //! [WHEN] Paste from clipboard
-    const muse::Ret ret = m_au3Interaction->pasteFromClipboard(0.0, true, true);
+    const muse::Ret ret = m_au3Interaction->paste({ trackData }, 0.0, true, true);
     ASSERT_EQ(ret, muse::make_ok()) << "The return value is not Ok";
 
     //! [THEN] The project has a new track with a single clip

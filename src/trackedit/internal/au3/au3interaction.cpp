@@ -1017,19 +1017,11 @@ void notifyAboutTrackToggledStereo(au::trackedit::ITrackeditProject& prj, const 
 }
 }
 
-muse::Ret Au3Interaction::pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks)
+muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks)
 {
-    if (clipboard()->trackDataEmpty()) {
-        return make_ret(trackedit::Err::TrackEmpty);
-    }
-
-    std::vector<std::shared_ptr<Au3TrackData> > copiedData;
-    {
-        const std::vector<ITrackDataPtr> trackData = clipboard()->trackDataCopy();
-        copiedData.reserve(trackData.size());
-        for (const auto& trackDataHolder : trackData) {
-            copiedData.push_back(std::static_pointer_cast<Au3TrackData>(trackDataHolder));
-        }
+    std::vector<std::shared_ptr<Au3TrackData> > copiedData(data.size());
+    for (size_t i = 0; i < data.size(); ++i) {
+        copiedData[i] = std::static_pointer_cast<Au3TrackData>(data[i]);
     }
 
     project::IAudacityProjectPtr project = globalContext()->currentProject();
