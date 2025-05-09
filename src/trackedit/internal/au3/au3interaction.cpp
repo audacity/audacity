@@ -1017,7 +1017,7 @@ void notifyAboutTrackToggledStereo(au::trackedit::ITrackeditProject& prj, const 
 }
 }
 
-muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks)
+muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks, bool isMultiSelectionCopy)
 {
     std::vector<std::shared_ptr<Au3TrackData> > copiedData(data.size());
     for (size_t i = 0; i < data.size(); ++i) {
@@ -1045,17 +1045,13 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
         return muse::make_ok();
     }
 
-    //! TODO: we need to make sure that we get a trackList with order
-    //! the same as in the TrackPanel
-    size_t clipboardTracksSize = clipboard()->trackDataSize();
-
-    TrackIdList dstTracksIds = determineDestinationTracksIds(tracks, selectedTracks, clipboardTracksSize);
+    TrackIdList dstTracksIds = determineDestinationTracksIds(tracks, selectedTracks, data.size());
 
     if (clipTransferNeedsDownmixing(copiedData, dstTracksIds) && !userIsOkWithDownmixing()) {
         return muse::make_ok();
     }
 
-    const bool newTracksNeeded = dstTracksIds.size() != clipboardTracksSize;
+    const bool newTracksNeeded = dstTracksIds.size() != data.size();
 
     auto ret = canPasteTrackData(dstTracksIds, copiedData, begin);
     if (!ret) {
@@ -1066,7 +1062,7 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
     bool pasteIntoExistingClip = !configuration()->pasteAsNewClip() && !moveAllTracks;
 
     if (!moveClips) {
-        if (clipboard()->isMultiSelectionCopy()) {
+        if (isMultiSelectionCopy) {
             ok = makeRoomForClipsOnTracks(dstTracksIds, copiedData, begin);
         } else {
             ok = makeRoomForDataOnTracks(dstTracksIds, copiedData, begin, pasteIntoExistingClip);
@@ -1117,7 +1113,7 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
 
         // If we have multiple clips, we want to insert them one by one
         // to keep any existing clips that may fall between them intact
-        if (!moveClips && clipboard()->isMultiSelectionCopy()) {
+        if (!moveClips && isMultiSelectionCopy) {
             trackToPaste->MoveTo(begin + trackToPaste->GetStartTime());
             for (const auto& interval : trackToPaste->Intervals()) {
                 dstWaveTrack->InsertInterval(interval, false);
