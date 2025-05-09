@@ -1033,7 +1033,7 @@ TEST_F(Au3InteractionTests, CopyContinuousTrackDataThrowsWhenStartIsGreaterThanE
     removeTrack(trackId);
 }
 
-TEST_F(Au3InteractionTests, CopyNonContinuousTrackDataIntoClipboard)
+TEST_F(Au3InteractionTests, CopyNonContinuousTrackData)
 {
     const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
     ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
@@ -1044,12 +1044,12 @@ TEST_F(Au3InteractionTests, CopyNonContinuousTrackDataIntoClipboard)
     EXPECT_CALL(*m_clipboard, addTrackData(_)).Times(1);
     EXPECT_CALL(*m_clipboard, setMultiSelectionCopy(true)).Times(1);
 
-    //! [WHEN] Copy the tracks into the clipboard
+    //! [WHEN] Copy the tracks
     std::vector<ClipKey> clips;
     for (size_t i = 0; i < track->NIntervals(); i++) {
         clips.push_back({ track->GetId(), track->GetClip(i)->GetId() });
     }
-    m_au3Interaction->copyNonContinuousTrackDataIntoClipboard(track->GetId(), clips, 0);
+    m_au3Interaction->copyNonContinuousTrackData(track->GetId(), clips, 0);
 
     //Cleanup
     removeTrack(trackId);
