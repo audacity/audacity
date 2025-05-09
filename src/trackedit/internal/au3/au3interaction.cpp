@@ -1718,20 +1718,20 @@ bool Au3Interaction::duplicateSelectedOnTrack(const TrackId trackId, secs_t begi
     return true;
 }
 
-bool Au3Interaction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
+ITrackDataPtr Au3Interaction::splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return nullptr;
     }
 
     auto track = waveTrack->SplitCut(begin, end);
-    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
+    const auto data = std::make_shared<Au3TrackData>(std::move(track));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
-    return true;
+    return data;
 }
 
 bool Au3Interaction::splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end)
@@ -1890,19 +1890,18 @@ bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)
     return true;
 }
 
-bool Au3Interaction::splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
+std::vector<ITrackDataPtr> Au3Interaction::splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
 {
+    std::vector<ITrackDataPtr> dataVector(tracksIds.size());
     for (const auto& trackId : tracksIds) {
-        bool ok = splitCutSelectedOnTrack(trackId, begin, end);
-        if (!ok) {
-            return false;
+        auto data = splitCutSelectedOnTrack(trackId, begin, end);
+        if (!data) {
+            return {};
         }
+        dataVector.push_back(data);
     }
 
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
-
-    return true;
+    return dataVector;
 }
 
 bool Au3Interaction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)

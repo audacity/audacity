@@ -72,7 +72,7 @@ public:
     bool duplicateClips(const ClipKeyList& clipKeyList) override;
     bool clipSplitCut(const ClipKey& clipKey) override;
     bool clipSplitDelete(const ClipKey& clipKey) override;
-    bool splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
+    std::vector<ITrackDataPtr> splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
     bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
                       UndoPushType type = UndoPushType::NONE) override;
@@ -149,7 +149,7 @@ private:
     std::shared_ptr<WaveTrack> createMonoTrack();
     std::shared_ptr<WaveTrack> createStereoTrack();
 
-    bool splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+    ITrackDataPtr splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
     bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
 
     void pushProjectHistoryJoinState(secs_t start, secs_t duration);

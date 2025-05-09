@@ -240,7 +240,15 @@ bool TrackeditOperationController::clipSplitDelete(const ClipKey& clipKey)
 
 bool TrackeditOperationController::splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
 {
-    return trackAndClipOperations()->splitCutSelectedOnTracks(tracksIds, begin, end);
+    std::vector<ITrackDataPtr> tracksData = trackAndClipOperations()->splitCutSelectedOnTracks(tracksIds, begin, end);
+    if (tracksData.empty()) {
+        return false;
+    }
+    for (auto& trackData : tracksData) {
+        clipboard()->addTrackData(std::move(trackData));
+    }
+    projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
+    return true;
 }
 
 bool TrackeditOperationController::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
