@@ -742,9 +742,7 @@ TEST_F(Au3InteractionTests, RemoveSingleClipFromATrack)
 
     //! [WHEN] Remove the clip
     const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
-    secs_t begin = -1;
-    secs_t end = -1;
-    m_au3Interaction->removeClip({ track->GetId(), clip->GetId() }, begin, end);
+    m_au3Interaction->removeClip({ track->GetId(), clip->GetId() });
 
     //! [THEN] The number of intervals is 1
     ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the remove operation is not 1";
@@ -1500,7 +1498,8 @@ TEST_F(Au3InteractionTests, MoveClipsRight)
         }));
 
     //! [WHEN] Move the clips right
-    m_au3Interaction->moveClips(secondsToMove, 0, true);
+    EditReport report;
+    m_au3Interaction->moveClips(secondsToMove, 0, true, report);
 
     //! [THEN] All clips are moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
@@ -1546,7 +1545,8 @@ TEST_F(Au3InteractionTests, MoveClipLeftWhenClipIsAtZero)
         }));
 
     //! [WHEN] Move the clips left
-    m_au3Interaction->moveClips(-1.0, 0, true);
+    EditReport report;
+    m_au3Interaction->moveClips(-1.0, 0, true, report);
 
     //! [THEN] No clip is moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);

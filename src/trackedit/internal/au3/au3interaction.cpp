@@ -1181,27 +1181,26 @@ ITrackDataPtr Au3Interaction::copyContinuousTrackData(const TrackId trackId, sec
     return std::make_shared<Au3TrackData>(std::move(track));
 }
 
-bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey, secs_t& begin, secs_t& end)
+std::optional<TimeSpan> Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return std::nullopt;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
-        return false;
+        return std::nullopt;
     }
 
-    begin = clip->Start();
-    end = clip->End();
-
-    waveTrack->Clear(clip->Start(), clip->End(), false);
+    const double start = clip->Start();
+    const double end = clip->End();
+    waveTrack->Clear(start, end, false);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
-    return true;
+    return TimeSpan{ start, end };
 }
 
 bool Au3Interaction::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
@@ -1250,7 +1249,7 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
     return true;
 }
 
-bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
+bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, EditReport& report)
 {
     //! NOTE: cannot start moving until previous move is handled
     if (m_busy) {
@@ -1276,48 +1275,47 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
         }
     }
 
-    for (const auto& selectedClip : selectionController()->selectedClipsInTrackOrder()) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            continue;
-        }
+    if (timePositionOffset.raw() != 0) {
+        for (const auto& selectedClip : selectionController()->selectedClipsInTrackOrder()) {
+            Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
+            IF_ASSERT_FAILED(waveTrack) {
+                continue;
+            }
 
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
-        IF_ASSERT_FAILED(clip) {
-            continue;
-        }
+            std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.clipId);
+            IF_ASSERT_FAILED(clip) {
+                continue;
+            }
 
-        changeClipStartTime(selectedClip, clip->GetPlayStartTime() + timePositionOffset, completed);
+            changeClipStartTime(selectedClip, clip->GetPlayStartTime() + timePositionOffset, completed);
+        }
+        report.clipsMovedHorizontally = true;
     }
 
     if (trackPositionOffset != 0) {
         // Update m_moveClipsNeedsDownmixing only when moving up/down
         m_moveClipsNeedsDownmixing = moveSelectedClipsUpOrDown(trackPositionOffset) == NeedsDownmixing::Yes;
+        report.clipsMovedVertically = true;
     }
 
-    if (completed) {
+    if (!completed) {
+        return true;
+    } else {
         m_startTracklistInfo.reset();
 
-        bool ok = true;
         const muse::Defer defer2([&] {
             m_moveClipsNeedsDownmixing = false;
-            if (ok) {
-                projectHistory()->pushHistoryState("Clip moved", "Move clip");
-            } else {
-                projectHistory()->rollbackState();
-                prj->reload();
-            }
         });
 
         if (m_moveClipsNeedsDownmixing && !userIsOkWithDownmixing()) {
-            return ok = false;
+            return false;
         }
 
         //! TODO AU4: later when having keyboard arrow shortcut for moving clips
         //! make use of UndoPush::CONSOLIDATE arg in UndoManager
-        ok = utils::withProgress(*interactive(),
-                                 muse::trc("trackedit", "Rendering clips"),
-                                 [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
+        return utils::withProgress(*interactive(),
+                                   muse::trc("trackedit", "Rendering clips"),
+                                   [&](utils::ProgressCb progressCb, utils::CancelCb cancelCb)
         {
             std::vector<std::pair<WaveTrack*, std::shared_ptr<WaveTrack> > > toReplace;
             for (const trackedit::TrackId track : selectionController()->selectedTracks()) {
@@ -1340,8 +1338,6 @@ bool Au3Interaction::moveClips(secs_t timePositionOffset, int trackPositionOffse
             return true;
         });
     }
-
-    return trackPositionOffset != 0;
 }
 
 bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)

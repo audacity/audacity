@@ -208,8 +208,8 @@ bool TrackeditOperationController::removeClip(const ClipKey& clipKey)
 {
     secs_t begin = -1;
     secs_t end = -1;
-    if (trackAndClipOperations()->removeClip(clipKey, begin, end)) {
-        pushProjectHistoryDeleteState(begin, end - begin);
+    if (const std::optional<TimeSpan> span = trackAndClipOperations()->removeClip(clipKey)) {
+        pushProjectHistoryDeleteState(span->start(), span->duration());
         return true;
     }
     return false;
@@ -229,9 +229,22 @@ bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds
     return trackAndClipOperations()->removeTracksData(tracksIds, begin, end, moveClips);
 }
 
-bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed)
+bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed,
+                                             bool& clipsMovedToOtherTrack)
 {
-    return trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed);
+    EditReport report;
+    auto success = true;
+    if (!trackAndClipOperations()->moveClips(timePositionOffset, trackPositionOffset, completed, report)) {
+        success = false;
+        if (report.clipsMovedHorizontally || report.clipsMovedVertically) {
+            projectHistory()->rollbackState();
+            globalContext()->currentTrackeditProject()->reload();
+        }
+    } else if (completed) {
+        projectHistory()->pushHistoryState("Clip moved", "Move clip");
+    }
+    clipsMovedToOtherTrack = report.clipsMovedVertically;
+    return success;
 }
 
 bool TrackeditOperationController::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
