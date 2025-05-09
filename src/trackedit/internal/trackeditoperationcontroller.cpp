@@ -89,7 +89,7 @@ bool TrackeditOperationController::renderClipPitchAndSpeed(const ClipKey& clipKe
 
 void TrackeditOperationController::clearClipboard()
 {
-    trackAndClipOperations()->clearClipboard();
+    clipboard()->clearTrackData();
 }
 
 muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks)
