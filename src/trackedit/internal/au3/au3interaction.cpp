@@ -1845,27 +1845,25 @@ bool Au3Interaction::duplicateClips(const ClipKeyList& clipKeyList)
     return true;
 }
 
-bool Au3Interaction::clipSplitCut(const ClipKey& clipKey)
+ITrackDataPtr Au3Interaction::clipSplitCut(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return false;
+        return nullptr;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
     IF_ASSERT_FAILED(clip) {
-        return false;
+        return nullptr;
     }
 
     auto track = waveTrack->SplitCut(clip->Start(), clip->End());
-    clipboard()->addTrackData(std::make_shared<Au3TrackData>(std::move(track)));
+    const auto data = std::make_shared<Au3TrackData>(std::move(track));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
-    projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
-
-    return true;
+    return data;
 }
 
 bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)

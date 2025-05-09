@@ -230,7 +230,13 @@ bool TrackeditOperationController::duplicateClips(const ClipKeyList& clipKeyList
 
 bool TrackeditOperationController::clipSplitCut(const ClipKey& clipKey)
 {
-    return trackAndClipOperations()->clipSplitCut(clipKey);
+    ITrackDataPtr data = trackAndClipOperations()->clipSplitCut(clipKey);
+    if (!data) {
+        return false;
+    }
+    clipboard()->addTrackData(std::move(data));
+    projectHistory()->pushHistoryState("Split-cut to the clipboard", "Split cut");
+    return true;
 }
 
 bool TrackeditOperationController::clipSplitDelete(const ClipKey& clipKey)

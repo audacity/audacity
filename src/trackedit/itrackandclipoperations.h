@@ -60,7 +60,7 @@ public:
     virtual bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool duplicateClip(const ClipKey& clipKey) = 0;
     virtual bool duplicateClips(const ClipKeyList& clipKeyList) = 0;
-    virtual bool clipSplitCut(const ClipKey& clipKey) = 0;
+    virtual ITrackDataPtr clipSplitCut(const ClipKey& clipKey) = 0;
     virtual bool clipSplitDelete(const ClipKey& clipKey) = 0;
     virtual std::vector<ITrackDataPtr> splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) = 0;
