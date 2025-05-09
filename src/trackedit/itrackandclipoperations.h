@@ -11,6 +11,7 @@
 #include "global/progress.h"
 
 #include "trackedittypes.h"
+#include "timespan.h"
 #include "itrackdata.h"
 #include "types/ret.h"
 
@@ -48,10 +49,10 @@ public:
     virtual ITrackDataPtr copyClip(const ClipKey& clipKey) = 0;
     virtual ITrackDataPtr copyNonContinuousTrackData(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) = 0;
     virtual ITrackDataPtr copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end) = 0;
-    virtual bool removeClip(const ClipKey& clipKey, secs_t& begin, secs_t& end) = 0;
+    virtual std::optional<TimeSpan> removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
-    virtual bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) = 0;
+    virtual bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTracks) = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) = 0;
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
     virtual bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;

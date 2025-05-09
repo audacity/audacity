@@ -56,10 +56,10 @@ public:
     ITrackDataPtr copyClip(const trackedit::ClipKey& clipKey) override;
     ITrackDataPtr copyNonContinuousTrackData(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset) override;
     ITrackDataPtr copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end) override;
-    bool removeClip(const trackedit::ClipKey& clipKey, secs_t& begin, secs_t& end) override;
+    std::optional<TimeSpan> removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
-    bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed) override;
+    bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTracks) override;
     bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
     bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
