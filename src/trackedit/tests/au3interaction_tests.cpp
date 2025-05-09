@@ -777,7 +777,9 @@ TEST_F(Au3InteractionTests, RemoveSingleClipFromATrack)
 
     //! [WHEN] Remove the clip
     const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
-    m_au3Interaction->removeClip({ track->GetId(), clip->GetId() });
+    secs_t begin = -1;
+    secs_t end = -1;
+    m_au3Interaction->removeClip({ track->GetId(), clip->GetId() }, begin, end);
 
     //! [THEN] The number of intervals is 1
     ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the remove operation is not 1";

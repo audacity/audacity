@@ -127,8 +127,7 @@ TrackIdList Au3Interaction::expandDestinationTracks(const std::vector<Track>& tr
     return result;
 }
 
-muse::Ret Au3Interaction::canPasteTrackData(const TrackIdList& dstTracksIds, const std::vector<Au3TrackDataPtr>& clipsToPaste,
-                                            secs_t begin) const
+muse::Ret Au3Interaction::canPasteTrackData(const TrackIdList& dstTracksIds, const std::vector<Au3TrackDataPtr>& clipsToPaste) const
 {
     IF_ASSERT_FAILED(dstTracksIds.size() <= clipsToPaste.size()) {
         return make_ret(trackedit::Err::NotEnoughDataInClipboard);
@@ -750,8 +749,6 @@ bool Au3Interaction::trimTracksData(const std::vector<TrackId>& tracksIds, secs_
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
 
-    pushProjectHistoryTracksTrimState(begin, end);
-
     return true;
 }
 
@@ -768,8 +765,6 @@ bool Au3Interaction::silenceTracksData(const std::vector<trackedit::TrackId>& tr
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
 
-    pushProjectHistoryTrackSilenceState(begin, end);
-
     return true;
 }
 
@@ -785,8 +780,6 @@ bool Au3Interaction::changeTrackTitle(const TrackId trackId, const muse::String&
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(track));
-
-    pushProjectHistoryChangeTrackTitle();
 
     return true;
 }
@@ -809,8 +802,6 @@ bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const mu
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
-    pushProjectHistoryChangeClipTitle();
-
     return true;
 }
 
@@ -831,8 +822,6 @@ bool Au3Interaction::changeClipPitch(const ClipKey& clipKey, int pitch)
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-
-    pushProjectHistoryChangeClipPitchState();
 
     return true;
 }
@@ -855,31 +844,17 @@ bool Au3Interaction::resetClipPitch(const ClipKey& clipKey)
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
-    pushProjectHistoryResetClipPitchState();
-
     return true;
 }
 
 bool Au3Interaction::changeClipSpeed(const ClipKey& clipKey, double speed)
 {
-    bool ok = doChangeClipSpeed(clipKey, speed);
-
-    if (ok) {
-        pushProjectHistoryChangeClipSpeedState();
-    }
-
-    return ok;
+    return doChangeClipSpeed(clipKey, speed);
 }
 
 bool Au3Interaction::resetClipSpeed(const ClipKey& clipKey)
 {
-    bool ok = doChangeClipSpeed(clipKey, 1);
-
-    if (ok) {
-        pushProjectHistoryResetClipSpeedState();
-    }
-
-    return ok;
+    return doChangeClipSpeed(clipKey, 1);
 }
 
 bool Au3Interaction::changeClipColor(const ClipKey& clipKey, const std::string& newColor)
@@ -947,9 +922,9 @@ bool Au3Interaction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool opt
     return true;
 }
 
-bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
+bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey, std::function<void()> onComplete)
 {
-    muse::Concurrent::run([this, clipKey]() {
+    muse::Concurrent::run([this, clipKey, onComplete]() {
         m_progress->start();
 
         muse::ProgressResult result;
@@ -978,7 +953,9 @@ bool Au3Interaction::renderClipPitchAndSpeed(const ClipKey& clipKey)
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack)); //! todo: replace with onClipChanged
 
-        pushProjectHistoryRenderClipStretchingState();
+        if (onComplete) {
+            onComplete();
+        }
     });
 
     return true;
@@ -1008,16 +985,8 @@ bool Au3Interaction::clipTransferNeedsDownmixing(const std::vector<Au3TrackDataP
     return false;
 }
 
-namespace {
-void notifyAboutTrackToggledStereo(au::trackedit::ITrackeditProject& prj, const Au3TrackList& trackList, const Au3WaveTrack& track)
-{
-    // prj.notifyAboutTrackRemoved(DomConverter::track(&track));
-    // prj.notifyAboutTrackInserted(DomConverter::track(&track), utils::getTrackIndex(trackList, track));
-    prj.trackChanged().send(DomConverter::track(&track));
-}
-}
-
-muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks, bool isMultiSelectionCopy)
+muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks,
+                                bool isMultiSelectionCopy)
 {
     if (data.empty()) {
         return make_ret(trackedit::Err::TrackEmpty);
@@ -1057,7 +1026,7 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
 
     const bool newTracksNeeded = dstTracksIds.size() != data.size();
 
-    auto ret = canPasteTrackData(dstTracksIds, copiedData, begin);
+    auto ret = canPasteTrackData(dstTracksIds, copiedData);
     if (!ret) {
         return ret;
     }
@@ -1100,7 +1069,7 @@ muse::Ret Au3Interaction::paste(const std::vector<ITrackDataPtr>& data, secs_t b
         if (dstWaveTrack->IsEmpty() && trackToPaste->NChannels() != dstWaveTrack->NChannels()) {
             auto& trackList = au3::Au3TrackList::Get(projectRef());
             dstWaveTrack = utils::toggleStereo(trackList, *dstWaveTrack);
-            notifyAboutTrackToggledStereo(*prj, trackList, *dstWaveTrack);
+            prj->trackChanged().send(DomConverter::track(dstWaveTrack));
         } else if (trackToPaste->NChannels() == 1 && dstWaveTrack->NChannels() == 2) {
             trackToPaste->MonoToStereo();
         } else if (trackToPaste->NChannels() == 2 && dstWaveTrack->NChannels() == 1) {
@@ -1250,7 +1219,7 @@ ITrackDataPtr Au3Interaction::copyContinuousTrackData(const TrackId trackId, sec
     return std::make_shared<Au3TrackData>(std::move(track));
 }
 
-bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
+bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey, secs_t& begin, secs_t& end)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -1262,16 +1231,13 @@ bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
         return false;
     }
 
-    secs_t start = clip->Start();
-    secs_t end = clip->End();
-    secs_t duration = end - start;
+    begin = clip->Start();
+    end = clip->End();
 
     waveTrack->Clear(clip->Start(), clip->End(), false);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
-
-    pushProjectHistoryDeleteState(start, duration);
 
     return true;
 }
@@ -1299,8 +1265,6 @@ bool Au3Interaction::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
 
-    pushProjectHistoryDeleteMultipleState();
-
     return true;
 }
 
@@ -1320,8 +1284,6 @@ bool Au3Interaction::removeTracksData(const TrackIdList& tracksIds, secs_t begin
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
-
-    pushProjectHistoryDeleteState(start, duration);
 
     return true;
 }
@@ -1436,8 +1398,6 @@ bool Au3Interaction::splitTracksAt(const TrackIdList& tracksIds, std::vector<sec
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
 
-    projectHistory()->pushHistoryState("Split", "Split");
-
     return true;
 }
 
@@ -1523,7 +1483,7 @@ NeedsDownmixing Au3Interaction::moveSelectedClipsUpOrDown(int offset)
         // Careful, this decreases the `origWaveTrack` ref count.
         mutOrig.ReplaceOne(*origWaveTrack, std::move(*copy));
         if (wasToggled) {
-            notifyAboutTrackToggledStereo(*prj, mutOrig, *newWaveTrack);
+            prj->trackChanged().send(DomConverter::track(newWaveTrack));
         } else {
             // Minimize the amount of UI refresh needed.
             const auto clipsAfter = prj->clipList(trackId);
@@ -1577,8 +1537,6 @@ bool Au3Interaction::splitRangeSelectionAtSilences(const TrackIdList& tracksIds,
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
 
-    projectHistory()->pushHistoryState("Split clips at silence", "Split at silence");
-
     return true;
 }
 
@@ -1600,8 +1558,6 @@ bool Au3Interaction::splitClipsAtSilences(const ClipKeyList& clipKeyList)
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
-
-    projectHistory()->pushHistoryState("Split clips at silence", "Split at silence");
 
     return true;
 }
@@ -1637,8 +1593,6 @@ bool Au3Interaction::splitRangeSelectionIntoNewTracks(const TrackIdList& tracksI
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
         prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
     }
-
-    projectHistory()->pushHistoryState("Split into new track", "Split into new track");
 
     return true;
 }
@@ -1676,8 +1630,6 @@ bool Au3Interaction::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList)
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
         prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
     }
-
-    projectHistory()->pushHistoryState("Split into new track", "Split into new track");
 
     return true;
 }
@@ -1751,16 +1703,12 @@ bool Au3Interaction::splitDeleteSelectedOnTrack(const TrackId trackId, secs_t be
 
 bool Au3Interaction::mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
 {
-    secs_t duration = end - begin;
-
     for (const auto& trackId : tracksIds) {
         bool ok = mergeSelectedOnTrack(trackId, begin, end);
         if (!ok) {
             return false;
         }
     }
-
-    pushProjectHistoryJoinState(begin, duration);
 
     return true;
 }
@@ -1773,8 +1721,6 @@ bool Au3Interaction::duplicateSelectedOnTracks(const TrackIdList& tracksIds, sec
             return false;
         }
     }
-
-    pushProjectHistoryDuplicateState();
 
     return true;
 }
@@ -1840,8 +1786,6 @@ bool Au3Interaction::duplicateClips(const ClipKeyList& clipKeyList)
         prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));
     }
 
-    pushProjectHistoryDuplicateState();
-
     return true;
 }
 
@@ -1883,8 +1827,6 @@ bool Au3Interaction::clipSplitDelete(const ClipKey& clipKey)
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
 
-    pushProjectHistorySplitDeleteState(clip->Start(), clip->End() - clip->Start());
-
     return true;
 }
 
@@ -1913,12 +1855,10 @@ bool Au3Interaction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, se
         }
     }
 
-    pushProjectHistorySplitDeleteState(begin, duration);
-
     return true;
 }
 
-bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
+bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsForInteraction(clipKey);
@@ -1928,19 +1868,10 @@ bool Au3Interaction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_
     //! NOTE: don't be tempted to early return if delta is 0.0 or by any other reason:
     //! we still need to trigger cannibalistic clip behaviour and save project state
     //! to the history so this function has to execute till the end
-    bool result = trimClipsLeft(clips, adjustedDelta, completed);
-    if (!result) {
-        return false;
-    }
-
-    if (completed) {
-        projectHistory()->pushHistoryState("Clip left trimmed", "Trim clip left", type);
-    }
-
-    return true;
+    return trimClipsLeft(clips, adjustedDelta, completed);
 }
 
-bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
+bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsForInteraction(clipKey);
@@ -1949,23 +1880,10 @@ bool Au3Interaction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs
     //! NOTE: don't be tempted to early return if delta is 0.0 or by any other reason:
     //! we still need to trigger cannibalistic clip behaviour and save project state
     //! to the history so this function has to execute till the end
-    bool result = trimClipsRight(clips, adjustedDelta, completed);
-    if (!result) {
-        return false;
-    }
-
-    if (completed) {
-        projectHistory()->pushHistoryState("Clip right trimmed", "Trim clip right", type);
-    }
-
-    return true;
+    return trimClipsRight(clips, adjustedDelta, completed);
 }
 
-bool Au3Interaction::stretchClipLeft(const ClipKey& clipKey,
-                                     secs_t deltaSec,
-                                     secs_t minClipDuration,
-                                     bool completed,
-                                     UndoPushType type)
+bool Au3Interaction::stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsForInteraction(clipKey);
@@ -1975,23 +1893,10 @@ bool Au3Interaction::stretchClipLeft(const ClipKey& clipKey,
     //! NOTE: don't be tempted to early return if delta is 0.0 or by any other reason:
     //! we still need to trigger cannibalistic clip behaviour and save project state
     //! to the history so this function has to execute till the end
-    bool result = stretchClipsLeft(clips, adjustedDelta, completed);
-    if (!result) {
-        return false;
-    }
-
-    if (completed) {
-        projectHistory()->pushHistoryState("Clip left stretched", "Stretch clip left", type);
-    }
-
-    return true;
+    return stretchClipsLeft(clips, adjustedDelta, completed);
 }
 
-bool Au3Interaction::stretchClipRight(const ClipKey& clipKey,
-                                      secs_t deltaSec,
-                                      secs_t minClipDuration,
-                                      bool completed,
-                                      UndoPushType type)
+bool Au3Interaction::stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
     //! NOTE: other clips must follow if selected
     ClipKeyList clips = determineClipsForInteraction(clipKey);
@@ -2000,16 +1905,7 @@ bool Au3Interaction::stretchClipRight(const ClipKey& clipKey,
     //! NOTE: don't be tempted to early return if delta is 0.0 or by any other reason:
     //! we still need to trigger cannibalistic clip behaviour and save project state
     //! to the history so this function has to execute till the end
-    bool result = stretchClipsRight(clips, adjustedDelta, completed);
-    if (!result) {
-        return false;
-    }
-
-    if (completed) {
-        projectHistory()->pushHistoryState("Clip right stretched", "Stretch clip right", type);
-    }
-
-    return true;
+    return stretchClipsRight(clips, adjustedDelta, completed);
 }
 
 bool Au3Interaction::newMonoTrack()
@@ -2032,8 +1928,6 @@ void Au3Interaction::addWaveTrack(int numChannels)
     prj->notifyAboutTrackAdded(DomConverter::track(track));
 
     selectionController()->setSelectedTracks({ track->GetId() });
-
-    pushProjectHistoryTrackAddedState();
 }
 
 bool Au3Interaction::newLabelTrack()
@@ -2059,8 +1953,6 @@ bool Au3Interaction::deleteTracks(const TrackIdList& trackIds)
         trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
         trackEdit->notifyAboutTrackRemoved(track);
     }
-
-    projectHistory()->pushHistoryState("Delete track", "Delete track");
 
     return true;
 }
@@ -2091,15 +1983,14 @@ bool Au3Interaction::duplicateTracks(const TrackIdList& trackIds)
         trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
         trackEdit->notifyAboutTrackInserted(clone, tracks.Size());
     }
-    projectHistory()->pushHistoryState("Duplicate track", "Duplicate track");
 
     return true;
 }
 
-void Au3Interaction::moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction)
+bool Au3Interaction::moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction)
 {
     if (trackIds.empty()) {
-        return;
+        return false;
     }
 
     TrackIdList sortedTrackIds = trackIds;
@@ -2125,13 +2016,14 @@ void Au3Interaction::moveTracks(const TrackIdList& trackIds, const TrackMoveDire
             moveTrack(trackId, direction);
         }
     }
-    projectHistory()->pushHistoryState("Move track", "Move track");
+
+    return true;
 }
 
-void Au3Interaction::moveTracksTo(const TrackIdList& trackIds, int to)
+bool Au3Interaction::moveTracksTo(const TrackIdList& trackIds, int to)
 {
     if (trackIds.empty()) {
-        return;
+        return false;
     }
 
     TrackIdList sortedTrackIds = trackIds;
@@ -2144,7 +2036,7 @@ void Au3Interaction::moveTracksTo(const TrackIdList& trackIds, int to)
         moveTrackTo(trackId, to);
     }
 
-    projectHistory()->pushHistoryState("Move track", "Move track");
+    return true;
 }
 
 bool Au3Interaction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
@@ -2166,8 +2058,6 @@ bool Au3Interaction::insertSilence(const TrackIdList& trackIds, secs_t begin, se
     } else {
         doInsertSilence(trackIds, begin, end, duration);
     }
-
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Insert silence"), muse::trc("trackedit", "Insert silence"));
 
     return true;
 }
@@ -2389,14 +2279,6 @@ muse::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) con
     return clip->End() - clip->Start();
 }
 
-void Au3Interaction::pushProjectHistoryJoinState(secs_t start, secs_t duration)
-{
-    std::stringstream ss;
-    ss << "Joined " << duration << " seconds at " << start;
-
-    projectHistory()->pushHistoryState(ss.str(), "Join");
-}
-
 bool Au3Interaction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
@@ -2464,8 +2346,6 @@ void Au3Interaction::groupClips(const ClipKeyList& clipKeyList)
     for (const auto& clipKey : clipKeyList) {
         setClipGroupId(clipKey, newGroupId);
     }
-
-    projectHistory()->pushHistoryState("Clips grouped", "Clips grouped");
 }
 
 void Au3Interaction::ungroupClips(const ClipKeyList& clipKeyList)
@@ -2473,8 +2353,6 @@ void Au3Interaction::ungroupClips(const ClipKeyList& clipKeyList)
     for (const auto& clipKey : clipKeyList) {
         setClipGroupId(clipKey, -1);
     }
-
-    projectHistory()->pushHistoryState("Clips ungrouped", "Clips ungrouped");
 }
 
 int64_t Au3Interaction::determineNewGroupId(const ClipKeyList& clipKeyList) const
@@ -2518,91 +2396,9 @@ muse::ProgressPtr Au3Interaction::progress() const
     return m_progress;
 }
 
-void Au3Interaction::pushProjectHistoryDuplicateState()
-{
-    projectHistory()->pushHistoryState("Duplicated", "Duplicate");
-}
-
-void Au3Interaction::pushProjectHistorySplitDeleteState(secs_t start, secs_t duration)
-{
-    std::stringstream ss;
-    ss << "Split-deleted " << duration << " seconds at " << start;
-
-    projectHistory()->pushHistoryState(ss.str(), "Split delete");
-}
-
-void Au3Interaction::pushProjectHistoryTrackAddedState()
-{
-    projectHistory()->pushHistoryState("Created new audio track", "New track");
-}
-
-void Au3Interaction::pushProjectHistoryTracksTrimState(secs_t start, secs_t end)
-{
-    std::stringstream ss;
-    ss << "Trim selected audio tracks from " << start << " seconds to " << end << " seconds";
-
-    projectHistory()->pushHistoryState(ss.str(), "Trim Audio");
-}
-
-void Au3Interaction::pushProjectHistoryTrackSilenceState(secs_t start, secs_t end)
-{
-    std::stringstream ss;
-    ss << "Silenced selected tracks for " << start << " seconds at " << end << "";
-
-    projectHistory()->pushHistoryState(ss.str(), "Silence");
-}
-
 void Au3Interaction::pushProjectHistoryPasteState()
 {
     projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
-}
-
-void Au3Interaction::pushProjectHistoryDeleteState(secs_t start, secs_t duration)
-{
-    std::stringstream ss;
-    ss << "Delete " << duration << " seconds at " << start;
-
-    projectHistory()->pushHistoryState(ss.str(), "Delete");
-}
-
-void Au3Interaction::pushProjectHistoryDeleteMultipleState()
-{
-    projectHistory()->pushHistoryState("Delete", "Deleted multiple clips");
-}
-
-void Au3Interaction::pushProjectHistoryChangeClipPitchState()
-{
-    projectHistory()->pushHistoryState("Pitch Shift", "Changed Pitch Shift");
-}
-
-void Au3Interaction::pushProjectHistoryResetClipPitchState()
-{
-    projectHistory()->pushHistoryState("Reset Clip Pitch", "Reset Clip Pitch");
-}
-
-void Au3Interaction::pushProjectHistoryChangeClipSpeedState()
-{
-    projectHistory()->pushHistoryState("Changed Speed", "Changed Speed");
-}
-
-void Au3Interaction::pushProjectHistoryResetClipSpeedState()
-{
-    projectHistory()->pushHistoryState("Reset Clip Speed", "Reset Clip Speed");
-}
-
-void Au3Interaction::pushProjectHistoryRenderClipStretchingState()
-{
-    projectHistory()->pushHistoryState("Rendered time-stretched audio", "Render");
-}
-
-void Au3Interaction::pushProjectHistoryChangeTrackTitle()
-{
-    projectHistory()->pushHistoryState("Track Title", "Changed Track Title");
-}
-
-void Au3Interaction::pushProjectHistoryChangeClipTitle()
-{
-    projectHistory()->pushHistoryState("Clip Title", "Changed Clip Title");
 }
 
 bool Au3Interaction::doChangeClipSpeed(const ClipKey& clipKey, double speed)
