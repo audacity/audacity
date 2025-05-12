@@ -28,6 +28,8 @@ Item {
     }
     height: view.height
 
+    signal relayoutRequested()
+
     QtObject {
         id: prv
 
@@ -46,7 +48,11 @@ Item {
         separatorHeight: 28
         maximumWidth: root.maximumWidth - prv.customizeButtonSpaceWidth
 
-        model: PlaybackToolBarModel {}
+        model: PlaybackToolBarModel {
+            onItemsChanged: {
+                root.relayoutRequested()
+            }
+        }
 
         sourceComponentCallback: function(type) {
             switch(type) {

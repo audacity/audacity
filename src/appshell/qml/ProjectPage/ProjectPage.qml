@@ -197,8 +197,7 @@ DockPage {
                     //! HACK: When docking and undocking we recalculate
                     //        the toolbar's content size and it looks ugly for the user.
                     //        Let's hide the content, delayedly relayout the window and show the content.
-                    visible = false
-                    playbackToolBarRelayoutTimer.start()
+                    relayout()
                 }
 
                 maximumWidth: playbackToolBar.width - 30 /* grip button */
@@ -212,12 +211,21 @@ DockPage {
                     playbackToolBar.thickness = height
                 }
 
+                onRelayoutRequested: {
+                    relayout()
+                }
+
                 navigationPanel.section: root.playbackToolBarKeyNavSec
                 navigationPanel.order: 1
 
+                function relayout() {
+                    visible = false
+                    playbackToolBarRelayoutTimer.start()
+                }
+
                 Timer {
                     id: playbackToolBarRelayoutTimer
-                    interval: 10
+                    interval: 20
                     onTriggered: {
                         root.layoutRequested()
                         playbackToolBarContent.visible = true
