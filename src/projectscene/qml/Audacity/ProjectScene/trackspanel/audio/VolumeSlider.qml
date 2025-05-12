@@ -12,6 +12,7 @@ StyledSlider {
 
     property double snapPoint: 0.0
     property double snapRange: 2.0
+    property bool shiftPressed: false
 
     signal newVolumeRequested(real volume, bool completed)
 
@@ -28,6 +29,8 @@ StyledSlider {
         property bool dragActive: false
         property real handleWidth: root.handle ? root.handle.width : 0
         property real innerMargin: handleWidth / 2
+        property real startPos: 0.0
+        property real startFineValue: 0.0
     }
 
     VolumeTooltip {
@@ -50,6 +53,8 @@ StyledSlider {
             prv.dragActive = true
             root.value = sliderValue()
             tooltip.show(true)
+            prv.startPos = mouseX
+            prv.startFineValue = root.value
         }
 
         onDoubleClicked: {
@@ -74,23 +79,38 @@ StyledSlider {
             }
         }
 
-        onPositionChanged: {
+        onPositionChanged: function(e) {
             if (!prv.dragActive) {
                 return
             }
 
-            let value = sliderValue()
-            if (Math.abs(value - snapPoint) < snapRange) {
-                value = snapPoint
-            }
+            if ((e.modifiers & (Qt.ShiftModifier))) {
+                if (!root.shiftPressed) {
+                    root.shiftPressed = true
+                    prv.startPos = mouseX
+                    prv.startFineValue = root.value
+                }
 
-            root.value = value
+                root.value = fineSliderValue()
+            } else {
+                if (root.shiftPressed) {
+                    root.shiftPressed = false
+                    prv.startPos = mouseX
+                    prv.startFineValue = root.value
+                }
+                root.value = sliderValue()
+            }
         }
 
         function sliderValue() {
             let relativePos = (mouseX - prv.innerMargin) / (width - prv.handleWidth)
             relativePos = Math.max(0, Math.min(1, relativePos))
             return relativePos * (root.to - root.from) + root.from
+        }
+
+        function fineSliderValue() {
+            let step = 2 * (mouseX - prv.startPos) / (root.to - root.from)
+            return prv.startFineValue + step
         }
     }
 }
