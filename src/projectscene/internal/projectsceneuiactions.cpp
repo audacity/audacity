@@ -179,20 +179,32 @@ void ProjectSceneUiActions::init()
 {
     const auto& colors = configuration()->clipColors();
     m_actions.clear();
-    m_actions.reserve(colors.size() + STATIC_ACTIONS.size());
+    m_actions.reserve(2 * colors.size() + STATIC_ACTIONS.size());
 
     for (const auto& color : colors) {
-        UiAction action;
-        action.code = muse::actions::ActionQuery(makeColorChangeAction(color.second)).toString();
-        action.uiCtx = context::UiCtxProjectOpened;
-        action.scCtx = context::CTX_PROJECT_FOCUSED;
-        action.description = muse::TranslatableString("action", "Change clip color");
-        action.title = muse::TranslatableString("action", "Change clip color");
-        action.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
-        action.iconColor = QString::fromStdString(color.second);
-        action.checkable = Checkable::Yes;
+        UiAction clipColorAction;
+        clipColorAction.code = muse::actions::ActionQuery(makeColorChangeAction(color.second)).toString();
+        clipColorAction.uiCtx = context::UiCtxProjectOpened;
+        clipColorAction.scCtx = context::CTX_PROJECT_FOCUSED;
+        clipColorAction.description = muse::TranslatableString("action", "Change clip color");
+        clipColorAction.title = muse::TranslatableString("action", "Change clip color");
+        clipColorAction.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
+        clipColorAction.iconColor = QString::fromStdString(color.second);
+        clipColorAction.checkable = Checkable::Yes;
 
-        m_actions.push_back(std::move(action));
+        m_actions.push_back(std::move(clipColorAction));
+
+        UiAction trackColorAction;
+        trackColorAction.code = muse::actions::ActionQuery(makeTrackColorChangeAction(color.second)).toString();
+        trackColorAction.uiCtx = context::UiCtxProjectOpened;
+        trackColorAction.scCtx = context::CTX_PROJECT_FOCUSED;
+        trackColorAction.description = muse::TranslatableString("action", "Change track color");
+        trackColorAction.title = muse::TranslatableString("action", "Change track color");
+        trackColorAction.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
+        trackColorAction.iconColor = QString::fromStdString(color.second);
+        trackColorAction.checkable = Checkable::Yes;
+
+        m_actions.push_back(std::move(trackColorAction));
     }
 
     m_actions.insert(m_actions.end(), STATIC_ACTIONS.begin(), STATIC_ACTIONS.end());

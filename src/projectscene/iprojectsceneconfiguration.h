@@ -31,6 +31,7 @@ public:
     virtual muse::async::Notification isEffectsPanelVisibleChanged() const = 0;
 
     virtual const std::vector<std::pair<std::string, std::string> >& clipColors() const = 0;
+    virtual std::string nextTrackColor() = 0;
 
     virtual ClipStyles::Style clipStyle() const = 0;
     virtual void setClipStyle(ClipStyles::Style style) = 0;

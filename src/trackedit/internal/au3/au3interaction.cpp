@@ -20,6 +20,7 @@
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
+#include "au3wrap/internal/trackcolor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -897,6 +898,30 @@ bool Au3Interaction::changeClipColor(const ClipKey& clipKey, const std::string& 
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
+bool Au3Interaction::changeTrackColor(const TrackId trackId, const std::string& color)
+{
+    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    auto& trackColor = TrackColor::Get(waveTrack);
+    trackColor.SetColor(muse::draw::Color::fromString(color));
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+
+    for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
+        //Set it back to auto
+        clips->SetColor("");
+        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
+    }
+
+    projectHistory()->pushHistoryState("Changed track color", "Changed track color");
 
     return true;
 }

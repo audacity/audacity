@@ -168,6 +168,13 @@ inline muse::actions::ActionQuery makeColorChangeAction(const std::string& color
     return muse::actions::ActionQuery(muse::String(COLOR_CHANGE_ACTION).arg(muse::String::fromStdString(
                                                                                 colorHex)));
 }
+
+constexpr const char16_t* TRACK_COLOR_CHANGE_ACTION = u"action://trackedit/track/change-color?color=%1";
+inline muse::actions::ActionQuery makeTrackColorChangeAction(const std::string& colorHex)
+{
+    return muse::actions::ActionQuery(muse::String(TRACK_COLOR_CHANGE_ACTION).arg(muse::String::fromStdString(
+                                                                                      colorHex)));
+}
 }
 
 #endif // AU_PROJECTSCENE_TRACKTYPES_H
