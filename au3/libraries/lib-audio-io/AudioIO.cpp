@@ -3074,14 +3074,11 @@ void AudioIoCallback::PushInputMeterValues(const std::shared_ptr<IMeterSender>& 
         auto nChannels = sequence->NChannels();
         const int64_t id = sequence->GetRecordableSequenceId();
         for (size_t ch = 0; ch < nChannels; ch++) {
-            sender->push(ch, {sptr, frames, 1}, id);
-            sptr += frames;
+            sender->push(ch, {sptr + ch, frames, nChannels}, id);
         }
     }
 
     constexpr size_t maxMainTrackChannels = 2;
-    sptr = values;
-
     // Update main meter
     // If the input source has more than 2 channels it will be splitted on multiple mono sequences
     if (mCaptureSequences.size() == 1) {
